@@ -202,7 +202,7 @@ The structure of a returned block header is as follows:
     - ``logsBloom`` 256 Bytes - ``String``: The bloom filter for the logs of the block. ``null`` when its pending block.
     - ``transactionsRoot`` 32 Bytes - ``String``: The root of the transaction trie of the block
     - ``stateRoot`` 32 Bytes - ``String``: The root of the final state trie of the block.
-    - ``receiptsRoot`` 32 Bytes - ``String``: The root of the receipts.
+    - ``receiptsRoot`` 32 Bytes - ``String``: Transaction receipts are used to store the state after a transaction has been executed and are kept in an index-keyed trie. The hash of its root is placed in the block header as the receipts root.
     - ``miner`` - ``String``: The address of the beneficiary to whom the mining rewards were given.
     - ``extraData`` - ``String``: The "extra data" field of this block.
     - ``gasLimit`` - ``Number``: The maximum gas allowed in this block.
