@@ -206,7 +206,7 @@ The structure of a returned block header is as follows:
     - ``miner`` - ``String``: The address of the beneficiary to whom the mining rewards were given.
     - ``extraData`` - ``String``: The "extra data" field of this block.
     - ``gasLimit`` - ``Number``: The maximum gas allowed in this block.
-    - ``gasUsed`` - ``Number``: The total used gas by all transactions in this block.
+    - ``gasUsed`` - ``Number``: The total used gas by all transactions in this block. It can be multiplied to `gasPrice` to obtain total amount in wei.
     - ``timestamp`` - ``Number``: The unix timestamp for when the block was collated.
 
 ----------------
