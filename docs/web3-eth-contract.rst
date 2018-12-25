@@ -379,7 +379,7 @@ Parameters of any method depend on the smart contracts methods, defined in the :
 Returns
 -------
 
-``Object``: The transaction object:
+``Object``: The Transaction Object:
 
 - ``Array`` - arguments: The arguments passed to the method before. They can be changed.
 - ``Function`` - :ref:`call <contract-call>`: Will call the "constant" method and execute its smart contract method in the EVM without sending a transaction (Can't alter the smart contract state).
