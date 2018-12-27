@@ -92,7 +92,7 @@ describe('AbstractSendMethodTest', () => {
             expect(transactionConfirmationWorkflowMock.execute)
                 .toHaveBeenCalledWith(abstractSendMethod, moduleInstanceMock, '0x0', promiEvent);
 
-            expect(providerAdapter.send)
+            expect(providerMock.send)
                 .toHaveBeenCalledWith(abstractSendMethod.rpcMethod, abstractSendMethod.parameters);
 
             done();
@@ -126,7 +126,7 @@ describe('AbstractSendMethodTest', () => {
             expect(abstractSendMethod.beforeExecution)
                 .toHaveBeenCalledWith(moduleInstanceMock);
 
-            expect(providerAdapter.send)
+            expect(providerMock.send)
                 .toHaveBeenCalledWith(abstractSendMethod.rpcMethod, abstractSendMethod.parameters);
 
             expect(abstractSendMethod.callback)
@@ -141,7 +141,7 @@ describe('AbstractSendMethodTest', () => {
                 expect(abstractSendMethod.beforeExecution)
                     .toHaveBeenCalledWith(moduleInstanceMock);
 
-                expect(providerAdapter.send)
+                expect(providerMock.send)
                     .toHaveBeenCalledWith(abstractSendMethod.rpcMethod, abstractSendMethod.parameters);
 
                 expect(abstractSendMethod.callback)
