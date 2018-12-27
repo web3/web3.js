@@ -387,6 +387,7 @@ getGasPrice
 
 Returns the current gas price oracle.
 The gas price is determined by the last few blocks median gas price.
+GasPrice is the wei per unit of gas,.
 
 -------
 Returns
@@ -797,7 +798,7 @@ Returns
   - ``from`` - ``String``: Address of the sender.
   - ``to`` - ``String``: Address of the receiver. ``null`` when its a contract creation transaction.
   - ``value`` - ``String``: Value transferred in :ref:`wei <what-is-wei>`.
-  - ``gasPrice`` - ``String``: Gas price provided by the sender in :ref:`wei <what-is-wei>`.
+  - ``gasPrice`` - ``String``: The wei per unit of gas provided by the sender in :ref:`wei <what-is-wei>`.
   - ``gas`` - ``Number``: Gas provided by the sender.
   - ``input`` - ``String``: The data sent along with the transaction.
 
