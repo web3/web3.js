@@ -1,4 +1,4 @@
-import {SocketProviderAdapter} from 'web3-providers';
+import {WebsocketProvider} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
@@ -8,7 +8,7 @@ import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
 
 // Mocks
 jest.mock('../../../src/workflows/TransactionConfirmationWorkflow');
-jest.mock('SocketProviderAdapter');
+jest.mock('WebsocketProvider');
 jest.mock('AbstractWeb3Module');
 jest.mock('Utils');
 jest.mock('formatters');
@@ -18,8 +18,8 @@ jest.mock('formatters');
  */
 describe('AbstractSendMethodTest', () => {
     let abstractSendMethod,
-        providerAdapter,
-        providerAdapterMock,
+        provider,
+        providerMock,
         moduleInstance,
         moduleInstanceMock,
         promiEvent,
@@ -27,10 +27,11 @@ describe('AbstractSendMethodTest', () => {
         transactionConfirmationWorkflowMock;
 
     beforeEach(() => {
-        providerAdapter = new SocketProviderAdapter({});
-        providerAdapterMock = SocketProviderAdapter.mock.instances[0];
+        provider = new WebsocketProvider('host', {});
+        providerMock = WebsocketProvider.mock.instances[0];
+        providerMock.send = jest.fn();
 
-        moduleInstance = new AbstractWeb3Module(providerAdapterMock, {}, {}, {});
+        moduleInstance = new AbstractWeb3Module(providerMock, {}, {}, {});
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
 
         promiEvent = new PromiEvent();
@@ -76,10 +77,10 @@ describe('AbstractSendMethodTest', () => {
     });
 
     it('calls execute and returns a PromiEvent object', async (done) => {
-        providerAdapterMock.send
+        providerMock.send
             .mockReturnValueOnce(Promise.resolve('0x0'));
 
-        moduleInstanceMock.currentProvider = providerAdapterMock;
+        moduleInstanceMock.currentProvider = providerMock;
 
         promiEvent.on('transactionHash', (response) => {
             expect(response)
@@ -108,13 +109,13 @@ describe('AbstractSendMethodTest', () => {
 
     it('calls execute and throws an error on send', async (done) => {
         const error = new Error('ERROR ON SEND');
-        providerAdapterMock.send = jest.fn(() => {
+        providerMock.send = jest.fn(() => {
            return new Promise((resolve, reject) => {
                reject(error);
            });
         });
 
-        moduleInstanceMock.currentProvider = providerAdapterMock;
+        moduleInstanceMock.currentProvider = providerMock;
 
         try {
             await abstractSendMethod.execute(moduleInstanceMock, promiEvent);
