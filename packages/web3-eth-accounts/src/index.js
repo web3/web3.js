@@ -194,13 +194,16 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
             var rawTransaction = RLP.encode(rawTx);
 
+            const txHash = Hash.keccak256(rawTransaction)
+
             var values = RLP.decode(rawTransaction);
             result = {
                 messageHash: hash,
                 v: trimLeadingZero(values[6]),
                 r: trimLeadingZero(values[7]),
                 s: trimLeadingZero(values[8]),
-                rawTransaction: rawTransaction
+                rawTransaction: rawTransaction,
+                txHash: txHash,
             };
 
         } catch(e) {
