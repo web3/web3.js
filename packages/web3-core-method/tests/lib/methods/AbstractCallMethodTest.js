@@ -1,11 +1,11 @@
-import {SocketProviderAdapter} from 'web3-providers';
+import {WebsocketProvider} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
 // Mocks
-jest.mock('SocketProviderAdapter');
+jest.mock('WebsocketProvider');
 jest.mock('AbstractWeb3Module');
 jest.mock('Utils');
 jest.mock('formatters');
@@ -15,16 +15,17 @@ jest.mock('formatters');
  */
 describe('AbstractCallMethodTest', () => {
     let abstractCallMethod,
-        providerAdapter,
-        providerAdapterMock,
+        provider,
+        providerMock,
         moduleInstance,
         moduleInstanceMock;
 
     beforeEach(() => {
-        providerAdapter = new SocketProviderAdapter({});
-        providerAdapterMock = SocketProviderAdapter.mock.instances[0];
+        provider = new WebsocketProvider('host', {});
+        providerMock = WebsocketProvider.mock.instances[0];
+        providerMock.send = jest.fn();
 
-        moduleInstance = new AbstractWeb3Module(providerAdapterMock, {}, {}, {});
+        moduleInstance = new AbstractWeb3Module(provider, {}, {}, {});
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
 
         abstractCallMethod = new AbstractCallMethod('RPC_METHOD', 0, Utils, formatters);
@@ -54,17 +55,17 @@ describe('AbstractCallMethodTest', () => {
             return '0x00';
         });
 
-        providerAdapterMock.send
+        providerMock.send
             .mockReturnValueOnce(Promise.resolve('0x0'));
 
-        moduleInstanceMock.currentProvider = providerAdapterMock;
+        moduleInstanceMock.currentProvider = providerMock;
 
         const response = await abstractCallMethod.execute(moduleInstanceMock);
 
         expect(response)
             .toEqual('0x00');
 
-        expect(providerAdapterMock.send)
+        expect(providerMock.send)
             .toHaveBeenCalledWith(abstractCallMethod.rpcMethod, abstractCallMethod.parameters);
 
         expect(abstractCallMethod.callback)
@@ -79,11 +80,11 @@ describe('AbstractCallMethodTest', () => {
 
     it('Will throw an error on sending the request to the connected node', async () => {
         const error = new Error('ERROR ON SEND');
-        providerAdapterMock.send = jest.fn(() => {
+        providerMock.send = jest.fn(() => {
             return Promise.reject(error);
         });
 
-        moduleInstanceMock.currentProvider = providerAdapterMock;
+        moduleInstanceMock.currentProvider = providerMock;
 
         try {
             await abstractCallMethod.execute(moduleInstanceMock);
@@ -91,7 +92,7 @@ describe('AbstractCallMethodTest', () => {
             expect(error2)
                 .toEqual(error);
 
-            expect(providerAdapterMock.send)
+            expect(providerMock.send)
                 .toHaveBeenCalledWith(abstractCallMethod.rpcMethod, abstractCallMethod.parameters);
 
             expect(abstractCallMethod.callback)
