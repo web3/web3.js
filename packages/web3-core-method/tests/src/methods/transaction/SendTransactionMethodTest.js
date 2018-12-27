@@ -1,6 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import {PromiEvent} from 'web3-core-promievent';
-import {SocketProviderAdapter} from 'web3-providers';
+import {WebsocketProvider} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
 import Accounts from '../../../__mocks__/Accounts';
 import SendTransactionMethod from '../../../../src/methods/transaction/SendTransactionMethod';
@@ -11,7 +11,7 @@ import TransactionConfirmationWorkflow from '../../../../src/workflows/Transacti
 jest.mock('formatters');
 jest.mock('../../../../src/workflows/TransactionConfirmationWorkflow');
 jest.mock('../../../../src/signers/TransactionSigner');
-jest.mock('SocketProviderAdapter');
+jest.mock('WebsocketProvider');
 jest.mock('AbstractWeb3Module');
 
 
@@ -20,8 +20,8 @@ jest.mock('AbstractWeb3Module');
  */
 describe('SendTransactionMethodTest', () => {
     let method,
-        providerAdapter,
-        providerAdapterMock,
+        provider,
+        providerMock,
         moduleInstance,
         moduleInstanceMock,
         promiEvent,
@@ -32,10 +32,11 @@ describe('SendTransactionMethodTest', () => {
         accountsMock;
 
     beforeEach(() => {
-        providerAdapter = new SocketProviderAdapter({});
-        providerAdapterMock = SocketProviderAdapter.mock.instances[0];
+        provider = new WebsocketProvider({});
+        providerMock = WebsocketProvider.mock.instances[0];
+        providerMock.send = jest.fn();
 
-        moduleInstance = new AbstractWeb3Module(providerAdapterMock, {}, {}, {});
+        moduleInstance = new AbstractWeb3Module(providerMock, {}, {}, {});
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
 
         accountsMock = new Accounts();
@@ -87,11 +88,11 @@ describe('SendTransactionMethodTest', () => {
             return Promise.resolve('0x0');
         });
 
-        providerAdapterMock.send =  jest.fn(() => {
+        providerMock.send =  jest.fn(() => {
             return Promise.resolve('0x0');
         });
 
-        moduleInstanceMock.currentProvider = providerAdapterMock;
+        moduleInstanceMock.currentProvider = providerMock;
 
         promiEvent.on('transactionHash', (response) => {
             expect(response)
@@ -100,7 +101,7 @@ describe('SendTransactionMethodTest', () => {
             expect(transactionConfirmationWorkflowMock.execute)
                 .toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
 
-            expect(providerAdapter.send)
+            expect(provider.send)
                 .toHaveBeenCalledWith(method.rpcMethod, method.parameters);
 
             expect(method.rpcMethod)
@@ -128,11 +129,11 @@ describe('SendTransactionMethodTest', () => {
             return Promise.resolve('0x0');
         });
 
-        providerAdapterMock.send =  jest.fn(() => {
+        providerMock.send =  jest.fn(() => {
             return Promise.resolve('0x0');
         });
 
-        moduleInstanceMock.currentProvider = providerAdapterMock;
+        moduleInstanceMock.currentProvider = providerMock;
         moduleInstanceMock.defaultGas = 100;
         moduleInstanceMock.defaultGasPrice = 100;
 
@@ -143,7 +144,7 @@ describe('SendTransactionMethodTest', () => {
             expect(transactionConfirmationWorkflowMock.execute)
                 .toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
 
-            expect(providerAdapter.send)
+            expect(provider.send)
                 .toHaveBeenCalledWith(method.rpcMethod, method.parameters);
 
             expect(method.rpcMethod)
@@ -174,7 +175,7 @@ describe('SendTransactionMethodTest', () => {
     it('calls execute and TransactionSigner throws error', async done => {
         accountsMock.wallet[0] = {privateKey: '0x0'};
 
-        providerAdapterMock.send =  jest.fn(() => {
+        providerMock.send =  jest.fn(() => {
             return Promise.resolve('0x0');
         });
 
@@ -185,13 +186,13 @@ describe('SendTransactionMethodTest', () => {
             });
         });
 
-        moduleInstanceMock.currentProvider = providerAdapterMock;
+        moduleInstanceMock.currentProvider = providerMock;
 
         promiEvent.on('error', e => {
             expect(e)
                 .toEqual(error);
 
-            expect(providerAdapter.send)
+            expect(provider.send)
                 .toHaveBeenCalledWith('eth_gasPrice', []);
 
             expect(method.rpcMethod)
@@ -217,11 +218,11 @@ describe('SendTransactionMethodTest', () => {
     it('calls execute without wallets defined', async done => {
         method.parameters = [{gasPrice: false}];
 
-        providerAdapterMock.send =  jest.fn(() => {
+        providerMock.send =  jest.fn(() => {
             return Promise.resolve('0x0');
         });
 
-        moduleInstanceMock.currentProvider = providerAdapterMock;
+        moduleInstanceMock.currentProvider = providerMock;
 
         promiEvent.on('transactionHash', (response) => {
             expect(response)
@@ -230,7 +231,7 @@ describe('SendTransactionMethodTest', () => {
             expect(transactionConfirmationWorkflowMock.execute)
                 .toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
 
-            expect(providerAdapter.send)
+            expect(provider.send)
                 .toHaveBeenCalledWith(method.rpcMethod, method.parameters);
 
             expect(method.rpcMethod)

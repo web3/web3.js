@@ -1,11 +1,11 @@
 import {AbstractSubscription, SubscriptionsFactory} from 'web3-core-subscriptions';
 import {AbstractWeb3Module} from 'web3-core';
-import {HttpProviderAdapter, SocketProviderAdapter} from 'web3-providers';
+import {WebsocketProvider, HttpProvider} from 'web3-providers';
 import NewHeadsWatcher from '../../../src/watchers/NewHeadsWatcher';
 
 // Mocks
-jest.mock('HttpProviderAdapter');
-jest.mock('SocketProviderAdapter');
+jest.mock('HttpProvider');
+jest.mock('WebsocketProvider');
 jest.mock('AbstractWeb3Module');
 jest.mock('Subscription');
 jest.mock('SubscriptionsFactory');
@@ -16,8 +16,8 @@ jest.mock('AbstractSubscription');
  */
 describe('NewHeadsWatcherTest', () => {
     let newHeadsWatcher,
-        providerAdapter,
-        providerAdapterMock,
+        provider,
+        providerMock,
         moduleInstance,
         moduleInstanceMock,
         subscriptionsFactoryMock,
@@ -43,7 +43,7 @@ describe('NewHeadsWatcherTest', () => {
             .toBeNull();
     });
 
-    it('calls watch and stop with HttpProviderAdapter', () => {
+    it('calls watch and stops with HttpProvider', () => {
         jest.useFakeTimers();
 
         subscriptionsFactoryMock = new SubscriptionsFactory();
@@ -51,10 +51,10 @@ describe('NewHeadsWatcherTest', () => {
 
         newHeadsWatcher = new NewHeadsWatcher(subscriptionsFactoryMock);
 
-        providerAdapter = new HttpProviderAdapter({});
-        providerAdapterMock = HttpProviderAdapter.mock.instances[0];
+        provider = new HttpProvider({});
+        providerMock = HttpProvider.mock.instances[0];
 
-        moduleInstance = new AbstractWeb3Module(providerAdapterMock, {}, {}, {});
+        moduleInstance = new AbstractWeb3Module(providerMock, {}, {}, {});
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
 
         const newHeadsWatcherObject = newHeadsWatcher.watch(moduleInstanceMock);
@@ -77,13 +77,13 @@ describe('NewHeadsWatcherTest', () => {
             .toHaveLength(0);
     });
 
-    it('calls watch and stop with SocketProviderAdapter', () => {
-        providerAdapter = new SocketProviderAdapter({});
-        providerAdapterMock = SocketProviderAdapter.mock.instances[0];
+    it('calls watch and stops with WebsocketProvider', () => {
+        provider = new WebsocketProvider({});
+        providerMock = WebsocketProvider.mock.instances[0];
 
-        moduleInstance = new AbstractWeb3Module(providerAdapterMock, {}, {}, {});
+        moduleInstance = new AbstractWeb3Module(providerMock, {}, {}, {});
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
-        moduleInstance.currentProvider = providerAdapterMock;
+        moduleInstance.currentProvider = providerMock;
 
         subscription = new AbstractSubscription({}, moduleInstanceMock);
         subscriptionMock = AbstractSubscription.mock.instances[0];

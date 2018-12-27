@@ -106,3 +106,4 @@ export const ProviderDetector = () => {
 };
 
 export ProvidersModuleFactory from './factories/ProvidersModuleFactory';
+export EthereumProvider from './providers/EthereumProvider';

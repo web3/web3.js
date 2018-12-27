@@ -1,5 +1,5 @@
 import {formatters} from 'web3-core-helpers';
-import {SocketProviderAdapter} from 'web3-providers';
+import {WebsocketProvider} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
 import SignMethod from '../../../src/methods/SignMethod';
 import Accounts from '../../__mocks__/Accounts';
@@ -7,7 +7,7 @@ import MessageSigner from '../../../src/signers/MessageSigner';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 // Mocks
-jest.mock('SocketProviderAdapter');
+jest.mock('WebsocketProvider');
 jest.mock('AbstractWeb3Module');
 jest.mock('formatters');
 jest.mock('../../../src/signers/MessageSigner');
@@ -17,8 +17,8 @@ jest.mock('../../../src/signers/MessageSigner');
  */
 describe('SignMethodTest', () => {
     let method,
-        providerAdapter,
-        providerAdapterMock,
+        provider,
+        providerMock,
         moduleInstance,
         moduleInstanceMock,
         messageSigner,
@@ -26,10 +26,11 @@ describe('SignMethodTest', () => {
         accountsMock;
 
     beforeEach(() => {
-        providerAdapter = new SocketProviderAdapter({});
-        providerAdapterMock = SocketProviderAdapter.mock.instances[0];
+        provider = new WebsocketProvider({});
+        providerMock = WebsocketProvider.mock.instances[0];
+        providerMock.send = jest.fn();
 
-        moduleInstance = new AbstractWeb3Module(providerAdapterMock, {}, {}, {});
+        moduleInstance = new AbstractWeb3Module(providerMock, {}, {}, {});
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
 
         accountsMock = new Accounts();
@@ -135,10 +136,10 @@ describe('SignMethodTest', () => {
         messageSignerMock.sign
             .mockReturnValueOnce('0x00');
 
-        providerAdapterMock.send
+        providerMock.send
             .mockReturnValueOnce(Promise.resolve('0x0'));
 
-        moduleInstanceMock.currentProvider = providerAdapterMock;
+        moduleInstanceMock.currentProvider = providerMock;
 
         const response = await method.execute(moduleInstanceMock);
 
