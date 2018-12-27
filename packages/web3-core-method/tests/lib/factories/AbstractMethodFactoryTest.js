@@ -1,9 +1,11 @@
 import AbstractMethodFactory from '../../../lib/factories/AbstractMethodFactory';
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import MethodModuleFactory from '../../../src/factories/ModuleFactory';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
+import SendTransactionMethod from '../../../src/methods/transaction/SendTransactionMethod';
+import SignMethod from '../../../src/methods/SignMethod';
 
 // Mocks
-jest.mock('../../../lib/methods/AbstractMethod');
 jest.mock('../../../src/factories/ModuleFactory');
 
 /**
@@ -20,7 +22,8 @@ describe('AbstractMethodFactoryTest', () => {
 
         abstractMethodFactory = new AbstractMethodFactory(
             {
-                test: AbstractMethod
+                call: AbstractCallMethod,
+                send: AbstractSendMethod
             },
             methodModuleFactoryMock,
             {},
@@ -28,54 +31,66 @@ describe('AbstractMethodFactoryTest', () => {
         );
     });
 
-    it('hasMethod returns true', () => {
-        abstractMethodFactory = new AbstractMethodFactory({test: true}, {}, {}, {});
-        expect(abstractMethodFactory.hasMethod('test'))
+    it('calls hasMethod and returns true', () => {
+        abstractMethodFactory = new AbstractMethodFactory({call: true}, {}, {}, {});
+        expect(abstractMethodFactory.hasMethod('call'))
             .toBeTruthy();
     });
 
-    it('hasMethod returns false', () => {
+    it('calls hasMethod and returns false', () => {
         abstractMethodFactory = new AbstractMethodFactory({}, {}, {}, {});
 
-        expect(abstractMethodFactory.hasMethod('test'))
+        expect(abstractMethodFactory.hasMethod('call'))
             .toBeFalsy();
     });
 
-    it('createMethod returns method with call command', () => {
-        AbstractMethod.Type = 'CALL';
-
-        abstractMethodFactory = new AbstractMethodFactory(
-            {
-                test: AbstractMethod
-            },
-            methodModuleFactoryMock,
-            {},
-            {}
-        );
-
-        expect(abstractMethodFactory.hasMethod('test'))
+    it('calls createMethod and returns AbstractCallMethod', () => {
+        expect(abstractMethodFactory.hasMethod('call'))
             .toBeTruthy();
 
-        expect(abstractMethodFactory.createMethod('test'))
-            .toBeInstanceOf(AbstractMethod);
+        expect(abstractMethodFactory.createMethod('call'))
+            .toBeInstanceOf(AbstractCallMethod);
     });
 
-    it('createMethod returns method with send command', () => {
-        AbstractMethod.Type = 'SEND';
+    it('calls createMethod and returns AbstractSendMethod', () => {
+        expect(abstractMethodFactory.hasMethod('send'))
+            .toBeTruthy();
 
+        expect(abstractMethodFactory.createMethod('send'))
+            .toBeInstanceOf(AbstractSendMethod);
+    });
+
+    it('calls createMethod and returns SendTransactionMethod', () => {
         abstractMethodFactory = new AbstractMethodFactory(
             {
-                test: AbstractMethod
+                sendTransaction: SendTransactionMethod
             },
             methodModuleFactoryMock,
             {},
             {}
         );
 
-        expect(abstractMethodFactory.hasMethod('test'))
+        expect(abstractMethodFactory.hasMethod('sendTransaction'))
             .toBeTruthy();
 
-        expect(abstractMethodFactory.createMethod('test'))
-            .toBeInstanceOf(AbstractMethod);
+        expect(abstractMethodFactory.createMethod('sendTransaction'))
+            .toBeInstanceOf(SendTransactionMethod);
+    });
+
+    it('calls createMethod and returns SignMethod', () => {
+        abstractMethodFactory = new AbstractMethodFactory(
+            {
+                sign: SignMethod
+            },
+            methodModuleFactoryMock,
+            {},
+            {}
+        );
+
+        expect(abstractMethodFactory.hasMethod('sign'))
+            .toBeTruthy();
+
+        expect(abstractMethodFactory.createMethod('sign'))
+            .toBeInstanceOf(SignMethod);
     });
 });

@@ -63,7 +63,7 @@ export default class AbstractMethodFactory {
 
         switch (method.Type) {
             case 'CALL':
-                if (method.constructor.name === 'SignMethod') {
+                if (method.name === 'SignMethod') {
                     return new method(
                         this.utils,
                         this.formatters,
@@ -74,7 +74,7 @@ export default class AbstractMethodFactory {
 
                 return new method(this.utils, this.formatters);
             case 'SEND':
-                if (method.constructor.name === 'SendTransactionMethod') {
+                if (method.name === 'SendTransactionMethod') {
                     return new method(
                         this.utils,
                         this.formatters,
@@ -87,7 +87,7 @@ export default class AbstractMethodFactory {
                 return new method(
                     this.utils,
                     this.formatters,
-                    this.methodModuleFactory.createTransactionConfirmationWorkflow(),
+                    this.methodModuleFactory.createTransactionConfirmationWorkflow()
                 );
         }
     }
