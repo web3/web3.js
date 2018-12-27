@@ -631,6 +631,7 @@ Returns
   - ``logsBloom`` 256 Bytes - ``String``: The bloom filter for the logs of the block. ``null`` when its pending block.
   - ``transactionsRoot`` 32 Bytes - ``String``: The root of the transaction trie of the block
   - ``stateRoot`` 32 Bytes - ``String``: The root of the final state trie of the block.
+  - ``receiptsRoot`` 32 Bytes - ``String``: Transaction receipts are used to store the state after a transaction has been executed and are kept in an index-keyed trie. The hash of its root is placed in the block header as the receipts root.
   - ``miner`` - ``String``: The address of the beneficiary to whom the mining rewards were given.
   - ``difficulty`` - ``String``: Integer of the difficulty for this block.
   - ``totalDifficulty`` - ``String``: Integer of the total difficulty of the chain until this block.
@@ -661,6 +662,7 @@ Example
         "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         "transactionsRoot": "0x3a1b03875115b79539e5bd33fb00d8f7b7cd61929d5a3c574f507b8acf415bee",
         "stateRoot": "0xf1133199d44695dfa8fd1bcfe424d82854b5cebef75bddd7e40ea94cda515bcb",
+        "receiptsRoot: '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
         "miner": "0x8888f1f195afa192cfee860698584c030f4c9db1",
         "difficulty": '21345678965432',
         "totalDifficulty": '324567845321',
