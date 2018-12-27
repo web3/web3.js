@@ -117,13 +117,9 @@ export default class AbstractSubscription extends EventEmitter {
      */
     unsubscribe(callback) {
         return this.moduleInstance.currentProvider
-            .unsubscribe(this.id, this.type)
+            .unsubscribe(this.id, this.type.slice(0, 3) + '_unsubscribe')
             .then(response => {
-                this.removeAllListeners('data');
-
                 if (!response) {
-                    this.id = null;
-
                     const error = new Error('Error on unsubscribe!');
                     if (isFunction(callback)) {
                         callback(error, null);
@@ -131,6 +127,9 @@ export default class AbstractSubscription extends EventEmitter {
 
                     throw error;
                 }
+
+                this.id = null;
+                this.removeAllListeners('data');
 
                 if (isFunction(callback)) {
                     callback(false, true);

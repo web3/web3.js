@@ -29,15 +29,15 @@ describe('AbstractSubscriptionTest', () => {
             return Promise.resolve('MY_ID');
         });
 
-        abstractSubscription = new AbstractSubscription('type', 'method', {}, Utils, formatters, moduleInstanceMock);
+        abstractSubscription = new AbstractSubscription('eth_subscribe', 'rpc_method', {}, Utils, formatters, moduleInstanceMock);
     });
 
     it('constructor check', () => {
         expect(abstractSubscription.type)
-            .toEqual('type');
+            .toEqual('eth_subscribe');
 
         expect(abstractSubscription.method)
-            .toEqual('method');
+            .toEqual('rpc_method');
 
         expect(abstractSubscription.options)
             .toEqual({});
@@ -67,7 +67,8 @@ describe('AbstractSubscriptionTest', () => {
         moduleInstanceMock.currentProvider.on = jest.fn((id, callback) => {
             expect(id)
                 .toEqual('MY_ID');
-            callback(false, 'SUBSCRIPTION_ITEM');
+
+            callback({result: 'SUBSCRIPTION_ITEM'});
         });
 
         const callback = jest.fn((error, response) => {
@@ -85,10 +86,62 @@ describe('AbstractSubscriptionTest', () => {
 
         const subscription = abstractSubscription.subscribe(callback);
 
-        subscription.on('data', error => {
-            expect(error)
+        subscription.on('data', data => {
+            expect(data)
                 .toEqual('SUBSCRIPTION_ITEM');
         });
+    });
+
+    it('calls unsubscribe and returns with a resolved promise', async () => {
+        moduleInstanceMock.currentProvider.unsubscribe = jest.fn((id, type) => {
+            expect(id)
+                .toEqual('ID');
+
+            expect(type)
+                .toEqual('eth_unsubscribe');
+
+            return Promise.resolve(true);
+        });
+
+        abstractSubscription.id = 'ID';
+        abstractSubscription.on('data', () => {});
+
+        const callback = jest.fn(),
+              response = await abstractSubscription.unsubscribe(callback);
+
+        expect(response)
+            .toEqual(true);
+
+        expect(callback)
+            .toHaveBeenCalledWith(false, true);
+
+        expect(abstractSubscription.listenerCount('data'))
+            .toEqual(0);
+
+        expect(abstractSubscription.id)
+            .toEqual(null);
+    });
+
+    it('calls unsubscribe and returns with a rejected promise', async () => {
+        moduleInstanceMock.currentProvider.unsubscribe = jest.fn((id, type) => {
+            expect(id)
+                .toEqual('ID');
+
+            expect(type)
+                .toEqual('eth_unsubscribe');
+
+            return Promise.resolve(false);
+        });
+
+        const callback = jest.fn();
+        abstractSubscription.id = 'ID';
+        abstractSubscription.type = 'eth_s';
+
+        await expect(abstractSubscription.unsubscribe(callback)).rejects
+            .toThrow('Error on unsubscribe!');
+
+        expect(callback)
+            .toHaveBeenCalledWith(new Error('Error on unsubscribe!'), null);
     });
 });
 
