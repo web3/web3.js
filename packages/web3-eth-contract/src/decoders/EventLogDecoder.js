@@ -44,6 +44,7 @@ export default class EventLogDecoder {
      */
     decode(abiItemModel, response) {
         let argTopics = response.topics;
+
         if (abiItemModel.anonymous) {
             argTopics = response.topics.slice(1);
         }
@@ -60,7 +61,6 @@ export default class EventLogDecoder {
             response.signature = null;
         }
 
-        delete response.returnValues.__length__;
         delete response.data;
         delete response.topics;
 

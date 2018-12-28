@@ -32,9 +32,6 @@ const ethersAbiCoder = new EthersAbi((type, value) => {
     return value;
 });
 
-// result method
-function Result() {}
-
 export default class AbiCoder {
     /**
      * @param {Utils} utils
@@ -239,31 +236,28 @@ export default class AbiCoder {
      * @param {Array} outputs
      * @param {String} bytes
      *
-     * @returns {Array} array of plain params
+     * @returns {Object} Object with named and indexed properties of the returnValues
      */
     decodeParameters(outputs, bytes) {
         if (!bytes || bytes === '0x' || bytes === '0X') {
             throw new Error("Returned values aren't valid, did it run Out of Gas?");
         }
 
-        const res = ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`);
-        const returnValue = new Result();
-        returnValue.__length__ = 0;
+        const res = ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`),
+              returnValues = {};
 
         outputs.forEach((output, i) => {
-            let decodedValue = res[returnValue.__length__];
+            let decodedValue = res[returnValues.length];
             decodedValue = decodedValue === '0x' ? null : decodedValue;
 
-            returnValue[i] = decodedValue;
+            returnValues[i] = decodedValue;
 
             if (isObject(output) && output.name) {
-                returnValue[output.name] = decodedValue;
+                returnValues[output.name] = decodedValue;
             }
-
-            returnValue.__length__++;
         });
 
-        return returnValue;
+        return returnValues;
     }
 
     /**
@@ -275,26 +269,25 @@ export default class AbiCoder {
      * @param {String} data
      * @param {Array} topics
      *
-     * @returns {Array} array of plain params
+     * @returns {Object} Object with named and indexed properties of the returnValues
      */
-    decodeLog(inputs, data, topics) {
-        const _this = this;
-        topics = isArray(topics) ? topics : [topics];
-
-        data = data || '';
-
-        const notIndexedInputs = [];
-        const indexedParams = [];
+    decodeLog(inputs, data = '', topics) {
         let topicCount = 0;
 
+        if (!isArray(topics)) {
+            topics = [topics];
+        }
+
         // TODO check for anonymous logs?
+        const notIndexedInputs = [],
+              indexedParams = [];
 
         inputs.forEach((input, i) => {
             if (input.indexed) {
-                indexedParams[i] = ['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find((staticType) => {
+                indexedParams[i] = ['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find(staticType => {
                     return input.type.indexOf(staticType) !== -1;
                 })
-                    ? _this.decodeParameter(input.type, topics[topicCount])
+                    ? this.decodeParameter(input.type, topics[topicCount])
                     : topics[topicCount];
                 topicCount++;
             } else {
@@ -302,29 +295,25 @@ export default class AbiCoder {
             }
         });
 
-        const nonIndexedData = data;
-        const notIndexedParams = nonIndexedData ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [];
-
-        const returnValue = new Result();
-        returnValue.__length__ = 0;
+        const nonIndexedData = data,
+              notIndexedParams = nonIndexedData ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [],
+              returnValues = {};
 
         inputs.forEach((res, i) => {
-            returnValue[i] = res.type === 'string' ? '' : null;
+            returnValues[i] = res.type === 'string' ? '' : null;
 
             if (typeof notIndexedParams[i] !== 'undefined') {
-                returnValue[i] = notIndexedParams[i];
+                returnValues[i] = notIndexedParams[i];
             }
             if (typeof indexedParams[i] !== 'undefined') {
-                returnValue[i] = indexedParams[i];
+                returnValues[i] = indexedParams[i];
             }
 
             if (res.name) {
-                returnValue[res.name] = returnValue[i];
+                returnValues[res.name] = returnValues[i];
             }
-
-            returnValue.__length__++;
         });
 
-        return returnValue;
+        return returnValues;
     }
 }
