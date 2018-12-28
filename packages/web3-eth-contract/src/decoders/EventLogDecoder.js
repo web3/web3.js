@@ -23,13 +23,11 @@
 export default class EventLogDecoder {
     /**
      * @param {AbiCoder} abiCoder
-     * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(abiCoder, formatters) {
+    constructor(abiCoder) {
         this.abiCoder = abiCoder;
-        this.formatters = formatters;
     }
 
     /**

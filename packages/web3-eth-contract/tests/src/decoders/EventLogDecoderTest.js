@@ -1,10 +1,8 @@
 import EventLogDecoder from '../../../src/decoders/EventLogDecoder';
-import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
 import AbiItemModel from '../../../src/models/abi/AbiItemModel';
 
 // Mocks
-jest.mock('formatters');
 jest.mock('AbiCoder');
 jest.mock('../../../src/models/abi/AbiItemModel');
 
@@ -13,23 +11,19 @@ jest.mock('../../../src/models/abi/AbiItemModel');
  */
 describe('EventLogDecoderTest', () => {
     let eventLogDecoder,
-        abiCoder,
         abiCoderMock;
 
     beforeEach(() => {
-        abiCoder = new AbiCoder();
+        new AbiCoder();
         abiCoderMock = AbiCoder.mock.instances[0];
         abiCoderMock.decodeLog = jest.fn();
 
-        eventLogDecoder = new EventLogDecoder(abiCoderMock, formatters);
+        eventLogDecoder = new EventLogDecoder(abiCoderMock);
     });
 
     it('constructor check', () => {
         expect(eventLogDecoder.abiCoder)
             .toEqual(abiCoderMock);
-
-        expect(eventLogDecoder.formatters)
-            .toEqual(formatters);
     });
 
     it('calls decode and returns the expected value', () => {
