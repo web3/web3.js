@@ -33,7 +33,7 @@ export default class EventLogDecoder {
     /**
      * Decodes the event subscription response
      *
-     * @method decoder
+     * @method decode
      *
      * @param {AbiItemModel} abiItemModel
      * @param {Object} response
