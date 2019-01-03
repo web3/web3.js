@@ -24,16 +24,16 @@ import isArray from 'underscore-es/isArray';
 
 export default class AbiMapper {
     /**
-     * @param {ContractModuleFactory} contractPackageFactory
+     * @param {ContractModuleFactory} contractModuleFactory
      * @param {AbiCoder} abiCoder
      * @param {Utils} utils
      *
      * @constructor
      */
-    constructor(contractPackageFactory, abiCoder, utils) {
+    constructor(contractModuleFactory, abiCoder, utils) {
         this.utils = utils;
         this.abiCoder = abiCoder;
-        this.contractPackageFactory = contractPackageFactory;
+        this.contractModuleFactory = contractModuleFactory;
     }
 
     /**
@@ -62,7 +62,7 @@ export default class AbiMapper {
             if (abiItem.type === 'function') {
                 abiItem.signature = this.abiCoder.encodeFunctionSignature(abiItem.funcName);
 
-                abiItemModel = this.contractPackageFactory.createAbiItemModel(abiItem);
+                abiItemModel = this.contractModuleFactory.createAbiItemModel(abiItem);
 
                 // Check if an method already exists with this name and if it exists than create an array and push this abiItem
                 // into it. This will be used if there are methods with the same name but with different arguments.
@@ -85,7 +85,7 @@ export default class AbiMapper {
             if (abiItem.type === 'event') {
                 abiItem.signature = this.abiCoder.encodeEventSignature(abiItem.funcName);
 
-                abiItem = this.contractPackageFactory.createAbiItemModel(event);
+                abiItemModel = this.contractModuleFactory.createAbiItemModel(abiItem);
 
                 if (!mappedAbiItems.events[abiItem.name] || mappedAbiItems.events[abiItem.name].name === 'bound ') {
                     mappedAbiItems.events[abiItem.name] = abiItemModel;
@@ -97,11 +97,11 @@ export default class AbiMapper {
 
             if (abiItem.type === 'constructor') {
                 abiItem.signature = abiItem.type;
-                mappedAbiItems.methods['contractConstructor'] = this.contractPackageFactory.createAbiItemModel(abiItem);
+                mappedAbiItems.methods['contractConstructor'] = this.contractModuleFactory.createAbiItemModel(abiItem);
             }
         });
 
-        return this.contractPackageFactory.createAbiModel(mappedAbiItems);
+        return this.contractModuleFactory.createAbiModel(mappedAbiItems);
     }
 
     /**
