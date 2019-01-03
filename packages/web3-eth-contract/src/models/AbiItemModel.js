@@ -34,18 +34,23 @@ export default class AbiItemModel {
         this.name = this.abiItem.name;
         this.anonymous = this.abiItem.anonymous;
         this.contractMethodParameters = [];
+    }
 
-        Object.defineProperty(this, 'requestType', {
-            get() {
-                if (abiItem.type === 'function') {
-                    if (abiItem.constant === true) {
-                        return 'call';
-                    }
-
-                    return 'send';
-                }
+    /**
+     * Getter for the requestType of this ABI item.
+     *
+     * @property requestType
+     *
+     * @returns {String}
+     */
+    get requestType() {
+        if (this.abiItem.type === 'function') {
+            if (this.abiItem.constant === true) {
+                return 'call';
             }
-        });
+
+            return 'send';
+        }
     }
 
     /**
