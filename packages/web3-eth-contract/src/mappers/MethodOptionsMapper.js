@@ -41,11 +41,6 @@ export default class MethodOptionsMapper {
      * @returns {Object}
      */
     map(contract, options) {
-        let gasPrice = null;
-        if (options.gasPrice) {
-            gasPrice = String(options.gasPrice);
-        }
-
         let from = null;
         if (options.from) {
             from = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(options.from));
@@ -53,7 +48,7 @@ export default class MethodOptionsMapper {
 
         options.to = contract.address;
         options.from = from || contract.defaultAccount;
-        options.gasPrice = gasPrice || contract.defaultGasPrice;
+        options.gasPrice = options.gasPrice || contract.defaultGasPrice;
         options.gas = options.gas || options.gasLimit || contract.defaultGas;
 
         delete options.gasLimit;
