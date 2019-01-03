@@ -6,5 +6,4 @@ module.exports = jestConfig({
     'MethodModuleFactory': 'web3-core-method',
     'Accounts': 'web3-eth-accounts',
     'Utils': 'web3-utils',
-    'ProvidersModuleFactory': 'web3-providers'
 });

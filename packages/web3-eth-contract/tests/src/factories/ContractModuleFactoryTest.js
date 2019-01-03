@@ -21,7 +21,6 @@ import AbiItemModel from '../../../src/models/abi/AbiItemModel';
 import AbiModel from '../../../src/models/abi/AbiModel';
 import AbstractContract from '../../../src/AbstractContract';
 import MethodFactory from '../../../src/factories/MethodFactory';
-
 import ContractModuleFactory from '../../../src/factories/ContractModuleFactory';
 
 // Mocks
@@ -30,8 +29,23 @@ jest.mock('MethodModuleFactory');
 jest.mock('Accounts');
 jest.mock('Utils');
 jest.mock('formatters');
-jest.mock('../../../src/AbstractContract');
+jest.mock('../../../src/validators/MethodOptionsValidator');
+jest.mock('../../../src/mappers/MethodOptionsMapper');
+jest.mock('../../../src/proxies/EventSubscriptionsProxy');
 jest.mock('../../../src/proxies/MethodsProxy');
+jest.mock('../../../src/factories/EventSubscriptionFactory');
+jest.mock('../../../src/mappers/AllEventsOptionsMapper');
+jest.mock('../../../src/mappers/EventOptionsMapper');
+jest.mock('../../../src/decoders/AllEventsLogDecoder');
+jest.mock('../../../src/decoders/EventLogDecoder');
+jest.mock('../../../src/mappers/AbiMapper');
+jest.mock('../../../src/encoders/AllEventsFilterEncoder');
+jest.mock('../../../src/encoders/EventFilterEncoder');
+jest.mock('../../../src/encoders/MethodEncoder');
+jest.mock('../../../src/models/abi/AbiItemModel');
+jest.mock('../../../src/models/abi/AbiModel');
+jest.mock('../../../src/AbstractContract');
+jest.mock('../../../src/factories/MethodFactory');
 
 /**
  * ContractModuleFactory test
