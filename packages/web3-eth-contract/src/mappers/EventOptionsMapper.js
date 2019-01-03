@@ -19,7 +19,7 @@
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
-
+//TODO: Remove code duplication of AllEventsOptionsMapper and EventsOptionsMapper.
 export default class EventOptionsMapper {
     /**
      * @param {Object} formatters
