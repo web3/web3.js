@@ -31,7 +31,7 @@ export default class SendContractMethod extends SendTransactionMethod {
      * @param {Accounts} accounts
      * @param {TransactionSigner} transactionSigner
      * @param {AllEventsLogDecoder} allEventsLogDecoder
-     * @param {AbiItem} abiItem
+     * @param {AbiItemModel} abiItem
      *
      * @constructor
      */

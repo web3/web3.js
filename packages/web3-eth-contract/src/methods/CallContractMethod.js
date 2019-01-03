@@ -26,7 +26,7 @@ export default class CallContractMethod extends CallMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbiItem} abiItem
+     * @param {AbiItemModel} abiItem
      *
      * @constructor
      */

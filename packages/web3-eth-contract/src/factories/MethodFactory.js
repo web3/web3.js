@@ -37,9 +37,9 @@ export default class MethodFactory {
      * @constructor
      */
     constructor(accounts, utils, formatters, contractModuleFactory, methodModuleFactory) {
+        this.accounts = accounts;
         this.utils = utils;
         this.formatters = formatters;
-        this.accounts = accounts;
         this.contractModuleFactory = contractModuleFactory;
         this.methodModuleFactory = methodModuleFactory;
     }
@@ -49,7 +49,7 @@ export default class MethodFactory {
      *
      * @method createMethod
      *
-     * @param {AbiItem} abiItem
+     * @param {AbiItemModel} abiItem
      * @param {AbstractContract} contract
      *
      * @returns {AbstractMethod}
@@ -73,7 +73,7 @@ export default class MethodFactory {
         }
 
         if (typeof rpcMethod === 'undefined') {
-            throw new TypeError(`RPC call not found with requestType "${abiItem.requestType}"`);
+            throw new TypeError(`RPC call not found with requestType: "${abiItem.requestType}"`);
         }
 
         return rpcMethod;
@@ -84,7 +84,7 @@ export default class MethodFactory {
      *
      * @method createPastEventLogsMethod
      *
-     * @param {AbiItem} abiItem
+     * @param {AbiItemModel} abiItem
      *
      * @returns {PastEventLogsMethod}
      */
@@ -102,7 +102,7 @@ export default class MethodFactory {
      *
      * @method createCallContractMethod
      *
-     * @param {AbiItem} abiItem
+     * @param {AbiItemModel} abiItem
      *
      * @returns {CallContractMethod}
      */
@@ -119,7 +119,7 @@ export default class MethodFactory {
      *
      * @method createSendContractMethod
      *
-     * @param {AbiItem} abiItem
+     * @param {AbiItemModel} abiItem
      *
      * @returns {SendContractMethod}
      */
