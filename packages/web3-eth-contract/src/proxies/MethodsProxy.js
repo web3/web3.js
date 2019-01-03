@@ -65,10 +65,9 @@ export default class MethodsProxy {
                  * @returns {Function|Error}
                  */
                 get: (target, name) => {
-                    let abiItemModel = this.abiModel.getMethod(name);
-
-                    if (abiItemModel) {
-                        let requestType = abiItemModel.requestType;
+                    if (this.abiModel.hasMethod(name)) {
+                        let abiItemModel = this.abiModel.getMethod(name),
+                            requestType = abiItemModel.requestType;
 
                         const anonymousFunction = () => {
                             let methodArguments = arguments;
@@ -90,7 +89,7 @@ export default class MethodsProxy {
                             // TODO: Find a better solution for the handling of the contractMethodParameters
                             // If there exists more than one method with this name then find the correct abiItemModel
                             if (isArray(abiItemModel)) {
-                                const abiItemModelFound = abiItemModel.some((model) => {
+                                const abiItemModelFound = abiItemModel.some(model => {
                                     model.contractMethodParameters = methodArguments;
 
                                     try {
@@ -173,7 +172,13 @@ export default class MethodsProxy {
             return promiEvent;
         }
 
-        return this.method.execute(this.contract);
+        if (abiItemModel.requestType === 'call') {
+            return method.execute(this.contract);
+        }
+
+        // TODO: The promiEvent will just be used for send methods I could move this logic directly to the AbstractSendMethod
+        // TODO: Because of this I could remove the promievent module because it's just used in the SendTransaction- & SendRawTransaction method.
+        return method.execute(this.contract,  new this.PromiEvent());
     }
 
     /**
