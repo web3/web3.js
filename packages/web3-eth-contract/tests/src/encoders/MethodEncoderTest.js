@@ -4,7 +4,7 @@ import MethodEncoder from '../../../src/encoders/MethodEncoder';
 
 // Mocks
 jest.mock('AbiCoder');
-jest.mock('../../../src/models/abi/AbiItemModel');
+jest.mock('../../../src/models/AbiItemModel');
 
 /**
  * MethodEncoder test

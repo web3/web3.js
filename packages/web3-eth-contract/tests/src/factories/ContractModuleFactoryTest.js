@@ -42,8 +42,8 @@ jest.mock('../../../src/mappers/AbiMapper');
 jest.mock('../../../src/encoders/AllEventsFilterEncoder');
 jest.mock('../../../src/encoders/EventFilterEncoder');
 jest.mock('../../../src/encoders/MethodEncoder');
-jest.mock('../../../src/models/abi/AbiItemModel');
-jest.mock('../../../src/models/abi/AbiModel');
+jest.mock('../../../src/models/AbiItemModel');
+jest.mock('../../../src/models/AbiModel');
 jest.mock('../../../src/AbstractContract');
 jest.mock('../../../src/factories/MethodFactory');
 

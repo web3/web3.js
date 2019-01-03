@@ -1,10 +1,10 @@
-import EventLogDecoder from '../../../src/decoders/EventLogDecoder';
 import {AbiCoder} from 'web3-eth-abi';
+import EventLogDecoder from '../../../src/decoders/EventLogDecoder';
 import AbiItemModel from '../../../src/models/AbiItemModel';
 
 // Mocks
 jest.mock('AbiCoder');
-jest.mock('../../../src/models/abi/AbiItemModel');
+jest.mock('../../../src/models/AbiItemModel');
 
 /**
  * EventLogDecoder test

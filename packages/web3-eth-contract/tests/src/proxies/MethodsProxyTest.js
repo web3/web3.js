@@ -200,7 +200,7 @@ describe('MethodsProxyTest', () => {
         expect(abiItemModelMock.isOfType)
             .toHaveBeenCalledWith('constructor');
 
-        expect(contractMock.options.data)
+        expect(methodsProxy.contract.options.data)
             .toEqual('0x0');
 
         expect(abiItemModelMock.contractMethodParameters)

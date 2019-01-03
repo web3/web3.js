@@ -9,7 +9,7 @@ import PastEventLogsMethod from '../../../src/methods/PastEventLogsMethod';
 jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('../../../src/decoders/EventLogDecoder');
-jest.mock('../../../src/models/abi/AbiItemModel');
+jest.mock('../../../src/models/AbiItemModel');
 
 /**
  * PastEventLogsMethod test

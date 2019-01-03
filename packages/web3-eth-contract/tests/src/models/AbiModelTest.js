@@ -1,8 +1,5 @@
 import AbiModel from '../../../src/models/AbiModel';
 
-// Mocks
-jest.mock('');
-
 /**
  * AbiModel test
  */

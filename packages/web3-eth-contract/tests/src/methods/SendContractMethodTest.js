@@ -13,7 +13,7 @@ jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('Accounts');
 jest.mock('../../../src/decoders/AllEventsLogDecoder');
-jest.mock('../../../src/models/abi/AbiItemModel');
+jest.mock('../../../src/models/AbiItemModel');
 
 /**
  * SendContractMethod test

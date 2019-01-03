@@ -4,7 +4,7 @@ import EventFilterEncoder from '../../../src/encoders/EventFilterEncoder';
 
 // Mocks
 jest.mock('AbiCoder');
-jest.mock('../../../src/models/abi/AbiItemModel');
+jest.mock('../../../src/models/AbiItemModel');
 
 /**
  * EventFilterEncoder test
