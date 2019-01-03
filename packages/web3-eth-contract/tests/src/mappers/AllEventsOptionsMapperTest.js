@@ -67,7 +67,7 @@ describe('AllEventsOptionsMapperTest', () => {
 
     it('calls map with defined filter property and returns the expected result', () => {
         const options = {
-            filter: [],
+            filter: []
         };
 
         allEventsFilterEncoderMock.encode

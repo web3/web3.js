@@ -20,9 +20,6 @@
  * @date 2018
  */
 
-import isArray from 'underscore-es/isArray';
-
-//TODO: Remove code duplication of AllEventsOptionsMapper and EventsOptionsMapper.
 export default class AllEventsOptionsMapper {
     /**
      * @param {Object} formatters
@@ -43,9 +40,7 @@ export default class AllEventsOptionsMapper {
      * @returns {Object}
      */
     map(abiModel, contract, options) {
-        if (!isArray(options.topics)) {
-            options.topics = [];
-        }
+        options.topics = [];
 
         if (typeof options.fromBlock !== 'undefined') {
             options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);

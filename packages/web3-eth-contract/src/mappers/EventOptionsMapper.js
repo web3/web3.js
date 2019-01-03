@@ -19,7 +19,9 @@
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
-//TODO: Remove code duplication of AllEventsOptionsMapper and EventsOptionsMapper.
+
+import isArray from 'underscore-es/isArray';
+
 export default class EventOptionsMapper {
     /**
      * @param {Object} formatters
@@ -40,7 +42,7 @@ export default class EventOptionsMapper {
      * @returns {Object}
      */
     map(abiItemModel, contract, options) {
-        if (typeof options.topics === 'undefined') {
+        if (!isArray(options.topics)) {
             options.topics = [];
         }
 
@@ -58,8 +60,8 @@ export default class EventOptionsMapper {
             options.topics.unshift(abiItemModel.signature);
         }
 
-        if (typeof options.filters !== 'undefined') {
-            options.topics.concat(this.eventFilterEncoder.encode(abiItemModel, options.filter));
+        if (typeof options.filter !== 'undefined') {
+            options.topics = options.topics.concat(this.eventFilterEncoder.encode(abiItemModel, options.filter));
         }
 
         if (!options.address) {
