@@ -53,7 +53,7 @@ export default class MethodsProxy {
         this.PromiEvent = PromiEvent;
 
         return new Proxy(
-            contract,
+            this,
             {
                 /**
                  * Checks if a contract event exists by the given name and
@@ -69,7 +69,11 @@ export default class MethodsProxy {
                         let abiItemModel = this.abiModel.getMethod(name),
                             requestType = abiItemModel.requestType;
 
-                        const anonymousFunction = () => {
+                        if(isArray(abiItemModel)) {
+                            requestType = abiItemModel[0].requestType;
+                        }
+
+                        function anonymousFunction() {
                             let methodArguments = arguments;
 
                             // Because of the possibility to overwrite the contract data if I call contract.deploy()
@@ -78,12 +82,16 @@ export default class MethodsProxy {
                             // TODO: Change API or improve this
                             if (!isArray(abiItemModel) && abiItemModel.isOfType('constructor')) {
                                 if (arguments[0]['data']) {
-                                    target.contract.options.data = arguments[0]['data'] || target.contract.options.data;
+                                    target.contract.options.data = arguments[0]['data'];
                                 }
 
                                 if (arguments[0]['arguments']) {
                                     methodArguments = arguments[0]['arguments'];
                                 }
+
+                                abiItemModel.contractMethodParameters = methodArguments;
+
+                                return anonymousFunction;
                             }
 
                             // TODO: Find a better solution for the handling of the contractMethodParameters
@@ -105,28 +113,30 @@ export default class MethodsProxy {
                                 if (!abiItemModelFound) {
                                     throw new Error(`Methods with name "${name}" found but the given parameters are wrong`);
                                 }
-                            } else {
-                                abiItemModel.contractMethodParameters = methodArguments;
+
+                                return anonymousFunction;
                             }
 
-                            return anonymousFunction;
-                        };
+                            abiItemModel.contractMethodParameters = methodArguments;
 
-                        anonymousFunction[requestType] = () => {
+                            return anonymousFunction;
+                        }
+
+                        anonymousFunction[requestType] = function() {
                             return target.executeMethod(abiItemModel, arguments);
                         };
 
-                        anonymousFunction[requestType].request = () => {
+                        anonymousFunction[requestType].request = function() {
                             return target.createMethod(abiItemModel, arguments);
                         };
 
-                        anonymousFunction.estimateGas = () => {
+                        anonymousFunction.estimateGas = function() {
                             abiItemModel.requestType = 'estimate';
 
                             return target.executeMethod(abiItemModel, arguments);
                         };
 
-                        anonymousFunction.encodeAbi = () => {
+                        anonymousFunction.encodeABI = function() {
                             return target.methodEncoder.encode(abiItemModel, target.contract.options.data);
                         };
 
@@ -134,7 +144,7 @@ export default class MethodsProxy {
                     }
 
                     if (target[name]) {
-                        return this[name];
+                        return target[name];
                     }
                 }
 
@@ -161,7 +171,6 @@ export default class MethodsProxy {
             method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract);
             method.methodArguments = methodArguments;
 
-            promiEvent.resolve(null);
             promiEvent.reject(error);
             promiEvent.emit('error', error);
 
@@ -172,13 +181,13 @@ export default class MethodsProxy {
             return promiEvent;
         }
 
-        if (abiItemModel.requestType === 'call') {
+        if (abiItemModel.requestType === 'call' || abiItemModel.requestType === 'estimate') {
             return method.execute(this.contract);
         }
 
         // TODO: The promiEvent will just be used for send methods I could move this logic directly to the AbstractSendMethod
         // TODO: Because of this I could remove the promievent module because it's just used in the SendTransaction- & SendRawTransaction method.
-        return method.execute(this.contract,  new this.PromiEvent());
+        return method.execute(this.contract, new this.PromiEvent());
     }
 
     /**

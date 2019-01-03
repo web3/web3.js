@@ -71,8 +71,8 @@ export default class AbstractContract extends AbstractWeb3Module {
 
         this.options = options;
 
-        this.contractModuleFactory.createMethodsProxy(
-            this.methods,
+        this.methods = this.contractModuleFactory.createMethodsProxy(
+            this,
             this.abiModel,
             this.PromiEvent
         );
