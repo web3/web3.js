@@ -54,7 +54,7 @@ export default class GetPastLogsMethod extends AbstractCallMethod {
      * @returns {Array}
      */
     afterExecution(response) {
-        return response.map((responseItem) => {
+        return response.map(responseItem => {
             return this.formatters.outputLogFormatter(responseItem);
         });
     }
