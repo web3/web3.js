@@ -1,7 +1,7 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
-
+import {CallMethod} from 'web3-core-method';
 import AbiItemModel from '../../../src/models/abi/AbiItemModel';
 import CallContractMethod from '../../../src/methods/CallContractMethod';
 
@@ -39,6 +39,9 @@ describe('CallContractMethodTest', () => {
 
         expect(callContractMethod.abiItemModel)
             .toEqual(abiItemModelMock);
+
+        expect(callContractMethod)
+            .toBeInstanceOf(CallMethod);
     });
 
     it('calls afterExecution with undefined response and returns the expected result', () => {

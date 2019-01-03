@@ -1,6 +1,7 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {Accounts} from 'web3-eth-accounts';
+import {SendTransactionMethod} from 'web3-core-method';
 import TransactionConfirmationWorkflow from '../../__mocks__/TransactionConfirmationWorkflow';
 import TransactionSigner from '../../__mocks__/TransactionSigner';
 import AbstractContract from '../../../src/AbstractContract';
@@ -60,6 +61,9 @@ describe('ContractDeployMethodTest', () => {
 
         expect(contractDeployMethod.contract)
             .toEqual(contractMock);
+
+        expect(contractDeployMethod)
+            .toBeInstanceOf(SendTransactionMethod);
     });
 
     it('calls beforeExecution and removes the to property from the options', () => {

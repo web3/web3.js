@@ -1,5 +1,6 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
+import {GetPastLogsMethod} from 'web3-core-method';
 import EventLogDecoder from '../../../src/decoders/EventLogDecoder';
 import AbiItemModel from '../../../src/models/abi/AbiItemModel';
 import PastEventLogsMethod from '../../../src/methods/PastEventLogsMethod';
@@ -40,6 +41,9 @@ describe('PastEventLogsMethodTest', () => {
 
         expect(pastEventLogsMethod.abiItemModel)
             .toEqual(abiItemModelMock);
+
+        expect(pastEventLogsMethod)
+            .toBeInstanceOf(GetPastLogsMethod);
     });
 
     it('calls afterExecution and returns the expected result', () => {
