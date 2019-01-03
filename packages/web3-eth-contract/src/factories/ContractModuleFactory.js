@@ -20,8 +20,8 @@
  * @date 2018
  */
 
-import AbiModel from '../models/abi/AbiModel';
-import AbiItemModel from '../models/abi/AbiItemModel';
+import AbiModel from '../models/AbiModel';
+import AbiItemModel from '../models/AbiItemModel';
 import MethodEncoder from '../encoders/MethodEncoder';
 import EventFilterEncoder from '../encoders/EventFilterEncoder';
 import AllEventsFilterEncoder from '../encoders/AllEventsFilterEncoder';

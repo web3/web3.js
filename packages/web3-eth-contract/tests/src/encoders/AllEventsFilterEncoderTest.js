@@ -1,6 +1,6 @@
 import {AbiCoder} from 'web3-eth-abi';
-import AbiModel from '../../../src/models/abi/AbiModel';
-import AbiItemModel from '../../../src/models/abi/AbiItemModel';
+import AbiModel from '../../../src/models/AbiModel';
+import AbiItemModel from '../../../src/models/AbiItemModel';
 import AllEventsFilterEncoder from '../../../src/encoders/AllEventsFilterEncoder';
 
 // Mocks

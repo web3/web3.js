@@ -2,7 +2,7 @@ import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
 import {CallMethod} from 'web3-core-method';
-import AbiItemModel from '../../../src/models/abi/AbiItemModel';
+import AbiItemModel from '../../../src/models/AbiItemModel';
 import CallContractMethod from '../../../src/methods/CallContractMethod';
 
 // Mocks

@@ -6,7 +6,7 @@ import TransactionConfirmationWorkflow from '../../__mocks__/TransactionConfirma
 import TransactionSigner from '../../__mocks__/TransactionSigner';
 import AllEventsLogDecoder from '../../../src/decoders/AllEventsLogDecoder';
 import SendContractMethod from '../../../src/methods/SendContractMethod';
-import AbiItemModel from '../../../src/models/abi/AbiItemModel';
+import AbiItemModel from '../../../src/models/AbiItemModel';
 
 // Mocks
 jest.mock('Utils');

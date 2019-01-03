@@ -1,5 +1,5 @@
 import {AbiCoder} from 'web3-eth-abi';
-import AbiItemModel from '../../../src/models/abi/AbiItemModel';
+import AbiItemModel from '../../../src/models/AbiItemModel';
 import MethodEncoder from '../../../src/encoders/MethodEncoder';
 
 // Mocks
