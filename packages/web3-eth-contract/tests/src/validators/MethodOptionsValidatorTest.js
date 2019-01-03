@@ -75,7 +75,7 @@ describe('MethodOptionsValidatorTest', () => {
     it('calls validate and throws isValueValid error', () => {
         Utils.isAddress
             .mockReturnValueOnce(true);
-        
+
         expect(() => {
             methodOptionsValidator.validate(
                 {
