@@ -278,7 +278,7 @@ export default class ContractModuleFactory {
         return new EventSubscriptionsProxy(
             contract,
             abiModel,
-            this.createEventSubscriptionFactory(methodController),
+            this.createEventSubscriptionFactory(),
             this.createEventOptionsMapper(),
             this.createEventLogDecoder(),
             this.createAllEventsLogDecoder(),
@@ -292,11 +292,9 @@ export default class ContractModuleFactory {
      *
      * @method createEventSubscriptionFactory
      *
-     * @param {MethodController} methodController
-     *
      * @returns {EventSubscriptionFactory}
      */
-    createEventSubscriptionFactory(methodController) {
-        return new EventSubscriptionFactory(this.utils, this.formatters, methodController);
+    createEventSubscriptionFactory() {
+        return new EventSubscriptionFactory(this.utils, this.formatters);
     }
 }

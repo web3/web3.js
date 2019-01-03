@@ -23,7 +23,7 @@
 import isFunction from 'underscore-es/isFunction';
 import isUndefined from 'underscore-es/isUndefined';
 
-export default class EventSubscriptionsProxy extends Proxy {
+export default class EventSubscriptionsProxy {
     /**
      * @param {AbstractContract} contract
      * @param {AbiModel} abiModel
@@ -46,8 +46,17 @@ export default class EventSubscriptionsProxy extends Proxy {
         allEventsOptionsMapper,
         PromiEvent
     ) {
-        super(
-            contract,
+        this.contract = contract;
+        this.eventSubscriptionFactory = eventSubscriptionFactory;
+        this.abiModel = abiModel;
+        this.eventOptionsMapper = eventOptionsMapper;
+        this.eventLogDecoder = eventLogDecoder;
+        this.allEventsLogDecoder = allEventsLogDecoder;
+        this.allEventsOptionsMapper = allEventsOptionsMapper;
+        this.PromiEvent = PromiEvent;
+
+        return new Proxy(
+            this,
             {
                 /**
                  * Checks if a contract event exists by the given name and returns the subscription otherwise it throws an error
@@ -78,15 +87,6 @@ export default class EventSubscriptionsProxy extends Proxy {
                 }
             }
         );
-
-        this.contract = contract;
-        this.eventSubscriptionFactory = eventSubscriptionFactory;
-        this.abiModel = abiModel;
-        this.eventOptionsMapper = eventOptionsMapper;
-        this.eventLogDecoder = eventLogDecoder;
-        this.allEventsLogDecoder = allEventsLogDecoder;
-        this.allEventsOptionsMapper = allEventsOptionsMapper;
-        this.PromiEvent = PromiEvent;
     }
 
     /**

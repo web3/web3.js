@@ -23,7 +23,7 @@
 import isArray from 'underscore-es/isArray';
 import isFunction from 'underscore-es/isFunction';
 
-export default class MethodsProxy extends Proxy {
+export default class MethodsProxy {
     /**
      * @param {AbstractContract} contract
      * @param {AbiModel} abiModel
@@ -44,7 +44,15 @@ export default class MethodsProxy extends Proxy {
         methodOptionsMapper,
         PromiEvent
     ) {
-        super(
+        this.contract = contract;
+        this.abiModel = abiModel;
+        this.methodFactory = methodFactory;
+        this.methodEncoder = methodEncoder;
+        this.methodOptionsValidator = methodOptionsValidator;
+        this.methodOptionsMapper = methodOptionsMapper;
+        this.PromiEvent = PromiEvent;
+
+        return new Proxy(
             contract,
             {
                 /**
@@ -131,15 +139,8 @@ export default class MethodsProxy extends Proxy {
                     }
                 }
 
-            });
-
-        this.contract = contract;
-        this.abiModel = abiModel;
-        this.methodFactory = methodFactory;
-        this.methodEncoder = methodEncoder;
-        this.methodOptionsValidator = methodOptionsValidator;
-        this.methodOptionsMapper = methodOptionsMapper;
-        this.PromiEvent = PromiEvent;
+            }
+        );
     }
 
     /**
