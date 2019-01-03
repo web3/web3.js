@@ -2,6 +2,7 @@ import {MethodModuleFactory, EstimateGasMethod} from 'web3-core-method';
 import {Accounts} from 'web3-eth-accounts';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
+import {AbiCoder} from 'web3-eth-abi';
 
 import MethodFactory from '../../../src/factories/MethodFactory';
 import ContractModuleFactory from '../../../src/factories/ContractModuleFactory';
@@ -16,6 +17,7 @@ jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('MethodModuleFactory');
 jest.mock('EstimateGasMethod');
+jest.mock('AbiCoder');
 jest.mock('../../../src/factories/ContractModuleFactory');
 jest.mock('../../../src/methods/CallContractMethod');
 jest.mock('../../../src/methods/SendContractMethod');
@@ -29,7 +31,8 @@ describe('MethodFactoryTest', () => {
     let methodFactory,
         accountsMock,
         contractModuleFactoryMock,
-        methodModuleFactoryMock;
+        methodModuleFactoryMock,
+        abiCoderMock;
 
     beforeEach(() => {
         new Accounts();
@@ -43,12 +46,16 @@ describe('MethodFactoryTest', () => {
         new ContractModuleFactory({}, {}, {}, {}, {});
         contractModuleFactoryMock = ContractModuleFactory.mock.instances[0];
 
+        new AbiCoder();
+        abiCoderMock = AbiCoder.mock.instances[0];
+
         methodFactory = new MethodFactory(
             accountsMock,
             Utils,
             formatters,
             contractModuleFactoryMock,
-            methodModuleFactoryMock
+            methodModuleFactoryMock,
+            abiCoderMock
         );
     });
 

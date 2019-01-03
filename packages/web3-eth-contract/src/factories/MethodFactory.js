@@ -33,15 +33,17 @@ export default class MethodFactory {
      * @param {Object} formatters
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
+     * @param {AbiCoder} abiCoder
      *
      * @constructor
      */
-    constructor(accounts, utils, formatters, contractModuleFactory, methodModuleFactory) {
+    constructor(accounts, utils, formatters, contractModuleFactory, methodModuleFactory, abiCoder) {
         this.accounts = accounts;
         this.utils = utils;
         this.formatters = formatters;
         this.contractModuleFactory = contractModuleFactory;
         this.methodModuleFactory = methodModuleFactory;
+        this.abiCoder = abiCoder;
     }
 
     /**
@@ -110,6 +112,7 @@ export default class MethodFactory {
         return new CallContractMethod(
             this.utils,
             this.formatters,
+            this.abiCoder,
             abiItem
         );
     }

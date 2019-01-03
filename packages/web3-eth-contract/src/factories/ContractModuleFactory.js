@@ -236,7 +236,8 @@ export default class ContractModuleFactory {
             this.utils,
             this.formatters,
             this,
-            this.methodModuleFactory
+            this.methodModuleFactory,
+            this.abiCoder
         );
     }
 

@@ -49,6 +49,7 @@ export default class AbiItemModel {
     }
 
     /**
+     * TODO: rename getInputLength to getInputsLength
      * Returns the input length of the abiItem
      *
      * @method getInputLength
@@ -64,6 +65,7 @@ export default class AbiItemModel {
     }
 
     /**
+     * TODO: Refactor to es6 accessor
      * Returns all inputs of the abi item
      *
      * @method getInputs
@@ -71,13 +73,27 @@ export default class AbiItemModel {
      * @returns {Array}
      */
     getInputs() {
-        let inputs = [];
-
         if (isArray(this.abiItem.inputs)) {
-            inputs = this.abiItem.inputs;
+            return this.abiItem.inputs;
         }
 
-        return inputs;
+        return [];
+    }
+
+    /**
+     * TODO: Refactor to es6 accessor
+     * Returns all outputs of the abi item
+     *
+     * @method getOutputs
+     *
+     * @returns {Array}
+     */
+    getOutputs() {
+        if (isArray(this.abiItem.outputs)) {
+            return this.abiItem.outputs;
+        }
+
+        return [];
     }
 
     /**
