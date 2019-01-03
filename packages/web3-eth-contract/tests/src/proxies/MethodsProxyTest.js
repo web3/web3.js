@@ -257,7 +257,7 @@ describe('MethodsProxyTest', () => {
         methodOptionsMapperMock.map
             .mockReturnValueOnce({options: true});
 
-        await expect(methodsProxy.myMethod({arguments: [true], data: '0x0'}).send({options: false})).resolves
+        await expect(methodsProxy.myMethod(true).send({options: false})).resolves
             .toEqual(true);
 
         expect(abiModelMock.hasMethod)
@@ -266,11 +266,8 @@ describe('MethodsProxyTest', () => {
         expect(abiModelMock.getMethod)
             .toHaveBeenCalledWith('myMethod');
 
-        // expect(methodsProxy.contract.options.data)
-        //     .toEqual('0x0');
-
         expect(abiItemModelMock.contractMethodParameters[0])
-            .toEqual({arguments: [true], data: '0x0'});
+            .toEqual(true);
 
         expect(abiItemModelMock.givenParametersLengthIsValid)
             .toHaveBeenCalled();
