@@ -67,7 +67,7 @@ export default class EventSubscriptionFactory {
      *
      * @returns {AllEventsLogSubscription}
      */
-    createAllEventLogSubscription(allEventsLogDecoder, contract, options) {
+    createAllEventsLogSubscription(allEventsLogDecoder, contract, options) {
         return new AllEventsLogSubscription(
             options,
             this.utils,

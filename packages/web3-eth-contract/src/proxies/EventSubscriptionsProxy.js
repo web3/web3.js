@@ -79,11 +79,7 @@ export default class EventSubscriptionsProxy {
                         };
                     }
 
-                    if (target[name]) {
-                        return target[name];
-                    }
-
-                    throw new Error(`Event with name "${name}" not found`);
+                    return target[name];
                 }
             }
         );
@@ -100,11 +96,13 @@ export default class EventSubscriptionsProxy {
      * @returns {Subscription|PromiEvent}
      */
     subscribe(abiItemModel, options, callback) {
-        if (!isUndefined(options.filters) && !isUndefined(options.topics)) {
-            return this.handleValidationError(
+        if (!isUndefined(options.filter) && !isUndefined(options.topics)) {
+            this.handleValidationError(
                 'Invalid subscription options: Only filter or topics are allowed and not both',
                 callback
             );
+
+            return;
         }
 
         return this.eventSubscriptionFactory
@@ -130,14 +128,16 @@ export default class EventSubscriptionsProxy {
      */
     subscribeAll(options, callback) {
         if (!isUndefined(options.topics)) {
-            return this.handleValidationError(
-                'Invalid subscription options: Topics are not allowed for the "allEvents" subscription',
+            this.handleValidationError(
+                'Invalid subscription options: Only filter or topics are allowed and not both',
                 callback
             );
+
+            return;
         }
 
         return this.eventSubscriptionFactory
-            .createAllEventLogSubscription(
+            .createAllEventsLogSubscription(
                 this.allEventsLogDecoder,
                 this.contract,
                 this.allEventsOptionsMapper.map(this.abiModel, this.contract, options)
@@ -154,18 +154,14 @@ export default class EventSubscriptionsProxy {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {PromiEvent}
      */
     handleValidationError(errorMessage, callback) {
-        const promiEvent = new this.PromiEvent();
-
         const error = new Error(errorMessage);
-        promiEvent.emit('error', error);
 
         if (isFunction(callback)) {
             callback(error, null);
         }
 
-        return promiEvent;
+        throw error;
     }
 }

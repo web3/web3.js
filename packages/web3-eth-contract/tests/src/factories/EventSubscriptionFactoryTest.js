@@ -34,8 +34,8 @@ describe('EventSubscriptionFactoryTest', () => {
             .toBeInstanceOf(EventLogSubscription);
     });
 
-    it('calls createAllEventLogSubscription and returns an AllEventsLogSubscription object', () => {
-        expect(eventSubscriptionFactory.createAllEventLogSubscription({}, {}, {}, {}))
+    it('calls createAllEventsLogSubscription and returns an AllEventsLogSubscription object', () => {
+        expect(eventSubscriptionFactory.createAllEventsLogSubscription({}, {}, {}))
             .toBeInstanceOf(AllEventsLogSubscription);
     });
 });
