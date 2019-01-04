@@ -82,29 +82,25 @@ export default class Registry extends AbstractContract {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {Promise<*>}
+     * @returns {Promise<String>}
      */
     owner(name, callback) {
         return new Promise((resolve, reject) => {
-            this.contract.then((contract) => {
-                contract.methods
-                    .owner(namehash.hash(name))
-                    .call()
-                    .then((receipt) => {
-                        resolve(receipt);
+            this.methods.owner(namehash.hash(name)).call()
+                .then(receipt => {
+                    resolve(receipt);
 
-                        if (isFunction(callback)) {
-                            callback(false, receipt);
-                        }
-                    })
-                    .catch((error) => {
-                        reject(error);
+                    if (isFunction(callback)) {
+                        callback(false, receipt);
+                    }
+                })
+                .catch(error => {
+                    reject(error);
 
-                        if (isFunction(callback)) {
-                            callback(error, null);
-                        }
-                    });
-            });
+                    if (isFunction(callback)) {
+                        callback(error, null);
+                    }
+                });
         });
     }
 
@@ -137,7 +133,7 @@ export default class Registry extends AbstractContract {
      * @returns {Promise<AbstractContract>}
      */
     async resolver(name) {
-        if(this.resolverName === name && this.resolverContract) {
+        if (this.resolverName === name && this.resolverContract) {
             return this.resolverContract;
         }
 
@@ -179,7 +175,7 @@ export default class Registry extends AbstractContract {
         const address = ensAddresses[networkType];
 
         if (typeof address === 'undefined') {
-            throw new TypeError(`ENS is not supported on network ${networkType}`);
+            throw new TypeError(`ENS is not supported on network: "${networkType}"`);
         }
 
         return address;

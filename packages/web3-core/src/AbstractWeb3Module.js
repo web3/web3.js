@@ -139,7 +139,7 @@ export default class AbstractWeb3Module {
      *
      * @method setProvider
      *
-     * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Net} net
      *
      * @returns {Boolean|Error}
