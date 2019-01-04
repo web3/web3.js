@@ -127,7 +127,7 @@ var checkAddressChecksum = function (address) {
  * @param {String} string to be padded
  * @param {Number} chars that result string should have
  * @param {String} sign, by default 0
- * @returns {String} right aligned string
+ * @returns {String} left aligned string
  */
 var leftPad = function (string, chars, sign) {
     var hasPrefix = /^0x/i.test(string) || typeof string === 'number';
