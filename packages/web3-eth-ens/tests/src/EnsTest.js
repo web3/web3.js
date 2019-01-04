@@ -2,6 +2,7 @@ import {PromiEvent} from 'web3-core-promievent';
 import {HttpProvider, ProvidersModuleFactory} from 'web3-providers';
 import {MethodModuleFactory} from 'web3-core-method';
 import Registry from '../../src/contracts/Registry';
+import namehash from 'eth-ens-namehash';
 import Ens from '../../src/Ens';
 
 // Mocks
@@ -9,6 +10,7 @@ jest.mock('../../src/contracts/Registry');
 jest.mock('ProvidersModuleFactory');
 jest.mock('HttpProvider');
 jest.mock('MethodModuleFactory');
+jest.mock('namehash');
 
 /**
  * Ens test
@@ -39,6 +41,10 @@ describe('EnsTest', () => {
 
         providersModuleFactoryMock.createProviderResolver
             .mockReturnValueOnce({resolve: jest.fn()});
+
+        namehash.hash = jest.fn(() => {
+            return '0x0';
+        });
 
         ens = new Ens(providerMock, providersModuleFactoryMock, methodModuleFactoryMock, {}, registryMock);
     });
@@ -169,6 +175,9 @@ describe('EnsTest', () => {
 
         expect(callback)
             .toHaveBeenCalled();
+
+        expect(namehash.hash)
+            .toHaveBeenCalledWith('name');
     });
 
     it('calls setAddress and returns a rejected PromiEvent', async () => {
@@ -255,6 +264,9 @@ describe('EnsTest', () => {
 
         expect(callback)
             .toHaveBeenCalled();
+
+        expect(namehash.hash)
+            .toHaveBeenCalledWith('name');
     });
 
     it('calls getPubkey and returns a resolved promise', async () => {
@@ -330,7 +342,10 @@ describe('EnsTest', () => {
 
         const resolver = {
             methods: {
-                setPubkey: jest.fn((x, y) => {
+                setPubkey: jest.fn((node, x, y) => {
+                    expect(node)
+                        .toEqual('0x0');
+
                     expect(x)
                         .toEqual('x');
 
@@ -373,6 +388,9 @@ describe('EnsTest', () => {
 
         expect(callback)
             .toHaveBeenCalled();
+
+        expect(namehash.hash)
+            .toHaveBeenCalledWith('name');
     });
 
     it('calls setPubkey and returns a rejected PromiEvent', async () => {
@@ -419,7 +437,10 @@ describe('EnsTest', () => {
 
         const resolver = {
             methods: {
-                setPubkey: jest.fn((x, y) => {
+                setPubkey: jest.fn((node, x, y) => {
+                    expect(node)
+                        .toEqual('0x0');
+
                     expect(x)
                         .toEqual('x');
 
@@ -462,6 +483,9 @@ describe('EnsTest', () => {
 
         expect(callback)
             .toHaveBeenCalled();
+
+        expect(namehash.hash)
+            .toHaveBeenCalledWith('name');
     });
 
     it('calls getContent and returns a resolved promise', async () => {
@@ -537,7 +561,10 @@ describe('EnsTest', () => {
 
         const resolver = {
             methods: {
-                setContent: jest.fn(hash => {
+                setContent: jest.fn((node, hash) => {
+                    expect(node)
+                        .toEqual('0x0');
+
                     expect(hash)
                         .toEqual('hash');
 
@@ -577,6 +604,9 @@ describe('EnsTest', () => {
 
         expect(callback)
             .toHaveBeenCalled();
+
+        expect(namehash.hash)
+            .toHaveBeenCalledWith('name');
     });
 
     it('calls setContent and returns a rejected PromiEvent', async () => {
@@ -623,7 +653,10 @@ describe('EnsTest', () => {
 
         const resolver = {
             methods: {
-                setContent: jest.fn(hash => {
+                setContent: jest.fn((node, hash) => {
+                    expect(node)
+                        .toEqual('0x0');
+
                     expect(hash)
                         .toEqual('hash');
 
@@ -663,6 +696,9 @@ describe('EnsTest', () => {
 
         expect(callback)
             .toHaveBeenCalled();
+
+        expect(namehash.hash)
+            .toHaveBeenCalledWith('name');
     });
 
     it('calls getMultihash and returns a resolved promise', async () => {
@@ -738,7 +774,10 @@ describe('EnsTest', () => {
 
         const resolver = {
             methods: {
-                setMultihash: jest.fn(hash => {
+                setMultihash: jest.fn((node, hash) => {
+                    expect(node)
+                        .toEqual('0x0');
+
                     expect(hash)
                         .toEqual('hash');
 
@@ -778,6 +817,9 @@ describe('EnsTest', () => {
 
         expect(callback)
             .toHaveBeenCalled();
+
+        expect(namehash.hash)
+            .toHaveBeenCalledWith('name');
     });
 
     it('calls setMultihash and returns a rejected PromiEvent', async () => {
@@ -824,7 +866,10 @@ describe('EnsTest', () => {
 
         const resolver = {
             methods: {
-                setMultihash: jest.fn(hash => {
+                setMultihash: jest.fn((node, hash) => {
+                    expect(node)
+                        .toEqual('0x0');
+
                     expect(hash)
                         .toEqual('hash');
 
@@ -864,5 +909,8 @@ describe('EnsTest', () => {
 
         expect(callback)
             .toHaveBeenCalled();
+
+        expect(namehash.hash)
+            .toHaveBeenCalledWith('name');
     });
 });
