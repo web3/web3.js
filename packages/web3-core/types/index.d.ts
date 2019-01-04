@@ -51,7 +51,7 @@ export class AbstractWeb3Module {
 
     isSameProvider(provider: provider): boolean;
 
-    clearSubscriptions(): Promise<boolean | Error>;
+    clearSubscriptions(subscriptionType: string): Promise<boolean | Error>;
 }
 
 export interface Web3ModuleOptions {

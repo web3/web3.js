@@ -15,7 +15,8 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file MethodFactory* @author Samuel Furter <samuel@ethereum.org>
+ * @file MethodFactory
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 

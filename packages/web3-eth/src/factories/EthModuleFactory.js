@@ -20,9 +20,9 @@
  * @date 2018
  */
 
+import {AbstractContract} from 'web3-eth-contract';
 import MethodFactory from './MethodFactory';
 import Eth from '../Eth';
-import Contract from '../Contract';
 
 export default class EthModuleFactory {
     /**
@@ -69,10 +69,10 @@ export default class EthModuleFactory {
      * @param {String} address
      * @param {Object} options
      *
-     * @returns {Contract}
+     * @returns {AbstractContract}
      */
     createContract(abi, address, options) {
-        return new Contract(
+        return new AbstractContract(
             this.provider,
             this.providersModuleFactory,
             this.methodModuleFactory,

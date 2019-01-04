@@ -4,10 +4,9 @@ import {MethodModuleFactory} from 'web3-core-method';
 import {PromiEvent} from 'web3-core-promievent';
 import {Accounts} from 'web3-eth-accounts';
 import {AbiCoder} from 'web3-eth-abi';
-import {ContractModuleFactory} from 'web3-eth-contract';
+import {ContractModuleFactory, AbstractContract} from 'web3-eth-contract';
 import {HttpProvider, ProvidersModuleFactory} from 'web3-providers';
 import Eth from '../../../src/Eth';
-import Contract from '../../../src/Contract';
 import EthModuleFactory from '../../../src/factories/EthModuleFactory';
 
 // Mocks
@@ -20,7 +19,6 @@ jest.mock('AbiCoder');
 jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('../../../src/Eth');
-jest.mock('../../../src/Contract');
 
 /**
  * EthModuleFactory test
@@ -97,7 +95,7 @@ describe('EthModuleFactoryTest', () => {
 
     it('calls createContract and returns a Contract object', () => {
        expect(ethModuleFactory.createContract({}, '', {}))
-           .toBeInstanceOf(Contract);
+           .toBeInstanceOf(AbstractContract);
     });
 
     it('calls createEthModule and returns a Contract object', () => {
