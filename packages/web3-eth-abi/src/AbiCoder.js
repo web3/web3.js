@@ -23,24 +23,18 @@
 
 import isObject from 'underscore-es/isObject';
 import isArray from 'underscore-es/isArray';
-import {AbiCoder as EthersAbi} from 'ethers/utils/abi-coder';
-
-const ethersAbiCoder = new EthersAbi((type, value) => {
-    if (type.match(/^u?int/) && !isArray(value) && (!isObject(value) || value.constructor.name !== 'BN')) {
-        return value.toString();
-    }
-    return value;
-});
 
 // TODO: Implement it by our self this can't be a dependency because of the importance of it.
 export default class AbiCoder {
     /**
      * @param {Utils} utils
+     * @param {EthersAbiCoder} ethersAbiCoder
      *
      * @constructor
      */
-    constructor(utils) {
+    constructor(utils, ethersAbiCoder) {
         this.utils = utils;
+        this.ethersAbiCoder = ethersAbiCoder;
     }
 
     /**
@@ -102,7 +96,7 @@ export default class AbiCoder {
      * @returns {String} encoded list of params
      */
     encodeParameters(types, params) {
-        return ethersAbiCoder.encode(this._mapTypes(types), params);
+        return this.ethersAbiCoder.encode(this._mapTypes(types), params);
     }
 
     /**
@@ -116,7 +110,7 @@ export default class AbiCoder {
      */
     _mapTypes(types) {
         const mappedTypes = [];
-        types.forEach((type) => {
+        types.forEach(type => {
             if (this._isSimplifiedStructFormat(type)) {
                 const structName = Object.keys(type)[0];
                 mappedTypes.push(
@@ -178,12 +172,15 @@ export default class AbiCoder {
      */
     _mapStructToCoderFormat(struct) {
         const components = [];
-        Object.keys(struct).forEach((key) => {
+        Object.keys(struct).forEach(key => {
             if (typeof struct[key] === 'object') {
                 components.push(
-                    Object.assign(this._mapStructNameAndType(key), {
-                        components: this._mapStructToCoderFormat(struct[key])
-                    })
+                    Object.assign(
+                        this._mapStructNameAndType(key),
+                        {
+                            components: this._mapStructToCoderFormat(struct[key])
+                        }
+                    )
                 );
 
                 return;
@@ -244,7 +241,7 @@ export default class AbiCoder {
             throw new Error("Returned values aren't valid, did it run Out of Gas?");
         }
 
-        const res = ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`),
+        const res = this.ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`),
               returnValues = {};
 
         outputs.forEach((output, i) => {
