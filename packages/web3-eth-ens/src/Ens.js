@@ -105,21 +105,21 @@ export default class Ens extends AbstractWeb3Module {
                 .on('confirmation', (confirmationNumber, receipt) => {
                     promiEvent.emit('confirmation', confirmationNumber, receipt);
                 })
-                .on('receipt', (receipt) => {
-                    promiEvent.emit('receipt', receipt);
-                    promiEvent.resolve(receipt);
-
+                .on('receipt', receipt => {
                     if (isFunction(callback)) {
                         callback(receipt);
                     }
-                })
-                .on('error', (error) => {
-                    promiEvent.emit('error', error);
-                    promiEvent.reject(error);
 
+                    promiEvent.emit('receipt', receipt);
+                    promiEvent.resolve(receipt);
+                })
+                .on('error', error => {
                     if (isFunction(callback)) {
                         callback(error);
                     }
+
+                    promiEvent.emit('error', error);
+                    promiEvent.reject(error);
                 });
         });
 
@@ -169,20 +169,20 @@ export default class Ens extends AbstractWeb3Module {
                     promiEvent.emit('confirmation', confirmationNumber, receipt);
                 })
                 .on('receipt', (receipt) => {
-                    promiEvent.emit('receipt', receipt);
-                    promiEvent.resolve(receipt);
-
                     if (isFunction(callback)) {
                         callback(receipt);
                     }
+
+                    promiEvent.emit('receipt', receipt);
+                    promiEvent.resolve(receipt);
                 })
                 .on('error', (error) => {
-                    promiEvent.emit('error', error);
-                    promiEvent.reject(error);
-
                     if (isFunction(callback)) {
                         callback(error);
                     }
+
+                    promiEvent.emit('error', error);
+                    promiEvent.reject(error);
                 });
         });
 
@@ -231,20 +231,20 @@ export default class Ens extends AbstractWeb3Module {
                     promiEvent.emit('confirmation', confirmationNumber, receipt);
                 })
                 .on('receipt', (receipt) => {
-                    promiEvent.emit('receipt', receipt);
-                    promiEvent.resolve(receipt);
-
                     if (isFunction(callback)) {
                         callback(receipt);
                     }
+
+                    promiEvent.emit('receipt', receipt);
+                    promiEvent.resolve(receipt);
                 })
                 .on('error', (error) => {
-                    promiEvent.emit('error', error);
-                    promiEvent.reject(error);
-
                     if (isFunction(callback)) {
                         callback(error);
                     }
+
+                    promiEvent.emit('error', error);
+                    promiEvent.reject(error);
                 });
         });
 
@@ -285,7 +285,7 @@ export default class Ens extends AbstractWeb3Module {
         const promiEvent = new this.registry.PromiEvent();
 
         this.registry.resolver(name).then(resolver => {
-            resolver.methods.multihash(hash).send(sendOptions, callback)
+            resolver.methods.setMultihash(hash).send(sendOptions, callback)
                 .on('transactionHash', transactionHash => {
                     promiEvent.emit('transactionHash', transactionHash);
                 })
@@ -293,20 +293,21 @@ export default class Ens extends AbstractWeb3Module {
                     promiEvent.emit('confirmation', confirmationNumber, receipt);
                 })
                 .on('receipt', (receipt) => {
-                    promiEvent.emit('receipt', receipt);
-                    promiEvent.resolve(receipt);
-
                     if (isFunction(callback)) {
                         callback(receipt);
                     }
+
+                    promiEvent.emit('receipt', receipt);
+                    promiEvent.resolve(receipt);
+
                 })
                 .on('error', (error) => {
-                    promiEvent.emit('error', error);
-                    promiEvent.reject(error);
-
                     if (isFunction(callback)) {
                         callback(error);
                     }
+
+                    promiEvent.emit('error', error);
+                    promiEvent.reject(error);
                 });
         });
 
