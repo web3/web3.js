@@ -7,5 +7,9 @@ module.exports = jestConfig({
     'EstimateGasMethod': 'web3-core-method',
     'GetPastLogsMethod': 'web3-core-method',
     'Accounts': 'web3-eth-accounts',
+    'HttpProvider': 'web3-providers',
+    'ProvidersModuleFactory': 'web3-providers',
+    'ProviderDetector': 'web3-providers',
+    'ProviderResolver': 'web3-providers',
     'Utils': 'web3-utils',
 });

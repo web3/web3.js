@@ -32,7 +32,6 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @param {AbiCoder} abiCoder
      * @param {Object} utils
      * @param {Object} formatters
-     * @param {Accounts} accounts
      * @param {Object} abi
      * @param {String} address
      * @param {Object} options
@@ -48,7 +47,6 @@ export default class AbstractContract extends AbstractWeb3Module {
         abiCoder,
         utils,
         formatters,
-        accounts,
         abi = AbstractWeb3Module.throwIfMissing('abi'),
         address,
         options
@@ -58,11 +56,10 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.abiCoder = abiCoder;
         this.utils = utils;
         this.formatters = formatters;
-        this.accounts = accounts;
-        this.abiMapper = contractModuleFactory.createAbiMapper();
+        this.abiMapper = this.contractModuleFactory.createAbiMapper();
         this.options = options;
         this.PromiEvent = PromiEvent;
-        this.methodFactory = contractModuleFactory.createMethodFactory();
+        this.methodFactory = this.contractModuleFactory.createMethodFactory();
         this.abiModel = this.abiMapper.map(abi);
 
         if (address) {
@@ -80,7 +77,6 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.events = this.contractModuleFactory.createEventSubscriptionsProxy(
             this,
             this.abiModel,
-            this.methodController,
             this.PromiEvent
         );
     }
@@ -106,7 +102,7 @@ export default class AbstractContract extends AbstractWeb3Module {
             delete options.fromBlock;
         }
 
-        const eventSubscription = this.events[event](options, callback);
+        const eventSubscription = this.events[eventName](options, callback);
 
         eventSubscription.on('data', () => {
             eventSubscription.unsubscribe();
@@ -126,18 +122,20 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @returns {Promise<Array>}
      */
     getPastEvents(eventName, options, callback) {
-        if (!this.options.jsonInterface.hasEvent(eventName)) {
-            throw new Error(`Event with name "${eventName}does not exists.`);
-        }
+        return new Promise(async (resolve, reject) => {
+            if (!this.abiModel.hasEvent(eventName)) {
+                reject(new Error(`Event with name "${eventName}" does not exists.`));
+            }
 
-        const pastEventLogsMethod = this.methodFactory.createPastEventLogsMethod(
-            this.options.jsonInterface.getEvent(eventName)
-        );
+            const pastEventLogsMethod = this.methodFactory.createPastEventLogsMethod(
+                this.abiModel.getEvent(eventName)
+            );
 
-        pastEventLogsMethod.parameters = [options];
-        pastEventLogsMethod.callback = callback;
+            pastEventLogsMethod.parameters = [options];
+            pastEventLogsMethod.callback = callback;
 
-        return pastEventLogsMethod.execute(this);
+            return resolve(await pastEventLogsMethod.execute(this));
+        });
     }
 
     /**
@@ -162,38 +160,24 @@ export default class AbstractContract extends AbstractWeb3Module {
      */
     clone() {
         const contract = new this.constructor(
-            this.provider,
+            this.currentProvider,
             this.providersModuleFactory,
-            this.providers,
             this.methodModuleFactory,
             this.contractModuleFactory,
             this.PromiEvent,
             this.abiCoder,
             this.utils,
             this.formatters,
-            this.accounts,
-            this.abi,
-            null,
+            {},
+            this.address,
             this.options
         );
 
         contract.abiModel = this.abiModel;
+        contract.methods.abiModel = this.abiModel;
+        contract.events.abiModel = this.abiModel;
 
         return contract;
-    }
-
-    /**
-     * Sets the currentProvider and provider property
-     *
-     * @method setProvider
-     *
-     * @param {Object|String} provider
-     * @param {Net} net
-     *
-     * @returns {Boolean}
-     */
-    setProvider(provider, net) {
-        return !!(super.setProvider(provider, net) && this.accounts.setProvider(provider, net));
     }
 
     /**
@@ -218,89 +202,5 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.abiModel = this.abiMapper.map(value);
         this.methods.abiModel = this.abiModel;
         this.events.abiModel = this.abiModel;
-    }
-
-    /**
-     * Sets the defaultGasPrice property on the current object and the accounts module
-     *
-     * @property defaultGasPrice
-     *
-     * @param {String} value
-     */
-    set defaultGasPrice(value) {
-        super.defaultGasPrice = value;
-        this.accounts.defaultGasPrice = value;
-    }
-
-    /**
-     * Sets the defaultGas property on the current object and the accounts module
-     *
-     * @property defaultGas
-     *
-     * @param {Number} value
-     */
-    set defaultGas(value) {
-        super.defaultGas = value;
-        this.accounts.defaultGas = value;
-    }
-
-    /**
-     * Sets the transactionBlockTimeout property on the current object and the accounts module
-     *
-     * @property transactionBlockTimeout
-     *
-     * @param {Number} value
-     */
-    set transactionBlockTimeout(value) {
-        super.transactionBlockTimeout = value;
-        this.accounts.transactionBlockTimeout = value;
-    }
-
-    /**
-     * Sets the transactionConfirmationBlocks property on the current object and the accounts module
-     *
-     * @property transactionConfirmationBlocks
-     *
-     * @param {Number} value
-     */
-    set transactionConfirmationBlocks(value) {
-        super.transactionConfirmationBlocks = value;
-        this.accounts.transactionConfirmationBlocks = value;
-    }
-
-    /**
-     * Sets the transactionPollingTimeout property on the current object and the accounts module
-     *
-     * @property transactionPollingTimeout
-     *
-     * @param {Number} value
-     */
-    set transactionPollingTimeout(value) {
-        super.transactionPollingTimeout = value;
-        this.accounts.transactionPollingTimeout = value;
-    }
-
-    /**
-     * Sets the defaultAccount property on the current object and the accounts module
-     *
-     * @property defaultAccount
-     *
-     * @param {String} value
-     */
-    set defaultAccount(value) {
-        super.defaultAccount = value;
-        this.accounts.defaultAccount = value;
-    }
-
-    /**
-     * Sets the defaultBlock property on the current object and the accounts module
-     *
-     * @property defaultBlock
-     *
-     * @param value
-     */
-    set defaultBlock(value) {
-        super.defaultBlock = value;
-        this.accounts.defaultBlock = value;
     }
 }

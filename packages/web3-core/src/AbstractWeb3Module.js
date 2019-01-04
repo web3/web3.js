@@ -21,7 +21,7 @@
  */
 
 import isObject from 'underscore-es/isObject';
-import {toChecksumAddress} from 'web3-utils'; // TODO: Maybe this could be removed with a web3-core-types module
+import {toChecksumAddress} from 'web3-utils'; // TODO: This could be removed with a web3-core-types module
 
 export default class AbstractWeb3Module {
     /**
@@ -58,7 +58,7 @@ export default class AbstractWeb3Module {
             return this.providersModuleFactory.createBatchRequest(this);
         };
 
-        if (methodFactory !== null || typeof methodFactory !== 'undefined') {
+        if (methodFactory !== null) {
             this.methodFactory = methodFactory;
 
             return methodModuleFactory.createMethodProxy(

@@ -32,6 +32,7 @@ const ethersAbiCoder = new EthersAbi((type, value) => {
     return value;
 });
 
+// TODO: Implement it by our self this can't be a dependency because of the importance of it.
 export default class AbiCoder {
     /**
      * @param {Utils} utils

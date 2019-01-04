@@ -24,6 +24,7 @@ import isObject from 'underscore-es/isObject';
 import isString from 'underscore-es/isString';
 import * as swarm from 'swarm-js';
 
+// TODO: Refactor the complete module and implement the swarm API correct.
 export default class Bzz {
     /**
      * @param {Object|String} provider
