@@ -22,17 +22,17 @@
 
 import {MethodModuleFactory} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
-import {Network} from 'web3-net';
-import {ProvidersModuleFactory} from 'web3-providers';
-import * as Utils from 'web3-utils';
-import {Accounts} from 'web3-eth-accounts';
-import {Personal} from 'web3-eth-personal';
-import {Ens} from 'web3-eth-ens';
+import {PromiEvent} from 'web3-core-promievent';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
+import {Accounts} from 'web3-eth-accounts';
+import {Ens} from 'web3-eth-ens';
+import {ContractModuleFactory} from 'web3-eth-contract';
+import {Personal} from 'web3-eth-personal';
 import {AbiCoder} from 'web3-eth-abi';
 import {Iban} from 'web3-eth-iban';
-import {ContractModuleFactory} from 'web3-eth-contract';
-import {PromiEvent} from 'web3-core-promievent';
+import {ProvidersModuleFactory} from 'web3-providers';
+import {Network} from 'web3-net';
+import * as Utils from 'web3-utils';
 import EthModuleFactory from './factories/EthModuleFactory';
 
 /**
