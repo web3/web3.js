@@ -61,12 +61,11 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.PromiEvent = PromiEvent;
         this.methodFactory = this.contractModuleFactory.createMethodFactory();
         this.abiModel = this.abiMapper.map(abi);
+        this.options = options;
 
         if (address) {
             this.address = address;
         }
-
-        this.options = options;
 
         this.methods = this.contractModuleFactory.createMethodsProxy(
             this,
@@ -79,6 +78,52 @@ export default class AbstractContract extends AbstractWeb3Module {
             this.abiModel,
             this.PromiEvent
         );
+    }
+
+    /**
+     * Returns the jsonInterface
+     *
+     * @property abiModel
+     *
+     * @returns {AbiModel}
+     */
+    get jsonInterface() {
+        return this.abiModel;
+    }
+
+    /**
+     * Sets the abiModel property
+     *
+     * @property abiModel
+     *
+     * @param {Object} value
+     */
+    set jsonInterface(value) {
+        this.abiModel = this.abiMapper.map(value);
+        this.methods.abiModel = this.abiModel;
+        this.events.abiModel = this.abiModel;
+    }
+
+    /**
+     * Getter for the contract address
+     *
+     * @property address
+     *
+     * @returns {String}
+     */
+    get address() {
+        return this.options.address;
+    }
+
+    /**
+     * Setter for the contract address
+     *
+     * @property address
+     *
+     * @param {String} value
+     */
+    set address(value) {
+        this.options.address = address;
     }
 
     /**
@@ -178,29 +223,5 @@ export default class AbstractContract extends AbstractWeb3Module {
         contract.events.abiModel = this.abiModel;
 
         return contract;
-    }
-
-    /**
-     * Returns the jsonInterface
-     *
-     * @property abiModel
-     *
-     * @returns {AbiModel}
-     */
-    get jsonInterface() {
-        return this.abiModel;
-    }
-
-    /**
-     * Sets the abiModel property
-     *
-     * @property abiModel
-     *
-     * @param {Object} value
-     */
-    set jsonInterface(value) {
-        this.abiModel = this.abiMapper.map(value);
-        this.methods.abiModel = this.abiModel;
-        this.events.abiModel = this.abiModel;
     }
 }

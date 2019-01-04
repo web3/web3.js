@@ -19,7 +19,6 @@
 
 import Ens from '../Ens';
 import Registry from '../contracts/Registry';
-import ResolverMethodHandler from '../handlers/ResolverMethodHandler';
 
 export default class EnsModuleFactory {
     /**
@@ -27,20 +26,51 @@ export default class EnsModuleFactory {
      *
      * @method createENS
      *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {ContractModuleFactory} contractModuleFactory
+     * @param {PromiEvent} promiEvent
+     * @param {AbiCoder} abiCoder
+     * @param {Utils} utils
+     * @param {Object} formatters
      * @param {Network} net
-     * @param {Accounts} accounts
-     * @param {Contract} Contract
-     * @param {Object} registryAbi
-     * @param {Object} resolverAbi
-     * @param {PromiEvent} PromiEvent
+     * @param {Object} registryOptions
+     * @param {Object} ensModuleOptions
      *
      * @returns {Ens}
      */
-    createENS(provider, net, accounts, Contract, registryAbi, resolverAbi, PromiEvent) {
-        const registry = this.createRegistry(provider, net, accounts, Contract, registryAbi, resolverAbi);
-
-        return new Ens(registry, this.createResolverMethodHandler(registry, PromiEvent));
+    createENS(
+        provider,
+        providersModuleFactory,
+        methodModuleFactory,
+        contractModuleFactory,
+        promiEvent,
+        abiCoder,
+        utils,
+        formatters,
+        net,
+        registryOptions,
+        ensModuleOptions
+    ) {
+        return new Ens(
+            provider,
+            providersModuleFactory,
+            methodModuleFactory,
+            ensModuleOptions,
+            this.createRegistry(
+                provider,
+                providersModuleFactory,
+                methodModuleFactory,
+                contractModuleFactory,
+                promiEvent,
+                abiCoder,
+                utils,
+                formatters,
+                registryOptions,
+                net
+            )
+        );
     }
 
     /**
@@ -48,30 +78,41 @@ export default class EnsModuleFactory {
      *
      * @method createRegistry
      *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {ContractModuleFactory} contractModuleFactory
+     * @param {PromiEvent} PromiEvent
+     * @param {AbiCoder} abiCoder
+     * @param {Utils} utils
+     * @param {Object} formatters
+     * @param {Object} options
      * @param {Network} net
-     * @param {Accounts} accounts
-     * @param {Contract} Contract
-     * @param {Object} registryAbi
-     * @param {Object} resolverAbi
      *
      * @returns {Registry}
      */
-    createRegistry(provider, net, accounts, Contract, registryAbi, resolverAbi) {
-        return new Registry(provider, net, accounts, Contract, registryAbi, resolverAbi);
-    }
-
-    /**
-     * Returns an object of type ResolverMethodHandler
-     *
-     * @method createResolverMethodHandler
-     *
-     * @param {Registry} registry
-     * @param {PromiEvent} PromiEvent
-     *
-     * @returns {ResolverMethodHandler}
-     */
-    createResolverMethodHandler(registry, PromiEvent) {
-        return new ResolverMethodHandler(registry, PromiEvent);
+    createRegistry(
+        provider,
+        providersModuleFactory,
+        methodModuleFactory,
+        contractModuleFactory,
+        PromiEvent,
+        abiCoder,
+        utils,
+        formatters,
+        options,
+        net
+    ) {
+        return new Registry(
+            provider,
+            providersModuleFactory,
+            methodModuleFactory,
+            contractModuleFactory,
+            PromiEvent,
+            abiCoder,
+            utils,
+            formatters,
+            options,
+            net);
     }
 }

@@ -19,46 +19,58 @@
 
 import isFunction from 'underscore-es/isFunction';
 import namehash from 'eth-ens-namehash';
+import {AbstractContract} from 'web3-eth-contract';
+import {REGISTRY_ABI} from '../../ressources/ABI/Registry';
+import {RESOLVER_ABI} from '../../ressources/ABI/Resolver';
 
-export default class Registry {
+export default class Registry extends AbstractContract {
     /**
-     * // TODO: Contract should be implemented over dependency inversion and not dependency injection
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {ContractModuleFactory} contractModuleFactory
+     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {PromiEvent} PromiEvent
+     * @param {AbiCoder} abiCoder
+     * @param {Utils} utils
+     * @param {Object} formatters
+     * @param {Object} options
      * @param {Network} net
-     * @param {Accounts} accounts
-     * @param {Contract} ContractObject
-     * @param {Object} registryABI
-     * @param {Object} resolverABI
      *
      * @constructor
      */
-    constructor(provider, net, accounts, ContractObject, registryABI, resolverABI) {
+    constructor(
+        provider,
+        providersModuleFactory,
+        methodModuleFactory,
+        contractModuleFactory,
+        PromiEvent,
+        abiCoder,
+        utils,
+        formatters,
+        options,
+        net
+    ) {
+        super(
+            provider,
+            providersModuleFactory,
+            methodModuleFactory,
+            contractModuleFactory,
+            PromiEvent,
+            abiCoder,
+            utils,
+            formatters,
+            REGISTRY_ABI,
+            '',
+            options
+        );
+
         this.net = net;
-        this.accounts = accounts;
-        this.ContractObject = ContractObject;
-        this.registryABI = registryABI;
-        this.resolverABI = resolverABI;
-        this.provider = provider;
+        this.resolverContract = null;
+        this.resolverName = null;
 
-        this.contract = this.checkNetwork().then((address) => {
-            return new this.ContractObject(this.provider, this.accounts, this.registryABI, address);
+        this.checkNetwork().then(address => {
+            this.address = address;
         });
-    }
-
-    /**
-     * Sets the provider in NetworkPackage, AccountsPackage and the current object.
-     *
-     * @method setProvider
-     *
-     * @param {Object|String} provider
-     * @param {Net} net
-     *
-     * @returns {Boolean}
-     */
-    setProvider(provider, net) {
-        this.provider = this.providersPackage.resolve(provider, net);
-
-        return !!(this.net.setProvider(provider, net) && this.accounts.setProvider(provider, net) && this.provider);
     }
 
     /**
@@ -97,22 +109,48 @@ export default class Registry {
     }
 
     /**
+     * Sets the provider for the registry and resolver object.
+     * This method will also set the provider in the NetworkPackage and AccountsPackage because they are used here.
+     *
+     * @method setProvider
+     *
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+     * @param {Net} net
+     *
+     * @returns {Boolean}
+     */
+    setProvider(provider, net) {
+        if (this.resolverContract) {
+            return !!(super.setProvider(provider, net) && this.resolverContract.setProvider(provider, net));
+        }
+
+        return super.setProvider(provider, net);
+    }
+
+    /**
      * Returns the resolver contract associated with a name.
      *
      * @method resolver
      *
      * @param {String} name
      *
-     * @returns {Promise<Contract>}
+     * @returns {Promise<AbstractContract>}
      */
-    resolver(name) {
-        return this.contract
-            .then((contract) => {
-                return contract.methods.resolver(namehash.hash(name)).call();
-            })
-            .then((address) => {
-                return new this.Contract.Contract(this.provider, this.accounts, this.resolverABI, address);
-            });
+    async resolver(name) {
+        if(this.resolverName === name && this.resolverContract) {
+            return this.resolverContract;
+        }
+
+        const address = await this.methods.resolver(namehash.hash(name)).call();
+
+        const clone = this.clone();
+        clone.jsonInterface = RESOLVER_ABI;
+        clone.address = address;
+
+        this.resolverName = name;
+        this.resolverContract = clone;
+
+        return clone;
     }
 
     /**
@@ -123,30 +161,27 @@ export default class Registry {
      *
      * @returns {Promise<String>}
      */
-    checkNetwork() {
+    async checkNetwork() {
         const ensAddresses = {
             main: '0x314159265dD8dbb310642f98f50C066173C1259b',
             ropsten: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
             rinkeby: '0xe7410170f87102df0055eb195163a03b7f2bff4a'
         };
 
-        return this.net
-            .getBlock('latest', false)
-            .then((block) => {
-                const headAge = new Date() / 1000 - block.timestamp;
-                if (headAge > 3600) {
-                    throw new Error(`Network not synced; last block was ${headAge} seconds ago`);
-                }
+        const block = await this.net.getBlock('latest', false);
+        const headAge = new Date() / 1000 - block.timestamp;
 
-                return this.net.getNetworkType();
-            })
-            .then((networkType) => {
-                const addr = ensAddresses[networkType];
-                if (typeof addr === 'undefined') {
-                    throw new TypeError(`ENS is not supported on network ${networkType}`);
-                }
+        if (headAge > 3600) {
+            throw new Error(`Network not synced; last block was ${headAge} seconds ago`);
+        }
 
-                return addr;
-            });
+        const networkType = await this.net.getNetworkType();
+        const address = ensAddresses[networkType];
+
+        if (typeof address === 'undefined') {
+            throw new TypeError(`ENS is not supported on network ${networkType}`);
+        }
+
+        return address;
     }
 }

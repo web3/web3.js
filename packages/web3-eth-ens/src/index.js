@@ -17,25 +17,38 @@
  * @date 2018
  */
 
-import {Contract} from 'web3-eth-contract';
 import {PromiEvent} from 'web3-core-promievent';
-import {REGISTRY_ABI} from '../ressources/ABI/Registry';
-import {RESOLVER_ABI} from '../ressources/ABI/Resolver';
+import {ProvidersModuleFactory} from 'web3-providers';
+import * as Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import {MethodModuleFactory} from 'web3-core-method';
+import {ContractModuleFactory} from 'web3-eth-contract';
+import {AbiCoder} from 'web3-eth-abi';
+import {Network} from 'web3-net';
 import EnsModuleFactory from './factories/EnsModuleFactory';
 
 /**
- * TODO: Contracts should be implemented over dependency inversion not injection.
- * TODO: Refactor Ens
  * Returns the Ens object
  *
  * @method Ens
  *
- * @param {AbstractProviderAdapter|EthereumProvider} provider
- * @param {Network} net
- * @param {Accounts} accounts
+ * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+ * @param {Object} ensModuleOptions
  *
  * @returns {Ens}
  */
-export const Ens = (provider, net, accounts) => {
-    return new EnsModuleFactory().createENS(provider, net, accounts, Contract, REGISTRY_ABI, RESOLVER_ABI, PromiEvent);
+export const Ens = (provider, ensModuleOptions) => {
+    return new EnsModuleFactory().createENS(
+        provider,
+        new ProvidersModuleFactory(),
+        new MethodModuleFactory(),
+        new ContractModuleFactory(),
+        PromiEvent,
+        new AbiCoder(),
+        Utils,
+        formatters,
+        new Network(),
+        {},
+        ensModuleOptions
+    );
 };
