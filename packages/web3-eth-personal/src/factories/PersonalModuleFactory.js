@@ -38,7 +38,7 @@ export default class PersonalModuleFactory {
     /**
      * Returns an object of type Personal
      *
-     * @method createPersonalModule
+     * @method createPersonal
      *
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
@@ -48,7 +48,7 @@ export default class PersonalModuleFactory {
      *
      * @returns {Personal}
      */
-    createPersonalModule(provider, providersModuleFactory, methodModuleFactory, net, options) {
+    createPersonal(provider, providersModuleFactory, methodModuleFactory, net, options) {
         return new Personal(
             provider,
             providersModuleFactory,
