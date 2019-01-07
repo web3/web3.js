@@ -28,8 +28,8 @@ describe('PersonalModuleFactoryTest', () => {
             .toEqual(formatters);
     });
 
-    it('calls createPersonal and returns the expected Personal object', () => {
-       expect(personalModuleFactory.createPersonal({}, {}, {}, {}, {}))
+    it('calls createPersonalModule and returns the expected Personal object', () => {
+       expect(personalModuleFactory.createPersonalModule({}, {}, {}, {}, {}))
            .toBeInstanceOf(Personal);
     });
 

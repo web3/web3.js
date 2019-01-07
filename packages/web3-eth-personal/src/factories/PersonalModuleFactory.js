@@ -48,7 +48,7 @@ export default class PersonalModuleFactory {
      *
      * @returns {Personal}
      */
-    createPersonal(provider, providersModuleFactory, methodModuleFactory, net, options) {
+    createPersonalModule(provider, providersModuleFactory, methodModuleFactory, net, options) {
         return new Personal(
             provider,
             providersModuleFactory,
