@@ -143,9 +143,10 @@ export default class Iban {
 
         address = address.replace('0x', '').replace('0X', '');
 
-        const asBn = new BigNumber(address, 16);
-        const base36 = asBn.toString(36);
-        const padded = leftPad(base36, 15);
+        const asBn = new BigNumber(address, 16),
+              base36 = asBn.toString(36),
+              padded = leftPad(base36, 15);
+
         return Iban.fromBban(padded.toUpperCase());
     }
 
