@@ -21,24 +21,28 @@ describe('AbstractMethodFactoryTest', () => {
         methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
 
         abstractMethodFactory = new AbstractMethodFactory(
-            {
-                call: AbstractCallMethod,
-                send: AbstractSendMethod
-            },
             methodModuleFactoryMock,
             {},
             {}
         );
+
+        abstractMethodFactory.methods = {
+            call: AbstractCallMethod,
+            send: AbstractSendMethod
+        };
     });
 
     it('calls hasMethod and returns true', () => {
-        abstractMethodFactory = new AbstractMethodFactory({call: true}, {}, {}, {});
+        abstractMethodFactory = new AbstractMethodFactory({}, {}, {});
+        abstractMethodFactory.methods = {call: true};
+
         expect(abstractMethodFactory.hasMethod('call'))
             .toBeTruthy();
     });
 
     it('calls hasMethod and returns false', () => {
-        abstractMethodFactory = new AbstractMethodFactory({}, {}, {}, {});
+        abstractMethodFactory = new AbstractMethodFactory({}, {}, {});
+        abstractMethodFactory.methods = {};
 
         expect(abstractMethodFactory.hasMethod('call'))
             .toBeFalsy();
@@ -62,13 +66,13 @@ describe('AbstractMethodFactoryTest', () => {
 
     it('calls createMethod and returns SendTransactionMethod', () => {
         abstractMethodFactory = new AbstractMethodFactory(
-            {
-                sendTransaction: SendTransactionMethod
-            },
             methodModuleFactoryMock,
             {},
             {}
         );
+        abstractMethodFactory.methods = {
+            sendTransaction: SendTransactionMethod
+        };
 
         expect(abstractMethodFactory.hasMethod('sendTransaction'))
             .toBeTruthy();
@@ -79,13 +83,13 @@ describe('AbstractMethodFactoryTest', () => {
 
     it('calls createMethod and returns SignMethod', () => {
         abstractMethodFactory = new AbstractMethodFactory(
-            {
-                sign: SignMethod
-            },
             methodModuleFactoryMock,
             {},
             {}
         );
+        abstractMethodFactory.methods = {
+            sign: SignMethod
+        };
 
         expect(abstractMethodFactory.hasMethod('sign'))
             .toBeTruthy();

@@ -37,14 +37,15 @@ export default class MethodFactory extends AbstractMethodFactory {
      */
     constructor(methodModuleFactory, utils, formatters) {
         super(
-            {
-                getGasPrice: GetGasPriceMethod,
-                getTransactionCount: GetTransactionCountMethod,
-                getId: VersionMethod
-            },
             methodModuleFactory,
             utils,
             formatters
         );
+
+        this.methods = {
+            getGasPrice: GetGasPriceMethod,
+            getTransactionCount: GetTransactionCountMethod,
+            getId: VersionMethod
+        };
     }
 }

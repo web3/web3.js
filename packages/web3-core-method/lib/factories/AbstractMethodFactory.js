@@ -22,18 +22,43 @@
 
 export default class AbstractMethodFactory {
     /**
-     * @param {{name: String, method: AbstractMethod}} methods
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(methods, methodModuleFactory, utils, formatters) {
-        this.methods = methods;
+    constructor(methodModuleFactory, utils, formatters) {
         this.methodModuleFactory = methodModuleFactory;
         this.utils = utils;
         this.formatters = formatters;
+        this._methods = null;
+    }
+
+    /**
+     * Gets the methods object
+     *
+     * @property methods
+     *
+     * @returns {null|Object}
+     */
+    get methods() {
+        if(this._methods) {
+            return this._methods;
+        }
+
+        throw new Error('No methods defined for MethodFactory!');
+    }
+
+    /**
+     * Sets the methods object
+     *
+     * @property methods
+     *
+     * @param {Object} value
+     */
+    set methods(value) {
+        this._methods = value;
     }
 
     /**
