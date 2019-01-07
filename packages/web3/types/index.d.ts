@@ -49,7 +49,7 @@ export default class Web3 extends AbstractWeb3Module {
     bzz: Bzz;
 }
 
-export interface Modules {
+export interface Modules {// TODO: add net parameter
     Eth: new (provider: provider) => Eth;
     Net: new (provider: provider) => Network;
     Personal: new (provider: provider) => Personal;
