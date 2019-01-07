@@ -238,14 +238,15 @@ export default class AbiCoder {
      */
     decodeParameters(outputs, bytes) {
         if (!bytes || bytes === '0x' || bytes === '0X') {
-            throw new Error("Returned values aren't valid, did it run Out of Gas?");
+            throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
         }
 
         const res = this.ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`),
               returnValues = {};
 
+        let decodedValue;
         outputs.forEach((output, i) => {
-            let decodedValue = res[returnValues.length];
+            decodedValue = res[i];
             decodedValue = decodedValue === '0x' ? null : decodedValue;
 
             returnValues[i] = decodedValue;
@@ -263,7 +264,7 @@ export default class AbiCoder {
      *
      * @method decodeLog
      *
-     * @param {Object} inputs
+     * @param {Array} inputs
      * @param {String} data
      * @param {Array} topics
      *
@@ -276,7 +277,8 @@ export default class AbiCoder {
             topics = [topics];
         }
 
-        // TODO check for anonymous logs?
+        // TODO: check for anonymous logs?
+        // TODO: Refactor this to one loop
         const notIndexedInputs = [],
               indexedParams = [];
 

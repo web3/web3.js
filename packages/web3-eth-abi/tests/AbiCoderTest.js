@@ -145,4 +145,88 @@ describe('AbiCoderTest', () => {
                 }
             ]);
     });
+
+    it('calls encodeFunctionCall and returns the expected string', () => {
+        Utils.sha3 = jest.fn(() => {
+            return '0x000000000';
+        });
+
+        ethersAbiCoderMock.encode
+            .mockReturnValueOnce('0x0');
+
+        expect(abiCoder.encodeFunctionCall({inputs: [{components: true}]}, []))
+            .toEqual('0x000000000');
+
+        expect(ethersAbiCoderMock.encode)
+            .toHaveBeenCalledWith([{components: true}], []);
+    });
+
+    it('calls decodeParameters and returns the expected object', () => {
+        ethersAbiCoderMock.decode
+            .mockReturnValueOnce(['0']);
+
+        expect(abiCoder.decodeParameters([{name: 'output'}], '0x0'))
+            .toEqual({output: '0', '0': '0'});
+
+        expect(ethersAbiCoderMock.decode)
+            .toHaveBeenCalledWith([{name: 'output'}], '0x0');
+    });
+
+    it('calls decodeParameters and throws an error', () => {
+        expect(() => {
+            abiCoder.decodeParameters([], '0x');
+        }).toThrow('Returned values aren\'t valid, did it run Out of Gas?');
+
+        expect(() => {
+            abiCoder.decodeParameters([], '0X');
+        }).toThrow('Returned values aren\'t valid, did it run Out of Gas?');
+
+        expect(() => {
+            abiCoder.decodeParameters([]);
+        }).toThrow('Returned values aren\'t valid, did it run Out of Gas?');
+    });
+
+    it('calls decodeParameter and returns the expected object', () => {
+        ethersAbiCoderMock.decode
+            .mockReturnValueOnce(['0']);
+
+        expect(abiCoder.decodeParameter({name: 'output'}, '0x0'))
+            .toEqual('0');
+
+        expect(ethersAbiCoderMock.decode)
+            .toHaveBeenCalledWith([{name: 'output'}], '0x0');
+    });
+
+    it('calls decodeLog and returns the expected object', () => {
+        ethersAbiCoderMock.decode
+            .mockReturnValueOnce(['0'])
+            .mockReturnValueOnce(['', '', '0']);
+
+        const inputs = [
+            {
+                components: true,
+                indexed: true,
+                type: 'bool'
+            },
+            {
+                components: true,
+                indexed: true,
+                type: ''
+            },
+            {
+                components: true,
+                indexed: false,
+                name: 'input'
+            }
+        ];
+
+       expect(abiCoder.decodeLog(inputs, '0x0', ['0x0', '0x0']))
+           .toEqual({'0': '0', '1': '0x0', '2': '0', input: '0'});
+
+        expect(ethersAbiCoderMock.decode)
+            .toHaveBeenNthCalledWith(1, [inputs[0].type], '0x0');
+
+        expect(ethersAbiCoderMock.decode)
+            .toHaveBeenNthCalledWith(2, [inputs[2]], '0x0');
+    });
 });

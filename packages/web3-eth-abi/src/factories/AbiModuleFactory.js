@@ -38,7 +38,7 @@ export default class AbiModuleFactory {
     createAbiCoder(utils) {
         return new AbiCoder(
             utils,
-            new EthersAbiCoder((type, value) => {
+            new EthersAbiCoder((type, value) => { // TODO: Move this anonymous method to a object method otherwise it's not possible to test this.
                 if (type.match(/^u?int/) && !isArray(value) && (!isObject(value) || value.constructor.name !== 'BN')) {
                     return value.toString();
                 }
