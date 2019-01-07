@@ -47,12 +47,12 @@ export default class AbstractWeb3Module {
         this._currentProvider = this.providerResolver.resolve(provider);
 
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
-        this.defaultBlock = options.defaultBlock;
-        this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
-        this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
-        this.transactionPollingTimeout = options.transactionPollingTimeout || 15;
-        this.defaultGasPrice = options.defaultGasPrice;
-        this.defaultGas = options.defaultGas;
+        this._defaultBlock = options.defaultBlock;
+        this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
+        this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
+        this._transactionPollingTimeout = options.transactionPollingTimeout || 15;
+        this._defaultGasPrice = options.defaultGasPrice;
+        this._defaultGas = options.defaultGas;
 
         this.BatchRequest = () => {
             return this.providersModuleFactory.createBatchRequest(this);
@@ -66,6 +66,138 @@ export default class AbstractWeb3Module {
                 this.methodFactory
             );
         }
+    }
+
+    /**
+     * Getter for the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @returns {null|String}
+     */
+    get defaultBlock() {
+        return this._defaultBlock;
+    }
+
+    /**
+     * Setter for the defaultAccount property
+     *
+     * @property defaultBlock
+     *
+     * @param {String|Number} value
+     */
+    set defaultBlock(value) {
+        this._defaultBlock = value;
+    }
+
+    /**
+     * Getter for the transactionBlockTimeout property
+     *
+     * @property transactionBlockTimeout
+     *
+     * @returns {Number}
+     */
+    get transactionBlockTimeout() {
+        return this._transactionBlockTimeout;
+    }
+
+    /**
+     * Setter for the transactionBlockTimeout property
+     *
+     * @property transactionBlockTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionBlockTimeout(value) {
+        this._transactionBlockTimeout = value;
+    }
+
+    /**
+     * Getter for the transactionConfirmationBlocks property
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @returns {Number}
+     */
+    get transactionConfirmationBlocks() {
+        return this._transactionConfirmationBlocks;
+    }
+
+    /**
+     * Setter for the transactionConfirmationBlocks property
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @param {Number} value
+     */
+    set transactionConfirmationBlocks(value) {
+        this._transactionConfirmationBlocks = value;
+    }
+
+    /**
+     * Getter for the transactionPollingTimeout property
+     *
+     * @property transactionPollingTimeout
+     *
+     * @returns {Number}
+     */
+    get transactionPollingTimeout() {
+        return this._transactionPollingTimeout;
+    }
+
+    /**
+     * Setter for the transactionPollingTimeout property
+     *
+     * @property transactionPollingTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionPollingTimeout(value) {
+        this._transactionPollingTimeout = value;
+    }
+
+    /**
+     * Getter for the defaultGasPrice property
+     *
+     * @property defaultGasPrice
+     *
+     * @returns {Number|String}
+     */
+    get defaultGasPrice() {
+        return this._defaultGasPrice;
+    }
+
+    /**
+     * Setter for the defaultGasPrice property
+     *
+     * @property defaultGasPrice
+     *
+     * @param {Number|String} value
+     */
+    set defaultGasPrice(value) {
+        this._defaultGasPrice = value;
+    }
+
+    /**
+     * Getter for the defaultGas property
+     *
+     * @property defaultGas
+     *
+     * @returns {Number|String}
+     */
+    get defaultGas() {
+        return this._defaultGas;
+    }
+
+    /**
+     * Setter for the defaultGas property
+     *
+     * @property defaultGas
+     *
+     * @param {Number|String} value
+     */
+    set defaultGas(value) {
+        this._defaultGas = value;
     }
 
     /**

@@ -4,7 +4,8 @@ const jestConfig = require('../../jest.config');
 module.exports = jestConfig({
     'HttpProvider': 'web3-providers',
     'ProvidersModuleFactory': 'web3-providers',
-    'AbstractWeb3Module': 'web3-core',
+    'ProviderDetector': 'web3-providers',
+    'ProviderResolver': 'web3-providers',
     'MethodModuleFactory': 'web3-core-method',
     'GetPastLogsMethod': 'web3-core-method',
     'SubscriptionsFactory': 'web3-core-subscriptions',
@@ -17,5 +18,6 @@ module.exports = jestConfig({
     'Ens': 'web3-eth-ens',
     'Personal': 'web3-eth-personal',
     'Network': 'web3-net',
-    'Utils': 'web3-utils'
+    'Utils': 'web3-utils',
+    'AbstractContract': 'web3-eth-contract'
 });

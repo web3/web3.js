@@ -1,23 +1,60 @@
 import * as Utils from 'web3-utils';
-import {AbstractWeb3Module} from 'web3-core';
 import {formatters} from 'web3-core-helpers';
-import {SubscriptionsFactory, LogSubscription, AbstractSubscription} from 'web3-core-subscriptions';
-import {GetPastLogsMethod} from 'web3-core-method';
+import {AbstractSubscription, LogSubscription, SubscriptionsFactory} from 'web3-core-subscriptions';
+import {
+    CallMethod,
+    EstimateGasMethod,
+    GetAccountsMethod,
+    GetBalanceMethod,
+    GetBlockMethod,
+    GetBlockNumberMethod,
+    GetBlockTransactionCountMethod,
+    GetBlockUncleCountMethod,
+    GetCodeMethod,
+    GetCoinbaseMethod,
+    GetGasPriceMethod,
+    GetHashrateMethod,
+    GetNodeInfoMethod,
+    GetPastLogsMethod,
+    GetProtocolVersionMethod,
+    GetStorageAtMethod,
+    GetTransactionCountMethod,
+    GetTransactionFromBlockMethod,
+    GetTransactionMethod,
+    GetTransactionReceipt,
+    GetUncleMethod,
+    GetWorkMethod,
+    IsMiningMethod,
+    IsSyncingMethod,
+    MethodModuleFactory,
+    RequestAccountsMethod,
+    SendRawTransactionMethod,
+    SendTransactionMethod,
+    SignMethod,
+    SignTransactionMethod,
+    SubmitWorkMethod
+} from 'web3-core-method';
 import {AbiCoder} from 'web3-eth-abi';
 import {Accounts} from 'web3-eth-accounts';
 import {Ens} from 'web3-eth-ens';
 import {Iban} from 'web3-eth-iban';
 import {Personal} from 'web3-eth-personal';
 import {Network} from 'web3-net';
+import {AbstractContract} from 'web3-eth-contract';
+import {HttpProvider, ProviderDetector, ProviderResolver, ProvidersModuleFactory} from 'web3-providers';
 import EthModuleFactory from '../../src/factories/EthModuleFactory';
 import MethodFactory from '../../src/factories/MethodFactory';
 import Eth from '../../src/Eth';
 
 // Mocks
+jest.mock('HttpProvider');
+jest.mock('ProvidersModuleFactory');
+jest.mock('ProviderDetector');
+jest.mock('ProviderResolver');
+jest.mock('MethodModuleFactory');
 jest.mock('AbstractSubscription');
 jest.mock('LogSubscription');
 jest.mock('GetPastLogsMethod');
-jest.mock('AbstractWeb3Module');
 jest.mock('SubscriptionsFactory');
 jest.mock('AbiCoder');
 jest.mock('Accounts');
@@ -26,7 +63,7 @@ jest.mock('Personal');
 jest.mock('Network');
 jest.mock('Utils');
 jest.mock('formatters');
-jest.mock('../../src/factories/MethodFactory');
+jest.mock('AbstractContract');
 jest.mock('../../src/factories/EthModuleFactory');
 
 /**
@@ -34,19 +71,50 @@ jest.mock('../../src/factories/EthModuleFactory');
  */
 describe('EthTest', () => {
     let eth,
-        methodFactoryMock,
+        providerMock,
+        providersModuleFactoryMock,
+        providerDetectorMock,
+        providerResolverMock,
+        methodModuleFactoryMock,
+        methodFactory,
         ethModuleFactoryMock,
         networkMock,
         accountsMock,
         personalMock,
         abiCoderMock,
         ensMock,
-        subscriptionsFactoryMock,
-        abstractWeb3ModuleMock;
+        subscriptionsFactoryMock;
 
     beforeEach(() => {
-        new MethodFactory();
-        methodFactoryMock = MethodFactory.mock.instances[0];
+        new HttpProvider();
+        providerMock = HttpProvider.mock.instances[0];
+
+        new ProvidersModuleFactory();
+        providersModuleFactoryMock = ProvidersModuleFactory.mock.instances[0];
+
+        new ProviderDetector();
+        providerDetectorMock = ProviderDetector.mock.instances[0];
+        providerDetectorMock.detect = jest.fn(() => {
+            return null;
+        });
+
+        new ProviderResolver();
+        providerResolverMock = ProviderResolver.mock.instances[0];
+        providerResolverMock.resolve = jest.fn(() => {
+            return providerMock;
+        });
+
+        providersModuleFactoryMock.createProviderDetector
+            .mockReturnValueOnce(providerDetectorMock);
+
+        providersModuleFactoryMock.createProviderResolver
+            .mockReturnValueOnce(providerResolverMock);
+
+        new MethodModuleFactory();
+        methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
+        methodModuleFactoryMock.createMethodProxy = jest.fn();
+
+        methodFactory = new MethodFactory(methodModuleFactoryMock, Utils, formatters);
 
         new EthModuleFactory();
         ethModuleFactoryMock = EthModuleFactory.mock.instances[0];
@@ -70,10 +138,10 @@ describe('EthTest', () => {
         subscriptionsFactoryMock = SubscriptionsFactory.mock.instances[0];
 
         eth = new Eth(
-            {},
-            {},
-            {},
-            methodFactoryMock,
+            providerMock,
+            providersModuleFactoryMock,
+            methodModuleFactoryMock,
+            methodFactory,
             ethModuleFactoryMock,
             networkMock,
             accountsMock,
@@ -86,9 +154,6 @@ describe('EthTest', () => {
             subscriptionsFactoryMock,
             {}
         );
-
-        abstractWeb3ModuleMock = AbstractWeb3Module.mock.instances[0];
-        eth.methodFactory = methodFactoryMock;
     });
 
     it('constructor check', () => {
@@ -126,11 +191,40 @@ describe('EthTest', () => {
             .toBeInstanceOf(Function);
     });
 
-    it('calls clearSubscriptions', () => {
-        eth.clearSubscriptions();
-
-        expect(abstractWeb3ModuleMock.clearSubscriptions)
-            .toHaveBeenCalled();
+    it('JSON-RPC methods check', () => {
+        expect(eth.methodFactory.methods)
+            .toEqual({
+                getNodeInfo: GetNodeInfoMethod,
+                getProtocolVersion: GetProtocolVersionMethod,
+                getCoinbase: GetCoinbaseMethod,
+                isMining: IsMiningMethod,
+                getHashrate: GetHashrateMethod,
+                isSyncing: IsSyncingMethod,
+                getGasPrice: GetGasPriceMethod,
+                getAccounts: GetAccountsMethod,
+                getBlockNumber: GetBlockNumberMethod,
+                getBalance: GetBalanceMethod,
+                getStorageAt: GetStorageAtMethod,
+                getCode: GetCodeMethod,
+                getBlock: GetBlockMethod,
+                getUncle: GetUncleMethod,
+                getBlockTransactionCount: GetBlockTransactionCountMethod,
+                getBlockUncleCount: GetBlockUncleCountMethod,
+                getTransaction: GetTransactionMethod,
+                getTransactionFromBlock: GetTransactionFromBlockMethod,
+                getTransactionReceipt: GetTransactionReceipt,
+                getTransactionCount: GetTransactionCountMethod,
+                sendSignedTransaction: SendRawTransactionMethod,
+                signTransaction: SignTransactionMethod,
+                sendTransaction: SendTransactionMethod,
+                sign: SignMethod,
+                call: CallMethod,
+                estimateGas: EstimateGasMethod,
+                submitWork: SubmitWorkMethod,
+                getWork: GetWorkMethod,
+                getPastLogs: GetPastLogsMethod,
+                requestAccounts: RequestAccountsMethod
+            });
     });
 
     it('sets the defaultGasPrice property', () => {
@@ -140,7 +234,7 @@ describe('EthTest', () => {
         expect(eth.initiatedContracts[0].defaultGasPrice)
             .toEqual(10);
 
-        expect(abstractWeb3ModuleMock.defaultGasPrice)
+        expect(eth.defaultGasPrice)
             .toEqual(10);
 
         expect(networkMock.defaultGasPrice)
@@ -157,7 +251,7 @@ describe('EthTest', () => {
         expect(eth.initiatedContracts[0].defaultGas)
             .toEqual(10);
 
-        expect(abstractWeb3ModuleMock.defaultGas)
+        expect(eth.defaultGas)
             .toEqual(10);
 
         expect(networkMock.defaultGas)
@@ -174,7 +268,7 @@ describe('EthTest', () => {
         expect(eth.initiatedContracts[0].transactionBlockTimeout)
             .toEqual(10);
 
-        expect(abstractWeb3ModuleMock.transactionBlockTimeout)
+        expect(eth.transactionBlockTimeout)
             .toEqual(10);
 
         expect(networkMock.transactionBlockTimeout)
@@ -191,7 +285,7 @@ describe('EthTest', () => {
         expect(eth.initiatedContracts[0].transactionConfirmationBlocks)
             .toEqual(10);
 
-        expect(abstractWeb3ModuleMock.transactionConfirmationBlocks)
+        expect(eth.transactionConfirmationBlocks)
             .toEqual(10);
 
         expect(networkMock.transactionConfirmationBlocks)
@@ -208,7 +302,7 @@ describe('EthTest', () => {
         expect(eth.initiatedContracts[0].transactionPollingTimeout)
             .toEqual(10);
 
-        expect(abstractWeb3ModuleMock.transactionPollingTimeout)
+        expect(eth.transactionPollingTimeout)
             .toEqual(10);
 
         expect(networkMock.transactionPollingTimeout)
@@ -220,19 +314,26 @@ describe('EthTest', () => {
 
     it('sets the defaultAccount property', () => {
         eth.initiatedContracts = [{defaultAccount: '0x0'}];
+
+        Utils.toChecksumAddress
+            .mockReturnValue('0x2');
+
         eth.defaultAccount = '0x1';
 
         expect(eth.initiatedContracts[0].defaultAccount)
-            .toEqual('0x1');
+            .toEqual('0x2');
 
-        expect(abstractWeb3ModuleMock.defaultAccount)
-            .toEqual('0x1');
+        expect(eth.defaultAccount)
+            .toEqual('0x2');
 
         expect(networkMock.defaultAccount)
             .toEqual('0x1');
 
         expect(personalMock.defaultAccount)
             .toEqual('0x1');
+
+        expect(Utils.toChecksumAddress)
+            .toHaveBeenCalled();
     });
 
     it('sets the defaultBlock property', () => {
@@ -242,7 +343,7 @@ describe('EthTest', () => {
         expect(eth.initiatedContracts[0].defaultBlock)
             .toEqual(10);
 
-        expect(abstractWeb3ModuleMock.defaultBlock)
+        expect(eth.defaultBlock)
             .toEqual(10);
 
         expect(networkMock.defaultBlock)
@@ -253,6 +354,39 @@ describe('EthTest', () => {
     });
 
     it('calls subscribe wih "logs" as type', () => {
+        new GetPastLogsMethod();
+        const getPastLogsMethodMock = GetPastLogsMethod.mock.instances[0];
+
+        const methodFactoryMock = {
+            createMethod: jest.fn(() => {
+                return getPastLogsMethodMock;
+            })
+        };
+
+        providersModuleFactoryMock.createProviderDetector
+            .mockReturnValueOnce(providerDetectorMock);
+
+        providersModuleFactoryMock.createProviderResolver
+            .mockReturnValueOnce(providerResolverMock);
+
+        eth = new Eth(
+            providerMock,
+            providersModuleFactoryMock,
+            methodModuleFactoryMock,
+            methodFactoryMock,
+            ethModuleFactoryMock,
+            networkMock,
+            accountsMock,
+            personalMock,
+            Iban,
+            abiCoderMock,
+            ensMock,
+            Utils,
+            formatters,
+            subscriptionsFactoryMock,
+            {}
+        );
+
         subscriptionsFactoryMock.createLogSubscription = jest.fn();
 
         new LogSubscription();
@@ -261,16 +395,11 @@ describe('EthTest', () => {
         logSubscriptionMock.subscribe
             .mockReturnValueOnce(logSubscriptionMock);
 
-        new GetPastLogsMethod();
-        const getPastLogsMethodMock = GetPastLogsMethod.mock.instances[0];
-
         subscriptionsFactoryMock.createLogSubscription
             .mockReturnValueOnce(logSubscriptionMock);
 
-        methodFactoryMock.createMethod
-            .mockReturnValueOnce(getPastLogsMethodMock);
-
-        const callback = () => {};
+        const callback = () => {
+        };
 
         expect(eth.subscribe('logs', {}, callback))
             .toBeInstanceOf(LogSubscription);
@@ -297,7 +426,8 @@ describe('EthTest', () => {
         subscriptionsFactoryMock.createNewHeadsSubscription
             .mockReturnValueOnce(abstractSubscriptionMock);
 
-        const callback = () => {};
+        const callback = () => {
+        };
 
         expect(eth.subscribe('newBlockHeaders', {}, callback))
             .toBeInstanceOf(AbstractSubscription);
@@ -321,7 +451,8 @@ describe('EthTest', () => {
         subscriptionsFactoryMock.createNewPendingTransactionsSubscription
             .mockReturnValueOnce(abstractSubscriptionMock);
 
-        const callback = () => {};
+        const callback = () => {
+        };
 
         expect(eth.subscribe('pendingTransactions', {}, callback))
             .toBeInstanceOf(AbstractSubscription);
@@ -345,7 +476,8 @@ describe('EthTest', () => {
         subscriptionsFactoryMock.createSyncingSubscription
             .mockReturnValueOnce(abstractSubscriptionMock);
 
-        const callback = () => {};
+        const callback = () => {
+        };
 
         expect(eth.subscribe('syncing', {}, callback))
             .toBeInstanceOf(AbstractSubscription);
@@ -359,7 +491,55 @@ describe('EthTest', () => {
 
     it('calls subscribe wih unknown type', () => {
         expect(() => {
-            eth.subscribe('NOPE', {}, () => {})
+            eth.subscribe('NOPE', {}, () => {
+            });
         }).toThrow('Unknown subscription: NOPE');
+    });
+
+    it('calls the Contract factory method from the constructor', () => {
+        ethModuleFactoryMock.createContract
+            .mockReturnValueOnce(new AbstractContract());
+
+        expect(new eth.Contract())
+            .toBeInstanceOf(AbstractContract);
+
+        expect(eth.initiatedContracts.length)
+            .toEqual(1);
+    });
+
+    it('calls setProvider and returns true', () => {
+        eth.initiatedContracts = [{
+            setProvider: jest.fn(() => {
+                return true;
+            })
+        }];
+
+        networkMock.setProvider = jest.fn();
+        personalMock.setProvider = jest.fn();
+        accountsMock.setProvider = jest.fn();
+
+        networkMock.setProvider
+            .mockReturnValueOnce(true);
+
+        personalMock.setProvider
+            .mockReturnValueOnce(true);
+
+        accountsMock.setProvider
+            .mockReturnValueOnce(true);
+
+        expect(eth.setProvider('provider', 'net'))
+            .toEqual(true);
+
+        expect(eth.initiatedContracts[0].setProvider)
+            .toHaveBeenCalledWith('provider', 'net');
+
+        expect(networkMock.setProvider)
+            .toHaveBeenCalledWith('provider', 'net');
+
+        expect(personalMock.setProvider)
+            .toHaveBeenCalledWith('provider', 'net');
+
+        expect(accountsMock.setProvider)
+            .toHaveBeenCalledWith('provider', 'net');
     });
 });
