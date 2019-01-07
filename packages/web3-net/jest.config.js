@@ -1,3 +1,6 @@
 const jestConfig = require('../../jest.config');
 
-module.exports = jestConfig({});
+module.exports = jestConfig({
+    'formatters': 'web3-core-helpers',
+    'Utils': 'web3-utils',
+});
