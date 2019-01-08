@@ -58,32 +58,6 @@ export default class Web3 extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultAccount property on the eth module and also on the shh module
-     *
-     * @property defaultAccount
-     *
-     * @param {String} value
-     */
-    set defaultAccount(value) {
-        super.defaultAccount = value;
-        this.eth.defaultAccount = value;
-        this.shh.defaultAccount = value;
-    }
-
-    /**
-     * Sets the defaultBlock property on the eth module and also on the shh module
-     *
-     * @property defaultBlock
-     *
-     * @param {Number|String} value
-     */
-    set defaultBlock(value) {
-        super.defaultBlock = value;
-        this.eth.defaultBlock = value;
-        this.shh.defaultBlock = value;
-    }
-
-    /**
      * Sets the defaultGasPrice property on the eth module and also on the shh module
      *
      * @property defaultGasPrice
@@ -94,6 +68,17 @@ export default class Web3 extends AbstractWeb3Module {
         super.defaultGasPrice = value;
         this.eth.defaultGasPrice = value;
         this.shh.defaultGasPrice = value;
+    }
+
+    /**
+     * Gets the defaultGasPrice property
+     *
+     * @property defaultGasPrice
+     *
+     * @returns {String|Number} value
+     */
+    get defaultGasPrice() {
+        return super.defaultGasPrice;
     }
 
     /**
@@ -110,42 +95,134 @@ export default class Web3 extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the timeoutBlock property on the eth module and also on the shh module
+     * Gets the defaultGas property
      *
-     * @property timeoutBlock
+     * @property defaultGas
      *
-     * @param {Number} value
+     * @returns {String|Number} value
      */
-    set timeoutBlock(value) {
-        super.timeoutBlock = value;
-        this.eth.timeoutBlock = value;
-        this.shh.timeoutBlock = value;
+    get defaultGas() {
+        return super.defaultGas;
     }
 
     /**
-     * Sets the confirmationBlock property on the eth module and also on the shh module
+     * Sets the transactionBlockTimeout property on all contracts and on all sub-modules
      *
-     * @property confirmationBlock
+     * @property transactionBlockTimeout
      *
      * @param {Number} value
      */
-    set confirmationBlock(value) {
-        super.confirmationBlock = value;
-        this.eth.confirmationBlock = value;
-        this.shh.confirmationBlock = value;
+    set transactionBlockTimeout(value) {
+        this.eth.transactionBlockTimeout = value;
+        this.shh.transactionBlockTimeout = value;
+        super.transactionBlockTimeout = value;
     }
 
     /**
-     * Sets the pollingTimeout property on the eth module and also on the shh module
+     * Gets the transactionBlockTimeout property
      *
-     * @property pollingTimeout
+     * @property transactionBlockTimeout
+     *
+     * @returns {Number} value
+     */
+    get transactionBlockTimeout() {
+        return super.transactionBlockTimeout;
+    }
+
+    /**
+     * Sets the transactionConfirmationBlocks property on all contracts and on all sub-modules
+     *
+     * @property transactionConfirmationBlocks
      *
      * @param {Number} value
      */
-    set pollingTimeout(value) {
-        super.pollingTimeout = value;
-        this.eth.pollingTimeout = value;
-        this.shh.pollingTimeout = value;
+    set transactionConfirmationBlocks(value) {
+        this.eth.transactionConfirmationBlocks = value;
+        this.shh.transactionConfirmationBlocks = value;
+        super.transactionConfirmationBlocks = value;
+    }
+
+    /**
+     * Gets the transactionConfirmationBlocks property
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @returns {Number} value
+     */
+    get transactionConfirmationBlocks() {
+        return super.transactionConfirmationBlocks;
+    }
+
+    /**
+     * Sets the transactionConfirmationBlocks property on all contracts and on all sub-modules
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @param {Number} value
+     */
+    set transactionPollingTimeout(value) {
+        this.eth.transactionPollingTimeout = value;
+        this.shh.transactionPollingTimeout = value;
+        super.transactionPollingTimeout = value;
+    }
+
+    /**
+     * Gets the transactionPollingTimeout property
+     *
+     * @property transactionPollingTimeout
+     *
+     * @returns {Number} value
+     */
+    get transactionPollingTimeout() {
+        return super.transactionPollingTimeout;
+    }
+
+    /**
+     * Sets the defaultAccount property on the eth module and also on the shh module
+     *
+     * @property defaultAccount
+     *
+     * @param {String} value
+     */
+    set defaultAccount(value) {
+        super.defaultAccount = value;
+        this.eth.defaultAccount = value;
+        this.shh.defaultAccount = value;
+    }
+
+    /**
+     * Gets the defaultAccount property
+     *
+     * @property defaultAccount
+     *
+     * @returns {String} value
+     */
+    get defaultAccount() {
+        return super.defaultAccount;
+    }
+
+    /**
+     * Sets the defaultBlock property on the eth module and also on the shh module
+     *
+     * @property defaultBlock
+     *
+     * @param {Number|String} value
+     */
+    set defaultBlock(value) {
+        super.defaultBlock = value;
+        this.eth.defaultBlock = value;
+        this.shh.defaultBlock = value;
+    }
+
+    /**
+     * Gets the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @returns {String|Number} value
+     */
+    get defaultBlock() {
+        return super.defaultBlock;
     }
 
     /**
@@ -215,8 +292,8 @@ export default class Web3 extends AbstractWeb3Module {
             Shh: (provider, net) => {
                 return new Shh(providerResolver.resolve(provider, net));
             },
-            Bzz: (provider, net) => {
-                return new Bzz(providerResolver.resolve(provider, net));
+            Bzz: (provider) => {
+                return new Bzz(provider);
             }
         };
     }
