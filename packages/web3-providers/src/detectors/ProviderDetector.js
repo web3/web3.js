@@ -35,7 +35,7 @@ export default class ProviderDetector {
      *
      * @method detect
      *
-     * @returns {Object|undefined} provider
+     * @returns {Object|null} provider
      */
     detect() {
         if (
@@ -48,5 +48,7 @@ export default class ProviderDetector {
         if (typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
             return global.web3.currentProvider;
         }
+
+        return null;
     }
 }
