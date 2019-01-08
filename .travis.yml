@@ -24,7 +24,7 @@ install:
     - npm run bootstrap
 script:
     - npm run build
-    - npm run test
+    - npm run test:coverage
 after_script:
     - cd test/node && npm install && node app.js
 
