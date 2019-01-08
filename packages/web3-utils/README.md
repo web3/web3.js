@@ -21,7 +21,7 @@ Build running the following in the [web3.js][repo] repository:
 npm run-script build-all
 ```
 
-Then include `dist/web3-Utils.js` in your html file.
+Then include `dist/web3-utils.js` in your html file.
 This will expose the `Web3Utils` object on the window object.
 
 

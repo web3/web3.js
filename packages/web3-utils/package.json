@@ -11,7 +11,7 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "",
+        "test": "jest",
         "dtslint": "dtslint types --onlyTestTsNext"
     },
     "types": "types",
@@ -29,6 +29,7 @@
         "types/index.d.ts"
     ],
     "devDependencies": {
-        "dtslint": "^0.3.0"
+        "dtslint": "^0.3.0",
+        "crypto-js": "3.1.9-1"
     }
 }
