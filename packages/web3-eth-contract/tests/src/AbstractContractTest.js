@@ -324,17 +324,10 @@ describe('AbstractContractTest', () => {
 
         const clone = abstractContract.clone();
 
-        expect(abstractContract.methods.abiModel)
-            .toEqual(abiModelMock);
-
-        expect(abstractContract.events.abiModel)
-            .toEqual(abiModelMock);
-
         expect(clone)
             .toBeInstanceOf(AbstractContract);
 
         clone.address = '000';
-        abstractContract.address = '001';
 
         expect(clone.address)
             .toEqual('000');
