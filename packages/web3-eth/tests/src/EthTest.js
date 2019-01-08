@@ -333,7 +333,7 @@ describe('EthTest', () => {
             .toEqual('0x1');
 
         expect(Utils.toChecksumAddress)
-            .toHaveBeenCalledWith('0x0');
+            .toHaveBeenCalledWith('0x1');
     });
 
     it('sets the defaultBlock property', () => {

@@ -113,16 +113,12 @@ export default class Eth extends AbstractWeb3Module {
      * @param {String|Number} value
      */
     set defaultGasPrice(value) {
-        if (this.initiatedContracts) {
-            this.initiatedContracts.forEach(contract => {
-                contract.defaultGasPrice = value;
-            });
-        }
+        this.initiatedContracts.forEach(contract => {
+            contract.defaultGasPrice = value;
+        });
 
-        if (this.net && this.personal) {
-            this.net.defaultGasPrice = value;
-            this.personal.defaultGasPrice = value;
-        }
+        this.net.defaultGasPrice = value;
+        this.personal.defaultGasPrice = value;
 
         super.defaultGasPrice = value;
     }
@@ -146,16 +142,12 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Number} value
      */
     set defaultGas(value) {
-        if (this.initiatedContracts) {
-            this.initiatedContracts.forEach(contract => {
-                contract.defaultGas = value;
-            });
-        }
+        this.initiatedContracts.forEach(contract => {
+            contract.defaultGas = value;
+        });
 
-        if (this.net && this.personal) {
-            this.net.defaultGas = value;
-            this.personal.defaultGas = value;
-        }
+        this.net.defaultGas = value;
+        this.personal.defaultGas = value;
 
         super.defaultGas = value;
     }
@@ -179,16 +171,12 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionBlockTimeout(value) {
-        if (this.initiatedContracts) {
-            this.initiatedContracts.forEach(contract => {
-                contract.transactionBlockTimeout = value;
-            });
-        }
+        this.initiatedContracts.forEach(contract => {
+            contract.transactionBlockTimeout = value;
+        });
 
-        if (this.net && this.personal) {
-            this.net.transactionBlockTimeout = value;
-            this.personal.transactionBlockTimeout = value;
-        }
+        this.net.transactionBlockTimeout = value;
+        this.personal.transactionBlockTimeout = value;
 
         super.transactionBlockTimeout = value;
     }
@@ -212,16 +200,12 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionConfirmationBlocks(value) {
-        if (this.initiatedContracts) {
-            this.initiatedContracts.forEach(contract => {
-                contract.transactionConfirmationBlocks = value;
-            });
-        }
+        this.initiatedContracts.forEach(contract => {
+            contract.transactionConfirmationBlocks = value;
+        });
 
-        if (this.net && this.personal) {
-            this.net.transactionConfirmationBlocks = value;
-            this.personal.transactionConfirmationBlocks = value;
-        }
+        this.net.transactionConfirmationBlocks = value;
+        this.personal.transactionConfirmationBlocks = value;
 
         super.transactionConfirmationBlocks = value;
     }
@@ -245,16 +229,12 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionPollingTimeout(value) {
-        if (this.initiatedContracts) {
-            this.initiatedContracts.forEach(contract => {
-                contract.transactionPollingTimeout = value;
-            });
-        }
+        this.initiatedContracts.forEach(contract => {
+            contract.transactionPollingTimeout = value;
+        });
 
-        if (this.net && this.personal) {
-            this.net.transactionPollingTimeout = value;
-            this.personal.transactionPollingTimeout = value;
-        }
+        this.net.transactionPollingTimeout = value;
+        this.personal.transactionPollingTimeout = value;
 
         super.transactionPollingTimeout = value;
     }
@@ -278,16 +258,12 @@ export default class Eth extends AbstractWeb3Module {
      * @param {String} value
      */
     set defaultAccount(value) {
-        if (this.initiatedContracts) {
-            this.initiatedContracts.forEach(contract => {
-                contract.defaultAccount = this.utils.toChecksumAddress(value);
-            });
-        }
+        this.initiatedContracts.forEach(contract => {
+            contract.defaultAccount = this.utils.toChecksumAddress(value);
+        });
 
-        if (this.net && this.personal) {
-            this.net.defaultAccount = value;
-            this.personal.defaultAccount = value;
-        }
+        this.net.defaultAccount = value;
+        this.personal.defaultAccount = value;
 
         super.defaultAccount = value;
     }
@@ -311,16 +287,12 @@ export default class Eth extends AbstractWeb3Module {
      * @param {String|Number}value
      */
     set defaultBlock(value) {
-        if (this.initiatedContracts) {
-            this.initiatedContracts.forEach(contract => {
-                contract.defaultBlock = value;
-            });
-        }
+        this.initiatedContracts.forEach(contract => {
+            contract.defaultBlock = value;
+        });
 
-        if (this.net && this.personal) {
-            this.net.defaultBlock = value;
-            this.personal.defaultBlock = value;
-        }
+        this.net.defaultBlock = value;
+        this.personal.defaultBlock = value;
 
         super.defaultBlock = value;
     }
