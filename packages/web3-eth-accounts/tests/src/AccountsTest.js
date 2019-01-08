@@ -868,7 +868,7 @@ describe('AccountsTest', () => {
                 crypto: {
                     kdf: 'scrypt',
                     mac: 'mac',
-                    ciphertext: '3030',
+                    ciphertext: 'xx',
                     cipher: 'cipher',
                     cipherparams: {
                         iv: ['0x0']
@@ -955,7 +955,7 @@ describe('AccountsTest', () => {
                 crypto: {
                     kdf: 'pbkdf2',
                     mac: 'mac',
-                    ciphertext: '3030',
+                    ciphertext: 'xx',
                     cipher: 'cipher',
                     cipherparams: {
                         iv: ['0x0']
@@ -1081,7 +1081,7 @@ describe('AccountsTest', () => {
             crypto: {
                 kdf: 'pbkdf2',
                 mac: 'macs',
-                ciphertext: '3030',
+                ciphertext: 'xx',
                 cipher: 'cipher',
                 cipherparams: {
                     iv: ['0x0']
