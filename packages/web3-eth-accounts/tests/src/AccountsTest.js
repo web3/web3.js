@@ -1130,7 +1130,7 @@ describe('AccountsTest', () => {
 
     it('calls encrypt and returns the expected object', () => {
         const account = {
-                privateKey: '0x0',
+                privateKey: '0xxx',
                 address: '0xA'
             },
             options = {};
@@ -1234,7 +1234,7 @@ describe('AccountsTest', () => {
 
     it('calls encrypt with the pbkdf2 sheme and returns the expected object', () => {
         const account = {
-                privateKey: '0x0',
+                privateKey: '0xxx',
                 address: '0xA'
             },
             options = {kdf: 'pbkdf2'};
@@ -1338,7 +1338,7 @@ describe('AccountsTest', () => {
 
     it('calls encrypt with a unsupported sheme', () => {
         const account = {
-            privateKey: '0x0',
+            privateKey: '0xxx',
             address: '0xA'
         };
 
@@ -1365,7 +1365,7 @@ describe('AccountsTest', () => {
 
     it('calls encrypt with a unsupported cipher', () => {
         const account = {
-                privateKey: '0x0',
+                privateKey: '0xxx',
                 address: '0xA'
             },
             options = {kdf: 'pbkdf2'};
