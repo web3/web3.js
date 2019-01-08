@@ -10,7 +10,7 @@ import {
 } from 'web3-core-method';
 import {AbstractWeb3Module} from 'web3-core';
 import MethodFactory from '../../src/factories/MethodFactory';
-import Network from '../../src/network';
+import Network from '../../src/Network';
 
 // Mocks
 jest.mock('Utils');
