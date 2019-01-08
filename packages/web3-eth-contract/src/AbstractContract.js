@@ -198,7 +198,7 @@ export default class AbstractContract extends AbstractWeb3Module {
 
     /**
      * TODO: It was and is just a shallow copy here and not a deep copy of the object.
-     * 
+     *
      * Return an new instance of the Contract object
      *
      * @method clone
