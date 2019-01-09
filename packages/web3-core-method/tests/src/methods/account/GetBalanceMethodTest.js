@@ -47,7 +47,7 @@ describe('GetBalanceMethodTest', () => {
     it('afterExecution should call outputBigNumberFormatter on the response and return it', () => {
         formatters.outputBigNumberFormatter.mockReturnValueOnce({bigNumber: true});
 
-        expect(method.afterExecution({result: 'response'})).toHaveProperty('bigNumber', true);
+        expect(method.afterExecution('response')).toHaveProperty('bigNumber', true);
 
         expect(formatters.outputBigNumberFormatter).toHaveBeenCalledWith('response');
     });

@@ -163,7 +163,7 @@ describe('IpcProviderTest', () => {
         });
 
         setTimeout(() => {
-            ipcProvider.emit('0x0', true);
+            ipcProvider.emit('0x0', {result: true});
         }, 1);
 
         const response = await ipcProvider.send('rpc_method', []);
@@ -172,7 +172,7 @@ describe('IpcProviderTest', () => {
 
         expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
 
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith(true);
+        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
 
         expect(ipcProvider.listenerCount('0x0')).toEqual(0);
     });
@@ -194,14 +194,14 @@ describe('IpcProviderTest', () => {
         });
 
         setTimeout(() => {
-            ipcProvider.emit('0x0', true);
+            ipcProvider.emit('0x0', {result: true});
         }, 1);
 
         await expect(ipcProvider.send('rpc_method', [])).rejects.toThrow('invalid');
 
         expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
 
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith(true);
+        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
 
         expect(ipcProvider.listenerCount('0x0')).toEqual(0);
     });
@@ -228,12 +228,12 @@ describe('IpcProviderTest', () => {
         });
 
         setTimeout(() => {
-            ipcProvider.emit('0x0', true);
+            ipcProvider.emit('0x0', {result: true});
         }, 1);
 
         const response = await ipcProvider.sendBatch([abstractMethodMock], moduleInstanceMock);
 
-        expect(response).toEqual(true);
+        expect(response).toEqual({result: true});
 
         expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
 
@@ -253,12 +253,12 @@ describe('IpcProviderTest', () => {
         });
 
         setTimeout(() => {
-            ipcProvider.emit('0x0', true);
+            ipcProvider.emit('0x0', {result: true});
         }, 1);
 
         const response = await ipcProvider.sendPayload({id: '0x0'});
 
-        expect(response).toEqual(true);
+        expect(response).toEqual({result: true});
 
         expect(ipcProvider.listenerCount('0x0')).toEqual(0);
     });
@@ -281,12 +281,12 @@ describe('IpcProviderTest', () => {
         });
 
         setTimeout(() => {
-            ipcProvider.emit('0x0', true);
+            ipcProvider.emit('0x0', {result: true});
         }, 1);
 
         const response = await ipcProvider.sendPayload({id: '0x0'});
 
-        expect(response).toEqual(true);
+        expect(response).toEqual({result: true});
 
         expect(ipcProvider.listenerCount('0x0')).toEqual(0);
 
@@ -304,7 +304,7 @@ describe('IpcProviderTest', () => {
         });
 
         setTimeout(() => {
-            ipcProvider.emit('0x0', true);
+            ipcProvider.emit('0x0', {result: true});
         }, 1);
 
         await expect(ipcProvider.sendPayload({id: '0x0'})).rejects.toThrow(
@@ -323,12 +323,12 @@ describe('IpcProviderTest', () => {
         });
 
         setTimeout(() => {
-            ipcProvider.emit('0x0', true);
+            ipcProvider.emit('0x0', {result: true});
         }, 1);
 
         const response = await ipcProvider.sendPayload([{id: '0x0'}]);
 
-        expect(response).toEqual(true);
+        expect(response).toEqual({result: true});
 
         expect(ipcProvider.listenerCount('0x0')).toEqual(0);
     });

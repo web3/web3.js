@@ -86,7 +86,7 @@ describe('HttpProviderTest', () => {
 
         xhrMock.readyState = 4;
         xhrMock.status = 200;
-        xhrMock.responseText = 'true';
+        xhrMock.responseText = '{"result":true}';
 
         providersModuleFactoryMock.createXMLHttpRequest.mockReturnValueOnce(xhrMock);
 
@@ -100,7 +100,7 @@ describe('HttpProviderTest', () => {
 
         expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
 
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith(true);
+        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
 
         expect(providersModuleFactoryMock.createXMLHttpRequest).toHaveBeenCalledWith(
             httpProvider.host,

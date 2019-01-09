@@ -208,7 +208,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 throw validationResult;
             }
 
-            return response;
+            return response.result;
         });
     }
 

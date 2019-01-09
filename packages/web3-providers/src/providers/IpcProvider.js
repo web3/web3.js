@@ -141,7 +141,7 @@ export default class IpcProvider extends AbstractSocketProvider {
                 throw validationResult;
             }
 
-            return response;
+            return response.result;
         });
     }
 
