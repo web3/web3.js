@@ -47,7 +47,7 @@ export default class AbstractWeb3Module {
         this._currentProvider = this.providerResolver.resolve(provider);
 
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
-        this._defaultBlock = options.defaultBlock;
+        this._defaultBlock = options.defaultBlock || 'latest';
         this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
         this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
         this._transactionPollingTimeout = options.transactionPollingTimeout || 15;

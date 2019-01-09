@@ -170,24 +170,15 @@ export default class AbstractMethod {
      * @param {IArguments} args
      */
     set arguments(args) {
-        let parameters = args;
+        let parameters = Array.from(args),
+            callback = null;
 
-        let callback = null;
-
-        if (args.length < this.parametersAmount) {
-            throw new Error(
-                `Arguments length is not correct: expected: ${this.parametersAmount}, given: ${arguments.length}`
-            );
-        }
-
-        if (args.length > this.parametersAmount) {
-            callback = args.pop();
-
+        if (parameters.length > this.parametersAmount) {
             if (!isFunction(callback)) {
                 throw new TypeError("The latest parameter should be a function otherwise it can't be used as callback");
             }
 
-            parameters = args;
+            callback = parameters.pop();
         }
 
         this._arguments = {

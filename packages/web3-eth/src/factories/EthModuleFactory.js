@@ -102,6 +102,6 @@ export default class EthModuleFactory {
      * @returns {MethodFactory}
      */
     createMethodFactory() {
-        return new MethodFactory(this.utils, this.formatters, this.accounts);
+        return new MethodFactory(this.methodModuleFactory, this.utils, this.formatters);
     }
 }

@@ -36,12 +36,11 @@ export default class JsonRpcResponseValidator {
     static validate(response, payload = false) {
         if (isObject(response)) {
             if (response.error) {
-                // TODO: Check where and why this is the case.
                 if (response.error instanceof Error) {
                     return new Error(`Node error: ${response.error.message}`);
                 }
 
-                return new Error(`Node error: ${response.error}`);
+                return new Error(`Node error: ${JSON.stringify(response.error)}`);
             }
 
             if (payload && response.id !== payload.id) {

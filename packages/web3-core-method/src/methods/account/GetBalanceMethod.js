@@ -55,6 +55,6 @@ export default class GetBalanceMethod extends AbstractCallMethod {
      * @returns {BigNumber}
      */
     afterExecution(response) {
-        return this.formatters.outputBigNumberFormatter(response);
+        return this.formatters.outputBigNumberFormatter(response.result);
     }
 }

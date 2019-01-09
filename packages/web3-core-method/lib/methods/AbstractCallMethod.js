@@ -61,6 +61,12 @@ export default class AbstractCallMethod extends AbstractMethod {
     async execute(moduleInstance) {
         this.beforeExecution(moduleInstance);
 
+        if (this.parameters.length !== this.parametersAmount) {
+            throw new Error(
+                `Invalid Arguments length: expected: ${this.parametersAmount}, given: ${this.parameters.length}`
+            );
+        }
+
         try {
             const response = await moduleInstance.currentProvider.send(this.rpcMethod, this.parameters);
 

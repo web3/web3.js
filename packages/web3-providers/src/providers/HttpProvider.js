@@ -135,7 +135,7 @@ export default class HttpProvider {
                     this.connected = true;
                 }
 
-                if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+                if (request.readyState === 4 && request.status === 200) {
                     try {
                         return resolve(JSON.parse(request.responseText));
                     } catch (error) {

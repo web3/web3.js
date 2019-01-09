@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import {PromiEvent} from 'web3-core-promievent';
+
 export default class MethodProxy {
     /**
      * @param {AbstractWeb3Module} target
@@ -45,18 +47,14 @@ export default class MethodProxy {
 
                     const method = methodFactory.createMethod(name);
 
-                    const anonymousFunction = () => {
+                    function anonymousFunction() {
                         method.arguments = arguments;
 
-                        if (method.parameters.length !== method.parametersAmount) {
-                            throw new Error(
-                                `Invalid parameters length the expected length would be ${
-                                    method.parametersAmount
-                                } and not ${method.parameters.length}`
-                            );
+                        if(method.Type === 'call') {
+                            return method.execute(target);
                         }
 
-                        return method.execute(target, target.accounts);
+                        return method.execute(target, new PromiEvent());
                     };
 
                     anonymousFunction.method = method;
