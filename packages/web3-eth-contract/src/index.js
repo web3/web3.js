@@ -26,7 +26,6 @@ import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
 import {MethodModuleFactory} from 'web3-core-method';
 import {PromiEvent} from 'web3-core-promievent';
-import {Accounts} from 'web3-eth-accounts';
 import ContractModuleFactory from './factories/ContractModuleFactory';
 
 export AbstractContract from './AbstractContract';
@@ -38,18 +37,19 @@ export ContractModuleFactory from './factories/ContractModuleFactory';
  * @method Contract
  *
  * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Accounts} accounts
  * @param {Object} abi
  * @param {String} address
  * @param {Object} options
  *
  * @returns {AbstractContract}
  */
-export const Contract = (provider, abi, address, options) => {
+export const Contract = (provider, accounts, abi, address, options) => {
     return new ContractModuleFactory(
         Utils,
         formatters,
         new AbiCoder(),
-        new Accounts(provider, options),
-        new MethodModuleFactory()
+        accounts,
+        new MethodModuleFactory(accounts)
     ).createContract(provider, new ProvidersModuleFactory(), PromiEvent, abi, address, options);
 };

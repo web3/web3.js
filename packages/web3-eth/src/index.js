@@ -46,9 +46,8 @@ import EthModuleFactory from './factories/EthModuleFactory';
  * @returns {Eth}
  */
 export const Eth = (provider, options) => {
-    const accounts = new Accounts(provider, options);
-
-    const abiCoder = new AbiCoder();
+    const accounts = new Accounts(provider, options),
+          abiCoder = new AbiCoder();
 
     return new EthModuleFactory(
         provider,
@@ -62,9 +61,9 @@ export const Eth = (provider, options) => {
         abiCoder
     ).createEthModule(
         new Network(provider, options),
-        new Personal(provider, options),
+        new Personal(provider, accounts, options),
         Iban,
-        new Ens(provider),
+        new Ens(provider, accounts),
         new SubscriptionsFactory(),
         options
     );

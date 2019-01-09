@@ -26,7 +26,8 @@ export default class Eth extends AbstractWeb3Module {
     /**
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {EthModuleFactory} ethModuleFactory
+     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {MethodFactory} methodFactory
      * @param {Network} net
      * @param {Accounts} accounts
      * @param {Personal} personal
@@ -36,8 +37,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {SubscriptionsFactory} subscriptionsFactory
-     * @param {MethodFactory} methodFactory
-     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {ContractModuleFactory} contractModuleFactory
      * @param {Object} options
      *
      * @constructor
@@ -47,7 +47,6 @@ export default class Eth extends AbstractWeb3Module {
         providersModuleFactory,
         methodModuleFactory,
         methodFactory,
-        ethModuleFactory,
         net,
         accounts,
         personal,
@@ -57,11 +56,11 @@ export default class Eth extends AbstractWeb3Module {
         utils,
         formatters,
         subscriptionsFactory,
+        contractModuleFactory,
         options
     ) {
         super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
 
-        this.ethModuleFactory = ethModuleFactory;
         this.net = net;
         this.accounts = accounts;
         this.personal = personal;
@@ -85,7 +84,7 @@ export default class Eth extends AbstractWeb3Module {
          * @constructor
          */
         this.Contract = (abi, address, options) => {
-            const contract = this.ethModuleFactory.createContract(abi, address, options);
+            const contract = this.contractModuleFactory.createContract(abi, address, options);
 
             this.initiatedContracts.push(contract);
 

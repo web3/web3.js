@@ -22,6 +22,7 @@ const config = [
             babel({
                 exclude: 'node_modules/**',
                 babelrc: false,
+                runtimeHelpers: true,
                 presets: [
                     [
                         '@babel/env',
@@ -36,7 +37,11 @@ const config = [
                 ],
                 plugins: [
                     '@babel/plugin-proposal-export-default-from',
-                    '@babel/plugin-proposal-export-namespace-from'
+                    '@babel/plugin-proposal-export-namespace-from',
+                    ["@babel/plugin-transform-runtime", {
+                        "helpers": true,
+                        "regenerator": true
+                    }]
                 ]
             }),
             json(),

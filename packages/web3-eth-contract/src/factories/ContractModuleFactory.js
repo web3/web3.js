@@ -80,7 +80,6 @@ export default class ContractModuleFactory {
             this.abiCoder,
             this.utils,
             this.formatters,
-            this.accounts,
             abi,
             address,
             options

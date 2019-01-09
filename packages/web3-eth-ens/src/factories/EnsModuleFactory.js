@@ -58,18 +58,13 @@ export default class EnsModuleFactory {
             providersModuleFactory,
             methodModuleFactory,
             ensModuleOptions,
-            this.createRegistry(
-                provider,
-                providersModuleFactory,
-                methodModuleFactory,
-                contractModuleFactory,
-                promiEvent,
-                abiCoder,
-                utils,
-                formatters,
-                registryOptions,
-                net
-            )
+            this,
+            promiEvent,
+            abiCoder,
+            utils,
+            formatters,
+            registryOptions,
+            net
         );
     }
 
@@ -82,7 +77,7 @@ export default class EnsModuleFactory {
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory
-     * @param {PromiEvent} PromiEvent
+     * @param {PromiEvent} promiEvent
      * @param {AbiCoder} abiCoder
      * @param {Utils} utils
      * @param {Object} formatters
@@ -96,7 +91,7 @@ export default class EnsModuleFactory {
         providersModuleFactory,
         methodModuleFactory,
         contractModuleFactory,
-        PromiEvent,
+        promiEvent,
         abiCoder,
         utils,
         formatters,
@@ -108,7 +103,7 @@ export default class EnsModuleFactory {
             providersModuleFactory,
             methodModuleFactory,
             contractModuleFactory,
-            PromiEvent,
+            promiEvent,
             abiCoder,
             utils,
             formatters,

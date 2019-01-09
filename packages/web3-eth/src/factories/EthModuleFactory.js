@@ -61,34 +61,6 @@ export default class EthModuleFactory {
     }
 
     /**
-     * Returns an object of type Contract
-     *
-     * @method createContract
-     *
-     * @param {Object} abi
-     * @param {String} address
-     * @param {Object} options
-     *
-     * @returns {AbstractContract}
-     */
-    createContract(abi, address, options) {
-        return new AbstractContract(
-            this.provider,
-            this.providersModuleFactory,
-            this.methodModuleFactory,
-            this.contractModuleFactory,
-            this.PromiEvent,
-            this.abiCoder,
-            this.utils,
-            this.formatters,
-            this.accounts,
-            abi,
-            address,
-            options
-        );
-    }
-
-    /**
      * Returns an object of type Eth
      *
      * @method createEthModule
@@ -108,7 +80,6 @@ export default class EthModuleFactory {
             this.providersModuleFactory,
             this.methodModuleFactory,
             this.createMethodFactory(),
-            this,
             net,
             this.accounts,
             personal,
@@ -118,6 +89,7 @@ export default class EthModuleFactory {
             this.utils,
             this.formatters,
             subscriptionsFactory,
+            this.contractModuleFactory,
             options
         );
     }

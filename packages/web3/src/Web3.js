@@ -41,10 +41,7 @@ export default class Web3 extends AbstractWeb3Module {
      * @constructor
      */
     constructor(provider, net, options = {}) {
-        const providersModuleFactory = new ProvidersModuleFactory();
-        provider = providersModuleFactory.createProviderResolver().resolve(provider, net);
-
-        super(provider, providersModuleFactory, null, null, options);
+        super(provider, new ProvidersModuleFactory(), null, null, options);
 
         this.eth = new Eth(provider, options);
         this.shh = new Shh(provider, options);

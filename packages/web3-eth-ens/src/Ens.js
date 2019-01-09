@@ -27,13 +27,65 @@ export default class Ens extends AbstractWeb3Module {
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {Object} options
-     * @param {Registry} registry
+     * @param {EnsModuleFactory} ensModuleFactory
+     * @param {PromiEvent} promiEvent
+     * @param {AbiCoder} abiCoder
+     * @param {Utils} utils
+     * @param {Object} formatters
+     * @param {Object} registryOptions
+     * @param {Network} net
      *
      * @constructor
      */
-    constructor(provider, providersModuleFactory, methodModuleFactory, options, registry) {
+    constructor(
+        provider,
+        providersModuleFactory,
+        methodModuleFactory,
+        options,
+        ensModuleFactory,
+        promiEvent,
+        abiCoder,
+        utils,
+        formatters,
+        registryOptions,
+        net
+    ) {
         super(provider, providersModuleFactory, methodModuleFactory, null, options);
-        this.registry = registry;
+
+        this.ensModuleFactory = ensModuleFactory;
+        this.promiEvent = promiEvent;
+        this.abiCoder = abiCoder;
+        this.utils = utils;
+        this.formatters = formatters;
+        this.registryOptions = registryOptions;
+        this.net = net;
+        this._registry = false;
+    }
+
+    /**
+     * Getter for the registry property
+     *
+     * @property registry
+     *
+     * @returns {Registry}
+     */
+    get registry() {
+        if(!this._registry) {
+            this._registry = this.ensModuleFactory.createRegistry(
+                this.currentProvider,
+                this.providersModuleFactory,
+                this.methodModuleFactory,
+                this.contractModuleFactory,
+                this.promiEvent,
+                this.abiCoder,
+                this.utils,
+                this.formatters,
+                this.registryOptions,
+                this.net
+            );
+        }
+
+        return this._registry;
     }
 
     /**

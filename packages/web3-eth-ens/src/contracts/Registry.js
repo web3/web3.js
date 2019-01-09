@@ -29,7 +29,7 @@ export default class Registry extends AbstractContract {
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
-     * @param {PromiEvent} PromiEvent
+     * @param {PromiEvent} promiEvent
      * @param {AbiCoder} abiCoder
      * @param {Utils} utils
      * @param {Object} formatters
@@ -43,7 +43,7 @@ export default class Registry extends AbstractContract {
         providersModuleFactory,
         methodModuleFactory,
         contractModuleFactory,
-        PromiEvent,
+        promiEvent,
         abiCoder,
         utils,
         formatters,
@@ -55,7 +55,7 @@ export default class Registry extends AbstractContract {
             providersModuleFactory,
             methodModuleFactory,
             contractModuleFactory,
-            PromiEvent,
+            promiEvent,
             abiCoder,
             utils,
             formatters,
