@@ -27,7 +27,7 @@ describe('AbstractMethodTest', () => {
 
         expect(abstractMethod.formatters).toEqual(formatters);
 
-        expect(abstractMethod.parameters).toEqual(undefined);
+        expect(abstractMethod.parameters).toEqual([]);
 
         expect(abstractMethod.callback).toEqual(undefined);
     });
@@ -122,7 +122,7 @@ describe('AbstractMethodTest', () => {
 
         expect(abstractMethod.formatters).toEqual(formatters);
 
-        expect(abstractMethod.parameters).toEqual(undefined);
+        expect(abstractMethod.parameters).toEqual([]);
 
         expect(abstractMethod.callback).toEqual(undefined);
     });

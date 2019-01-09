@@ -1,10 +1,12 @@
 import {AbstractWeb3Module} from 'web3-core';
+import {PromiEvent} from 'web3-core-promievent';
 import MethodProxy from '../../../src/proxy/MethodProxy';
 import AbstractMethodFactory from '../../../lib/factories/AbstractMethodFactory';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 // Mocks
 jest.mock('AbstractWeb3Module');
+jest.mock('PromiEvent');
 jest.mock('../../../lib/factories/AbstractMethodFactory');
 jest.mock('../../../lib/methods/AbstractMethod');
 
@@ -57,11 +59,12 @@ describe('MethodProxyTest', () => {
         }
     });
 
-    it('methodProxy returns method and this method returns the expected return value', () => {
+    it('the methodProxy executes the AbstractCallMethod myMethod and it returns the expected value', () => {
         methodMock.parameters = [];
         methodMock.parametersAmount = 0;
 
         methodMock.execute.mockReturnValueOnce(100);
+        methodMock.Type = 'CALL';
 
         methodFactoryMock.hasMethod.mockReturnValueOnce(true);
 
@@ -77,7 +80,31 @@ describe('MethodProxyTest', () => {
 
         expect(methodFactoryMock.createMethod).toHaveBeenCalledWith('myMethod');
 
-        expect(methodMock.execute).toHaveBeenCalledWith(moduleInstanceMock, moduleInstanceMock.accounts);
+        expect(methodMock.execute).toHaveBeenCalledWith(moduleInstanceMock);
+    });
+
+    it('calls the AbstractSendMethod myMethod and returns the expected value', () => {
+        methodMock.parameters = [];
+        methodMock.parametersAmount = 0;
+
+        methodMock.execute.mockReturnValueOnce(100);
+        methodMock.Type = 'SEND';
+
+        methodFactoryMock.hasMethod.mockReturnValueOnce(true);
+
+        methodFactoryMock.createMethod.mockReturnValueOnce(methodMock);
+
+        methodProxy = new MethodProxy(moduleInstanceMock, methodFactoryMock);
+
+        const response = methodProxy.myMethod();
+
+        expect(response).toEqual(100);
+
+        expect(methodFactoryMock.hasMethod).toHaveBeenCalledWith('myMethod');
+
+        expect(methodFactoryMock.createMethod).toHaveBeenCalledWith('myMethod');
+
+        expect(methodMock.execute).toHaveBeenCalledWith(moduleInstanceMock, PromiEvent.mock.instances[0]);
     });
 
     it('methodProxy throws error because of invalid parameter length', () => {

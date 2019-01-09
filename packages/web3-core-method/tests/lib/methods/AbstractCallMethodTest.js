@@ -41,7 +41,7 @@ describe('AbstractCallMethodTest', () => {
         expect(abstractCallMethod.formatters).toEqual(formatters);
     });
 
-    it('Send the request to the connected node', async () => {
+    it('calls execute and returns with the expected value', async () => {
         abstractCallMethod.afterExecution = jest.fn(() => {
             return '0x00';
         });
@@ -63,7 +63,7 @@ describe('AbstractCallMethodTest', () => {
         expect(abstractCallMethod.afterExecution).toHaveBeenCalledWith('0x0');
     });
 
-    it('Will throw an error on sending the request to the connected node', async () => {
+    it('calls execute and throws an error on sending the request to the connected node', async () => {
         const error = new Error('ERROR ON SEND');
         providerMock.send = jest.fn(() => {
             return Promise.reject(error);

@@ -36,7 +36,9 @@ export default class AbstractMethod {
         this.utils = utils;
         this.formatters = formatters;
         this.promiEvent = new PromiEvent();
-        this._arguments = {};
+        this._arguments = {
+            parameters: []
+        };
         this._rpcMethod = rpcMethod;
         this._parametersAmount = parametersAmount;
     }
@@ -174,7 +176,7 @@ export default class AbstractMethod {
             callback = null;
 
         if (parameters.length > this.parametersAmount) {
-            if (!isFunction(callback)) {
+            if (!isFunction(parameters[parameters.length - 1])) {
                 throw new TypeError("The latest parameter should be a function otherwise it can't be used as callback");
             }
 

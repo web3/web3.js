@@ -50,12 +50,12 @@ export default class MethodProxy {
                     function anonymousFunction() {
                         method.arguments = arguments;
 
-                        if(method.Type === 'call') {
+                        if(method.Type === 'CALL') {
                             return method.execute(target);
                         }
 
                         return method.execute(target, new PromiEvent());
-                    };
+                    }
 
                     anonymousFunction.method = method;
                     anonymousFunction.request = method.request;

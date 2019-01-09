@@ -34,7 +34,7 @@ describe('AbstractSendMethodTest', () => {
 
         abstractSendMethod = new AbstractSendMethod(
             'RPC_METHOD',
-            0,
+            1,
             Utils,
             formatters,
             transactionConfirmationWorkflowMock
@@ -55,7 +55,7 @@ describe('AbstractSendMethodTest', () => {
 
         expect(abstractSendMethod.rpcMethod).toEqual('RPC_METHOD');
 
-        expect(abstractSendMethod.parametersAmount).toEqual(0);
+        expect(abstractSendMethod.parametersAmount).toEqual(1);
 
         expect(abstractSendMethod.utils).toEqual(Utils);
 
