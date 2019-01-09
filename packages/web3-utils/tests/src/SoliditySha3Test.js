@@ -1,4 +1,4 @@
-import isArray from 'underscore-es/isArray';
+import {isArray} from 'lodash';
 import BN from 'bn.js';
 import {soliditySha3} from '../../src/SoliditySha3';
 
