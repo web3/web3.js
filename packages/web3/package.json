@@ -79,7 +79,7 @@
         "rollup-plugin-json": "^3.1.0",
         "rollup-plugin-node-builtins": "^2.1.2",
         "rollup-plugin-node-resolve": "^3.4.0",
-        "dtslint": "^0.3.0"
+        "dtslint": "^0.4.2"
     },
     "files": [
         "dist",

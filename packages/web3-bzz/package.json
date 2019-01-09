@@ -19,7 +19,7 @@
         "underscore-es": "^1.9.8"
     },
     "devDependencies": {
-        "dtslint": "^0.3.0"
+        "dtslint": "^0.4.2"
     },
     "files": [
         "dist",

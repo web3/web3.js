@@ -23,11 +23,11 @@
         "web3-providers": "1.0.0-beta.36",
         "web3-utils": "1.0.0-beta.36"
     },
+    "devDependencies": {
+        "dtslint": "^0.4.2"
+    },
     "files": [
         "dist",
         "types/index.d.ts"
-    ],
-    "devDependencies": {
-        "dtslint": "^0.3.0"
-    }
+    ]
 }
