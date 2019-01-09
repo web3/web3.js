@@ -70,6 +70,7 @@ export default class Eth extends AbstractWeb3Module {
         this.utils = utils;
         this.formatters = formatters;
         this.subscriptionsFactory = subscriptionsFactory;
+        this.contractModuleFactory = contractModuleFactory;
         this.initiatedContracts = [];
 
         /**
@@ -79,7 +80,7 @@ export default class Eth extends AbstractWeb3Module {
          * @param {String} address
          * @param {Object} options
          *
-         * @returns {Contract}
+         * @returns {AbstractContract}
          *
          * @constructor
          */

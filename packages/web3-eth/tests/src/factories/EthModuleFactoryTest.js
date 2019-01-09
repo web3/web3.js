@@ -84,10 +84,6 @@ describe('EthModuleFactoryTest', () => {
         expect(ethModuleFactory.abiCoder).toEqual(abiCoderMock);
     });
 
-    it('calls createContract and returns a Contract object', () => {
-        expect(ethModuleFactory.createContract({}, '', {})).toBeInstanceOf(AbstractContract);
-    });
-
     it('calls createEthModule and returns a Contract object', () => {
         expect(ethModuleFactory.createEthModule({}, '', {})).toBeInstanceOf(Eth);
     });

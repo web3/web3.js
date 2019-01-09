@@ -40,9 +40,8 @@ import {Ens} from 'web3-eth-ens';
 import {Iban} from 'web3-eth-iban';
 import {Personal} from 'web3-eth-personal';
 import {Network} from 'web3-net';
-import {AbstractContract} from 'web3-eth-contract';
+import {AbstractContract, ContractModuleFactory} from 'web3-eth-contract';
 import {HttpProvider, ProviderDetector, ProviderResolver, ProvidersModuleFactory} from 'web3-providers';
-import EthModuleFactory from '../../src/factories/EthModuleFactory';
 import MethodFactory from '../../src/factories/MethodFactory';
 import Eth from '../../src/Eth';
 
@@ -64,6 +63,7 @@ jest.mock('Network');
 jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('AbstractContract');
+jest.mock('ContractModuleFactory');
 jest.mock('../../src/factories/EthModuleFactory');
 
 /**
@@ -77,7 +77,7 @@ describe('EthTest', () => {
         providerResolverMock,
         methodModuleFactoryMock,
         methodFactory,
-        ethModuleFactoryMock,
+        contractModuleFactoryMock,
         networkMock,
         accountsMock,
         personalMock,
@@ -114,8 +114,8 @@ describe('EthTest', () => {
 
         methodFactory = new MethodFactory(methodModuleFactoryMock, Utils, formatters);
 
-        new EthModuleFactory();
-        ethModuleFactoryMock = EthModuleFactory.mock.instances[0];
+        new ContractModuleFactory();
+        contractModuleFactoryMock = ContractModuleFactory.mock.instances[0];
 
         new Network();
         networkMock = Network.mock.instances[0];
@@ -140,7 +140,6 @@ describe('EthTest', () => {
             providersModuleFactoryMock,
             methodModuleFactoryMock,
             methodFactory,
-            ethModuleFactoryMock,
             networkMock,
             accountsMock,
             personalMock,
@@ -150,12 +149,13 @@ describe('EthTest', () => {
             Utils,
             formatters,
             subscriptionsFactoryMock,
+            contractModuleFactoryMock,
             {}
         );
     });
 
     it('constructor check', () => {
-        expect(eth.ethModuleFactory).toEqual(ethModuleFactoryMock);
+        expect(eth.contractModuleFactory).toEqual(contractModuleFactoryMock);
 
         expect(eth.net).toEqual(networkMock);
 
@@ -319,27 +319,11 @@ describe('EthTest', () => {
             })
         };
 
+        eth.methodFactory = methodFactoryMock;
+
         providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce(providerDetectorMock);
 
         providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce(providerResolverMock);
-
-        eth = new Eth(
-            providerMock,
-            providersModuleFactoryMock,
-            methodModuleFactoryMock,
-            methodFactoryMock,
-            ethModuleFactoryMock,
-            networkMock,
-            accountsMock,
-            personalMock,
-            Iban,
-            abiCoderMock,
-            ensMock,
-            Utils,
-            formatters,
-            subscriptionsFactoryMock,
-            {}
-        );
 
         subscriptionsFactoryMock.createLogSubscription = jest.fn();
 
@@ -425,7 +409,7 @@ describe('EthTest', () => {
     });
 
     it('calls the Contract factory method from the constructor', () => {
-        ethModuleFactoryMock.createContract.mockReturnValueOnce(new AbstractContract());
+        contractModuleFactoryMock.createContract.mockReturnValueOnce(new AbstractContract());
 
         expect(new eth.Contract()).toBeInstanceOf(AbstractContract);
 
