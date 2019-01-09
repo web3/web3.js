@@ -1,22 +1,39 @@
+import * as Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
 import {PromiEvent} from 'web3-core-promievent';
 import {HttpProvider, ProvidersModuleFactory} from 'web3-providers';
 import {MethodModuleFactory} from 'web3-core-method';
+import {Network} from 'web3-net';
+import {AbiCoder} from 'web3-eth-abi';
 import Registry from '../../src/contracts/Registry';
 import namehash from 'eth-ens-namehash';
 import Ens from '../../src/Ens';
+import EnsModuleFactory from '../../src/factories/EnsModuleFactory';
 
 // Mocks
+jest.mock('../../src/factories/EnsModuleFactory');
 jest.mock('../../src/contracts/Registry');
 jest.mock('ProvidersModuleFactory');
 jest.mock('HttpProvider');
 jest.mock('MethodModuleFactory');
+jest.mock('Network');
+jest.mock('AbiCoder');
+jest.mock('Utils');
+jest.mock('formatters');
 jest.mock('namehash');
 
 /**
  * Ens test
  */
 describe('EnsTest', () => {
-    let ens, providerMock, providersModuleFactoryMock, methodModuleFactoryMock, registryMock;
+    let ens,
+        providerMock,
+        providersModuleFactoryMock,
+        methodModuleFactoryMock,
+        registryMock,
+        ensModuleFactoryMock,
+        abiCoderMock,
+        networkMock;
 
     beforeEach(() => {
         new HttpProvider();
@@ -32,19 +49,53 @@ describe('EnsTest', () => {
         registryMock = Registry.mock.instances[0];
         registryMock.PromiEvent = PromiEvent;
 
-        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce({detect: jest.fn()});
+        new EnsModuleFactory();
+        ensModuleFactoryMock = EnsModuleFactory.mock.instances[0];
+        ensModuleFactoryMock.createRegistry.mockReturnValue(registryMock);
 
+        new AbiCoder();
+        abiCoderMock = AbiCoder.mock.instances[0];
+
+        new Network();
+        networkMock = Network.mock.instances[0];
+
+        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce({detect: jest.fn()});
         providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce({resolve: jest.fn()});
 
         namehash.hash = jest.fn(() => {
             return '0x0';
         });
 
-        ens = new Ens(providerMock, providersModuleFactoryMock, methodModuleFactoryMock, {}, registryMock);
+        ens = new Ens(
+            providerMock,
+            providersModuleFactoryMock,
+            methodModuleFactoryMock,
+            {},
+            ensModuleFactoryMock,
+            PromiEvent,
+            abiCoderMock,
+            Utils,
+            formatters,
+            {},
+            networkMock
+        );
     });
 
     it('constructor check', () => {
         expect(ens.registry).toEqual(registryMock);
+        expect(ensModuleFactoryMock.createRegistry)
+            .toHaveBeenCalledWith(
+                ens.currentProvider,
+                ens.providersModuleFactory,
+                ens.methodModuleFactory,
+                ens.contractModuleFactory,
+                ens.promiEvent,
+                ens.abiCoder,
+                ens.utils,
+                ens.formatters,
+                ens.registryOptions,
+                ens.net
+            );
     });
 
     it('calls resolver and returns with a resolved promise', async () => {
@@ -70,7 +121,8 @@ describe('EnsTest', () => {
 
         registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
 
-        await expect(ens.getAddress('name', () => {})).resolves.toEqual('address');
+        await expect(ens.getAddress('name', () => {
+        })).resolves.toEqual('address');
 
         expect(registryMock.resolver).toHaveBeenCalledWith('name');
 
@@ -248,7 +300,8 @@ describe('EnsTest', () => {
 
         registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
 
-        await expect(ens.getPubkey('name', () => {})).resolves.toEqual('pubkey');
+        await expect(ens.getPubkey('name', () => {
+        })).resolves.toEqual('pubkey');
 
         expect(registryMock.resolver).toHaveBeenCalledWith('name');
 
@@ -434,7 +487,8 @@ describe('EnsTest', () => {
 
         registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
 
-        await expect(ens.getContent('name', () => {})).resolves.toEqual('content');
+        await expect(ens.getContent('name', () => {
+        })).resolves.toEqual('content');
 
         expect(registryMock.resolver).toHaveBeenCalledWith('name');
 
@@ -616,7 +670,8 @@ describe('EnsTest', () => {
 
         registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
 
-        await expect(ens.getMultihash('name', () => {})).resolves.toEqual('content');
+        await expect(ens.getMultihash('name', () => {
+        })).resolves.toEqual('content');
 
         expect(registryMock.resolver).toHaveBeenCalledWith('name');
 
