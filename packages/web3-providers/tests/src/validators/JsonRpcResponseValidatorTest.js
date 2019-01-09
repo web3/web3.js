@@ -31,7 +31,7 @@ describe('JsonRpcResponseValidatorTest', () => {
                 jsonrpc: '2.0',
                 error: 'Error'
             })
-        ).toEqual(new Error('Node error: Error'));
+        ).toEqual(new Error('Node error: "Error"'));
     });
 
     it('calls validate and returns an invalid payload id error ', () => {
