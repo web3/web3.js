@@ -1,13 +1,7 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {HttpProvider, ProvidersModuleFactory, ProviderDetector, ProviderResolver} from 'web3-providers';
-import {
-    MethodModuleFactory,
-    VersionMethod,
-    GetBlockMethod,
-    ListeningMethod,
-    PeerCountMethod
-} from 'web3-core-method';
+import {MethodModuleFactory, VersionMethod, GetBlockMethod, ListeningMethod, PeerCountMethod} from 'web3-core-method';
 import {AbstractWeb3Module} from 'web3-core';
 import MethodFactory from '../../src/factories/MethodFactory';
 import Network from '../../src/Network';
@@ -52,11 +46,9 @@ describe('NetworkTest', () => {
             return providerMock;
         });
 
-        providersModuleFactoryMock.createProviderDetector
-            .mockReturnValueOnce(providerDetectorMock);
+        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce(providerDetectorMock);
 
-        providersModuleFactoryMock.createProviderResolver
-            .mockReturnValueOnce(providerResolverMock);
+        providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce(providerResolverMock);
 
         new MethodModuleFactory();
         methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
@@ -76,33 +68,26 @@ describe('NetworkTest', () => {
     });
 
     it('constructor check', () => {
-        expect(network.currentProvider)
-            .toEqual(providerMock);
+        expect(network.currentProvider).toEqual(providerMock);
 
-        expect(network.providersModuleFactory)
-            .toEqual(providersModuleFactoryMock);
+        expect(network.providersModuleFactory).toEqual(providersModuleFactoryMock);
 
-        expect(network.methodFactory)
-            .toEqual(methodFactory);
+        expect(network.methodFactory).toEqual(methodFactory);
 
-        expect(network.utils)
-            .toEqual(Utils);
+        expect(network.utils).toEqual(Utils);
 
-        expect(network.formatters)
-            .toEqual(formatters);
+        expect(network.formatters).toEqual(formatters);
 
-        expect(network)
-            .toBeInstanceOf(AbstractWeb3Module);
+        expect(network).toBeInstanceOf(AbstractWeb3Module);
     });
 
     it('JSON-RPC methods check', () => {
-        expect(network.methodFactory.methods)
-            .toEqual({
-                getId: VersionMethod,
-                getBlock: GetBlockMethod,
-                isListening: ListeningMethod,
-                getPeerCount: PeerCountMethod
-            });
+        expect(network.methodFactory.methods).toEqual({
+            getId: VersionMethod,
+            getBlock: GetBlockMethod,
+            isListening: ListeningMethod,
+            getPeerCount: PeerCountMethod
+        });
     });
 
     it('calls getNetworkType and resolves to the network name "private', async () => {
@@ -113,26 +98,20 @@ describe('NetworkTest', () => {
         });
 
         network.getBlock = jest.fn((block, txObjects) => {
-            expect(block)
-                .toEqual(0);
+            expect(block).toEqual(0);
 
-            expect(txObjects)
-                .toEqual(false);
+            expect(txObjects).toEqual(false);
 
             return Promise.resolve({hash: 'private'});
         });
 
-        await expect(network.getNetworkType(callback)).resolves
-            .toEqual('private');
+        await expect(network.getNetworkType(callback)).resolves.toEqual('private');
 
-        expect(callback)
-            .toHaveBeenCalledWith(null, 'private');
+        expect(callback).toHaveBeenCalledWith(null, 'private');
 
-        expect(network.getBlock)
-            .toHaveBeenCalled();
+        expect(network.getBlock).toHaveBeenCalled();
 
-        expect(network.getId)
-            .toHaveBeenCalled();
+        expect(network.getId).toHaveBeenCalled();
     });
 
     it('calls getNetworkType and resolves to the network name "main', async () => {
@@ -143,26 +122,20 @@ describe('NetworkTest', () => {
         });
 
         network.getBlock = jest.fn((block, txObjects) => {
-            expect(block)
-                .toEqual(0);
+            expect(block).toEqual(0);
 
-            expect(txObjects)
-                .toEqual(false);
+            expect(txObjects).toEqual(false);
 
             return Promise.resolve({hash: '0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3'});
         });
 
-        await expect(network.getNetworkType(callback)).resolves
-            .toEqual('main');
+        await expect(network.getNetworkType(callback)).resolves.toEqual('main');
 
-        expect(callback)
-            .toHaveBeenCalledWith(null, 'main');
+        expect(callback).toHaveBeenCalledWith(null, 'main');
 
-        expect(network.getBlock)
-            .toHaveBeenCalled();
+        expect(network.getBlock).toHaveBeenCalled();
 
-        expect(network.getId)
-            .toHaveBeenCalled();
+        expect(network.getId).toHaveBeenCalled();
     });
 
     it('calls getNetworkType and resolves to the network name "morden', async () => {
@@ -173,26 +146,20 @@ describe('NetworkTest', () => {
         });
 
         network.getBlock = jest.fn((block, txObjects) => {
-            expect(block)
-                .toEqual(0);
+            expect(block).toEqual(0);
 
-            expect(txObjects)
-                .toEqual(false);
+            expect(txObjects).toEqual(false);
 
             return Promise.resolve({hash: '0cd786a2425d16f152c658316c423e6ce1181e15c3295826d7c9904cba9ce303'});
         });
 
-        await expect(network.getNetworkType(callback)).resolves
-            .toEqual('morden');
+        await expect(network.getNetworkType(callback)).resolves.toEqual('morden');
 
-        expect(callback)
-            .toHaveBeenCalledWith(null, 'morden');
+        expect(callback).toHaveBeenCalledWith(null, 'morden');
 
-        expect(network.getBlock)
-            .toHaveBeenCalled();
+        expect(network.getBlock).toHaveBeenCalled();
 
-        expect(network.getId)
-            .toHaveBeenCalled();
+        expect(network.getId).toHaveBeenCalled();
     });
 
     it('calls getNetworkType and resolves to the network name "ropsten', async () => {
@@ -203,26 +170,20 @@ describe('NetworkTest', () => {
         });
 
         network.getBlock = jest.fn((block, txObjects) => {
-            expect(block)
-                .toEqual(0);
+            expect(block).toEqual(0);
 
-            expect(txObjects)
-                .toEqual(false);
+            expect(txObjects).toEqual(false);
 
             return Promise.resolve({hash: '0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d'});
         });
 
-        await expect(network.getNetworkType(callback)).resolves
-            .toEqual('ropsten');
+        await expect(network.getNetworkType(callback)).resolves.toEqual('ropsten');
 
-        expect(callback)
-            .toHaveBeenCalledWith(null, 'ropsten');
+        expect(callback).toHaveBeenCalledWith(null, 'ropsten');
 
-        expect(network.getBlock)
-            .toHaveBeenCalled();
+        expect(network.getBlock).toHaveBeenCalled();
 
-        expect(network.getId)
-            .toHaveBeenCalled();
+        expect(network.getId).toHaveBeenCalled();
     });
 
     it('calls getNetworkType and resolves to the network name "rinkeby', async () => {
@@ -233,26 +194,20 @@ describe('NetworkTest', () => {
         });
 
         network.getBlock = jest.fn((block, txObjects) => {
-            expect(block)
-                .toEqual(0);
+            expect(block).toEqual(0);
 
-            expect(txObjects)
-                .toEqual(false);
+            expect(txObjects).toEqual(false);
 
             return Promise.resolve({hash: '0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177'});
         });
 
-        await expect(network.getNetworkType(callback)).resolves
-            .toEqual('rinkeby');
+        await expect(network.getNetworkType(callback)).resolves.toEqual('rinkeby');
 
-        expect(callback)
-            .toHaveBeenCalledWith(null, 'rinkeby');
+        expect(callback).toHaveBeenCalledWith(null, 'rinkeby');
 
-        expect(network.getBlock)
-            .toHaveBeenCalled();
+        expect(network.getBlock).toHaveBeenCalled();
 
-        expect(network.getId)
-            .toHaveBeenCalled();
+        expect(network.getId).toHaveBeenCalled();
     });
 
     it('calls getNetworkType and resolves to the network name "kovan', async () => {
@@ -263,72 +218,33 @@ describe('NetworkTest', () => {
         });
 
         network.getBlock = jest.fn((block, txObjects) => {
-            expect(block)
-                .toEqual(0);
+            expect(block).toEqual(0);
 
-            expect(txObjects)
-                .toEqual(false);
+            expect(txObjects).toEqual(false);
 
             return Promise.resolve({hash: '0xa3c565fc15c7478862d50ccd6561e3c06b24cc509bf388941c25ea985ce32cb9'});
         });
 
-        await expect(network.getNetworkType(callback)).resolves
-            .toEqual('kovan');
+        await expect(network.getNetworkType(callback)).resolves.toEqual('kovan');
 
-        expect(callback)
-            .toHaveBeenCalledWith(null, 'kovan');
+        expect(callback).toHaveBeenCalledWith(null, 'kovan');
 
-        expect(network.getBlock)
-            .toHaveBeenCalled();
+        expect(network.getBlock).toHaveBeenCalled();
 
-        expect(network.getId)
-            .toHaveBeenCalled();
+        expect(network.getId).toHaveBeenCalled();
     });
 
-    it('calls getNetworkType and resolves to the network name "kovan', async () => {
+    it('calls getNetworkType and rejects the promise', async () => {
         const callback = jest.fn();
 
         network.getId = jest.fn(() => {
-            return Promise.resolve(42);
+            return Promise.reject(new Error('ERROR'));
         });
 
-        network.getBlock = jest.fn((block, txObjects) => {
-            expect(block)
-                .toEqual(0);
+        await expect(network.getNetworkType(callback)).rejects.toEqual(new Error('ERROR'));
 
-            expect(txObjects)
-                .toEqual(false);
+        expect(callback).toHaveBeenCalledWith(new Error('ERROR'), null);
 
-            return Promise.resolve({hash: '0xa3c565fc15c7478862d50ccd6561e3c06b24cc509bf388941c25ea985ce32cb9'});
-        });
-
-        await expect(network.getNetworkType(callback)).resolves
-            .toEqual('kovan');
-
-        expect(callback)
-            .toHaveBeenCalledWith(null, 'kovan');
-
-        expect(network.getBlock)
-            .toHaveBeenCalled();
-
-        expect(network.getId)
-            .toHaveBeenCalled();
-    });
-
-    it('calls getNetworkType and resolves to the network name "kovan', async () => {
-        const callback = jest.fn();
-
-        network.getId = jest.fn(() => {
-            return Promise.reject(false);
-        });
-
-        await expect(network.getNetworkType(callback)).rejects
-            .toEqual(false);
-
-        expect(callback)
-            .toHaveBeenCalledWith(false, null);
-
-        expect(network.getId)
-            .toHaveBeenCalled();
+        expect(network.getId).toHaveBeenCalled();
     });
 });

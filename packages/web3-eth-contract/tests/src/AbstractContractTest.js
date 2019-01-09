@@ -1,7 +1,6 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
-import {Accounts} from 'web3-eth-accounts';
 import {HttpProvider, ProvidersModuleFactory, ProviderDetector, ProviderResolver} from 'web3-providers';
 import {MethodModuleFactory, GetPastLogsMethod} from 'web3-core-method';
 import {PromiEvent} from 'web3-core-promievent';
@@ -23,7 +22,6 @@ jest.mock('ProviderResolver');
 jest.mock('MethodModuleFactory');
 jest.mock('GetPastLogsMethod');
 jest.mock('AbiCoder');
-jest.mock('Accounts');
 jest.mock('../../src/mappers/AbiMapper');
 jest.mock('../../src/factories/ContractModuleFactory');
 jest.mock('../../src/factories/MethodFactory');
@@ -42,7 +40,6 @@ describe('AbstractContractTest', () => {
         methodModuleFactoryMock,
         contractModuleFactoryMock,
         abiCoderMock,
-        accountsMock,
         abiMapperMock,
         methodFactoryMock,
         abiModelMock,
@@ -68,9 +65,6 @@ describe('AbstractContractTest', () => {
 
         new AbiCoder();
         abiCoderMock = AbiCoder.mock.instances[0];
-
-        new Accounts();
-        accountsMock = Accounts.mock.instances[0];
 
         new AbiMapper();
         abiMapperMock = AbiMapper.mock.instances[0];
@@ -104,26 +98,19 @@ describe('AbstractContractTest', () => {
             return providerMock;
         });
 
-        providersModuleFactoryMock.createProviderDetector
-            .mockReturnValueOnce(providerDetectorMock);
+        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce(providerDetectorMock);
 
-        providersModuleFactoryMock.createProviderResolver
-            .mockReturnValueOnce(providerResolverMock);
+        providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce(providerResolverMock);
 
-        contractModuleFactoryMock.createAbiMapper
-            .mockReturnValueOnce(abiMapperMock);
+        contractModuleFactoryMock.createAbiMapper.mockReturnValueOnce(abiMapperMock);
 
-        contractModuleFactoryMock.createMethodFactory
-            .mockReturnValueOnce(methodFactoryMock);
+        contractModuleFactoryMock.createMethodFactory.mockReturnValueOnce(methodFactoryMock);
 
-        contractModuleFactoryMock.createMethodsProxy
-            .mockReturnValueOnce(methodsProxyMock);
+        contractModuleFactoryMock.createMethodsProxy.mockReturnValueOnce(methodsProxyMock);
 
-        contractModuleFactoryMock.createEventSubscriptionsProxy
-            .mockReturnValueOnce(eventSubscriptionsProxyMock);
+        contractModuleFactoryMock.createEventSubscriptionsProxy.mockReturnValueOnce(eventSubscriptionsProxyMock);
 
-        abiMapperMock.map
-            .mockReturnValueOnce(abiModelMock);
+        abiMapperMock.map.mockReturnValueOnce(abiModelMock);
 
         abstractContract = new AbstractContract(
             providerMock,
@@ -141,65 +128,55 @@ describe('AbstractContractTest', () => {
     });
 
     it('constructor check', () => {
-        expect(contractModuleFactoryMock.createAbiMapper)
-            .toHaveBeenCalled();
+        expect(contractModuleFactoryMock.createAbiMapper).toHaveBeenCalled();
 
-        expect(contractModuleFactoryMock.createMethodFactory)
-            .toHaveBeenCalled();
+        expect(contractModuleFactoryMock.createMethodFactory).toHaveBeenCalled();
 
-        expect(contractModuleFactoryMock.createMethodsProxy)
-            .toHaveBeenCalledWith(abstractContract, abiModelMock, PromiEvent);
+        expect(contractModuleFactoryMock.createMethodsProxy).toHaveBeenCalledWith(
+            abstractContract,
+            abiModelMock,
+            PromiEvent
+        );
 
-        expect(contractModuleFactoryMock.createEventSubscriptionsProxy)
-            .toHaveBeenCalledWith(abstractContract, abiModelMock, PromiEvent);
+        expect(contractModuleFactoryMock.createEventSubscriptionsProxy).toHaveBeenCalledWith(
+            abstractContract,
+            abiModelMock,
+            PromiEvent
+        );
 
-        expect(abiMapperMock.map)
-            .toHaveBeenCalledWith([]);
+        expect(abiMapperMock.map).toHaveBeenCalledWith([]);
 
-        expect(abstractContract.contractModuleFactory)
-            .toEqual(contractModuleFactoryMock);
+        expect(abstractContract.contractModuleFactory).toEqual(contractModuleFactoryMock);
 
-        expect(abstractContract.abiCoder)
-            .toEqual(abiCoderMock);
+        expect(abstractContract.abiCoder).toEqual(abiCoderMock);
 
-        expect(abstractContract.utils)
-            .toEqual(Utils);
+        expect(abstractContract.utils).toEqual(Utils);
 
-        expect(abstractContract.formatters)
-            .toEqual(formatters);
+        expect(abstractContract.formatters).toEqual(formatters);
 
-        expect(abstractContract.abiMapper)
-            .toEqual(abiMapperMock);
+        expect(abstractContract.abiMapper).toEqual(abiMapperMock);
 
-        expect(abstractContract.options)
-            .toEqual(options);
+        expect(abstractContract.options).toEqual(options);
 
-        expect(abstractContract.PromiEvent)
-            .toEqual(PromiEvent);
+        expect(abstractContract.PromiEvent).toEqual(PromiEvent);
 
-        expect(abstractContract.methodFactory)
-            .toEqual(methodFactoryMock);
+        expect(abstractContract.methodFactory).toEqual(methodFactoryMock);
 
-        expect(abstractContract.abiModel)
-            .toEqual(abiModelMock);
+        expect(abstractContract.abiModel).toEqual(abiModelMock);
 
-        expect(abstractContract.address)
-            .toEqual('0x0');
+        expect(abstractContract.address).toEqual('0x0');
 
-        expect(abstractContract.methods)
-            .toEqual(methodsProxyMock);
+        expect(abstractContract.methods).toEqual(methodsProxyMock);
 
-        expect(abstractContract.events)
-            .toEqual(eventSubscriptionsProxyMock);
+        expect(abstractContract.events).toEqual(eventSubscriptionsProxyMock);
 
-        expect(abstractContract)
-            .toBeInstanceOf(AbstractWeb3Module);
+        expect(abstractContract).toBeInstanceOf(AbstractWeb3Module);
     });
 
     it('calls once and throws an error because no callback is defined', () => {
-       expect(() => {
-           abstractContract.once('event', {});
-       }).toThrow('Once requires a callback function.');
+        expect(() => {
+            abstractContract.once('event', {});
+        }).toThrow('Once requires a callback function.');
     });
 
     it('calls once and returns one subscription item', () => {
@@ -207,21 +184,17 @@ describe('AbstractContractTest', () => {
         const eventSubscriptionMock = EventLogSubscription.mock.instances[0];
 
         eventSubscriptionMock.on = jest.fn((event, callback) => {
-           expect(event)
-               .toEqual('data');
+            expect(event).toEqual('data');
 
-           expect(callback)
-               .toBeInstanceOf(Function);
+            expect(callback).toBeInstanceOf(Function);
 
-           callback();
+            callback();
         });
 
         eventSubscriptionsProxyMock.event = jest.fn((options, callback) => {
-            expect(options)
-                .toEqual({});
+            expect(options).toEqual({});
 
-            expect(callback)
-                .toBeInstanceOf(Function);
+            expect(callback).toBeInstanceOf(Function);
 
             return eventSubscriptionMock;
         });
@@ -229,128 +202,97 @@ describe('AbstractContractTest', () => {
         const options = {fromBlock: true};
         abstractContract.once('event', options, () => {});
 
-        expect(eventSubscriptionMock.unsubscribe)
-            .toHaveBeenCalled();
+        expect(eventSubscriptionMock.unsubscribe).toHaveBeenCalled();
 
-        expect(eventSubscriptionMock.on)
-            .toHaveBeenCalled();
+        expect(eventSubscriptionMock.on).toHaveBeenCalled();
 
-        expect(options.fromBlock)
-            .toBeUndefined();
+        expect(options.fromBlock).toBeUndefined();
     });
 
     it('calls getPastEvents and returns a resolved promise', async () => {
-        abiModelMock.hasEvent
-            .mockReturnValueOnce(true);
+        abiModelMock.hasEvent.mockReturnValueOnce(true);
 
-        abiModelMock.getEvent
-            .mockReturnValueOnce({});
+        abiModelMock.getEvent.mockReturnValueOnce({});
 
         new GetPastLogsMethod();
         const getPastLogsMethodMock = GetPastLogsMethod.mock.instances[0];
 
-        getPastLogsMethodMock.execute
-            .mockReturnValueOnce(Promise.resolve(true));
+        getPastLogsMethodMock.execute.mockReturnValueOnce(Promise.resolve(true));
 
-        methodFactoryMock.createPastEventLogsMethod
-            .mockReturnValueOnce(getPastLogsMethodMock);
+        methodFactoryMock.createPastEventLogsMethod.mockReturnValueOnce(getPastLogsMethodMock);
 
-        await expect(abstractContract.getPastEvents('eventName', {}, () => {})).resolves
-            .toEqual(true);
+        await expect(abstractContract.getPastEvents('eventName', {}, () => {})).resolves.toEqual(true);
 
-        expect(abiModelMock.hasEvent)
-            .toHaveBeenCalledWith('eventName');
+        expect(abiModelMock.hasEvent).toHaveBeenCalledWith('eventName');
 
-        expect(abiModelMock.getEvent)
-            .toHaveBeenCalledWith('eventName');
+        expect(abiModelMock.getEvent).toHaveBeenCalledWith('eventName');
 
-        expect(getPastLogsMethodMock.execute)
-            .toHaveBeenCalledWith(abstractContract);
+        expect(getPastLogsMethodMock.execute).toHaveBeenCalledWith(abstractContract);
 
-        expect(methodFactoryMock.createPastEventLogsMethod)
-            .toHaveBeenCalledWith({});
+        expect(methodFactoryMock.createPastEventLogsMethod).toHaveBeenCalledWith({});
 
-        expect(getPastLogsMethodMock.parameters)
-            .toEqual([{}]);
+        expect(getPastLogsMethodMock.parameters).toEqual([{}]);
 
-        expect(getPastLogsMethodMock.callback)
-            .toBeInstanceOf(Function);
+        expect(getPastLogsMethodMock.callback).toBeInstanceOf(Function);
     });
 
     it('calls getPastEvents and returns a rejected promise', async () => {
-        abiModelMock.hasEvent
-            .mockReturnValueOnce(false);
+        abiModelMock.hasEvent.mockReturnValueOnce(false);
 
-        await expect(abstractContract.getPastEvents('eventName', {}, () => {})).rejects
-            .toThrow('Event with name "eventName" does not exists.');
+        await expect(abstractContract.getPastEvents('eventName', {}, () => {})).rejects.toThrow(
+            'Event with name "eventName" does not exists.'
+        );
 
-        expect(abiModelMock.hasEvent)
-            .toHaveBeenCalledWith('eventName');
+        expect(abiModelMock.hasEvent).toHaveBeenCalledWith('eventName');
     });
 
     it('calls deploy', () => {
-       methodsProxyMock.contractConstructor = jest.fn(() => {
-           return true;
-       });
+        methodsProxyMock.contractConstructor = jest.fn(() => {
+            return true;
+        });
 
-       expect(abstractContract.deploy({}))
-           .toEqual(true);
+        expect(abstractContract.deploy({})).toEqual(true);
 
-       expect(methodsProxyMock.contractConstructor)
-           .toHaveBeenCalledWith({});
+        expect(methodsProxyMock.contractConstructor).toHaveBeenCalledWith({});
     });
 
     it('calls clone and returns the cloned contract object', () => {
-        providersModuleFactoryMock.createProviderDetector
-            .mockReturnValueOnce(providerDetectorMock);
+        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce(providerDetectorMock);
 
-        providersModuleFactoryMock.createProviderResolver
-            .mockReturnValueOnce(providerResolverMock);
+        providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce(providerResolverMock);
 
-        contractModuleFactoryMock.createAbiMapper
-            .mockReturnValueOnce(abiMapperMock);
+        contractModuleFactoryMock.createAbiMapper.mockReturnValueOnce(abiMapperMock);
 
-        contractModuleFactoryMock.createMethodFactory
-            .mockReturnValueOnce(methodFactoryMock);
+        contractModuleFactoryMock.createMethodFactory.mockReturnValueOnce(methodFactoryMock);
 
-        contractModuleFactoryMock.createMethodsProxy
-            .mockReturnValueOnce(methodsProxyMock);
+        contractModuleFactoryMock.createMethodsProxy.mockReturnValueOnce(methodsProxyMock);
 
-        contractModuleFactoryMock.createEventSubscriptionsProxy
-            .mockReturnValueOnce(eventSubscriptionsProxyMock);
+        contractModuleFactoryMock.createEventSubscriptionsProxy.mockReturnValueOnce(eventSubscriptionsProxyMock);
 
-        abiMapperMock.map
-            .mockReturnValueOnce(abiModelMock);
+        abiMapperMock.map.mockReturnValueOnce(abiModelMock);
 
         const clone = abstractContract.clone();
 
-        expect(clone)
-            .toBeInstanceOf(AbstractContract);
+        expect(clone).toBeInstanceOf(AbstractContract);
 
         clone.address = '000';
 
-        expect(clone.address)
-            .toEqual('000');
+        expect(clone.address).toEqual('000');
     });
 
     it('gets the jsonInterface property', () => {
-        expect(abstractContract.jsonInterface)
-            .toEqual(abiModelMock);
+        expect(abstractContract.jsonInterface).toEqual(abiModelMock);
     });
 
     it('sets the jsonInterface property', () => {
-        abiMapperMock.map
-            .mockReturnValueOnce(abiModelMock);
+        abiMapperMock.map.mockReturnValueOnce(abiModelMock);
 
         abstractContract.jsonInterface = {};
 
-        expect(abiMapperMock.map)
-            .toHaveBeenCalledWith({});
+        expect(abiMapperMock.map).toHaveBeenCalledWith({});
 
-        expect(abstractContract.methods.abiModel)
-            .toEqual(abiModelMock);
+        expect(abstractContract.methods.abiModel).toEqual(abiModelMock);
 
-        expect(abstractContract.events.abiModel)
-            .toEqual(abiModelMock);
+        expect(abstractContract.events.abiModel).toEqual(abiModelMock);
     });
 });

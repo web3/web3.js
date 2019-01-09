@@ -24,7 +24,6 @@ import http from 'http';
 import https from 'https';
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
-import {NetworkError} from 'xhr2-cookies/dist/index';
 
 export default class HttpProvider {
     /**
@@ -53,14 +52,14 @@ export default class HttpProvider {
      * Added this method to have a better error message if someone is trying to create a subscription with this provider.
      */
     subscribe() {
-        throw Error('Subscriptions are not supported with the HttpProvider.');
+        throw new Error('Subscriptions are not supported with the HttpProvider.');
     }
 
     /**
      * Added this method to have a better error message if someone is trying to unsubscribe with this provider.
      */
     unsubscribe() {
-        throw Error('Subscriptions are not supported with the HttpProvider.');
+        throw new Error('Subscriptions are not supported with the HttpProvider.');
     }
 
     /**
@@ -81,16 +80,15 @@ export default class HttpProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters))
-            .then(response => {
-                const validationResult = JsonRpcResponseValidator.validate(response);
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
+            const validationResult = JsonRpcResponseValidator.validate(response);
 
-                if (validationResult instanceof Error) {
-                    throw validationResult;
-                }
+            if (validationResult instanceof Error) {
+                throw validationResult;
+            }
 
-                return response;
-            });
+            return response;
+        });
     }
 
     /**
@@ -106,7 +104,7 @@ export default class HttpProvider {
     sendBatch(methods, moduleInstance) {
         let payload = [];
 
-        methods.forEach(method => {
+        methods.forEach((method) => {
             method.beforeExecution(moduleInstance);
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         });

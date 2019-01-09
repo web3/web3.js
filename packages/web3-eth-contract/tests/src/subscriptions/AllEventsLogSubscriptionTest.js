@@ -17,10 +17,7 @@ jest.mock('../../../src/decoders/AllEventsLogDecoder');
  * AllEventsLogSubscription test
  */
 describe('AllEventsLogSubscriptionTest', () => {
-    let allEventsLogSubscription,
-        contractMock,
-        getPastLogsMethodMock,
-        allEventsLogDecoderMock;
+    let allEventsLogSubscription, contractMock, getPastLogsMethodMock, allEventsLogDecoderMock;
 
     beforeEach(() => {
         new AbstractContract();
@@ -43,26 +40,20 @@ describe('AllEventsLogSubscriptionTest', () => {
     });
 
     it('constructor check', () => {
-        expect(allEventsLogSubscription.allEventsLogDecoder)
-            .toEqual(allEventsLogDecoderMock);
+        expect(allEventsLogSubscription.allEventsLogDecoder).toEqual(allEventsLogDecoderMock);
 
-        expect(allEventsLogSubscription)
-            .toBeInstanceOf(LogSubscription);
+        expect(allEventsLogSubscription).toBeInstanceOf(LogSubscription);
     });
 
     it('calls onNewSubscriptionItem returns decoded item', () => {
-        allEventsLogDecoderMock.decode
-            .mockReturnValueOnce(true);
+        allEventsLogDecoderMock.decode.mockReturnValueOnce(true);
 
-        formatters.outputLogFormatter
-            .mockReturnValueOnce({item: false});
+        formatters.outputLogFormatter.mockReturnValueOnce({item: false});
 
         allEventsLogSubscription.onNewSubscriptionItem(null, {item: true});
 
-        expect(allEventsLogDecoderMock.decode)
-            .toHaveBeenCalledWith({item: false});
+        expect(allEventsLogDecoderMock.decode).toHaveBeenCalledWith({item: false});
 
-        expect(formatters.outputLogFormatter)
-            .toHaveBeenCalledWith({item: true});
+        expect(formatters.outputLogFormatter).toHaveBeenCalledWith({item: true});
     });
 });

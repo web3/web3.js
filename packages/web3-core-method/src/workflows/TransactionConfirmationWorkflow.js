@@ -71,10 +71,7 @@ export default class TransactionConfirmationWorkflow {
                 this.timeoutCounter++;
                 if (!this.isTimeoutTimeExceeded(moduleInstance, this.newHeadsWatcher.isPolling)) {
                     this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
-                        const validationResult = this.transactionReceiptValidator.validate(
-                            receipt,
-                            method.parameters
-                        );
+                        const validationResult = this.transactionReceiptValidator.validate(receipt, method.parameters);
 
                         if (validationResult === true) {
                             this.confirmationsCounter++;
@@ -206,6 +203,5 @@ export default class TransactionConfirmationWorkflow {
         promiEvent.reject(error);
         promiEvent.emit('error', error);
         promiEvent.removeAllListeners();
-
     }
 }

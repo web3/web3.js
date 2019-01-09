@@ -12,10 +12,7 @@ jest.mock('../../../src/models/AbiItemModel');
  * AllEventsFilterEncoder test
  */
 describe('AllEventsFilterEncoderTest', () => {
-    let allEventsFilterEncoder,
-        abiCoderMock,
-        abiModelMock,
-        abiItemModelMock;
+    let allEventsFilterEncoder, abiCoderMock, abiModelMock, abiItemModelMock;
 
     beforeEach(() => {
         new AbiCoder();
@@ -32,25 +29,20 @@ describe('AllEventsFilterEncoderTest', () => {
     });
 
     it('calls encode an returns the expected value', () => {
-        abiModelMock.getEvents
-            .mockReturnValueOnce({0: abiItemModelMock});
+        abiModelMock.getEvents.mockReturnValueOnce({0: abiItemModelMock});
 
-        abiItemModelMock.getIndexedInputs
-            .mockReturnValueOnce(
-                [
-                    {
-                        type: 'bytes32',
-                        name: 'myName'
-                    },
-                    {
-                        type: 'uint256[]',
-                        name: 'arrayItem'
-                    }
-                ]
-            );
+        abiItemModelMock.getIndexedInputs.mockReturnValueOnce([
+            {
+                type: 'bytes32',
+                name: 'myName'
+            },
+            {
+                type: 'uint256[]',
+                name: 'arrayItem'
+            }
+        ]);
 
-        abiCoderMock.encodeParameter
-            .mockReturnValue('0x0');
+        abiCoderMock.encodeParameter.mockReturnValue('0x0');
 
         const filter = {
             myName: 'theValue',
@@ -59,16 +51,12 @@ describe('AllEventsFilterEncoderTest', () => {
 
         const topics = allEventsFilterEncoder.encode(abiModelMock, filter);
 
-        expect(topics)
-            .toEqual([['0x0', ['0x0', '0x0']]]);
+        expect(topics).toEqual([['0x0', ['0x0', '0x0']]]);
 
-        expect(abiCoderMock.encodeParameter)
-            .toHaveBeenNthCalledWith(1, 'bytes32', filter.myName);
+        expect(abiCoderMock.encodeParameter).toHaveBeenNthCalledWith(1, 'bytes32', filter.myName);
 
-        expect(abiCoderMock.encodeParameter)
-            .toHaveBeenNthCalledWith(2, 'uint256[]', filter.arrayItem[0]);
+        expect(abiCoderMock.encodeParameter).toHaveBeenNthCalledWith(2, 'uint256[]', filter.arrayItem[0]);
 
-        expect(abiCoderMock.encodeParameter)
-            .toHaveBeenNthCalledWith(3, 'uint256[]', filter.arrayItem[1]);
+        expect(abiCoderMock.encodeParameter).toHaveBeenNthCalledWith(3, 'uint256[]', filter.arrayItem[1]);
     });
 });

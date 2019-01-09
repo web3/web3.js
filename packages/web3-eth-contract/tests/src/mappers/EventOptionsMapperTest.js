@@ -11,8 +11,7 @@ jest.mock('formatters');
  * EventOptionsMapper test
  */
 describe('EventOptionsMapperTest', () => {
-    let eventOptionsMapper,
-        eventFilterEncoderMock;
+    let eventOptionsMapper, eventFilterEncoderMock;
 
     beforeEach(() => {
         new EventFilterEncoder();
@@ -22,11 +21,9 @@ describe('EventOptionsMapperTest', () => {
     });
 
     it('constructor check', () => {
-        expect(eventOptionsMapper.formatters)
-            .toEqual(formatters);
+        expect(eventOptionsMapper.formatters).toEqual(formatters);
 
-        expect(eventOptionsMapper.eventFilterEncoder)
-            .toEqual(eventFilterEncoderMock);
+        expect(eventOptionsMapper.eventFilterEncoder).toEqual(eventFilterEncoderMock);
     });
 
     it('calls map with defined fromBlock property and returns the expected result', () => {
@@ -34,35 +31,28 @@ describe('EventOptionsMapperTest', () => {
             fromBlock: 0
         };
 
-        formatters.inputBlockNumberFormatter
-            .mockReturnValueOnce('block');
+        formatters.inputBlockNumberFormatter.mockReturnValueOnce('block');
 
-        expect(eventOptionsMapper.map({}, {}, options))
-            .toHaveProperty('fromBlock', 'block');
+        expect(eventOptionsMapper.map({}, {}, options)).toHaveProperty('fromBlock', 'block');
 
-        expect(formatters.inputBlockNumberFormatter)
-            .toHaveBeenCalledWith(0);
+        expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
     });
 
     it('calls map with undefined fromBlock property and returns the expected result', () => {
-        expect(eventOptionsMapper.map({}, {defaultBlock: 'block'}, {}))
-            .toHaveProperty('fromBlock', 'block');
+        expect(eventOptionsMapper.map({}, {defaultBlock: 'block'}, {})).toHaveProperty('fromBlock', 'block');
     });
 
     it('calls map with defined toBlock property and returns the expected result', () => {
         const options = {
             fromBlock: 0,
-            toBlock: 0,
+            toBlock: 0
         };
 
-        formatters.inputBlockNumberFormatter
-            .mockReturnValue('block');
+        formatters.inputBlockNumberFormatter.mockReturnValue('block');
 
-        expect(eventOptionsMapper.map({}, {}, options))
-            .toHaveProperty('toBlock', 'block');
+        expect(eventOptionsMapper.map({}, {}, options)).toHaveProperty('toBlock', 'block');
 
-        expect(formatters.inputBlockNumberFormatter)
-            .toHaveBeenCalledWith(0);
+        expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
     });
 
     it('calls map with defined filter property and returns the expected result', () => {
@@ -70,41 +60,38 @@ describe('EventOptionsMapperTest', () => {
             filter: []
         };
 
-        eventFilterEncoderMock.encode
-            .mockReturnValueOnce([0]);
+        eventFilterEncoderMock.encode.mockReturnValueOnce([0]);
 
-        expect(eventOptionsMapper.map({anonymous: true}, {defaultBlock: 0}, options))
-            .toHaveProperty('topics', [0]);
+        expect(eventOptionsMapper.map({anonymous: true}, {defaultBlock: 0}, options)).toHaveProperty('topics', [0]);
 
-        expect(eventFilterEncoderMock.encode)
-            .toHaveBeenCalledWith({anonymous: true}, []);
+        expect(eventFilterEncoderMock.encode).toHaveBeenCalledWith({anonymous: true}, []);
     });
 
     it('calls map with undefined address property and returns the expected result', () => {
         const options = {
-            fromBlock: 0,
+            fromBlock: 0
         };
 
-        expect(eventOptionsMapper.map({}, {defaultBlock: 0, address: true}, options))
-            .toHaveProperty('address', true);
+        expect(eventOptionsMapper.map({}, {defaultBlock: 0, address: true}, options)).toHaveProperty('address', true);
     });
 
     it('calls map with anonymous property false and returns the expected result', () => {
         const options = {
             filter: []
-        },
-        abiItemModel = {
+        };
+
+        const abiItemModel = {
             anonymous: false,
             signature: 'signature'
         };
 
-        eventFilterEncoderMock.encode
-            .mockReturnValueOnce([0]);
+        eventFilterEncoderMock.encode.mockReturnValueOnce([0]);
 
-        expect(eventOptionsMapper.map(abiItemModel, {defaultBlock: 0}, options))
-            .toHaveProperty('topics', ['signature', 0]);
+        expect(eventOptionsMapper.map(abiItemModel, {defaultBlock: 0}, options)).toHaveProperty('topics', [
+            'signature',
+            0
+        ]);
 
-        expect(eventFilterEncoderMock.encode)
-            .toHaveBeenCalledWith(abiItemModel, []);
+        expect(eventFilterEncoderMock.encode).toHaveBeenCalledWith(abiItemModel, []);
     });
 });

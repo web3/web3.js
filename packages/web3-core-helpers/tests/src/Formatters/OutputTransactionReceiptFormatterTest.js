@@ -20,23 +20,20 @@ describe('OutputTransactionReceiptFormatterTest', () => {
             contractAddress: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
         };
 
-        expect(outputTransactionReceiptFormatter(receipt))
-            .toEqual(
-                {
-                    status: false,
-                    cumulativeGasUsed: 100,
-                    gasUsed: 100,
-                    blockNumber: 0,
-                    transactionIndex: 0,
-                    gas: 100,
-                    gasPrice: 100,
-                    nonce: 1,
-                    value: 100,
-                    to: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
-                    from: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
-                    contractAddress: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
-                }
-            );
+        expect(outputTransactionReceiptFormatter(receipt)).toEqual({
+            status: false,
+            cumulativeGasUsed: 100,
+            gasUsed: 100,
+            blockNumber: 0,
+            transactionIndex: 0,
+            gas: 100,
+            gasPrice: 100,
+            nonce: 1,
+            value: 100,
+            to: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
+            from: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
+            contractAddress: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
+        });
     });
 
     it('call outputTransactionReceiptFormatter with a valid receipt and logs', () => {
@@ -56,34 +53,33 @@ describe('OutputTransactionReceiptFormatterTest', () => {
             logs: [{}]
         };
 
-        expect(outputTransactionReceiptFormatter(receipt))
-            .toEqual(
+        expect(outputTransactionReceiptFormatter(receipt)).toEqual({
+            status: false,
+            cumulativeGasUsed: 100,
+            gasUsed: 100,
+            blockNumber: 0,
+            transactionIndex: 0,
+            gas: 100,
+            gasPrice: 100,
+            nonce: 1,
+            value: 100,
+            to: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
+            from: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
+            contractAddress: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078',
+            logs: [
                 {
-                    status: false,
-                    cumulativeGasUsed: 100,
-                    gasUsed: 100,
-                    blockNumber: 0,
-                    transactionIndex: 0,
-                    gas: 100,
-                    gasPrice: 100,
-                    nonce: 1,
-                    value: 100,
-                    to: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
-                    from: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
-                    contractAddress: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078',
-                    logs: [{
-                        blockNumber: undefined,
-                        id: null,
-                        logIndex: undefined,
-                        transactionIndex: undefined
-                    }],
+                    blockNumber: undefined,
+                    id: null,
+                    logIndex: undefined,
+                    transactionIndex: undefined
                 }
-            );
+            ]
+        });
     });
 
     it('call outputTransactionReceiptFormatter with invalid argument', () => {
         expect(() => {
-            outputTransactionReceiptFormatter('STRING')
+            outputTransactionReceiptFormatter('STRING');
         }).toThrow('Received receipt is invalid: STRING');
     });
 });

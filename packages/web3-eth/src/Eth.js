@@ -21,7 +21,6 @@
  */
 
 import {AbstractWeb3Module} from 'web3-core';
-import {AbstractContract} from 'web3-eth-contract';
 
 export default class Eth extends AbstractWeb3Module {
     /**
@@ -113,7 +112,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {String|Number} value
      */
     set defaultGasPrice(value) {
-        this.initiatedContracts.forEach(contract => {
+        this.initiatedContracts.forEach((contract) => {
             contract.defaultGasPrice = value;
         });
 
@@ -142,7 +141,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Number} value
      */
     set defaultGas(value) {
-        this.initiatedContracts.forEach(contract => {
+        this.initiatedContracts.forEach((contract) => {
             contract.defaultGas = value;
         });
 
@@ -171,7 +170,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionBlockTimeout(value) {
-        this.initiatedContracts.forEach(contract => {
+        this.initiatedContracts.forEach((contract) => {
             contract.transactionBlockTimeout = value;
         });
 
@@ -200,7 +199,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionConfirmationBlocks(value) {
-        this.initiatedContracts.forEach(contract => {
+        this.initiatedContracts.forEach((contract) => {
             contract.transactionConfirmationBlocks = value;
         });
 
@@ -229,7 +228,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionPollingTimeout(value) {
-        this.initiatedContracts.forEach(contract => {
+        this.initiatedContracts.forEach((contract) => {
             contract.transactionPollingTimeout = value;
         });
 
@@ -258,7 +257,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {String} value
      */
     set defaultAccount(value) {
-        this.initiatedContracts.forEach(contract => {
+        this.initiatedContracts.forEach((contract) => {
             contract.defaultAccount = this.utils.toChecksumAddress(value);
         });
 
@@ -287,7 +286,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {String|Number}value
      */
     set defaultBlock(value) {
-        this.initiatedContracts.forEach(contract => {
+        this.initiatedContracts.forEach((contract) => {
             contract.defaultBlock = value;
         });
 
@@ -324,11 +323,7 @@ export default class Eth extends AbstractWeb3Module {
         switch (type) {
             case 'logs':
                 return this.subscriptionsFactory
-                    .createLogSubscription(
-                        options,
-                        this,
-                        this.methodFactory.createMethod('getPastLogs')
-                    )
+                    .createLogSubscription(options, this, this.methodFactory.createMethod('getPastLogs'))
                     .subscribe(callback);
 
             case 'newBlockHeaders':
@@ -355,7 +350,7 @@ export default class Eth extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        const setContractProviders = this.initiatedContracts.every(contract => {
+        const setContractProviders = this.initiatedContracts.every((contract) => {
             return contract.setProvider(provider, net);
         });
 

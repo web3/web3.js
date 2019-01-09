@@ -98,15 +98,17 @@ export default class Ens extends AbstractWeb3Module {
     setAddress(name, address, sendOptions, callback) {
         const promiEvent = new this.registry.PromiEvent();
 
-        this.registry.resolver(name).then(resolver => {
-            resolver.methods.setAddr(namehash.hash(name), address).send(sendOptions, callback)
-                .on('transactionHash', transactionHash => {
+        this.registry.resolver(name).then((resolver) => {
+            resolver.methods
+                .setAddr(namehash.hash(name), address)
+                .send(sendOptions, callback)
+                .on('transactionHash', (transactionHash) => {
                     promiEvent.emit('transactionHash', transactionHash);
                 })
                 .on('confirmation', (confirmationNumber, receipt) => {
                     promiEvent.emit('confirmation', confirmationNumber, receipt);
                 })
-                .on('receipt', receipt => {
+                .on('receipt', (receipt) => {
                     if (isFunction(callback)) {
                         callback(receipt);
                     }
@@ -114,7 +116,7 @@ export default class Ens extends AbstractWeb3Module {
                     promiEvent.emit('receipt', receipt);
                     promiEvent.resolve(receipt);
                 })
-                .on('error', error => {
+                .on('error', (error) => {
                     if (isFunction(callback)) {
                         callback(error);
                     }
@@ -161,15 +163,17 @@ export default class Ens extends AbstractWeb3Module {
     setPubkey(name, x, y, sendOptions, callback) {
         const promiEvent = new this.registry.PromiEvent();
 
-        this.registry.resolver(name).then(resolver => {
-            resolver.methods.setPubkey(namehash.hash(name), x, y).send(sendOptions, callback)
-                .on('transactionHash', transactionHash => {
+        this.registry.resolver(name).then((resolver) => {
+            resolver.methods
+                .setPubkey(namehash.hash(name), x, y)
+                .send(sendOptions, callback)
+                .on('transactionHash', (transactionHash) => {
                     promiEvent.emit('transactionHash', transactionHash);
                 })
                 .on('confirmation', (confirmationNumber, receipt) => {
                     promiEvent.emit('confirmation', confirmationNumber, receipt);
                 })
-                .on('receipt', receipt => {
+                .on('receipt', (receipt) => {
                     if (isFunction(callback)) {
                         callback(receipt);
                     }
@@ -177,7 +181,7 @@ export default class Ens extends AbstractWeb3Module {
                     promiEvent.emit('receipt', receipt);
                     promiEvent.resolve(receipt);
                 })
-                .on('error', error => {
+                .on('error', (error) => {
                     if (isFunction(callback)) {
                         callback(error);
                     }
@@ -223,15 +227,17 @@ export default class Ens extends AbstractWeb3Module {
     setContent(name, hash, sendOptions, callback) {
         const promiEvent = new this.registry.PromiEvent();
 
-        this.registry.resolver(name).then(resolver => {
-            resolver.methods.setContent(namehash.hash(name), hash).send(sendOptions, callback)
-                .on('transactionHash', transactionHash => {
+        this.registry.resolver(name).then((resolver) => {
+            resolver.methods
+                .setContent(namehash.hash(name), hash)
+                .send(sendOptions, callback)
+                .on('transactionHash', (transactionHash) => {
                     promiEvent.emit('transactionHash', transactionHash);
                 })
                 .on('confirmation', (confirmationNumber, receipt) => {
                     promiEvent.emit('confirmation', confirmationNumber, receipt);
                 })
-                .on('receipt', receipt => {
+                .on('receipt', (receipt) => {
                     if (isFunction(callback)) {
                         callback(receipt);
                     }
@@ -239,7 +245,7 @@ export default class Ens extends AbstractWeb3Module {
                     promiEvent.emit('receipt', receipt);
                     promiEvent.resolve(receipt);
                 })
-                .on('error', error => {
+                .on('error', (error) => {
                     if (isFunction(callback)) {
                         callback(error);
                     }
@@ -285,24 +291,25 @@ export default class Ens extends AbstractWeb3Module {
     setMultihash(name, hash, sendOptions, callback) {
         const promiEvent = new this.registry.PromiEvent();
 
-        this.registry.resolver(name).then(resolver => {
-            resolver.methods.setMultihash(namehash.hash(name), hash).send(sendOptions, callback)
-                .on('transactionHash', transactionHash => {
+        this.registry.resolver(name).then((resolver) => {
+            resolver.methods
+                .setMultihash(namehash.hash(name), hash)
+                .send(sendOptions, callback)
+                .on('transactionHash', (transactionHash) => {
                     promiEvent.emit('transactionHash', transactionHash);
                 })
                 .on('confirmation', (confirmationNumber, receipt) => {
                     promiEvent.emit('confirmation', confirmationNumber, receipt);
                 })
-                .on('receipt', receipt => {
+                .on('receipt', (receipt) => {
                     if (isFunction(callback)) {
                         callback(receipt);
                     }
 
                     promiEvent.emit('receipt', receipt);
                     promiEvent.resolve(receipt);
-
                 })
-                .on('error', error => {
+                .on('error', (error) => {
                     if (isFunction(callback)) {
                         callback(error);
                     }

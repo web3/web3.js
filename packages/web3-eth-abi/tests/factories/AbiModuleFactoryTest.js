@@ -15,7 +15,6 @@ describe('AbiModuleFactoryTest', () => {
     });
 
     it('calls createAbiCoder and returns AbiCoder object', () => {
-        expect(abiModuleFactory.createAbiCoder())
-            .toBeInstanceOf(AbiCoder);
+        expect(abiModuleFactory.createAbiCoder()).toBeInstanceOf(AbiCoder);
     });
 });

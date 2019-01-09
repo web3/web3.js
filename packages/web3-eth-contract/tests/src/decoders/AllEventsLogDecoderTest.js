@@ -12,10 +12,7 @@ jest.mock('../../../src/models/AbiItemModel');
  * AllEventsLogDecoder test
  */
 describe('AllEventsLogDecoderTest', () => {
-    let allEventsLogDecoder,
-        abiCoderMock,
-        abiModelMock;
-
+    let allEventsLogDecoder, abiCoderMock, abiModelMock;
 
     beforeEach(() => {
         new AbiCoder();
@@ -29,60 +26,46 @@ describe('AllEventsLogDecoderTest', () => {
     });
 
     it('constructor check', () => {
-        expect(allEventsLogDecoder.abiCoder)
-            .toEqual(abiCoderMock);
+        expect(allEventsLogDecoder.abiCoder).toEqual(abiCoderMock);
 
-        expect(allEventsLogDecoder.abiModel)
-            .toEqual(abiModelMock);
+        expect(allEventsLogDecoder.abiModel).toEqual(abiModelMock);
     });
 
     it('calls decode and returns the expected value', () => {
         new AbiItemModel({});
-        const abiItemModel = AbiItemModel.mock.instances[0],
-            response = {
-                topics: ['0x0'],
-                data: '0x0',
-            };
+        const abiItemModel = AbiItemModel.mock.instances[0];
 
-        abiCoderMock.decodeLog
-            .mockReturnValueOnce(['0x0']);
+        const response = {
+            topics: ['0x0'],
+            data: '0x0'
+        };
 
-        abiModelMock.getEventBySignature
-            .mockReturnValueOnce(abiItemModel);
+        abiCoderMock.decodeLog.mockReturnValueOnce(['0x0']);
 
-        abiItemModel.getInputs
-            .mockReturnValueOnce([]);
+        abiModelMock.getEventBySignature.mockReturnValueOnce(abiItemModel);
+
+        abiItemModel.getInputs.mockReturnValueOnce([]);
 
         const decodedLog = allEventsLogDecoder.decode(response);
 
-        expect(decodedLog.data)
-            .toEqual(undefined);
+        expect(decodedLog.data).toEqual(undefined);
 
-        expect(decodedLog.topics)
-            .toEqual(undefined);
+        expect(decodedLog.topics).toEqual(undefined);
 
-        expect(decodedLog.raw.data)
-            .toEqual('0x0');
+        expect(decodedLog.raw.data).toEqual('0x0');
 
-        expect(decodedLog.raw.topics)
-            .toEqual(['0x0']);
+        expect(decodedLog.raw.topics).toEqual(['0x0']);
 
-        expect(decodedLog.signature)
-            .toEqual(abiItemModel.signature);
+        expect(decodedLog.signature).toEqual(abiItemModel.signature);
 
-        expect(decodedLog.event)
-            .toEqual(abiItemModel.name);
+        expect(decodedLog.event).toEqual(abiItemModel.name);
 
-        expect(decodedLog.returnValues)
-            .toEqual(['0x0']);
+        expect(decodedLog.returnValues).toEqual(['0x0']);
 
-        expect(abiModelMock.getEventBySignature)
-            .toHaveBeenCalledWith('0x0');
+        expect(abiModelMock.getEventBySignature).toHaveBeenCalledWith('0x0');
 
-        expect(abiCoderMock.decodeLog)
-            .toHaveBeenCalledWith([], '0x0', ['0x0']);
+        expect(abiCoderMock.decodeLog).toHaveBeenCalledWith([], '0x0', ['0x0']);
 
-        expect(abiItemModel.getInputs)
-            .toHaveBeenCalled();
+        expect(abiItemModel.getInputs).toHaveBeenCalled();
     });
 });

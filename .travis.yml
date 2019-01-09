@@ -24,6 +24,7 @@ install:
     - npm install
     - npm run bootstrap
 script:
+    - npm run lint
     - npm run build
     - npm run test:coverage
 after_script:

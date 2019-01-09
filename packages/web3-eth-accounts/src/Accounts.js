@@ -38,18 +38,18 @@ import {AbstractWeb3Module} from 'web3-core';
 
 const cryp = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
 
-const isNot = value => {
+const isNot = (value) => {
     return isUndefined(value) || isNull(value);
 };
 
-const trimLeadingZero = hex => {
+const trimLeadingZero = (hex) => {
     while (hex && hex.startsWith('0x0')) {
         hex = `0x${hex.slice(3)}`;
     }
     return hex;
 };
 
-const makeEven = hex => {
+const makeEven = (hex) => {
     if (hex.length % 2 === 1) {
         hex = hex.replace('0x', '0x0');
     }
@@ -69,22 +69,8 @@ export default class Accounts extends AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(
-        provider,
-        providersModuleFactory,
-        methodModuleFactory,
-        methodFactory,
-        utils,
-        formatters,
-        options
-    ) {
-        super(
-            provider,
-            providersModuleFactory,
-            methodModuleFactory,
-            methodFactory,
-            options
-        );
+    constructor(provider, providersModuleFactory, methodModuleFactory, methodFactory, utils, formatters, options) {
+        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
 
         this.utils = utils;
         this.formatters = formatters;
@@ -106,7 +92,7 @@ export default class Accounts extends AbstractWeb3Module {
             return this.signTransaction(tx, account.privateKey, callback);
         };
 
-        account.sign = data => {
+        account.sign = (data) => {
             return this.sign(data, account.privateKey);
         };
 

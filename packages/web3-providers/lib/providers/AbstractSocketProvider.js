@@ -51,8 +51,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @method registerEventListeners
      */
-    registerEventListeners() {
-    }
+    registerEventListeners() {}
 
     /**
      * Removes all socket listeners
@@ -75,8 +74,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {Number} code
      * @param {String} reason
      */
-    disconnect(code, reason) {
-    }
+    disconnect(code, reason) {}
 
     /**
      * Returns true if the socket is connected
@@ -85,8 +83,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Boolean}
      */
-    get connected() {
-    }
+    get connected() {}
 
     /**
      * Creates the JSON-RPC payload and sends it to the node.
@@ -98,8 +95,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Promise<any>}
      */
-    send(method, parameters) {
-    }
+    send(method, parameters) {}
 
     /**
      * Creates the JSON-RPC batch payload and sends it to the node.
@@ -111,8 +107,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns Promise<Object|Error>
      */
-    sendBatch(methods, moduleInstance) {
-    }
+    sendBatch(methods, moduleInstance) {}
 
     /**
      * Emits the ready event when the connection is established
@@ -226,7 +221,7 @@ export default class AbstractSocketProvider extends EventEmitter {
         parameters.unshift(subscriptionMethod);
 
         return this.send(subscribeMethod, parameters)
-            .then(subscriptionId => {
+            .then((subscriptionId) => {
                 this.subscriptions[subscriptionId] = {
                     id: subscriptionId,
                     subscribeMethod: subscribeMethod,
@@ -234,7 +229,8 @@ export default class AbstractSocketProvider extends EventEmitter {
                 };
 
                 return subscriptionId;
-            }).catch(error => {
+            })
+            .catch((error) => {
                 throw new Error(`Provider error: ${error}`);
             });
     }
@@ -251,16 +247,15 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     unsubscribe(subscriptionId, unsubscribeMethod = 'eth_unsubscribe') {
         if (this.hasSubscription(subscriptionId)) {
-            return this.send(unsubscribeMethod, [subscriptionId])
-                .then(response => {
-                    if (response) {
-                        this.removeAllListeners(this.getSubscriptionEvent(subscriptionId));
+            return this.send(unsubscribeMethod, [subscriptionId]).then((response) => {
+                if (response) {
+                    this.removeAllListeners(this.getSubscriptionEvent(subscriptionId));
 
-                        delete this.subscriptions[subscriptionId];
-                    }
+                    delete this.subscriptions[subscriptionId];
+                }
 
-                    return response;
-                });
+                return response;
+            });
         }
 
         return Promise.reject(new Error(`Provider error: Subscription with ID ${subscriptionId} does not exist.`));
@@ -278,14 +273,14 @@ export default class AbstractSocketProvider extends EventEmitter {
     clearSubscriptions(unsubscribeMethod = 'eth_unsubscribe') {
         let unsubscribePromises = [];
 
-        Object.keys(this.subscriptions).forEach(key => {
+        Object.keys(this.subscriptions).forEach((key) => {
             this.removeAllListeners(key);
             unsubscribePromises.push(this.unsubscribe(this.subscriptions[key].id, unsubscribeMethod));
         });
 
-        return Promise.all(unsubscribePromises).then(results => {
+        return Promise.all(unsubscribePromises).then((results) => {
             if (results.includes(false)) {
-                throw Error(`Could not unsubscribe all subscriptions: ${JSON.stringify(results)}`);
+                throw new Error(`Could not unsubscribe all subscriptions: ${JSON.stringify(results)}`);
             }
 
             return true;
@@ -320,7 +315,7 @@ export default class AbstractSocketProvider extends EventEmitter {
         }
 
         let event;
-        Object.keys(this.subscriptions).forEach(key => {
+        Object.keys(this.subscriptions).forEach((key) => {
             if (this.subscriptions[key].id === subscriptionId) {
                 event = key;
             }

@@ -20,20 +20,16 @@ describe('AccountsModuleFactoryTest', () => {
     });
 
     it('constructor check', () => {
-        expect(accountsModuleFactory.utils)
-            .toEqual(Utils);
+        expect(accountsModuleFactory.utils).toEqual(Utils);
 
-        expect(accountsModuleFactory.formatters)
-            .toEqual(formatters);
+        expect(accountsModuleFactory.formatters).toEqual(formatters);
     });
 
     it('calls createAccounts and returns a object of type Accounts', () => {
-       expect(accountsModuleFactory.createAccounts({}, {}, {}, {}))
-           .toBeInstanceOf(Accounts);
+        expect(accountsModuleFactory.createAccounts({}, {}, {}, {})).toBeInstanceOf(Accounts);
     });
 
     it('calls createMethodFactory and returns a object of type MethodFactory', () => {
-       expect(accountsModuleFactory.createMethodFactory({}))
-           .toBeInstanceOf(MethodFactory);
+        expect(accountsModuleFactory.createMethodFactory({})).toBeInstanceOf(MethodFactory);
     });
 });

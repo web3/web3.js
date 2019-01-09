@@ -15,52 +15,40 @@ describe('GetBalanceMethodTest', () => {
     });
 
     it('static Type property returns "CALL"', () => {
-        expect(GetBalanceMethod.Type)
-            .toEqual('CALL');
+        expect(GetBalanceMethod.Type).toEqual('CALL');
     });
 
     it('rpcMethod should return eth_getBalance', () => {
-        expect(method.rpcMethod)
-            .toEqual('eth_getBalance');
+        expect(method.rpcMethod).toEqual('eth_getBalance');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(method.parametersAmount)
-            .toEqual(2);
+        expect(method.parametersAmount).toEqual(2);
     });
 
     it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
         method.parameters = ['string', 100];
 
-        formatters.inputAddressFormatter
-            .mockReturnValueOnce('0x0');
+        formatters.inputAddressFormatter.mockReturnValueOnce('0x0');
 
-        formatters.inputDefaultBlockNumberFormatter
-            .mockReturnValueOnce('0x0');
+        formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
 
         method.beforeExecution({});
 
-        expect(method.parameters[0])
-            .toEqual('0x0');
+        expect(method.parameters[0]).toEqual('0x0');
 
-        expect(method.parameters[1])
-            .toEqual('0x0');
+        expect(method.parameters[1]).toEqual('0x0');
 
-        expect(formatters.inputAddressFormatter)
-            .toHaveBeenCalledWith('string');
+        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
 
-        expect(formatters.inputDefaultBlockNumberFormatter)
-            .toHaveBeenCalledWith(100, {});
+        expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith(100, {});
     });
 
     it('afterExecution should call outputBigNumberFormatter on the response and return it', () => {
-        formatters.outputBigNumberFormatter
-            .mockReturnValueOnce({bigNumber: true});
+        formatters.outputBigNumberFormatter.mockReturnValueOnce({bigNumber: true});
 
-        expect(method.afterExecution({}))
-            .toHaveProperty('bigNumber', true);
+        expect(method.afterExecution({})).toHaveProperty('bigNumber', true);
 
-        expect(formatters.outputBigNumberFormatter)
-            .toHaveBeenCalledWith({});
+        expect(formatters.outputBigNumberFormatter).toHaveBeenCalledWith({});
     });
 });

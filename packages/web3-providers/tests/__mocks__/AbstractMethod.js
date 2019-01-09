@@ -1,5 +1,3 @@
 export default class AbstractMethod {
-    constructor() {
-
-    }
+    constructor() {}
 }

@@ -35,15 +35,7 @@ export default class Network extends AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(
-        provider,
-        providersModuleFactory,
-        methodModuleFactory,
-        methodFactory,
-        utils,
-        formatters,
-        options
-    ) {
+    constructor(provider, providersModuleFactory, methodModuleFactory, methodFactory, utils, formatters, options) {
         super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
 
         this.utils = utils;
@@ -73,10 +65,7 @@ export default class Network extends AbstractWeb3Module {
                 returnValue = 'main';
             }
 
-            if (
-                genesisBlock.hash === '0cd786a2425d16f152c658316c423e6ce1181e15c3295826d7c9904cba9ce303' &&
-                id === 2
-            ) {
+            if (genesisBlock.hash === '0cd786a2425d16f152c658316c423e6ce1181e15c3295826d7c9904cba9ce303' && id === 2) {
                 returnValue = 'morden';
             }
 

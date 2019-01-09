@@ -15,9 +15,7 @@ jest.mock('../../../src/models/AbiItemModel');
  * PastEventLogsMethod test
  */
 describe('PastEventLogsMethodTest', () => {
-    let pastEventLogsMethod,
-        eventLogDecoderMock,
-        abiItemModelMock;
+    let pastEventLogsMethod, eventLogDecoderMock, abiItemModelMock;
 
     beforeEach(() => {
         new EventLogDecoder();
@@ -30,43 +28,32 @@ describe('PastEventLogsMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(pastEventLogsMethod.utils)
-            .toEqual(Utils);
+        expect(pastEventLogsMethod.utils).toEqual(Utils);
 
-        expect(pastEventLogsMethod.formatters)
-            .toEqual(formatters);
+        expect(pastEventLogsMethod.formatters).toEqual(formatters);
 
-        expect(pastEventLogsMethod.eventLogDecoder)
-            .toEqual(eventLogDecoderMock);
+        expect(pastEventLogsMethod.eventLogDecoder).toEqual(eventLogDecoderMock);
 
-        expect(pastEventLogsMethod.abiItemModel)
-            .toEqual(abiItemModelMock);
+        expect(pastEventLogsMethod.abiItemModel).toEqual(abiItemModelMock);
 
-        expect(pastEventLogsMethod)
-            .toBeInstanceOf(GetPastLogsMethod);
+        expect(pastEventLogsMethod).toBeInstanceOf(GetPastLogsMethod);
     });
 
     it('calls afterExecution and returns the expected result', () => {
         const response = [false, false, false];
 
-        formatters.outputLogFormatter
-            .mockReturnValue(true);
+        formatters.outputLogFormatter.mockReturnValue(true);
 
-        eventLogDecoderMock.decode
-            .mockReturnValue('decoded');
+        eventLogDecoderMock.decode.mockReturnValue('decoded');
 
         const mappedResponse = pastEventLogsMethod.afterExecution(response);
 
-        expect(mappedResponse)
-            .toEqual(['decoded', 'decoded', 'decoded']);
+        expect(mappedResponse).toEqual(['decoded', 'decoded', 'decoded']);
 
-        expect(formatters.outputLogFormatter)
-            .toHaveBeenCalledTimes(3);
+        expect(formatters.outputLogFormatter).toHaveBeenCalledTimes(3);
 
-        expect(eventLogDecoderMock.decode)
-            .toHaveBeenCalledTimes(3);
+        expect(eventLogDecoderMock.decode).toHaveBeenCalledTimes(3);
 
-        expect(eventLogDecoderMock.decode)
-            .toHaveBeenCalledWith(abiItemModelMock, true);
+        expect(eventLogDecoderMock.decode).toHaveBeenCalledWith(abiItemModelMock, true);
     });
 });

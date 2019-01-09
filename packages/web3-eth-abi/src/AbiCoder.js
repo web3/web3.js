@@ -110,7 +110,7 @@ export default class AbiCoder {
      */
     _mapTypes(types) {
         const mappedTypes = [];
-        types.forEach(type => {
+        types.forEach((type) => {
             if (this._isSimplifiedStructFormat(type)) {
                 const structName = Object.keys(type)[0];
                 mappedTypes.push(
@@ -172,15 +172,12 @@ export default class AbiCoder {
      */
     _mapStructToCoderFormat(struct) {
         const components = [];
-        Object.keys(struct).forEach(key => {
+        Object.keys(struct).forEach((key) => {
             if (typeof struct[key] === 'object') {
                 components.push(
-                    Object.assign(
-                        this._mapStructNameAndType(key),
-                        {
-                            components: this._mapStructToCoderFormat(struct[key])
-                        }
-                    )
+                    Object.assign(this._mapStructNameAndType(key), {
+                        components: this._mapStructToCoderFormat(struct[key])
+                    })
                 );
 
                 return;
@@ -238,11 +235,12 @@ export default class AbiCoder {
      */
     decodeParameters(outputs, bytes) {
         if (!bytes || bytes === '0x' || bytes === '0X') {
-            throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
+            throw new Error("Returned values aren't valid, did it run Out of Gas?");
         }
 
-        const res = this.ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`),
-              returnValues = {};
+        const res = this.ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`);
+
+        const returnValues = {};
 
         let decodedValue;
         outputs.forEach((output, i) => {
@@ -279,12 +277,13 @@ export default class AbiCoder {
 
         // TODO: check for anonymous logs?
         // TODO: Refactor this to one loop
-        const notIndexedInputs = [],
-              indexedParams = [];
+        const notIndexedInputs = [];
+
+        const indexedParams = [];
 
         inputs.forEach((input, i) => {
             if (input.indexed) {
-                indexedParams[i] = ['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find(staticType => {
+                indexedParams[i] = ['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find((staticType) => {
                     return input.type.indexOf(staticType) !== -1;
                 })
                     ? this.decodeParameter(input.type, topics[topicCount])
@@ -295,9 +294,11 @@ export default class AbiCoder {
             }
         });
 
-        const nonIndexedData = data,
-              notIndexedParams = nonIndexedData ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [],
-              returnValues = {};
+        const nonIndexedData = data;
+
+        const notIndexedParams = nonIndexedData ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [];
+
+        const returnValues = {};
 
         inputs.forEach((res, i) => {
             returnValues[i] = res.type === 'string' ? '' : null;

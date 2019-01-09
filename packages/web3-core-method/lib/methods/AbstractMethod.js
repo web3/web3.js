@@ -73,7 +73,7 @@ export default class AbstractMethod {
      *
      * @returns {Promise<Object|String>|PromiEvent|String}
      */
-    execute(moduleInstance) { }
+    execute(moduleInstance) {}
 
     /**
      * Setter for the rpcMethod property
@@ -171,8 +171,9 @@ export default class AbstractMethod {
      * @param {IArguments} args
      */
     set arguments(args) {
-        let parameters = args,
-            callback = null;
+        let parameters = args;
+
+        let callback = null;
 
         if (args.length < this.parametersAmount) {
             throw new Error(
@@ -184,9 +185,7 @@ export default class AbstractMethod {
             callback = args.pop();
 
             if (!isFunction(callback)) {
-                throw new TypeError(
-                    'The latest parameter should be a function otherwise it can\'t be used as callback'
-                );
+                throw new TypeError("The latest parameter should be a function otherwise it can't be used as callback");
             }
 
             parameters = args;

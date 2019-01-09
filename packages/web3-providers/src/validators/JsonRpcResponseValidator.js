@@ -37,7 +37,7 @@ export default class JsonRpcResponseValidator {
         if (isObject(response)) {
             if (response.error) {
                 // TODO: Check where and why this is the case.
-                if(response.error instanceof Error) {
+                if (response.error instanceof Error) {
                     return new Error(`Node error: ${response.error.message}`);
                 }
 
@@ -45,10 +45,12 @@ export default class JsonRpcResponseValidator {
             }
 
             if (payload && response.id !== payload.id) {
-                return new Error(`Validation error: Invalid JSON-RPC response ID (request: ${payload.id} / response: ${response.id})`)
+                return new Error(
+                    `Validation error: Invalid JSON-RPC response ID (request: ${payload.id} / response: ${response.id})`
+                );
             }
 
-            if(response.result === undefined) {
+            if (response.result === undefined) {
                 return new Error('Validation error: Undefined JSON-RPC result');
             }
 

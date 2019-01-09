@@ -67,17 +67,9 @@ export default class AbstractContract extends AbstractWeb3Module {
             this.address = address;
         }
 
-        this.methods = this.contractModuleFactory.createMethodsProxy(
-            this,
-            this.abiModel,
-            this.PromiEvent
-        );
+        this.methods = this.contractModuleFactory.createMethodsProxy(this, this.abiModel, this.PromiEvent);
 
-        this.events = this.contractModuleFactory.createEventSubscriptionsProxy(
-            this,
-            this.abiModel,
-            this.PromiEvent
-        );
+        this.events = this.contractModuleFactory.createEventSubscriptionsProxy(this, this.abiModel, this.PromiEvent);
     }
 
     /**
@@ -172,9 +164,7 @@ export default class AbstractContract extends AbstractWeb3Module {
                 reject(new Error(`Event with name "${eventName}" does not exists.`));
             }
 
-            const pastEventLogsMethod = this.methodFactory.createPastEventLogsMethod(
-                this.abiModel.getEvent(eventName)
-            );
+            const pastEventLogsMethod = this.methodFactory.createPastEventLogsMethod(this.abiModel.getEvent(eventName));
 
             pastEventLogsMethod.parameters = [options];
             pastEventLogsMethod.callback = callback;

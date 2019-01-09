@@ -28,11 +28,7 @@ jest.mock('../../../src/methods/PastEventLogsMethod');
  * MethodFactory test
  */
 describe('MethodFactoryTest', () => {
-    let methodFactory,
-        accountsMock,
-        contractModuleFactoryMock,
-        methodModuleFactoryMock,
-        abiCoderMock;
+    let methodFactory, accountsMock, contractModuleFactoryMock, methodModuleFactoryMock, abiCoderMock;
 
     beforeEach(() => {
         new Accounts();
@@ -60,102 +56,86 @@ describe('MethodFactoryTest', () => {
     });
 
     it('constructor check', () => {
-        expect(methodFactory.accounts)
-            .toEqual(accountsMock);
+        expect(methodFactory.accounts).toEqual(accountsMock);
 
-        expect(methodFactory.utils)
-            .toEqual(Utils);
+        expect(methodFactory.utils).toEqual(Utils);
 
-        expect(methodFactory.formatters)
-            .toEqual(formatters);
+        expect(methodFactory.formatters).toEqual(formatters);
 
-        expect(methodFactory.contractModuleFactory)
-            .toEqual(contractModuleFactoryMock);
+        expect(methodFactory.contractModuleFactory).toEqual(contractModuleFactoryMock);
 
-        expect(methodFactory.methodModuleFactory)
-            .toEqual(methodModuleFactoryMock);
+        expect(methodFactory.methodModuleFactory).toEqual(methodModuleFactoryMock);
     });
 
     it('calls createMethodByRequestType with requestType call', () => {
-        const abiItem = {requestType: 'call'},
-              response = methodFactory.createMethodByRequestType(abiItem, {});
+        const abiItem = {requestType: 'call'};
 
-        expect(response)
-            .toBeInstanceOf(CallContractMethod);
+        const response = methodFactory.createMethodByRequestType(abiItem, {});
+
+        expect(response).toBeInstanceOf(CallContractMethod);
     });
 
     it('calls createMethodByRequestType with requestType send', () => {
-        const abiItem = {requestType: 'send'},
-              response = methodFactory.createMethodByRequestType(abiItem, {});
+        const abiItem = {requestType: 'send'};
 
-        expect(response)
-            .toBeInstanceOf(SendContractMethod);
+        const response = methodFactory.createMethodByRequestType(abiItem, {});
+
+        expect(response).toBeInstanceOf(SendContractMethod);
     });
 
     it('calls createMethodByRequestType with requestType estimate', () => {
-        const abiItem = {requestType: 'estimate'},
-              response = methodFactory.createMethodByRequestType(abiItem, {});
+        const abiItem = {requestType: 'estimate'};
 
-        expect(response)
-            .toBeInstanceOf(EstimateGasMethod);
+        const response = methodFactory.createMethodByRequestType(abiItem, {});
+
+        expect(response).toBeInstanceOf(EstimateGasMethod);
     });
 
-    it('calls createMethodByRequestType with requestType estimate', () => {
-        const abiItem = {requestType: 'contract-deployment'},
-              response = methodFactory.createMethodByRequestType(abiItem, {});
+    it('calls createMethodByRequestType with requestType contract-deployment', () => {
+        const abiItem = {requestType: 'contract-deployment'};
 
-        expect(response)
-            .toBeInstanceOf(ContractDeployMethod);
+        const response = methodFactory.createMethodByRequestType(abiItem, {});
+
+        expect(response).toBeInstanceOf(ContractDeployMethod);
     });
 
     it('calls createMethodByRequestType with unknown requestType', () => {
         const abiItem = {requestType: 'nope'};
 
         expect(() => {
-            methodFactory.createMethodByRequestType(abiItem, {})
+            methodFactory.createMethodByRequestType(abiItem, {});
         }).toThrow('RPC call not found with requestType: "nope"');
     });
 
     it('calls createPastEventLogsMethod and returns PastEventLogsMethod object', () => {
-        expect(methodFactory.createPastEventLogsMethod({}))
-            .toBeInstanceOf(PastEventLogsMethod);
+        expect(methodFactory.createPastEventLogsMethod({})).toBeInstanceOf(PastEventLogsMethod);
 
-        expect(contractModuleFactoryMock.createEventLogDecoder)
-            .toHaveBeenCalled();
+        expect(contractModuleFactoryMock.createEventLogDecoder).toHaveBeenCalled();
     });
 
     it('calls createCallContractMethod and returns CallContractMethod object', () => {
-        expect(methodFactory.createCallContractMethod({}))
-            .toBeInstanceOf(CallContractMethod);
+        expect(methodFactory.createCallContractMethod({})).toBeInstanceOf(CallContractMethod);
     });
 
     it('calls createSendContractMethod and returns SendContractMethod object', () => {
-        expect(methodFactory.createSendContractMethod({}))
-            .toBeInstanceOf(SendContractMethod);
+        expect(methodFactory.createSendContractMethod({})).toBeInstanceOf(SendContractMethod);
 
-        expect(contractModuleFactoryMock.createAllEventsLogDecoder)
-            .toHaveBeenCalled();
+        expect(contractModuleFactoryMock.createAllEventsLogDecoder).toHaveBeenCalled();
 
-        expect(methodModuleFactoryMock.createTransactionSigner)
-            .toHaveBeenCalled();
+        expect(methodModuleFactoryMock.createTransactionSigner).toHaveBeenCalled();
 
-        expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow)
-            .toHaveBeenCalled();
+        expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow).toHaveBeenCalled();
     });
 
     it('calls createContractDeployMethod and returns ContractDeployMethod object', () => {
-        expect(methodFactory.createContractDeployMethod({}))
-            .toBeInstanceOf(ContractDeployMethod);
+        expect(methodFactory.createContractDeployMethod({})).toBeInstanceOf(ContractDeployMethod);
 
-        expect(methodModuleFactoryMock.createTransactionSigner)
-            .toHaveBeenCalled();
+        expect(methodModuleFactoryMock.createTransactionSigner).toHaveBeenCalled();
 
-        expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow)
-            .toHaveBeenCalled();
+        expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow).toHaveBeenCalled();
     });
 
     it('calls createEstimateGasMethod and returns EstimateGasMethod object', () => {
-        expect(methodFactory.createEstimateGasMethod({}))
-            .toBeInstanceOf(EstimateGasMethod);
+        expect(methodFactory.createEstimateGasMethod({})).toBeInstanceOf(EstimateGasMethod);
     });
 });

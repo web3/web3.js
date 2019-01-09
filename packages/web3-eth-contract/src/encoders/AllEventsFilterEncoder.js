@@ -35,7 +35,7 @@ export default class AllEventsFilterEncoder extends EventFilterEncoder {
         const events = abiModel.getEvents();
         let topics = [];
 
-        Object.keys(events).forEach(key => {
+        Object.keys(events).forEach((key) => {
             topics.push(super.encode(events[key], filter));
         });
 

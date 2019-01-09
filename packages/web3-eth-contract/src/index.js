@@ -51,12 +51,5 @@ export const Contract = (provider, abi, address, options) => {
         new AbiCoder(),
         new Accounts(provider, options),
         new MethodModuleFactory()
-    ).createContract(
-        provider,
-        new ProvidersModuleFactory(),
-        PromiEvent,
-        abi,
-        address,
-        options
-    );
+    ).createContract(provider, new ProvidersModuleFactory(), PromiEvent, abi, address, options);
 };

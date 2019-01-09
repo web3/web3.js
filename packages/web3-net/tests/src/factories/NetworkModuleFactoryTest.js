@@ -1,5 +1,5 @@
 import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers'
+import {formatters} from 'web3-core-helpers';
 import Network from '../../../src/Network';
 import MethodFactory from '../../../src/factories/MethodFactory';
 import NetworkModuleFactory from '../../../src/factories/NetworkModuleFactory';
@@ -20,20 +20,16 @@ describe('NetworkModuleFactoryTest', () => {
     });
 
     it('constructor check', () => {
-        expect(networkModuleFactory.utils)
-            .toEqual(Utils);
+        expect(networkModuleFactory.utils).toEqual(Utils);
 
-        expect(networkModuleFactory.formatters)
-            .toEqual(formatters);
+        expect(networkModuleFactory.formatters).toEqual(formatters);
     });
 
     it('calls createNetworkModule and returns the expected Network object', () => {
-        expect(networkModuleFactory.createNetworkModule({}, {}, {}, {}))
-            .toBeInstanceOf(Network);
+        expect(networkModuleFactory.createNetworkModule({}, {}, {}, {})).toBeInstanceOf(Network);
     });
 
     it('calls createMethodFactory and returns the expected MethodFactory object', () => {
-        expect(networkModuleFactory.createMethodFactory({}))
-            .toBeInstanceOf(MethodFactory);
+        expect(networkModuleFactory.createMethodFactory({})).toBeInstanceOf(MethodFactory);
     });
 });

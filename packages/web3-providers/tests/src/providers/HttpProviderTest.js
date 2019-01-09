@@ -19,57 +19,43 @@ jest.mock('XMLHttpRequest');
  * HttpProvider test
  */
 describe('HttpProviderTest', () => {
-    let httpProvider,
-        providersModuleFactory,
-        providersModuleFactoryMock;
+    let httpProvider, providersModuleFactoryMock;
 
     beforeEach(() => {
-        providersModuleFactory = new ProvidersModuleFactory();
+        new ProvidersModuleFactory();
         providersModuleFactoryMock = ProvidersModuleFactory.mock.instances[0];
 
         httpProvider = new HttpProvider('https', {headers: [], timeout: 1}, providersModuleFactoryMock);
     });
 
     it('constructor check with https', () => {
-        expect(httpProvider.host)
-            .toEqual('https');
+        expect(httpProvider.host).toEqual('https');
 
-        expect(httpProvider.headers)
-            .toEqual([]);
+        expect(httpProvider.headers).toEqual([]);
 
-        expect(httpProvider.timeout)
-            .toEqual(1);
+        expect(httpProvider.timeout).toEqual(1);
 
-        expect(httpProvider.connected)
-            .toEqual(false);
+        expect(httpProvider.connected).toEqual(false);
 
-        expect(httpProvider.providersModuleFactory)
-            .toEqual(providersModuleFactoryMock);
+        expect(httpProvider.providersModuleFactory).toEqual(providersModuleFactoryMock);
 
-        expect(httpProvider.agent.httpsAgent)
-            .toBeInstanceOf(https.Agent);
+        expect(httpProvider.agent.httpsAgent).toBeInstanceOf(https.Agent);
     });
 
     it('constructor check with http', () => {
         httpProvider = new HttpProvider('http', {headers: [], timeout: 1}, providersModuleFactoryMock);
 
-        expect(httpProvider.host)
-            .toEqual('http');
+        expect(httpProvider.host).toEqual('http');
 
-        expect(httpProvider.headers)
-            .toEqual([]);
+        expect(httpProvider.headers).toEqual([]);
 
-        expect(httpProvider.timeout)
-            .toEqual(1);
+        expect(httpProvider.timeout).toEqual(1);
 
-        expect(httpProvider.connected)
-            .toEqual(false);
+        expect(httpProvider.connected).toEqual(false);
 
-        expect(httpProvider.providersModuleFactory)
-            .toEqual(providersModuleFactoryMock);
+        expect(httpProvider.providersModuleFactory).toEqual(providersModuleFactoryMock);
 
-        expect(httpProvider.agent.httpAgent)
-            .toBeInstanceOf(http.Agent);
+        expect(httpProvider.agent.httpAgent).toBeInstanceOf(http.Agent);
     });
 
     it('calls subscribe and throws error', () => {
@@ -85,28 +71,24 @@ describe('HttpProviderTest', () => {
     });
 
     it('calls disconnect and returns true', () => {
-        expect(httpProvider.disconnect())
-            .toEqual(true);
+        expect(httpProvider.disconnect()).toEqual(true);
     });
 
     it('calls send and returns with a resolved promise', async () => {
         JsonRpcMapper.toPayload = jest.fn();
-        JsonRpcMapper.toPayload
-            .mockReturnValueOnce({id: '0x0'});
+        JsonRpcMapper.toPayload.mockReturnValueOnce({id: '0x0'});
 
         JsonRpcResponseValidator.validate = jest.fn();
-        JsonRpcResponseValidator.validate
-            .mockReturnValueOnce(true);
+        JsonRpcResponseValidator.validate.mockReturnValueOnce(true);
 
-        const xhr = new XHR(),
-              xhrMock = XHR.mock.instances[0];
+        new XHR();
+        const xhrMock = XHR.mock.instances[0];
 
         xhrMock.readyState = 4;
         xhrMock.status = 200;
         xhrMock.responseText = 'true';
 
-        providersModuleFactoryMock.createXMLHttpRequest
-            .mockReturnValueOnce(xhrMock);
+        providersModuleFactoryMock.createXMLHttpRequest.mockReturnValueOnce(xhrMock);
 
         setTimeout(() => {
             xhrMock.onreadystatechange();
@@ -114,85 +96,80 @@ describe('HttpProviderTest', () => {
 
         const response = await httpProvider.send('rpc_method', []);
 
-        expect(response)
-            .toEqual(true);
+        expect(response).toEqual(true);
 
-        expect(JsonRpcMapper.toPayload)
-            .toHaveBeenCalledWith('rpc_method', []);
+        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
 
-        expect(JsonRpcResponseValidator.validate)
-            .toHaveBeenCalledWith(true);
+        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith(true);
 
-        expect(providersModuleFactoryMock.createXMLHttpRequest)
-            .toHaveBeenCalledWith(httpProvider.host, httpProvider.timeout, httpProvider.headers, httpProvider.agent);
+        expect(providersModuleFactoryMock.createXMLHttpRequest).toHaveBeenCalledWith(
+            httpProvider.host,
+            httpProvider.timeout,
+            httpProvider.headers,
+            httpProvider.agent
+        );
 
-        expect(xhrMock.send)
-            .toHaveBeenCalledWith('{"id":"0x0"}');
+        expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
 
-        expect(httpProvider.connected)
-            .toEqual(true);
+        expect(httpProvider.connected).toEqual(true);
     });
 
     it('calls send and returns with a rejected promise because of an invalid JSON-RPC response', async () => {
         JsonRpcMapper.toPayload = jest.fn();
-        JsonRpcMapper.toPayload
-            .mockReturnValueOnce({id: '0x0'});
+        JsonRpcMapper.toPayload.mockReturnValueOnce({id: '0x0'});
 
         JsonRpcResponseValidator.validate = jest.fn();
-        JsonRpcResponseValidator.validate
-            .mockReturnValueOnce(new Error('invalid'));
+        JsonRpcResponseValidator.validate.mockReturnValueOnce(new Error('invalid'));
 
-        const xhr = new XHR(),
-              xhrMock = XHR.mock.instances[0];
+        new XHR();
+        const xhrMock = XHR.mock.instances[0];
 
         xhrMock.readyState = 4;
         xhrMock.status = 200;
         xhrMock.responseText = 'true';
 
-        providersModuleFactoryMock.createXMLHttpRequest
-            .mockReturnValueOnce(xhrMock);
+        providersModuleFactoryMock.createXMLHttpRequest.mockReturnValueOnce(xhrMock);
 
         setTimeout(() => {
             xhrMock.onreadystatechange();
         }, 1);
 
-        await expect(httpProvider.send('rpc_method', [])).rejects
-            .toThrow('invalid');
+        await expect(httpProvider.send('rpc_method', [])).rejects.toThrow('invalid');
 
-        expect(JsonRpcResponseValidator.validate)
-            .toHaveBeenCalledWith(true);
+        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith(true);
 
-        expect(JsonRpcMapper.toPayload)
-            .toHaveBeenCalledWith('rpc_method', []);
+        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
 
-        expect(providersModuleFactoryMock.createXMLHttpRequest)
-            .toHaveBeenCalledWith(httpProvider.host, httpProvider.timeout, httpProvider.headers, httpProvider.agent);
+        expect(providersModuleFactoryMock.createXMLHttpRequest).toHaveBeenCalledWith(
+            httpProvider.host,
+            httpProvider.timeout,
+            httpProvider.headers,
+            httpProvider.agent
+        );
 
-        expect(xhrMock.send)
-            .toHaveBeenCalledWith('{"id":"0x0"}');
+        expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
     });
 
     it('calls sendBatch and returns with a resolved promise', async () => {
-        const abstractMethodMock = new AbstractMethod(),
-              moduleInstanceMock = new AbstractWeb3Module();
+        const abstractMethodMock = new AbstractMethod();
+
+        const moduleInstanceMock = new AbstractWeb3Module();
 
         abstractMethodMock.beforeExecution = jest.fn();
         abstractMethodMock.rpcMethod = 'rpc_method';
         abstractMethodMock.parameters = [];
 
         JsonRpcMapper.toPayload = jest.fn();
-        JsonRpcMapper.toPayload
-            .mockReturnValueOnce({id: '0x0'});
+        JsonRpcMapper.toPayload.mockReturnValueOnce({id: '0x0'});
 
-        const xhr = new XHR(),
-              xhrMock = XHR.mock.instances[0];
+        new XHR();
+        const xhrMock = XHR.mock.instances[0];
 
         xhrMock.readyState = 4;
         xhrMock.status = 200;
         xhrMock.responseText = 'true';
 
-        providersModuleFactoryMock.createXMLHttpRequest
-            .mockReturnValueOnce(xhrMock);
+        providersModuleFactoryMock.createXMLHttpRequest.mockReturnValueOnce(xhrMock);
 
         setTimeout(() => {
             xhrMock.onreadystatechange();
@@ -200,96 +177,97 @@ describe('HttpProviderTest', () => {
 
         const response = await httpProvider.sendBatch([abstractMethodMock], moduleInstanceMock);
 
-        expect(response)
-            .toEqual(true);
+        expect(response).toEqual(true);
 
-        expect(JsonRpcMapper.toPayload)
-            .toHaveBeenCalledWith('rpc_method', []);
+        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
 
-        expect(providersModuleFactoryMock.createXMLHttpRequest)
-            .toHaveBeenCalledWith(httpProvider.host, httpProvider.timeout, httpProvider.headers, httpProvider.agent);
+        expect(providersModuleFactoryMock.createXMLHttpRequest).toHaveBeenCalledWith(
+            httpProvider.host,
+            httpProvider.timeout,
+            httpProvider.headers,
+            httpProvider.agent
+        );
 
-        expect(xhrMock.send)
-            .toHaveBeenCalledWith('[{"id":"0x0"}]');
+        expect(xhrMock.send).toHaveBeenCalledWith('[{"id":"0x0"}]');
 
-        expect(abstractMethodMock.beforeExecution)
-            .toHaveBeenCalled();
+        expect(abstractMethodMock.beforeExecution).toHaveBeenCalled();
 
-        expect(httpProvider.connected)
-            .toEqual(true);
+        expect(httpProvider.connected).toEqual(true);
     });
 
     it('calls sendPayload and returns with a rejected promise because of an invalid JSON response', async () => {
-        const xhr = new XHR(),
-              xhrMock = XHR.mock.instances[0];
+        new XHR();
+        const xhrMock = XHR.mock.instances[0];
 
         xhrMock.readyState = 4;
         xhrMock.status = 200;
         xhrMock.responseText = '{,}';
 
-        providersModuleFactoryMock.createXMLHttpRequest
-            .mockReturnValueOnce(xhrMock);
+        providersModuleFactoryMock.createXMLHttpRequest.mockReturnValueOnce(xhrMock);
 
         setTimeout(() => {
             xhrMock.onreadystatechange();
         }, 1);
 
-        await expect(httpProvider.sendPayload({id: '0x0'})).rejects
-            .toThrow(`Invalid JSON as response: {,}`);
+        await expect(httpProvider.sendPayload({id: '0x0'})).rejects.toThrow('Invalid JSON as response: {,}');
 
-        expect(providersModuleFactoryMock.createXMLHttpRequest)
-            .toHaveBeenCalledWith(httpProvider.host, httpProvider.timeout, httpProvider.headers, httpProvider.agent);
+        expect(providersModuleFactoryMock.createXMLHttpRequest).toHaveBeenCalledWith(
+            httpProvider.host,
+            httpProvider.timeout,
+            httpProvider.headers,
+            httpProvider.agent
+        );
 
-        expect(xhrMock.send)
-            .toHaveBeenCalledWith('{"id":"0x0"}');
+        expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
     });
 
     it('calls sendPayload and returns with a rejected promise because of the exceeded timeout', async () => {
-        const xhr = new XHR(),
-              xhrMock = XHR.mock.instances[0];
+        new XHR();
+        const xhrMock = XHR.mock.instances[0];
 
-
-        providersModuleFactoryMock.createXMLHttpRequest
-            .mockReturnValueOnce(xhrMock);
+        providersModuleFactoryMock.createXMLHttpRequest.mockReturnValueOnce(xhrMock);
 
         setTimeout(() => {
             xhrMock.ontimeout();
         }, 1);
 
-        await expect(httpProvider.sendPayload({id: '0x0'})).rejects
-            .toThrow(`Connection error: Timeout exceeded after 1ms`);
+        await expect(httpProvider.sendPayload({id: '0x0'})).rejects.toThrow(
+            'Connection error: Timeout exceeded after 1ms'
+        );
 
-        expect(httpProvider.connected)
-            .toEqual(false);
+        expect(httpProvider.connected).toEqual(false);
 
-        expect(providersModuleFactoryMock.createXMLHttpRequest)
-            .toHaveBeenCalledWith(httpProvider.host, httpProvider.timeout, httpProvider.headers, httpProvider.agent);
+        expect(providersModuleFactoryMock.createXMLHttpRequest).toHaveBeenCalledWith(
+            httpProvider.host,
+            httpProvider.timeout,
+            httpProvider.headers,
+            httpProvider.agent
+        );
 
-        expect(xhrMock.send)
-            .toHaveBeenCalledWith('{"id":"0x0"}');
+        expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
     });
 
     it('calls sendPayload and returns with a rejected promise because the request.send() method throws an error', async () => {
-        const xhr = new XHR(),
-              xhrMock = XHR.mock.instances[0];
+        new XHR();
+        const xhrMock = XHR.mock.instances[0];
 
         xhrMock.send = jest.fn(() => {
             throw new NetworkError('ERROR');
         });
 
-        providersModuleFactoryMock.createXMLHttpRequest
-            .mockReturnValueOnce(xhrMock);
+        providersModuleFactoryMock.createXMLHttpRequest.mockReturnValueOnce(xhrMock);
 
-        await expect(httpProvider.sendPayload({id: '0x0'})).rejects
-            .toThrow('ERROR');
+        await expect(httpProvider.sendPayload({id: '0x0'})).rejects.toThrow('ERROR');
 
-        expect(httpProvider.connected)
-            .toEqual(false);
+        expect(httpProvider.connected).toEqual(false);
 
-        expect(providersModuleFactoryMock.createXMLHttpRequest)
-            .toHaveBeenCalledWith(httpProvider.host, httpProvider.timeout, httpProvider.headers, httpProvider.agent);
+        expect(providersModuleFactoryMock.createXMLHttpRequest).toHaveBeenCalledWith(
+            httpProvider.host,
+            httpProvider.timeout,
+            httpProvider.headers,
+            httpProvider.agent
+        );
 
-        expect(xhrMock.send)
-            .toHaveBeenCalledWith('{"id":"0x0"}');
+        expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
     });
 });

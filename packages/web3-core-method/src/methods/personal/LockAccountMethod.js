@@ -33,7 +33,6 @@ export default class LockAccountMethod extends AbstractCallMethod {
         super('personal_lockAccount', 1, utils, formatters);
     }
 
-
     /**
      * This method will be executed before the RPC request.
      *

@@ -15,9 +15,7 @@ jest.mock('../../../src/models/AbiItemModel');
  * CallContractMethod test
  */
 describe('CallContractMethodTest', () => {
-    let callContractMethod,
-        abiItemModelMock,
-        abiCoderMock;
+    let callContractMethod, abiItemModelMock, abiCoderMock;
 
     beforeEach(() => {
         new AbiCoder();
@@ -31,49 +29,36 @@ describe('CallContractMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(callContractMethod.utils)
-            .toEqual(Utils);
+        expect(callContractMethod.utils).toEqual(Utils);
 
-        expect(callContractMethod.formatters)
-            .toEqual(formatters);
+        expect(callContractMethod.formatters).toEqual(formatters);
 
-        expect(callContractMethod.abiItemModel)
-            .toEqual(abiItemModelMock);
+        expect(callContractMethod.abiItemModel).toEqual(abiItemModelMock);
 
-        expect(callContractMethod)
-            .toBeInstanceOf(CallMethod);
+        expect(callContractMethod).toBeInstanceOf(CallMethod);
     });
 
     it('calls afterExecution with undefined response and returns the expected result', () => {
-        expect(callContractMethod.afterExecution())
-            .toEqual(null);
+        expect(callContractMethod.afterExecution()).toEqual(null);
     });
 
     it('calls afterExecution and returns the result array', () => {
-        abiCoderMock.decodeParameters
-            .mockReturnValueOnce(['0x0', '0x0']);
+        abiCoderMock.decodeParameters.mockReturnValueOnce(['0x0', '0x0']);
 
-        abiItemModelMock.getOutputs
-            .mockReturnValueOnce([]);
+        abiItemModelMock.getOutputs.mockReturnValueOnce([]);
 
-        expect(callContractMethod.afterExecution('0x0'))
-            .toEqual(['0x0', '0x0']);
+        expect(callContractMethod.afterExecution('0x0')).toEqual(['0x0', '0x0']);
 
-        expect(abiCoderMock.decodeParameters)
-            .toHaveBeenCalledWith([], '0');
+        expect(abiCoderMock.decodeParameters).toHaveBeenCalledWith([], '0');
     });
 
     it('calls afterExecution and returns the first array item as result', () => {
-        abiCoderMock.decodeParameters
-            .mockReturnValueOnce(['0x0']);
+        abiCoderMock.decodeParameters.mockReturnValueOnce(['0x0']);
 
-        abiItemModelMock.getOutputs
-            .mockReturnValueOnce([]);
+        abiItemModelMock.getOutputs.mockReturnValueOnce([]);
 
-        expect(callContractMethod.afterExecution('0x0'))
-            .toEqual('0x0');
+        expect(callContractMethod.afterExecution('0x0')).toEqual('0x0');
 
-        expect(abiCoderMock.decodeParameters)
-            .toHaveBeenCalledWith([], '0');
+        expect(abiCoderMock.decodeParameters).toHaveBeenCalledWith([], '0');
     });
 });

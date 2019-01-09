@@ -32,13 +32,7 @@ export default class AbstractSendMethod extends AbstractMethod {
      *
      * @constructor
      */
-    constructor(
-        rpcMethod,
-        parametersAmount,
-        utils,
-        formatters,
-        transactionConfirmationWorkflow
-    ) {
+    constructor(rpcMethod, parametersAmount, utils, formatters, transactionConfirmationWorkflow) {
         super(rpcMethod, parametersAmount, utils, formatters);
         this.transactionConfirmationWorkflow = transactionConfirmationWorkflow;
     }
@@ -70,7 +64,7 @@ export default class AbstractSendMethod extends AbstractMethod {
 
         moduleInstance.currentProvider
             .send(this.rpcMethod, this.parameters)
-            .then(response => {
+            .then((response) => {
                 this.transactionConfirmationWorkflow.execute(this, moduleInstance, response, promiEvent);
 
                 if (this.callback) {
@@ -79,7 +73,7 @@ export default class AbstractSendMethod extends AbstractMethod {
 
                 promiEvent.emit('transactionHash', response);
             })
-            .catch(error => {
+            .catch((error) => {
                 if (this.callback) {
                     this.callback(error, null);
                 }

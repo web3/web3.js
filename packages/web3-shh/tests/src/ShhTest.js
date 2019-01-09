@@ -75,11 +75,9 @@ describe('ShhTest', () => {
             return providerMock;
         });
 
-        providersModuleFactoryMock.createProviderDetector
-            .mockReturnValueOnce(providerDetectorMock);
+        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce(providerDetectorMock);
 
-        providersModuleFactoryMock.createProviderResolver
-            .mockReturnValueOnce(providerResolverMock);
+        providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce(providerResolverMock);
 
         new MethodModuleFactory();
         methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
@@ -105,38 +103,35 @@ describe('ShhTest', () => {
     });
 
     it('constructor check', () => {
-        expect(shh.subscriptionsFactory)
-            .toEqual(subscriptionsFactoryMock);
+        expect(shh.subscriptionsFactory).toEqual(subscriptionsFactoryMock);
 
-        expect(shh.net)
-            .toEqual(networkMock);
+        expect(shh.net).toEqual(networkMock);
     });
 
     it('JSON-RPC methods check', () => {
-        expect(shh.methodFactory.methods)
-            .toEqual({
-                getVersion: ShhVersionMethod,
-                getInfo: GetInfoMethod,
-                setMaxMessageSize: SetMaxMessageSizeMethod,
-                setMinPoW: SetMinPoWMethod,
-                markTrustedPeer: MarkTrustedPeerMethod,
-                newKeyPair: NewKeyPairMethod,
-                addPrivateKey: AddPrivateKeyMethod,
-                deleteKeyPair: DeleteKeyPairMethod,
-                hasKeyPair: HasKeyPairMethod,
-                getPublicKey: GetPublicKeyMethod,
-                getPrivateKey: GetPrivateKeyMethod,
-                newSymKey: NewSymKeyMethod,
-                addSymKey: AddSymKeyMethod,
-                generateSymKeyFromPassword: GenerateSymKeyFromPasswordMethod,
-                hasSymKey: HasSymKeyMethod,
-                getSymKey: GetSymKeyMethod,
-                deleteSymKey: DeleteSymKeyMethod,
-                newMessageFilter: NewMessageFilterMethod,
-                getFilterMessages: GetFilterMessagesMethod,
-                deleteMessageFilter: DeleteMessageFilterMethod,
-                post: PostMethod
-            });
+        expect(shh.methodFactory.methods).toEqual({
+            getVersion: ShhVersionMethod,
+            getInfo: GetInfoMethod,
+            setMaxMessageSize: SetMaxMessageSizeMethod,
+            setMinPoW: SetMinPoWMethod,
+            markTrustedPeer: MarkTrustedPeerMethod,
+            newKeyPair: NewKeyPairMethod,
+            addPrivateKey: AddPrivateKeyMethod,
+            deleteKeyPair: DeleteKeyPairMethod,
+            hasKeyPair: HasKeyPairMethod,
+            getPublicKey: GetPublicKeyMethod,
+            getPrivateKey: GetPrivateKeyMethod,
+            newSymKey: NewSymKeyMethod,
+            addSymKey: AddSymKeyMethod,
+            generateSymKeyFromPassword: GenerateSymKeyFromPasswordMethod,
+            hasSymKey: HasSymKeyMethod,
+            getSymKey: GetSymKeyMethod,
+            deleteSymKey: DeleteSymKeyMethod,
+            newMessageFilter: NewMessageFilterMethod,
+            getFilterMessages: GetFilterMessagesMethod,
+            deleteMessageFilter: DeleteMessageFilterMethod,
+            post: PostMethod
+        });
     });
 
     it('calls the subscribe method with the method string "messages" and it returns a object of type ShhMessagesSubscription', () => {
@@ -147,18 +142,13 @@ describe('ShhTest', () => {
         new AbstractSubscription();
         const shhMessagesSubscriptionMock = AbstractSubscription.mock.instances[0];
 
-        shhMessagesSubscriptionMock.subscribe
-            .mockReturnValueOnce(shhMessagesSubscriptionMock);
+        shhMessagesSubscriptionMock.subscribe.mockReturnValueOnce(shhMessagesSubscriptionMock);
 
-        subscriptionsFactoryMock.createShhMessagesSubscription
-            .mockReturnValueOnce(shhMessagesSubscriptionMock);
+        subscriptionsFactoryMock.createShhMessagesSubscription.mockReturnValueOnce(shhMessagesSubscriptionMock);
 
-        expect(shh.subscribe('messages', {}, callback))
-            .toEqual(shhMessagesSubscriptionMock);
+        expect(shh.subscribe('messages', {}, callback)).toEqual(shhMessagesSubscriptionMock);
 
-        expect(subscriptionsFactoryMock.createShhMessagesSubscription)
-            .toHaveBeenCalledWith({}, shh);
-
+        expect(subscriptionsFactoryMock.createShhMessagesSubscription).toHaveBeenCalledWith({}, shh);
     });
 
     it('calls the subscribe method with a unknown method string and it throws an error', () => {
@@ -169,80 +159,65 @@ describe('ShhTest', () => {
 
     it('calls setProvider and returns true', () => {
         networkMock.setProvider = jest.fn();
-        networkMock.setProvider
-            .mockReturnValueOnce(true);
+        networkMock.setProvider.mockReturnValueOnce(true);
 
-        expect(shh.setProvider('provider', 'net'))
-            .toEqual(true);
+        expect(shh.setProvider('provider', 'net')).toEqual(true);
 
-        expect(networkMock.setProvider)
-            .toHaveBeenCalledWith('provider', 'net');
+        expect(networkMock.setProvider).toHaveBeenCalledWith('provider', 'net');
     });
 
     it('calls setProvider and returns false', () => {
         networkMock.setProvider = jest.fn();
-        networkMock.setProvider
-            .mockReturnValueOnce(false);
+        networkMock.setProvider.mockReturnValueOnce(false);
 
-        expect(shh.setProvider('provider', 'net'))
-            .toEqual(false);
+        expect(shh.setProvider('provider', 'net')).toEqual(false);
 
-        expect(networkMock.setProvider)
-            .toHaveBeenCalledWith('provider', 'net');
+        expect(networkMock.setProvider).toHaveBeenCalledWith('provider', 'net');
     });
 
     it('sets the defaultGasPrice property', () => {
         shh.defaultGasPrice = 10;
 
-        expect(shh.defaultGasPrice)
-            .toEqual(10);
+        expect(shh.defaultGasPrice).toEqual(10);
     });
 
     it('sets the defaultGas property', () => {
         shh.defaultGas = 10;
 
-        expect(shh.defaultGas)
-            .toEqual(10);
+        expect(shh.defaultGas).toEqual(10);
     });
 
     it('sets the transactionBlockTimeout property', () => {
         shh.transactionBlockTimeout = 10;
 
-        expect(shh.transactionBlockTimeout)
-            .toEqual(10);
+        expect(shh.transactionBlockTimeout).toEqual(10);
     });
 
     it('sets the transactionConfirmationBlocks property', () => {
         shh.transactionConfirmationBlocks = 10;
 
-        expect(shh.transactionConfirmationBlocks)
-            .toEqual(10);
+        expect(shh.transactionConfirmationBlocks).toEqual(10);
     });
 
     it('sets the transactionPollingTimeout property', () => {
         shh.transactionPollingTimeout = 10;
 
-        expect(shh.transactionPollingTimeout)
-            .toEqual(10);
+        expect(shh.transactionPollingTimeout).toEqual(10);
     });
 
     it('sets the defaultAccount property', () => {
-        Utils.toChecksumAddress
-            .mockReturnValue('0x2');
+        Utils.toChecksumAddress.mockReturnValue('0x2');
 
         shh.defaultAccount = '0x1';
 
-        expect(shh.defaultAccount)
-            .toEqual('0x2');
+        expect(shh.defaultAccount).toEqual('0x2');
 
-        expect(Utils.toChecksumAddress)
-            .toHaveBeenCalledWith('0x1');
+        expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x1');
     });
 
     it('sets the defaultBlock property', () => {
         shh.defaultBlock = 10;
 
-        expect(shh.defaultBlock)
-            .toEqual(10);
+        expect(shh.defaultBlock).toEqual(10);
     });
 });

@@ -22,20 +22,20 @@ describe('EventSubscriptionFactoryTest', () => {
     });
 
     it('constructor check', () => {
-        expect(eventSubscriptionFactory.utils)
-            .toEqual(Utils);
+        expect(eventSubscriptionFactory.utils).toEqual(Utils);
 
-        expect(eventSubscriptionFactory.formatters)
-            .toEqual(formatters);
+        expect(eventSubscriptionFactory.formatters).toEqual(formatters);
     });
 
     it('calls createEventLogSubscription and returns an EventLogSubscription object', () => {
-        expect(eventSubscriptionFactory.createEventLogSubscription({}, {}, {}, {}))
-            .toBeInstanceOf(EventLogSubscription);
+        expect(eventSubscriptionFactory.createEventLogSubscription({}, {}, {}, {})).toBeInstanceOf(
+            EventLogSubscription
+        );
     });
 
     it('calls createAllEventsLogSubscription and returns an AllEventsLogSubscription object', () => {
-        expect(eventSubscriptionFactory.createAllEventsLogSubscription({}, {}, {}))
-            .toBeInstanceOf(AllEventsLogSubscription);
+        expect(eventSubscriptionFactory.createAllEventsLogSubscription({}, {}, {})).toBeInstanceOf(
+            AllEventsLogSubscription
+        );
     });
 });

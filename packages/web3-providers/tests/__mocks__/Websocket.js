@@ -4,9 +4,7 @@ export default class Websocket {
         this.protocol = protocol;
     }
 
-    addEventListener(event, method) {
-    }
+    addEventListener(event, method) {}
 
-    removeEventListener(event, method) {
-    }
+    removeEventListener(event, method) {}
 }

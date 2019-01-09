@@ -16,9 +16,7 @@ jest.mock('../../../src/providers/EthereumProvider');
  * ProviderResolver test
  */
 describe('ProviderResolverTest', () => {
-    let providerResolver,
-        providersModuleFactory,
-        providersModuleFactoryMock;
+    let providerResolver, providersModuleFactory, providersModuleFactoryMock;
 
     beforeEach(() => {
         providersModuleFactory = new ProvidersModuleFactory();
@@ -31,86 +29,72 @@ describe('ProviderResolverTest', () => {
         new HttpProvider('host', {}, providersModuleFactoryMock);
         const httpProviderMock = HttpProvider.mock.instances[0];
 
-        providersModuleFactory.createHttpProvider
-            .mockReturnValueOnce(httpProviderMock);
+        providersModuleFactory.createHttpProvider.mockReturnValueOnce(httpProviderMock);
 
-        expect(providerResolver.resolve('http://localhost:8545'))
-            .toBeInstanceOf(HttpProvider);
+        expect(providerResolver.resolve('http://localhost:8545')).toBeInstanceOf(HttpProvider);
 
-        expect(providersModuleFactoryMock.createHttpProvider)
-            .toHaveBeenCalledWith('http://localhost:8545');
+        expect(providersModuleFactoryMock.createHttpProvider).toHaveBeenCalledWith('http://localhost:8545');
     });
 
     it('calls resolve with WebSocket url', () => {
         new WebsocketProvider({}, 1);
         const websocketProviderMock = WebsocketProvider.mock.instances[0];
 
-        providersModuleFactory.createWebsocketProvider
-            .mockReturnValueOnce(websocketProviderMock);
+        providersModuleFactory.createWebsocketProvider.mockReturnValueOnce(websocketProviderMock);
 
-        expect(providerResolver.resolve('ws://127.0.0.1:8545'))
-            .toBeInstanceOf(WebsocketProvider);
+        expect(providerResolver.resolve('ws://127.0.0.1:8545')).toBeInstanceOf(WebsocketProvider);
 
-        expect(providersModuleFactoryMock.createWebsocketProvider)
-            .toHaveBeenCalledWith('ws://127.0.0.1:8545');
+        expect(providersModuleFactoryMock.createWebsocketProvider).toHaveBeenCalledWith('ws://127.0.0.1:8545');
     });
 
     it('calls resolve with Ipc path and net object', () => {
         new IpcProvider({}, '/path/to/the/socket');
-        const ipcProviderMock = IpcProvider.mock.instances[0],
-              net = {connect: () => {}};
+        const ipcProviderMock = IpcProvider.mock.instances[0];
 
-        providersModuleFactory.createIpcProvider
-            .mockReturnValueOnce(ipcProviderMock);
+        const net = {connect: () => {}};
 
-        expect(providerResolver.resolve('/path/to/the/socket', net))
-            .toBeInstanceOf(IpcProvider);
+        providersModuleFactory.createIpcProvider.mockReturnValueOnce(ipcProviderMock);
 
-        expect(providersModuleFactoryMock.createIpcProvider)
-            .toHaveBeenCalledWith('/path/to/the/socket', net);
+        expect(providerResolver.resolve('/path/to/the/socket', net)).toBeInstanceOf(IpcProvider);
+
+        expect(providersModuleFactoryMock.createIpcProvider).toHaveBeenCalledWith('/path/to/the/socket', net);
     });
 
     it('calls resolve with the HttpProvider', () => {
         new HttpProvider('host', {}, providersModuleFactoryMock);
         const httpProviderMock = HttpProvider.mock.instances[0];
 
-        expect(providerResolver.resolve(httpProviderMock))
-            .toBeInstanceOf(HttpProvider);
+        expect(providerResolver.resolve(httpProviderMock)).toBeInstanceOf(HttpProvider);
     });
 
     it('calls resolve with the EthereumProvider', () => {
         new EthereumProvider({});
         const ethereumProviderMock = EthereumProvider.mock.instances[0];
 
-        providersModuleFactoryMock.createEthereumProvider
-            .mockReturnValueOnce(ethereumProviderMock);
+        providersModuleFactoryMock.createEthereumProvider.mockReturnValueOnce(ethereumProviderMock);
 
-        expect(providerResolver.resolve(ethereumProviderMock))
-            .toBeInstanceOf(EthereumProvider);
+        expect(providerResolver.resolve(ethereumProviderMock)).toBeInstanceOf(EthereumProvider);
 
-        expect(providersModuleFactoryMock.createEthereumProvider)
-            .toHaveBeenCalledWith(ethereumProviderMock);
+        expect(providersModuleFactoryMock.createEthereumProvider).toHaveBeenCalledWith(ethereumProviderMock);
     });
 
     it('calls resolve with the WebsocketProvider', () => {
         new WebsocketProvider({}, 1);
         const websocketProviderMock = WebsocketProvider.mock.instances[0];
 
-        expect(providerResolver.resolve(websocketProviderMock))
-            .toBeInstanceOf(WebsocketProvider);
+        expect(providerResolver.resolve(websocketProviderMock)).toBeInstanceOf(WebsocketProvider);
     });
 
     it('calls resolve with the IpcProvider', () => {
         new IpcProvider({}, '/path/to/the/socket');
         const ipcProviderMock = IpcProvider.mock.instances[0];
 
-        expect(providerResolver.resolve(ipcProviderMock))
-            .toBeInstanceOf(IpcProvider);
+        expect(providerResolver.resolve(ipcProviderMock)).toBeInstanceOf(IpcProvider);
     });
 
-    it('calls resolve with a provider that isn\'t supported', () => {
+    it("calls resolve with a provider that isn't supported", () => {
         expect(() => {
-            providerResolver.resolve('LALALA')
+            providerResolver.resolve('LALALA');
         }).toThrow('Please provide an valid Web3 provider');
     });
 });

@@ -37,16 +37,7 @@ export default class Personal extends AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(
-        provider,
-        providersModuleFactory,
-        methodModuleFactory,
-        methodFactory,
-        net,
-        utils,
-        formatters,
-        options
-    ) {
+    constructor(provider, providersModuleFactory, methodModuleFactory, methodFactory, net, utils, formatters, options) {
         super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
 
         this.utils = utils;

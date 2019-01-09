@@ -113,6 +113,7 @@ export default class EnsModuleFactory {
             utils,
             formatters,
             options,
-            net);
+            net
+        );
     }
 }

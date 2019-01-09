@@ -65,41 +65,30 @@ describe('EthModuleFactoryTest', () => {
     });
 
     it('constructor check', () => {
-        expect(ethModuleFactory.provider)
-            .toEqual(providerMock);
+        expect(ethModuleFactory.provider).toEqual(providerMock);
 
-        expect(ethModuleFactory.providersModuleFactory)
-            .toEqual(providersModuleFactoryMock);
+        expect(ethModuleFactory.providersModuleFactory).toEqual(providersModuleFactoryMock);
 
-        expect(ethModuleFactory.methodModuleFactory)
-            .toEqual(methodModuleFactoryMock);
+        expect(ethModuleFactory.methodModuleFactory).toEqual(methodModuleFactoryMock);
 
-        expect(ethModuleFactory.accounts)
-            .toEqual(accountsMock);
+        expect(ethModuleFactory.accounts).toEqual(accountsMock);
 
-        expect(ethModuleFactory.PromiEvent)
-            .toEqual(PromiEvent);
+        expect(ethModuleFactory.PromiEvent).toEqual(PromiEvent);
 
-        expect(ethModuleFactory.utils)
-            .toEqual(Utils);
+        expect(ethModuleFactory.utils).toEqual(Utils);
 
-        expect(ethModuleFactory.formatters)
-            .toEqual(formatters);
+        expect(ethModuleFactory.formatters).toEqual(formatters);
 
-        expect(ethModuleFactory.contractModuleFactory)
-            .toEqual(contractModuleFactoryMock);
+        expect(ethModuleFactory.contractModuleFactory).toEqual(contractModuleFactoryMock);
 
-        expect(ethModuleFactory.abiCoder)
-            .toEqual(abiCoderMock);
+        expect(ethModuleFactory.abiCoder).toEqual(abiCoderMock);
     });
 
     it('calls createContract and returns a Contract object', () => {
-       expect(ethModuleFactory.createContract({}, '', {}))
-           .toBeInstanceOf(AbstractContract);
+        expect(ethModuleFactory.createContract({}, '', {})).toBeInstanceOf(AbstractContract);
     });
 
     it('calls createEthModule and returns a Contract object', () => {
-        expect(ethModuleFactory.createEthModule({}, '', {}))
-            .toBeInstanceOf(Eth);
+        expect(ethModuleFactory.createEthModule({}, '', {})).toBeInstanceOf(Eth);
     });
 });

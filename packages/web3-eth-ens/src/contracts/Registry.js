@@ -68,7 +68,7 @@ export default class Registry extends AbstractContract {
         this.resolverContract = null;
         this.resolverName = null;
 
-        this.checkNetwork().then(address => {
+        this.checkNetwork().then((address) => {
             this.address = address;
         });
     }
@@ -86,15 +86,17 @@ export default class Registry extends AbstractContract {
      */
     owner(name, callback) {
         return new Promise((resolve, reject) => {
-            this.methods.owner(namehash.hash(name)).call()
-                .then(receipt => {
+            this.methods
+                .owner(namehash.hash(name))
+                .call()
+                .then((receipt) => {
                     resolve(receipt);
 
                     if (isFunction(callback)) {
                         callback(false, receipt);
                     }
                 })
-                .catch(error => {
+                .catch((error) => {
                     reject(error);
 
                     if (isFunction(callback)) {

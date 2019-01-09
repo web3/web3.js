@@ -75,78 +75,65 @@ describe('EventSubscriptionsProxyTest', () => {
     });
 
     it('constructor check', () => {
-        expect(eventSubscriptionsProxy.contract)
-            .toEqual(contractMock);
+        expect(eventSubscriptionsProxy.contract).toEqual(contractMock);
 
-        expect(eventSubscriptionsProxy.eventSubscriptionFactory)
-            .toEqual(eventSubscriptionFactoryMock);
+        expect(eventSubscriptionsProxy.eventSubscriptionFactory).toEqual(eventSubscriptionFactoryMock);
 
-        expect(eventSubscriptionsProxy.abiModel)
-            .toEqual(abiModelMock);
+        expect(eventSubscriptionsProxy.abiModel).toEqual(abiModelMock);
 
-        expect(eventSubscriptionsProxy.eventOptionsMapper)
-            .toEqual(eventOptionsMapperMock);
+        expect(eventSubscriptionsProxy.eventOptionsMapper).toEqual(eventOptionsMapperMock);
 
-        expect(eventSubscriptionsProxy.eventLogDecoder)
-            .toEqual(eventLogDecoderMock);
+        expect(eventSubscriptionsProxy.eventLogDecoder).toEqual(eventLogDecoderMock);
 
-        expect(eventSubscriptionsProxy.allEventsLogDecoder)
-            .toEqual(allEventsLogDecoderMock);
+        expect(eventSubscriptionsProxy.allEventsLogDecoder).toEqual(allEventsLogDecoderMock);
 
-        expect(eventSubscriptionsProxy.allEventsOptionsMapper)
-            .toEqual(allEventsOptionsMapperMock);
+        expect(eventSubscriptionsProxy.allEventsOptionsMapper).toEqual(allEventsOptionsMapperMock);
 
-        expect(eventSubscriptionsProxy.PromiEvent)
-            .toEqual(PromiEvent);
+        expect(eventSubscriptionsProxy.PromiEvent).toEqual(PromiEvent);
     });
 
     it('subscribes an event over the proxy', () => {
-        abiModelMock.hasEvent
-            .mockReturnValueOnce(true);
+        abiModelMock.hasEvent.mockReturnValueOnce(true);
 
-        abiModelMock.getEvent
-            .mockReturnValueOnce(abiItemModelMock);
+        abiModelMock.getEvent.mockReturnValueOnce(abiItemModelMock);
 
         new EventLogSubscription();
         const options = {
-                filter: []
-            },
-            eventLogSubscriptionMock = EventLogSubscription.mock.instances[0];
+            filter: []
+        };
 
-        eventLogSubscriptionMock.subscribe = jest.fn(callback => {
-            expect(callback)
-                .toBeInstanceOf(Function);
+        const eventLogSubscriptionMock = EventLogSubscription.mock.instances[0];
+
+        eventLogSubscriptionMock.subscribe = jest.fn((callback) => {
+            expect(callback).toBeInstanceOf(Function);
 
             return eventLogSubscriptionMock;
         });
 
-        eventSubscriptionFactoryMock.createEventLogSubscription
-            .mockReturnValueOnce(eventLogSubscriptionMock);
+        eventSubscriptionFactoryMock.createEventLogSubscription.mockReturnValueOnce(eventLogSubscriptionMock);
 
-        eventOptionsMapperMock.map
-            .mockReturnValueOnce({options: true});
+        eventOptionsMapperMock.map.mockReturnValueOnce({options: true});
 
         const subscription = eventSubscriptionsProxy.MyEvent(options, () => {});
 
-        expect(subscription)
-            .toEqual(eventLogSubscriptionMock);
+        expect(subscription).toEqual(eventLogSubscriptionMock);
 
-        expect(abiModelMock.hasEvent)
-            .toHaveBeenCalledWith('MyEvent');
+        expect(abiModelMock.hasEvent).toHaveBeenCalledWith('MyEvent');
 
-        expect(abiModelMock.getEvent)
-            .toHaveBeenCalledWith('MyEvent');
+        expect(abiModelMock.getEvent).toHaveBeenCalledWith('MyEvent');
 
-        expect(eventSubscriptionFactoryMock.createEventLogSubscription)
-            .toHaveBeenCalledWith(eventLogDecoderMock, abiItemModelMock, contractMock, {options: true});
+        expect(eventSubscriptionFactoryMock.createEventLogSubscription).toHaveBeenCalledWith(
+            eventLogDecoderMock,
+            abiItemModelMock,
+            contractMock,
+            {options: true}
+        );
 
-        expect(eventOptionsMapperMock.map)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock, options);
+        expect(eventOptionsMapperMock.map).toHaveBeenCalledWith(abiItemModelMock, contractMock, options);
     });
 
     it('subscribes an event over the proxy with a filter and topics set', () => {
-        abiModelMock.hasEvent
-            .mockReturnValueOnce(true);
+        abiModelMock.hasEvent.mockReturnValueOnce(true);
 
         const options = {
             filter: [],
@@ -157,57 +144,50 @@ describe('EventSubscriptionsProxyTest', () => {
             eventSubscriptionsProxy.MyEvent(options, () => {});
         }).toThrow('Invalid subscription options: Only filter or topics are allowed and not both');
 
-        expect(abiModelMock.hasEvent)
-            .toHaveBeenCalledWith('MyEvent');
+        expect(abiModelMock.hasEvent).toHaveBeenCalledWith('MyEvent');
 
-        expect(abiModelMock.getEvent)
-            .toHaveBeenCalledWith('MyEvent');
+        expect(abiModelMock.getEvent).toHaveBeenCalledWith('MyEvent');
     });
 
     it('subscribes to all events over the proxy', () => {
-        abiModelMock.hasEvent
-            .mockReturnValueOnce(false);
+        abiModelMock.hasEvent.mockReturnValueOnce(false);
 
-        abiModelMock.getEvent
-            .mockReturnValueOnce(abiItemModelMock);
+        abiModelMock.getEvent.mockReturnValueOnce(abiItemModelMock);
 
         new AllEventsLogSubscription();
         const options = {
-                filter: []
-            },
-            allEventsLogSubscription = AllEventsLogSubscription.mock.instances[0];
+            filter: []
+        };
 
-        allEventsLogSubscription.subscribe = jest.fn(callback => {
-            expect(callback)
-                .toBeInstanceOf(Function);
+        const allEventsLogSubscription = AllEventsLogSubscription.mock.instances[0];
+
+        allEventsLogSubscription.subscribe = jest.fn((callback) => {
+            expect(callback).toBeInstanceOf(Function);
 
             return allEventsLogSubscription;
         });
 
-        eventSubscriptionFactoryMock.createAllEventsLogSubscription
-            .mockReturnValueOnce(allEventsLogSubscription);
+        eventSubscriptionFactoryMock.createAllEventsLogSubscription.mockReturnValueOnce(allEventsLogSubscription);
 
-        allEventsOptionsMapperMock.map
-            .mockReturnValueOnce({options: true});
+        allEventsOptionsMapperMock.map.mockReturnValueOnce({options: true});
 
         const subscription = eventSubscriptionsProxy.allEvents(options, () => {});
 
-        expect(subscription)
-            .toEqual(allEventsLogSubscription);
+        expect(subscription).toEqual(allEventsLogSubscription);
 
-        expect(abiModelMock.hasEvent)
-            .toHaveBeenCalledWith('allEvents');
+        expect(abiModelMock.hasEvent).toHaveBeenCalledWith('allEvents');
 
-        expect(eventSubscriptionFactoryMock.createAllEventsLogSubscription)
-            .toHaveBeenCalledWith(allEventsLogDecoderMock, contractMock, {options: true});
+        expect(eventSubscriptionFactoryMock.createAllEventsLogSubscription).toHaveBeenCalledWith(
+            allEventsLogDecoderMock,
+            contractMock,
+            {options: true}
+        );
 
-        expect(allEventsOptionsMapperMock.map)
-            .toHaveBeenCalledWith(abiModelMock, contractMock, options);
+        expect(allEventsOptionsMapperMock.map).toHaveBeenCalledWith(abiModelMock, contractMock, options);
     });
 
     it('subscribes to all evens over the proxy with a filter and topics set', () => {
-        abiModelMock.hasEvent
-            .mockReturnValueOnce(false);
+        abiModelMock.hasEvent.mockReturnValueOnce(false);
 
         const options = {
             filter: [],
@@ -218,14 +198,12 @@ describe('EventSubscriptionsProxyTest', () => {
             eventSubscriptionsProxy.allEvents(options, () => {});
         }).toThrow('Invalid subscription options: Only filter or topics are allowed and not both');
 
-        expect(abiModelMock.hasEvent)
-            .toHaveBeenCalledWith('allEvents');
+        expect(abiModelMock.hasEvent).toHaveBeenCalledWith('allEvents');
     });
 
     it('calls a property on the target that does not exist', () => {
         expect(() => {
             eventSubscriptionsProxy.doesNotExist();
         }).toThrow('eventSubscriptionsProxy.doesNotExist is not a function');
-
-    })
+    });
 });

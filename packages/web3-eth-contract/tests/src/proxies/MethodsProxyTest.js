@@ -71,396 +71,294 @@ describe('MethodsProxyTest', () => {
     });
 
     it('constructor check', () => {
-        expect(methodsProxy.contract)
-            .toEqual(contractMock);
+        expect(methodsProxy.contract).toEqual(contractMock);
 
-        expect(methodsProxy.abiModel)
-            .toEqual(abiModelMock);
+        expect(methodsProxy.abiModel).toEqual(abiModelMock);
 
-        expect(methodsProxy.methodFactory)
-            .toEqual(methodFactoryMock);
+        expect(methodsProxy.methodFactory).toEqual(methodFactoryMock);
 
-        expect(methodsProxy.methodEncoder)
-            .toEqual(methodEncoderMock);
+        expect(methodsProxy.methodEncoder).toEqual(methodEncoderMock);
 
-        expect(methodsProxy.methodOptionsValidator)
-            .toEqual(methodOptionsValidatorMock);
+        expect(methodsProxy.methodOptionsValidator).toEqual(methodOptionsValidatorMock);
 
-        expect(methodsProxy.methodOptionsMapper)
-            .toEqual(methodOptionsMapperMock);
+        expect(methodsProxy.methodOptionsMapper).toEqual(methodOptionsMapperMock);
 
-        expect(methodsProxy.PromiEvent)
-            .toEqual(PromiEvent);
+        expect(methodsProxy.PromiEvent).toEqual(PromiEvent);
     });
 
     it('calls a call method over the proxy', async () => {
         abiItemModelMock.requestType = 'call';
 
-        abiModelMock.hasMethod
-            .mockReturnValueOnce(true);
+        abiModelMock.hasMethod.mockReturnValueOnce(true);
 
-        abiModelMock.getMethod
-            .mockReturnValueOnce(abiItemModelMock);
+        abiModelMock.getMethod.mockReturnValueOnce(abiItemModelMock);
 
         new CallContractMethod();
         const callMethodMock = CallContractMethod.mock.instances[0];
         callMethodMock.parameters = [{}];
 
-        callMethodMock.execute = jest.fn(contractInstance => {
-            expect(contractInstance)
-                .toEqual(contractMock);
+        callMethodMock.execute = jest.fn((contractInstance) => {
+            expect(contractInstance).toEqual(contractMock);
 
             return Promise.resolve(true);
         });
 
-        methodFactoryMock.createMethodByRequestType
-            .mockReturnValueOnce(callMethodMock);
+        methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(callMethodMock);
 
-        methodEncoderMock.encode
-            .mockReturnValueOnce('0x0');
+        methodEncoderMock.encode.mockReturnValueOnce('0x0');
 
-        methodOptionsMapperMock.map
-            .mockReturnValueOnce({options: true});
+        methodOptionsMapperMock.map.mockReturnValueOnce({options: true});
 
-        await expect(methodsProxy.myMethod(true).call({options: false})).resolves
-            .toEqual(true);
+        await expect(methodsProxy.myMethod(true).call({options: false})).resolves.toEqual(true);
 
-        expect(abiModelMock.hasMethod)
-            .toHaveBeenCalledWith('myMethod');
+        expect(abiModelMock.hasMethod).toHaveBeenCalledWith('myMethod');
 
-        expect(abiModelMock.getMethod)
-            .toHaveBeenCalledWith('myMethod');
+        expect(abiModelMock.getMethod).toHaveBeenCalledWith('myMethod');
 
-        expect(abiItemModelMock.contractMethodParameters[0])
-            .toEqual(true);
+        expect(abiItemModelMock.contractMethodParameters[0]).toEqual(true);
 
-        expect(abiItemModelMock.givenParametersLengthIsValid)
-            .toHaveBeenCalled();
+        expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
 
-        expect(methodFactoryMock.createMethodByRequestType)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock);
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(abiItemModelMock, contractMock);
 
-        expect(callMethodMock.methodArguments[0])
-            .toEqual({options: false});
+        expect(callMethodMock.methodArguments[0]).toEqual({options: false});
 
-        expect(methodEncoderMock.encode)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
 
-        expect(methodOptionsMapperMock.map)
-            .toHaveBeenCalledWith(contractMock, {data: '0x0'});
+        expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
 
-        expect(methodOptionsValidatorMock.validate)
-            .toHaveBeenCalledWith(abiItemModelMock, callMethodMock);
+        expect(methodOptionsValidatorMock.validate).toHaveBeenCalledWith(abiItemModelMock, callMethodMock);
     });
 
     it('calls the constructor method over the proxy', async () => {
         abiItemModelMock.requestType = 'send';
 
-        abiModelMock.hasMethod
-            .mockReturnValueOnce(true);
+        abiModelMock.hasMethod.mockReturnValueOnce(true);
 
-        abiModelMock.getMethod
-            .mockReturnValueOnce(abiItemModelMock);
+        abiModelMock.getMethod.mockReturnValueOnce(abiItemModelMock);
 
-        abiItemModelMock.isOfType
-            .mockReturnValueOnce(true);
+        abiItemModelMock.isOfType.mockReturnValueOnce(true);
 
         new SendContractMethod();
         const sendMethodMock = SendContractMethod.mock.instances[0];
         sendMethodMock.parameters = [{}];
 
         sendMethodMock.execute = jest.fn((contractInstance, promiEventInstance) => {
-            expect(contractInstance)
-                .toEqual(contractMock);
+            expect(contractInstance).toEqual(contractMock);
 
-            expect(promiEventInstance)
-                .toBeInstanceOf(PromiEvent);
+            expect(promiEventInstance).toBeInstanceOf(PromiEvent);
 
             return Promise.resolve(true);
         });
 
-        methodFactoryMock.createMethodByRequestType
-            .mockReturnValueOnce(sendMethodMock);
+        methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(sendMethodMock);
 
-        methodEncoderMock.encode
-            .mockReturnValueOnce('0x0');
+        methodEncoderMock.encode.mockReturnValueOnce('0x0');
 
-        methodOptionsMapperMock.map
-            .mockReturnValueOnce({options: true});
+        methodOptionsMapperMock.map.mockReturnValueOnce({options: true});
 
-        await expect(methodsProxy.myMethod({arguments: [true], data: '0x0'}).send({options: false})).resolves
-            .toEqual(true);
+        await expect(methodsProxy.myMethod({arguments: [true], data: '0x0'}).send({options: false})).resolves.toEqual(
+            true
+        );
 
-        expect(abiModelMock.hasMethod)
-            .toHaveBeenCalledWith('myMethod');
+        expect(abiModelMock.hasMethod).toHaveBeenCalledWith('myMethod');
 
-        expect(abiModelMock.getMethod)
-            .toHaveBeenCalledWith('myMethod');
+        expect(abiModelMock.getMethod).toHaveBeenCalledWith('myMethod');
 
-        expect(abiItemModelMock.isOfType)
-            .toHaveBeenCalledWith('constructor');
+        expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('constructor');
 
-        expect(methodsProxy.contract.options.data)
-            .toEqual('0x0');
+        expect(methodsProxy.contract.options.data).toEqual('0x0');
 
-        expect(abiItemModelMock.contractMethodParameters)
-            .toEqual([true]);
+        expect(abiItemModelMock.contractMethodParameters).toEqual([true]);
 
-        expect(abiItemModelMock.givenParametersLengthIsValid)
-            .toHaveBeenCalled();
+        expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
 
-        expect(methodFactoryMock.createMethodByRequestType)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock);
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(abiItemModelMock, contractMock);
 
-        expect(sendMethodMock.methodArguments[0])
-            .toEqual({options: false});
+        expect(sendMethodMock.methodArguments[0]).toEqual({options: false});
 
-        expect(methodEncoderMock.encode)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
 
-        expect(methodOptionsMapperMock.map)
-            .toHaveBeenCalledWith(contractMock, {data: '0x0'});
+        expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
 
-        expect(methodOptionsValidatorMock.validate)
-            .toHaveBeenCalledWith(abiItemModelMock, sendMethodMock);
+        expect(methodOptionsValidatorMock.validate).toHaveBeenCalledWith(abiItemModelMock, sendMethodMock);
     });
 
     it('calls a method that exists with different arguments over the proxy', async () => {
         abiItemModelMock.requestType = 'send';
 
-        abiModelMock.hasMethod
-            .mockReturnValueOnce(true);
+        abiModelMock.hasMethod.mockReturnValueOnce(true);
 
-        abiModelMock.getMethod
-            .mockReturnValueOnce([abiItemModelMock]);
+        abiModelMock.getMethod.mockReturnValueOnce([abiItemModelMock]);
 
         new SendContractMethod();
         const sendMethodMock = SendContractMethod.mock.instances[0];
         sendMethodMock.parameters = [{}];
 
         sendMethodMock.execute = jest.fn((contractInstance, promiEventInstance) => {
-            expect(contractInstance)
-                .toEqual(contractMock);
+            expect(contractInstance).toEqual(contractMock);
 
-            expect(promiEventInstance)
-                .toBeInstanceOf(PromiEvent);
+            expect(promiEventInstance).toBeInstanceOf(PromiEvent);
 
             return Promise.resolve(true);
         });
 
-        methodFactoryMock.createMethodByRequestType
-            .mockReturnValueOnce(sendMethodMock);
+        methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(sendMethodMock);
 
-        methodEncoderMock.encode
-            .mockReturnValueOnce('0x0');
+        methodEncoderMock.encode.mockReturnValueOnce('0x0');
 
-        methodOptionsMapperMock.map
-            .mockReturnValueOnce({options: true});
+        methodOptionsMapperMock.map.mockReturnValueOnce({options: true});
 
-        await expect(methodsProxy.myMethod(true).send({options: false})).resolves
-            .toEqual(true);
+        await expect(methodsProxy.myMethod(true).send({options: false})).resolves.toEqual(true);
 
-        expect(abiModelMock.hasMethod)
-            .toHaveBeenCalledWith('myMethod');
+        expect(abiModelMock.hasMethod).toHaveBeenCalledWith('myMethod');
 
-        expect(abiModelMock.getMethod)
-            .toHaveBeenCalledWith('myMethod');
+        expect(abiModelMock.getMethod).toHaveBeenCalledWith('myMethod');
 
-        expect(abiItemModelMock.contractMethodParameters[0])
-            .toEqual(true);
+        expect(abiItemModelMock.contractMethodParameters[0]).toEqual(true);
 
-        expect(abiItemModelMock.givenParametersLengthIsValid)
-            .toHaveBeenCalled();
+        expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
 
-        expect(methodFactoryMock.createMethodByRequestType)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock);
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(abiItemModelMock, contractMock);
 
-        expect(sendMethodMock.methodArguments[0])
-            .toEqual({options: false});
+        expect(sendMethodMock.methodArguments[0]).toEqual({options: false});
 
-        expect(methodEncoderMock.encode)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
 
-        expect(methodOptionsMapperMock.map)
-            .toHaveBeenCalledWith(contractMock, {data: '0x0'});
+        expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
 
-        expect(methodOptionsValidatorMock.validate)
-            .toHaveBeenCalledWith(abiItemModelMock, sendMethodMock);
+        expect(methodOptionsValidatorMock.validate).toHaveBeenCalledWith(abiItemModelMock, sendMethodMock);
     });
 
     it('calls a method that exists with different arguments but also not with the given and throws an error', async () => {
         abiItemModelMock.requestType = 'send';
 
         abiItemModelMock.givenParametersLengthIsValid = jest.fn(() => {
-            throw new Error();
+            throw new Error('ERROR');
         });
 
-        abiModelMock.hasMethod
-            .mockReturnValueOnce(true);
+        abiModelMock.hasMethod.mockReturnValueOnce(true);
 
-        abiModelMock.getMethod
-            .mockReturnValueOnce([abiItemModelMock]);
+        abiModelMock.getMethod.mockReturnValueOnce([abiItemModelMock]);
 
-        methodEncoderMock.encode
-            .mockReturnValueOnce('0x0');
+        methodEncoderMock.encode.mockReturnValueOnce('0x0');
 
-        methodOptionsMapperMock.map
-            .mockReturnValueOnce({options: true});
+        methodOptionsMapperMock.map.mockReturnValueOnce({options: true});
 
         expect(() => {
-            methodsProxy.myMethod({arguments: [true], data: '0x0'})
+            methodsProxy.myMethod({arguments: [true], data: '0x0'});
         }).toThrow('Methods with name "myMethod" found but the given parameters are wrong');
 
-        expect(abiModelMock.hasMethod)
-            .toHaveBeenCalledWith('myMethod');
+        expect(abiModelMock.hasMethod).toHaveBeenCalledWith('myMethod');
 
-        expect(abiModelMock.getMethod)
-            .toHaveBeenCalledWith('myMethod');
+        expect(abiModelMock.getMethod).toHaveBeenCalledWith('myMethod');
 
-        expect(abiItemModelMock.contractMethodParameters[0])
-            .toEqual({arguments: [true], data: '0x0'});
+        expect(abiItemModelMock.contractMethodParameters[0]).toEqual({arguments: [true], data: '0x0'});
 
-        expect(abiItemModelMock.givenParametersLengthIsValid)
-            .toHaveBeenCalled();
+        expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
     });
 
     it('calls executeMethod and returns a rejected PromiEvent', async () => {
         abiItemModelMock.givenParametersLengthIsValid = jest.fn(() => {
-           throw new Error('Nope');
+            throw new Error('Nope');
         });
 
         const method = {
             callback: jest.fn()
         };
 
-        methodFactoryMock.createMethodByRequestType
-            .mockReturnValueOnce(method);
+        methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(method);
 
-        await expect(methodsProxy.executeMethod(abiItemModelMock, [true])).rejects
-            .toThrow('Nope');
+        await expect(methodsProxy.executeMethod(abiItemModelMock, [true])).rejects.toThrow('Nope');
 
-        expect(method.callback)
-            .toHaveBeenCalledWith(new Error('Nope'), null);
+        expect(method.callback).toHaveBeenCalledWith(new Error('Nope'), null);
 
-        expect(methodFactoryMock.createMethodByRequestType)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock);
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(abiItemModelMock, contractMock);
 
-        expect(method.methodArguments)
-            .toEqual([true]);
+        expect(method.methodArguments).toEqual([true]);
     });
 
     it('calls the request method on a contract method and returns the expect AbstractMethod object', () => {
         abiItemModelMock.requestType = 'call';
 
-        abiModelMock.hasMethod
-            .mockReturnValueOnce(true);
+        abiModelMock.hasMethod.mockReturnValueOnce(true);
 
-        abiModelMock.getMethod
-            .mockReturnValueOnce([abiItemModelMock]);
+        abiModelMock.getMethod.mockReturnValueOnce([abiItemModelMock]);
 
         new CallContractMethod();
         const callMethodMock = CallContractMethod.mock.instances[0];
         callMethodMock.parameters = [{}];
 
-        methodFactoryMock.createMethodByRequestType
-            .mockReturnValueOnce(callMethodMock);
+        methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(callMethodMock);
 
-        methodEncoderMock.encode
-            .mockReturnValueOnce('0x0');
+        methodEncoderMock.encode.mockReturnValueOnce('0x0');
 
-        methodOptionsMapperMock.map
-            .mockReturnValueOnce({options: true});
+        methodOptionsMapperMock.map.mockReturnValueOnce({options: true});
 
-        expect(methodsProxy.myMethod(true).call.request({options: false}))
-            .toEqual(callMethodMock);
+        expect(methodsProxy.myMethod(true).call.request({options: false})).toEqual(callMethodMock);
 
-        expect(abiItemModelMock.givenParametersLengthIsValid)
-            .toHaveBeenCalled();
+        expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
 
-        expect(methodFactoryMock.createMethodByRequestType)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock);
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(abiItemModelMock, contractMock);
 
-        expect(callMethodMock.methodArguments[0])
-            .toEqual({options: false});
+        expect(callMethodMock.methodArguments[0]).toEqual({options: false});
 
-        expect(methodEncoderMock.encode)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
 
-        expect(methodOptionsMapperMock.map)
-            .toHaveBeenCalledWith(contractMock, {data: '0x0'});
+        expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
 
-        expect(methodOptionsValidatorMock.validate)
-            .toHaveBeenCalledWith(abiItemModelMock, callMethodMock);
+        expect(methodOptionsValidatorMock.validate).toHaveBeenCalledWith(abiItemModelMock, callMethodMock);
     });
 
     it('calls the estimateGas method on a contract method and returns the expect value', async () => {
         abiItemModelMock.requestType = 'call';
 
-        abiModelMock.hasMethod
-            .mockReturnValueOnce(true);
+        abiModelMock.hasMethod.mockReturnValueOnce(true);
 
-        abiModelMock.getMethod
-            .mockReturnValueOnce([abiItemModelMock]);
+        abiModelMock.getMethod.mockReturnValueOnce([abiItemModelMock]);
 
         new EstimateGasMethod();
         const estimateGasMethod = EstimateGasMethod.mock.instances[0];
         estimateGasMethod.parameters = [{}];
 
-        estimateGasMethod.execute = jest.fn(contractInstance => {
-            expect(contractInstance)
-                .toEqual(contractMock);
+        estimateGasMethod.execute = jest.fn((contractInstance) => {
+            expect(contractInstance).toEqual(contractMock);
 
             return Promise.resolve(true);
         });
 
-        methodFactoryMock.createMethodByRequestType
-            .mockReturnValueOnce(estimateGasMethod);
+        methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(estimateGasMethod);
 
-        methodEncoderMock.encode
-            .mockReturnValueOnce('0x0');
+        methodEncoderMock.encode.mockReturnValueOnce('0x0');
 
-        methodOptionsMapperMock.map
-            .mockReturnValueOnce({options: true});
+        methodOptionsMapperMock.map.mockReturnValueOnce({options: true});
 
-        await expect(methodsProxy.myMethod(true).estimateGas({options: false})).resolves
-            .toEqual(true);
+        await expect(methodsProxy.myMethod(true).estimateGas({options: false})).resolves.toEqual(true);
 
-        expect(abiItemModelMock.requestType)
-            .toEqual('estimate');
+        expect(abiItemModelMock.requestType).toEqual('estimate');
 
-        expect(abiItemModelMock.givenParametersLengthIsValid)
-            .toHaveBeenCalled();
+        expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
 
-        expect(methodFactoryMock.createMethodByRequestType)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock);
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(abiItemModelMock, contractMock);
 
-        expect(estimateGasMethod.methodArguments[0])
-            .toEqual({options: false});
+        expect(estimateGasMethod.methodArguments[0]).toEqual({options: false});
 
-        expect(methodEncoderMock.encode)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
 
-        expect(methodOptionsMapperMock.map)
-            .toHaveBeenCalledWith(contractMock, {data: '0x0'});
+        expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
 
-        expect(methodOptionsValidatorMock.validate)
-            .toHaveBeenCalledWith(abiItemModelMock, estimateGasMethod);
+        expect(methodOptionsValidatorMock.validate).toHaveBeenCalledWith(abiItemModelMock, estimateGasMethod);
     });
 
     it('calls the encodeAbi method on a contract method and returns the expected value', () => {
-        abiModelMock.hasMethod
-            .mockReturnValueOnce(true);
+        abiModelMock.hasMethod.mockReturnValueOnce(true);
 
-        abiModelMock.getMethod
-            .mockReturnValueOnce(abiItemModelMock);
+        abiModelMock.getMethod.mockReturnValueOnce(abiItemModelMock);
 
-        methodEncoderMock.encode
-            .mockReturnValueOnce('encoded');
+        methodEncoderMock.encode.mockReturnValueOnce('encoded');
 
-        expect(methodsProxy.myMethod(true).encodeABI())
-            .toEqual('encoded');
+        expect(methodsProxy.myMethod(true).encodeABI()).toEqual('encoded');
 
-        expect(methodEncoderMock.encode)
-            .toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
     });
 });

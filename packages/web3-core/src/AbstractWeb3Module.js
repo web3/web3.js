@@ -41,7 +41,7 @@ export default class AbstractWeb3Module {
         options = {}
     ) {
         this.providersModuleFactory = providersModuleFactory;
-        this.providerDetector = providersModuleFactory.createProviderDetector();// TODO: detection of an provider and setting of givenProvider could be removed.
+        this.providerDetector = providersModuleFactory.createProviderDetector(); // TODO: detection of an provider and setting of givenProvider could be removed.
         this.providerResolver = providersModuleFactory.createProviderResolver();
         this.givenProvider = this.providerDetector.detect();
         this._currentProvider = this.providerResolver.resolve(provider);
@@ -61,10 +61,7 @@ export default class AbstractWeb3Module {
         if (methodFactory !== null) {
             this.methodFactory = methodFactory;
 
-            return methodModuleFactory.createMethodProxy(
-                this,
-                this.methodFactory
-            );
+            return methodModuleFactory.createMethodProxy(this, this.methodFactory);
         }
     }
 
@@ -308,7 +305,6 @@ export default class AbstractWeb3Module {
 
         return this.currentProvider.host === provider;
     }
-
 
     /**
      * Clears all subscriptions and listeners

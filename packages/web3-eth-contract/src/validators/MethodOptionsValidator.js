@@ -42,7 +42,7 @@ export default class MethodOptionsValidator {
      */
     validate(abiItemModel, method) {
         if (!this.isToSet(abiItemModel, method)) {
-            throw new Error('This contract object doesn\'t have address set yet, please set an address first.');
+            throw new Error("This contract object doesn't have address set yet, please set an address first.");
         }
 
         if (!this.isFromSet(method)) {

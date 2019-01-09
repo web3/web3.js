@@ -19,27 +19,24 @@ describe('SubscriptionsFactoryTest', () => {
     });
 
     it('createLogSubscription returns LogSubscription', () => {
-        expect(subscriptionsFactory.createLogSubscription())
-            .toBeInstanceOf(LogSubscription);
+        expect(subscriptionsFactory.createLogSubscription()).toBeInstanceOf(LogSubscription);
     });
 
     it('createNewHeadsSubscription returns NewHeadsSubscription', () => {
-        expect(subscriptionsFactory.createNewHeadsSubscription())
-            .toBeInstanceOf(NewHeadsSubscription);
+        expect(subscriptionsFactory.createNewHeadsSubscription()).toBeInstanceOf(NewHeadsSubscription);
     });
 
     it('createNewPendingTransactionsSubscription returns NewPendingTransactionsSubscription', () => {
-        expect(subscriptionsFactory.createNewPendingTransactionsSubscription())
-            .toBeInstanceOf(NewPendingTransactionsSubscription);
+        expect(subscriptionsFactory.createNewPendingTransactionsSubscription()).toBeInstanceOf(
+            NewPendingTransactionsSubscription
+        );
     });
 
     it('createSyncingSubscription returns SyncingSubscription', () => {
-        expect(subscriptionsFactory.createSyncingSubscription())
-            .toBeInstanceOf(SyncingSubscription);
+        expect(subscriptionsFactory.createSyncingSubscription()).toBeInstanceOf(SyncingSubscription);
     });
 
     it('createShhMessagesSubscription returns MessagesSubscription', () => {
-        expect(subscriptionsFactory.createShhMessagesSubscription())
-            .toBeInstanceOf(MessagesSubscription);
+        expect(subscriptionsFactory.createShhMessagesSubscription()).toBeInstanceOf(MessagesSubscription);
     });
 });

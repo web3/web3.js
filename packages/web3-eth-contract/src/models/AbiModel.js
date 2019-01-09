@@ -87,7 +87,7 @@ export default class AbiModel {
     getEventBySignature(signature) {
         let event;
 
-        Object.keys(this.abi.events).forEach(key => {
+        Object.keys(this.abi.events).forEach((key) => {
             if (this.abi.events[key].signature === signature) {
                 event = this.abi.events[key];
             }

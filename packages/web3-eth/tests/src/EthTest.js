@@ -104,11 +104,9 @@ describe('EthTest', () => {
             return providerMock;
         });
 
-        providersModuleFactoryMock.createProviderDetector
-            .mockReturnValueOnce(providerDetectorMock);
+        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce(providerDetectorMock);
 
-        providersModuleFactoryMock.createProviderResolver
-            .mockReturnValueOnce(providerResolverMock);
+        providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce(providerResolverMock);
 
         new MethodModuleFactory();
         methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
@@ -157,200 +155,158 @@ describe('EthTest', () => {
     });
 
     it('constructor check', () => {
-        expect(eth.ethModuleFactory)
-            .toEqual(ethModuleFactoryMock);
+        expect(eth.ethModuleFactory).toEqual(ethModuleFactoryMock);
 
-        expect(eth.net)
-            .toEqual(networkMock);
+        expect(eth.net).toEqual(networkMock);
 
-        expect(eth.accounts)
-            .toEqual(accountsMock);
+        expect(eth.accounts).toEqual(accountsMock);
 
-        expect(eth.personal)
-            .toEqual(personalMock);
+        expect(eth.personal).toEqual(personalMock);
 
-        expect(eth.Iban)
-            .toEqual(Iban);
+        expect(eth.Iban).toEqual(Iban);
 
-        expect(eth.abi)
-            .toEqual(abiCoderMock);
+        expect(eth.abi).toEqual(abiCoderMock);
 
-        expect(eth.ens)
-            .toEqual(ensMock);
+        expect(eth.ens).toEqual(ensMock);
 
-        expect(eth.utils)
-            .toEqual(Utils);
+        expect(eth.utils).toEqual(Utils);
 
-        expect(eth.formatters)
-            .toEqual(formatters);
+        expect(eth.formatters).toEqual(formatters);
 
-        expect(eth.initiatedContracts)
-            .toEqual([]);
+        expect(eth.initiatedContracts).toEqual([]);
 
-        expect(eth.Contract)
-            .toBeInstanceOf(Function);
+        expect(eth.Contract).toBeInstanceOf(Function);
     });
 
     it('JSON-RPC methods check', () => {
-        expect(eth.methodFactory.methods)
-            .toEqual({
-                getNodeInfo: GetNodeInfoMethod,
-                getProtocolVersion: GetProtocolVersionMethod,
-                getCoinbase: GetCoinbaseMethod,
-                isMining: IsMiningMethod,
-                getHashrate: GetHashrateMethod,
-                isSyncing: IsSyncingMethod,
-                getGasPrice: GetGasPriceMethod,
-                getAccounts: GetAccountsMethod,
-                getBlockNumber: GetBlockNumberMethod,
-                getBalance: GetBalanceMethod,
-                getStorageAt: GetStorageAtMethod,
-                getCode: GetCodeMethod,
-                getBlock: GetBlockMethod,
-                getUncle: GetUncleMethod,
-                getBlockTransactionCount: GetBlockTransactionCountMethod,
-                getBlockUncleCount: GetBlockUncleCountMethod,
-                getTransaction: GetTransactionMethod,
-                getTransactionFromBlock: GetTransactionFromBlockMethod,
-                getTransactionReceipt: GetTransactionReceipt,
-                getTransactionCount: GetTransactionCountMethod,
-                sendSignedTransaction: SendRawTransactionMethod,
-                signTransaction: SignTransactionMethod,
-                sendTransaction: SendTransactionMethod,
-                sign: SignMethod,
-                call: CallMethod,
-                estimateGas: EstimateGasMethod,
-                submitWork: SubmitWorkMethod,
-                getWork: GetWorkMethod,
-                getPastLogs: GetPastLogsMethod,
-                requestAccounts: RequestAccountsMethod
-            });
+        expect(eth.methodFactory.methods).toEqual({
+            getNodeInfo: GetNodeInfoMethod,
+            getProtocolVersion: GetProtocolVersionMethod,
+            getCoinbase: GetCoinbaseMethod,
+            isMining: IsMiningMethod,
+            getHashrate: GetHashrateMethod,
+            isSyncing: IsSyncingMethod,
+            getGasPrice: GetGasPriceMethod,
+            getAccounts: GetAccountsMethod,
+            getBlockNumber: GetBlockNumberMethod,
+            getBalance: GetBalanceMethod,
+            getStorageAt: GetStorageAtMethod,
+            getCode: GetCodeMethod,
+            getBlock: GetBlockMethod,
+            getUncle: GetUncleMethod,
+            getBlockTransactionCount: GetBlockTransactionCountMethod,
+            getBlockUncleCount: GetBlockUncleCountMethod,
+            getTransaction: GetTransactionMethod,
+            getTransactionFromBlock: GetTransactionFromBlockMethod,
+            getTransactionReceipt: GetTransactionReceipt,
+            getTransactionCount: GetTransactionCountMethod,
+            sendSignedTransaction: SendRawTransactionMethod,
+            signTransaction: SignTransactionMethod,
+            sendTransaction: SendTransactionMethod,
+            sign: SignMethod,
+            call: CallMethod,
+            estimateGas: EstimateGasMethod,
+            submitWork: SubmitWorkMethod,
+            getWork: GetWorkMethod,
+            getPastLogs: GetPastLogsMethod,
+            requestAccounts: RequestAccountsMethod
+        });
     });
 
     it('sets the defaultGasPrice property', () => {
         eth.initiatedContracts = [{defaultGasPrice: 20}];
         eth.defaultGasPrice = 10;
 
-        expect(eth.initiatedContracts[0].defaultGasPrice)
-            .toEqual(10);
+        expect(eth.initiatedContracts[0].defaultGasPrice).toEqual(10);
 
-        expect(eth.defaultGasPrice)
-            .toEqual(10);
+        expect(eth.defaultGasPrice).toEqual(10);
 
-        expect(networkMock.defaultGasPrice)
-            .toEqual(10);
+        expect(networkMock.defaultGasPrice).toEqual(10);
 
-        expect(personalMock.defaultGasPrice)
-            .toEqual(10);
+        expect(personalMock.defaultGasPrice).toEqual(10);
     });
 
     it('sets the defaultGas property', () => {
         eth.initiatedContracts = [{defaultGas: 20}];
         eth.defaultGas = 10;
 
-        expect(eth.initiatedContracts[0].defaultGas)
-            .toEqual(10);
+        expect(eth.initiatedContracts[0].defaultGas).toEqual(10);
 
-        expect(eth.defaultGas)
-            .toEqual(10);
+        expect(eth.defaultGas).toEqual(10);
 
-        expect(networkMock.defaultGas)
-            .toEqual(10);
+        expect(networkMock.defaultGas).toEqual(10);
 
-        expect(personalMock.defaultGas)
-            .toEqual(10);
+        expect(personalMock.defaultGas).toEqual(10);
     });
 
     it('sets the transactionBlockTimeout property', () => {
         eth.initiatedContracts = [{transactionBlockTimeout: 20}];
         eth.transactionBlockTimeout = 10;
 
-        expect(eth.initiatedContracts[0].transactionBlockTimeout)
-            .toEqual(10);
+        expect(eth.initiatedContracts[0].transactionBlockTimeout).toEqual(10);
 
-        expect(eth.transactionBlockTimeout)
-            .toEqual(10);
+        expect(eth.transactionBlockTimeout).toEqual(10);
 
-        expect(networkMock.transactionBlockTimeout)
-            .toEqual(10);
+        expect(networkMock.transactionBlockTimeout).toEqual(10);
 
-        expect(personalMock.transactionBlockTimeout)
-            .toEqual(10);
+        expect(personalMock.transactionBlockTimeout).toEqual(10);
     });
 
     it('sets the transactionConfirmationBlocks property', () => {
         eth.initiatedContracts = [{transactionConfirmationBlocks: 20}];
         eth.transactionConfirmationBlocks = 10;
 
-        expect(eth.initiatedContracts[0].transactionConfirmationBlocks)
-            .toEqual(10);
+        expect(eth.initiatedContracts[0].transactionConfirmationBlocks).toEqual(10);
 
-        expect(eth.transactionConfirmationBlocks)
-            .toEqual(10);
+        expect(eth.transactionConfirmationBlocks).toEqual(10);
 
-        expect(networkMock.transactionConfirmationBlocks)
-            .toEqual(10);
+        expect(networkMock.transactionConfirmationBlocks).toEqual(10);
 
-        expect(personalMock.transactionConfirmationBlocks)
-            .toEqual(10);
+        expect(personalMock.transactionConfirmationBlocks).toEqual(10);
     });
 
     it('sets the transactionPollingTimeout property', () => {
         eth.initiatedContracts = [{transactionPollingTimeout: 20}];
         eth.transactionPollingTimeout = 10;
 
-        expect(eth.initiatedContracts[0].transactionPollingTimeout)
-            .toEqual(10);
+        expect(eth.initiatedContracts[0].transactionPollingTimeout).toEqual(10);
 
-        expect(eth.transactionPollingTimeout)
-            .toEqual(10);
+        expect(eth.transactionPollingTimeout).toEqual(10);
 
-        expect(networkMock.transactionPollingTimeout)
-            .toEqual(10);
+        expect(networkMock.transactionPollingTimeout).toEqual(10);
 
-        expect(personalMock.transactionPollingTimeout)
-            .toEqual(10);
+        expect(personalMock.transactionPollingTimeout).toEqual(10);
     });
 
     it('sets the defaultAccount property', () => {
         eth.initiatedContracts = [{defaultAccount: '0x0'}];
 
-        Utils.toChecksumAddress
-            .mockReturnValue('0x2');
+        Utils.toChecksumAddress.mockReturnValue('0x2');
 
         eth.defaultAccount = '0x1';
 
-        expect(eth.initiatedContracts[0].defaultAccount)
-            .toEqual('0x2');
+        expect(eth.initiatedContracts[0].defaultAccount).toEqual('0x2');
 
-        expect(eth.defaultAccount)
-            .toEqual('0x2');
+        expect(eth.defaultAccount).toEqual('0x2');
 
-        expect(networkMock.defaultAccount)
-            .toEqual('0x1');
+        expect(networkMock.defaultAccount).toEqual('0x1');
 
-        expect(personalMock.defaultAccount)
-            .toEqual('0x1');
+        expect(personalMock.defaultAccount).toEqual('0x1');
 
-        expect(Utils.toChecksumAddress)
-            .toHaveBeenCalledWith('0x1');
+        expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x1');
     });
 
     it('sets the defaultBlock property', () => {
         eth.initiatedContracts = [{defaultBlock: 20}];
         eth.defaultBlock = 10;
 
-        expect(eth.initiatedContracts[0].defaultBlock)
-            .toEqual(10);
+        expect(eth.initiatedContracts[0].defaultBlock).toEqual(10);
 
-        expect(eth.defaultBlock)
-            .toEqual(10);
+        expect(eth.defaultBlock).toEqual(10);
 
-        expect(networkMock.defaultBlock)
-            .toEqual(10);
+        expect(networkMock.defaultBlock).toEqual(10);
 
-        expect(personalMock.defaultBlock)
-            .toEqual(10);
+        expect(personalMock.defaultBlock).toEqual(10);
     });
 
     it('calls subscribe wih "logs" as type', () => {
@@ -363,11 +319,9 @@ describe('EthTest', () => {
             })
         };
 
-        providersModuleFactoryMock.createProviderDetector
-            .mockReturnValueOnce(providerDetectorMock);
+        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce(providerDetectorMock);
 
-        providersModuleFactoryMock.createProviderResolver
-            .mockReturnValueOnce(providerResolverMock);
+        providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce(providerResolverMock);
 
         eth = new Eth(
             providerMock,
@@ -392,26 +346,19 @@ describe('EthTest', () => {
         new LogSubscription();
         const logSubscriptionMock = LogSubscription.mock.instances[0];
 
-        logSubscriptionMock.subscribe
-            .mockReturnValueOnce(logSubscriptionMock);
+        logSubscriptionMock.subscribe.mockReturnValueOnce(logSubscriptionMock);
 
-        subscriptionsFactoryMock.createLogSubscription
-            .mockReturnValueOnce(logSubscriptionMock);
+        subscriptionsFactoryMock.createLogSubscription.mockReturnValueOnce(logSubscriptionMock);
 
-        const callback = () => {
-        };
+        const callback = () => {};
 
-        expect(eth.subscribe('logs', {}, callback))
-            .toBeInstanceOf(LogSubscription);
+        expect(eth.subscribe('logs', {}, callback)).toBeInstanceOf(LogSubscription);
 
-        expect(subscriptionsFactoryMock.createLogSubscription)
-            .toHaveBeenCalledWith({}, eth, getPastLogsMethodMock);
+        expect(subscriptionsFactoryMock.createLogSubscription).toHaveBeenCalledWith({}, eth, getPastLogsMethodMock);
 
-        expect(logSubscriptionMock.subscribe)
-            .toHaveBeenCalledWith(callback);
+        expect(logSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
 
-        expect(methodFactoryMock.createMethod)
-            .toHaveBeenCalledWith('getPastLogs');
+        expect(methodFactoryMock.createMethod).toHaveBeenCalledWith('getPastLogs');
     });
 
     it('calls subscribe wih "newBlockHeaders" as type', () => {
@@ -420,23 +367,17 @@ describe('EthTest', () => {
         new AbstractSubscription();
         const abstractSubscriptionMock = AbstractSubscription.mock.instances[0];
 
-        abstractSubscriptionMock.subscribe
-            .mockReturnValueOnce(abstractSubscriptionMock);
+        abstractSubscriptionMock.subscribe.mockReturnValueOnce(abstractSubscriptionMock);
 
-        subscriptionsFactoryMock.createNewHeadsSubscription
-            .mockReturnValueOnce(abstractSubscriptionMock);
+        subscriptionsFactoryMock.createNewHeadsSubscription.mockReturnValueOnce(abstractSubscriptionMock);
 
-        const callback = () => {
-        };
+        const callback = () => {};
 
-        expect(eth.subscribe('newBlockHeaders', {}, callback))
-            .toBeInstanceOf(AbstractSubscription);
+        expect(eth.subscribe('newBlockHeaders', {}, callback)).toBeInstanceOf(AbstractSubscription);
 
-        expect(subscriptionsFactoryMock.createNewHeadsSubscription)
-            .toHaveBeenCalledWith(eth);
+        expect(subscriptionsFactoryMock.createNewHeadsSubscription).toHaveBeenCalledWith(eth);
 
-        expect(abstractSubscriptionMock.subscribe)
-            .toHaveBeenCalledWith(callback);
+        expect(abstractSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
     });
 
     it('calls subscribe wih "pendingTransactions" as type', () => {
@@ -445,23 +386,17 @@ describe('EthTest', () => {
         new AbstractSubscription();
         const abstractSubscriptionMock = AbstractSubscription.mock.instances[0];
 
-        abstractSubscriptionMock.subscribe
-            .mockReturnValueOnce(abstractSubscriptionMock);
+        abstractSubscriptionMock.subscribe.mockReturnValueOnce(abstractSubscriptionMock);
 
-        subscriptionsFactoryMock.createNewPendingTransactionsSubscription
-            .mockReturnValueOnce(abstractSubscriptionMock);
+        subscriptionsFactoryMock.createNewPendingTransactionsSubscription.mockReturnValueOnce(abstractSubscriptionMock);
 
-        const callback = () => {
-        };
+        const callback = () => {};
 
-        expect(eth.subscribe('pendingTransactions', {}, callback))
-            .toBeInstanceOf(AbstractSubscription);
+        expect(eth.subscribe('pendingTransactions', {}, callback)).toBeInstanceOf(AbstractSubscription);
 
-        expect(subscriptionsFactoryMock.createNewPendingTransactionsSubscription)
-            .toHaveBeenCalledWith(eth);
+        expect(subscriptionsFactoryMock.createNewPendingTransactionsSubscription).toHaveBeenCalledWith(eth);
 
-        expect(abstractSubscriptionMock.subscribe)
-            .toHaveBeenCalledWith(callback);
+        expect(abstractSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
     });
 
     it('calls subscribe wih "syncing" as type', () => {
@@ -470,76 +405,60 @@ describe('EthTest', () => {
         new AbstractSubscription();
         const abstractSubscriptionMock = AbstractSubscription.mock.instances[0];
 
-        abstractSubscriptionMock.subscribe
-            .mockReturnValueOnce(abstractSubscriptionMock);
+        abstractSubscriptionMock.subscribe.mockReturnValueOnce(abstractSubscriptionMock);
 
-        subscriptionsFactoryMock.createSyncingSubscription
-            .mockReturnValueOnce(abstractSubscriptionMock);
+        subscriptionsFactoryMock.createSyncingSubscription.mockReturnValueOnce(abstractSubscriptionMock);
 
-        const callback = () => {
-        };
+        const callback = () => {};
 
-        expect(eth.subscribe('syncing', {}, callback))
-            .toBeInstanceOf(AbstractSubscription);
+        expect(eth.subscribe('syncing', {}, callback)).toBeInstanceOf(AbstractSubscription);
 
-        expect(subscriptionsFactoryMock.createSyncingSubscription)
-            .toHaveBeenCalledWith(eth);
+        expect(subscriptionsFactoryMock.createSyncingSubscription).toHaveBeenCalledWith(eth);
 
-        expect(abstractSubscriptionMock.subscribe)
-            .toHaveBeenCalledWith(callback);
+        expect(abstractSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
     });
 
     it('calls subscribe wih unknown type', () => {
         expect(() => {
-            eth.subscribe('NOPE', {}, () => {
-            });
+            eth.subscribe('NOPE', {}, () => {});
         }).toThrow('Unknown subscription: NOPE');
     });
 
     it('calls the Contract factory method from the constructor', () => {
-        ethModuleFactoryMock.createContract
-            .mockReturnValueOnce(new AbstractContract());
+        ethModuleFactoryMock.createContract.mockReturnValueOnce(new AbstractContract());
 
-        expect(new eth.Contract())
-            .toBeInstanceOf(AbstractContract);
+        expect(new eth.Contract()).toBeInstanceOf(AbstractContract);
 
-        expect(eth.initiatedContracts.length)
-            .toEqual(1);
+        expect(eth.initiatedContracts).toHaveLength(1);
     });
 
     it('calls setProvider and returns true', () => {
-        eth.initiatedContracts = [{
-            setProvider: jest.fn(() => {
-                return true;
-            })
-        }];
+        eth.initiatedContracts = [
+            {
+                setProvider: jest.fn(() => {
+                    return true;
+                })
+            }
+        ];
 
         networkMock.setProvider = jest.fn();
         personalMock.setProvider = jest.fn();
         accountsMock.setProvider = jest.fn();
 
-        networkMock.setProvider
-            .mockReturnValueOnce(true);
+        networkMock.setProvider.mockReturnValueOnce(true);
 
-        personalMock.setProvider
-            .mockReturnValueOnce(true);
+        personalMock.setProvider.mockReturnValueOnce(true);
 
-        accountsMock.setProvider
-            .mockReturnValueOnce(true);
+        accountsMock.setProvider.mockReturnValueOnce(true);
 
-        expect(eth.setProvider('provider', 'net'))
-            .toEqual(true);
+        expect(eth.setProvider('provider', 'net')).toEqual(true);
 
-        expect(eth.initiatedContracts[0].setProvider)
-            .toHaveBeenCalledWith('provider', 'net');
+        expect(eth.initiatedContracts[0].setProvider).toHaveBeenCalledWith('provider', 'net');
 
-        expect(networkMock.setProvider)
-            .toHaveBeenCalledWith('provider', 'net');
+        expect(networkMock.setProvider).toHaveBeenCalledWith('provider', 'net');
 
-        expect(personalMock.setProvider)
-            .toHaveBeenCalledWith('provider', 'net');
+        expect(personalMock.setProvider).toHaveBeenCalledWith('provider', 'net');
 
-        expect(accountsMock.setProvider)
-            .toHaveBeenCalledWith('provider', 'net');
+        expect(accountsMock.setProvider).toHaveBeenCalledWith('provider', 'net');
     });
 });

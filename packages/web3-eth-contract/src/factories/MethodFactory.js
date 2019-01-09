@@ -109,12 +109,7 @@ export default class MethodFactory {
      * @returns {CallContractMethod}
      */
     createCallContractMethod(abiItem) {
-        return new CallContractMethod(
-            this.utils,
-            this.formatters,
-            this.abiCoder,
-            abiItem
-        );
+        return new CallContractMethod(this.utils, this.formatters, this.abiCoder, abiItem);
     }
 
     /**
@@ -134,7 +129,7 @@ export default class MethodFactory {
             this.methodModuleFactory.createTransactionConfirmationWorkflow(),
             this.methodModuleFactory.createTransactionSigner(),
             this.contractModuleFactory.createAllEventsLogDecoder(),
-            abiItem,
+            abiItem
         );
     }
 
@@ -166,9 +161,6 @@ export default class MethodFactory {
      * @returns {EstimateGasMethod}
      */
     createEstimateGasMethod() {
-        return new EstimateGasMethod(
-            this.utils,
-            this.formatters
-        );
+        return new EstimateGasMethod(this.utils, this.formatters);
     }
 }

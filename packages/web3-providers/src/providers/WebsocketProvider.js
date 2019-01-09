@@ -103,10 +103,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     this.connection._client.config
                 ];
             } else {
-                constructorArgs = [
-                    this.host,
-                    this.connection.protocol
-                ];
+                constructorArgs = [this.host, this.connection.protocol];
             }
 
             // TODO: Pass the module factory for an createW3CWebsocket and createWebSocket method.
@@ -204,16 +201,15 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters))
-            .then(response => {
-                const validationResult = JsonRpcResponseValidator.validate(response);
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
+            const validationResult = JsonRpcResponseValidator.validate(response);
 
-                if (validationResult instanceof Error) {
-                    throw validationResult;
-                }
+            if (validationResult instanceof Error) {
+                throw validationResult;
+            }
 
-                return response;
-            });
+            return response;
+        });
     }
 
     /**
@@ -229,7 +225,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     sendBatch(methods, moduleInstance) {
         let payload = [];
 
-        methods.forEach(method => {
+        methods.forEach((method) => {
             method.beforeExecution(moduleInstance);
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         });
@@ -249,8 +245,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
             if (!this.isConnecting()) {
-                let timeout,
-                    id;
+                let timeout, id;
 
                 if (this.connection.readyState !== this.connection.OPEN) {
                     return reject(new Error('Connection error: Connection is not open on send()'));
@@ -270,7 +265,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
-                this.on(id, response => {
+                this.on(id, (response) => {
                     if (timeout) {
                         clearTimeout(timeout);
                     }
@@ -279,7 +274,6 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
                     return resolve(response);
                 });
-
 
                 return;
             }

@@ -26,19 +26,15 @@ describe('TransactionSignerTest', () => {
             from: 0
         };
 
-        accountsMock.signTransaction
-            .mockReturnValueOnce(Promise.resolve('0x0'));
+        accountsMock.signTransaction.mockReturnValueOnce(Promise.resolve('0x0'));
 
         const returnValue = await transactionSigner.sign(transaction, accountsMock);
 
-        expect(returnValue)
-            .toEqual('0x0');
+        expect(returnValue).toEqual('0x0');
 
-        expect(transaction.from)
-            .toEqual(undefined);
+        expect(transaction.from).toEqual(undefined);
 
-        expect(accountsMock.signTransaction)
-            .toHaveBeenCalledWith(transaction, '0x0');
+        expect(accountsMock.signTransaction).toHaveBeenCalledWith(transaction, '0x0');
     });
 
     it('calls sign and signing with accounts throws an error', async () => {
@@ -47,14 +43,12 @@ describe('TransactionSignerTest', () => {
             from: 0
         };
 
-        accountsMock.signTransaction
-            .mockReturnValueOnce(Promise.reject(new Error()));
+        accountsMock.signTransaction.mockReturnValueOnce(Promise.reject(new Error()));
 
         try {
             await transactionSigner.sign(transaction, accountsMock);
         } catch (error) {
-            expect(error)
-                .toBeInstanceOf(Error);
+            expect(error).toBeInstanceOf(Error);
         }
     });
 });

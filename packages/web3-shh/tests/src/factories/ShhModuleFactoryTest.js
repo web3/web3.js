@@ -14,28 +14,23 @@ jest.mock('../../../src/factories/MethodFactory');
  * ShhModuleFactory test
  */
 describe('ShhModuleFactoryTest', () => {
-    let shhModuleFactory,
-        methodModuleFactoryMock;
+    let shhModuleFactory, methodModuleFactoryMock;
 
     beforeEach(() => {
         shhModuleFactory = new ShhModuleFactory(Utils, formatters, methodModuleFactoryMock);
     });
 
     it('constructor check', () => {
-        expect(shhModuleFactory.utils)
-            .toEqual(Utils);
+        expect(shhModuleFactory.utils).toEqual(Utils);
 
-        expect(shhModuleFactory.formatters)
-            .toEqual(formatters);
+        expect(shhModuleFactory.formatters).toEqual(formatters);
     });
 
     it('calls createShhModule and returns the expected Shh object', () => {
-        expect(shhModuleFactory.createShhModule({}, {}, {}, {}))
-            .toBeInstanceOf(Shh);
+        expect(shhModuleFactory.createShhModule({}, {}, {}, {})).toBeInstanceOf(Shh);
     });
 
     it('calls createMethodFactory and returns the expected MethodFactory object', () => {
-        expect(shhModuleFactory.createMethodFactory({}))
-            .toBeInstanceOf(MethodFactory);
+        expect(shhModuleFactory.createMethodFactory({})).toBeInstanceOf(MethodFactory);
     });
 });

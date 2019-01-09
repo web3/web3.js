@@ -17,7 +17,7 @@ import {
     toUtf8,
     toWei,
     utf8ToHex
-} from '../../src/index';
+} from '../../src';
 
 /**
  * Utils test
@@ -26,18 +26,18 @@ describe('UtilsTest', () => {
     it('calls asciiToHex and returns the expected results', () => {
         const tests = [
             {value: 'myString', expected: '0x6d79537472696e67'},
-            {value: 'myString\x00', expected: '0x6d79537472696e6700'},
+            {value: 'myString\u0000', expected: '0x6d79537472696e6700'},
             {
-                value: '\u0003\u0000\u0000\u00005èÆÕL]\u0012|Î¾\u001a7«\u00052\u0011(ÐY\n<\u0010\u0000\u0000\u0000\u0000\u0000\u0000e!ßd/ñõì\f:z¦Î¦±ç·÷Í¢Ëß\u00076*\bñùC1ÉUÀé2\u001aÓB',
-                expected: '0x0300000035e8c6d54c5d127c9dcebe9e1a37ab9b05321128d097590a3c100000000000006521df642ff1f5ec0c3a7aa6cea6b1e7b7f7cda2cbdf07362a85088e97f19ef94331c955c0e9321ad386428c'
+                value:
+                    '\u0003\u0000\u0000\u00005èÆÕL]\u0012|Î¾\u001a7«\u00052\u0011(ÐY\n<\u0010\u0000\u0000\u0000\u0000\u0000\u0000e!ßd/ñõì\f:z¦Î¦±ç·÷Í¢Ëß\u00076*\bñùC1ÉUÀé2\u001aÓB',
+                expected:
+                    '0x0300000035e8c6d54c5d127c9dcebe9e1a37ab9b05321128d097590a3c100000000000006521df642ff1f5ec0c3a7aa6cea6b1e7b7f7cda2cbdf07362a85088e97f19ef94331c955c0e9321ad386428c'
             }
         ];
 
-        tests.forEach(test => {
-            expect(asciiToHex(test.value))
-                .toEqual(test.expected);
+        tests.forEach((test) => {
+            expect(asciiToHex(test.value)).toEqual(test.expected);
         });
-
     });
 
     it('calls numberToHex and returns the expected results', () => {
@@ -83,57 +83,46 @@ describe('UtilsTest', () => {
             {value: '-0x0', expected: '0x0'}
         ];
 
-        tests.forEach(test => {
-            expect(numberToHex(test.value))
-                .toEqual(test.expected);
+        tests.forEach((test) => {
+            expect(numberToHex(test.value)).toEqual(test.expected);
         });
     });
 
     it('calls fromWei and returns the expected results', () => {
-        expect(fromWei('1000000000000000000', 'wei'))
-            .toEqual('1000000000000000000');
+        expect(fromWei('1000000000000000000', 'wei')).toEqual('1000000000000000000');
 
-        expect(fromWei('1000000000000000000', 'kwei'))
-            .toEqual('1000000000000000');
+        expect(fromWei('1000000000000000000', 'kwei')).toEqual('1000000000000000');
 
-        expect(fromWei('1000000000000000000', 'mwei'))
-            .toEqual('1000000000000');
+        expect(fromWei('1000000000000000000', 'mwei')).toEqual('1000000000000');
 
-        expect(fromWei('1000000000000000000', 'gwei'))
-            .toEqual('1000000000');
+        expect(fromWei('1000000000000000000', 'gwei')).toEqual('1000000000');
 
-        expect(fromWei('1000000000000000000', 'szabo'))
-            .toEqual('1000000');
+        expect(fromWei('1000000000000000000', 'szabo')).toEqual('1000000');
 
-        expect(fromWei('1000000000000000000', 'finney'))
-            .toEqual('1000');
+        expect(fromWei('1000000000000000000', 'finney')).toEqual('1000');
 
-        expect(fromWei('1000000000000000000', 'ether'))
-            .toEqual('1');
+        expect(fromWei('1000000000000000000', 'ether')).toEqual('1');
 
-        expect(fromWei('1000000000000000000', 'kether'))
-            .toEqual('0.001');
+        expect(fromWei('1000000000000000000', 'kether')).toEqual('0.001');
 
-        expect(fromWei('1000000000000000000', 'grand'))
-            .toEqual('0.001');
+        expect(fromWei('1000000000000000000', 'grand')).toEqual('0.001');
 
-        expect(fromWei('1000000000000000000', 'mether'))
-            .toEqual('0.000001');
+        expect(fromWei('1000000000000000000', 'mether')).toEqual('0.000001');
 
-        expect(fromWei('1000000000000000000', 'gether'))
-            .toEqual('0.000000001');
+        expect(fromWei('1000000000000000000', 'gether')).toEqual('0.000000001');
 
-        expect(fromWei('1000000000000000000', 'tether'))
-            .toEqual('0.000000000001');
+        expect(fromWei('1000000000000000000', 'tether')).toEqual('0.000000000001');
     });
 
     it('calls isAddress and returns the expected results', () => {
         const tests = [
             {
-                value: () => {
-                }, is: false
+                value: () => {},
+                is: false
             },
+            /* eslint-disable no-new-func */
             {value: new Function(), is: false},
+            /* eslint-enable */
             {value: 'function', is: false},
             {value: {}, is: false},
             {value: '0xc6d9d2cd449a754c494264e1809c50e34d64562b', is: true},
@@ -145,35 +134,34 @@ describe('UtilsTest', () => {
             {value: '0XE247A45C287191D435A8A5D72A7C8DC030451E9F', is: true}
         ];
 
-        tests.forEach(test => {
-            expect(isAddress(test.value))
-                .toEqual(test.is);
+        tests.forEach((test) => {
+            expect(isAddress(test.value)).toEqual(test.is);
         });
     });
 
-    it('calls isAddress and returns the expected results', () => {
+    it('calls isBN and returns the expected results', () => {
         const tests = [
             {
-                value: () => {
-                }, is: false
+                value: () => {},
+                is: false
             },
+            /* eslint-disable no-new-func */
             {value: new Function(), is: false},
+            /* eslint-enable no-new-func */
             {value: 'function', is: false},
             {value: {}, is: false},
-            {value: new String('hello'), is: false},
+            {value: String('hello'), is: false},
             {value: new BN(0), is: true},
             {value: 132, is: false},
             {value: '0x12', is: false}
-
         ];
 
-        tests.forEach(test => {
-            expect(isBN(test.value))
-                .toEqual(test.is);
+        tests.forEach((test) => {
+            expect(isBN(test.value)).toEqual(test.is);
         });
     });
 
-    it('calls isAddress and returns the expected results', () => {
+    it('calls checkAddressChecksum and returns the expected results', () => {
         const tests = [
             {value: '0x52908400098527886E0F7030069857D2E4169EE7', is: true},
             {value: '0x8617E340B3D01FA5F11F306F4090FD50E238070D', is: true},
@@ -187,27 +175,31 @@ describe('UtilsTest', () => {
             {value: '0xd1220a0cf47c7b9be7a2e6ba89f429762e7b9adb', is: false}
         ];
 
-        tests.forEach(test => {
-            expect(checkAddressChecksum(test.value))
-                .toEqual(test.is);
+        tests.forEach((test) => {
+            expect(checkAddressChecksum(test.value)).toEqual(test.is);
         });
     });
 
+    /* eslint-disable jest/no-identical-title */
     describe('calls sha3', () => {
         it('should return sha3 with hex prefix', () => {
-            expect(sha3('test123'))
-                .toEqual('0x' + cjsSha3('test123', {
-                    outputLength: 256
-                }).toString());
+            expect(sha3('test123')).toEqual(
+                '0x' +
+                    cjsSha3('test123', {
+                        outputLength: 256
+                    }).toString()
+            );
 
-            expect(sha3('test(int)'))
-                .toEqual('0x' + cjsSha3('test(int)', {
-                    outputLength: 256
-                }).toString());
+            expect(sha3('test(int)')).toEqual(
+                '0x' +
+                    cjsSha3('test(int)', {
+                        outputLength: 256
+                    }).toString()
+            );
         });
 
         it('should return sha3 with hex prefix when hex input', () => {
-            const sha3Hex = value => {
+            const sha3Hex = (value) => {
                 if (value.length > 2 && value.substr(0, 2) === '0x') {
                     value = value.substr(2);
                 }
@@ -218,17 +210,16 @@ describe('UtilsTest', () => {
                 }).toString();
             };
 
-            expect(sha3('0x80'))
-                .toEqual('0x' + sha3Hex('0x80'));
+            expect(sha3('0x80')).toEqual('0x' + sha3Hex('0x80'));
 
-            expect(sha3('0x3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1'))
-                .toEqual('0x' + sha3Hex('0x3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1'));
+            expect(sha3('0x3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1')).toEqual(
+                '0x' + sha3Hex('0x3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1')
+            );
         });
 
-        it('should return sha3 with hex prefix when hex input', function() {
+        it('should return sha3 with hex prefix', () => {
             const test = (v, e, o) => {
-                expect(sha3(v, o))
-                    .toEqual(e);
+                expect(sha3(v, o)).toEqual(e);
             };
 
             test('test123', '0xf81b517a242b218999ec8eec0ea6e2ddbef2a367a14e93f4a32a39e260f686ad');
@@ -240,20 +231,22 @@ describe('UtilsTest', () => {
             );
         });
     });
+    /* eslint-enable jest/no-identical-title */
 
     it('calls toAscii and returns the expected results', () => {
         const tests = [
             {value: '0x6d79537472696e67', expected: 'myString'},
             {value: '0x6d79537472696e6700', expected: 'myString\u0000'},
             {
-                value: '0x0300000035e8c6d54c5d127c9dcebe9e1a37ab9b05321128d097590a3c100000000000006521df642ff1f5ec0c3a7aa6cea6b1e7b7f7cda2cbdf07362a85088e97f19ef94331c955c0e9321ad386428c',
-                expected: '\u0003\u0000\u0000\u00005èÆÕL]\u0012|Î¾\u001a7«\u00052\u0011(ÐY\n<\u0010\u0000\u0000\u0000\u0000\u0000\u0000e!ßd/ñõì\f:z¦Î¦±ç·÷Í¢Ëß\u00076*\bñùC1ÉUÀé2\u001aÓB'
+                value:
+                    '0x0300000035e8c6d54c5d127c9dcebe9e1a37ab9b05321128d097590a3c100000000000006521df642ff1f5ec0c3a7aa6cea6b1e7b7f7cda2cbdf07362a85088e97f19ef94331c955c0e9321ad386428c',
+                expected:
+                    '\u0003\u0000\u0000\u00005èÆÕL]\u0012|Î¾\u001a7«\u00052\u0011(ÐY\n<\u0010\u0000\u0000\u0000\u0000\u0000\u0000e!ßd/ñõì\f:z¦Î¦±ç·÷Í¢Ëß\u00076*\bñùC1ÉUÀé2\u001aÓB'
             }
         ];
 
-        tests.forEach(test => {
-            expect(toAscii(test.value))
-                .toEqual(test.expected);
+        tests.forEach((test) => {
+            expect(toAscii(test.value)).toEqual(test.expected);
         });
     });
 
@@ -301,9 +294,8 @@ describe('UtilsTest', () => {
             {value: new BN(0), expected: '0'}
         ];
 
-        tests.forEach(test => {
-            expect(toBN(test.value).toString(10))
-                .toEqual(test.expected);
+        tests.forEach((test) => {
+            expect(toBN(test.value).toString(10)).toEqual(test.expected);
         });
     });
 
@@ -351,38 +343,37 @@ describe('UtilsTest', () => {
             {value: true, expected: '0x01'},
             {value: false, expected: '0x00'},
             {
-                value: 'ff\u0003\u0000\u0000\u00005èÆÕL]\u0012|Î¾\u001a7«\u00052\u0011(ÐY\n<\u0010\u0000\u0000\u0000\u0000\u0000\u0000e!ßd/ñõì\f:z¦Î¦±ç·÷Í¢Ëß\u00076*\bñùC1ÉUÀé2\u001aÓB',
-                expected: '0x66660300000035c3a8c386c3954c5d127cc29dc38ec2bec29e1a37c2abc29b05321128c390c297590a3c100000000000006521c39f642fc3b1c3b5c3ac0c3a7ac2a6c38ec2a6c2b1c3a7c2b7c3b7c38dc2a2c38bc39f07362ac28508c28ec297c3b1c29ec3b94331c38955c380c3a9321ac393c28642c28c'
+                value:
+                    'ff\u0003\u0000\u0000\u00005èÆÕL]\u0012|Î¾\u001a7«\u00052\u0011(ÐY\n<\u0010\u0000\u0000\u0000\u0000\u0000\u0000e!ßd/ñõì\f:z¦Î¦±ç·÷Í¢Ëß\u00076*\bñùC1ÉUÀé2\u001aÓB',
+                expected:
+                    '0x66660300000035c3a8c386c3954c5d127cc29dc38ec2bec29e1a37c2abc29b05321128c390c297590a3c100000000000006521c39f642fc3b1c3b5c3ac0c3a7ac2a6c38ec2a6c2b1c3a7c2b7c3b7c38dc2a2c38bc39f07362ac28508c28ec297c3b1c29ec3b94331c38955c380c3a9321ac393c28642c28c'
             },
             {
-                value: '\u0003\u0000\u0000\u00005èÆÕL]\u0012|Î¾\u001a7«\u00052\u0011(ÐY\n<\u0010\u0000\u0000\u0000\u0000\u0000\u0000e!ßd/ñõì\f:z¦Î¦±ç·÷Í¢Ëß\u00076*\bñùC1ÉUÀé2\u001aÓB',
-                expected: '0x0300000035c3a8c386c3954c5d127cc29dc38ec2bec29e1a37c2abc29b05321128c390c297590a3c100000000000006521c39f642fc3b1c3b5c3ac0c3a7ac2a6c38ec2a6c2b1c3a7c2b7c3b7c38dc2a2c38bc39f07362ac28508c28ec297c3b1c29ec3b94331c38955c380c3a9321ac393c28642c28c'
+                value:
+                    '\u0003\u0000\u0000\u00005èÆÕL]\u0012|Î¾\u001a7«\u00052\u0011(ÐY\n<\u0010\u0000\u0000\u0000\u0000\u0000\u0000e!ßd/ñõì\f:z¦Î¦±ç·÷Í¢Ëß\u00076*\bñùC1ÉUÀé2\u001aÓB',
+                expected:
+                    '0x0300000035c3a8c386c3954c5d127cc29dc38ec2bec29e1a37c2abc29b05321128c390c297590a3c100000000000006521c39f642fc3b1c3b5c3ac0c3a7ac2a6c38ec2a6c2b1c3a7c2b7c3b7c38dc2a2c38bc39f07362ac28508c28ec297c3b1c29ec3b94331c38955c380c3a9321ac393c28642c28c'
             },
             {value: '내가 제일 잘 나가', expected: '0xeb82b4eab08020eca09cec9dbc20ec9e9820eb8298eab080'}
         ];
 
-        tests.forEach(test => {
-            expect(toHex(test.value))
-                .toEqual(test.expected);
+        tests.forEach((test) => {
+            expect(toHex(test.value)).toEqual(test.expected);
         });
     });
 
     it('calls hexToNumberString and returns the expected results', () => {
-        expect(hexToNumberString('0x3e8'))
-            .toEqual('1000');
+        expect(hexToNumberString('0x3e8')).toEqual('1000');
 
-        expect(hexToNumberString('0x1f0fe294a36'))
-            .toEqual('2134567897654');
+        expect(hexToNumberString('0x1f0fe294a36')).toEqual('2134567897654');
 
         // allow compatiblity
-        expect(hexToNumberString(100000))
-            .toEqual('100000');
+        expect(hexToNumberString(100000)).toEqual('100000');
 
-        expect(hexToNumberString('100000'))
-            .toEqual('100000');
+        expect(hexToNumberString('100000')).toEqual('100000');
     });
 
-    it('calls toHex and returns the expected results', () => {
+    it('calls toTwosComplement and returns the expected results', () => {
         const tests = [
             {value: 1, expected: '0000000000000000000000000000000000000000000000000000000000000001'},
             {value: '1', expected: '0000000000000000000000000000000000000000000000000000000000000001'},
@@ -395,9 +386,8 @@ describe('UtilsTest', () => {
             {value: new BN(0), expected: '0000000000000000000000000000000000000000000000000000000000000000'}
         ];
 
-        tests.forEach(test => {
-            expect(toTwosComplement(test.value).replace('0x', ''))
-                .toEqual(test.expected);
+        tests.forEach((test) => {
+            expect(toTwosComplement(test.value).replace('0x', '')).toEqual(test.expected);
         });
     });
 
@@ -416,81 +406,57 @@ describe('UtilsTest', () => {
             }
         ];
 
-        tests.forEach(test => {
-            expect(toUtf8(test.value))
-                .toEqual(test.expected);
+        tests.forEach((test) => {
+            expect(toUtf8(test.value)).toEqual(test.expected);
         });
     });
 
-    it('calls toUtf8 and returns the expected results', () => {
-        expect(toWei('1', 'wei'))
-            .toEqual('1');
+    it('calls toWei and returns the expected results', () => {
+        expect(toWei('1', 'wei')).toEqual('1');
 
-        expect(toWei('1', 'kwei'))
-            .toEqual('1000');
+        expect(toWei('1', 'kwei')).toEqual('1000');
 
-        expect(toWei('1', 'Kwei'))
-            .toEqual('1000');
+        expect(toWei('1', 'Kwei')).toEqual('1000');
 
-        expect(toWei('1', 'babbage'))
-            .toEqual('1000');
+        expect(toWei('1', 'babbage')).toEqual('1000');
 
-        expect(toWei('1', 'mwei'))
-            .toEqual('1000000');
+        expect(toWei('1', 'mwei')).toEqual('1000000');
 
-        expect(toWei('1', 'Mwei'))
-            .toEqual('1000000');
+        expect(toWei('1', 'Mwei')).toEqual('1000000');
 
-        expect(toWei('1', 'lovelace'))
-            .toEqual('1000000');
+        expect(toWei('1', 'lovelace')).toEqual('1000000');
 
-        expect(toWei('1', 'gwei'))
-            .toEqual('1000000000');
+        expect(toWei('1', 'gwei')).toEqual('1000000000');
 
-        expect(toWei('1', 'Gwei'))
-            .toEqual('1000000000');
+        expect(toWei('1', 'Gwei')).toEqual('1000000000');
 
-        expect(toWei('1', 'shannon'))
-            .toEqual('1000000000');
+        expect(toWei('1', 'shannon')).toEqual('1000000000');
 
-        expect(toWei('1', 'szabo'))
-            .toEqual('1000000000000');
+        expect(toWei('1', 'szabo')).toEqual('1000000000000');
 
-        expect(toWei('1', 'finney'))
-            .toEqual('1000000000000000');
+        expect(toWei('1', 'finney')).toEqual('1000000000000000');
 
-        expect(toWei('1', 'ether'))
-            .toEqual('1000000000000000000');
+        expect(toWei('1', 'ether')).toEqual('1000000000000000000');
 
-        expect(toWei('1', 'kether'))
-            .toEqual('1000000000000000000000');
+        expect(toWei('1', 'kether')).toEqual('1000000000000000000000');
 
-        expect(toWei('1', 'grand'))
-            .toEqual('1000000000000000000000');
+        expect(toWei('1', 'grand')).toEqual('1000000000000000000000');
 
-        expect(toWei('1', 'mether'))
-            .toEqual('1000000000000000000000000');
+        expect(toWei('1', 'mether')).toEqual('1000000000000000000000000');
 
-        expect(toWei('1', 'gether'))
-            .toEqual('1000000000000000000000000000');
+        expect(toWei('1', 'gether')).toEqual('1000000000000000000000000000');
 
-        expect(toWei('1', 'tether'))
-            .toEqual('1000000000000000000000000000000');
+        expect(toWei('1', 'tether')).toEqual('1000000000000000000000000000000');
 
-        expect(toWei('1', 'kwei'))
-            .toEqual(toWei('1', 'femtoether'));
+        expect(toWei('1', 'kwei')).toEqual(toWei('1', 'femtoether'));
 
-        expect(toWei('1', 'szabo'))
-            .toEqual(toWei('1', 'microether'));
+        expect(toWei('1', 'szabo')).toEqual(toWei('1', 'microether'));
 
-        expect(toWei('1', 'finney'))
-            .toEqual(toWei('1', 'milliether'));
+        expect(toWei('1', 'finney')).toEqual(toWei('1', 'milliether'));
 
-        expect(toWei('1', 'milli'))
-            .toEqual(toWei('1', 'milliether'));
+        expect(toWei('1', 'milli')).toEqual(toWei('1', 'milliether'));
 
-        expect(toWei('1', 'milli'))
-            .toEqual(toWei('1000', 'micro'));
+        expect(toWei('1', 'milli')).toEqual(toWei('1000', 'micro'));
 
         expect(() => {
             toWei(1, 'wei');
@@ -504,7 +470,7 @@ describe('UtilsTest', () => {
                 expected: '0x486565c3a4c3b6c3b6c3a4f09f9185443334c99dc9a33234d084cdbd2d2e2cc3a4c3bc2b232f'
             },
             {value: 'myString', expected: '0x6d79537472696e67'},
-            {value: 'myString\x00', expected: '0x6d79537472696e67'},
+            {value: 'myString\u0000', expected: '0x6d79537472696e67'},
             {value: 'expected value\u0000\u0000\u0000', expected: '0x65787065637465642076616c7565'},
             {value: 'expect\u0000\u0000ed value\u0000\u0000\u0000', expected: '0x657870656374000065642076616c7565'},
             {
@@ -513,13 +479,13 @@ describe('UtilsTest', () => {
             },
             {
                 value: '나는 유리를 먹을 수 있어요. 그래도 아프지 않아요',
-                expected: '0xeb8298eb8a9420ec9ca0eba6aceba5bc20eba8b9ec9d8420ec889820ec9e88ec96b4ec9a942e20eab7b8eb9e98eb8f8420ec9584ed9484eca78020ec958aec9584ec9a94'
+                expected:
+                    '0xeb8298eb8a9420ec9ca0eba6aceba5bc20eba8b9ec9d8420ec889820ec9e88ec96b4ec9a942e20eab7b8eb9e98eb8f8420ec9584ed9484eca78020ec958aec9584ec9a94'
             }
         ];
 
-        tests.forEach(test => {
-            expect(utf8ToHex(test.value))
-                .toEqual(test.expected);
+        tests.forEach((test) => {
+            expect(utf8ToHex(test.value)).toEqual(test.expected);
         });
     });
 });

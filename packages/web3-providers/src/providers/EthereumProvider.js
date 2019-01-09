@@ -130,16 +130,15 @@ export default class EthereumProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.connection.send(method, parameters)
-            .then(response => {
-                const validationResult = JsonRpcResponseValidator.validate(response);
+        return this.connection.send(method, parameters).then((response) => {
+            const validationResult = JsonRpcResponseValidator.validate(response);
 
-                if (validationResult instanceof Error) {
-                    throw validationResult;
-                }
+            if (validationResult instanceof Error) {
+                throw validationResult;
+            }
 
-                return response;
-            });
+            return response;
+        });
     }
 
     /**
@@ -155,7 +154,7 @@ export default class EthereumProvider extends AbstractSocketProvider {
     sendBatch(methods, moduleInstance) {
         let methodCalls = [];
 
-        methods.forEach(method => {
+        methods.forEach((method) => {
             method.beforeExecution(moduleInstance);
             methodCalls.push(this.connection.send(method.rpcMethod, method.parameters));
         });

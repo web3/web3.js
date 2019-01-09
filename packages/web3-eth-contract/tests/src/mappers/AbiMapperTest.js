@@ -13,9 +13,7 @@ jest.mock('../../../src/factories/ContractModuleFactory');
  * AbiMapper test
  */
 describe('AbiMapperTest', () => {
-    let abiMapper,
-        contractModuleFactoryMock,
-        abiCoderMock;
+    let abiMapper, contractModuleFactoryMock, abiCoderMock;
 
     beforeEach(() => {
         new ContractModuleFactory();
@@ -30,14 +28,11 @@ describe('AbiMapperTest', () => {
     });
 
     it('constructor check', () => {
-        expect(abiMapper.contractModuleFactory)
-            .toEqual(contractModuleFactoryMock);
+        expect(abiMapper.contractModuleFactory).toEqual(contractModuleFactoryMock);
 
-        expect(abiMapper.abiCoder)
-            .toEqual(abiCoderMock);
+        expect(abiMapper.abiCoder).toEqual(abiCoderMock);
 
-        expect(abiMapper.utils)
-            .toEqual(Utils);
+        expect(abiMapper.utils).toEqual(Utils);
     });
 
     it('calls map with ABI items of type function and returns the expected result', () => {
@@ -62,47 +57,36 @@ describe('AbiMapperTest', () => {
             }
         ];
 
-        Utils.jsonInterfaceMethodToString
-            .mockReturnValue('funcName');
+        Utils.jsonInterfaceMethodToString.mockReturnValue('funcName');
 
-        abiCoderMock.encodeFunctionSignature
-            .mockReturnValue('funcSignature');
+        abiCoderMock.encodeFunctionSignature.mockReturnValue('funcSignature');
 
-        contractModuleFactoryMock.createAbiItemModel
-            .mockReturnValue(true);
+        contractModuleFactoryMock.createAbiItemModel.mockReturnValue(true);
 
-        contractModuleFactoryMock.createAbiModel
-            .mockReturnValue(true);
+        contractModuleFactoryMock.createAbiModel.mockReturnValue(true);
 
         const response = abiMapper.map(abi);
 
-        expect(response)
-            .toEqual(true);
+        expect(response).toEqual(true);
 
-        expect(Utils.jsonInterfaceMethodToString)
-            .toHaveBeenNthCalledWith(1, abi[0]);
+        expect(Utils.jsonInterfaceMethodToString).toHaveBeenNthCalledWith(1, abi[0]);
 
-        expect(Utils.jsonInterfaceMethodToString)
-            .toHaveBeenNthCalledWith(2, abi[1]);
+        expect(Utils.jsonInterfaceMethodToString).toHaveBeenNthCalledWith(2, abi[1]);
 
-        expect(Utils.jsonInterfaceMethodToString)
-            .toHaveBeenNthCalledWith(3, abi[2]);
+        expect(Utils.jsonInterfaceMethodToString).toHaveBeenNthCalledWith(3, abi[2]);
 
-        expect(abiCoderMock.encodeFunctionSignature)
-            .toHaveBeenCalledWith('funcName');
+        expect(abiCoderMock.encodeFunctionSignature).toHaveBeenCalledWith('funcName');
 
-        expect(abiCoderMock.encodeFunctionSignature)
-            .toHaveBeenCalledTimes(3);
+        expect(abiCoderMock.encodeFunctionSignature).toHaveBeenCalledTimes(3);
 
-        expect(contractModuleFactoryMock.createAbiModel)
-            .toHaveBeenCalledWith({
-                events: {},
-                methods: {
-                    item: [true, true, true],
-                    funcSignature: true,
-                    funcName: true
-                }
-            });
+        expect(contractModuleFactoryMock.createAbiModel).toHaveBeenCalledWith({
+            events: {},
+            methods: {
+                item: [true, true, true],
+                funcSignature: true,
+                funcName: true
+            }
+        });
     });
 
     it('calls map with ABI items of type event and returns the expected result', () => {
@@ -127,47 +111,36 @@ describe('AbiMapperTest', () => {
             }
         ];
 
-        Utils.jsonInterfaceMethodToString
-            .mockReturnValue('eventName');
+        Utils.jsonInterfaceMethodToString.mockReturnValue('eventName');
 
-        abiCoderMock.encodeEventSignature
-            .mockReturnValue('eventSignature');
+        abiCoderMock.encodeEventSignature.mockReturnValue('eventSignature');
 
-        contractModuleFactoryMock.createAbiItemModel
-            .mockReturnValue(true);
+        contractModuleFactoryMock.createAbiItemModel.mockReturnValue(true);
 
-        contractModuleFactoryMock.createAbiModel
-            .mockReturnValue(true);
+        contractModuleFactoryMock.createAbiModel.mockReturnValue(true);
 
         const response = abiMapper.map(abi);
 
-        expect(response)
-            .toEqual(true);
+        expect(response).toEqual(true);
 
-        expect(Utils.jsonInterfaceMethodToString)
-            .toHaveBeenNthCalledWith(1, abi[0]);
+        expect(Utils.jsonInterfaceMethodToString).toHaveBeenNthCalledWith(1, abi[0]);
 
-        expect(Utils.jsonInterfaceMethodToString)
-            .toHaveBeenNthCalledWith(2, abi[1]);
+        expect(Utils.jsonInterfaceMethodToString).toHaveBeenNthCalledWith(2, abi[1]);
 
-        expect(Utils.jsonInterfaceMethodToString)
-            .toHaveBeenNthCalledWith(3, abi[2]);
+        expect(Utils.jsonInterfaceMethodToString).toHaveBeenNthCalledWith(3, abi[2]);
 
-        expect(abiCoderMock.encodeEventSignature)
-            .toHaveBeenCalledWith('eventName');
+        expect(abiCoderMock.encodeEventSignature).toHaveBeenCalledWith('eventName');
 
-        expect(abiCoderMock.encodeEventSignature)
-            .toHaveBeenCalledTimes(3);
+        expect(abiCoderMock.encodeEventSignature).toHaveBeenCalledTimes(3);
 
-        expect(contractModuleFactoryMock.createAbiModel)
-            .toHaveBeenCalledWith({
-                events: {
-                    item: true,
-                    eventSignature: true,
-                    eventName: true
-                },
-                methods: {}
-            });
+        expect(contractModuleFactoryMock.createAbiModel).toHaveBeenCalledWith({
+            events: {
+                item: true,
+                eventSignature: true,
+                eventName: true
+            },
+            methods: {}
+        });
     });
 
     it('calls map with an ABI item of type constructor and returns the expected result', () => {
@@ -180,27 +153,21 @@ describe('AbiMapperTest', () => {
             }
         ];
 
-        Utils.jsonInterfaceMethodToString
-            .mockReturnValue('eventName');
+        Utils.jsonInterfaceMethodToString.mockReturnValue('eventName');
 
-        contractModuleFactoryMock.createAbiItemModel
-            .mockReturnValue(true);
+        contractModuleFactoryMock.createAbiItemModel.mockReturnValue(true);
 
-        contractModuleFactoryMock.createAbiModel
-            .mockReturnValue(true);
+        contractModuleFactoryMock.createAbiModel.mockReturnValue(true);
 
         const response = abiMapper.map(abi);
 
-        expect(response)
-            .toEqual(true);
+        expect(response).toEqual(true);
 
-        expect(Utils.jsonInterfaceMethodToString)
-            .toHaveBeenCalledWith(abi[0]);
+        expect(Utils.jsonInterfaceMethodToString).toHaveBeenCalledWith(abi[0]);
 
-        expect(contractModuleFactoryMock.createAbiModel)
-            .toHaveBeenCalledWith({
-                events: {},
-                methods: {contractConstructor: true}
-            });
+        expect(contractModuleFactoryMock.createAbiModel).toHaveBeenCalledWith({
+            events: {},
+            methods: {contractConstructor: true}
+        });
     });
 });

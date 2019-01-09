@@ -43,7 +43,7 @@ export default class AbstractMethodFactory {
      * @returns {null|Object}
      */
     get methods() {
-        if(this._methods) {
+        if (this._methods) {
             return this._methods;
         }
 
@@ -89,17 +89,22 @@ export default class AbstractMethodFactory {
         switch (method.Type) {
             case 'CALL':
                 if (method.name === 'SignMethod') {
+                    /* eslint-disable new-cap */
                     return new method(
                         this.utils,
                         this.formatters,
                         this.methodModuleFactory.accounts,
                         this.methodModuleFactory.createMessageSigner()
-                    )
+                    );
+                    /* eslint-enable new-cap */
                 }
 
+                /* eslint-disable new-cap */
                 return new method(this.utils, this.formatters);
+            /* eslint-enable new-cap */
             case 'SEND':
                 if (method.name === 'SendTransactionMethod') {
+                    /* eslint-disable new-cap */
                     return new method(
                         this.utils,
                         this.formatters,
@@ -107,13 +112,16 @@ export default class AbstractMethodFactory {
                         this.methodModuleFactory.accounts,
                         this.methodModuleFactory.createTransactionSigner()
                     );
+                    /* eslint-enable new-cap */
                 }
 
+                /* eslint-disable new-cap */
                 return new method(
                     this.utils,
                     this.formatters,
                     this.methodModuleFactory.createTransactionConfirmationWorkflow()
                 );
+            /* eslint-enable new-cap */
         }
     }
 }

@@ -16,130 +16,105 @@ describe('IbanTest', () => {
     });
 
     it('constructor check', () => {
-        expect(iban._iban)
-            .toEqual('IBAN');
+        expect(iban._iban).toEqual('IBAN');
     });
 
     it('calls isValid and returns true', () => {
         iban._iban = 'XE1222Q908LN1QBBU6XUQSO1OHWJIOS46OO';
 
-        expect(iban.isValid())
-            .toEqual(true);
+        expect(iban.isValid()).toEqual(true);
     });
 
     it('calls isValid and returns false', () => {
-        expect(iban.isValid())
-            .toEqual(false);
+        expect(iban.isValid()).toEqual(false);
     });
 
     it('calls isDirect and returns true', () => {
         iban._iban = '0000000000000000000000000000000000';
-        expect(iban.isDirect())
-            .toEqual(true);
+        expect(iban.isDirect()).toEqual(true);
 
         iban._iban = '0000000000000000000000000000000000';
-        expect(iban.isDirect())
-            .toEqual(true);
+        expect(iban.isDirect()).toEqual(true);
     });
 
     it('calls isDirect and returns false', () => {
-        expect(iban.isDirect())
-            .toEqual(false);
+        expect(iban.isDirect()).toEqual(false);
     });
 
     it('calls isIndirect and returns true', () => {
         iban._iban = '00000000000000000000';
-        expect(iban.isIndirect())
-            .toEqual(true);
+        expect(iban.isIndirect()).toEqual(true);
     });
 
     it('calls isIndirect and returns false', () => {
         iban._iban = '000000000000000000000';
-        expect(iban.isIndirect())
-            .toEqual(false);
+        expect(iban.isIndirect()).toEqual(false);
     });
 
     it('calls checksum and returns the checksum', () => {
-        expect(iban.checksum())
-            .toEqual('AN');
+        expect(iban.checksum()).toEqual('AN');
     });
 
     it('calls institution with a indirect Iban and returns the expected string', () => {
         iban._iban = '00000000000000000000';
-        expect(iban.institution())
-            .toEqual('0000');
+        expect(iban.institution()).toEqual('0000');
     });
 
     it('calls institution with a direct Iban and returns the expected string', () => {
-        expect(iban.institution())
-            .toEqual('');
+        expect(iban.institution()).toEqual('');
     });
 
     it('calls client with indirect and returns the expected string', () => {
         iban._iban = '00000000000000000000';
-        expect(iban.client())
-            .toEqual('000000000');
+        expect(iban.client()).toEqual('000000000');
     });
 
     it('calls client with a direct Iban and returns the expected string', () => {
-        expect(iban.client())
-            .toEqual('');
+        expect(iban.client()).toEqual('');
     });
 
     it('calls toAddress with a direct Iban and returns the expected string', () => {
         iban._iban = '0000000000000000000000000000000000';
 
-        Utils.toChecksumAddress
-            .mockReturnValueOnce('0x0');
+        Utils.toChecksumAddress.mockReturnValueOnce('0x0');
 
-        expect(iban.toAddress())
-            .toEqual('0x0');
+        expect(iban.toAddress()).toEqual('0x0');
 
-        expect(Utils.toChecksumAddress)
-            .toHaveBeenCalledWith(new BigNumber(iban._iban.substr(4)).toString(16, 20));
+        expect(Utils.toChecksumAddress).toHaveBeenCalledWith(new BigNumber(iban._iban.substr(4)).toString(16, 20));
     });
 
     it('calls toAddress with a indirect Iban and returns the expected string', () => {
-        expect(iban.toAddress())
-            .toEqual('');
+        expect(iban.toAddress()).toEqual('');
     });
 
     it('calls toString and returns the expected string', () => {
-        expect(iban.toString())
-            .toEqual('IBAN');
+        expect(iban.toString()).toEqual('IBAN');
     });
 
     it('calls the static method toAddress and returns the expected string', () => {
-        Utils.toChecksumAddress
-            .mockReturnValueOnce('0x0');
+        Utils.toChecksumAddress.mockReturnValueOnce('0x0');
 
-        expect(Iban.toAddress('0000000000000000000000000000000000'))
-            .toEqual('0x0');
+        expect(Iban.toAddress('0000000000000000000000000000000000')).toEqual('0x0');
 
-        expect(Utils.toChecksumAddress)
-            .toHaveBeenCalledWith(new BigNumber(iban._iban.substr(4)).toString(16, 20));
+        expect(Utils.toChecksumAddress).toHaveBeenCalledWith(new BigNumber(iban._iban.substr(4)).toString(16, 20));
     });
 
     it('calls the static method toAddress with a indirect Iban and throws an error', () => {
         expect(() => {
             Iban.toAddress('IBAN');
-        }).toThrow('IBAN is indirect and can\'t be converted');
+        }).toThrow("IBAN is indirect and can't be converted");
     });
 
     it('calls toIban and returns the expected string', () => {
-        Utils.isAddress
-            .mockReturnValueOnce(true);
+        Utils.isAddress.mockReturnValueOnce(true);
 
-        expect(Iban.toIban('0x0').toString())
-            .toEqual('XE50000000000000000000000000000000');
+        expect(Iban.toIban('0x0').toString()).toEqual('XE50000000000000000000000000000000');
 
-        expect(Utils.isAddress)
-            .toHaveBeenCalledWith('0x0');
+        expect(Utils.isAddress).toHaveBeenCalledWith('0x0');
     });
 
     it('calls fromAddress and throws an error', () => {
-        Utils.isAddress
-            .mockReturnValueOnce(false);
+        Utils.isAddress.mockReturnValueOnce(false);
 
         expect(() => {
             Iban.fromAddress('0');
@@ -147,22 +122,22 @@ describe('IbanTest', () => {
     });
 
     it('calls fromBban and returns the expected Iban object', () => {
-        expect(Iban.fromBban('00012030200359100100').toString())
-            .toEqual('XE9300012030200359100100');
+        expect(Iban.fromBban('00012030200359100100').toString()).toEqual('XE9300012030200359100100');
     });
 
     it('calls createIndirect and returns the expected Iban object', () => {
-        expect(Iban.createIndirect({institution: 'ME', identifier: 'SAM'}).toString())
-            .toEqual('XE63ETHMESAM');
+        expect(Iban.createIndirect({institution: 'ME', identifier: 'SAM'}).toString()).toEqual('XE63ETHMESAM');
     });
 
     it('calls the static isValid method', () => {
         const tests = [
             {
-                obj: () => {
-                }, is: false
+                obj: () => {},
+                is: false
             },
+            /* eslint-disable no-new-func */
             {obj: new Function(), is: false},
+            /* eslint-enable no-new-func */
             {obj: 'function', is: false},
             {obj: {}, is: false},
             {obj: '[]', is: false},
@@ -181,9 +156,8 @@ describe('IbanTest', () => {
             {obj: 'XE1222Q908LN1QBBU6XUQSO1OHWJIOS46OO', is: true}
         ];
 
-        tests.forEach(test => {
-            expect(Iban.isValid(test.obj))
-                .toEqual(test.is);
+        tests.forEach((test) => {
+            expect(Iban.isValid(test.obj)).toEqual(test.is);
         });
     });
 });

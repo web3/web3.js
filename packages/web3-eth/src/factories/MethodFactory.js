@@ -63,11 +63,7 @@ export default class MethodFactory extends AbstractMethodFactory {
      * @constructor
      */
     constructor(methodModuleFactory, utils, formatters) {
-        super(
-            methodModuleFactory,
-            utils,
-            formatters
-        );
+        super(methodModuleFactory, utils, formatters);
 
         this.methods = {
             getNodeInfo: GetNodeInfoMethod,
@@ -99,7 +95,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             submitWork: SubmitWorkMethod,
             getWork: GetWorkMethod,
             getPastLogs: GetPastLogsMethod,
-            requestAccounts: RequestAccountsMethod,
+            requestAccounts: RequestAccountsMethod
         };
     }
 }

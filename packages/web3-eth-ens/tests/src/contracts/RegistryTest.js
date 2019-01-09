@@ -78,80 +78,67 @@ describe('RegistryTest', () => {
     });
 
     it('constructor check', () => {
-        expect(registry)
-            .toBeInstanceOf(AbstractContract);
+        expect(registry).toBeInstanceOf(AbstractContract);
 
-        expect(registry.net)
-            .toEqual(networkMock);
+        expect(registry.net).toEqual(networkMock);
 
-        expect(registry.resolverContract)
-            .toEqual(null);
+        expect(registry.resolverContract).toEqual(null);
 
-        expect(registry.resolverName)
-            .toEqual(null);
+        expect(registry.resolverName).toEqual(null);
 
-        expect(networkMock.getBlock)
-            .toHaveBeenCalledWith('latest', false);
+        expect(networkMock.getBlock).toHaveBeenCalledWith('latest', false);
 
-        expect(networkMock.getNetworkType)
-            .toHaveBeenCalled();
+        expect(networkMock.getNetworkType).toHaveBeenCalled();
 
-        expect(registry.address)
-            .toEqual('0xe7410170f87102df0055eb195163a03b7f2bff4a');
+        expect(registry.address).toEqual('0xe7410170f87102df0055eb195163a03b7f2bff4a');
     });
 
     it('calls owner and returns a resolved promise', async () => {
         const call = jest.fn(() => {
-                return Promise.resolve(true);
-            }),
-            callback = jest.fn();
+            return Promise.resolve(true);
+        });
 
-        registry.methods.owner = jest.fn(hash => {
-            expect(hash)
-                .toEqual('0x0');
+        const callback = jest.fn();
+
+        registry.methods.owner = jest.fn((hash) => {
+            expect(hash).toEqual('0x0');
 
             return call;
         });
 
-        namehash.hash = jest.fn(name => {
-            expect(name)
-                .toEqual('name');
+        namehash.hash = jest.fn((name) => {
+            expect(name).toEqual('name');
 
             return '0x0';
         });
 
-        await expect(registry.owner('name', callback)).resolves
-            .toEqual(true);
+        await expect(registry.owner('name', callback)).resolves.toEqual(true);
 
-        expect(callback)
-            .toHaveBeenCalledWith(false, true);
+        expect(callback).toHaveBeenCalledWith(false, true);
     });
 
     it('calls owner and returns a rejected promise', async () => {
         const call = jest.fn(() => {
-                return Promise.reject(false);
-            }),
-            callback = jest.fn();
+            return Promise.reject(new Error('ERROR'));
+        });
 
-        registry.methods.owner = jest.fn(hash => {
-            expect(hash)
-                .toEqual('0x0');
+        const callback = jest.fn();
+
+        registry.methods.owner = jest.fn((hash) => {
+            expect(hash).toEqual('0x0');
 
             return call;
         });
 
-        namehash.hash = jest.fn(name => {
-            expect(name)
-                .toEqual('name');
+        namehash.hash = jest.fn((name) => {
+            expect(name).toEqual('name');
 
             return '0x0';
         });
 
-        await expect(registry.owner('name', callback)).rejects
-            .toEqual(false);
+        await expect(registry.owner('name', callback)).rejects.toEqual(new Error('ERROR'));
 
-        expect(callback)
-            .toHaveBeenCalledWith(false, null);
+        expect(callback).toHaveBeenCalledWith(new Error('ERROR'), null);
     });
 
     it('calls resolver and returns with a resolved promise', async () => {
@@ -159,16 +146,14 @@ describe('RegistryTest', () => {
             return Promise.resolve('address');
         });
 
-        registry.methods.resolver = jest.fn(hash => {
-            expect(hash)
-                .toEqual('0x0');
+        registry.methods.resolver = jest.fn((hash) => {
+            expect(hash).toEqual('0x0');
 
             return call;
         });
 
-        namehash.hash = jest.fn(name => {
-            expect(name)
-                .toEqual('name');
+        namehash.hash = jest.fn((name) => {
+            expect(name).toEqual('name');
 
             return '0x0';
         });
@@ -179,28 +164,22 @@ describe('RegistryTest', () => {
 
         const resolver = await registry.resolver('name');
 
-        expect(resolver.jsonInterface)
-            .toEqual(RESOLVER_ABI);
+        expect(resolver.jsonInterface).toEqual(RESOLVER_ABI);
 
-        expect(resolver.address)
-            .toEqual('address');
+        expect(resolver.address).toEqual('address');
 
-        expect(registry.resolverName)
-            .toEqual('name');
+        expect(registry.resolverName).toEqual('name');
 
-        expect(registry.resolverContract)
-            .toEqual(resolver);
+        expect(registry.resolverContract).toEqual(resolver);
 
-        expect(registry.clone)
-            .toHaveBeenCalled();
+        expect(registry.clone).toHaveBeenCalled();
     });
 
     it('calls resolver with the same name again and returns with a resolved promise', async () => {
         registry.resolverName = 'name';
         registry.resolverContract = true;
 
-        await expect(registry.resolver('name')).resolves
-            .toEqual(true);
+        await expect(registry.resolver('name')).resolves.toEqual(true);
     });
 
     it('calls checkNetwork and the network is not synced', async () => {
@@ -208,11 +187,9 @@ describe('RegistryTest', () => {
             return Promise.resolve({timestamp: 0});
         });
 
-        await expect(registry.checkNetwork()).rejects
-            .toBeInstanceOf(Error);
+        await expect(registry.checkNetwork()).rejects.toBeInstanceOf(Error);
 
-        expect(networkMock.getBlock)
-            .toHaveBeenCalledWith('latest', false);
+        expect(networkMock.getBlock).toHaveBeenCalledWith('latest', false);
     });
 
     it('calls checkNetwork and ENS is not supported', async () => {
@@ -220,13 +197,10 @@ describe('RegistryTest', () => {
             return Promise.resolve('Nope');
         });
 
-        await expect(registry.checkNetwork()).rejects
-            .toThrow('ENS is not supported on network: "Nope"');
+        await expect(registry.checkNetwork()).rejects.toThrow('ENS is not supported on network: "Nope"');
 
-        expect(networkMock.getBlock)
-            .toHaveBeenCalledWith('latest', false);
+        expect(networkMock.getBlock).toHaveBeenCalledWith('latest', false);
 
-        expect(networkMock.getNetworkType)
-            .toHaveBeenCalled();
+        expect(networkMock.getNetworkType).toHaveBeenCalled();
     });
 });

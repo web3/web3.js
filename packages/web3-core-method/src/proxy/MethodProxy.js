@@ -28,43 +28,45 @@ export default class MethodProxy {
      * @constructor
      */
     constructor(target, methodFactory) {
-        return new Proxy(
-            target,
-            {
-                /**
-                 * @param {AbstractWeb3Module} target
-                 * @param {String|Symbol} name
-                 *
-                 * @returns {any}
-                 */
-                get: (target, name) => {
-                    if (methodFactory.hasMethod(name)) {
-                        if (typeof target[name] !== 'undefined') {
+        return new Proxy(target, {
+            /**
+             * @param {AbstractWeb3Module} target
+             * @param {String|Symbol} name
+             *
+             * @returns {any}
+             */
+            get: (target, name) => {
+                if (methodFactory.hasMethod(name)) {
+                    if (typeof target[name] !== 'undefined') {
+                        throw new TypeError(
+                            `Duplicated method ${name}. This method is defined as RPC call and as Object method.`
+                        );
+                    }
+
+                    const method = methodFactory.createMethod(name);
+
+                    const anonymousFunction = () => {
+                        method.arguments = arguments;
+
+                        if (method.parameters.length !== method.parametersAmount) {
                             throw new Error(
-                                `Duplicated method ${name}. This method is defined as RPC call and as Object method.`
+                                `Invalid parameters length the expected length would be ${
+                                    method.parametersAmount
+                                } and not ${method.parameters.length}`
                             );
                         }
 
-                        const method = methodFactory.createMethod(name);
+                        return method.execute(target, target.accounts);
+                    };
 
-                        const anonymousFunction = () => {
-                            method.arguments = arguments;
+                    anonymousFunction.method = method;
+                    anonymousFunction.request = method.request;
 
-                            if (method.parameters.length !== method.parametersAmount) {
-                                throw new Error(`Invalid parameters length the expected length would be ${method.parametersAmount} and not ${method.parameters.length}`);
-                            }
-
-                            return method.execute(target, target.accounts);
-                        };
-
-                        anonymousFunction.method = method;
-                        anonymousFunction.request = method.request;
-
-                        return anonymousFunction;
-                    }
-
-                    return target[name];
+                    return anonymousFunction;
                 }
-            });
+
+                return target[name];
+            }
+        });
     }
-};
+}

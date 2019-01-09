@@ -17,12 +17,10 @@ describe('EnsModuleFactoryTest', () => {
     });
 
     it('call createEns and returns the Ens object', () => {
-        expect(ensModuleFactory.createENS({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}))
-            .toBeInstanceOf(Ens);
+        expect(ensModuleFactory.createENS({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})).toBeInstanceOf(Ens);
     });
 
     it('call createRegistry and returns the Ens object', () => {
-        expect(ensModuleFactory.createRegistry({}, {}, {}, {}, {}, {}, {}, {}, {}, {}))
-            .toBeInstanceOf(Registry);
+        expect(ensModuleFactory.createRegistry({}, {}, {}, {}, {}, {}, {}, {}, {}, {})).toBeInstanceOf(Registry);
     });
 });

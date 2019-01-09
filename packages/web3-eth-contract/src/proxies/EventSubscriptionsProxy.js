@@ -55,34 +55,31 @@ export default class EventSubscriptionsProxy {
         this.allEventsOptionsMapper = allEventsOptionsMapper;
         this.PromiEvent = PromiEvent;
 
-        return new Proxy(
-            this,
-            {
-                /**
-                 * Checks if a contract event exists by the given name and returns the subscription otherwise it throws an error
-                 *
-                 * @param {EventSubscriptionsProxy} target
-                 * @param {String} name
-                 *
-                 * @returns {Function|Error}
-                 */
-                get: (target, name) => {
-                    if (this.abiModel.hasEvent(name)) {
-                        return (options, callback) => {
-                            return target.subscribe(target.abiModel.getEvent(name), options, callback);
-                        };
-                    }
-
-                    if (name === 'allEvents') {
-                        return (options, callback) => {
-                            return target.subscribeAll(options, callback);
-                        };
-                    }
-
-                    return target[name];
+        return new Proxy(this, {
+            /**
+             * Checks if a contract event exists by the given name and returns the subscription otherwise it throws an error
+             *
+             * @param {EventSubscriptionsProxy} target
+             * @param {String} name
+             *
+             * @returns {Function|Error}
+             */
+            get: (target, name) => {
+                if (this.abiModel.hasEvent(name)) {
+                    return (options, callback) => {
+                        return target.subscribe(target.abiModel.getEvent(name), options, callback);
+                    };
                 }
+
+                if (name === 'allEvents') {
+                    return (options, callback) => {
+                        return target.subscribeAll(options, callback);
+                    };
+                }
+
+                return target[name];
             }
-        );
+        });
     }
 
     /**

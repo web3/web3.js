@@ -52,36 +52,28 @@ describe('SendContractMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(sendContractMethod.utils)
-            .toEqual(Utils);
+        expect(sendContractMethod.utils).toEqual(Utils);
 
-        expect(sendContractMethod.formatters)
-            .toEqual(formatters);
+        expect(sendContractMethod.formatters).toEqual(formatters);
 
-        expect(sendContractMethod.transactionConfirmationWorkflow)
-            .toEqual(transactionConfirmationWorkflowMock);
+        expect(sendContractMethod.transactionConfirmationWorkflow).toEqual(transactionConfirmationWorkflowMock);
 
-        expect(sendContractMethod.accounts)
-            .toEqual(accountsMock);
+        expect(sendContractMethod.accounts).toEqual(accountsMock);
 
-        expect(sendContractMethod.transactionSigner)
-            .toEqual(transactionSignerMock);
+        expect(sendContractMethod.transactionSigner).toEqual(transactionSignerMock);
 
-        expect(sendContractMethod.allEventsLogDecoder)
-            .toEqual(allEventsLogDecoderMock);
+        expect(sendContractMethod.allEventsLogDecoder).toEqual(allEventsLogDecoderMock);
 
-        expect(sendContractMethod.abiItemModel)
-            .toEqual(abiItemModelMock);
+        expect(sendContractMethod.abiItemModel).toEqual(abiItemModelMock);
 
-        expect(sendContractMethod)
-            .toBeInstanceOf(SendTransactionMethod);
+        expect(sendContractMethod).toBeInstanceOf(SendTransactionMethod);
     });
 
     it('calls afterExecution and returns the expected result', () => {
         const response = {
             logs: [
                 {
-                    event: false,
+                    event: false
                 },
                 {
                     event: 'MyEvent'
@@ -95,48 +87,39 @@ describe('SendContractMethodTest', () => {
             ]
         };
 
-        allEventsLogDecoderMock.decode
-            .mockReturnValueOnce({event: false});
+        allEventsLogDecoderMock.decode.mockReturnValueOnce({event: false});
 
-        allEventsLogDecoderMock.decode
-            .mockReturnValueOnce({event: 'MyEvent'});
+        allEventsLogDecoderMock.decode.mockReturnValueOnce({event: 'MyEvent'});
 
-        allEventsLogDecoderMock.decode
-            .mockReturnValueOnce({event: 'MyEvent'});
+        allEventsLogDecoderMock.decode.mockReturnValueOnce({event: 'MyEvent'});
 
-        allEventsLogDecoderMock.decode
-            .mockReturnValueOnce({event: 'MyEvent'});
+        allEventsLogDecoderMock.decode.mockReturnValueOnce({event: 'MyEvent'});
 
         const mappedResponse = sendContractMethod.afterExecution(response);
 
-        expect(mappedResponse)
-            .toEqual({
-                events: {
-                    0: {event: false},
-                    MyEvent: [
-                        {
-                            event: 'MyEvent'
-                        },
-                        {
-                            event: 'MyEvent'
-                        },
-                        {
-                            event: 'MyEvent'
-                        }
-                    ]
-                }
-            });
+        expect(mappedResponse).toEqual({
+            events: {
+                0: {event: false},
+                MyEvent: [
+                    {
+                        event: 'MyEvent'
+                    },
+                    {
+                        event: 'MyEvent'
+                    },
+                    {
+                        event: 'MyEvent'
+                    }
+                ]
+            }
+        });
 
-        expect(allEventsLogDecoderMock.decode)
-            .toHaveBeenNthCalledWith(1, null, {event: false});
+        expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(1, null, {event: false});
 
-        expect(allEventsLogDecoderMock.decode)
-            .toHaveBeenNthCalledWith(2, null, {event: 'MyEvent'});
+        expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(2, null, {event: 'MyEvent'});
 
-        expect(allEventsLogDecoderMock.decode)
-            .toHaveBeenNthCalledWith(3, null, {event: 'MyEvent'});
+        expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(3, null, {event: 'MyEvent'});
 
-        expect(allEventsLogDecoderMock.decode)
-            .toHaveBeenNthCalledWith(4, null, {event: 'MyEvent'});
+        expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(4, null, {event: 'MyEvent'});
     });
 });

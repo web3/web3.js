@@ -1,6 +1,3 @@
 export default class MethodModuleFactory {
-    constructor() {
-
-    }
-
+    constructor() {}
 }

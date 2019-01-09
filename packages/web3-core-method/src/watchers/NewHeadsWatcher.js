@@ -92,8 +92,10 @@ export default class NewHeadsWatcher extends EventEmitter {
      * @returns {Boolean}
      */
     isSocketConnection(provider) {
-        return provider instanceof WebsocketProvider ||
-               provider instanceof IpcProvider ||
-               provider instanceof EthereumProvider;
+        return (
+            provider instanceof WebsocketProvider ||
+            provider instanceof IpcProvider ||
+            provider instanceof EthereumProvider
+        );
     }
 }

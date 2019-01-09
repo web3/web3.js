@@ -49,7 +49,7 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
     afterExecution(response) {
         const formattedLogs = super.afterExecution(response);
 
-        return formattedLogs.map(logItem => {
+        return formattedLogs.map((logItem) => {
             return this.eventLogDecoder.decode(this.abiItemModel, logItem);
         });
     }

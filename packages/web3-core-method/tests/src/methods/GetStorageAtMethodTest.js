@@ -17,18 +17,15 @@ describe('GetStorageAtMethodTest', () => {
     });
 
     it('static Type property returns "CALL"', () => {
-        expect(GetStorageAtMethod.Type)
-            .toEqual('CALL');
+        expect(GetStorageAtMethod.Type).toEqual('CALL');
     });
 
     it('rpcMethod should return eth_getStorageAt', () => {
-        expect(method.rpcMethod)
-            .toEqual('eth_getStorageAt');
+        expect(method.rpcMethod).toEqual('eth_getStorageAt');
     });
 
     it('parametersAmount should return 3', () => {
-        expect(method.parametersAmount)
-            .toEqual(3);
+        expect(method.parametersAmount).toEqual(3);
     });
 
     it(
@@ -37,41 +34,31 @@ describe('GetStorageAtMethodTest', () => {
         () => {
             method.parameters = ['string', 100, 100];
 
-            formatters.inputAddressFormatter
-                .mockReturnValue('0x0');
+            formatters.inputAddressFormatter.mockReturnValue('0x0');
 
-            formatters.inputDefaultBlockNumberFormatter
-                .mockReturnValueOnce('0x0');
+            formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
 
-            Utils.numberToHex
-                .mockReturnValueOnce('0x0');
+            Utils.numberToHex.mockReturnValueOnce('0x0');
 
             method.beforeExecution({});
 
-            expect(method.parameters[0])
-                .toEqual('0x0');
+            expect(method.parameters[0]).toEqual('0x0');
 
-            expect(method.parameters[1])
-                .toEqual('0x0');
+            expect(method.parameters[1]).toEqual('0x0');
 
-            expect(method.parameters[2])
-                .toEqual('0x0');
+            expect(method.parameters[2]).toEqual('0x0');
 
-            expect(formatters.inputAddressFormatter)
-                .toHaveBeenCalledWith('string');
+            expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
 
-            expect(formatters.inputDefaultBlockNumberFormatter)
-                .toHaveBeenCalledWith(100, {});
+            expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith(100, {});
 
-            expect(Utils.numberToHex)
-                .toHaveBeenCalledWith(100);
+            expect(Utils.numberToHex).toHaveBeenCalledWith(100);
         }
     );
 
     it('afterExecution should just return the response', () => {
         const object = {};
 
-        expect(method.afterExecution(object))
-            .toEqual(object);
+        expect(method.afterExecution(object)).toEqual(object);
     });
 });

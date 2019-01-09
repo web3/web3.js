@@ -51,10 +51,7 @@ jest.mock('../../../src/factories/MethodFactory');
  * ContractModuleFactory test
  */
 describe('ContractModuleFactoryTest', () => {
-    let contractModuleFactory,
-        abiCoderMock,
-        accountsMock,
-        methodModuleFactoryMock;
+    let contractModuleFactory, abiCoderMock, accountsMock, methodModuleFactoryMock;
 
     beforeEach(() => {
         new AbiCoder();
@@ -76,104 +73,82 @@ describe('ContractModuleFactoryTest', () => {
     });
 
     it('constructor check', () => {
-        expect(contractModuleFactory.utils)
-            .toEqual(Utils);
+        expect(contractModuleFactory.utils).toEqual(Utils);
 
-        expect(contractModuleFactory.formatters)
-            .toEqual(formatters);
+        expect(contractModuleFactory.formatters).toEqual(formatters);
 
-        expect(contractModuleFactory.abiCoder)
-            .toEqual(abiCoderMock);
+        expect(contractModuleFactory.abiCoder).toEqual(abiCoderMock);
 
-        expect(contractModuleFactory.accounts)
-            .toEqual(accountsMock);
+        expect(contractModuleFactory.accounts).toEqual(accountsMock);
 
-        expect(contractModuleFactory.methodModuleFactory)
-            .toEqual(methodModuleFactoryMock);
+        expect(contractModuleFactory.methodModuleFactory).toEqual(methodModuleFactoryMock);
     });
 
     it('calls createContract and returns an AbstractContract object', () => {
-        expect(contractModuleFactory.createContract({}, {}, {}, [], '', {}))
-            .toBeInstanceOf(AbstractContract);
+        expect(contractModuleFactory.createContract({}, {}, {}, [], '', {})).toBeInstanceOf(AbstractContract);
     });
 
     it('calls createAbiModel and returns an AbiModel object', () => {
-        expect(contractModuleFactory.createAbiModel({}))
-            .toBeInstanceOf(AbiModel);
+        expect(contractModuleFactory.createAbiModel({})).toBeInstanceOf(AbiModel);
     });
 
     it('calls createAbiItemModel and returns an AbiItemModel object', () => {
-        expect(contractModuleFactory.createAbiItemModel({}))
-            .toBeInstanceOf(AbiItemModel);
+        expect(contractModuleFactory.createAbiItemModel({})).toBeInstanceOf(AbiItemModel);
     });
 
     it('calls createMethodEncoder and returns an MethodEncoder object', () => {
-        expect(contractModuleFactory.createMethodEncoder())
-            .toBeInstanceOf(MethodEncoder);
+        expect(contractModuleFactory.createMethodEncoder()).toBeInstanceOf(MethodEncoder);
     });
 
     it('calls createEventFilterEncoder and returns an EventFilterEncoder object', () => {
-        expect(contractModuleFactory.createEventFilterEncoder())
-            .toBeInstanceOf(EventFilterEncoder);
+        expect(contractModuleFactory.createEventFilterEncoder()).toBeInstanceOf(EventFilterEncoder);
     });
 
     it('calls createAllEventsFilterEncoder and returns an AllEventsFilterEncoder object', () => {
-        expect(contractModuleFactory.createAllEventsFilterEncoder())
-            .toBeInstanceOf(AllEventsFilterEncoder);
+        expect(contractModuleFactory.createAllEventsFilterEncoder()).toBeInstanceOf(AllEventsFilterEncoder);
     });
 
     it('calls createAbiMapper and returns an AbiMapper object', () => {
-        expect(contractModuleFactory.createAbiMapper())
-            .toBeInstanceOf(AbiMapper);
+        expect(contractModuleFactory.createAbiMapper()).toBeInstanceOf(AbiMapper);
     });
 
     it('calls createEventLogDecoder and returns an EventLogDecoder object', () => {
-        expect(contractModuleFactory.createEventLogDecoder())
-            .toBeInstanceOf(EventLogDecoder);
+        expect(contractModuleFactory.createEventLogDecoder()).toBeInstanceOf(EventLogDecoder);
     });
 
     it('calls createAllEventsLogDecoder and returns an AllEventsLogDecoder object', () => {
-        expect(contractModuleFactory.createAllEventsLogDecoder())
-            .toBeInstanceOf(AllEventsLogDecoder);
+        expect(contractModuleFactory.createAllEventsLogDecoder()).toBeInstanceOf(AllEventsLogDecoder);
     });
 
     it('calls createMethodOptionsValidator and returns an MethodOptionsValidator object', () => {
-        expect(contractModuleFactory.createMethodOptionsValidator())
-            .toBeInstanceOf(MethodOptionsValidator);
+        expect(contractModuleFactory.createMethodOptionsValidator()).toBeInstanceOf(MethodOptionsValidator);
     });
 
     it('calls createMethodOptionsMapper and returns an MethodOptionsMapper object', () => {
-        expect(contractModuleFactory.createMethodOptionsMapper())
-            .toBeInstanceOf(MethodOptionsMapper);
+        expect(contractModuleFactory.createMethodOptionsMapper()).toBeInstanceOf(MethodOptionsMapper);
     });
 
     it('calls createEventOptionsMapper and returns an EventOptionsMapper object', () => {
-        expect(contractModuleFactory.createEventOptionsMapper())
-            .toBeInstanceOf(EventOptionsMapper);
+        expect(contractModuleFactory.createEventOptionsMapper()).toBeInstanceOf(EventOptionsMapper);
     });
 
     it('calls createAllEventsOptionsMapper and returns an AllEventsOptionsMapper object', () => {
-        expect(contractModuleFactory.createAllEventsOptionsMapper())
-            .toBeInstanceOf(AllEventsOptionsMapper);
+        expect(contractModuleFactory.createAllEventsOptionsMapper()).toBeInstanceOf(AllEventsOptionsMapper);
     });
 
     it('calls createMethodFactory and returns an MethodFactory object', () => {
-        expect(contractModuleFactory.createMethodFactory())
-            .toBeInstanceOf(MethodFactory);
+        expect(contractModuleFactory.createMethodFactory()).toBeInstanceOf(MethodFactory);
     });
 
     it('calls createMethodsProxy and returns an MethodsProxy object', () => {
-        expect(contractModuleFactory.createMethodsProxy({}, {}, {}))
-            .toBeInstanceOf(MethodsProxy);
+        expect(contractModuleFactory.createMethodsProxy({}, {}, {})).toBeInstanceOf(MethodsProxy);
     });
 
     it('calls createEventSubscriptionsProxy and returns an EventSubscriptionsProxy object', () => {
-        expect(contractModuleFactory.createEventSubscriptionsProxy({}, {}, {}))
-            .toBeInstanceOf(EventSubscriptionsProxy);
+        expect(contractModuleFactory.createEventSubscriptionsProxy({}, {}, {})).toBeInstanceOf(EventSubscriptionsProxy);
     });
 
     it('calls createEventSubscriptionFactory and returns an EventSubscriptionFactory object', () => {
-        expect(contractModuleFactory.createEventSubscriptionFactory())
-            .toBeInstanceOf(EventSubscriptionFactory);
+        expect(contractModuleFactory.createEventSubscriptionFactory()).toBeInstanceOf(EventSubscriptionFactory);
     });
 });

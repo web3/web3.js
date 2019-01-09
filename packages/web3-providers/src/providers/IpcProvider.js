@@ -134,16 +134,15 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters))
-            .then(response => {
-                const validationResult = JsonRpcResponseValidator.validate(response);
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
+            const validationResult = JsonRpcResponseValidator.validate(response);
 
-                if (validationResult instanceof Error) {
-                    throw validationResult;
-                }
+            if (validationResult instanceof Error) {
+                throw validationResult;
+            }
 
-                return response;
-            });
+            return response;
+        });
     }
 
     /**
@@ -159,7 +158,7 @@ export default class IpcProvider extends AbstractSocketProvider {
     sendBatch(methods, moduleInstance) {
         let payload = [];
 
-        methods.forEach(method => {
+        methods.forEach((method) => {
             method.beforeExecution(moduleInstance);
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         });
@@ -195,7 +194,7 @@ export default class IpcProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
-                this.on(id, response => {
+                this.on(id, (response) => {
                     resolve(response);
 
                     this.removeAllListeners(id);
@@ -204,7 +203,7 @@ export default class IpcProvider extends AbstractSocketProvider {
                 return;
             }
 
-            return reject(new Error('Connection error: Couldn\'t write on the socket with Socket.write(payload)'));
+            return reject(new Error("Connection error: Couldn't write on the socket with Socket.write(payload)"));
         });
     }
 }
