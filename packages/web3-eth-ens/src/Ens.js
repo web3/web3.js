@@ -70,7 +70,7 @@ export default class Ens extends AbstractWeb3Module {
      * @returns {Registry}
      */
     get registry() {
-        if(!this._registry) {
+        if (!this._registry) {
             this._registry = this.ensModuleFactory.createRegistry(
                 this.currentProvider,
                 this.providersModuleFactory,

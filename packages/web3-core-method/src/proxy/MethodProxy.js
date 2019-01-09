@@ -46,17 +46,17 @@ export default class MethodProxy {
                     }
 
                     const method = methodFactory.createMethod(name);
-
+                    /* eslint-disable no-inner-declarations */
                     function anonymousFunction() {
                         method.arguments = arguments;
 
-                        if(method.Type === 'CALL') {
+                        if (method.Type === 'CALL') {
                             return method.execute(target);
                         }
 
                         return method.execute(target, new PromiEvent());
                     }
-
+                    /* eslint-enable no-inner-declarations */
                     anonymousFunction.method = method;
                     anonymousFunction.request = method.request;
 

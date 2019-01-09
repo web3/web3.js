@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import {AbstractContract} from 'web3-eth-contract';
 import MethodFactory from './MethodFactory';
 import Eth from '../Eth';
 

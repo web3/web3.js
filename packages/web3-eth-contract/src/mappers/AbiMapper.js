@@ -49,7 +49,7 @@ export default class AbiMapper {
             events: {}
         };
 
-        abi.forEach(abiItem => {
+        abi.forEach((abiItem) => {
             abiItem.constant = this.isConstant(abiItem);
             abiItem.payable = this.isPayable(abiItem);
 

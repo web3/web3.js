@@ -39,8 +39,9 @@ import EnsModuleFactory from './factories/EnsModuleFactory';
  * @returns {Ens}
  */
 export const Ens = (provider, accounts, ensModuleOptions) => {
-    const abiCoder = new AbiCoder(),
-          methodModuleFactory = new MethodModuleFactory();
+    const abiCoder = new AbiCoder();
+
+    const methodModuleFactory = new MethodModuleFactory();
 
     return new EnsModuleFactory().createENS(
         provider,
