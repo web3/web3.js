@@ -20,9 +20,8 @@
  * @date 2018
  */
 
+import {isObject, isArray} from 'lodash';
 import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
-import isObject from 'underscore-es/isObject';
-import isArray from 'underscore-es/isArray';
 import AbiCoder from '../AbiCoder';
 
 export default class AbiModuleFactory {

@@ -14,16 +14,16 @@
     },
     "dependencies": {
         "eth-ens-namehash": "2.0.8",
-        "underscore-es": "1.9.8",
+        "lodash": "^4.17.11",
         "web3-core": "1.0.0-beta.36",
-        "web3-core-promievent": "1.0.0-beta.36",
-        "web3-core-method": "1.0.0-beta.36",
         "web3-core-helpers": "1.0.0-beta.36",
-        "web3-eth-contract": "1.0.0-beta.36",
+        "web3-core-method": "1.0.0-beta.36",
+        "web3-core-promievent": "1.0.0-beta.36",
         "web3-eth-abi": "1.0.0-beta.36",
+        "web3-eth-contract": "1.0.0-beta.36",
         "web3-net": "1.0.0-beta.36",
-        "web3-utils": "1.0.0-beta.36",
-        "web3-providers": "1.0.0-beta.36"
+        "web3-providers": "1.0.0-beta.36",
+        "web3-utils": "1.0.0-beta.36"
     },
     "files": [
         "dist"

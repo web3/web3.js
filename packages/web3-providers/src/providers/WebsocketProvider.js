@@ -23,7 +23,7 @@
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
-import isArray from 'underscore-es/isArray';
+import {isArray} from 'lodash';
 
 export default class WebsocketProvider extends AbstractSocketProvider {
     /**

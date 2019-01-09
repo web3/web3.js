@@ -20,8 +20,7 @@
  * @date 2018
  */
 
-import isObject from 'underscore-es/isObject';
-import isArray from 'underscore-es/isArray';
+import {isObject, isArray} from 'lodash';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class BatchRequest {

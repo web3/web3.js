@@ -20,8 +20,7 @@
  * @date 2018
  */
 
-import isArray from 'underscore-es/isArray';
-import isFunction from 'underscore-es/isFunction';
+import {isArray, isFunction} from 'lodash';
 
 export default class MethodsProxy {
     /**

@@ -21,8 +21,7 @@
  * @date 2018
  */
 
-import isObject from 'underscore-es/isObject';
-import isArray from 'underscore-es/isArray';
+import {isObject, isArray} from 'lodash';
 
 // TODO: Implement it by our self this can't be a dependency because of the importance of it.
 export default class AbiCoder {

@@ -20,12 +20,7 @@
  * @date 2017
  */
 
-import isNull from 'underscore-es/isNull';
-import isUndefined from 'underscore-es/isUndefined';
-import isBoolean from 'underscore-es/isBoolean';
-import isString from 'underscore-es/isString';
-import isNumber from 'underscore-es/isNumber';
-import isObject from 'underscore-es/isObject';
+import {isUndefined, isBoolean, isString, isNumber, isObject, isNull} from 'lodash';
 import numberToBN from 'number-to-bn';
 import utf8 from 'utf8';
 import Hash from 'eth-lib/lib/hash';
@@ -297,7 +292,7 @@ export const hexToNumberString = (value) => {
  * @returns {String}
  */
 export const numberToHex = (value) => {
-    if (isNull(value) || isUndefined(value)) {
+    if (isNull(value) || typeof value === 'undefined') {
         return value;
     }
 

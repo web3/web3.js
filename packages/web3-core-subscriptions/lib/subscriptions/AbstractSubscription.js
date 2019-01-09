@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import isFunction from 'underscore-es/isFunction';
+import {isFunction} from 'lodash';
 import EventEmitter from 'eventemitter3';
 
 /**

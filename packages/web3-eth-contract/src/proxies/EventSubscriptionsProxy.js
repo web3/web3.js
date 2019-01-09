@@ -20,8 +20,7 @@
  * @date 2018
  */
 
-import isFunction from 'underscore-es/isFunction';
-import isUndefined from 'underscore-es/isUndefined';
+import {isFunction, isUndefined} from 'lodash';
 
 export default class EventSubscriptionsProxy {
     /**

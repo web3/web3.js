@@ -18,14 +18,14 @@
     "dependencies": {
         "crypto-browserify": "3.12.0",
         "eth-lib": "0.2.8",
+        "lodash": "^4.17.11",
         "scrypt.js": "0.2.0",
-        "underscore-es": "1.9.8",
         "uuid": "3.3.2",
         "web3-core": "1.0.0-beta.36",
         "web3-core-helpers": "1.0.0-beta.36",
         "web3-core-method": "1.0.0-beta.36",
-        "web3-utils": "1.0.0-beta.36",
-        "web3-providers": "1.0.0-beta.36"
+        "web3-providers": "1.0.0-beta.36",
+        "web3-utils": "1.0.0-beta.36"
     },
     "devDependencies": {
         "dtslint": "^0.4.2"

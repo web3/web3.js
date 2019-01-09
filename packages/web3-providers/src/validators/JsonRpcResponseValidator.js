@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import isObject from 'underscore-es/isObject';
+import {isObject} from 'lodash';
 
 export default class JsonRpcResponseValidator {
     /**

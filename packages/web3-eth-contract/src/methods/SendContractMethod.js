@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import isArray from 'underscore-es/isArray';
+import {isArray} from 'lodash';
 import {SendTransactionMethod} from 'web3-core-method';
 
 export default class SendContractMethod extends SendTransactionMethod {

@@ -16,7 +16,6 @@
         "dtslint": "dtslint types --onlyTestTsNext"
     },
     "dependencies": {
-        "underscore-es": "^1.9.8",
         "web3-core": "1.0.0-beta.36",
         "web3-core-helpers": "1.0.0-beta.36",
         "web3-core-method": "1.0.0-beta.36",

@@ -18,7 +18,7 @@
  */
 
 import {AbstractWeb3Module} from 'web3-core';
-import isFunction from 'underscore-es/isFunction';
+import {isFunction} from 'lodash';
 import namehash from 'eth-ens-namehash';
 
 export default class Ens extends AbstractWeb3Module {

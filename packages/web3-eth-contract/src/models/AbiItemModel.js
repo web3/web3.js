@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import isArray from 'underscore-es/isArray';
+import {isArray} from 'lodash';
 
 export default class AbiItemModel {
     /**

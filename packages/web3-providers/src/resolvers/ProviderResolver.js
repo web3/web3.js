@@ -20,8 +20,7 @@
  * @date 2018
  */
 
-import isObject from 'underscore-es/isObject';
-import isFunction from 'underscore-es/isFunction';
+import {isObject, isFunction} from 'lodash';
 
 export default class ProviderResolver {
     /**

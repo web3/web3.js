@@ -14,7 +14,7 @@
         "test": "jest"
     },
     "dependencies": {
-        "underscore-es": "^1.9.8",
+        "lodash": "^4.17.11",
         "web3-eth-iban": "1.0.0-beta.36",
         "web3-utils": "1.0.0-beta.36"
     },
