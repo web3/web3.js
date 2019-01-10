@@ -194,7 +194,7 @@ describe('AccountsTest', () => {
 
         formatters.inputCallFormatter.mockReturnValueOnce(tx);
 
-        Utils.numberToHex.mockReturnValueOnce(1);
+        Utils.fromDecimal.mockReturnValueOnce(1);
 
         RLP.encode.mockReturnValue('encoded');
 
@@ -234,7 +234,7 @@ describe('AccountsTest', () => {
 
         expect(formatters.inputCallFormatter).toHaveBeenCalledWith(tx);
 
-        expect(Utils.numberToHex).toHaveBeenCalledWith(4);
+        expect(Utils.fromDecimal).toHaveBeenCalledWith(4);
 
         expect(Bytes.fromNat).toHaveBeenNthCalledWith(1, 2);
 
@@ -298,7 +298,7 @@ describe('AccountsTest', () => {
 
         formatters.inputCallFormatter.mockReturnValueOnce(tx);
 
-        Utils.numberToHex.mockReturnValueOnce(1);
+        Utils.fromDecimal.mockReturnValueOnce(1);
 
         RLP.encode.mockReturnValue('encoded');
 
@@ -350,7 +350,7 @@ describe('AccountsTest', () => {
 
         expect(formatters.inputCallFormatter).toHaveBeenCalledWith(tx);
 
-        expect(Utils.numberToHex).toHaveBeenCalledWith(4);
+        expect(Utils.fromDecimal).toHaveBeenCalledWith(4);
 
         expect(Bytes.fromNat).toHaveBeenNthCalledWith(1, 2);
 
