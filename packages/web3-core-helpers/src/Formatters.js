@@ -199,7 +199,7 @@ export const inputTransactionFormatter = (options, moduleInstance) => {
  * @returns {String}
  */
 export const inputSignFormatter = (data) => {
-    return Utils.isHexStrict(data) ? data : Utils.utf8ToHex(data);
+    return Utils.isHexStrict(data) ? data : Utils.stringToHex(data);
 };
 
 /**
@@ -213,15 +213,15 @@ export const inputSignFormatter = (data) => {
  */
 export const outputTransactionFormatter = (receipt) => {
     if (receipt.blockNumber !== null) {
-        receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
+        receipt.blockNumber = Utils.toDecimal(receipt.blockNumber);
     }
 
     if (receipt.transactionIndex !== null) {
-        receipt.transactionIndex = Utils.hexToNumber(receipt.transactionIndex);
+        receipt.transactionIndex = Utils.toDecimal(receipt.transactionIndex);
     }
 
-    receipt.nonce = Utils.hexToNumber(receipt.nonce);
-    receipt.gas = Utils.hexToNumber(receipt.gas);
+    receipt.nonce = Utils.toDecimal(receipt.nonce);
+    receipt.gas = Utils.toDecimal(receipt.gas);
     receipt.gasPrice = outputBigNumberFormatter(receipt.gasPrice);
     receipt.value = outputBigNumberFormatter(receipt.value);
 
@@ -254,15 +254,15 @@ export const outputTransactionReceiptFormatter = (receipt) => {
     }
 
     if (receipt.blockNumber !== null) {
-        receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
+        receipt.blockNumber = Utils.toDecimal(receipt.blockNumber);
     }
 
     if (receipt.transactionIndex !== null) {
-        receipt.transactionIndex = Utils.hexToNumber(receipt.transactionIndex);
+        receipt.transactionIndex = Utils.toDecimal(receipt.transactionIndex);
     }
 
-    receipt.cumulativeGasUsed = Utils.hexToNumber(receipt.cumulativeGasUsed);
-    receipt.gasUsed = Utils.hexToNumber(receipt.gasUsed);
+    receipt.cumulativeGasUsed = Utils.toDecimal(receipt.cumulativeGasUsed);
+    receipt.gasUsed = Utils.toDecimal(receipt.gasUsed);
 
     if (isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
@@ -289,13 +289,13 @@ export const outputTransactionReceiptFormatter = (receipt) => {
  * @returns {Object}
  */
 export const outputBlockFormatter = (block) => {
-    block.gasLimit = Utils.hexToNumber(block.gasLimit);
-    block.gasUsed = Utils.hexToNumber(block.gasUsed);
-    block.size = Utils.hexToNumber(block.size);
-    block.timestamp = Utils.hexToNumber(block.timestamp);
+    block.gasLimit = Utils.toDecimal(block.gasLimit);
+    block.gasUsed = Utils.toDecimal(block.gasUsed);
+    block.size = Utils.toDecimal(block.size);
+    block.timestamp = Utils.toDecimal(block.timestamp);
 
     if (block.number !== null) {
-        block.number = Utils.hexToNumber(block.number);
+        block.number = Utils.toDecimal(block.number);
     }
 
     if (block.difficulty) {
@@ -400,15 +400,15 @@ export const outputLogFormatter = (log) => {
     }
 
     if (log.blockNumber !== null) {
-        log.blockNumber = Utils.hexToNumber(log.blockNumber);
+        log.blockNumber = Utils.toDecimal(log.blockNumber);
     }
 
     if (log.transactionIndex !== null) {
-        log.transactionIndex = Utils.hexToNumber(log.transactionIndex);
+        log.transactionIndex = Utils.toDecimal(log.transactionIndex);
     }
 
     if (log.logIndex !== null) {
-        log.logIndex = Utils.hexToNumber(log.logIndex);
+        log.logIndex = Utils.toDecimal(log.logIndex);
     }
 
     if (log.address) {
@@ -464,10 +464,10 @@ export const inputPostFormatter = (post) => {
  * @returns {Object}
  */
 export const outputPostFormatter = (post) => {
-    post.expiry = Utils.hexToNumber(post.expiry);
-    post.sent = Utils.hexToNumber(post.sent);
-    post.ttl = Utils.hexToNumber(post.ttl);
-    post.workProved = Utils.hexToNumber(post.workProved);
+    post.expiry = Utils.toDecimal(post.expiry);
+    post.sent = Utils.toDecimal(post.sent);
+    post.ttl = Utils.toDecimal(post.ttl);
+    post.workProved = Utils.toDecimal(post.workProved);
     // post.payloadRaw = post.payload;
     // post.payload = Utils.hexToAscii(post.payload);
 
@@ -519,12 +519,12 @@ export const inputAddressFormatter = (address) => {
  * @returns {Object}
  */
 export const outputSyncingFormatter = (result) => {
-    result.startingBlock = Utils.hexToNumber(result.startingBlock);
-    result.currentBlock = Utils.hexToNumber(result.currentBlock);
-    result.highestBlock = Utils.hexToNumber(result.highestBlock);
+    result.startingBlock = Utils.toDecimal(result.startingBlock);
+    result.currentBlock = Utils.toDecimal(result.currentBlock);
+    result.highestBlock = Utils.toDecimal(result.highestBlock);
     if (result.knownStates) {
-        result.knownStates = Utils.hexToNumber(result.knownStates);
-        result.pulledStates = Utils.hexToNumber(result.pulledStates);
+        result.knownStates = Utils.toDecimal(result.knownStates);
+        result.pulledStates = Utils.toDecimal(result.pulledStates);
     }
 
     return result;
