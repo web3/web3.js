@@ -16,12 +16,12 @@
         "dtslint": "dtslint types"
     },
     "dependencies": {
-        "underscore-es": "^1.9.8",
+        "lodash": "^4.17.11",
         "web3-providers": "1.0.0-beta.36",
         "web3-utils": "1.0.0-beta.36"
     },
     "devDependencies": {
-        "dtslint": "0.3.0"
+        "dtslint": "^0.4.2"
     },
     "files": [
         "dist",

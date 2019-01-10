@@ -32,7 +32,6 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @param {AbiCoder} abiCoder
      * @param {Object} utils
      * @param {Object} formatters
-     * @param {Accounts} accounts
      * @param {Object} abi
      * @param {String} address
      * @param {Object} options
@@ -48,7 +47,6 @@ export default class AbstractContract extends AbstractWeb3Module {
         abiCoder,
         utils,
         formatters,
-        accounts,
         abi = AbstractWeb3Module.throwIfMissing('abi'),
         address,
         options
@@ -58,142 +56,20 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.abiCoder = abiCoder;
         this.utils = utils;
         this.formatters = formatters;
-        this.accounts = accounts;
-        this.abiMapper = contractModuleFactory.createAbiMapper();
+        this.abiMapper = this.contractModuleFactory.createAbiMapper();
         this.options = options;
         this.PromiEvent = PromiEvent;
-        this.methodFactory = contractModuleFactory.createMethodFactory();
+        this.methodFactory = this.contractModuleFactory.createMethodFactory();
         this.abiModel = this.abiMapper.map(abi);
+        this.options = options;
 
         if (address) {
             this.address = address;
         }
 
-        this.options = options;
+        this.methods = this.contractModuleFactory.createMethodsProxy(this, this.abiModel, this.PromiEvent);
 
-        this.contractModuleFactory.createMethodsProxy(
-            this.methods,
-            this.abiModel,
-            this.PromiEvent
-        );
-
-        this.events = this.contractModuleFactory.createEventSubscriptionsProxy(
-            this,
-            this.abiModel,
-            this.methodController,
-            this.PromiEvent
-        );
-    }
-
-    /**
-     * Adds event listeners and creates a subscription, and remove it once its fired.
-     *
-     * @method once
-     *
-     * @param {String} eventName
-     * @param {Object} options
-     * @param {Function} callback
-     *
-     * @callback callback callback(error, result)
-     * @returns {undefined}
-     */
-    once(eventName, options, callback) {
-        if (!callback) {
-            throw new Error('Once requires a callback function.');
-        }
-
-        if (options) {
-            delete options.fromBlock;
-        }
-
-        const eventSubscription = this.events[event](options, callback);
-
-        eventSubscription.on('data', () => {
-            eventSubscription.unsubscribe();
-        });
-    }
-
-    /**
-     * Returns the past event logs by his name
-     *
-     * @method getPastEvents
-     *
-     * @param {String} eventName
-     * @param {Object} options
-     * @param {Function} callback
-     *
-     * @callback callback callback(error, result)
-     * @returns {Promise<Array>}
-     */
-    getPastEvents(eventName, options, callback) {
-        if (!this.options.jsonInterface.hasEvent(eventName)) {
-            throw new Error(`Event with name "${eventName}does not exists.`);
-        }
-
-        const pastEventLogsMethod = this.methodFactory.createPastEventLogsMethod(
-            this.options.jsonInterface.getEvent(eventName)
-        );
-
-        pastEventLogsMethod.parameters = [options];
-        pastEventLogsMethod.callback = callback;
-
-        return pastEventLogsMethod.execute(this);
-    }
-
-    /**
-     * Deploy an contract and returns an new Contract instance with the correct address set
-     *
-     * @method deploy
-     *
-     * @param {Object} options
-     *
-     * @returns {Promise<Contract>|EventEmitter}
-     */
-    deploy(options) {
-        return this.methods.contractConstructor(options);
-    }
-
-    /**
-     * Return an new instance of the Contract object
-     *
-     * @method clone
-     *
-     * @returns {AbstractContract}
-     */
-    clone() {
-        const contract = new this.constructor(
-            this.provider,
-            this.providersModuleFactory,
-            this.providers,
-            this.methodModuleFactory,
-            this.contractModuleFactory,
-            this.PromiEvent,
-            this.abiCoder,
-            this.utils,
-            this.formatters,
-            this.accounts,
-            this.abi,
-            null,
-            this.options
-        );
-
-        contract.abiModel = this.abiModel;
-
-        return contract;
-    }
-
-    /**
-     * Sets the currentProvider and provider property
-     *
-     * @method setProvider
-     *
-     * @param {Object|String} provider
-     * @param {Net} net
-     *
-     * @returns {Boolean}
-     */
-    setProvider(provider, net) {
-        return !!(super.setProvider(provider, net) && this.accounts.setProvider(provider, net));
+        this.events = this.contractModuleFactory.createEventSubscriptionsProxy(this, this.abiModel, this.PromiEvent);
     }
 
     /**
@@ -221,86 +97,123 @@ export default class AbstractContract extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultGasPrice property on the current object and the accounts module
+     * Getter for the contract address
      *
-     * @property defaultGasPrice
+     * @property address
+     *
+     * @returns {String}
+     */
+    get address() {
+        return this.options.address;
+    }
+
+    /**
+     * Setter for the contract address
+     *
+     * @property address
      *
      * @param {String} value
      */
-    set defaultGasPrice(value) {
-        super.defaultGasPrice = value;
-        this.accounts.defaultGasPrice = value;
+    set address(value) {
+        this.options.address = value;
     }
 
     /**
-     * Sets the defaultGas property on the current object and the accounts module
+     * Adds event listeners and creates a subscription, and remove it once its fired.
      *
-     * @property defaultGas
+     * @method once
      *
-     * @param {Number} value
+     * @param {String} eventName
+     * @param {Object} options
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {undefined}
      */
-    set defaultGas(value) {
-        super.defaultGas = value;
-        this.accounts.defaultGas = value;
+    once(eventName, options, callback) {
+        if (!callback) {
+            throw new Error('Once requires a callback function.');
+        }
+
+        if (options) {
+            delete options.fromBlock;
+        }
+
+        const eventSubscription = this.events[eventName](options, callback);
+
+        eventSubscription.on('data', () => {
+            eventSubscription.unsubscribe();
+        });
     }
 
     /**
-     * Sets the transactionBlockTimeout property on the current object and the accounts module
+     * Returns the past event logs by his name
      *
-     * @property transactionBlockTimeout
+     * @method getPastEvents
      *
-     * @param {Number} value
+     * @param {String} eventName
+     * @param {Object} options
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {Promise<Array>}
      */
-    set transactionBlockTimeout(value) {
-        super.transactionBlockTimeout = value;
-        this.accounts.transactionBlockTimeout = value;
+    getPastEvents(eventName, options, callback) {
+        return new Promise(async (resolve, reject) => {
+            if (!this.abiModel.hasEvent(eventName)) {
+                reject(new Error(`Event with name "${eventName}" does not exists.`));
+            }
+
+            const pastEventLogsMethod = this.methodFactory.createPastEventLogsMethod(this.abiModel.getEvent(eventName));
+
+            pastEventLogsMethod.parameters = [options];
+            pastEventLogsMethod.callback = callback;
+
+            return resolve(await pastEventLogsMethod.execute(this));
+        });
     }
 
     /**
-     * Sets the transactionConfirmationBlocks property on the current object and the accounts module
+     * Deploy an contract and returns an new Contract instance with the correct address set
      *
-     * @property transactionConfirmationBlocks
+     * @method deploy
      *
-     * @param {Number} value
+     * @param {Object} options
+     *
+     * @returns {Promise<Contract>|EventEmitter}
      */
-    set transactionConfirmationBlocks(value) {
-        super.transactionConfirmationBlocks = value;
-        this.accounts.transactionConfirmationBlocks = value;
+    deploy(options) {
+        return this.methods.contractConstructor(options);
     }
 
     /**
-     * Sets the transactionPollingTimeout property on the current object and the accounts module
+     * TODO: It was and is just a shallow copy here and not a deep copy of the object.
      *
-     * @property transactionPollingTimeout
+     * Return an new instance of the Contract object
      *
-     * @param {Number} value
+     * @method clone
+     *
+     * @returns {AbstractContract}
      */
-    set transactionPollingTimeout(value) {
-        super.transactionPollingTimeout = value;
-        this.accounts.transactionPollingTimeout = value;
-    }
+    clone() {
+        const contract = new this.constructor(
+            this.currentProvider,
+            this.providersModuleFactory,
+            this.methodModuleFactory,
+            this.contractModuleFactory,
+            this.PromiEvent,
+            this.abiCoder,
+            this.utils,
+            this.formatters,
+            {},
+            this.address,
+            this.options
+        );
 
-    /**
-     * Sets the defaultAccount property on the current object and the accounts module
-     *
-     * @property defaultAccount
-     *
-     * @param {String} value
-     */
-    set defaultAccount(value) {
-        super.defaultAccount = value;
-        this.accounts.defaultAccount = value;
-    }
+        contract.abiModel = this.abiModel;
+        contract.methods.abiModel = this.abiModel;
+        contract.events.abiModel = this.abiModel;
 
-    /**
-     * Sets the defaultBlock property on the current object and the accounts module
-     *
-     * @property defaultBlock
-     *
-     * @param value
-     */
-    set defaultBlock(value) {
-        super.defaultBlock = value;
-        this.accounts.defaultBlock = value;
+        return contract;
     }
 }

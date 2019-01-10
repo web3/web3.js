@@ -54,33 +54,30 @@ export default class MethodFactory extends AbstractMethodFactory {
      * @constructor
      */
     constructor(methodModuleFactory, utils, formatters) {
-        super(
-            {
-                getVersion: ShhVersionMethod,
-                getInfo: GetInfoMethod,
-                setMaxMessageSize: SetMaxMessageSizeMethod,
-                setMinPoW: SetMinPoWMethod,
-                markTrustedPeer: MarkTrustedPeerMethod,
-                newKeyPair: NewKeyPairMethod,
-                addPrivateKey: AddPrivateKeyMethod,
-                deleteKeyPair: DeleteKeyPairMethod,
-                hasKeyPair: HasKeyPairMethod,
-                getPublicKey: GetPublicKeyMethod,
-                getPrivateKey: GetPrivateKeyMethod,
-                newSymKey: NewSymKeyMethod,
-                addSymKey: AddSymKeyMethod,
-                generateSymKeyFromPassword: GenerateSymKeyFromPasswordMethod,
-                hasSymKey: HasSymKeyMethod,
-                getSymKey: GetSymKeyMethod,
-                deleteSymKey: DeleteSymKeyMethod,
-                newMessageFilter: NewMessageFilterMethod,
-                getFilterMessages: GetFilterMessagesMethod,
-                deleteMessageFilter: DeleteMessageFilterMethod,
-                post: PostMethod
-            },
-            methodModuleFactory,
-            utils,
-            formatters
-        );
+        super(methodModuleFactory, utils, formatters);
+
+        this.methods = {
+            getVersion: ShhVersionMethod,
+            getInfo: GetInfoMethod,
+            setMaxMessageSize: SetMaxMessageSizeMethod,
+            setMinPoW: SetMinPoWMethod,
+            markTrustedPeer: MarkTrustedPeerMethod,
+            newKeyPair: NewKeyPairMethod,
+            addPrivateKey: AddPrivateKeyMethod,
+            deleteKeyPair: DeleteKeyPairMethod,
+            hasKeyPair: HasKeyPairMethod,
+            getPublicKey: GetPublicKeyMethod,
+            getPrivateKey: GetPrivateKeyMethod,
+            newSymKey: NewSymKeyMethod,
+            addSymKey: AddSymKeyMethod,
+            generateSymKeyFromPassword: GenerateSymKeyFromPasswordMethod,
+            hasSymKey: HasSymKeyMethod,
+            getSymKey: GetSymKeyMethod,
+            deleteSymKey: DeleteSymKeyMethod,
+            newMessageFilter: NewMessageFilterMethod,
+            getFilterMessages: GetFilterMessagesMethod,
+            deleteMessageFilter: DeleteMessageFilterMethod,
+            post: PostMethod
+        };
     }
 }

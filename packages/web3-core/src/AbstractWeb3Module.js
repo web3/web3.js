@@ -20,8 +20,8 @@
  * @date 2018
  */
 
-import isObject from 'underscore-es/isObject';
-import {toChecksumAddress} from 'web3-utils'; // TODO: Maybe this could be removed with a web3-core-types module
+import {isObject} from 'lodash';
+import {toChecksumAddress} from 'web3-utils'; // TODO: This could be removed with a web3-core-types module
 
 export default class AbstractWeb3Module {
     /**
@@ -41,31 +41,160 @@ export default class AbstractWeb3Module {
         options = {}
     ) {
         this.providersModuleFactory = providersModuleFactory;
-        this.providerDetector = providersModuleFactory.createProviderDetector();
+        this.providerDetector = providersModuleFactory.createProviderDetector(); // TODO: detection of an provider and setting of givenProvider could be removed.
         this.providerResolver = providersModuleFactory.createProviderResolver();
         this.givenProvider = this.providerDetector.detect();
         this._currentProvider = this.providerResolver.resolve(provider);
 
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
-        this.defaultBlock = options.defaultBlock;
-        this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
-        this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
-        this.transactionPollingTimeout = options.transactionPollingTimeout || 15;
-        this.defaultGasPrice = options.defaultGasPrice;
-        this.defaultGas = options.defaultGas;
+        this._defaultBlock = options.defaultBlock || 'latest';
+        this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
+        this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
+        this._transactionPollingTimeout = options.transactionPollingTimeout || 15;
+        this._defaultGasPrice = options.defaultGasPrice;
+        this._defaultGas = options.defaultGas;
 
         this.BatchRequest = () => {
             return this.providersModuleFactory.createBatchRequest(this);
         };
 
-        if (methodFactory !== null || typeof methodFactory !== 'undefined') {
+        if (methodFactory !== null) {
             this.methodFactory = methodFactory;
 
-            return methodModuleFactory.createMethodProxy(
-                this,
-                this.methodFactory
-            );
+            return methodModuleFactory.createMethodProxy(this, this.methodFactory);
         }
+    }
+
+    /**
+     * Getter for the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @returns {null|String}
+     */
+    get defaultBlock() {
+        return this._defaultBlock;
+    }
+
+    /**
+     * Setter for the defaultAccount property
+     *
+     * @property defaultBlock
+     *
+     * @param {String|Number} value
+     */
+    set defaultBlock(value) {
+        this._defaultBlock = value;
+    }
+
+    /**
+     * Getter for the transactionBlockTimeout property
+     *
+     * @property transactionBlockTimeout
+     *
+     * @returns {Number}
+     */
+    get transactionBlockTimeout() {
+        return this._transactionBlockTimeout;
+    }
+
+    /**
+     * Setter for the transactionBlockTimeout property
+     *
+     * @property transactionBlockTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionBlockTimeout(value) {
+        this._transactionBlockTimeout = value;
+    }
+
+    /**
+     * Getter for the transactionConfirmationBlocks property
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @returns {Number}
+     */
+    get transactionConfirmationBlocks() {
+        return this._transactionConfirmationBlocks;
+    }
+
+    /**
+     * Setter for the transactionConfirmationBlocks property
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @param {Number} value
+     */
+    set transactionConfirmationBlocks(value) {
+        this._transactionConfirmationBlocks = value;
+    }
+
+    /**
+     * Getter for the transactionPollingTimeout property
+     *
+     * @property transactionPollingTimeout
+     *
+     * @returns {Number}
+     */
+    get transactionPollingTimeout() {
+        return this._transactionPollingTimeout;
+    }
+
+    /**
+     * Setter for the transactionPollingTimeout property
+     *
+     * @property transactionPollingTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionPollingTimeout(value) {
+        this._transactionPollingTimeout = value;
+    }
+
+    /**
+     * Getter for the defaultGasPrice property
+     *
+     * @property defaultGasPrice
+     *
+     * @returns {Number|String}
+     */
+    get defaultGasPrice() {
+        return this._defaultGasPrice;
+    }
+
+    /**
+     * Setter for the defaultGasPrice property
+     *
+     * @property defaultGasPrice
+     *
+     * @param {Number|String} value
+     */
+    set defaultGasPrice(value) {
+        this._defaultGasPrice = value;
+    }
+
+    /**
+     * Getter for the defaultGas property
+     *
+     * @property defaultGas
+     *
+     * @returns {Number|String}
+     */
+    get defaultGas() {
+        return this._defaultGas;
+    }
+
+    /**
+     * Setter for the defaultGas property
+     *
+     * @property defaultGas
+     *
+     * @param {Number|String} value
+     */
+    set defaultGas(value) {
+        this._defaultGas = value;
     }
 
     /**
@@ -139,14 +268,14 @@ export default class AbstractWeb3Module {
      *
      * @method setProvider
      *
-     * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Net} net
      *
      * @returns {Boolean|Error}
      */
     setProvider(provider, net) {
         if (!this.isSameProvider(provider)) {
-            const resolvedProvider = this.ProviderResolver.resolve(provider, net);
+            const resolvedProvider = this.providerResolver.resolve(provider, net);
             this.clearSubscriptions();
             this._currentProvider = resolvedProvider;
 
@@ -161,13 +290,13 @@ export default class AbstractWeb3Module {
      *
      * @method isSameProvider
      *
-     * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      *
      * @returns {Boolean}
      */
     isSameProvider(provider) {
         if (isObject(provider)) {
-            if (this.currentProvider.provider.constructor.name === provider.constructor.name) {
+            if (this.currentProvider.constructor.name === provider.constructor.name) {
                 return this.currentProvider.host === provider.host;
             }
 
@@ -176,7 +305,6 @@ export default class AbstractWeb3Module {
 
         return this.currentProvider.host === provider;
     }
-
 
     /**
      * Clears all subscriptions and listeners

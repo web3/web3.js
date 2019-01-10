@@ -33,15 +33,17 @@ export default class MethodFactory {
      * @param {Object} formatters
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
+     * @param {AbiCoder} abiCoder
      *
      * @constructor
      */
-    constructor(accounts, utils, formatters, contractModuleFactory, methodModuleFactory) {
+    constructor(accounts, utils, formatters, contractModuleFactory, methodModuleFactory, abiCoder) {
+        this.accounts = accounts;
         this.utils = utils;
         this.formatters = formatters;
-        this.accounts = accounts;
         this.contractModuleFactory = contractModuleFactory;
         this.methodModuleFactory = methodModuleFactory;
+        this.abiCoder = abiCoder;
     }
 
     /**
@@ -49,7 +51,7 @@ export default class MethodFactory {
      *
      * @method createMethod
      *
-     * @param {AbiItem} abiItem
+     * @param {AbiItemModel} abiItem
      * @param {AbstractContract} contract
      *
      * @returns {AbstractMethod}
@@ -73,7 +75,7 @@ export default class MethodFactory {
         }
 
         if (typeof rpcMethod === 'undefined') {
-            throw new TypeError(`RPC call not found with requestType "${abiItem.requestType}"`);
+            throw new TypeError(`RPC call not found with requestType: "${abiItem.requestType}"`);
         }
 
         return rpcMethod;
@@ -84,7 +86,7 @@ export default class MethodFactory {
      *
      * @method createPastEventLogsMethod
      *
-     * @param {AbiItem} abiItem
+     * @param {AbiItemModel} abiItem
      *
      * @returns {PastEventLogsMethod}
      */
@@ -102,16 +104,12 @@ export default class MethodFactory {
      *
      * @method createCallContractMethod
      *
-     * @param {AbiItem} abiItem
+     * @param {AbiItemModel} abiItem
      *
      * @returns {CallContractMethod}
      */
     createCallContractMethod(abiItem) {
-        return new CallContractMethod(
-            this.utils,
-            this.formatters,
-            abiItem
-        );
+        return new CallContractMethod(this.utils, this.formatters, this.abiCoder, abiItem);
     }
 
     /**
@@ -119,7 +117,7 @@ export default class MethodFactory {
      *
      * @method createSendContractMethod
      *
-     * @param {AbiItem} abiItem
+     * @param {AbiItemModel} abiItem
      *
      * @returns {SendContractMethod}
      */
@@ -131,7 +129,7 @@ export default class MethodFactory {
             this.methodModuleFactory.createTransactionConfirmationWorkflow(),
             this.methodModuleFactory.createTransactionSigner(),
             this.contractModuleFactory.createAllEventsLogDecoder(),
-            abiItem,
+            abiItem
         );
     }
 
@@ -163,9 +161,6 @@ export default class MethodFactory {
      * @returns {EstimateGasMethod}
      */
     createEstimateGasMethod() {
-        return new EstimateGasMethod(
-            this.utils,
-            this.formatters
-        );
+        return new EstimateGasMethod(this.utils, this.formatters);
     }
 }

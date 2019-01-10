@@ -17,31 +17,22 @@ describe('NewHeadsSubscriptionTest', () => {
     });
 
     it('constructor check', () => {
-        expect(newHeadsSubscription.method)
-            .toEqual('newHeads');
+        expect(newHeadsSubscription.method).toEqual('newHeads');
 
-        expect(newHeadsSubscription.type)
-            .toEqual('eth_subscribe');
+        expect(newHeadsSubscription.type).toEqual('eth_subscribe');
 
-        expect(newHeadsSubscription.options)
-            .toEqual(null);
+        expect(newHeadsSubscription.options).toEqual(null);
 
-        expect(newHeadsSubscription.utils)
-            .toEqual(Utils);
+        expect(newHeadsSubscription.utils).toEqual(Utils);
 
-        expect(newHeadsSubscription.moduleInstance)
-            .toEqual({});
+        expect(newHeadsSubscription.moduleInstance).toEqual({});
     });
 
-
     it('onNewSubscriptionItem should call the outputBlockFormatter method', () => {
-        formatters.outputBlockFormatter
-            .mockReturnValueOnce({});
+        formatters.outputBlockFormatter.mockReturnValueOnce({});
 
-        newHeadsSubscription
-            .onNewSubscriptionItem('string');
+        newHeadsSubscription.onNewSubscriptionItem('string');
 
-        expect(formatters.outputBlockFormatter)
-            .toHaveBeenCalledWith('string');
+        expect(formatters.outputBlockFormatter).toHaveBeenCalledWith('string');
     });
 });

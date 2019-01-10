@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import {isArray} from 'lodash';
+
 export default class EventOptionsMapper {
     /**
      * @param {Object} formatters
@@ -40,7 +42,7 @@ export default class EventOptionsMapper {
      * @returns {Object}
      */
     map(abiItemModel, contract, options) {
-        if (typeof options.topics === 'undefined') {
+        if (!isArray(options.topics)) {
             options.topics = [];
         }
 
@@ -58,8 +60,8 @@ export default class EventOptionsMapper {
             options.topics.unshift(abiItemModel.signature);
         }
 
-        if (typeof options.filters !== 'undefined') {
-            options.topics.concat(this.eventFilterEncoder.encode(abiItemModel, options.filter));
+        if (typeof options.filter !== 'undefined') {
+            options.topics = options.topics.concat(this.eventFilterEncoder.encode(abiItemModel, options.filter));
         }
 
         if (!options.address) {

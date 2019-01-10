@@ -21,13 +21,13 @@
  */
 
 import {AbstractWeb3Module} from 'web3-core';
-import Contract from './Contract';
 
 export default class Eth extends AbstractWeb3Module {
     /**
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {EthModuleFactory} ethModuleFactory
+     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {MethodFactory} methodFactory
      * @param {Network} net
      * @param {Accounts} accounts
      * @param {Personal} personal
@@ -37,8 +37,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {SubscriptionsFactory} subscriptionsFactory
-     * @param {MethodFactory} methodFactory
-     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {ContractModuleFactory} contractModuleFactory
      * @param {Object} options
      *
      * @constructor
@@ -48,7 +47,6 @@ export default class Eth extends AbstractWeb3Module {
         providersModuleFactory,
         methodModuleFactory,
         methodFactory,
-        ethModuleFactory,
         net,
         accounts,
         personal,
@@ -58,11 +56,11 @@ export default class Eth extends AbstractWeb3Module {
         utils,
         formatters,
         subscriptionsFactory,
+        contractModuleFactory,
         options
     ) {
         super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
 
-        this.ethModuleFactory = ethModuleFactory;
         this.net = net;
         this.accounts = accounts;
         this.personal = personal;
@@ -72,6 +70,7 @@ export default class Eth extends AbstractWeb3Module {
         this.utils = utils;
         this.formatters = formatters;
         this.subscriptionsFactory = subscriptionsFactory;
+        this.contractModuleFactory = contractModuleFactory;
         this.initiatedContracts = [];
 
         /**
@@ -81,16 +80,12 @@ export default class Eth extends AbstractWeb3Module {
          * @param {String} address
          * @param {Object} options
          *
-         * @returns {Contract}
+         * @returns {AbstractContract}
          *
          * @constructor
          */
         this.Contract = (abi, address, options) => {
-            if (!(this instanceof Contract)) {
-                throw new TypeError('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
-            }
-
-            const contract = this.ethModuleFactory.createContract(abi, address, options);
+            const contract = this.contractModuleFactory.createContract(abi, address, options);
 
             this.initiatedContracts.push(contract);
 
@@ -110,88 +105,148 @@ export default class Eth extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultGasPrice property on all contracts and on the personal module
+     * Sets the defaultGasPrice property on all contracts and on all sub-modules
      *
      * @property defaultGasPrice
      *
-     * @param {String} value
+     * @param {String|Number} value
      */
     set defaultGasPrice(value) {
-        super.defaultGasPrice = value;
         this.initiatedContracts.forEach((contract) => {
             contract.defaultGasPrice = value;
         });
 
         this.net.defaultGasPrice = value;
         this.personal.defaultGasPrice = value;
+
+        super.defaultGasPrice = value;
     }
 
     /**
-     * Sets the defaultGas property on all contracts and on the personal module
+     * Gets the defaultGasPrice property
+     *
+     * @property defaultGasPrice
+     *
+     * @returns {String|Number} value
+     */
+    get defaultGasPrice() {
+        return super.defaultGasPrice;
+    }
+
+    /**
+     * Sets the defaultGas property on all contracts and on all sub-modules
      *
      * @property defaultGas
      *
      * @param {Number} value
      */
     set defaultGas(value) {
-        super.defaultGas = value;
         this.initiatedContracts.forEach((contract) => {
             contract.defaultGas = value;
         });
 
         this.net.defaultGas = value;
         this.personal.defaultGas = value;
+
+        super.defaultGas = value;
     }
 
     /**
-     * Sets the transactionBlockTimeout property on all contracts and on the personal module
+     * Gets the defaultGas property
+     *
+     * @property defaultGas
+     *
+     * @returns {String|Number} value
+     */
+    get defaultGas() {
+        return super.defaultGas;
+    }
+
+    /**
+     * Sets the transactionBlockTimeout property on all contracts and on all sub-modules
      *
      * @property transactionBlockTimeout
      *
      * @param {Number} value
      */
     set transactionBlockTimeout(value) {
-        super.transactionBlockTimeout = value;
         this.initiatedContracts.forEach((contract) => {
             contract.transactionBlockTimeout = value;
         });
 
         this.net.transactionBlockTimeout = value;
         this.personal.transactionBlockTimeout = value;
+
+        super.transactionBlockTimeout = value;
     }
 
     /**
-     * Sets the transactionConfirmationBlocks property on all contracts and on the personal module
+     * Gets the transactionBlockTimeout property
+     *
+     * @property transactionBlockTimeout
+     *
+     * @returns {Number} value
+     */
+    get transactionBlockTimeout() {
+        return super.transactionBlockTimeout;
+    }
+
+    /**
+     * Sets the transactionConfirmationBlocks property on all contracts and on all sub-modules
      *
      * @property transactionConfirmationBlocks
      *
      * @param {Number} value
      */
     set transactionConfirmationBlocks(value) {
-        super.transactionConfirmationBlocks = value;
         this.initiatedContracts.forEach((contract) => {
             contract.transactionConfirmationBlocks = value;
         });
 
         this.net.transactionConfirmationBlocks = value;
         this.personal.transactionConfirmationBlocks = value;
+
+        super.transactionConfirmationBlocks = value;
     }
 
     /**
-     * Sets the transactionPollingTimeout property on all contracts and on the personal module
+     * Gets the transactionConfirmationBlocks property
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @returns {Number} value
+     */
+    get transactionConfirmationBlocks() {
+        return super.transactionConfirmationBlocks;
+    }
+
+    /**
+     * Sets the transactionPollingTimeout property on all contracts and on all sub-modules
      *
      * @property transactionPollingTimeout
      *
      * @param {Number} value
      */
     set transactionPollingTimeout(value) {
-        super.transactionPollingTimeout = value;
         this.initiatedContracts.forEach((contract) => {
             contract.transactionPollingTimeout = value;
         });
 
         this.net.transactionPollingTimeout = value;
         this.personal.transactionPollingTimeout = value;
+
+        super.transactionPollingTimeout = value;
+    }
+
+    /**
+     * Gets the transactionPollingTimeout property
+     *
+     * @property transactionPollingTimeout
+     *
+     * @returns {Number} value
+     */
+    get transactionPollingTimeout() {
+        return super.transactionPollingTimeout;
     }
 
     /**
@@ -202,13 +257,25 @@ export default class Eth extends AbstractWeb3Module {
      * @param {String} value
      */
     set defaultAccount(value) {
-        super.defaultAccount = value;
         this.initiatedContracts.forEach((contract) => {
-            contract.defaultAccount = value;
+            contract.defaultAccount = this.utils.toChecksumAddress(value);
         });
 
         this.net.defaultAccount = value;
         this.personal.defaultAccount = value;
+
+        super.defaultAccount = value;
+    }
+
+    /**
+     * Gets the defaultAccount property
+     *
+     * @property defaultAccount
+     *
+     * @returns {String} value
+     */
+    get defaultAccount() {
+        return super.defaultAccount;
     }
 
     /**
@@ -219,13 +286,25 @@ export default class Eth extends AbstractWeb3Module {
      * @param {String|Number}value
      */
     set defaultBlock(value) {
-        super.defaultBlock = value;
         this.initiatedContracts.forEach((contract) => {
             contract.defaultBlock = value;
         });
 
         this.net.defaultBlock = value;
         this.personal.defaultBlock = value;
+
+        super.defaultBlock = value;
+    }
+
+    /**
+     * Gets the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @returns {String|Number} value
+     */
+    get defaultBlock() {
+        return super.defaultBlock;
     }
 
     /**
@@ -244,11 +323,7 @@ export default class Eth extends AbstractWeb3Module {
         switch (type) {
             case 'logs':
                 return this.subscriptionsFactory
-                    .createLogSubscription(
-                        options,
-                        this,
-                        this.methodFactory.createMethod('getPastLogs')
-                    )
+                    .createLogSubscription(options, this, this.methodFactory.createMethod('getPastLogs'))
                     .subscribe(callback);
 
             case 'newBlockHeaders':
@@ -258,7 +333,7 @@ export default class Eth extends AbstractWeb3Module {
                 return this.subscriptionsFactory.createNewPendingTransactionsSubscription(this).subscribe(callback);
 
             case 'syncing':
-                return this.subscriptionsFactory.createSyncingSubscriptionModel(this).subscribe(callback);
+                return this.subscriptionsFactory.createSyncingSubscription(this).subscribe(callback);
 
             default:
                 throw new Error(`Unknown subscription: ${type}`);
@@ -279,11 +354,11 @@ export default class Eth extends AbstractWeb3Module {
             return contract.setProvider(provider, net);
         });
 
-        return !!(
-            super.setProvider(provider, net) &&
+        return (
             this.net.setProvider(provider, net) &&
             this.personal.setProvider(provider, net) &&
             this.accounts.setProvider(provider, net) &&
+            super.setProvider(provider, net) &&
             setContractProviders
         );
     }

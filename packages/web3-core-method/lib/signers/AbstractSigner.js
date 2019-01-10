@@ -26,7 +26,7 @@ export default class AbstractSigner {
      */
     constructor(accounts) {
         this.accounts = accounts;
-    };
+    }
 
     /**
      * Get wallet for address with accounts package

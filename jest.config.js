@@ -5,15 +5,11 @@ const config = {
     clearMocks: true,
     resetMocks: true,
     resetModules: true,
-    testMatch: [
-        '/**/**Test.js'
-    ],
+    testMatch: ['/**/**Test.js'],
     transform: {
         '^.+\\.js$': '<rootDir>/../../jest.preprocessor.js'
     },
-    transformIgnorePatterns: [
-        'node_modules/(?!(underscore-es)/)'
-    ],
+    transformIgnorePatterns: ['node_modules/(?!(underscore-es)/)'],
     bail: true
 };
 

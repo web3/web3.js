@@ -10,8 +10,7 @@ import AbstractSocketProvider from '../../../lib/providers/AbstractSocketProvide
  * EthereumProvider test
  */
 describe('EthereumProviderTest', () => {
-    let ethereumProvider,
-        socketMock;
+    let ethereumProvider, socketMock;
 
     beforeEach(() => {
         socketMock = {
@@ -22,42 +21,34 @@ describe('EthereumProviderTest', () => {
     });
 
     it('constructor check', () => {
-        expect(ethereumProvider.timeout)
-            .toEqual(null);
+        expect(ethereumProvider.timeout).toEqual(null);
 
-        expect(ethereumProvider.connection)
-            .toEqual(socketMock);
+        expect(ethereumProvider.connection).toEqual(socketMock);
 
-        expect(ethereumProvider)
-            .toBeInstanceOf(AbstractSocketProvider);
+        expect(ethereumProvider).toBeInstanceOf(AbstractSocketProvider);
+
+        expect(ethereumProvider.host).toEqual('EthereumProvider');
     });
 
     it('calls registerEventListeners and the expected listeners will be registered', () => {
         ethereumProvider.registerEventListeners();
 
-        expect(socketMock.on)
-            .toHaveBeenCalledWith('notification', ethereumProvider.onMessage);
+        expect(socketMock.on).toHaveBeenCalledWith('notification', ethereumProvider.onMessage);
 
-        expect(socketMock.on)
-            .toHaveBeenCalledWith('connect', ethereumProvider.onConnect);
+        expect(socketMock.on).toHaveBeenCalledWith('connect', ethereumProvider.onConnect);
 
-        expect(socketMock.on)
-            .toHaveBeenCalledWith('close', ethereumProvider.onClose);
+        expect(socketMock.on).toHaveBeenCalledWith('close', ethereumProvider.onClose);
 
-        expect(socketMock.on)
-            .toHaveBeenCalledWith('networkChanged', ethereumProvider.onNetworkChanged);
+        expect(socketMock.on).toHaveBeenCalledWith('networkChanged', ethereumProvider.onNetworkChanged);
 
-        expect(socketMock.on)
-            .toHaveBeenCalledWith('accountsChanged', ethereumProvider.onAccountsChanged);
+        expect(socketMock.on).toHaveBeenCalledWith('accountsChanged', ethereumProvider.onAccountsChanged);
     });
 
-    it('calls removeAllListeners with the "socket_networkChanged" event', done => {
+    it('calls removeAllListeners with the "socket_networkChanged" event', (done) => {
         socketMock.removeListener = jest.fn((event, listener) => {
-            expect(event)
-                .toEqual('networkChanged');
+            expect(event).toEqual('networkChanged');
 
-            expect(listener)
-                .toEqual(ethereumProvider.onNetworkChanged);
+            expect(listener).toEqual(ethereumProvider.onNetworkChanged);
 
             done();
         });
@@ -65,13 +56,11 @@ describe('EthereumProviderTest', () => {
         ethereumProvider.removeAllListeners('socket_networkChanged');
     });
 
-    it('calls removeAllListeners with the "socket_accountsChanged" event', done => {
+    it('calls removeAllListeners with the "socket_accountsChanged" event', (done) => {
         socketMock.removeListener = jest.fn((event, listener) => {
-            expect(event)
-                .toEqual('accountsChanged');
+            expect(event).toEqual('accountsChanged');
 
-            expect(listener)
-                .toEqual(ethereumProvider.onAccountsChanged);
+            expect(listener).toEqual(ethereumProvider.onAccountsChanged);
 
             done();
         });
@@ -79,13 +68,11 @@ describe('EthereumProviderTest', () => {
         ethereumProvider.removeAllListeners('socket_accountsChanged');
     });
 
-    it('calls removeAllListeners with the "socket_message" event', done => {
+    it('calls removeAllListeners with the "socket_message" event', (done) => {
         socketMock.removeListener = jest.fn((event, listener) => {
-            expect(event)
-                .toEqual('notification');
+            expect(event).toEqual('notification');
 
-            expect(listener)
-                .toEqual(ethereumProvider.onMessage);
+            expect(listener).toEqual(ethereumProvider.onMessage);
 
             done();
         });
@@ -93,13 +80,11 @@ describe('EthereumProviderTest', () => {
         ethereumProvider.removeAllListeners('socket_message');
     });
 
-    it('calls removeAllListeners with the "socket_ready" event', done => {
+    it('calls removeAllListeners with the "socket_ready" event', (done) => {
         socketMock.removeListener = jest.fn((event, listener) => {
-            expect(event)
-                .toEqual('connect');
+            expect(event).toEqual('connect');
 
-            expect(listener)
-                .toEqual(ethereumProvider.onReady);
+            expect(listener).toEqual(ethereumProvider.onReady);
 
             done();
         });
@@ -107,13 +92,11 @@ describe('EthereumProviderTest', () => {
         ethereumProvider.removeAllListeners('socket_ready');
     });
 
-    it('calls removeAllListeners with the "socket_close" event', done => {
+    it('calls removeAllListeners with the "socket_close" event', (done) => {
         socketMock.removeListener = jest.fn((event, listener) => {
-            expect(event)
-                .toEqual('close');
+            expect(event).toEqual('close');
 
-            expect(listener)
-                .toEqual(ethereumProvider.onClose);
+            expect(listener).toEqual(ethereumProvider.onClose);
 
             done();
         });
@@ -121,13 +104,11 @@ describe('EthereumProviderTest', () => {
         ethereumProvider.removeAllListeners('socket_close');
     });
 
-    it('calls removeAllListeners with the "socket_error" event', done => {
+    it('calls removeAllListeners with the "socket_error" event', (done) => {
         socketMock.removeListener = jest.fn((event, listener) => {
-            expect(event)
-                .toEqual('close');
+            expect(event).toEqual('close');
 
-            expect(listener)
-                .toEqual(ethereumProvider.onError);
+            expect(listener).toEqual(ethereumProvider.onError);
 
             done();
         });
@@ -135,13 +116,11 @@ describe('EthereumProviderTest', () => {
         ethereumProvider.removeAllListeners('socket_error');
     });
 
-    it('calls removeAllListeners with the "socket_connect" event', done => {
+    it('calls removeAllListeners with the "socket_connect" event', (done) => {
         socketMock.removeListener = jest.fn((event, listener) => {
-            expect(event)
-                .toEqual('connect');
+            expect(event).toEqual('connect');
 
-            expect(listener)
-                .toEqual(ethereumProvider.onConnect);
+            expect(listener).toEqual(ethereumProvider.onConnect);
 
             done();
         });
@@ -149,10 +128,17 @@ describe('EthereumProviderTest', () => {
         ethereumProvider.removeAllListeners('socket_connect');
     });
 
-    it('calls onNetworkChanged and emits the "networkChanged" event', done => {
-        ethereumProvider.on('networkChanged', networkId => {
-            expect(networkId)
-                .toEqual('ID');
+    it('calls removeAllSocketListeners', () => {
+        socketMock.removeAllListeners = jest.fn();
+
+        ethereumProvider.removeAllSocketListeners();
+
+        expect(socketMock.removeAllListeners).toHaveBeenCalled();
+    });
+
+    it('calls onNetworkChanged and emits the "networkChanged" event', (done) => {
+        ethereumProvider.on('networkChanged', (networkId) => {
+            expect(networkId).toEqual('ID');
 
             done();
         });
@@ -160,10 +146,9 @@ describe('EthereumProviderTest', () => {
         ethereumProvider.onNetworkChanged('ID');
     });
 
-    it('calls onAccountsChanged and emits the "accountsChanged" event', done => {
-        ethereumProvider.on('accountsChanged', accounts => {
-            expect(accounts)
-                .toEqual([]);
+    it('calls onAccountsChanged and emits the "accountsChanged" event', (done) => {
+        ethereumProvider.on('accountsChanged', (accounts) => {
+            expect(accounts).toEqual([]);
 
             done();
         });
@@ -171,12 +156,11 @@ describe('EthereumProviderTest', () => {
         ethereumProvider.onAccountsChanged([]);
     });
 
-    it('calls onMessage and emits the correct event', done => {
+    it('calls onMessage and emits the correct event', (done) => {
         ethereumProvider.subscriptions['0x0'] = true;
 
-        ethereumProvider.on('0x0', accounts => {
-            expect(accounts)
-                .toEqual({subscription: '0x0'});
+        ethereumProvider.on('0x0', (accounts) => {
+            expect(accounts).toEqual({subscription: '0x0'});
 
             done();
         });
@@ -190,22 +174,18 @@ describe('EthereumProviderTest', () => {
         });
 
         socketMock.send = jest.fn((method, parameters) => {
-            expect(method)
-                .toEqual('method');
+            expect(method).toEqual('method');
 
-            expect(parameters)
-                .toEqual([]);
+            expect(parameters).toEqual([]);
 
             return Promise.resolve(true);
         });
 
         const response = await ethereumProvider.send('method', []);
 
-        expect(response)
-            .toEqual(true);
+        expect(response).toEqual(true);
 
-        expect(JsonRpcResponseValidator.validate)
-            .toHaveBeenCalled();
+        expect(JsonRpcResponseValidator.validate).toHaveBeenCalled();
     });
 
     it('calls send and returns a rejected promise because of a invalid response', async () => {
@@ -214,52 +194,42 @@ describe('EthereumProviderTest', () => {
         });
 
         socketMock.send = jest.fn((method, parameters) => {
-            expect(method)
-                .toEqual('method');
+            expect(method).toEqual('method');
 
-            expect(parameters)
-                .toEqual([]);
+            expect(parameters).toEqual([]);
 
             return Promise.resolve(false);
         });
 
-        await expect(ethereumProvider.send('method', [])).rejects
-            .toThrow('invalid')
-            .then(() => {
-                expect(JsonRpcResponseValidator.validate)
-                    .toHaveBeenCalled();
-            });
+        await expect(ethereumProvider.send('method', [])).rejects.toThrow('invalid');
+
+        expect(JsonRpcResponseValidator.validate).toHaveBeenCalled();
     });
 
     it('calls sendBatch and returns a resolved promise with the response', async () => {
-        const abstractMethodMock = new AbstractMethod(),
-              moduleInstanceMock = new AbstractWeb3Module();
+        const abstractMethodMock = new AbstractMethod();
+
+        const moduleInstanceMock = new AbstractWeb3Module();
 
         abstractMethodMock.rpcMethod = 'RPC_METHOD';
         abstractMethodMock.parameters = [];
 
-        abstractMethodMock.beforeExecution = jest.fn(moduleInstance => {
-            expect(moduleInstance)
-                .toEqual(moduleInstanceMock);
+        abstractMethodMock.beforeExecution = jest.fn((moduleInstance) => {
+            expect(moduleInstance).toEqual(moduleInstanceMock);
         });
 
         socketMock.send = jest.fn((method, parameters) => {
-            expect(method)
-                .toEqual('RPC_METHOD');
+            expect(method).toEqual('RPC_METHOD');
 
-            expect(parameters)
-                .toEqual([]);
+            expect(parameters).toEqual([]);
 
             return Promise.resolve(true);
         });
 
         const response = await ethereumProvider.sendBatch([abstractMethodMock], moduleInstanceMock);
 
-        expect(response)
-            .toEqual([true]);
+        expect(response).toEqual([true]);
 
-        expect(abstractMethodMock.beforeExecution)
-            .toHaveBeenCalled();
+        expect(abstractMethodMock.beforeExecution).toHaveBeenCalled();
     });
-
 });

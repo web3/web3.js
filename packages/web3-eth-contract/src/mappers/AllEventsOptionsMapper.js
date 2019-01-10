@@ -52,8 +52,8 @@ export default class AllEventsOptionsMapper {
             options.toBlock = this.formatters.inputBlockNumberFormatter(options.toBlock);
         }
 
-        if (typeof options.filters !== 'undefined') {
-            options.topics.concat(this.allEventsFilterEncoder.encode(abiModel, options.filter));
+        if (typeof options.filter !== 'undefined') {
+            options.topics = options.topics.concat(this.allEventsFilterEncoder.encode(abiModel, options.filter));
         }
 
         if (!options.address) {

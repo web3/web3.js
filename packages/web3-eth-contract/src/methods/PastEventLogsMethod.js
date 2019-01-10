@@ -27,13 +27,13 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {EventLogDecoder} eventLogDecoder
-     * @param {AbiItem} abiItem
+     * @param {AbiItemModel} abiItemModel
      *
      * @constructor
      */
-    constructor(utils, formatters, eventLogDecoder, abiItem) {
+    constructor(utils, formatters, eventLogDecoder, abiItemModel) {
         super(utils, formatters);
-        this.abiItem = abiItem;
+        this.abiItemModel = abiItemModel;
         this.eventLogDecoder = eventLogDecoder;
     }
 
@@ -49,10 +49,8 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
     afterExecution(response) {
         const formattedLogs = super.afterExecution(response);
 
-        formattedLogs.map(logItem => {
-            return this.eventLogDecoder.decode(self.abiItem, logItem);
+        return formattedLogs.map((logItem) => {
+            return this.eventLogDecoder.decode(this.abiItemModel, logItem);
         });
-
-        return formattedLogs;
     }
 }

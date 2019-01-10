@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import {PromiEvent} from 'web3-core-promievent';
+
 export default class MethodProxy {
     /**
      * @param {AbstractWeb3Module} target
@@ -28,43 +30,41 @@ export default class MethodProxy {
      * @constructor
      */
     constructor(target, methodFactory) {
-        return new Proxy(
-            target,
-            {
-                /**
-                 * @param {AbstractWeb3Module} target
-                 * @param {String|Symbol} name
-                 *
-                 * @returns {any}
-                 */
-                get: (target, name) => {
-                    if (methodFactory.hasMethod(name)) {
-                        if (typeof target[name] !== 'undefined') {
-                            throw new Error(
-                                `Duplicated method ${name}. This method is defined as RPC call and as Object method.`
-                            );
-                        }
-
-                        const method = methodFactory.createMethod(name);
-
-                        const anonymousFunction = () => {
-                            method.arguments = arguments;
-
-                            if (method.parameters.length !== method.parametersAmount) {
-                                throw new Error(`Invalid parameters length the expected length would be ${method.parametersAmount} and not ${method.parameters.length}`);
-                            }
-
-                            return method.execute(target, target.accounts);
-                        };
-
-                        anonymousFunction.method = method;
-                        anonymousFunction.request = method.request;
-
-                        return anonymousFunction;
+        return new Proxy(target, {
+            /**
+             * @param {AbstractWeb3Module} target
+             * @param {String|Symbol} name
+             *
+             * @returns {any}
+             */
+            get: (target, name) => {
+                if (methodFactory.hasMethod(name)) {
+                    if (typeof target[name] !== 'undefined') {
+                        throw new TypeError(
+                            `Duplicated method ${name}. This method is defined as RPC call and as Object method.`
+                        );
                     }
 
-                    return target[name];
+                    const method = methodFactory.createMethod(name);
+                    /* eslint-disable no-inner-declarations */
+                    function anonymousFunction() {
+                        method.arguments = arguments;
+
+                        if (method.Type === 'CALL') {
+                            return method.execute(target);
+                        }
+
+                        return method.execute(target, new PromiEvent());
+                    }
+                    /* eslint-enable no-inner-declarations */
+                    anonymousFunction.method = method;
+                    anonymousFunction.request = method.request;
+
+                    return anonymousFunction;
                 }
-            });
+
+                return target[name];
+            }
+        });
     }
-};
+}

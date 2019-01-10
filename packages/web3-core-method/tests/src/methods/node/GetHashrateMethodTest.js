@@ -15,35 +15,29 @@ describe('GetHashrateMethodTest', () => {
     });
 
     it('static Type property returns "CALL"', () => {
-        expect(GetHashrateMethod.Type)
-            .toEqual('CALL');
+        expect(GetHashrateMethod.Type).toEqual('CALL');
     });
 
     it('rpcMethod should return eth_hashrate', () => {
-        expect(method.rpcMethod)
-            .toEqual('eth_hashrate');
+        expect(method.rpcMethod).toEqual('eth_hashrate');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(method.parametersAmount)
-            .toEqual(0);
+        expect(method.parametersAmount).toEqual(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
         method.parameters = [];
         method.beforeExecution();
 
-        expect(method.parameters[0])
-            .toEqual(undefined);
+        expect(method.parameters[0]).toEqual(undefined);
     });
 
     it('afterExecution should map the response', () => {
-        Utils.hexToNumber
-            .mockReturnValueOnce(100);
+        Utils.hexToNumber.mockReturnValueOnce(100);
 
         expect(method.afterExecution('0x0')).toEqual(100);
 
-        expect(Utils.hexToNumber)
-            .toHaveBeenCalledWith('0x0');
+        expect(Utils.hexToNumber).toHaveBeenCalledWith('0x0');
     });
 });

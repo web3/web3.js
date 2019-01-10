@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import isObject from 'underscore-es/isObject';
+import {isObject} from 'lodash';
 import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
 
 export default class SendTransactionMethod extends AbstractSendMethod {
@@ -73,12 +73,10 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         }
 
         if (!this.isGasPriceDefined() && !this.hasDefaultGasPrice(moduleInstance)) {
-            moduleInstance.currentProvider
-                .send('eth_gasPrice', [])
-                .then(gasPrice => {
-                    this.parameters[0]['gasPrice'] = gasPrice;
-                    this.execute(moduleInstance, promiEvent);
-                });
+            moduleInstance.currentProvider.send('eth_gasPrice', []).then((gasPrice) => {
+                this.parameters[0]['gasPrice'] = gasPrice;
+                this.execute(moduleInstance, promiEvent);
+            });
         }
 
         if (this.hasWallets()) {
@@ -86,11 +84,11 @@ export default class SendTransactionMethod extends AbstractSendMethod {
 
             this.transactionSigner
                 .sign(this.parameters[0])
-                .then(response => {
+                .then((response) => {
                     this.parameters = [response.rawTransaction];
                     super.execute(moduleInstance, promiEvent);
                 })
-                .catch(error => {
+                .catch((error) => {
                     if (this.callback) {
                         this.callback(error, null);
                     }

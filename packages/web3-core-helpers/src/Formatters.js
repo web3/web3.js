@@ -21,10 +21,7 @@
  * @date 2017
  */
 
-import isString from 'underscore-es/isString';
-import isArray from 'underscore-es/isArray';
-import isObject from 'underscore-es/isObject';
-import isNumber from 'underscore-es/isNumber';
+import {isString, isArray, isObject, isNumber} from 'lodash';
 import * as Utils from 'web3-utils';
 import {Iban} from 'web3-eth-iban';
 
@@ -256,7 +253,7 @@ export const outputTransactionReceiptFormatter = (receipt) => {
         throw new TypeError(`Received receipt is invalid: ${receipt}`);
     }
 
-    if (receipt.blockNumber !== null)  {
+    if (receipt.blockNumber !== null) {
         receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
     }
 
@@ -297,7 +294,7 @@ export const outputBlockFormatter = (block) => {
     block.size = Utils.hexToNumber(block.size);
     block.timestamp = Utils.hexToNumber(block.timestamp);
 
-    if (block.number !== null)  {
+    if (block.number !== null) {
         block.number = Utils.hexToNumber(block.number);
     }
 

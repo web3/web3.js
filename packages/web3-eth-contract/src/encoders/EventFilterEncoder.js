@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import isArray from 'underscore-es/isArray';
+import {isArray} from 'lodash';
 
 export default class EventFilterEncoder {
     /**
@@ -45,11 +45,11 @@ export default class EventFilterEncoder {
         let topics = [];
 
         indexedInputs.forEach((indexedInput) => {
-            if (typeof filter[indexedInput.name] !== 'undefined') {
-                const filterItem = filter[indexedInput.name];
+            if (filter[indexedInput.name]) {
+                let filterItem = filter[indexedInput.name];
 
                 if (isArray(filterItem)) {
-                    filterItem.map((item) => {
+                    filterItem = filterItem.map((item) => {
                         return this.abiCoder.encodeParameter(indexedInput.type, item);
                     });
 

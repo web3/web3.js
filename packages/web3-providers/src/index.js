@@ -104,3 +104,6 @@ export const ProviderResolver = () => {
 export const ProviderDetector = () => {
     return new ProvidersModuleFactory().createProviderDetector();
 };
+
+export ProvidersModuleFactory from './factories/ProvidersModuleFactory';
+export EthereumProvider from './providers/EthereumProvider';

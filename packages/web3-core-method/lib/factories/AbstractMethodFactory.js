@@ -22,18 +22,43 @@
 
 export default class AbstractMethodFactory {
     /**
-     * @param {{name: String, method: AbstractMethod}} methods
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(methods, methodModuleFactory, utils, formatters) {
-        this.methods = methods;
+    constructor(methodModuleFactory, utils, formatters) {
         this.methodModuleFactory = methodModuleFactory;
         this.utils = utils;
         this.formatters = formatters;
+        this._methods = null;
+    }
+
+    /**
+     * Gets the methods object
+     *
+     * @property methods
+     *
+     * @returns {null|Object}
+     */
+    get methods() {
+        if (this._methods) {
+            return this._methods;
+        }
+
+        throw new Error('No methods defined for MethodFactory!');
+    }
+
+    /**
+     * Sets the methods object
+     *
+     * @property methods
+     *
+     * @param {Object} value
+     */
+    set methods(value) {
+        this._methods = value;
     }
 
     /**
@@ -63,18 +88,23 @@ export default class AbstractMethodFactory {
 
         switch (method.Type) {
             case 'CALL':
-                if (method.constructor.name === 'SignMethod') {
+                if (method.name === 'SignMethod') {
+                    /* eslint-disable new-cap */
                     return new method(
                         this.utils,
                         this.formatters,
                         this.methodModuleFactory.accounts,
                         this.methodModuleFactory.createMessageSigner()
-                    )
+                    );
+                    /* eslint-enable new-cap */
                 }
 
+                /* eslint-disable new-cap */
                 return new method(this.utils, this.formatters);
+            /* eslint-enable new-cap */
             case 'SEND':
-                if (method.constructor.name === 'SendTransactionMethod') {
+                if (method.name === 'SendTransactionMethod') {
+                    /* eslint-disable new-cap */
                     return new method(
                         this.utils,
                         this.formatters,
@@ -82,13 +112,16 @@ export default class AbstractMethodFactory {
                         this.methodModuleFactory.accounts,
                         this.methodModuleFactory.createTransactionSigner()
                     );
+                    /* eslint-enable new-cap */
                 }
 
+                /* eslint-disable new-cap */
                 return new method(
                     this.utils,
                     this.formatters,
-                    this.methodModuleFactory.createTransactionConfirmationWorkflow(),
+                    this.methodModuleFactory.createTransactionConfirmationWorkflow()
                 );
+            /* eslint-enable new-cap */
         }
     }
 }

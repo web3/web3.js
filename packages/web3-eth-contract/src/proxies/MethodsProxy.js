@@ -20,10 +20,9 @@
  * @date 2018
  */
 
-import isArray from 'underscore-es/isArray';
-import isFunction from 'underscore-es/isFunction';
+import {isArray, isFunction} from 'lodash';
 
-export default class MethodsProxy extends Proxy {
+export default class MethodsProxy {
     /**
      * @param {AbstractContract} contract
      * @param {AbiModel} abiModel
@@ -44,95 +43,6 @@ export default class MethodsProxy extends Proxy {
         methodOptionsMapper,
         PromiEvent
     ) {
-        super(
-            contract,
-            {
-                /**
-                 * Checks if a contract event exists by the given name and
-                 * returns the subscription otherwise it throws an error
-                 *
-                 * @param {MethodsProxy} target
-                 * @param {String} name
-                 *
-                 * @returns {Function|Error}
-                 */
-                get: (target, name) => {
-                    let abiItemModel = this.abiModel.getMethod(name);
-
-                    if (abiItemModel) {
-                        let requestType = abiItemModel.requestType;
-
-                        const anonymousFunction = () => {
-                            let methodArguments = arguments;
-
-                            // Because of the possibility to overwrite the contract data if I call contract.deploy()
-                            // have I to check here if it is a contract deployment. If this call is a contract deployment
-                            // then I have to set the right contract data and to map the arguments.
-                            // TODO: Change API or improve this
-                            if (!isArray(abiItemModel) && abiItemModel.isOfType('constructor')) {
-                                if (arguments[0]['data']) {
-                                    target.contract.options.data = arguments[0]['data'] || target.contract.options.data;
-                                }
-
-                                if (arguments[0]['arguments']) {
-                                    methodArguments = arguments[0]['arguments'];
-                                }
-                            }
-
-                            // TODO: Find a better solution for the handling of the contractMethodParameters
-                            // If there exists more than one method with this name then find the correct abiItemModel
-                            if (isArray(abiItemModel)) {
-                                const abiItemModelFound = abiItemModel.some((model) => {
-                                    model.contractMethodParameters = methodArguments;
-
-                                    try {
-                                        model.givenParametersLengthIsValid();
-                                    } catch (error) {
-                                        return false;
-                                    }
-
-                                    abiItemModel = model;
-                                    return true;
-                                });
-
-                                if (!abiItemModelFound) {
-                                    throw new Error(`Methods with name "${name}" found but the given parameters are wrong`);
-                                }
-                            } else {
-                                abiItemModel.contractMethodParameters = methodArguments;
-                            }
-
-                            return anonymousFunction;
-                        };
-
-                        anonymousFunction[requestType] = () => {
-                            return target.executeMethod(abiItemModel, arguments);
-                        };
-
-                        anonymousFunction[requestType].request = () => {
-                            return target.createMethod(abiItemModel, arguments);
-                        };
-
-                        anonymousFunction.estimateGas = () => {
-                            abiItemModel.requestType = 'estimate';
-
-                            return target.executeMethod(abiItemModel, arguments);
-                        };
-
-                        anonymousFunction.encodeAbi = () => {
-                            return target.methodEncoder.encode(abiItemModel, target.contract.options.data);
-                        };
-
-                        return anonymousFunction;
-                    }
-
-                    if (target[name]) {
-                        return this[name];
-                    }
-                }
-
-            });
-
         this.contract = contract;
         this.abiModel = abiModel;
         this.methodFactory = methodFactory;
@@ -140,6 +50,103 @@ export default class MethodsProxy extends Proxy {
         this.methodOptionsValidator = methodOptionsValidator;
         this.methodOptionsMapper = methodOptionsMapper;
         this.PromiEvent = PromiEvent;
+
+        return new Proxy(this, {
+            /**
+             * Checks if a contract event exists by the given name and
+             * returns the subscription otherwise it throws an error
+             *
+             * @param {MethodsProxy} target
+             * @param {String} name
+             *
+             * @returns {Function|Error}
+             */
+            get: (target, name) => {
+                if (this.abiModel.hasMethod(name)) {
+                    let abiItemModel = this.abiModel.getMethod(name);
+
+                    let requestType = abiItemModel.requestType;
+
+                    if (isArray(abiItemModel)) {
+                        requestType = abiItemModel[0].requestType;
+                    }
+                    /* eslint-disable no-inner-declarations */
+                    function anonymousFunction() {
+                        let methodArguments = arguments;
+
+                        // Because of the possibility to overwrite the contract data if I call contract.deploy()
+                        // have I to check here if it is a contract deployment. If this call is a contract deployment
+                        // then I have to set the right contract data and to map the arguments.
+                        // TODO: Change API or improve this
+                        if (!isArray(abiItemModel) && abiItemModel.isOfType('constructor')) {
+                            if (arguments[0]['data']) {
+                                target.contract.options.data = arguments[0]['data'];
+                            }
+
+                            if (arguments[0]['arguments']) {
+                                methodArguments = arguments[0]['arguments'];
+                            }
+
+                            abiItemModel.contractMethodParameters = methodArguments;
+
+                            return anonymousFunction;
+                        }
+
+                        // TODO: Find a better solution for the handling of the contractMethodParameters
+                        // If there exists more than one method with this name then find the correct abiItemModel
+                        if (isArray(abiItemModel)) {
+                            const abiItemModelFound = abiItemModel.some((model) => {
+                                model.contractMethodParameters = methodArguments;
+
+                                try {
+                                    model.givenParametersLengthIsValid();
+                                } catch (error) {
+                                    return false;
+                                }
+
+                                abiItemModel = model;
+                                return true;
+                            });
+
+                            if (!abiItemModelFound) {
+                                throw new Error(`Methods with name "${name}" found but the given parameters are wrong`);
+                            }
+
+                            return anonymousFunction;
+                        }
+
+                        abiItemModel.contractMethodParameters = methodArguments;
+
+                        return anonymousFunction;
+                    }
+
+                    anonymousFunction[requestType] = function() {
+                        return target.executeMethod(abiItemModel, arguments);
+                    };
+
+                    anonymousFunction[requestType].request = function() {
+                        return target.createMethod(abiItemModel, arguments);
+                    };
+
+                    anonymousFunction.estimateGas = function() {
+                        abiItemModel.requestType = 'estimate';
+
+                        return target.executeMethod(abiItemModel, arguments);
+                    };
+
+                    anonymousFunction.encodeABI = function() {
+                        return target.methodEncoder.encode(abiItemModel, target.contract.options.data);
+                    };
+
+                    return anonymousFunction;
+                    /* eslint-enable no-inner-declarations */
+                }
+
+                if (target[name]) {
+                    return target[name];
+                }
+            }
+        });
     }
 
     /**
@@ -161,7 +168,6 @@ export default class MethodsProxy extends Proxy {
             method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract);
             method.methodArguments = methodArguments;
 
-            promiEvent.resolve(null);
             promiEvent.reject(error);
             promiEvent.emit('error', error);
 
@@ -172,7 +178,13 @@ export default class MethodsProxy extends Proxy {
             return promiEvent;
         }
 
-        return this.method.execute(this.contract);
+        if (abiItemModel.requestType === 'call' || abiItemModel.requestType === 'estimate') {
+            return method.execute(this.contract);
+        }
+
+        // TODO: The promiEvent will just be used for send methods I could move this logic directly to the AbstractSendMethod
+        // TODO: Because of this I could remove the promievent module because it's just used in the SendTransaction- & SendRawTransaction method.
+        return method.execute(this.contract, new this.PromiEvent());
     }
 
     /**

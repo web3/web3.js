@@ -36,7 +36,9 @@ export default class RequestAccountsMethod extends AbstractCallMethod {
      */
     beforeExecution(moduleInstance) {
         if (moduleInstance.currentProvider.constructor.name !== 'EthereumProvider') {
-            const error = new Error('The JSON-RPC method "eth_requestAccounts" is just supported with the EthereumProvider.');
+            const error = new Error(
+                'The JSON-RPC method "eth_requestAccounts" is just supported with the EthereumProvider.'
+            );
 
             this.callback(error, null);
             this.promiEvent.reject(error);

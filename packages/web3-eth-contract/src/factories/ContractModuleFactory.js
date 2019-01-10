@@ -20,8 +20,8 @@
  * @date 2018
  */
 
-import AbiModel from '../models/abi/AbiModel';
-import AbiItemModel from '../models/abi/AbiItemModel';
+import AbiModel from '../models/AbiModel';
+import AbiItemModel from '../models/AbiItemModel';
 import MethodEncoder from '../encoders/MethodEncoder';
 import EventFilterEncoder from '../encoders/EventFilterEncoder';
 import AllEventsFilterEncoder from '../encoders/AllEventsFilterEncoder';
@@ -80,7 +80,6 @@ export default class ContractModuleFactory {
             this.abiCoder,
             this.utils,
             this.formatters,
-            this.accounts,
             abi,
             address,
             options
@@ -236,7 +235,8 @@ export default class ContractModuleFactory {
             this.utils,
             this.formatters,
             this,
-            this.methodModuleFactory
+            this.methodModuleFactory,
+            this.abiCoder
         );
     }
 
@@ -278,7 +278,7 @@ export default class ContractModuleFactory {
         return new EventSubscriptionsProxy(
             contract,
             abiModel,
-            this.createEventSubscriptionFactory(methodController),
+            this.createEventSubscriptionFactory(),
             this.createEventOptionsMapper(),
             this.createEventLogDecoder(),
             this.createAllEventsLogDecoder(),
@@ -292,11 +292,9 @@ export default class ContractModuleFactory {
      *
      * @method createEventSubscriptionFactory
      *
-     * @param {MethodController} methodController
-     *
      * @returns {EventSubscriptionFactory}
      */
-    createEventSubscriptionFactory(methodController) {
-        return new EventSubscriptionFactory(this.utils, this.formatters, methodController);
+    createEventSubscriptionFactory() {
+        return new EventSubscriptionFactory(this.utils, this.formatters);
     }
 }

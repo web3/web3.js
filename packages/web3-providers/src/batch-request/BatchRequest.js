@@ -20,8 +20,7 @@
  * @date 2018
  */
 
-import isObject from 'underscore-es/isObject';
-import isArray from 'underscore-es/isArray';
+import {isObject, isArray} from 'lodash';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class BatchRequest {
@@ -58,50 +57,50 @@ export default class BatchRequest {
      * @returns Promise<{methods: AbstractMethod[], response: Object[]}|Error[]>
      */
     execute() {
-        return this.moduleInstance.currentProvider.sendBatch(this.methods, this.moduleInstance)
-            .then(response => {
-                let errors = [];
-                this.methods.forEach((method, index) => {
-                    if (!isArray(response)) {
-                        method.callback(
-                            new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`),
-                            null
-                        );
+        return this.moduleInstance.currentProvider.sendBatch(this.methods, this.moduleInstance).then((response) => {
+            let errors = [];
+            this.methods.forEach((method, index) => {
+                if (!isArray(response)) {
+                    method.callback(
+                        new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`),
+                        null
+                    );
 
-                        errors.push(`Response should be of type Array but is: ${typeof response}`);
+                    errors.push(`Response should be of type Array but is: ${typeof response}`);
 
-                        return;
-                    }
-
-                    const responseItem = response[index] || null,
-                          validationResult = JsonRpcResponseValidator.validate(responseItem);
-
-                    if (validationResult) {
-                        try {
-                            const mappedResult = method.afterExecution(responseItem.result);
-
-                            response[index] = mappedResult;
-                            method.callback(false, mappedResult);
-                        } catch (error) {
-                            errors.push(error);
-                            method.callback(error, null);
-                        }
-
-                        return;
-                    }
-
-                    errors.push(validationResult);
-                    method.callback(validationResult, null);
-                });
-
-                if (errors.length > 0) {
-                    throw new Error(`BatchRequest error: ${JSON.stringify(errors)}`);
+                    return;
                 }
 
-                return {
-                    methods: this.methods,
-                    response
-                };
+                const responseItem = response[index] || null;
+
+                const validationResult = JsonRpcResponseValidator.validate(responseItem);
+
+                if (validationResult) {
+                    try {
+                        const mappedResult = method.afterExecution(responseItem.result);
+
+                        response[index] = mappedResult;
+                        method.callback(false, mappedResult);
+                    } catch (error) {
+                        errors.push(error);
+                        method.callback(error, null);
+                    }
+
+                    return;
+                }
+
+                errors.push(validationResult);
+                method.callback(validationResult, null);
             });
+
+            if (errors.length > 0) {
+                throw new Error(`BatchRequest error: ${JSON.stringify(errors)}`);
+            }
+
+            return {
+                methods: this.methods,
+                response
+            };
+        });
     }
 }

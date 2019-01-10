@@ -24,7 +24,7 @@ import {LogSubscription} from 'web3-core-subscriptions';
 
 export default class EventLogSubscription extends LogSubscription {
     /**
-     * @param {AbiItem} abiItem
+     * @param {AbiItemModel} abiItemModel
      * @param {Object} options
      * @param {Utils} utils
      * @param {Object} formatters
@@ -34,11 +34,11 @@ export default class EventLogSubscription extends LogSubscription {
      *
      * @constructor
      */
-    constructor(abiItem, options, utils, formatters, contract, getPastLogsMethod, eventLogDecoder) {
+    constructor(abiItemModel, options, utils, formatters, contract, getPastLogsMethod, eventLogDecoder) {
         super(options, utils, formatters, contract, getPastLogsMethod);
 
         this.eventLogDecoder = eventLogDecoder;
-        this.abiItem = abiItem;
+        this.abiItemModel = abiItemModel;
     }
 
     /**
@@ -52,6 +52,6 @@ export default class EventLogSubscription extends LogSubscription {
      * @returns {Object}
      */
     onNewSubscriptionItem(subscription, subscriptionItem) {
-        return this.eventLogDecoder.decode(this.abiItem, this.formatters.outputLogFormatter(subscriptionItem));
+        return this.eventLogDecoder.decode(this.abiItemModel, this.formatters.outputLogFormatter(subscriptionItem));
     }
 }

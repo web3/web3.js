@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import {isObject, isArray} from 'lodash';
+import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
 import AbiCoder from '../AbiCoder';
 
 export default class AbiModuleFactory {
@@ -33,6 +35,16 @@ export default class AbiModuleFactory {
      * @returns {AbiCoder}
      */
     createAbiCoder(utils) {
-        return new AbiCoder(utils);
+        return new AbiCoder(
+            utils,
+            new EthersAbiCoder((type, value) => {
+                // TODO: Change this anonymous method to a accessable method because of the testing.
+                if (type.match(/^u?int/) && !isArray(value) && (!isObject(value) || value.constructor.name !== 'BN')) {
+                    return value.toString();
+                }
+
+                return value;
+            })
+        );
     }
 }

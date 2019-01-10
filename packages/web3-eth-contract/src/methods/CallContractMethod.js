@@ -26,13 +26,15 @@ export default class CallContractMethod extends CallMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbiItem} abiItem
+     * @param {AbiCoder} abiCoder
+     * @param {AbiItemModel} abiItemModel
      *
      * @constructor
      */
-    constructor(utils, formatters, abiItem) {
+    constructor(utils, formatters, abiCoder, abiItemModel) {
         super(utils, formatters);
-        this.abiItem = abiItem;
+        this.abiCoder = abiCoder;
+        this.abiItemModel = abiItemModel;
     }
 
     /**
@@ -40,7 +42,7 @@ export default class CallContractMethod extends CallMethod {
      *
      * @method afterExecution
      *
-     * @param {Array} response
+     * @param {String} response
      *
      * @returns {Array}
      */
@@ -53,9 +55,9 @@ export default class CallContractMethod extends CallMethod {
             response = response.slice(2);
         }
 
-        const result = this.abiCoder.decodeParameters(this.abiItem, response);
+        const result = this.abiCoder.decodeParameters(this.abiItemModel.getOutputs(), response);
 
-        if (result.__length__ === 1) {
+        if (result.length === 1) {
             return result[0];
         }
 

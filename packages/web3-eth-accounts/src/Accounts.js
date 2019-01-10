@@ -20,13 +20,7 @@
  * @date 2017
  */
 
-import isUndefined from 'underscore-es/isUndefined';
-import isNull from 'underscore-es/isNull';
-import extend from 'underscore-es/extend';
-import isObject from 'underscore-es/isObject';
-import isBoolean from 'underscore-es/isBoolean';
-import isString from 'underscore-es/isString';
-import has from 'underscore-es/has';
+import {isUndefined, isNull, isObject, isBoolean, isString, has, extend} from 'lodash';
 import Account from 'eth-lib/lib/account';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
@@ -53,6 +47,7 @@ const makeEven = (hex) => {
     if (hex.length % 2 === 1) {
         hex = hex.replace('0x', '0x0');
     }
+
     return hex;
 };
 
@@ -68,22 +63,8 @@ export default class Accounts extends AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(
-        provider,
-        providersModuleFactory,
-        methodModuleFactory,
-        methodFactory,
-        utils,
-        formatters,
-        options
-    ) {
-        super(
-            provider,
-            providersModuleFactory,
-            methodModuleFactory,
-            methodFactory,
-            options
-        );
+    constructor(provider, providersModuleFactory, methodModuleFactory, methodFactory, utils, formatters, options) {
+        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
 
         this.utils = utils;
         this.formatters = formatters;
@@ -100,18 +81,17 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Object}
      */
     _addAccountFunctions(account) {
-        const _this = this;
-
         // add sign functions
-        account.signTransaction = function signTransaction(tx, callback) {
-            return _this.signTransaction(tx, account.privateKey, callback);
-        };
-        account.sign = function sign(data) {
-            return _this.sign(data, account.privateKey);
+        account.signTransaction = (tx, callback) => {
+            return this.signTransaction(tx, account.privateKey, callback);
         };
 
-        account.encrypt = function encrypt(password, options) {
-            return _this.encrypt(account.privateKey, password, options);
+        account.sign = (data) => {
+            return this.sign(data, account.privateKey);
+        };
+
+        account.encrypt = (password, options) => {
+            return this.encrypt(account.privateKey, password, options);
         };
 
         return account;
@@ -255,6 +235,7 @@ export default class Accounts extends AbstractWeb3Module {
                     `One of the values 'chainId', 'gasPrice', or 'nonce' couldn't be fetched: ${JSON.stringify(args)}`
                 );
             }
+
             return signed(extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2]}));
         });
     }
@@ -294,6 +275,7 @@ export default class Accounts extends AbstractWeb3Module {
         const preamble = `\u0019Ethereum Signed Message:\n${message.length}`;
         const preambleBuffer = Buffer.from(preamble);
         const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
+
         return Hash.keccak256s(ethMessage);
     }
 
@@ -346,10 +328,11 @@ export default class Accounts extends AbstractWeb3Module {
 
         if (args.length >= 4) {
             preFixed = args.slice(-1)[0];
-            preFixed = isBoolean(preFixed) ? !!preFixed : false;
+            preFixed = isBoolean(preFixed) ? preFixed : false;
 
             return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
         }
+
         return Account.recover(message, signature);
     }
 

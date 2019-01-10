@@ -17,26 +17,19 @@ describe('AbstractMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(AbstractMethod.Type)
-            .toEqual(undefined);
+        expect(AbstractMethod.Type).toEqual(undefined);
 
-        expect(abstractMethod.rpcMethod)
-            .toEqual('RPC_TEST');
+        expect(abstractMethod.rpcMethod).toEqual('RPC_TEST');
 
-        expect(abstractMethod.parametersAmount)
-            .toEqual(0);
+        expect(abstractMethod.parametersAmount).toEqual(0);
 
-        expect(abstractMethod.utils)
-            .toEqual(Utils);
+        expect(abstractMethod.utils).toEqual(Utils);
 
-        expect(abstractMethod.formatters)
-            .toEqual(formatters);
+        expect(abstractMethod.formatters).toEqual(formatters);
 
-        expect(abstractMethod.parameters)
-            .toEqual(undefined);
+        expect(abstractMethod.parameters).toEqual([]);
 
-        expect(abstractMethod.callback)
-            .toEqual(undefined);
+        expect(abstractMethod.callback).toEqual(undefined);
     });
 
     it('set arguments throws error on missing arguments', () => {
@@ -44,9 +37,8 @@ describe('AbstractMethodTest', () => {
 
         try {
             abstractMethod.arguments = [];
-        } catch(error) {
-            expect(error)
-                .toBeInstanceOf(Error);
+        } catch (error) {
+            expect(error).toBeInstanceOf(Error);
         }
     });
 
@@ -55,9 +47,8 @@ describe('AbstractMethodTest', () => {
 
         try {
             abstractMethod.arguments = [true, true];
-        } catch(error) {
-            expect(error)
-                .toBeInstanceOf(Error);
+        } catch (error) {
+            expect(error).toBeInstanceOf(Error);
         }
     });
 
@@ -65,53 +56,43 @@ describe('AbstractMethodTest', () => {
         abstractMethod.parametersAmount = 1;
         abstractMethod.arguments = [true];
 
-        expect(abstractMethod.parameters)
-            .toEqual([true]);
+        expect(abstractMethod.parameters).toEqual([true]);
 
-        expect(abstractMethod.callback)
-            .toEqual(null);
+        expect(abstractMethod.callback).toEqual(null);
     });
 
     it('set arguments with callback', () => {
         abstractMethod.parametersAmount = 1;
         abstractMethod.arguments = [true, () => {}];
 
-        expect(abstractMethod.parameters)
-            .toEqual([true]);
+        expect(abstractMethod.parameters).toEqual([true]);
 
-
-        expect(abstractMethod.callback)
-            .toBeInstanceOf(Function);
+        expect(abstractMethod.callback).toBeInstanceOf(Function);
     });
 
     it('get arguments', () => {
         abstractMethod.parametersAmount = 1;
         abstractMethod.arguments = [true];
 
-        expect(abstractMethod.arguments)
-            .toEqual({callback: null, parameters: [true]});
-
+        expect(abstractMethod.arguments).toEqual({callback: null, parameters: [true]});
     });
 
     it('set rpcMethod', () => {
         abstractMethod.rpcMethod = 'test';
 
-        expect(abstractMethod.rpcMethod)
-            .toEqual('test');
+        expect(abstractMethod.rpcMethod).toEqual('test');
     });
 
     it('set parameters', () => {
         abstractMethod.parameters = ['test'];
 
-        expect(abstractMethod.parameters)
-            .toEqual(['test']);
+        expect(abstractMethod.parameters).toEqual(['test']);
     });
 
     it('set callback', () => {
         abstractMethod.callback = () => {};
 
-        expect(abstractMethod.callback)
-            .toBeInstanceOf(Function);
+        expect(abstractMethod.callback).toBeInstanceOf(Function);
     });
 
     it('execution of request returns AbstractMethod with parameters set', () => {
@@ -119,66 +100,51 @@ describe('AbstractMethodTest', () => {
         abstractMethod.arguments = [true];
         const request = abstractMethod.request(true);
 
-        expect(request)
-            .toBeInstanceOf(AbstractMethod);
+        expect(request).toBeInstanceOf(AbstractMethod);
 
-        expect(request.parameters[0])
-            .toBeTruthy();
+        expect(request.parameters[0]).toBeTruthy();
     });
 
     it('check if execute method exists', () => {
-        expect(abstractMethod.execute)
-            .toBeInstanceOf(Function);
+        expect(abstractMethod.execute).toBeInstanceOf(Function);
     });
 
     it('beforeExecution changes nothing', () => {
         abstractMethod.beforeExecution();
 
-        expect(AbstractMethod.Type)
-            .toEqual(undefined);
+        expect(AbstractMethod.Type).toEqual(undefined);
 
-        expect(abstractMethod.rpcMethod)
-            .toEqual('RPC_TEST');
+        expect(abstractMethod.rpcMethod).toEqual('RPC_TEST');
 
-        expect(abstractMethod.parametersAmount)
-            .toEqual(0);
+        expect(abstractMethod.parametersAmount).toEqual(0);
 
-        expect(abstractMethod.utils)
-            .toEqual(Utils);
+        expect(abstractMethod.utils).toEqual(Utils);
 
-        expect(abstractMethod.formatters)
-            .toEqual(formatters);
+        expect(abstractMethod.formatters).toEqual(formatters);
 
-        expect(abstractMethod.parameters)
-            .toEqual(undefined);
+        expect(abstractMethod.parameters).toEqual([]);
 
-        expect(abstractMethod.callback)
-            .toEqual(undefined);
+        expect(abstractMethod.callback).toEqual(undefined);
     });
 
     it('afterExecution just returns the value', () => {
-        expect(abstractMethod.afterExecution('string'))
-            .toEqual('string');
+        expect(abstractMethod.afterExecution('string')).toEqual('string');
     });
 
-    it('isHash returns true', () =>  {
-       expect(abstractMethod.isHash('0x0'))
-           .toBeTruthy();
+    it('isHash returns true', () => {
+        expect(abstractMethod.isHash('0x0')).toBeTruthy();
     });
 
-    it('isHash returns false', () =>  {
-        expect(abstractMethod.isHash(100))
-            .toBeFalsy();
+    it('isHash returns false', () => {
+        expect(abstractMethod.isHash(100)).toBeFalsy();
     });
 
-    it('hasWallets returns true', () =>  {
+    it('hasWallets returns true', () => {
         abstractMethod.accounts = {wallet: [0]};
-        expect(abstractMethod.hasWallets())
-            .toBeTruthy();
+        expect(abstractMethod.hasWallets()).toBeTruthy();
     });
 
-    it('hasWallets returns false', () =>  {
-        expect(abstractMethod.hasWallets())
-            .toBeFalsy();
+    it('hasWallets returns false', () => {
+        expect(abstractMethod.hasWallets()).toBeFalsy();
     });
 });

@@ -85,9 +85,15 @@ export default class AbiModel {
      * @returns {AbiItemModel}
      */
     getEventBySignature(signature) {
-        return this.abi.events.find((event) => {
-            return event.signature === signature;
+        let event;
+
+        Object.keys(this.abi.events).forEach((key) => {
+            if (this.abi.events[key].signature === signature) {
+                event = this.abi.events[key];
+            }
         });
+
+        return event;
     }
 
     /**

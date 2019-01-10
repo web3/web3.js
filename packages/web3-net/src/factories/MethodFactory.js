@@ -20,13 +20,7 @@
  * @date 2018
  */
 
-import {
-    AbstractMethodFactory,
-    VersionMethod,
-    GetBlockMethod,
-    ListeningMethod,
-    PeerCountMethod
-} from 'web3-core-method';
+import {AbstractMethodFactory, GetBlockMethod, ListeningMethod, PeerCountMethod, VersionMethod} from 'web3-core-method';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
@@ -37,16 +31,13 @@ export default class MethodFactory extends AbstractMethodFactory {
      * @constructor
      */
     constructor(methodModuleFactory, utils, formatters) {
-        super(
-            {
-                getId: VersionMethod,
-                getBlock: GetBlockMethod,
-                isListening: ListeningMethod,
-                getPeerCount: PeerCountMethod
-            },
-            methodModuleFactory,
-            utils,
-            formatters
-        );
+        super(methodModuleFactory, utils, formatters);
+
+        this.methods = {
+            getId: VersionMethod,
+            getBlock: GetBlockMethod,
+            isListening: ListeningMethod,
+            getPeerCount: PeerCountMethod
+        };
     }
 }

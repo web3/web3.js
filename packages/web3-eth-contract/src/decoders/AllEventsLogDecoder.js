@@ -26,12 +26,11 @@ export default class AllEventsLogDecoder extends EventLogDecoder {
     /**
      * @param {AbiModel} abiModel
      * @param {AbiCoder} abiCoder
-     * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(abiModel, abiCoder, formatters) {
-        super(abiCoder, formatters);
+    constructor(abiModel, abiCoder) {
+        super(abiCoder);
 
         this.abiModel = abiModel;
     }
@@ -39,7 +38,7 @@ export default class AllEventsLogDecoder extends EventLogDecoder {
     /**
      * Decodes the event subscription response
      *
-     * @method decoder
+     * @method decode
      *
      * @param {Object} response
      *

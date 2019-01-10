@@ -21,10 +21,7 @@
  * @date 2017
  */
 
-import isObject from 'underscore-es/isObject';
-import isString from 'underscore-es/isString';
-import isArray from 'underscore-es/isArray';
-import isFunction from 'underscore-es/isFunction';
+import {isObject, isString, isArray} from 'lodash';
 import * as utils from './Utils';
 import * as ethjsUnit from 'ethjs-unit';
 

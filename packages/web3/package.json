@@ -67,20 +67,6 @@
         "web3-shh": "1.0.0-beta.36",
         "web3-utils": "1.0.0-beta.36"
     },
-    "devDependencies": {
-        "@babel/core": "^7.1.5",
-        "@babel/plugin-proposal-export-default-from": "^7.0.0",
-        "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
-        "@babel/runtime": "^7.1.5",
-        "rollup": "^0.67.0",
-        "rollup-plugin-auto-external": "^2.0.0",
-        "rollup-plugin-babel": "^4.0.3",
-        "rollup-plugin-commonjs": "^9.1.0",
-        "rollup-plugin-json": "^3.1.0",
-        "rollup-plugin-node-builtins": "^2.1.2",
-        "rollup-plugin-node-resolve": "^3.4.0",
-        "dtslint": "^0.3.0"
-    },
     "files": [
         "dist",
         "types/index.d.ts"

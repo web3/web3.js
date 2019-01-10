@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import isFunction from 'underscore-es/isFunction';
+import {isFunction} from 'lodash';
 import EventEmitter from 'eventemitter3';
 
 /**
@@ -55,7 +55,7 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @param {AbstractWeb3Module} moduleInstance
      */
-    beforeSubscription(moduleInstance) { }
+    beforeSubscription(moduleInstance) {}
 
     /**
      * This method will be executed on each new subscription item.
@@ -83,24 +83,19 @@ export default class AbstractSubscription extends EventEmitter {
     subscribe(callback) {
         this.beforeSubscription(this.moduleInstance);
 
-        this.moduleInstance.currentProvider
-            .subscribe(this.type, this.method, [this.options])
-            .then(subscriptionId => {
-                this.id = subscriptionId;
+        this.moduleInstance.currentProvider.subscribe(this.type, this.method, [this.options]).then((subscriptionId) => {
+            this.id = subscriptionId;
 
-                this.moduleInstance.currentProvider.on(
-                    this.id,
-                    response => {
-                        const formattedOutput = this.onNewSubscriptionItem(response.result);
+            this.moduleInstance.currentProvider.on(this.id, (response) => {
+                const formattedOutput = this.onNewSubscriptionItem(response.result);
 
-                        this.emit('data', formattedOutput);
+                this.emit('data', formattedOutput);
 
-                        if (isFunction(callback)) {
-                            callback(false, formattedOutput);
-                        }
-                    }
-                );
+                if (isFunction(callback)) {
+                    callback(false, formattedOutput);
+                }
             });
+        });
 
         return this;
     }
@@ -117,13 +112,9 @@ export default class AbstractSubscription extends EventEmitter {
      */
     unsubscribe(callback) {
         return this.moduleInstance.currentProvider
-            .unsubscribe(this.id, this.type)
-            .then(response => {
-                this.removeAllListeners('data');
-
+            .unsubscribe(this.id, this.type.slice(0, 3) + '_unsubscribe')
+            .then((response) => {
                 if (!response) {
-                    this.id = null;
-
                     const error = new Error('Error on unsubscribe!');
                     if (isFunction(callback)) {
                         callback(error, null);
@@ -131,6 +122,9 @@ export default class AbstractSubscription extends EventEmitter {
 
                     throw error;
                 }
+
+                this.id = null;
+                this.removeAllListeners('data');
 
                 if (isFunction(callback)) {
                     callback(false, true);

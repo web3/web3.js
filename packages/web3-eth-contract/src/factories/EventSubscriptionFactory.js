@@ -31,7 +31,7 @@ export default class EventSubscriptionFactory {
      *
      * @constructor
      */
-    constructor(utils, formatters, ) {
+    constructor(utils, formatters) {
         this.utils = utils;
         this.formatters = formatters;
     }
@@ -67,7 +67,7 @@ export default class EventSubscriptionFactory {
      *
      * @returns {AllEventsLogSubscription}
      */
-    createAllEventLogSubscription(allEventsLogDecoder, contract, options) {
+    createAllEventsLogSubscription(allEventsLogDecoder, contract, options) {
         return new AllEventsLogSubscription(
             options,
             this.utils,

@@ -35,12 +35,12 @@ export default class ProviderDetector {
      *
      * @method detect
      *
-     * @returns {Object|undefined} provider
+     * @returns {Object|null} provider
      */
     detect() {
         if (
-            typeof global.ethereumProvider !== 'undefined'
-            && global.ethereumProvider.constructor.name === 'EthereumProvider'
+            typeof global.ethereumProvider !== 'undefined' &&
+            global.ethereumProvider.constructor.name === 'EthereumProvider'
         ) {
             return global.ethereumProvider;
         }
@@ -48,5 +48,7 @@ export default class ProviderDetector {
         if (typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
             return global.web3.currentProvider;
         }
+
+        return null;
     }
 }

@@ -15,7 +15,8 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file MethodFactory* @author Samuel Furter <samuel@ethereum.org>
+ * @file MethodFactory
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
@@ -62,42 +63,39 @@ export default class MethodFactory extends AbstractMethodFactory {
      * @constructor
      */
     constructor(methodModuleFactory, utils, formatters) {
-        super(
-            {
-                getNodeInfo: GetNodeInfoMethod,
-                getProtocolVersion: GetProtocolVersionMethod,
-                getCoinbase: GetCoinbaseMethod,
-                isMining: IsMiningMethod,
-                getHashrate: GetHashrateMethod,
-                isSyncing: IsSyncingMethod,
-                getGasPrice: GetGasPriceMethod,
-                getAccounts: GetAccountsMethod,
-                getBlockNumber: GetBlockNumberMethod,
-                getBalance: GetBalanceMethod,
-                getStorageAt: GetStorageAtMethod,
-                getCode: GetCodeMethod,
-                getBlock: GetBlockMethod,
-                getUncle: GetUncleMethod,
-                getBlockTransactionCount: GetBlockTransactionCountMethod,
-                getBlockUncleCount: GetBlockUncleCountMethod,
-                getTransaction: GetTransactionMethod,
-                getTransactionFromBlock: GetTransactionFromBlockMethod,
-                getTransactionReceipt: GetTransactionReceipt,
-                getTransactionCount: GetTransactionCountMethod,
-                sendSignedTransaction: SendRawTransactionMethod,
-                signTransaction: SignTransactionMethod,
-                sendTransaction: SendTransactionMethod,
-                sign: SignMethod,
-                call: CallMethod,
-                estimateGas: EstimateGasMethod,
-                submitWork: SubmitWorkMethod,
-                getWork: GetWorkMethod,
-                getPastLogs: GetPastLogsMethod,
-                requestAccounts: RequestAccountsMethod,
-            },
-            methodModuleFactory,
-            utils,
-            formatters
-        );
+        super(methodModuleFactory, utils, formatters);
+
+        this.methods = {
+            getNodeInfo: GetNodeInfoMethod,
+            getProtocolVersion: GetProtocolVersionMethod,
+            getCoinbase: GetCoinbaseMethod,
+            isMining: IsMiningMethod,
+            getHashrate: GetHashrateMethod,
+            isSyncing: IsSyncingMethod,
+            getGasPrice: GetGasPriceMethod,
+            getAccounts: GetAccountsMethod,
+            getBlockNumber: GetBlockNumberMethod,
+            getBalance: GetBalanceMethod,
+            getStorageAt: GetStorageAtMethod,
+            getCode: GetCodeMethod,
+            getBlock: GetBlockMethod,
+            getUncle: GetUncleMethod,
+            getBlockTransactionCount: GetBlockTransactionCountMethod,
+            getBlockUncleCount: GetBlockUncleCountMethod,
+            getTransaction: GetTransactionMethod,
+            getTransactionFromBlock: GetTransactionFromBlockMethod,
+            getTransactionReceipt: GetTransactionReceipt,
+            getTransactionCount: GetTransactionCountMethod,
+            sendSignedTransaction: SendRawTransactionMethod,
+            signTransaction: SignTransactionMethod,
+            sendTransaction: SendTransactionMethod,
+            sign: SignMethod,
+            call: CallMethod,
+            estimateGas: EstimateGasMethod,
+            submitWork: SubmitWorkMethod,
+            getWork: GetWorkMethod,
+            getPastLogs: GetPastLogsMethod,
+            requestAccounts: RequestAccountsMethod
+        };
     }
 }

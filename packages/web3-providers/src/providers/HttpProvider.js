@@ -52,14 +52,14 @@ export default class HttpProvider {
      * Added this method to have a better error message if someone is trying to create a subscription with this provider.
      */
     subscribe() {
-        throw Error('Subscriptions are not supported with the HttpProvider.');
+        throw new Error('Subscriptions are not supported with the HttpProvider.');
     }
 
     /**
      * Added this method to have a better error message if someone is trying to unsubscribe with this provider.
      */
     unsubscribe() {
-        throw Error('Subscriptions are not supported with the HttpProvider.');
+        throw new Error('Subscriptions are not supported with the HttpProvider.');
     }
 
     /**
@@ -80,16 +80,15 @@ export default class HttpProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters))
-            .then(response => {
-                const validationResult = JsonRpcResponseValidator.validate(response);
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
+            const validationResult = JsonRpcResponseValidator.validate(response);
 
-                if (validationResult instanceof Error) {
-                    throw validationResult;
-                }
+            if (validationResult instanceof Error) {
+                throw validationResult;
+            }
 
-                return response;
-            });
+            return response.result;
+        });
     }
 
     /**
@@ -105,7 +104,7 @@ export default class HttpProvider {
     sendBatch(methods, moduleInstance) {
         let payload = [];
 
-        methods.forEach(method => {
+        methods.forEach((method) => {
             method.beforeExecution(moduleInstance);
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         });
@@ -124,7 +123,7 @@ export default class HttpProvider {
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
-            const request = this.providersModuleFacotry.createXMLHttpRequest(
+            const request = this.providersModuleFactory.createXMLHttpRequest(
                 this.host,
                 this.timeout,
                 this.headers,
@@ -136,7 +135,7 @@ export default class HttpProvider {
                     this.connected = true;
                 }
 
-                if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+                if (request.readyState === 4 && request.status === 200) {
                     try {
                         return resolve(JSON.parse(request.responseText));
                     } catch (error) {

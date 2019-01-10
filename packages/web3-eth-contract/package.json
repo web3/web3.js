@@ -16,7 +16,6 @@
         "dtslint": "dtslint types --onlyTestTsNext"
     },
     "dependencies": {
-        "underscore-es": "^1.9.8",
         "web3-core": "1.0.0-beta.36",
         "web3-core-helpers": "1.0.0-beta.36",
         "web3-core-method": "1.0.0-beta.36",
@@ -25,11 +24,11 @@
         "web3-eth-abi": "1.0.0-beta.36",
         "web3-eth-accounts": "1.0.0-beta.36",
         "web3-eth-iban": "1.0.0-beta.36",
-        "web3-providers": "1.0.0-beta.36",
         "web3-utils": "1.0.0-beta.36"
     },
     "devDependencies": {
-        "dtslint": "^0.3.0"
+        "dtslint": "^0.4.2",
+        "web3-providers": "1.0.0-beta.36"
     },
     "files": [
         "dist",

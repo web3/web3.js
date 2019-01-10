@@ -11,15 +11,15 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "jest",
+        "test": "",
         "dtslint": "dtslint types --onlyTestTsNext"
     },
     "dependencies": {
-        "swarm-js": "^0.1.39",
-        "underscore-es": "^1.9.8"
+        "lodash": "^4.17.11",
+        "swarm-js": "^0.1.39"
     },
     "devDependencies": {
-        "dtslint": "^0.3.0"
+        "dtslint": "^0.4.2"
     },
     "files": [
         "dist",

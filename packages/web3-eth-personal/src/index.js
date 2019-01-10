@@ -33,15 +33,16 @@ import PersonalModuleFactory from './factories/PersonalModuleFactory';
  * @method Personal
  *
  * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Accounts} accounts
  * @param {Object} options
  *
  * @returns {Personal}
  */
-export const Personal = (provider, options) => {
+export const Personal = (provider, accounts, options) => {
     return new PersonalModuleFactory(Utils, formatters).createPersonalModule(
         provider,
         new ProvidersModuleFactory(),
-        new MethodModuleFactory(),
+        new MethodModuleFactory(accounts),
         new Network(provider, options),
         options
     );

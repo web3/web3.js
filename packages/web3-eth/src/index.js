@@ -22,17 +22,17 @@
 
 import {MethodModuleFactory} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
-import {Network} from 'web3-net';
-import {ProvidersModuleFactory} from 'web3-providers';
-import * as Utils from 'web3-utils';
-import {Accounts} from 'web3-eth-accounts';
-import {Personal} from 'web3-eth-personal';
-import {Ens} from 'web3-eth-ens';
+import {PromiEvent} from 'web3-core-promievent';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
+import {Accounts} from 'web3-eth-accounts';
+import {Ens} from 'web3-eth-ens';
+import {ContractModuleFactory} from 'web3-eth-contract';
+import {Personal} from 'web3-eth-personal';
 import {AbiCoder} from 'web3-eth-abi';
 import {Iban} from 'web3-eth-iban';
-import {ContractModuleFactory} from 'web3-eth-contract';
-import {PromiEvent} from 'web3-core-promievent';
+import {ProvidersModuleFactory} from 'web3-providers';
+import {Network} from 'web3-net';
+import * as Utils from 'web3-utils';
 import EthModuleFactory from './factories/EthModuleFactory';
 
 /**
@@ -46,8 +46,9 @@ import EthModuleFactory from './factories/EthModuleFactory';
  * @returns {Eth}
  */
 export const Eth = (provider, options) => {
-    const accounts = new Accounts(provider, options),
-          abiCoder = new AbiCoder();
+    const accounts = new Accounts(provider, options);
+
+    const abiCoder = new AbiCoder();
 
     return new EthModuleFactory(
         provider,
@@ -61,9 +62,9 @@ export const Eth = (provider, options) => {
         abiCoder
     ).createEthModule(
         new Network(provider, options),
-        new Personal(provider, options),
+        new Personal(provider, accounts, options),
         Iban,
-        new Ens(provider),
+        new Ens(provider, accounts),
         new SubscriptionsFactory(),
         options
     );

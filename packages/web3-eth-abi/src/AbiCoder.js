@@ -21,28 +21,19 @@
  * @date 2018
  */
 
-import isObject from 'underscore-es/isObject';
-import isArray from 'underscore-es/isArray';
-import {AbiCoder as EthersAbi} from 'ethers/utils/abi-coder';
+import {isObject, isArray} from 'lodash';
 
-const ethersAbiCoder = new EthersAbi((type, value) => {
-    if (type.match(/^u?int/) && !isArray(value) && (!isObject(value) || value.constructor.name !== 'BN')) {
-        return value.toString();
-    }
-    return value;
-});
-
-// result method
-function Result() {}
-
+// TODO: Implement it by our self this can't be a dependency because of the importance of it.
 export default class AbiCoder {
     /**
      * @param {Utils} utils
+     * @param {EthersAbiCoder} ethersAbiCoder
      *
      * @constructor
      */
-    constructor(utils) {
+    constructor(utils, ethersAbiCoder) {
         this.utils = utils;
+        this.ethersAbiCoder = ethersAbiCoder;
     }
 
     /**
@@ -104,7 +95,7 @@ export default class AbiCoder {
      * @returns {String} encoded list of params
      */
     encodeParameters(types, params) {
-        return ethersAbiCoder.encode(this._mapTypes(types), params);
+        return this.ethersAbiCoder.encode(this._mapTypes(types), params);
     }
 
     /**
@@ -239,31 +230,30 @@ export default class AbiCoder {
      * @param {Array} outputs
      * @param {String} bytes
      *
-     * @returns {Array} array of plain params
+     * @returns {Object} Object with named and indexed properties of the returnValues
      */
     decodeParameters(outputs, bytes) {
         if (!bytes || bytes === '0x' || bytes === '0X') {
             throw new Error("Returned values aren't valid, did it run Out of Gas?");
         }
 
-        const res = ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`);
-        const returnValue = new Result();
-        returnValue.__length__ = 0;
+        const res = this.ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`);
 
+        const returnValues = {};
+
+        let decodedValue;
         outputs.forEach((output, i) => {
-            let decodedValue = res[returnValue.__length__];
+            decodedValue = res[i];
             decodedValue = decodedValue === '0x' ? null : decodedValue;
 
-            returnValue[i] = decodedValue;
+            returnValues[i] = decodedValue;
 
             if (isObject(output) && output.name) {
-                returnValue[output.name] = decodedValue;
+                returnValues[output.name] = decodedValue;
             }
-
-            returnValue.__length__++;
         });
 
-        return returnValue;
+        return returnValues;
     }
 
     /**
@@ -271,30 +261,31 @@ export default class AbiCoder {
      *
      * @method decodeLog
      *
-     * @param {Object} inputs
+     * @param {Array} inputs
      * @param {String} data
      * @param {Array} topics
      *
-     * @returns {Array} array of plain params
+     * @returns {Object} Object with named and indexed properties of the returnValues
      */
-    decodeLog(inputs, data, topics) {
-        const _this = this;
-        topics = isArray(topics) ? topics : [topics];
-
-        data = data || '';
-
-        const notIndexedInputs = [];
-        const indexedParams = [];
+    decodeLog(inputs, data = '', topics) {
         let topicCount = 0;
 
-        // TODO check for anonymous logs?
+        if (!isArray(topics)) {
+            topics = [topics];
+        }
+
+        // TODO: check for anonymous logs?
+        // TODO: Refactor this to one loop
+        const notIndexedInputs = [];
+
+        const indexedParams = [];
 
         inputs.forEach((input, i) => {
             if (input.indexed) {
                 indexedParams[i] = ['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find((staticType) => {
                     return input.type.indexOf(staticType) !== -1;
                 })
-                    ? _this.decodeParameter(input.type, topics[topicCount])
+                    ? this.decodeParameter(input.type, topics[topicCount])
                     : topics[topicCount];
                 topicCount++;
             } else {
@@ -303,28 +294,26 @@ export default class AbiCoder {
         });
 
         const nonIndexedData = data;
+
         const notIndexedParams = nonIndexedData ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [];
 
-        const returnValue = new Result();
-        returnValue.__length__ = 0;
+        const returnValues = {};
 
         inputs.forEach((res, i) => {
-            returnValue[i] = res.type === 'string' ? '' : null;
+            returnValues[i] = res.type === 'string' ? '' : null;
 
             if (typeof notIndexedParams[i] !== 'undefined') {
-                returnValue[i] = notIndexedParams[i];
+                returnValues[i] = notIndexedParams[i];
             }
             if (typeof indexedParams[i] !== 'undefined') {
-                returnValue[i] = indexedParams[i];
+                returnValues[i] = indexedParams[i];
             }
 
             if (res.name) {
-                returnValue[res.name] = returnValue[i];
+                returnValues[res.name] = returnValues[i];
             }
-
-            returnValue.__length__++;
         });
 
-        return returnValue;
+        return returnValues;
     }
 }

@@ -35,4 +35,5 @@ export const SubscriptionsFactory = () => {
     return new SubscriptionsModuleFactory().createSubscriptionsFactory(Utils, formatters);
 };
 
+export LogSubscription from './subscriptions/eth/LogSubscription';
 export AbstractSubscription from '../lib/subscriptions/AbstractSubscription';

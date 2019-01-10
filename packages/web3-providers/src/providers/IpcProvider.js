@@ -21,6 +21,7 @@
  */
 
 import oboe from 'oboe';
+import {isArray} from 'lodash';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
@@ -102,19 +103,19 @@ export default class IpcProvider extends AbstractSocketProvider {
      */
     removeAllListeners(event) {
         switch (event) {
-            case 'socket_message':
+            case this.SOCKET_MESSAGE:
                 this.connection.removeEventListener('data', this.onMessage);
                 break;
-            case 'socket_ready':
+            case this.SOCKET_READY:
                 this.connection.removeEventListener('ready', this.onReady);
                 break;
-            case 'socket_close':
+            case this.SOCKET_CLOSE:
                 this.connection.removeEventListener('close', this.onClose);
                 break;
-            case 'socket_error':
+            case this.SOCKET_ERROR:
                 this.connection.removeEventListener('error', this.onError);
                 break;
-            case 'socket_connect':
+            case this.SOCKET_CONNECT:
                 this.connection.removeEventListener('connect', this.onConnect);
                 break;
         }
@@ -133,16 +134,15 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters))
-            .then(response => {
-                const validationResult = JsonRpcResponseValidator.validate(response);
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
+            const validationResult = JsonRpcResponseValidator.validate(response);
 
-                if (validationResult instanceof Error) {
-                    throw validationResult;
-                }
+            if (validationResult instanceof Error) {
+                throw validationResult;
+            }
 
-                return response;
-            });
+            return response.result;
+        });
     }
 
     /**
@@ -158,7 +158,7 @@ export default class IpcProvider extends AbstractSocketProvider {
     sendBatch(methods, moduleInstance) {
         let payload = [];
 
-        methods.forEach(method => {
+        methods.forEach((method) => {
             method.beforeExecution(moduleInstance);
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         });
@@ -178,7 +178,7 @@ export default class IpcProvider extends AbstractSocketProvider {
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
             if (this.connection.pending) {
-                reject(new Error('Connection error: The socket is still trying to connect'));
+                return reject(new Error('Connection error: The socket is still trying to connect'));
             }
 
             if (!this.connection.writable) {
@@ -194,7 +194,7 @@ export default class IpcProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
-                this.on(id, response => {
+                this.on(id, (response) => {
                     resolve(response);
 
                     this.removeAllListeners(id);
@@ -203,7 +203,7 @@ export default class IpcProvider extends AbstractSocketProvider {
                 return;
             }
 
-            return reject(new Error('Connection error: Couldn\'t write on the socket with Socket.write(payload)'));
+            return reject(new Error("Connection error: Couldn't write on the socket with Socket.write(payload)"));
         });
     }
 }

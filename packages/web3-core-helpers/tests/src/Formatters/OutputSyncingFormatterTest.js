@@ -13,15 +13,12 @@ describe('OutputSyncingFormatterTest', () => {
             pulledStates: '0x0'
         };
 
-        expect(outputSyncingFormatter(response))
-            .toEqual(
-                {
-                    startingBlock: 0,
-                    currentBlock: 0,
-                    highestBlock: 0,
-                    knownStates: 0,
-                    pulledStates: 0
-                }
-            );
+        expect(outputSyncingFormatter(response)).toEqual({
+            startingBlock: 0,
+            currentBlock: 0,
+            highestBlock: 0,
+            knownStates: 0,
+            pulledStates: 0
+        });
     });
 });

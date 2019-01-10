@@ -23,6 +23,7 @@
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
+import {isArray} from 'lodash';
 
 export default class WebsocketProvider extends AbstractSocketProvider {
     /**
@@ -61,7 +62,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
             return;
         }
 
-        super.onError(error);
+        super.onError(event);
     }
 
     /**
@@ -82,19 +83,19 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     }
 
     /**
-     * Removes the listeners and reconnect to the socket.
+     * Removes the listeners and reconnects to the socket.
      *
      * @method reconnect
      */
     reconnect() {
         setTimeout(() => {
-            this.connection.removeAllListeners();
+            this.removeAllSocketListeners();
 
             let constructorArgs = [];
 
-            if (this.connection.constructor.name === 'W3CWebSocket') {
+            if (this.connection.constructor.name === 'W3CWebsocket') {
                 constructorArgs = [
-                    this.connection.url,
+                    this.host,
                     this.connection._client.protocol,
                     null,
                     this.connection._client.headers,
@@ -102,12 +103,10 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     this.connection._client.config
                 ];
             } else {
-                constructorArgs = [
-                    this.connection.url,
-                    this.connection.protocol
-                ];
+                constructorArgs = [this.host, this.connection.protocol];
             }
 
+            // TODO: Pass the module factory for an createW3CWebsocket and createWebSocket method.
             this.connection = new this.connection.constructor(...constructorArgs);
             this.registerEventListeners();
         }, 5000);
@@ -149,19 +148,19 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      */
     removeAllListeners(event) {
         switch (event) {
-            case 'socket_message':
+            case this.SOCKET_MESSAGE:
                 this.connection.removeEventListener('message', this.onMessage);
                 break;
-            case 'socket_ready':
+            case this.SOCKET_READY:
                 this.connection.removeEventListener('open', this.onReady);
                 break;
-            case 'socket_close':
+            case this.SOCKET_CLOSE:
                 this.connection.removeEventListener('close', this.onClose);
                 break;
-            case 'socket_error':
+            case this.SOCKET_ERROR:
                 this.connection.removeEventListener('error', this.onError);
                 break;
-            case 'socket_connect':
+            case this.SOCKET_CONNECT:
                 this.connection.removeEventListener('connect', this.onConnect);
                 break;
         }
@@ -177,7 +176,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @returns {Boolean}
      */
     get connected() {
-        return this.connection && this.connection.readyState === this.connection.OPEN;
+        return this.connection.readyState === this.connection.OPEN;
     }
 
     /**
@@ -202,16 +201,15 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters))
-            .then(response => {
-                const validationResult = JsonRpcResponseValidator.validate(response);
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
+            const validationResult = JsonRpcResponseValidator.validate(response);
 
-                if (validationResult instanceof Error) {
-                    throw validationResult;
-                }
+            if (validationResult instanceof Error) {
+                throw validationResult;
+            }
 
-                return response;
-            });
+            return response.result;
+        });
     }
 
     /**
@@ -227,7 +225,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     sendBatch(methods, moduleInstance) {
         let payload = [];
 
-        methods.forEach(method => {
+        methods.forEach((method) => {
             method.beforeExecution(moduleInstance);
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         });
@@ -246,42 +244,44 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
-            if (this.connection.readyState !== this.connection.OPEN) {
-                reject('Connection error: Connection is not open on send()');
-            }
-
             if (!this.isConnecting()) {
+                let timeout, id;
+
+                if (this.connection.readyState !== this.connection.OPEN) {
+                    return reject(new Error('Connection error: Connection is not open on send()'));
+                }
+
                 this.connection.send(JSON.stringify(payload));
 
-                let timeout;
                 if (this.timeout) {
                     timeout = setTimeout(() => {
                         reject(new Error('Connection error: Timeout exceeded'));
                     }, this.timeout);
                 }
 
-                this.on(payload.id, response => {
+                if (isArray(payload)) {
+                    id = payload[0].id;
+                } else {
+                    id = payload.id;
+                }
+
+                this.on(id, (response) => {
                     if (timeout) {
                         clearTimeout(timeout);
                     }
 
-                    resolve(response);
+                    this.removeAllListeners(id);
 
-                    this.removeAllListeners(payload.id);
+                    return resolve(response);
                 });
-
 
                 return;
             }
 
             this.on('open', () => {
                 this.sendPayload(payload)
-                    .then(response => {
-                        resolve(response);
-                    })
-                    .catch(error => {
-                        reject(error);
-                    });
+                    .then(resolve)
+                    .catch(reject);
 
                 this.removeAllListeners('open');
             });

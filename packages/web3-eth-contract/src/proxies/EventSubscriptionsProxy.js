@@ -20,10 +20,9 @@
  * @date 2018
  */
 
-import isFunction from 'underscore-es/isFunction';
-import isUndefined from 'underscore-es/isUndefined';
+import {isFunction, isUndefined} from 'lodash';
 
-export default class EventSubscriptionsProxy extends Proxy {
+export default class EventSubscriptionsProxy {
     /**
      * @param {AbstractContract} contract
      * @param {AbiModel} abiModel
@@ -46,39 +45,6 @@ export default class EventSubscriptionsProxy extends Proxy {
         allEventsOptionsMapper,
         PromiEvent
     ) {
-        super(
-            contract,
-            {
-                /**
-                 * Checks if a contract event exists by the given name and returns the subscription otherwise it throws an error
-                 *
-                 * @param {EventSubscriptionsProxy} target
-                 * @param {String} name
-                 *
-                 * @returns {Function|Error}
-                 */
-                get: (target, name) => {
-                    if (this.abiModel.hasEvent(name)) {
-                        return (options, callback) => {
-                            return target.subscribe(target.abiModel.getEvent(name), options, callback);
-                        };
-                    }
-
-                    if (name === 'allEvents') {
-                        return (options, callback) => {
-                            return target.subscribeAll(options, callback);
-                        };
-                    }
-
-                    if (target[name]) {
-                        return target[name];
-                    }
-
-                    throw new Error(`Event with name "${name}" not found`);
-                }
-            }
-        );
-
         this.contract = contract;
         this.eventSubscriptionFactory = eventSubscriptionFactory;
         this.abiModel = abiModel;
@@ -87,6 +53,32 @@ export default class EventSubscriptionsProxy extends Proxy {
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.allEventsOptionsMapper = allEventsOptionsMapper;
         this.PromiEvent = PromiEvent;
+
+        return new Proxy(this, {
+            /**
+             * Checks if a contract event exists by the given name and returns the subscription otherwise it throws an error
+             *
+             * @param {EventSubscriptionsProxy} target
+             * @param {String} name
+             *
+             * @returns {Function|Error}
+             */
+            get: (target, name) => {
+                if (this.abiModel.hasEvent(name)) {
+                    return (options, callback) => {
+                        return target.subscribe(target.abiModel.getEvent(name), options, callback);
+                    };
+                }
+
+                if (name === 'allEvents') {
+                    return (options, callback) => {
+                        return target.subscribeAll(options, callback);
+                    };
+                }
+
+                return target[name];
+            }
+        });
     }
 
     /**
@@ -100,11 +92,13 @@ export default class EventSubscriptionsProxy extends Proxy {
      * @returns {Subscription|PromiEvent}
      */
     subscribe(abiItemModel, options, callback) {
-        if (!isUndefined(options.filters) && !isUndefined(options.topics)) {
-            return this.handleValidationError(
+        if (!isUndefined(options.filter) && !isUndefined(options.topics)) {
+            this.handleValidationError(
                 'Invalid subscription options: Only filter or topics are allowed and not both',
                 callback
             );
+
+            return;
         }
 
         return this.eventSubscriptionFactory
@@ -130,14 +124,16 @@ export default class EventSubscriptionsProxy extends Proxy {
      */
     subscribeAll(options, callback) {
         if (!isUndefined(options.topics)) {
-            return this.handleValidationError(
-                'Invalid subscription options: Topics are not allowed for the "allEvents" subscription',
+            this.handleValidationError(
+                'Invalid subscription options: Only filter or topics are allowed and not both',
                 callback
             );
+
+            return;
         }
 
         return this.eventSubscriptionFactory
-            .createAllEventLogSubscription(
+            .createAllEventsLogSubscription(
                 this.allEventsLogDecoder,
                 this.contract,
                 this.allEventsOptionsMapper.map(this.abiModel, this.contract, options)
@@ -154,18 +150,14 @@ export default class EventSubscriptionsProxy extends Proxy {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {PromiEvent}
      */
     handleValidationError(errorMessage, callback) {
-        const promiEvent = new this.PromiEvent();
-
         const error = new Error(errorMessage);
-        promiEvent.emit('error', error);
 
         if (isFunction(callback)) {
             callback(error, null);
         }
 
-        return promiEvent;
+        throw error;
     }
 }

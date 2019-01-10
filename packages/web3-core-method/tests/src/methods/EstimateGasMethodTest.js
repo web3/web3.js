@@ -17,43 +17,34 @@ describe('EstimateGasMethodTest', () => {
     });
 
     it('static Type property returns "CALL"', () => {
-        expect(EstimateGasMethod.Type)
-            .toEqual('CALL');
+        expect(EstimateGasMethod.Type).toEqual('CALL');
     });
 
     it('rpcMethod should return eth_estimateGas', () => {
-        expect(method.rpcMethod)
-            .toEqual('eth_estimateGas');
+        expect(method.rpcMethod).toEqual('eth_estimateGas');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(method.parametersAmount)
-            .toEqual(1);
+        expect(method.parametersAmount).toEqual(1);
     });
 
     it('beforeExecution should call the inputCallFormatter', () => {
         method.parameters = [{}];
 
-        formatters.inputCallFormatter
-            .mockReturnValueOnce({empty: true});
+        formatters.inputCallFormatter.mockReturnValueOnce({empty: true});
 
         method.beforeExecution({});
 
-        expect(method.parameters[0])
-            .toHaveProperty('empty', true);
+        expect(method.parameters[0]).toHaveProperty('empty', true);
 
-        expect(formatters.inputCallFormatter)
-            .toHaveBeenCalledWith({}, {});
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith({}, {});
     });
 
     it('afterExecution should call hexToNumber and return the response', () => {
-        Utils.hexToNumber
-            .mockReturnValueOnce(100);
+        Utils.hexToNumber.mockReturnValueOnce(100);
 
-        expect(method.afterExecution({}))
-            .toEqual(100);
+        expect(method.afterExecution({})).toEqual(100);
 
-        expect(Utils.hexToNumber)
-            .toHaveBeenCalledWith({});
+        expect(Utils.hexToNumber).toHaveBeenCalledWith({});
     });
 });

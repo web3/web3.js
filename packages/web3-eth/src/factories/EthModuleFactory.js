@@ -22,7 +22,6 @@
 
 import MethodFactory from './MethodFactory';
 import Eth from '../Eth';
-import Contract from '../Contract';
 
 export default class EthModuleFactory {
     /**
@@ -61,34 +60,6 @@ export default class EthModuleFactory {
     }
 
     /**
-     * Returns an object of type Contract
-     *
-     * @method createContract
-     *
-     * @param {Object} abi
-     * @param {String} address
-     * @param {Object} options
-     *
-     * @returns {Contract}
-     */
-    createContract(abi, address, options) {
-        return new Contract(
-            this.provider,
-            this.providersModuleFactory,
-            this.methodModuleFactory,
-            this.contractModuleFactory,
-            this.PromiEvent,
-            this.abiCoder,
-            this.utils,
-            this.formatters,
-            this.accounts,
-            abi,
-            address,
-            options
-        );
-    }
-
-    /**
      * Returns an object of type Eth
      *
      * @method createEthModule
@@ -108,7 +79,6 @@ export default class EthModuleFactory {
             this.providersModuleFactory,
             this.methodModuleFactory,
             this.createMethodFactory(),
-            this,
             net,
             this.accounts,
             personal,
@@ -118,6 +88,7 @@ export default class EthModuleFactory {
             this.utils,
             this.formatters,
             subscriptionsFactory,
+            this.contractModuleFactory,
             options
         );
     }
@@ -130,6 +101,6 @@ export default class EthModuleFactory {
      * @returns {MethodFactory}
      */
     createMethodFactory() {
-        return new MethodFactory(this.utils, this.formatters, this.accounts);
+        return new MethodFactory(this.methodModuleFactory, this.utils, this.formatters);
     }
 }

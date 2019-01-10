@@ -11,22 +11,16 @@ describe('MessagesSubscriptionTest', () => {
     });
 
     it('constructor check', () => {
-        expect(messagesSubscription.method)
-            .toEqual('messages');
+        expect(messagesSubscription.method).toEqual('messages');
 
-        expect(messagesSubscription.type)
-            .toEqual('shh_subscribe');
+        expect(messagesSubscription.type).toEqual('shh_subscribe');
 
-        expect(messagesSubscription.options)
-            .toEqual({});
+        expect(messagesSubscription.options).toEqual({});
 
-        expect(messagesSubscription.utils)
-            .toEqual({});
+        expect(messagesSubscription.utils).toEqual({});
 
-        expect(messagesSubscription.formatters)
-            .toEqual({});
+        expect(messagesSubscription.formatters).toEqual({});
 
-        expect(messagesSubscription.moduleInstance)
-            .toEqual({});
+        expect(messagesSubscription.moduleInstance).toEqual({});
     });
 });

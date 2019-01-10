@@ -15,8 +15,7 @@ describe('GetGasPriceMethodTest', () => {
     });
 
     it('static Type property returns "CALL"', () => {
-        expect(GetGasPriceMethod.Type)
-            .toEqual('CALL');
+        expect(GetGasPriceMethod.Type).toEqual('CALL');
     });
 
     it('rpcMethod should return eth_gasPrice', () => {
@@ -35,12 +34,10 @@ describe('GetGasPriceMethodTest', () => {
     });
 
     it('afterExecution should map the response', () => {
-        formatters.outputBigNumberFormatter
-            .mockReturnValueOnce({bigNumber: true});
+        formatters.outputBigNumberFormatter.mockReturnValueOnce({bigNumber: true});
 
         expect(method.afterExecution('1000')).toHaveProperty('bigNumber', true);
 
-        expect(formatters.outputBigNumberFormatter)
-            .toHaveBeenCalledWith('1000');
+        expect(formatters.outputBigNumberFormatter).toHaveBeenCalledWith('1000');
     });
 });

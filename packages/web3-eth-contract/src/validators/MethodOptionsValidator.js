@@ -46,7 +46,7 @@ export default class MethodOptionsValidator {
         }
 
         if (!this.isFromSet(method)) {
-            throw new Error('No "from" address specified in neither the given options, nor the default options.');
+            throw new Error('No valid "from" address specified in neither the given options, nor the default options.');
         }
 
         if (!this.isValueValid(abiItemModel, method)) {

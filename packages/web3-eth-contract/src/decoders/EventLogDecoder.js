@@ -23,19 +23,17 @@
 export default class EventLogDecoder {
     /**
      * @param {AbiCoder} abiCoder
-     * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(abiCoder, formatters) {
+    constructor(abiCoder) {
         this.abiCoder = abiCoder;
-        this.formatters = formatters;
     }
 
     /**
      * Decodes the event subscription response
      *
-     * @method decoder
+     * @method decode
      *
      * @param {AbiItemModel} abiItemModel
      * @param {Object} response
@@ -44,6 +42,7 @@ export default class EventLogDecoder {
      */
     decode(abiItemModel, response) {
         let argTopics = response.topics;
+
         if (abiItemModel.anonymous) {
             argTopics = response.topics.slice(1);
         }
@@ -60,7 +59,6 @@ export default class EventLogDecoder {
             response.signature = null;
         }
 
-        delete response.returnValues.__length__;
         delete response.data;
         delete response.topics;
 

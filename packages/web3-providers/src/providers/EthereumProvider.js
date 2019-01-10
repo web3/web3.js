@@ -28,6 +28,9 @@ export default class EthereumProvider extends AbstractSocketProvider {
      */
     constructor(connection) {
         super(connection, null);
+        this.host = 'EthereumProvider';
+        this.SOCKET_NETWORK_CHANGED = 'socket_networkChanged';
+        this.SOCKET_ACCOUNTS_CHANGED = 'socket_accountsChanged';
     }
 
     /**
@@ -52,30 +55,39 @@ export default class EthereumProvider extends AbstractSocketProvider {
      */
     removeAllListeners(event) {
         switch (event) {
-            case 'socket_networkChanged':
+            case this.SOCKET_NETWORK_CHANGED:
                 this.connection.removeListener('networkChanged', this.onNetworkChanged);
                 break;
-            case 'socket_accountsChanged':
+            case this.SOCKET_ACCOUNTS_CHANGED:
                 this.connection.removeListener('accountsChanged', this.onAccountsChanged);
                 break;
-            case 'socket_message':
+            case this.SOCKET_MESSAGE:
                 this.connection.removeListener('notification', this.onMessage);
                 break;
-            case 'socket_ready':
+            case this.SOCKET_READY:
                 this.connection.removeListener('connect', this.onReady);
                 break;
-            case 'socket_close':
+            case this.SOCKET_CLOSE:
                 this.connection.removeListener('close', this.onClose);
                 break;
-            case 'socket_error':
+            case this.SOCKET_ERROR:
                 this.connection.removeListener('close', this.onError);
                 break;
-            case 'socket_connect':
+            case this.SOCKET_CONNECT:
                 this.connection.removeListener('connect', this.onConnect);
                 break;
         }
 
         super.removeAllListeners(event);
+    }
+
+    /**
+     * Removes all socket listeners
+     *
+     * @method removeAllSocketListeners
+     */
+    removeAllSocketListeners() {
+        this.connection.removeAllListeners();
     }
 
     /**
@@ -118,16 +130,15 @@ export default class EthereumProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.connection.send(method, parameters)
-            .then(response => {
-                const validationResult = JsonRpcResponseValidator.validate(response);
+        return this.connection.send(method, parameters).then((response) => {
+            const validationResult = JsonRpcResponseValidator.validate(response);
 
-                if (validationResult instanceof Error) {
-                    throw validationResult;
-                }
+            if (validationResult instanceof Error) {
+                throw validationResult;
+            }
 
-                return response;
-            });
+            return response;
+        });
     }
 
     /**
@@ -143,7 +154,7 @@ export default class EthereumProvider extends AbstractSocketProvider {
     sendBatch(methods, moduleInstance) {
         let methodCalls = [];
 
-        methods.forEach(method => {
+        methods.forEach((method) => {
             method.beforeExecution(moduleInstance);
             methodCalls.push(this.connection.send(method.rpcMethod, method.parameters));
         });

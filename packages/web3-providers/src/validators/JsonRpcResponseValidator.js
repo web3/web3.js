@@ -20,62 +20,42 @@
  * @date 2018
  */
 
+import {isObject} from 'lodash';
+
 export default class JsonRpcResponseValidator {
     /**
      * Executes JSON-RPC response validation
      *
      * @method isValid
      *
-     * @param {Object|Array} response
+     * @param {Object} response
      * @param {Object|Array} payload
      *
      * @returns {Boolean}
      */
     static validate(response, payload = false) {
-        if (Array.isArray(response)) {
-            return response.every((responseItem, index) => {
-                this.isResponseItemValid(responseItem, payload[index])
-            });
-        }
-
-        return this.isResponseItemValid(response, payload);
-    }
-
-    /**
-     * Validates response item from a JSON-RPC response
-     *
-     * @method isResponseItemValid
-     *
-     * @param {Object} response
-     * @param {Object} payload
-     *
-     * @returns {Boolean|Error}
-     */
-    static isResponseItemValid(response, payload = false) {
         if (isObject(response)) {
             if (response.error) {
-                // TODO: Check where and why this is the case.
-                if(response.error instanceof Error) {
+                if (response.error instanceof Error) {
                     return new Error(`Node error: ${response.error.message}`);
                 }
 
-                return new Error(`Node error: ${response.error}`);
+                return new Error(`Node error: ${JSON.stringify(response.error)}`);
             }
 
             if (payload && response.id !== payload.id) {
-                return new Error(`Invalid JSON-RPC response ID: request: ${payload.id} / response: ${response.id}`)
+                return new Error(
+                    `Validation error: Invalid JSON-RPC response ID (request: ${payload.id} / response: ${response.id})`
+                );
             }
 
-            if (typeof response.id !== 'number' || typeof response.id !== 'string') {
-                return new Error(`Invalid type of the JSON-RPC ID: current: ${typeof response.id} expected: String|Number`);
+            if (response.result === undefined) {
+                return new Error('Validation error: Undefined JSON-RPC result');
             }
 
-            if(response.result === undefined) {
-                return new Error('Undefined JSON-RPC result');
-            }
-
+            return true;
         }
 
-        return true;
+        return new Error('Validation error: Response should be of type Object');
     }
 }

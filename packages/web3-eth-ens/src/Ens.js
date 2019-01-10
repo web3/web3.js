@@ -17,16 +17,75 @@
  * @date 2018
  */
 
-export default class Ens {
+import {AbstractWeb3Module} from 'web3-core';
+import {isFunction} from 'lodash';
+import namehash from 'eth-ens-namehash';
+
+export default class Ens extends AbstractWeb3Module {
     /**
-     * @param {Registry} registry
-     * @param {ResolverMethodHandler} resolverMethodHandler
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {Object} options
+     * @param {EnsModuleFactory} ensModuleFactory
+     * @param {PromiEvent} promiEvent
+     * @param {AbiCoder} abiCoder
+     * @param {Utils} utils
+     * @param {Object} formatters
+     * @param {Object} registryOptions
+     * @param {Network} net
      *
      * @constructor
      */
-    constructor(registry, resolverMethodHandler) {
-        this.registry = registry;
-        this.resolverMethodHandler = resolverMethodHandler;
+    constructor(
+        provider,
+        providersModuleFactory,
+        methodModuleFactory,
+        options,
+        ensModuleFactory,
+        promiEvent,
+        abiCoder,
+        utils,
+        formatters,
+        registryOptions,
+        net
+    ) {
+        super(provider, providersModuleFactory, methodModuleFactory, null, options);
+
+        this.ensModuleFactory = ensModuleFactory;
+        this.promiEvent = promiEvent;
+        this.abiCoder = abiCoder;
+        this.utils = utils;
+        this.formatters = formatters;
+        this.registryOptions = registryOptions;
+        this.net = net;
+        this._registry = false;
+    }
+
+    /**
+     * Getter for the registry property
+     *
+     * @property registry
+     *
+     * @returns {Registry}
+     */
+    get registry() {
+        if (!this._registry) {
+            this._registry = this.ensModuleFactory.createRegistry(
+                this.currentProvider,
+                this.providersModuleFactory,
+                this.methodModuleFactory,
+                this.contractModuleFactory,
+                this.promiEvent,
+                this.abiCoder,
+                this.utils,
+                this.formatters,
+                this.registryOptions,
+                this.net
+            );
+        }
+
+        return this._registry;
     }
 
     /**
@@ -35,13 +94,13 @@ export default class Ens {
      *
      * @method setProvider
      *
-     * @param {Object|String} provider
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
      * @param {Net} net
      *
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        return this.registry.setProvider(provider, net);
+        return !!(super.setProvider(provider, net) && this.registry.setProvider(provider, net));
     }
 
     /**
@@ -51,7 +110,7 @@ export default class Ens {
      *
      * @param {String} name
      *
-     * @returns {Promise<Contract>}
+     * @returns {Promise<AbstractContract>}
      */
     resolver(name) {
         return this.registry.resolver(name);
@@ -67,10 +126,12 @@ export default class Ens {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @return {PromiEvent}
+     * @returns {Promise<String>}
      */
-    getAddress(name, callback) {
-        return this.resolverMethodHandler.method(name, 'addr', []).call(callback);
+    async getAddress(name, callback) {
+        const resolver = await this.registry.resolver(name);
+
+        return resolver.methods.addr().call(callback);
     }
 
     /**
@@ -87,7 +148,37 @@ export default class Ens {
      * @returns {PromiEvent}
      */
     setAddress(name, address, sendOptions, callback) {
-        return this.resolverMethodHandler.method(name, 'setAddr', [address]).send(sendOptions, callback);
+        const promiEvent = new this.registry.PromiEvent();
+
+        this.registry.resolver(name).then((resolver) => {
+            resolver.methods
+                .setAddr(namehash.hash(name), address)
+                .send(sendOptions, callback)
+                .on('transactionHash', (transactionHash) => {
+                    promiEvent.emit('transactionHash', transactionHash);
+                })
+                .on('confirmation', (confirmationNumber, receipt) => {
+                    promiEvent.emit('confirmation', confirmationNumber, receipt);
+                })
+                .on('receipt', (receipt) => {
+                    if (isFunction(callback)) {
+                        callback(receipt);
+                    }
+
+                    promiEvent.emit('receipt', receipt);
+                    promiEvent.resolve(receipt);
+                })
+                .on('error', (error) => {
+                    if (isFunction(callback)) {
+                        callback(error);
+                    }
+
+                    promiEvent.emit('error', error);
+                    promiEvent.reject(error);
+                });
+        });
+
+        return promiEvent;
     }
 
     /**
@@ -99,10 +190,12 @@ export default class Ens {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {PromiEvent}
+     * @returns {Promise<String>}
      */
-    getPubkey(name, callback) {
-        return this.resolverMethodHandler.method(name, 'pubkey', []).call(callback);
+    async getPubkey(name, callback) {
+        const resolver = await this.registry.resolver(name);
+
+        return resolver.methods.pubkey().call(callback);
     }
 
     /**
@@ -120,7 +213,37 @@ export default class Ens {
      * @returns {PromiEvent}
      */
     setPubkey(name, x, y, sendOptions, callback) {
-        return this.resolverMethodHandler.method(name, 'setPubkey', [x, y]).send(sendOptions, callback);
+        const promiEvent = new this.registry.PromiEvent();
+
+        this.registry.resolver(name).then((resolver) => {
+            resolver.methods
+                .setPubkey(namehash.hash(name), x, y)
+                .send(sendOptions, callback)
+                .on('transactionHash', (transactionHash) => {
+                    promiEvent.emit('transactionHash', transactionHash);
+                })
+                .on('confirmation', (confirmationNumber, receipt) => {
+                    promiEvent.emit('confirmation', confirmationNumber, receipt);
+                })
+                .on('receipt', (receipt) => {
+                    if (isFunction(callback)) {
+                        callback(receipt);
+                    }
+
+                    promiEvent.emit('receipt', receipt);
+                    promiEvent.resolve(receipt);
+                })
+                .on('error', (error) => {
+                    if (isFunction(callback)) {
+                        callback(error);
+                    }
+
+                    promiEvent.emit('error', error);
+                    promiEvent.reject(error);
+                });
+        });
+
+        return promiEvent;
     }
 
     /**
@@ -132,10 +255,12 @@ export default class Ens {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {PromiEvent}
+     * @returns {Promise<String>}
      */
-    getContent(name, callback) {
-        return this.resolverMethodHandler.method(name, 'content', []).call(callback);
+    async getContent(name, callback) {
+        const resolver = await this.registry.resolver(name);
+
+        return resolver.methods.content().call(callback);
     }
 
     /**
@@ -152,7 +277,37 @@ export default class Ens {
      * @returns {PromiEvent}
      */
     setContent(name, hash, sendOptions, callback) {
-        return this.resolverMethodHandler.method(name, 'setContent', [hash]).send(sendOptions, callback);
+        const promiEvent = new this.registry.PromiEvent();
+
+        this.registry.resolver(name).then((resolver) => {
+            resolver.methods
+                .setContent(namehash.hash(name), hash)
+                .send(sendOptions, callback)
+                .on('transactionHash', (transactionHash) => {
+                    promiEvent.emit('transactionHash', transactionHash);
+                })
+                .on('confirmation', (confirmationNumber, receipt) => {
+                    promiEvent.emit('confirmation', confirmationNumber, receipt);
+                })
+                .on('receipt', (receipt) => {
+                    if (isFunction(callback)) {
+                        callback(receipt);
+                    }
+
+                    promiEvent.emit('receipt', receipt);
+                    promiEvent.resolve(receipt);
+                })
+                .on('error', (error) => {
+                    if (isFunction(callback)) {
+                        callback(error);
+                    }
+
+                    promiEvent.emit('error', error);
+                    promiEvent.reject(error);
+                });
+        });
+
+        return promiEvent;
     }
 
     /**
@@ -164,10 +319,12 @@ export default class Ens {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {PromiEvent}
+     * @returns {Promise<String>}
      */
-    getMultihash(name, callback) {
-        return this.resolverMethodHandler.method(name, 'multihash', []).call(callback);
+    async getMultihash(name, callback) {
+        const resolver = await this.registry.resolver(name);
+
+        return resolver.methods.multihash().call(callback);
     }
 
     /**
@@ -184,6 +341,36 @@ export default class Ens {
      * @returns {PromiEvent}
      */
     setMultihash(name, hash, sendOptions, callback) {
-        return this.resolverMethodHandler.method(name, 'multihash', [hash]).send(sendOptions, callback);
+        const promiEvent = new this.registry.PromiEvent();
+
+        this.registry.resolver(name).then((resolver) => {
+            resolver.methods
+                .setMultihash(namehash.hash(name), hash)
+                .send(sendOptions, callback)
+                .on('transactionHash', (transactionHash) => {
+                    promiEvent.emit('transactionHash', transactionHash);
+                })
+                .on('confirmation', (confirmationNumber, receipt) => {
+                    promiEvent.emit('confirmation', confirmationNumber, receipt);
+                })
+                .on('receipt', (receipt) => {
+                    if (isFunction(callback)) {
+                        callback(receipt);
+                    }
+
+                    promiEvent.emit('receipt', receipt);
+                    promiEvent.resolve(receipt);
+                })
+                .on('error', (error) => {
+                    if (isFunction(callback)) {
+                        callback(error);
+                    }
+
+                    promiEvent.emit('error', error);
+                    promiEvent.reject(error);
+                });
+        });
+
+        return promiEvent;
     }
 }

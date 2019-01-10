@@ -91,7 +91,7 @@ export default class Shh extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        return !!(super.setProvider(provider, net) && this.net.setProvider(provider, net));
+        return super.setProvider(provider, net) && this.net.setProvider(provider, net);
     }
 
     /**
@@ -107,6 +107,17 @@ export default class Shh extends AbstractWeb3Module {
     }
 
     /**
+     * Gets the defaultGasPrice property
+     *
+     * @property defaultGasPrice
+     *
+     * @returns {String|Number} value
+     */
+    get defaultGasPrice() {
+        return super.defaultGasPrice;
+    }
+
+    /**
      * Sets the defaultGas property on the current object and the network module
      *
      * @property defaultGas
@@ -116,6 +127,17 @@ export default class Shh extends AbstractWeb3Module {
     set defaultGas(value) {
         super.defaultGas = value;
         this.net.defaultGas = value;
+    }
+
+    /**
+     * Gets the defaultGas property
+     *
+     * @property defaultGas
+     *
+     * @returns {String|Number} value
+     */
+    get defaultGas() {
+        return super.defaultGas;
     }
 
     /**
@@ -131,6 +153,17 @@ export default class Shh extends AbstractWeb3Module {
     }
 
     /**
+     * Gets the transactionBlockTimeout property
+     *
+     * @property transactionBlockTimeout
+     *
+     * @returns {Number} value
+     */
+    get transactionBlockTimeout() {
+        return super.transactionBlockTimeout;
+    }
+
+    /**
      * Sets the transactionConfirmationBlocks property on the current object and the network module
      *
      * @property transactionConfirmationBlocks
@@ -140,6 +173,17 @@ export default class Shh extends AbstractWeb3Module {
     set transactionConfirmationBlocks(value) {
         super.transactionConfirmationBlocks = value;
         this.net.transactionConfirmationBlocks = value;
+    }
+
+    /**
+     * Gets the transactionConfirmationBlocks property
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @returns {Number} value
+     */
+    get transactionConfirmationBlocks() {
+        return super.transactionConfirmationBlocks;
     }
 
     /**
@@ -155,6 +199,17 @@ export default class Shh extends AbstractWeb3Module {
     }
 
     /**
+     * Gets the transactionPollingTimeout property
+     *
+     * @property transactionPollingTimeout
+     *
+     * @returns {Number} value
+     */
+    get transactionPollingTimeout() {
+        return super.transactionPollingTimeout;
+    }
+
+    /**
      * Sets the defaultAccount property on the current object and the network module
      *
      * @property defaultAccount
@@ -167,6 +222,17 @@ export default class Shh extends AbstractWeb3Module {
     }
 
     /**
+     * Gets the defaultAccount property
+     *
+     * @property defaultAccount
+     *
+     * @returns {String} value
+     */
+    get defaultAccount() {
+        return super.defaultAccount;
+    }
+
+    /**
      * Sets the defaultBlock property on the current object and the network module
      *
      * @property defaultBlock
@@ -176,5 +242,16 @@ export default class Shh extends AbstractWeb3Module {
     set defaultBlock(value) {
         super.defaultBlock = value;
         this.net.defaultBlock = value;
+    }
+
+    /**
+     * Gets the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @returns {String} value
+     */
+    get defaultBlock() {
+        return super.defaultBlock;
     }
 }

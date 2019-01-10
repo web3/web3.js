@@ -1,81 +1,76 @@
 import AbstractMethodFactory from '../../../lib/factories/AbstractMethodFactory';
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import MethodModuleFactory from '../../../src/factories/ModuleFactory';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
+import SendTransactionMethod from '../../../src/methods/transaction/SendTransactionMethod';
+import SignMethod from '../../../src/methods/SignMethod';
 
 // Mocks
-jest.mock('../../../lib/methods/AbstractMethod');
 jest.mock('../../../src/factories/ModuleFactory');
 
 /**
  * AbstractMethodFactory test
  */
 describe('AbstractMethodFactoryTest', () => {
-    let abstractMethodFactory,
-        methodModuleFactory,
-        methodModuleFactoryMock;
+    let abstractMethodFactory, methodModuleFactoryMock;
 
     beforeEach(() => {
-        methodModuleFactory = new MethodModuleFactory({});
+        new MethodModuleFactory({});
         methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
 
-        abstractMethodFactory = new AbstractMethodFactory(
-            {
-                test: AbstractMethod
-            },
-            methodModuleFactoryMock,
-            {},
-            {}
-        );
+        abstractMethodFactory = new AbstractMethodFactory(methodModuleFactoryMock, {}, {});
+
+        abstractMethodFactory.methods = {
+            call: AbstractCallMethod,
+            send: AbstractSendMethod
+        };
     });
 
-    it('hasMethod returns true', () => {
-        abstractMethodFactory = new AbstractMethodFactory({test: true}, {}, {}, {});
-        expect(abstractMethodFactory.hasMethod('test'))
-            .toBeTruthy();
+    it('calls hasMethod and returns true', () => {
+        abstractMethodFactory = new AbstractMethodFactory({}, {}, {});
+        abstractMethodFactory.methods = {call: true};
+
+        expect(abstractMethodFactory.hasMethod('call')).toEqual(true);
     });
 
-    it('hasMethod returns false', () => {
-        abstractMethodFactory = new AbstractMethodFactory({}, {}, {}, {});
+    it('calls hasMethod and returns false', () => {
+        abstractMethodFactory = new AbstractMethodFactory({}, {}, {});
+        abstractMethodFactory.methods = {};
 
-        expect(abstractMethodFactory.hasMethod('test'))
-            .toBeFalsy();
+        expect(abstractMethodFactory.hasMethod('call')).toEqual(false);
     });
 
-    it('createMethod returns method with call command', () => {
-        AbstractMethod.Type = 'CALL';
+    it('calls createMethod and returns AbstractCallMethod', () => {
+        expect(abstractMethodFactory.hasMethod('call')).toEqual(true);
 
-        abstractMethodFactory = new AbstractMethodFactory(
-            {
-                test: AbstractMethod
-            },
-            methodModuleFactoryMock,
-            {},
-            {}
-        );
-
-        expect(abstractMethodFactory.hasMethod('test'))
-            .toBeTruthy();
-
-        expect(abstractMethodFactory.createMethod('test'))
-            .toBeInstanceOf(AbstractMethod);
+        expect(abstractMethodFactory.createMethod('call')).toBeInstanceOf(AbstractCallMethod);
     });
 
-    it('createMethod returns method with send command', () => {
-        AbstractMethod.Type = 'SEND';
+    it('calls createMethod and returns AbstractSendMethod', () => {
+        expect(abstractMethodFactory.hasMethod('send')).toEqual(true);
 
-        abstractMethodFactory = new AbstractMethodFactory(
-            {
-                test: AbstractMethod
-            },
-            methodModuleFactoryMock,
-            {},
-            {}
-        );
+        expect(abstractMethodFactory.createMethod('send')).toBeInstanceOf(AbstractSendMethod);
+    });
 
-        expect(abstractMethodFactory.hasMethod('test'))
-            .toBeTruthy();
+    it('calls createMethod and returns SendTransactionMethod', () => {
+        abstractMethodFactory = new AbstractMethodFactory(methodModuleFactoryMock, {}, {});
+        abstractMethodFactory.methods = {
+            sendTransaction: SendTransactionMethod
+        };
 
-        expect(abstractMethodFactory.createMethod('test'))
-            .toBeInstanceOf(AbstractMethod);
+        expect(abstractMethodFactory.hasMethod('sendTransaction')).toEqual(true);
+
+        expect(abstractMethodFactory.createMethod('sendTransaction')).toBeInstanceOf(SendTransactionMethod);
+    });
+
+    it('calls createMethod and returns SignMethod', () => {
+        abstractMethodFactory = new AbstractMethodFactory(methodModuleFactoryMock, {}, {});
+        abstractMethodFactory.methods = {
+            sign: SignMethod
+        };
+
+        expect(abstractMethodFactory.hasMethod('sign')).toEqual(true);
+
+        expect(abstractMethodFactory.createMethod('sign')).toBeInstanceOf(SignMethod);
     });
 });

@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import {XMLHttpRequest} from 'xhr2-cookies';
 import {w3cwebsocket as W3CWebsocket} from 'websocket';
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import URL from 'url-parse';
@@ -104,7 +103,7 @@ export default class ProvidersModuleFactory {
         request.withCredentials = true;
 
         if (headers) {
-            headers.forEach(header => {
+            headers.forEach((header) => {
                 request.setRequestHeader(header.name, header.value);
             });
         }
@@ -127,8 +126,9 @@ export default class ProvidersModuleFactory {
 
         // runtime is of type node
         if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
-            let authToken,
-                headers = options.headers || {};
+            let authToken;
+
+            let headers = options.headers || {};
 
             const urlObject = new URL(url);
 

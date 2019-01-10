@@ -53,8 +53,8 @@ export default class NetworkModuleFactory {
             providersModuleFactory,
             methodModuleFactory,
             this.createMethodFactory(methodModuleFactory),
-            this.formatters,
             this.utils,
+            this.formatters,
             options
         );
     }

@@ -20,10 +20,10 @@
  * @date 2017
  */
 
-import isObject from 'underscore-es/isObject';
-import isString from 'underscore-es/isString';
+import {isObject, isString} from 'lodash';
 import * as swarm from 'swarm-js';
 
+// TODO: Refactor the complete module and implement the swarm API correct.
 export default class Bzz {
     /**
      * @param {Object|String} provider

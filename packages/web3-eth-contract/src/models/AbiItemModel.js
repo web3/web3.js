@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import isArray from 'underscore-es/isArray';
+import {isArray} from 'lodash';
 
 export default class AbiItemModel {
     /**
@@ -34,21 +34,43 @@ export default class AbiItemModel {
         this.name = this.abiItem.name;
         this.anonymous = this.abiItem.anonymous;
         this.contractMethodParameters = [];
-
-        Object.defineProperty(this, 'requestType', {
-            get() {
-                if (abiItem.type === 'function') {
-                    if (abiItem.constant === true) {
-                        return 'call';
-                    }
-
-                    return 'send';
-                }
-            }
-        });
+        this._requestType = false;
     }
 
     /**
+     * Getter for the requestType of this ABI item.
+     *
+     * @property requestType
+     *
+     * @returns {String}
+     */
+    get requestType() {
+        if (this._requestType) {
+            return this._requestType;
+        }
+
+        if (this.abiItem.type === 'function' || this.abiItem.type === 'constructor') {
+            if (this.abiItem.constant === true) {
+                return 'call';
+            }
+
+            return 'send';
+        }
+    }
+
+    /**
+     * Setter for the requestType of this ABI item.
+     *
+     * @property requestType
+     *
+     * @param {String} value
+     */
+    set requestType(value) {
+        this._requestType = value;
+    }
+
+    /**
+     * TODO: rename getInputLength to getInputsLength
      * Returns the input length of the abiItem
      *
      * @method getInputLength
@@ -64,6 +86,7 @@ export default class AbiItemModel {
     }
 
     /**
+     * TODO: Refactor to es6 accessor
      * Returns all inputs of the abi item
      *
      * @method getInputs
@@ -71,13 +94,27 @@ export default class AbiItemModel {
      * @returns {Array}
      */
     getInputs() {
-        let inputs = [];
-
         if (isArray(this.abiItem.inputs)) {
-            inputs = this.abiItem.inputs;
+            return this.abiItem.inputs;
         }
 
-        return inputs;
+        return [];
+    }
+
+    /**
+     * TODO: Refactor to es6 accessor
+     * Returns all outputs of the abi item
+     *
+     * @method getOutputs
+     *
+     * @returns {Array}
+     */
+    getOutputs() {
+        if (isArray(this.abiItem.outputs)) {
+            return this.abiItem.outputs;
+        }
+
+        return [];
     }
 
     /**

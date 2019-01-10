@@ -42,21 +42,18 @@ export default class MethodFactory extends AbstractMethodFactory {
      * @constructor
      */
     constructor(methodModuleFactory, utils, formatters) {
-        super(
-            {
-                getAccounts: GetAccountsMethod,
-                newAccount: NewAccountMethod,
-                unlockAccount: UnlockAccountMethod,
-                lockAccount: LockAccountMethod,
-                importRawKey: ImportRawKeyMethod,
-                sendTransaction: PersonalSendTransactionMethod,
-                signTransaction: PersonalSignTransactionMethod,
-                sign: PersonalSignMethod,
-                ecRecover: EcRecoverMethod
-            },
-            methodModuleFactory,
-            utils,
-            formatters
-        );
+        super(methodModuleFactory, utils, formatters);
+
+        this.methods = {
+            getAccounts: GetAccountsMethod,
+            newAccount: NewAccountMethod,
+            unlockAccount: UnlockAccountMethod,
+            lockAccount: LockAccountMethod,
+            importRawKey: ImportRawKeyMethod,
+            sendTransaction: PersonalSendTransactionMethod,
+            signTransaction: PersonalSignTransactionMethod,
+            sign: PersonalSignMethod,
+            ecRecover: EcRecoverMethod
+        };
     }
 }

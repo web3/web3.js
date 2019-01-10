@@ -26,6 +26,8 @@
         "jest"
     ],
     "rules": {
+        "no-useless-constructor": 0,
+        "no-new": 0,
         "standard/no-callback-literal": 0,
         "unicorn/filename-case": [
             "error",
