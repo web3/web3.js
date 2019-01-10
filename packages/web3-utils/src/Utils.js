@@ -141,7 +141,7 @@ export const checkAddressChecksum = (address) => {
  * @param {Number} chars that result string should have
  * @param {String} sign, by default 0
  *
- * @returns {String} right aligned string
+ * @returns {String} left aligned string
  */
 export const leftPad = (string, chars, sign) => {
     const hasPrefix = /^0x/i.test(string) || typeof string === 'number';
