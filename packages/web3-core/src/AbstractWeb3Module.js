@@ -58,7 +58,7 @@ export default class AbstractWeb3Module {
             return this.providersModuleFactory.createBatchRequest(this);
         };
 
-        if (methodFactory !== null) {
+        if (methodFactory !== null && methodModuleFactory !== null) {
             this.methodFactory = methodFactory;
 
             return methodModuleFactory.createMethodProxy(this, this.methodFactory);

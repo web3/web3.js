@@ -88,10 +88,12 @@ export default class IpcProvider extends AbstractSocketProvider {
             this.connection.addListener('data', this.onMessage);
         }
 
-        this.connection.addListener('connect', this.onConnect);
-        this.connection.addListener('error', this.onError);
-        this.connection.addListener('close', this.onClose);
-        this.connection.addListener('ready', this.onReady);
+        this.connection.addListener('connect', this.onConnect.bind(this));
+        this.connection.addListener('error', this.onError.bind(this));
+        this.connection.addListener('end', this.onError.bind(this));
+        this.connection.addListener('close', this.onClose.bind(this));
+        this.connection.addListener('timeout', this.onClose.bind(this));
+        this.connection.addListener('ready', this.onReady.bind(this));
     }
 
     /**

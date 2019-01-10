@@ -118,6 +118,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onReady(event) {
         this.emit(this.READY, event);
+        this.emit(this.SOCKET_READY, event);
     }
 
     /**
@@ -129,6 +130,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onError(error) {
         this.emit(this.ERROR, error);
+        this.emit(this.SOCKET_ERROR, error);
         this.removeAllSocketListeners();
         this.removeAllListeners();
     }
@@ -142,6 +144,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onClose(error = null) {
         this.emit(this.CLOSE, error);
+        this.emit(this.SOCKET_CLOSE, error);
         this.removeAllSocketListeners();
         this.removeAllListeners();
     }
@@ -193,6 +196,7 @@ export default class AbstractSocketProvider extends EventEmitter {
             event = response.id;
         }
 
+        this.emit(this.SOCKET_MESSAGE, response);
         this.emit(event, response);
     }
 

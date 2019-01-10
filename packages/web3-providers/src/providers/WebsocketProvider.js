@@ -132,11 +132,11 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @method registerEventListeners
      */
     registerEventListeners() {
-        this.connection.addEventListener('message', this.onMessage);
-        this.connection.addEventListener('open', this.onReady);
-        this.connection.addEventListener('close', this.onClose);
-        this.connection.addEventListener('error', this.onError);
-        this.connection.addEventListener('connect', this.onConnect);
+        this.connection.addEventListener('message', this.onMessage.bind(this));
+        this.connection.addEventListener('open', this.onReady.bind(this));
+        this.connection.addEventListener('open', this.onConnect.bind(this));
+        this.connection.addEventListener('close', this.onClose.bind(this));
+        this.connection.addEventListener('error', this.onError.bind(this));
     }
 
     /**
@@ -278,7 +278,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 return;
             }
 
-            this.on('open', () => {
+            this.on('connect', () => {
                 this.sendPayload(payload)
                     .then(resolve)
                     .catch(reject);

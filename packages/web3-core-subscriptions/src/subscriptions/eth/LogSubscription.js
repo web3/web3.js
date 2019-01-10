@@ -75,12 +75,11 @@ export default class LogSubscription extends AbstractSubscription {
      *
      * @method onNewSubscriptionItem
      *
-     * @param {Subscription} subscription
      * @param {any} subscriptionItem
      *
      * @returns {Object}
      */
-    onNewSubscriptionItem(subscription, subscriptionItem) {
+    onNewSubscriptionItem(subscriptionItem) {
         return this.formatters.outputLogFormatter(subscriptionItem);
     }
 }
