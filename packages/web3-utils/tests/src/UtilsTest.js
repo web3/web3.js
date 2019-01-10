@@ -8,15 +8,15 @@ import {
     hexToNumberString,
     isAddress,
     isBN,
-    numberToHex,
-    sha3,
+    fromDecimal,
+    keccak256,
     toAscii,
     toBN,
     toHex,
     toTwosComplement,
     toUtf8,
     toWei,
-    utf8ToHex,
+    stringToHex,
     getSignatureParameters
 } from '../../src';
 
@@ -41,7 +41,7 @@ describe('UtilsTest', () => {
         });
     });
 
-    it('calls numberToHex and returns the expected results', () => {
+    it('calls fromDecimal and returns the expected results', () => {
         const tests = [
             {value: 1, expected: '0x1'},
             {value: '21345678976543214567869765432145647586', expected: '0x100f073a3d694d13d1615dc9bc3097e2'},
@@ -85,7 +85,7 @@ describe('UtilsTest', () => {
         ];
 
         tests.forEach((test) => {
-            expect(numberToHex(test.value)).toEqual(test.expected);
+            expect(fromDecimal(test.value)).toEqual(test.expected);
         });
     });
 
@@ -182,16 +182,16 @@ describe('UtilsTest', () => {
     });
 
     /* eslint-disable jest/no-identical-title */
-    describe('calls sha3', () => {
-        it('should return sha3 with hex prefix', () => {
-            expect(sha3('test123')).toEqual(
+    describe('calls keccak256', () => {
+        it('should return keccak256 with hex prefix', () => {
+            expect(keccak256('test123')).toEqual(
                 '0x' +
                     cjsSha3('test123', {
                         outputLength: 256
                     }).toString()
             );
 
-            expect(sha3('test(int)')).toEqual(
+            expect(keccak256('test(int)')).toEqual(
                 '0x' +
                     cjsSha3('test(int)', {
                         outputLength: 256
@@ -199,7 +199,7 @@ describe('UtilsTest', () => {
             );
         });
 
-        it('should return sha3 with hex prefix when hex input', () => {
+        it('should return keccak256 with hex prefix when hex input', () => {
             const sha3Hex = (value) => {
                 if (value.length > 2 && value.substr(0, 2) === '0x') {
                     value = value.substr(2);
@@ -211,16 +211,16 @@ describe('UtilsTest', () => {
                 }).toString();
             };
 
-            expect(sha3('0x80')).toEqual('0x' + sha3Hex('0x80'));
+            expect(keccak256('0x80')).toEqual('0x' + sha3Hex('0x80'));
 
-            expect(sha3('0x3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1')).toEqual(
+            expect(keccak256('0x3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1')).toEqual(
                 '0x' + sha3Hex('0x3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1')
             );
         });
 
-        it('should return sha3 with hex prefix', () => {
+        it('should return keccak256 with hex prefix', () => {
             const test = (v, e, o) => {
-                expect(sha3(v, o)).toEqual(e);
+                expect(keccak256(v, o)).toEqual(e);
             };
 
             test('test123', '0xf81b517a242b218999ec8eec0ea6e2ddbef2a367a14e93f4a32a39e260f686ad');
@@ -464,7 +464,7 @@ describe('UtilsTest', () => {
         }).toThrow('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
     });
 
-    it('calls utf8ToHex and returns the expected results', () => {
+    it('calls stringToHex and returns the expected results', () => {
         const tests = [
             {
                 value: 'Heeäööä👅D34ɝɣ24Єͽ-.,äü+#/',
@@ -486,7 +486,7 @@ describe('UtilsTest', () => {
         ];
 
         tests.forEach((test) => {
-            expect(utf8ToHex(test.value)).toEqual(test.expected);
+            expect(stringToHex(test.value)).toEqual(test.expected);
         });
     });
 
