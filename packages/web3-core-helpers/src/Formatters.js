@@ -87,7 +87,7 @@ export const inputBlockNumberFormatter = (blockNumber) => {
         return blockNumber;
     }
 
-    return Utils.numberToHex(blockNumber);
+    return Utils.fromDecimal(blockNumber);
 };
 
 /**
@@ -130,7 +130,7 @@ export const txInputFormatter = (txObject) => {
             return txObject[key] !== undefined;
         })
         .forEach((key) => {
-            txObject[key] = Utils.numberToHex(txObject[key]);
+            txObject[key] = Utils.fromDecimal(txObject[key]);
         });
 
     return txObject;
@@ -429,15 +429,15 @@ export const outputLogFormatter = (log) => {
  */
 export const inputPostFormatter = (post) => {
     if (post.ttl) {
-        post.ttl = Utils.numberToHex(post.ttl);
+        post.ttl = Utils.fromDecimal(post.ttl);
     }
 
     if (post.workToProve) {
-        post.workToProve = Utils.numberToHex(post.workToProve);
+        post.workToProve = Utils.fromDecimal(post.workToProve);
     }
 
     if (post.priority) {
-        post.priority = Utils.numberToHex(post.priority);
+        post.priority = Utils.fromDecimal(post.priority);
     }
 
     // fallback
