@@ -283,3 +283,4 @@ export const toBN = utils.toBN;
 export const toHex = utils.toHex;
 export const hexToNumberString = utils.hexToNumberString;
 export const toTwosComplement = utils.toTwosComplement;
+export const isHex = utils.isHex;
