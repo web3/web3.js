@@ -497,6 +497,11 @@ sha3._Hash = Hash;
  * @return {Object} with r,s,v values
  */
 export const getSignatureParameters = (signature) => {
+
+    if (!isHexStrict(signature)) {
+        throw new Error(`Given value "${signature}" is not a valid hex string.`);
+    }
+
     const r = signature.slice( 0, 66 );
     const s = `0x${signature.slice( 66, 130 )}`;
     let v = `0x${signature.slice( 130, 132 )}`;
