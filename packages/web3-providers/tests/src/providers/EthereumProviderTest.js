@@ -33,15 +33,23 @@ describe('EthereumProviderTest', () => {
     it('calls registerEventListeners and the expected listeners will be registered', () => {
         ethereumProvider.registerEventListeners();
 
-        expect(socketMock.on).toHaveBeenCalledWith('notification', ethereumProvider.onMessage);
+        expect(socketMock.on.mock.calls[0][0]).toEqual('notification');
+        expect(socketMock.on.mock.calls[0][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.on).toHaveBeenCalledWith('connect', ethereumProvider.onConnect);
+        expect(socketMock.on.mock.calls[1][0]).toEqual('connect');
+        expect(socketMock.on.mock.calls[1][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.on).toHaveBeenCalledWith('close', ethereumProvider.onClose);
+        expect(socketMock.on.mock.calls[2][0]).toEqual('connect');
+        expect(socketMock.on.mock.calls[2][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.on).toHaveBeenCalledWith('networkChanged', ethereumProvider.onNetworkChanged);
+        expect(socketMock.on.mock.calls[3][0]).toEqual('close');
+        expect(socketMock.on.mock.calls[3][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.on).toHaveBeenCalledWith('accountsChanged', ethereumProvider.onAccountsChanged);
+        expect(socketMock.on.mock.calls[4][0]).toEqual('networkChanged');
+        expect(socketMock.on.mock.calls[4][1]).toBeInstanceOf(Function);
+
+        expect(socketMock.on.mock.calls[5][0]).toEqual('accountsChanged');
+        expect(socketMock.on.mock.calls[5][1]).toBeInstanceOf(Function);
     });
 
     it('calls removeAllListeners with the "socket_networkChanged" event', (done) => {

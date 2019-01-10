@@ -85,7 +85,7 @@ export default class IpcProvider extends AbstractSocketProvider {
         if (this.connection.constructor.name === 'Socket') {
             oboe(this.connection).done(this.onMessage);
         } else {
-            this.connection.addListener('data', this.onMessage);
+            this.connection.addListener('data', this.onMessage.bind(this));
         }
 
         this.connection.addListener('connect', this.onConnect.bind(this));

@@ -283,7 +283,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     .then(resolve)
                     .catch(reject);
 
-                this.removeAllListeners('open');
+                this.removeAllListeners('connect');
             });
         });
     }
