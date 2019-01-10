@@ -265,12 +265,16 @@ export const toChecksumAddress = (address) => {
 
 // aliases
 export const keccak256 = utils.sha3;
+export const sha3 = utils.sha3;
 export const toDecimal = utils.hexToNumber;
+export const hexToNumber = utils.hexToNumber;
 export const fromDecimal = utils.numberToHex;
+export const numberToHex = utils.numberToHex;
 export const hexToString = utils.hexToUtf8;
 export const toUtf8 = utils.hexToUtf8;
 export const stringToHex = utils.utf8ToHex;
 export const fromUtf8 = utils.utf8ToHex;
+export const utf8ToHex = utils.utf8ToHex;
 export const toAscii = hexToAscii;
 export const fromAscii = asciiToHex;
 export const padLeft = utils.leftPad;
