@@ -138,10 +138,9 @@ export default class ProvidersModuleFactory {
             }
 
             if (urlObject.auth) {
-                authToken = Buffer.from(urlObject.auth, 'base64');
+                headers.authorization = Buffer.from(urlObject.auth, 'base64');
             }
 
-            headers.authorization = authToken;
             connection = new W3CWebsocket(url, options.protocol, null, headers, null, options.clientConfig);
         } else {
             connection = new window.WebSocket(url, options.protocol);

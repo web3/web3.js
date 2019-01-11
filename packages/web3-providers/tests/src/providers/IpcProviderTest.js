@@ -29,15 +29,27 @@ describe('IpcProviderTest', () => {
 
         expect(ipcProvider.host).toEqual('PATH');
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('data', ipcProvider.onMessage);
+        expect(socketMock.addListener.mock.calls[0][0]).toEqual('data');
+        expect(socketMock.addListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('connect', ipcProvider.onConnect);
+        expect(socketMock.addListener.mock.calls[1][0]).toEqual('connect');
+        expect(socketMock.addListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('error', ipcProvider.onError);
+        expect(socketMock.addListener.mock.calls[2][0]).toEqual('error');
+        expect(socketMock.addListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('close', ipcProvider.onClose);
+        expect(socketMock.addListener.mock.calls[3][0]).toEqual('end');
+        expect(socketMock.addListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('ready', ipcProvider.onReady);
+        expect(socketMock.addListener.mock.calls[4][0]).toEqual('close');
+        expect(socketMock.addListener.mock.calls[4][1]).toBeInstanceOf(Function);
+
+        expect(socketMock.addListener.mock.calls[5][0]).toEqual('timeout');
+        expect(socketMock.addListener.mock.calls[5][1]).toBeInstanceOf(Function);
+
+        expect(socketMock.addListener.mock.calls[6][0]).toEqual('ready');
+        expect(socketMock.addListener.mock.calls[6][1]).toBeInstanceOf(Function);
+
     });
 
     it('calls disconnect', () => {
@@ -81,13 +93,26 @@ describe('IpcProviderTest', () => {
 
         ipcProvider.registerEventListeners();
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('connect', ipcProvider.onConnect);
+        expect(socketMock.addListener.mock.calls[0][0]).toEqual('data');
+        expect(socketMock.addListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('error', ipcProvider.onError);
+        expect(socketMock.addListener.mock.calls[1][0]).toEqual('connect');
+        expect(socketMock.addListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('close', ipcProvider.onClose);
+        expect(socketMock.addListener.mock.calls[2][0]).toEqual('error');
+        expect(socketMock.addListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('ready', ipcProvider.onReady);
+        expect(socketMock.addListener.mock.calls[3][0]).toEqual('end');
+        expect(socketMock.addListener.mock.calls[3][1]).toBeInstanceOf(Function);
+
+        expect(socketMock.addListener.mock.calls[4][0]).toEqual('close');
+        expect(socketMock.addListener.mock.calls[4][1]).toBeInstanceOf(Function);
+
+        expect(socketMock.addListener.mock.calls[5][0]).toEqual('timeout');
+        expect(socketMock.addListener.mock.calls[5][1]).toBeInstanceOf(Function);
+
+        expect(socketMock.addListener.mock.calls[6][0]).toEqual('ready');
+        expect(socketMock.addListener.mock.calls[6][1]).toBeInstanceOf(Function);
     });
 
     it('calls registerEventListener', () => {
@@ -95,15 +120,26 @@ describe('IpcProviderTest', () => {
 
         ipcProvider.registerEventListeners();
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('data', ipcProvider.onMessage);
+        expect(socketMock.addListener.mock.calls[0][0]).toEqual('data');
+        expect(socketMock.addListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('connect', ipcProvider.onConnect);
+        expect(socketMock.addListener.mock.calls[1][0]).toEqual('connect');
+        expect(socketMock.addListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('error', ipcProvider.onError);
+        expect(socketMock.addListener.mock.calls[2][0]).toEqual('error');
+        expect(socketMock.addListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('close', ipcProvider.onClose);
+        expect(socketMock.addListener.mock.calls[3][0]).toEqual('end');
+        expect(socketMock.addListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener).toHaveBeenCalledWith('ready', ipcProvider.onReady);
+        expect(socketMock.addListener.mock.calls[4][0]).toEqual('close');
+        expect(socketMock.addListener.mock.calls[4][1]).toBeInstanceOf(Function);
+
+        expect(socketMock.addListener.mock.calls[5][0]).toEqual('timeout');
+        expect(socketMock.addListener.mock.calls[5][1]).toBeInstanceOf(Function);
+
+        expect(socketMock.addListener.mock.calls[6][0]).toEqual('ready');
+        expect(socketMock.addListener.mock.calls[6][1]).toBeInstanceOf(Function);
     });
 
     it('calls removeAllListeners with the "socket_message" event', () => {
