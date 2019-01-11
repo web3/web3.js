@@ -4053,9 +4053,13 @@ SolidityFunction.prototype.extractDefaultBlock = function (args) {
 SolidityFunction.prototype.validateArgs = function (args) {
     var inputArgs = args.filter(function (a) {
       // filter the options object but not arguments that are arrays
+      function isBigNumber(number) {
+        return number.c !== null && number.e !== null && number.s !== null;
+      }
+
       return !( (utils.isObject(a) === true) &&
                 (utils.isArray(a) === false) &&
-                (utils.isBigNumber(a) === false)
+                (isBigNumber(a) === false)
               );
     });
     if (inputArgs.length !== this._inputTypes.length) {
