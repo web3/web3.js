@@ -39,11 +39,12 @@ export default class EthereumProvider extends AbstractSocketProvider {
      * @method registerEventListeners
      */
     registerEventListeners() {
-        this.connection.on('notification', this.onMessage);
-        this.connection.on('connect', this.onConnect);
-        this.connection.on('close', this.onClose);
-        this.connection.on('networkChanged', this.onNetworkChanged);
-        this.connection.on('accountsChanged', this.onAccountsChanged);
+        this.connection.on('notification', this.onMessage.bind(this));
+        this.connection.on('connect', this.onConnect.bind(this));
+        this.connection.on('connect', this.onReady.bind(this));
+        this.connection.on('close', this.onClose.bind(this));
+        this.connection.on('networkChanged', this.onNetworkChanged.bind(this));
+        this.connection.on('accountsChanged', this.onAccountsChanged.bind(this));
     }
 
     /**

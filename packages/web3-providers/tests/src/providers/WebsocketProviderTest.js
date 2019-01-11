@@ -27,15 +27,20 @@ describe('WebsocketProviderTest', () => {
 
         expect(websocketProvider.timeout).toEqual(1);
 
-        expect(socketMock.addEventListener).toHaveBeenCalledWith('message', websocketProvider.onMessage);
+        expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+        expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addEventListener).toHaveBeenCalledWith('open', websocketProvider.onReady);
+        expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+        expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addEventListener).toHaveBeenCalledWith('close', websocketProvider.onClose);
+        expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+        expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addEventListener).toHaveBeenCalledWith('error', websocketProvider.onError);
+        expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+        expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addEventListener).toHaveBeenCalledWith('connect', websocketProvider.onConnect);
+        expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+        expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
     });
 
     it('calls onMessage with an MessageEvent', (done) => {
@@ -68,15 +73,20 @@ describe('WebsocketProviderTest', () => {
             const event = {code: 'ECONNREFUSED'};
 
             setTimeout(() => {
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('message', websocketProvider.onMessage);
+                expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+                expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('open', websocketProvider.onReady);
+                expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+                expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('close', websocketProvider.onClose);
+                expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+                expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('error', websocketProvider.onError);
+                expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+                expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('connect', websocketProvider.onConnect);
+                expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+                expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
 
                 expect(socketMock.host).toEqual('host');
 
@@ -106,15 +116,20 @@ describe('WebsocketProviderTest', () => {
             const event = {code: 1001};
 
             setTimeout(() => {
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('message', websocketProvider.onMessage);
+                expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+                expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('open', websocketProvider.onReady);
+                expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+                expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('close', websocketProvider.onClose);
+                expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+                expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('error', websocketProvider.onError);
+                expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+                expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('connect', websocketProvider.onConnect);
+                expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+                expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
 
                 expect(socketMock.host).toEqual('host');
 
@@ -142,15 +157,20 @@ describe('WebsocketProviderTest', () => {
 
                 expect(websocketProvider.connection).toBeInstanceOf(Websocket);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('message', websocketProvider.onMessage);
+                expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+                expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('open', websocketProvider.onReady);
+                expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+                expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('close', websocketProvider.onClose);
+                expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+                expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('error', websocketProvider.onError);
+                expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+                expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('connect', websocketProvider.onConnect);
+                expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+                expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
 
                 expect(socketMock.removeEventListener).toHaveBeenCalledWith('message', websocketProvider.onMessage);
 
@@ -186,15 +206,20 @@ describe('WebsocketProviderTest', () => {
 
                 expect(websocketProvider.connection).toBeInstanceOf(W3CWebsocket);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('message', websocketProvider.onMessage);
+                expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+                expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('open', websocketProvider.onReady);
+                expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+                expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('close', websocketProvider.onClose);
+                expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+                expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('error', websocketProvider.onError);
+                expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+                expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener).toHaveBeenCalledWith('connect', websocketProvider.onConnect);
+                expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+                expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
 
                 expect(socketMock.removeEventListener).toHaveBeenCalledWith('message', websocketProvider.onMessage);
 
@@ -237,15 +262,20 @@ describe('WebsocketProviderTest', () => {
     it('calls registerEventListeners', () => {
         websocketProvider.registerEventListeners();
 
-        expect(socketMock.addEventListener).toHaveBeenCalledWith('message', websocketProvider.onMessage);
+        expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+        expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addEventListener).toHaveBeenCalledWith('open', websocketProvider.onReady);
+        expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+        expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addEventListener).toHaveBeenCalledWith('close', websocketProvider.onClose);
+        expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+        expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addEventListener).toHaveBeenCalledWith('error', websocketProvider.onError);
+        expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+        expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addEventListener).toHaveBeenCalledWith('connect', websocketProvider.onConnect);
+        expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+        expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
     });
 
     it('calls removeAllListeners with the event "socket_message"', () => {
@@ -449,7 +479,7 @@ describe('WebsocketProviderTest', () => {
 
         setTimeout(() => {
             socketMock.readyState = 4;
-            websocketProvider.emit('open');
+            websocketProvider.emit('connect');
         }, 100);
 
         setTimeout(() => {
@@ -464,6 +494,6 @@ describe('WebsocketProviderTest', () => {
 
         expect(websocketProvider.listenerCount('0x0')).toEqual(0);
 
-        expect(websocketProvider.listenerCount('open')).toEqual(0);
+        expect(websocketProvider.listenerCount('connect')).toEqual(0);
     });
 });
