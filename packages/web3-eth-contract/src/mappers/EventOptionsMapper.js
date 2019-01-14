@@ -42,30 +42,32 @@ export default class EventOptionsMapper {
      * @returns {Object}
      */
     map(abiItemModel, contract, options) {
-        if (!isArray(options.topics)) {
-            options.topics = [];
-        }
+        if (options) {
+            if (!isArray(options.topics)) {
+                options.topics = [];
+            }
 
-        if (typeof options.fromBlock !== 'undefined') {
-            options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);
-        } else if (contract.defaultBlock !== null) {
-            options.fromBlock = contract.defaultBlock;
-        }
+            if (typeof options.fromBlock !== 'undefined') {
+                options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);
+            } else if (contract.defaultBlock !== null) {
+                options.fromBlock = contract.defaultBlock;
+            }
 
-        if (typeof options.toBlock !== 'undefined') {
-            options.toBlock = this.formatters.inputBlockNumberFormatter(options.toBlock);
-        }
+            if (typeof options.toBlock !== 'undefined') {
+                options.toBlock = this.formatters.inputBlockNumberFormatter(options.toBlock);
+            }
 
-        if (!abiItemModel.anonymous) {
-            options.topics.unshift(abiItemModel.signature);
-        }
+            if (!abiItemModel.anonymous) {
+                options.topics.unshift(abiItemModel.signature);
+            }
 
-        if (typeof options.filter !== 'undefined') {
-            options.topics = options.topics.concat(this.eventFilterEncoder.encode(abiItemModel, options.filter));
-        }
+            if (typeof options.filter !== 'undefined') {
+                options.topics = options.topics.concat(this.eventFilterEncoder.encode(abiItemModel, options.filter));
+            }
 
-        if (!options.address) {
-            options.address = contract.address;
+            if (!options.address) {
+                options.address = contract.address;
+            }
         }
 
         return options;

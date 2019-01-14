@@ -92,7 +92,7 @@ export default class EventSubscriptionsProxy {
      * @returns {Subscription|PromiEvent}
      */
     subscribe(abiItemModel, options, callback) {
-        if (!isUndefined(options.filter) && !isUndefined(options.topics)) {
+        if (options && !isUndefined(options.filter) && !isUndefined(options.topics)) {
             this.handleValidationError(
                 'Invalid subscription options: Only filter or topics are allowed and not both',
                 callback
