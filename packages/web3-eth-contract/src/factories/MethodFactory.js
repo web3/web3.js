@@ -53,18 +53,19 @@ export default class MethodFactory {
      *
      * @param {AbiItemModel} abiItem
      * @param {AbstractContract} contract
+     * @param {String} requestType
      *
      * @returns {AbstractMethod}
      */
-    createMethodByRequestType(abiItem, contract) {
+    createMethodByRequestType(abiItem, contract, requestType) {
         let rpcMethod;
 
-        switch (abiItem.requestType) {
+        switch (requestType) {
             case 'call':
                 rpcMethod = this.createCallContractMethod(abiItem);
                 break;
             case 'send':
-                rpcMethod = this.createSendContractMethod(abiItem);
+                rpcMethod = this.createSendContractMethod(abiItem, contract.abiModel);
                 break;
             case 'estimate':
                 rpcMethod = this.createEstimateGasMethod();
@@ -121,15 +122,15 @@ export default class MethodFactory {
      *
      * @returns {SendContractMethod}
      */
-    createSendContractMethod(abiItem) {
+    createSendContractMethod(abiItem, abiModel) {
         return new SendContractMethod(
             this.utils,
             this.formatters,
-            this.accounts,
             this.methodModuleFactory.createTransactionConfirmationWorkflow(),
+            this.accounts,
             this.methodModuleFactory.createTransactionSigner(),
             this.contractModuleFactory.createAllEventsLogDecoder(),
-            abiItem
+            abiModel
         );
     }
 

@@ -172,9 +172,8 @@ export default class AbstractMethod {
      * @param {IArguments} args
      */
     set arguments(args) {
-        let parameters = [...args];
-
-        let callback = null;
+        let parameters = [...args],
+            callback = null;
 
         if (parameters.length > this.parametersAmount) {
             if (!isFunction(parameters[parameters.length - 1])) {
@@ -206,7 +205,7 @@ export default class AbstractMethod {
      *
      * @method isHash
      *
-     * @param {*} parameter
+     * @param {String} parameter
      *
      * @returns {Boolean}
      */

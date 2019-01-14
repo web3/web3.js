@@ -34,7 +34,6 @@ export default class AbiItemModel {
         this.name = this.abiItem.name;
         this.anonymous = this.abiItem.anonymous;
         this.contractMethodParameters = [];
-        this._requestType = false;
     }
 
     /**
@@ -45,10 +44,6 @@ export default class AbiItemModel {
      * @returns {String}
      */
     get requestType() {
-        if (this._requestType) {
-            return this._requestType;
-        }
-
         if (this.abiItem.type === 'function' || this.abiItem.type === 'constructor') {
             if (this.abiItem.constant === true) {
                 return 'call';
@@ -56,17 +51,6 @@ export default class AbiItemModel {
 
             return 'send';
         }
-    }
-
-    /**
-     * Setter for the requestType of this ABI item.
-     *
-     * @property requestType
-     *
-     * @param {String} value
-     */
-    set requestType(value) {
-        this._requestType = value;
     }
 
     /**

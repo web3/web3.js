@@ -44,7 +44,7 @@ export default class CallContractMethod extends CallMethod {
      *
      * @param {String} response
      *
-     * @returns {Array}
+     * @returns {Array|String}
      */
     afterExecution(response) {
         if (!response) {
@@ -57,7 +57,7 @@ export default class CallContractMethod extends CallMethod {
 
         const result = this.abiCoder.decodeParameters(this.abiItemModel.getOutputs(), response);
 
-        if (result.length === 1) {
+        if (Object.keys(result).length === 1) {
             return result[0];
         }
 

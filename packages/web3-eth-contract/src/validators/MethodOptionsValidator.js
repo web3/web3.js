@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import SendContractMethod from '../methods/SendContractMethod';
+
 export default class MethodOptionsValidator {
     /**
      * @param {Utils} utils
@@ -45,7 +47,7 @@ export default class MethodOptionsValidator {
             throw new Error("This contract object doesn't have address set yet, please set an address first.");
         }
 
-        if (!this.isFromSet(method)) {
+        if (!this.isFromSet(method) && method instanceof SendContractMethod) {
             throw new Error('No valid "from" address specified in neither the given options, nor the default options.');
         }
 

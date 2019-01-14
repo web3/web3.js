@@ -21,6 +21,9 @@
  */
 
 import {isObject, isFunction} from 'lodash';
+import HttpProvider from '../providers/HttpProvider';
+import WebsocketProvider from '../providers/WebsocketProvider';
+import IpcProvider from '../providers/IpcProvider';
 
 export default class ProviderResolver {
     /**
@@ -59,15 +62,16 @@ export default class ProviderResolver {
             }
         }
 
-        if (provider.constructor) {
-            switch (provider.constructor.name) {
-                case 'EthereumProvider':
-                    return this.providersModuleFactory.createEthereumProvider(provider);
-                case 'HttpProvider':
-                case 'WebsocketProvider':
-                case 'IpcProvider':
-                    return provider;
-            }
+        if (
+            provider instanceof HttpProvider ||
+            provider instanceof WebsocketProvider ||
+            provider instanceof IpcProvider
+        ) {
+            return provider;
+        }
+
+        if (provider.constructor.name === 'EthereumProvider') {
+            return this.providersModuleFactory.createEthereumProvider(provider);
         }
 
         throw new Error('Please provide an valid Web3 provider');

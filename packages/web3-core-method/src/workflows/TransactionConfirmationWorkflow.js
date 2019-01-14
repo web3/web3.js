@@ -51,11 +51,11 @@ export default class TransactionConfirmationWorkflow {
      * @callback callback callback(error, result)
      */
     execute(method, moduleInstance, transactionHash, promiEvent) {
-        this.getTransactionReceiptMethod.arguments = [transactionHash];
+        this.getTransactionReceiptMethod.parameters = [transactionHash];
 
         this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
             if (receipt && receipt.blockHash) {
-                const validationResult = this.transactionReceiptValidator.validate(receipt);
+                const validationResult = this.transactionReceiptValidator.validate(receipt, method.parameters);
                 if (validationResult === true) {
                     this.handleSuccessState(receipt, method, promiEvent);
 
