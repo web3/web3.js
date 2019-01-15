@@ -119,6 +119,7 @@ export default class MethodFactory {
      * @method createSendContractMethod
      *
      * @param {AbiItemModel} abiItem
+     * @param {AbiModel} abiModel
      *
      * @returns {SendContractMethod}
      */
@@ -147,8 +148,8 @@ export default class MethodFactory {
         return new ContractDeployMethod(
             this.utils,
             this.formatters,
-            this.accounts,
             this.methodModuleFactory.createTransactionConfirmationWorkflow(),
+            this.accounts,
             this.methodModuleFactory.createTransactionSigner(),
             contract
         );

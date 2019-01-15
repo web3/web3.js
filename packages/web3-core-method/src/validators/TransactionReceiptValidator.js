@@ -34,17 +34,18 @@ export default class TransactionReceiptValidator {
      * @returns {Error|Boolean}
      */
     validate(receipt, methodParameters) {
-        if (this.isValidGasUsage(receipt, methodParameters) && this.isValidReceiptStatus(receipt)) {
-            return true;
-        }
-
         const receiptJSON = JSON.stringify(receipt, null, 2);
 
-        if (receipt.status === false || receipt.status === '0x0') {
+        if (!this.isValidGasUsage(receipt, methodParameters)) {
+            return new Error(`Transaction ran out of gas. Please provide more gas:\n${receiptJSON}`);
+        }
+
+
+        if(!this.isValidReceiptStatus(receipt)) {
             return new Error(`Transaction has been reverted by the EVM:\n${receiptJSON}`);
         }
 
-        return new Error(`Transaction ran out of gas. Please provide more gas:\n${receiptJSON}`);
+        return true;
     }
 
     /**

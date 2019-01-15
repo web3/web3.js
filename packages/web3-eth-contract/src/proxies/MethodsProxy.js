@@ -66,6 +66,7 @@ export default class MethodsProxy {
                     let abiItemModel = this.abiModel.getMethod(name),
                         requestType = abiItemModel.requestType;
 
+                    // TODO: Improve the requestType detection and defining of the call/send method.
                     if (isArray(abiItemModel)) {
                         requestType = abiItemModel[0].requestType;
                     }
@@ -80,15 +81,13 @@ export default class MethodsProxy {
                         // then I have to set the right contract data and to map the arguments.
                         // TODO: Change API or improve this
                         if (!isArray(abiItemModel) && abiItemModel.isOfType('constructor')) {
-                            if (arguments[0]['data']) {
-                                target.contract.options.data = arguments[0]['data'];
+                            if (methodArguments[0]['data']) {
+                                target.contract.options.data = methodArguments[0]['data'];
                             }
 
-                            if (arguments[0]['arguments']) {
-                                methodArguments = arguments[0]['arguments'];
+                            if (methodArguments[0]['arguments']) {
+                                abiItemModel.contractMethodParameters = methodArguments[0]['arguments'];
                             }
-
-                            abiItemModel.contractMethodParameters = methodArguments;
 
                             return anonymousFunction;
                         }
@@ -122,6 +121,10 @@ export default class MethodsProxy {
                     }
 
                     anonymousFunction[requestType] = function() {
+                        if (abiItemModel.isOfType('constructor')) {
+                            return target.executeMethod(abiItemModel, arguments, 'contract-deployment');
+                        }
+
                         return target.executeMethod(abiItemModel, arguments, requestType);
                     };
 

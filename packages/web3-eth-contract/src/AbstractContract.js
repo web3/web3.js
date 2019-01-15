@@ -32,7 +32,7 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @param {AbiCoder} abiCoder
      * @param {Object} utils
      * @param {Object} formatters
-     * @param {Object} abi
+     * @param {Array} abi
      * @param {String} address
      * @param {Object} options
      *
@@ -204,7 +204,7 @@ export default class AbstractContract extends AbstractWeb3Module {
             this.abiCoder,
             this.utils,
             this.formatters,
-            {},
+            [],
             this.address,
             this.options
         );
