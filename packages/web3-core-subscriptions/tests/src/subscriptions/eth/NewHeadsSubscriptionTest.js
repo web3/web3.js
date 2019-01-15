@@ -21,7 +21,7 @@ describe('NewHeadsSubscriptionTest', () => {
 
         expect(newHeadsSubscription.type).toEqual('eth_subscribe');
 
-        expect(newHeadsSubscription.options).toEqual(null);
+        expect(newHeadsSubscription.options).toEqual({});
 
         expect(newHeadsSubscription.utils).toEqual(Utils);
 
