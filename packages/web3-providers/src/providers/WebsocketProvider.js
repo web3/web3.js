@@ -265,12 +265,10 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
-                this.on(id, (response) => {
+                this.once(id, (response) => {
                     if (timeout) {
                         clearTimeout(timeout);
                     }
-
-                    this.removeAllListeners(id);
 
                     return resolve(response);
                 });

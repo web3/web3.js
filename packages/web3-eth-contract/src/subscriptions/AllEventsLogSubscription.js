@@ -44,12 +44,11 @@ export default class AllEventsLogSubscription extends LogSubscription {
      *
      * @method onNewSubscriptionItem
      *
-     * @param {Subscription} subscription
      * @param {*} subscriptionItem
      *
      * @returns {Object}
      */
-    onNewSubscriptionItem(subscription, subscriptionItem) {
+    onNewSubscriptionItem(subscriptionItem) {
         return this.allEventsLogDecoder.decode(this.formatters.outputLogFormatter(subscriptionItem));
     }
 }

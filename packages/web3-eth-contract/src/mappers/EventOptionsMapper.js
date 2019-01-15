@@ -42,32 +42,34 @@ export default class EventOptionsMapper {
      * @returns {Object}
      */
     map(abiItemModel, contract, options) {
-        if (options) {
-            if (!isArray(options.topics)) {
-                options.topics = [];
-            }
+        if (!options) {
+            options = {};
+        }
 
-            if (typeof options.fromBlock !== 'undefined') {
-                options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);
-            } else if (contract.defaultBlock !== null) {
-                options.fromBlock = contract.defaultBlock;
-            }
+        if (!isArray(options.topics)) {
+            options.topics = [];
+        }
 
-            if (typeof options.toBlock !== 'undefined') {
-                options.toBlock = this.formatters.inputBlockNumberFormatter(options.toBlock);
-            }
+        if (typeof options.fromBlock !== 'undefined') {
+            options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);
+        } else if (contract.defaultBlock !== null) {
+            options.fromBlock = contract.defaultBlock;
+        }
 
-            if (!abiItemModel.anonymous) {
-                options.topics.unshift(abiItemModel.signature);
-            }
+        if (typeof options.toBlock !== 'undefined') {
+            options.toBlock = this.formatters.inputBlockNumberFormatter(options.toBlock);
+        }
 
-            if (typeof options.filter !== 'undefined') {
-                options.topics = options.topics.concat(this.eventFilterEncoder.encode(abiItemModel, options.filter));
-            }
+        if (!abiItemModel.anonymous) {
+            options.topics.unshift(abiItemModel.signature);
+        }
 
-            if (!options.address) {
-                options.address = contract.address;
-            }
+        if (typeof options.filter !== 'undefined') {
+            options.topics = options.topics.concat(this.eventFilterEncoder.encode(abiItemModel, options.filter));
+        }
+
+        if (!options.address) {
+            options.address = contract.address;
         }
 
         return options;

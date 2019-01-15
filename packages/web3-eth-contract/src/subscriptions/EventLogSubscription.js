@@ -46,12 +46,11 @@ export default class EventLogSubscription extends LogSubscription {
      *
      * @method onNewSubscriptionItem
      *
-     * @param {Subscription} subscription
      * @param {*} subscriptionItem
      *
      * @returns {Object}
      */
-    onNewSubscriptionItem(subscription, subscriptionItem) {
+    onNewSubscriptionItem(subscriptionItem) {
         return this.eventLogDecoder.decode(this.abiItemModel, this.formatters.outputLogFormatter(subscriptionItem));
     }
 }

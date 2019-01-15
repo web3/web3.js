@@ -48,7 +48,7 @@ export default class LogSubscription extends AbstractSubscription {
      * @returns {Subscription} Subscription
      */
     subscribe(callback) {
-        if (this.options && this.options.fromBlock && this.options.fromBlock !== 'latest') {
+        if (this.options.fromBlock && this.options.fromBlock !== 'latest') {
             this.getPastLogsMethod.parameters = [this.formatters.inputLogFormatter(this.options)];
             this.getPastLogsMethod
                 .execute(this.moduleInstance)
@@ -79,7 +79,7 @@ export default class LogSubscription extends AbstractSubscription {
      *
      * @method onNewSubscriptionItem
      *
-     * @param {any} subscriptionItem
+     * @param {Object} subscriptionItem
      *
      * @returns {Object}
      */

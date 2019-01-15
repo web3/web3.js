@@ -178,7 +178,7 @@ export default class MethodsProxy {
             return promiEvent;
         }
 
-        if (abiItemModel.requestType === 'call' || abiItemModel.requestType === 'estimate') {
+        if (requestType === 'call' || requestType === 'estimate') {
             return method.execute(this.contract);
         }
 
