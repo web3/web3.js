@@ -84,8 +84,8 @@ export default class AbstractSubscription extends EventEmitter {
     subscribe(callback) {
         this.beforeSubscription(this.moduleInstance);
 
-        try {
-            this.moduleInstance.currentProvider.subscribe(this.type, this.method, [this.options]).then((subscriptionId) => {
+        this.moduleInstance.currentProvider.subscribe(this.type, this.method, [this.options])
+            .then((subscriptionId) => {
                 this.id = subscriptionId;
 
                 this.moduleInstance.currentProvider.on(this.id, (response) => {
@@ -96,14 +96,14 @@ export default class AbstractSubscription extends EventEmitter {
                         callback(false, formattedOutput);
                     }
                 });
-            });
-        } catch (error) {
-            this.emit('error', error);
+            })
+            .catch(error => {
+                this.emit('error', error);
 
-            if (isFunction(callback)) {
-                callback(error, null);
-            }
-        }
+                if (isFunction(callback)) {
+                    callback(error, null);
+                }
+            });
 
         return this;
     }
