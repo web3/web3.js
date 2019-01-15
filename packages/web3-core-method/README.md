@@ -4,114 +4,106 @@ This is a sub package of [web3.js][repo]
 
 The Method module abstracts the JSON-RPC method and is used within most [web3.js][repo] packages.
 
-
-##### MethodController
-> Excecutes the JSON-RPC method with an ```MethodModel```.
-
-```js 
-import {MethodController} from 'web3-core-method'
-
-const response = new MethodController().execute(
-    methodModel, // AbstractMethodModel
-    accounts, // Accounts
-    moduleInstance // AbstractWeb3Module
-); 
-```
-
 ## Installation
-
-### Node.js
 
 ```bash
 npm install web3-core-method
 ```
 
-### In the Browser
+## Exported classes
 
-Build running the following in the [web3.js][repo] repository:
-
-```bash
-npm run-script build-all
+ ``` js
+ MethodModuleFactory
+ AbstractMethod 
+ AbstractMethodFactory
+ 
+ /**
+ * Methods
+ */
+ 
+ // Network
+ GetProtocolVersionMethod 
+ VersionMethod 
+ ListeningMethod 
+ PeerCountMethod 
+ 
+ // Node
+ GetNodeInfoMethod
+ GetCoinbaseMethod
+ IsMiningMethod 
+ GetHashrateMethod
+ IsSyncingMethod
+ GetGasPriceMethod
+ SubmitWorkMethod
+ GetWorkMethod
+ 
+ // Account
+ GetAccountsMethod
+ GetBalanceMethod
+ GetTransactionCountMethod
+ RequestAccountsMethod
+ 
+ // Block
+ GetBlockNumberMethod
+ GetBlockMethod 
+ GetUncleMethod 
+ GetBlockTransactionCountMethod
+ GetBlockUncleCountMethod
+ 
+ // Transaction
+ GetTransactionMethod
+ GetTransactionFromBlockMethod
+ GetTransactionReceipt
+ SendRawTransactionMethod
+ SignTransactionMethod
+ SendTransactionMethod
+ 
+ // Global
+ GetCodeMethod
+ SignMethod
+ CallMethod
+ GetStorageAtMethod
+ EstimateGasMethod
+ GetPastLogsMethod
+ 
+ // Personal
+ EcRecoverMethod
+ ImportRawKeyMethod
+ ListAccountsMethod
+ LockAccountMethod
+ NewAccountMethod
+ PersonalSendTransactionMethod
+ PersonalSignMethod
+ PersonalSignTransactionMethod
+ UnlockAccountMethod
+ 
+ // SHH
+ AddPrivateKeyMethod
+ AddSymKeyMethod
+ DeleteKeyPairMethod
+ DeleteMessageFilterMethod
+ DeleteSymKeyMethod
+ GenerateSymKeyFromPasswordMethod
+ GetFilterMessagesMethod
+ GetInfoMethod
+ GetPrivateKeyMethod
+ GetPublicKeyMethod
+ GetSymKeyMethod
+ HasKeyPairMethod
+ HasSymKeyMethod
+ MarkTrustedPeerMethod
+ NewKeyPairMethod
+ NewMessageFilterMethod
+ NewSymKeyMethod
+ PostMethod
+ SetMaxMessageSizeMethod
+ SetMinPoWMethod
+ ShhVersionMethod
 ```
 
-Then include `dist/web3-core-method.js` in your html file.
-This will expose the `Web3Method` object on the window object.
+## Types 
 
-
-## Usage
-
-```js
-import {AbstractWeb3Module} from 'web3-core';
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
-import {MethodController, AbstractMethodModelFactory, SendTransactionMethodModel} from 'web3-core-method';
-import {ProvidersModuleFactory, providers} from 'web3-providers';
-
-// Create an module class
-class Module extends AbstractWeb3Module {
-    /**
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
-     * @param {MethodController} methodController
-     * @param {AbstractMethodModelFactory} methodModelFactory
-     * @param {Object} options
-     * 
-     * @constructor
-     */
-    constructor(
-        provider,
-        providersModuleFactory,
-        providers,
-        methodController, 
-        methodModelFactory, // optional
-        options // optional
-    ) {
-        super(
-            provider,
-            providersModuleFactory,
-            providers,
-            methodController, 
-            methodModelFactory, // optional
-            options // optional
-        );
-    }
-}
-
-MethodFactory
-MethodFactoryactory extendMethodFactorydelFactory {
-    /**
-     * @param {Object} utils
-     * @param {Object} formatters
-     * 
-     * @constructor
-     */
-    constructor (utils, formatters) {
-        super(
-            {
-                sendTransaction: SendTransactionMethodModel
-            },
-            utils,
-            formatters
-        );
-    }
-}
-
-// Instantiate anything
-const providersModuleFactory = new ProvidersModuleFactory();
-const module = new Module(
-    providersModuleFactory.createProviderDetector().detect(), 
-    providersModuleFactory, 
-    providers,
-    new MethodController(), 
-    new MethodFactory(Utils,MethodFactory{defaultAccount: '0x', ...}
-);
-
-module.sendTransaction({...}, (error, result) => {});
-```
-
+All the typescript typings are placed in the types folder. 
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
-
-

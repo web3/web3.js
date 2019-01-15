@@ -7,38 +7,22 @@ Please read the [documentation][docs] for more.
 
 ## Installation
 
-### Node.js
-
 ```bash
 npm install web3-eth
 ```
 
-### In the Browser
-
-Build running the following in the [web3.js][repo] repository:
-
-```bash
-npm run-script build-all
-```
-
-Then include `dist/web3-eth.js` in your html file.
-This will expose the `Web3Eth` object on the window object.
-
-
 ## Usage
 
 ```js
-import {ProvidersModuleFactory} from 'web3-providers';
-import {Eth} from 'web3-eth';
-
 const eth = new Eth(
-    new ProvidersModuleFactory().createProviderResolver().resolve('http://127.0.0.1:4546'),
+    'http://127.0.0.1:4546',
     options
 );
 ```
 
+## Types 
+
+All the typescript typings are placed in the types folder. 
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
-
-
