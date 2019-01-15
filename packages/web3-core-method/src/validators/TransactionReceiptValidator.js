@@ -40,8 +40,7 @@ export default class TransactionReceiptValidator {
             return new Error(`Transaction ran out of gas. Please provide more gas:\n${receiptJSON}`);
         }
 
-
-        if(!this.isValidReceiptStatus(receipt)) {
+        if (!this.isValidReceiptStatus(receipt)) {
             return new Error(`Transaction has been reverted by the EVM:\n${receiptJSON}`);
         }
 

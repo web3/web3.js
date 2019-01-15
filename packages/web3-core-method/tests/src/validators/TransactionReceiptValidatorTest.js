@@ -26,7 +26,9 @@ describe('TransactionReceiptValidatorTest', () => {
         ).toEqual(true);
     });
 
-    it('calls validate and returns error because of invalid gasUsage', () => {
+    it(
+        'calls validate and returns error because of invalid gasUsage',
+        () => {
             const error = transactionReceiptValidator.validate(receipt, [
                 {
                     gas: 100
@@ -43,7 +45,8 @@ describe('TransactionReceiptValidatorTest', () => {
             {
                 gas: 100
             }
-        ]);
+        ]
+    );
 
     it('calls validate and returns error because the EVM has reverted it', () => {
         receipt.status = false;

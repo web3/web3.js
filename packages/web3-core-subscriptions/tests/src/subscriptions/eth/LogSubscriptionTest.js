@@ -109,19 +109,21 @@ describe('LogSubscriptionTest', () => {
         });
 
         logSubscription.options.fromBlock = 0;
-        expect(logSubscription.subscribe((error, response) => {
-            expect(error).toEqual(new Error('ERROR'));
+        expect(
+            logSubscription.subscribe((error, response) => {
+                expect(error).toEqual(new Error('ERROR'));
 
-            expect(response).toEqual(null);
+                expect(response).toEqual(null);
 
-            expect(formatters.inputLogFormatter).toHaveBeenCalledWith(logSubscription.options);
+                expect(formatters.inputLogFormatter).toHaveBeenCalledWith(logSubscription.options);
 
-            expect(getPastLogsMethodMock.parameters).toEqual([{}]);
+                expect(getPastLogsMethodMock.parameters).toEqual([{}]);
 
-            expect(getPastLogsMethodMock.execute).toHaveBeenCalledWith(moduleInstanceMock);
+                expect(getPastLogsMethodMock.execute).toHaveBeenCalledWith(moduleInstanceMock);
 
-            done();
-        })).toBeInstanceOf(LogSubscription);
+                done();
+            })
+        ).toBeInstanceOf(LogSubscription);
     });
 
     it('calls subscribe and calls the callback once', (done) => {
@@ -167,12 +169,14 @@ describe('LogSubscriptionTest', () => {
 
         moduleInstanceMock.currentProvider = socketProviderAdapterMock;
 
-        expect(logSubscription.subscribe((error, response) => {
-            expect(error).toEqual(new Error('ERROR'));
+        expect(
+            logSubscription.subscribe((error, response) => {
+                expect(error).toEqual(new Error('ERROR'));
 
-            expect(response).toEqual(null);
+                expect(response).toEqual(null);
 
-            done();
-        })).toBeInstanceOf(LogSubscription);
+                done();
+            })
+        ).toBeInstanceOf(LogSubscription);
     });
 });

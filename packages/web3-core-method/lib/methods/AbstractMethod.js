@@ -172,8 +172,9 @@ export default class AbstractMethod {
      * @param {IArguments} args
      */
     set arguments(args) {
-        let parameters = [...args],
-            callback = null;
+        let parameters = [...args];
+
+        let callback = null;
 
         if (parameters.length > this.parametersAmount) {
             if (!isFunction(parameters[parameters.length - 1])) {

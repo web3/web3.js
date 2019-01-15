@@ -55,8 +55,7 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @param {AbstractWeb3Module} moduleInstance
      */
-    beforeSubscription(moduleInstance) {
-    }
+    beforeSubscription(moduleInstance) {}
 
     /**
      * This method will be executed on each new subscription item.
@@ -84,7 +83,8 @@ export default class AbstractSubscription extends EventEmitter {
     subscribe(callback) {
         this.beforeSubscription(this.moduleInstance);
 
-        this.moduleInstance.currentProvider.subscribe(this.type, this.method, [this.options])
+        this.moduleInstance.currentProvider
+            .subscribe(this.type, this.method, [this.options])
             .then((subscriptionId) => {
                 this.id = subscriptionId;
 
@@ -97,7 +97,7 @@ export default class AbstractSubscription extends EventEmitter {
                     }
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 this.emit('error', error);
 
                 if (isFunction(callback)) {

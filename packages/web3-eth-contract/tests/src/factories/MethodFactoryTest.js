@@ -80,8 +80,9 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createMethodByRequestType with requestType contract-deployment', () => {
-        expect(methodFactory.createMethodByRequestType({}, {}, 'contract-deployment'))
-            .toBeInstanceOf(ContractDeployMethod);
+        expect(methodFactory.createMethodByRequestType({}, {}, 'contract-deployment')).toBeInstanceOf(
+            ContractDeployMethod
+        );
     });
 
     it('calls createMethodByRequestType with unknown requestType', () => {

@@ -10,8 +10,7 @@ jest.mock('../../../src/methods/SendContractMethod');
  * MethodOptionsValidator test
  */
 describe('MethodOptionsValidatorTest', () => {
-    let methodOptionsValidator,
-        sendContractMethodMock;
+    let methodOptionsValidator, sendContractMethodMock;
 
     beforeEach(() => {
         new SendContractMethod();
@@ -47,10 +46,7 @@ describe('MethodOptionsValidatorTest', () => {
         Utils.isAddress.mockReturnValueOnce(false);
 
         expect(() => {
-            methodOptionsValidator.validate(
-                {},
-                sendContractMethodMock
-            );
+            methodOptionsValidator.validate({}, sendContractMethodMock);
         }).toThrow("This contract object doesn't have address set yet, please set an address first.");
 
         expect(Utils.isAddress).toHaveBeenCalledWith('0x0');

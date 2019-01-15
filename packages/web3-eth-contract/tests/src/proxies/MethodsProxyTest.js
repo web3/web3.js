@@ -119,7 +119,11 @@ describe('MethodsProxyTest', () => {
 
         expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
 
-        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(abiItemModelMock, contractMock, 'call');
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
+            abiItemModelMock,
+            contractMock,
+            'call'
+        );
 
         expect(callMethodMock.parameters[0]).toEqual({options: true});
 
@@ -173,7 +177,11 @@ describe('MethodsProxyTest', () => {
 
         expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
 
-        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(abiItemModelMock, contractMock, 'contract-deployment');
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
+            abiItemModelMock,
+            contractMock,
+            'contract-deployment'
+        );
 
         expect(sendMethodMock.parameters[0]).toEqual({options: true});
 
@@ -219,7 +227,11 @@ describe('MethodsProxyTest', () => {
 
         expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
 
-        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(abiItemModelMock, contractMock, 'send');
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
+            abiItemModelMock,
+            contractMock,
+            'send'
+        );
 
         expect(sendMethodMock.parameters[0]).toEqual({options: true});
 
@@ -273,7 +285,11 @@ describe('MethodsProxyTest', () => {
 
         expect(method.callback).toHaveBeenCalledWith(new Error('Nope'), null);
 
-        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(abiItemModelMock, contractMock, 'send');
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
+            abiItemModelMock,
+            contractMock,
+            'send'
+        );
 
         expect(method.arguments).toEqual([true]);
     });
@@ -299,7 +315,11 @@ describe('MethodsProxyTest', () => {
 
         expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
 
-        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(abiItemModelMock, contractMock, 'call');
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
+            abiItemModelMock,
+            contractMock,
+            'call'
+        );
 
         expect(callMethodMock.parameters[0]).toEqual({options: true});
 
@@ -337,7 +357,11 @@ describe('MethodsProxyTest', () => {
 
         expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
 
-        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(abiItemModelMock, contractMock, 'estimate');
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
+            abiItemModelMock,
+            contractMock,
+            'estimate'
+        );
 
         expect(estimateGasMethod.parameters[0]).toEqual({options: true});
 

@@ -63,8 +63,9 @@ export default class MethodsProxy {
              */
             get: (target, name) => {
                 if (this.abiModel.hasMethod(name)) {
-                    let abiItemModel = this.abiModel.getMethod(name),
-                        requestType = abiItemModel.requestType;
+                    let abiItemModel = this.abiModel.getMethod(name);
+
+                    let requestType = abiItemModel.requestType;
 
                     // TODO: Improve the requestType detection and defining of the call/send method.
                     if (isArray(abiItemModel)) {
@@ -74,7 +75,7 @@ export default class MethodsProxy {
                     // TODO: Find a better solution for the handling of the contractMethodParameters
                     /* eslint-disable no-inner-declarations */
                     function anonymousFunction() {
-                        let methodArguments = Array.from(arguments);
+                        let methodArguments = [...arguments];
 
                         // Because of the possibility to overwrite the contract data if I call contract.deploy()
                         // have I to check here if it is a contract deployment. If this call is a contract deployment
@@ -91,7 +92,6 @@ export default class MethodsProxy {
 
                             return anonymousFunction;
                         }
-
 
                         // If there exists more than one method with this name then find the correct abiItemModel
                         if (isArray(abiItemModel)) {
