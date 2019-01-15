@@ -30,13 +30,15 @@ export default class AllEventsLogSubscription extends LogSubscription {
      * @param {AbstractContract} contract
      * @param {GetPastLogsMethod} getPastLogsMethod
      * @param {EventLogDecoder} allEventsLogDecoder
+     * @param {AbiModel} abiModel
      *
      * @constructor
      */
-    constructor(options, utils, formatters, contract, getPastLogsMethod, allEventsLogDecoder) {
+    constructor(options, utils, formatters, contract, getPastLogsMethod, allEventsLogDecoder, abiModel) {
         super(options, utils, formatters, contract, getPastLogsMethod);
 
         this.allEventsLogDecoder = allEventsLogDecoder;
+        this.abiModel = abiModel;
     }
 
     /**
@@ -49,6 +51,6 @@ export default class AllEventsLogSubscription extends LogSubscription {
      * @returns {Object}
      */
     onNewSubscriptionItem(subscriptionItem) {
-        return this.allEventsLogDecoder.decode(this.formatters.outputLogFormatter(subscriptionItem));
+        return this.allEventsLogDecoder.decode(this.abiModel, this.formatters.outputLogFormatter(subscriptionItem));
     }
 }

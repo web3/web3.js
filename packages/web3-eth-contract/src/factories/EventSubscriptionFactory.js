@@ -40,21 +40,21 @@ export default class EventSubscriptionFactory {
      * Returns an event log subscription
      *
      * @param {EventLogDecoder} eventLogDecoder
-     * @param {AbiItemModel} abiItemModel
      * @param {AbstractContract} contract
      * @param {Object} options
+     * @param {AbiItemModel} abiItemModel
      *
      * @returns {EventLogSubscription}
      */
-    createEventLogSubscription(eventLogDecoder, abiItemModel, contract, options) {
+    createEventLogSubscription(eventLogDecoder, contract, options, abiItemModel) {
         return new EventLogSubscription(
-            abiItemModel,
             options,
             this.utils,
             this.formatters,
             contract,
             new GetPastLogsMethod(this.utils, this.formatters),
-            eventLogDecoder
+            eventLogDecoder,
+            abiItemModel
         );
     }
 
@@ -74,7 +74,8 @@ export default class EventSubscriptionFactory {
             this.formatters,
             contract,
             new GetPastLogsMethod(this.utils, this.formatters),
-            allEventsLogDecoder
+            allEventsLogDecoder,
+            contract.abiModel
         );
     }
 }

@@ -104,9 +104,9 @@ export default class EventSubscriptionsProxy {
         return this.eventSubscriptionFactory
             .createEventLogSubscription(
                 this.eventLogDecoder,
-                abiItemModel,
                 this.contract,
-                this.eventOptionsMapper.map(abiItemModel, this.contract, options)
+                this.eventOptionsMapper.map(abiItemModel, this.contract, options),
+                abiItemModel
             )
             .subscribe(callback);
     }
@@ -123,7 +123,7 @@ export default class EventSubscriptionsProxy {
      * @returns {Subscription|PromiEvent}
      */
     subscribeAll(options, callback) {
-        if (!isUndefined(options.topics)) {
+        if (options && !isUndefined(options.filter) && !isUndefined(options.topics)) {
             this.handleValidationError(
                 'Invalid subscription options: Only filter or topics are allowed and not both',
                 callback
