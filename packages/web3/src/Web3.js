@@ -46,6 +46,8 @@ export default class Web3 extends AbstractWeb3Module {
         this.eth = new Eth(provider, options);
         this.shh = new Shh(provider, options);
         this.bzz = new Bzz(provider);
+        this.utils = Utils;
+        this.version = version;
     }
 
     /**
@@ -242,24 +244,6 @@ export default class Web3 extends AbstractWeb3Module {
      */
     static get givenProvider() {
         return new ProvidersModuleFactory().createProviderDetector().detect();
-    }
-
-    /**
-     * Returns the web3 version
-     *
-     * @returns {String}
-     */
-    static get version() {
-        return version;
-    }
-
-    /**
-     * Returns the utils
-     *
-     * @returns {Utils}
-     */
-    static get utils() {
-        return Utils;
     }
 
     /**
