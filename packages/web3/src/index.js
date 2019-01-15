@@ -50,6 +50,8 @@ var Web3 = function Web3() {
     this.shh = new Shh(this);
     this.bzz = new Bzz(this);
 
+    this.getId = this.eth.net.getId;
+    
     // overwrite package setProvider
     var setProvider = this.setProvider;
     this.setProvider = function (provider, net) {

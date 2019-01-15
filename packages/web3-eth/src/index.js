@@ -187,7 +187,8 @@ var Eth = function Eth() {
     var methods = [
         new Method({
             name: 'getNodeInfo',
-            call: 'web3_clientVersion'
+            call: 'web3_clientVersion',
+            params: 0
         }),
         new Method({
             name: 'getProtocolVersion',

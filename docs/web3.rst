@@ -80,6 +80,7 @@ The web3.js object is an umbrella package to house all Ethereum related modules.
     > web3.bzz
     > web3.utils
     > web3.version
+    > web3.getId
 
 
 ------------------------------------------------------------------------------
@@ -110,6 +111,35 @@ Example
 
     web3.version;
     > "1.0.0"
+
+
+
+------------------------------------------------------------------------------
+
+getId
+============
+
+.. code-block:: javascript
+
+    web3.getId
+
+Returns the network ID of the eth module.
+
+-------
+Returns
+-------
+
+``Promise`` returns ``Number``: The network ID of the eth module.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.getId()
+    .then(console.log);
+    > 1
 
 
 
