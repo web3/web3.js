@@ -4,6 +4,7 @@ import {GetPastLogsMethod} from 'web3-core-method';
 import {LogSubscription} from 'web3-core-subscriptions';
 import AbstractContract from '../../../src/AbstractContract';
 import EventLogDecoder from '../../../src/decoders/EventLogDecoder';
+import AbiItemModel from '../../../src/models/AbiItemModel';
 import EventLogSubscription from '../../../src/subscriptions/EventLogSubscription';
 
 // Mocks
@@ -12,12 +13,13 @@ jest.mock('formatters');
 jest.mock('GetPastLogsMethod');
 jest.mock('../../../src/AbstractContract');
 jest.mock('../../../src/decoders/EventLogDecoder');
+jest.mock('../../../src/models/AbiItemModel');
 
 /**
  * EventLogSubscription test
  */
 describe('EventLogSubscriptionTest', () => {
-    let eventLogSubscription, contractMock, getPastLogsMethodMock, eventLogDecoderMock;
+    let eventLogSubscription, contractMock, getPastLogsMethodMock, eventLogDecoderMock, abiItemModelMock;
 
     beforeEach(() => {
         new AbstractContract();
@@ -29,21 +31,24 @@ describe('EventLogSubscriptionTest', () => {
         new EventLogDecoder();
         eventLogDecoderMock = EventLogDecoder.mock.instances[0];
 
+        new AbiItemModel();
+        abiItemModelMock = AbiItemModel.mock.instances[0];
+
         eventLogSubscription = new EventLogSubscription(
-            {},
             {},
             Utils,
             formatters,
             contractMock,
             getPastLogsMethodMock,
-            eventLogDecoderMock
+            eventLogDecoderMock,
+            abiItemModelMock
         );
     });
 
     it('constructor check', () => {
         expect(eventLogSubscription.eventLogDecoder).toEqual(eventLogDecoderMock);
 
-        expect(eventLogSubscription.abiItemModel).toEqual({});
+        expect(eventLogSubscription.abiItemModel).toEqual(abiItemModelMock);
 
         expect(eventLogSubscription).toBeInstanceOf(LogSubscription);
     });
@@ -53,9 +58,9 @@ describe('EventLogSubscriptionTest', () => {
 
         formatters.outputLogFormatter.mockReturnValueOnce({item: false});
 
-        eventLogSubscription.onNewSubscriptionItem(null, {item: true});
+        eventLogSubscription.onNewSubscriptionItem({item: true});
 
-        expect(eventLogDecoderMock.decode).toHaveBeenCalledWith({}, {item: false});
+        expect(eventLogDecoderMock.decode).toHaveBeenCalledWith(abiItemModelMock, {item: false});
 
         expect(formatters.outputLogFormatter).toHaveBeenCalledWith({item: true});
     });

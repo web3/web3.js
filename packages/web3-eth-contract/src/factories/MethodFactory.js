@@ -76,7 +76,7 @@ export default class MethodFactory {
         }
 
         if (typeof rpcMethod === 'undefined') {
-            throw new TypeError(`RPC call not found with requestType: "${abiItem.requestType}"`);
+            throw new TypeError(`RPC call not found with requestType: "${requestType}"`);
         }
 
         return rpcMethod;

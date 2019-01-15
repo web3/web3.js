@@ -68,42 +68,25 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createMethodByRequestType with requestType call', () => {
-        const abiItem = {requestType: 'call'};
-
-        const response = methodFactory.createMethodByRequestType(abiItem, {});
-
-        expect(response).toBeInstanceOf(CallContractMethod);
+        expect(methodFactory.createMethodByRequestType({}, {}, 'call')).toBeInstanceOf(CallContractMethod);
     });
 
     it('calls createMethodByRequestType with requestType send', () => {
-        const abiItem = {requestType: 'send'};
-
-        const response = methodFactory.createMethodByRequestType(abiItem, {});
-
-        expect(response).toBeInstanceOf(SendContractMethod);
+        expect(methodFactory.createMethodByRequestType({}, {}, 'send')).toBeInstanceOf(SendContractMethod);
     });
 
     it('calls createMethodByRequestType with requestType estimate', () => {
-        const abiItem = {requestType: 'estimate'};
-
-        const response = methodFactory.createMethodByRequestType(abiItem, {});
-
-        expect(response).toBeInstanceOf(EstimateGasMethod);
+        expect(methodFactory.createMethodByRequestType({}, {}, 'estimate')).toBeInstanceOf(EstimateGasMethod);
     });
 
     it('calls createMethodByRequestType with requestType contract-deployment', () => {
-        const abiItem = {requestType: 'contract-deployment'};
-
-        const response = methodFactory.createMethodByRequestType(abiItem, {});
-
-        expect(response).toBeInstanceOf(ContractDeployMethod);
+        expect(methodFactory.createMethodByRequestType({}, {}, 'contract-deployment'))
+            .toBeInstanceOf(ContractDeployMethod);
     });
 
     it('calls createMethodByRequestType with unknown requestType', () => {
-        const abiItem = {requestType: 'nope'};
-
         expect(() => {
-            methodFactory.createMethodByRequestType(abiItem, {});
+            methodFactory.createMethodByRequestType({}, {}, 'nope');
         }).toThrow('RPC call not found with requestType: "nope"');
     });
 
