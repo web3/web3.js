@@ -220,10 +220,16 @@ export const outputTransactionFormatter = (receipt) => {
         receipt.transactionIndex = Utils.hexToNumber(receipt.transactionIndex);
     }
 
+    if (receipt.gasPrice) {
+        receipt.gasPrice = outputBigNumberFormatter(receipt.gasPrice);
+    }
+
+    if (receipt.value) {
+        receipt.value = outputBigNumberFormatter(receipt.value);
+    }
+
     receipt.nonce = Utils.hexToNumber(receipt.nonce);
     receipt.gas = Utils.hexToNumber(receipt.gas);
-    receipt.gasPrice = outputBigNumberFormatter(receipt.gasPrice);
-    receipt.value = outputBigNumberFormatter(receipt.value);
 
     if (receipt.to && Utils.isAddress(receipt.to)) {
         // tx.to could be `0x0` or `null` while contract creation

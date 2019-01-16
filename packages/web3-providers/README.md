@@ -4,35 +4,11 @@ This is a sub package of [web3.js][repo]
 
 ## Installation
 
-### Node.js
-
 ```bash
 npm install web3-providers
 ```
 
-### In the Browser
-
-Build running the following in the [web3.js][repo] repository:
-
-```bash
-npm run-script build-all
-```
-
-Then include `dist/web3-providers.js` in your html file.
-This will expose the `Web3Providers` object on the window object.
-
-
-## Events of the socket providers
-
-- ```socket_message``` -  This event will be fired on each message of the socket.
-- ```socket_ready```   -  This event will be fired when the socket is ready.
-- ```socket_close```   -  This event will be fired when the connection get closed.
-- ```socket_error```   -  This event will be fired when an error occurs.
-- ```socket_connect``` -  This event will be fired when the connection is established.
-- ```socket_networkChanged``` -  This event will be fired when the network is changing and exist only on the EthereumProvider.
-- ```socket_accountsChanged``` -  This event will be fired when the accounts are changing and exist only on the EthereumProvider.
-
-## Usage examples
+## Usage Examples
 
 #### HttpProvider
 You can pass with the options object the timeout and all known HTTP headers. 
@@ -121,6 +97,10 @@ const socketProviderAdapter = new ProvidersModuleFactory()
                         .createProviderResolver
                         .resolve('ws://localhost:8546');
 ```
+
+## Types 
+
+All the typescript typings are placed in the types folder. 
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js

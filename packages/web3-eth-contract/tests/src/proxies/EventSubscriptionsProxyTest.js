@@ -124,9 +124,9 @@ describe('EventSubscriptionsProxyTest', () => {
 
         expect(eventSubscriptionFactoryMock.createEventLogSubscription).toHaveBeenCalledWith(
             eventLogDecoderMock,
-            abiItemModelMock,
             contractMock,
-            {options: true}
+            {options: true},
+            abiItemModelMock
         );
 
         expect(eventOptionsMapperMock.map).toHaveBeenCalledWith(abiItemModelMock, contractMock, options);

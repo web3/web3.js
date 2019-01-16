@@ -131,10 +131,6 @@ describe('Web3Test', () => {
         expect(bzzMock.setProvider).toHaveBeenCalledWith('http://localhost');
     });
 
-    it('calls the static utils property and gets the expected object', () => {
-        expect(Web3.utils).toEqual(Utils);
-    });
-
     it('calls the static modules property and gets the expected object', () => {
         const modules = Web3.modules;
 

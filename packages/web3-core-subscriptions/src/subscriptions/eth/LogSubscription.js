@@ -48,24 +48,28 @@ export default class LogSubscription extends AbstractSubscription {
      * @returns {Subscription} Subscription
      */
     subscribe(callback) {
-        this.options = this.formatters.inputLogFormatter(this.options);
+        if ((this.options.fromBlock && this.options.fromBlock !== 'latest') || this.options.fromBlock === 0) {
+            this.getPastLogsMethod.parameters = [this.formatters.inputLogFormatter(this.options)];
+            this.getPastLogsMethod
+                .execute(this.moduleInstance)
+                .then((logs) => {
+                    logs.forEach((log) => {
+                        callback(false, log);
+                        this.emit('data', log);
+                    });
 
-        this.getPastLogsMethod.parameters = [this.options];
-        this.getPastLogsMethod
-            .execute(this.moduleInstance)
-            .then((logs) => {
-                logs.forEach((log) => {
-                    callback(false, log);
-                    this.emit('data', log);
+                    delete this.options.fromBlock;
+                    super.subscribe(callback);
+                })
+                .catch((error) => {
+                    this.emit('error', error);
+                    callback(error, null);
                 });
 
-                delete this.options.fromBlock;
-                super.subscribe(callback);
-            })
-            .catch((error) => {
-                this.emit('error', error);
-                callback(error, null);
-            });
+            return this;
+        }
+
+        super.subscribe(callback);
 
         return this;
     }
@@ -75,7 +79,7 @@ export default class LogSubscription extends AbstractSubscription {
      *
      * @method onNewSubscriptionItem
      *
-     * @param {any} subscriptionItem
+     * @param {Object} subscriptionItem
      *
      * @returns {Object}
      */

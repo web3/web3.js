@@ -61,6 +61,7 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
     it('calls executes and receipt does already exists but is invalid', (done) => {
         methodMock.callback = jest.fn();
+        methodMock.parameters = [];
 
         getTransactionReceiptMethodMock.execute.mockReturnValueOnce(Promise.resolve({blockHash: true}));
 
@@ -77,11 +78,11 @@ describe('TransactionConfirmationWorkflowTest', () => {
         promiEvent.catch((error) => {
             expect(error).toEqual(false);
 
-            expect(getTransactionReceiptMethodMock.arguments).toEqual(['0x0']);
+            expect(getTransactionReceiptMethodMock.parameters).toEqual(['0x0']);
 
             expect(getTransactionReceiptMethodMock.execute).toHaveBeenCalledWith(moduleInstanceMock);
 
-            expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith({blockHash: true});
+            expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith({blockHash: true}, []);
 
             expect(transactionConfirmationWorkflow.timeoutCounter).toEqual(0);
 

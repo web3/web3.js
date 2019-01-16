@@ -67,32 +67,32 @@ export default class MethodsProxy {
 
                     let requestType = abiItemModel.requestType;
 
+                    // TODO: Improve the requestType detection and defining of the call/send method.
                     if (isArray(abiItemModel)) {
                         requestType = abiItemModel[0].requestType;
                     }
+
+                    // TODO: Find a better solution for the handling of the contractMethodParameters
                     /* eslint-disable no-inner-declarations */
                     function anonymousFunction() {
-                        let methodArguments = arguments;
+                        let methodArguments = [...arguments];
 
                         // Because of the possibility to overwrite the contract data if I call contract.deploy()
                         // have I to check here if it is a contract deployment. If this call is a contract deployment
                         // then I have to set the right contract data and to map the arguments.
                         // TODO: Change API or improve this
                         if (!isArray(abiItemModel) && abiItemModel.isOfType('constructor')) {
-                            if (arguments[0]['data']) {
-                                target.contract.options.data = arguments[0]['data'];
+                            if (methodArguments[0]['data']) {
+                                target.contract.options.data = methodArguments[0]['data'];
                             }
 
-                            if (arguments[0]['arguments']) {
-                                methodArguments = arguments[0]['arguments'];
+                            if (methodArguments[0]['arguments']) {
+                                abiItemModel.contractMethodParameters = methodArguments[0]['arguments'];
                             }
-
-                            abiItemModel.contractMethodParameters = methodArguments;
 
                             return anonymousFunction;
                         }
 
-                        // TODO: Find a better solution for the handling of the contractMethodParameters
                         // If there exists more than one method with this name then find the correct abiItemModel
                         if (isArray(abiItemModel)) {
                             const abiItemModelFound = abiItemModel.some((model) => {
@@ -121,17 +121,19 @@ export default class MethodsProxy {
                     }
 
                     anonymousFunction[requestType] = function() {
-                        return target.executeMethod(abiItemModel, arguments);
+                        if (abiItemModel.isOfType('constructor')) {
+                            return target.executeMethod(abiItemModel, arguments, 'contract-deployment');
+                        }
+
+                        return target.executeMethod(abiItemModel, arguments, requestType);
                     };
 
                     anonymousFunction[requestType].request = function() {
-                        return target.createMethod(abiItemModel, arguments);
+                        return target.createMethod(abiItemModel, arguments, requestType);
                     };
 
                     anonymousFunction.estimateGas = function() {
-                        abiItemModel.requestType = 'estimate';
-
-                        return target.executeMethod(abiItemModel, arguments);
+                        return target.executeMethod(abiItemModel, arguments, 'estimate');
                     };
 
                     anonymousFunction.encodeABI = function() {
@@ -154,19 +156,20 @@ export default class MethodsProxy {
      *
      * @param {AbiItemModel} abiItemModel
      * @param {IArguments} methodArguments
+     * @param {String} requestType
      *
      * @returns {Promise|PromiEvent|String|Boolean}
      */
-    executeMethod(abiItemModel, methodArguments) {
+    executeMethod(abiItemModel, methodArguments, requestType) {
         let method;
 
         try {
-            method = this.createMethod(abiItemModel, methodArguments);
+            method = this.createMethod(abiItemModel, methodArguments, requestType);
         } catch (error) {
             const promiEvent = new this.PromiEvent();
 
-            method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract);
-            method.methodArguments = methodArguments;
+            method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
+            method.arguments = methodArguments;
 
             promiEvent.reject(error);
             promiEvent.emit('error', error);
@@ -178,7 +181,7 @@ export default class MethodsProxy {
             return promiEvent;
         }
 
-        if (abiItemModel.requestType === 'call' || abiItemModel.requestType === 'estimate') {
+        if (requestType === 'call' || requestType === 'estimate') {
             return method.execute(this.contract);
         }
 
@@ -192,15 +195,21 @@ export default class MethodsProxy {
      *
      * @param {AbiItemModel} abiItemModel
      * @param {IArguments} methodArguments
+     * @param {String} requestType
      *
      * @returns {AbstractMethod}
      */
-    createMethod(abiItemModel, methodArguments) {
+    createMethod(abiItemModel, methodArguments, requestType) {
         abiItemModel.givenParametersLengthIsValid();
 
         // Get correct rpc method model
-        const method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract);
-        method.methodArguments = methodArguments;
+        const method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
+        method.arguments = methodArguments;
+
+        // If no parameters are given for the eth_call or eth_send* methods then it will set a empty options object.
+        if (typeof method.parameters[0] === 'undefined') {
+            method.parameters[0] = {};
+        }
 
         // Encode contract method
         method.parameters[0]['data'] = this.methodEncoder.encode(abiItemModel, this.contract.options.data);

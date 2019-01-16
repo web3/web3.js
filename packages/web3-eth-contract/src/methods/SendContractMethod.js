@@ -31,7 +31,7 @@ export default class SendContractMethod extends SendTransactionMethod {
      * @param {Accounts} accounts
      * @param {TransactionSigner} transactionSigner
      * @param {AllEventsLogDecoder} allEventsLogDecoder
-     * @param {AbiItemModel} abiItemModel
+     * @param {AbiModel} abiModel
      *
      * @constructor
      */
@@ -42,11 +42,11 @@ export default class SendContractMethod extends SendTransactionMethod {
         accounts,
         transactionSigner,
         allEventsLogDecoder,
-        abiItemModel
+        abiModel
     ) {
         super(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner);
         this.allEventsLogDecoder = allEventsLogDecoder;
-        this.abiItemModel = abiItemModel;
+        this.abiModel = abiModel;
     }
 
     /**
@@ -63,7 +63,7 @@ export default class SendContractMethod extends SendTransactionMethod {
             response.events = {};
 
             response.logs.forEach((log, index) => {
-                log = this.allEventsLogDecoder.decode(null, log);
+                log = this.allEventsLogDecoder.decode(this.abiModel, log);
 
                 if (log.event) {
                     if (response.events[log.event]) {

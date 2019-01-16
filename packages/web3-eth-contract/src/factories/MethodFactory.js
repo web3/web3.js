@@ -53,18 +53,19 @@ export default class MethodFactory {
      *
      * @param {AbiItemModel} abiItem
      * @param {AbstractContract} contract
+     * @param {String} requestType
      *
      * @returns {AbstractMethod}
      */
-    createMethodByRequestType(abiItem, contract) {
+    createMethodByRequestType(abiItem, contract, requestType) {
         let rpcMethod;
 
-        switch (abiItem.requestType) {
+        switch (requestType) {
             case 'call':
                 rpcMethod = this.createCallContractMethod(abiItem);
                 break;
             case 'send':
-                rpcMethod = this.createSendContractMethod(abiItem);
+                rpcMethod = this.createSendContractMethod(abiItem, contract.abiModel);
                 break;
             case 'estimate':
                 rpcMethod = this.createEstimateGasMethod();
@@ -75,7 +76,7 @@ export default class MethodFactory {
         }
 
         if (typeof rpcMethod === 'undefined') {
-            throw new TypeError(`RPC call not found with requestType: "${abiItem.requestType}"`);
+            throw new TypeError(`RPC call not found with requestType: "${requestType}"`);
         }
 
         return rpcMethod;
@@ -118,18 +119,19 @@ export default class MethodFactory {
      * @method createSendContractMethod
      *
      * @param {AbiItemModel} abiItem
+     * @param {AbiModel} abiModel
      *
      * @returns {SendContractMethod}
      */
-    createSendContractMethod(abiItem) {
+    createSendContractMethod(abiItem, abiModel) {
         return new SendContractMethod(
             this.utils,
             this.formatters,
-            this.accounts,
             this.methodModuleFactory.createTransactionConfirmationWorkflow(),
+            this.accounts,
             this.methodModuleFactory.createTransactionSigner(),
             this.contractModuleFactory.createAllEventsLogDecoder(),
-            abiItem
+            abiModel
         );
     }
 
@@ -146,8 +148,8 @@ export default class MethodFactory {
         return new ContractDeployMethod(
             this.utils,
             this.formatters,
-            this.accounts,
             this.methodModuleFactory.createTransactionConfirmationWorkflow(),
+            this.accounts,
             this.methodModuleFactory.createTransactionSigner(),
             contract
         );

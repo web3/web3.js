@@ -41,7 +41,7 @@ export default class AbstractSubscription extends EventEmitter {
         super();
         this.type = type;
         this.method = method;
-        this.options = options;
+        this.options = options || {};
         this.utils = utils;
         this.formatters = formatters;
         this.moduleInstance = moduleInstance;
@@ -62,9 +62,9 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @method onNewSubscriptionItem
      *
-     * @param {any} subscriptionItem
+     * @param {*} subscriptionItem
      *
-     * @returns {any}
+     * @returns {*}
      */
     onNewSubscriptionItem(subscriptionItem) {
         return subscriptionItem;
@@ -83,19 +83,27 @@ export default class AbstractSubscription extends EventEmitter {
     subscribe(callback) {
         this.beforeSubscription(this.moduleInstance);
 
-        this.moduleInstance.currentProvider.subscribe(this.type, this.method, [this.options]).then((subscriptionId) => {
-            this.id = subscriptionId;
+        this.moduleInstance.currentProvider
+            .subscribe(this.type, this.method, [this.options])
+            .then((subscriptionId) => {
+                this.id = subscriptionId;
 
-            this.moduleInstance.currentProvider.on(this.id, (response) => {
-                const formattedOutput = this.onNewSubscriptionItem(response.result);
+                this.moduleInstance.currentProvider.on(this.id, (response) => {
+                    const formattedOutput = this.onNewSubscriptionItem(response.result);
+                    this.emit('data', formattedOutput);
 
-                this.emit('data', formattedOutput);
+                    if (isFunction(callback)) {
+                        callback(false, formattedOutput);
+                    }
+                });
+            })
+            .catch((error) => {
+                this.emit('error', error);
 
                 if (isFunction(callback)) {
-                    callback(false, formattedOutput);
+                    callback(error, null);
                 }
             });
-        });
 
         return this;
     }

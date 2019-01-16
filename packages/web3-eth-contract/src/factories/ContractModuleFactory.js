@@ -164,7 +164,7 @@ export default class ContractModuleFactory {
      * @returns {EventLogDecoder}
      */
     createEventLogDecoder() {
-        return new EventLogDecoder(this.abiCoder, this.formatters);
+        return new EventLogDecoder(this.abiCoder);
     }
 
     /**
@@ -175,7 +175,7 @@ export default class ContractModuleFactory {
      * @returns {AllEventsLogDecoder}
      */
     createAllEventsLogDecoder() {
-        return new AllEventsLogDecoder(this.abiCoder, this.formatters);
+        return new AllEventsLogDecoder(this.abiCoder);
     }
 
     /**

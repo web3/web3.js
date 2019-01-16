@@ -73,31 +73,21 @@ const web3 = new Web3("ws://localhost:8546");
 
 Documentation can be found at [read the docs][docs]
 
-## Building
+## Contributing
 
 ### Requirements
 
 * [Node.js](https://nodejs.org)
 * npm
 
-### Building
-
+### Commands
 ```bash
-npm run build // Bundle all modules
+npm run clean // removes all the node_modules folders in all modules
+npm run bootstrap // install all dependencies and symlinks the internal modules for all modules
+npm run test // runs all tests 
+npm run build // runs rollup
+npm run dev // runs rollup with a watcher
 
-// Or
-
-cd packages/web3-eth
-npm run build // This will just bundle the web3-eth module
-
-cd packages/web3-eth
-npm run dev // This module will be bundled each time a file has changed
-```
-
-### Testing
-
-```bash
-npm run test
 ```
 
 ### Contributing

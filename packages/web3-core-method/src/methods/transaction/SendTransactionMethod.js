@@ -77,6 +77,8 @@ export default class SendTransactionMethod extends AbstractSendMethod {
                 this.parameters[0]['gasPrice'] = gasPrice;
                 this.execute(moduleInstance, promiEvent);
             });
+
+            return promiEvent;
         }
 
         if (this.hasWallets()) {
