@@ -17,13 +17,11 @@ npm install web3-core-helpers
 
 ```js
 import {errors, formatters} from 'web3-core-helpers';
-
-console.dir(errors);
-console.dir(formatters);
 ```
 
+## Types 
+
+All the typescript typings are placed in the types folder. 
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
-
-

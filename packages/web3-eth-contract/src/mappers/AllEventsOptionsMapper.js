@@ -40,6 +40,10 @@ export default class AllEventsOptionsMapper {
      * @returns {Object}
      */
     map(abiModel, contract, options) {
+        if (!options) {
+            options = {};
+        }
+
         options.topics = [];
 
         if (typeof options.fromBlock !== 'undefined') {

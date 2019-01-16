@@ -49,7 +49,6 @@ describe('IpcProviderTest', () => {
 
         expect(socketMock.addListener.mock.calls[6][0]).toEqual('ready');
         expect(socketMock.addListener.mock.calls[6][1]).toBeInstanceOf(Function);
-
     });
 
     it('calls disconnect', () => {

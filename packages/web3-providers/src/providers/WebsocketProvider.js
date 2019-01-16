@@ -91,23 +91,23 @@ export default class WebsocketProvider extends AbstractSocketProvider {
         setTimeout(() => {
             this.removeAllSocketListeners();
 
-            let constructorArgs = [];
+            let connection = [];
 
             if (this.connection.constructor.name === 'W3CWebsocket') {
-                constructorArgs = [
+                connection = new this.connection.constructor(
                     this.host,
                     this.connection._client.protocol,
                     null,
                     this.connection._client.headers,
                     this.connection._client.requestOptions,
                     this.connection._client.config
-                ];
+                );
             } else {
-                constructorArgs = [this.host, this.connection.protocol];
+                const protocol = this.connection.protocol || undefined;
+                connection = new this.connection.constructor(this.host, protocol);
             }
 
-            // TODO: Pass the module factory for an createW3CWebsocket and createWebSocket method.
-            this.connection = new this.connection.constructor(...constructorArgs);
+            this.connection = connection;
             this.registerEventListeners();
         }, 5000);
     }
@@ -265,12 +265,10 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
-                this.on(id, (response) => {
+                this.once(id, (response) => {
                     if (timeout) {
                         clearTimeout(timeout);
                     }
-
-                    this.removeAllListeners(id);
 
                     return resolve(response);
                 });

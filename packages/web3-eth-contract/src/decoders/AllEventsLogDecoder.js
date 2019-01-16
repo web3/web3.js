@@ -24,15 +24,12 @@ import EventLogDecoder from './EventLogDecoder';
 
 export default class AllEventsLogDecoder extends EventLogDecoder {
     /**
-     * @param {AbiModel} abiModel
      * @param {AbiCoder} abiCoder
      *
      * @constructor
      */
-    constructor(abiModel, abiCoder) {
+    constructor(abiCoder) {
         super(abiCoder);
-
-        this.abiModel = abiModel;
     }
 
     /**
@@ -40,11 +37,12 @@ export default class AllEventsLogDecoder extends EventLogDecoder {
      *
      * @method decode
      *
+     * @param {AbiModel} abiModel
      * @param {Object} response
      *
      * @returns {Object}
      */
-    decode(response) {
-        return super.decode(this.abiModel.getEventBySignature(response.topics[0]), response);
+    decode(abiModel, response) {
+        return super.decode(abiModel.getEventBySignature(response.topics[0]), response);
     }
 }

@@ -42,6 +42,10 @@ export default class EventOptionsMapper {
      * @returns {Object}
      */
     map(abiItemModel, contract, options) {
+        if (!options) {
+            options = {};
+        }
+
         if (!isArray(options.topics)) {
             options.topics = [];
         }

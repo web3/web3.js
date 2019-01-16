@@ -6,7 +6,7 @@ import TransactionConfirmationWorkflow from '../../__mocks__/TransactionConfirma
 import TransactionSigner from '../../__mocks__/TransactionSigner';
 import AllEventsLogDecoder from '../../../src/decoders/AllEventsLogDecoder';
 import SendContractMethod from '../../../src/methods/SendContractMethod';
-import AbiItemModel from '../../../src/models/AbiItemModel';
+import AbiModel from '../../../src/models/AbiModel';
 
 // Mocks
 jest.mock('Utils');
@@ -14,6 +14,7 @@ jest.mock('formatters');
 jest.mock('Accounts');
 jest.mock('../../../src/decoders/AllEventsLogDecoder');
 jest.mock('../../../src/models/AbiItemModel');
+jest.mock('../../../src/models/AbiModel');
 
 /**
  * SendContractMethod test
@@ -24,7 +25,7 @@ describe('SendContractMethodTest', () => {
         accountsMock,
         transactionSignerMock,
         allEventsLogDecoderMock,
-        abiItemModelMock;
+        abiModelMock;
 
     beforeEach(() => {
         transactionConfirmationWorkflowMock = new TransactionConfirmationWorkflow();
@@ -34,8 +35,8 @@ describe('SendContractMethodTest', () => {
 
         transactionSignerMock = new TransactionSigner();
 
-        new AbiItemModel();
-        abiItemModelMock = AbiItemModel.mock.instances[0];
+        new AbiModel();
+        abiModelMock = AbiModel.mock.instances[0];
 
         new AllEventsLogDecoder();
         allEventsLogDecoderMock = AllEventsLogDecoder.mock.instances[0];
@@ -47,7 +48,7 @@ describe('SendContractMethodTest', () => {
             accountsMock,
             transactionSignerMock,
             allEventsLogDecoderMock,
-            abiItemModelMock
+            abiModelMock
         );
     });
 
@@ -64,7 +65,7 @@ describe('SendContractMethodTest', () => {
 
         expect(sendContractMethod.allEventsLogDecoder).toEqual(allEventsLogDecoderMock);
 
-        expect(sendContractMethod.abiItemModel).toEqual(abiItemModelMock);
+        expect(sendContractMethod.abiModel).toEqual(abiModelMock);
 
         expect(sendContractMethod).toBeInstanceOf(SendTransactionMethod);
     });
@@ -114,12 +115,12 @@ describe('SendContractMethodTest', () => {
             }
         });
 
-        expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(1, null, {event: false});
+        expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(1, abiModelMock, {event: false});
 
-        expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(2, null, {event: 'MyEvent'});
+        expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(2, abiModelMock, {event: 'MyEvent'});
 
-        expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(3, null, {event: 'MyEvent'});
+        expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(3, abiModelMock, {event: 'MyEvent'});
 
-        expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(4, null, {event: 'MyEvent'});
+        expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(4, abiModelMock, {event: 'MyEvent'});
     });
 });

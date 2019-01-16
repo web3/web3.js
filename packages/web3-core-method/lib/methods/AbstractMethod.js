@@ -206,7 +206,7 @@ export default class AbstractMethod {
      *
      * @method isHash
      *
-     * @param {*} parameter
+     * @param {String} parameter
      *
      * @returns {Boolean}
      */

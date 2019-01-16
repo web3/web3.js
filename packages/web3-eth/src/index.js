@@ -50,15 +50,17 @@ export const Eth = (provider, options) => {
 
     const abiCoder = new AbiCoder();
 
+    const methodModuleFactory = new MethodModuleFactory(accounts);
+
     return new EthModuleFactory(
         provider,
         new ProvidersModuleFactory(),
-        new MethodModuleFactory(accounts),
+        methodModuleFactory,
         accounts,
         PromiEvent,
         Utils,
         formatters,
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
+        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
         abiCoder
     ).createEthModule(
         new Network(provider, options),

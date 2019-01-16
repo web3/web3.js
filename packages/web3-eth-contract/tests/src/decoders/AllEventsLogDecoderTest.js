@@ -22,13 +22,11 @@ describe('AllEventsLogDecoderTest', () => {
         new AbiModel({});
         abiModelMock = AbiModel.mock.instances[0];
 
-        allEventsLogDecoder = new AllEventsLogDecoder(abiModelMock, abiCoderMock);
+        allEventsLogDecoder = new AllEventsLogDecoder(abiCoderMock);
     });
 
     it('constructor check', () => {
         expect(allEventsLogDecoder.abiCoder).toEqual(abiCoderMock);
-
-        expect(allEventsLogDecoder.abiModel).toEqual(abiModelMock);
     });
 
     it('calls decode and returns the expected value', () => {
@@ -46,7 +44,7 @@ describe('AllEventsLogDecoderTest', () => {
 
         abiItemModel.getInputs.mockReturnValueOnce([]);
 
-        const decodedLog = allEventsLogDecoder.decode(response);
+        const decodedLog = allEventsLogDecoder.decode(abiModelMock, response);
 
         expect(decodedLog.data).toEqual(undefined);
 
