@@ -84,7 +84,7 @@ export default class Registry extends AbstractContract {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    owner(name, callback) {
+    owner(name, callback = null) {
         return new Promise((resolve, reject) => {
             this.methods
                 .owner(namehash.hash(name))

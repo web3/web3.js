@@ -45,3 +45,6 @@ export class AbstractMethod {
 
     clearSubscriptions(unsubscribeMethod: string): Promise<boolean | Error>;
 }
+
+export class MethodModuleFactory { } // TODO: Define methods
+

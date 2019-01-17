@@ -17,11 +17,12 @@
     },
     "dependencies": {
         "lodash": "^4.17.11",
-        "web3-providers": "1.0.0-beta.38",
         "web3-utils": "1.0.0-beta.38"
     },
     "devDependencies": {
-        "dtslint": "^0.4.2"
+        "dtslint": "^0.4.2",
+        "web3-providers": "1.0.0-beta.38",
+        "web3-eth-accounts": "^1.0.0-beta.38"
     },
     "files": [
         "dist",

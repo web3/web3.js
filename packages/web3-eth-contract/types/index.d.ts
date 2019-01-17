@@ -47,6 +47,8 @@ export class Contract {
     getPastEvents(event: string, callback: (error: Error, event: EventData) => void): Promise<EventData[]>;
 }
 
+export class ContractModuleFactory { } // TODO: Define methods
+
 export interface Options {
     address: string;
     jsonInterface: AbiItem[];

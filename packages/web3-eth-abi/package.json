@@ -16,7 +16,7 @@
     },
     "types": "types",
     "dependencies": {
-        "ethers": "4.0.20",
+        "ethers": "4.0.21",
         "lodash": "^4.17.11",
         "web3-utils": "1.0.0-beta.38"
     },
