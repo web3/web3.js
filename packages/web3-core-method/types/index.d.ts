@@ -47,4 +47,3 @@ export class AbstractMethod {
 }
 
 export class MethodModuleFactory { } // TODO: Define methods
-

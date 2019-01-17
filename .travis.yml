@@ -24,10 +24,7 @@ install:
     - npm install
     - npm run bootstrap
 script:
-    - npm run lint
-    - npm run build
-    - npm run test:coverage
-    - npm run dtslint
+    - npm run travis
 after_script:
     - npm run coveralls
 
