@@ -20,33 +20,13 @@
 import {RLPEncodedTransaction} from 'web3-core';
 import {Personal} from 'web3-eth-personal';
 import {HttpProvider} from 'web3-providers';
-
-const options = {
-    timeout: 20000,
-    headers: [
-        {
-            name: 'Access-Control-Allow-Origin', value: '*'
-        }
-    ]
-};
-
-const httpProvider = new HttpProvider('http://localhost:8545', options);
+import {Accounts} from 'web3-eth-accounts';
 
 const personal = new Personal(
-    httpProvider,
+    'http://localhost:7545',
+    new Accounts('http://localhost:7545', {}),
+    {}
 );
-
-// $ExpectType boolean
-personal.setProvider(httpProvider);
-
-// $ExpectType Providers
-personal.providers;
-
-// $ExpectType provider
-personal.currentProvider;
-
-// $ExpectType BatchRequest
-new personal.BatchRequest();
 
 // $ExpectType Promise<string>
 personal.newAccount('test password');

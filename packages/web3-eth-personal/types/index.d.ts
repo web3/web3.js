@@ -18,7 +18,7 @@
  */
 
 import {Accounts} from 'web3-eth-accounts'
-import {BatchRequest, provider} from 'web3-providers';
+import {provider} from 'web3-providers';
 import {AbstractWeb3Module, Providers, RLPEncodedTransaction, Transaction, Web3ModuleOptions} from 'web3-core';
 
 export class Personal extends AbstractWeb3Module {
@@ -27,9 +27,6 @@ export class Personal extends AbstractWeb3Module {
         accounts: Accounts,
         options?: Web3ModuleOptions
     );
-
-    BatchRequest: new() => BatchRequest;
-    providers: Providers;
 
     newAccount(password: string, callback?: (error: Error, address: string) => void): Promise<string>;
 
