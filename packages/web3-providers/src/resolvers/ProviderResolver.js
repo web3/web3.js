@@ -65,7 +65,10 @@ export default class ProviderResolver {
         if (
             provider instanceof HttpProvider ||
             provider instanceof WebsocketProvider ||
-            provider instanceof IpcProvider
+            provider instanceof IpcProvider ||
+            provider.constructor.name === 'HttpProvider' ||
+            provider.constructor.name === 'WebsocketProvider' ||
+            provider.constructor.name === 'IpcProvider'
         ) {
             return provider;
         }
