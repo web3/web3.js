@@ -30,18 +30,18 @@ export class AbstractMethod {
     rpcMethod: string;
     parametersAmount: number;
     parameters: any[];
-    arguments: Object;
+    arguments: object;
     isHash(parameter: string): boolean;
-    request(...args : any[]): AbstractMethod;
+    request(...args: any[]): AbstractMethod;
     hasWallets(): boolean;
 
-    callback(): void;
+    callback(error: string | Error, response: any): void;
 
     beforeExecution(moduleInstance: AbstractWeb3Module): void;
 
     afterExecution(response: any): any;
 
-    execute(moduleInstance: AbstractWeb3Module): Promise<Object|string>|PromiEvent<any>|string;
+    execute(moduleInstance: AbstractWeb3Module): Promise<object|string>|PromiEvent<any>|string;
 
-    clearSubscriptions(subscriptionType: string): Promise<boolean | Error>;
+    clearSubscriptions(unsubscribeMethod: string): Promise<boolean | Error>;
 }
