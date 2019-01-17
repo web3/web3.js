@@ -45,28 +45,34 @@ const abstractWeb3Module = new AbstractWeb3Module(
     {}
 );
 
+// $ExpectType BatchRequest
+new abstractWeb3Module.BatchRequest();
+
+// $ExpectType string | number
+abstractWeb3Module.defaultBlock;
+
+// $ExpectType number
+abstractWeb3Module.transactionBlockTimeout;
+
+// $ExpectType number
+abstractWeb3Module.transactionConfirmationBlocks;
+
+// $ExpectType number
+abstractWeb3Module.transactionPollingTimeout;
+
 // $ExpectType string
 abstractWeb3Module.defaultGasPrice;
 
 // $ExpectType number
 abstractWeb3Module.defaultGas;
 
-// $ExpectType number
-abstractWeb3Module.transactionPollingTimeout;
-
-// $ExpectType number
-abstractWeb3Module.transactionConfirmationBlocks;
-
-// $ExpectType number
-abstractWeb3Module.transactionBlockTimeout;
-
-// $ExpectType string | number
-abstractWeb3Module.defaultBlock;
+// $ExpectType Providers
+abstractWeb3Module.providers
 
 // $ExpectType string | null
 abstractWeb3Module.defaultAccount;
 
-// $ExpectType EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider
+// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
 abstractWeb3Module.currentProvider;
 
 // $ExpectType boolean
@@ -81,5 +87,5 @@ abstractWeb3Module.isSameProvider('http://localhost:8545');
 // $ExpectType boolean
 abstractWeb3Module.isSameProvider(httpProvider);
 
-// $ExpectType void
-abstractWeb3Module.clearSubscriptions();
+// $ExpectType Promise<boolean>
+abstractWeb3Module.clearSubscriptions('eth_unsubscribe');

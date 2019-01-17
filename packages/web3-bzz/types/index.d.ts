@@ -17,10 +17,6 @@
  * @date 2018
  */
 
-// once dependency tree is sorted we can reuse web3-providers types here
-// for now we keep them loosely typed.
-// should really have a dependency on `web3-providers` as its using all
-// the providers objects within the class
 export class Bzz {
     constructor(provider: string | {});
 

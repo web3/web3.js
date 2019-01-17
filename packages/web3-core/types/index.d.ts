@@ -24,7 +24,8 @@ import {
     IpcProvider,
     provider,
     ProvidersModuleFactory,
-    WebsocketProvider
+    WebsocketProvider,
+    BatchRequest
 } from 'web3-providers';
 
 export class AbstractWeb3Module {
@@ -36,22 +37,23 @@ export class AbstractWeb3Module {
         options?: Web3ModuleOptions
     );
 
-    readonly defaultGasPrice: string;
-    readonly defaultGas: number;
-    readonly transactionPollingTimeout: number;
-    readonly transactionConfirmationBlocks: number;
-    readonly transactionBlockTimeout: number;
-    readonly defaultBlock: string | number;
-    readonly defaultAccount: string | null;
-    readonly currentProvider: EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider;
+    BatchRequest: new () => BatchRequest;
+    defaultBlock: string | number;
+    transactionBlockTimeout: number;
+    transactionConfirmationBlocks: number;
+    transactionPollingTimeout: number;
+    defaultGasPrice: string;
+    defaultGas: number;
     readonly providers: Providers;
+    defaultAccount: string | null;
+    readonly currentProvider: EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider;
     readonly givenProvider: provider | null;
 
     setProvider(provider: provider, net?: net.Socket): boolean;
 
     isSameProvider(provider: provider): boolean;
 
-    clearSubscriptions(subscriptionType: string): Promise<boolean | Error>;
+    clearSubscriptions(subscriptionType: string): Promise<boolean>;
 }
 
 export interface Web3ModuleOptions {

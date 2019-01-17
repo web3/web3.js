@@ -19,12 +19,6 @@
 
 import Web3 from 'web3';
 
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
-Web3.givenProvider;
-
-// $ExpectType Providers
-Web3.providers;
-
 // $ExpectType Modules
 Web3.modules;
 
@@ -44,6 +38,3 @@ web3.shh;
 
 // $ExpectType Bzz
 web3.bzz;
-
-// $ExpectType BatchRequest
-new web3.BatchRequest();

@@ -17,10 +17,10 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module, Providers, Web3ModuleOptions} from 'web3-core';
+import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
 import {Utils} from 'web3-utils';
 import * as net from 'net';
-import {BatchRequest, provider} from 'web3-providers';
+import {provider} from 'web3-providers';
 import {Eth} from 'web3-eth';
 import {Network} from 'web3-net';
 import {Shh} from 'web3-shh';
@@ -34,11 +34,7 @@ export default class Web3 extends AbstractWeb3Module {
         options?: Web3ModuleOptions
     );
 
-    static givenProvider: provider | null;
-    static providers: Providers;
     static modules: Modules;
-
-    BatchRequest: new () => BatchRequest;
 
     utils: Utils;
     eth: Eth;
