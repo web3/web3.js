@@ -111,7 +111,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
             this.registerEventListeners();
         }, 5000);
     }
-q
+
     /**
      * Will close the socket connection with a error code and reason.
      * Please have a look at https://developer.mozilla.org/de/docs/Web/API/WebSocket/close

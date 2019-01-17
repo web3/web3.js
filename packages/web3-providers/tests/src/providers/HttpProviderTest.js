@@ -35,7 +35,7 @@ describe('HttpProviderTest', () => {
 
         expect(httpProvider.timeout).toEqual(1);
 
-        expect(httpProvider.connected).toEqual(false);
+        expect(httpProvider.connected).toEqual(true);
 
         expect(httpProvider.providersModuleFactory).toEqual(providersModuleFactoryMock);
 
@@ -51,7 +51,7 @@ describe('HttpProviderTest', () => {
 
         expect(httpProvider.timeout).toEqual(1);
 
-        expect(httpProvider.connected).toEqual(false);
+        expect(httpProvider.connected).toEqual(true);
 
         expect(httpProvider.providersModuleFactory).toEqual(providersModuleFactoryMock);
 

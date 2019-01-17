@@ -1,4 +1,4 @@
-q/*
+/*
     This file is part of web3.js.
 
     web3.js is free software: you can redistribute it and/or modify
