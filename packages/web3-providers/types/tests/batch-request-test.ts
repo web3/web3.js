@@ -16,29 +16,22 @@
 */
 /**
  * @file batch-request-test.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {BatchRequest, HttpProvider, JsonRpcMapper, JsonRpcResponseValidator} from 'web3-providers';
+import {AbstractWeb3Module} from 'web3-core';
+import {AbstractMethod} from 'web3-core-method';
+import {BatchRequest, ProvidersModuleFactory} from 'web3-providers';
+import * as Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
 
-const options = {
-    timeout: 20000,
-    headers: [
-        {
-            name: 'Access-Control-Allow-Origin', value: '*'
-        }
-    ]
-};
-const httpProvider = new HttpProvider('http://localhost:8545', options);
-
-const batchRequest = new BatchRequest(httpProvider, JsonRpcMapper, JsonRpcResponseValidator);
+const batchRequest = new BatchRequest(
+    new AbstractWeb3Module('http://localhost:7545', new ProvidersModuleFactory(), {})
+);
 
 // $ExpectType void
-batchRequest.add({});
+batchRequest.add(new AbstractMethod('rpc_method', 1, Utils, formatters));
 
-// $ExpectType void
+// $ExpectType Promise<{ methods: AbstractMethod[]; response: object[]; } | Error[]>
 batchRequest.execute();
-
-// $ExpectType boolean
-batchRequest.hasOutputFormatter({});

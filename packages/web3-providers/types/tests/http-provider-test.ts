@@ -16,24 +16,29 @@
 */
 /**
  * @file http-provider-test.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {HttpProvider} from 'web3-providers';
+import {AbstractWeb3Module} from 'web3-core';
+import {HttpProvider, ProvidersModuleFactory} from 'web3-providers';
 
-const options = {
-    timeout: 20000,
-    headers: [
-        {
-            name: 'Access-Control-Allow-Origin', value: '*'
-        }
-    ]
-};
-const httpProvider = new HttpProvider('http://localhost:8545', options);
+const httpProvider = new HttpProvider(
+    'http://localhost:8545',
+    {
+        timeout: 20000,
+        headers: [
+            {
+                name: 'Access-Control-Allow-Origin', value: '*'
+            }
+        ]
+    });
 
-// $ExpectType void
-httpProvider.send({}, () => {});
+// $ExpectType Promise<object>
+httpProvider.send('rpc_method', []);
 
-// $ExpectType void
+// $ExpectType Promise<object[]>
+httpProvider.sendBatch([], new AbstractWeb3Module('http://localhost:7545', new ProvidersModuleFactory(), {}));
+
+// $ExpectType boolean
 httpProvider.disconnect();

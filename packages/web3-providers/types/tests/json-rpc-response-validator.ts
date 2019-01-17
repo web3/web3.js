@@ -16,7 +16,7 @@
 */
 /**
  * @file json-rpc-response-validator.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
@@ -30,6 +30,7 @@ const jsonRpcPayload: JsonRpcPayload = {
 };
 
 // $ExpectType boolean
-JsonRpcResponseValidator.isValid(jsonRpcPayload);
+JsonRpcResponseValidator.validate(jsonRpcPayload);
+
 // $ExpectType boolean
 JsonRpcResponseValidator.isResponseItemValid(jsonRpcPayload);

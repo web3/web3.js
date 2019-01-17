@@ -16,30 +16,21 @@
 */
 /**
  * @file provider-module-factory-test.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import * as net from "net";
-import {ProvidersModuleFactory, HttpProvider} from 'web3-providers';
-
-const options = {
-    timeout: 20000,
-    headers: [
-        {
-            name: 'Access-Control-Allow-Origin', value: '*'
-        }
-    ]
-};
-const genericProvider = new HttpProvider('http://localhost:8545', options);
+import {AbstractWeb3Module} from 'web3-core';
+import {ProvidersModuleFactory} from 'web3-providers';
 
 const providersModuleFactory = new ProvidersModuleFactory();
 
 // $ExpectType BatchRequest
-providersModuleFactory.createBatchRequest(genericProvider);
+providersModuleFactory.createBatchRequest(new AbstractWeb3Module('http://localhost:7545', new ProvidersModuleFactory(), {}));
 
-// $ExpectType ProviderAdapterResolver
-providersModuleFactory.createProviderAdapterResolver();
+// $ExpectType ProviderResolver
+providersModuleFactory.createProviderResolver();
 
 // $ExpectType ProviderDetector
 providersModuleFactory.createProviderDetector();
@@ -50,17 +41,8 @@ providersModuleFactory.createHttpProvider('http://localhost:8545');
 // $ExpectType WebsocketProvider
 providersModuleFactory.createWebsocketProvider('http://localhost:8545');
 
+// $ExpectType EthereumProvider
+providersModuleFactory.createEthereumProvider({});
+
 // $ExpectType IpcProvider
 providersModuleFactory.createIpcProvider('http://localhost:8545', new net.Server());
-
-// $ExpectType HttpProviderAdapter
-providersModuleFactory.createHttpProviderAdapter(genericProvider);
-
-// $ExpectType SocketProviderAdapter
-providersModuleFactory.createSocketProviderAdapter(genericProvider);
-
-// $ExpectType InpageProviderAdapter
-providersModuleFactory.createInpageProviderAdapter(genericProvider);
-
-// $ExpectType JsonRpcResponseValidator
-providersModuleFactory.createJSONRpcResponseValidator();

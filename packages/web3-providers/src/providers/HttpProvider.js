@@ -64,6 +64,10 @@ export default class HttpProvider {
 
     /**
      * This method has to exists to have the same interface as the socket providers.
+     *
+     * @method disconnect
+     *
+     * @returns {Boolean}
      */
     disconnect() {
         return true;

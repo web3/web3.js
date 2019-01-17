@@ -21,18 +21,17 @@
  */
 
 import * as net from 'net';
-import EventEmitter from 'eventemitter3';
 import {AbstractWeb3Module} from 'web3-core';
 import {AbstractMethod} from 'web3-core-method';
 
 // TODO: Update types
 
 export class BatchRequest {
-    constructor(moduleInstance: AbstractWeb3Module, provider: provider);
+    constructor(moduleInstance: AbstractWeb3Module);
 
-    add(request: any): void;
+    add(method: AbstractMethod): void;
 
-    execute(): Promise<any[]>;
+    execute(): Promise<{methods: AbstractMethod[], response: object[]}|Error[]>;
 }
 
 export class ProviderDetector {
@@ -40,9 +39,9 @@ export class ProviderDetector {
 }
 
 export class ProvidersModuleFactory {
-    createBatchRequest(moduleInstance: AbstractWeb3Module, provider: provider): BatchRequest;
+    createBatchRequest(moduleInstance: AbstractWeb3Module): BatchRequest;
 
-    createProviderAdapterResolver(): ProviderAdapterResolver;
+    createProviderResolver(): ProviderResolver;
 
     createProviderDetector(): ProviderDetector;
 
@@ -51,32 +50,36 @@ export class ProvidersModuleFactory {
     createWebsocketProvider(url: string): WebsocketProvider;
 
     createIpcProvider(path: string, net: net.Server): IpcProvider;
+
+    createEthereumProvider(connection: object): EthereumProvider;
 }
 
 export class HttpProvider {
     constructor(host: string, options?: HttpProviderOptions);
 
+    host: string;
     connected: boolean;
 
-    send(payload: JsonRpcPayload, callback: () => void): Promise<Object>;
+    send(method: string, parameters: any[]): Promise<object>;
 
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<Object[]>;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<object[]>;
 
-    disconnect(): void;
+    disconnect(): boolean;
 }
 
-export class IpcProvider {
-    constructor(path: string, net: net.Server);
+export class AbstractSocketProvider {
+    constructor(connection: any, timeout?: number);
 
+    host: string;
     connected: boolean;
 
     registerEventListeners(): void;
 
-    send(method: string, callback: () => void): Promise<Object>;
+    send(method: string, parameters: any[]): Promise<object>;
 
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<Object[]>;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<object[]>;
 
-    subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: []): Promise<String>;
+    subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: []): Promise<string>;
 
     unsubscribe(subscriptionId: string, unsubscribeMethod: string): Promise<boolean>;
 
@@ -89,54 +92,33 @@ export class IpcProvider {
     removeAllListeners(type: string): void;
 
     reset(): void;
-
-    reconnect(): void;
-
-    disconnect(): void;
-}
-
-export class WebsocketProvider {
-    constructor(host: string, options?: WebsocketProviderOptions);
-
-    connected: Boolean;
-
-    registerEventListeners(): void;
-
-    send(method: string, callback: () => void): Promise<Object>;
-
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<Object[]>;
-
-    subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: []): Promise<String>;
-
-    unsubscribe(subscriptionId: string, unsubscribeMethod: string): Promise<boolean>;
-
-    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>
-
-    on(type: string, callback: () => void): void;
-
-    removeListener(type: string, callback: () => void): void;
-
-    removeAllListeners(type: string): void;
-
-    isConnecting(): Boolean;
-
-    reset(): void;
-
-    disconnect(code: number, reason: string): void;
 
     reconnect(): void
+
+    disconnect(code: number, reason: string): void;
+}
+
+export class IpcProvider extends AbstractSocketProvider {
+    constructor(path: string, net: net.Server);
+}
+
+export class WebsocketProvider extends AbstractSocketProvider {
+    constructor(host: string, options?: WebsocketProviderOptions);
+
+    isConnecting(): boolean;
 }
 
 export class EthereumProvider {
     constructor();
 
+    host: string;
     registerEventListeners(): void;
 
-    send(method: string, callback: () => void): Promise<Object>;
+    send(method: string, callback: () => void): Promise<object>;
 
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<Object[]>;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<object[]>;
 
-    subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: []): Promise<String>;
+    subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: []): Promise<string>;
 
     unsubscribe(subscriptionId: string, unsubscribeMethod: string): Promise<boolean>;
 
@@ -155,14 +137,14 @@ export class JsonRpcMapper {
     static toPayload(method: string, params: any[]): JsonRpcPayload;
 }
 
-export class ProviderAdapterResolver {
+export class ProviderResolver {
     constructor(providersPackageFactory: ProvidersModuleFactory);
 
-    resolve(provider: provider, net: net.Server): provider;
+    resolve(provider: provider, net: net.Socket): provider;
 }
 
 export class JsonRpcResponseValidator {
-    static validate(response: JsonRpcPayload[] | JsonRpcPayload, payload?: Object): boolean;
+    static validate(response: JsonRpcPayload[] | JsonRpcPayload, payload?: object): boolean;
 
     static isResponseItemValid(response: JsonRpcPayload): boolean;
 }

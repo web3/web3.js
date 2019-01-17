@@ -29,25 +29,5 @@ const options: WebsocketProviderOptions = {
     }
 };
 
-const websocketsProvider = new WebsocketProvider('http://localhost:8545', options);
-
-// $ExpectType void
-websocketsProvider.addDefaultEvents();
-
-// $ExpectType void
-websocketsProvider.send({}, () => {});
-
-// $ExpectType void
-websocketsProvider.on('type', () => {});
-
-// $ExpectType void
-websocketsProvider.removeListener('type', () => {});
-
-// $ExpectType void
-websocketsProvider.removeAllListeners('type');
-
-// $ExpectType void
-websocketsProvider.reset();
-
-// $ExpectType void
-websocketsProvider.disconnect();
+// $ExpectType boolean
+new WebsocketProvider('http://localhost:8545', options).isConnecting();

@@ -16,29 +16,11 @@
 */
 /**
  * @file provider-detector-test.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {ProviderDetector, HttpProvider} from 'web3-providers';
+import {ProviderDetector} from 'web3-providers';
 
-const options = {
-    timeout: 20000,
-    headers: [
-        {
-            name: 'Access-Control-Allow-Origin', value: '*'
-        }
-    ]
-};
-const httpProvider = new HttpProvider('http://localhost:8545', options);
-
-const providerDetector = new ProviderDetector();
-
-// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | undefined
-providerDetector.detect();
-
-// $ExpectType boolean
-providerDetector.isIpcProviderWrapper(httpProvider);
-
-// $ExpectType provider
-providerDetector.addSubscriptionsToIpcProviderWrapper(httpProvider);
+// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | undefined
+new ProviderDetector().detect();

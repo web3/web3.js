@@ -15,12 +15,13 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file socket-provider-adapter-test.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @file provider-adapter-resolver-test.ts
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {SocketProviderAdapter, HttpProvider} from 'web3-providers';
+import * as net from "net";
+import {ProviderResolver, ProvidersModuleFactory, HttpProvider} from 'web3-providers';
 
 const options = {
     timeout: 20000,
@@ -30,26 +31,10 @@ const options = {
         }
     ]
 };
-const httpProvider = new HttpProvider('http://localhost:8545', options);
-const sockerProvider = new SocketProviderAdapter(httpProvider);
+const provider = new HttpProvider('http://localhost:8545', options);
 
-// $ExpectType Promise<string>
-sockerProvider.subscribe('type', 'method', [123]);
+const providersModuleFactory = new ProvidersModuleFactory();
+const providerResolver = new ProviderResolver(providersModuleFactory);
 
-// $ExpectType boolean
-sockerProvider.isConnected();
-
-// $ExpectType Promise<boolean>
-sockerProvider.unsubscribe('3', 'type');
-
-// $ExpectType void
-sockerProvider.registerSubscriptionListener();
-
-// $ExpectType boolean
-sockerProvider.hasSubscription('4');
-
-// $ExpectType void
-sockerProvider.clearSubscriptions();
-
-// $ExpectType Promise<boolean>
-sockerProvider.removeSubscription('3', 'type');
+// $ExpectType provider
+providerResolver.resolve(provider, new net.Socket());
