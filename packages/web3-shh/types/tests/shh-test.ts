@@ -21,42 +21,6 @@ import {Shh, Info, Notification} from 'web3-shh';
 
 const shh = new Shh('https://localhost:5000');
 
-// $ExpectType boolean
-shh.setProvider('https://localhost:3000');
-
-// $ExpectType Providers
-shh.providers;
-
-// $ExpectType Providers
-shh.providers;
-
-// $ExpectType Providers
-shh.providers;
-
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | null
-shh.givenProvider;
-
-// $ExpectType AbstractProviderAdapter
-shh.currentProvider;
-
-// $ExpectType BatchRequest
-new shh.BatchRequest();
-
-// $ExpectType Promise<number>
-shh.net.getId();
-// $ExpectType Promise<number>
-shh.net.getId((error: Error, id: number) => {});
-
-// $ExpectType Promise<boolean>
-shh.net.isListening();
-// $ExpectType Promise<boolean>
-shh.net.isListening((error: Error, listening: boolean) => {});
-
-// $ExpectType Promise<number>
-shh.net.getPeerCount();
-// $ExpectType Promise<number>
-shh.net.getPeerCount((error: Error, peerCount: number) => {});
-
 // $ExpectType Promise<string>
 shh.getVersion();
 // $ExpectType Promise<string>
@@ -179,9 +143,6 @@ shh.subscribe('messages', {
     topics: ['0xffddaa11'],
     minPow: 0.8,
 }, (error: Error, message: Notification, subscription: any) => {});
-
-// $ExpectType Promise<boolean|Error>
-shh.clearSubscriptions();
 
 // $ExpectType Promise<string>
 shh.newMessageFilter();

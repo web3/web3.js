@@ -27,9 +27,6 @@ export class Shh extends AbstractWeb3Module {
         options?: Web3ModuleOptions
     );
 
-    readonly providers: Providers;
-    readonly givenProvider: provider | null;
-    BatchRequest: new() => BatchRequest;
     net: Network;
 
     getVersion(callback?: (error: Error, version: string) => void): Promise<string>;
@@ -69,8 +66,6 @@ export class Shh extends AbstractWeb3Module {
     post(object: PostWithSymKey | PostWithPubKey, callback?: (error: Error, result: string) => void): Promise<string>;
 
     subscribe(string: 'messages', options: SubscriptionOptions, callback?: (error: Error, message: Notification, subscription: any) => void): Subscribe;
-
-    clearSubscriptions(): Promise<boolean|Error>;
 
     newMessageFilter(options?: SubscriptionOptions): Promise<string>;
 
