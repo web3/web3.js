@@ -13,16 +13,15 @@
 */
 /**
  * @file index.d.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {BatchRequest, provider} from 'web3-providers';
+import {provider} from 'web3-providers';
 import {
     AbstractWeb3Module,
     Log,
     PromiEvent,
-    Providers,
     RLPEncodedTransaction,
     Transaction,
     TransactionReceipt,
@@ -50,7 +49,7 @@ export class Eth extends AbstractWeb3Module {
     abi: AbiCoder;
     net: Network;
 
-    clearSubscriptions(): Promise<boolean | Error>
+    clearSubscriptions(): Promise<boolean>;
 
     subscribe(type: 'logs', options?: Logs): Promise<Subscribe<Log>>;
     subscribe(type: 'logs', callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>
@@ -58,10 +57,6 @@ export class Eth extends AbstractWeb3Module {
     subscribe(type: 'syncing', callback?: (error: Error, result: Subscribe<any>) => void): Promise<Subscribe<any>>
     subscribe(type: 'newBlockHeaders', callback?: (error: Error, result: Subscribe<BlockHeader>) => void): Promise<Subscribe<BlockHeader>>
     subscribe(type: 'pendingTransactions', callback?: (error: Error, result: Subscribe<Transaction>) => void): Promise<Subscribe<Transaction>>
-
-    readonly providers: Providers;
-    readonly givenProvider: provider | null;
-    BatchRequest: new () => BatchRequest;
 
     getProtocolVersion(callback?: (error: Error, protocolVersion: string) => void): Promise<string>;
 

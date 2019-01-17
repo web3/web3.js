@@ -22,7 +22,7 @@ import {Eth, Subscribe, BlockHeader, Syncing, Block} from 'web3-eth';
 
 const eth = new Eth('http://localhost:8545');
 
-// $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => Contract
+// $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => AbstractContract
 eth.Contract;
 
 // $ExpectType new (iban: string) => Iban
@@ -43,7 +43,6 @@ eth.abi;
 // $ExpectType Network
 eth.net;
 
-// $ExpectType Promise<boolean|Error>
 eth.clearSubscriptions();
 
 // $ExpectType Promise<Subscribe<Log>>
@@ -71,21 +70,6 @@ eth.subscribe('newBlockHeaders', (error: Error, result: Subscribe<BlockHeader>) 
 eth.subscribe('pendingTransactions');
 // $ExpectType Promise<Subscribe<Transaction>>
 eth.subscribe('pendingTransactions', (error: Error, result: Subscribe<Transaction>) => {});
-
-// $ExpectType Providers
-eth.providers;
-
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | null
-eth.givenProvider;
-
-// $ExpectType BatchRequest
-new eth.BatchRequest();
-
-// $ExpectType string | null
-eth.defaultAccount
-
-// $ExpectType string | number
-eth.defaultBlock
 
 // $ExpectType Promise<string>
 eth.getProtocolVersion();
