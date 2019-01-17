@@ -47,7 +47,7 @@ export class AbstractWeb3Module {
     readonly providers: Providers;
     readonly givenProvider: provider | null;
 
-    setProvider(provider: provider, net?: net.Server): boolean;
+    setProvider(provider: provider, net?: net.Socket): boolean;
 
     isSameProvider(provider: provider): boolean;
 

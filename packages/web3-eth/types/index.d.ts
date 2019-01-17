@@ -17,7 +17,6 @@
  * @date 2018
  */
 
-import * as net from 'net';
 import {BatchRequest, provider} from 'web3-providers';
 import {
     AbstractWeb3Module,
@@ -29,7 +28,7 @@ import {
     TransactionReceipt,
     Web3ModuleOptions
 } from 'web3-core';
-import {Contract, ContractOptions} from 'web3-eth-contract';
+import {AbstractContract, ContractOptions} from 'web3-eth-contract';
 import {Iban} from 'web3-eth-iban';
 import {Accounts} from 'web3-eth-accounts';
 import {AbiCoder} from 'web3-eth-abi';
@@ -43,7 +42,7 @@ export class Eth extends AbstractWeb3Module {
         options?: Web3ModuleOptions
     );
 
-    Contract: new (jsonInterface: AbiItem[] | AbiItem, address?: string, options?: ContractOptions) => Contract;
+    Contract: new (jsonInterface: AbiItem[] | AbiItem, address?: string, options?: ContractOptions) => AbstractContract;
     Iban: new(iban: string) => Iban;
     personal: Personal;
     accounts: Accounts;
@@ -59,8 +58,6 @@ export class Eth extends AbstractWeb3Module {
     subscribe(type: 'syncing', callback?: (error: Error, result: Subscribe<any>) => void): Promise<Subscribe<any>>
     subscribe(type: 'newBlockHeaders', callback?: (error: Error, result: Subscribe<BlockHeader>) => void): Promise<Subscribe<BlockHeader>>
     subscribe(type: 'pendingTransactions', callback?: (error: Error, result: Subscribe<Transaction>) => void): Promise<Subscribe<Transaction>>
-
-    setProvider(provider: provider, net?: net.Server): boolean;
 
     readonly providers: Providers;
     readonly givenProvider: provider | null;

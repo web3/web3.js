@@ -128,7 +128,7 @@ export default class EthereumProvider extends AbstractSocketProvider {
      * @param {String} method
      * @param {Array} parameters
      *
-     * @returns {Promise<any>}
+     * @returns {Promise<Object>}
      */
     send(method, parameters) {
         return this.connection.send(method, parameters).then((response) => {

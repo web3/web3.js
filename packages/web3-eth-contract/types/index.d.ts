@@ -20,7 +20,7 @@
 import {provider} from 'web3-providers';
 import {AbiItem, BN} from 'web3-utils';
 
-export class Contract {
+export class AbstractContract {
     constructor(
         provider: provider,
         jsonInterface: AbiItem[] | AbiItem,
@@ -30,7 +30,7 @@ export class Contract {
 
     options: Options;
 
-    clone(): Contract;
+    clone(): AbstractContract;
 
     deploy(options: DeployOptions): DeployTransactionResponse;
 
@@ -64,7 +64,7 @@ export interface DeployOptions {
 export interface DeployTransactionResponse {
     array: any[];
 
-    send(options: SendOptions): () => Promise<Contract>;
+    send(options: SendOptions): () => Promise<AbstractContract>;
 
     estimateGas(options: EstimateGasOptions, callback?: (err: Error, gas: number) => void): void;
 

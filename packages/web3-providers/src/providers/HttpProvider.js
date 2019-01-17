@@ -37,7 +37,7 @@ export default class HttpProvider {
         this.host = host;
         this.timeout = options.timeout || 0;
         this.headers = options.headers;
-        this.connected = false;
+        this.connected = true;
         this.providersModuleFactory = providersModuleFactory;
         this.agent = {};
 

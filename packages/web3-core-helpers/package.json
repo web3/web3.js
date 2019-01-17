@@ -8,17 +8,24 @@
     "main": "dist/web3-core-helpers.cjs.js",
     "module": "dist/web3-core-helpers.esm.js",
     "browser": "dist/web3-core-helpers.umd.js",
+    "types": "types",
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "jest"
+        "test": "jest",
+        "dtslint": "dtslint types"
     },
     "dependencies": {
         "lodash": "^4.17.11",
         "web3-eth-iban": "1.0.0-beta.38",
         "web3-utils": "1.0.0-beta.38"
     },
+    "devDependencies": {
+        "dtslint": "^0.4.2",
+        "web3-core":  "1.0.0-beta.38"
+    },
     "files": [
-        "dist"
+        "dist",
+        "types/index.d.ts"
     ]
 }

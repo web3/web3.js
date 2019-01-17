@@ -17,7 +17,6 @@
  * @date 2018
  */
 
-import * as net from 'net';
 import {AbstractWeb3Module, Providers, Web3ModuleOptions} from 'web3-core';
 import {BatchRequest, provider} from 'web3-providers';
 import {Network} from 'web3-net';
@@ -27,8 +26,6 @@ export class Shh extends AbstractWeb3Module {
         provider: provider,
         options?: Web3ModuleOptions
     );
-
-    setProvider(provider: provider, net?: net.Server): boolean;
 
     readonly providers: Providers;
     readonly givenProvider: provider | null;

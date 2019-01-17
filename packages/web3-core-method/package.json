@@ -12,8 +12,10 @@
         "build": "rollup -c",
         "dev": "rollup -c -w",
         "test": "jest",
-        "test:watch": "jest --watchAll"
+        "test:watch": "jest --watchAll",
+        "dtslint": "dtslint types"
     },
+    "types": "types",
     "dependencies": {
         "eventemitter3": "3.1.0",
         "web3-core": "1.0.0-beta.38",
@@ -23,9 +25,11 @@
         "web3-utils": "1.0.0-beta.38"
     },
     "devDependencies": {
+        "dtslint": "^0.4.2",
         "web3-providers": "1.0.0-beta.38"
     },
     "files": [
-        "dist"
+        "dist",
+        "types/index.d.ts"
     ]
 }

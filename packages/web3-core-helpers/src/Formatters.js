@@ -43,7 +43,7 @@ export const outputBigNumberFormatter = (number) => {
 /**
  * @method isPredefinedBlockNumber
  *
- * @param {String|Number} blockNumber
+ * @param {String} blockNumber
  *
  * @returns {Boolean}
  */
@@ -72,7 +72,7 @@ export const inputDefaultBlockNumberFormatter = (blockNumber, moduleInstance) =>
  *
  * @param {String|Number} blockNumber
  *
- * @returns {undefined|Number|String}
+ * @returns {String|Number}
  */
 export const inputBlockNumberFormatter = (blockNumber) => {
     if (blockNumber === undefined || blockNumber === null || isPredefinedBlockNumber(blockNumber)) {
@@ -141,24 +141,24 @@ export const txInputFormatter = (txObject) => {
  *
  * @method inputCallFormatter
  *
- * @param {Object} options
+ * @param {Object} txObject
  * @param {AbstractWeb3Module} moduleInstance
  *
- * @returns object
+ * @returns {Object}
  */
-export const inputCallFormatter = (options, moduleInstance) => {
-    options = txInputFormatter(options);
+export const inputCallFormatter = (txObject, moduleInstance) => {
+    txObject = txInputFormatter(txObject);
     let from = moduleInstance.defaultAccount;
 
-    if (options.from) {
-        from = options.from;
+    if (txObject.from) {
+        from = txObject.from;
     }
 
     if (from) {
-        options.from = inputAddressFormatter(from);
+        txObject.from = inputAddressFormatter(from);
     }
 
-    return options;
+    return txObject;
 };
 
 /**
@@ -166,27 +166,27 @@ export const inputCallFormatter = (options, moduleInstance) => {
  *
  * @method inputTransactionFormatter
  *
- * @param {Object} options
+ * @param {Object} txObject
  * @param {AbstractWeb3Module} moduleInstance
  *
  * @returns {Object}
  */
-export const inputTransactionFormatter = (options, moduleInstance) => {
-    options = txInputFormatter(options);
+export const inputTransactionFormatter = (txObject, moduleInstance) => {
+    txObject = txInputFormatter(txObject);
 
-    if (!isNumber(options.from) && !isObject(options.from)) {
-        if (!options.from) {
-            options.from = moduleInstance.defaultAccount;
+    if (!isNumber(txObject.from) && !isObject(txObject.from)) {
+        if (!txObject.from) {
+            txObject.from = moduleInstance.defaultAccount;
         }
 
-        if (!options.from && !isNumber(options.from)) {
+        if (!txObject.from && !isNumber(txObject.from)) {
             throw new Error('The send transactions "from" field must be defined!');
         }
 
-        options.from = inputAddressFormatter(options.from);
+        txObject.from = inputAddressFormatter(txObject.from);
     }
 
-    return options;
+    return txObject;
 };
 
 /**
@@ -203,6 +203,7 @@ export const inputSignFormatter = (data) => {
 };
 
 /**
+ * TODO: Check where this is used and why the method below (outputTransactionReceiptFormatter) also exists.
  * Formats the output of a transaction to its proper values
  *
  * @method outputTransactionFormatter

@@ -13,7 +13,7 @@
 */
 /**
  * @file index.d.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
@@ -30,29 +30,27 @@ import {Personal} from 'web3-eth-personal';
 export default class Web3 extends AbstractWeb3Module {
     constructor(
         provider: provider,
+        net?: net.Socket,
         options?: Web3ModuleOptions
     );
 
-    static utils: Utils;
-    utils: Utils;
-    static version: string;
-    version: string;
-    static givenProvider: provider;
+    static givenProvider: provider | null;
     static providers: Providers;
     static modules: Modules;
 
-    setProvider(provider: provider, net?: net.Server): boolean;
-
     BatchRequest: new () => BatchRequest;
+
+    utils: Utils;
     eth: Eth;
     shh: Shh;
     bzz: Bzz;
+    version: string;
 }
 
-export interface Modules {// TODO: add net parameter
-    Eth: new (provider: provider) => Eth;
-    Net: new (provider: provider) => Network;
-    Personal: new (provider: provider) => Personal;
-    Shh: new (provider: provider) => Shh;
+export interface Modules {
+    Eth: new (provider: provider, net: net.Socket) => Eth;
+    Net: new (provider: provider, net: net.Socket) => Network;
+    Personal: new (provider: provider, net: net.Socket) => Personal;
+    Shh: new (provider: provider, net: net.Socket) => Shh;
     Bzz: new (provider: provider) => Bzz;
 }

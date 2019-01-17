@@ -17,20 +17,27 @@
  * @date 2018
  */
 
-import * as net from 'net';
-import {AbstractProviderAdapter, provider, BatchRequest} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions, Providers, Transaction, RLPEncodedTransaction} from 'web3-core';
+import {Accounts} from 'web3-eth-accounts'
+import {BatchRequest, provider} from 'web3-providers';
+import {AbstractWeb3Module, Providers, RLPEncodedTransaction, Transaction, Web3ModuleOptions} from 'web3-core';
+
 export class Personal extends AbstractWeb3Module {
     constructor(
-        provider: AbstractProviderAdapter | provider,
+        provider: provider,
+        accounts: Accounts,
         options?: Web3ModuleOptions
     );
-    setProvider(provider: AbstractProviderAdapter | provider, net?: net.Server): boolean;
+
     BatchRequest: new() => BatchRequest;
     providers: Providers;
+
     newAccount(password: string, callback?: (error: Error, address: string) => void): Promise<string>;
+
     sign(dataToSign: string, address: string, password: string, callback?: (error: Error, signature: string) => void): Promise<string>;
+
     ecRecover(dataThatWasSigned: string, signature: string, callback?: (error: Error, address: string) => void): Promise<string>;
+
     signTransaction(transation: Transaction, password: string, callback?: (error: Error, RLPEncodedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
+
     unlockAccount(address: string, password: string, unlockDuration: number, callback?: (error: Error) => void): Promise<boolean>;
 }

@@ -111,7 +111,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
             this.registerEventListeners();
         }, 5000);
     }
-
+q
     /**
      * Will close the socket connection with a error code and reason.
      * Please have a look at https://developer.mozilla.org/de/docs/Web/API/WebSocket/close
@@ -198,7 +198,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @param {String} method
      * @param {Array} parameters
      *
-     * @returns {Promise<any>}
+     * @returns {Promise<Object>}
      */
     send(method, parameters) {
         return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
@@ -220,7 +220,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @param {AbstractMethod[]} methods
      * @param {AbstractWeb3Module} moduleInstance
      *
-     * @returns Promise<Object|Error>
+     * @returns Promise<Object[]>
      */
     sendBatch(methods, moduleInstance) {
         let payload = [];

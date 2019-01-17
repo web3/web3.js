@@ -13,7 +13,7 @@
 */
 /**
  * @file personal-tests.ts
- * @author Huan Zhang <huanzhang30@gmail.com>
+ * @author Huan Zhang <huanzhang30@gmail.com>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
@@ -34,15 +34,15 @@ const httpProvider = new HttpProvider('http://localhost:8545', options);
 
 const personal = new Personal(
     httpProvider,
-)
+);
 
 // $ExpectType boolean
-personal.setProvider(httpProvider)
+personal.setProvider(httpProvider);
 
 // $ExpectType Providers
 personal.providers;
 
-// $ExpectType AbstractProviderAdapter
+// $ExpectType provider
 personal.currentProvider;
 
 // $ExpectType BatchRequest
