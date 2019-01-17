@@ -16,24 +16,41 @@
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
-import {AbstractWeb3Module, Log, Transaction, TransactionReceipt} from 'web3-core';
 
-export interface formatters {
-    outputBigNumberFormatter(number: number): number;
-    inputSignFormatter(data: string): string;
-    inputAddressFormatter(address: string): string;
-    isPredefinedBlockNumber(blockNumber: string): boolean;
-    inputDefaultBlockNumberFormatter(blockNumber: string, moduleInstance: AbstractWeb3Module): string;
-    inputBlockNumberFormatter(blockNumber: string | number): string | number;
-    outputBlockFormatter(block: Object): Object; // TODO: Create Block interface
-    txInputFormatter(txObject: Transaction): Transaction;
-    inputCallFormatter(txObject: Transaction): Transaction;
-    inputTransactionFormatter(txObject: Transaction): Transaction;
-    outputTransactionFormatter(TransactionReceipt: string): TransactionReceipt;
-    outputTransactionReceiptFormatter(TransactionReceipt: string): TransactionReceipt;
-    inputLogFormatter(log: Log): Log;
-    outputLogFormatter(log: Log): Log;
-    inputPostFormatter(post: Object): Object; // TODO: Create Post interface
-    outputPostFormatter(post: Object): Object; // TODO: Create Post interface
-    outputSyncingFormatter(result: Object): Object; // TODO: Create SyncLog interface
+import {AbstractWeb3Module} from 'web3-core';
+
+export class formatters {
+    static outputBigNumberFormatter(number: number): number;
+
+    static inputSignFormatter(data: string): string;
+
+    static inputAddressFormatter(address: string): string;
+
+    static isPredefinedBlockNumber(blockNumber: string): boolean;
+
+    static inputDefaultBlockNumberFormatter(blockNumber: string, moduleInstance: AbstractWeb3Module): string;
+
+    static inputBlockNumberFormatter(blockNumber: string | number): string | number;
+
+    static outputBlockFormatter(block: object): object; // TODO: Create Block interface
+
+    static txInputFormatter(txObject: object): object;
+
+    static inputCallFormatter(txObject: object): object;
+
+    static inputTransactionFormatter(txObject: object): object;
+
+    static outputTransactionFormatter(receipt: object): object;
+
+    static outputTransactionReceiptFormatter(receipt: object): object;
+
+    static inputLogFormatter(log: object): object;
+
+    static outputLogFormatter(log: object): object;
+
+    static inputPostFormatter(post: object): object; // TODO: Create Post interface
+
+    static outputPostFormatter(post: object): object; // TODO: Create Post interface
+
+    static outputSyncingFormatter(result: object): object; // TODO: Create SyncLog interface
 }

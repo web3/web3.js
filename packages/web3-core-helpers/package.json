@@ -13,7 +13,7 @@
         "build": "rollup -c",
         "dev": "rollup -c -w",
         "test": "jest",
-        "dtslint": "dtslint types"
+        "dtslint": "dtslint types --onlyTestTsNext"
     },
     "dependencies": {
         "lodash": "^4.17.11",
@@ -22,7 +22,8 @@
     },
     "devDependencies": {
         "dtslint": "^0.4.2",
-        "web3-core":  "1.0.0-beta.38"
+        "web3-core":  "1.0.0-beta.38",
+        "web3-providers": "1.0.0-beta.38"
     },
     "files": [
         "dist",

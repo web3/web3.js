@@ -10,8 +10,8 @@
         "noEmit": true,
         "allowSyntheticDefaultImports": true,
         "baseUrl": ".",
-        "paths": { 
-            "web3-core": ["."] 
+        "paths": {
+            "web3-core-helpers": ["."]
         }
     }
 }
