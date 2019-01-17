@@ -27,7 +27,7 @@ import {
     TransactionReceipt,
     Web3ModuleOptions
 } from 'web3-core';
-import {AbstractContract, ContractOptions} from 'web3-eth-contract';
+import {Contract, ContractOptions} from 'web3-eth-contract';
 import {Iban} from 'web3-eth-iban';
 import {Accounts} from 'web3-eth-accounts';
 import {AbiCoder} from 'web3-eth-abi';
@@ -41,7 +41,7 @@ export class Eth extends AbstractWeb3Module {
         options?: Web3ModuleOptions
     );
 
-    Contract: new (jsonInterface: AbiItem[] | AbiItem, address?: string, options?: ContractOptions) => AbstractContract;
+    Contract: new (jsonInterface: AbiItem[] | AbiItem, address?: string, options?: ContractOptions) => Contract;
     Iban: new(iban: string) => Iban;
     personal: Personal;
     accounts: Accounts;

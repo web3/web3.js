@@ -22,7 +22,7 @@ import {Eth, Subscribe, BlockHeader, Syncing, Block} from 'web3-eth';
 
 const eth = new Eth('http://localhost:8545');
 
-// $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => AbstractContract
+// $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => Contract
 eth.Contract;
 
 // $ExpectType new (iban: string) => Iban

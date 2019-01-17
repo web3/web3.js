@@ -36,6 +36,7 @@ export class Iban {
     static createIndirect(options: IndirectOptions): Iban;
 
     static isValid(iban: string): boolean;
+
     isValid(): boolean;
 
     isDirect(): boolean;
