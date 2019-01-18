@@ -28,6 +28,7 @@ import Nat from 'eth-lib/lib/nat';
 import Bytes from 'eth-lib/lib/bytes';
 import scryptsy from 'scrypt.js';
 import uuid from 'uuid';
+import cloneDeep from 'lodash/cloneDeep';
 import {AbstractWeb3Module} from 'web3-core';
 
 const cryp = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
@@ -135,10 +136,11 @@ export default class Accounts extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<Object>}
      */
-    signTransaction(tx, privateKey, callback) {
+    signTransaction(inputTx, privateKey, callback) {
         const _this = this;
         let error = false;
         let result;
+        let tx = cloneDeep(inputTx);
 
         callback = callback || (() => {});
 
