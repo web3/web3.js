@@ -202,6 +202,7 @@ export default class Accounts extends AbstractWeb3Module {
                 rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
 
                 const rawTransaction = RLP.encode(rawTx);
+                const txHash = Hash.keccak256(rawTransaction);
 
                 const values = RLP.decode(rawTransaction);
                 result = {
@@ -209,7 +210,8 @@ export default class Accounts extends AbstractWeb3Module {
                     v: trimLeadingZero(values[6]),
                     r: trimLeadingZero(values[7]),
                     s: trimLeadingZero(values[8]),
-                    rawTransaction
+                    rawTransaction,
+                    txHash
                 };
             } catch (error) {
                 callback(error);
