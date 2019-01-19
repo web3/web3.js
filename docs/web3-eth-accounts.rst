@@ -34,7 +34,9 @@ create
 
     web3.eth.accounts.create([entropy]);
 
-Generates an account object with private key and public key.
+Generates an account object with private key and public key. It's different from
+:ref:`web3.eth.personal.newAccount() <personal-newaccount>` which creates an account
+over the network on the node via an RPC call.
 
 ----------
 Parameters
@@ -104,7 +106,7 @@ Creates an account object from a private key.
 Parameters
 ----------
 
-1. ``privateKey`` - ``String``: The private key to convert.
+1. ``privateKey`` - ``String``: The private key hex string beginning with ``0x``.
 
 -------
 Returns
