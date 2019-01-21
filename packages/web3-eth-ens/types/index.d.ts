@@ -53,6 +53,10 @@ export class Ens extends AbstractWeb3Module {
     getMultihash(name: string, callback?: () => {}): Promise<string>;
 
     setMultihash(name: string, hash: string, sendOptions: TxObject, callback?: () => {}): PromiEvent<any>;
+
+    getContenthash(name: string, callback?: () => {}): Promise<string>;
+
+    setContenthash(name: string, hash: string, sendOptions: TxObject, callback?: () => {}): PromiEvent<any>;
 }
 
 export class Registry {

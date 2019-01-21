@@ -51,3 +51,9 @@ ens.getMultihash('name');
 
 // $ExpectType PromiEvent<any>
 ens.setMultihash('name', 'hash', {});
+
+// $ExpectType Promise<string>
+ens.getContenthash('name');
+
+// $ExpectType PromiEvent<any>
+ens.setContenthash('name', 'hash', {});

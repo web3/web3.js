@@ -130,7 +130,7 @@ export default class Ens extends AbstractWeb3Module {
     async getAddress(name, callback = null) {
         const resolver = await this.registry.resolver(name);
 
-        return resolver.methods.addr().call(callback);
+        return resolver.methods.addr(namehash.hash(name)).call(callback);
     }
 
     /**
@@ -194,7 +194,7 @@ export default class Ens extends AbstractWeb3Module {
     async getPubkey(name, callback = null) {
         const resolver = await this.registry.resolver(name);
 
-        return resolver.methods.pubkey().call(callback);
+        return resolver.methods.pubkey(namehash.hash(name)).call(callback);
     }
 
     /**
@@ -259,7 +259,7 @@ export default class Ens extends AbstractWeb3Module {
     async getContent(name, callback = null) {
         const resolver = await this.registry.resolver(name);
 
-        return resolver.methods.content().call(callback);
+        return resolver.methods.content(namehash.hash(name)).call(callback);
     }
 
     /**
@@ -323,7 +323,7 @@ export default class Ens extends AbstractWeb3Module {
     async getMultihash(name, callback = null) {
         const resolver = await this.registry.resolver(name);
 
-        return resolver.methods.multihash().call(callback);
+        return resolver.methods.multihash(namehash.hash(name)).call(callback);
     }
 
     /**
@@ -345,6 +345,70 @@ export default class Ens extends AbstractWeb3Module {
         this.registry.resolver(name).then((resolver) => {
             resolver.methods
                 .setMultihash(namehash.hash(name), hash)
+                .send(sendOptions, callback)
+                .on('transactionHash', (transactionHash) => {
+                    promiEvent.emit('transactionHash', transactionHash);
+                })
+                .on('confirmation', (confirmationNumber, receipt) => {
+                    promiEvent.emit('confirmation', confirmationNumber, receipt);
+                })
+                .on('receipt', (receipt) => {
+                    if (isFunction(callback)) {
+                        callback(receipt);
+                    }
+
+                    promiEvent.emit('receipt', receipt);
+                    promiEvent.resolve(receipt);
+                })
+                .on('error', (error) => {
+                    if (isFunction(callback)) {
+                        callback(error);
+                    }
+
+                    promiEvent.emit('error', error);
+                    promiEvent.reject(error);
+                });
+        });
+
+        return promiEvent;
+    }
+
+    /**
+     * Get the contenthash
+     *
+     * @method getContenthash
+     *
+     * @param {String} name
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {Promise<String>}
+     */
+    async getContenthash(name, callback = null) {
+        const resolver = await this.registry.resolver(name);
+
+        return resolver.methods.contenthash(namehash.hash(name)).call(callback);
+    }
+
+    /**
+     * Set the contenthash
+     *
+     * @method setContenthash
+     *
+     * @param {String} name
+     * @param {String} hash
+     * @param {Object} sendOptions
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {PromiEvent}
+     */
+    setContenthash(name, hash, sendOptions, callback = null) {
+        const promiEvent = new this.registry.PromiEvent();
+
+        this.registry.resolver(name).then((resolver) => {
+            resolver.methods
+                .setContenthash(namehash.hash(name), hash)
                 .send(sendOptions, callback)
                 .on('transactionHash', (transactionHash) => {
                     promiEvent.emit('transactionHash', transactionHash);
