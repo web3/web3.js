@@ -28,6 +28,9 @@ ens.registry;
 // $ExpectType Promise<Contract>
 ens.resolver('name');
 
+// $ExpectType Promise<boolean>
+ens.supportsInterface('name', 'interfaceId');
+
 // $ExpectType Promise<string>
 ens.getAddress('name');
 

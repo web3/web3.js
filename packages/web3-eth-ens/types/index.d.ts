@@ -38,6 +38,8 @@ export class Ens extends AbstractWeb3Module {
 
     resolver(name: string): Promise<Contract>;
 
+    supportsInterface(name: string, interfaceId: string, callback?: () => {}): Promise<boolean>;
+
     getAddress(name: string, callback?: () => {}): Promise<string>;
 
     setAddress(name: string, address: string, sendOptions: TxObject, callback?: () => {}): PromiEvent<any>;

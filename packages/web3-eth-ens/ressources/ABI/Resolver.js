@@ -15,6 +15,7 @@ export const RESOLVER_ABI = [
             }
         ],
         payable: false,
+        stateMutability: 'pure',
         type: 'function'
     },
     {

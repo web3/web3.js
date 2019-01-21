@@ -22,7 +22,7 @@ import {isFunction} from 'lodash';
 import namehash from 'eth-ens-namehash';
 
 // TODO: Maybe it would be better to extend from the CallContractMethod and SendContractMethod and to implement the
-// TODO: ENS methods as method objects this would clean up the entire module and remove a lot of code duplication.
+// TODO: ENS methods as method objects. This would clean up the entire module and remove the duplicated code.
 export default class Ens extends AbstractWeb3Module {
     /**
      * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
@@ -116,6 +116,24 @@ export default class Ens extends AbstractWeb3Module {
      */
     resolver(name) {
         return this.registry.resolver(name);
+    }
+
+    /**
+     * Returns the address record associated with a name.
+     *
+     * @method supportsInterface
+     *
+     * @param {String} name
+     * @param {String} interfaceId
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {Promise<String>}
+     */
+    async supportsInterface(name, interfaceId, callback = null) {
+        const resolver = await this.registry.resolver(name);
+
+        return resolver.methods.supportsInterface(interfaceId).call(callback);
     }
 
     /**

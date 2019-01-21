@@ -103,6 +103,30 @@ describe('EnsTest', () => {
         await expect(ens.resolver('name')).resolves.toEqual(true);
     });
 
+    it('calls supportsInterface and returns a resolved promise', async () => {
+        const call = jest.fn((callback) => {
+            expect(callback).toBeInstanceOf(Function);
+
+            return Promise.resolve(true);
+        });
+
+        const resolver = {
+            methods: {
+                supportsInterface: jest.fn(() => {
+                    return {call: call};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        await expect(ens.supportsInterface('name', 'interfaceId', () => {})).resolves.toEqual(true);
+
+        expect(registryMock.resolver).toHaveBeenCalledWith('name');
+
+        expect(resolver.methods.supportsInterface).toHaveBeenCalled();
+    });
+
     it('calls getAddress and returns a resolved promise', async () => {
         const call = jest.fn((callback) => {
             expect(callback).toBeInstanceOf(Function);
