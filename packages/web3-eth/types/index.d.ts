@@ -1,0 +1,214 @@
+/*
+    This file is part of web3.js.
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/**
+ * @file index.d.ts
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
+ * @date 2018
+ */
+
+import {provider} from 'web3-providers';
+import {
+    AbstractWeb3Module,
+    Log,
+    PromiEvent,
+    RLPEncodedTransaction,
+    Transaction,
+    TransactionReceipt,
+    Web3ModuleOptions
+} from 'web3-core';
+import {Contract, ContractOptions} from 'web3-eth-contract';
+import {Iban} from 'web3-eth-iban';
+import {Accounts} from 'web3-eth-accounts';
+import {AbiCoder} from 'web3-eth-abi';
+import {Network} from 'web3-net';
+import {Personal} from 'web3-eth-personal';
+import {AbiItem} from 'web3-utils';
+
+export class Eth extends AbstractWeb3Module {
+    constructor(
+        provider: provider,
+        options?: Web3ModuleOptions
+    );
+
+    Contract: new (jsonInterface: AbiItem[] | AbiItem, address?: string, options?: ContractOptions) => Contract;
+    Iban: new(iban: string) => Iban;
+    personal: Personal;
+    accounts: Accounts;
+    ens: any; // change once ens types as written
+    abi: AbiCoder;
+    net: Network;
+
+    clearSubscriptions(): Promise<boolean>;
+
+    subscribe(type: 'logs', options?: Logs): Promise<Subscribe<Log>>;
+    subscribe(type: 'logs', callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>
+    subscribe(type: 'logs', options?: Logs, callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>;
+    subscribe(type: 'syncing', callback?: (error: Error, result: Subscribe<any>) => void): Promise<Subscribe<any>>
+    subscribe(type: 'newBlockHeaders', callback?: (error: Error, result: Subscribe<BlockHeader>) => void): Promise<Subscribe<BlockHeader>>
+    subscribe(type: 'pendingTransactions', callback?: (error: Error, result: Subscribe<Transaction>) => void): Promise<Subscribe<Transaction>>
+
+    getProtocolVersion(callback?: (error: Error, protocolVersion: string) => void): Promise<string>;
+
+    isSyncing(callback?: (error: Error, syncing: Syncing) => void): Promise<Syncing | boolean>;
+
+    getCoinbase(callback?: (error: Error, coinbaseAddress: string) => void): Promise<string>;
+
+    isMining(callback?: (error: Error, mining: boolean) => void): Promise<boolean>;
+
+    getHashrate(callback?: (error: Error, hashes: number) => void): Promise<number>;
+
+    getGasPrice(callback?: (error: Error, gasPrice: string) => void): Promise<string>;
+
+    getAccounts(callback?: (error: Error, accounts: string[]) => void): Promise<string[]>;
+
+    getBlockNumber(callback?: (error: Error, blockNumber: number) => void): Promise<number>;
+
+    getBalance(address: string): Promise<string>;
+    getBalance(address: string, defaultBlock: string | number): Promise<string>;
+    getBalance(address: string, callback?: (error: Error, balance: string) => void): Promise<string>;
+    getBalance(address: string, defaultBlock: string | number, callback?: (error: Error, balance: string) => void): Promise<string>;
+
+    getStorageAt(address: string, position: number): Promise<string>;
+    getStorageAt(address: string, position: number, defaultBlock: number | string): Promise<string>;
+    getStorageAt(address: string, position: number, callback?: (error: Error, storageAt: string) => void): Promise<string>;
+    getStorageAt(address: string, position: number, defaultBlock: number | string, callback?: (error: Error, storageAt: string) => void): Promise<string>;
+
+    getCode(address: string): Promise<string>;
+    getCode(address: string, defaultBlock: string | number): Promise<string>;
+    getCode(address: string, callback?: (error: Error, code: string) => void): Promise<string>;
+    getCode(address: string, defaultBlock: string | number, callback?: (error: Error, code: string) => void): Promise<string>;
+
+    getBlock(blockHashOrBlockNumber: string | number): Promise<Block>;
+    getBlock(blockHashOrBlockNumber: string | number, returnTransactionObjects: boolean): Promise<Block>;
+    getBlock(blockHashOrBlockNumber: string | number, callback?: (error: Error, block: Block) => void): Promise<Block>;
+    getBlock(blockHashOrBlockNumber: string | number, returnTransactionObjects: boolean, callback?: (error: Error, block: Block) => void): Promise<Block>;
+
+    getBlockTransactionCount(blockHashOrBlockNumber: string | number, callback?: (error: Error, numberOfTransactions: number) => void): Promise<number>;
+
+    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number): Promise<Block>
+    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, returnTransactionObjects: boolean): Promise<Block>
+    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, callback?: (error: Error, uncle: {}) => void): Promise<Block>
+    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, returnTransactionObjects: boolean, callback?: (error: Error, uncle: {}) => void): Promise<Block>
+
+    getTransaction(transactionHash: string, callback?: (error: Error, transaction: Transaction) => void): Promise<Transaction>;
+
+    getTransactionFromBlock(hashStringOrNumber: string | number, indexNumber: number, callback?: (error: Error, transaction: Transaction) => void): Promise<Transaction>;
+
+    getTransactionReceipt(hash: string, callback?: (error: Error, transactionReceipt: TransactionReceipt) => void): Promise<TransactionReceipt>;
+
+    getTransactionCount(address: string): Promise<number>;
+    getTransactionCount(address: string, defaultBlock: number | string): Promise<number>;
+    getTransactionCount(address: string, callback?: (error: Error, count: number) => void): Promise<number>;
+    getTransactionCount(address: string, defaultBlock: number | string, callback?: (error: Error, count: number) => void): Promise<number>;
+
+    sendTransaction(transaction: Transaction, callback?: (error: Error, hash: string) => void): PromiEvent<TransactionReceipt>;
+
+    sendSignedTransaction(signedTransactionData: string, callback?: (error: Error, gas: string) => void): PromiEvent<TransactionReceipt>
+
+    sign(dataToSign: string, address: string | number, callback?: (error: Error, signature: string) => void): Promise<string>;
+
+    // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
+    signTransaction(transaction: Transaction, callback?: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
+    // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
+    signTransaction(transaction: Transaction, address: string): Promise<RLPEncodedTransaction>;
+    // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
+    signTransaction(transaction: Transaction, address: string, callback: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
+
+    call(transaction: Transaction): Promise<string>;
+    call(transaction: Transaction, defaultBlock?: number | string): Promise<string>;
+    call(transaction: Transaction, callback?: (error: Error, data: string) => void): Promise<string>;
+    call(transaction: Transaction, defaultBlock: number | string, callback: (error: Error, data: string) => void): Promise<string>;
+
+    estimateGas(transaction: Transaction, callback?: (error: Error, gas: number) => void): Promise<number>;
+
+    getPastLogs(options: PastLogsOptions, callback?: (error: Error, logs: Log[]) => void): Promise<Log[]>;
+
+    getWork(callback?: (error: Error, result: string[]) => void): Promise<string[]>;
+
+    submitWork(data: [string, string, string], callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+}
+
+export interface Methods {
+    property?: string;
+    methods: Method[];
+}
+
+export interface Method {
+    name: string;
+    call: string;
+    params?: number;
+    inputFormatter?: Array<(() => void) | null>;
+    outputFormatter?: () => void;
+}
+
+export interface Syncing {
+    startingBlock: number;
+    currentBlock: number;
+    highestBlock: number;
+    knownStates: number;
+    pulledStates: number;
+}
+
+export interface BlockHeader {
+    number: number
+    hash: string
+    parentHash: string
+    nonce: string
+    sha3Uncles: string
+    logsBloom: string
+    transactionRoot: string
+    stateRoot: string
+    receiptRoot: string
+    miner: string
+    extraData: string
+    gasLimit: number
+    gasUsed: number
+    timestamp: number
+}
+
+export interface Block extends BlockHeader {
+    transactions: Transaction[];
+    size: number
+    difficulty: number
+    totalDifficulty: number
+    uncles: string[];
+}
+
+export interface PastLogsOptions {
+    fromBlock?: number | string;
+    toBlock?: number | string;
+    address: string | string[];
+    topics?: Array<string | string[]>;
+}
+
+export interface Logs {
+    fromBlock?: number
+    address?: string
+    topics?: Array<string | string[]>
+}
+
+export interface Subscribe<T> {
+    subscription: {
+        id: string
+        subscribe(callback?: (error: Error, result: Subscribe<T>) => void): Subscribe<T>
+        unsubscribe(callback?: (error: Error, result: boolean) => void): void | boolean
+        options: {}
+    }
+
+    on(type: 'data', handler: (data: T) => void): void
+
+    on(type: 'changed', handler: (data: T) => void): void
+
+    on(type: 'error', handler: (data: Error) => void): void
+}

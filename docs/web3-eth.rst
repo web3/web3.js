@@ -94,7 +94,7 @@ For ``web3.eth.accounts`` see the :ref:`accounts reference documentation <eth-ac
 ens
 =====================
 
-For ``web3.eth.ens`` see the :ref:`ENS reference documentation <eth-ens>`
+For ``web3.eth.ens`` see the :ref:`Ens reference documentation <eth-ens>`
 
 
 
@@ -1188,7 +1188,7 @@ signTransaction
 
 .. code-block:: javascript
 
-    web3.eth.signTransaction(transactionObject, address [, callback])
+    web3.eth.signTransaction(transactionObject [, address] [, callback])
 
 Signs a transaction. This account needs to be unlocked.
 
@@ -1198,7 +1198,7 @@ Parameters
 
 
 1. ``Object`` - The transaction data to sign :ref:`web3.eth.sendTransaction() <eth-sendtransaction>` for more.
-2. ``String`` - Address to sign transaction with.
+2. ``String`` - (optional) Address to sign transaction with.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 

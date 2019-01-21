@@ -2,9 +2,9 @@
 
 Steps before creating an issue: 
 
-1. I've read the documentation.
-2. I was looking for an solution on stackoverflow or something else.
-3. I was looking for an identical issue.
+1. I have read the documentation.
+2. I was looking for an solution on stackoverflow or somewhere else.
+3. I checked the issue list if an identical issue already exists.
 
 -->
 
@@ -18,7 +18,7 @@ Steps before creating an issue:
 2. [Second step]
 3. [and so on...]
 
-#### Logs
+#### Error Logs
 
 #### Versions
 [NPM, Node, Web3.js, OS, device...]

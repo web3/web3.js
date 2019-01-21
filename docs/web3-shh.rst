@@ -63,7 +63,7 @@ Returns
 -------
 
 
-``String`` - The version of the current whisper running.
+``Promise`` returns ``String`` - The version of the current whisper running.
 
 
 -------
@@ -103,7 +103,7 @@ Returns
 -------
 
 
-``Object`` - The information of the node with the following properties:
+``Promise`` returns ``Object`` - The information of the node with the following properties:
 
     - ``messages`` - ``Number``: Number of currently floating messages.
     - ``maxMessageSize`` - ``Number``: The current message size limit in bytes.
@@ -153,7 +153,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on success, error on failure.
+``Promise`` returns ``Boolean`` - ``true`` on success, error on failure.
 
 
 -------
@@ -196,7 +196,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on success, error on failure.
+``Promise`` returns ``Boolean`` - ``true`` on success, error on failure.
 
 
 -------
@@ -237,7 +237,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on success, error on failure.
+``Promise`` returns ``Boolean`` - ``true`` on success, error on failure.
 
 
 -------
@@ -275,7 +275,7 @@ Returns
 -------
 
 
-``String`` - Key ID on success and an error on failure.
+``Promise`` returns ``String`` - Key ID on success and an error on failure.
 
 
 -------
@@ -314,7 +314,7 @@ Returns
 -------
 
 
-``String`` - Key ID on success and an error on failure.
+``Promise`` returns ``String`` - Key ID on success and an error on failure.
 
 
 -------
@@ -353,7 +353,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on success, error on failure.
+``Promise`` returns ``Boolean`` - ``true`` on success, error on failure.
 
 
 -------
@@ -392,7 +392,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on if the key pair exist in the node, ``false`` if not. Error on failure.
+``Promise`` returns ``Boolean`` - ``true`` on if the key pair exist in the node, ``false`` if not. Error on failure.
 
 
 -------
@@ -431,7 +431,7 @@ Returns
 -------
 
 
-``String`` - Public key on success and an error on failure.
+``Promise`` returns ``String`` - Public key on success and an error on failure.
 
 
 -------
@@ -470,7 +470,7 @@ Returns
 -------
 
 
-``String`` - Private key on success and an error on failure.
+``Promise`` returns ``String`` - Private key on success and an error on failure.
 
 
 -------
@@ -509,7 +509,7 @@ Returns
 -------
 
 
-``String`` - Key ID on success and an error on failure.
+``Promise`` returns ``String`` - Key ID on success and an error on failure.
 
 
 -------
@@ -548,7 +548,7 @@ Returns
 -------
 
 
-``String`` - Key ID on success and an error on failure.
+``Promise`` returns ``String`` - Key ID on success and an error on failure.
 
 
 -------
@@ -587,7 +587,7 @@ Returns
 -------
 
 
-``Promise<String|Error>``: The Key ID on success and an error on failure.
+``Promise`` returns ``String`` - Key ID on success and an error on failure.
 
 
 -------
@@ -626,7 +626,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on if the symmetric key exist in the node, ``false`` if not. Error on failure.
+``Promise`` returns ``Boolean`` - ``true`` on if the symmetric key exist in the node, ``false`` if not. Error on failure.
 
 
 -------
@@ -665,7 +665,7 @@ Returns
 -------
 
 
-``String`` - The raw symmetric key on success and an error on failure.
+``Promise`` returns ``String`` - The raw symmetric key on success and an error on failure.
 
 
 -------
@@ -704,7 +704,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on if the symmetric key was deleted, error on failure.
+``Promise`` returns ``Boolean`` - ``true`` on if the symmetric key was deleted, error on failure.
 
 
 -------
@@ -753,7 +753,7 @@ Parameters
 Returns
 -------
 
-``Promise`` - returns a promise. Upon success, the ``then`` function will be passed a string representing the hash of the sent message. On error, the ``catch`` function will be passed a string containing the reason for the error.
+``Promise`` returns ``Promise`` - returns a promise. Upon success, the ``then`` function will be passed a string representing the hash of the sent message. On error, the ``catch`` function will be passed a string containing the reason for the error.
 
 
 -------
@@ -934,7 +934,7 @@ Parameters
 Returns
 -------
 
-``String``: The filter ID.
+``Promise`` returns ``String``: The filter ID.
 
 -------
 Example
@@ -968,7 +968,7 @@ Parameters
 Returns
 -------
 
-``Boolean``: ``true`` on success, error on failure.
+``Promise`` returns ``Boolean``: ``true`` on success, error on failure.
 
 -------
 Example
@@ -1003,7 +1003,7 @@ Parameters
 Returns
 -------
 
-``Array``: Returns an array of message objects like :ref:`web3.shh.subscribe() notification returns <shh-subscribenotificationreturns>`
+``Promise`` returns ``Array``: Returns an array of message objects like :ref:`web3.shh.subscribe() notification returns <shh-subscribenotificationreturns>`
 
 -------
 Example

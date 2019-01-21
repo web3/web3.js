@@ -11,9 +11,9 @@ Fixes #(issue)
 
 <!--- Please delete options that are not relevant. -->
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Bug fix 
+- [ ] New feature 
+- [ ] Breaking change 
 
 ## Checklist:
 
@@ -21,8 +21,10 @@ Fixes #(issue)
 - [ ] I have performed a self-review of my own code.
 - [ ] I have commented my code, particularly in hard-to-understand areas.
 - [ ] I have made corresponding changes to the documentation.
-- [ ] My changes generate no new warnings.
+- [ ] My changes generate no warnings.
+- [ ] I have updated or added types for all modules I've changed
 - [ ] Any dependent changes have been merged and published in downstream modules.
 - [ ] I ran ```npm run test``` with success and extended the tests if necessary.
-- [ ] I ran ```npm run build``` and tested the resulting file from ```dist``` folder in a browser.
+- [ ] I ran ```npm run build``` and tested it in the browser and with node.
+- [ ] I ran ```npm run-script dtslint``` and tested that all my types are correct
 - [ ] I have tested my code on the live network.

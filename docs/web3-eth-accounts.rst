@@ -462,7 +462,7 @@ Decrypts a keystore v3 JSON, and creates the account.
 Parameters
 ----------
 
-1. ``encryptedPrivateKey`` - ``String``: The encrypted private key to decrypt.
+1. ``keystoreJsonV3`` - ``String``: The encrypted keystore v3 JSON.
 2. ``password`` - ``String``: The password used for encryption.
 
 

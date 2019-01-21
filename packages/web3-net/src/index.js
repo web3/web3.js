@@ -15,53 +15,32 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file index.js
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2017
+ * @file Network.js
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @date 2018
  */
 
-"use strict";
+import {ProvidersModuleFactory} from 'web3-providers';
+import {MethodModuleFactory} from 'web3-core-method';
+import {formatters} from 'web3-core-helpers';
+import * as Utils from 'web3-utils';
+import NetworkModuleFactory from './factories/NetworkModuleFactory';
 
-var core = require('web3-core');
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
-
-
-var Net = function () {
-    var _this = this;
-
-    // sets _requestmanager
-    core.packageInit(this, arguments);
-
-
-    [
-        new Method({
-            name: 'getId',
-            call: 'net_version',
-            params: 0,
-            outputFormatter: utils.hexToNumber
-        }),
-        new Method({
-            name: 'isListening',
-            call: 'net_listening',
-            params: 0
-        }),
-        new Method({
-            name: 'getPeerCount',
-            call: 'net_peerCount',
-            params: 0,
-            outputFormatter: utils.hexToNumber
-        })
-    ].forEach(function(method) {
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager);
-    });
-
+/**
+ * Creates the Network Object
+ *
+ * @method Network
+ *
+ * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Object} options
+ *
+ * @returns {Network}
+ */
+export const Network = (provider, options) => {
+    return new NetworkModuleFactory(Utils, formatters).createNetworkModule(
+        provider,
+        new ProvidersModuleFactory(),
+        new MethodModuleFactory(),
+        options
+    );
 };
-
-core.addProviders(Net);
-
-
-module.exports = Net;
-
-

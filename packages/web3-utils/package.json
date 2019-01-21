@@ -1,18 +1,35 @@
 {
     "name": "web3-utils",
     "namespace": "ethereum",
-    "version": "1.0.0-beta.36",
+    "version": "1.0.0-beta.38",
     "description": "Collection of utility functions used in web3.js.",
     "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-utils",
     "license": "LGPL-3.0",
-    "main": "src/index.js",
+    "main": "dist/web3-utils.cjs.js",
+    "module": "dist/web3-utils.esm.js",
+    "browser": "dist/web3-utils.umd.js",
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w",
+        "test": "jest",
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
+    "types": "types",
     "dependencies": {
-        "bn.js": "4.11.6",
-        "eth-lib": "0.1.27",
-        "ethjs-unit": "0.1.6",
+        "bn.js": "4.11.8",
+        "eth-lib": "0.2.8",
+        "ethjs-unit": "^0.1.6",
+        "lodash": "^4.17.11",
         "number-to-bn": "1.7.0",
         "randomhex": "0.1.5",
-        "underscore": "1.8.3",
         "utf8": "2.1.1"
-    }
+    },
+    "devDependencies": {
+        "dtslint": "^0.4.2",
+        "crypto-js": "3.1.9-1"
+    },
+    "files": [
+        "dist",
+        "types/index.d.ts"
+    ]
 }

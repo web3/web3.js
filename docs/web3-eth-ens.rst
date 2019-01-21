@@ -6,7 +6,56 @@
 web3.eth.ens
 =========
 
-The ``web3.eth.ens`` functions let you interacting with ENS.
+The ``web3.eth.ens`` functions let you interacting with Ens.
+
+------------------------------------------------------------------------------
+
+setProvider
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.ens.setProvider(myProvider, net)
+
+Will change the provider for the Ens package.
+
+----------
+Parameters
+----------
+
+1. ``Object|String`` - ``provider``: a valid provider
+2. ``Net`` - ``net``: (optional) the node.js Net package. This is only required for the IPC provider.
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var Web3 = require('web3');
+    var web3 = new Web3('http://localhost:8545');
+    // or
+    var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+
+    // change provider
+    web3.setProvider('ws://localhost:8546');
+    // or
+    web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
+
+    // Using the IPC provider in node.js
+    var net = require('net');
+    var web3 = new Web3('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
+    // or
+    var web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net)); // mac os path
+    // on windows the path is: "\\\\.\\pipe\\geth.ipc"
+    // on linux the path is: "/users/myuser/.ethereum/geth.ipc"
+
 
 ------------------------------------------------------------------------------
 
@@ -17,13 +66,13 @@ registry
 
     web3.eth.ens.registry;
 
-Returns the network specific ENS registry.
+Returns the network specific Ens registry.
 
 -------
 Returns
 -------
 
-``Registry`` - The current ENS registry.
+``Registry`` - The current Ens registry.
 
 -------
 Example
@@ -33,7 +82,7 @@ Example
 
     web3.eth.ens.registry;
     > {
-        ens: ENS,
+        ens: Ens,
         contract: Contract,
         owner: Function(name),
         resolve: Function(name)
@@ -54,7 +103,7 @@ Returns the resolver contract to an Ethereum address.
 Returns
 -------
 
-``Reslver`` - The ENS resolver for this name.
+``Resolver`` - The Ens resolver for this name.
 
 -------
 Example
@@ -76,13 +125,13 @@ getAddress
 
     web3.eth.ens.getAddress(ENSName);
 
-Resolves an ENS name to an Ethereum address.
+Resolves an Ens name to an Ethereum address.
 
 ----------
 Parameters
 ----------
 
-1. ``ENSName`` - ``String``: The ENS name to resolve.
+1. ``ENSName`` - ``String``: The Ens name to resolve.
 
 -------
 Returns
@@ -110,13 +159,13 @@ setAddress
 
     web3.eth.ens.setAddress(ENSName, address, options);
 
-Sets the address of an ENS name in his resolver.
+Sets the address of an Ens name in his resolver.
 
 ----------
 Parameters
 ----------
 
-1. ``ENSName`` - ``String``: The ENS name.
+1. ``ENSName`` - ``String``: The Ens name.
 2. ``address`` - ``String``: The address to set.
 3. ``options`` - ``Object``: The options used for sending.
     * ``from`` - ``String``: The address the transaction should be sent from.
@@ -178,7 +227,7 @@ Example
     });
 
 
-    For further information on the handling of contract events please see here contract-events_.
+For further information on the handling of contract events please see here contract-events_.
 
 ------------------------------------------------------------------------------
 
@@ -195,7 +244,7 @@ Returns the X and Y coordinates of the curve point for the public key.
 Parameters
 ----------
 
-1. ``ENSName`` - ``String``: The ENS name.
+1. ``ENSName`` - ``String``: The Ens name.
 
 -------
 Returns
@@ -228,13 +277,13 @@ setPubkey
 
     web3.eth.ens.setPubkey(ENSName, x, y, options);
 
-Sets the SECP256k1 public key associated with an ENS node
+Sets the SECP256k1 public key associated with an Ens node
 
 ----------
 Parameters
 ----------
 
-1. ``ENSName`` - ``String``: The ENS name.
+1. ``ENSName`` - ``String``: The Ens name.
 2. ``x`` - ``String``: The X coordinate of the public key.
 3. ``y`` - ``String``: The Y coordinate of the public key.
 4. ``options`` - ``Object``: The options used for sending.
@@ -300,7 +349,7 @@ Example
     });
 
 
-    For further information on the handling of contract events please see here contract-events_.
+For further information on the handling of contract events please see here contract-events_.
 
 ------------------------------------------------------------------------------
 
@@ -311,19 +360,19 @@ getContent
 
     web3.eth.ens.getContent(ENSName);
 
-Returns the content hash associated with an ENS node.
+Returns the content hash associated with an Ens node.
 
 ----------
 Parameters
 ----------
 
-1. ``ENSName`` - ``String``: The ENS name.
+1. ``ENSName`` - ``String``: The Ens name.
 
 -------
 Returns
 -------
 
-``String`` - The content hash associated with an ENS node.
+``String`` - The content hash associated with an Ens node.
 
 -------
 Example
@@ -345,13 +394,13 @@ setContent
 
     web3.eth.ens.setContent(ENSName, hash, options);
 
-Sets the content hash associated with an ENS node.
+Sets the content hash associated with an Ens node.
 
 ----------
 Parameters
 ----------
 
-1. ``ENSName`` - ``String``: The ENS name.
+1. ``ENSName`` - ``String``: The Ens name.
 2. ``hash`` - ``String``: The content hash to set.
 3. ``options`` - ``Object``: The options used for sending.
     * ``from`` - ``String``: The address the transaction should be sent from.
@@ -414,7 +463,7 @@ Example
     });
 
 
-    For further information on the handling of contract events please see here contract-events_.
+For further information on the handling of contract events please see here contract-events_.
 
 ------------------------------------------------------------------------------
 
@@ -425,13 +474,13 @@ getMultihash
 
     web3.eth.ens.getMultihash(ENSName);
 
-Returns the multihash associated with an ENS node.
+Returns the multihash associated with an Ens node.
 
 ----------
 Parameters
 ----------
 
-1. ``ENSName`` - ``String``: The ENS name.
+1. ``ENSName`` - ``String``: The Ens name.
 
 -------
 Returns
@@ -459,13 +508,13 @@ setMultihash
 
     web3.eth.ens.setMultihash(ENSName, hash, options);
 
-Sets the multihash associated with an ENS node.
+Sets the multihash associated with an Ens node.
 
 ----------
 Parameters
 ----------
 
-1. ``ENSName`` - ``String``: The ENS name.
+1. ``ENSName`` - ``String``: The Ens name.
 2. ``hash`` - ``String``: The multihash to set.
 3. ``options`` - ``Object``: The options used for sending.
     * ``from`` - ``String``: The address the transaction should be sent from.
@@ -513,24 +562,24 @@ Example
     .on('error', console.error);
 
 
-    For further information on the handling of contract events please see here contract-events_.
+For further information on the handling of contract events please see here contract-events_.
 
 ------------------------------------------------------------------------------
 
-ENS events
+Ens events
 =====================
 
-The ENS API provides the possibility for listening to all ENS related events.
+The Ens API provides the possibility for listening to all Ens related events.
 
 ------------
 Known resolver events
 ------------
 
-1. AddrChanged(node bytes32, a address)
-2. ContentChanged(node bytes32, hash bytes32)
-4. NameChanged(node bytes32, name string)
-5. ABIChanged(node bytes32, contentType uint256)
-6. PubkeyChanged(node bytes32, x bytes32, y bytes32)
+1. ``AddrChanged`` - AddrChanged(node bytes32, a address)
+2. ``ContentChanged`` - ContentChanged(node bytes32, hash bytes32)
+4. ``NameChanged`` - NameChanged(node bytes32, name string)
+5. ``ABIChanged`` - ABIChanged(node bytes32, contentType uint256)
+6. ``PubkeyChanged`` - PubkeyChanged(node bytes32, x bytes32, y bytes32)
 
 -------
 Example
@@ -576,10 +625,10 @@ Example
 Known registry events
 ------------
 
-1. Transfer(node bytes32, owner address)
-2. NewOwner(node bytes32, label bytes32, owner address)
-4. NewResolver(node bytes32, resolver address)
-5. NewTTL(node bytes32, ttl uint64)
+1. ``Transfer`` - Transfer(node bytes32, owner address)
+2. ``NewOwner`` - NewOwner(node bytes32, label bytes32, owner address)
+4. ``NewResolver`` - NewResolver(node bytes32, resolver address)
+5. ``NewTTL`` - NewTTL(node bytes32, ttl uint64)
 
 -------
 Example
