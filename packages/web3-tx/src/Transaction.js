@@ -45,6 +45,8 @@ export default class Transaction {
         data,
         nonce
     ) {
+      
+        /* Set the error messages */
         this.error = {
             from:     `The 'from' parameter needs to be an address or a wallet index number.`,
             to:       `The 'to' parameter needs to be an address or 'deploy' when deploying code.`,
@@ -58,6 +60,8 @@ export default class Transaction {
                       `Use 'auto' to set the RPC-calculated nonce.`
         };
 
+
+        /* Initialise the params */
         this.params = {
             from: undefined,
             to: undefined,
@@ -68,6 +72,8 @@ export default class Transaction {
             nonce: undefined
         };
 
+
+        /* Check for type and format validity */
         this.params.from = isAddress(from) || Number.isInteger(from)
             ? from
             : undefined;
@@ -109,7 +115,8 @@ export default class Transaction {
             : undefined;
 
 
-        if(to === 'contractCreation');
+        /* Set the default values */
+        if(to === 'deploy');
 
         if(value === 'auto')
             this.value = toBN(0);
@@ -126,7 +133,8 @@ export default class Transaction {
         if(nonce === 'auto');
             // default nonce
 
-        
+
+        /* Throw if any parameter is still undefined */
         Object.keys(this.params).forEach((key) => {
             this.params[key] && _throw(this.error[key]);
         });
