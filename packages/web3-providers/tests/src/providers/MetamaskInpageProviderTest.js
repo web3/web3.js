@@ -73,8 +73,8 @@ describe('MetamaskInpageProviderTest', () => {
             metamaskInpageProvider.onAccountsChanged
         );
 
-        expect(inpageProvider.removeListener).toHaveBeenCalledWith('data', metamaskInpageProvider.onMessage);
-        expect(inpageProvider.removeListener).toHaveBeenCalledWith('error', metamaskInpageProvider.onError);
+        expect(inpageProvider.removeListener).toHaveBeenNthCalledWith(3, 'data', metamaskInpageProvider.onMessage);
+        expect(inpageProvider.removeListener).toHaveBeenNthCalledWith(4, 'error', metamaskInpageProvider.onError);
     });
 
     it('calls removeAllSocketListeners and exectues the expected methods', () => {

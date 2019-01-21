@@ -87,7 +87,6 @@ export default class ProviderResolver {
                 return provider;
         }
 
-        // For the cjs bundles
         if (
             provider instanceof HttpProvider ||
             provider instanceof WebsocketProvider ||
