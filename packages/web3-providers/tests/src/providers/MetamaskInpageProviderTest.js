@@ -105,7 +105,7 @@ describe('MetamaskInpageProviderTest', () => {
         inpageProvider.send = jest.fn((payload, callback) => {
             expect(callback).toBeInstanceOf(Function);
 
-            expect(payload).toEqual(JSON.stringify({id: '0x0'}));
+            expect(payload).toEqual({id: '0x0'});
 
             callback(false, {result: true});
         });
@@ -128,7 +128,7 @@ describe('MetamaskInpageProviderTest', () => {
         inpageProvider.send = jest.fn((payload, callback) => {
             expect(callback).toBeInstanceOf(Function);
 
-            expect(payload).toEqual(JSON.stringify({id: '0x0'}));
+            expect(payload).toEqual({id: '0x0'});
 
             callback(true, {result: true});
         });
@@ -150,7 +150,7 @@ describe('MetamaskInpageProviderTest', () => {
         inpageProvider.send = jest.fn((payload, callback) => {
             expect(callback).toBeInstanceOf(Function);
 
-            expect(payload).toEqual(JSON.stringify([{id: '0x0'}]));
+            expect(payload).toEqual([{id: '0x0'}]);
 
             callback(false, {result: true});
         });
@@ -181,7 +181,7 @@ describe('MetamaskInpageProviderTest', () => {
         inpageProvider.send = jest.fn((payload, callback) => {
             expect(callback).toBeInstanceOf(Function);
 
-            expect(payload).toEqual(JSON.stringify([{id: '0x0'}]));
+            expect(payload).toEqual([{id: '0x0'}]);
 
             callback(true, {result: true});
         });
@@ -204,7 +204,7 @@ describe('MetamaskInpageProviderTest', () => {
         inpageProvider.send = jest.fn((payload, callback) => {
             expect(callback).toBeInstanceOf(Function);
 
-            expect(payload).toEqual(JSON.stringify({id: 0}));
+            expect(payload).toEqual({id: 0});
 
             callback(false, true);
         });
@@ -220,7 +220,7 @@ describe('MetamaskInpageProviderTest', () => {
         inpageProvider.send = jest.fn((payload, callback) => {
             expect(callback).toBeInstanceOf(Function);
 
-            expect(payload).toEqual(JSON.stringify({id: 0}));
+            expect(payload).toEqual({id: 0});
 
             callback(true, false);
         });
