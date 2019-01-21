@@ -38,7 +38,7 @@ new contract
 
 .. code-block:: javascript
 
-    new web3.eth.Contract(jsonInterface[, address][, options])
+    new web3.eth.Contract(jsonInterface, address, options)
 
 Creates a new contract instance with all its methods and events defined in its :ref:`json interface <glossary-json-interface>` object.
 
