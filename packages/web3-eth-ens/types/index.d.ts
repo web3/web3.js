@@ -48,6 +48,10 @@ export class Ens extends AbstractWeb3Module {
 
     setPubkey(name: string, x: string, y: string, sendOptions: TxObject, callback?: () => {}): PromiEvent<any>;
 
+    setText(name: string, key: string, value: string, sendOptions: TxObject, callback?: () => {}): PromiEvent<any>;
+
+    getText(name: string, key: string, callback?: () => {}): Promise<string>;
+
     getContent(name: string, callback?: () => {}): Promise<string>;
 
     setContent(name: string, hash: string, sendOptions: TxObject, callback?: () => {}): PromiEvent<any>;

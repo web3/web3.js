@@ -10,55 +10,6 @@ The ``web3.eth.ens`` functions let you interacting with Ens.
 
 ------------------------------------------------------------------------------
 
-setProvider
-=====================
-
-.. code-block:: javascript
-
-    web3.eth.ens.setProvider(myProvider, net)
-
-Will change the provider for the Ens package.
-
-----------
-Parameters
-----------
-
-1. ``Object|String`` - ``provider``: a valid provider
-2. ``Net`` - ``net``: (optional) the node.js Net package. This is only required for the IPC provider.
-
--------
-Returns
--------
-
-``Boolean``
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    var Web3 = require('web3');
-    var web3 = new Web3('http://localhost:8545');
-    // or
-    var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-
-    // change provider
-    web3.setProvider('ws://localhost:8546');
-    // or
-    web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
-
-    // Using the IPC provider in node.js
-    var net = require('net');
-    var web3 = new Web3('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
-    // or
-    var web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net)); // mac os path
-    // on windows the path is: "\\\\.\\pipe\\geth.ipc"
-    // on linux the path is: "/users/myuser/.ethereum/geth.ipc"
-
-
-------------------------------------------------------------------------------
-
 registry
 =====================
 
@@ -115,6 +66,41 @@ Example
         console.log(contract);
     });
     > Contract<Resolver>
+
+------------------------------------------------------------------------------
+
+supportsInterface
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.ens.supportsInterface(ENSName, interfaceId);
+
+Checks if the current resolver does support the desired interface.
+
+----------
+Parameters
+----------
+
+1. ``ENSName`` - ``String``: The Ens name to resolve.
+2. ``interfaceId`` - ``String``: A defined ENS interfaceId.
+
+-------
+Returns
+-------
+
+``Boolean`` - Returns true if the given interfaceId is supported by the resolver.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.supportsInterface('ethereum.eth', '0xbc1c58d1').then(function (supportsInterface) {
+        console.log(supportsInterface);
+    })
+    > true
 
 ------------------------------------------------------------------------------
 
@@ -353,6 +339,125 @@ For further information on the handling of contract events please see here contr
 
 ------------------------------------------------------------------------------
 
+getText
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.ens.getText(ENSName, key);
+
+Returns the text by the given key.
+
+----------
+Parameters
+----------
+
+1. ``ENSName`` - ``String``: The Ens name.
+1. ``key`` - ``String``: The key of the array.
+
+-------
+Returns
+-------
+
+``String`` - The ENS name.
+``String`` - The key.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.getText('ethereum.eth', 'key).then(function (result) {
+        console.log(result);
+    });
+    > "0000000000000000000000000000000000000000000000000000000000000000"
+
+------------------------------------------------------------------------------
+
+setText
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.ens.setText(ENSName, key, value, options);
+
+Sets the content hash associated with an Ens node.
+
+----------
+Parameters
+----------
+
+1. ``ENSName`` - ``String``: The Ens name.
+2. ``key`` - ``String``: The key.
+2. ``value`` - ``String``: The value.
+3. ``options`` - ``Object``: The options used for sending.
+    * ``from`` - ``String``: The address the transaction should be sent from.
+    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
+    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+
+
+Emits an ``TextChanged`` event.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.setText(
+        'ethereum.eth',
+        'key',
+        'value',
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
+    ).then(function (result) {
+             console.log(result.events);
+     });
+    > ContentChanged(...)
+
+    // Or using the event emitter
+
+    web3.eth.ens.setText(
+        'ethereum.eth',
+        'key',
+        'value',
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
+    )
+    .on('transactionHash', function(hash){
+        ...
+    })
+    .on('confirmation', function(confirmationNumber, receipt){
+        ...
+    })
+    .on('receipt', function(receipt){
+        ...
+    })
+    .on('error', console.error);
+
+    // And listen to the TextChanged event on the resolver
+
+    web3.eth.ens.resolver('ethereum.eth').then(function (resolver) {
+        resolver.events.TextChanged({fromBlock: 0}, function(error, event) {
+            console.log(event);
+        })
+        .on('data', function(event){
+            console.log(event);
+        })
+        .on('changed', function(event){
+            // remove event from local database
+        })
+        .on('error', console.error);
+    });
+
+
+For further information on the handling of contract events please see here contract-events_.
+
+------------------------------------------------------------------------------
+
 getContent
 =====================
 
@@ -566,6 +671,105 @@ For further information on the handling of contract events please see here contr
 
 ------------------------------------------------------------------------------
 
+getContenthash
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.ens.getContenthash(ENSName);
+
+Returns the contenthash associated with an Ens node.
+
+----------
+Parameters
+----------
+
+1. ``ENSName`` - ``String``: The Ens name.
+
+-------
+Returns
+-------
+
+``String`` - The associated contenthash.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.getContenthash('ethereum.eth').then(function (result) {
+        console.log(result);
+    });
+    > 'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK'
+
+------------------------------------------------------------------------------
+
+setContenthash
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.ens.setContenthash(ENSName, hash, options);
+
+Sets the contenthash associated with an Ens node.
+
+----------
+Parameters
+----------
+
+1. ``ENSName`` - ``String``: The Ens name.
+2. ``hash`` - ``String``: The contenthash to set.
+3. ``options`` - ``Object``: The options used for sending.
+    * ``from`` - ``String``: The address the transaction should be sent from.
+    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
+    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+
+
+Emits an ``ContenthashChanged``event.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.setContenthash(
+        'ethereum.eth',
+        'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK',
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
+    ).then(function (result) {
+        console.log(result.events);
+    });
+    > ContenthashChanged(...)
+
+    // Or using the event emitter
+
+    web3.eth.ens.setContenthash(
+        'ethereum.eth',
+        'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK',
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
+    )
+    .on('transactionHash', function(hash){
+        ...
+    })
+    .on('confirmation', function(confirmationNumber, receipt){
+        ...
+    })
+    .on('receipt', function(receipt){
+        ...
+    })
+    .on('error', console.error);
+
+
+For further information on the handling of contract events please see here contract-events_.
+
+------------------------------------------------------------------------------
+
 Ens events
 =====================
 
@@ -580,6 +784,8 @@ Known resolver events
 4. ``NameChanged`` - NameChanged(node bytes32, name string)
 5. ``ABIChanged`` - ABIChanged(node bytes32, contentType uint256)
 6. ``PubkeyChanged`` - PubkeyChanged(node bytes32, x bytes32, y bytes32)
+6. ``TextChanged`` - TextChanged(bytes32 indexed node, string indexedKey, string key)
+6. ``ContenthashChanged`` - ContenthashChanged(bytes32 indexed node, bytes hash)
 
 -------
 Example

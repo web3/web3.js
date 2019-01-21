@@ -44,6 +44,12 @@ ens.getPubkey('name');
 ens.setPubkey('name', 'x', 'y', {});
 
 // $ExpectType Promise<string>
+ens.getText('name', 'key');
+
+// $ExpectType PromiEvent<any>
+ens.setText('name', 'key', 'value', {});
+
+// $ExpectType Promise<string>
 ens.getContent('name');
 
 // $ExpectType PromiEvent<any>

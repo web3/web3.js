@@ -266,6 +266,72 @@ export default class Ens extends AbstractWeb3Module {
     }
 
     /**
+     * Returns the text by the given key
+     *
+     * @method getText
+     *
+     * @param {String} name
+     * @param {String} key
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {Promise<String>}
+     */
+    async getText(name, key, callback = null) {
+        const resolver = await this.registry.resolver(name);
+
+        return resolver.methods.text(namehash.hash(name), key).call(callback);
+    }
+
+    /**
+     * Set a new text item in the resolver.
+     *
+     * @method setText
+     *
+     * @param {String} name
+     * @param {String} key
+     * @param {String} value
+     * @param {Object} sendOptions
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {PromiEvent}
+     */
+    setText(name, key, value, sendOptions, callback = null) {
+        const promiEvent = new this.registry.PromiEvent();
+
+        this.registry.resolver(name).then((resolver) => {
+            resolver.methods
+                .setText(namehash.hash(name), key, value)
+                .send(sendOptions, callback)
+                .on('transactionHash', (transactionHash) => {
+                    promiEvent.emit('transactionHash', transactionHash);
+                })
+                .on('confirmation', (confirmationNumber, receipt) => {
+                    promiEvent.emit('confirmation', confirmationNumber, receipt);
+                })
+                .on('receipt', (receipt) => {
+                    if (isFunction(callback)) {
+                        callback(receipt);
+                    }
+
+                    promiEvent.emit('receipt', receipt);
+                    promiEvent.resolve(receipt);
+                })
+                .on('error', (error) => {
+                    if (isFunction(callback)) {
+                        callback(error);
+                    }
+
+                    promiEvent.emit('error', error);
+                    promiEvent.reject(error);
+                });
+        });
+
+        return promiEvent;
+    }
+
+    /**
      * Returns the content
      *
      * @method getContent

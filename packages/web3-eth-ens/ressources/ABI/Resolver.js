@@ -3,6 +3,51 @@ export const RESOLVER_ABI = [
         constant: true,
         inputs: [
             {
+                name: 'node',
+                type: 'bytes32'
+            },
+            {
+                name: 'key',
+                type: 'string'
+            }
+        ],
+        name: 'text',
+        outputs: [
+            {
+                name: '',
+                type: 'string'
+            }
+        ],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+    },
+    {
+        constant: false,
+        inputs: [
+            {
+                name: 'node',
+                type: 'bytes32'
+            },
+            {
+                name: 'key',
+                type: 'string'
+            },
+            {
+                name: 'value',
+                type: 'string'
+            }
+        ],
+        name: 'setText',
+        outputs: [],
+        payable: false,
+        stateMutability: 'nonpayable',
+        type: 'function'
+    },
+    {
+        constant: true,
+        inputs: [
+            {
                 name: 'interfaceID',
                 type: 'bytes4'
             }
@@ -329,6 +374,45 @@ export const RESOLVER_ABI = [
             }
         ],
         name: 'ContentChanged',
+        type: 'event'
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: true,
+                name: 'node',
+                type: 'bytes32'
+            },
+            {
+                indexed: false,
+                name: 'indexedKey',
+                type: 'string'
+            },
+            {
+                indexed: false,
+                name: 'key',
+                type: 'string'
+            }
+        ],
+        name: 'TextChanged',
+        type: 'event'
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: true,
+                name: 'node',
+                type: 'bytes32'
+            },
+            {
+                indexed: false,
+                name: 'hash',
+                type: 'bytes'
+            }
+        ],
+        name: 'ContenthashChanged',
         type: 'event'
     },
     {
