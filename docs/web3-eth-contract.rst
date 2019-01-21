@@ -432,7 +432,7 @@ methods.myMethod.call
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]]).call(options[, callback])
+    myContract.methods.myMethod([param1[, param2[, ...]]]).call(transactionObject, blockNumber, callback])
 
 Will call a "constant" method and execute its smart contract method in the EVM without sending any transaction. Note calling can not alter the smart contract state.
 
@@ -440,11 +440,13 @@ Will call a "constant" method and execute its smart contract method in the EVM w
 Parameters
 ----------
 
-1. ``options`` - ``Object`` (optional): The options used for calling.
+``options`` - ``Object`` (optional): The options used for calling.
+1.* ``transactionObject``
     * ``from`` - ``String`` (optional): The address the call "transaction" should be made from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this call "transaction".It is the wei per unit of gas.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this call "transaction" (gas limit).
-2. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the smart contract method execution as the second argument, or with an error object as the first argument.
+2.*``blockNumber`` - ``Number``: The block number this log was created in. ``null`` when still pending.
+3.*``callback`` - ``Function`` (optional): This callback will be fired with the result of the smart contract method execution as the second argument, or with an error object as the first argument.
 
 -------
 Returns
