@@ -21,6 +21,8 @@ import {AbstractWeb3Module} from 'web3-core';
 import {isFunction} from 'lodash';
 import namehash from 'eth-ens-namehash';
 
+// TODO: Maybe it would be better to extend from the CallContractMethod and SendContractMethod and to implement the
+// TODO: ENS methods as method objects this would clean up the entire module and remove a lot of code duplication.
 export default class Ens extends AbstractWeb3Module {
     /**
      * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
