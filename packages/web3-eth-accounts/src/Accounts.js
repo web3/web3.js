@@ -692,8 +692,8 @@ class Wallet {
         } catch (error) {
             // code 18 means trying to use local storage in a iframe
             // with third party cookies turned off
-            // we still want to support using web3 in a iframe 
-            // as by default safari turn these off for all iframes 
+            // we still want to support using web3 in a iframe
+            // as by default safari turn these off for all iframes
             // so mask the error
             if (error.code === 18) {
                 return true;
@@ -717,7 +717,7 @@ class Wallet {
      * @returns {Wallet}
      */
     load(password, keyName) {
-        let keystore
+        let keystore;
         try {
             keystore = localStorage.getItem(keyName || this.defaultKeyName);
 
@@ -729,8 +729,8 @@ class Wallet {
         } catch (error) {
             // code 18 means trying to use local storage in a iframe
             // with third party cookies turned off
-            // we still want to support using web3 in a iframe 
-            // as by default safari turn these off for all iframes 
+            // we still want to support using web3 in a iframe
+            // as by default safari turn these off for all iframes
             // so mask the error
             if (error.code === 18) {
                 keystore = this.defaultKeyName;
@@ -752,7 +752,7 @@ try {
 } catch (error) {
     // code 18 means trying to use local storage in a iframe
     // with third party cookies turned off
-    // we still want to support using web3 in a iframe 
+    // we still want to support using web3 in a iframe
     // as by default safari turn these off for all iframes
     // so mask the error
     if (error.code !== 18) {

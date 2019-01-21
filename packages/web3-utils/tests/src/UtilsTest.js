@@ -493,7 +493,8 @@ describe('UtilsTest', () => {
     it('calls getSignatureParameters and returns the expected results', () => {
         const tests = [
             {
-                value: '0x5763ab346198e3e6cc4d53996ccdeca0c941cb6cb70d671d97711c421d3bf7922c77ef244ad40e5262d1721bf9638fb06bab8ed3c43bfaa80d6da0be9bbd33dc1b',
+                value:
+                    '0x5763ab346198e3e6cc4d53996ccdeca0c941cb6cb70d671d97711c421d3bf7922c77ef244ad40e5262d1721bf9638fb06bab8ed3c43bfaa80d6da0be9bbd33dc1b',
                 r: '0x5763ab346198e3e6cc4d53996ccdeca0c941cb6cb70d671d97711c421d3bf792',
                 s: '0x2c77ef244ad40e5262d1721bf9638fb06bab8ed3c43bfaa80d6da0be9bbd33dc',
                 v: 27
@@ -502,9 +503,8 @@ describe('UtilsTest', () => {
 
         tests.forEach((test) => {
             expect(getSignatureParameters(test.value).r).toEqual(test.r) &&
-            expect(getSignatureParameters(test.value).s).toEqual(test.s) &&
-            expect(getSignatureParameters(test.value).v).toEqual(test.v);
-
+                expect(getSignatureParameters(test.value).s).toEqual(test.s) &&
+                expect(getSignatureParameters(test.value).v).toEqual(test.v);
         });
     });
 });

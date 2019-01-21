@@ -28,7 +28,6 @@ import * as ethjsUnit from 'ethjs-unit';
 export {soliditySha3} from './SoliditySha3';
 export {randomHex} from 'randomhex';
 
-
 /**
  * Should be used to create full function/event name from json abi
  *
@@ -282,7 +281,7 @@ export const padRight = utils.rightPad;
 export const getSignatureParameters = utils.getSignatureParameters;
 export const isAddress = utils.isAddress;
 export const isBN = utils.isBN;
-export const checkAddressChecksum  = utils.checkAddressChecksum;
+export const checkAddressChecksum = utils.checkAddressChecksum;
 export const toBN = utils.toBN;
 export const toHex = utils.toHex;
 export const hexToNumberString = utils.hexToNumberString;
@@ -292,4 +291,4 @@ export const isHexStrict = utils.isHexStrict;
 export const isBloom = utils.isBloom;
 export const isTopic = utils.isTopic;
 export const bytesToHex = utils.bytesToHex;
-export const hexToBytes = utils.hexToBytes; 
+export const hexToBytes = utils.hexToBytes;
