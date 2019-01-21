@@ -11,7 +11,7 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "jest --config jest.config.js",
+        "test": "jest --verbose false",
         "dtslint": "dtslint types --onlyTestTsNext"
     },
     "types": "types",

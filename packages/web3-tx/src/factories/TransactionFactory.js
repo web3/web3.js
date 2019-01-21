@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import {isObject, isArray} from 'lodash';
 import Transaction from '../Transaction';
 
 export default class TransactionFactory {
@@ -38,11 +37,11 @@ export default class TransactionFactory {
             to: "The 'to' parameter needs to be an address or 'deploy' when deploying code.",
             value:
                 "The 'value' parameter needs to be zero or positive, and in number, BN, BigNumber or string format.\n" +
-                "Use 'auto' for 0 ether.",
+                "Use 'none' for 0 ether.",
             gas: '',
             gasPrice: '',
-            data: "The 'data' parameter needs to be hex encoded." + "Use 'auto' for no payload.",
-            nonce: "The 'nonce' parameter needs to be an integer." + "Use 'auto' to set the RPC-calculated nonce."
+            data: "The 'data' parameter needs to be hex encoded.\n" + "Use 'none' for no payload.",
+            nonce: "The 'nonce' parameter needs to be an integer.\n" + "Use 'auto' to set the RPC-calculated nonce."
         };
 
         /* Initialise the params */
@@ -56,6 +55,10 @@ export default class TransactionFactory {
             nonce: undefined
         };
 
-        return new Transaction(...txParams, error, params);
+        return new Transaction(
+            txParams,
+            error,
+            params
+        );
     }
 }
