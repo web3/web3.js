@@ -687,7 +687,21 @@ class Wallet {
      * @returns {boolean}
      */
     save(password, keyName) {
-        localStorage.setItem(keyName || this.defaultKeyName, JSON.stringify(this.encrypt(password)));
+        try {
+            localStorage.setItem(keyName || this.defaultKeyName, JSON.stringify(this.encrypt(password)));
+        } catch (error) {
+            // code 18 means trying to use local storage in a iframe
+            // with third party cookies turned off
+            // we still want to support using web3 in a iframe 
+            // as by default safari turn these off for all iframes 
+            // so mask the error
+            if (error.code === 18) {
+                return true;
+            } else {
+                // throw as normal if not
+                throw new Error(error);
+            }
+        }
 
         return true;
     }
@@ -703,19 +717,45 @@ class Wallet {
      * @returns {Wallet}
      */
     load(password, keyName) {
-        let keystore = localStorage.getItem(keyName || this.defaultKeyName);
+        let keystore
+        try {
+            keystore = localStorage.getItem(keyName || this.defaultKeyName);
 
-        if (keystore) {
-            try {
-                keystore = JSON.parse(keystore);
-            } catch (error) {}
+            if (keystore) {
+                try {
+                    keystore = JSON.parse(keystore);
+                } catch (error) {}
+            }
+        } catch (error) {
+            // code 18 means trying to use local storage in a iframe
+            // with third party cookies turned off
+            // we still want to support using web3 in a iframe 
+            // as by default safari turn these off for all iframes 
+            // so mask the error
+            if (error.code === 18) {
+                keystore = this.defaultKeyName;
+            } else {
+                // throw as normal if not
+                throw new Error(error);
+            }
         }
 
         return this.decrypt(keystore || [], password);
     }
 }
 
-if (typeof localStorage === 'undefined') {
-    delete Wallet.prototype.save;
-    delete Wallet.prototype.load;
+try {
+    if (typeof localStorage === 'undefined') {
+        delete Wallet.prototype.save;
+        delete Wallet.prototype.load;
+    }
+} catch (error) {
+    // code 18 means trying to use local storage in a iframe
+    // with third party cookies turned off
+    // we still want to support using web3 in a iframe 
+    // as by default safari turn these off for all iframes
+    // so mask the error
+    if (error.code !== 18) {
+        throw new Error(error);
+    }
 }
