@@ -13,8 +13,6 @@ describe('TransactionTest', () => {
     beforeEach(() => {});
 
     it('constructor check', () => {
-        expect().toEqual();
-
-        expect().toEqual();
+        expect(1).toEqual(1);
     });
 });

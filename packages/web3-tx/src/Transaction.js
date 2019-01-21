@@ -20,9 +20,8 @@
  * @date 2019
  */
 
-import {formatters} from 'web3-core-helpers';
 import {isAddress, isBN, isBigNumber, toBN, isHex} from 'web3-utils';
-import {isObject, isArray, omit} from 'lodash';
+import {isNan, omit} from 'lodash';
 
 export default class Transaction {
     /**
@@ -70,7 +69,9 @@ export default class Transaction {
             ? toBN(value.toString())
             : undefined;
 
-        this.params.gas = Number.isInteger(gas) ? gas : undefined;
+        this.params.gas = Number.isInteger(gas)
+            ? gas
+            : undefined;
 
         this.params.gasPrice = (
                 (!isNan(gasPrice) && Number.isInteger(gasPrice) && gasPrice >= 0) ||
@@ -81,9 +82,13 @@ export default class Transaction {
             ? toBN(gasPrice.toString())
             : undefined;
 
-        this.params.data = isHex(data) ? data : undefined;
+        this.params.data = isHex(data)
+            ? data
+            : undefined;
 
-        this.params.nonce = Number.isInteger(nonce) && nonce > 0 ? nonce : undefined;
+        this.params.nonce = Number.isInteger(nonce) && nonce > 0
+            ? nonce
+            : undefined;
 
         /* Set the default values */
         if (value === 'empty') this.value = toBN(0);
@@ -104,7 +109,7 @@ export default class Transaction {
 
         /* Throw if any parameter is still undefined */
         Object.keys(this.params).forEach((key) => {
-            this.params[key] && _throw(this.error[key]);
+            this.params[key] && this._throw(this.error[key]);
         });
     }
 
@@ -112,5 +117,4 @@ export default class Transaction {
         throw message;
     }
 
-    toHex() {}
 }
