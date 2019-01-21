@@ -125,6 +125,7 @@ export function getUnitValue(unit: Unit): string;
 export function unitMap(): Units;
 export function testAddress(bloom: string, address: string): boolean;
 export function testTopic(bloom: string, topic: string): boolean;
+export function getSignatureParameters(signature: string) : object;
 
 // interfaces
 
@@ -173,6 +174,7 @@ export interface Utils {
     unitMap(): Units;
     testAddress(bloom: string, address: string): boolean;
     testTopic(bloom: string, topic: string): boolean;
+    getSignatureParameters(signature: string) : object;
 }
 
 export interface Units {

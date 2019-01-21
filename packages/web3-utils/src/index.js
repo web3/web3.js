@@ -27,7 +27,7 @@ import * as ethjsUnit from 'ethjs-unit';
 
 export {soliditySha3} from './SoliditySha3';
 export {randomHex} from 'randomhex';
-export * from './Utils';
+
 
 /**
  * Should be used to create full function/event name from json abi
@@ -265,13 +265,31 @@ export const toChecksumAddress = (address) => {
 
 // aliases
 export const keccak256 = utils.sha3;
+export const sha3 = utils.sha3;
 export const toDecimal = utils.hexToNumber;
+export const hexToNumber = utils.hexToNumber;
 export const fromDecimal = utils.numberToHex;
+export const numberToHex = utils.numberToHex;
 export const hexToString = utils.hexToUtf8;
 export const toUtf8 = utils.hexToUtf8;
 export const stringToHex = utils.utf8ToHex;
 export const fromUtf8 = utils.utf8ToHex;
+export const utf8ToHex = utils.utf8ToHex;
 export const toAscii = hexToAscii;
 export const fromAscii = asciiToHex;
 export const padLeft = utils.leftPad;
 export const padRight = utils.rightPad;
+export const getSignatureParameters = utils.getSignatureParameters;
+export const isAddress = utils.isAddress;
+export const isBN = utils.isBN;
+export const checkAddressChecksum  = utils.checkAddressChecksum;
+export const toBN = utils.toBN;
+export const toHex = utils.toHex;
+export const hexToNumberString = utils.hexToNumberString;
+export const toTwosComplement = utils.toTwosComplement;
+export const isHex = utils.isHex;
+export const isHexStrict = utils.isHexStrict;
+export const isBloom = utils.isBloom;
+export const isTopic = utils.isTopic;
+export const bytesToHex = utils.bytesToHex;
+export const hexToBytes = utils.hexToBytes; 
