@@ -31,6 +31,7 @@ import HttpProvider from '../providers/HttpProvider';
 import BatchRequest from '../batch-request/BatchRequest';
 import EthereumProvider from '../providers/EthereumProvider';
 import MetamaskInpageProvider from '../providers/MetamaskInpageProvider';
+import MistEthereumProvider from '../providers/MistEthereumProvider';
 
 export default class ProvidersModuleFactory {
     /**
@@ -188,5 +189,18 @@ export default class ProvidersModuleFactory {
      */
     createMetamaskInpageProvider(inpageProvider) {
         return new MetamaskInpageProvider(inpageProvider);
+    }
+
+    /**
+     * Returns an MistEthereumProvider object
+     *
+     * @method createMistEthereumProvider
+     *
+     * @param {MistEthereumProvider} mistEthereumProvider
+     *
+     * @returns {MistEthereumProvider}
+     */
+    createMistEthereumProvider(mistEthereumProvider) {
+        return new MistEthereumProvider(mistEthereumProvider);
     }
 }

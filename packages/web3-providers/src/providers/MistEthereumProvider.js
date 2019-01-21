@@ -13,13 +13,13 @@
 */
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
+import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 
 /**
  * @file MistEthereumProvider
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
-
 export default class MistEthereumProvider extends AbstractSocketProvider {
     /**
      * @param {EthereumProvider} connection

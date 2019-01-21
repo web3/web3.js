@@ -20,6 +20,16 @@
  * @date 2018
  */
 
+// TODO: This can be removed when the EIP-1193 got released.
+/* eslint-disable no-new-func */
+let global;
+try {
+    global = new Function('return this')();
+} catch (error) {
+    global = window;
+}
+/* eslint-enable */
+
 import {isFunction, isObject} from 'lodash';
 import HttpProvider from '../providers/HttpProvider';
 import WebsocketProvider from '../providers/WebsocketProvider';
@@ -60,6 +70,10 @@ export default class ProviderResolver {
             if (provider && isObject(net) && isFunction(net.connect)) {
                 return this.providersModuleFactory.createIpcProvider(provider, net);
             }
+        }
+
+        if (typeof global.mist !== 'undefined' && provider.constructor.name === 'EthereumProvider') {
+            return this.providersModuleFactory.createMistEthereumProvider(provider);
         }
 
         switch (provider.constructor.name) {
