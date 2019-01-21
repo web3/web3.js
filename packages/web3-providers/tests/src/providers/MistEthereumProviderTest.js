@@ -23,7 +23,6 @@ describe('MistEthereumProviderTest', () => {
         expect(mistEthereumProvider.timeout).toEqual(null);
     });
 
-
     it('calls registerEventListeners and the expected listeners will be registered', () => {
         mistEthereumProvider.registerEventListeners();
 

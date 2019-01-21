@@ -20,7 +20,11 @@
  * @date 2018
  */
 
-// TODO: This can be removed when the EIP-1193 got released.
+import {isFunction, isObject} from 'lodash';
+import HttpProvider from '../providers/HttpProvider';
+import WebsocketProvider from '../providers/WebsocketProvider';
+import IpcProvider from '../providers/IpcProvider';
+
 /* eslint-disable no-new-func */
 let global;
 try {
@@ -29,11 +33,6 @@ try {
     global = window;
 }
 /* eslint-enable */
-
-import {isFunction, isObject} from 'lodash';
-import HttpProvider from '../providers/HttpProvider';
-import WebsocketProvider from '../providers/WebsocketProvider';
-import IpcProvider from '../providers/IpcProvider';
 
 export default class ProviderResolver {
     /**
