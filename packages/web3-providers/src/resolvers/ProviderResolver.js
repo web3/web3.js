@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {isObject, isFunction} from 'lodash';
+import {isFunction, isObject} from 'lodash';
 import HttpProvider from '../providers/HttpProvider';
 import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
@@ -62,19 +62,24 @@ export default class ProviderResolver {
             }
         }
 
+        switch (provider.constructor.name) {
+            case 'EthereumProvider':
+                return this.providersModuleFactory.createEthereumProvider(provider);
+            case 'MetamaskInpageProvider':
+                return this.providersModuleFactory.createMetamaskInpageProvider(provider);
+            case 'HttpProvider':
+            case 'WebsocketProvider':
+            case 'IpcProvider':
+                return provider;
+        }
+
+        // For the cjs bundles
         if (
             provider instanceof HttpProvider ||
             provider instanceof WebsocketProvider ||
-            provider instanceof IpcProvider ||
-            provider.constructor.name === 'HttpProvider' ||
-            provider.constructor.name === 'WebsocketProvider' ||
-            provider.constructor.name === 'IpcProvider'
+            provider instanceof IpcProvider
         ) {
             return provider;
-        }
-
-        if (provider.constructor.name === 'EthereumProvider') {
-            return this.providersModuleFactory.createEthereumProvider(provider);
         }
 
         throw new Error('Please provide an valid Web3 provider');
