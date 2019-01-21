@@ -587,7 +587,7 @@ Returns
 -------
 
 
-``Promise`` returns ``String`` - Key ID on success and an error on failure.
+``Promise<String|Error>``: The Key ID on success and an error on failure.
 
 
 -------

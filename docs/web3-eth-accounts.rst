@@ -34,7 +34,9 @@ create
 
     web3.eth.accounts.create([entropy]);
 
-Generates an account object with private key and public key.
+Generates an account object with private key and public key. It's different from
+:ref:`web3.eth.personal.newAccount() <personal-newaccount>` which creates an account
+over the network on the node via an RPC call.
 
 ----------
 Parameters
@@ -104,7 +106,7 @@ Creates an account object from a private key.
 Parameters
 ----------
 
-1. ``privateKey`` - ``String``: The private key to convert.
+1. ``privateKey`` - ``String``: The private key hex string beginning with ``0x``.
 
 -------
 Returns
@@ -127,16 +129,6 @@ Example
         encrypt: function(password){...}
     }
 
-    web3.eth.accounts.privateKeyToAccount('0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
-    > {
-        address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
-        privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
-        signTransaction: function(tx){...},
-        sign: function(data){...},
-        encrypt: function(password){...}
-    }
-
-
 ------------------------------------------------------------------------------
 
 .. _eth-accounts-signtransaction:
@@ -154,7 +146,7 @@ Signs an Ethereum transaction with a given private key.
 Parameters
 ----------
 
-1. ``tx`` - ``Object``: The transaction object as follows:
+1. ``tx`` - ``Object``: The transaction's properties object as follows:
     - ``nonce`` - ``String``: (optional) The nonce to use when signing this transaction. Default will use :ref:`web3.eth.getTransactionCount() <eth-gettransactioncount>`.
     - ``chainId`` - ``String``: (optional) The chain id to use when signing this transaction. Default will use :ref:`web3.eth.net.getId() <net-getid>`.
     - ``to`` - ``String``: (optional) The recevier of the transaction, can be empty when deploying a contract.
@@ -747,7 +739,7 @@ wallet.encrypt
 
     web3.eth.accounts.wallet.encrypt(password);
 
-Encrypts all wallet accounts to and array of encrypted keystore v3 objects.
+Encrypts all wallet accounts to an array of encrypted keystore v3 objects.
 
 ----------
 Parameters
