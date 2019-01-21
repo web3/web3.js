@@ -16,8 +16,8 @@
 */
 /**
  * @file TransactionFactory.js
- * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @author Oscar Fonseca <hiro@cehh.org>
+ * @date 2019
  */
 
 import Transaction from '../Transaction';
