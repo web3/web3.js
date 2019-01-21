@@ -10,8 +10,7 @@ jest.mock('Utils');
 describe('TransactionTest', () => {
     let transaction;
 
-    beforeEach(() => {
-    });
+    beforeEach(() => {});
 
     it('constructor check', () => {
         expect().toEqual();

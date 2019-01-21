@@ -23,12 +23,12 @@
 import TransactionFactory from './factories/TransactionFactory';
 
 /**
- * Returns an object of Transaction 
+ * Returns an object of Transaction
  *
  * @returns {Transaction}
  *
  * @constructor
  */
-export const Transaction = () => {
-    return new TransactionFactory().createTransaction();
+export const Transaction = (txParams) => {
+    return new TransactionFactory().createTransaction(txParams);
 };
