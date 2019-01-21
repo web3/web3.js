@@ -46,13 +46,16 @@ export default class Transaction {
         nonce
     ) {
         this.error = {
-            from: "",
-            to: "",
-            value: "",
-            gas: "",
-            gasPrice: "",
-            data: "",
-            nonce: ""
+            from:     `The 'from' parameter needs to be an address or a wallet index number.`,
+            to:       `The 'to' parameter needs to be an address or 'deploy' when deploying code.`,
+            value:    `The 'value' parameter needs to be zero or positive, and in number, BN, BigNumber or string format.\n` +
+                      `Use 'auto' for 0 ether.`,
+            gas:      ``,
+            gasPrice: ``,
+            data:     `The 'data' parameter needs to be hex encoded.` +
+                      `Use 'auto' for no payload.`,
+            nonce:    `The 'nonce' parameter needs to be an integer.` +
+                      `Use 'auto' to set the RPC-calculated nonce.`
         };
 
         this.params = {
