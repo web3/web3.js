@@ -38,7 +38,7 @@ new contract
 
 .. code-block:: javascript
 
-    new web3.eth.Contract(jsonInterface[, address][, options])
+    new web3.eth.Contract(jsonInterface, address, options)
 
 Creates a new contract instance with all its methods and events defined in its :ref:`json interface <glossary-json-interface>` object.
 
@@ -47,10 +47,10 @@ Parameters
 ----------
 
 1. ``jsonInterface`` - ``Object``: The json interface for the contract to instantiate
-2. ``address`` - ``String`` (optional): The address of the smart contract to call, can be added later using ``myContract.options.address = '0x1234..'``
+2. ``address`` - ``String`` (optional): The address of the smart contract to call, can be added later using ``myContract.options.address = '0x1234..'. It is necessary when using the contract instance to generate transactions.``
 3. ``options`` - ``Object`` (optional): The options of the contract. Some are used as fallbacks for calls and transactions:
     * ``from`` - ``String``: The address transactions should be made from.
-    * ``gasPrice`` - ``String``: The gas price in wei to use for transactions.It is the wei per unit of gas.
+    * ``gasPrice`` - ``String``: The gas price in wei to use for transactions. It is the wei per unit of gas.
     * ``gas`` - ``Number``: The maximum gas provided for a transaction (gas limit).
     * ``data`` - ``String``: The byte code of the contract. Used when the contract gets :ref:`deployed <contract-deploy>`.
 
