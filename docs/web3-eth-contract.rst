@@ -38,7 +38,7 @@ new contract
 
 .. code-block:: javascript
 
-    new web3.eth.Contract(jsonInterface[, address][, options])
+    new web3.eth.Contract(jsonInterface, address, options)
 
 Creates a new contract instance with all its methods and events defined in its :ref:`json interface <glossary-json-interface>` object.
 
@@ -47,10 +47,10 @@ Parameters
 ----------
 
 1. ``jsonInterface`` - ``Object``: The json interface for the contract to instantiate
-2. ``address`` - ``String`` (optional): The address of the smart contract to call, can be added later using ``myContract.options.address = '0x1234..'``
+2. ``address`` - ``String`` (optional): The address of the smart contract to call, can be added later using ``myContract.options.address = '0x1234..'. It is necessary when using the contract instance to generate transactions.``
 3. ``options`` - ``Object`` (optional): The options of the contract. Some are used as fallbacks for calls and transactions:
     * ``from`` - ``String``: The address transactions should be made from.
-    * ``gasPrice`` - ``String``: The gas price in wei to use for transactions.It is the wei per unit of gas.
+    * ``gasPrice`` - ``String``: The gas price in wei to use for transactions. It is the wei per unit of gas.
     * ``gas`` - ``Number``: The maximum gas provided for a transaction (gas limit).
     * ``data`` - ``String``: The byte code of the contract. Used when the contract gets :ref:`deployed <contract-deploy>`.
 
@@ -379,7 +379,7 @@ Parameters of any method depend on the smart contracts methods, defined in the :
 Returns
 -------
 
-``Object``: The transaction object:
+``Object``: The Transaction Object:
 
 - ``Array`` - arguments: The arguments passed to the method before. They can be changed.
 - ``Function`` - :ref:`call <contract-call>`: Will call the "constant" method and execute its smart contract method in the EVM without sending a transaction (Can't alter the smart contract state).
