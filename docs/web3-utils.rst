@@ -606,7 +606,7 @@ toBN
 
     web3.utils.toBN(number)
 
-Will safly convert any given value (including `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ instances) into a `BN.js <https://github.com/indutny/bn.js/>`_ instance, for handling big numbers in JavaScript.
+Will safely convert any given value (including `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ instances) into a `BN.js <https://github.com/indutny/bn.js/>`_ instance, for handling big numbers in JavaScript.
 
 .. note:: For just the `BN.js <https://github.com/indutny/bn.js/>`_ class use :ref:`utils.BN <utils-bn>`
 
@@ -977,7 +977,7 @@ Converts any `ether value <http://ethdocs.org/en/latest/ether.html>`_ value into
 Parameters
 ----------
 
-1. ``number`` - ``String|Number|BN``: The value.
+1. ``number`` - ``String|BN``: The value.
 2. ``unit`` - ``String`` (optional, defaults to ``"ether"``): The ether to convert from. Possible units are:
     - ``noether``: '0'
     - ``wei``: '1'
@@ -1011,7 +1011,7 @@ Parameters
 Returns
 -------
 
-``String|BN``: If a number, or string is given it returns a number string, otherwise a `BN.js <https://github.com/indutny/bn.js/>`_ instance.
+``String|BN``: If a string is given it returns a number string, otherwise a `BN.js <https://github.com/indutny/bn.js/>`_ instance.
 
 -------
 Example
@@ -1051,7 +1051,7 @@ Converts any `wei <http://ethereum.stackexchange.com/questions/253/the-ether-den
 Parameters
 ----------
 
-1. ``number`` - ``String|Number|BN``: The value in wei.
+1. ``number`` - ``String|BN``: The value in wei.
 2. ``unit`` - ``String`` (optional, defaults to ``"ether"``): The ether to convert to. Possible units are:
     - ``noether``: '0'
     - ``wei``: '1'
@@ -1085,7 +1085,7 @@ Parameters
 Returns
 -------
 
-``String|BN``: If a number, or string is given it returns a number string, otherwise a `BN.js <https://github.com/indutny/bn.js/>`_ instance.
+``String``: It always returns a string number.
 
 -------
 Example

@@ -387,6 +387,7 @@ getGasPrice
 
 Returns the current gas price oracle.
 The gas price is determined by the last few blocks median gas price.
+GasPrice is the wei per unit of gas,.
 
 -------
 Returns
@@ -410,6 +411,7 @@ Example
 
 ------------------------------------------------------------------------------
 
+.. _eth-getaccounts:
 
 getAccounts
 =====================
@@ -418,7 +420,13 @@ getAccounts
 
     web3.eth.getAccounts([callback])
 
-Returns a list of accounts the node controls.
+Returns a list of accounts the node controls by using the provider and calling
+the RPC method ``eth_accounts``. Using :ref:`web3.eth.accounts.create() <accounts-create>`
+will not add accounts into this list. For that use
+:ref:`web3.eth.personal.newAccount() <personal-newaccount>`.
+
+The results are the same as :ref:`web3.eth.personal.getAccounts() <personal-getaccounts>` except that calls
+the RPC method ``personal_listAccounts``.
 
 -------
 Returns
@@ -624,6 +632,7 @@ Returns
   - ``logsBloom`` 256 Bytes - ``String``: The bloom filter for the logs of the block. ``null`` when its pending block.
   - ``transactionsRoot`` 32 Bytes - ``String``: The root of the transaction trie of the block
   - ``stateRoot`` 32 Bytes - ``String``: The root of the final state trie of the block.
+  - ``receiptsRoot`` 32 Bytes - ``String``: Transaction receipts are used to store the state after a transaction has been executed and are kept in an index-keyed trie. The hash of its root is placed in the block header as the receipts root.
   - ``miner`` - ``String``: The address of the beneficiary to whom the mining rewards were given.
   - ``difficulty`` - ``String``: Integer of the difficulty for this block.
   - ``totalDifficulty`` - ``String``: Integer of the total difficulty of the chain until this block.
@@ -654,6 +663,7 @@ Example
         "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         "transactionsRoot": "0x3a1b03875115b79539e5bd33fb00d8f7b7cd61929d5a3c574f507b8acf415bee",
         "stateRoot": "0xf1133199d44695dfa8fd1bcfe424d82854b5cebef75bddd7e40ea94cda515bcb",
+        "receiptsRoot: '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
         "miner": "0x8888f1f195afa192cfee860698584c030f4c9db1",
         "difficulty": '21345678965432',
         "totalDifficulty": '324567845321',
@@ -788,7 +798,7 @@ Returns
   - ``from`` - ``String``: Address of the sender.
   - ``to`` - ``String``: Address of the receiver. ``null`` when its a contract creation transaction.
   - ``value`` - ``String``: Value transferred in :ref:`wei <what-is-wei>`.
-  - ``gasPrice`` - ``String``: Gas price provided by the sender in :ref:`wei <what-is-wei>`.
+  - ``gasPrice`` - ``String``: The wei per unit of gas provided by the sender in :ref:`wei <what-is-wei>`.
   - ``gas`` - ``Number``: Gas provided by the sender.
   - ``input`` - ``String``: The data sent along with the transaction.
 
