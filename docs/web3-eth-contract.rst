@@ -38,7 +38,7 @@ new contract
 
 .. code-block:: javascript
 
-    new web3.eth.Contract(jsonInterface[, address][, options])
+    new web3.eth.Contract(jsonInterface, address, options)
 
 Creates a new contract instance with all its methods and events defined in its :ref:`json interface <glossary-json-interface>` object.
 
@@ -47,10 +47,10 @@ Parameters
 ----------
 
 1. ``jsonInterface`` - ``Array``: The json interface for the contract to instantiate
-2. ``address`` - ``String`` (optional): The address of the smart contract to call, can be added later using ``myContract.options.address = '0x1234..'``
+2. ``address`` - ``String`` (optional): This address is necessary for transactions and call requests and can also be added later using ``myContract.options.address = '0x1234..'.``
 3. ``options`` - ``Object`` (optional): The options of the contract. Some are used as fallbacks for calls and transactions:
     * ``from`` - ``String``: The address transactions should be made from.
-    * ``gasPrice`` - ``String``: The gas price in wei to use for transactions.It is the wei per unit of gas.
+    * ``gasPrice`` - ``String``: The gas price in wei to use for transactions. It is the wei per unit of gas.
     * ``gas`` - ``Number``: The maximum gas provided for a transaction (gas limit).
     * ``data`` - ``String``: The byte code of the contract. Used when the contract gets :ref:`deployed <contract-deploy>`.
 
@@ -379,7 +379,7 @@ Parameters of any method depend on the smart contracts methods, defined in the :
 Returns
 -------
 
-``Object``: The transaction object:
+``Object``: The Transaction Object:
 
 - ``Array`` - arguments: The arguments passed to the method before. They can be changed.
 - ``Function`` - :ref:`call <contract-call>`: Will call the "constant" method and execute its smart contract method in the EVM without sending a transaction (Can't alter the smart contract state).
@@ -432,7 +432,7 @@ methods.myMethod.call
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]]).call(options[, callback])
+    myContract.methods.myMethod([param1[, param2[, ...]]]).call(transactionObject, blockNumber, callback])
 
 Will call a "constant" method and execute its smart contract method in the EVM without sending any transaction. Note calling can not alter the smart contract state.
 
@@ -440,11 +440,13 @@ Will call a "constant" method and execute its smart contract method in the EVM w
 Parameters
 ----------
 
-1. ``options`` - ``Object`` (optional): The options used for calling.
+``options`` - ``Object`` (optional): The options used for calling.
+1.* ``transactionObject``
     * ``from`` - ``String`` (optional): The address the call "transaction" should be made from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this call "transaction".It is the wei per unit of gas.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this call "transaction" (gas limit).
-2. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the smart contract method execution as the second argument, or with an error object as the first argument.
+2.*``blockNumber`` - ``Number``: The block number this log was created in. ``null`` when still pending.
+3.*``callback`` - ``Function`` (optional): This callback will be fired with the result of the smart contract method execution as the second argument, or with an error object as the first argument.
 
 -------
 Returns
