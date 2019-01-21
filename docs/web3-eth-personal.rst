@@ -263,6 +263,7 @@ Example
 
 ------------------------------------------------------------------------------
 
+
 .. _personal-getaccounts:
 
 getAccounts
@@ -302,6 +303,47 @@ Example
 ------------------------------------------------------------------------------
 
 
-// TODO
+importRawKey
+=====================
 
+.. code-block:: javascript
+
+    web3.eth.personal.importRawKey(privateKey, password)
+
+Imports the given private key into the key store, encrypting it with the passphrase.
+
+Returns the address of the new account.
+
+.. note:: Sending your account password over an unsecured HTTP RPC connection is highly unsecure.
+
+----------
+Parameters
+----------
+
+
+1. ``privateKey`` - ``String`` - An unencrypted private key (hex string).
+2. ``password`` - ``String`` - The password of the account.
+
+
+-------
+Returns
+-------
+
+
+``Promise`` returns ``String`` - The address of the account.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.personal.importRawKey("cd3376bb711cb332ee3fb2ca04c6a8b9f70c316fcdf7a1f44ef4c7999483295e", "password1234")
+    .then(console.log);
+    > "0x8f337bf484b2fc75e4b0436645dcc226ee2ac531"
+
+------------------------------------------------------------------------------
+    
+// TODO
 lockAccount, sendTransaction
