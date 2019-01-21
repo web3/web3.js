@@ -130,12 +130,12 @@ export const RESOLVER_ABI = [
         constant: false,
         inputs: [
             {
-                'name': 'node',
-                'type': 'bytes32'
+                name: 'node',
+                type: 'bytes32'
             },
             {
-                'name': 'hash',
-                'type': 'bytes'
+                name: 'hash',
+                type: 'bytes'
             }
         ],
         name: 'setContenthash',

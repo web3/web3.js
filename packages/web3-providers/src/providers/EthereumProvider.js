@@ -29,8 +29,6 @@ export default class EthereumProvider extends AbstractSocketProvider {
     constructor(connection) {
         super(connection, null);
         this.host = 'EthereumProvider';
-        this.SOCKET_NETWORK_CHANGED = 'socket_networkChanged';
-        this.SOCKET_ACCOUNTS_CHANGED = 'socket_accountsChanged';
     }
 
     /**

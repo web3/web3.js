@@ -44,6 +44,8 @@ export default class AbstractSocketProvider extends EventEmitter {
         this.SOCKET_CLOSE = 'socket_close';
         this.SOCKET_ERROR = 'socket_error';
         this.SOCKET_CONNECT = 'socket_connect';
+        this.SOCKET_NETWORK_CHANGED = 'socket_networkChanged';
+        this.SOCKET_ACCOUNTS_CHANGED = 'socket_accountsChanged';
     }
 
     /**

@@ -486,29 +486,26 @@ export const sha3 = (value) => {
 // expose the under the hood keccak256
 sha3._Hash = Hash;
 
-
 /**
  * Gets the r,s,v values from a signature
  *
  * @method getSignatureParameters
- * 
+ *
  * @param {String} ECDSA signature
- * 
+ *
  * @return {Object} with r,s,v values
  */
 export const getSignatureParameters = (signature) => {
-
     if (!isHexStrict(signature)) {
         throw new Error(`Given value "${signature}" is not a valid hex string.`);
     }
 
-    const r = signature.slice( 0, 66 );
-    const s = `0x${signature.slice( 66, 130 )}`;
-    let v = `0x${signature.slice( 130, 132 )}`;
+    const r = signature.slice(0, 66);
+    const s = `0x${signature.slice(66, 130)}`;
+    let v = `0x${signature.slice(130, 132)}`;
     v = hexToNumber(v);
-    
 
-    if ( ![ 27, 28 ].includes( v ) ) v += 27;
+    if (![27, 28].includes(v)) v += 27;
 
     return {
         r,

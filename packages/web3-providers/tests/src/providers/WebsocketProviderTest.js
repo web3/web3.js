@@ -395,9 +395,9 @@ describe('WebsocketProviderTest', () => {
     });
 
     it('calls sendBatch and returns with a resolved promise', async () => {
-        const abstractMethodMock = new AbstractMethod();
-
         const moduleInstanceMock = new AbstractWeb3Module();
+
+        const abstractMethodMock = new AbstractMethod();
 
         abstractMethodMock.beforeExecution = jest.fn();
         abstractMethodMock.rpcMethod = 'rpc_method';

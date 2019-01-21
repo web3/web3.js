@@ -20,7 +20,6 @@
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
-import {isArray} from 'lodash';
 
 export default class MetamaskInpageProvider extends AbstractSocketProvider {
     /**
@@ -44,6 +43,44 @@ export default class MetamaskInpageProvider extends AbstractSocketProvider {
         this.connection.on('networkChanged', this.onNetworkChanged.bind(this));
         this.connection.on('data', this.onMessage.bind(this));
         this.connection.on('error', this.onError.bind(this));
+    }
+
+    /**
+     * Removes all listeners on the EventEmitter and the socket object.
+     *
+     * @method removeAllListeners
+     *
+     * @param {String} event
+     */
+    removeAllListeners(event) {
+        switch (event) {
+            case this.SOCKET_NETWORK_CHANGED:
+                this.connection.removeListener('networkChanged', this.onNetworkChanged);
+                break;
+            case this.SOCKET_ACCOUNTS_CHANGED:
+                this.connection.removeListener('accountsChanged', this.onAccountsChanged);
+                break;
+            case this.SOCKET_MESSAGE:
+                this.connection.removeListener('data', this.onMessage);
+                break;
+            case this.SOCKET_ERROR:
+                this.connection.removeListener('error', this.onError);
+                break;
+        }
+
+        super.removeAllListeners(event);
+    }
+
+    /**
+     * Removes all socket listeners
+     *
+     * @method removeAllSocketListeners
+     */
+    removeAllSocketListeners() {
+        this.connection.removeListener(this.SOCKET_NETWORK_CHANGED, this.onNetworkChanged);
+        this.connection.removeListener(this.SOCKET_ACCOUNTS_CHANGED, this.onAccountsChanged);
+
+        super.removeAllSocketListeners();
     }
 
     /**
