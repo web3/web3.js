@@ -50,7 +50,7 @@ export default class MethodProxy {
 
                     /* eslint-disable no-inner-declarations */
                     function anonymousFunction() {
-                        method.arguments = cloneDeep(arguments);
+                        method.arguments = cloneDeep([...arguments]);
 
                         if (method.Type === 'CALL') {
                             return method.execute(target);
