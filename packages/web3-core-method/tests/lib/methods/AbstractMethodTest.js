@@ -94,7 +94,7 @@ describe('AbstractMethodTest', () => {
 
         expect(abstractMethod.callback).toBeInstanceOf(Function);
     });
-    
+
     it('check if execute method exists', () => {
         expect(abstractMethod.execute).toBeInstanceOf(Function);
     });
