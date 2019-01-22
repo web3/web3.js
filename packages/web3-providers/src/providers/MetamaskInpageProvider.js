@@ -20,7 +20,6 @@
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
-import {isArray} from 'lodash';
 
 export default class MetamaskInpageProvider extends AbstractSocketProvider {
     /**
