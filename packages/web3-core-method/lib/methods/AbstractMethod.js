@@ -216,19 +216,6 @@ export default class AbstractMethod {
     }
 
     /**
-     * Returns this Method with the arguments set.
-     *
-     * @method request
-     *
-     * @returns {AbstractMethod}
-     */
-    request() {
-        this.arguments = arguments;
-
-        return this;
-    }
-
-    /**
      * Checks if accounts is defined and if wallet is not empty
      *
      * @method hasWallet

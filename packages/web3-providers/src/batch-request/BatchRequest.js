@@ -43,7 +43,7 @@ export default class BatchRequest {
      * @param {AbstractMethod} method
      */
     add(method) {
-        if (!isObject(method)) {
+        if (!isObject(method) && method) {
             throw new Error('Please provide a object of type AbstractMethod.');
         }
 
