@@ -20,7 +20,11 @@
  * @date 2017
  */
 
-import {isBoolean, isString, isNumber, isObject, isNull} from 'lodash';
+import isBoolean from 'lodash/isBoolean';
+import isString from 'lodash/isString';
+import isNumber from 'lodash/isNumber';
+import isObject from 'lodash/isObject';
+import isNull from 'lodash/isNull';
 import numberToBN from 'number-to-bn';
 import utf8 from 'utf8';
 import Hash from 'eth-lib/lib/hash';

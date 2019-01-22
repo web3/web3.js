@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {isArray} from 'lodash';
+import isArray from 'lodash/isArray';
 
 export default class AbiMapper {
     /**

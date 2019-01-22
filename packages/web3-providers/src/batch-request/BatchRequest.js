@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isObject, isArray} from 'lodash';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class BatchRequest {

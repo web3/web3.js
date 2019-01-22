@@ -18,7 +18,7 @@
  */
 
 import EventEmitter from 'eventemitter3';
-import {isArray} from 'lodash';
+import isArray from 'lodash/isArray';
 
 export default class AbstractSocketProvider extends EventEmitter {
     /**

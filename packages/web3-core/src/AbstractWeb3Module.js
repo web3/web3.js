@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {isObject} from 'lodash';
+import isObject from 'lodash/isObject';
 import {toChecksumAddress} from 'web3-utils'; // TODO: This could be removed with a web3-core-types module
 
 export default class AbstractWeb3Module {

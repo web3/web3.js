@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import cloneDeep from 'lodash/cloneDeep';
 import LogSubscription from '../subscriptions/eth/LogSubscription';
 import NewHeadsSubscription from '../subscriptions/eth/NewHeadsSubscription';
 import NewPendingTransactionsSubscription from '../subscriptions/eth/NewPendingTransactionsSubscription';
@@ -50,7 +51,7 @@ export default class SubscriptionsFactory {
      * @returns {LogSubscription}
      */
     createLogSubscription(options, moduleInstance, getPastLogsMethod) {
-        return new LogSubscription(options, this.utils, this.formatters, moduleInstance, getPastLogsMethod);
+        return new LogSubscription(cloneDeep(options), this.utils, this.formatters, moduleInstance, getPastLogsMethod);
     }
 
     /**
