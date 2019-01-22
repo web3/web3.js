@@ -56,6 +56,37 @@ describe('GetStorageAtMethodTest', () => {
         }
     );
 
+    it(
+        'calls beforeExecution without a callback instead of the optional parameter and should call the inputAddressFormatter, inputDefaultBlockNumberFormatter ' +
+            'and numberToHex method',
+        () => {
+            const callback = jest.fn();
+            method.parameters = ['string', 100, callback];
+
+            formatters.inputAddressFormatter.mockReturnValue('0x0');
+
+            formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+
+            Utils.numberToHex.mockReturnValueOnce('0x0');
+
+            method.beforeExecution({defaultBlock: 'latest'});
+
+            expect(method.callback).toEqual(callback);
+
+            expect(method.parameters[0]).toEqual('0x0');
+
+            expect(method.parameters[1]).toEqual('0x0');
+
+            expect(method.parameters[2]).toEqual('0x0');
+
+            expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
+
+            expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {defaultBlock: 'latest'});
+
+            expect(Utils.numberToHex).toHaveBeenCalledWith(100);
+        }
+    );
+
     it('afterExecution should just return the response', () => {
         const object = {};
 

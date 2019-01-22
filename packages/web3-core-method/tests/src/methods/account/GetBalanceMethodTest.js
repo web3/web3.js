@@ -44,6 +44,27 @@ describe('GetBalanceMethodTest', () => {
         expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith(100, {});
     });
 
+    it('calls beforeExecution with a callback instead of the optional paramter and it calls the inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
+        const callback = jest.fn();
+        method.parameters = ['string', callback];
+
+        formatters.inputAddressFormatter.mockReturnValueOnce('0x0');
+
+        formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+
+        method.beforeExecution({defaultBlock: 'latest'});
+
+        expect(method.callback).toEqual(callback);
+
+        expect(method.parameters[0]).toEqual('0x0');
+
+        expect(method.parameters[1]).toEqual('0x0');
+
+        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
+
+        expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {defaultBlock: 'latest'});
+    });
+
     it('afterExecution should call outputBigNumberFormatter on the response and return it', () => {
         formatters.outputBigNumberFormatter.mockReturnValueOnce({bigNumber: true});
 

@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import isFunction from 'lodash/isFunction';
 import AbstractCallMethod from '../../lib/methods/AbstractCallMethod';
 
 export default class GetCodeMethod extends AbstractCallMethod {
