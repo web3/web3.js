@@ -351,7 +351,7 @@ export const hexToBytes = (hex) => {
     }
 
     hex = hex.replace(/^0x/i, '');
-    hex = hex.length % 2 ? '0' + hex : hex
+    hex = hex.length % 2 ? '0' + hex : hex;
 
     let bytes = [];
     for (let c = 0; c < hex.length; c += 2) {

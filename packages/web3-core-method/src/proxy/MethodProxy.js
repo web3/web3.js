@@ -61,7 +61,7 @@ export default class MethodProxy {
                     /* eslint-enable no-inner-declarations */
 
                     anonymousFunction.method = method;
-                    anonymousFunction.request = function () {
+                    anonymousFunction.request = function() {
                         method.arguments = cloneDeep([...arguments]);
 
                         return method;
