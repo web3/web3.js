@@ -725,7 +725,7 @@ getUncle
 
 .. code-block:: javascript
 
-    web3.eth.getUncle(blockHashOrBlockNumber, uncleIndex [, returnTransactionObjects] [, callback])
+    web3.eth.getUncle(blockHashOrBlockNumber, uncleIndex [, callback])
 
 Returns a blocks uncle by a given uncle index position.
 
@@ -735,8 +735,7 @@ Parameters
 
 1. ``String|Number`` - The block number or hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Number`` - The index position of the uncle.
-3. ``Boolean`` - (optional, default ``false``) If ``true``, the returned block will contain all transactions as objects, if ``false`` it will only contains the transaction hashes.
-4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------

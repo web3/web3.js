@@ -22,6 +22,7 @@
 
 import isFunction from 'lodash/isFunction';
 import isString from 'lodash/isString';
+import cloneDeep from 'lodash/cloneDeep';
 import {PromiEvent} from 'web3-core-promievent';
 
 export default class AbstractMethod {
@@ -173,8 +174,7 @@ export default class AbstractMethod {
      * @param {IArguments} args
      */
     set arguments(args) {
-        let parameters = [...args];
-
+        let parameters = cloneDeep([...args]);
         let callback = null;
 
         if (parameters.length > this.parametersAmount) {
