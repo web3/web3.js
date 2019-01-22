@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isFunction, isString} from 'lodash';
+import isFunction from 'lodash/isFunction';
+import isString from 'lodash/isString';
 import {PromiEvent} from 'web3-core-promievent';
 
 export default class AbstractMethod {

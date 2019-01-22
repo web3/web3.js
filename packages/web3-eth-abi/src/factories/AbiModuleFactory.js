@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isObject, isArray} from 'lodash';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
 import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
 import AbiCoder from '../AbiCoder';
 

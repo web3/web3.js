@@ -18,7 +18,7 @@
  */
 
 import {AbstractWeb3Module} from 'web3-core';
-import {isFunction} from 'lodash';
+import isFunction from 'lodash/isFunction';
 import namehash from 'eth-ens-namehash';
 
 // TODO: Maybe it would be better to extend from the CallContractMethod and SendContractMethod and to implement the

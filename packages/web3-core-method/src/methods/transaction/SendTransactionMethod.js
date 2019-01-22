@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {isObject} from 'lodash';
+import isObject from 'lodash/isObject';
 import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
 
 export default class SendTransactionMethod extends AbstractSendMethod {

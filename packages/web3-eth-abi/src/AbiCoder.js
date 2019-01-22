@@ -21,7 +21,8 @@
  * @date 2018
  */
 
-import {isObject, isArray} from 'lodash';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
 
 // TODO: Implement it by our self this can't be a dependency because of the importance of it.
 export default class AbiCoder {

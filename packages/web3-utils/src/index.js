@@ -21,7 +21,9 @@
  * @date 2017
  */
 
-import {isObject, isString, isArray} from 'lodash';
+import isObject from 'lodash/isObject';
+import isString from 'lodash/isString';
+import isArray from 'lodash/isArray';
 import * as utils from './Utils';
 import * as ethjsUnit from 'ethjs-unit';
 

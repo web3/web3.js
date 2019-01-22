@@ -21,6 +21,7 @@
  */
 
 import {PromiEvent} from 'web3-core-promievent';
+import cloneDeep from 'lodash/cloneDeep';
 
 export default class MethodProxy {
     /**
@@ -48,7 +49,7 @@ export default class MethodProxy {
                     const method = methodFactory.createMethod(name);
                     /* eslint-disable no-inner-declarations */
                     function anonymousFunction() {
-                        method.arguments = arguments;
+                        method.arguments = cloneDeep(arguments);
 
                         if (method.Type === 'CALL') {
                             return method.execute(target);
