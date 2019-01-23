@@ -1,4 +1,5 @@
 import * as Utils from 'web3-utils';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import GetHashrateMethod from '../../../../src/methods/node/GetHashrateMethod';
 
 // Mocks
@@ -11,26 +12,19 @@ describe('GetHashrateMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetHashrateMethod(Utils, {});
+        method = new GetHashrateMethod(Utils, null);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetHashrateMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_hashrate', () => {
         expect(method.rpcMethod).toEqual('eth_hashrate');
-    });
 
-    it('parametersAmount should return 0', () => {
         expect(method.parametersAmount).toEqual(0);
-    });
 
-    it('beforeExecution should do nothing with the parameters', () => {
-        method.parameters = [];
-        method.beforeExecution();
+        expect(method.utils).toEqual(Utils);
 
-        expect(method.parameters[0]).toEqual(undefined);
+        expect(method.formatters).toEqual(null);
     });
 
     it('afterExecution should map the response', () => {

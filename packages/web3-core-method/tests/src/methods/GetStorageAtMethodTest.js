@@ -1,5 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 import GetStorageAtMethod from '../../../src/methods/GetStorageAtMethod';
 
 // Mocks
@@ -16,16 +17,16 @@ describe('GetStorageAtMethodTest', () => {
         method = new GetStorageAtMethod(Utils, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetStorageAtMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_getStorageAt', () => {
         expect(method.rpcMethod).toEqual('eth_getStorageAt');
-    });
 
-    it('parametersAmount should return 3', () => {
         expect(method.parametersAmount).toEqual(3);
+
+        expect(method.utils).toEqual(Utils);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it(
@@ -88,10 +89,4 @@ describe('GetStorageAtMethodTest', () => {
             expect(Utils.numberToHex).toHaveBeenCalledWith(100);
         }
     );
-
-    it('afterExecution should just return the response', () => {
-        const object = {};
-
-        expect(method.afterExecution(object)).toEqual(object);
-    });
 });

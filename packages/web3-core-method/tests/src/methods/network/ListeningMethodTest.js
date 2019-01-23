@@ -1,20 +1,20 @@
 import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
-import IsMiningMethod from '../../../../src/methods/node/IsMiningMethod';
+import ListeningMethod from '../../../../src/methods/network/ListeningMethod';
 
 /**
- * IsMiningMethod test
+ * ListeningMethod test
  */
-describe('IsMiningMethodTest', () => {
+describe('ListeningMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new IsMiningMethod(null, null);
+        method = new ListeningMethod(null, null);
     });
 
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractCallMethod);
 
-        expect(method.rpcMethod).toEqual('eth_mining');
+        expect(method.rpcMethod).toEqual('net_listening');
 
         expect(method.parametersAmount).toEqual(0);
 

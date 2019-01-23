@@ -1,4 +1,5 @@
 import {formatters} from 'web3-core-helpers';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import GetBlockMethod from '../../../../src/methods/block/GetBlockMethod';
 
 // Mocks
@@ -11,19 +12,19 @@ describe('GetBlockMethod', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBlockMethod({}, formatters);
+        method = new GetBlockMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetBlockMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_getBlockByNumber', () => {
         expect(method.rpcMethod).toEqual('eth_getBlockByNumber');
-    });
 
-    it('parametersAmount should return 2', () => {
         expect(method.parametersAmount).toEqual(2);
+
+        expect(method.utils).toEqual(null);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {

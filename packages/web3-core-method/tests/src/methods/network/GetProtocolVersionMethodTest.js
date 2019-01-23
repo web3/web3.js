@@ -1,20 +1,20 @@
 import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
-import IsMiningMethod from '../../../../src/methods/node/IsMiningMethod';
+import GetProtocolVersionMethod from '../../../../src/methods/network/GetProtocolVersionMethod';
 
 /**
- * IsMiningMethod test
+ * GetProtocolVersionMethod test
  */
-describe('IsMiningMethodTest', () => {
+describe('GetProtocolVersionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new IsMiningMethod(null, null);
+        method = new GetProtocolVersionMethod(null, null);
     });
 
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractCallMethod);
 
-        expect(method.rpcMethod).toEqual('eth_mining');
+        expect(method.rpcMethod).toEqual('eth_protocolVersion');
 
         expect(method.parametersAmount).toEqual(0);
 

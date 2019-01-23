@@ -1,4 +1,5 @@
 import * as Utils from 'web3-utils';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import ListAccountsMethod from '../../../../src/methods/personal/ListAccountsMethod';
 
 // Mocks
@@ -11,29 +12,22 @@ describe('ListAccountsMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new ListAccountsMethod(Utils, {});
+        method = new ListAccountsMethod(Utils, null);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(ListAccountsMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return personal_listAccounts', () => {
         expect(method.rpcMethod).toEqual('personal_listAccounts');
-    });
 
-    it('parametersAmount should return 0', () => {
         expect(method.parametersAmount).toEqual(0);
+
+        expect(method.utils).toEqual(Utils);
+
+        expect(method.formatters).toEqual(null);
     });
 
-    it('beforeExecution should do nothing with the parameters', () => {
-        method.parameters = [];
-        method.beforeExecution();
-
-        expect(method.parameters[0]).toEqual(undefined);
-    });
-
-    it('afterExecution should just return the response', () => {
+    it('afterExecution should map the response', () => {
         Utils.toChecksumAddress.mockReturnValueOnce('0x0');
 
         expect(method.afterExecution(['0x0'])[0]).toEqual('0x0');

@@ -1,4 +1,5 @@
 import {formatters} from 'web3-core-helpers';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import SignTransactionMethod from '../../../../src/methods/transaction/SignTransactionMethod';
 
 // Mocks
@@ -11,22 +12,22 @@ describe('SignTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SignTransactionMethod({}, formatters);
+        method = new SignTransactionMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(SignTransactionMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_signTransaction', () => {
         expect(method.rpcMethod).toEqual('eth_signTransaction');
-    });
 
-    it('parametersAmount should return 1', () => {
         expect(method.parametersAmount).toEqual(1);
+
+        expect(method.utils).toEqual(null);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
-    it('beforeExecution should do nothing with the parameters', () => {
+    it('beforeExecution should execute the inputTransactionFormatter', () => {
         method.parameters = [{}];
 
         formatters.inputTransactionFormatter.mockReturnValueOnce({empty: false});
@@ -36,9 +37,5 @@ describe('SignTransactionMethodTest', () => {
         expect(method.parameters[0]).toHaveProperty('empty', false);
 
         expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith({}, {});
-    });
-
-    it('afterExecution should just return the response', () => {
-        expect(method.afterExecution('sendTransaction')).toEqual('sendTransaction');
     });
 });

@@ -1,4 +1,5 @@
 import * as Utils from 'web3-utils';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import GetCoinbaseMethod from '../../../../src/methods/node/GetCoinbaseMethod';
 
 // Mocks
@@ -11,29 +12,18 @@ describe('GetCoinbaseMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetCoinbaseMethod(Utils, {});
+        method = new GetCoinbaseMethod(Utils, null);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetCoinbaseMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_coinbase', () => {
         expect(method.rpcMethod).toEqual('eth_coinbase');
-    });
 
-    it('parametersAmount should return 0', () => {
         expect(method.parametersAmount).toEqual(0);
-    });
 
-    it('beforeExecution should do nothing with the parameters', () => {
-        method.parameters = [];
-        method.beforeExecution();
+        expect(method.utils).toEqual(Utils);
 
-        expect(method.parameters[0]).toEqual(undefined);
-    });
-
-    it('afterExecution should just return the response', () => {
-        expect(method.afterExecution('coinbase')).toEqual('coinbase');
+        expect(method.formatters).toEqual(null);
     });
 });

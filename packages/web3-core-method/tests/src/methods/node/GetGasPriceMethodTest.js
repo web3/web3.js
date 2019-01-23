@@ -1,4 +1,5 @@
 import {formatters} from 'web3-core-helpers';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import GetGasPriceMethod from '../../../../src/methods/node/GetGasPriceMethod';
 
 // Mocks
@@ -11,26 +12,19 @@ describe('GetGasPriceMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetGasPriceMethod({}, formatters);
+        method = new GetGasPriceMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetGasPriceMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_gasPrice', () => {
         expect(method.rpcMethod).toEqual('eth_gasPrice');
-    });
 
-    it('parametersAmount should return 0', () => {
         expect(method.parametersAmount).toEqual(0);
-    });
 
-    it('beforeExecution should do nothing with the parameters', () => {
-        method.parameters = [];
-        method.beforeExecution();
+        expect(method.utils).toEqual(null);
 
-        expect(method.parameters[0]).toEqual(undefined);
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('afterExecution should map the response', () => {

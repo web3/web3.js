@@ -1,5 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import GetTransactionReceiptMethod from '../../../../src/methods/transaction/GetTransactionReceiptMethod';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 
 // Mocks
 jest.mock('formatters');
@@ -11,27 +12,19 @@ describe('GetTransactionReceiptMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetTransactionReceiptMethod({}, formatters);
+        method = new GetTransactionReceiptMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetTransactionReceiptMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_getTransactionReceipt', () => {
         expect(method.rpcMethod).toEqual('eth_getTransactionReceipt');
-    });
 
-    it('parametersAmount should return 1', () => {
         expect(method.parametersAmount).toEqual(1);
-    });
 
-    it('beforeExecution should do nothing with the parameters', () => {
-        method.parameters = [];
+        expect(method.utils).toEqual(null);
 
-        method.beforeExecution();
-
-        expect(method.parameters[0]).toEqual(undefined);
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('afterExecution should map the response', () => {

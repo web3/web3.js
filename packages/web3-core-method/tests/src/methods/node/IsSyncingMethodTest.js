@@ -1,4 +1,5 @@
 import {formatters} from 'web3-core-helpers';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import IsSyncingMethod from '../../../../src/methods/node/IsSyncingMethod';
 
 // Mocks
@@ -8,35 +9,28 @@ jest.mock('formatters');
  * IsSyncingMethod test
  */
 describe('IsSyncingMethodTest', () => {
-    let model;
+    let method;
 
     beforeEach(() => {
-        model = new IsSyncingMethod({}, formatters);
+        method = new IsSyncingMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(IsSyncingMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_syncing', () => {
-        expect(model.rpcMethod).toEqual('eth_syncing');
-    });
+        expect(method.rpcMethod).toEqual('eth_syncing');
 
-    it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount).toEqual(0);
-    });
+        expect(method.parametersAmount).toEqual(0);
 
-    it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
-        model.beforeExecution();
+        expect(method.utils).toEqual(null);
 
-        expect(model.parameters[0]).toEqual(undefined);
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('afterExecution should map the response', () => {
         formatters.outputSyncingFormatter.mockReturnValueOnce({isSyncing: true});
 
-        expect(model.afterExecution({})).toHaveProperty('isSyncing', true);
+        expect(method.afterExecution({})).toHaveProperty('isSyncing', true);
 
         expect(formatters.outputSyncingFormatter).toHaveBeenCalledWith({});
     });
