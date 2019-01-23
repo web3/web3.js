@@ -26,4 +26,12 @@ describe('GetAccountsMethodTest', () => {
 
         expect(method.formatters).toEqual(null);
     });
+
+    it('afterExecution should just return the response', () => {
+        Utils.toChecksumAddress.mockReturnValueOnce('0x0');
+
+        expect(method.afterExecution([{}])[0]).toEqual('0x0');
+
+        expect(Utils.toChecksumAddress).toHaveBeenCalledWith({});
+    });
 });

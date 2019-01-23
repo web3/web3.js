@@ -27,11 +27,15 @@ describe('IsSyncingMethodTest', () => {
         expect(method.formatters).toEqual(formatters);
     });
 
-    it('afterExecution should map the response', () => {
+    it('afterExecution should call outputSyncingFormatter and return the response', () => {
         formatters.outputSyncingFormatter.mockReturnValueOnce({isSyncing: true});
 
         expect(method.afterExecution({})).toHaveProperty('isSyncing', true);
 
         expect(formatters.outputSyncingFormatter).toHaveBeenCalledWith({});
+    });
+
+    it('afterExecution should directly return the response', () => {
+        expect(method.afterExecution(false)).toEqual(false);
     });
 });
