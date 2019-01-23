@@ -21,26 +21,30 @@
  */
 
 // TODO implement sha3 util
-import sha3 from './sha3'; 
+import sha3 from '../sha3'; 
 import {cloneDeep, isBoolean} from 'lodash';
 
-export default class Type {
+export default class Address {
     /**
-     * @param {String} from
+     * @param {String} address
+     * @param {boolean} isChecksummed
      *
      * @constructor
      */
     constructor(params, error /* from factory */, initParams /* from factory */) {
-
         this.error = error;
+        this.initParams = initParams;
         this.params = cloneDeep(initParams);
 
         /* Check for type and format validity */
-        this.params.address = /(0x)([0-9a-fA-F]{40})/gm.test(params)
-                ? params.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2')
+        this.params.address = /(0x)?([0-9a-fA-F]{40})/gm.test(params.address)
+                ? params.address.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2')
                 : undefined;
         
-        this.params.isChecksummed = (isBoolean(params.isChecksummed) && this.isValidChecksum(params.address))
+        this.params.isChecksummed = (
+          isBoolean(params.isChecksummed) &&
+          (!params.isChecksummed || this.isValidChecksum(params.address))
+          )
                 ? params.isChecksummed
                 : undefined;
 
@@ -48,6 +52,10 @@ export default class Type {
         Object.keys(this.params).forEach((key) => {
             typeof this.params[key] === 'undefined' && this._throw(this.error[key]);
         });
+
+
+        /* Make the params immutable */
+        Object.freeze(params);
     }
 
     /**
@@ -60,9 +68,9 @@ export default class Type {
      *
      * @returns {boolean}
      */
-    isValidChecksum(address) {
+    isValidChecksum(_address = this.params.address) {
         /* Remove the prefix in case it still has it */
-        const address = address.replace('0x','');
+        const address = _address.replace('0x','');
 
         /* Hash the lowercased address, make it lowercase, and remove the prefix if present */
         const addressHash = sha3(address.toLowerCase()).toLowerCase().replace('0x','');
@@ -72,13 +80,51 @@ export default class Type {
          *  the first bit of the binary value of
          *  the corresponding index of the hash
          *  i.e. if the hex value is between 8 and f. (1___) */
-        const isChecksummed = address.every((v,i,addr) => {
-            !(/[0-9]/gm.test(v))
-                ? /[8-9a-f]/gm.test(addressHash[i]) && /[A-F]/gm.test(v)
+        const isChecksummed = address.split('').every((v,i) => {
+            return !(/[0-9]/gm.test(v))
+                ? !/[8-9a-f]/gm.test(addressHash[i]) || /[A-F]/gm.test(v)
                 : true;
         });
 
         return isChecksummed;
+    }
+    
+    /**
+     * Change an address to make it checksummed
+     *
+     * @method toChecksumAddress
+     *
+     * @param {Address} addressObj
+     *
+     * @returns {Address}
+     */
+    toChecksumAddress(addressObj = this) {
+        /* Remove the prefix in case it still has it */
+        const address = addressObj.params.address.replace('0x','');
+
+        /* Hash the lowercased address, make it lowercase, and remove the prefix if present */
+        const addressHash = sha3(address.toLowerCase()).toLowerCase().replace('0x','');
+
+
+        /* If the hex digit is not a number, it must be uppercase if
+         *  the first bit of the binary value of
+         *  the corresponding index of the hash
+         *  i.e. if the hex value is between 8 and f. (1___) */
+        const checksummed = address.split('').map((v,i) => {
+            return !(/[0-9]/gm.test(v)) && /[8-9a-f]/gm.test(addressHash[i])
+                ? v.toUpperCase()
+                : v.toLowerCase();
+        }).join('');
+
+        return new Address(
+                {
+                    ...addressObj.params,
+                    address: checksummed,
+                    isChecksummed: true
+                },
+                addressObj.error,
+                addressObj.initParams
+            );
     }
 
     _throw(message) {

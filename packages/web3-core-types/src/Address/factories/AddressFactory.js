@@ -43,7 +43,7 @@ export default class AddressFactory {
             isChecksummed: undefined
         };
 
-        return new Transaction(
+        return new Address(
             params,
             error,
             initParams

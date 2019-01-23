@@ -1,29 +1,24 @@
-import TransactionFactory from '../../src/factories/TransactionFactory';
-import Transaction from '../../src/Transaction';
+import AddressFactory from '../../factories/AddressFactory';
+import Address from '../../Address';
 
 // Mocks
-jest.mock('../../src/Transaction');
+jest.mock('../../Address');
 
 /**
- * TransactionFactory test
+ * AddressFactory test
  */
-describe('TransactionFactoryTest', () => {
-    const transaction = {
-        from: '0x4f38f4229924bfa28d58eeda496cc85e8016bccc',
-        to: 'deploy',
-        value: '42',
-        gas: 3,
-        gasPrice: 10000,
-        data: 'none',
-        nonce: 0
+describe('AddressFactoryTest', () => {
+    let addressFactory;
+    const data = {
+        address: '0x564286362092D8e7936f0549571a803B203aAceD',
+        isChecksummed: true
     };
-    let transactionFactory;
 
     beforeEach(() => {
-        transactionFactory = new TransactionFactory();
+        addressFactory = new AddressFactory();
     });
 
-    it('calls createTransaction and returns Transaction object', () => {
-        expect(transactionFactory.createTransaction(transaction)).toBeInstanceOf(Transaction);
+    it('calls createAddress and returns Address object', () => {
+        expect(addressFactory.createAddress(data)).toBeInstanceOf(Address);
     });
 });

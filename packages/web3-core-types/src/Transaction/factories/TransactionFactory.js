@@ -30,7 +30,7 @@ export default class TransactionFactory {
      *
      * @returns {Transaction}
      */
-    createTransaction(txParams) {
+    createTransaction(params) {
         /* Set the error messages */
         const error = {
             from: "The 'from' parameter needs to be an address or a wallet index number.\n" +
@@ -46,7 +46,7 @@ export default class TransactionFactory {
         };
 
         /* Initialise the params */
-        const params = {
+        const initParams = {
             from: undefined,
             to: undefined,
             value: undefined,
@@ -57,9 +57,9 @@ export default class TransactionFactory {
         };
 
         return new Transaction(
-            txParams,
+            params,
             error,
-            params
+            initParams 
         );
     }
 }

@@ -21,7 +21,7 @@
  */
 
 import {isAddress, isBN, isBigNumber, toBN, isHex} from 'web3-utils';
-import {isNaN, omit} from 'lodash';
+import {isNaN, omit, cloneDeep} from 'lodash';
 
 export default class Transaction {
     /**
@@ -35,63 +35,63 @@ export default class Transaction {
      *
      * @constructor
      */
-    constructor(txParams, error /* from factory */, params /* from factory */) {
-
+    constructor(params, error /* from factory */, initParams /* from factory */) {
         this.error = error;
-        this.params = params;
+        this.initParams = initParams;
+        this.params = cloneDeep(initParams);
 
         /* Check for type and format validity */
         this.params.from =
-            isAddress(txParams.from) || Number.isInteger(txParams.from)
-                ? txParams.from.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2').toLowerCase()
+            isAddress(params.from) || Number.isInteger(params.from)
+                ? params.from.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2').toLowerCase()
                 : undefined;
 
-        this.params.to = isAddress(txParams.to) ? txParams.to.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2').toLowerCase() : undefined;
+        this.params.to = isAddress(params.to) ? params.to.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2').toLowerCase() : undefined;
 
         this.params.value =
-            (!isNaN(txParams.value)
-                && Number.isInteger(txParams.value) && txParams.value >= 0) ||
-            isBN(txParams.value) ||
-            isBigNumber(txParams.value) ||
-            (typeof txParams.value === 'string'
-                && /([0-9])+/gm.test(txParams.value)
-                && isBN(toBN(txParams.value)))
-                ? toBN(txParams.value.toString())
+            (!isNaN(params.value)
+                && Number.isInteger(params.value) && params.value >= 0) ||
+            isBN(params.value) ||
+            isBigNumber(params.value) ||
+            (typeof params.value === 'string'
+                && /([0-9])+/gm.test(params.value)
+                && isBN(toBN(params.value)))
+                ? toBN(params.value.toString())
                 : undefined;
 
-        this.params.gas = Number.isInteger(txParams.gas) ? txParams.gas : undefined;
+        this.params.gas = Number.isInteger(params.gas) ? params.gas : undefined;
 
         this.params.gasPrice =
-            (!isNaN(txParams.gasPrice)
-                && Number.isInteger(txParams.gasPrice)
-                && txParams.gasPrice >= 0) ||
-            isBN(txParams.gasPrice) ||
-            isBigNumber(txParams.gasPrice) ||
-            (typeof txParams.gasPrice === 'string'
-                && isBN(toBN(txParams.gasPrice)))
-                ? toBN(txParams.gasPrice.toString())
+            (!isNaN(params.gasPrice)
+                && Number.isInteger(params.gasPrice)
+                && params.gasPrice >= 0) ||
+            isBN(params.gasPrice) ||
+            isBigNumber(params.gasPrice) ||
+            (typeof params.gasPrice === 'string'
+                && isBN(toBN(params.gasPrice)))
+                ? toBN(params.gasPrice.toString())
                 : undefined;
 
-        this.params.data = isHex(txParams.data) ? txParams.data : undefined;
+        this.params.data = isHex(params.data) ? params.data : undefined;
 
-        this.params.nonce = txParams.nonce === 0 || Number.isInteger(txParams.nonce) ? txParams.nonce : undefined;
+        this.params.nonce = params.nonce === 0 || Number.isInteger(params.nonce) ? params.nonce : undefined;
 
         /* Set the default values */
-        if (txParams.value === 'none') this.params.value = toBN(0);
+        if (params.value === 'none') this.params.value = toBN(0);
 
-        if (txParams.gas === 'auto');
+        if (params.gas === 'auto');
         // TODO
 
-        if (txParams.gasPrice === 'auto');
+        if (params.gasPrice === 'auto');
         // TODO this.gasPrice = web3.eth.gasPrice
 
-        if (txParams.data === 'none') this.params.data = '0x';
+        if (params.data === 'none') this.params.data = '0x';
 
-        if (txParams.nonce === 'auto');
+        if (params.nonce === 'auto');
         // TODO default nonce
 
         /* Allow empty 'to' field if code is being deployed */
-        if (txParams.to === 'deploy') this.params = omit(this.params, 'to');
+        if (params.to === 'deploy') this.params = omit(this.params, 'to');
 
         /* Throw if any parameter is still undefined */
         Object.keys(this.params).forEach((key) => {

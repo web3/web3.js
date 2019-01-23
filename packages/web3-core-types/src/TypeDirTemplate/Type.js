@@ -30,6 +30,11 @@ export default class Type {
      */
     constructor(params, error /* from factory */, initParams /* from factory */) {
 
+        /* params are the values given to the contructor
+         * this.params are the params fed via the constructor
+         * after being filtered.
+         * this.params start assigned to undefined via initParams */
+
         /* Set the errors */
         this.error = error; 
 

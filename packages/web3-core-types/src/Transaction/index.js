@@ -29,6 +29,6 @@ import TransactionFactory from './factories/TransactionFactory';
  *
  * @constructor
  */
-export const Transaction = (txParams) => {
-    return new TransactionFactory().createTransaction(txParams);
+export const Transaction = (params) => {
+    return new TransactionFactory().createTransaction(params);
 };

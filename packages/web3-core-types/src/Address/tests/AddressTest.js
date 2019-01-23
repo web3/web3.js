@@ -1,136 +1,48 @@
-import * as Utils from 'web3-utils';
 import {cloneDeep} from 'lodash';
-import Transaction from '../src/Transaction';
+import Address from '../Address';
+import sha3 from '../../sha3';
 
+jest.mock('../../sha3');
 /**
- * Transaction test
+ * Address test
  */
-describe('TransactionTest', () => {
-    let transaction;
-    let txParamsTest;
-
-    const txParams = {
-        from: '0xE247A45c287191d435A8a5D72A7C8dc030451E9F',
-        to: '0x4F38f4229924bfa28D58eeda496Cc85e8016bCCC',
-        value: Utils.toWei((1).toString(), 'ether'),
-        gas: 21000,
-        gasPrice: Utils.toWei((1).toString(), 'gwei'),
-        data: '0x0',
-        nonce: 0
-    };
-
+describe('AddressTest', () => {
+    let address;
     const error = {
-        from: "The 'from' parameter needs to be an address or a wallet index number.",
-        to: "The 'to' parameter needs to be an address or 'deploy' when deploying code.",
-        value:
-            "The 'value' parameter needs to be zero or positive, and in number, BN, BigNumber or string format.\n" +
-            "Use 'none' for 0 ether.",
-        gas: '',
-        gasPrice: '',
-        data: "The 'data' parameter needs to be hex encoded.\n" + "Use 'none' for no payload.",
-        nonce: "The 'nonce' parameter needs to be an integer.\n" + "Use 'auto' to set the RPC-calculated nonce."
+        address: "The address needs to be hex encoded, supplied as a string.",
+        isChecksummed: "The parameter 'isChecksum' needs to be true or false.\ntrue means the supplied address is checksummed. false means the address may or may not be checksummed.",
     };
 
-    const params = {
-        from: undefined,
-        to: undefined,
-        value: undefined,
-        gas: undefined,
-        gasPrice: undefined,
-        data: undefined,
-        nonce: undefined
+    const initParams = {
+        address: undefined,
+        isChecksummed: undefined
     };
 
+    const data = {
+        address: '0x0E5165F9D5B56cfD5E33e6BA9AB6f114382AF9C4',
+        isChecksummed: false
+    }
+    
     beforeEach(() => {
-        txParamsTest = cloneDeep(txParams);
+        sha3.mockImplementation(() => {
+          return '0x8f1328e5affc41692dba18acbd8d209af83db094e4d84c32325130350929562e'
+        });
+        
+        address = new Address(
+            data,
+            error,
+            initParams
+        );
     });
 
     it('constructor check', () => {
-        transaction = new Transaction(
-            txParamsTest,
-            error,
-            params
-        );
-
-        expect(transaction).toHaveProperty('error');
-        expect(transaction).toHaveProperty('params');
+        expect(address).toHaveProperty('error');
+        expect(address).toHaveProperty('params');
     });
     
-    it('accepts value types and parses to BN', () => {
-        const tests = [
-            {value: 101, is: Utils.toBN(101)},
-            {value: Utils.toBN(102), is: Utils.toBN(102)},
-            {value: "103", is: Utils.toBN(103)}
-        ];  
-     
-        tests.forEach((test) => {
-            txParamsTest.value = test.value;
-
-            transaction = new Transaction(
-                txParamsTest,
-                error,
-                params
-            );
-
-            expect(transaction).toHaveProperty('params');
-            expect(transaction.params.value).toEqual(test.is);
-        });
-    });
-    
-    it('accepts gas integer values', () => {
-        const tests = [
-            {value: 0},
-            {value: 10},
-        ];  
-     
-        tests.forEach((test) => {
-            txParamsTest.gas = test.value;
-
-            transaction = new Transaction(
-                txParamsTest,
-                error,
-                params
-            );
-
-            expect(transaction).toHaveProperty('params');
-            expect(transaction.params.gas).toEqual(test.value);
-        });
-    });
-    
-    it('removes "to" for code deployment', () => {
-        txParamsTest.to = 'deploy';
-        transaction = new Transaction(
-            txParamsTest,
-            error,
-            params
-        );
-
-        expect(transaction).toHaveProperty('params');
-        expect(transaction.params).not.toHaveProperty('to');
-    });
-    
-    it('sets 0 value for "none"', () => {
-        txParamsTest.value = 'none';
-        transaction = new Transaction(
-            txParamsTest,
-            error,
-            params
-        );
-
-        expect(transaction).toHaveProperty('params');
-        expect(transaction.params.value).toMatchObject(Utils.toBN(0));
-    });
-    
-    it('sets 0x data for "none"', () => {
-        txParamsTest.data = 'none';
-        transaction = new Transaction(
-            txParamsTest,
-            error,
-            params
-        );
-
-        expect(transaction).toHaveProperty('params');
-        expect(transaction.params.data).toEqual("0x");
+    it('checksums the address', () => {
+        const isChecksummed = address.toChecksumAddress();
+        expect(isChecksummed.isValidChecksum()).toEqual(true);
     });
 });
 
