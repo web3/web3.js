@@ -81,7 +81,9 @@ describe('GetStorageAtMethodTest', () => {
 
             expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
 
-            expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {defaultBlock: 'latest'});
+            expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {
+                defaultBlock: 'latest'
+            });
 
             expect(Utils.numberToHex).toHaveBeenCalledWith(100);
         }
