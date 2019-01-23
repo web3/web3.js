@@ -20,4 +20,15 @@
  * @date 2019
  */
 
-export Transaction from './Transaction/index.js';
+import TransactionFactory from './factories/TransactionFactory';
+
+/**
+ * Returns an object of Transaction
+ *
+ * @returns {Transaction}
+ *
+ * @constructor
+ */
+export const Transaction = (txParams) => {
+    return new TransactionFactory().createTransaction(txParams);
+};

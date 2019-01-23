@@ -25,13 +25,13 @@ import {isNaN, omit} from 'lodash';
 
 export default class Transaction {
     /**
-     * @param {String|Number}
-     * @param {String|"deploy"}
-     * @param {Number|BN|BigNumber|String|"none"}
-     * @param {Number|"auto"}
-     * @param {Number|BN|BigNumber|String|"auto"}
-     * @param {String|"none"}
-     * @param {Number|"auto"}
+     * @param {String|Number} from
+     * @param {String|"deploy"} to
+     * @param {Number|BN|BigNumber|String|"none"} value
+     * @param {Number|"auto"} gas
+     * @param {Number|BN|BigNumber|String|"auto"} gasPrice
+     * @param {String|"none"} data
+     * @param {Number|"auto"} nonce
      *
      * @constructor
      */
@@ -83,12 +83,12 @@ export default class Transaction {
         // TODO
 
         if (txParams.gasPrice === 'auto');
-        // this.gasPrice = web3.eth.gasPrice
+        // TODO this.gasPrice = web3.eth.gasPrice
 
         if (txParams.data === 'none') this.params.data = '0x';
 
         if (txParams.nonce === 'auto');
-        // default nonce
+        // TODO default nonce
 
         /* Allow empty 'to' field if code is being deployed */
         if (txParams.to === 'deploy') this.params = omit(this.params, 'to');
