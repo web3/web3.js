@@ -1484,11 +1484,12 @@ requestAccounts
 
     web3.eth.requestAccounts([callback])
 
-This method will request/enable the accounts from the current environment as for example from Metamask, Status or Mist.
-This method isn't working if your connecting over a default Web3.js provider as WebsocketProvider, HttpProvidder and
-IpcProvider. It's only working if you're using the injected provider from a application like Status, Mist or Metamask.
+This method will request/enable the accounts from the current environment it is running (Metamask, Status or Mist).
+It doesn't work if you're connected to a node with a default Web3.js provider. (WebsocketProvider, HttpProvidder and
+IpcProvider).
+This method will only work if you're using the injected provider from a application like Status, Mist or Metamask.
 
-This method is defined in this `EIP-1102. <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md>`_
+For further information about the behavior of this method please read the EIP of it: `EIP-1102 <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md>`_
 
 ----------
 Parameters
