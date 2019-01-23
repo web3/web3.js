@@ -33,8 +33,9 @@ export default class TransactionFactory {
     createTransaction(params) {
         /* Set the error messages */
         const error = {
-            from: "The 'from' parameter needs to be an address or a wallet index number.\n" +
-                  "The address needs to be hex encoded, supplied as a string, and checksummed.",
+            from:
+                "The 'from' parameter needs to be an address or a wallet index number.\n" +
+                'The address needs to be hex encoded, supplied as a string, and checksummed.',
             to: "The 'to' parameter needs to be an address or 'deploy' when deploying code.",
             value:
                 "The 'value' parameter needs to be zero or positive, and in number, BN, BigNumber or string format.\n" +
@@ -56,10 +57,6 @@ export default class TransactionFactory {
             nonce: undefined
         };
 
-        return new Transaction(
-            params,
-            error,
-            initParams 
-        );
+        return new Transaction(params, error, initParams);
     }
 }

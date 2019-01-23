@@ -21,7 +21,7 @@
  */
 
 // TODO implement sha3 util
-import sha3 from '../sha3'; 
+import sha3 from '../sha3';
 import {cloneDeep, isBoolean} from 'lodash';
 
 export default class Address {
@@ -38,13 +38,11 @@ export default class Address {
 
         /* Check for type and format validity */
         this.params.address = /(0x)?([0-9a-fA-F]{40})/gm.test(params.address)
-                ? params.address.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2')
-                : undefined;
-        
-        this.params.isChecksummed = (
-          isBoolean(params.isChecksummed) &&
-          (!params.isChecksummed || this.isValidChecksum(params.address))
-          )
+            ? params.address.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2')
+            : undefined;
+
+        this.params.isChecksummed =
+            isBoolean(params.isChecksummed) && (!params.isChecksummed || Address.isValidChecksum(params.address))
                 ? params.isChecksummed
                 : undefined;
 
@@ -53,10 +51,12 @@ export default class Address {
             typeof this.params[key] === 'undefined' && this._throw(this.error[key]);
         });
 
-
         /* Make the params immutable */
         Object.freeze(params);
     }
+
+
+    /* Class functions */
 
     /**
      * Check for a valid checksum if the address is supposed to be
@@ -68,27 +68,26 @@ export default class Address {
      *
      * @returns {boolean}
      */
-    isValidChecksum(_address = this.params.address) {
+    static isValidChecksum(_address) {
         /* Remove the prefix in case it still has it */
-        const address = _address.replace('0x','');
+        const address = _address.replace('0x', '');
 
         /* Hash the lowercased address, make it lowercase, and remove the prefix if present */
-        const addressHash = sha3(address.toLowerCase()).toLowerCase().replace('0x','');
-
+        const addressHash = sha3(address.toLowerCase())
+            .toLowerCase()
+            .replace('0x', '');
 
         /* If the hex digit is not a number, it must be uppercase if
          *  the first bit of the binary value of
          *  the corresponding index of the hash
          *  i.e. if the hex value is between 8 and f. (1___) */
-        const isChecksummed = address.split('').every((v,i) => {
-            return !(/[0-9]/gm.test(v))
-                ? !/[8-9a-f]/gm.test(addressHash[i]) || /[A-F]/gm.test(v)
-                : true;
+        const isChecksummed = address.split('').every((v, i) => {
+            return !/\d/gm.test(v) ? !/[8-9a-f]/gm.test(addressHash[i]) || /[A-F]/gm.test(v) : true;
         });
 
         return isChecksummed;
     }
-    
+
     /**
      * Change an address to make it checksummed
      *
@@ -98,34 +97,62 @@ export default class Address {
      *
      * @returns {Address}
      */
-    toChecksumAddress(addressObj = this) {
+    static toChecksumAddress(addressObj) {
         /* Remove the prefix in case it still has it */
-        const address = addressObj.params.address.replace('0x','');
+        const address = addressObj.params.address.replace('0x', '');
 
         /* Hash the lowercased address, make it lowercase, and remove the prefix if present */
-        const addressHash = sha3(address.toLowerCase()).toLowerCase().replace('0x','');
-
+        const addressHash = sha3(address.toLowerCase())
+            .toLowerCase()
+            .replace('0x', '');
 
         /* If the hex digit is not a number, it must be uppercase if
          *  the first bit of the binary value of
          *  the corresponding index of the hash
          *  i.e. if the hex value is between 8 and f. (1___) */
-        const checksummed = address.split('').map((v,i) => {
-            return !(/[0-9]/gm.test(v)) && /[8-9a-f]/gm.test(addressHash[i])
-                ? v.toUpperCase()
-                : v.toLowerCase();
-        }).join('');
+        const checksummed = address
+            .split('')
+            .map((v, i) => {
+                return !/\d/gm.test(v) && /[8-9a-f]/gm.test(addressHash[i]) ? v.toUpperCase() : v.toLowerCase();
+            })
+            .join('');
 
         return new Address(
-                {
-                    ...addressObj.params,
-                    address: checksummed,
-                    isChecksummed: true
-                },
-                addressObj.error,
-                addressObj.initParams
-            );
+            {
+                ...addressObj.params,
+                address: checksummed,
+                isChecksummed: true
+            },
+            addressObj.error,
+            addressObj.initParams
+        );
     }
+
+
+    /* Instance accessors  */
+
+    /**
+     * Change an address to make it checksummed
+     *
+     * @method toChecksumAddress
+     *
+     * @returns {Address}
+     */
+    toChecksumAddress() {
+        return Address.toChecksumAddress(this);
+    }
+    
+    /**
+     * Check for a valid checksum of the caller
+     *
+     * @method isValidChecksum
+     *
+     * @returns {boolean}
+     */
+    isValidChecksum() {
+        return Address.isValidChecksum(this.params.address);
+    }
+
 
     _throw(message) {
         throw message;

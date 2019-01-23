@@ -38,11 +38,14 @@ export default class Type {
         /* Set the errors */
         this.error = error; 
 
+        /* Set the inital values */
+        this.initParams = initParams; 
+        
         /* Initialize the parameters */
         this.params = cloneDeep(initParams); 
         
         /* Check for type and format validity */
-        this.params.p = (/* condition check */)
+        this.params.p = /* condition check */
                 ? /* parameter standarization */
                 : undefined;
 
@@ -54,6 +57,19 @@ export default class Type {
         Object.keys(this.params).forEach((key) => {
             typeof this.params[key] === 'undefined' && this._throw(this.error[key]);
         });
+        
+        /* Make the params immutable */
+        Object.freeze(params);
+    }
+
+    /* Class functions */
+    static foo(p1) {
+      return 
+    }
+
+    /* Instance accessors */
+    foo() {
+      return Type.foo(/* this value */);
     }
 
     _throw(message) {

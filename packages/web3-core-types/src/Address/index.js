@@ -23,7 +23,7 @@
 import AddressFactory from './factories/AddressFactory';
 
 /**
- * Returns an object of Address 
+ * Returns an object of Address
  *
  * @returns {Address}
  *

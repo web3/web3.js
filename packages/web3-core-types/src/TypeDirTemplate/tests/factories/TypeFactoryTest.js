@@ -8,10 +8,7 @@ jest.mock('../../src/Type');
  * TypeFactory test
  */
 describe('TypeFactoryTest', () => {
+    beforeEach(() => {});
 
-    beforeEach(() => {
-    });
-
-    it('calls createType and returns Type object', () => {
-    });
+    it('calls createType and returns Type object', () => {});
 });

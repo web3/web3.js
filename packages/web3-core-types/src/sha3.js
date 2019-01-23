@@ -1,1 +1,1 @@
-export default (value) => { return hash; }
+export default () => {};

@@ -5,32 +5,12 @@ import Type from '../src/Type';
  * Type test
  */
 describe('TypeTest', () => {
-
-    beforeEach(() => {
-    });
+    beforeEach(() => {});
 
     it('constructor check', () => {
-        type = new Type(
-            txParamsTest,
-            error,
-            params
-        );
+        type = new Type(txParamsTest, error, params);
 
         expect(type).toHaveProperty('error');
         expect(type).toHaveProperty('params');
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-

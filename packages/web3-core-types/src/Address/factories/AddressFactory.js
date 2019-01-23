@@ -24,17 +24,18 @@ import Address from '../Address';
 
 export default class AddressFactory {
     /**
-     * Returns an object of type Address 
+     * Returns an object of type Address
      *
-     * @method createAddress 
+     * @method createAddress
      *
      * @returns {Address}
      */
     createAddress(params) {
         /* Set the error messages */
         const error = {
-            address: "The address needs to be hex encoded, supplied as a string.",
-            isChecksummed: "The parameter 'isChecksum' needs to be true or false.\ntrue means the supplied address is checksummed. false means the address may or may not be checksummed.",
+            address: 'The address needs to be hex encoded, supplied as a string.',
+            isChecksummed:
+                "The parameter 'isChecksum' needs to be true or false.\ntrue means the supplied address is checksummed. false means the address may or may not be checksummed."
         };
 
         /* Initialise the params */
@@ -43,10 +44,6 @@ export default class AddressFactory {
             isChecksummed: undefined
         };
 
-        return new Address(
-            params,
-            error,
-            initParams
-        );
+        return new Address(params, error, initParams);
     }
 }

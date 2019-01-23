@@ -46,104 +46,63 @@ describe('TransactionTest', () => {
     });
 
     it('constructor check', () => {
-        transaction = new Transaction(
-            txParamsTest,
-            error,
-            params
-        );
+        transaction = new Transaction(txParamsTest, error, params);
 
         expect(transaction).toHaveProperty('error');
         expect(transaction).toHaveProperty('params');
     });
-    
+
     it('accepts value types and parses to BN', () => {
         const tests = [
             {value: 101, is: Utils.toBN(101)},
             {value: Utils.toBN(102), is: Utils.toBN(102)},
-            {value: "103", is: Utils.toBN(103)}
-        ];  
-     
+            {value: '103', is: Utils.toBN(103)}
+        ];
+
         tests.forEach((test) => {
             txParamsTest.value = test.value;
 
-            transaction = new Transaction(
-                txParamsTest,
-                error,
-                params
-            );
+            transaction = new Transaction(txParamsTest, error, params);
 
             expect(transaction).toHaveProperty('params');
             expect(transaction.params.value).toEqual(test.is);
         });
     });
-    
+
     it('accepts gas integer values', () => {
-        const tests = [
-            {value: 0},
-            {value: 10},
-        ];  
-     
+        const tests = [{value: 0}, {value: 10}];
+
         tests.forEach((test) => {
             txParamsTest.gas = test.value;
 
-            transaction = new Transaction(
-                txParamsTest,
-                error,
-                params
-            );
+            transaction = new Transaction(txParamsTest, error, params);
 
             expect(transaction).toHaveProperty('params');
             expect(transaction.params.gas).toEqual(test.value);
         });
     });
-    
+
     it('removes "to" for code deployment', () => {
         txParamsTest.to = 'deploy';
-        transaction = new Transaction(
-            txParamsTest,
-            error,
-            params
-        );
+        transaction = new Transaction(txParamsTest, error, params);
 
         expect(transaction).toHaveProperty('params');
         expect(transaction.params).not.toHaveProperty('to');
     });
-    
+
     it('sets 0 value for "none"', () => {
         txParamsTest.value = 'none';
-        transaction = new Transaction(
-            txParamsTest,
-            error,
-            params
-        );
+        transaction = new Transaction(txParamsTest, error, params);
 
         expect(transaction).toHaveProperty('params');
         expect(transaction.params.value).toMatchObject(Utils.toBN(0));
     });
-    
+
     it('sets 0x data for "none"', () => {
         txParamsTest.data = 'none';
-        transaction = new Transaction(
-            txParamsTest,
-            error,
-            params
-        );
+        transaction = new Transaction(txParamsTest, error, params);
 
         expect(transaction).toHaveProperty('params');
-        expect(transaction.params.data).toEqual("0x");
+        expect(transaction.params.data).toEqual('0x');
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-

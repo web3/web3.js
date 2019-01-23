@@ -46,29 +46,25 @@ export default class Transaction {
                 ? params.from.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2').toLowerCase()
                 : undefined;
 
-        this.params.to = isAddress(params.to) ? params.to.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2').toLowerCase() : undefined;
+        this.params.to = isAddress(params.to)
+            ? params.to.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2').toLowerCase()
+            : undefined;
 
         this.params.value =
-            (!isNaN(params.value)
-                && Number.isInteger(params.value) && params.value >= 0) ||
+            (!isNaN(params.value) && Number.isInteger(params.value) && params.value >= 0) ||
             isBN(params.value) ||
             isBigNumber(params.value) ||
-            (typeof params.value === 'string'
-                && /([0-9])+/gm.test(params.value)
-                && isBN(toBN(params.value)))
+            (typeof params.value === 'string' && /(\d)+/gm.test(params.value) && isBN(toBN(params.value)))
                 ? toBN(params.value.toString())
                 : undefined;
 
         this.params.gas = Number.isInteger(params.gas) ? params.gas : undefined;
 
         this.params.gasPrice =
-            (!isNaN(params.gasPrice)
-                && Number.isInteger(params.gasPrice)
-                && params.gasPrice >= 0) ||
+            (!isNaN(params.gasPrice) && Number.isInteger(params.gasPrice) && params.gasPrice >= 0) ||
             isBN(params.gasPrice) ||
             isBigNumber(params.gasPrice) ||
-            (typeof params.gasPrice === 'string'
-                && isBN(toBN(params.gasPrice)))
+            (typeof params.gasPrice === 'string' && isBN(toBN(params.gasPrice)))
                 ? toBN(params.gasPrice.toString())
                 : undefined;
 
@@ -97,6 +93,9 @@ export default class Transaction {
         Object.keys(this.params).forEach((key) => {
             typeof this.params[key] === 'undefined' && this._throw(this.error[key]);
         });
+
+        /* Make the params immutable */
+        Object.freeze(this.params);
     }
 
     _throw(message) {
