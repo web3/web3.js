@@ -47,7 +47,6 @@ export default class GetBlockMethod extends AbstractCallMethod {
         }
 
         this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
-        console.log(this.parameters);
 
         // Optional second parameter 'returnTransactionObjects' could also be the callback
         if (isFunction(this.parameters[1])) {
