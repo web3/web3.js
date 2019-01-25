@@ -25,7 +25,7 @@
 
 'use strict';
 
-import {Address} from '../index.js';
+import * as Types from '..';
 import BigNumber from 'bn.js';
 
 const leftPad = (string, bytes) => {
@@ -137,11 +137,14 @@ export default class Iban {
      * @returns {Iban} the IBAN object
      */
     static fromAddress(address) {
-        if (address.isValid()) {
+        if (!Types.Address.isValid(address)) {
             throw new Error(`Provided address is not a valid address: ${address}`);
         }
 
-        const addressString = address.toString().replace('0x', '').replace('0X', '');
+        const addressString = address
+            .toString()
+            .replace('0x', '')
+            .replace('0X', '');
 
         const asBn = new BigNumber(addressString, 16);
 
@@ -281,8 +284,8 @@ export default class Iban {
         if (this.isDirect()) {
             const base36 = this._iban.substr(4);
             const asBn = new BigNumber(base36, 36);
-            console.log(asBn.toString(16,20))
-            return Address(asBn.toString(16, 20)).toChecksum().toString();
+            const address = Types.Address(asBn.toString(16, 20)).toChecksum();
+            return address.toString();
         }
 
         return '';

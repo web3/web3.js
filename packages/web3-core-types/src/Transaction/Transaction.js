@@ -20,12 +20,13 @@
  * @date 2019
  */
 
-import {isBN, isBigNumber, toBN, isHex} from 'web3-utils';
 import * as Types from '..';
+import {isBN, isBigNumber, toBN} from 'web3-utils';
 import {isNaN, isInteger, omit, cloneDeep} from 'lodash';
 
 export default class Transaction {
     /**
+     * @dev Wrap as object
      * @param {Address} from
      * @param {Address|"deploy"} to
      * @param {Number|BN|BigNumber|String|"none"} value
@@ -69,7 +70,7 @@ export default class Transaction {
         this.props.data = params.data.isHex ? Types.Hex(params.data.props) : undefined;
 
         this.props.nonce = params.nonce === 0 || Number.isInteger(params.nonce) ? params.nonce : undefined;
-        
+
         this.props.chainId = isInteger(params.chainId) ? params.chainId.toString() : undefined;
 
         /* Set the default values */
@@ -85,19 +86,18 @@ export default class Transaction {
 
         if (params.nonce === 'auto');
         // TODO default nonce
-        
-        if (/main/i.test(params.chainId)) this.props.chainId = "1";
+
+        if (/main/i.test(params.chainId)) this.props.chainId = '1';
 
         /* Allow empty 'to' field if code is being deployed */
         if (params.to === 'deploy') this.props = omit(this.props, 'to');
-
 
         /* Throw if any parameter is still undefined */
         Object.keys(this.props).forEach((key) => {
             typeof this.props[key] === 'undefined' && this._throw(this.error[key]);
         });
 
-        /* Make the params immutable */
+        /* Make the props immutable */
         Object.freeze(this.props);
     }
 
@@ -108,35 +108,47 @@ export default class Transaction {
     get gasPrice() {
         return this.props.gasPrice.toString();
     }
-    
+
     get to() {
         return this.props.to.toString();
     }
-    
+
     get from() {
         return this.props.from.toString();
     }
-    
+
     get value() {
         return this.props.value.toString();
     }
-    
+
     get data() {
         return this.props.data.toString();
     }
-    
+
     get nonce() {
         return parseInt(this.props.nonce);
     }
-    
+
     get chainId() {
         return this.props.chainId.toString();
     }
-    
+
+    /**
+     * Declare the type of the object
+     *
+     * @method isTransaction
+     *
+     * @return {boolean}
+     */
     isTransaction() {
         return true;
     }
 
+    /**
+     * Wrap error throwing from the constructor for types
+     *
+     * @method _throw
+     */
     _throw(message) {
         throw message;
     }

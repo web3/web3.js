@@ -21,6 +21,7 @@
  */
 
 import AddressFactory from './factories/AddressFactory';
+import AddressClass from './Address';
 
 /**
  * Returns an object of Address
@@ -31,4 +32,27 @@ import AddressFactory from './factories/AddressFactory';
  */
 export const Address = (params) => {
     return new AddressFactory().createAddress(params);
+};
+
+/**
+ * Copy isValid class method and expose
+ *
+ * @param {String} value
+ *
+ * @returns {boolean}
+ *
+ */
+Address.isValid = AddressClass.isValid;
+
+/**
+ * Expose toChecksum by taking an address
+ * as string and creating the object
+ *
+ * @param {String} value
+ *
+ * @returns {Address}
+ *
+ */
+Address.toChecksum = (address) => {
+    return Address(address).toChecksum();
 };

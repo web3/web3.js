@@ -8,7 +8,16 @@ jest.mock('../../Hex');
  * HexFactory test
  */
 describe('HexFactoryTest', () => {
-    beforeEach(() => {});
+    const hex = {
+        hex: '0x0'
+    };
+    let hexFactory;
 
-    it('calls createHex and returns Hex object', () => {});
+    beforeEach(() => {
+        hexFactory = new HexFactory();
+    });
+
+    it('calls createHex and returns Hex object', () => {
+        expect(hexFactory.createHex(hex)).toBeInstanceOf(Hex);
+    });
 });

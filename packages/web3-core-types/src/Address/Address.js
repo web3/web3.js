@@ -20,12 +20,12 @@
  * @date 2019
  */
 
-import * as Types from '..';
-import sha3 from '../sha3';
+import {sha3} from 'web3-utils';
 import {cloneDeep, isBoolean, isObject} from 'lodash';
 
 export default class Address {
     /**
+     * @dev Wrap as object
      * @param {String} address
      * @param {boolean} isChecksummed
      *
@@ -60,7 +60,7 @@ export default class Address {
             typeof this.props[key] === 'undefined' && this._throw(this.error[key]);
         });
 
-        /* Make the params immutable */
+        /* Make the props immutable */
         Object.freeze(this.props);
     }
 
@@ -130,7 +130,7 @@ export default class Address {
         return new Address(
             {
                 ...addressObj.props,
-                address: checksummed,
+                address: `0x${checksummed}`,
                 isChecksummed: true
             },
             addressObj.error,
@@ -162,14 +162,33 @@ export default class Address {
         return Address.isValid(this.props.address);
     }
 
-    isAddress() {
-        return true;
-    }
-
+    /**
+     * Override toString to print the plaintext address
+     *
+     * @method toString
+     *
+     * @return {String}
+     */
     toString() {
         return this.props.address;
     }
 
+    /**
+     * Declare the type of the object
+     *
+     * @method isAddress
+     *
+     * @return {boolean}
+     */
+    isAddress() {
+        return true;
+    }
+
+    /**
+     * Wrap error throwing from the constructor for types
+     *
+     * @method _throw
+     */
     _throw(message) {
         throw message;
     }

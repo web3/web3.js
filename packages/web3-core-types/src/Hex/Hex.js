@@ -20,13 +20,13 @@
  * @date 2019
  */
 
-import * as Types from '..';
 // import {toBigNumber} from '../BigNumber/BigNumber';
-import {toBigNumber} from 'web3-utils';
+import {BigNumber} from 'web3-utils';
 import {cloneDeep, isObject} from 'lodash';
 
 export default class Hex {
     /**
+     * @dev Wrap as object
      * @param {String} hex
      *
      * @constructor
@@ -54,7 +54,7 @@ export default class Hex {
         }
 
         /* Check for type and format validity */
-        this.props.hex = Hex.isHex(params.hex) ? params.hex : undefined;
+        this.props.hex = Hex.isValid(params.hex) ? params.hex : undefined;
 
         /* Check for default, auto, none, etc. key values */
         if (params.hex === 'empty') this.props.hex = '0x';
@@ -64,7 +64,7 @@ export default class Hex {
             typeof this.props[key] === 'undefined' && this._throw(this.error[key]);
         });
 
-        /* Make the params immutable */
+        /* Make the props immutable */
         Object.freeze(params);
     }
 
@@ -72,14 +72,27 @@ export default class Hex {
     /**
      * Check if the supplied string is a valid hex value
      *
-     * @method isHex
+     * @method isValid
      *
      * @param {string} parameter
      *
      * @return {boolean}
      */
-    static isHex(hex) {
+    static isValid(hex) {
         return /^(-0x|0x)?[0-9a-f]*$/.test(hex);
+    }
+
+    /**
+     * Check if the supplied string is hex with 0x prefix
+     *
+     * @method isStrict
+     *
+     * @param {string} hex
+     *
+     * @return {boolean}
+     */
+    static isStrict(hex) {
+        return /^(-0x|0x)[0-9a-f]*$/.test(hex);
     }
 
     /* Instance accessors */
@@ -105,19 +118,45 @@ export default class Hex {
         return BigNumber.toBigNumber(this.props.hex).toNumber();
     }
 
-    isHex() {
-        return true;
-    }
-
+    /**
+     * Check if the supplied string is hex with 0x prefix
+     *
+     * @method isStrict
+     *
+     * @return {boolean}
+     */
     isStrict() {
-        return /0x/.test(this.props.hex);
+        return Hex.isStrict(this.props.hex);
     }
 
+    /**
+     * Override toString to print the hex prop
+     *
+     * @method toString
+     *
+     * @return {String}
+     */
     toString() {
         // TODO return formatted?
         return this.props.hex;
     }
 
+    /**
+     * Declare the type of the object
+     *
+     * @method isHex
+     *
+     * @return {boolean}
+     */
+    isHex() {
+        return true;
+    }
+
+    /**
+     * Wrap error throwing from the constructor for types
+     *
+     * @method _throw
+     */
     _throw(message) {
         throw message;
     }
