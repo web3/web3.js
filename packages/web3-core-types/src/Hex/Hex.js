@@ -20,8 +20,10 @@
  * @date 2019
  */
 
-import {toBigNumber} from '../BigNumber/BigNumber';
-import {cloneDeep} from 'lodash';
+import * as Types from '..';
+// import {toBigNumber} from '../BigNumber/BigNumber';
+import {toBigNumber} from 'web3-utils';
+import {cloneDeep, isObject} from 'lodash';
 
 export default class Hex {
     /**
@@ -31,9 +33,9 @@ export default class Hex {
      */
     constructor(params, error /* from factory */, initParams /* from factory */) {
         /* params are the values given to the contructor
-         * this.params are the params fed via the constructor
+         * this.props are the params fed via the constructor
          * after being filtered.
-         * this.params start assigned to undefined via initParams */
+         * this.props start assigned to undefined via initParams */
 
         /* Set the errors */
         this.error = error;
@@ -42,17 +44,24 @@ export default class Hex {
         this.initParams = initParams;
 
         /* Initialize the parameters */
-        this.params = cloneDeep(initParams);
+        this.props = cloneDeep(initParams);
+
+        /* Override constructor to only taking a string */
+        if (!isObject(params)) {
+            params = {
+                hex: params
+            };
+        }
 
         /* Check for type and format validity */
-        this.params.hex = Hex.isHex(params.hex) ? params.hex : undefined;
+        this.props.hex = Hex.isHex(params.hex) ? params.hex : undefined;
 
         /* Check for default, auto, none, etc. key values */
-        if (params.hex === 'empty') this.params.hex = '0x';
+        if (params.hex === 'empty') this.props.hex = '0x';
 
         /* Throw if any parameter is still undefined */
-        Object.keys(this.params).forEach((key) => {
-            typeof this.params[key] === 'undefined' && this._throw(this.error[key]);
+        Object.keys(this.props).forEach((key) => {
+            typeof this.props[key] === 'undefined' && this._throw(this.error[key]);
         });
 
         /* Make the params immutable */
@@ -70,7 +79,7 @@ export default class Hex {
      * @return {boolean}
      */
     static isHex(hex) {
-        return /^(-)?(0x)?[0-9a-f]*$/.test(hex);
+        return /^(-0x|0x)?[0-9a-f]*$/.test(hex);
     }
 
     /* Instance accessors */
@@ -82,7 +91,7 @@ export default class Hex {
      * @return {BigNumber}
      */
     toBigNumber() {
-        return BigNumber.toBigNumber(this.params.hex);
+        return BigNumber.toBigNumber(this.props.hex);
     }
 
     /**
@@ -93,7 +102,11 @@ export default class Hex {
      * @return {String}
      */
     toNumberString() {
-        return BigNumber.toBigNumber(this.params.hex).toString(10);
+        return BigNumber.toBigNumber(this.props.hex).toString(10);
+    }
+
+    isHex() {
+        return true;
     }
 
     _throw(message) {

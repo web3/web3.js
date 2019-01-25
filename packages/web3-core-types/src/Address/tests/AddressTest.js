@@ -29,7 +29,7 @@ describe('AddressTest', () => {
 
     it('constructor check', () => {
         expect(address).toHaveProperty('error');
-        expect(address).toHaveProperty('params');
+        expect(address).toHaveProperty('props');
     });
 
     it('checksums the address', () => {

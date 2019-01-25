@@ -20,8 +20,8 @@
  * @date 2019
  */
 
-// import {isBN, isBigNumber, toBN, isHex} from 'web3-utils';
-import {Address} from '../Address';
+import {isBN, isBigNumber, toBN, isHex} from 'web3-utils';
+import * as Types from '..';
 import {isNaN, omit, cloneDeep} from 'lodash';
 
 export default class Transaction {
@@ -39,14 +39,15 @@ export default class Transaction {
     constructor(params, error /* from factory */, initParams /* from factory */) {
         this.error = error;
         this.initParams = initParams;
-        this.params = cloneDeep(initParams);
+        this.props = cloneDeep(initParams);
 
         /* Check for type and format validity */
-        this.params.from = params.from instanceof Address ? params.from : undefined;
+        this.props.from = params.from.isAddress ? Types.Address(params.from.props) : undefined;
 
-        this.params.to = params.to instanceof Address ? params.to : undefined;
+        this.props.to = params.to.isAddress ? Types.Address(params.to.props) : undefined;
 
-        this.params.value =
+        // TODO Move this check to BigNumber as a constructor check
+        this.props.value =
             (!isNaN(params.value) && Number.isInteger(params.value) && params.value >= 0) ||
             isBN(params.value) ||
             isBigNumber(params.value) ||
@@ -54,9 +55,10 @@ export default class Transaction {
                 ? toBN(params.value.toString())
                 : undefined;
 
-        this.params.gas = Number.isInteger(params.gas) ? params.gas : undefined;
+        this.props.gas = Number.isInteger(params.gas) ? params.gas : undefined;
 
-        this.params.gasPrice =
+        // TODO Move this check to BigNumber as a constructor check
+        this.props.gasPrice =
             (!isNaN(params.gasPrice) && Number.isInteger(params.gasPrice) && params.gasPrice >= 0) ||
             isBN(params.gasPrice) ||
             isBigNumber(params.gasPrice) ||
@@ -64,12 +66,12 @@ export default class Transaction {
                 ? toBN(params.gasPrice.toString())
                 : undefined;
 
-        this.params.data = isHex(params.data) ? params.data : undefined;
+        this.props.data = params.data.isHex ? Types.Hex(params.data.props) : undefined;
 
-        this.params.nonce = params.nonce === 0 || Number.isInteger(params.nonce) ? params.nonce : undefined;
+        this.props.nonce = params.nonce === 0 || Number.isInteger(params.nonce) ? params.nonce : undefined;
 
         /* Set the default values */
-        if (params.value === 'none') this.params.value = toBN(0);
+        if (params.value === 'none') this.props.value = toBN(0);
 
         if (params.gas === 'auto');
         // TODO
@@ -77,21 +79,25 @@ export default class Transaction {
         if (params.gasPrice === 'auto');
         // TODO this.gasPrice = web3.eth.gasPrice
 
-        if (params.data === 'none') this.params.data = '0x';
+        if (params.data === 'none') this.props.data = Types.Hex('empty');
 
         if (params.nonce === 'auto');
         // TODO default nonce
 
         /* Allow empty 'to' field if code is being deployed */
-        if (params.to === 'deploy') this.params = omit(this.params, 'to');
+        if (params.to === 'deploy') this.props = omit(this.props, 'to');
 
         /* Throw if any parameter is still undefined */
-        Object.keys(this.params).forEach((key) => {
-            typeof this.params[key] === 'undefined' && this._throw(this.error[key]);
+        Object.keys(this.props).forEach((key) => {
+            typeof this.props[key] === 'undefined' && this._throw(this.error[key]);
         });
 
         /* Make the params immutable */
-        Object.freeze(this.params);
+        Object.freeze(this.props);
+    }
+
+    isTransaction() {
+        return true;
     }
 
     _throw(message) {

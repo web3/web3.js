@@ -1,5 +1,6 @@
+import * as Utils from 'web3-utils';
 import {cloneDeep} from 'lodash';
-import {Address} from '../..';
+import * as Types from '../..';
 import Transaction from '../Transaction';
 
 /**
@@ -10,12 +11,12 @@ describe('TransactionTest', () => {
     let txParamsTest;
 
     const txParams = {
-        from: Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
-        to: Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
+        from: Types.Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
+        to: Types.Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
         value: 1,
         gas: 21000,
         gasPrice: 0,
-        data: '0x0',
+        data: Types.Hex('empty'),
         nonce: 0
     };
 
@@ -49,7 +50,7 @@ describe('TransactionTest', () => {
         transaction = new Transaction(txParamsTest, error, params);
 
         expect(transaction).toHaveProperty('error');
-        expect(transaction).toHaveProperty('params');
+        expect(transaction).toHaveProperty('props');
     });
 
     it('accepts value types and parses to BN', () => {
@@ -64,8 +65,8 @@ describe('TransactionTest', () => {
 
             transaction = new Transaction(txParamsTest, error, params);
 
-            expect(transaction).toHaveProperty('params');
-            expect(transaction.params.value).toEqual(test.is);
+            expect(transaction).toHaveProperty('props');
+            expect(transaction.props.value).toEqual(test.is);
         });
     });
 
@@ -77,8 +78,8 @@ describe('TransactionTest', () => {
 
             transaction = new Transaction(txParamsTest, error, params);
 
-            expect(transaction).toHaveProperty('params');
-            expect(transaction.params.gas).toEqual(test.value);
+            expect(transaction).toHaveProperty('props');
+            expect(transaction.props.gas).toEqual(test.value);
         });
     });
 
@@ -86,23 +87,23 @@ describe('TransactionTest', () => {
         txParamsTest.to = 'deploy';
         transaction = new Transaction(txParamsTest, error, params);
 
-        expect(transaction).toHaveProperty('params');
-        expect(transaction.params).not.toHaveProperty('to');
+        expect(transaction).toHaveProperty('props');
+        expect(transaction.props).not.toHaveProperty('to');
     });
 
     it('sets 0 value for "none"', () => {
         txParamsTest.value = 'none';
         transaction = new Transaction(txParamsTest, error, params);
 
-        expect(transaction).toHaveProperty('params');
-        expect(transaction.params.value).toMatchObject(Utils.toBN(0));
+        expect(transaction).toHaveProperty('props');
+        expect(transaction.props.value).toMatchObject(Utils.toBN(0));
     });
 
     it('sets 0x data for "none"', () => {
         txParamsTest.data = 'none';
         transaction = new Transaction(txParamsTest, error, params);
 
-        expect(transaction).toHaveProperty('params');
-        expect(transaction.params.data).toEqual('0x');
+        expect(transaction).toHaveProperty('props');
+        expect(transaction.props.data).toHaveProperty('isHex');
     });
 });
