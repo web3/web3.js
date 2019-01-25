@@ -41,10 +41,15 @@ export default class HttpProvider {
         this.providersModuleFactory = providersModuleFactory;
         this.agent = {};
 
+        let keepAlive = false;
+        if (options.keepAlive === true || options.keepAlive !== false) {
+            keepAlive = true;
+        }
+
         if (host.substring(0, 5) === 'https') {
-            this.agent['httpsAgent'] = new https.Agent({keepAlive: true});
+            this.agent['httpsAgent'] = new https.Agent({keepAlive});
         } else {
-            this.agent['httpAgent'] = new http.Agent({keepAlive: true});
+            this.agent['httpAgent'] = new http.Agent({keepAlive});
         }
     }
 
