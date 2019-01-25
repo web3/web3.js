@@ -1,34 +1,25 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>web3.utils &#8212; web3.js 1.0.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="top" title="web3.js 1.0.0 documentation" href="index.html" />
     <link rel="prev" title="web3.shh" href="web3-shh.html" /> 
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -57,23 +48,23 @@
 <hr class="docutils" />
 <div class="section" id="randomhex">
 <h2>randomHex<a class="headerlink" href="#randomhex" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">randomHex</span><span class="p">(</span><span class="nx">size</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">randomHex</span><span class="p">(</span><span class="nx">size</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <a class="reference external" href="https://github.com/frozeman/randomHex">randomHex</a> library to generate cryptographically strong pseudo-random HEX strings from a given byte size.</p>
 <div class="section" id="parameters">
 <h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">size</span></code> - <code class="docutils literal"><span class="pre">Number</span></code>: The byte size for the HEX string, e.g. <code class="docutils literal"><span class="pre">32</span></code> will result in a 32 bytes HEX string with 64 characters preficed with &#8220;0x&#8221;.</li>
+<li><code class="docutils literal notranslate"><span class="pre">size</span></code> - <code class="docutils literal notranslate"><span class="pre">Number</span></code>: The byte size for the HEX string, e.g. <code class="docutils literal notranslate"><span class="pre">32</span></code> will result in a 32 bytes HEX string with 64 characters preficed with “0x”.</li>
 </ol>
 </div>
 <div class="section" id="returns">
 <h3>Returns<a class="headerlink" href="#returns" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The generated random HEX string.</p>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The generated random HEX string.</p>
 </div>
 <div class="section" id="example">
 <h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">randomHex</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">randomHex</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0xa5b9d60f32436310afebcfda832817a68921beb782fabf7915cc0460b443116a&quot;</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">randomHex</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
@@ -92,31 +83,9 @@
 <hr class="docutils" />
 </div>
 </div>
-<div class="section" id="id2">
-<h2>_<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">_</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>The <a class="reference external" href="http://underscorejs.org">underscore</a> library for many convenience JavaScript functions.</p>
-<p>See the <a class="reference external" href="http://underscorejs.org">underscore API reference</a> for details.</p>
-<div class="section" id="id3">
-<h3>Example<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">_</span><span class="p">;</span>
-
-<span class="nx">_</span><span class="p">.</span><span class="nx">union</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">]);</span>
-<span class="o">&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
-
-<span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">({</span><span class="nx">my</span><span class="o">:</span> <span class="s1">&#39;object&#39;</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">key</span><span class="p">){</span> <span class="p">...</span> <span class="p">})</span>
-
-<span class="p">...</span>
-</pre></div>
-</div>
-<hr class="docutils" />
-</div>
-</div>
 <div class="section" id="bn">
 <span id="utils-bn"></span><h2>BN<a class="headerlink" href="#bn" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">BN</span><span class="p">(</span><span class="nx">mixed</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">BN</span><span class="p">(</span><span class="nx">mixed</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> library for calculating with big numbers in JavaScript.
@@ -125,19 +94,19 @@ See the <a class="reference external" href="https://github.com/indutny/bn.js/">B
 <p class="first admonition-title">Note</p>
 <p class="last">For safe conversion of many types, incl <a class="reference external" href="http://mikemcl.github.io/bignumber.js/">BigNumber.js</a> use <a class="reference internal" href="#utils-tobn"><span class="std std-ref">utils.toBN</span></a></p>
 </div>
-<div class="section" id="id4">
-<h3>Parameters<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Parameters<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">mixed</span></code> - <code class="docutils literal"><span class="pre">String|Number</span></code>: A number, number string or HEX string to convert to a BN object.</li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code> - <code class="docutils literal notranslate"><span class="pre">String|Number</span></code>: A number, number string or HEX string to convert to a BN object.</li>
 </ol>
 </div>
-<div class="section" id="id5">
-<h3>Returns<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">Object</span></code>: The <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> instance.</p>
+<div class="section" id="id3">
+<h3>Returns<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Object</span></code>: The <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> instance.</p>
 </div>
-<div class="section" id="id7">
-<h3>Example<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">BN</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">BN</span><span class="p">;</span>
+<div class="section" id="id5">
+<h3>Example<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">BN</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">BN</span><span class="p">;</span>
 
 <span class="k">new</span> <span class="nx">BN</span><span class="p">(</span><span class="mi">1234</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
 <span class="o">&gt;</span> <span class="s2">&quot;1234&quot;</span>
@@ -154,23 +123,23 @@ See the <a class="reference external" href="https://github.com/indutny/bn.js/">B
 <hr class="docutils" />
 <div class="section" id="isbn">
 <h2>isBN<a class="headerlink" href="#isbn" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isBN</span><span class="p">(</span><span class="nx">bn</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isBN</span><span class="p">(</span><span class="nx">bn</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Checks if a given value is a <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> instance.</p>
-<div class="section" id="id9">
-<h3>Parameters<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">bn</span></code> - <code class="docutils literal"><span class="pre">Object</span></code>: An <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> instance.</li>
+<li><code class="docutils literal notranslate"><span class="pre">bn</span></code> - <code class="docutils literal notranslate"><span class="pre">Object</span></code>: An <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> instance.</li>
 </ol>
 </div>
-<div class="section" id="id11">
-<h3>Returns<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">Boolean</span></code></p>
+<div class="section" id="id9">
+<h3>Returns<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
 </div>
-<div class="section" id="id12">
-<h3>Example<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">number</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BN</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<div class="section" id="id10">
+<h3>Example<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">number</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BN</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isBN</span><span class="p">(</span><span class="nx">number</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
@@ -181,23 +150,23 @@ See the <a class="reference external" href="https://github.com/indutny/bn.js/">B
 <hr class="docutils" />
 <div class="section" id="isbignumber">
 <h2>isBigNumber<a class="headerlink" href="#isbignumber" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isBigNumber</span><span class="p">(</span><span class="nx">bignumber</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isBigNumber</span><span class="p">(</span><span class="nx">bignumber</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Checks if a given value is a <a class="reference external" href="http://mikemcl.github.io/bignumber.js/">BigNumber.js</a> instance.</p>
-<div class="section" id="id14">
-<h3>Parameters<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3>Parameters<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">bignumber</span></code> - <code class="docutils literal"><span class="pre">Object</span></code>: A <a class="reference external" href="http://mikemcl.github.io/bignumber.js/">BigNumber.js</a> instance.</li>
+<li><code class="docutils literal notranslate"><span class="pre">BigNumber</span></code> - <code class="docutils literal notranslate"><span class="pre">Object</span></code>: A <a class="reference external" href="http://mikemcl.github.io/bignumber.js/">BigNumber.js</a> instance.</li>
 </ol>
 </div>
-<div class="section" id="id16">
-<h3>Returns<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">Boolean</span></code></p>
+<div class="section" id="id14">
+<h3>Returns<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
 </div>
-<div class="section" id="id17">
-<h3>Example<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">number</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BigNumber</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<div class="section" id="id15">
+<h3>Example<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">number</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BigNumber</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isBigNumber</span><span class="p">(</span><span class="nx">number</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
@@ -208,7 +177,7 @@ See the <a class="reference external" href="https://github.com/indutny/bn.js/">B
 <hr class="docutils" />
 <div class="section" id="sha3">
 <h2>sha3<a class="headerlink" href="#sha3" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">sha3</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">sha3</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">keccak256</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="c1">// ALIAS</span>
 </pre></div>
 </div>
@@ -217,19 +186,19 @@ See the <a class="reference external" href="https://github.com/indutny/bn.js/">B
 <p class="first admonition-title">Note</p>
 <p class="last">To mimic the sha3 behaviour of solidity use <a class="reference internal" href="#utils-soliditysha3"><span class="std std-ref">soliditySha3</span></a></p>
 </div>
-<div class="section" id="id18">
-<h3>Parameters<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h3>Parameters<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">string</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: A string to hash.</li>
+<li><code class="docutils literal notranslate"><span class="pre">string</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: A string to hash.</li>
 </ol>
 </div>
-<div class="section" id="id19">
-<h3>Returns<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: the result hash.</p>
+<div class="section" id="id17">
+<h3>Returns<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: the result hash.</p>
 </div>
-<div class="section" id="id20">
-<h3>Example<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">sha3</span><span class="p">(</span><span class="s1">&#39;234&#39;</span><span class="p">);</span> <span class="c1">// taken as string</span>
+<div class="section" id="id18">
+<h3>Example<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">sha3</span><span class="p">(</span><span class="s1">&#39;234&#39;</span><span class="p">);</span> <span class="c1">// taken as string</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0xc1912fee45d61c87cc5ea59dae311904cd86b84fee17cc96966216f811ce6a79&quot;</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">sha3</span><span class="p">(</span><span class="k">new</span> <span class="nx">BN</span><span class="p">(</span><span class="s1">&#39;234&#39;</span><span class="p">));</span>
@@ -250,35 +219,35 @@ See the <a class="reference external" href="https://github.com/indutny/bn.js/">B
 </div>
 <div class="section" id="soliditysha3">
 <span id="utils-soliditysha3"></span><h2>soliditySha3<a class="headerlink" href="#soliditysha3" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">soliditySha3</span><span class="p">(</span><span class="nx">param1</span> <span class="p">[,</span> <span class="nx">param2</span><span class="p">,</span> <span class="p">...])</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">soliditySha3</span><span class="p">(</span><span class="nx">param1</span> <span class="p">[,</span> <span class="nx">param2</span><span class="p">,</span> <span class="p">...])</span>
 </pre></div>
 </div>
 <p>Will calculate the sha3 of given input parameters in the same way solidity would.
 This means arguments will be ABI converted and tightly packed before being hashed.</p>
-<div class="section" id="id21">
-<h3>Parameters<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id19">
+<h3>Parameters<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
-<li><p class="first"><code class="docutils literal"><span class="pre">paramX</span></code> - <code class="docutils literal"><span class="pre">Mixed</span></code>: Any type, or an object with <code class="docutils literal"><span class="pre">{type:</span> <span class="pre">'uint',</span> <span class="pre">value:</span> <span class="pre">'123456'}</span></code> or <code class="docutils literal"><span class="pre">{t:</span> <span class="pre">'bytes',</span> <span class="pre">v:</span> <span class="pre">'0xfff456'}</span></code>. Basic types are autodetected as follows:</p>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">paramX</span></code> - <code class="docutils literal notranslate"><span class="pre">Mixed</span></code>: Any type, or an object with <code class="docutils literal notranslate"><span class="pre">{type:</span> <span class="pre">'uint',</span> <span class="pre">value:</span> <span class="pre">'123456'}</span></code> or <code class="docutils literal notranslate"><span class="pre">{t:</span> <span class="pre">'bytes',</span> <span class="pre">v:</span> <span class="pre">'0xfff456'}</span></code>. Basic types are autodetected as follows:</p>
 <blockquote>
 <div><ul class="simple">
-<li><code class="docutils literal"><span class="pre">String</span></code> non numerical UTF-8 string is interpreted as <code class="docutils literal"><span class="pre">string</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">String|Number|BN|HEX</span></code> positive number is interpreted as <code class="docutils literal"><span class="pre">uint256</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">String|Number|BN</span></code> negative number is interpreted as <code class="docutils literal"><span class="pre">int256</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">Boolean</span></code> as <code class="docutils literal"><span class="pre">bool</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">String</span></code> HEX string with leading <code class="docutils literal"><span class="pre">0x</span></code> is interpreted as <code class="docutils literal"><span class="pre">bytes</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">HEX</span></code> HEX number representation is interpreted as <code class="docutils literal"><span class="pre">uint256</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">String</span></code> non numerical UTF-8 string is interpreted as <code class="docutils literal notranslate"><span class="pre">string</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">String|Number|BN|HEX</span></code> positive number is interpreted as <code class="docutils literal notranslate"><span class="pre">uint256</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">String|Number|BN</span></code> negative number is interpreted as <code class="docutils literal notranslate"><span class="pre">int256</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">Boolean</span></code> as <code class="docutils literal notranslate"><span class="pre">bool</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">String</span></code> HEX string with leading <code class="docutils literal notranslate"><span class="pre">0x</span></code> is interpreted as <code class="docutils literal notranslate"><span class="pre">bytes</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">HEX</span></code> HEX number representation is interpreted as <code class="docutils literal notranslate"><span class="pre">uint256</span></code>.</li>
 </ul>
 </div></blockquote>
 </li>
 </ol>
 </div>
-<div class="section" id="id22">
-<h3>Returns<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: the result hash.</p>
+<div class="section" id="id20">
+<h3>Returns<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: the result hash.</p>
 </div>
-<div class="section" id="id23">
-<h3>Example<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">soliditySha3</span><span class="p">(</span><span class="s1">&#39;234564535&#39;</span><span class="p">,</span> <span class="s1">&#39;0xfff23243&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">);</span>
+<div class="section" id="id21">
+<h3>Example<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">soliditySha3</span><span class="p">(</span><span class="s1">&#39;234564535&#39;</span><span class="p">,</span> <span class="s1">&#39;0xfff23243&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">);</span>
 <span class="c1">// auto detects:        uint256,      bytes,     bool,   int256</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x3e27a893dc40ef8a7f0841d96639de2f58a132be5ae466d40087a2cfa83b7179&quot;</span>
 
@@ -327,23 +296,23 @@ This means arguments will be ABI converted and tightly packed before being hashe
 <hr class="docutils" />
 <div class="section" id="ishex">
 <h2>isHex<a class="headerlink" href="#ishex" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isHex</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isHex</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Checks if a given string is a HEX string.</p>
-<div class="section" id="id24">
-<h3>Parameters<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id22">
+<h3>Parameters<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">hex</span></code> - <code class="docutils literal"><span class="pre">String|HEX</span></code>: The given HEX string.</li>
+<li><code class="docutils literal notranslate"><span class="pre">hex</span></code> - <code class="docutils literal notranslate"><span class="pre">String|HEX</span></code>: The given HEX string.</li>
 </ol>
 </div>
-<div class="section" id="id25">
-<h3>Returns<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">Boolean</span></code></p>
+<div class="section" id="id23">
+<h3>Returns<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
 </div>
-<div class="section" id="id26">
-<h3>Example<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isHex</span><span class="p">(</span><span class="s1">&#39;0xc1912&#39;</span><span class="p">);</span>
+<div class="section" id="id24">
+<h3>Example<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isHex</span><span class="p">(</span><span class="s1">&#39;0xc1912&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isHex</span><span class="p">(</span><span class="mh">0xc1912</span><span class="p">);</span>
@@ -367,23 +336,23 @@ This means arguments will be ABI converted and tightly packed before being hashe
 <hr class="docutils" />
 <div class="section" id="ishexstrict">
 <h2>isHexStrict<a class="headerlink" href="#ishexstrict" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isHexStrict</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isHexStrict</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Checks if a given string is a HEX string. Difference to <code class="docutils literal"><span class="pre">web3.utils.isHex()</span></code> is that it expects HEX to be prefixed with <code class="docutils literal"><span class="pre">0x</span></code>.</p>
-<div class="section" id="id27">
-<h3>Parameters<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<p>Checks if a given string is a HEX string. Difference to <code class="docutils literal notranslate"><span class="pre">web3.utils.isHex()</span></code> is that it expects HEX to be prefixed with <code class="docutils literal notranslate"><span class="pre">0x</span></code>.</p>
+<div class="section" id="id25">
+<h3>Parameters<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">hex</span></code> - <code class="docutils literal"><span class="pre">String|HEX</span></code>: The given HEX string.</li>
+<li><code class="docutils literal notranslate"><span class="pre">hex</span></code> - <code class="docutils literal notranslate"><span class="pre">String|HEX</span></code>: The given HEX string.</li>
 </ol>
 </div>
-<div class="section" id="id28">
-<h3>Returns<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">Boolean</span></code></p>
+<div class="section" id="id26">
+<h3>Returns<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
 </div>
-<div class="section" id="id29">
-<h3>Example<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isHexStrict</span><span class="p">(</span><span class="s1">&#39;0xc1912&#39;</span><span class="p">);</span>
+<div class="section" id="id27">
+<h3>Example<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isHexStrict</span><span class="p">(</span><span class="s1">&#39;0xc1912&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isHexStrict</span><span class="p">(</span><span class="mh">0xc1912</span><span class="p">);</span>
@@ -407,24 +376,24 @@ This means arguments will be ABI converted and tightly packed before being hashe
 <hr class="docutils" />
 <div class="section" id="isaddress">
 <h2>isAddress<a class="headerlink" href="#isaddress" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isAddress</span><span class="p">(</span><span class="nx">address</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isAddress</span><span class="p">(</span><span class="nx">address</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Checks if a given string is a valid Ethereum address.
 It will also check the checksum, if the address has upper and lowercase letters.</p>
-<div class="section" id="id30">
-<h3>Parameters<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id28">
+<h3>Parameters<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">address</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: An address string.</li>
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: An address string.</li>
 </ol>
 </div>
-<div class="section" id="id31">
-<h3>Returns<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">Boolean</span></code></p>
+<div class="section" id="id29">
+<h3>Returns<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
 </div>
-<div class="section" id="id32">
-<h3>Example<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isAddress</span><span class="p">(</span><span class="s1">&#39;0xc1912fee45d61c87cc5ea59dae31190fffff232d&#39;</span><span class="p">);</span>
+<div class="section" id="id30">
+<h3>Example<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isAddress</span><span class="p">(</span><span class="s1">&#39;0xc1912fee45d61c87cc5ea59dae31190fffff232d&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">isAddress</span><span class="p">(</span><span class="s1">&#39;c1912fee45d61c87cc5ea59dae31190fffff232d&#39;</span><span class="p">);</span>
@@ -445,23 +414,23 @@ It will also check the checksum, if the address has upper and lowercase letters.
 <hr class="docutils" />
 <div class="section" id="tochecksumaddress">
 <h2>toChecksumAddress<a class="headerlink" href="#tochecksumaddress" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toChecksumAddress</span><span class="p">(</span><span class="nx">address</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toChecksumAddress</span><span class="p">(</span><span class="nx">address</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Will convert an upper or lowercase Ethereum address to a checksum address.</p>
-<div class="section" id="id33">
-<h3>Parameters<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id31">
+<h3>Parameters<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">address</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: An address string.</li>
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: An address string.</li>
 </ol>
 </div>
-<div class="section" id="id34">
-<h3>Returns<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The checksum address.</p>
+<div class="section" id="id32">
+<h3>Returns<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The checksum address.</p>
 </div>
-<div class="section" id="id35">
-<h3>Example<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toChecksumAddress</span><span class="p">(</span><span class="s1">&#39;0xc1912fee45d61c87cc5ea59dae31190fffff2323&#39;</span><span class="p">);</span>
+<div class="section" id="id33">
+<h3>Example<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toChecksumAddress</span><span class="p">(</span><span class="s1">&#39;0xc1912fee45d61c87cc5ea59dae31190fffff2323&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d&quot;</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toChecksumAddress</span><span class="p">(</span><span class="s1">&#39;0XC1912FEE45D61C87CC5EA59DAE31190FFFFF232D&#39;</span><span class="p">);</span>
@@ -473,23 +442,23 @@ It will also check the checksum, if the address has upper and lowercase letters.
 <hr class="docutils" />
 <div class="section" id="checkaddresschecksum">
 <h2>checkAddressChecksum<a class="headerlink" href="#checkaddresschecksum" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">checkAddressChecksum</span><span class="p">(</span><span class="nx">address</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">checkAddressChecksum</span><span class="p">(</span><span class="nx">address</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Checks the checksum of a given address. Will also return false on non-checksum addresses.</p>
-<div class="section" id="id36">
-<h3>Parameters<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id34">
+<h3>Parameters<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">address</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: An address string.</li>
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: An address string.</li>
 </ol>
 </div>
-<div class="section" id="id37">
-<h3>Returns<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">Boolean</span></code>: <code class="docutils literal"><span class="pre">true</span></code> when the checksum of the address is valid, <code class="docutils literal"><span class="pre">false</span></code> if its not a checksum address, or the checksum is invalid.</p>
+<div class="section" id="id35">
+<h3>Returns<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Boolean</span></code>: <code class="docutils literal notranslate"><span class="pre">true</span></code> when the checksum of the address is valid, <code class="docutils literal notranslate"><span class="pre">false</span></code> if its not a checksum address, or the checksum is invalid.</p>
 </div>
-<div class="section" id="id38">
-<h3>Example<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">checkAddressChecksum</span><span class="p">(</span><span class="s1">&#39;0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d&#39;</span><span class="p">);</span>
+<div class="section" id="id36">
+<h3>Example<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">checkAddressChecksum</span><span class="p">(</span><span class="s1">&#39;0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
 </pre></div>
 </div>
@@ -498,25 +467,25 @@ It will also check the checksum, if the address has upper and lowercase letters.
 <hr class="docutils" />
 <div class="section" id="tohex">
 <h2>toHex<a class="headerlink" href="#tohex" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toHex</span><span class="p">(</span><span class="nx">mixed</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toHex</span><span class="p">(</span><span class="nx">mixed</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Will auto convert any given value to HEX.
 Number strings will interpreted as numbers.
 Text strings will be interpreted as UTF-8 strings.</p>
-<div class="section" id="id39">
-<h3>Parameters<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id37">
+<h3>Parameters<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">mixed</span></code> - <code class="docutils literal"><span class="pre">String|Number|BN|BigNumber</span></code>: The input to convert to HEX.</li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code> - <code class="docutils literal notranslate"><span class="pre">String|Number|BN|BigNumber</span></code>: The input to convert to HEX.</li>
 </ol>
 </div>
-<div class="section" id="id40">
-<h3>Returns<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The resulting HEX string.</p>
+<div class="section" id="id38">
+<h3>Returns<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The resulting HEX string.</p>
 </div>
-<div class="section" id="id41">
-<h3>Example<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toHex</span><span class="p">(</span><span class="s1">&#39;234&#39;</span><span class="p">);</span>
+<div class="section" id="id39">
+<h3>Example<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toHex</span><span class="p">(</span><span class="s1">&#39;234&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0xea&quot;</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toHex</span><span class="p">(</span><span class="mi">234</span><span class="p">);</span>
@@ -537,27 +506,27 @@ Text strings will be interpreted as UTF-8 strings.</p>
 </div>
 <div class="section" id="tobn">
 <span id="utils-tobn"></span><h2>toBN<a class="headerlink" href="#tobn" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toBN</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toBN</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Will safly convert any given value (including <a class="reference external" href="http://mikemcl.github.io/bignumber.js/">BigNumber.js</a> instances) into a <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> instance, for handling big numbers in JavaScript.</p>
+<p>Will safely convert any given value (including <a class="reference external" href="http://mikemcl.github.io/bignumber.js/">BigNumber.js</a> instances) into a <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> instance, for handling big numbers in JavaScript.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">For just the <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> class use <a class="reference internal" href="#utils-bn"><span class="std std-ref">utils.BN</span></a></p>
 </div>
-<div class="section" id="id45">
-<h3>Parameters<a class="headerlink" href="#id45" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id43">
+<h3>Parameters<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">number</span></code> - <code class="docutils literal"><span class="pre">String|Number|HEX</span></code>: Number to convert to a big number.</li>
+<li><code class="docutils literal notranslate"><span class="pre">number</span></code> - <code class="docutils literal notranslate"><span class="pre">String|Number|HEX</span></code>: Number to convert to a big number.</li>
 </ol>
 </div>
-<div class="section" id="id46">
-<h3>Returns<a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">Object</span></code>: The <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> instance.</p>
+<div class="section" id="id44">
+<h3>Returns<a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Object</span></code>: The <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> instance.</p>
 </div>
-<div class="section" id="id48">
-<h3>Example<a class="headerlink" href="#id48" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toBN</span><span class="p">(</span><span class="mi">1234</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
+<div class="section" id="id46">
+<h3>Example<a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toBN</span><span class="p">(</span><span class="mi">1234</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
 <span class="o">&gt;</span> <span class="s2">&quot;1234&quot;</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toBN</span><span class="p">(</span><span class="s1">&#39;1234&#39;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toBN</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)).</span><span class="nx">toString</span><span class="p">();</span>
@@ -572,23 +541,23 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="hextonumberstring">
 <h2>hexToNumberString<a class="headerlink" href="#hextonumberstring" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToNumberString</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToNumberString</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Returns the number representation of a given HEX value as a string.</p>
-<div class="section" id="id49">
-<h3>Parameters<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id47">
+<h3>Parameters<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">hexString</span></code> - <code class="docutils literal"><span class="pre">String|HEX</span></code>: A string to hash.</li>
+<li><code class="docutils literal notranslate"><span class="pre">hexString</span></code> - <code class="docutils literal notranslate"><span class="pre">String|HEX</span></code>: A string to hash.</li>
 </ol>
 </div>
-<div class="section" id="id50">
-<h3>Returns<a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The number as a string.</p>
+<div class="section" id="id48">
+<h3>Returns<a class="headerlink" href="#id48" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The number as a string.</p>
 </div>
-<div class="section" id="id51">
-<h3>Example<a class="headerlink" href="#id51" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToNumberString</span><span class="p">(</span><span class="s1">&#39;0xea&#39;</span><span class="p">);</span>
+<div class="section" id="id49">
+<h3>Example<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToNumberString</span><span class="p">(</span><span class="s1">&#39;0xea&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;234&quot;</span>
 </pre></div>
 </div>
@@ -597,7 +566,7 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="hextonumber">
 <h2>hexToNumber<a class="headerlink" href="#hextonumber" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToNumber</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToNumber</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toDecimal</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span> <span class="c1">// ALIAS, deprecated</span>
 </pre></div>
 </div>
@@ -606,19 +575,19 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">This is not useful for big numbers, rather use <a class="reference internal" href="#utils-tobn"><span class="std std-ref">utils.toBN</span></a> instead.</p>
 </div>
-<div class="section" id="id52">
-<h3>Parameters<a class="headerlink" href="#id52" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id50">
+<h3>Parameters<a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">hexString</span></code> - <code class="docutils literal"><span class="pre">String|HEX</span></code>: A string to hash.</li>
+<li><code class="docutils literal notranslate"><span class="pre">hexString</span></code> - <code class="docutils literal notranslate"><span class="pre">String|HEX</span></code>: A string to hash.</li>
 </ol>
 </div>
-<div class="section" id="id53">
-<h3>Returns<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">Number</span></code></p>
+<div class="section" id="id51">
+<h3>Returns<a class="headerlink" href="#id51" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Number</span></code></p>
 </div>
-<div class="section" id="id54">
-<h3>Example<a class="headerlink" href="#id54" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToNumber</span><span class="p">(</span><span class="s1">&#39;0xea&#39;</span><span class="p">);</span>
+<div class="section" id="id52">
+<h3>Example<a class="headerlink" href="#id52" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToNumber</span><span class="p">(</span><span class="s1">&#39;0xea&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="mi">234</span>
 </pre></div>
 </div>
@@ -627,24 +596,24 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="numbertohex">
 <h2>numberToHex<a class="headerlink" href="#numbertohex" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">numberToHex</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">numberToHex</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">fromDecimal</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span> <span class="c1">// ALIAS, deprecated</span>
 </pre></div>
 </div>
 <p>Returns the HEX representation of a given number value.</p>
-<div class="section" id="id55">
-<h3>Parameters<a class="headerlink" href="#id55" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id53">
+<h3>Parameters<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">number</span></code> - <code class="docutils literal"><span class="pre">String|Number|BN|BigNumber</span></code>: A number as string or number.</li>
+<li><code class="docutils literal notranslate"><span class="pre">number</span></code> - <code class="docutils literal notranslate"><span class="pre">String|Number|BN|BigNumber</span></code>: A number as string or number.</li>
 </ol>
 </div>
-<div class="section" id="id56">
-<h3>Returns<a class="headerlink" href="#id56" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The HEX value of the given number.</p>
+<div class="section" id="id54">
+<h3>Returns<a class="headerlink" href="#id54" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The HEX value of the given number.</p>
 </div>
-<div class="section" id="id57">
-<h3>Example<a class="headerlink" href="#id57" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">numberToHex</span><span class="p">(</span><span class="s1">&#39;234&#39;</span><span class="p">);</span>
+<div class="section" id="id55">
+<h3>Example<a class="headerlink" href="#id55" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">numberToHex</span><span class="p">(</span><span class="s1">&#39;234&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s1">&#39;0xea&#39;</span>
 </pre></div>
 </div>
@@ -653,25 +622,25 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="hextoutf8">
 <h2>hexToUtf8<a class="headerlink" href="#hextoutf8" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToUtf8</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToUtf8</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToString</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span> <span class="c1">// ALIAS</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toUtf8</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span> <span class="c1">// ALIAS, deprecated</span>
 </pre></div>
 </div>
 <p>Returns the UTF-8 string representation of a given HEX value.</p>
-<div class="section" id="id58">
-<h3>Parameters<a class="headerlink" href="#id58" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id56">
+<h3>Parameters<a class="headerlink" href="#id56" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">hex</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: A HEX string to convert to a UTF-8 string.</li>
+<li><code class="docutils literal notranslate"><span class="pre">hex</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: A HEX string to convert to a UTF-8 string.</li>
 </ol>
 </div>
-<div class="section" id="id59">
-<h3>Returns<a class="headerlink" href="#id59" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The UTF-8 string.</p>
+<div class="section" id="id57">
+<h3>Returns<a class="headerlink" href="#id57" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The UTF-8 string.</p>
 </div>
-<div class="section" id="id60">
-<h3>Example<a class="headerlink" href="#id60" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToUtf8</span><span class="p">(</span><span class="s1">&#39;0x49206861766520313030e282ac&#39;</span><span class="p">);</span>
+<div class="section" id="id58">
+<h3>Example<a class="headerlink" href="#id58" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToUtf8</span><span class="p">(</span><span class="s1">&#39;0x49206861766520313030e282ac&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;I have 100€&quot;</span>
 </pre></div>
 </div>
@@ -680,24 +649,24 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="hextoascii">
 <h2>hexToAscii<a class="headerlink" href="#hextoascii" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToAscii</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToAscii</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toAscii</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span> <span class="c1">// ALIAS, deprecated</span>
 </pre></div>
 </div>
 <p>Returns the ASCII string representation of a given HEX value.</p>
-<div class="section" id="id61">
-<h3>Parameters<a class="headerlink" href="#id61" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id59">
+<h3>Parameters<a class="headerlink" href="#id59" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">hex</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: A HEX string to convert to a ASCII string.</li>
+<li><code class="docutils literal notranslate"><span class="pre">hex</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: A HEX string to convert to a ASCII string.</li>
 </ol>
 </div>
-<div class="section" id="id62">
-<h3>Returns<a class="headerlink" href="#id62" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The ASCII string.</p>
+<div class="section" id="id60">
+<h3>Returns<a class="headerlink" href="#id60" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The ASCII string.</p>
 </div>
-<div class="section" id="id63">
-<h3>Example<a class="headerlink" href="#id63" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToAscii</span><span class="p">(</span><span class="s1">&#39;0x4920686176652031303021&#39;</span><span class="p">);</span>
+<div class="section" id="id61">
+<h3>Example<a class="headerlink" href="#id61" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToAscii</span><span class="p">(</span><span class="s1">&#39;0x4920686176652031303021&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;I have 100!&quot;</span>
 </pre></div>
 </div>
@@ -706,25 +675,25 @@ Text strings will be interpreted as UTF-8 strings.</p>
 </div>
 <div class="section" id="utf8tohex">
 <span id="utils-utf8tohex"></span><h2>utf8ToHex<a class="headerlink" href="#utf8tohex" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">utf8ToHex</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">utf8ToHex</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">stringToHex</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="c1">// ALIAS</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">fromUtf8</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="c1">// ALIAS, deprecated</span>
 </pre></div>
 </div>
 <p>Returns the HEX representation of a given UTF-8 string.</p>
-<div class="section" id="id64">
-<h3>Parameters<a class="headerlink" href="#id64" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id62">
+<h3>Parameters<a class="headerlink" href="#id62" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">string</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: A UTF-8 string to convert to a HEX string.</li>
+<li><code class="docutils literal notranslate"><span class="pre">string</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: A UTF-8 string to convert to a HEX string.</li>
 </ol>
 </div>
-<div class="section" id="id65">
-<h3>Returns<a class="headerlink" href="#id65" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The HEX string.</p>
+<div class="section" id="id63">
+<h3>Returns<a class="headerlink" href="#id63" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The HEX string.</p>
 </div>
-<div class="section" id="id66">
-<h3>Example<a class="headerlink" href="#id66" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">utf8ToHex</span><span class="p">(</span><span class="s1">&#39;I have 100€&#39;</span><span class="p">);</span>
+<div class="section" id="id64">
+<h3>Example<a class="headerlink" href="#id64" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">utf8ToHex</span><span class="p">(</span><span class="s1">&#39;I have 100€&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x49206861766520313030e282ac&quot;</span>
 </pre></div>
 </div>
@@ -733,24 +702,24 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="asciitohex">
 <h2>asciiToHex<a class="headerlink" href="#asciitohex" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">asciiToHex</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">asciiToHex</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">fromAscii</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="c1">// ALIAS, deprecated</span>
 </pre></div>
 </div>
 <p>Returns the HEX representation of a given ASCII string.</p>
-<div class="section" id="id67">
-<h3>Parameters<a class="headerlink" href="#id67" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id65">
+<h3>Parameters<a class="headerlink" href="#id65" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">string</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: A ASCII string to convert to a HEX string.</li>
+<li><code class="docutils literal notranslate"><span class="pre">string</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: A ASCII string to convert to a HEX string.</li>
 </ol>
 </div>
-<div class="section" id="id68">
-<h3>Returns<a class="headerlink" href="#id68" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The HEX string.</p>
+<div class="section" id="id66">
+<h3>Returns<a class="headerlink" href="#id66" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The HEX string.</p>
 </div>
-<div class="section" id="id69">
-<h3>Example<a class="headerlink" href="#id69" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">asciiToHex</span><span class="p">(</span><span class="s1">&#39;I have 100!&#39;</span><span class="p">);</span>
+<div class="section" id="id67">
+<h3>Example<a class="headerlink" href="#id67" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">asciiToHex</span><span class="p">(</span><span class="s1">&#39;I have 100!&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x4920686176652031303021&quot;</span>
 </pre></div>
 </div>
@@ -759,23 +728,23 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="hextobytes">
 <h2>hexToBytes<a class="headerlink" href="#hextobytes" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToBytes</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToBytes</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Returns a byte array from the given HEX string.</p>
-<div class="section" id="id70">
-<h3>Parameters<a class="headerlink" href="#id70" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id68">
+<h3>Parameters<a class="headerlink" href="#id68" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">hex</span></code> - <code class="docutils literal"><span class="pre">String|HEX</span></code>: A HEX to convert.</li>
+<li><code class="docutils literal notranslate"><span class="pre">hex</span></code> - <code class="docutils literal notranslate"><span class="pre">String|HEX</span></code>: A HEX to convert.</li>
 </ol>
 </div>
-<div class="section" id="id71">
-<h3>Returns<a class="headerlink" href="#id71" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">Array</span></code>: The byte array.</p>
+<div class="section" id="id69">
+<h3>Returns<a class="headerlink" href="#id69" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Array</span></code>: The byte array.</p>
 </div>
-<div class="section" id="id72">
-<h3>Example<a class="headerlink" href="#id72" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToBytes</span><span class="p">(</span><span class="s1">&#39;0x000000ea&#39;</span><span class="p">);</span>
+<div class="section" id="id70">
+<h3>Example<a class="headerlink" href="#id70" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToBytes</span><span class="p">(</span><span class="s1">&#39;0x000000ea&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">234</span> <span class="p">]</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">hexToBytes</span><span class="p">(</span><span class="mh">0x000000ea</span><span class="p">);</span>
@@ -787,23 +756,23 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="bytestohex">
 <h2>bytesToHex<a class="headerlink" href="#bytestohex" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">bytesToHex</span><span class="p">(</span><span class="nx">byteArray</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">bytesToHex</span><span class="p">(</span><span class="nx">byteArray</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Returns a HEX string from a byte array.</p>
-<div class="section" id="id73">
-<h3>Parameters<a class="headerlink" href="#id73" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id71">
+<h3>Parameters<a class="headerlink" href="#id71" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">byteArray</span></code> - <code class="docutils literal"><span class="pre">Array</span></code>: A byte array to convert.</li>
+<li><code class="docutils literal notranslate"><span class="pre">byteArray</span></code> - <code class="docutils literal notranslate"><span class="pre">Array</span></code>: A byte array to convert.</li>
 </ol>
 </div>
-<div class="section" id="id74">
-<h3>Returns<a class="headerlink" href="#id74" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The HEX string.</p>
+<div class="section" id="id72">
+<h3>Returns<a class="headerlink" href="#id72" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The HEX string.</p>
 </div>
-<div class="section" id="id75">
-<h3>Example<a class="headerlink" href="#id75" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">bytesToHex</span><span class="p">([</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">36</span> <span class="p">]);</span>
+<div class="section" id="id73">
+<h3>Example<a class="headerlink" href="#id73" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">bytesToHex</span><span class="p">([</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">36</span> <span class="p">]);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x48656c6c6f2125&quot;</span>
 </pre></div>
 </div>
@@ -812,57 +781,61 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="towei">
 <h2>toWei<a class="headerlink" href="#towei" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toWei</span><span class="p">(</span><span class="nx">number</span> <span class="p">[,</span> <span class="nx">unit</span><span class="p">])</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toWei</span><span class="p">(</span><span class="nx">number</span> <span class="p">[,</span> <span class="nx">unit</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Converts any <a class="reference external" href="http://ethdocs.org/en/latest/ether.html">ether value</a> value into <a class="reference external" href="http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na">wei</a>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">&#8220;wei&#8221; are the smallest ethere unit, and you should always make calculations in wei and convert only for display reasons.</p>
+<p class="last">“wei” are the smallest ethere unit, and you should always make calculations in wei and convert only for display reasons.</p>
 </div>
-<div class="section" id="id76">
-<h3>Parameters<a class="headerlink" href="#id76" title="Permalink to this headline">¶</a></h3>
-<p>1. <code class="docutils literal"><span class="pre">number</span></code> - <code class="docutils literal"><span class="pre">String|Number|BN</span></code>: The value.
-1. <code class="docutils literal"><span class="pre">unit</span></code> - <code class="docutils literal"><span class="pre">String</span></code> (optional, defaults to <code class="docutils literal"><span class="pre">&quot;ether&quot;</span></code>): The ether to convert from. Possible units are:</p>
-<blockquote>
-<div><ul class="simple">
-<li><code class="docutils literal"><span class="pre">noether</span></code>: &#8216;0&#8217;</li>
-<li><code class="docutils literal"><span class="pre">wei</span></code>: &#8216;1&#8217;</li>
-<li><code class="docutils literal"><span class="pre">kwei</span></code>: &#8216;1000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">Kwei</span></code>: &#8216;1000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">babbage</span></code>: &#8216;1000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">femtoether</span></code>: &#8216;1000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">mwei</span></code>: &#8216;1000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">Mwei</span></code>: &#8216;1000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">lovelace</span></code>: &#8216;1000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">picoether</span></code>: &#8216;1000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">gwei</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">Gwei</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">shannon</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">nanoether</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">nano</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">szabo</span></code>: &#8216;1000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">microether</span></code>: &#8216;1000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">micro</span></code>: &#8216;1000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">finney</span></code>: &#8216;1000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">milliether</span></code>: &#8216;1000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">milli</span></code>: &#8216;1000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">ether</span></code>: &#8216;1000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">kether</span></code>: &#8216;1000000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">grand</span></code>: &#8216;1000000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">mether</span></code>: &#8216;1000000000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">gether</span></code>: &#8216;1000000000000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">tether</span></code>: &#8216;1000000000000000000000000000000&#8217;</li>
+<div class="section" id="id74">
+<h3>Parameters<a class="headerlink" href="#id74" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><code class="docutils literal notranslate"><span class="pre">number</span></code> - <code class="docutils literal notranslate"><span class="pre">String|BN</span></code>: The value.</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">unit</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code> (optional, defaults to <code class="docutils literal notranslate"><span class="pre">&quot;ether&quot;</span></code>): The ether to convert from. Possible units are:</dt>
+<dd><ul class="first last">
+<li><code class="docutils literal notranslate"><span class="pre">noether</span></code>: ‘0’</li>
+<li><code class="docutils literal notranslate"><span class="pre">wei</span></code>: ‘1’</li>
+<li><code class="docutils literal notranslate"><span class="pre">kwei</span></code>: ‘1000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">Kwei</span></code>: ‘1000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">babbage</span></code>: ‘1000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">femtoether</span></code>: ‘1000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">mwei</span></code>: ‘1000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">Mwei</span></code>: ‘1000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">lovelace</span></code>: ‘1000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">picoether</span></code>: ‘1000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">gwei</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">Gwei</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">shannon</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">nanoether</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">nano</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">szabo</span></code>: ‘1000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">microether</span></code>: ‘1000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">micro</span></code>: ‘1000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">finney</span></code>: ‘1000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">milliether</span></code>: ‘1000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">milli</span></code>: ‘1000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">ether</span></code>: ‘1000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">kether</span></code>: ‘1000000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">grand</span></code>: ‘1000000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">mether</span></code>: ‘1000000000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">gether</span></code>: ‘1000000000000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">tether</span></code>: ‘1000000000000000000000000000000’</li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+<div class="section" id="id75">
+<h3>Returns<a class="headerlink" href="#id75" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String|BN</span></code>: If a string is given it returns a number string, otherwise a <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> instance.</p>
 </div>
 <div class="section" id="id77">
-<h3>Returns<a class="headerlink" href="#id77" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String|BN</span></code>: If a number, or string is given it returns a number string, otherwise a <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> instance.</p>
-</div>
-<div class="section" id="id79">
-<h3>Example<a class="headerlink" href="#id79" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toWei</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;ether&#39;</span><span class="p">);</span>
+<h3>Example<a class="headerlink" href="#id77" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toWei</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;ether&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;1000000000000000000&quot;</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toWei</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;finney&#39;</span><span class="p">);</span>
@@ -880,57 +853,61 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="fromwei">
 <h2>fromWei<a class="headerlink" href="#fromwei" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">fromWei</span><span class="p">(</span><span class="nx">number</span> <span class="p">[,</span> <span class="nx">unit</span><span class="p">])</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">fromWei</span><span class="p">(</span><span class="nx">number</span> <span class="p">[,</span> <span class="nx">unit</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Converts any <a class="reference external" href="http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na">wei</a> value into a <a class="reference external" href="http://ethdocs.org/en/latest/ether.html">ether value</a>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">&#8220;wei&#8221; are the smallest ethere unit, and you should always make calculations in wei and convert only for display reasons.</p>
+<p class="last">“wei” are the smallest ethere unit, and you should always make calculations in wei and convert only for display reasons.</p>
+</div>
+<div class="section" id="id80">
+<h3>Parameters<a class="headerlink" href="#id80" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><code class="docutils literal notranslate"><span class="pre">number</span></code> - <code class="docutils literal notranslate"><span class="pre">String|BN</span></code>: The value in wei.</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">unit</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code> (optional, defaults to <code class="docutils literal notranslate"><span class="pre">&quot;ether&quot;</span></code>): The ether to convert to. Possible units are:</dt>
+<dd><ul class="first last">
+<li><code class="docutils literal notranslate"><span class="pre">noether</span></code>: ‘0’</li>
+<li><code class="docutils literal notranslate"><span class="pre">wei</span></code>: ‘1’</li>
+<li><code class="docutils literal notranslate"><span class="pre">kwei</span></code>: ‘1000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">Kwei</span></code>: ‘1000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">babbage</span></code>: ‘1000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">femtoether</span></code>: ‘1000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">mwei</span></code>: ‘1000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">Mwei</span></code>: ‘1000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">lovelace</span></code>: ‘1000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">picoether</span></code>: ‘1000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">gwei</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">Gwei</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">shannon</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">nanoether</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">nano</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">szabo</span></code>: ‘1000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">microether</span></code>: ‘1000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">micro</span></code>: ‘1000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">finney</span></code>: ‘1000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">milliether</span></code>: ‘1000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">milli</span></code>: ‘1000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">ether</span></code>: ‘1000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">kether</span></code>: ‘1000000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">grand</span></code>: ‘1000000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">mether</span></code>: ‘1000000000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">gether</span></code>: ‘1000000000000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">tether</span></code>: ‘1000000000000000000000000000000’</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+<div class="section" id="id81">
+<h3>Returns<a class="headerlink" href="#id81" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: It always returns a string number.</p>
 </div>
 <div class="section" id="id82">
-<h3>Parameters<a class="headerlink" href="#id82" title="Permalink to this headline">¶</a></h3>
-<p>1. <code class="docutils literal"><span class="pre">number</span></code> - <code class="docutils literal"><span class="pre">String|Number|BN</span></code>: The value in wei.
-1. <code class="docutils literal"><span class="pre">unit</span></code> - <code class="docutils literal"><span class="pre">String</span></code> (optional, defaults to <code class="docutils literal"><span class="pre">&quot;ether&quot;</span></code>): The ether to convert to. Possible units are:</p>
-<blockquote>
-<div><ul class="simple">
-<li><code class="docutils literal"><span class="pre">noether</span></code>: &#8216;0&#8217;</li>
-<li><code class="docutils literal"><span class="pre">wei</span></code>: &#8216;1&#8217;</li>
-<li><code class="docutils literal"><span class="pre">kwei</span></code>: &#8216;1000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">Kwei</span></code>: &#8216;1000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">babbage</span></code>: &#8216;1000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">femtoether</span></code>: &#8216;1000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">mwei</span></code>: &#8216;1000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">Mwei</span></code>: &#8216;1000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">lovelace</span></code>: &#8216;1000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">picoether</span></code>: &#8216;1000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">gwei</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">Gwei</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">shannon</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">nanoether</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">nano</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">szabo</span></code>: &#8216;1000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">microether</span></code>: &#8216;1000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">micro</span></code>: &#8216;1000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">finney</span></code>: &#8216;1000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">milliether</span></code>: &#8216;1000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">milli</span></code>: &#8216;1000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">ether</span></code>: &#8216;1000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">kether</span></code>: &#8216;1000000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">grand</span></code>: &#8216;1000000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">mether</span></code>: &#8216;1000000000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">gether</span></code>: &#8216;1000000000000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">tether</span></code>: &#8216;1000000000000000000000000000000&#8217;</li>
-</ul>
-</div></blockquote>
-</div>
-<div class="section" id="id83">
-<h3>Returns<a class="headerlink" href="#id83" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String|BN</span></code>: If a number, or string is given it returns a number string, otherwise a <a class="reference external" href="https://github.com/indutny/bn.js/">BN.js</a> instance.</p>
-</div>
-<div class="section" id="id85">
-<h3>Example<a class="headerlink" href="#id85" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">fromWei</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;ether&#39;</span><span class="p">);</span>
+<h3>Example<a class="headerlink" href="#id82" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">fromWei</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;ether&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0.000000000000000001&quot;</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">fromWei</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;finney&#39;</span><span class="p">);</span>
@@ -948,52 +925,52 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="unitmap">
 <h2>unitMap<a class="headerlink" href="#unitmap" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">unitMap</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">unitMap</span>
 </pre></div>
 </div>
 <p>Shows all possible <a class="reference external" href="http://ethdocs.org/en/latest/ether.html">ether value</a> and their amount in <a class="reference external" href="http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na">wei</a>.</p>
-<div class="section" id="retrun-value">
-<h3>Retrun value<a class="headerlink" href="#retrun-value" title="Permalink to this headline">¶</a></h3>
-<ul>
+<div class="section" id="return-value">
+<h3>Return value<a class="headerlink" href="#return-value" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">Object</span></code> with the following properties:</dt>
-<dd><ul class="first last simple">
-<li><code class="docutils literal"><span class="pre">noether</span></code>: &#8216;0&#8217;</li>
-<li><code class="docutils literal"><span class="pre">wei</span></code>: &#8216;1&#8217;</li>
-<li><code class="docutils literal"><span class="pre">kwei</span></code>: &#8216;1000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">Kwei</span></code>: &#8216;1000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">babbage</span></code>: &#8216;1000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">femtoether</span></code>: &#8216;1000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">mwei</span></code>: &#8216;1000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">Mwei</span></code>: &#8216;1000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">lovelace</span></code>: &#8216;1000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">picoether</span></code>: &#8216;1000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">gwei</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">Gwei</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">shannon</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">nanoether</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">nano</span></code>: &#8216;1000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">szabo</span></code>: &#8216;1000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">microether</span></code>: &#8216;1000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">micro</span></code>: &#8216;1000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">finney</span></code>: &#8216;1000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">milliether</span></code>: &#8216;1000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">milli</span></code>: &#8216;1000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">ether</span></code>: &#8216;1000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">kether</span></code>: &#8216;1000000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">grand</span></code>: &#8216;1000000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">mether</span></code>: &#8216;1000000000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">gether</span></code>: &#8216;1000000000000000000000000000&#8217;</li>
-<li><code class="docutils literal"><span class="pre">tether</span></code>: &#8216;1000000000000000000000000000000&#8217;</li>
+<dt><code class="docutils literal notranslate"><span class="pre">Object</span></code> with the following properties:</dt>
+<dd><ul class="first last">
+<li><code class="docutils literal notranslate"><span class="pre">noether</span></code>: ‘0’</li>
+<li><code class="docutils literal notranslate"><span class="pre">wei</span></code>: ‘1’</li>
+<li><code class="docutils literal notranslate"><span class="pre">kwei</span></code>: ‘1000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">Kwei</span></code>: ‘1000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">babbage</span></code>: ‘1000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">femtoether</span></code>: ‘1000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">mwei</span></code>: ‘1000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">Mwei</span></code>: ‘1000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">lovelace</span></code>: ‘1000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">picoether</span></code>: ‘1000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">gwei</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">Gwei</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">shannon</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">nanoether</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">nano</span></code>: ‘1000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">szabo</span></code>: ‘1000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">microether</span></code>: ‘1000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">micro</span></code>: ‘1000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">finney</span></code>: ‘1000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">milliether</span></code>: ‘1000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">milli</span></code>: ‘1000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">ether</span></code>: ‘1000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">kether</span></code>: ‘1000000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">grand</span></code>: ‘1000000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">mether</span></code>: ‘1000000000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">gether</span></code>: ‘1000000000000000000000000000’</li>
+<li><code class="docutils literal notranslate"><span class="pre">tether</span></code>: ‘1000000000000000000000000000000’</li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
 </div>
-<div class="section" id="id88">
-<h3>Example<a class="headerlink" href="#id88" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">unitMap</span>
+<div class="section" id="id85">
+<h3>Example<a class="headerlink" href="#id85" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">unitMap</span>
 <span class="o">&gt;</span> <span class="p">{</span>
     <span class="nx">noether</span><span class="o">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
     <span class="nx">wei</span><span class="o">:</span>        <span class="s1">&#39;1&#39;</span><span class="p">,</span>
@@ -1030,26 +1007,26 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="padleft">
 <h2>padLeft<a class="headerlink" href="#padleft" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padLeft</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">characterAmount</span> <span class="p">[,</span> <span class="nx">sign</span><span class="p">])</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padLeft</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">characterAmount</span> <span class="p">[,</span> <span class="nx">sign</span><span class="p">])</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">leftPad</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">characterAmount</span> <span class="p">[,</span> <span class="nx">sign</span><span class="p">])</span> <span class="c1">// ALIAS</span>
 </pre></div>
 </div>
 <p>Adds a padding on the left of a string, Useful for adding paddings to HEX strings.</p>
-<div class="section" id="id89">
-<h3>Parameters<a class="headerlink" href="#id89" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id86">
+<h3>Parameters<a class="headerlink" href="#id86" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">string</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: The string to add padding on the left.</li>
-<li><code class="docutils literal"><span class="pre">characterAmount</span></code> - <code class="docutils literal"><span class="pre">Number</span></code>: The number of characters the total string should have.</li>
-<li><code class="docutils literal"><span class="pre">sign</span></code> - <code class="docutils literal"><span class="pre">String</span></code> (optional): The character sign to use, defaults to <code class="docutils literal"><span class="pre">&quot;0&quot;</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">string</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: The string to add padding on the left.</li>
+<li><code class="docutils literal notranslate"><span class="pre">characterAmount</span></code> - <code class="docutils literal notranslate"><span class="pre">Number</span></code>: The number of characters the total string should have.</li>
+<li><code class="docutils literal notranslate"><span class="pre">sign</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code> (optional): The character sign to use, defaults to <code class="docutils literal notranslate"><span class="pre">&quot;0&quot;</span></code>.</li>
 </ol>
 </div>
-<div class="section" id="id90">
-<h3>Returns<a class="headerlink" href="#id90" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The padded string.</p>
+<div class="section" id="id87">
+<h3>Returns<a class="headerlink" href="#id87" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The padded string.</p>
 </div>
-<div class="section" id="id91">
-<h3>Example<a class="headerlink" href="#id91" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padLeft</span><span class="p">(</span><span class="s1">&#39;0x3456ff&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+<div class="section" id="id88">
+<h3>Example<a class="headerlink" href="#id88" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padLeft</span><span class="p">(</span><span class="s1">&#39;0x3456ff&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x000000000000003456ff&quot;</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padLeft</span><span class="p">(</span><span class="mh">0x3456ff</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
@@ -1064,26 +1041,26 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="padright">
 <h2>padRight<a class="headerlink" href="#padright" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padRight</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">characterAmount</span> <span class="p">[,</span> <span class="nx">sign</span><span class="p">])</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padRight</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">characterAmount</span> <span class="p">[,</span> <span class="nx">sign</span><span class="p">])</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">rightPad</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">characterAmount</span> <span class="p">[,</span> <span class="nx">sign</span><span class="p">])</span> <span class="c1">// ALIAS</span>
 </pre></div>
 </div>
 <p>Adds a padding on the right of a string, Useful for adding paddings to HEX strings.</p>
-<div class="section" id="id92">
-<h3>Parameters<a class="headerlink" href="#id92" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id89">
+<h3>Parameters<a class="headerlink" href="#id89" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">string</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: The string to add padding on the right.</li>
-<li><code class="docutils literal"><span class="pre">characterAmount</span></code> - <code class="docutils literal"><span class="pre">Number</span></code>: The number of characters the total string should have.</li>
-<li><code class="docutils literal"><span class="pre">sign</span></code> - <code class="docutils literal"><span class="pre">String</span></code> (optional): The character sign to use, defaults to <code class="docutils literal"><span class="pre">&quot;0&quot;</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">string</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: The string to add padding on the right.</li>
+<li><code class="docutils literal notranslate"><span class="pre">characterAmount</span></code> - <code class="docutils literal notranslate"><span class="pre">Number</span></code>: The number of characters the total string should have.</li>
+<li><code class="docutils literal notranslate"><span class="pre">sign</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code> (optional): The character sign to use, defaults to <code class="docutils literal notranslate"><span class="pre">&quot;0&quot;</span></code>.</li>
 </ol>
 </div>
-<div class="section" id="id93">
-<h3>Returns<a class="headerlink" href="#id93" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The padded string.</p>
+<div class="section" id="id90">
+<h3>Returns<a class="headerlink" href="#id90" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The padded string.</p>
 </div>
-<div class="section" id="id94">
-<h3>Example<a class="headerlink" href="#id94" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padRight</span><span class="p">(</span><span class="s1">&#39;0x3456ff&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+<div class="section" id="id91">
+<h3>Example<a class="headerlink" href="#id91" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padRight</span><span class="p">(</span><span class="s1">&#39;0x3456ff&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x3456ff00000000000000&quot;</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padRight</span><span class="p">(</span><span class="mh">0x3456ff</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
@@ -1098,23 +1075,23 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <hr class="docutils" />
 <div class="section" id="totwoscomplement">
 <h2>toTwosComplement<a class="headerlink" href="#totwoscomplement" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toTwosComplement</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toTwosComplement</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Converts a negative numer into a two&#8217;s complement.</p>
-<div class="section" id="id95">
-<h3>Parameters<a class="headerlink" href="#id95" title="Permalink to this headline">¶</a></h3>
+<p>Converts a negative numer into a two’s complement.</p>
+<div class="section" id="id92">
+<h3>Parameters<a class="headerlink" href="#id92" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">number</span></code> - <code class="docutils literal"><span class="pre">Number|String|BigNumber</span></code>: The number to convert.</li>
+<li><code class="docutils literal notranslate"><span class="pre">number</span></code> - <code class="docutils literal notranslate"><span class="pre">Number|String|BigNumber</span></code>: The number to convert.</li>
 </ol>
 </div>
-<div class="section" id="id96">
-<h3>Returns<a class="headerlink" href="#id96" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">String</span></code>: The converted hex string.</p>
+<div class="section" id="id93">
+<h3>Returns<a class="headerlink" href="#id93" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The converted hex string.</p>
 </div>
-<div class="section" id="id97">
-<h3>Example<a class="headerlink" href="#id97" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toTwosComplement</span><span class="p">(</span><span class="s1">&#39;-1&#39;</span><span class="p">);</span>
+<div class="section" id="id94">
+<h3>Example<a class="headerlink" href="#id94" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toTwosComplement</span><span class="p">(</span><span class="s1">&#39;-1&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff&quot;</span>
 
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toTwosComplement</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
@@ -1132,6 +1109,31 @@ Text strings will be interpreted as UTF-8 strings.</p>
 </div>
 </div>
 </div>
+<hr class="docutils" />
+<div class="section" id="getsignatureparameters">
+<h2>getSignatureParameters<a class="headerlink" href="#getsignatureparameters" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">getSignatureParameters</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Gets the r, s and v values of an ECDSA signature</p>
+<div class="section" id="id95">
+<h3>Parameters<a class="headerlink" href="#id95" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><code class="docutils literal notranslate"><span class="pre">string</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: An ECDSA signature.</li>
+</ol>
+</div>
+<div class="section" id="id96">
+<h3>Returns<a class="headerlink" href="#id96" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Object</span></code>: Object containing r,s,v values.</p>
+</div>
+<div class="section" id="id97">
+<h3>Example<a class="headerlink" href="#id97" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">getSignatureParameters</span><span class="p">(</span><span class="s1">&#39;0x5763ab346198e3e6cc4d53996ccdeca0c941cb6cb70d671d97711c421d3bf7922c77ef244ad40e5262d1721bf9638fb06bab8ed3c43bfaa80d6da0be9bbd33dc1b&#39;</span><span class="p">);</span>
+<span class="o">&gt;</span> <span class="s2">&quot;{ r: &#39;0x5763ab346198e3e6cc4d53996ccdeca0c941cb6cb70d671d97711c421d3bf792&#39;, s: &#39;0x2c77ef244ad40e5262d1721bf9638fb06bab8ed3c43bfaa80d6da0be9bbd33dc&#39;, v: 27 }&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -1140,7 +1142,7 @@ Text strings will be interpreted as UTF-8 strings.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">web3.utils</a><ul>
 <li><a class="reference internal" href="#randomhex">randomHex</a><ul>
@@ -1149,166 +1151,168 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <li><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id2">_</a><ul>
-<li><a class="reference internal" href="#id3">Example</a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#bn">BN</a><ul>
-<li><a class="reference internal" href="#id4">Parameters</a></li>
-<li><a class="reference internal" href="#id5">Returns</a></li>
-<li><a class="reference internal" href="#id7">Example</a></li>
+<li><a class="reference internal" href="#id2">Parameters</a></li>
+<li><a class="reference internal" href="#id3">Returns</a></li>
+<li><a class="reference internal" href="#id5">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#isbn">isBN</a><ul>
-<li><a class="reference internal" href="#id9">Parameters</a></li>
-<li><a class="reference internal" href="#id11">Returns</a></li>
-<li><a class="reference internal" href="#id12">Example</a></li>
+<li><a class="reference internal" href="#id7">Parameters</a></li>
+<li><a class="reference internal" href="#id9">Returns</a></li>
+<li><a class="reference internal" href="#id10">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#isbignumber">isBigNumber</a><ul>
-<li><a class="reference internal" href="#id14">Parameters</a></li>
-<li><a class="reference internal" href="#id16">Returns</a></li>
-<li><a class="reference internal" href="#id17">Example</a></li>
+<li><a class="reference internal" href="#id12">Parameters</a></li>
+<li><a class="reference internal" href="#id14">Returns</a></li>
+<li><a class="reference internal" href="#id15">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#sha3">sha3</a><ul>
-<li><a class="reference internal" href="#id18">Parameters</a></li>
-<li><a class="reference internal" href="#id19">Returns</a></li>
-<li><a class="reference internal" href="#id20">Example</a></li>
+<li><a class="reference internal" href="#id16">Parameters</a></li>
+<li><a class="reference internal" href="#id17">Returns</a></li>
+<li><a class="reference internal" href="#id18">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#soliditysha3">soliditySha3</a><ul>
-<li><a class="reference internal" href="#id21">Parameters</a></li>
-<li><a class="reference internal" href="#id22">Returns</a></li>
-<li><a class="reference internal" href="#id23">Example</a></li>
+<li><a class="reference internal" href="#id19">Parameters</a></li>
+<li><a class="reference internal" href="#id20">Returns</a></li>
+<li><a class="reference internal" href="#id21">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ishex">isHex</a><ul>
-<li><a class="reference internal" href="#id24">Parameters</a></li>
-<li><a class="reference internal" href="#id25">Returns</a></li>
-<li><a class="reference internal" href="#id26">Example</a></li>
+<li><a class="reference internal" href="#id22">Parameters</a></li>
+<li><a class="reference internal" href="#id23">Returns</a></li>
+<li><a class="reference internal" href="#id24">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ishexstrict">isHexStrict</a><ul>
-<li><a class="reference internal" href="#id27">Parameters</a></li>
-<li><a class="reference internal" href="#id28">Returns</a></li>
-<li><a class="reference internal" href="#id29">Example</a></li>
+<li><a class="reference internal" href="#id25">Parameters</a></li>
+<li><a class="reference internal" href="#id26">Returns</a></li>
+<li><a class="reference internal" href="#id27">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#isaddress">isAddress</a><ul>
-<li><a class="reference internal" href="#id30">Parameters</a></li>
-<li><a class="reference internal" href="#id31">Returns</a></li>
-<li><a class="reference internal" href="#id32">Example</a></li>
+<li><a class="reference internal" href="#id28">Parameters</a></li>
+<li><a class="reference internal" href="#id29">Returns</a></li>
+<li><a class="reference internal" href="#id30">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#tochecksumaddress">toChecksumAddress</a><ul>
-<li><a class="reference internal" href="#id33">Parameters</a></li>
-<li><a class="reference internal" href="#id34">Returns</a></li>
-<li><a class="reference internal" href="#id35">Example</a></li>
+<li><a class="reference internal" href="#id31">Parameters</a></li>
+<li><a class="reference internal" href="#id32">Returns</a></li>
+<li><a class="reference internal" href="#id33">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#checkaddresschecksum">checkAddressChecksum</a><ul>
-<li><a class="reference internal" href="#id36">Parameters</a></li>
-<li><a class="reference internal" href="#id37">Returns</a></li>
-<li><a class="reference internal" href="#id38">Example</a></li>
+<li><a class="reference internal" href="#id34">Parameters</a></li>
+<li><a class="reference internal" href="#id35">Returns</a></li>
+<li><a class="reference internal" href="#id36">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#tohex">toHex</a><ul>
-<li><a class="reference internal" href="#id39">Parameters</a></li>
-<li><a class="reference internal" href="#id40">Returns</a></li>
-<li><a class="reference internal" href="#id41">Example</a></li>
+<li><a class="reference internal" href="#id37">Parameters</a></li>
+<li><a class="reference internal" href="#id38">Returns</a></li>
+<li><a class="reference internal" href="#id39">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#tobn">toBN</a><ul>
-<li><a class="reference internal" href="#id45">Parameters</a></li>
-<li><a class="reference internal" href="#id46">Returns</a></li>
-<li><a class="reference internal" href="#id48">Example</a></li>
+<li><a class="reference internal" href="#id43">Parameters</a></li>
+<li><a class="reference internal" href="#id44">Returns</a></li>
+<li><a class="reference internal" href="#id46">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#hextonumberstring">hexToNumberString</a><ul>
-<li><a class="reference internal" href="#id49">Parameters</a></li>
-<li><a class="reference internal" href="#id50">Returns</a></li>
-<li><a class="reference internal" href="#id51">Example</a></li>
+<li><a class="reference internal" href="#id47">Parameters</a></li>
+<li><a class="reference internal" href="#id48">Returns</a></li>
+<li><a class="reference internal" href="#id49">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#hextonumber">hexToNumber</a><ul>
-<li><a class="reference internal" href="#id52">Parameters</a></li>
-<li><a class="reference internal" href="#id53">Returns</a></li>
-<li><a class="reference internal" href="#id54">Example</a></li>
+<li><a class="reference internal" href="#id50">Parameters</a></li>
+<li><a class="reference internal" href="#id51">Returns</a></li>
+<li><a class="reference internal" href="#id52">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#numbertohex">numberToHex</a><ul>
-<li><a class="reference internal" href="#id55">Parameters</a></li>
-<li><a class="reference internal" href="#id56">Returns</a></li>
-<li><a class="reference internal" href="#id57">Example</a></li>
+<li><a class="reference internal" href="#id53">Parameters</a></li>
+<li><a class="reference internal" href="#id54">Returns</a></li>
+<li><a class="reference internal" href="#id55">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#hextoutf8">hexToUtf8</a><ul>
-<li><a class="reference internal" href="#id58">Parameters</a></li>
-<li><a class="reference internal" href="#id59">Returns</a></li>
-<li><a class="reference internal" href="#id60">Example</a></li>
+<li><a class="reference internal" href="#id56">Parameters</a></li>
+<li><a class="reference internal" href="#id57">Returns</a></li>
+<li><a class="reference internal" href="#id58">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#hextoascii">hexToAscii</a><ul>
-<li><a class="reference internal" href="#id61">Parameters</a></li>
-<li><a class="reference internal" href="#id62">Returns</a></li>
-<li><a class="reference internal" href="#id63">Example</a></li>
+<li><a class="reference internal" href="#id59">Parameters</a></li>
+<li><a class="reference internal" href="#id60">Returns</a></li>
+<li><a class="reference internal" href="#id61">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#utf8tohex">utf8ToHex</a><ul>
-<li><a class="reference internal" href="#id64">Parameters</a></li>
-<li><a class="reference internal" href="#id65">Returns</a></li>
-<li><a class="reference internal" href="#id66">Example</a></li>
+<li><a class="reference internal" href="#id62">Parameters</a></li>
+<li><a class="reference internal" href="#id63">Returns</a></li>
+<li><a class="reference internal" href="#id64">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#asciitohex">asciiToHex</a><ul>
-<li><a class="reference internal" href="#id67">Parameters</a></li>
-<li><a class="reference internal" href="#id68">Returns</a></li>
-<li><a class="reference internal" href="#id69">Example</a></li>
+<li><a class="reference internal" href="#id65">Parameters</a></li>
+<li><a class="reference internal" href="#id66">Returns</a></li>
+<li><a class="reference internal" href="#id67">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#hextobytes">hexToBytes</a><ul>
-<li><a class="reference internal" href="#id70">Parameters</a></li>
-<li><a class="reference internal" href="#id71">Returns</a></li>
-<li><a class="reference internal" href="#id72">Example</a></li>
+<li><a class="reference internal" href="#id68">Parameters</a></li>
+<li><a class="reference internal" href="#id69">Returns</a></li>
+<li><a class="reference internal" href="#id70">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#bytestohex">bytesToHex</a><ul>
-<li><a class="reference internal" href="#id73">Parameters</a></li>
-<li><a class="reference internal" href="#id74">Returns</a></li>
-<li><a class="reference internal" href="#id75">Example</a></li>
+<li><a class="reference internal" href="#id71">Parameters</a></li>
+<li><a class="reference internal" href="#id72">Returns</a></li>
+<li><a class="reference internal" href="#id73">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#towei">toWei</a><ul>
-<li><a class="reference internal" href="#id76">Parameters</a></li>
-<li><a class="reference internal" href="#id77">Returns</a></li>
-<li><a class="reference internal" href="#id79">Example</a></li>
+<li><a class="reference internal" href="#id74">Parameters</a></li>
+<li><a class="reference internal" href="#id75">Returns</a></li>
+<li><a class="reference internal" href="#id77">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#fromwei">fromWei</a><ul>
-<li><a class="reference internal" href="#id82">Parameters</a></li>
-<li><a class="reference internal" href="#id83">Returns</a></li>
-<li><a class="reference internal" href="#id85">Example</a></li>
+<li><a class="reference internal" href="#id80">Parameters</a></li>
+<li><a class="reference internal" href="#id81">Returns</a></li>
+<li><a class="reference internal" href="#id82">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#unitmap">unitMap</a><ul>
-<li><a class="reference internal" href="#retrun-value">Retrun value</a></li>
-<li><a class="reference internal" href="#id88">Example</a></li>
+<li><a class="reference internal" href="#return-value">Return value</a></li>
+<li><a class="reference internal" href="#id85">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#padleft">padLeft</a><ul>
+<li><a class="reference internal" href="#id86">Parameters</a></li>
+<li><a class="reference internal" href="#id87">Returns</a></li>
+<li><a class="reference internal" href="#id88">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#padright">padRight</a><ul>
 <li><a class="reference internal" href="#id89">Parameters</a></li>
 <li><a class="reference internal" href="#id90">Returns</a></li>
 <li><a class="reference internal" href="#id91">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#padright">padRight</a><ul>
+<li><a class="reference internal" href="#totwoscomplement">toTwosComplement</a><ul>
 <li><a class="reference internal" href="#id92">Parameters</a></li>
 <li><a class="reference internal" href="#id93">Returns</a></li>
 <li><a class="reference internal" href="#id94">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#totwoscomplement">toTwosComplement</a><ul>
+<li><a class="reference internal" href="#getsignatureparameters">getSignatureParameters</a><ul>
 <li><a class="reference internal" href="#id95">Parameters</a></li>
 <li><a class="reference internal" href="#id96">Returns</a></li>
 <li><a class="reference internal" href="#id97">Example</a></li>
@@ -1324,18 +1328,20 @@ Text strings will be interpreted as UTF-8 strings.</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/web3-utils.txt"
+      <li><a href="_sources/web3-utils.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1356,7 +1362,7 @@ Text strings will be interpreted as UTF-8 strings.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Ethereum.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
     </div>
   </body>
 </html>
