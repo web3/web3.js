@@ -33,11 +33,12 @@ export default class TypeFactory {
     createType(params) {
         /* Set the error messages */
 
-        /* These should contain the error messages that explain
+        /**
+         * These functions should contain the error messages that explain
          * why an object creation failed.
-        */
+         */
         const error = {
-            /* parameter: "Explanation of why it was rejected" */
+            /* parameter: (value) => `Explanation of why parameter ${value} was rejected` */
         };
 
         /* Initialise the params */

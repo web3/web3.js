@@ -33,18 +33,21 @@ export default class TransactionFactory {
     createTransaction(params) {
         /* Set the error messages */
         const error = {
-            from:
-                "The 'from' parameter needs to be an address or a wallet index number.\n" +
+            from: (value) =>
+                `The 'from' parameter ${value} needs to be an address or a wallet index number.\n` +
                 'The address needs to be hex encoded, supplied as a string, and checksummed.',
-            to: "The 'to' parameter needs to be an address or 'deploy' when deploying code.",
-            value:
-                "The 'value' parameter needs to be zero or positive, and in number, BN, BigNumber or string format.\n" +
+            to: (value) => `The 'to' parameter ${value} needs to be an address or 'deploy' when deploying code.`,
+            value: (value) =>
+                `The 'value' parameter ${value} needs to be zero or positive, and in number, BN, BigNumber or string format.\n` +
                 "Use 'none' for 0 ether.",
-            gas: '',
-            gasPrice: '',
-            data: "The 'data' parameter needs to be hex encoded.\n" + "Use 'none' for no payload.",
-            nonce: "The 'nonce' parameter needs to be an integer.\n" + "Use 'auto' to set the RPC-calculated nonce.",
-            chainId: "The 'chainId' parameter needs to be an integer.\n" + "Use 'main' to set the mainnet chain ID."
+            gas: (value) => `${value}`,
+            gasPrice: (value) => `${value}`,
+            data: (value) => `The 'data' parameter ${value} needs to be hex encoded.\n` + "Use 'none' for no payload.",
+            nonce: (value) =>
+                `The 'nonce' parameter ${value} needs to be an integer.\n` +
+                "Use 'auto' to set the RPC-calculated nonce.",
+            chainId: (value) =>
+                `The 'chainId' parameter ${value} needs to be an integer.\n` + "Use 'main' to set the mainnet chain ID."
         };
 
         /* Initialise the params */

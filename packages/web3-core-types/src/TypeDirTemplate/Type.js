@@ -39,7 +39,7 @@ export default class Type {
         /* 1) Set the errors */
         this.error = error; 
 
-        /* 2) Set the inital values */
+        /* 2) Set the initial values */
         this.initParams = initParams; 
         
         /* 3) Initialize the parameters */
@@ -64,10 +64,10 @@ export default class Type {
 
         /* 7) Throw if any parameter is still undefined */
         Object.keys(this.props).forEach((key) => {
-            typeof this.props[key] === 'undefined' && this._throw(this.error[key]);
+            typeof this.props[key] === 'undefined' && this._throw(this.error[key], params[key]);
         });
         
-        /* 8) Make the params immutable */
+        /* 8) Make the props immutable */
         Object.freeze(this.props);
     }
 
@@ -107,7 +107,7 @@ export default class Type {
     /**
      * _throw is wrap the error throw when checking for parsing errors
      */
-    _throw(message) {
-        throw message;
+    _throw(message, value) {
+        throw message(value);
     }
 }

@@ -22,19 +22,17 @@ describe('TransactionTest', () => {
     };
 
     const error = {
-        from: "The 'from' parameter needs to be an address or a wallet index number.",
-        to: "The 'to' parameter needs to be an address or 'deploy' when deploying code.",
-        value:
-            "The 'value' parameter needs to be zero or positive, and in number, BN, BigNumber or string format.\n" +
-            "Use 'none' for 0 ether.",
-        gas: '',
-        gasPrice: '',
-        data: "The 'data' parameter needs to be hex encoded.\n" + "Use 'none' for no payload.",
-        nonce: "The 'nonce' parameter needs to be an integer.\n" + "Use 'auto' to set the RPC-calculated nonce.",
-        chainId: "The 'chainId' parameter needs to be an integer.\n" + "Use 'main' to set the mainnet chain ID."
+        from: () => 'err msg',
+        to: () => 'err msg',
+        value: () => 'err msg',
+        gas: () => 'err msg',
+        gasPrice: () => 'err msg',
+        data: () => 'err msg',
+        nonce: () => 'err msg',
+        chainId: () => 'err msg'
     };
 
-    const params = {
+    const initParams = {
         from: undefined,
         to: undefined,
         value: undefined,
@@ -50,7 +48,7 @@ describe('TransactionTest', () => {
     });
 
     it('constructor check', () => {
-        transaction = new Transaction(txParamsTest, error, params);
+        transaction = new Transaction(txParamsTest, error, initParams);
 
         expect(transaction).toHaveProperty('error');
         expect(transaction).toHaveProperty('props');
@@ -66,7 +64,7 @@ describe('TransactionTest', () => {
         tests.forEach((test) => {
             txParamsTest.value = test.value;
 
-            transaction = new Transaction(txParamsTest, error, params);
+            transaction = new Transaction(txParamsTest, error, initParams);
 
             expect(transaction).toHaveProperty('props');
             expect(transaction.props.value).toEqual(test.is);
@@ -79,7 +77,7 @@ describe('TransactionTest', () => {
         tests.forEach((test) => {
             txParamsTest.gas = test.value;
 
-            transaction = new Transaction(txParamsTest, error, params);
+            transaction = new Transaction(txParamsTest, error, initParams);
 
             expect(transaction).toHaveProperty('props');
             expect(transaction.props.gas).toEqual(test.value);
@@ -88,7 +86,7 @@ describe('TransactionTest', () => {
 
     it('removes "to" for code deployment', () => {
         txParamsTest.to = 'deploy';
-        transaction = new Transaction(txParamsTest, error, params);
+        transaction = new Transaction(txParamsTest, error, initParams);
 
         expect(transaction).toHaveProperty('props');
         expect(transaction.props).not.toHaveProperty('to');
@@ -96,7 +94,7 @@ describe('TransactionTest', () => {
 
     it('sets 0 value for "none"', () => {
         txParamsTest.value = 'none';
-        transaction = new Transaction(txParamsTest, error, params);
+        transaction = new Transaction(txParamsTest, error, initParams);
 
         expect(transaction).toHaveProperty('props');
         expect(transaction.props.value).toMatchObject(Utils.toBN(0));
@@ -104,14 +102,14 @@ describe('TransactionTest', () => {
 
     it('sets 0x data for "none"', () => {
         txParamsTest.data = 'none';
-        transaction = new Transaction(txParamsTest, error, params);
+        transaction = new Transaction(txParamsTest, error, initParams);
 
         expect(transaction).toHaveProperty('props');
         expect(transaction.props.data).toHaveProperty('isHex');
     });
 
     it('gets properties', () => {
-        transaction = new Transaction(txParamsTest, error, params);
+        transaction = new Transaction(txParamsTest, error, initParams);
 
         Object.keys(txParamsTest).forEach((param) => {
             const getter = transaction[param].toString();

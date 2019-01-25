@@ -20,6 +20,7 @@
  * @date 2019
  */
 
+import TypeClass from './Type';
 import TypeFactory from './factories/TypeFactory';
 
 /**
@@ -32,3 +33,12 @@ import TypeFactory from './factories/TypeFactory';
 export const Type = (params) => {
     return new TypeFactory().createType(params);
 };
+
+/* Expose static calls */
+Type.method = TypeClass.method;
+
+
+/* Pre-process a static calls */
+Type.method = (value) => {
+    return TypeClass.method(value);
+}

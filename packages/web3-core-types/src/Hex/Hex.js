@@ -61,7 +61,7 @@ export default class Hex {
 
         /* Throw if any parameter is still undefined */
         Object.keys(this.props).forEach((key) => {
-            typeof this.props[key] === 'undefined' && this._throw(this.error[key]);
+            typeof this.props[key] === 'undefined' && this._throw(this.error[key], params[key]);
         });
 
         /* Make the props immutable */
@@ -157,7 +157,7 @@ export default class Hex {
      *
      * @method _throw
      */
-    _throw(message) {
-        throw message;
+    _throw(message, value) {
+        throw message(value);
     }
 }

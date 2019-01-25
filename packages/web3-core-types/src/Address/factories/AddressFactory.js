@@ -33,10 +33,13 @@ export default class AddressFactory {
     createAddress(params) {
         /* Set the error messages */
         const error = {
-            address:
-                'The address needs to be hex encoded, supplied as a string.\n Addresses may be prefixed with 0x and are 40 hex characters long.',
-            isChecksummed:
-                "The parameter 'isChecksummed' needs to be true or false.\ntrue means the supplied address is checksummed, and will throw if it isn't.\nfalse means the address may or may not be checksummed."
+            address: (value) =>
+                `The 'address' parameter ${value} needs to be hex encoded, supplied as a string.\n` +
+                'Addresses may be prefixed with 0x and are 40 hex characters long.',
+            isChecksummed: (value) =>
+                `The 'isChecksummed' parameter ${value} needs to be true or false.\n` +
+                "true means the supplied address is checksummed, and will throw if it isn't.\n" +
+                'false means the address may or may not be checksummed.'
         };
 
         /* Initialise the params */
