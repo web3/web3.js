@@ -96,9 +96,7 @@ npm run dev // runs rollup with a watcher
 
 ### Support
 
-![chrome](https://img.shields.io/badge/chrome-latest%202%20versions-green.svg)
-![firefox](https://img.shields.io/badge/firefox-latest%202%20versions-green.svg)
-![opera](https://img.shields.io/badge/opera-latest%202%20versions-green.svg)
+![browsers](https://img.shields.io/badge/browsers-latest%202%20versions-brightgreen.svg)
 ![node](https://img.shields.io/badge/node->=6-green.svg)
 
 ### Community
