@@ -20,13 +20,14 @@
  * @date 2019
  */
 
-import {isAddress, isBN, isBigNumber, toBN, isHex} from 'web3-utils';
+// import {isBN, isBigNumber, toBN, isHex} from 'web3-utils';
+import {Address} from '../Address';
 import {isNaN, omit, cloneDeep} from 'lodash';
 
 export default class Transaction {
     /**
-     * @param {String|Number} from
-     * @param {String|"deploy"} to
+     * @param {Address} from
+     * @param {Address|"deploy"} to
      * @param {Number|BN|BigNumber|String|"none"} value
      * @param {Number|"auto"} gas
      * @param {Number|BN|BigNumber|String|"auto"} gasPrice
@@ -41,14 +42,9 @@ export default class Transaction {
         this.params = cloneDeep(initParams);
 
         /* Check for type and format validity */
-        this.params.from =
-            isAddress(params.from) || Number.isInteger(params.from)
-                ? params.from.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2').toLowerCase()
-                : undefined;
+        this.params.from = params.from instanceof Address ? params.from : undefined;
 
-        this.params.to = isAddress(params.to)
-            ? params.to.replace(/(0x)([0-9a-fA-F]{40})/gm, '0x$2').toLowerCase()
-            : undefined;
+        this.params.to = params.to instanceof Address ? params.to : undefined;
 
         this.params.value =
             (!isNaN(params.value) && Number.isInteger(params.value) && params.value >= 0) ||

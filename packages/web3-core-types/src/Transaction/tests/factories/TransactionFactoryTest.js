@@ -1,8 +1,8 @@
-import TransactionFactory from '../../src/factories/TransactionFactory';
-import Transaction from '../../src/Transaction';
+import TransactionFactory from '../../factories/TransactionFactory';
+import Transaction from '../../Transaction';
 
 // Mocks
-jest.mock('../../src/Transaction');
+jest.mock('../../Transaction');
 
 /**
  * TransactionFactory test

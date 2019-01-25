@@ -1,8 +1,8 @@
-import TypeFactory from '../../src/factories/TypeFactory';
-import Type from '../../src/Type';
+import TypeFactory from '../../factories/TypeFactory';
+import Type from '../../Type';
 
 // Mocks
-jest.mock('../../src/Type');
+jest.mock('../../Type');
 
 /**
  * TypeFactory test

@@ -1,16 +1,16 @@
 import Address from '../Address';
 import sha3 from '../../sha3';
 
-jest.mock('../../sha3');
 /**
  * Address test
  */
 describe('AddressTest', () => {
     let address;
     const error = {
-        address: 'The address needs to be hex encoded, supplied as a string.',
+        address:
+            'The address needs to be hex encoded, supplied as a string.\n Addresses may be prefixed with 0x and are 40 hex characters long.',
         isChecksummed:
-            "The parameter 'isChecksum' needs to be true or false.\ntrue means the supplied address is checksummed. false means the address may or may not be checksummed."
+            "The parameter 'isChecksummed' needs to be true or false.\ntrue means the supplied address is checksummed, and will throw if it isn't.\nfalse means the address may or may not be checksummed."
     };
 
     const initParams = {
@@ -19,15 +19,11 @@ describe('AddressTest', () => {
     };
 
     const data = {
-        address: '0x0E5165F9D5B56cfD5E33e6BA9AB6f114382AF9C4',
+        address: '0xE247A45c287191d435A8a5D72A7C8dc030451E9F',
         isChecksummed: false
     };
 
     beforeEach(() => {
-        sha3.mockImplementation(() => {
-            return '0x8f1328e5affc41692dba18acbd8d209af83db094e4d84c32325130350929562e';
-        });
-
         address = new Address(data, error, initParams);
     });
 
@@ -37,11 +33,10 @@ describe('AddressTest', () => {
     });
 
     it('checksums the address', () => {
-        const isChecksummed = address.toChecksumAddress();
-        expect(isChecksummed.isValidChecksum()).toEqual(true);
+        expect(address.toChecksumAddress().isValidChecksum()).toEqual(true);
     });
 
-    it('checks the checksum', () => {
-        expect(Address.isValidChecksum(data.address)).toEqual(true);
+    it('checks the checksum of an address string', () => {
+        expect(Address.isValidChecksum(data.address)).toEqual(false);
     });
 });

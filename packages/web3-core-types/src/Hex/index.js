@@ -20,5 +20,15 @@
  * @date 2019
  */
 
-export * from './Address';
-export * from './Transaction';
+import HexFactory from './factories/HexFactory';
+
+/**
+ * Returns an object of Hex
+ *
+ * @returns {Hex}
+ *
+ * @constructor
+ */
+export const Hex = (params) => {
+    return new HexFactory().createHex(params);
+};

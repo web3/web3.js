@@ -1,5 +1,5 @@
 import {cloneDeep} from 'lodash';
-import Type from '../src/Type';
+import Type from '../Type';
 
 /**
  * Type test

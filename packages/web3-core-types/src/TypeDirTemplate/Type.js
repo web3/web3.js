@@ -35,43 +35,68 @@ export default class Type {
          * after being filtered.
          * this.params start assigned to undefined via initParams */
 
-        /* Set the errors */
+        /* 1) Set the errors */
         this.error = error; 
 
-        /* Set the inital values */
+        /* 2) Set the inital values */
         this.initParams = initParams; 
         
-        /* Initialize the parameters */
+        /* 3) Initialize the parameters */
         this.params = cloneDeep(initParams); 
+      
+        /* 4) Reshape params to emulate different constructor overrides */
+        if(!isObject(params)) {
+            params = {
+                p1: params,
+                p2: /* default safe value */
+            }
+        }
         
-        /* Check for type and format validity */
+        /* 5) Check for type and format validity */
         this.params.p = /* condition check */
                 ? /* parameter standarization */
                 : undefined;
 
 
-        /* Check for default, auto, none, etc. key values */
+        /* 6) Check for default, auto, none, etc. key values */
         if (params.p === 'auto') this.params.p = /* default/auto/empty value */
 
-        /* Throw if any parameter is still undefined */
+        /* 7) Throw if any parameter is still undefined */
         Object.keys(this.params).forEach((key) => {
             typeof this.params[key] === 'undefined' && this._throw(this.error[key]);
         });
         
-        /* Make the params immutable */
-        Object.freeze(params);
+        /* 8) Make the params immutable */
+        Object.freeze(this.params);
     }
 
-    /* Class functions */
+    /**
+     * Class functions
+     *
+     * @dev Methods that do not require the parameter to be of the class 
+     * e.g. type checking
+     */
     static foo(p1) {
       return 
     }
 
-    /* Instance accessors */
+    /**
+     * Instance accessors
+     *
+     * @dev Methods require a valid instance of the class
+     * e.g. object parsing
+     */
     foo() {
       return Type.foo(/* this value */);
     }
+  
+    bar() {
+      return castTo(/* this value */);
+    }
 
+    /**
+     * _throw is wrap the error throw when checking for parsing errors
+     */
     _throw(message) {
         throw message;
     }

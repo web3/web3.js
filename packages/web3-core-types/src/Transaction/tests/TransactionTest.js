@@ -1,6 +1,6 @@
-import * as Utils from 'web3-utils';
 import {cloneDeep} from 'lodash';
-import Transaction from '../src/Transaction';
+import {Address} from '../..';
+import Transaction from '../Transaction';
 
 /**
  * Transaction test
@@ -10,11 +10,11 @@ describe('TransactionTest', () => {
     let txParamsTest;
 
     const txParams = {
-        from: '0xE247A45c287191d435A8a5D72A7C8dc030451E9F',
-        to: '0x4F38f4229924bfa28D58eeda496Cc85e8016bCCC',
-        value: Utils.toWei((1).toString(), 'ether'),
+        from: Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
+        to: Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
+        value: 1,
         gas: 21000,
-        gasPrice: Utils.toWei((1).toString(), 'gwei'),
+        gasPrice: 0,
         data: '0x0',
         nonce: 0
     };

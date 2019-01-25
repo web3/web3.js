@@ -15,36 +15,43 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file AddressFactory.js
+ * @file HexFactory.js
  * @author Oscar Fonseca <hiro@cehh.io>
  * @date 2019
  */
 
-import Address from '../Address';
+import Hex from '../Hex';
 
-export default class AddressFactory {
+export default class HexFactory {
     /**
-     * Returns an object of type Address
+     * Returns an object of Hex Hex
      *
-     * @method createAddress
+     * @method createHex
      *
-     * @returns {Address}
+     * @returns {Hex}
      */
-    createAddress(params) {
+    createHex(params) {
         /* Set the error messages */
+
+        /* These should contain the error messages that explain
+         * why an object creation failed.
+        */
         const error = {
-            address:
-                'The address needs to be hex encoded, supplied as a string.\n Addresses may be prefixed with 0x and are 40 hex characters long.',
-            isChecksummed:
-                "The parameter 'isChecksummed' needs to be true or false.\ntrue means the supplied address is checksummed, and will throw if it isn't.\nfalse means the address may or may not be checksummed."
+            hex:
+                "The 'hex' parameter needs to be a string composed of numbers and letters between 'a' and 'f'.\n" +
+                "Use 'empty' to set a web3 empty hex object."
         };
 
         /* Initialise the params */
+        /* All the params should be defaulted to
+         * undefined. If by the end of the constructor execution
+         * a parameter is still undefined/default value, throw the
+         * corresponding error.
+        */
         const initParams = {
-            address: undefined,
-            isChecksummed: undefined
+            hex: undefined
         };
 
-        return new Address(params, error, initParams);
+        return new Hex(params, error, initParams);
     }
 }

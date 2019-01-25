@@ -20,9 +20,8 @@
  * @date 2019
  */
 
-// TODO implement sha3 util
 import sha3 from '../sha3';
-import {cloneDeep, isBoolean} from 'lodash';
+import {cloneDeep, isBoolean, isObject} from 'lodash';
 
 export default class Address {
     /**
@@ -33,8 +32,17 @@ export default class Address {
      */
     constructor(params, error /* from factory */, initParams /* from factory */) {
         this.error = error;
+
         this.initParams = initParams;
+
         this.params = cloneDeep(initParams);
+
+        if (!isObject(params)) {
+            params = {
+                address: params,
+                isChecksummed: false
+            };
+        }
 
         /* Check for type and format validity */
         this.params.address = /(0x)?([0-9a-fA-F]{40})/gm.test(params.address)
@@ -52,9 +60,8 @@ export default class Address {
         });
 
         /* Make the params immutable */
-        Object.freeze(params);
+        Object.freeze(this.params);
     }
-
 
     /* Class functions */
 
@@ -128,7 +135,6 @@ export default class Address {
         );
     }
 
-
     /* Instance accessors  */
 
     /**
@@ -141,7 +147,7 @@ export default class Address {
     toChecksumAddress() {
         return Address.toChecksumAddress(this);
     }
-    
+
     /**
      * Check for a valid checksum of the caller
      *
@@ -152,7 +158,6 @@ export default class Address {
     isValidChecksum() {
         return Address.isValidChecksum(this.params.address);
     }
-
 
     _throw(message) {
         throw message;
