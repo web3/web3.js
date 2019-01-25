@@ -857,7 +857,7 @@ Example
 
 .. code-block:: javascript
 
-    var transaction = web3.eth.getTransactionFromBlock('0x4534534534', 2)
+    const transaction = web3.eth.getTransactionFromBlock('0x4534534534', 2)
     .then(console.log);
     > // see web3.eth.getTransaction
 
@@ -910,7 +910,7 @@ Example
 
 .. code-block:: javascript
 
-    var receipt = web3.eth.getTransactionReceipt('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b')
+    const receipt = web3.eth.getTransactionReceipt('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b')
     .then(console.log);
 
     > {
@@ -1020,7 +1020,7 @@ Example
 .. code-block:: javascript
 
     // compiled solidity source code using https://remix.ethereum.org
-    var code = "603d80600c6000396000f3007c01000000000000000000000000000000000000000000000000000000006000350463c6888fa18114602d57005b6007600435028060005260206000f3";
+    const code = "603d80600c6000396000f3007c01000000000000000000000000000000000000000000000000000000006000350463c6888fa18114602d57005b6007600435028060005260206000f3";
 
 
     // using the callback
@@ -1093,10 +1093,10 @@ Example
 
 .. code-block:: javascript
 
-    var Tx = require('ethereumjs-tx');
-    var privateKey = new Buffer('e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109', 'hex')
+    const Tx = require('ethereumjs-tx');
+    const privateKey = new Buffer('e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109', 'hex')
 
-    var rawTx = {
+    const rawTx = {
       nonce: '0x00',
       gasPrice: '0x09184e72a000',
       gasLimit: '0x2710',
@@ -1105,10 +1105,10 @@ Example
       data: '0x7f7465737432000000000000000000000000000000000000000000000000000000600057'
     }
 
-    var tx = new Tx(rawTx);
+    const tx = new Tx(rawTx);
     tx.sign(privateKey);
 
-    var serializedTx = tx.serialize();
+    const serializedTx = tx.serialize();
 
     // console.log(serializedTx.toString('hex'));
     // 0xf889808609184e72a00082271094000000000000000000000000000000000000000080a47f74657374320000000000000000000000000000000000000000000000000000006000571ca08a8bbf888cfa37bbf0bb965423625641fc956967b81d12e23709cead01446075a01ce999b56a8a88504be365442ea61239198e23d1fce7d00fcfc5cd3b44b7215f

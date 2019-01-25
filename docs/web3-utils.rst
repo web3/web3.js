@@ -89,7 +89,7 @@ Example
 
 .. code-block:: javascript
 
-    var BN = web3.utils.BN;
+    const BN = web3.utils.BN;
 
     new BN(1234).toString();
     > "1234"
@@ -132,7 +132,7 @@ Example
 
 .. code-block:: javascript
 
-    var number = new BN(10);
+    const number = new BN(10);
 
     web3.utils.isBN(number);
     > true
@@ -169,7 +169,7 @@ Example
 
 .. code-block:: javascript
 
-    var number = new BigNumber(10);
+    const number = new BigNumber(10);
 
     web3.utils.isBigNumber(number);
     > true

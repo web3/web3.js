@@ -66,9 +66,9 @@
 <p>After that you need to create a web3 instance and set a provider.
 Ethereum supported Browsers like Mist or MetaMask will have a <code class="docutils literal notranslate"><span class="pre">ethereumProvider</span></code> or <code class="docutils literal notranslate"><span class="pre">web3.currentProvider</span></code> available. For  web3.js, check <code class="docutils literal notranslate"><span class="pre">Web3.givenProvider</span></code>.
 If this property is <code class="docutils literal notranslate"><span class="pre">null</span></code> you should connect to a remote/local node.</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="c1">// in node.js use: var Web3 = require(&#39;web3&#39;);</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="c1">// in node.js use: const Web3 = require(&#39;web3&#39;);</span>
 
-<span class="kd">var</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s2">&quot;ws://localhost:8546&quot;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s2">&quot;ws://localhost:8546&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>That’s it! now you can use the <code class="docutils literal notranslate"><span class="pre">web3</span></code> object.</p>

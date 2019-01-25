@@ -193,18 +193,18 @@ If you want to circumvent the checksum check you can make an address all lower- 
 </div>
 <div class="section" id="id2">
 <h3>Example<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">Web3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3&#39;</span><span class="p">);</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">Web3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3&#39;</span><span class="p">);</span>
 <span class="c1">// use the given Provider, e.g in Mist, or instantiate a new websocket provider</span>
-<span class="kd">var</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">);</span>
 <span class="c1">// or</span>
-<span class="kd">var</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">.</span><span class="nx">providers</span><span class="p">.</span><span class="nx">WebsocketProvider</span><span class="p">(</span><span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">));</span>
+<span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">.</span><span class="nx">providers</span><span class="p">.</span><span class="nx">WebsocketProvider</span><span class="p">(</span><span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">));</span>
 
 <span class="c1">// Using the IPC provider in node.js</span>
-<span class="kd">var</span> <span class="nx">net</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;net&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">net</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;net&#39;</span><span class="p">);</span>
 
-<span class="kd">var</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="s1">&#39;/Users/myuser/Library/Ethereum/geth.ipc&#39;</span><span class="p">,</span> <span class="nx">net</span><span class="p">);</span> <span class="c1">// mac os path</span>
+<span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="s1">&#39;/Users/myuser/Library/Ethereum/geth.ipc&#39;</span><span class="p">,</span> <span class="nx">net</span><span class="p">);</span> <span class="c1">// mac os path</span>
 <span class="c1">// or</span>
-<span class="kd">var</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="k">new</span> <span class="nx">Web3</span><span class="p">.</span><span class="nx">providers</span><span class="p">.</span><span class="nx">IpcProvider</span><span class="p">(</span><span class="s1">&#39;/Users/myuser/Library/Ethereum/geth.ipc&#39;</span><span class="p">,</span> <span class="nx">net</span><span class="p">));</span> <span class="c1">// mac os path</span>
+<span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="k">new</span> <span class="nx">Web3</span><span class="p">.</span><span class="nx">providers</span><span class="p">.</span><span class="nx">IpcProvider</span><span class="p">(</span><span class="s1">&#39;/Users/myuser/Library/Ethereum/geth.ipc&#39;</span><span class="p">,</span> <span class="nx">net</span><span class="p">));</span> <span class="c1">// mac os path</span>
 <span class="c1">// on windows the path is: &#39;\\\\.\\pipe\\geth.ipc&#39;</span>
 <span class="c1">// on linux the path is: &#39;/users/myuser/.ethereum/geth.ipc&#39;</span>
 </pre></div>
@@ -284,9 +284,9 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </div>
 <div class="section" id="id9">
 <h3>Example<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">contract</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">Contract</span><span class="p">(</span><span class="nx">abi</span><span class="p">,</span> <span class="nx">address</span><span class="p">);</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">contract</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">Contract</span><span class="p">(</span><span class="nx">abi</span><span class="p">,</span> <span class="nx">address</span><span class="p">);</span>
 
-<span class="kd">var</span> <span class="nx">batch</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">();</span>
+<span class="kr">const</span> <span class="nx">batch</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">();</span>
 <span class="nx">batch</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getBalance</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">&#39;0x0000000000000000000000000000000000000000&#39;</span><span class="p">,</span> <span class="s1">&#39;latest&#39;</span><span class="p">,</span> <span class="nx">callback</span><span class="p">));</span>
 <span class="nx">batch</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">contract</span><span class="p">.</span><span class="nx">methods</span><span class="p">.</span><span class="nx">balance</span><span class="p">(</span><span class="nx">address</span><span class="p">).</span><span class="nx">call</span><span class="p">.</span><span class="nx">request</span><span class="p">({</span><span class="nx">from</span><span class="o">:</span> <span class="s1">&#39;0x0000000000000000000000000000000000000000&#39;</span><span class="p">},</span> <span class="nx">callback2</span><span class="p">));</span>
 <span class="nx">batch</span><span class="p">.</span><span class="nx">execute</span><span class="p">();</span>
@@ -839,7 +839,7 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </div>
 <div class="section" id="id52">
 <h3>Example<a class="headerlink" href="#id52" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">transaction</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getTransactionFromBlock</span><span class="p">(</span><span class="s1">&#39;0x4534534534&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">transaction</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getTransactionFromBlock</span><span class="p">(</span><span class="s1">&#39;0x4534534534&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="c1">// see web3.eth.getTransaction</span>
 </pre></div>
@@ -885,7 +885,7 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </div>
 <div class="section" id="id55">
 <h3>Example<a class="headerlink" href="#id55" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">receipt</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getTransactionReceipt</span><span class="p">(</span><span class="s1">&#39;0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b&#39;</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">receipt</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getTransactionReceipt</span><span class="p">(</span><span class="s1">&#39;0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 
 <span class="o">&gt;</span> <span class="p">{</span>
@@ -978,7 +978,7 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 <div class="section" id="id61">
 <h3>Example<a class="headerlink" href="#id61" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="c1">// compiled solidity source code using https://remix.ethereum.org</span>
-<span class="kd">var</span> <span class="nx">code</span> <span class="o">=</span> <span class="s2">&quot;603d80600c6000396000f3007c01000000000000000000000000000000000000000000000000000000006000350463c6888fa18114602d57005b6007600435028060005260206000f3&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">code</span> <span class="o">=</span> <span class="s2">&quot;603d80600c6000396000f3007c01000000000000000000000000000000000000000000000000000000006000350463c6888fa18114602d57005b6007600435028060005260206000f3&quot;</span><span class="p">;</span>
 
 
 <span class="c1">// using the callback</span>
@@ -1039,10 +1039,10 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </div>
 <div class="section" id="id64">
 <h3>Example<a class="headerlink" href="#id64" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">Tx</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;ethereumjs-tx&#39;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">privateKey</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Buffer</span><span class="p">(</span><span class="s1">&#39;e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109&#39;</span><span class="p">,</span> <span class="s1">&#39;hex&#39;</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">Tx</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;ethereumjs-tx&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">privateKey</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Buffer</span><span class="p">(</span><span class="s1">&#39;e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109&#39;</span><span class="p">,</span> <span class="s1">&#39;hex&#39;</span><span class="p">)</span>
 
-<span class="kd">var</span> <span class="nx">rawTx</span> <span class="o">=</span> <span class="p">{</span>
+<span class="kr">const</span> <span class="nx">rawTx</span> <span class="o">=</span> <span class="p">{</span>
   <span class="nx">nonce</span><span class="o">:</span> <span class="s1">&#39;0x00&#39;</span><span class="p">,</span>
   <span class="nx">gasPrice</span><span class="o">:</span> <span class="s1">&#39;0x09184e72a000&#39;</span><span class="p">,</span>
   <span class="nx">gasLimit</span><span class="o">:</span> <span class="s1">&#39;0x2710&#39;</span><span class="p">,</span>
@@ -1051,10 +1051,10 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
   <span class="nx">data</span><span class="o">:</span> <span class="s1">&#39;0x7f7465737432000000000000000000000000000000000000000000000000000000600057&#39;</span>
 <span class="p">}</span>
 
-<span class="kd">var</span> <span class="nx">tx</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Tx</span><span class="p">(</span><span class="nx">rawTx</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">tx</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Tx</span><span class="p">(</span><span class="nx">rawTx</span><span class="p">);</span>
 <span class="nx">tx</span><span class="p">.</span><span class="nx">sign</span><span class="p">(</span><span class="nx">privateKey</span><span class="p">);</span>
 
-<span class="kd">var</span> <span class="nx">serializedTx</span> <span class="o">=</span> <span class="nx">tx</span><span class="p">.</span><span class="nx">serialize</span><span class="p">();</span>
+<span class="kr">const</span> <span class="nx">serializedTx</span> <span class="o">=</span> <span class="nx">tx</span><span class="p">.</span><span class="nx">serialize</span><span class="p">();</span>
 
 <span class="c1">// console.log(serializedTx.toString(&#39;hex&#39;));</span>
 <span class="c1">// 0xf889808609184e72a00082271094000000000000000000000000000000000000000080a47f74657374320000000000000000000000000000000000000000000000000000006000571ca08a8bbf888cfa37bbf0bb965423625641fc956967b81d12e23709cead01446075a01ce999b56a8a88504be365442ea61239198e23d1fce7d00fcfc5cd3b44b7215f</span>

@@ -85,18 +85,18 @@ Example
 
 .. code-block:: javascript
 
-    var Web3 = require('web3');
+    const Web3 = require('web3');
     // use the given Provider, e.g in Mist, or instantiate a new websocket provider
-    var web3 = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+    const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8546');
     // or
-    var web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://localhost:8546'));
+    const web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 
     // Using the IPC provider in node.js
-    var net = require('net');
+    const net = require('net');
 
-    var web3 = new Web3('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
+    const web3 = new Web3('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
     // or
-    var web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net)); // mac os path
+    const web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net)); // mac os path
     // on windows the path is: '\\\\.\\pipe\\geth.ipc'
     // on linux the path is: '/users/myuser/.ethereum/geth.ipc'
 
@@ -200,9 +200,9 @@ Example
 
 .. code-block:: javascript
 
-    var contract = new web3.eth.Contract(abi, address);
+    const contract = new web3.eth.Contract(abi, address);
 
-    var batch = new web3.BatchRequest();
+    const batch = new web3.BatchRequest();
     batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest', callback));
     batch.add(contract.methods.balance(address).call.request({from: '0x0000000000000000000000000000000000000000'}, callback2));
     batch.execute();

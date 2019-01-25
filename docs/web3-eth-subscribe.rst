@@ -53,7 +53,7 @@ Example
 
 .. code-block:: javascript
 
-    var subscription = web3.eth.subscribe('logs', {
+    const subscription = web3.eth.subscribe('logs', {
         address: '0x123456..',
         topics: ['0x12345...']
     }, function(error, result){
@@ -143,7 +143,7 @@ Example
 
 .. code-block:: javascript
 
-    var subscription = web3.eth.subscribe('pendingTransactions', function(error, result){
+    const subscription = web3.eth.subscribe('pendingTransactions', function(error, result){
         if (!error)
             console.log(result);
     })
@@ -217,7 +217,7 @@ Example
 
 .. code-block:: javascript
 
-    var subscription = web3.eth.subscribe('newBlockHeaders', function(error, result){
+    const subscription = web3.eth.subscribe('newBlockHeaders', function(error, result){
         if (!error) {
             console.log(result);
 
@@ -283,7 +283,7 @@ Example
 
 .. code-block:: javascript
 
-    var subscription = web3.eth.subscribe('syncing', function(error, sync){
+    const subscription = web3.eth.subscribe('syncing', function(error, sync){
         if (!error)
             console.log(sync);
     })
