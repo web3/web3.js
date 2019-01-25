@@ -21,4 +21,5 @@
  */
 
 export * from './Address';
+export * from './Hex';
 export * from './Transaction';

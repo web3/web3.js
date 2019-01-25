@@ -17,7 +17,8 @@ describe('TransactionTest', () => {
         gas: 21000,
         gasPrice: 0,
         data: Types.Hex('empty'),
-        nonce: 0
+        nonce: 0,
+        chainId: 2
     };
 
     const error = {
@@ -29,7 +30,8 @@ describe('TransactionTest', () => {
         gas: '',
         gasPrice: '',
         data: "The 'data' parameter needs to be hex encoded.\n" + "Use 'none' for no payload.",
-        nonce: "The 'nonce' parameter needs to be an integer.\n" + "Use 'auto' to set the RPC-calculated nonce."
+        nonce: "The 'nonce' parameter needs to be an integer.\n" + "Use 'auto' to set the RPC-calculated nonce.",
+        chainId: "The 'chainId' parameter needs to be an integer.\n" + "Use 'main' to set the mainnet chain ID."
     };
 
     const params = {
@@ -39,7 +41,8 @@ describe('TransactionTest', () => {
         gas: undefined,
         gasPrice: undefined,
         data: undefined,
-        nonce: undefined
+        nonce: undefined,
+        chainId: undefined
     };
 
     beforeEach(() => {
@@ -105,5 +108,14 @@ describe('TransactionTest', () => {
 
         expect(transaction).toHaveProperty('props');
         expect(transaction.props.data).toHaveProperty('isHex');
+    });
+
+    it('gets properties', () => {
+        transaction = new Transaction(txParamsTest, error, params);
+
+        Object.keys(txParamsTest).forEach((param) => {
+            const getter = transaction[param].toString();
+            expect(getter).toEqual(txParamsTest[param].toString());
+        });
     });
 });

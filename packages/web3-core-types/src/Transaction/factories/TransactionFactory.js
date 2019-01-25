@@ -43,7 +43,8 @@ export default class TransactionFactory {
             gas: '',
             gasPrice: '',
             data: "The 'data' parameter needs to be hex encoded.\n" + "Use 'none' for no payload.",
-            nonce: "The 'nonce' parameter needs to be an integer.\n" + "Use 'auto' to set the RPC-calculated nonce."
+            nonce: "The 'nonce' parameter needs to be an integer.\n" + "Use 'auto' to set the RPC-calculated nonce.",
+            chainId: "The 'chainId' parameter needs to be an integer.\n" + "Use 'main' to set the mainnet chain ID."
         };
 
         /* Initialise the params */
@@ -54,7 +55,8 @@ export default class TransactionFactory {
             gas: undefined,
             gasPrice: undefined,
             data: undefined,
-            nonce: undefined
+            nonce: undefined,
+            chainId: undefined
         };
 
         return new Transaction(params, error, initParams);

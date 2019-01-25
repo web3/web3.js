@@ -20,6 +20,7 @@
  * @date 2019
  */
 
+import * as Types from '../index';
 import {cloneDeep} from 'lodash';
 
 export default class Type {
@@ -30,10 +31,10 @@ export default class Type {
      */
     constructor(params, error /* from factory */, initParams /* from factory */) {
 
-        /* params are the values given to the contructor
-         * this.params are the params fed via the constructor
-         * after being filtered.
-         * this.params start assigned to undefined via initParams */
+        /* -) params are the values given to the constructor
+         * -) this.props are the params fed via the constructor
+         *      after being filtered.
+         * -) this.props start assigned to undefined via initParams */
 
         /* 1) Set the errors */
         this.error = error; 
@@ -42,7 +43,7 @@ export default class Type {
         this.initParams = initParams; 
         
         /* 3) Initialize the parameters */
-        this.params = cloneDeep(initParams); 
+        this.props = cloneDeep(initParams); 
       
         /* 4) Reshape params to emulate different constructor overrides */
         if(!isObject(params)) {
@@ -53,21 +54,21 @@ export default class Type {
         }
         
         /* 5) Check for type and format validity */
-        this.params.p = /* condition check */
+        this.props.p = /* condition check */
                 ? /* parameter standarization */
                 : undefined;
 
 
         /* 6) Check for default, auto, none, etc. key values */
-        if (params.p === 'auto') this.params.p = /* default/auto/empty value */
+        if (params.p === 'auto') this.props.p = /* default/auto/empty value */
 
         /* 7) Throw if any parameter is still undefined */
-        Object.keys(this.params).forEach((key) => {
-            typeof this.params[key] === 'undefined' && this._throw(this.error[key]);
+        Object.keys(this.props).forEach((key) => {
+            typeof this.props[key] === 'undefined' && this._throw(this.error[key]);
         });
         
         /* 8) Make the params immutable */
-        Object.freeze(this.params);
+        Object.freeze(this.props);
     }
 
     /**
@@ -92,6 +93,15 @@ export default class Type {
   
     bar() {
       return castTo(/* this value */);
+    }
+
+    /**
+     * isType
+     * @dev add this as a function property to quickly check
+     *      if the object is of type Type
+     */
+    isType() {
+      return true;
     }
 
     /**

@@ -51,7 +51,7 @@ export default class Address {
             : undefined;
 
         this.props.isChecksummed =
-            isBoolean(params.isChecksummed) && (!params.isChecksummed || Address.isValidChecksum(params.address))
+            isBoolean(params.isChecksummed) && (!params.isChecksummed || Address.isValid(params.address))
                 ? params.isChecksummed
                 : undefined;
 
@@ -70,13 +70,13 @@ export default class Address {
      * Check for a valid checksum if the address is supposed to be
      * checksummed
      *
-     * @method isValidChecksum
+     * @method isValid
      *
      * @param {String} address
      *
      * @returns {boolean}
      */
-    static isValidChecksum(_address) {
+    static isValid(_address) {
         /* Remove the prefix in case it still has it */
         const address = _address.replace('0x', '');
 
@@ -100,13 +100,13 @@ export default class Address {
     /**
      * Change an address to make it checksummed
      *
-     * @method toChecksumAddress
+     * @method toChecksum
      *
      * @param {Address} addressObj
      *
      * @returns {Address}
      */
-    static toChecksumAddress(addressObj) {
+    static toChecksum(addressObj) {
         /* Remove the prefix in case it still has it */
         const address = addressObj.props.address.replace('0x', '');
 
@@ -143,27 +143,31 @@ export default class Address {
     /**
      * Change an address to make it checksummed
      *
-     * @method toChecksumAddress
+     * @method toChecksum
      *
      * @returns {Address}
      */
-    toChecksumAddress() {
-        return Address.toChecksumAddress(this);
+    toChecksum() {
+        return Address.toChecksum(this);
     }
 
     /**
      * Check for a valid checksum of the caller
      *
-     * @method isValidChecksum
+     * @method isValid
      *
      * @returns {boolean}
      */
-    isValidChecksum() {
-        return Address.isValidChecksum(this.props.address);
+    isValid() {
+        return Address.isValid(this.props.address);
     }
 
     isAddress() {
         return true;
+    }
+
+    toString() {
+        return this.props.address;
     }
 
     _throw(message) {

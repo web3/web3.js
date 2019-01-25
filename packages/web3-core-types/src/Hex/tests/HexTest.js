@@ -30,4 +30,19 @@ describe('HexTest', () => {
         expect(hex).toHaveProperty('error');
         expect(hex).toHaveProperty('props');
     });
+    
+    it('takes string for constructor override', () => {
+        hex = new Hex('0x12', error, initParams);
+
+        expect(hex).toHaveProperty('error');
+        expect(hex).toHaveProperty('props');
+    });
+    
+    it('checks for strict hex', () => {
+        const strict = new Hex('0x12', error, initParams).isStrict();
+        const notStrict = new Hex('12', error, initParams).isStrict();
+
+        expect(strict).toBe(true);
+        expect(notStrict).toBe(false);
+    });
 });

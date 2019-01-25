@@ -22,7 +22,7 @@
 
 import {isBN, isBigNumber, toBN, isHex} from 'web3-utils';
 import * as Types from '..';
-import {isNaN, omit, cloneDeep} from 'lodash';
+import {isNaN, isInteger, omit, cloneDeep} from 'lodash';
 
 export default class Transaction {
     /**
@@ -69,6 +69,8 @@ export default class Transaction {
         this.props.data = params.data.isHex ? Types.Hex(params.data.props) : undefined;
 
         this.props.nonce = params.nonce === 0 || Number.isInteger(params.nonce) ? params.nonce : undefined;
+        
+        this.props.chainId = isInteger(params.chainId) ? params.chainId.toString() : undefined;
 
         /* Set the default values */
         if (params.value === 'none') this.props.value = toBN(0);
@@ -83,9 +85,12 @@ export default class Transaction {
 
         if (params.nonce === 'auto');
         // TODO default nonce
+        
+        if (/main/i.test(params.chainId)) this.props.chainId = "1";
 
         /* Allow empty 'to' field if code is being deployed */
         if (params.to === 'deploy') this.props = omit(this.props, 'to');
+
 
         /* Throw if any parameter is still undefined */
         Object.keys(this.props).forEach((key) => {
@@ -96,6 +101,38 @@ export default class Transaction {
         Object.freeze(this.props);
     }
 
+    get gas() {
+        return this.props.gas.toString();
+    }
+
+    get gasPrice() {
+        return this.props.gasPrice.toString();
+    }
+    
+    get to() {
+        return this.props.to.toString();
+    }
+    
+    get from() {
+        return this.props.from.toString();
+    }
+    
+    get value() {
+        return this.props.value.toString();
+    }
+    
+    get data() {
+        return this.props.data.toString();
+    }
+    
+    get nonce() {
+        return parseInt(this.props.nonce);
+    }
+    
+    get chainId() {
+        return this.props.chainId.toString();
+    }
+    
     isTransaction() {
         return true;
     }

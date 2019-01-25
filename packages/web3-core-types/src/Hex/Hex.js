@@ -101,12 +101,21 @@ export default class Hex {
      *
      * @return {String}
      */
-    toNumberString() {
-        return BigNumber.toBigNumber(this.props.hex).toString(10);
+    toNumber() {
+        return BigNumber.toBigNumber(this.props.hex).toNumber();
     }
 
     isHex() {
         return true;
+    }
+
+    isStrict() {
+        return /0x/.test(this.props.hex);
+    }
+
+    toString() {
+        // TODO return formatted?
+        return this.props.hex;
     }
 
     _throw(message) {

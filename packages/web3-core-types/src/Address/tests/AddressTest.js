@@ -33,10 +33,10 @@ describe('AddressTest', () => {
     });
 
     it('checksums the address', () => {
-        expect(address.toChecksumAddress().isValidChecksum()).toEqual(true);
+        expect(address.toChecksum().isValid()).toEqual(true);
     });
 
     it('checks the checksum of an address string', () => {
-        expect(Address.isValidChecksum(data.address)).toEqual(false);
+        expect(Address.isValid(data.address)).toEqual(false);
     });
 });
