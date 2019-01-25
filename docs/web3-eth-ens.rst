@@ -7,6 +7,25 @@ web3.eth.ens
 =========
 
 The ``web3.eth.ens`` functions let you interacting with Ens.
+.. code-block:: javascript
+
+    import {Ens} from 'web3-eth-ens';
+    import {Accounts} from 'web3-eth-accounts;
+
+    // "Ens.providers.givenProvider" will be set if in an Ethereum supported browser.
+    const eth = new Ens(
+        Ens.givenProvider || 'ws://some.local-or-remote.node:8546',
+        new Accounts(Ens.givenProvider || 'ws://some.local-or-remote.node:8546', options),
+        options
+    );
+
+
+    // or using the web3 umbrella package
+
+    import {Web3 } from 'web3';
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+
+    // -> web3.eth.ens
 
 ------------------------------------------------------------------------------
 
@@ -62,7 +81,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.resolver('ethereum.eth').then(function (contract) {
+    web3.eth.ens.resolver('ethereum.eth').then((contract) => {
         console.log(contract);
     });
     > Contract<Resolver>
@@ -97,7 +116,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.supportsInterface('ethereum.eth', '0xbc1c58d1').then(function (supportsInterface) {
+    web3.eth.ens.supportsInterface('ethereum.eth', '0xbc1c58d1').then((supportsInterface) => {
         console.log(supportsInterface);
     })
     > true
@@ -131,7 +150,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getAddress('ethereum.eth').then(function (address) {
+    web3.eth.ens.getAddress('ethereum.eth').then((address) => {
         console.log(address);
     })
     > 0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359
@@ -172,7 +191,7 @@ Example
         {
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
-    ).then(function (result) {
+    ).then((result) => {
              console.log(result.events);
     });
     > AddrChanged(...)
@@ -186,27 +205,27 @@ Example
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
     )
-    .on('transactionHash', function(hash){
+    .on('transactionHash', (hash) => {
         ...
     })
-    .on('confirmation', function(confirmationNumber, receipt){
+    .on('confirmation', (confirmationNumber, receipt) => {
         ...
     })
-    .on('receipt', function(receipt){
+    .on('receipt', (receipt) => {
         ...
     })
     .on('error', console.error);
 
     // Or listen to the AddrChanged event on the resolver
 
-    web3.eth.ens.resolver('ethereum.eth').then(function (resolver) {
-        resolver.events.AddrChanged({fromBlock: 0}, function(error, event) {
+    web3.eth.ens.resolver('ethereum.eth').then((resolver) => {
+        resolver.events.AddrChanged({fromBlock: 0}, (error, event) => {
             console.log(event);
         })
-        .on('data', function(event){
+        .on('data', (event) => {
             console.log(event);
         })
-        .on('changed', function(event){
+        .on('changed', (event) => {
             // remove event from local database
         })
         .on('error', console.error);
@@ -244,7 +263,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getPubkey('ethereum.eth').then(function (result) {
+    web3.eth.ens.getPubkey('ethereum.eth').then((result) => {
         console.log(result)
     });
     > {
@@ -293,7 +312,7 @@ Example
         {
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
-    ).then(function (result) {
+    ).then((result) => {
         console.log(result.events);
     });
     > PubkeyChanged(...)
@@ -308,27 +327,27 @@ Example
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
     )
-    .on('transactionHash', function(hash){
+    .on('transactionHash', (hash) => {
         ...
     })
-    .on('confirmation', function(confirmationNumber, receipt){
+    .on('confirmation', (confirmationNumber, receipt) => {
         ...
     })
-    .on('receipt', function(receipt){
+    .on('receipt', (receipt) => {
         ...
     })
     .on('error', console.error);
 
     // Or listen to the PubkeyChanged event on the resolver
 
-    web3.eth.ens.resolver('ethereum.eth').then(function (resolver) {
+    web3.eth.ens.resolver('ethereum.eth').then((resolver) => {
         resolver.events.PubkeyChanged({fromBlock: 0}, function(error, event) {
             console.log(event);
         })
-        .on('data', function(event){
+        .on('data', (event) => {
             console.log(event);
         })
-        .on('changed', function(event){
+        .on('changed', (event) => {
             // remove event from local database
         })
         .on('error', console.error);
@@ -368,7 +387,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getText('ethereum.eth', 'key).then(function (result) {
+    web3.eth.ens.getText('ethereum.eth', 'key).then((result) => {
         console.log(result);
     });
     > "0000000000000000000000000000000000000000000000000000000000000000"
@@ -412,7 +431,7 @@ Example
         {
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
-    ).then(function (result) {
+    ).then((result) => {
              console.log(result.events);
      });
     > ContentChanged(...)
@@ -427,27 +446,27 @@ Example
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
     )
-    .on('transactionHash', function(hash){
+    .on('transactionHash', (hash) => {
         ...
     })
-    .on('confirmation', function(confirmationNumber, receipt){
+    .on('confirmation', (confirmationNumber, receipt) => {
         ...
     })
-    .on('receipt', function(receipt){
+    .on('receipt', (receipt) => {
         ...
     })
     .on('error', console.error);
 
     // And listen to the TextChanged event on the resolver
 
-    web3.eth.ens.resolver('ethereum.eth').then(function (resolver) {
-        resolver.events.TextChanged({fromBlock: 0}, function(error, event) {
+    web3.eth.ens.resolver('ethereum.eth').then((resolver) => {
+        resolver.events.TextChanged({fromBlock: 0}, (error, event) => {
             console.log(event);
         })
-        .on('data', function(event){
+        .on('data', (event) => {
             console.log(event);
         })
-        .on('changed', function(event){
+        .on('changed', (event) => {
             // remove event from local database
         })
         .on('error', console.error);
@@ -485,7 +504,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContent('ethereum.eth').then(function (result) {
+    web3.eth.ens.getContent('ethereum.eth').then((result) => {
         console.log(result);
     });
     > "0x0000000000000000000000000000000000000000000000000000000000000000"
@@ -527,7 +546,7 @@ Example
         {
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
-    ).then(function (result) {
+    ).then((result) => {
              console.log(result.events);
      });
     > ContentChanged(...)
@@ -541,27 +560,27 @@ Example
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
     )
-    .on('transactionHash', function(hash){
+    .on('transactionHash', (hash) => {
         ...
     })
-    .on('confirmation', function(confirmationNumber, receipt){
+    .on('confirmation', (confirmationNumber, receipt) => {
         ...
     })
-    .on('receipt', function(receipt){
+    .on('receipt', (receipt) => {
         ...
     })
     .on('error', console.error);
 
     // Or listen to the ContentChanged event on the resolver
 
-    web3.eth.ens.resolver('ethereum.eth').then(function (resolver) {
-        resolver.events.ContentChanged({fromBlock: 0}, function(error, event) {
+    web3.eth.ens.resolver('ethereum.eth').then((resolver) => {
+        resolver.events.ContentChanged({fromBlock: 0}, (error, event) => {
             console.log(event);
         })
-        .on('data', function(event){
+        .on('data', (event) => {
             console.log(event);
         })
-        .on('changed', function(event){
+        .on('changed', (event) => {
             // remove event from local database
         })
         .on('error', console.error);
@@ -599,7 +618,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getMultihash('ethereum.eth').then(function (result) {
+    web3.eth.ens.getMultihash('ethereum.eth').then((result) => {
         console.log(result);
     });
     > 'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK'
@@ -641,7 +660,7 @@ Example
         {
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
-    ).then(function (result) {
+    ).then((result) => {
         console.log(result.events);
     });
     > MultihashChanged(...)
@@ -655,13 +674,13 @@ Example
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
     )
-    .on('transactionHash', function(hash){
+    .on('transactionHash', (hash) => {
         ...
     })
-    .on('confirmation', function(confirmationNumber, receipt){
+    .on('confirmation', (confirmationNumber, receipt) => {
         ...
     })
-    .on('receipt', function(receipt){
+    .on('receipt', (receipt) => {
         ...
     })
     .on('error', console.error);
@@ -698,7 +717,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContenthash('ethereum.eth').then(function (result) {
+    web3.eth.ens.getContenthash('ethereum.eth').then((result) => {
         console.log(result);
     });
     > 'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK'
@@ -740,7 +759,7 @@ Example
         {
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
-    ).then(function (result) {
+    ).then((result) => {
         console.log(result.events);
     });
     > ContenthashChanged(...)
@@ -754,13 +773,13 @@ Example
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
     )
-    .on('transactionHash', function(hash){
+    .on('transactionHash', (hash) => {
         ...
     })
-    .on('confirmation', function(confirmationNumber, receipt){
+    .on('confirmation', (confirmationNumber, receipt) => {
         ...
     })
-    .on('receipt', function(receipt){
+    .on('receipt', (receipt) => {
         ...
     })
     .on('error', console.error);
@@ -793,14 +812,14 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.resolver('ethereum.eth').then(function (resolver) {
-        resolver.events.AddrChanged({fromBlock: 0}, function(error, event) {
+    web3.eth.ens.resolver('ethereum.eth').then((resolver) => {
+        resolver.events.AddrChanged({fromBlock: 0}, (error, event) => {
             console.log(event);
         })
-        .on('data', function(event){
+        .on('data', (event) => {
             console.log(event);
         })
-        .on('changed', function(event){
+        .on('changed', (event) => {
             // remove event from local database
         })
         .on('error', console.error);
@@ -842,14 +861,14 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.resistry.then(function (registry) {
-        registry.events.Transfer({fromBlock: 0}, , function(error, event) {
+    web3.eth.ens.resistry.then((registry) => {
+        registry.events.Transfer({fromBlock: 0}, (error, event) => {
               console.log(event);
           })
-          .on('data', function(event){
+          .on('data', (event) => {
               console.log(event);
           })
-          .on('changed', function(event){
+          .on('changed', (event) => {
               // remove event from local database
           })
           .on('error', console.error);

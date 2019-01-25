@@ -45,7 +45,7 @@ Returns
 Notification returns
 ----------------
 
-- ``Mixed`` - depends on the subscription, see the different subscriptions for more.
+- ``any`` - depends on the subscription, see the different subscriptions for more.
 
 -------
 Example
@@ -80,19 +80,13 @@ clearSubscriptions
 
 Resets subscriptions.
 
-.. note:: This will not reset subscriptions from other packages like ``web3-shh``, as they use their own requestManager.
-
-----------
-Parameters
-----------
-
-1. ``Boolean``: If ``true`` it keeps the ``"syncing"`` subscription.
+.. note:: This will not reset subscriptions from other packages like ``web3-shh``.
 
 -------
 Returns
 -------
 
-``Boolean``
+``Promise<boolean>``
 
 -------
 Example
@@ -359,21 +353,26 @@ Example
 
 .. code-block:: javascript
 
-    var subscription = web3.eth.subscribe('logs', {
+    const subscription = web3.eth.subscribe('logs', {
         address: '0x123456..',
         topics: ['0x12345...']
-    }, function(error, result){
-        if (!error)
+    }, (error, result) => {
+        if (!error) {
             console.log(result);
+        }
+
+        console.error(error);
     })
-    .on("data", function(log){
+    .on("data", (log) => {
         console.log(log);
     })
-    .on("changed", function(log){
+    .on("changed", (log) => {
+        console.log(log);
     });
 
     // unsubscribes the subscription
-    subscription.unsubscribe(function(error, success){
-        if(success)
+    subscription.unsubscribe((error, success) => {
+        if (success) {
             console.log('Successfully unsubscribed!');
+        }
     });

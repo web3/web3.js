@@ -34,11 +34,11 @@ import EnsModuleFactory from './factories/EnsModuleFactory';
  *
  * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
  * @param {Accounts} accounts
- * @param {Object} ensModuleOptions
+ * @param {Object} options
  *
  * @returns {Ens}
  */
-export const Ens = (provider, accounts, ensModuleOptions) => {
+export const Ens = (provider, accounts, options) => {
     const abiCoder = new AbiCoder();
 
     const methodModuleFactory = new MethodModuleFactory();
@@ -54,6 +54,6 @@ export const Ens = (provider, accounts, ensModuleOptions) => {
         formatters,
         new Network(provider),
         {},
-        ensModuleOptions
+        options
     );
 };

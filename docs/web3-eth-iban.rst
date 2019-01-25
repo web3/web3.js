@@ -8,6 +8,20 @@ web3.eth.Iban
 
 The ``web3.eth.Iban`` function lets convert Ethereum addresses from and to IBAN and BBAN.
 
+.. code-block:: javascript
+
+    import {Iban} from 'web3-eth-iban';
+
+    const iban = new Iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS');
+
+    // or using the web3 umbrella package
+
+    import {Web3 } from 'web3';
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+
+    // -> new web3.eth.Iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS')
+
+
 
 ------------------------------------------------------------------------------
 
@@ -19,45 +33,6 @@ This's instance of Iban
 .. code-block:: javascript
 
     > Iban { _iban: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS' }
-
-------------------------------------------------------------------------------
-
-Iban contructor
-=====================
-
-.. code-block:: javascript
-
-    new web3.eth.Iban(ibanAddress)
-
-Generates a iban object with conversion methods and validity checks. Also has singleton functions for conversion like
-:ref:`Iban.toAddress() <_eth-iban-toaddress>`,
-:ref:`Iban.toIban() <_eth-iban-toiban>`,
-:ref:`Iban.fromAddress() <_eth-iban-fromaddress>`,
-:ref:`Iban.fromBban() <_eth-iban-frombban>`,
-:ref:`Iban.createIndirect() <_eth-iban-createindirect>`,
-:ref:`Iban.isValid() <_eth-iban-isvalid>`.
-
-----------
-Parameters
-----------
-
-1. ``String``: the IBAN address to instantiate an Iban instance from.
-
--------
-Returns
--------
-
-``Object`` - The Iban instance.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    var iban = new web3.eth.Iban("XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS");
-    > Iban { _iban: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS' }
-
 
 ------------------------------------------------------------------------------
 
@@ -326,7 +301,7 @@ Example
 
 .. code-block:: javascript
 
-    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    const iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
     iban.isValid();
     > true
 
@@ -344,12 +319,6 @@ prototype.isDirect
 
 Checks if the IBAN instance is direct.
 
-----------
-Parameters
-----------
-
-none
-
 -------
 Returns
 -------
@@ -362,7 +331,7 @@ Example
 
 .. code-block:: javascript
 
-    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    const iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
     iban.isDirect();
     > false
 
@@ -379,12 +348,6 @@ prototype.isIndirect
 
 Checks if the IBAN instance is indirect.
 
-----------
-Parameters
-----------
-
-none
-
 -------
 Returns
 -------
@@ -397,7 +360,7 @@ Example
 
 .. code-block:: javascript
 
-    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    const iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
     iban.isIndirect();
     > true
 
@@ -414,12 +377,6 @@ prototype.checksum
 
 Returns the checksum of the IBAN instance.
 
-----------
-Parameters
-----------
-
-none
-
 -------
 Returns
 -------
@@ -432,7 +389,7 @@ Example
 
 .. code-block:: javascript
 
-    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    const iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
     iban.checksum();
     > "81"
 
@@ -451,12 +408,6 @@ prototype.institution
 
 Returns the institution of the IBAN instance.
 
-----------
-Parameters
-----------
-
-none
-
 -------
 Returns
 -------
@@ -469,7 +420,7 @@ Example
 
 .. code-block:: javascript
 
-    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    const iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
     iban.institution();
     > 'XREG'
 
@@ -487,12 +438,6 @@ prototype.client
 
 Returns the client of the IBAN instance.
 
-----------
-Parameters
-----------
-
-none
-
 -------
 Returns
 -------
@@ -505,7 +450,7 @@ Example
 
 .. code-block:: javascript
 
-    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    const iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
     iban.client();
     > 'GAVOFYORK'
 
@@ -522,12 +467,6 @@ prototype.toAddress
 
 Returns the Ethereum address of the IBAN instance.
 
-----------
-Parameters
-----------
-
-none
-
 -------
 Returns
 -------
@@ -540,7 +479,7 @@ Example
 
 .. code-block:: javascript
 
-    var iban = new web3.eth.Iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS');
+    const iban = new web3.eth.Iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS');
     iban.toAddress();
     > '0x00c5496aEe77C1bA1f0854206A26DdA82a81D6D8'
 
@@ -558,12 +497,6 @@ prototype.toString
 
 Returns the IBAN address of the IBAN instance.
 
-----------
-Parameters
-----------
-
-none
-
 -------
 Returns
 -------
@@ -576,7 +509,7 @@ Example
 
 .. code-block:: javascript
 
-    var iban = new web3.eth.Iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS');
+    const iban = new web3.eth.Iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS');
     iban.toString();
     > 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS'
 

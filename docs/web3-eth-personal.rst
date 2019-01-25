@@ -14,16 +14,16 @@ The ``web3-eth-personal`` package allows you to interact with the Ethereum node'
 
 .. code-block:: javascript
 
-    var Personal = require('web3-eth-personal');
+    import {Personal} from 'web3-eth-personal';
 
-    // "Personal.providers.givenProvider" will be set if in an Ethereum supported browser.
-    var personal = new Personal(Personal.givenProvider || 'ws://some.local-or-remote.node:8546');
+    // "Personal.givenProvider" will be set if in an Ethereum supported browser.
+    const personal = new Personal(Personal.givenProvider || 'ws://some.local-or-remote.node:8546', options);
 
 
     // or using the web3 umbrella package
 
-    var Web3 = require('web3');
-    var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+    import {Web3} from 'web3';
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
 
     // -> web3.eth.personal
 
@@ -63,7 +63,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``String``: The address of the newly created account.
+``Promise<string>`` - The address of the newly created account.
 
 -------
 Example
@@ -105,7 +105,7 @@ Returns
 -------
 
 
-``Promise`` returns ``String`` - The signature.
+``Promise<string>`` - The signature.
 
 
 -------
@@ -152,7 +152,7 @@ Returns
 -------
 
 
-``Promise`` returns ``String`` - The account.
+``Promise<string>`` - The account.
 
 
 -------
@@ -194,7 +194,7 @@ Returns
 -------
 
 
-``Promise`` returns ``Object`` - The RLP encoded transaction. The ``raw`` property can be used to send the transaction using :ref:`web3.eth.sendSignedTransaction <eth-sendsignedtransaction>`.
+``Promise<Object>`` - The RLP encoded transaction. The ``raw`` property can be used to send the transaction using :ref:`web3.eth.sendSignedTransaction <eth-sendsignedtransaction>`.
 
 
 -------
@@ -257,7 +257,7 @@ Returns
 -------
 
 
-``Promise<String>`` - The transaction hash.
+``Promise<string>`` - The transaction hash.
 
 
 -------

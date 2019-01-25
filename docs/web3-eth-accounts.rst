@@ -15,11 +15,11 @@ To use this package standalone use:
 
 .. code-block:: javascript
 
-    var Accounts = require('web3-eth-accounts');
+    import {Accounts} from 'web3-eth-accounts;
 
     // Passing in the eth or web3 package is necessary to allow retrieving chainId, gasPrice and nonce automatically
     // for accounts.signTransaction().
-    var accounts = new Accounts('ws://localhost:8546');
+    const accounts = new Accounts('ws://localhost:8546', options);
 
 
 

@@ -57,36 +57,6 @@ Example
 
 ------------------------------------------------------------------------------
 
-_
-=====================
-
-.. code-block:: javascript
-
-    web3.utils._()
-
-The `underscore <http://underscorejs.org>`_ library for many convenience JavaScript functions.
-
-See the `underscore API reference <http://underscorejs.org>`_ for details.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    var _ = web3.utils._;
-
-    _.union([1,2],[3]);
-    > [1,2,3]
-
-    _.each({my: 'object'}, function(value, key){ ... })
-
-    ...
-
-
-
-------------------------------------------------------------------------------
-
 .. _utils-bn:
 
 BN
@@ -105,7 +75,7 @@ See the `BN.js documentation <https://github.com/indutny/bn.js/>`_ for details.
 Parameters
 ----------
 
-1. ``mixed`` - ``String|Number``: A number, number string or HEX string to convert to a BN object.
+1. ``value`` - ``String|Number``: A number, number string or HEX string to convert to a BN object.
 
 -------
 Returns
@@ -185,7 +155,7 @@ Checks if a given value is a `BigNumber.js <http://mikemcl.github.io/bignumber.j
 Parameters
 ----------
 
-1. ``bignumber`` - ``Object``: A `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ instance.
+1. ``BigNumber`` - ``Object``: A `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ instance.
 
 -------
 Returns
@@ -565,7 +535,7 @@ Text strings will be interpreted as UTF-8 strings.
 Parameters
 ----------
 
-1. ``mixed`` - ``String|Number|BN|BigNumber``: The input to convert to HEX.
+1. ``value`` - ``String|Number|BN|BigNumber``: The input to convert to HEX.
 
 -------
 Returns

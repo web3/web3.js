@@ -15,22 +15,19 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
 
 .. code-block:: javascript
 
-    var Bzz = require('web3-bzz');
+    import {Bzz} from 'web3-bzz';
 
     // will autodetect if the "ethereum" object is present and will either connect to the local swarm node, or the swarm-gateways.net.
     // Optional you can give your own provider URL; If no provider URL is given it will use "http://swarm-gateways.net"
-    var bzz = new Bzz(Bzz.givenProvider || 'http://swarm-gateways.net');
+    const bzz = new Bzz(Bzz.givenProvider || 'http://swarm-gateways.net');
 
 
     // or using the web3 umbrella package
 
-    var Web3 = require('web3');
-    var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+    import {Web3} from 'web3';
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
 
     // -> web3.bzz.currentProvider // if Web3.givenProvider was an ethereum provider it will set: "http://localhost:8500" otherwise it will set: "http://swarm-gateways.net"
-
-    // set the provider manually if necessary
-    web3.bzz.setProvider("http://localhost:8500");
 
 
 ------------------------------------------------------------------------------
@@ -65,8 +62,9 @@ Example
 
 .. code-block:: javascript
 
-    var Bzz = require('web3-bzz');
-    var bzz = new Bzz('http://localhost:8500');
+    import {Bzz} from 'web3-bzz';
+
+    const bzz = new Bzz('http://localhost:8500');
 
     // change provider
     bzz.setProvider('http://swarm-gateways.net');
@@ -117,7 +115,7 @@ currentProvider
 
 .. code-block:: javascript
 
-    bzz.currentProvider
+    web3.bzz.currentProvider
 
 Will return the current provider URL, otherwise ``null``.
 
@@ -178,7 +176,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returning ``String``: Returns the content hash of the manifest.
+``Promise<String>`` - Returns the content hash of the manifest.
 
 
 -------
@@ -187,19 +185,18 @@ Example
 
 .. code-block:: javascript
 
-    var bzz = web3.bzz;
-
     // raw data
-    bzz.upload("test file").then(function(hash) {
+    bzz.upload("test file").then((hash) => {
         console.log("Uploaded file. Address:", hash);
     })
 
     // raw directory
-    var dir = {
+    const dir = {
         "/foo.txt": {type: "text/plain", data: "sample file"},
         "/bar.txt": {type: "text/plain", data: "another file"}
     };
-    bzz.upload(dir).then(function(hash) {
+
+    bzz.upload(dir).then((hash) => {
         console.log("Uploaded directory. Address:", hash);
     });
 
@@ -238,7 +235,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returning ``Buffer|Object|String``: The Buffer of the file downloaded, an object with the directory structure, or the path where it was downloaded to.
+``Promise<Buffer|Object|String>`` - The Buffer of the file downloaded, an object with the directory structure, or the path where it was downloaded to.
 
 
 -------
@@ -247,17 +244,15 @@ Example
 
 .. code-block:: javascript
 
-    var bzz = web3.bzz;
-
     // download raw file
-    var fileHash = "a5c10851ef054c268a2438f10a21f6efe3dc3dcdcc2ea0e6a1a7a38bf8c91e23";
-    bzz.download(fileHash).then(function(buffer) {
+    const fileHash = "a5c10851ef054c268a2438f10a21f6efe3dc3dcdcc2ea0e6a1a7a38bf8c91e23";
+    bzz.download(fileHash).then((buffer) => {
         console.log("Downloaded file:", buffer.toString());
     });
 
     // download directory, if the hash is manifest file.
-    var dirHash = "7e980476df218c05ecfcb0a2ca73597193a34c5a9d6da84d54e295ecd8e0c641";
-    bzz.download(dirHash).then(function(dir) {
+    const dirHash = "7e980476df218c05ecfcb0a2ca73597193a34c5a9d6da84d54e295ecd8e0c641";
+    bzz.download(dirHash).then((dir) => {
         console.log("Downloaded directory:");
         > {
             'bar.txt': { type: 'text/plain', data: <Buffer 61 6e 6f 74 68 65 72 20 66 69 6c 65> },
@@ -266,9 +261,9 @@ Example
     });
 
     // download file/directory to disk (only node.js)
-    var dirHash = "a5c10851ef054c268a2438f10a21f6efe3dc3dcdcc2ea0e6a1a7a38bf8c91e23";
+    const dirHash = "a5c10851ef054c268a2438f10a21f6efe3dc3dcdcc2ea0e6a1a7a38bf8c91e23";
     bzz.download(dirHash, "/target/dir")
-    .then(path => console.log(`Downloaded directory to ${path}.`))
+    .then((path) => console.log(`Downloaded directory to ${path}.`))
     .catch(console.log);
 
 
@@ -296,7 +291,7 @@ none
 Returns
 -------
 
-``Promise`` returning ``Object``: Returns the file or multiple files.
+``Promise<Object>`` - Returns the file or multiple files.
 
 -------
 Example

@@ -11,16 +11,16 @@ The ``web3-eth`` package allows you to interact with an Ethereum blockchain and 
 
 .. code-block:: javascript
 
-    var Eth = require('web3-eth');
+    import {Eth} from 'web3-eth';
 
     // "Eth.providers.givenProvider" will be set if in an Ethereum supported browser.
-    var eth = new Eth(Eth.givenProvider || 'ws://some.local-or-remote.node:8546');
+    const eth = new Eth(Eth.givenProvider || 'ws://some.local-or-remote.node:8546', options);
 
 
     // or using the web3 umbrella package
 
-    var Web3 = require('web3');
-    var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+    import {Web3 } from 'web3';
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
 
     // -> web3.eth
 

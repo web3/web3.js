@@ -255,17 +255,17 @@ export default class Web3 extends AbstractWeb3Module {
         const providerResolver = new ProvidersModuleFactory().createProviderResolver();
 
         return {
-            Eth: (provider, net) => {
-                return new Eth(providerResolver.resolve(provider, net));
+            Eth: (provider, options, net) => {
+                return new Eth(providerResolver.resolve(provider, net), options);
             },
-            Net: (provider, net) => {
-                return new Network(providerResolver.resolve(provider, net));
+            Net: (provider, options, net) => {
+                return new Network(providerResolver.resolve(provider, net), options);
             },
-            Personal: (provider, net) => {
-                return new Personal(providerResolver.resolve(provider, net));
+            Personal: (provider, options, net) => {
+                return new Personal(providerResolver.resolve(provider, net), options);
             },
-            Shh: (provider, net) => {
-                return new Shh(providerResolver.resolve(provider, net));
+            Shh: (provider, options, net) => {
+                return new Shh(providerResolver.resolve(provider, net), options);
             },
             Bzz: (provider) => {
                 return new Bzz(provider);
