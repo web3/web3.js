@@ -14,16 +14,16 @@ The ``web3-eth-personal`` package allows you to interact with the Ethereum node'
 
 .. code-block:: javascript
 
-    var Personal = require('web3-eth-personal');
+    import {Personal} from 'web3-eth-personal';
 
-    // "Personal.providers.givenProvider" will be set if in an Ethereum supported browser.
-    var personal = new Personal(Personal.givenProvider || 'ws://some.local-or-remote.node:8546');
+    // "Personal.givenProvider" will be set if in an Ethereum supported browser.
+    const personal = new Personal(Personal.givenProvider || 'ws://some.local-or-remote.node:8546', options);
 
 
     // or using the web3 umbrella package
 
-    var Web3 = require('web3');
-    var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+    import {Web3} from 'web3';
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
 
     // -> web3.eth.personal
 
@@ -63,7 +63,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``String``: The address of the newly created account.
+``Promise<string>`` - The address of the newly created account.
 
 -------
 Example
@@ -105,7 +105,7 @@ Returns
 -------
 
 
-``Promise`` returns ``String`` - The signature.
+``Promise<string>`` - The signature.
 
 
 -------
@@ -152,7 +152,7 @@ Returns
 -------
 
 
-``Promise`` returns ``String`` - The account.
+``Promise<string>`` - The account.
 
 
 -------
@@ -166,6 +166,7 @@ Example
     > "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe"
 
 ------------------------------------------------------------------------------
+
 
 signTransaction
 =====================
@@ -193,7 +194,7 @@ Returns
 -------
 
 
-``Promise`` returns ``Object`` - The RLP encoded transaction. The ``raw`` property can be used to send the transaction using :ref:`web3.eth.sendSignedTransaction <eth-sendsignedtransaction>`.
+``Promise<Object>`` - The RLP encoded transaction. The ``raw`` property can be used to send the transaction using :ref:`web3.eth.sendSignedTransaction <eth-sendsignedtransaction>`.
 
 
 -------
@@ -230,14 +231,14 @@ Example
 ------------------------------------------------------------------------------
 
 
-unlockAccount
+sendTransaction
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.personal.unlockAccount(address, password, unlockDuraction [, callback])
+    web3.eth.personal.sendTransaction(transactionOptions, password [, callback])
 
-Signs data using a specific account.
+This method sends a transaction over the management API.
 
 .. note:: Sending your account password over an unsecured HTTP RPC connection is highly unsecure.
 
@@ -246,9 +247,65 @@ Parameters
 ----------
 
 
+1. ``Object`` - The transaction options
+2. ``String`` - The passphrase for the current account
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+
+-------
+Returns
+-------
+
+
+``Promise<string>`` - The transaction hash.
+
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.sendTransaction({
+        from: "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0",
+        gasPrice: "20000000000",
+        gas: "21000",
+        to: '0x3535353535353535353535353535353535353535',
+        value: "1000000000000000000",
+        data: ""
+    }, 'MyPassword!').then(console.log);
+    > '0xda3be87732110de6c1354c83770aae630ede9ac308d9f7b399ecfba23d923384'
+
+------------------------------------------------------------------------------
+
+
+unlockAccount
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.personal.unlockAccount(address, password, unlockDuraction [, callback])
+
+Unlocks the given account.
+
+.. note:: Sending your account password over an unsecured HTTP RPC connection is highly unsecure.
+
+----------
+Parameters
+----------
+
 1. ``address`` - ``String``: The account address.
 2. ``password`` - ``String`` - The password of the account.
 3. ``unlockDuration`` - ``Number`` - The duration for the account to remain unlocked.
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+
+``Promise<boolean>`` - True if the account got unlocked successful otherwise false.
 
 -------
 Example
@@ -263,6 +320,47 @@ Example
 
 ------------------------------------------------------------------------------
 
+
+lockAccount
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.personal.lockAccount(address [, callback])
+
+Locks the given account.
+
+.. note:: Sending your account password over an unsecured HTTP RPC connection is highly unsecure.
+
+----------
+Parameters
+----------
+
+
+1. ``address`` - ``String``: The account address.
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+
+-------
+Returns
+-------
+
+
+``Promise<boolean>``
+
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.personal.lockAccount("0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe")
+    .then(console.log('Account locked!'));
+    > "Account locked!"
+
+------------------------------------------------------------------------------
 
 .. _personal-getaccounts:
 
@@ -286,7 +384,7 @@ Returns
 -------
 
 
-``Promise`` returns ``Array`` - An array of addresses controlled by node.
+``Promise<Array>`` - An array of addresses controlled by node.
 
 -------
 Example
@@ -330,7 +428,7 @@ Returns
 -------
 
 
-``Promise`` returns ``String`` - The address of the account.
+``Promise<string>`` - The address of the account.
 
 -------
 Example
@@ -344,6 +442,3 @@ Example
     > "0x8f337bf484b2fc75e4b0436645dcc226ee2ac531"
 
 ------------------------------------------------------------------------------
-    
-// TODO
-lockAccount, sendTransaction

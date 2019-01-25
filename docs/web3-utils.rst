@@ -57,36 +57,6 @@ Example
 
 ------------------------------------------------------------------------------
 
-_
-=====================
-
-.. code-block:: javascript
-
-    web3.utils._()
-
-The `underscore <http://underscorejs.org>`_ library for many convenience JavaScript functions.
-
-See the `underscore API reference <http://underscorejs.org>`_ for details.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    var _ = web3.utils._;
-
-    _.union([1,2],[3]);
-    > [1,2,3]
-
-    _.each({my: 'object'}, function(value, key){ ... })
-
-    ...
-
-
-
-------------------------------------------------------------------------------
-
 .. _utils-bn:
 
 BN
@@ -105,7 +75,7 @@ See the `BN.js documentation <https://github.com/indutny/bn.js/>`_ for details.
 Parameters
 ----------
 
-1. ``mixed`` - ``String|Number``: A number, number string or HEX string to convert to a BN object.
+1. ``value`` - ``String|Number``: A number, number string or HEX string to convert to a BN object.
 
 -------
 Returns
@@ -185,7 +155,7 @@ Checks if a given value is a `BigNumber.js <http://mikemcl.github.io/bignumber.j
 Parameters
 ----------
 
-1. ``bignumber`` - ``Object``: A `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ instance.
+1. ``BigNumber`` - ``Object``: A `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ instance.
 
 -------
 Returns
@@ -565,7 +535,7 @@ Text strings will be interpreted as UTF-8 strings.
 Parameters
 ----------
 
-1. ``mixed`` - ``String|Number|BN|BigNumber``: The input to convert to HEX.
+1. ``value`` - ``String|Number|BN|BigNumber``: The input to convert to HEX.
 
 -------
 Returns
@@ -1320,3 +1290,36 @@ Example
     web3.utils.toTwosComplement('-0x1');
     > "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
 
+------------------------------------------------------------------------------
+
+getSignatureParameters
+======================
+
+.. code-block:: javascript
+
+    web3.utils.getSignatureParameters(string)
+
+
+Gets the r, s and v values of an ECDSA signature
+
+
+----------
+Parameters
+----------
+
+1. ``string`` - ``String``: An ECDSA signature.
+
+-------
+Returns
+-------
+
+``Object``: Object containing r,s,v values.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.getSignatureParameters('0x5763ab346198e3e6cc4d53996ccdeca0c941cb6cb70d671d97711c421d3bf7922c77ef244ad40e5262d1721bf9638fb06bab8ed3c43bfaa80d6da0be9bbd33dc1b');
+    > "{ r: '0x5763ab346198e3e6cc4d53996ccdeca0c941cb6cb70d671d97711c421d3bf792', s: '0x2c77ef244ad40e5262d1721bf9638fb06bab8ed3c43bfaa80d6da0be9bbd33dc', v: 27 }"

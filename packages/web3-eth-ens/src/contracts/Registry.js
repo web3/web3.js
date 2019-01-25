@@ -13,88 +13,173 @@
 */
 /**
  * @file Registry.js
- *
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-"use strict";
+import isFunction from 'lodash/isFunction';
+import namehash from 'eth-ens-namehash';
+import {AbstractContract} from 'web3-eth-contract';
+import {REGISTRY_ABI} from '../../ressources/ABI/Registry';
+import {RESOLVER_ABI} from '../../ressources/ABI/Resolver';
 
-var _ = require('underscore');
-var Contract = require('web3-eth-contract');
-var namehash = require('eth-ens-namehash');
-var PromiEvent = require('web3-core-promievent');
-var REGISTRY_ABI = require('../ressources/ABI/Registry');
-var RESOLVER_ABI = require('../ressources/ABI/Resolver');
+export default class Registry extends AbstractContract {
+    /**
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {ContractModuleFactory} contractModuleFactory
+     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {PromiEvent} promiEvent
+     * @param {AbiCoder} abiCoder
+     * @param {Utils} utils
+     * @param {Object} formatters
+     * @param {Object} options
+     * @param {Network} net
+     *
+     * @constructor
+     */
+    constructor(
+        provider,
+        providersModuleFactory,
+        methodModuleFactory,
+        contractModuleFactory,
+        promiEvent,
+        abiCoder,
+        utils,
+        formatters,
+        options,
+        net
+    ) {
+        super(
+            provider,
+            providersModuleFactory,
+            methodModuleFactory,
+            contractModuleFactory,
+            promiEvent,
+            abiCoder,
+            utils,
+            formatters,
+            REGISTRY_ABI,
+            '',
+            options
+        );
 
+        this.net = net;
+        this.resolverContract = null;
+        this.resolverName = null;
 
-/**
- * A wrapper around the ENS registry contract.
- *
- * @method Registry
- * @param {Ens} ens
- * @constructor
- */
-function Registry(ens) {
-    var self = this;
-    this.ens = ens;
-    this.contract = ens.checkNetwork().then(function (address) {
-        var contract = new Contract(REGISTRY_ABI, address);
-        contract.setProvider(self.ens.eth.currentProvider);
+        this.checkNetwork().then((address) => {
+            this.address = address;
+        });
+    }
 
-        return contract;
-    });
+    /**
+     * Returns the address of the owner of an Ens name.
+     *
+     * @method owner
+     *
+     * @param {String} name
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {Promise<String>}
+     */
+    owner(name, callback = null) {
+        return new Promise((resolve, reject) => {
+            this.methods
+                .owner(namehash.hash(name))
+                .call()
+                .then((receipt) => {
+                    resolve(receipt);
+
+                    if (isFunction(callback)) {
+                        callback(false, receipt);
+                    }
+                })
+                .catch((error) => {
+                    reject(error);
+
+                    if (isFunction(callback)) {
+                        callback(error, null);
+                    }
+                });
+        });
+    }
+
+    /**
+     * Sets the provider for the registry and resolver object.
+     * This method will also set the provider in the NetworkPackage and AccountsPackage because they are used here.
+     *
+     * @method setProvider
+     *
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+     * @param {Net} net
+     *
+     * @returns {Boolean}
+     */
+    setProvider(provider, net) {
+        if (this.resolverContract) {
+            return !!(super.setProvider(provider, net) && this.resolverContract.setProvider(provider, net));
+        }
+
+        return super.setProvider(provider, net);
+    }
+
+    /**
+     * Returns the resolver contract associated with a name.
+     *
+     * @method resolver
+     *
+     * @param {String} name
+     *
+     * @returns {Promise<AbstractContract>}
+     */
+    async resolver(name) {
+        if (this.resolverName === name && this.resolverContract) {
+            return this.resolverContract;
+        }
+
+        const address = await this.methods.resolver(namehash.hash(name)).call();
+
+        const clone = this.clone();
+        clone.jsonInterface = RESOLVER_ABI;
+        clone.address = address;
+
+        this.resolverName = name;
+        this.resolverContract = clone;
+
+        return clone;
+    }
+
+    /**
+     * Checks if the current used network is synced and looks for Ens support there.
+     * Throws an error if not.
+     *
+     * @method checkNetwork
+     *
+     * @returns {Promise<String>}
+     */
+    async checkNetwork() {
+        const ensAddresses = {
+            main: '0x314159265dD8dbb310642f98f50C066173C1259b',
+            ropsten: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
+            rinkeby: '0xe7410170f87102df0055eb195163a03b7f2bff4a'
+        };
+
+        const block = await this.net.getBlock('latest', false);
+        const headAge = new Date() / 1000 - block.timestamp;
+
+        if (headAge > 3600) {
+            throw new Error(`Network not synced; last block was ${headAge} seconds ago`);
+        }
+
+        const networkType = await this.net.getNetworkType();
+        const address = ensAddresses[networkType];
+
+        if (typeof address === 'undefined') {
+            throw new TypeError(`ENS is not supported on network: "${networkType}"`);
+        }
+
+        return address;
+    }
 }
-
-/**
- * Returns the address of the owner of an ENS name.
- *
- * @method owner
- * @param {string} name
- * @param {function} callback
- * @return {Promise<any>}
- */
-Registry.prototype.owner = function (name, callback) {
-    var promiEvent = new PromiEvent(true);
-
-    this.contract.then(function (contract) {
-        contract.methods.owner(namehash.hash(name)).call()
-            .then(function (receipt) {
-                promiEvent.resolve(receipt);
-
-                if (_.isFunction(callback)) {
-                    callback(receipt);
-                }
-            })
-            .catch(function (error) {
-                promiEvent.reject(error);
-
-                if (_.isFunction(callback)) {
-                    callback(error);
-                }
-            });
-    });
-
-    return promiEvent.eventEmitter;
-};
-
-/**
- * Returns the resolver contract associated with a name.
- *
- * @method resolver
- * @param {string} name
- * @return {Promise<Contract>}
- */
-Registry.prototype.resolver = function (name) {
-    var self = this;
-
-    return this.contract.then(function (contract) {
-        return contract.methods.resolver(namehash.hash(name)).call();
-    }).then(function (address) {
-        var contract = new Contract(RESOLVER_ABI, address);
-        contract.setProvider(self.ens.eth.currentProvider);
-        return contract;
-    });
-};
-
-module.exports = Registry;

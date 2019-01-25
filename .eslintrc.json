@@ -1,0 +1,62 @@
+{
+    "parser": "babel-eslint",
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true,
+        "jest/globals": true
+    },
+    "extends": [
+        "standard",
+        "plugin:unicorn/recommended",
+        "plugin:jest/recommended",
+        "prettier",
+        "prettier/standard",
+        "prettier/unicorn"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2017,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "prettier",
+        "standard",
+        "unicorn",
+        "jest"
+    ],
+    "rules": {
+        "no-useless-constructor": 0,
+        "no-new": 0,
+        "standard/no-callback-literal": 0,
+        "unicorn/filename-case": [
+            "error",
+            {
+                "case": "pascalCase"
+            }
+        ],
+        "prettier/prettier": "error",
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single",
+            {
+                "avoidEscape": true
+            }
+        ],
+        "semi": [
+            "error",
+            "always"
+        ]
+    }
+}

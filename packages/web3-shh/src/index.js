@@ -16,175 +16,34 @@
 */
 /**
  * @file index.js
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2017
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @date 2018
  */
 
-"use strict";
+import {ProvidersModuleFactory} from 'web3-providers';
+import {MethodModuleFactory} from 'web3-core-method';
+import {SubscriptionsFactory} from 'web3-core-subscriptions';
+import {Network} from 'web3-net';
+import * as Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import ShhModuleFactory from './factories/ShhModuleFactory';
 
-var core = require('web3-core');
-var Subscriptions = require('web3-core-subscriptions').subscriptions;
-var Method = require('web3-core-method');
-// var formatters = require('web3-core-helpers').formatters;
-var Net = require('web3-net');
-
-
-var Shh = function Shh() {
-    var _this = this;
-
-    // sets _requestmanager
-    core.packageInit(this, arguments);
-
-    // overwrite setProvider
-    var setProvider = this.setProvider;
-    this.setProvider = function () {
-        setProvider.apply(_this, arguments);
-        _this.net.setProvider.apply(_this, arguments);
-    };
-
-    this.net = new Net(this.currentProvider);
-
-    [
-        new Subscriptions({
-            name: 'subscribe',
-            type: 'shh',
-            subscriptions: {
-                'messages': {
-                    params: 1
-                    // inputFormatter: [formatters.inputPostFormatter],
-                    // outputFormatter: formatters.outputPostFormatter
-                }
-            }
-        }),
-
-        new Method({
-            name: 'getVersion',
-            call: 'shh_version',
-            params: 0
-        }),
-        new Method({
-            name: 'getInfo',
-            call: 'shh_info',
-            params: 0
-        }),
-        new Method({
-            name: 'setMaxMessageSize',
-            call: 'shh_setMaxMessageSize',
-            params: 1
-        }),
-        new Method({
-            name: 'setMinPoW',
-            call: 'shh_setMinPoW',
-            params: 1
-        }),
-        new Method({
-            name: 'markTrustedPeer',
-            call: 'shh_markTrustedPeer',
-            params: 1
-        }),
-        new Method({
-            name: 'newKeyPair',
-            call: 'shh_newKeyPair',
-            params: 0
-        }),
-        new Method({
-            name: 'addPrivateKey',
-            call: 'shh_addPrivateKey',
-            params: 1
-        }),
-        new Method({
-            name: 'deleteKeyPair',
-            call: 'shh_deleteKeyPair',
-            params: 1
-        }),
-        new Method({
-            name: 'hasKeyPair',
-            call: 'shh_hasKeyPair',
-            params: 1
-        }),
-        new Method({
-            name: 'getPublicKey',
-            call: 'shh_getPublicKey',
-            params: 1
-        }),
-        new Method({
-            name: 'getPrivateKey',
-            call: 'shh_getPrivateKey',
-            params: 1
-        }),
-        new Method({
-            name: 'newSymKey',
-            call: 'shh_newSymKey',
-            params: 0
-        }),
-        new Method({
-            name: 'addSymKey',
-            call: 'shh_addSymKey',
-            params: 1
-        }),
-        new Method({
-            name: 'generateSymKeyFromPassword',
-            call: 'shh_generateSymKeyFromPassword',
-            params: 1
-        }),
-        new Method({
-            name: 'hasSymKey',
-            call: 'shh_hasSymKey',
-            params: 1
-        }),
-        new Method({
-            name: 'getSymKey',
-            call: 'shh_getSymKey',
-            params: 1
-        }),
-        new Method({
-            name: 'deleteSymKey',
-            call: 'shh_deleteSymKey',
-            params: 1
-        }),
-
-        new Method({
-            name: 'newMessageFilter',
-            call: 'shh_newMessageFilter',
-            params: 1
-        }),
-        new Method({
-            name: 'getFilterMessages',
-            call: 'shh_getFilterMessages',
-            params: 1
-        }),
-        new Method({
-            name: 'deleteMessageFilter',
-            call: 'shh_deleteMessageFilter',
-            params: 1
-        }),
-
-        new Method({
-            name: 'post',
-            call: 'shh_post',
-            params: 1,
-            inputFormatter: [null]
-        }),
-
-        new Method({
-            name: 'unsubscribe',
-            call: 'shh_unsubscribe',
-            params: 1
-        })
-    ].forEach(function(method) {
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager);
-    });
+/**
+ * Returns the Shh object.
+ *
+ * @method Shh
+ *
+ * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Object} options
+ *
+ * @returns {Shh}
+ */
+export const Shh = (provider, options) => {
+    return new ShhModuleFactory(Utils, formatters, new MethodModuleFactory()).createShhModule(
+        provider,
+        new ProvidersModuleFactory(),
+        new SubscriptionsFactory(),
+        new Network(provider, options),
+        options
+    );
 };
-
-Shh.prototype.clearSubscriptions = function () {
-     this._requestManager.clearSubscriptions();
-};
-
-core.addProviders(Shh);
-
-
-
-module.exports = Shh;
-
-

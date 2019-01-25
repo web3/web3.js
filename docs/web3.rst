@@ -5,16 +5,13 @@
 Web3
 ====
 
-    Class
 
-This's main class of anything related Ethereum.
+    This's main class of anything related Ethereum.
 
 .. code-block:: javascript
 
-    var Web3 = require('web3');
+    import {Web3} from 'web3';
 
-    > Web3.utils
-    > Web3.version
     > Web3.givenProvider
     > Web3.providers
     > Web3.modules
@@ -24,13 +21,13 @@ This's main class of anything related Ethereum.
 Web3.modules
 =====================
 
-    Property of Web3 class
+    Static property of the Web3 class
 
 .. code-block:: javascript
 
     Web3.modules
 
-Will return an object with the classes of all major sub modules, to be able to instantiate them manually.
+    Will return an object with the classes of all major sub modules, to be able to instantiate them manually.
 
 -------
 Returns
@@ -51,29 +48,27 @@ Example
 
     Web3.modules
     > {
-        Eth: Eth function(provider),
-        Net: Net function(provider),
-        Personal: Personal function(provider),
-        Shh: Shh function(provider),
-        Bzz: Bzz function(provider),
+        Eth: Eth function(provider, options?, net?),
+        Net: Net function(provider, options?, net?),
+        Personal: Personal function(provider, options?, net?),
+        Shh: Shh function(provider, options?, net?),
+        Bzz: Bzz function(provider, options?, net?),
     }
 
 
 ------------------------------------------------------------------------------
 
-web3 object
+Web3 Class
 ============
 
-    The instance of Web3
-
-The web3.js object is an umbrella package to house all Ethereum related modules.
+    The Web3 class is an wrapper to house all Ethereum related modules.
 
 .. code-block:: javascript
 
-    var Web3 = require('web3');
+    import {Web3} from 'web3';
 
     // "Web3.providers.givenProvider" will be set if in an Ethereum supported browser.
-    var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
 
     > web3.eth
     > web3.shh
@@ -87,14 +82,14 @@ The web3.js object is an umbrella package to house all Ethereum related modules.
 version
 ============
 
-    Property of Web3 class and instance of Web3
+    Property of the Web3 class.
 
 .. code-block:: javascript
 
     Web3.version
     web3.version
 
-Contains the version of the ``web3`` container object.
+Contains the version of the ``web3`` wrapper class.
 
 -------
 Returns
@@ -119,14 +114,13 @@ Example
 utils
 =====================
 
-    Property of Web3 class and instance of Web3
+    Static property of the Web3 class.
 
 .. code-block:: javascript
 
     Web3.utils
-    web3.utils
 
-Utility functions are also exposes on the ``Web3`` class object directly.
+    Utility functions are also exposes on the ``Web3`` class object directly.
 
 See :ref:`web3.utils <utils>` for more.
 

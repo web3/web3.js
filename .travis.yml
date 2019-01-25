@@ -3,7 +3,9 @@ node_js:
     - "6"
     - "7"
     - "8"
+    - "9"
     - "10"
+    - "11"
 env:
     - CXX=g++-4.8
 addons:
@@ -20,9 +22,9 @@ before_script:
     - sh -e /etc/init.d/xvfb start
 install:
     - npm install
+    - npm run bootstrap
 script:
-    - npm run-script build
-    - npm run-script test-coveralls
+    - npm run travis
 after_script:
-    - cd test/node && npm install && node app.js
+    - npm run coveralls
 

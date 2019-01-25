@@ -16,60 +16,24 @@
 */
 /**
  * @file index.js
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2017
+ * @authors: Samuel Furter <samuel@ethereum.org>
+ * @date 2018
  */
 
-"use strict";
+import * as Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import SubscriptionsModuleFactory from './factories/SubscriptionsModuleFactory';
 
-var Subscription = require('./subscription.js');
-
-
-var Subscriptions = function Subscriptions(options) {
-    this.name = options.name;
-    this.type = options.type;
-    this.subscriptions = options.subscriptions || {};
-    this.requestManager = null;
+/**
+ * Returns an object of type SubscriptionsFactory
+ *
+ * @method SubscriptionsFactory
+ *
+ * @returns {SubscriptionsFactory}
+ */
+export const SubscriptionsFactory = () => {
+    return new SubscriptionsModuleFactory().createSubscriptionsFactory(Utils, formatters);
 };
 
-
-Subscriptions.prototype.setRequestManager = function (rm) {
-    this.requestManager = rm;
-};
-
-
-Subscriptions.prototype.attachToObject = function (obj) {
-    var func = this.buildCall();
-    var name = this.name.split('.');
-    if (name.length > 1) {
-        obj[name[0]] = obj[name[0]] || {};
-        obj[name[0]][name[1]] = func;
-    } else {
-        obj[name[0]] = func;
-    }
-};
-
-
-Subscriptions.prototype.buildCall = function() {
-    var _this = this;
-
-    return function(){
-        if(!_this.subscriptions[arguments[0]]) {
-            console.warn('Subscription '+ JSON.stringify(arguments[0]) +' doesn\'t exist. Subscribing anyway.');
-        }
-
-        var subscription = new Subscription({
-            subscription: _this.subscriptions[arguments[0]],
-            requestManager: _this.requestManager,
-            type: _this.type
-        });
-
-        return subscription.subscribe.apply(subscription, arguments);
-    };
-};
-
-
-module.exports = {
-    subscriptions: Subscriptions,
-    subscription: Subscription
-};
+export LogSubscription from './subscriptions/eth/LogSubscription';
+export AbstractSubscription from '../lib/subscriptions/AbstractSubscription';

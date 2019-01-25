@@ -11,16 +11,16 @@ The ``web3-eth`` package allows you to interact with an Ethereum blockchain and 
 
 .. code-block:: javascript
 
-    var Eth = require('web3-eth');
+    import {Eth} from 'web3-eth';
 
     // "Eth.providers.givenProvider" will be set if in an Ethereum supported browser.
-    var eth = new Eth(Eth.givenProvider || 'ws://some.local-or-remote.node:8546');
+    const eth = new Eth(Eth.givenProvider || 'ws://some.local-or-remote.node:8546', options);
 
 
     // or using the web3 umbrella package
 
-    var Web3 = require('web3');
-    var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+    import {Web3 } from 'web3';
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
 
     // -> web3.eth
 
@@ -94,7 +94,7 @@ For ``web3.eth.accounts`` see the :ref:`accounts reference documentation <eth-ac
 ens
 =====================
 
-For ``web3.eth.ens`` see the :ref:`ENS reference documentation <eth-ens>`
+For ``web3.eth.ens`` see the :ref:`Ens reference documentation <eth-ens>`
 
 
 
@@ -224,7 +224,7 @@ Returns the ethereum protocol version of the node.
 Returns
 -------
 
-``Promise`` returns ``String``: the protocol version.
+``Promise<string>`` - The protocol version.
 
 
 -------
@@ -256,7 +256,7 @@ Checks if the node is currently syncing and returns either a syncing object, or 
 Returns
 -------
 
-``Promise`` returns ``Object|Boolean`` - A sync object when the node is currently syncing or ``false``:
+``Promise<object|boolean>`` - A sync object when the node is currently syncing or ``false``:
 
     - ``startingBlock`` - ``Number``: The block number where the sync started.
     - ``currentBlock`` - ``Number``: The block number where at which block the node currently synced to already.
@@ -299,7 +299,7 @@ Returns the coinbase address to which mining rewards will go.
 Returns
 -------
 
-``Promise`` returns ``String`` - bytes 20: The coinbase address set in the node for mining rewards.
+``Promise<string>`` - The coinbase address set in the node for mining rewards.
 
 
 -------
@@ -329,7 +329,7 @@ Checks whether the node is mining or not.
 Returns
 -------
 
-``Promise`` returns ``Boolean``: ``true`` if the node is mining, otherwise ``false``.
+``Promise<boolean>`` - Returns ``true`` if the node is mining, otherwise ``false``.
 
 
 -------
@@ -358,7 +358,7 @@ Returns the number of hashes per second that the node is mining with.
 Returns
 -------
 
-``Promise`` returns ``Number``: Number of hashes per second.
+``Promise<number>`` - The Number of hashes per second.
 
 -------
 Example
@@ -393,7 +393,7 @@ GasPrice is the wei per unit of gas,.
 Returns
 -------
 
-``Promise`` returns ``String`` - Number string of the current gas price in :ref:`wei <what-is-wei>`.
+``Promise<string>`` - Number string of the current gas price in :ref:`wei <what-is-wei>`.
 
 See the :ref:`A note on dealing with big numbers in JavaScript <utils-bn>`.
 
@@ -433,7 +433,7 @@ Returns
 -------
 
 
-``Promise`` returns ``Array`` - An array of addresses controlled by node.
+``Promise<Array>`` - An array of addresses controlled by node.
 
 -------
 Example
@@ -463,7 +463,7 @@ Returns the current block number.
 Returns
 -------
 
-``Promise`` returns ``Number`` - The number of the most recent block.
+``Promise<number>`` - The number of the most recent block.
 
 -------
 Example
@@ -503,7 +503,7 @@ Returns
 -------
 
 
-``Promise`` returns ``String`` - The current balance for the given address in :ref:`wei <what-is-wei>`.
+``Promise<string>`` - The current balance for the given address in :ref:`wei <what-is-wei>`.
 
 See the :ref:`A note on dealing with big numbers in JavaScript <big-numbers-in-javascript>`.
 
@@ -544,7 +544,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``String`` - The value in storage at the given position.
+``Promise<string>`` - The value in storage at the given position.
 
 -------
 Example
@@ -582,7 +582,7 @@ Returns
 -------
 
 
-``Promise`` returns ``String`` - The data at given address ``address``.
+``Promise<string>`` - The data at given address ``address``.
 
 -------
 Example
@@ -622,7 +622,7 @@ Returns
 -------
 
 
-``Promise`` returns ``Object`` - The block object:
+``Promise<object>`` - The block object:
 
   - ``number`` - ``Number``: The block number. ``null`` when its pending block.
   - ``hash`` 32 Bytes - ``String``: Hash of the block. ``null`` when its pending block.
@@ -704,7 +704,7 @@ Returns
 -------
 
 
-``Promise`` returns ``Number`` - The number of transactions in the given block.
+``Promise<number>`` - The number of transactions in the given block.
 
 -------
 Example
@@ -725,7 +725,7 @@ getUncle
 
 .. code-block:: javascript
 
-    web3.eth.getUncle(blockHashOrBlockNumber, uncleIndex [, returnTransactionObjects] [, callback])
+    web3.eth.getUncle(blockHashOrBlockNumber, uncleIndex [, callback])
 
 Returns a blocks uncle by a given uncle index position.
 
@@ -735,8 +735,7 @@ Parameters
 
 1. ``String|Number`` - The block number or hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Number`` - The index position of the uncle.
-3. ``Boolean`` - (optional, default ``false``) If ``true``, the returned block will contain all transactions as objects, if ``false`` it will only contains the transaction hashes.
-4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
@@ -744,7 +743,7 @@ Returns
 -------
 
 
-``Promise`` returns ``Object`` - the returned uncle. For a return value see :ref:`web3.eth.getBlock() <eth-getblock>`.
+``Promise<object>`` - The returned uncle. For a return value see :ref:`web3.eth.getBlock() <eth-getblock>`.
 
 .. note:: An uncle doesn't contain individual transactions.
 
@@ -788,7 +787,7 @@ Returns
 -------
 
 
-``Promise`` returns ``Object`` - A transaction object its hash ``transactionHash``:
+``Promise<object>`` - A transaction object its hash ``transactionHash``:
 
   - ``hash`` 32 Bytes - ``String``: Hash of the transaction.
   - ``nonce`` - ``Number``: The number of transactions made by the sender prior to this one.
@@ -854,7 +853,7 @@ Returns
 -------
 
 
-``Promise`` returns ``Object`` - A transaction object, see :ref:`web3.eth.getTransaction <eth-gettransaction-return>`:
+``Promise<object>`` - A transaction object, see :ref:`web3.eth.getTransaction <eth-gettransaction-return>`:
 
 
 -------
@@ -965,7 +964,7 @@ Returns
 -------
 
 
-``Promise`` returns ``Number`` - The number of transactions sent from the given address.
+``Promise<number>`` - The number of transactions sent from the given address.
 
 -------
 Example
@@ -1161,7 +1160,7 @@ Returns
 -------
 
 
-``Promise`` returns ``String`` - The signature.
+``Promise<string>`` - The signature.
 
 
 -------
@@ -1188,7 +1187,7 @@ signTransaction
 
 .. code-block:: javascript
 
-    web3.eth.signTransaction(transactionObject, address [, callback])
+    web3.eth.signTransaction(transactionObject [, address] [, callback])
 
 Signs a transaction. This account needs to be unlocked.
 
@@ -1198,7 +1197,7 @@ Parameters
 
 
 1. ``Object`` - The transaction data to sign :ref:`web3.eth.sendTransaction() <eth-sendtransaction>` for more.
-2. ``String`` - Address to sign transaction with.
+2. ``String`` - (optional) Address to sign transaction with.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -1207,7 +1206,7 @@ Returns
 -------
 
 
-``Promise`` returns ``Object`` - The RLP encoded transaction. The ``raw`` property can be used to send the transaction using :ref:`web3.eth.sendSignedTransaction <eth-sendsignedtransaction>`.
+``Promise<object>`` - The RLP encoded transaction. The ``raw`` property can be used to send the transaction using :ref:`web3.eth.sendSignedTransaction <eth-sendsignedtransaction>`.
 
 
 -------
@@ -1266,7 +1265,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``String``: The returned data of the call, e.g. a smart contract functions return value.
+``Promise<string>`` - The returned data of the call, e.g. a smart contract functions return value.
 
 -------
 Example
@@ -1308,7 +1307,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``Number`` - the used gas for the simulated call/transaction.
+``Promise<number>`` - The used gas for the simulated call/transaction.
 
 -------
 Example
@@ -1354,7 +1353,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``Array`` - Array of log objects.
+``Promise<Array>`` - Array of log objects.
 
 The structure of the returned event ``Object`` in the ``Array`` looks as follows:
 
@@ -1412,7 +1411,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``Array`` - the mining work with the following structure:
+``Promise<Array>`` - The mining work with the following structure:
 
     - ``String`` 32 Bytes - at **index 0**: current block header pow-hash
     - ``String`` 32 Bytes - at **index 1**: the seed hash used for the DAG.
@@ -1458,7 +1457,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``Boolean`` - Returns ``TRUE`` if the provided solution is valid, otherwise false.
+``Promise<boolean>`` - Returns ``true`` if the provided solution is valid, otherwise false.
 
 -------
 Example
@@ -1474,6 +1473,44 @@ Example
     ])
     .then(console.log);
     > true
+
+
+------------------------------------------------------------------------------
+
+requestAccounts
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.requestAccounts([callback])
+
+This method will request/enable the accounts from the current environment it is running (Metamask, Status or Mist).
+It doesn't work if you're connected to a node with a default Web3.js provider. (WebsocketProvider, HttpProvidder and IpcProvider)
+This method will only work if you're using the injected provider from a application like Status, Mist or Metamask.
+
+For further information about the behavior of this method please read the EIP of it: `EIP-1102 <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md>`_
+
+----------
+Parameters
+----------
+
+1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+``Promise<Array>`` - Returns an array of enabled accounts.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.requestAccounts().then(console.log);
+    > ['0aae0B295369a9FD31d5F28D9Ec85E40f4cb692BAf', 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe]
 
 
 ------------------------------------------------------------------------------

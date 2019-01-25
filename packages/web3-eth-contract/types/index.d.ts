@@ -1,0 +1,123 @@
+/*
+    This file is part of web3.js.
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/**
+ * @file index.d.ts
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @date 2018
+ */
+
+import {provider} from 'web3-providers';
+import {AbiItem, BN} from 'web3-utils';
+
+export class Contract {
+    constructor(
+        provider: provider,
+        jsonInterface: AbiItem[] | AbiItem,
+        address?: string,
+        options?: ContractOptions
+    )
+
+    options: Options;
+
+    clone(): Contract;
+
+    deploy(options: DeployOptions): DeployTransactionResponse;
+
+    methods: any;
+
+    once(event: string, callback: (error: Error, event: EventData) => void): void;
+    once(event: string, options: EventOptions, callback: (error: Error, event: EventData) => void): void;
+
+    events: any;
+
+    getPastEvents(event: string): Promise<EventData[]>;
+    getPastEvents(event: string, options: EventOptions, callback: (error: Error, event: EventData) => void): Promise<EventData[]>;
+    getPastEvents(event: string, options: EventOptions): Promise<EventData[]>;
+    getPastEvents(event: string, callback: (error: Error, event: EventData) => void): Promise<EventData[]>;
+}
+
+export class ContractModuleFactory { } // TODO: Define methods
+
+export interface Options {
+    address: string;
+    jsonInterface: AbiItem[];
+    data: string;
+    from: string;
+    gasPrice: string;
+    gas: number;
+}
+
+export interface DeployOptions {
+    data: string;
+    arguments?: any[];
+}
+
+export interface DeployTransactionResponse {
+    array: any[];
+
+    send(options: SendOptions): () => Promise<Contract>;
+
+    estimateGas(options: EstimateGasOptions, callback?: (err: Error, gas: number) => void): void;
+
+    estimateGas(callback: (err: Error, gas: number) => void): void;
+
+    estimateGas(options: EstimateGasOptions, callback: (err: Error, gas: number) => void): void;
+
+    estimateGas(options: EstimateGasOptions): void;
+
+    encodeABI(): string;
+}
+
+export interface SendOptions {
+    from: string;
+    gasPrice?: string;
+    gas: number;
+    value?: number | string | BN;
+}
+
+export interface EstimateGasOptions {
+    from?: string;
+    gas: number;
+    value?: number | string | BN;
+}
+
+export interface ContractOptions {
+    from: string;
+    gasPrice: string;
+    gas: number;
+    data: string;
+}
+
+export interface EventOptions {
+    filter: {};
+    fromBlock?: number;
+    toBlock?: string | number;
+    topics?: any[];
+}
+
+export interface EventData {
+    returnValues: {},
+    raw: {
+        data: string;
+        topics: string[];
+    },
+    event: string;
+    signature: string;
+    logIndex: number;
+    transactionIndex: number;
+    transactionHash: string;
+    blockHash: string;
+    blockNumber: number;
+    address: string;
+}

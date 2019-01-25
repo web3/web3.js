@@ -1,3 +1,4 @@
+dist/
 .DS_Store
 *.swp
 */**/*un~
@@ -8,10 +9,9 @@ npm-debug.log
 /coverage
 /tmp
 node_modules
-bower_components
-/bower
 .idea/
 .npm/
 .vscode/
-dist/
-!./dist/web3.min.js
+coverage/
+lerna-debug.log
+.eslintcache

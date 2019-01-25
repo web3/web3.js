@@ -1,14 +1,32 @@
 {
     "name": "web3-core-helpers",
     "namespace": "ethereum",
-    "version": "1.0.0-beta.36",
+    "version": "1.0.0-beta.38",
     "description": "Web3 core tools helper for sub packages. This is an internal package.",
     "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-core-helpers",
     "license": "LGPL-3.0",
-    "main": "src/index.js",
+    "main": "dist/web3-core-helpers.cjs.js",
+    "module": "dist/web3-core-helpers.esm.js",
+    "browser": "dist/web3-core-helpers.umd.js",
+    "types": "types",
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w",
+        "test": "jest",
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
     "dependencies": {
-        "underscore": "1.8.3",
-        "web3-eth-iban": "1.0.0-beta.36",
-        "web3-utils": "1.0.0-beta.36"
-    }
+        "lodash": "^4.17.11",
+        "web3-eth-iban": "1.0.0-beta.38",
+        "web3-utils": "1.0.0-beta.38"
+    },
+    "devDependencies": {
+        "dtslint": "^0.4.2",
+        "web3-core":  "1.0.0-beta.38",
+        "web3-providers": "1.0.0-beta.38"
+    },
+    "files": [
+        "dist",
+        "types/index.d.ts"
+    ]
 }

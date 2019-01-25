@@ -15,15 +15,19 @@ This allows you to interact with smart contracts as if they were JavaScript obje
 To use it standalone:
 
 .. code-block:: javascript
-    var Contract = require('web3-eth-contract');
+    import {Contract} from 'web3-eth-contract';
+    import {Accounts} from 'web3-eth-accounts;
 
-    // set provider for all later instances to use
-    Contract.setProvider('ws://localhost:8546');
-
-    var contract = new Contract(jsonInterface, address);
+    const contract = new Contract(
+        'ws://localhost:8546',
+        new Accounts('ws://localhost:8546', options),
+        abi,
+        address,
+        options
+    );
 
     contract.methods.somFunc().send({from: ....})
-    .on('receipt', function(){
+    .on('receipt', () => {
         ...
     });
 
@@ -67,7 +71,7 @@ Example
 
 .. code-block:: javascript
 
-    var myContract = new web3.eth.Contract([...], '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', {
+    const myContract = new web3.eth.Contract([...], '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', {
         from: '0x1234567890123456789012345678901234567891', // default from address
         gasPrice: '20000000000' // default gas price in wei, 20 gwei in this case
     });
@@ -242,9 +246,9 @@ Example
 
 .. code-block:: javascript
 
-    var contract1 = new eth.Contract(abi, address, {gasPrice: '12345678', from: fromAddress});
+    const contract1 = new eth.Contract(abi, address, {gasPrice: '12345678', from: fromAddress});
 
-    var contract2 = contract1.clone();
+    const contract2 = contract1.clone();
     contract2.options.address = address2;
 
     (contract1.options.address !== contract2.options.address);
@@ -303,14 +307,14 @@ Example
         from: '0x1234567890123456789012345678901234567891',
         gas: 1500000,
         gasPrice: '30000000000000'
-    }, function(error, transactionHash){ ... })
-    .on('error', function(error){ ... })
-    .on('transactionHash', function(transactionHash){ ... })
-    .on('receipt', function(receipt){
+    }, (error, transactionHash) => { ... })
+    .on('error', (error) => { ... })
+    .on('transactionHash', (transactionHash) => { ... })
+    .on('receipt', (receipt) => {
        console.log(receipt.contractAddress) // contains the new contract address
     })
-    .on('confirmation', function(confirmationNumber, receipt){ ... })
-    .then(function(newContractInstance){
+    .on('confirmation', (confirmationNumber, receipt) => { ... })
+    .then((newContractInstance) => {
         console.log(newContractInstance.options.address) // instance with the new contract address
     });
 
@@ -326,7 +330,7 @@ Example
         gas: 1500000,
         gasPrice: '30000000000000'
     })
-    .then(function(newContractInstance){
+    .then((newContractInstance) => {
         console.log(newContractInstance.options.address) // instance with the new contract address
     });
 
@@ -345,7 +349,7 @@ Example
         data: '0x12345...',
         arguments: [123, 'My String']
     })
-    .estimateGas(function(err, gas){
+    .estimateGas((err, gas) => {
         console.log(gas);
     });
 
@@ -397,26 +401,26 @@ Example
 
     // calling a method
 
-    myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, function(error, result){
+    myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, (error, result) => {
         ...
     });
 
     // or sending and using a promise
     myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
-    .then(function(receipt){
+    .then((receipt) => {
         // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
     });
 
     // or sending and using the events
 
     myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
-    .on('transactionHash', function(hash){
+    .on('transactionHash', (hash) => {
         ...
     })
-    .on('receipt', function(receipt){
+    .on('receipt', (receipt) => {
         ...
     })
-    .on('confirmation', function(confirmationNumber, receipt){
+    .on('confirmation', (confirmationNumber, receipt) => {
         ...
     })
     .on('error', console.error);
@@ -452,7 +456,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``Mixed``: The return value(s) of the smart contract method.
+``Promise<any>`` - The return value(s) of the smart contract method.
 If it returns a single value, it's returned as is. If it has multiple return values they are returned as an object with properties and indices:
 
 -------
@@ -462,13 +466,13 @@ Example
 .. code-block:: javascript
 
     // using the callback
-    myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, function(error, result){
+    myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, (error, result) => {
         ...
     });
 
     // using the promise
     myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
-    .then(function(result){
+    .then((result) => {
         ...
     });
 
@@ -557,26 +561,26 @@ Example
 .. code-block:: javascript
 
     // using the callback
-    myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, function(error, transactionHash){
+    myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, (error, transactionHash) => {
         ...
     });
 
     // using the promise
     myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
-    .then(function(receipt){
+    .then((receipt) => {
         // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
     });
 
 
     // using the event emitter
     myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
-    .on('transactionHash', function(hash){
+    .on('transactionHash', (hash) => {
         ...
     })
-    .on('confirmation', function(confirmationNumber, receipt){
+    .on('confirmation', (confirmationNumber, receipt) => {
         ...
     })
-    .on('receipt', function(receipt){
+    .on('receipt', (receipt) => {
         // receipt example
         console.log(receipt);
         > {
@@ -646,7 +650,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``Number``: The gas amount estimated.
+``Promise<number>`` - The gas amount estimated.
 
 -------
 Example
@@ -751,7 +755,7 @@ Example
     myContract.once('MyEvent', {
         filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
         fromBlock: 0
-    }, function(error, event){ console.log(event); });
+    }, (error, event) => { console.log(event); });
 
     // event output example
     > {
@@ -834,11 +838,11 @@ Example
     myContract.events.MyEvent({
         filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
         fromBlock: 0
-    }, function(error, event){ console.log(event); })
-    .on('data', function(event){
+    }, (error, event) => { console.log(event); })
+    .on('data', (event) => {
         console.log(event); // same results as the optional callback above
     })
-    .on('changed', function(event){
+    .on('changed', (event) => {
         // remove event from local database
     })
     .on('error', console.error);
@@ -921,8 +925,8 @@ Example
         filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
         fromBlock: 0,
         toBlock: 'latest'
-    }, function(error, events){ console.log(events); })
-    .then(function(events){
+    }, (error, events) => { console.log(events); })
+    .then((events) => {
         console.log(events) // same results as the optional callback above
     });
 

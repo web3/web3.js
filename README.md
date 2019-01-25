@@ -1,16 +1,14 @@
 **PREVIEW RELEASE** This is a beta preview release with breaking changes! The current stable version is 0.20.0 
 
-<img src="https://github.com/ethereum/web3.js/raw/1.0/web3js.jpg" width=200 />
+![Web3.js logo](assets/web3js.svg)
 
 # web3.js - Ethereum JavaScript API
 
+[![npm](https://img.shields.io/npm/dm/web3.svg)](https://www.npmjs.com/package/web3) [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url]
 [![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![npm](https://img.shields.io/npm/dm/web3.svg)](https://www.npmjs.com/package/web3) [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Stories in Ready][waffle-image]][waffle-url]
 
 This is the Ethereum [JavaScript API][docs]
 which connects to the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
-
 
 You need to run a local or remote Ethereum node to use this library.
 
@@ -30,33 +28,12 @@ npm install web3
 yarn add web3
 ```
 
-### Meteor
-
-*Note*: works only in the Browser for now. (PR welcome).
-
-```bash
-meteor add ethereum:web3
-```
-
-### In the Browser
-
-Use the prebuild ``dist/web3.min.js``, or
-build using the [web3.js][repo] repository:
-
-```bash
-npm run-script build
-```
-
-Then include `dist/web3.js` in your html file.
-This will expose `Web3` on the window object.
-
 ## Usage
 
 ```js
-// in node.js
-var Web3 = require('web3');
+import Web3 from 'web3';
 
-var web3 = new Web3('ws://localhost:8546');
+const web3 = new Web3('ws://localhost:8546');
 console.log(web3);
 > {
     eth: ... ,
@@ -83,68 +60,47 @@ web3.eth.getAccounts()
 
 ### Usage with TypeScript
 
-Type definitions are maintained at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) by others. You can install them with
+We do support types within the repo itself. Please open an issue here if you find any wrong types.
 
-```bash
-npm install --dev @types/web3.js
-```
-
-You might need to install type definitions for `bignumber.js` and `lodash` too.
-
-And then use `web3.js` as follows:
+You can use `web3.js` as follows:
 
 ```typescript
-import Web3 = require("web3"); // Note the special syntax! Copy this line when in doubt!
+import Web3 from 'web3';
 const web3 = new Web3("ws://localhost:8546");
 ```
-
-**Please note:** We do not support TypeScript ourselves. If you have any issue with TypeScript and `web3.js` do not create an issue here. Go over to DefinitelyTyped and do it there.
 
 ## Documentation
 
 Documentation can be found at [read the docs][docs]
 
-
-## Building
+## Contributing
 
 ### Requirements
 
 * [Node.js](https://nodejs.org)
 * npm
 
+### Commands
 ```bash
-sudo apt-get update
-sudo apt-get install nodejs
-sudo apt-get install npm
-```
+npm run clean // removes all the node_modules folders in all modules
+npm run bootstrap // install all dependencies and symlinks the internal modules for all modules
+npm run test // runs all tests 
+npm run build // runs rollup
+npm run dev // runs rollup with a watcher
 
-### Building (gulp)
-
-Build only the web3.js package
-
-```bash
-npm run-script build
-```
-
-Or build all sub packages as well
-
-```bash
-npm run-script build-all
-```
-
-This will put all the browser build files into the `dist` folder.
-
-
-### Testing (mocha)
-
-```bash
-npm test
 ```
 
 ### Contributing
 
-- All contributions have to go into develop, or the 1.0 branch
+- All contributions have to go into develop (0.20.x), or the 1.0 branch
 - Please follow the code style of the other files, we use 4 spaces as tabs.
+
+### Support
+
+![chrome](https://img.shields.io/badge/chrome-latest%202%20versions-green.svg)
+![firefox](https://img.shields.io/badge/firefox-latest%202%20versions-green.svg)
+![opera](https://img.shields.io/badge/opera-latest%202%20versions-green.svg)
+![node](https://img.shields.io/badge/node->=6-green.svg)
 
 ### Community
  - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
@@ -153,8 +109,8 @@ npm test
 
 ### Similar libraries in other languages
  - Python [Web3.py](https://github.com/pipermerriam/web3.py)
- - Haskell [hs-web3](https://github.com/airalab/hs-web3)		   - Haskell [hs-web3](https://github.com/airalab/hs-web3)
- - Java [web3j](https://github.com/web3j/web3j)		   - Java [web3j](https://github.com/web3j/web3j)
+ - Haskell [hs-web3](https://github.com/airalab/hs-web3)
+ - Java [web3j](https://github.com/web3j/web3j)
  - Scala [web3j-scala](https://github.com/mslinn/web3j-scala)
  - Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
  - PHP [web3.php](https://github.com/sc0Vu/web3.php)

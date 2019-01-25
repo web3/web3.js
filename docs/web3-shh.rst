@@ -13,16 +13,16 @@ For more see `Whisper  Overview <https://github.com/ethereum/go-ethereum/wiki/Wh
 
 .. code-block:: javascript
 
-    var Shh = require('web3-shh');
+    import {Shh} import 'web3-shh';
 
-    // "Shh.providers.givenProvider" will be set if in an Ethereum supported browser.
-    var shh = new Shh(Shh.givenProvider || 'ws://some.local-or-remote.node:8546');
+    // "Shh.givenProvider" will be set if in an Ethereum supported browser.
+    const shh = new Shh(Shh.givenProvider || 'ws://some.local-or-remote.node:8546', options);
 
 
     // or using the web3 umbrella package
 
-    var Web3 = require('web3');
-    var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+    import {Web3} from 'web3';
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options;
 
     // -> web3.shh
 
@@ -63,7 +63,7 @@ Returns
 -------
 
 
-``String`` - The version of the current whisper running.
+``Promise<string>`` - The version of the current whisper running.
 
 
 -------
@@ -103,7 +103,7 @@ Returns
 -------
 
 
-``Object`` - The information of the node with the following properties:
+``Promise<Object>`` - The information of the node with the following properties:
 
     - ``messages`` - ``Number``: Number of currently floating messages.
     - ``maxMessageSize`` - ``Number``: The current message size limit in bytes.
@@ -153,7 +153,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on success, error on failure.
+``Promise<boolean>`` - Returns ``true`` on success, error on failure.
 
 
 -------
@@ -196,7 +196,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on success, error on failure.
+``Promise<boolean>`` - Returns ``true`` on success, error on failure.
 
 
 -------
@@ -237,7 +237,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on success, error on failure.
+``Promise<boolean>`` - Returns ``true`` on success, error on failure.
 
 
 -------
@@ -275,7 +275,7 @@ Returns
 -------
 
 
-``String`` - Key ID on success and an error on failure.
+``Promise<string>`` - Returns the Key ID on success and an error on failure.
 
 
 -------
@@ -314,7 +314,7 @@ Returns
 -------
 
 
-``String`` - Key ID on success and an error on failure.
+``Promise<string>`` - The Key ID on success and an error on failure.
 
 
 -------
@@ -353,7 +353,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on success, error on failure.
+``Promise<boolean>`` - Returns ``true`` on success, error on failure.
 
 
 -------
@@ -392,7 +392,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on if the key pair exist in the node, ``false`` if not. Error on failure.
+``Promise<boolean>`` - Returns ``true`` on if the key pair exist in the node, ``false`` if not. Error on failure.
 
 
 -------
@@ -431,7 +431,7 @@ Returns
 -------
 
 
-``String`` - Public key on success and an error on failure.
+``Promise<string>`` - Returns the Public key on success and an error on failure.
 
 
 -------
@@ -470,7 +470,7 @@ Returns
 -------
 
 
-``String`` - Private key on success and an error on failure.
+``Promise<string>`` - Returns the private key on success and an error on failure.
 
 
 -------
@@ -509,7 +509,7 @@ Returns
 -------
 
 
-``String`` - Key ID on success and an error on failure.
+``Promise<string>`` - Returns the Key ID on success and an error on failure.
 
 
 -------
@@ -548,7 +548,7 @@ Returns
 -------
 
 
-``String`` - Key ID on success and an error on failure.
+``Promise<string>`` - Returns the key ID on success and an error on failure.
 
 
 -------
@@ -587,7 +587,7 @@ Returns
 -------
 
 
-``Promise<String|Error>``: The Key ID on success and an error on failure.
+``Promise<String|Error>`` - Returns the Key ID on success and an error on failure.
 
 
 -------
@@ -626,7 +626,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on if the symmetric key exist in the node, ``false`` if not. Error on failure.
+``Promise<boolean>`` - Returns ``true`` on if the symmetric key exist in the node, ``false`` if not. Error on failure.
 
 
 -------
@@ -665,7 +665,7 @@ Returns
 -------
 
 
-``String`` - The raw symmetric key on success and an error on failure.
+``Promise<string>`` - Returns the raw symmetric key on success and an error on failure.
 
 
 -------
@@ -704,7 +704,7 @@ Returns
 -------
 
 
-``Boolean`` - ``true`` on if the symmetric key was deleted, error on failure.
+``Promise<boolean>`` - Returns ``true`` on if the symmetric key was deleted, error on failure.
 
 
 -------
@@ -753,7 +753,7 @@ Parameters
 Returns
 -------
 
-``Promise`` - returns a promise. Upon success, the ``then`` function will be passed a string representing the hash of the sent message. On error, the ``catch`` function will be passed a string containing the reason for the error.
+``Promise`` returns ``Promise`` - returns a promise. Upon success, the ``then`` function will be passed a string representing the hash of the sent message. On error, the ``catch`` function will be passed a string containing the reason for the error.
 
 
 -------
@@ -762,8 +762,8 @@ Example
 
 .. code-block:: javascript
 
-    var identities = [];
-    var subscription = null;
+    const identities = [],
+          subscription = null;
 
     Promise.all([
         web3.shh.newSymKey().then((id) => {identities.push(id);}),
@@ -786,7 +786,7 @@ Example
             payload: '0xffffffdddddd1122',
             powTime: 3,
             powTarget: 0.5
-        }).then(h => console.log(`Message with hash ${h} was successfuly sent`))
+        }).then(hash => console.log(`Message with hash ${h} was successfuly sent`))
         .catch(err => console.log("Error: ", err));
     });
 
@@ -853,7 +853,7 @@ Example
         ttl: 20,
         topics: ['0xffddaa11'],
         minPow: 0.8,
-    }, function(error, message, subscription){
+    }, (error, message, subscription) => {
 
         console.log(message);
         > {
@@ -869,7 +869,7 @@ Example
         }
     })
     // or
-    .on('data', function(message){ ... });
+    .on('data', (message) => { ... });
 
 
 ------------------------------------------------------------------------------
@@ -904,7 +904,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.shh.subscribe('messages', {...} ,function(){ ... });
+    web3.shh.subscribe('messages', {...} , () => { ... });
 
     ...
 
@@ -934,7 +934,7 @@ Parameters
 Returns
 -------
 
-``String``: The filter ID.
+``Promise<string>`` - Returns the filter ID.
 
 -------
 Example
@@ -968,7 +968,7 @@ Parameters
 Returns
 -------
 
-``Boolean``: ``true`` on success, error on failure.
+``Promise<boolean>`` - Returns ``true`` on success, error on failure.
 
 -------
 Example
@@ -1003,7 +1003,7 @@ Parameters
 Returns
 -------
 
-``Array``: Returns an array of message objects like :ref:`web3.shh.subscribe() notification returns <shh-subscribenotificationreturns>`
+``Promise<Array>`` - Returns an array of message objects like :ref:`web3.shh.subscribe() notification returns <shh-subscribenotificationreturns>`
 
 -------
 Example

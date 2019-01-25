@@ -19,7 +19,8 @@ Will change the provider for its module.
 Parameters
 ----------
 
-1. ``Object`` - ``myProvider``: :ref:`a valid provider <web3-providers>`.
+1. ``Object|String`` - ``provider``: a valid provider
+2. ``Net`` - ``net``: (optional) the node.js Net package. This is only required for the IPC provider.
 
 -------
 Returns
@@ -202,85 +203,6 @@ Example
     batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest', callback));
     batch.add(contract.methods.balance(address).call.request({from: '0x0000000000000000000000000000000000000000'}, callback2));
     batch.execute();
-
-
-------------------------------------------------------------------------------
-
-extend
-=====================
-
-.. code-block:: javascript
-
-    web3.extend(methods)
-    web3.eth.extend(methods)
-    web3.shh.extend(methods)
-    web3.bzz.extend(methods)
-    ...
-
-Allows extending the web3 modules.
-
-.. note:: You also have ``*.extend.formatters`` as additional formatter functions to be used for in and output formatting. Please see the `source file <https://github.com/ethereum/web3.js/blob/master/packages/web3-core-helpers/src/formatters.js>`_ for function details.
-
-----------
-Parameters
-----------
-
-1. ``methods`` - ``Object``: Extension object with array of methods description objects as follows:
-    - ``property`` - ``String``: (optional) The name of the property to add to the module. If no property is set it will be added to the module directly.
-    - ``methods`` - ``Array``: The array of method descriptions:
-        - ``name`` - ``String``: Name of the method to add.
-        - ``call`` - ``String``: The RPC method name.
-        - ``params`` - ``Number``: (optional) The number of parameters for that function. Default 0.
-        - ``inputFormatter`` - ``Array``: (optional) Array of inputformatter functions. Each array item responds to a function parameter, so if you want some parameters not to be formatted, add a ``null`` instead.
-        - ``outputFormatter - ``Function``: (optional) Can be used to format the output of the method.
-
-
-----------
-Returns
-----------
-
-``Object``: The extended module.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.extend({
-        property: 'myModule',
-        methods: [{
-            name: 'getBalance',
-            call: 'eth_getBalance',
-            params: 2,
-            inputFormatter: [web3.extend.formatters.inputAddressFormatter, web3.extend.formatters.inputDefaultBlockNumberFormatter],
-            outputFormatter: web3.utils.hexToNumberString
-        },{
-            name: 'getGasPriceSuperFunction',
-            call: 'eth_gasPriceSuper',
-            params: 2,
-            inputFormatter: [null, web3.utils.numberToHex]
-        }]
-    });
-
-    web3.extend({
-        methods: [{
-            name: 'directCall',
-            call: 'eth_callForFun',
-        }]
-    });
-
-    console.log(web3);
-    > Web3 {
-        myModule: {
-            getBalance: function(){},
-            getGasPriceSuperFunction: function(){}
-        },
-        directCall: function(){},
-        eth: Eth {...},
-        bzz: Bzz {...},
-        ...
-    }
 
 
 ------------------------------------------------------------------------------

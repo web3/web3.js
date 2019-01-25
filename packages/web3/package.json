@@ -1,53 +1,77 @@
 {
-  "name": "web3",
-  "namespace": "ethereum",
-  "version": "1.0.0-beta.36",
-  "description": "Ethereum JavaScript API",
-  "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3",
-  "license": "LGPL-3.0",
-  "main": "src/index.js",
-  "bugs": {
-    "url": "https://github.com/ethereum/web3.js/issues"
-  },
-  "keywords": [
-    "Ethereum",
-    "JavaScript",
-    "API"
-  ],
-  "author": "ethereum.org",
-  "authors": [
-    {
-      "name": "Fabian Vogelsteller",
-      "email": "fabian@ethereum.org",
-      "homepage": "http://frozeman.de"
+    "name": "web3",
+    "namespace": "ethereum",
+    "version": "1.0.0-beta.38",
+    "description": "Ethereum JavaScript API",
+    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3",
+    "license": "LGPL-3.0",
+    "main": "dist/web3.cjs.js",
+    "module": "dist/web3.esm.js",
+    "browser": "dist/web3.umd.js",
+    "bugs": {
+        "url": "https://github.com/ethereum/web3.js/issues"
     },
-    {
-      "name": "Marek Kotewicz",
-      "email": "marek@parity.io",
-      "url": "https://github.com/debris"
+    "keywords": [
+        "Ethereum",
+        "JavaScript",
+        "API"
+    ],
+    "author": "ethereum.org",
+    "authors": [
+        {
+            "name": "Samuel Furter",
+            "email": "samuel@ethereum.org",
+            "homepage": "https://github.com/nivida"
+        },
+        {
+            "name": "Fabian Vogelsteller",
+            "email": "fabian@ethereum.org",
+            "homepage": "https://github.com/frozeman"
+        },
+        {
+            "name": "Marek Kotewicz",
+            "email": "marek@parity.io",
+            "url": "https://github.com/debris"
+        },
+        {
+            "name": "Marian Oancea",
+            "url": "https://github.com/cubedro"
+        },
+        {
+            "name": "Gav Wood",
+            "email": "g@parity.io",
+            "homepage": "http://gavwood.com"
+        },
+        {
+            "name": "Jeffery Wilcke",
+            "email": "jeffrey.wilcke@ethereum.org",
+            "url": "https://github.com/obscuren"
+        }
+    ],
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w",
+        "test": "jest",
+        "dtslint": "dtslint types --onlyTestTsNext"
     },
-    {
-      "name": "Marian Oancea",
-      "url": "https://github.com/cubedro"
+    "types": "types",
+    "dependencies": {
+        "web3-bzz": "1.0.0-beta.38",
+        "web3-core": "1.0.0-beta.38",
+        "web3-core-helpers": "1.0.0-beta.38",
+        "web3-core-method": "1.0.0-beta.38",
+        "web3-eth": "1.0.0-beta.38",
+        "web3-eth-personal": "1.0.0-beta.38",
+        "web3-net": "1.0.0-beta.38",
+        "web3-providers": "1.0.0-beta.38",
+        "web3-shh": "1.0.0-beta.38",
+        "web3-utils": "1.0.0-beta.38"
     },
-    {
-      "name": "Gav Wood",
-      "email": "g@parity.io",
-      "homepage": "http://gavwood.com"
+    "devDependencies": {
+        "dtslint": "^0.4.2"
     },
-    {
-      "name": "Jeffery Wilcke",
-      "email": "jeffrey.wilcke@ethereum.org",
-      "url": "https://github.com/obscuren"
-    }
-  ],
-  "dependencies": {
-    "web3-bzz": "1.0.0-beta.36",
-    "web3-core": "1.0.0-beta.36",
-    "web3-eth": "1.0.0-beta.36",
-    "web3-eth-personal": "1.0.0-beta.36",
-    "web3-net": "1.0.0-beta.36",
-    "web3-shh": "1.0.0-beta.36",
-    "web3-utils": "1.0.0-beta.36"
-  }
+    "files": [
+        "dist",
+        "types/index.d.ts"
+    ]
 }
