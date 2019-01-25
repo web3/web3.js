@@ -15,6 +15,7 @@
         "bootstrap": "lerna bootstrap",
         "install:all": "lerna add",
         "remove:all": "lerna exec npm uninstall",
+        "publish": "lerna publish",
         "build": "lerna run build",
         "test": "lerna run test",
         "coveralls": "cat ./coverage/lcov.info | coveralls",

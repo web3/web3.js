@@ -29,7 +29,7 @@
     },
     "devDependencies": {
         "dtslint": "^0.4.2",
-        "web3-eth-accounts": "^1.0.0-beta.38"
+        "web3-eth-accounts": "1.0.0-beta.38"
     },
     "files": [
         "dist",

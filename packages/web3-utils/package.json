@@ -25,8 +25,8 @@
         "utf8": "2.1.1"
     },
     "devDependencies": {
-        "dtslint": "^0.4.2",
-        "crypto-js": "3.1.9-1"
+        "crypto-js": "3.1.9-1",
+        "dtslint": "^0.4.2"
     },
     "files": [
         "dist",
