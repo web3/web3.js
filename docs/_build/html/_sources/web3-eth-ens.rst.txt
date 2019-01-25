@@ -7,6 +7,7 @@ web3.eth.ens
 =========
 
 The ``web3.eth.ens`` functions let you interacting with Ens.
+
 .. code-block:: javascript
 
     import {Ens} from 'web3-eth-ens';
