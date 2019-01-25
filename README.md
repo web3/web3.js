@@ -1,4 +1,3 @@
-**PREVIEW RELEASE** This is a beta preview release with breaking changes! The current stable version is 0.20.0 
 
 ![Web3.js logo](assets/web3js.svg)
 
