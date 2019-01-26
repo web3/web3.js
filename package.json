@@ -15,17 +15,16 @@
         "bootstrap": "lerna bootstrap",
         "install:all": "lerna add",
         "remove:all": "lerna exec npm uninstall",
-        "publish": "lerna publish",
+        "publish": "npm run clean && npm run bootstrap && npm run travis && lerna publish && npm run docs",
         "build": "lerna run build",
         "test": "lerna run test",
-        "coveralls": "cat ./coverage/lcov.info | coveralls",
         "test:coverage": "lerna run test -- -- --coverage && istanbul-combine -d coverage -r lcov -r html ./packages/**/coverage-final.json",
-        "release": "lerna bootstrap; lerna publish; gulp version; gulp; gulp publishTag; git push --tags",
-        "docs": "cd docs; make html;",
-        "format": "prettier --config ./.prettierrc --write ./packages/**/*.js",
-        "lint": "eslint --cache --fix .",
         "dtslint": "lerna run dtslint",
-        "travis": "npm run lint && npm run build && npm run test:coverage && npm run dtslint"
+        "docs": "cd docs; make html;",
+        "lint": "eslint --cache --fix .",
+        "format": "prettier --config ./.prettierrc --write ./packages/**/*.js",
+        "travis": "npm run lint && npm run build && npm run test:coverage && npm run dtslint",
+        "coveralls": "cat ./coverage/lcov.info | coveralls"
     },
     "repository": {
         "type": "git",
