@@ -24,19 +24,20 @@ import {BN, toWei} from 'web3-utils';
 
 const bigNumber = new BN(3);
 
-// $ExpectType string | BN
+// $ExpectType string
 toWei('1');
-// $ExpectType string | BN
-toWei(1);
-// $ExpectType string | BN
+// $ExpectType BN
 toWei(bigNumber);
-// $ExpectType string | BN
+// $ExpectType string
 toWei('1', 'finney');
-// $ExpectType string | BN
-toWei(1, 'finney');
-// $ExpectType string | BN
+// $ExpectType BN
 toWei(bigNumber, 'finney');
 
+
+// $ExpectError
+toWei(1);
+// $ExpectError
+toWei(1, 'finney');
 // $ExpectError
 toWei(['string']);
 // $ExpectError
