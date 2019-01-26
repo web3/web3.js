@@ -20,8 +20,6 @@
  * @date 2019
  */
 
-// import {toBigNumber} from '../BigNumber/BigNumber';
-import {BigNumber} from 'web3-utils';
 import {cloneDeep, isObject} from 'lodash';
 
 export default class Hex {
@@ -54,7 +52,7 @@ export default class Hex {
         }
 
         /* Check for type and format validity */
-        this.props.hex = Hex.isValid(params.hex) ? params.hex : undefined;
+        this.props.hex = Hex.isValid(params.hex) ? params.hex.toString() : undefined;
 
         /* Check for default, auto, none, etc. key values */
         if (params.hex === 'empty') this.props.hex = '0x';
@@ -79,7 +77,7 @@ export default class Hex {
      * @return {boolean}
      */
     static isValid(hex) {
-        return /^(-0x|0x)?[0-9a-f]*$/.test(hex);
+        return /^(-)?(0x)?[0-9a-f]*$/.test(hex);
     }
 
     /**
@@ -96,28 +94,6 @@ export default class Hex {
     }
 
     /* Instance accessors */
-    /**
-     * Parse the hex value to BigNumber
-     *
-     * @method toBigNumber
-     *
-     * @return {BigNumber}
-     */
-    toBigNumber() {
-        return BigNumber.toBigNumber(this.props.hex);
-    }
-
-    /**
-     * Parse the hex value to its numeric representation
-     *
-     * @method toNumberString
-     *
-     * @return {String}
-     */
-    toNumber() {
-        return BigNumber.toBigNumber(this.props.hex).toNumber();
-    }
-
     /**
      * Check if the supplied string is hex with 0x prefix
      *
@@ -137,9 +113,53 @@ export default class Hex {
      * @return {String}
      */
     toString() {
-        // TODO return formatted?
-        return this.props.hex;
+        /* match the sign, match the 0x, match either 1) 0 followed by 0s or 2) 0s followed by hex */
+        // const cleanup = this.props.hex.replace(/^(-)?(?:0x)?((0)0*|0*([0-9a-f]*))$/i, `$10x$3$4`);
+
+        /* pass the -0x0 = 0x0 case to a condition */
+        // return cleanup === "-0x0" ? "0x0" : cleanup;
+
+        return this.props.hex.replace(/(-)?(0x)?([0-9a-f]*)/i, '$10x$3');
     }
+
+    /**
+     * Interpret the hex data as an integer
+     *
+     * @method toNumber
+     *
+     * @return {Number}
+     */
+    toNumber() {
+        return parseInt(this.props.hex, 16);
+    }
+
+    /**
+     * Interpret the hex data as ASCII chars
+     *
+     * @method toAscii
+     *
+     * @return {string}
+     */
+    toAscii() {}
+
+    /**
+     * Interpret the hex data as UTF-8 chars
+     *
+     * @method toUtf8
+     *
+     * @return {string}
+     */
+    toUtf8() {}
+
+    /**
+     * Interpret the hex data as an int
+     *  and parse to bytes string
+     *
+     * @method toBytes
+     *
+     * @return {String}
+     */
+    toBytes() {}
 
     /**
      * Declare the type of the object

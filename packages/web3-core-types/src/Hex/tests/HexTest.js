@@ -6,9 +6,7 @@ import Hex from '../Hex';
 describe('HexTest', () => {
     let hex;
     const error = {
-        hex:
-            "The 'hex' parameter needs to be a string composed of numbers and letters between 'a' and 'f'.\n" +
-            "Use 'empty' to set a web3 empty hex object."
+        hex: () => 'err msg'
     };
     const initParams = {
         hex: undefined
@@ -43,5 +41,40 @@ describe('HexTest', () => {
 
         expect(strict).toBe(true);
         expect(notStrict).toBe(false);
+    });
+
+    it('converts toString from string hex', () => {
+        const tests = [
+            {value: '1', expected: '0x1'},
+            {value: '0x1', expected: '0x1'},
+            {value: '0x01', expected: '0x01'},
+            {value: '-1', expected: '-0x1'},
+            {value: '-0x1', expected: '-0x1'},
+            {value: '-0x01', expected: '-0x01'},
+            {
+                value: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+                expected: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+            },
+            {
+                value: '0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd',
+                expected: '0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd'
+            },
+            {
+                value: '-0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+                expected: '-0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+            },
+            {
+                value: '-0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd',
+                expected: '-0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd'
+            },
+            {value: '0', expected: '0x0'},
+            {value: '0x0', expected: '0x0'},
+            {value: '-0', expected: '-0x0'},
+            {value: '-0x0', expected: '-0x0'}
+        ];
+
+        tests.forEach((test) => {
+            expect(new Hex(test.value, error, initParams).toString()).toEqual(test.expected);
+        });
     });
 });

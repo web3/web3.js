@@ -34,9 +34,8 @@ export const Type = (params) => {
     return new TypeFactory().createType(params);
 };
 
-/* Expose static calls */
+/* Mixin/Expose static calls */
 Type.method = TypeClass.method;
-
 
 /* Pre-process a static calls */
 Type.method = (value) => {

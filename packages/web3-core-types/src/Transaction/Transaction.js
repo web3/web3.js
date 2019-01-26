@@ -43,6 +43,7 @@ export default class Transaction {
         this.props = cloneDeep(initParams);
 
         /* Check for type and format validity */
+        // TODO Link to local wallet index
         this.props.from = params.from.isAddress ? Types.Address(params.from.props) : undefined;
 
         this.props.to = params.to.isAddress ? Types.Address(params.to.props) : undefined;
