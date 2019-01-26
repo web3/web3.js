@@ -2,8 +2,8 @@
 Web3 Module Options
 =====================
 
-An Web3 module does provide several options for configuring the transaction confirmation worklfow or for defining
-default values. These are the currently available option properties on a Web3 module:
+An Web3 module does provide several options for configuring the transaction confirmation worklfow or for defining default values.
+These are the currently available option properties on a Web3 module:
 
 --------------
 Module Options
@@ -310,7 +310,7 @@ defaultGasPrice
     web3.shh.defaultGasPrice
     ...
 
-The default gas price which will be used for call requests.
+The default gas price which will be used for a request.
 
 -------
 Returns
@@ -333,7 +333,7 @@ defaultGas
     web3.shh.defaultGas
     ...
 
-The default gas which will be used for call requests.
+The default gas which will be used for a request.
 
 -------
 Returns
