@@ -33,7 +33,6 @@ toWei('1', 'finney');
 // $ExpectType BN
 toWei(bigNumber, 'finney');
 
-
 // $ExpectError
 toWei(1);
 // $ExpectError
