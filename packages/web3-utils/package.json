@@ -3,7 +3,7 @@
     "namespace": "ethereum",
     "version": "1.0.0-beta.38",
     "description": "Collection of utility functions used in web3.js.",
-    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-utils",
+    "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-utils",
     "license": "LGPL-3.0",
     "main": "dist/web3-utils.cjs.js",
     "module": "dist/web3-utils.esm.js",
