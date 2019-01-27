@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-=========
+=================
 web3.eth.accounts
-=========
+=================
 
 The ``web3.eth.accounts`` contains functions to generate Ethereum accounts and sign transactions and data.
 
@@ -28,7 +28,7 @@ To use this package standalone use:
 .. _accounts-create:
 
 create
-=====================
+======
 
 .. code-block:: javascript
 
@@ -92,9 +92,8 @@ Example
 
 ------------------------------------------------------------------------------
 
-
 privateKeyToAccount
-=====================
+===================
 
 .. code-block:: javascript
 
@@ -134,7 +133,7 @@ Example
 .. _eth-accounts-signtransaction:
 
 signTransaction
-=====================
+===============
 
 .. code-block:: javascript
 
@@ -211,9 +210,8 @@ Example
 
 ------------------------------------------------------------------------------
 
-
 recoverTransaction
-=====================
+==================
 
 .. code-block:: javascript
 
@@ -244,11 +242,10 @@ Example
     > "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55"
 
 
-
 ------------------------------------------------------------------------------
 
 hashMessage
-=====================
+===========
 
 .. code-block:: javascript
 
@@ -289,7 +286,7 @@ Example
 .. _eth-accounts-sign:
 
 sign
-=====================
+====
 
 .. code-block:: javascript
 
@@ -339,7 +336,7 @@ Example
 .. _accounts-recover:
 
 recover
-=====================
+=======
 
 .. code-block:: javascript
 
@@ -396,7 +393,7 @@ Example
 
 
 encrypt
-=====================
+=======
 
 .. code-block:: javascript
 
@@ -450,7 +447,7 @@ Example
 ------------------------------------------------------------------------------
 
 decrypt
-=====================
+=======
 
 .. code-block:: javascript
 
@@ -511,7 +508,7 @@ Example
 .. _eth_accounts_wallet:
 
 wallet
-=====================
+======
 
 .. code-block:: javascript
 
@@ -548,7 +545,7 @@ Example
 ------------------------------------------------------------------------------
 
 wallet.create
-=====================
+=============
 
 .. code-block:: javascript
 
@@ -589,7 +586,7 @@ Example
 ------------------------------------------------------------------------------
 
 wallet.add
-=====================
+==========
 
 .. code-block:: javascript
 
@@ -644,7 +641,7 @@ Example
 ------------------------------------------------------------------------------
 
 wallet.remove
-=====================
+=============
 
 .. code-block:: javascript
 
@@ -692,7 +689,7 @@ Example
 
 
 wallet.clear
-=====================
+============
 
 .. code-block:: javascript
 
@@ -733,7 +730,7 @@ Example
 ------------------------------------------------------------------------------
 
 wallet.encrypt
-=====================
+==============
 
 .. code-block:: javascript
 
@@ -787,7 +784,7 @@ Example
 
 
 wallet.decrypt
-=====================
+==============
 
 .. code-block:: javascript
 
@@ -860,7 +857,7 @@ Example
 ------------------------------------------------------------------------------
 
 wallet.save
-=====================
+===========
 
 .. code-block:: javascript
 
@@ -897,7 +894,7 @@ Example
 ------------------------------------------------------------------------------
 
 wallet.load
-=====================
+===========
 
 .. code-block:: javascript
 

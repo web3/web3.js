@@ -40,7 +40,7 @@
             
   <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This documentation is work in progress and web3.js 1.0 is not yet released! You can find the current documentation for web3 0.x.x at <a class="reference external" href="https://github.com/ethereum/wiki/wiki/JavaScript-API">github.com/ethereum/wiki/wiki/JavaScript-API</a>.</p>
+<p class="last">This documentation is work in progress and web3.js 1.0 stable is not yet released! You can find the current documentation for web3 0.x.x at <a class="reference external" href="https://github.com/ethereum/wiki/wiki/JavaScript-API">github.com/ethereum/wiki/wiki/JavaScript-API</a>.</p>
 </div>
 <div class="section" id="web3-js-ethereum-javascript-api">
 <h1>web3.js - Ethereum JavaScript API<a class="headerlink" href="#web3-js-ethereum-javascript-api" title="Permalink to this headline">¶</a></h1>
@@ -69,14 +69,21 @@ as well as providing a <span class="xref std std-ref">API reference documentatio
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="web3.html">Web3</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="web3.html#web3-modules">Web3.modules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web3.html#web3-class">Web3 Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web3.html#version">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web3.html#utils">utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3.html#options">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3.html#defaultblock">defaultBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3.html#defaultaccount">defaultAccount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3.html#defaultgasprice">defaultGasPrice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3.html#defaultgas">defaultGas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3.html#transactionblocktimeout">transactionBlockTimeout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3.html#transactionconfirmationblocks">transactionConfirmationBlocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3.html#transactionpollingtimeout">transactionPollingTimeout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3.html#setprovider">setProvider</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3.html#providers">providers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3.html#givenprovider">givenProvider</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3.html#currentprovider">currentProvider</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3.html#batchrequest">BatchRequest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3.html#version">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3.html#utils">utils</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="web3-eth.html">web3.eth</a><ul>
@@ -89,13 +96,21 @@ as well as providing a <span class="xref std std-ref">API reference documentatio
 <li class="toctree-l2"><a class="reference internal" href="web3-eth.html#ens">ens</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth.html#abi">abi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth.html#net">net</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth.html#options">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth.html#defaultblock">defaultBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth.html#defaultaccount">defaultAccount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth.html#defaultgasprice">defaultGasPrice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth.html#defaultgas">defaultGas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth.html#transactionblocktimeout">transactionBlockTimeout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth.html#transactionconfirmationblocks">transactionConfirmationBlocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth.html#transactionpollingtimeout">transactionPollingTimeout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth.html#setprovider">setProvider</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth.html#providers">providers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth.html#givenprovider">givenProvider</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth.html#currentprovider">currentProvider</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth.html#batchrequest">BatchRequest</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web3-eth.html#defaultaccount">defaultAccount</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web3-eth.html#defaultblock">defaultBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth.html#eth-defaultaccount">defaultAccount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth.html#eth-defaultblock">defaultBlock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth.html#getprotocolversion">getProtocolVersion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth.html#issyncing">isSyncing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth.html#getcoinbase">getCoinbase</a></li>
@@ -178,6 +193,14 @@ as well as providing a <span class="xref std std-ref">API reference documentatio
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="web3-eth-personal.html">web3.eth.personal</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth-personal.html#options">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth-personal.html#defaultblock">defaultBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth-personal.html#defaultaccount">defaultAccount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth-personal.html#defaultgasprice">defaultGasPrice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth-personal.html#defaultgas">defaultGas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth-personal.html#transactionblocktimeout">transactionBlockTimeout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth-personal.html#transactionconfirmationblocks">transactionConfirmationBlocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-eth-personal.html#transactionpollingtimeout">transactionPollingTimeout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth-personal.html#setprovider">setProvider</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth-personal.html#providers">providers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-eth-personal.html#givenprovider">givenProvider</a></li>
@@ -265,6 +288,14 @@ as well as providing a <span class="xref std std-ref">API reference documentatio
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="web3-shh.html">web3.shh</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="web3-shh.html#options">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-shh.html#defaultblock">defaultBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-shh.html#defaultaccount">defaultAccount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-shh.html#defaultgasprice">defaultGasPrice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-shh.html#defaultgas">defaultGas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-shh.html#transactionblocktimeout">transactionBlockTimeout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-shh.html#transactionconfirmationblocks">transactionConfirmationBlocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web3-shh.html#transactionpollingtimeout">transactionPollingTimeout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-shh.html#setprovider">setProvider</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-shh.html#providers">providers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web3-shh.html#givenprovider">givenProvider</a></li>

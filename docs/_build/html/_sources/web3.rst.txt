@@ -5,16 +5,20 @@
 Web3
 ====
 
-
-    This's main class of anything related Ethereum.
+    The Web3 class is an wrapper to house all Ethereum related modules.
 
 .. code-block:: javascript
 
     import {Web3} from 'web3';
 
-    > Web3.givenProvider
-    > Web3.providers
-    > Web3.modules
+    // "Web3.providers.givenProvider" will be set if in an Ethereum supported browser.
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+
+    > web3.eth
+    > web3.shh
+    > web3.bzz
+    > web3.utils
+    > web3.version
 
 ------------------------------------------------------------------------------
 
@@ -58,29 +62,12 @@ Example
 
 ------------------------------------------------------------------------------
 
-Web3 Class
-============
-
-    The Web3 class is an wrapper to house all Ethereum related modules.
-
-.. code-block:: javascript
-
-    import {Web3} from 'web3';
-
-    // "Web3.providers.givenProvider" will be set if in an Ethereum supported browser.
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
-
-    > web3.eth
-    > web3.shh
-    > web3.bzz
-    > web3.utils
-    > web3.version
-
+.. include:: include_package-core.rst
 
 ------------------------------------------------------------------------------
 
 version
-============
+=======
 
     Property of the Web3 class.
 
@@ -107,7 +94,6 @@ Example
     > "1.0.0"
 
 
-
 ------------------------------------------------------------------------------
 
 
@@ -123,12 +109,3 @@ utils
     Utility functions are also exposes on the ``Web3`` class object directly.
 
 See :ref:`web3.utils <utils>` for more.
-
-
-------------------------------------------------------------------------------
-
-
-.. include:: include_package-core.rst
-
-
-------------------------------------------------------------------------------

@@ -22,7 +22,6 @@
 
 import isArray from 'lodash/isArray';
 import isFunction from 'lodash/isFunction';
-import cloneDeep from 'lodash/cloneDeep';
 
 export default class MethodsProxy {
     /**
@@ -77,7 +76,7 @@ export default class MethodsProxy {
                     // TODO: Find a better solution for the handling of the contractMethodParameters
                     /* eslint-disable no-inner-declarations */
                     function anonymousFunction() {
-                        let methodArguments = cloneDeep([...arguments]);
+                        let methodArguments = [...arguments];
 
                         // Because of the possibility to overwrite the contract data if I call contract.deploy()
                         // have I to check here if it is a contract deployment. If this call is a contract deployment
@@ -124,18 +123,18 @@ export default class MethodsProxy {
 
                     anonymousFunction[requestType] = function() {
                         if (abiItemModel.isOfType('constructor')) {
-                            return target.executeMethod(abiItemModel, cloneDeep(arguments), 'contract-deployment');
+                            return target.executeMethod(abiItemModel, arguments, 'contract-deployment');
                         }
 
-                        return target.executeMethod(abiItemModel, cloneDeep(arguments), requestType);
+                        return target.executeMethod(abiItemModel, arguments, requestType);
                     };
 
                     anonymousFunction[requestType].request = function() {
-                        return target.createMethod(abiItemModel, cloneDeep(arguments), requestType);
+                        return target.createMethod(abiItemModel, arguments, requestType);
                     };
 
                     anonymousFunction.estimateGas = function() {
-                        return target.executeMethod(abiItemModel, cloneDeep(arguments), 'estimate');
+                        return target.executeMethod(abiItemModel, arguments, 'estimate');
                     };
 
                     anonymousFunction.encodeABI = function() {

@@ -13,15 +13,14 @@ For more see `Whisper  Overview <https://github.com/ethereum/go-ethereum/wiki/Wh
 
 .. code-block:: javascript
 
+    import Web3 from 'web3';
     import {Shh} import 'web3-shh';
 
-    // "Shh.givenProvider" will be set if in an Ethereum supported browser.
-    const shh = new Shh(Shh.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+    // "Web3.givenProvider" will be set if in an Ethereum supported browser.
+    const shh = new Shh(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
 
 
     // or using the web3 umbrella package
-
-    import {Web3} from 'web3';
     const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options;
 
     // -> web3.shh
