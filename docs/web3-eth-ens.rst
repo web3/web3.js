@@ -10,7 +10,7 @@ The ``web3.eth.ens`` functions let you interacting with Ens.
 
 .. code-block:: javascript
 
-    import {Web3} from 'web3';
+    import Web3 from 'web3';
     import {Ens} from 'web3-eth-ens';
     import {Accounts} from 'web3-eth-accounts;
 

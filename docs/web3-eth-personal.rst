@@ -14,7 +14,7 @@ The ``web3-eth-personal`` package allows you to interact with the Ethereum node'
 
 .. code-block:: javascript
 
-    import {Web3} from 'web3';
+    import Web3 from 'web3';
     import {Personal} from 'web3-eth-personal';
 
     // "Web3.givenProvider" will be set if in an Ethereum supported browser.

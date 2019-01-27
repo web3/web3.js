@@ -15,8 +15,8 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
 
 .. code-block:: javascript
 
+    import Web3 from 'web3';
     import {Bzz} from 'web3-bzz';
-    import {Web3} from 'web3';
 
     // will autodetect if the "ethereum" object is present and will either connect to the local swarm node, or the swarm-gateways.net.
     // Optional you can give your own provider URL; If no provider URL is given it will use "http://swarm-gateways.net"

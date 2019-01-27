@@ -12,7 +12,7 @@ The ``web3-net`` package allows you to interact with the Ethereum nodes network 
 
 .. code-block:: javascript
 
-    import {Web3} from 'web3';
+    import Web3 from 'web3';
     import {Net} from 'web3-net';
 
     // "Personal.providers.givenProvider" will be set if in an Ethereum supported browser.
