@@ -25,7 +25,9 @@ import {
     provider,
     ProvidersModuleFactory,
     WebsocketProvider,
-    BatchRequest
+    BatchRequest,
+    HttpProviderOptions,
+    WebsocketProviderOptions
 } from 'web3-providers';
 
 export class AbstractWeb3Module {
@@ -44,7 +46,7 @@ export class AbstractWeb3Module {
     transactionPollingTimeout: number;
     defaultGasPrice: string;
     defaultGas: number;
-    readonly providers: Providers;
+    static readonly providers: Providers;
     defaultAccount: string | null;
     readonly currentProvider: EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider;
     readonly givenProvider: provider | null;
@@ -67,31 +69,37 @@ export interface Web3ModuleOptions {
 }
 
 export interface Providers {
-    HttpProvider: HttpProvider;
-    WebsocketProvider: WebsocketProvider;
-    IpcProvider: IpcProvider;
+    HttpProvider: new (host: string, options?: HttpProviderOptions) => HttpProvider;
+    WebsocketProvider: new (host: string, options?: WebsocketProviderOptions) => WebsocketProvider;
+    IpcProvider: new (path: string, net: any) => IpcProvider;
 }
 
 export interface PromiEvent<T> extends Promise<T> {
-    once(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
+    once(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>;
 
-    once(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
+    once(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>;
 
-    once(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
+    once(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>;
 
-    once(type: 'error', handler: (error: Error) => void): PromiEvent<T>
+    once(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
 
-    once(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
+    once(
+        type: 'error' | 'confirmation' | 'receipt' | 'transactionHash',
+        handler: (error: Error | TransactionReceipt | string) => void
+    ): PromiEvent<T>;
 
-    on(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
+    on(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>;
 
-    on(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
+    on(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>;
 
-    on(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
+    on(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>;
 
-    on(type: 'error', handler: (error: Error) => void): PromiEvent<T>
+    on(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
 
-    on(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
+    on(
+        type: 'error' | 'confirmation' | 'receipt' | 'transactionHash',
+        handler: (error: Error | TransactionReceipt | string) => void
+    ): PromiEvent<T>;
 }
 
 export interface Transaction {
@@ -110,36 +118,36 @@ export interface Transaction {
 }
 
 export interface RLPEncodedTransaction {
-    raw: string,
-    tx: Transaction
+    raw: string;
+    tx: Transaction;
 }
 
 export interface TransactionReceipt {
-    transactionHash: string
-    transactionIndex: number
-    blockHash: string
-    blockNumber: number
-    from: string
-    to: string
-    contractAddress: string
-    cumulativeGasUsed: number
-    gasUsed: number
-    logs?: Log[]
+    transactionHash: string;
+    transactionIndex: number;
+    blockHash: string;
+    blockNumber: number;
+    from: string;
+    to: string;
+    contractAddress: string;
+    cumulativeGasUsed: number;
+    gasUsed: number;
+    logs?: Log[];
     events?: {
-        [eventName: string]: EventLog
-    }
+        [eventName: string]: EventLog;
+    };
 }
 
 export interface EventLog {
-    event: string
-    address: string
-    returnValues: object
-    logIndex: number
-    transactionIndex: number
-    transactionHash: string
-    blockHash: string
-    blockNumber: number
-    raw?: {data: string, topics: any[]}
+    event: string;
+    address: string;
+    returnValues: object;
+    logIndex: number;
+    transactionIndex: number;
+    transactionHash: string;
+    blockHash: string;
+    blockNumber: number;
+    raw?: {data: string, topics: any[]};
 }
 
 export interface Log {
