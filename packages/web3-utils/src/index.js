@@ -184,10 +184,10 @@ export const getUnitValue = (unit) => {
  *
  * @method fromWei
  *
- * @param {Number|String} number can be a number, number string or a HEX of a decimal
+ * @param {String|BN} number can be a BigNumber, number string or a HEX of a decimal
  * @param {String} unit the unit to convert to, default ether
  *
- * @returns {String|Object} When given a BN object it returns one as well, otherwise a number
+ * @returns {String} Returns a string
  */
 export const fromWei = (number, unit) => {
     unit = getUnitValue(unit);
@@ -218,10 +218,10 @@ export const fromWei = (number, unit) => {
  *
  * @method toWei
  *
- * @param {Number|String|BN} number can be a number, number string or a HEX of a decimal
+ * @param {String|BN} number can be a number, number string or a HEX of a decimal
  * @param {String} unit the unit to convert from, default ether
  *
- * @returns {String|Object} When given a BN object it returns one as well, otherwise a number
+ * @returns {String|BN} When given a BN object it returns one as well, otherwise a string
  */
 export const toWei = (number, unit) => {
     unit = getUnitValue(unit);
