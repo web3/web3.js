@@ -68,9 +68,10 @@ abstractWeb3Module.defaultGasPrice;
 abstractWeb3Module.defaultGas;
 
 // $ExpectType Providers
-abstractWeb3Module.providers;
-// $ExpectType Providers
 AbstractWeb3Module.providers;
+
+// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
+abstractWeb3Module.givenProvider;
 
 // $ExpectType string | null
 abstractWeb3Module.defaultAccount;

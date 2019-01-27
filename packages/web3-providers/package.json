@@ -16,6 +16,7 @@
     },
     "types": "types",
     "dependencies": {
+        "@types/node": "^10.12.18",
         "eventemitter3": "3.1.0",
         "lodash": "^4.17.11",
         "oboe": "2.1.4",

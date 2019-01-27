@@ -19,8 +19,10 @@
 
 import * as net from 'net';
 import {
+    BatchRequest,
     EthereumProvider,
     HttpProvider,
+    HttpProviderOptions,
     IpcProvider,
     provider,
     ProvidersModuleFactory,
@@ -47,12 +49,9 @@ export class AbstractWeb3Module {
     defaultGasPrice: string;
     defaultGas: number;
     static readonly providers: Providers;
-    readonly providers: Providers;
     defaultAccount: string | null;
     readonly currentProvider: EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider;
-    static readonly currentProvider: EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider;
     readonly givenProvider: provider | null;
-    static readonly givenProvider: provider | null;
 
     setProvider(provider: provider, net?: net.Socket): boolean;
 

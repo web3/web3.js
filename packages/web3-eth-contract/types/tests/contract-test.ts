@@ -58,3 +58,39 @@ contract.getPastEvents('MyEvent', {
 
 // $ExpectType Promise<EventData[]>
 contract.getPastEvents('MyEvent', (error, events) => { console.log(events); });
+
+// $ExpectType Promise<number>
+contract.deploy({
+    data: '0x12345...',
+    arguments: [123, 'My String']
+}).estimateGas();
+
+// $ExpectType Promise<number>
+contract.deploy({
+    data: '0x12345...',
+    arguments: [123, 'My String']
+}).estimateGas({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'});
+
+// $ExpectType Promise<number>
+contract.deploy({
+    data: '0x12345...',
+    arguments: [123, 'My String']
+}).estimateGas((err: Error, gas: number) => { console.log(gas) });
+
+// $ExpectType string
+contract.deploy({
+    data: '0x12345...',
+    arguments: [123, 'My String']
+}).encodeABI();
+
+// $ExpectType PromiEvent<Contract>
+contract.deploy({
+    data: '0x12345...',
+    arguments: [123, 'My String']
+}).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'});
+
+// $ExpectType PromiEvent<Contract>
+contract.deploy({
+    data: '0x12345...',
+    arguments: [123, 'My String']
+}).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, (err: Error, contract: Contract) => { console.log(contract) });
