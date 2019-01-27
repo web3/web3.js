@@ -178,7 +178,7 @@ The AbstractMethod class does have the following methods and properties:
 .. _web3-module-abstract-call-method:
 
 AbstractCallMethod
-==============
+==================
 
 Source: `AbstractCallMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractCallMethod.js>`_
 
@@ -207,7 +207,7 @@ You're able to overwrite these methods:
 .. _web3-module-abstract-send-method:
 
 AbstractSendMethod
-==============
+==================
 
 Source: `AbstractSendMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractSendMethod.js>`_
 
@@ -237,7 +237,7 @@ You're able to overwrite these methods:
 .. _web3-module-abstract-subscription:
 
 AbstractSubscription
-==================
+====================
 
 Source: `AbstractSubscription <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions/lib/subscriptions/AbstractSubscription.js>`_
 
