@@ -19,14 +19,14 @@
 
 import * as net from 'net';
 import {
+    BatchRequest,
     EthereumProvider,
     HttpProvider,
+    HttpProviderOptions,
     IpcProvider,
     provider,
     ProvidersModuleFactory,
     WebsocketProvider,
-    BatchRequest,
-    HttpProviderOptions,
     WebsocketProviderOptions
 } from 'web3-providers';
 

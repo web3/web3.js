@@ -241,7 +241,6 @@ describe('AbstractWeb3ModuleTest', () => {
         const httpProvider = new AbstractWeb3Module.providers.HttpProvider(url, options);
 
         expect(httpProvider).toBeInstanceOf(HttpProvider);
-
     });
 
     it('initiates a WebsocketProvider with the providers property of the module', () => {
