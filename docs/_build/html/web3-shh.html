@@ -44,7 +44,7 @@
             
   <div class="admonition note" id="shh">
 <p class="first admonition-title">Note</p>
-<p class="last">This documentation is work in progress and web3.js 1.0 is not yet released! You can find the current documentation for web3 0.x.x at <a class="reference external" href="https://github.com/ethereum/wiki/wiki/JavaScript-API">github.com/ethereum/wiki/wiki/JavaScript-API</a>.</p>
+<p class="last">This documentation is work in progress and web3.js 1.0 stable is not yet released! You can find the current documentation for web3 0.x.x at <a class="reference external" href="https://github.com/ethereum/wiki/wiki/JavaScript-API">github.com/ethereum/wiki/wiki/JavaScript-API</a>.</p>
 </div>
 <div class="section" id="web3-shh">
 <h1>web3.shh<a class="headerlink" href="#web3-shh" title="Permalink to this headline">¶</a></h1>
@@ -63,6 +63,40 @@ For more see <a class="reference external" href="https://github.com/ethereum/go-
 
 <span class="c1">// -&gt; web3.shh</span>
 </pre></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="web3-module-options">
+<h2>Web3 Module Options<a class="headerlink" href="#web3-module-options" title="Permalink to this headline">¶</a></h2>
+<p>An Web3 module does provide several options for configuring the transaction confirmation worklfow or for defining default values.
+These are the currently available option properties on a Web3 module:</p>
+<div class="section" id="module-options">
+<h3>Module Options<a class="headerlink" href="#module-options" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="#web3-module-defaultaccount"><span class="std std-ref">defaultAccount</span></a></p>
+<p><a class="reference internal" href="#web3-module-defaultblock"><span class="std std-ref">defaultBlock</span></a></p>
+<p><a class="reference internal" href="#web3-module-defaultgas"><span class="std std-ref">defaultGas</span></a></p>
+<p><a class="reference internal" href="#web3-module-defaultaccount"><span class="std std-ref">defaultGasPrice</span></a></p>
+<p><a class="reference internal" href="#web3-module-transactionblocktimeout"><span class="std std-ref">transactionBlockTimeout</span></a></p>
+<p><a class="reference internal" href="#web3-module-transactionconfirmationblocks"><span class="std std-ref">transactionConfirmationBlocks</span></a></p>
+<p><a class="reference internal" href="#web3-module-transactionpollingtimeout"><span class="std std-ref">transactionPollingTimeout</span></a></p>
+</div>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nx">Web3</span> <span class="nx">from</span> <span class="s1">&#39;web3&#39;</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">defaultAccount</span><span class="o">:</span> <span class="s1">&#39;0x0&#39;</span><span class="p">,</span>
+    <span class="nx">defaultBlock</span><span class="o">:</span> <span class="s1">&#39;latest&#39;</span><span class="p">,</span>
+    <span class="nx">defaultGas</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">defaultGasPrice</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">transactionBlockTimeout</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="nx">transactionConfirmationBlocks</span><span class="o">:</span> <span class="mi">24</span><span class="p">,</span>
+    <span class="nx">transactionPollingTimeout</span><span class="o">:</span> <span class="mi">480</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="s1">&#39;http://localhost:8545&#39;</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
 </div>
 <hr class="docutils" />
 <div class="section" id="setprovider">
@@ -90,8 +124,8 @@ For more see <a class="reference external" href="https://github.com/ethereum/go-
 <h3>Returns<a class="headerlink" href="#returns" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
 </div>
-<div class="section" id="example">
-<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>Example<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">Web3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3&#39;</span><span class="p">);</span>
 <span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="s1">&#39;http://localhost:8545&#39;</span><span class="p">);</span>
 
@@ -118,10 +152,8 @@ For more see <a class="reference external" href="https://github.com/ethereum/go-
 <hr class="docutils" />
 <div class="section" id="providers">
 <h2>providers<a class="headerlink" href="#providers" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">providers</span>
-<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">providers</span>
-<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">providers</span>
-<span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">providers</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">Web3</span><span class="p">.</span><span class="nx">providers</span>
+<span class="nx">Eth</span><span class="p">.</span><span class="nx">providers</span>
 <span class="p">...</span>
 </pre></div>
 </div>
@@ -137,8 +169,8 @@ For more see <a class="reference external" href="https://github.com/ethereum/go-
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id1">
-<h3>Example<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Example<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">Web3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3&#39;</span><span class="p">);</span>
 <span class="c1">// use the given Provider, e.g in Mist, or instantiate a new websocket provider</span>
 <span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">);</span>
@@ -160,7 +192,7 @@ For more see <a class="reference external" href="https://github.com/ethereum/go-
 <hr class="docutils" />
 <div class="section" id="givenprovider">
 <h2>givenProvider<a class="headerlink" href="#givenprovider" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">givenProvider</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">givenProvider</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">givenProvider</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">givenProvider</span>
@@ -169,12 +201,12 @@ For more see <a class="reference external" href="https://github.com/ethereum/go-
 </div>
 <p>When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser.
 Will return the given provider by the (browser) environment, otherwise <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p>
-<div class="section" id="id2">
-<h3>Returns<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Returns<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Object</span></code>: The given provider set or <code class="docutils literal notranslate"><span class="pre">null</span></code>;</p>
 </div>
-<div class="section" id="id3">
-<h3>Example<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Example<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="nx">web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -191,12 +223,12 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>Will return the current provider, otherwise <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p>
-<div class="section" id="id4">
-<h3>Returns<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Object</span></code>: The current provider set or <code class="docutils literal notranslate"><span class="pre">null</span></code>;</p>
 </div>
-<div class="section" id="id5">
-<h3>Example<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Example<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">web3</span><span class="p">.</span><span class="nx">currentProvider</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">web3</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="s1">&#39;http://localhost:8545&#39;</span><span class="p">);</span>
 <span class="p">}</span>
@@ -210,16 +242,16 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">()</span>
 <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">()</span>
 <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">()</span>
-<span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">()</span>
+<span class="p">...</span>
 </pre></div>
 </div>
 <p>Class to create and execute batch requests.</p>
-<div class="section" id="id6">
-<h3>Parameters<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p>none</p>
 </div>
-<div class="section" id="id7">
-<h3>Returns<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>Returns<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Object</span></code>: With the following methods:</p>
 <blockquote>
 <div><ul class="simple">
@@ -228,8 +260,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id8">
-<h3>Example<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h3>Example<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">contract</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">Contract</span><span class="p">(</span><span class="nx">abi</span><span class="p">,</span> <span class="nx">address</span><span class="p">);</span>
 
 <span class="kr">const</span> <span class="nx">batch</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">();</span>
@@ -241,6 +273,115 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 <hr class="docutils" />
 </div>
 </div>
+<div class="section" id="defaultblock">
+<span id="web3-module-defaultblock"></span><h2>defaultBlock<a class="headerlink" href="#defaultblock" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">defaultBlock</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultBlock</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">defaultBlock</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>The default block which will be used for a requests.</p>
+<div class="section" id="id10">
+<h3>Returns<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultBlock property.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="web3-module-defaultaccount">
+<span id="id11"></span><h2>defaultBlock<a class="headerlink" href="#web3-module-defaultaccount" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">defaultAccount</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultAccount</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">defaultAccount</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>The default account which will be used for a requests.</p>
+<div class="section" id="id12">
+<h3>Returns<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">null|string</span></code>: The current value of the defaultAccount property.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="defaultgasprice">
+<span id="web3-module-defaultgasprice"></span><h2>defaultGasPrice<a class="headerlink" href="#defaultgasprice" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">defaultGasPrice</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultGasPrice</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">defaultGasPrice</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>The default gas price which will be used for a request.</p>
+<div class="section" id="id13">
+<h3>Returns<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultGasPrice property.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="defaultgas">
+<span id="web3-module-defaultgas"></span><h2>defaultGas<a class="headerlink" href="#defaultgas" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">defaultGas</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultGas</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">defaultGas</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>The default gas which will be used for a request.</p>
+<div class="section" id="id14">
+<h3>Returns<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultGas property.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="transactionblocktimeout">
+<span id="web3-module-transactionblocktimeout"></span><h2>transactionBlockTimeout<a class="headerlink" href="#transactionblocktimeout" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">transactionBlockTimeout</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">transactionBlockTimeout</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">transactionBlockTimeout</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>This can be used with a socket provider and defines the number of blocks until the PromiEvent
+rejects with a timeout error.</p>
+<div class="section" id="id15">
+<h3>Returns<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionBlockTimeout</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="transactionconfirmationblocks">
+<span id="web3-module-transactionconfirmationblocks"></span><h2>transactionConfirmationBlocks<a class="headerlink" href="#transactionconfirmationblocks" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">transactionConfirmationBlocks</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">transactionConfirmationBlocks</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">transactionConfirmationBlocks</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>This defines the number of blocks it requires until a transaction will be handled as confirmed.
+The PromiEvent will resolve with the desired receipt when enough confirmations happened.</p>
+<div class="section" id="id16">
+<h3>Returns<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionConfirmationBlocks</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="transactionpollingtimeout">
+<span id="web3-module-transactionpollingtimeout"></span><h2>transactionPollingTimeout<a class="headerlink" href="#transactionpollingtimeout" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">transactionPollingTimeout</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">transactionPollingTimeout</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">transactionPollingTimeout</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>This defines the polling cycles amount when you send a transaction with the HttpProvider.
+The PromiEvent rejects with a timeout error when the timeout got exceeded. (1 cycle == 1sec.).</p>
+<div class="section" id="id17">
+<h3>Returns<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionPollingTimeout</p>
+<hr class="docutils" />
+<hr class="docutils" />
+</div>
+</div>
 <div class="section" id="getid">
 <span id="net-getid"></span><h2>getId<a class="headerlink" href="#getid" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">net</span><span class="p">.</span><span class="nx">getId</span><span class="p">([</span><span class="nx">callback</span><span class="p">])</span>
@@ -249,16 +390,16 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>Gets the current network ID.</p>
-<div class="section" id="id9">
-<h3>Parameters<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id18">
+<h3>Parameters<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <p>none</p>
 </div>
-<div class="section" id="id10">
-<h3>Returns<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id19">
+<h3>Returns<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise</span></code> returns <code class="docutils literal notranslate"><span class="pre">Number</span></code>: The network ID.</p>
 </div>
-<div class="section" id="id11">
-<h3>Example<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id20">
+<h3>Example<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">net</span><span class="p">.</span><span class="nx">getId</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="mi">1</span>
@@ -275,16 +416,16 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>Checks if the node is listening for peers.</p>
-<div class="section" id="id12">
-<h3>Parameters<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id21">
+<h3>Parameters<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
 <p>none</p>
 </div>
-<div class="section" id="id13">
-<h3>Returns<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id22">
+<h3>Returns<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise</span></code> returns <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
 </div>
-<div class="section" id="id14">
-<h3>Example<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id23">
+<h3>Example<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">isListening</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
@@ -301,16 +442,16 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>Get the number of peers connected to.</p>
-<div class="section" id="id15">
-<h3>Parameters<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id24">
+<h3>Parameters<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
 <p>none</p>
 </div>
-<div class="section" id="id16">
-<h3>Returns<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id25">
+<h3>Returns<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise</span></code> returns <code class="docutils literal notranslate"><span class="pre">Number</span></code></p>
 </div>
-<div class="section" id="id17">
-<h3>Example<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id26">
+<h3>Example<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getPeerCount</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="mi">25</span>
@@ -325,18 +466,18 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>Returns the version of the running whisper.</p>
-<div class="section" id="id18">
-<h3>Parameters<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id27">
+<h3>Parameters<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id19">
-<h3>Returns<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id28">
+<h3>Returns<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The version of the current whisper running.</p>
 </div>
-<div class="section" id="id20">
-<h3>Example<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id29">
+<h3>Example<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">getVersion</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;5.0&quot;</span>
@@ -351,14 +492,14 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>Gets information about the current whisper node.</p>
-<div class="section" id="id21">
-<h3>Parameters<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id30">
+<h3>Parameters<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id22">
-<h3>Returns<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id31">
+<h3>Returns<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;Object&gt;</span></code> - The information of the node with the following properties:</p>
 <blockquote>
 <div><ul class="simple">
@@ -369,8 +510,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id23">
-<h3>Example<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id32">
+<h3>Example<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">getInfo</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="p">{</span>
@@ -391,19 +532,19 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </div>
 <p>Sets the maximal message size allowed by this node. Incoming and outgoing messages with a larger size will be rejected.
 Whisper message size can never exceed the limit imposed by the underlying P2P protocol (10 Mb).</p>
-<div class="section" id="id24">
-<h3>Parameters<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id33">
+<h3>Parameters<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Number</span></code> - Message size in bytes.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id25">
-<h3>Returns<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id34">
+<h3>Returns<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;boolean&gt;</span></code> - Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> on success, error on failure.</p>
 </div>
-<div class="section" id="id26">
-<h3>Example<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id35">
+<h3>Example<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">setMaxMessageSize</span><span class="p">(</span><span class="mi">1234565</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
@@ -421,19 +562,19 @@ Whisper message size can never exceed the limit imposed by the underlying P2P pr
 <p>This experimental function was introduced for the future dynamic adjustment of PoW requirement.
 If the node is overwhelmed with messages, it should raise the PoW requirement and notify the peers.
 The new value should be set relative to the old value (e.g. double). The old value can be obtained via <a class="reference internal" href="#shh-getinfo"><span class="std std-ref">web3.shh.getInfo()</span></a>.</p>
-<div class="section" id="id27">
-<h3>Parameters<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id36">
+<h3>Parameters<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Number</span></code> - The new PoW requirement.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id28">
-<h3>Returns<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id37">
+<h3>Returns<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;boolean&gt;</span></code> - Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> on success, error on failure.</p>
 </div>
-<div class="section" id="id29">
-<h3>Example<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id38">
+<h3>Example<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">setMinPoW</span><span class="p">(</span><span class="mf">0.9</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
@@ -452,19 +593,19 @@ The new value should be set relative to the old value (e.g. double). The old val
 <p class="first admonition-title">Note</p>
 <p class="last">This function is not adding new nodes, the node needs to be an existing peer.</p>
 </div>
-<div class="section" id="id30">
-<h3>Parameters<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id39">
+<h3>Parameters<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - Enode of the trusted peer.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id31">
-<h3>Returns<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id40">
+<h3>Returns<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;boolean&gt;</span></code> - Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> on success, error on failure.</p>
 </div>
-<div class="section" id="id32">
-<h3>Example<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id41">
+<h3>Example<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">markTrustedPeer</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
@@ -479,18 +620,18 @@ The new value should be set relative to the old value (e.g. double). The old val
 </pre></div>
 </div>
 <p>Generates a new public and private key pair for message decryption and encryption.</p>
-<div class="section" id="id33">
-<h3>Parameters<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id42">
+<h3>Parameters<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id34">
-<h3>Returns<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id43">
+<h3>Returns<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - Returns the Key ID on success and an error on failure.</p>
 </div>
-<div class="section" id="id35">
-<h3>Example<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id44">
+<h3>Example<a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">newKeyPair</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;5e57b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&quot;</span>
@@ -505,19 +646,19 @@ The new value should be set relative to the old value (e.g. double). The old val
 </pre></div>
 </div>
 <p>Stores a key pair derived from a private key, and returns its ID.</p>
-<div class="section" id="id36">
-<h3>Parameters<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id45">
+<h3>Parameters<a class="headerlink" href="#id45" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The private key as HEX bytes to import.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id37">
-<h3>Returns<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id46">
+<h3>Returns<a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The Key ID on success and an error on failure.</p>
 </div>
-<div class="section" id="id38">
-<h3>Example<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id47">
+<h3>Example<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">addPrivateKey</span><span class="p">(</span><span class="s1">&#39;0x8bda3abeb454847b515fa9b404cede50b1cc63cfdeddd4999d074284b4c21e15&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&quot;</span>
@@ -532,19 +673,19 @@ The new value should be set relative to the old value (e.g. double). The old val
 </pre></div>
 </div>
 <p>Deletes the specifies key if it exists.</p>
-<div class="section" id="id39">
-<h3>Parameters<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id48">
+<h3>Parameters<a class="headerlink" href="#id48" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The key pair ID, returned by the creation functions (<code class="docutils literal notranslate"><span class="pre">shh.newKeyPair</span></code> and <code class="docutils literal notranslate"><span class="pre">shh.addPrivateKey</span></code>).</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id40">
-<h3>Returns<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id49">
+<h3>Returns<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;boolean&gt;</span></code> - Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> on success, error on failure.</p>
 </div>
-<div class="section" id="id41">
-<h3>Example<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id50">
+<h3>Example<a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">deleteKeyPair</span><span class="p">(</span><span class="s1">&#39;3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
@@ -559,19 +700,19 @@ The new value should be set relative to the old value (e.g. double). The old val
 </pre></div>
 </div>
 <p>Checks if the whisper node has a private key of a key pair matching the given ID.</p>
-<div class="section" id="id42">
-<h3>Parameters<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id51">
+<h3>Parameters<a class="headerlink" href="#id51" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The key pair ID, returned by the creation functions (<code class="docutils literal notranslate"><span class="pre">shh.newKeyPair</span></code> and <code class="docutils literal notranslate"><span class="pre">shh.addPrivateKey</span></code>).</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id43">
-<h3>Returns<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id52">
+<h3>Returns<a class="headerlink" href="#id52" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;boolean&gt;</span></code> - Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> on if the key pair exist in the node, <code class="docutils literal notranslate"><span class="pre">false</span></code> if not. Error on failure.</p>
 </div>
-<div class="section" id="id44">
-<h3>Example<a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id53">
+<h3>Example<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">hasKeyPair</span><span class="p">(</span><span class="s1">&#39;fe22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
@@ -586,19 +727,19 @@ The new value should be set relative to the old value (e.g. double). The old val
 </pre></div>
 </div>
 <p>Returns the public key for a key pair ID.</p>
-<div class="section" id="id45">
-<h3>Parameters<a class="headerlink" href="#id45" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id54">
+<h3>Parameters<a class="headerlink" href="#id54" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The key pair ID, returned by the creation functions (<code class="docutils literal notranslate"><span class="pre">shh.newKeyPair</span></code> and <code class="docutils literal notranslate"><span class="pre">shh.addPrivateKey</span></code>).</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id46">
-<h3>Returns<a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id55">
+<h3>Returns<a class="headerlink" href="#id55" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - Returns the Public key on success and an error on failure.</p>
 </div>
-<div class="section" id="id47">
-<h3>Example<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id56">
+<h3>Example<a class="headerlink" href="#id56" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">getPublicKey</span><span class="p">(</span><span class="s1">&#39;3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x04d1574d4eab8f3dde4d2dc7ed2c4d699d77cbbdd09167b8fffa099652ce4df00c4c6e0263eafe05007a46fdf0c8d32b11aeabcd3abbc7b2bc2bb967368a68e9c6&quot;</span>
@@ -613,19 +754,19 @@ The new value should be set relative to the old value (e.g. double). The old val
 </pre></div>
 </div>
 <p>Returns the private key for a key pair ID.</p>
-<div class="section" id="id48">
-<h3>Parameters<a class="headerlink" href="#id48" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id57">
+<h3>Parameters<a class="headerlink" href="#id57" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The key pair ID, returned by the creation functions (<code class="docutils literal notranslate"><span class="pre">shh.newKeyPair</span></code> and <code class="docutils literal notranslate"><span class="pre">shh.addPrivateKey</span></code>).</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id49">
-<h3>Returns<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id58">
+<h3>Returns<a class="headerlink" href="#id58" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - Returns the private key on success and an error on failure.</p>
 </div>
-<div class="section" id="id50">
-<h3>Example<a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id59">
+<h3>Example<a class="headerlink" href="#id59" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">getPrivateKey</span><span class="p">(</span><span class="s1">&#39;3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x234234e22b9ffc2387e18636e0534534a3d0c56b0243567432453264c16e78a2adc&quot;</span>
@@ -641,18 +782,18 @@ The new value should be set relative to the old value (e.g. double). The old val
 </div>
 <p>Generates a random symmetric key and stores it under an ID, which is then returned.
 Will be used for encrypting and decrypting of messages where the sym key is known to both parties.</p>
-<div class="section" id="id51">
-<h3>Parameters<a class="headerlink" href="#id51" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id60">
+<h3>Parameters<a class="headerlink" href="#id60" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id52">
-<h3>Returns<a class="headerlink" href="#id52" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id61">
+<h3>Returns<a class="headerlink" href="#id61" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - Returns the Key ID on success and an error on failure.</p>
 </div>
-<div class="section" id="id53">
-<h3>Example<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id62">
+<h3>Example<a class="headerlink" href="#id62" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">newSymKey</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;cec94d139ff51d7df1d228812b90c23ec1f909afa0840ed80f1e04030bb681e4&quot;</span>
@@ -667,19 +808,19 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </pre></div>
 </div>
 <p>Stores the key, and returns its ID.</p>
-<div class="section" id="id54">
-<h3>Parameters<a class="headerlink" href="#id54" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id63">
+<h3>Parameters<a class="headerlink" href="#id63" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The raw key for symmetric encryption as HEX bytes.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id55">
-<h3>Returns<a class="headerlink" href="#id55" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id64">
+<h3>Returns<a class="headerlink" href="#id64" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - Returns the key ID on success and an error on failure.</p>
 </div>
-<div class="section" id="id56">
-<h3>Example<a class="headerlink" href="#id56" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id65">
+<h3>Example<a class="headerlink" href="#id65" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">addSymKey</span><span class="p">(</span><span class="s1">&#39;0x5e11b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;fea94d139ff51d7df1d228812b90c23ec1f909afa0840ed80f1e04030bb681e4&quot;</span>
@@ -694,19 +835,19 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </pre></div>
 </div>
 <p>Generates the key from password, stores it, and returns its ID.</p>
-<div class="section" id="id57">
-<h3>Parameters<a class="headerlink" href="#id57" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id66">
+<h3>Parameters<a class="headerlink" href="#id66" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - A password to generate the sym key from.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id58">
-<h3>Returns<a class="headerlink" href="#id58" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id67">
+<h3>Returns<a class="headerlink" href="#id67" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;String|Error&gt;</span></code> - Returns the Key ID on success and an error on failure.</p>
 </div>
-<div class="section" id="id59">
-<h3>Example<a class="headerlink" href="#id59" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id68">
+<h3>Example<a class="headerlink" href="#id68" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">generateSymKeyFromPassword</span><span class="p">(</span><span class="s1">&#39;Never use this password - password!&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;2e57b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&quot;</span>
@@ -721,19 +862,19 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </pre></div>
 </div>
 <p>Checks if there is a symmetric key stored with the given ID.</p>
-<div class="section" id="id60">
-<h3>Parameters<a class="headerlink" href="#id60" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id69">
+<h3>Parameters<a class="headerlink" href="#id69" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The key pair ID, returned by the creation functions (<code class="docutils literal notranslate"><span class="pre">shh.newSymKey</span></code>, <code class="docutils literal notranslate"><span class="pre">shh.addSymKey</span></code> or <code class="docutils literal notranslate"><span class="pre">shh.generateSymKeyFromPassword</span></code>).</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id61">
-<h3>Returns<a class="headerlink" href="#id61" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id70">
+<h3>Returns<a class="headerlink" href="#id70" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;boolean&gt;</span></code> - Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> on if the symmetric key exist in the node, <code class="docutils literal notranslate"><span class="pre">false</span></code> if not. Error on failure.</p>
 </div>
-<div class="section" id="id62">
-<h3>Example<a class="headerlink" href="#id62" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id71">
+<h3>Example<a class="headerlink" href="#id71" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">hasSymKey</span><span class="p">(</span><span class="s1">&#39;f6dcf21ed6a17bd78d8c4c63195ab997b3b65ea683705501eae82d32667adc92&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
@@ -748,19 +889,19 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </pre></div>
 </div>
 <p>Returns the symmetric key associated with the given ID.</p>
-<div class="section" id="id63">
-<h3>Parameters<a class="headerlink" href="#id63" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id72">
+<h3>Parameters<a class="headerlink" href="#id72" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The key pair ID, returned by the creation functions (<code class="docutils literal notranslate"><span class="pre">shh.newKeyPair</span></code> and <code class="docutils literal notranslate"><span class="pre">shh.addPrivateKey</span></code>).</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id64">
-<h3>Returns<a class="headerlink" href="#id64" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id73">
+<h3>Returns<a class="headerlink" href="#id73" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - Returns the raw symmetric key on success and an error on failure.</p>
 </div>
-<div class="section" id="id65">
-<h3>Example<a class="headerlink" href="#id65" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id74">
+<h3>Example<a class="headerlink" href="#id74" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">getSymKey</span><span class="p">(</span><span class="s1">&#39;af33b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0xa82a520aff70f7a989098376e48ec128f25f767085e84d7fb995a9815eebff0a&quot;</span>
@@ -775,19 +916,19 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </pre></div>
 </div>
 <p>Deletes the symmetric key associated with the given ID.</p>
-<div class="section" id="id66">
-<h3>Parameters<a class="headerlink" href="#id66" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id75">
+<h3>Parameters<a class="headerlink" href="#id75" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The key pair ID, returned by the creation functions (<code class="docutils literal notranslate"><span class="pre">shh.newKeyPair</span></code> and <code class="docutils literal notranslate"><span class="pre">shh.addPrivateKey</span></code>).</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id67">
-<h3>Returns<a class="headerlink" href="#id67" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id76">
+<h3>Returns<a class="headerlink" href="#id76" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;boolean&gt;</span></code> - Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> on if the symmetric key was deleted, error on failure.</p>
 </div>
-<div class="section" id="id68">
-<h3>Example<a class="headerlink" href="#id68" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id77">
+<h3>Example<a class="headerlink" href="#id77" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">deleteSymKey</span><span class="p">(</span><span class="s1">&#39;bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
@@ -802,8 +943,8 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </pre></div>
 </div>
 <p>This method should be called, when we want to post whisper a message to the network.</p>
-<div class="section" id="id69">
-<h3>Parameters<a class="headerlink" href="#id69" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id78">
+<h3>Parameters<a class="headerlink" href="#id78" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><dl class="first docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">Object</span></code> - The post object:</dt>
@@ -825,12 +966,12 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 <li><code class="docutils literal notranslate"><span class="pre">callback</span></code> - <code class="docutils literal notranslate"><span class="pre">Function</span></code>: (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id70">
-<h3>Returns<a class="headerlink" href="#id70" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id79">
+<h3>Returns<a class="headerlink" href="#id79" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise</span></code> returns <code class="docutils literal notranslate"><span class="pre">Promise</span></code> - returns a promise. Upon success, the <code class="docutils literal notranslate"><span class="pre">then</span></code> function will be passed a string representing the hash of the sent message. On error, the <code class="docutils literal notranslate"><span class="pre">catch</span></code> function will be passed a string containing the reason for the error.</p>
 </div>
-<div class="section" id="id71">
-<h3>Example<a class="headerlink" href="#id71" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id80">
+<h3>Example<a class="headerlink" href="#id80" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">identities</span> <span class="o">=</span> <span class="p">[],</span>
       <span class="nx">subscription</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
 
@@ -870,7 +1011,7 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </div>
 <p>Subscribe for incoming whisper messages.</p>
 <div class="section" id="shh-subscribeoptions">
-<span id="id72"></span><h3>Parameters<a class="headerlink" href="#shh-subscribeoptions" title="Permalink to this headline">¶</a></h3>
+<span id="id81"></span><h3>Parameters<a class="headerlink" href="#shh-subscribeoptions" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">&quot;messages&quot;</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: Type of the subscription.</li>
 <li><dl class="first docutils">
@@ -906,8 +1047,8 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id73">
-<h3>Example<a class="headerlink" href="#id73" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id82">
+<h3>Example<a class="headerlink" href="#id82" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">&#39;messages&#39;</span><span class="p">,</span> <span class="p">{</span>
     <span class="nx">symKeyID</span><span class="o">:</span> <span class="s1">&#39;bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">,</span>
     <span class="nx">sig</span><span class="o">:</span> <span class="s1">&#39;0x04d1574d4eab8f3dde4d2dc7ed2c4d699d77cbbdd09167b8fffa099652ce4df00c4c6e0263eafe05007a46fdf0c8d32b11aeabcd3abbc7b2bc2bb967368a68e9c6&#39;</span><span class="p">,</span>
@@ -946,18 +1087,18 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 <p class="first admonition-title">Note</p>
 <p class="last">This will not reset subscriptions from other packages like <code class="docutils literal notranslate"><span class="pre">web3-eth</span></code>, as they use their own requestManager.</p>
 </div>
-<div class="section" id="id74">
-<h3>Parameters<a class="headerlink" href="#id74" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id83">
+<h3>Parameters<a class="headerlink" href="#id83" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Boolean</span></code>: If <code class="docutils literal notranslate"><span class="pre">true</span></code> it keeps the <code class="docutils literal notranslate"><span class="pre">&quot;syncing&quot;</span></code> subscription.</li>
 </ol>
 </div>
-<div class="section" id="id75">
-<h3>Returns<a class="headerlink" href="#id75" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id84">
+<h3>Returns<a class="headerlink" href="#id84" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
 </div>
-<div class="section" id="id76">
-<h3>Example<a class="headerlink" href="#id76" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id85">
+<h3>Example<a class="headerlink" href="#id85" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">&#39;messages&#39;</span><span class="p">,</span> <span class="p">{...}</span> <span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="p">...</span> <span class="p">});</span>
 
 <span class="p">...</span>
@@ -974,18 +1115,18 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </pre></div>
 </div>
 <p>Create a new filter within the node. This filter can be used to poll for new messages that match the set of criteria.</p>
-<div class="section" id="id77">
-<h3>Parameters<a class="headerlink" href="#id77" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id86">
+<h3>Parameters<a class="headerlink" href="#id86" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Object</span></code>: See <a class="reference internal" href="#shh-subscribeoptions"><span class="std std-ref">web3.shh.subscribe() options</span></a> for details.</li>
 </ol>
 </div>
-<div class="section" id="id78">
-<h3>Returns<a class="headerlink" href="#id78" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id87">
+<h3>Returns<a class="headerlink" href="#id87" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - Returns the filter ID.</p>
 </div>
-<div class="section" id="id79">
-<h3>Example<a class="headerlink" href="#id79" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id88">
+<h3>Example<a class="headerlink" href="#id88" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">newMessageFilter</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;2b47fbafb3cce24570812a82e6e93cd9e2551bbc4823f6548ff0d82d2206b326&quot;</span>
@@ -1000,18 +1141,18 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </pre></div>
 </div>
 <p>Deletes a message filter in the node.</p>
-<div class="section" id="id80">
-<h3>Parameters<a class="headerlink" href="#id80" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id89">
+<h3>Parameters<a class="headerlink" href="#id89" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code>: The filter ID created with <code class="docutils literal notranslate"><span class="pre">shh.newMessageFilter()</span></code>.</li>
 </ol>
 </div>
-<div class="section" id="id81">
-<h3>Returns<a class="headerlink" href="#id81" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id90">
+<h3>Returns<a class="headerlink" href="#id90" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;boolean&gt;</span></code> - Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> on success, error on failure.</p>
 </div>
-<div class="section" id="id82">
-<h3>Example<a class="headerlink" href="#id82" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id91">
+<h3>Example<a class="headerlink" href="#id91" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">deleteMessageFilter</span><span class="p">(</span><span class="s1">&#39;2b47fbafb3cce24570812a82e6e93cd9e2551bbc4823f6548ff0d82d2206b326&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
@@ -1026,18 +1167,18 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </pre></div>
 </div>
 <p>Retrieve messages that match the filter criteria and are received between the last time this function was called and now.</p>
-<div class="section" id="id83">
-<h3>Parameters<a class="headerlink" href="#id83" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id92">
+<h3>Parameters<a class="headerlink" href="#id92" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code>: The filter ID created with <code class="docutils literal notranslate"><span class="pre">shh.newMessageFilter()</span></code>.</li>
 </ol>
 </div>
-<div class="section" id="id84">
-<h3>Returns<a class="headerlink" href="#id84" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id93">
+<h3>Returns<a class="headerlink" href="#id93" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;Array&gt;</span></code> - Returns an array of message objects like <a class="reference internal" href="#shh-subscribenotificationreturns"><span class="std std-ref">web3.shh.subscribe() notification returns</span></a></p>
 </div>
-<div class="section" id="id85">
-<h3>Example<a class="headerlink" href="#id85" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id94">
+<h3>Example<a class="headerlink" href="#id94" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">getFilterMessages</span><span class="p">(</span><span class="s1">&#39;2b47fbafb3cce24570812a82e6e93cd9e2551bbc4823f6548ff0d82d2206b326&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="p">[{</span>
@@ -1066,187 +1207,220 @@ Will be used for encrypting and decrypting of messages where the sym key is know
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">web3.shh</a><ul>
+<li><a class="reference internal" href="#web3-module-options">Web3 Module Options</a><ul>
+<li><a class="reference internal" href="#module-options">Module Options</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#setprovider">setProvider</a><ul>
 <li><a class="reference internal" href="#parameters">Parameters</a></li>
 <li><a class="reference internal" href="#returns">Returns</a></li>
-<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#id1">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#providers">providers</a><ul>
 <li><a class="reference internal" href="#value">Value</a></li>
-<li><a class="reference internal" href="#id1">Example</a></li>
+<li><a class="reference internal" href="#id2">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#givenprovider">givenProvider</a><ul>
-<li><a class="reference internal" href="#id2">Returns</a></li>
-<li><a class="reference internal" href="#id3">Example</a></li>
+<li><a class="reference internal" href="#id3">Returns</a></li>
+<li><a class="reference internal" href="#id4">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#currentprovider">currentProvider</a><ul>
-<li><a class="reference internal" href="#id4">Returns</a></li>
-<li><a class="reference internal" href="#id5">Example</a></li>
+<li><a class="reference internal" href="#id5">Returns</a></li>
+<li><a class="reference internal" href="#id6">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#batchrequest">BatchRequest</a><ul>
-<li><a class="reference internal" href="#id6">Parameters</a></li>
-<li><a class="reference internal" href="#id7">Returns</a></li>
-<li><a class="reference internal" href="#id8">Example</a></li>
+<li><a class="reference internal" href="#id7">Parameters</a></li>
+<li><a class="reference internal" href="#id8">Returns</a></li>
+<li><a class="reference internal" href="#id9">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#defaultblock">defaultBlock</a><ul>
+<li><a class="reference internal" href="#id10">Returns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#web3-module-defaultaccount">defaultBlock</a><ul>
+<li><a class="reference internal" href="#id12">Returns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#defaultgasprice">defaultGasPrice</a><ul>
+<li><a class="reference internal" href="#id13">Returns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#defaultgas">defaultGas</a><ul>
+<li><a class="reference internal" href="#id14">Returns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#transactionblocktimeout">transactionBlockTimeout</a><ul>
+<li><a class="reference internal" href="#id15">Returns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#transactionconfirmationblocks">transactionConfirmationBlocks</a><ul>
+<li><a class="reference internal" href="#id16">Returns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#transactionpollingtimeout">transactionPollingTimeout</a><ul>
+<li><a class="reference internal" href="#id17">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#getid">getId</a><ul>
-<li><a class="reference internal" href="#id9">Parameters</a></li>
-<li><a class="reference internal" href="#id10">Returns</a></li>
-<li><a class="reference internal" href="#id11">Example</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#islistening">isListening</a><ul>
-<li><a class="reference internal" href="#id12">Parameters</a></li>
-<li><a class="reference internal" href="#id13">Returns</a></li>
-<li><a class="reference internal" href="#id14">Example</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#getpeercount">getPeerCount</a><ul>
-<li><a class="reference internal" href="#id15">Parameters</a></li>
-<li><a class="reference internal" href="#id16">Returns</a></li>
-<li><a class="reference internal" href="#id17">Example</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#getversion">getVersion</a><ul>
 <li><a class="reference internal" href="#id18">Parameters</a></li>
 <li><a class="reference internal" href="#id19">Returns</a></li>
 <li><a class="reference internal" href="#id20">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#getinfo">getInfo</a><ul>
+<li><a class="reference internal" href="#islistening">isListening</a><ul>
 <li><a class="reference internal" href="#id21">Parameters</a></li>
 <li><a class="reference internal" href="#id22">Returns</a></li>
 <li><a class="reference internal" href="#id23">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#setmaxmessagesize">setMaxMessageSize</a><ul>
+<li><a class="reference internal" href="#getpeercount">getPeerCount</a><ul>
 <li><a class="reference internal" href="#id24">Parameters</a></li>
 <li><a class="reference internal" href="#id25">Returns</a></li>
 <li><a class="reference internal" href="#id26">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#setminpow">setMinPoW</a><ul>
+<li><a class="reference internal" href="#getversion">getVersion</a><ul>
 <li><a class="reference internal" href="#id27">Parameters</a></li>
 <li><a class="reference internal" href="#id28">Returns</a></li>
 <li><a class="reference internal" href="#id29">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#marktrustedpeer">markTrustedPeer</a><ul>
+<li><a class="reference internal" href="#getinfo">getInfo</a><ul>
 <li><a class="reference internal" href="#id30">Parameters</a></li>
 <li><a class="reference internal" href="#id31">Returns</a></li>
 <li><a class="reference internal" href="#id32">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#newkeypair">newKeyPair</a><ul>
+<li><a class="reference internal" href="#setmaxmessagesize">setMaxMessageSize</a><ul>
 <li><a class="reference internal" href="#id33">Parameters</a></li>
 <li><a class="reference internal" href="#id34">Returns</a></li>
 <li><a class="reference internal" href="#id35">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#addprivatekey">addPrivateKey</a><ul>
+<li><a class="reference internal" href="#setminpow">setMinPoW</a><ul>
 <li><a class="reference internal" href="#id36">Parameters</a></li>
 <li><a class="reference internal" href="#id37">Returns</a></li>
 <li><a class="reference internal" href="#id38">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#deletekeypair">deleteKeyPair</a><ul>
+<li><a class="reference internal" href="#marktrustedpeer">markTrustedPeer</a><ul>
 <li><a class="reference internal" href="#id39">Parameters</a></li>
 <li><a class="reference internal" href="#id40">Returns</a></li>
 <li><a class="reference internal" href="#id41">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#haskeypair">hasKeyPair</a><ul>
+<li><a class="reference internal" href="#newkeypair">newKeyPair</a><ul>
 <li><a class="reference internal" href="#id42">Parameters</a></li>
 <li><a class="reference internal" href="#id43">Returns</a></li>
 <li><a class="reference internal" href="#id44">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#getpublickey">getPublicKey</a><ul>
+<li><a class="reference internal" href="#addprivatekey">addPrivateKey</a><ul>
 <li><a class="reference internal" href="#id45">Parameters</a></li>
 <li><a class="reference internal" href="#id46">Returns</a></li>
 <li><a class="reference internal" href="#id47">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#getprivatekey">getPrivateKey</a><ul>
+<li><a class="reference internal" href="#deletekeypair">deleteKeyPair</a><ul>
 <li><a class="reference internal" href="#id48">Parameters</a></li>
 <li><a class="reference internal" href="#id49">Returns</a></li>
 <li><a class="reference internal" href="#id50">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#newsymkey">newSymKey</a><ul>
+<li><a class="reference internal" href="#haskeypair">hasKeyPair</a><ul>
 <li><a class="reference internal" href="#id51">Parameters</a></li>
 <li><a class="reference internal" href="#id52">Returns</a></li>
 <li><a class="reference internal" href="#id53">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#addsymkey">addSymKey</a><ul>
+<li><a class="reference internal" href="#getpublickey">getPublicKey</a><ul>
 <li><a class="reference internal" href="#id54">Parameters</a></li>
 <li><a class="reference internal" href="#id55">Returns</a></li>
 <li><a class="reference internal" href="#id56">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#generatesymkeyfrompassword">generateSymKeyFromPassword</a><ul>
+<li><a class="reference internal" href="#getprivatekey">getPrivateKey</a><ul>
 <li><a class="reference internal" href="#id57">Parameters</a></li>
 <li><a class="reference internal" href="#id58">Returns</a></li>
 <li><a class="reference internal" href="#id59">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#hassymkey">hasSymKey</a><ul>
+<li><a class="reference internal" href="#newsymkey">newSymKey</a><ul>
 <li><a class="reference internal" href="#id60">Parameters</a></li>
 <li><a class="reference internal" href="#id61">Returns</a></li>
 <li><a class="reference internal" href="#id62">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#getsymkey">getSymKey</a><ul>
+<li><a class="reference internal" href="#addsymkey">addSymKey</a><ul>
 <li><a class="reference internal" href="#id63">Parameters</a></li>
 <li><a class="reference internal" href="#id64">Returns</a></li>
 <li><a class="reference internal" href="#id65">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#deletesymkey">deleteSymKey</a><ul>
+<li><a class="reference internal" href="#generatesymkeyfrompassword">generateSymKeyFromPassword</a><ul>
 <li><a class="reference internal" href="#id66">Parameters</a></li>
 <li><a class="reference internal" href="#id67">Returns</a></li>
 <li><a class="reference internal" href="#id68">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#post">post</a><ul>
+<li><a class="reference internal" href="#hassymkey">hasSymKey</a><ul>
 <li><a class="reference internal" href="#id69">Parameters</a></li>
 <li><a class="reference internal" href="#id70">Returns</a></li>
 <li><a class="reference internal" href="#id71">Example</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#getsymkey">getSymKey</a><ul>
+<li><a class="reference internal" href="#id72">Parameters</a></li>
+<li><a class="reference internal" href="#id73">Returns</a></li>
+<li><a class="reference internal" href="#id74">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#deletesymkey">deleteSymKey</a><ul>
+<li><a class="reference internal" href="#id75">Parameters</a></li>
+<li><a class="reference internal" href="#id76">Returns</a></li>
+<li><a class="reference internal" href="#id77">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#post">post</a><ul>
+<li><a class="reference internal" href="#id78">Parameters</a></li>
+<li><a class="reference internal" href="#id79">Returns</a></li>
+<li><a class="reference internal" href="#id80">Example</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#subscribe">subscribe</a><ul>
 <li><a class="reference internal" href="#shh-subscribeoptions">Parameters</a></li>
 <li><a class="reference internal" href="#notification-returns">Notification Returns</a></li>
-<li><a class="reference internal" href="#id73">Example</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#clearsubscriptions">clearSubscriptions</a><ul>
-<li><a class="reference internal" href="#id74">Parameters</a></li>
-<li><a class="reference internal" href="#id75">Returns</a></li>
-<li><a class="reference internal" href="#id76">Example</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#newmessagefilter">newMessageFilter</a><ul>
-<li><a class="reference internal" href="#id77">Parameters</a></li>
-<li><a class="reference internal" href="#id78">Returns</a></li>
-<li><a class="reference internal" href="#id79">Example</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#deletemessagefilter">deleteMessageFilter</a><ul>
-<li><a class="reference internal" href="#id80">Parameters</a></li>
-<li><a class="reference internal" href="#id81">Returns</a></li>
 <li><a class="reference internal" href="#id82">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#getfiltermessages">getFilterMessages</a><ul>
+<li><a class="reference internal" href="#clearsubscriptions">clearSubscriptions</a><ul>
 <li><a class="reference internal" href="#id83">Parameters</a></li>
 <li><a class="reference internal" href="#id84">Returns</a></li>
 <li><a class="reference internal" href="#id85">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#newmessagefilter">newMessageFilter</a><ul>
+<li><a class="reference internal" href="#id86">Parameters</a></li>
+<li><a class="reference internal" href="#id87">Returns</a></li>
+<li><a class="reference internal" href="#id88">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#deletemessagefilter">deleteMessageFilter</a><ul>
+<li><a class="reference internal" href="#id89">Parameters</a></li>
+<li><a class="reference internal" href="#id90">Returns</a></li>
+<li><a class="reference internal" href="#id91">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#getfiltermessages">getFilterMessages</a><ul>
+<li><a class="reference internal" href="#id92">Parameters</a></li>
+<li><a class="reference internal" href="#id93">Returns</a></li>
+<li><a class="reference internal" href="#id94">Example</a></li>
 </ul>
 </li>
 </ul>

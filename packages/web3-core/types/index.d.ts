@@ -147,7 +147,7 @@ export interface EventLog {
     transactionHash: string;
     blockHash: string;
     blockNumber: number;
-    raw?: {data: string, topics: any[]};
+    raw?: {data: string; topics: any[]};
 }
 
 export interface Log {

@@ -10,7 +10,7 @@ Web3
 
 .. code-block:: javascript
 
-    import {Web3} from 'web3';
+    import Web3 from 'web3';
 
     > Web3.givenProvider
     > Web3.providers
