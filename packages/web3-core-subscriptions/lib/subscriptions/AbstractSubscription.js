@@ -78,7 +78,7 @@ export default class AbstractSubscription extends EventEmitter {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {Subscription} Subscription
+     * @returns {AbstractSubscription}
      */
     subscribe(callback) {
         this.beforeSubscription(this.moduleInstance);

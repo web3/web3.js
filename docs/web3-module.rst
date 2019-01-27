@@ -16,10 +16,11 @@ to create complex contract APIs and tools for the development of a DApp.
 The Web3 Module API provides the following ES6 classes:
 
 - :ref:`AbstractWeb3Module <web3-abtract-module>`
-- :ref:`AbstractMethodFactory <web3-abtract-method-factory>`
-- :ref:`AbstractMethod <web3-abstract-method>`
-- :ref:`AbstractCallMethod <web3-abstract-call-method>`
-- :ref:`AbstractSendMethod <web3-abstract-send-method>`
+- :ref:`AbstractMethodFactory <web3-module-abstract-method-factory>`
+- :ref:`AbstractMethod <web3-module-abstract-method>`
+- :ref:`AbstractCallMethod <web3-module-abstract-call-method>`
+- :ref:`AbstractSendMethod <web3-module-abstract-send-method>`
+- :ref:`AbstractSubscription <web3-module-abstract-subscription>`
 
 =======
 Methods
@@ -90,7 +91,7 @@ These are the available methods and properties the AbstractWeb3Module does provi
 
 ------------------------------------------------------------------------------------------------------------------------
 
-.. _web3-abstract-method-factory:
+.. _web3-module-abstract-method-factory:
 
 AbstractMethodFactory
 =====================
@@ -124,7 +125,7 @@ The ``AbstractMethod`` does have the following constructor parameters:
 - ``utils`` - The Utils object.
 - ``formatters`` - The formatters object.
 
-The ``AbstractMethod`` is the base method object and does provide the basic functionalities to create a
+The ``AbstractMethod`` is the base method class and does provide the basic functionalities to create a
 Web3.js compatible JSON-RPC method.
 
 **The ``execute`` method of the ``AbstractMethod`` class has to get overwritten.**
@@ -168,13 +169,13 @@ of the method class.
     };
     > "result"
 
-The AbstractMethod object does have the following methods and properties:
+The AbstractMethod class does have the following methods and properties:
 
 .. include:: web3-module-abstract-method-class-reference.rst
 
 ------------------------------------------------------------------------------------------------------------------------
 
-.. _web3-abstract-call-method:
+.. _web3-module-abstract-call-method:
 
 AbstractCallMethod
 ==============
@@ -189,7 +190,7 @@ does have the following constructor parameters:
 - ``utils`` - The Utils object.
 - ``formatters`` - The formatters object.
 
-The ``AbstractCallMethod`` is the base method object for all methods expect the "send transaction" methods.
+The ``AbstractCallMethod`` is the base method class for all methods expect the "send transaction" methods.
 
 **Don't overwrite the ``execute`` method of the ``AbstractCallMethod`` class.**
 
@@ -203,7 +204,7 @@ You're able to overwrite these methods:
 
 ------------------------------------------------------------------------------------------------------------------------
 
-.. _web3-abstract-send-method:
+.. _web3-module-abstract-send-method:
 
 AbstractSendMethod
 ==============
@@ -219,7 +220,7 @@ does have the following constructor parameters:
 - ``formatters`` - The formatters object.
 - ``tranactionConfirmationWorkflow`` - The ``TransactionConfirmationWorkflow`` class which defines the confirmation process of the transaction.
 
-The ``AbstractSendMethod`` is the base method object for all "send transaction" methods.
+The ``AbstractSendMethod`` is the base method class for all "send transaction" methods.
 
 **Don't overwrite the ``execute`` method of the ``AbstractSendMethod`` class.**
 
@@ -229,3 +230,172 @@ You're able to overwrite these methods:
 - :ref:`beforeExecution <web3-abstract-method-before-execution>`
 
 .. include:: web3-module-abstract-method-class-reference.rst
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+.. _web3-module-abstract-subscription:
+
+AbstractSubscription
+==================
+
+Source: `AbstractSubscription <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions/lib/subscriptions/AbstractSubscription.js>`_
+
+The ``AbstractSubscription`` extends from the ``EventEmitter`` object and does have the following constructor parameters:
+
+- :ref:`type <web3-abstract-subscription-subscribe>` - The subscriptions type ``eth_subscribe`` or ``shh_subscribe``.
+- :ref:`method <web3-abstract-subscription-subscribe>` - The subscription method which is the first parameter in the JSON-RPC payload object.
+- :ref:`options <web3-abstract-subscription-subscribe>` - The options object of the subscription.
+- :ref:`formatters <web3-abstract-subscription-subscribe>` - The formatters object.
+- :ref:`moduleInstance <web3-abstract-subscription-subscribe>` - An ``AbstractWeb3Module`` instance.
+
+The ``AbstractSubscription`` is the base subscription class of all subscriptions.
+
+**Don't overwrite the ``subscribe`` method of the ``AbstractSubscription`` class.**
+
+You're able to overwrite these methods:
+
+- :ref:`subscribe <web3-abstract-subscription-subscribe>`
+- :ref:`unsubscribe <web3-abstract-subscription-unsubscribe>`
+- :ref:`beforeSubscription <web3-abstract-subscription-before-execution>`
+- :ref:`onNewSubscriptionItem <web3-abstract-subscription-after-execution>`
+
+.. _web3-abstract-subscription-subscribe:
+
+subscribe
+*********
+
+This method will start the subscription.
+
+==========
+Parameters
+==========
+
+- ``callback: Function`` - The callback function which will be called with the arguments ``error: Error`` and ``response: any``.
+
+=======
+Returns
+=======
+
+``AbstractSubscription``
+
+------------------------------------------------------------------------------------------------------------------------
+
+.. _web3-abstract-subscription-unsubscribe:
+
+unsubscribe
+***********
+
+This method will end the subscription.
+
+==========
+Parameters
+==========
+
+- ``callback: Function`` - The callback function which will be called with the arguments ``error: Error`` and ``response: any``.
+
+=======
+Returns
+=======
+
+``Promise<boolean|Error>``
+
+------------------------------------------------------------------------------------------------------------------------
+
+.. _web3-abstract-subscription-before-subscription:
+
+beforeSubscription
+******************
+
+This method will be executed before the subscription happens.
+The ``beforeSubscription`` method gives you the possibility to customize the subscription class before the request will be sent.
+
+==========
+Parameters
+==========
+
+- ``moduleInstance: AbstractWeb3Module`` - The current ``AbstractWeb3Module``.
+
+------------------------------------------------------------------------------------------------------------------------
+
+.. _web3-abstract-subscription-on-new-subscription-item:
+
+onNewSubscriptionItem
+*********************
+
+This method will be executed on each subscription item.
+The ``onNewSubscriptionItem`` method gives you the possibility to map the response.
+
+==========
+Parameters
+==========
+
+- ``moduleInstance: AbstractWeb3Module`` - The current ``AbstractWeb3Module``.
+
+=======
+Returns
+=======
+
+``any``
+
+------------------------------------------------------------------------------------------------------------------------
+
+.. _web3-abstract-subscription-type:
+
+type
+****
+
+The property ``type`` does contain the subscription type.
+
+=======
+Returns
+=======
+
+``string`` - Returns ``eth_subscribe`` or ``shh_subscribe``
+
+------------------------------------------------------------------------------------------------------------------------
+
+.. _web3-abstract-subscription-method:
+
+method
+******
+
+The property ``method`` does contain the subscription method.
+
+=======
+Returns
+=======
+
+``string``
+
+------------------------------------------------------------------------------------------------------------------------
+
+.. _web3-abstract-subscription-options:
+
+options
+*******
+
+The property ``options`` does contain the subscription options.
+
+=======
+Returns
+=======
+
+``object``
+
+------------------------------------------------------------------------------------------------------------------------
+
+.. _web3-abstract-subscription-id:
+
+id
+****
+
+The property ``id`` does contain the subscription id when the subscription is running.
+
+=======
+Returns
+=======
+
+``string``
+
+------------------------------------------------------------------------------------------------------------------------
