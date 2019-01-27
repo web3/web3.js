@@ -6,12 +6,12 @@
  Web3 Module API
 ================
 
-The Web3 Module API provides the possibility to create your own custom Web3 Module with JSON-RPC methods, subscriptions
+The Web3 Module API provides you the possibility to create your own custom Web3 Module with JSON-RPC methods, subscriptions
 or contracts. The provided modules from the Web3 library are also written with the Web3 Module API the core does provide.
 
-Instead of using the Web3 object or the different objects from the submodule for creating for example a contract API.
 The idea of the Web3 Module API is to extend and customize the JSON-RPC methods, contracts and subscriptions to project
-specific functions with a similar kind of API the DApp developer knows from the Web3.js library.
+specific functions with a similar kind of API the DApp developer knows from the Web3.js library. It should be possible
+to create complex contract API's and tools for the development of a DApp.
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -56,11 +56,11 @@ The ``AbstractWeb3Module`` does have the following constructor parameters:
 - ``options?: `` - These are the default ``options``.
 
 
-If you would like to provide the same method API as the Web3.js library is providing and also supporting for example BatchRequest.
-Then you should pass the ``methodModuleFactory``and the ``methodFactory`` parameter for extending the module with the methods.
+If you would like to provide the same method API as the Web3.js library is providing and also supporting the latest features of the library.
+Should you pass the ``methodModuleFactory``and the ``methodFactory`` parameter for extending the module with the methods.
 
 If you would like to provide your own API for interacting with a JSON-RPC method then you can simply use the method in
-the module without the ``MethodModuleFactory`` and ``MethodFactory``.
+the module without the ``MethodModuleFactory`` and ``MethodFactory`` constructor parameter.
 
 The example code of the starter module is placed in the ``<project-root-dir>/src/`` folder with the name ``StarterModule``.
 
