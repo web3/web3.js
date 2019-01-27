@@ -16,6 +16,7 @@
         "dtslint": "dtslint types --onlyTestTsNext"
     },
     "dependencies": {
+        "@types/node": "^10.12.18",
         "lodash": "^4.17.11",
         "web3-utils": "1.0.0-beta.38"
     },
