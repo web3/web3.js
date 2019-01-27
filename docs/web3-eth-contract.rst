@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-========
+=================
 web3.eth.Contract
-========
+=================
 
 The ``web3.eth.Contract`` object makes it easy to interact with smart contracts on the ethereum blockchain.
 When you create a new contract object you give it the json interface of the respective smart contract
@@ -36,7 +36,7 @@ To use it standalone:
 
 
 new contract
-=========
+============
 
 .. index:: JSON interface
 
