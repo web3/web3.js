@@ -21,13 +21,33 @@ The Web3 Module API provides the following ES6 classes:
 - :ref:`AbstractCallMethod <web3-abstract-call-method>`
 - :ref:`AbstractSendMethod <web3-abstract-send-method>`
 
+=======
+Methods
+=======
+
+The Web3.js library does have implemented most of the provided JSON-RPC method nodes do provide.
+If you're interested to know which methods you could extend from then please check out the folders in the code base.
+
+Source: `Web3.js method classes <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/src/methods>`_
+
+------------------------------------------------------------------------------------------------------------------------
+
+=============
+Subscriptions
+=============
+
+The Web3.js library does have implemented the subscriptions nodes do provide.
+If you're interested to know which subscriptions you could extend from then please check out the folders in the code base.
+
+Source: `Web3.js subscription classes <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions/src/subscriptions>`_
+
 ------------------------------------------------------------------------------------------------------------------------
 
 =======
 Example
 =======
 
-Clone the ``web3-examples`` GitHub repository and copy the following `starter folder: https://github.com/ethereum/web3-examples/tree/development/modules/starter-module`_
+Clone the ``web3-examples`` GitHub repository and copy the following `starter folder: <https://github.com/ethereum/web3-examples/tree/development/modules/starter-module>`_
 
 If you moved the files in your folder then run ``npm install`` and ``npm run build``.
 This will install all required dependencies and builds the module with the ``development`` flag.
