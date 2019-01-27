@@ -16,6 +16,7 @@
     },
     "types": "types",
     "dependencies": {
+        "@types/node": "^10.12.18",
         "bn.js": "4.11.8",
         "eth-lib": "0.2.8",
         "ethjs-unit": "^0.1.6",
