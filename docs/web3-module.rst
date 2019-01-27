@@ -25,7 +25,7 @@ The Web3 Module API provides the following ES6 classes:
 Methods
 =======
 
-The Web3.js library does have implemented most of the provided JSON-RPC method nodes do provide.
+The Web3.js library does have implemented most of the provided JSON-RPC methods a Ethereum node does provide.
 If you're interested to know which methods you could extend from then please check out the folders in the code base.
 
 Source: `Web3.js method classes <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/src/methods>`_
@@ -36,7 +36,7 @@ Source: `Web3.js method classes <https://github.com/ethereum/web3.js/tree/1.0/pa
 Subscriptions
 =============
 
-The Web3.js library does have implemented the subscriptions nodes do provide.
+The Web3.js library does have implemented the subscriptions a Ethereum node does provide.
 If you're interested to know which subscriptions you could extend from then please check out the folders in the code base.
 
 Source: `Web3.js subscription classes <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions/src/subscriptions>`_
