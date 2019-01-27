@@ -3,7 +3,7 @@
     "namespace": "ethereum",
     "version": "1.0.0-beta.38",
     "description": "Manages web3 subscriptions. This is an internal package.",
-    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-core-subscriptions",
+    "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions",
     "license": "LGPL-3.0",
     "main": "dist/web3-core-subscriptions.cjs.js",
     "module": "dist/web3-core-subscriptions.esm.js",
