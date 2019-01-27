@@ -124,7 +124,7 @@ of the method class.
 
 .. code-block:: javascript
 
-    class Example extend AbstractWeb3Module {
+    class Example extends AbstractWeb3Module {
         constructor(...) {
             ...
         }
