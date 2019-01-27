@@ -72,7 +72,7 @@ eth.subscribe('pendingTransactions');
 eth.subscribe('pendingTransactions', (error: Error, result: Subscribe<Transaction>) => {});
 
 // $ExpectType Providers
-eth.providers;
+Eth.providers;
 
 // $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
 eth.givenProvider;

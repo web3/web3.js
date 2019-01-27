@@ -25,7 +25,7 @@ const shh = new Shh('https://localhost:5000');
 shh.setProvider('https://localhost:3000');
 
 // $ExpectType Providers
-shh.providers;
+Shh.providers;
 
 // $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
 shh.givenProvider;
