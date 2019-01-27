@@ -154,14 +154,4 @@ describe('Web3Test', () => {
 
         expect(bzz).toBeInstanceOf(Bzz);
     });
-
-    it('calls the static providers property and gets the expected object', () => {
-        const providers = Web3.providers;
-
-        expect(providers.HttpProvider).toBeInstanceOf(Function);
-
-        expect(providers.WebsocketProvider).toBeInstanceOf(Function);
-
-        expect(providers.IpcProvider).toBeInstanceOf(Function);
-    });
 });

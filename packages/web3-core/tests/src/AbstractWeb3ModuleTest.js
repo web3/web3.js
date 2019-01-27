@@ -234,62 +234,31 @@ describe('AbstractWeb3ModuleTest', () => {
         expect(abstractWeb3Module.isSameProvider(provider)).toEqual(true);
     });
 
-    it('gets the providers property and it contains the expected object with his properties', () => {
-        expect(abstractWeb3Module.providers.HttpProvider).toBeInstanceOf(Function);
-
-        expect(abstractWeb3Module.providers.WebsocketProvider).toBeInstanceOf(Function);
-
-        expect(abstractWeb3Module.providers.IpcProvider).toBeInstanceOf(Function);
-    });
-
     it('initiates a HttpProvider with the providers property of the module', () => {
-        new HttpProvider('HOST', {});
-        const httpProviderMock = HttpProvider.mock.instances[0];
-
-        providersModuleFactoryMock.createHttpProvider.mockReturnValueOnce(httpProviderMock);
-
         const url = 'HOST';
-
         const options = {};
 
-        const httpProvider = new abstractWeb3Module.providers.HttpProvider(url, options);
+        const httpProvider = new AbstractWeb3Module.providers.HttpProvider(url, options);
 
-        expect(httpProvider).toEqual(httpProviderMock);
+        expect(httpProvider).toBeInstanceOf(HttpProvider);
 
-        expect(providersModuleFactoryMock.createHttpProvider).toHaveBeenCalledWith(url, options);
     });
 
     it('initiates a WebsocketProvider with the providers property of the module', () => {
-        new WebsocketProvider('HOST', {});
-        const websocketProviderMock = WebsocketProvider.mock.instances[0];
-
-        providersModuleFactoryMock.createWebsocketProvider.mockReturnValueOnce(websocketProviderMock);
-
         const url = 'HOST';
-
         const options = {};
 
-        const websocketProvider = new abstractWeb3Module.providers.WebsocketProvider(url, options);
+        const websocketProvider = new AbstractWeb3Module.providers.WebsocketProvider(url, options);
 
-        expect(websocketProvider).toEqual(websocketProviderMock);
-
-        expect(providersModuleFactoryMock.createWebsocketProvider).toHaveBeenCalledWith(url, options);
+        expect(websocketProvider).toBeInstanceOf(WebsocketProvider);
     });
 
     it('initiates a IpcProvider with the providers property of the module', () => {
-        new IpcProvider('HOST', {});
-        const ipcProviderMock = IpcProvider.mock.instances[0];
-
-        providersModuleFactoryMock.createIpcProvider.mockReturnValueOnce(ipcProviderMock);
-
         const path = 'HOST';
-
         const net = {};
 
-        const ipcProvider = new abstractWeb3Module.providers.IpcProvider(path, net);
+        const ipcProvider = new AbstractWeb3Module.providers.IpcProvider(path, net);
 
-        expect(ipcProvider).toEqual(ipcProviderMock);
-
-        expect(providersModuleFactoryMock.createIpcProvider).toHaveBeenCalledWith(path, net);
+        expect(ipcProvider).toBeInstanceOf(IpcProvider);
     });
 });
