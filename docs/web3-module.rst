@@ -6,7 +6,7 @@
 Web3 Module API
 ===============
 
-The Web3 Module API provides you the possibility to create your own custom Web3 Module with JSON-RPC methods, subscriptions
+The Web3 Module API gives you the possibility to create your own custom Web3 Module with JSON-RPC methods, subscriptions
 or contracts. The provided modules from the Web3 library are also written with the Web3 Module API the core does provide.
 
 The idea of the Web3 Module API is to extend and customize the JSON-RPC methods, contracts and subscriptions to project
@@ -27,13 +27,13 @@ These Web3 Module API provides the following ES6 classes:
 Example
 =======
 
-Clone the web3-examples github repository and copy the following `starter folder https://github.com/ethereum/web3-examples/tree/development/modules/starter-module`_
+Clone the ``web3-examples`` GitHub repository and copy the following `starter folder: https://github.com/ethereum/web3-examples/tree/development/modules/starter-module`_
 
-If you successfully created your folder with the starter files then run ```npm install`` and ``npm run build``.
-This will install all required dependencies and builds the module in the dev mode.
-Further information to the development environment are in the readme file of the example folder.
+If you successfully copied the files in your folder then run ```npm install`` and ``npm run build``.
+This will install all required dependencies and builds the module with the ``development`` flag.
+You can find further information to the development environment in the readme file of the example folder.
 
-These example ES6 classes are included in the example:
+These example ES6 classes are included:
 
 - :ref:`StarterModule <>`_
 - :ref:`StarterModuleMethodFactory <>`_
@@ -52,21 +52,19 @@ Source: `AbstractWeb3Module <https://github.com/ethereum/web3.js/tree/1.0/packag
 
 The ``AbstractWeb3Module`` does have the following constructor parameters:
 
-- ``provider`` - The provider object or string.
-- ``providersModuleFactory`` - The ProvidersModuleFactory which will be used for resolving providers when ``setProvider()`` is executed and also for the constructor.
-- ``methodModuleFactory`` - The MethodModuleFactory is optional and will just be used if the MethodFactory also is given.
-- ``methodFactory`` - The MethodFactory is optional an will just be used if you would like to extend the module with methods.
+- ``provider`` - The provider class or string.
+- ``providersModuleFactory`` - The ``ProvidersModuleFactory`` which will be used to resolve the providers when ``setProvider()`` is executed or in the constructor.
+- ``methodModuleFactory`` - The ``MethodModuleFactory`` is optional and will just be used if the ``MethodFactory`` is given.
+- ``methodFactory`` - The ``MethodFactory`` is optional an is required to extend the module with methods.
 - ``options`` - These are the default ``options``.
 
 
-If you would like to provide the same method API as the Web3.js library is providing and also supporting the latest features of the library.
-Should you pass the ``methodModuleFactory`` and the ``methodFactory`` parameter for extending the module with the methods.
+If you would like to support the latest features of Web3.js and to provide the same API for your module then please pass
+the ``methodModuleFactory`` and the ``methodFactory`` parameter for extending the module with the defined methods.
 
-If you would like to provide your own API for interacting with a JSON-RPC method then you can simply use the method in
-the module without the ``MethodModuleFactory`` and ``MethodFactory`` constructor parameter.
+The parameters ``methodModuleFactory`` and ``methodFactory`` aren't required if you providing your own way to interact with a Web3 method.
 
-These are the available methods and properties the AbstractWeb3Module does provid:
-
+These are the available methods and properties the AbstractWeb3Module does provide:
 
 .. include:: include_package-core.rst
 
@@ -86,7 +84,7 @@ The ``AbstractMethodFactory`` does have the following constructor parameters:
 - ``formatters`` - The formatters object.
 
 The ``AbstractMethodFactory`` class wil be used in the ``MethodProxy`` of the current module for creating the correct method.
-This is the right place to pass additional paramters to a custom method class. Just extend the ``createMethod()`` of
+This is the right place to pass additional parameters to a custom method class. Just extend the ``createMethod()`` of
 the ``AbstractMethodFactory`` and you're able to pass additional parameters to the constructor of your custom method.
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -105,7 +103,7 @@ The ``AbstractMethod`` does have the following constructor parameters:
 - ``utils`` - The Utils object.
 - ``formatters`` - The formatters object.
 
-The ``AbstractMethod`` is the base method object and does provide the basic functionalities and methods for creating a
+The ``AbstractMethod`` is the base method object and does provide the basic functionalities and methods to create a
 Web3.js compatible custom JSON-RPC method.
 
 **The ``execute`` method of the ``AbstractMethod`` class has to get overwritten.**
@@ -118,8 +116,9 @@ You're able to overwrite these methods:
 Usage Example
 *************
 
-This example will show how the parameters handling is working in the ``MethodProxy`` and
-how you can implement a your own way for interacting with a JSON-RPC method.
+This example will show the usage of the ``arguments`` property.
+It's also possible to set the parameters and callback method directly over the ``parameters`` and ``callback`` property
+of the method class.
 
 .. code-block:: javascript
 
@@ -170,7 +169,7 @@ does have the following constructor parameters:
 
 The ``AbstractCallMethod`` is the base method object for all methods expect the "send transaction" methods.
 
-**The ``execute`` method of the ``AbstractCallMethod`` class has not to get overwritten.**
+**Don't overwrite the ``execute`` method of the ``AbstractCallMethod`` class.**
 
 You're able to overwrite these methods:
 
@@ -196,11 +195,11 @@ does have the following constructor parameters:
 - ``parametersAmount`` - The amount of parameters this JSON-RPC method has.
 - ``utils`` - The Utils object.
 - ``formatters`` - The formatters object.
-- ``tranactionConfirmationWorkflow`` - The ``TransactionConfirmationWorkflow`` class which defines the confirmation process.
+- ``tranactionConfirmationWorkflow`` - The ``TransactionConfirmationWorkflow`` class which defines the confirmation process of the transaction.
 
-The ``AbstractSendMethod`` is the base method object for all methods "send transaction" methods.
+The ``AbstractSendMethod`` is the base method object for all "send transaction" methods.
 
-**The ``execute`` method of the ``AbstractSendMethod`` class has not to get overwritten.**
+**Don't overwrite the ``execute`` method of the ``AbstractSendMethod`` class.**
 
 You're able to overwrite these methods:
 
