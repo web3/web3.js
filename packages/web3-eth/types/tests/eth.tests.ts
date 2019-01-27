@@ -86,6 +86,9 @@ eth.defaultAccount;
 // $ExpectType string | number
 eth.defaultBlock;
 
+// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
+eth.currentProvider;
+
 // $ExpectType Promise<string>
 eth.getProtocolVersion();
 // $ExpectType Promise<string>

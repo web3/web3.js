@@ -30,6 +30,9 @@ Web3.givenProvider;
 // $ExpectType Providers
 Web3.providers;
 
+// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
+Web3.currentProvider;
+
 // $ExpectType Utils
 web3.utils;
 
