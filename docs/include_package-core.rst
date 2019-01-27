@@ -1,5 +1,9 @@
 
-Web3 modules options
+Web3 Module
+=====================
+
+
+options
 =====================
 
 An Web3 module does provide several options for configuring the transaction confirmation worklfow or for defining default values.
@@ -42,6 +46,168 @@ Example
     }
 
     const web3 = new Web3('http://localhost:8545', options);
+
+------------------------------------------------------------------------------
+
+.. _web3-module-defaultblock:
+
+defaultBlock
+=====================
+
+.. code-block:: javascript
+
+    web3.defaultBlock
+    web3.eth.defaultBlock
+    web3.shh.defaultBlock
+    ...
+
+The default block which will be used for a requests.
+
+-------
+Returns
+-------
+
+``string|number``: The current value of the defaultBlock property.
+
+------------------------------------------------------------------------------
+
+.. _web3-module-defaultaccount:
+
+defaultAccount
+=====================
+
+.. code-block:: javascript
+
+    web3.defaultAccount
+    web3.eth.defaultAccount
+    web3.shh.defaultAccount
+    ...
+
+The default account which will be used for a requests.
+
+-------
+Returns
+-------
+
+``null|string``: The current value of the defaultAccount property.
+
+------------------------------------------------------------------------------
+
+.. _web3-module-defaultgasprice:
+
+defaultGasPrice
+=====================
+
+.. code-block:: javascript
+
+    web3.defaultGasPrice
+    web3.eth.defaultGasPrice
+    web3.shh.defaultGasPrice
+    ...
+
+The default gas price which will be used for a request.
+
+-------
+Returns
+-------
+
+``string|number``: The current value of the defaultGasPrice property.
+
+
+------------------------------------------------------------------------------
+
+.. _web3-module-defaultgas:
+
+defaultGas
+=====================
+
+.. code-block:: javascript
+
+    web3.defaultGas
+    web3.eth.defaultGas
+    web3.shh.defaultGas
+    ...
+
+The default gas which will be used for a request.
+
+-------
+Returns
+-------
+
+``string|number``: The current value of the defaultGas property.
+
+------------------------------------------------------------------------------
+
+.. _web3-module-transactionblocktimeout:
+
+transactionBlockTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.transactionBlockTimeout
+    web3.eth.transactionBlockTimeout
+    web3.shh.transactionBlockTimeout
+    ...
+
+This can be used with a socket provider and defines the number of blocks until the PromiEvent
+rejects with a timeout error.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionBlockTimeout
+
+------------------------------------------------------------------------------
+
+.. _web3-module-transactionconfirmationblocks:
+
+transactionConfirmationBlocks
+=====================
+
+.. code-block:: javascript
+
+    web3.transactionConfirmationBlocks
+    web3.eth.transactionConfirmationBlocks
+    web3.shh.transactionConfirmationBlocks
+    ...
+
+This defines the number of blocks it requires until a transaction will be handled as confirmed.
+The PromiEvent will resolve with the desired receipt when enough confirmations happened.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionConfirmationBlocks
+
+------------------------------------------------------------------------------
+
+
+.. _web3-module-transactionpollingtimeout:
+
+transactionPollingTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.transactionPollingTimeout
+    web3.eth.transactionPollingTimeout
+    web3.shh.transactionPollingTimeout
+    ...
+
+This defines the polling cycles amount when you send a transaction with the HttpProvider.
+The PromiEvent rejects with a timeout error when the timeout got exceeded. (1 cycle == 1sec.).
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionPollingTimeout
 
 ------------------------------------------------------------------------------
 
@@ -250,167 +416,3 @@ Example
     batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest', callback));
     batch.add(contract.methods.balance(address).call.request({from: '0x0000000000000000000000000000000000000000'}, callback2));
     batch.execute();
-
-------------------------------------------------------------------------------
-
-.. _web3-module-defaultblock:
-
-defaultBlock
-=====================
-
-.. code-block:: javascript
-
-    web3.defaultBlock
-    web3.eth.defaultBlock
-    web3.shh.defaultBlock
-    ...
-
-The default block which will be used for a requests.
-
--------
-Returns
--------
-
-``string|number``: The current value of the defaultBlock property.
-
-------------------------------------------------------------------------------
-
-.. _web3-module-defaultaccount:
-
-defaultAccount
-=====================
-
-.. code-block:: javascript
-
-    web3.defaultAccount
-    web3.eth.defaultAccount
-    web3.shh.defaultAccount
-    ...
-
-The default account which will be used for a requests.
-
--------
-Returns
--------
-
-``null|string``: The current value of the defaultAccount property.
-
-------------------------------------------------------------------------------
-
-.. _web3-module-defaultgasprice:
-
-defaultGasPrice
-=====================
-
-.. code-block:: javascript
-
-    web3.defaultGasPrice
-    web3.eth.defaultGasPrice
-    web3.shh.defaultGasPrice
-    ...
-
-The default gas price which will be used for a request.
-
--------
-Returns
--------
-
-``string|number``: The current value of the defaultGasPrice property.
-
-
-------------------------------------------------------------------------------
-
-.. _web3-module-defaultgas:
-
-defaultGas
-=====================
-
-.. code-block:: javascript
-
-    web3.defaultGas
-    web3.eth.defaultGas
-    web3.shh.defaultGas
-    ...
-
-The default gas which will be used for a request.
-
--------
-Returns
--------
-
-``string|number``: The current value of the defaultGas property.
-
-------------------------------------------------------------------------------
-
-.. _web3-module-transactionblocktimeout:
-
-transactionBlockTimeout
-=====================
-
-.. code-block:: javascript
-
-    web3.transactionBlockTimeout
-    web3.eth.transactionBlockTimeout
-    web3.shh.transactionBlockTimeout
-    ...
-
-This can be used with a socket provider and defines the number of blocks until the PromiEvent
-rejects with a timeout error.
-
-
--------
-Returns
--------
-
-``number``: The current value of transactionBlockTimeout
-
-------------------------------------------------------------------------------
-
-.. _web3-module-transactionconfirmationblocks:
-
-transactionConfirmationBlocks
-=====================
-
-.. code-block:: javascript
-
-    web3.transactionConfirmationBlocks
-    web3.eth.transactionConfirmationBlocks
-    web3.shh.transactionConfirmationBlocks
-    ...
-
-This defines the number of blocks it requires until a transaction will be handled as confirmed.
-The PromiEvent will resolve with the desired receipt when enough confirmations happened.
-
-
--------
-Returns
--------
-
-``number``: The current value of transactionConfirmationBlocks
-
-------------------------------------------------------------------------------
-
-
-.. _web3-module-transactionpollingtimeout:
-
-transactionPollingTimeout
-=====================
-
-.. code-block:: javascript
-
-    web3.transactionPollingTimeout
-    web3.eth.transactionPollingTimeout
-    web3.shh.transactionPollingTimeout
-    ...
-
-This defines the polling cycles amount when you send a transaction with the HttpProvider.
-The PromiEvent rejects with a timeout error when the timeout got exceeded. (1 cycle == 1sec.).
-
-
--------
-Returns
--------
-
-``number``: The current value of transactionPollingTimeout
-
-------------------------------------------------------------------------------
