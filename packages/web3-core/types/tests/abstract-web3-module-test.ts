@@ -24,7 +24,8 @@ const options = {
     timeout: 20000,
     headers: [
         {
-            name: 'Access-Control-Allow-Origin', value: '*'
+            name: 'Access-Control-Allow-Origin',
+            value: '*'
         }
     ]
 };
@@ -67,13 +68,22 @@ abstractWeb3Module.defaultGasPrice;
 abstractWeb3Module.defaultGas;
 
 // $ExpectType Providers
-abstractWeb3Module.providers
+abstractWeb3Module.providers;
+// $ExpectType Providers
+AbstractWeb3Module.providers;
 
 // $ExpectType string | null
 abstractWeb3Module.defaultAccount;
 
 // $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
 abstractWeb3Module.currentProvider;
+// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
+AbstractWeb3Module.currentProvider;
+
+// $ExpectType provider | null
+abstractWeb3Module.givenProvider;
+// $ExpectType provider | null
+AbstractWeb3Module.givenProvider;
 
 // $ExpectType boolean
 abstractWeb3Module.setProvider(httpProvider);

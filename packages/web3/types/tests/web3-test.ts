@@ -24,6 +24,12 @@ Web3.modules;
 
 const web3 = new Web3('https://localhost:5000/');
 
+// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
+Web3.givenProvider;
+
+// $ExpectType Providers
+Web3.providers;
+
 // $ExpectType Utils
 web3.utils;
 
@@ -38,3 +44,6 @@ web3.shh;
 
 // $ExpectType Bzz
 web3.bzz;
+
+// $ExpectType BatchRequest
+new web3.BatchRequest();
