@@ -16,15 +16,14 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
 .. code-block:: javascript
 
     import {Bzz} from 'web3-bzz';
+    import {Web3} from 'web3';
 
     // will autodetect if the "ethereum" object is present and will either connect to the local swarm node, or the swarm-gateways.net.
     // Optional you can give your own provider URL; If no provider URL is given it will use "http://swarm-gateways.net"
-    const bzz = new Bzz(Bzz.givenProvider || 'http://swarm-gateways.net');
+    const bzz = new Bzz(Web3.givenProvider || 'http://swarm-gateways.net');
 
 
     // or using the web3 umbrella package
-
-    import {Web3} from 'web3';
     const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
 
     // -> web3.bzz.currentProvider // if Web3.givenProvider was an ethereum provider it will set: "http://localhost:8500" otherwise it will set: "http://swarm-gateways.net"

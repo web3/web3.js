@@ -172,7 +172,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.setProvider(web3.givenProvider || 'ws://localhost:8546');
+    web3.setProvider(Web3.givenProvider || 'ws://localhost:8546');
 
 
 ------------------------------------------------------------------------------
