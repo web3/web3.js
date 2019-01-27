@@ -4,7 +4,7 @@
 Type
 ****
 
-The static ``readonly`` property Type will be used in the ``AbstractMethodFactory`` class to determine
+The static ``readonly`` property ``Type`` will be used in the ``AbstractMethodFactory`` class to determine
 how the class should get initiated.
 
 =======
@@ -54,7 +54,7 @@ Returns
 execute
 *******
 
-This method will execute the current method and return the desired correct value.
+This method will execute the current method.
 
 ==========
 Parameters
@@ -73,7 +73,7 @@ Returns
 rpcMethod
 *********
 
-This property will return the ``rpcMethod`` ``string``.
+This property will return the ``rpcMethod`` string.
 It will be used for the creation of the JSON-RPC payload object.
 
 =======
@@ -101,9 +101,10 @@ Returns
 parameters
 **********
 
-This property does contain the given ``parameters``. If you would like to use the automaticly detection if a callback exists
-then please use the ``arguments`` property for setting the parameters. This property will be used for validating the given parameters
-length and for the detection of the callback method.
+This property does contain the given ``parameters``.
+
+If you would like to let Web3.js automaticly detect if a callback is given then please use the ``arguments`` property for setting the parameters.
+The ``arguments`` property will be used for validating the given parameters length and for the detection of the callback method.
 
 =======
 Returns
@@ -116,9 +117,10 @@ Returns
 callback
 ********
 
-This property does contain the given ``callback``. If you would like to use the automaticly detection if a callback exists
-then please use the ``arguments`` property for setting the parameters. If the callback property is set with a function then
-it will call the ``callback`` function with an ``error: Error`` and ``response: any`` function parameter.
+This property does contain the given ``callback``.
+
+If you would like to let Web3.js automaticly detect if a callback is given then please use the ``arguments`` property for setting the parameters.
+The ``arguments`` property will be used for validating the given parameters length and for the detection of the callback method.
 
 =======
 Returns
@@ -131,7 +133,7 @@ Returns
 arguments
 *********
 
-This property will be used for detecting the callback function and validation the paramters length.
+This property will be used to detect the callback function and for validating the parameters length.
 The ``arguments`` property will set the ``parameter`` and ``callback`` property.
 
 =======
@@ -146,7 +148,7 @@ isHash
 ******
 
 This method will check if the given value is a string and starts with ``0x``.
-It will be used in several methods for deciding which JSON-RPC method schould get executed.
+It will be used in several methods for deciding which JSON-RPC method should get executed.
 
 =======
 Returns
