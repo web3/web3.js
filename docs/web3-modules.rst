@@ -2,16 +2,16 @@
 
 .. include:: include_announcement.rst
 
-================
- Web3 Module API
-================
+===============
+Web3 Module API
+===============
 
 The Web3 Module API provides you the possibility to create your own custom Web3 Module with JSON-RPC methods, subscriptions
 or contracts. The provided modules from the Web3 library are also written with the Web3 Module API the core does provide.
 
 The idea of the Web3 Module API is to extend and customize the JSON-RPC methods, contracts and subscriptions to project
 specific functions with a similar kind of API the DApp developer knows from the Web3.js library. It should be possible
-to create complex contract API's and tools for the development of a DApp.
+to create complex contract APIs and tools for the development of a DApp.
 
 These Web3 Module API provides the following ES6 classes:
 
@@ -90,11 +90,18 @@ The ``AbstractMethod`` does have the following constructor parameters:
 The ``AbstractMethod`` is the base method object and does provide the basic functionalities and methods for creating a
 Web3.js compatible custom JSON-RPC method.
 
+**The ``execute`` method of the ``AbstractMethod`` class has to be overwritten.**
+
+The following methods are optional and don't have to get overwritten:
+
+- :ref:`afterExecution <web3-abstract-method-after-execution>`
+- :ref:`beforeExecution <web3-abstract-method-before-execution>`
+
 Usage Example
 *************
 
 This example will show how the parameters handling is working in the ``MethodProxy`` and
-how you can implement a custom way for interacting with a JSON-RPC method.
+how you can implement a your own way for interacting with a JSON-RPC method.
 
 .. code-block:: javascript
 
@@ -122,8 +129,9 @@ how you can implement a custom way for interacting with a JSON-RPC method.
     };
     > "result"
 
-
 The AbstractMethod object does have the following methods and properties:
+
+.. _web3-abstract-method-before-execution:
 
 beforeExecution
 ***************
@@ -138,6 +146,8 @@ Parameters
 - ``moduleInstance: AbstractWeb3Module`` - The current ``AbstractWeb3Module``.
 
 ------------------------------------------------------------------------------------------------------------------------
+
+.. _web3-abstract-method-after-execution:
 
 afterExecution
 **************
@@ -210,7 +220,7 @@ parameters
 **********
 
 This property does contain the given ``parameters``. If you would like to use the automaticly detection if a callback exists
-then please use the `àrguments`` property for setting the parameters. This property will be used for validating the given parameters
+then please use the ``arguments`` property for setting the parameters. This property will be used for validating the given parameters
 length and for the detection of the callback method.
 
 =======
@@ -225,7 +235,7 @@ callback
 ********
 
 This property does contain the given ``callback``. If you would like to use the automaticly detection if a callback exists
-then please use the `àrguments`` property for setting the parameters. If the callback property is set with a function then
+then please use the ``arguments`` property for setting the parameters. If the callback property is set with a function then
 it will call the ``callback`` function with an ``error: Error`` and ``response: any`` function parameter.
 
 =======
