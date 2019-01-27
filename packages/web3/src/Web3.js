@@ -23,7 +23,7 @@
 // TODO: objects and do them the functional way because of the tree shaking.
 // TODO: Move the folders back to simpler structure e.g.: "packages/core/<methods|subscriptions|providers>"
 import {AbstractWeb3Module} from 'web3-core';
-import {ProvidersModuleFactory, HttpProvider, WebsocketProvider, IpcProvider} from 'web3-providers';
+import {ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {Eth} from 'web3-eth';
 import {Shh} from 'web3-shh';
@@ -270,19 +270,6 @@ export default class Web3 extends AbstractWeb3Module {
             Bzz: (provider) => {
                 return new Bzz(provider);
             }
-        };
-    }
-
-    /**
-     * Returns an object with all providers of web3
-     *
-     * @returns {Object}
-     */
-    static get providers() {
-        return {
-            HttpProvider,
-            WebsocketProvider,
-            IpcProvider
         };
     }
 }

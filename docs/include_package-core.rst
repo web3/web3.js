@@ -106,10 +106,8 @@ providers
 
 .. code-block:: javascript
 
-    web3.providers
-    web3.eth.providers
-    web3.shh.providers
-    web3.bzz.providers
+    Web3.providers
+    Eth.providers
     ...
 
 Contains the current available providers.
@@ -152,7 +150,7 @@ givenProvider
 
 .. code-block:: javascript
 
-    web3.givenProvider
+    Web3.givenProvider
     web3.eth.givenProvider
     web3.shh.givenProvider
     web3.bzz.givenProvider
