@@ -56,6 +56,7 @@
     },
     "types": "types",
     "dependencies": {
+        "@types/node": "^10.12.18",
         "web3-bzz": "1.0.0-beta.38",
         "web3-core": "1.0.0-beta.38",
         "web3-core-helpers": "1.0.0-beta.38",
