@@ -54,16 +54,15 @@
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">web3-bzz</span></code> package allows you to interact swarm the decentralized file store.
 For more see the <a class="reference external" href="http://swarm-guide.readthedocs.io/en/latest/">Swarm Docs</a>.</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="p">{</span><span class="nx">Bzz</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;web3-bzz&#39;</span><span class="p">;</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nx">Web3</span> <span class="nx">from</span> <span class="s1">&#39;web3&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span><span class="nx">Bzz</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;web3-bzz&#39;</span><span class="p">;</span>
 
 <span class="c1">// will autodetect if the &quot;ethereum&quot; object is present and will either connect to the local swarm node, or the swarm-gateways.net.</span>
 <span class="c1">// Optional you can give your own provider URL; If no provider URL is given it will use &quot;http://swarm-gateways.net&quot;</span>
-<span class="kr">const</span> <span class="nx">bzz</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bzz</span><span class="p">(</span><span class="nx">Bzz</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;http://swarm-gateways.net&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">bzz</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bzz</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;http://swarm-gateways.net&#39;</span><span class="p">);</span>
 
 
 <span class="c1">// or using the web3 umbrella package</span>
-
-<span class="kr">import</span> <span class="p">{</span><span class="nx">Web3</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;web3&#39;</span><span class="p">;</span>
 <span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://some.local-or-remote.node:8546&#39;</span><span class="p">);</span>
 
 <span class="c1">// -&gt; web3.bzz.currentProvider // if Web3.givenProvider was an ethereum provider it will set: &quot;http://localhost:8500&quot; otherwise it will set: &quot;http://swarm-gateways.net&quot;</span>
