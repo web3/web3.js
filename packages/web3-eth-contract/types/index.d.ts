@@ -67,7 +67,7 @@ export interface DeployOptions {
 export interface DeployTransactionResponse {
     array: any[];
 
-    send(options: SendOptions, callback?: (err: Error, contracts: Contract) => void): () => PromiEvent<Contract>;
+    send(options: SendOptions, callback?: (err: Error, contracts: Contract) => void): PromiEvent<Contract>;
 
     estimateGas(options: EstimateGasOptions, callback?: (err: Error, gas: number) => void): Promise<number>;
 
