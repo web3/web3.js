@@ -1,5 +1,5 @@
 
-Web3 Module Options
+Web3 modules options
 =====================
 
 An Web3 module does provide several options for configuring the transaction confirmation worklfow or for defining default values.

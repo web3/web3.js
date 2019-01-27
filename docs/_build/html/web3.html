@@ -96,60 +96,8 @@
 </div>
 </div>
 <hr class="docutils" />
-<div class="section" id="web3-class">
-<h2>Web3 Class<a class="headerlink" href="#web3-class" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div>The Web3 class is an wrapper to house all Ethereum related modules.</div></blockquote>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="p">{</span><span class="nx">Web3</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;web3&#39;</span><span class="p">;</span>
-
-<span class="c1">// &quot;Web3.providers.givenProvider&quot; will be set if in an Ethereum supported browser.</span>
-<span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://some.local-or-remote.node:8546&#39;</span><span class="p">);</span>
-
-<span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span>
-<span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span>
-<span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span>
-<span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span>
-<span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">version</span>
-</pre></div>
-</div>
-</div>
-<hr class="docutils" />
-<div class="section" id="version">
-<h2>version<a class="headerlink" href="#version" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div>Property of the Web3 class.</div></blockquote>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">Web3</span><span class="p">.</span><span class="nx">version</span>
-<span class="nx">web3</span><span class="p">.</span><span class="nx">version</span>
-</pre></div>
-</div>
-<p>Contains the version of the <code class="docutils literal notranslate"><span class="pre">web3</span></code> wrapper class.</p>
-<div class="section" id="id1">
-<h3>Returns<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The current version.</p>
-</div>
-<div class="section" id="id2">
-<h3>Example<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">version</span><span class="p">;</span>
-<span class="o">&gt;</span> <span class="s2">&quot;1.0.0&quot;</span>
-</pre></div>
-</div>
-</div>
-</div>
-<hr class="docutils" />
-<div class="section" id="utils">
-<h2>utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div>Static property of the Web3 class.</div></blockquote>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">Web3</span><span class="p">.</span><span class="nx">utils</span>
-
-<span class="nx">Utility</span> <span class="nx">functions</span> <span class="nx">are</span> <span class="nx">also</span> <span class="nx">exposes</span> <span class="nx">on</span> <span class="nx">the</span> <span class="sb">``</span><span class="nx">Web3</span><span class="sb">``</span> <span class="kr">class</span> <span class="nx">object</span> <span class="nx">directly</span><span class="p">.</span>
-</pre></div>
-</div>
-<p>See <a class="reference internal" href="web3-utils.html#utils"><span class="std std-ref">web3.utils</span></a> for more.</p>
-</div>
-<hr class="docutils" />
-<div class="section" id="web3-module-options">
-<h2>Web3 Module Options<a class="headerlink" href="#web3-module-options" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="web3-modules-options">
+<h2>Web3 modules options<a class="headerlink" href="#web3-modules-options" title="Permalink to this headline">¶</a></h2>
 <p>An Web3 module does provide several options for configuring the transaction confirmation worklfow or for defining default values.
 These are the currently available option properties on a Web3 module:</p>
 <div class="section" id="module-options">
@@ -162,8 +110,8 @@ These are the currently available option properties on a Web3 module:</p>
 <p><a class="reference internal" href="web3-shh.html#web3-module-transactionconfirmationblocks"><span class="std std-ref">transactionConfirmationBlocks</span></a></p>
 <p><a class="reference internal" href="web3-shh.html#web3-module-transactionpollingtimeout"><span class="std std-ref">transactionPollingTimeout</span></a></p>
 </div>
-<div class="section" id="id3">
-<h3>Example<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>Example<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nx">Web3</span> <span class="nx">from</span> <span class="s1">&#39;web3&#39;</span><span class="p">;</span>
 
 <span class="kr">const</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
@@ -203,12 +151,12 @@ These are the currently available option properties on a Web3 module:</p>
 <li><code class="docutils literal notranslate"><span class="pre">Net</span></code> - <code class="docutils literal notranslate"><span class="pre">net</span></code>: (optional) the node.js Net package. This is only required for the IPC provider.</li>
 </ol>
 </div>
-<div class="section" id="id4">
-<h3>Returns<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Returns<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
 </div>
-<div class="section" id="id5">
-<h3>Example<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Example<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nx">Web3</span> <span class="nx">from</span> <span class="s1">&#39;web3&#39;</span><span class="p">;</span>
 
 <span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="s1">&#39;http://localhost:8545&#39;</span><span class="p">);</span>
@@ -253,8 +201,8 @@ These are the currently available option properties on a Web3 module:</p>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id6">
-<h3>Example<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Example<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">Web3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3&#39;</span><span class="p">);</span>
 <span class="c1">// use the given Provider, e.g in Mist, or instantiate a new websocket provider</span>
 <span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">);</span>
@@ -285,12 +233,12 @@ These are the currently available option properties on a Web3 module:</p>
 </div>
 <p>When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser.
 Will return the given provider by the (browser) environment, otherwise <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p>
-<div class="section" id="id7">
-<h3>Returns<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Object</span></code>: The given provider set or <code class="docutils literal notranslate"><span class="pre">null</span></code>;</p>
 </div>
-<div class="section" id="id8">
-<h3>Example<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Example<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -307,12 +255,12 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>Will return the current provider, otherwise <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p>
-<div class="section" id="id9">
-<h3>Returns<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Object</span></code>: The current provider set or <code class="docutils literal notranslate"><span class="pre">null</span></code>;</p>
 </div>
-<div class="section" id="id10">
-<h3>Example<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>Example<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">web3</span><span class="p">.</span><span class="nx">currentProvider</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">web3</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="s1">&#39;http://localhost:8545&#39;</span><span class="p">);</span>
 <span class="p">}</span>
@@ -330,12 +278,12 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>Class to create and execute batch requests.</p>
-<div class="section" id="id11">
-<h3>Parameters<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h3>Parameters<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <p>none</p>
 </div>
-<div class="section" id="id12">
-<h3>Returns<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3>Returns<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Object</span></code>: With the following methods:</p>
 <blockquote>
 <div><ul class="simple">
@@ -344,8 +292,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id13">
-<h3>Example<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3>Example<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">contract</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">Contract</span><span class="p">(</span><span class="nx">abi</span><span class="p">,</span> <span class="nx">address</span><span class="p">);</span>
 
 <span class="kr">const</span> <span class="nx">batch</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">();</span>
@@ -366,8 +314,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>The default block which will be used for a requests.</p>
-<div class="section" id="id14">
-<h3>Returns<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3>Returns<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultBlock property.</p>
 <hr class="docutils" />
 </div>
@@ -381,8 +329,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>The default account which will be used for a requests.</p>
-<div class="section" id="id15">
-<h3>Returns<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3>Returns<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">null|string</span></code>: The current value of the defaultAccount property.</p>
 <hr class="docutils" />
 </div>
@@ -396,8 +344,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>The default gas price which will be used for a request.</p>
-<div class="section" id="id16">
-<h3>Returns<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>Returns<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultGasPrice property.</p>
 <hr class="docutils" />
 </div>
@@ -411,8 +359,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>The default gas which will be used for a request.</p>
-<div class="section" id="id17">
-<h3>Returns<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h3>Returns<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultGas property.</p>
 <hr class="docutils" />
 </div>
@@ -427,8 +375,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </div>
 <p>This can be used with a socket provider and defines the number of blocks until the PromiEvent
 rejects with a timeout error.</p>
-<div class="section" id="id18">
-<h3>Returns<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h3>Returns<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionBlockTimeout</p>
 <hr class="docutils" />
 </div>
@@ -443,8 +391,8 @@ rejects with a timeout error.</p>
 </div>
 <p>This defines the number of blocks it requires until a transaction will be handled as confirmed.
 The PromiEvent will resolve with the desired receipt when enough confirmations happened.</p>
-<div class="section" id="id19">
-<h3>Returns<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id17">
+<h3>Returns<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionConfirmationBlocks</p>
 <hr class="docutils" />
 </div>
@@ -459,12 +407,63 @@ The PromiEvent will resolve with the desired receipt when enough confirmations h
 </div>
 <p>This defines the polling cycles amount when you send a transaction with the HttpProvider.
 The PromiEvent rejects with a timeout error when the timeout got exceeded. (1 cycle == 1sec.).</p>
-<div class="section" id="id20">
-<h3>Returns<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id18">
+<h3>Returns<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionPollingTimeout</p>
 <hr class="docutils" />
-<hr class="docutils" />
 </div>
+</div>
+<hr class="docutils" />
+<div class="section" id="web3-class">
+<h2>Web3 Class<a class="headerlink" href="#web3-class" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>The Web3 class is an wrapper to house all Ethereum related modules.</div></blockquote>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="p">{</span><span class="nx">Web3</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;web3&#39;</span><span class="p">;</span>
+
+<span class="c1">// &quot;Web3.providers.givenProvider&quot; will be set if in an Ethereum supported browser.</span>
+<span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://some.local-or-remote.node:8546&#39;</span><span class="p">);</span>
+
+<span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span>
+<span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span>
+<span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span>
+<span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span>
+<span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">version</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="version">
+<h2>version<a class="headerlink" href="#version" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>Property of the Web3 class.</div></blockquote>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">Web3</span><span class="p">.</span><span class="nx">version</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">version</span>
+</pre></div>
+</div>
+<p>Contains the version of the <code class="docutils literal notranslate"><span class="pre">web3</span></code> wrapper class.</p>
+<div class="section" id="id19">
+<h3>Returns<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code>: The current version.</p>
+</div>
+<div class="section" id="id20">
+<h3>Example<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">version</span><span class="p">;</span>
+<span class="o">&gt;</span> <span class="s2">&quot;1.0.0&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="utils">
+<h2>utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>Static property of the Web3 class.</div></blockquote>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">Web3</span><span class="p">.</span><span class="nx">utils</span>
+
+<span class="nx">Utility</span> <span class="nx">functions</span> <span class="nx">are</span> <span class="nx">also</span> <span class="nx">exposes</span> <span class="nx">on</span> <span class="nx">the</span> <span class="sb">``</span><span class="nx">Web3</span><span class="sb">``</span> <span class="kr">class</span> <span class="nx">object</span> <span class="nx">directly</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="web3-utils.html#utils"><span class="std std-ref">web3.utils</span></a> for more.</p>
 </div>
 </div>
 
@@ -482,73 +481,73 @@ The PromiEvent rejects with a timeout error when the timeout got exceeded. (1 cy
 <li><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#web3-class">Web3 Class</a></li>
-<li><a class="reference internal" href="#version">version</a><ul>
-<li><a class="reference internal" href="#id1">Returns</a></li>
-<li><a class="reference internal" href="#id2">Example</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#utils">utils</a></li>
-<li><a class="reference internal" href="#web3-module-options">Web3 Module Options</a><ul>
+<li><a class="reference internal" href="#web3-modules-options">Web3 modules options</a><ul>
 <li><a class="reference internal" href="#module-options">Module Options</a></li>
-<li><a class="reference internal" href="#id3">Example</a></li>
+<li><a class="reference internal" href="#id1">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#setprovider">setProvider</a><ul>
 <li><a class="reference internal" href="#parameters">Parameters</a></li>
-<li><a class="reference internal" href="#id4">Returns</a></li>
-<li><a class="reference internal" href="#id5">Example</a></li>
+<li><a class="reference internal" href="#id2">Returns</a></li>
+<li><a class="reference internal" href="#id3">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#providers">providers</a><ul>
 <li><a class="reference internal" href="#value">Value</a></li>
-<li><a class="reference internal" href="#id6">Example</a></li>
+<li><a class="reference internal" href="#id4">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#givenprovider">givenProvider</a><ul>
+<li><a class="reference internal" href="#id5">Returns</a></li>
+<li><a class="reference internal" href="#id6">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#currentprovider">currentProvider</a><ul>
 <li><a class="reference internal" href="#id7">Returns</a></li>
 <li><a class="reference internal" href="#id8">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#currentprovider">currentProvider</a><ul>
-<li><a class="reference internal" href="#id9">Returns</a></li>
-<li><a class="reference internal" href="#id10">Example</a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#batchrequest">BatchRequest</a><ul>
-<li><a class="reference internal" href="#id11">Parameters</a></li>
-<li><a class="reference internal" href="#id12">Returns</a></li>
-<li><a class="reference internal" href="#id13">Example</a></li>
+<li><a class="reference internal" href="#id9">Parameters</a></li>
+<li><a class="reference internal" href="#id10">Returns</a></li>
+<li><a class="reference internal" href="#id11">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#defaultblock">defaultBlock</a><ul>
-<li><a class="reference internal" href="#id14">Returns</a></li>
+<li><a class="reference internal" href="#id12">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#defaultaccount">defaultAccount</a><ul>
-<li><a class="reference internal" href="#id15">Returns</a></li>
+<li><a class="reference internal" href="#id13">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#defaultgasprice">defaultGasPrice</a><ul>
-<li><a class="reference internal" href="#id16">Returns</a></li>
+<li><a class="reference internal" href="#id14">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#defaultgas">defaultGas</a><ul>
-<li><a class="reference internal" href="#id17">Returns</a></li>
+<li><a class="reference internal" href="#id15">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#transactionblocktimeout">transactionBlockTimeout</a><ul>
-<li><a class="reference internal" href="#id18">Returns</a></li>
+<li><a class="reference internal" href="#id16">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#transactionconfirmationblocks">transactionConfirmationBlocks</a><ul>
-<li><a class="reference internal" href="#id19">Returns</a></li>
+<li><a class="reference internal" href="#id17">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#transactionpollingtimeout">transactionPollingTimeout</a><ul>
-<li><a class="reference internal" href="#id20">Returns</a></li>
+<li><a class="reference internal" href="#id18">Returns</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#web3-class">Web3 Class</a></li>
+<li><a class="reference internal" href="#version">version</a><ul>
+<li><a class="reference internal" href="#id19">Returns</a></li>
+<li><a class="reference internal" href="#id20">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#utils">utils</a></li>
 </ul>
 </li>
 </ul>
