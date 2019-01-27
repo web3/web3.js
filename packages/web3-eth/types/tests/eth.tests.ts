@@ -74,7 +74,7 @@ eth.subscribe('pendingTransactions', (error: Error, result: Subscribe<Transactio
 // $ExpectType Providers
 eth.providers;
 
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | null
+// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
 eth.givenProvider;
 
 // $ExpectType BatchRequest
