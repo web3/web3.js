@@ -71,7 +71,7 @@ export default class AbstractWeb3Module {
      *
      * @property defaultBlock
      *
-     * @returns {null|String}
+     * @returns {String|Number}
      */
     get defaultBlock() {
         return this._defaultBlock;
