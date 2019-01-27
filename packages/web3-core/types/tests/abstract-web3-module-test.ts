@@ -80,9 +80,9 @@ abstractWeb3Module.currentProvider;
 // $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
 AbstractWeb3Module.currentProvider;
 
-// $ExpectType provider | null
+// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
 abstractWeb3Module.givenProvider;
-// $ExpectType provider | null
+// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
 AbstractWeb3Module.givenProvider;
 
 // $ExpectType boolean
