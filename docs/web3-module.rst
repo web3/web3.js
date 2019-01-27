@@ -21,7 +21,25 @@ These Web3 Module API provides the following ES6 classes:
 - :ref:`AbstractCallMethod <web3-abstract-call-method>`
 - :ref:`AbstractSendMethod <web3-abstract-send-method>`
 
+------------------------------------------------------------------------------------------------------------------------
 
+=======
+Example
+=======
+
+Clone the web3-examples github repository and copy the following `starter folder https://github.com/ethereum/web3-examples/tree/development/modules/starter-module`_
+
+If you successfully created your folder with the starter files then run ```npm install`` and ``npm run build``.
+This will install all required dependencies and builds the module in the dev mode.
+Further information to the development environment are in the readme file of the example folder.
+
+These example ES6 classes are included in the example:
+
+- :ref:`StarterModule <>`_
+- :ref:`StarterModuleMethodFactory <>`_
+- :ref:`StarterMethod <>`_
+- :ref:`StarterContract <>`_
+- :ref:`StarterSubscription <>`_
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -30,7 +48,7 @@ These Web3 Module API provides the following ES6 classes:
 AbstractWeb3Module
 ==================
 
-Source:
+Source: `AbstractWeb3Module <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractWeb3Module.js>`_
 
 The ``AbstractWeb3Module`` does have the following constructor parameters:
 
@@ -59,7 +77,7 @@ These are the available methods and properties the AbstractWeb3Module does provi
 AbstractMethodFactory
 =====================
 
-Source:
+Source: `AbstractMethodFactory <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractMethodFactory.js>`_
 
 The ``AbstractMethodFactory`` does have the following constructor parameters:
 
@@ -78,7 +96,7 @@ the ``AbstractMethodFactory`` and you're able to pass additional parameters to t
 AbstractMethod
 ==============
 
-Source:
+Source: `AbstractMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractMethod.js>`_
 
 The ``AbstractMethod`` does have the following constructor parameters:
 
@@ -92,7 +110,7 @@ Web3.js compatible custom JSON-RPC method.
 
 **The ``execute`` method of the ``AbstractMethod`` class has to get overwritten.**
 
-You are able to overwrite these methods:
+You're able to overwrite these methods:
 
 - :ref:`afterExecution <web3-abstract-method-after-execution>`
 - :ref:`beforeExecution <web3-abstract-method-before-execution>`
@@ -135,12 +153,12 @@ The AbstractMethod object does have the following methods and properties:
 
 ------------------------------------------------------------------------------------------------------------------------
 
-.. _web3-abstract-method:
+.. _web3-abstract-call-method:
 
 AbstractCallMethod
 ==============
 
-Source:
+Source: `AbstractCallMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractCallMethod.js>`_
 
 The ``AbstractCallMethod`` extends from the :ref:`AbstractMethod <web3-module-abstract-method` and
 does have the following constructor parameters:
@@ -152,9 +170,9 @@ does have the following constructor parameters:
 
 The ``AbstractCallMethod`` is the base method object for all methods expect the "send transaction" methods.
 
-**The ``execute`` method of the ``AbstractMethod`` class has not to get overwritten.**
+**The ``execute`` method of the ``AbstractCallMethod`` class has not to get overwritten.**
 
-You are able to overwrite these methods:
+You're able to overwrite these methods:
 
 - :ref:`afterExecution <web3-abstract-method-after-execution>`
 - :ref:`beforeExecution <web3-abstract-method-before-execution>`
@@ -163,3 +181,30 @@ You are able to overwrite these methods:
 
 
 ------------------------------------------------------------------------------------------------------------------------
+
+.. _web3-abstract-send-method:
+
+AbstractSendMethod
+==============
+
+Source: `AbstractSendMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractSendMethod.js>`_
+
+The ``AbstractSendMethod`` extends from the :ref:`AbstractMethod <web3-module-abstract-method` and
+does have the following constructor parameters:
+
+- ``rpcMethod`` - The JSON-RPC method name.
+- ``parametersAmount`` - The amount of parameters this JSON-RPC method has.
+- ``utils`` - The Utils object.
+- ``formatters`` - The formatters object.
+- ``tranactionConfirmationWorkflow`` - The ``TransactionConfirmationWorkflow`` class which defines the confirmation process.
+
+The ``AbstractSendMethod`` is the base method object for all methods "send transaction" methods.
+
+**The ``execute`` method of the ``AbstractSendMethod`` class has not to get overwritten.**
+
+You're able to overwrite these methods:
+
+- :ref:`afterExecution <web3-abstract-method-after-execution>`
+- :ref:`beforeExecution <web3-abstract-method-before-execution>`
+
+.. include:: web3-module-abstract-method-class-reference.rst
