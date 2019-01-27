@@ -19,6 +19,7 @@
 
 import {provider} from 'web3-providers';
 import {AbiItem, BN} from 'web3-utils';
+import {PromiEvent} from 'web3-core';
 
 export class Contract {
     constructor(
@@ -66,15 +67,17 @@ export interface DeployOptions {
 export interface DeployTransactionResponse {
     array: any[];
 
-    send(options: SendOptions): () => Promise<Contract>;
+    send(options: SendOptions, callback?: (err: Error, contracts: Contract) => void): () => PromiEvent<Contract>;
 
-    estimateGas(options: EstimateGasOptions, callback?: (err: Error, gas: number) => void): void;
+    estimateGas(options: EstimateGasOptions, callback?: (err: Error, gas: number) => void): Promise<number>;
 
-    estimateGas(callback: (err: Error, gas: number) => void): void;
+    estimateGas(callback: (err: Error, gas: number) => void): Promise<number>;
 
-    estimateGas(options: EstimateGasOptions, callback: (err: Error, gas: number) => void): void;
+    estimateGas(options: EstimateGasOptions, callback: (err: Error, gas: number) => void): Promise<number>;
 
-    estimateGas(options: EstimateGasOptions): void;
+    estimateGas(options: EstimateGasOptions): Promise<number>;
+
+    estimateGas(): Promise<number>;
 
     encodeABI(): string;
 }
@@ -82,13 +85,13 @@ export interface DeployTransactionResponse {
 export interface SendOptions {
     from: string;
     gasPrice?: string;
-    gas: number;
+    gas?: number;
     value?: number | string | BN;
 }
 
 export interface EstimateGasOptions {
     from?: string;
-    gas: number;
+    gas?: number;
     value?: number | string | BN;
 }
 
