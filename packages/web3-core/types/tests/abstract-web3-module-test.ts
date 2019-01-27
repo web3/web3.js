@@ -78,13 +78,9 @@ abstractWeb3Module.defaultAccount;
 
 // $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
 abstractWeb3Module.currentProvider;
-// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
-AbstractWeb3Module.currentProvider;
 
 // $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
 abstractWeb3Module.givenProvider;
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
-AbstractWeb3Module.givenProvider;
 
 // $ExpectType boolean
 abstractWeb3Module.setProvider(httpProvider);

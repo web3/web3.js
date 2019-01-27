@@ -27,8 +27,6 @@ import {
     provider,
     ProvidersModuleFactory,
     WebsocketProvider,
-    BatchRequest,
-    HttpProviderOptions,
     WebsocketProviderOptions
 } from 'web3-providers';
 
