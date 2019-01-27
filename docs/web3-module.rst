@@ -161,13 +161,13 @@ of the method class.
     const example = new Example(...);
 
     const response = await example.myMethod('parameter').
-    > "result"
+    // > "result"
 
 
     example.myMethod('parameters', (error, response) => {
         console.log(response);
     };
-    > "result"
+    // > "result"
 
 
 The AbstractMethod class does have the following methods and properties:
@@ -202,7 +202,6 @@ You're able to overwrite these methods:
 
 .. include:: web3-module-abstract-method-class-reference.rst
 
-
 ------------------------------------------------------------------------------------------------------------------------
 
 .. _web3-module-abstract-send-method:
@@ -231,7 +230,6 @@ You're able to overwrite these methods:
 - :ref:`beforeExecution <web3-abstract-method-before-execution>`
 
 .. include:: web3-module-abstract-method-class-reference.rst
-
 
 ------------------------------------------------------------------------------------------------------------------------
 
