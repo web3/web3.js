@@ -343,8 +343,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 <hr class="docutils" />
 </div>
 </div>
-<div class="section" id="web3-module-defaultaccount">
-<span id="id12"></span><h2>defaultBlock<a class="headerlink" href="#web3-module-defaultaccount" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="defaultaccount">
+<span id="web3-module-defaultaccount"></span><h2>defaultAccount<a class="headerlink" href="#defaultaccount" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">defaultAccount</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultAccount</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">defaultAccount</span>
@@ -352,8 +352,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>The default account which will be used for a requests.</p>
-<div class="section" id="id13">
-<h3>Returns<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3>Returns<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">null|string</span></code>: The current value of the defaultAccount property.</p>
 <hr class="docutils" />
 </div>
@@ -367,8 +367,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>The default gas price which will be used for a request.</p>
-<div class="section" id="id14">
-<h3>Returns<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3>Returns<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultGasPrice property.</p>
 <hr class="docutils" />
 </div>
@@ -382,8 +382,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>The default gas which will be used for a request.</p>
-<div class="section" id="id15">
-<h3>Returns<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>Returns<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultGas property.</p>
 <hr class="docutils" />
 </div>
@@ -398,8 +398,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </div>
 <p>This can be used with a socket provider and defines the number of blocks until the PromiEvent
 rejects with a timeout error.</p>
-<div class="section" id="id16">
-<h3>Returns<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h3>Returns<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionBlockTimeout</p>
 <hr class="docutils" />
 </div>
@@ -414,8 +414,8 @@ rejects with a timeout error.</p>
 </div>
 <p>This defines the number of blocks it requires until a transaction will be handled as confirmed.
 The PromiEvent will resolve with the desired receipt when enough confirmations happened.</p>
-<div class="section" id="id17">
-<h3>Returns<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h3>Returns<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionConfirmationBlocks</p>
 <hr class="docutils" />
 </div>
@@ -430,15 +430,15 @@ The PromiEvent will resolve with the desired receipt when enough confirmations h
 </div>
 <p>This defines the polling cycles amount when you send a transaction with the HttpProvider.
 The PromiEvent rejects with a timeout error when the timeout got exceeded. (1 cycle == 1sec.).</p>
-<div class="section" id="id18">
-<h3>Returns<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id17">
+<h3>Returns<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionPollingTimeout</p>
 <hr class="docutils" />
 <hr class="docutils" />
 </div>
 </div>
-<div class="section" id="defaultaccount">
-<span id="eth-defaultaccount"></span><h2>defaultAccount<a class="headerlink" href="#defaultaccount" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="eth-defaultaccount">
+<span id="id18"></span><h2>defaultAccount<a class="headerlink" href="#eth-defaultaccount" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultAccount</span>
 </pre></div>
 </div>
@@ -1571,31 +1571,31 @@ This method will only work if you’re using the injected provider from a applic
 <li><a class="reference internal" href="#id11">Returns</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#web3-module-defaultaccount">defaultBlock</a><ul>
-<li><a class="reference internal" href="#id13">Returns</a></li>
+<li><a class="reference internal" href="#defaultaccount">defaultAccount</a><ul>
+<li><a class="reference internal" href="#id12">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#defaultgasprice">defaultGasPrice</a><ul>
-<li><a class="reference internal" href="#id14">Returns</a></li>
+<li><a class="reference internal" href="#id13">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#defaultgas">defaultGas</a><ul>
-<li><a class="reference internal" href="#id15">Returns</a></li>
+<li><a class="reference internal" href="#id14">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#transactionblocktimeout">transactionBlockTimeout</a><ul>
-<li><a class="reference internal" href="#id16">Returns</a></li>
+<li><a class="reference internal" href="#id15">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#transactionconfirmationblocks">transactionConfirmationBlocks</a><ul>
-<li><a class="reference internal" href="#id17">Returns</a></li>
+<li><a class="reference internal" href="#id16">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#transactionpollingtimeout">transactionPollingTimeout</a><ul>
-<li><a class="reference internal" href="#id18">Returns</a></li>
+<li><a class="reference internal" href="#id17">Returns</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#defaultaccount">defaultAccount</a><ul>
+<li><a class="reference internal" href="#eth-defaultaccount">defaultAccount</a><ul>
 <li><a class="reference internal" href="#property">Property</a></li>
 <li><a class="reference internal" href="#id19">Example</a></li>
 </ul>

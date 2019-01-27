@@ -291,8 +291,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 <hr class="docutils" />
 </div>
 </div>
-<div class="section" id="web3-module-defaultaccount">
-<span id="id11"></span><h2>defaultBlock<a class="headerlink" href="#web3-module-defaultaccount" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="defaultaccount">
+<span id="web3-module-defaultaccount"></span><h2>defaultAccount<a class="headerlink" href="#defaultaccount" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">defaultAccount</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultAccount</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">defaultAccount</span>
@@ -300,8 +300,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>The default account which will be used for a requests.</p>
-<div class="section" id="id12">
-<h3>Returns<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3>Returns<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">null|string</span></code>: The current value of the defaultAccount property.</p>
 <hr class="docutils" />
 </div>
@@ -315,8 +315,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>The default gas price which will be used for a request.</p>
-<div class="section" id="id13">
-<h3>Returns<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3>Returns<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultGasPrice property.</p>
 <hr class="docutils" />
 </div>
@@ -330,8 +330,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>The default gas which will be used for a request.</p>
-<div class="section" id="id14">
-<h3>Returns<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3>Returns<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultGas property.</p>
 <hr class="docutils" />
 </div>
@@ -346,8 +346,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </div>
 <p>This can be used with a socket provider and defines the number of blocks until the PromiEvent
 rejects with a timeout error.</p>
-<div class="section" id="id15">
-<h3>Returns<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>Returns<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionBlockTimeout</p>
 <hr class="docutils" />
 </div>
@@ -362,8 +362,8 @@ rejects with a timeout error.</p>
 </div>
 <p>This defines the number of blocks it requires until a transaction will be handled as confirmed.
 The PromiEvent will resolve with the desired receipt when enough confirmations happened.</p>
-<div class="section" id="id16">
-<h3>Returns<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h3>Returns<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionConfirmationBlocks</p>
 <hr class="docutils" />
 </div>
@@ -378,8 +378,8 @@ The PromiEvent will resolve with the desired receipt when enough confirmations h
 </div>
 <p>This defines the polling cycles amount when you send a transaction with the HttpProvider.
 The PromiEvent rejects with a timeout error when the timeout got exceeded. (1 cycle == 1sec.).</p>
-<div class="section" id="id17">
-<h3>Returns<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h3>Returns<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionPollingTimeout</p>
 <hr class="docutils" />
 <hr class="docutils" />
@@ -398,18 +398,18 @@ created only on client and it’s up to the developer to manage it.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">Never call this function over a unsecured Websocket or HTTP provider, as your password will be send in plain text!</p>
 </div>
-<div class="section" id="id18">
-<h3>Parameters<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id17">
+<h3>Parameters<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">password</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: The password to encrypt this account with.</li>
 </ol>
 </div>
-<div class="section" id="id19">
-<h3>Returns<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id18">
+<h3>Returns<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The address of the newly created account.</p>
 </div>
-<div class="section" id="id20">
-<h3>Example<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id19">
+<h3>Example<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">personal</span><span class="p">.</span><span class="nx">newAccount</span><span class="p">(</span><span class="s1">&#39;!@superpassword&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s1">&#39;0x1234567891011121314151617181920212223456&#39;</span>
@@ -428,8 +428,8 @@ created only on client and it’s up to the developer to manage it.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">Sending your account password over an unsecured HTTP RPC connection is highly unsecure.</p>
 </div>
-<div class="section" id="id21">
-<h3>Parameters<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id20">
+<h3>Parameters<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - Data to sign. If String it will be converted using <a class="reference internal" href="web3-utils.html#utils-utf8tohex"><span class="std std-ref">web3.utils.utf8ToHex</span></a>.</li>
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - Address to sign data with.</li>
@@ -437,12 +437,12 @@ created only on client and it’s up to the developer to manage it.</p>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id22">
-<h3>Returns<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id21">
+<h3>Returns<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The signature.</p>
 </div>
-<div class="section" id="id23">
-<h3>Example<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id22">
+<h3>Example<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">personal</span><span class="p">.</span><span class="nx">sign</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">,</span> <span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span><span class="p">,</span> <span class="s2">&quot;test password!&quot;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400&quot;</span>
@@ -462,20 +462,20 @@ created only on client and it’s up to the developer to manage it.</p>
 </pre></div>
 </div>
 <p>Recovers the account that signed the data.</p>
-<div class="section" id="id24">
-<h3>Parameters<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id23">
+<h3>Parameters<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - Data that was signed. If String it will be converted using <a class="reference internal" href="web3-utils.html#utils-utf8tohex"><span class="std std-ref">web3.utils.utf8ToHex</span></a>.</li>
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The signature.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id25">
-<h3>Returns<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id24">
+<h3>Returns<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The account.</p>
 </div>
-<div class="section" id="id26">
-<h3>Example<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id25">
+<h3>Example<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">personal</span><span class="p">.</span><span class="nx">ecRecover</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">,</span> <span class="s2">&quot;0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400&quot;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span>
 </pre></div>
@@ -493,20 +493,20 @@ created only on client and it’s up to the developer to manage it.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">Sending your account password over an unsecured HTTP RPC connection is highly unsecure.</p>
 </div>
-<div class="section" id="id27">
-<h3>Parameters<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id26">
+<h3>Parameters<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Object</span></code> - The transaction data to sign <a class="reference internal" href="web3-eth.html#eth-sendtransaction"><span class="std std-ref">web3.eth.sendTransaction()</span></a> for more.</li>
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The password of the <code class="docutils literal notranslate"><span class="pre">from</span></code> account, to sign the transaction with.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id28">
-<h3>Returns<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id27">
+<h3>Returns<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;Object&gt;</span></code> - The RLP encoded transaction. The <code class="docutils literal notranslate"><span class="pre">raw</span></code> property can be used to send the transaction using <a class="reference internal" href="web3-eth.html#eth-sendsignedtransaction"><span class="std std-ref">web3.eth.sendSignedTransaction</span></a>.</p>
 </div>
-<div class="section" id="id29">
-<h3>Example<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id28">
+<h3>Example<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">signTransaction</span><span class="p">({</span>
     <span class="nx">from</span><span class="o">:</span> <span class="s2">&quot;0xEB014f8c8B418Db6b45774c326A0E64C78914dC0&quot;</span><span class="p">,</span>
     <span class="nx">gasPrice</span><span class="o">:</span> <span class="s2">&quot;20000000000&quot;</span><span class="p">,</span>
@@ -545,20 +545,20 @@ created only on client and it’s up to the developer to manage it.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">Sending your account password over an unsecured HTTP RPC connection is highly unsecure.</p>
 </div>
-<div class="section" id="id30">
-<h3>Parameters<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id29">
+<h3>Parameters<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Object</span></code> - The transaction options</li>
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The passphrase for the current account</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id31">
-<h3>Returns<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id30">
+<h3>Returns<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The transaction hash.</p>
 </div>
-<div class="section" id="id32">
-<h3>Example<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id31">
+<h3>Example<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">sendTransaction</span><span class="p">({</span>
     <span class="nx">from</span><span class="o">:</span> <span class="s2">&quot;0xEB014f8c8B418Db6b45774c326A0E64C78914dC0&quot;</span><span class="p">,</span>
     <span class="nx">gasPrice</span><span class="o">:</span> <span class="s2">&quot;20000000000&quot;</span><span class="p">,</span>
@@ -583,8 +583,8 @@ created only on client and it’s up to the developer to manage it.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">Sending your account password over an unsecured HTTP RPC connection is highly unsecure.</p>
 </div>
-<div class="section" id="id33">
-<h3>Parameters<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id32">
+<h3>Parameters<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: The account address.</li>
 <li><code class="docutils literal notranslate"><span class="pre">password</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code> - The password of the account.</li>
@@ -592,12 +592,12 @@ created only on client and it’s up to the developer to manage it.</p>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id34">
-<h3>Returns<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id33">
+<h3>Returns<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;boolean&gt;</span></code> - True if the account got unlocked successful otherwise false.</p>
 </div>
-<div class="section" id="id35">
-<h3>Example<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id34">
+<h3>Example<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">personal</span><span class="p">.</span><span class="nx">unlockAccount</span><span class="p">(</span><span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span><span class="p">,</span> <span class="s2">&quot;test password!&quot;</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Account unlocked!&#39;</span><span class="p">));</span>
 <span class="o">&gt;</span> <span class="s2">&quot;Account unlocked!&quot;</span>
@@ -616,17 +616,17 @@ created only on client and it’s up to the developer to manage it.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">Sending your account password over an unsecured HTTP RPC connection is highly unsecure.</p>
 </div>
-<div class="section" id="id36">
-<h3>Parameters<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id35">
+<h3>Parameters<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
 <p>1. <code class="docutils literal notranslate"><span class="pre">address</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code>: The account address.
 4. <code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</p>
 </div>
-<div class="section" id="id37">
-<h3>Returns<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id36">
+<h3>Returns<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;boolean&gt;</span></code></p>
 </div>
-<div class="section" id="id38">
-<h3>Example<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id37">
+<h3>Example<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">personal</span><span class="p">.</span><span class="nx">lockAccount</span><span class="p">(</span><span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Account locked!&#39;</span><span class="p">));</span>
 <span class="o">&gt;</span> <span class="s2">&quot;Account locked!&quot;</span>
@@ -646,12 +646,12 @@ will not add accounts into this list. For that use
 <a class="reference internal" href="#personal-newaccount"><span class="std std-ref">web3.eth.personal.newAccount()</span></a>.</p>
 <p>The results are the same as <a class="reference internal" href="web3-eth.html#eth-getaccounts"><span class="std std-ref">web3.eth.getAccounts()</span></a> except that calls
 the RPC method <code class="docutils literal notranslate"><span class="pre">eth_accounts</span></code>.</p>
-<div class="section" id="id39">
-<h3>Returns<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id38">
+<h3>Returns<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;Array&gt;</span></code> - An array of addresses controlled by node.</p>
 </div>
-<div class="section" id="id40">
-<h3>Example<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id39">
+<h3>Example<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">personal</span><span class="p">.</span><span class="nx">getAccounts</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="p">[</span><span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span><span class="p">,</span> <span class="s2">&quot;0xDCc6960376d6C6dEa93647383FfB245CfCed97Cf&quot;</span><span class="p">]</span>
@@ -671,19 +671,19 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">eth_
 <p class="first admonition-title">Note</p>
 <p class="last">Sending your account password over an unsecured HTTP RPC connection is highly unsecure.</p>
 </div>
-<div class="section" id="id41">
-<h3>Parameters<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id40">
+<h3>Parameters<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">privateKey</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code> - An unencrypted private key (hex string).</li>
 <li><code class="docutils literal notranslate"><span class="pre">password</span></code> - <code class="docutils literal notranslate"><span class="pre">String</span></code> - The password of the account.</li>
 </ol>
 </div>
-<div class="section" id="id42">
-<h3>Returns<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id41">
+<h3>Returns<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The address of the account.</p>
 </div>
-<div class="section" id="id43">
-<h3>Example<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id42">
+<h3>Example<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">personal</span><span class="p">.</span><span class="nx">importRawKey</span><span class="p">(</span><span class="s2">&quot;cd3376bb711cb332ee3fb2ca04c6a8b9f70c316fcdf7a1f44ef4c7999483295e&quot;</span><span class="p">,</span> <span class="s2">&quot;password1234&quot;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x8f337bf484b2fc75e4b0436645dcc226ee2ac531&quot;</span>
@@ -739,81 +739,81 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">eth_
 <li><a class="reference internal" href="#id10">Returns</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#web3-module-defaultaccount">defaultBlock</a><ul>
-<li><a class="reference internal" href="#id12">Returns</a></li>
+<li><a class="reference internal" href="#defaultaccount">defaultAccount</a><ul>
+<li><a class="reference internal" href="#id11">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#defaultgasprice">defaultGasPrice</a><ul>
-<li><a class="reference internal" href="#id13">Returns</a></li>
+<li><a class="reference internal" href="#id12">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#defaultgas">defaultGas</a><ul>
-<li><a class="reference internal" href="#id14">Returns</a></li>
+<li><a class="reference internal" href="#id13">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#transactionblocktimeout">transactionBlockTimeout</a><ul>
-<li><a class="reference internal" href="#id15">Returns</a></li>
+<li><a class="reference internal" href="#id14">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#transactionconfirmationblocks">transactionConfirmationBlocks</a><ul>
-<li><a class="reference internal" href="#id16">Returns</a></li>
+<li><a class="reference internal" href="#id15">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#transactionpollingtimeout">transactionPollingTimeout</a><ul>
-<li><a class="reference internal" href="#id17">Returns</a></li>
+<li><a class="reference internal" href="#id16">Returns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#newaccount">newAccount</a><ul>
-<li><a class="reference internal" href="#id18">Parameters</a></li>
-<li><a class="reference internal" href="#id19">Returns</a></li>
-<li><a class="reference internal" href="#id20">Example</a></li>
+<li><a class="reference internal" href="#id17">Parameters</a></li>
+<li><a class="reference internal" href="#id18">Returns</a></li>
+<li><a class="reference internal" href="#id19">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#sign">sign</a><ul>
-<li><a class="reference internal" href="#id21">Parameters</a></li>
-<li><a class="reference internal" href="#id22">Returns</a></li>
-<li><a class="reference internal" href="#id23">Example</a></li>
+<li><a class="reference internal" href="#id20">Parameters</a></li>
+<li><a class="reference internal" href="#id21">Returns</a></li>
+<li><a class="reference internal" href="#id22">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ecrecover">ecRecover</a><ul>
-<li><a class="reference internal" href="#id24">Parameters</a></li>
-<li><a class="reference internal" href="#id25">Returns</a></li>
-<li><a class="reference internal" href="#id26">Example</a></li>
+<li><a class="reference internal" href="#id23">Parameters</a></li>
+<li><a class="reference internal" href="#id24">Returns</a></li>
+<li><a class="reference internal" href="#id25">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#signtransaction">signTransaction</a><ul>
-<li><a class="reference internal" href="#id27">Parameters</a></li>
-<li><a class="reference internal" href="#id28">Returns</a></li>
-<li><a class="reference internal" href="#id29">Example</a></li>
+<li><a class="reference internal" href="#id26">Parameters</a></li>
+<li><a class="reference internal" href="#id27">Returns</a></li>
+<li><a class="reference internal" href="#id28">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#sendtransaction">sendTransaction</a><ul>
-<li><a class="reference internal" href="#id30">Parameters</a></li>
-<li><a class="reference internal" href="#id31">Returns</a></li>
-<li><a class="reference internal" href="#id32">Example</a></li>
+<li><a class="reference internal" href="#id29">Parameters</a></li>
+<li><a class="reference internal" href="#id30">Returns</a></li>
+<li><a class="reference internal" href="#id31">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#unlockaccount">unlockAccount</a><ul>
-<li><a class="reference internal" href="#id33">Parameters</a></li>
-<li><a class="reference internal" href="#id34">Returns</a></li>
-<li><a class="reference internal" href="#id35">Example</a></li>
+<li><a class="reference internal" href="#id32">Parameters</a></li>
+<li><a class="reference internal" href="#id33">Returns</a></li>
+<li><a class="reference internal" href="#id34">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#lockaccount">lockAccount</a><ul>
-<li><a class="reference internal" href="#id36">Parameters</a></li>
-<li><a class="reference internal" href="#id37">Returns</a></li>
-<li><a class="reference internal" href="#id38">Example</a></li>
+<li><a class="reference internal" href="#id35">Parameters</a></li>
+<li><a class="reference internal" href="#id36">Returns</a></li>
+<li><a class="reference internal" href="#id37">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#getaccounts">getAccounts</a><ul>
-<li><a class="reference internal" href="#id39">Returns</a></li>
-<li><a class="reference internal" href="#id40">Example</a></li>
+<li><a class="reference internal" href="#id38">Returns</a></li>
+<li><a class="reference internal" href="#id39">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#importrawkey">importRawKey</a><ul>
-<li><a class="reference internal" href="#id41">Parameters</a></li>
-<li><a class="reference internal" href="#id42">Returns</a></li>
-<li><a class="reference internal" href="#id43">Example</a></li>
+<li><a class="reference internal" href="#id40">Parameters</a></li>
+<li><a class="reference internal" href="#id41">Returns</a></li>
+<li><a class="reference internal" href="#id42">Example</a></li>
 </ul>
 </li>
 </ul>

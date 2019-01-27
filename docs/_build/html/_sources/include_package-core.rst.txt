@@ -277,7 +277,7 @@ Returns
 
 .. _web3-module-defaultaccount:
 
-defaultBlock
+defaultAccount
 =====================
 
 .. code-block:: javascript
