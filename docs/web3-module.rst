@@ -169,6 +169,7 @@ of the method class.
     };
     > "result"
 
+
 The AbstractMethod class does have the following methods and properties:
 
 .. include:: web3-module-abstract-method-class-reference.rst
