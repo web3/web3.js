@@ -30,7 +30,7 @@ export class Accounts extends AbstractWeb3Module {
 
     privateKeyToAccount(privateKey: string): Account;
 
-    signTransaction(tx: Transaction, privateKey: string, callback?: () => void): SignedTransaction;
+    signTransaction(tx: Transaction, privateKey: string, callback?: () => void): Promise<SignedTransaction>;
 
     recoverTransaction(signature: string): string;
 
