@@ -9,9 +9,9 @@ Web3 Module API
 The Web3 Module API gives you the possibility to create your own custom Web3 Module with JSON-RPC methods, subscriptions
 or contracts. The provided modules from the Web3 library are also written with the Web3 Module API the core does provide.
 
-The idea of the Web3 Module API is to extend and customize the JSON-RPC methods, contracts and subscriptions to project
-specific functions with a similar kind of API the DApp developer knows from the Web3.js library. It is possible
-to create complex contract APIs and tools for the development of a DApp.
+The goal of the Web3 Module API is to provide the possibility to extend and customize the JSON-RPC methods, contracts and subscriptions
+to project specific classes with a similar kind of API the DApp developer knows from the Web3.js library.
+It's possible with the Web3 Module API to create complex contract APIs and tools for the development of a DApp.
 
 The Web3 Module API provides the following ES6 classes:
 
@@ -27,7 +27,7 @@ Methods
 =======
 
 The Web3.js library does have implemented most of the provided JSON-RPC methods a Ethereum node does provide.
-If you're interested to know which methods you could extend from then please check out the folders in the code base.
+If you're interested to know which methods you could extend from then please check out the folders in the code.
 
 Source: `Web3.js method classes <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/src/methods>`_
 
@@ -38,7 +38,7 @@ Subscriptions
 =============
 
 The Web3.js library does have implemented the subscriptions a Ethereum node does provide.
-If you're interested to know which subscriptions you could extend from then please check out the folders in the code base.
+If you're interested to know which subscriptions you could extend from then please check out the folders in the code.
 
 Source: `Web3.js subscription classes <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions/src/subscriptions>`_
 
@@ -56,11 +56,11 @@ You can find further information to the development environment in the readme fi
 
 These ES6 classes are included in the example folder:
 
-- :ref:`StarterModule <>`_
-- :ref:`StarterModuleMethodFactory <>`_
-- :ref:`StarterMethod <>`_
-- :ref:`StarterContract <>`_
-- :ref:`StarterSubscription <>`_
+- ``StarterModule``
+- ``StarterModuleMethodFactory``
+- ``StarterMethod``
+- ``StarterContract``
+- ``StarterSubscription``
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -77,10 +77,10 @@ The ``AbstractWeb3Module`` does have the following constructor parameters:
 - ``providersModuleFactory`` - The ``ProvidersModuleFactory`` which will be used to resolve the provider in the constructor.
 - ``methodModuleFactory`` - The ``MethodModuleFactory`` is optional and will just be used if the ``MethodFactory`` is given.
 - ``methodFactory`` - The ``MethodFactory`` is only required if you extend the module with methods.
-- ``options`` - These are the default ``options``.
+- ``options`` - These are the default ``options`` of a Web3 module.
 
 
-If you would like to support the latest features of Web3.js and to provide the same API for your module then please pass
+If you would like to support the latest features of Web3.js and also provide the same API for your module then please pass
 the ``methodModuleFactory`` and the ``methodFactory`` parameter for extending the module with your methods.
 
 The parameters ``methodModuleFactory`` and ``methodFactory`` aren't required if you providing your own way to interact with a Web3 method.
@@ -125,13 +125,12 @@ The ``AbstractMethod`` does have the following constructor parameters:
 - ``utils`` - The Utils object.
 - ``formatters`` - The formatters object.
 
-The ``AbstractMethod`` is the base method class and does provide the basic functionalities to create a
+The ``AbstractMethod`` is the base method class and does provide the basic methods and properties for creating a
 Web3.js compatible JSON-RPC method.
-
-**The ``execute`` method of the ``AbstractMethod`` class has to get overwritten.**
 
 You're able to overwrite these methods:
 
+- :ref:`execute <web3-abstract-method-execute>`
 - :ref:`afterExecution <web3-abstract-method-after-execution>`
 - :ref:`beforeExecution <web3-abstract-method-before-execution>`
 
@@ -170,7 +169,7 @@ of the method class.
     // > "result"
 
 
-The AbstractMethod class does have the following methods and properties:
+The ``AbstractMethod`` class does have the following methods and properties:
 
 .. include:: include_web3-module-abstract-method-class-reference.rst
 
