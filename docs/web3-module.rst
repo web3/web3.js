@@ -172,7 +172,7 @@ of the method class.
 
 The AbstractMethod class does have the following methods and properties:
 
-.. include:: web3-module-abstract-method-class-reference.rst
+.. include:: include_web3-module-abstract-method-class-reference.rst
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -200,7 +200,7 @@ You're able to overwrite these methods:
 - :ref:`afterExecution <web3-abstract-method-after-execution>`
 - :ref:`beforeExecution <web3-abstract-method-before-execution>`
 
-.. include:: web3-module-abstract-method-class-reference.rst
+.. include:: include_web3-module-abstract-method-class-reference.rst
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -229,7 +229,7 @@ You're able to overwrite these methods:
 - :ref:`afterExecution <web3-abstract-method-after-execution>`
 - :ref:`beforeExecution <web3-abstract-method-before-execution>`
 
-.. include:: web3-module-abstract-method-class-reference.rst
+.. include:: include_web3-module-abstract-method-class-reference.rst
 
 ------------------------------------------------------------------------------------------------------------------------
 
