@@ -15,6 +15,7 @@
         "dtslint": "dtslint types --onlyTestTsNext"
     },
     "dependencies": {
+        "@babel/runtime": "^7.3.1",
         "eth-ens-namehash": "2.0.8",
         "lodash": "^4.17.11",
         "web3-core": "1.0.0-beta.38",
