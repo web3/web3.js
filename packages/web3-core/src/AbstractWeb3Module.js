@@ -51,7 +51,7 @@ export default class AbstractWeb3Module {
         this._defaultBlock = options.defaultBlock || 'latest';
         this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
         this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
-        this._transactionPollingTimeout = options.transactionPollingTimeout || 15;
+        this._transactionPollingTimeout = options.transactionPollingTimeout || 750;
         this._defaultGasPrice = options.defaultGasPrice;
         this._defaultGas = options.defaultGas;
 
