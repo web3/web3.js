@@ -15,7 +15,7 @@
         "bootstrap": "lerna bootstrap",
         "install:all": "lerna add",
         "remove:all": "lerna exec npm uninstall",
-        "publish": "npm run clean && npm run bootstrap && npm run travis && lerna publish && npm run docs",
+        "publish": "npm run clean && npm run bootstrap && npm run travis && lerna publish",
         "build": "lerna run build",
         "test": "lerna run test",
         "test:coverage": "lerna run test -- -- --coverage && istanbul-combine -d coverage -r lcov -r html ./packages/**/coverage-final.json",
