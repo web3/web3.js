@@ -170,7 +170,7 @@ export default class Accounts extends AbstractWeb3Module {
             }
 
             try {
-                tx = _this.formatters.inputCallFormatter(tx);
+                tx = _this.formatters.inputCallFormatter(tx, _this);
 
                 const transaction = tx;
                 transaction.to = tx.to || '0x';
