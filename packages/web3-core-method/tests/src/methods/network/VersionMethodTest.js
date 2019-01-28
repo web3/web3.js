@@ -18,7 +18,7 @@ describe('VersionMethodTest', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractCallMethod);
 
-        expect(method.rpcMethod).toEqual('eth_protocolVersion');
+        expect(method.rpcMethod).toEqual('net_version');
 
         expect(method.parametersAmount).toEqual(0);
 
