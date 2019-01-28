@@ -103,7 +103,7 @@ describe('AbstractWeb3ModuleTest', () => {
 
         expect(abstractWeb3Module.transactionConfirmationBlocks).toEqual(24);
 
-        expect(abstractWeb3Module.transactionPollingTimeout).toEqual(15);
+        expect(abstractWeb3Module.transactionPollingTimeout).toEqual(750);
 
         expect(abstractWeb3Module.defaultGasPrice).toEqual(100);
 
