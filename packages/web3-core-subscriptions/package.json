@@ -15,6 +15,7 @@
         "test:watch": "jest --watchAll"
     },
     "dependencies": {
+        "@babel/runtime": "^7.3.1",
         "eventemitter3": "^3.1.0",
         "lodash": "^4.17.11",
         "web3-core-helpers": "1.0.0-beta.38",
