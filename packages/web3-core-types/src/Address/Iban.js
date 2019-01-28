@@ -284,7 +284,7 @@ export default class Iban {
         if (this.isDirect()) {
             const base36 = this._iban.substr(4);
             const asBn = new BigNumber(base36, 36);
-            const address = Types.Address(asBn.toString(16, 20)).toChecksum();
+            const address = Types.Address.toChecksum(asBn.toString(16, 20));
             return address.toString();
         }
 

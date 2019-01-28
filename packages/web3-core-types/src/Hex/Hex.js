@@ -21,6 +21,7 @@
  */
 
 import {cloneDeep, isObject} from 'lodash';
+import utf8 from 'utf8';
 
 export default class Hex {
     /**
@@ -63,7 +64,7 @@ export default class Hex {
         });
 
         /* Make the props immutable */
-        Object.freeze(params);
+        Object.freeze(this.props);
     }
 
     /* Class functions */
@@ -138,9 +139,16 @@ export default class Hex {
      *
      * @method toAscii
      *
-     * @return {string}
+     * @return {String}
      */
-    toAscii() {}
+    toAscii() {
+        let ascii = '';
+        for(let i = 0; i < this.props.hex.length; i += 2) {
+           ascii += String.fromCharCode(parseInt(this.props.hex.substr(i,2)));
+        }
+
+        return ascii;
+    }
 
     /**
      * Interpret the hex data as UTF-8 chars
@@ -149,17 +157,52 @@ export default class Hex {
      *
      * @return {string}
      */
-    toUtf8() {}
+    toUtf8() {
+        let str = '';
+        let code = 0;
+        let hex = this.props.hex.replace(/^0x/i, '');
+
+        // remove 00 padding from either side
+        hex = hex.replace(/^(?:00)*/, '');
+        hex = hex
+            .split('')
+            .reverse()
+            .join('');
+        hex = hex.replace(/^(?:00)*/, '');
+        hex = hex
+            .split('')
+            .reverse()
+            .join('');
+
+        const l = hex.length;
+
+        for (let i = 0; i < l; i += 2) {
+            code = parseInt(hex.substr(i, 2), 16);
+            str += String.fromCharCode(code);
+        }
+
+        return utf8.decode(str);  
+    }
 
     /**
      * Interpret the hex data as an int
-     *  and parse to bytes string
+     *  and parse to bytes array
      *
      * @method toBytes
      *
-     * @return {String}
+     * @return {Uint8Array}
      */
-    toBytes() {}
+    toBytes() {
+        const hex = this.props.hex.replace(/^(-|-0x|0x)/i,'');
+        const pad = hex.length % 2 === 0 ? hex : `0${hex}`;
+        const bytes = new Uint8Array(pad.length/2);
+
+        for(let i = 0; i < pad.length; i+=2) {
+            bytes[i/2] = parseInt(pad.substr(i,2),16);
+        }
+
+        return bytes;
+    }
 
     /**
      * Declare the type of the object

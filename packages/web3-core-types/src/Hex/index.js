@@ -66,6 +66,9 @@ Hex.isStrict = HexClass.isStrict;
  */
 Hex.fromString = (value) => {
     if (!isString(value)) throw new Error(`The given value ${value} is not string type.`);
+
+    value = value.replace(/(-)?(0x)?([0-9a-f]*)/i, '$10x$3');
+
     const params = {
         hex: value
     };
@@ -124,6 +127,8 @@ Hex.fromAscii = (value) => {
  *
  */
 Hex.fromUtf8 = (value) => {
+    if (!isString(value)) throw new Error(`The given value ${value} is not string type.`);
+
     let hex = '';
     value = utf8.encode(value);
 
@@ -157,9 +162,38 @@ Hex.fromUtf8 = (value) => {
 };
 
 Hex.fromBytes = (value) => {
-    // TODO
+    let hex = '';
+
+    value.forEach((v) => {
+        const s = v.toString(16);
+        hex += s.length < 2 ? `0${s}` : s;
+    });
+
+    hex = `0x${hex}`;
+
+    const params = {
+        hex: hex
+    };
+
+    return Hex(params);
 };
 
+/**
+ * Fallback for number or string parsing.
+ * Number parameters call fromNumber
+ * String parameters call fromString
+ *
+ * @param {String|Number} value
+ *
+ * @returns {Hex}
+ *
+ */
 Hex.from = (value) => {
-    // TODO
+    if(isNumber(value)) {
+        return Hex.fromNumber(value);
+    } else if(isString(value)) {
+        return Hex.fromString(value);
+    } else {
+        throw new Error(`The given value ${value} needs to be a hex-encoded value string or a base 10 number.`);
+    }
 };

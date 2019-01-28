@@ -87,6 +87,23 @@ describe('TypeModuleHexTest', () => {
             expect(obj.toString()).toBe(test.expected);
         });
     });
+    
+    it('Interface - Hex fromBytes', () => {
+        const tests = [
+            {value: new Uint8Array([0]), expected: '0x00'},
+            {value: new Uint8Array([15]), expected: '0x0f'},
+            {value: new Uint8Array([255]), expected: '0xff'},
+            {value: new Uint8Array([15,0]), expected: '0x0f00'},
+            {value: new Uint8Array([255,15]), expected: '0xff0f'},
+            {value: new Uint8Array([255,255]), expected: '0xffff'}
+        ];
+
+        tests.forEach((test) => {
+            obj = new Types.Hex.fromBytes(test.value); // eslint-disable-line new-cap
+
+            expect(obj.toString()).toBe(test.expected);
+        });
+    });
 
     it('Mixin - Hex', () => {
         const tests = [

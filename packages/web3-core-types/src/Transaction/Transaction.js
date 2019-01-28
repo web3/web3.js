@@ -135,6 +135,33 @@ export default class Transaction {
     }
 
     /**
+     * Check if the transaction has valid content
+     *
+     * @method isValid
+     *
+     * @return {boolean|Error}
+     *
+     */
+    isValid() {
+
+    }
+
+    
+    /**
+     * Sign the transaction object
+     *
+     * @method sign
+     *
+     * @param {Object}
+     *
+     * @return {SignedTransaction}
+     *
+     */
+    sign(account) {
+        
+    }
+
+    /**
      * Declare the type of the object
      *
      * @method isTransaction

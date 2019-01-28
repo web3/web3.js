@@ -22,6 +22,7 @@
 
 import AddressFactory from './factories/AddressFactory';
 import AddressClass from './Address';
+import Iban from './Iban';
 
 /**
  * Returns an object of Address
@@ -48,11 +49,23 @@ Address.isValid = AddressClass.isValid;
  * Expose toChecksum by taking an address
  * as string and creating the object
  *
- * @param {String} value
+ * @param {String} address 
  *
  * @returns {Address}
  *
  */
 Address.toChecksum = (address) => {
-    return Address(address).toChecksum();
+    return new Address(address).toChecksum();
+};
+
+/**
+ * Create an Address object from an IBAN string
+ *
+ * @param {String} iban 
+ *
+ * @returns {Address}
+ *
+ */
+Address.fromIban = (iban) => {
+   return new Address(Iban.toAddress(iban));
 };

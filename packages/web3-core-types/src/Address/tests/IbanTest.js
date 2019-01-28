@@ -76,11 +76,11 @@ describe('IbanTest', () => {
     it('calls toAddress with a direct Iban and returns the expected string', () => {
         iban._iban = '0000000000000000000000000000000000';
 
-        Types.Address.mockReturnValueOnce({toChecksum: () => '0x0'});
+        Types.Address.toChecksum.mockReturnValueOnce('0x0');
 
         expect(iban.toAddress()).toEqual('0x0');
 
-        expect(Types.Address).toHaveBeenCalledWith(new BigNumber(iban._iban.substr(4)).toString(16, 20));
+        expect(Types.Address.toChecksum).toHaveBeenCalledWith(new BigNumber(iban._iban.substr(4)).toString(16, 20));
     });
 
     it('calls toAddress with a indirect Iban and returns the expected string', () => {
@@ -92,11 +92,11 @@ describe('IbanTest', () => {
     });
 
     it('calls the static method toAddress and returns the expected string', () => {
-        Types.Address.mockReturnValueOnce({toChecksum: () => '0x0'});
+        Types.Address.toChecksum.mockReturnValueOnce('0x0');
 
         expect(Iban.toAddress('0000000000000000000000000000000000')).toEqual('0x0');
 
-        expect(Types.Address).toHaveBeenCalledWith(new BigNumber(iban._iban.substr(4)).toString(16, 20));
+        expect(Types.Address.toChecksum).toHaveBeenCalledWith(new BigNumber(iban._iban.substr(4)).toString(16, 20));
     });
 
     it('calls the static method toAddress with a indirect Iban and throws an error', () => {
