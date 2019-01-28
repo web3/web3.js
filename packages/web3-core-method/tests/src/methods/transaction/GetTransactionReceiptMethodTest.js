@@ -34,4 +34,8 @@ describe('GetTransactionReceiptMethodTest', () => {
 
         expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({});
     });
+
+    it('afterExecution should return null', () => {
+        expect(method.afterExecution(null)).toEqual(null);
+    });
 });
