@@ -38,7 +38,7 @@ export default class HexFactory {
         */
         const error = {
             hex: (value) =>
-                `The 'hex' parameter ${value} needs to be a string composed of numbers and letters between 'a' and 'f'.\n` +
+                `The 'hex' parameter ${value} needs to be a string composed of numbers, and characters between 'a' and 'f'.\n` +
                 "Use 'empty' to set a web3 empty hex object."
         };
 

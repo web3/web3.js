@@ -78,7 +78,7 @@ describe('TransactionTest', () => {
         expect(transaction).toHaveProperty('props');
         expect(transaction.props.from).toHaveProperty('isAddress');
     });
-    
+
     it('accepts wallet index', () => {
         txParamsTest.from = 0;
         transaction = new Transaction(txParamsTest, error, initParams);

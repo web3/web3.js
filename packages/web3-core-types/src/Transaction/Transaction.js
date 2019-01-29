@@ -45,11 +45,15 @@ export default class Transaction {
         /* Check for type and format validity */
 
         /* Allow from an address string, Address object, or wallet index */
-        if (params.from.isAddress) this.props.from = Types.Address(params.from.props);
-        else if (isString(params.from) && Types.Address.isValid(params.from))
+        if (params.from.isAddress) {
+            this.props.from = Types.Address(params.from.props);
+        } else if (isString(params.from) && Types.Address.isValid(params.from)) {
             this.props.from = Types.Address(params.from);
-        else if (isInteger(params.from)) this.props.from = params.from;
+        } else if (isInteger(params.from)) {
+            this.props.from = params.from;
+        }
 
+        /* Receipient address */
         this.props.to = params.to.isAddress ? Types.Address(params.to.props) : undefined;
 
         // TODO Move this check to BigNumber as a constructor check
@@ -61,6 +65,7 @@ export default class Transaction {
                 ? toBN(params.value.toString())
                 : undefined;
 
+        /* Transaction gas */
         this.props.gas = Number.isInteger(params.gas) ? params.gas : undefined;
 
         // TODO Move this check to BigNumber as a constructor check
@@ -72,10 +77,18 @@ export default class Transaction {
                 ? toBN(params.gasPrice.toString())
                 : undefined;
 
-        this.props.data = params.data.isHex ? Types.Hex(params.data.props) : undefined;
+        /* Allow Hex object or valid hex string */
+        if (params.data.isHex) {
+            this.props.data = Types.Hex(params.data.props);
+        } else if (Types.Hex.isValid(params.data)) {
+            this.props.data = Types.Hex(params.data);
+        }
 
+        /* Transaction nonce */
         this.props.nonce = params.nonce === 0 || Number.isInteger(params.nonce) ? params.nonce : undefined;
 
+        /* Chain ID */
+        // TODO The transaction might not check this parameter
         this.props.chainId = isInteger(params.chainId) ? params.chainId.toString() : undefined;
 
         /* Set the default values */
@@ -217,8 +230,8 @@ export default class Transaction {
      */
     sign(account) {
         const params = cloneDeep(this.props);
-        if(params.from.isAddress) params.from = params.from.toString();
-        if(params.to.isAddress) params.to= params.to.toString();
+        if (params.from.isAddress) params.from = params.from.toString();
+        if (params.to.isAddress) params.to = params.to.toString();
 
         const unsignedTx = Object.keys(params).forEach(
             (key) => (params[key] = params[key] === 'auto' ? undefined : params[key])

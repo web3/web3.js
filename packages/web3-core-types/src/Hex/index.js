@@ -107,7 +107,7 @@ Hex.fromAscii = (value) => {
 
     const hex = value.split('').reduce((acc, char) => {
         const v = char.charCodeAt(0).toString(16);
-        if (v.length > 2) throw new Error(`Non ASCII char ${char} in string`);
+        if (v.length > 2) throw new Error(`Non ASCII char ${char} in string ${value}.`);
         return acc + (v.length < 2 ? '0' + v : v);
     }, '0x');
 
@@ -194,6 +194,6 @@ Hex.from = (value) => {
     } else if (isString(value)) {
         return Hex.fromString(value);
     } else {
-        throw new Error(`The given value ${value} needs to be a hex-encoded value string or a base 10 number.`);
+        throw new Error(`The given value ${value} needs to be a hex-encoded string or a base 10 number.`);
     }
 };
