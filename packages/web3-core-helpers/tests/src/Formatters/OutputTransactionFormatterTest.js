@@ -75,4 +75,11 @@ describe('OutputTransactionFormatterTest', () => {
             from: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
         });
     });
+
+    describe('when passed a null receipt', () => {
+        it('returns null', () => {
+            const receipt = null;
+            expect(outputTransactionFormatter(receipt)).toEqual(null);
+        });
+    });
 });

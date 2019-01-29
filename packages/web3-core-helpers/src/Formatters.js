@@ -216,6 +216,10 @@ export const inputSignFormatter = (data) => {
  * @returns {Object}
  */
 export const outputTransactionFormatter = (receipt) => {
+    if (receipt == null) {
+        return null;
+    }
+
     if (receipt.blockNumber !== null) {
         receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
     }
