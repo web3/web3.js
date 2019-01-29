@@ -95,6 +95,6 @@ export default class ProviderResolver {
             return provider;
         }
 
-        throw new Error('Please provide an valid Web3 provider');
+        throw new Error('Please provide a valid Web3 provider');
     }
 }
