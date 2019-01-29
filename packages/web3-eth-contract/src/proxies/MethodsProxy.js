@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isArray, isFunction} from 'lodash';
+import isArray from 'lodash/isArray';
+import isFunction from 'lodash/isFunction';
 
 export default class MethodsProxy {
     /**

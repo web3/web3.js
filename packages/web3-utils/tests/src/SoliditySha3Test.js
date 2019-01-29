@@ -1,4 +1,4 @@
-import {isArray} from 'lodash';
+import isArray from 'lodash/isArray';
 import BN from 'bn.js';
 import {soliditySha3} from '../../src/SoliditySha3';
 

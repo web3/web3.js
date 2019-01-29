@@ -28,14 +28,14 @@ accounts.create('2435@#@#@±±±±!!!!678543213456764321§3456754321345678543213
 // $ExpectType Account
 accounts.privateKeyToAccount('0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
 
-// $ExpectType SignedTransaction
+// $ExpectType Promise<SignedTransaction>
 accounts.signTransaction({
     to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
     value: '1000000000',
     gas: 2000000
 }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318');
 
-// $ExpectType SignedTransaction
+// $ExpectType Promise<SignedTransaction>
 accounts.signTransaction({
     to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
     value: '1000000000',

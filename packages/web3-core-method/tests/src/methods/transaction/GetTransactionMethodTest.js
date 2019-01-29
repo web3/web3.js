@@ -1,5 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import GetTransactionMethod from '../../../../src/methods/transaction/GetTransactionMethod';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 
 // Mocks
 jest.mock('formatters');
@@ -11,27 +12,19 @@ describe('GetTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetTransactionMethod({}, formatters);
+        method = new GetTransactionMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetTransactionMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_getTransactionByHash', () => {
         expect(method.rpcMethod).toEqual('eth_getTransactionByHash');
-    });
 
-    it('parametersAmount should return 1', () => {
         expect(method.parametersAmount).toEqual(1);
-    });
 
-    it('beforeExecution should do nothing with the parameters', () => {
-        method.parameters = [];
+        expect(method.utils).toEqual(null);
 
-        method.beforeExecution();
-
-        expect(method.parameters[0]).toEqual(undefined);
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('afterExecution should map the response', () => {

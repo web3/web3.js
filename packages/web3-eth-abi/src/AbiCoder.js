@@ -21,7 +21,8 @@
  * @date 2018
  */
 
-import {isObject, isArray} from 'lodash';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
 
 // TODO: Implement it by our self this can't be a dependency because of the importance of it.
 export default class AbiCoder {
@@ -233,7 +234,7 @@ export default class AbiCoder {
      * @returns {Object} Object with named and indexed properties of the returnValues
      */
     decodeParameters(outputs, bytes) {
-        if (!bytes || bytes === '0x' || bytes === '0X') {
+        if (outputs.length > 0 && (!bytes || bytes === '0x' || bytes === '0X')) {
             throw new Error("Returned values aren't valid, did it run Out of Gas?");
         }
 

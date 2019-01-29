@@ -1,3 +1,7 @@
+
+**All issues which aren't created with this template will get immediately closed.**
+
+
 <!---
 
 Steps before creating an issue: 

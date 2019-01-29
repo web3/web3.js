@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import isFunction from 'lodash/isFunction';
 import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
 export default class GetBlockMethod extends AbstractCallMethod {
@@ -46,7 +47,14 @@ export default class GetBlockMethod extends AbstractCallMethod {
         }
 
         this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
-        this.parameters[1] = !!this.parameters[1];
+
+        // Optional second parameter 'returnTransactionObjects' could also be the callback
+        if (isFunction(this.parameters[1])) {
+            this.callback = this.parameters[1];
+            this.parameters[1] = false;
+        } else {
+            this.parameters[1] = !!this.parameters[1];
+        }
     }
 
     /**

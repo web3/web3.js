@@ -21,7 +21,10 @@
  * @date 2017
  */
 
-import {isString, isArray, isObject, isNumber} from 'lodash';
+import isString from 'lodash/isString';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
+import isNumber from 'lodash/isNumber';
 import * as Utils from 'web3-utils';
 import {Iban} from 'web3-eth-iban';
 

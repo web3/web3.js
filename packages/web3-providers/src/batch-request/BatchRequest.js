@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isObject, isArray} from 'lodash';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class BatchRequest {
@@ -42,7 +43,7 @@ export default class BatchRequest {
      * @param {AbstractMethod} method
      */
     add(method) {
-        if (!isObject(method)) {
+        if (!isObject(method) && method) {
             throw new Error('Please provide a object of type AbstractMethod.');
         }
 

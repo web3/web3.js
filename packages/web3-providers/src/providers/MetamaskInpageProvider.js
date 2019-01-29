@@ -46,6 +46,14 @@ export default class MetamaskInpageProvider extends AbstractSocketProvider {
     }
 
     /**
+     * @param metamaskParam
+     * @param payload
+     */
+    onMessage(metamaskParam, payload) {
+        super.onMessage(payload);
+    }
+
+    /**
      * Removes all listeners on the EventEmitter and the socket object.
      *
      * @method removeAllListeners

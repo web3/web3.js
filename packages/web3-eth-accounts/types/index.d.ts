@@ -30,7 +30,7 @@ export class Accounts extends AbstractWeb3Module {
 
     privateKeyToAccount(privateKey: string): Account;
 
-    signTransaction(tx: Transaction, privateKey: string, callback?: () => void): SignedTransaction;
+    signTransaction(tx: Transaction, privateKey: string, callback?: () => void): Promise<SignedTransaction>;
 
     recoverTransaction(signature: string): string;
 
@@ -101,8 +101,6 @@ export interface EncryptedKeystoreV3Json {
     }
 }
 
-/** TODO - MOVE ALL BELOW TO WEB3-CORE ONCE FIXED CONFUSING WITH RETURN TYPES !!! */
-
 export interface SignedTransaction {
     messageHash?: string;
     r: string;
@@ -114,5 +112,3 @@ export interface SignedTransaction {
 export interface Sign extends SignedTransaction {
     message: string;
 }
-
-/** END !!! */

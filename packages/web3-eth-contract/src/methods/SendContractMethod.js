@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {isArray} from 'lodash';
+import isArray from 'lodash/isArray';
 import {SendTransactionMethod} from 'web3-core-method';
 
 export default class SendContractMethod extends SendTransactionMethod {

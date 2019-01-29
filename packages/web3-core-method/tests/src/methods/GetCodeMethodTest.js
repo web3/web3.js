@@ -1,4 +1,5 @@
 import {formatters} from 'web3-core-helpers';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 import GetCodeMethod from '../../../src/methods/GetCodeMethod';
 
 // Mocks
@@ -11,19 +12,19 @@ describe('GetCodeMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetCodeMethod({}, formatters);
+        method = new GetCodeMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetCodeMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_getCode', () => {
         expect(method.rpcMethod).toEqual('eth_getCode');
-    });
 
-    it('parametersAmount should return 2', () => {
         expect(method.parametersAmount).toEqual(2);
+
+        expect(method.utils).toEqual(null);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {
@@ -44,9 +45,24 @@ describe('GetCodeMethodTest', () => {
         expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith(100, {});
     });
 
-    it('afterExecution should just return the response', () => {
-        const object = {};
+    it('calls beforeExecution without a callback instead of the optional parameter', () => {
+        const callback = jest.fn();
+        method.parameters = ['string', callback];
 
-        expect(method.afterExecution(object)).toEqual(object);
+        formatters.inputAddressFormatter.mockReturnValueOnce('0x0');
+
+        formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+
+        method.beforeExecution({defaultBlock: 'latest'});
+
+        expect(method.callback).toEqual(callback);
+
+        expect(method.parameters[0]).toEqual('0x0');
+
+        expect(method.parameters[1]).toEqual('0x0');
+
+        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
+
+        expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {defaultBlock: 'latest'});
     });
 });

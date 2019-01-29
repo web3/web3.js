@@ -20,7 +20,8 @@
  * @date 2017
  */
 
-import {isObject, isString} from 'lodash';
+import isObject from 'lodash/isObject';
+import isString from 'lodash/isString';
 import * as swarm from 'swarm-js';
 
 // TODO: Refactor the complete module and implement the swarm API correct.

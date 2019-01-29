@@ -24,8 +24,6 @@ import * as net from 'net';
 import {AbstractWeb3Module} from 'web3-core';
 import {AbstractMethod} from 'web3-core-method';
 
-// TODO: Update types
-
 export class BatchRequest {
     constructor(moduleInstance: AbstractWeb3Module);
 

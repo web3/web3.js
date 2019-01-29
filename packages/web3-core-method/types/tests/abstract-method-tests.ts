@@ -55,9 +55,6 @@ abstractMethod.arguments;
 // $ExpectType boolean
 abstractMethod.isHash('string');
 
-// $ExpectType AbstractMethod
-abstractMethod.request('param');
-
 // $ExpectType boolean
 abstractMethod.hasWallets();
 

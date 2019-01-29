@@ -25,7 +25,11 @@ describe('HttpProviderTest', () => {
         new ProvidersModuleFactory();
         providersModuleFactoryMock = ProvidersModuleFactory.mock.instances[0];
 
-        httpProvider = new HttpProvider('https', {headers: [], timeout: 1}, providersModuleFactoryMock);
+        httpProvider = new HttpProvider(
+            'https',
+            {headers: [], timeout: 1, keepAlive: true},
+            providersModuleFactoryMock
+        );
     });
 
     it('constructor check with https', () => {

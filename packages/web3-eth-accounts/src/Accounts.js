@@ -20,7 +20,13 @@
  * @date 2017
  */
 
-import {isUndefined, isNull, isObject, isBoolean, isString, has, extend} from 'lodash';
+import isUndefined from 'lodash/isUndefined';
+import isNull from 'lodash/isNull';
+import isObject from 'lodash/isObject';
+import isBoolean from 'lodash/isBoolean';
+import isString from 'lodash/isString';
+import has from 'lodash/has';
+import extend from 'lodash/extend';
 import Account from 'eth-lib/lib/account';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
@@ -164,7 +170,7 @@ export default class Accounts extends AbstractWeb3Module {
             }
 
             try {
-                tx = _this.formatters.inputCallFormatter(tx);
+                tx = _this.formatters.inputCallFormatter(tx, _this);
 
                 const transaction = tx;
                 transaction.to = tx.to || '0x';

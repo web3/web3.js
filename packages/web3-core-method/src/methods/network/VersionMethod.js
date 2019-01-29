@@ -30,7 +30,7 @@ export default class VersionMethod extends AbstractCallMethod {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_protocolVersion', 0, utils, formatters);
+        super('net_version', 0, utils, formatters);
     }
 
     /**

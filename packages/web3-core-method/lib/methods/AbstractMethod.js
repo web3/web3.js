@@ -20,7 +20,9 @@
  * @date 2018
  */
 
-import {isFunction, isString} from 'lodash';
+import isFunction from 'lodash/isFunction';
+import isString from 'lodash/isString';
+import cloneDeep from 'lodash/cloneDeep';
 import {PromiEvent} from 'web3-core-promievent';
 
 export default class AbstractMethod {
@@ -172,8 +174,7 @@ export default class AbstractMethod {
      * @param {IArguments} args
      */
     set arguments(args) {
-        let parameters = [...args];
-
+        let parameters = cloneDeep([...args]);
         let callback = null;
 
         if (parameters.length > this.parametersAmount) {
@@ -212,19 +213,6 @@ export default class AbstractMethod {
      */
     isHash(parameter) {
         return isString(parameter) && parameter.indexOf('0x') === 0;
-    }
-
-    /**
-     * Returns this Method with the arguments set.
-     *
-     * @method request
-     *
-     * @returns {AbstractMethod}
-     */
-    request() {
-        this.arguments = arguments;
-
-        return this;
     }
 
     /**

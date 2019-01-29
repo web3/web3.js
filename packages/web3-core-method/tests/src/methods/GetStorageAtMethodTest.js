@@ -1,5 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 import GetStorageAtMethod from '../../../src/methods/GetStorageAtMethod';
 
 // Mocks
@@ -16,16 +17,16 @@ describe('GetStorageAtMethodTest', () => {
         method = new GetStorageAtMethod(Utils, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetStorageAtMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_getStorageAt', () => {
         expect(method.rpcMethod).toEqual('eth_getStorageAt');
-    });
 
-    it('parametersAmount should return 3', () => {
         expect(method.parametersAmount).toEqual(3);
+
+        expect(method.utils).toEqual(Utils);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it(
@@ -56,9 +57,36 @@ describe('GetStorageAtMethodTest', () => {
         }
     );
 
-    it('afterExecution should just return the response', () => {
-        const object = {};
+    it(
+        'calls beforeExecution without a callback instead of the optional parameter and should call the inputAddressFormatter, inputDefaultBlockNumberFormatter ' +
+            'and numberToHex method',
+        () => {
+            const callback = jest.fn();
+            method.parameters = ['string', 100, callback];
 
-        expect(method.afterExecution(object)).toEqual(object);
-    });
+            formatters.inputAddressFormatter.mockReturnValue('0x0');
+
+            formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+
+            Utils.numberToHex.mockReturnValueOnce('0x0');
+
+            method.beforeExecution({defaultBlock: 'latest'});
+
+            expect(method.callback).toEqual(callback);
+
+            expect(method.parameters[0]).toEqual('0x0');
+
+            expect(method.parameters[1]).toEqual('0x0');
+
+            expect(method.parameters[2]).toEqual('0x0');
+
+            expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
+
+            expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {
+                defaultBlock: 'latest'
+            });
+
+            expect(Utils.numberToHex).toHaveBeenCalledWith(100);
+        }
+    );
 });

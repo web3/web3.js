@@ -18,7 +18,8 @@
  */
 
 import EventEmitter from 'eventemitter3';
-import {isArray} from 'lodash';
+import isObject from 'lodash/isObject';
+import isArray from 'lodash/isArray';
 
 export default class AbstractSocketProvider extends EventEmitter {
     /**
@@ -187,7 +188,10 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onMessage(response) {
         let event;
-        response = JSON.parse(response);
+
+        if (!isObject(response)) {
+            response = JSON.parse(response);
+        }
 
         if (isArray(response)) {
             event = response[0].id;

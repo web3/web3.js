@@ -1,3 +1,4 @@
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import GetNodeInfoMethod from '../../../../src/methods/node/GetNodeInfoMethod';
 
 /**
@@ -7,29 +8,18 @@ describe('GetNodeInfoMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetNodeInfoMethod({}, {});
+        method = new GetNodeInfoMethod(null, null);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetNodeInfoMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return web3_clientVersion', () => {
         expect(method.rpcMethod).toEqual('web3_clientVersion');
-    });
 
-    it('parametersAmount should return 0', () => {
         expect(method.parametersAmount).toEqual(0);
-    });
 
-    it('beforeExecution should do nothing with the parameters', () => {
-        method.parameters = [];
-        method.beforeExecution();
+        expect(method.utils).toEqual(null);
 
-        expect(method.parameters[0]).toEqual(undefined);
-    });
-
-    it('afterExecution should just return the response', () => {
-        expect(method.afterExecution('version')).toEqual('version');
+        expect(method.formatters).toEqual(null);
     });
 });

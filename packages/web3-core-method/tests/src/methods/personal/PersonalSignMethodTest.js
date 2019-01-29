@@ -1,4 +1,5 @@
 import {formatters} from 'web3-core-helpers';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import PersonalSignMethod from '../../../../src/methods/personal/PersonalSignMethod';
 
 // Mocks
@@ -11,19 +12,19 @@ describe('PersonalSignMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new PersonalSignMethod({}, formatters);
+        method = new PersonalSignMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(PersonalSignMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return personal_sign', () => {
         expect(method.rpcMethod).toEqual('personal_sign');
-    });
 
-    it('parametersAmount should return 3', () => {
         expect(method.parametersAmount).toEqual(3);
+
+        expect(method.utils).toEqual(null);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('beforeExecution should call inputSignFormatter and inputAddressFormatter', () => {
@@ -42,9 +43,5 @@ describe('PersonalSignMethodTest', () => {
         expect(formatters.inputSignFormatter).toHaveBeenCalledWith('sign');
 
         expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
-    });
-
-    it('afterExecution should just return the response', () => {
-        expect(method.afterExecution('personalSign')).toEqual('personalSign');
     });
 });

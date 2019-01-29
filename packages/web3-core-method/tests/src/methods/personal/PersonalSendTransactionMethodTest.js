@@ -1,5 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import PersonalSendTransactionMethod from '../../../../src/methods/personal/PersonalSendTransactionMethod';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 
 // Mocks
 jest.mock('formatters');
@@ -11,19 +12,19 @@ describe('PersonalSendTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new PersonalSendTransactionMethod({}, formatters);
+        method = new PersonalSendTransactionMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(PersonalSendTransactionMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return personal_sendTransaction', () => {
         expect(method.rpcMethod).toEqual('personal_sendTransaction');
-    });
 
-    it('parametersAmount should return 2', () => {
         expect(method.parametersAmount).toEqual(2);
+
+        expect(method.utils).toEqual(null);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('beforeExecution should call inputTransactionFormatter', () => {
@@ -36,9 +37,5 @@ describe('PersonalSendTransactionMethodTest', () => {
         expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith({}, {});
 
         expect(method.parameters[0]).toHaveProperty('send', true);
-    });
-
-    it('afterExecution should just return the response', () => {
-        expect(method.afterExecution('personalSend')).toEqual('personalSend');
     });
 });

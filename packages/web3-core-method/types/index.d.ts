@@ -32,7 +32,6 @@ export class AbstractMethod {
     parameters: any[];
     arguments: object;
     isHash(parameter: string): boolean;
-    request(...args: any[]): AbstractMethod;
     hasWallets(): boolean;
 
     callback(error: string | Error, response: any): void;

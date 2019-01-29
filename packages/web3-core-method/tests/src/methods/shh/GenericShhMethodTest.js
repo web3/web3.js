@@ -133,13 +133,17 @@ describe('GenericShhMethodsTest', () => {
         let method;
         tests.forEach((test) => {
             // eslint-disable-next-line new-cap
-            method = new test.method({}, {});
+            method = new test.method(null, null);
 
             expect(test.method.Type).toEqual('CALL');
 
             expect(method.rpcMethod).toEqual(test.rpcMethod);
 
             expect(method.parametersAmount).toEqual(test.parametersAmount);
+
+            expect(method.utils).toEqual(null);
+
+            expect(method.formatters).toEqual(null);
         });
     });
 });

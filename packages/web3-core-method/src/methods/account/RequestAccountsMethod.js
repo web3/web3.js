@@ -26,22 +26,4 @@ export default class RequestAccountsMethod extends AbstractCallMethod {
     constructor() {
         super('eth_requestAccounts', 0, null, null);
     }
-
-    /**
-     * This method will be executed before the RPC request.
-     *
-     * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
-     */
-    beforeExecution(moduleInstance) {
-        if (moduleInstance.currentProvider.constructor.name !== 'EthereumProvider') {
-            const error = new Error(
-                'The JSON-RPC method "eth_requestAccounts" is just supported with the EthereumProvider.'
-            );
-
-            this.callback(error, null);
-            this.promiEvent.reject(error);
-        }
-    }
 }

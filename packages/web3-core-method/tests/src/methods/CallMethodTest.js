@@ -1,4 +1,5 @@
 import {formatters} from 'web3-core-helpers';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 import CallMethod from '../../../src/methods/CallMethod';
 
 // Mocks
@@ -11,19 +12,19 @@ describe('CallMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new CallMethod({}, formatters);
+        method = new CallMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(CallMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_call', () => {
         expect(method.rpcMethod).toEqual('eth_call');
-    });
 
-    it('parametersAmount should return 2', () => {
         expect(method.parametersAmount).toEqual(2);
+
+        expect(method.utils).toEqual(null);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('beforeExecution should call inputCallFormatter and inputDefaultBlockNumberFormatter', () => {
@@ -42,11 +43,5 @@ describe('CallMethodTest', () => {
         expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith(100, {});
 
         expect(formatters.inputCallFormatter).toHaveBeenCalledWith({}, {});
-    });
-
-    it('afterExecution should just return the response', () => {
-        const object = {};
-
-        expect(method.afterExecution(object)).toEqual(object);
     });
 });

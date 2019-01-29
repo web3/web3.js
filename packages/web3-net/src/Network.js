@@ -21,7 +21,7 @@
  */
 
 import {AbstractWeb3Module} from 'web3-core';
-import {isFunction} from 'lodash';
+import isFunction from 'lodash/isFunction';
 
 export default class Network extends AbstractWeb3Module {
     /**

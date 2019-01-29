@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import isFunction from 'lodash/isFunction';
 import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
 export default class GetBalanceMethod extends AbstractCallMethod {
@@ -42,6 +43,13 @@ export default class GetBalanceMethod extends AbstractCallMethod {
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+
+        // Optional second parameter 'defaultBlock' could also be the callback
+        if (isFunction(this.parameters[1])) {
+            this.callback = this.parameters[1];
+            this.parameters[1] = moduleInstance.defaultBlock;
+        }
+
         this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
     }
 

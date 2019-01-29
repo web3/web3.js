@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isObject} from 'lodash';
+import isObject from 'lodash/isObject';
+import {HttpProvider, WebsocketProvider, IpcProvider} from 'web3-providers';
 import {toChecksumAddress} from 'web3-utils'; // TODO: This could be removed with a web3-core-types module
 
 export default class AbstractWeb3Module {
@@ -50,7 +51,7 @@ export default class AbstractWeb3Module {
         this._defaultBlock = options.defaultBlock || 'latest';
         this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
         this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
-        this._transactionPollingTimeout = options.transactionPollingTimeout || 15;
+        this._transactionPollingTimeout = options.transactionPollingTimeout || 750;
         this._defaultGasPrice = options.defaultGasPrice;
         this._defaultGas = options.defaultGas;
 
@@ -70,7 +71,7 @@ export default class AbstractWeb3Module {
      *
      * @property defaultBlock
      *
-     * @returns {null|String}
+     * @returns {String|Number}
      */
     get defaultBlock() {
         return this._defaultBlock;
@@ -204,17 +205,11 @@ export default class AbstractWeb3Module {
      *
      * @returns {Object}
      */
-    get providers() {
+    static get providers() {
         return {
-            HttpProvider: (url, options) => {
-                return this.providersModuleFactory.createHttpProvider(url, options);
-            },
-            WebsocketProvider: (url, options) => {
-                return this.providersModuleFactory.createWebsocketProvider(url, options);
-            },
-            IpcProvider: (path, net) => {
-                return this.providersModuleFactory.createIpcProvider(path, net);
-            }
+            HttpProvider,
+            WebsocketProvider,
+            IpcProvider
         };
     }
 

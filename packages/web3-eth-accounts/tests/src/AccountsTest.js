@@ -232,7 +232,7 @@ describe('AccountsTest', () => {
             rawTransaction: 'encoded'
         });
 
-        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(tx);
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(tx, accounts);
 
         expect(Utils.numberToHex).toHaveBeenCalledWith(4);
 
@@ -348,7 +348,7 @@ describe('AccountsTest', () => {
             rawTransaction: 'encoded'
         });
 
-        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(tx);
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(tx, accounts);
 
         expect(Utils.numberToHex).toHaveBeenCalledWith(4);
 

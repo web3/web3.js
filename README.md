@@ -1,10 +1,9 @@
-**PREVIEW RELEASE** This is a beta preview release with breaking changes! The current stable version is 0.20.0 
 
 ![Web3.js logo](assets/web3js.svg)
 
 # web3.js - Ethereum JavaScript API
 
-[![npm](https://img.shields.io/npm/dm/web3.svg)](https://www.npmjs.com/package/web3) [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url]
+[![npm](https://img.shields.io/npm/dm/web3.svg)](https://www.npmjs.com/package/web3) [![Build Status][travis-image]][travis-url] ![Coverage Status](https://coveralls.io/repos/github/ethereum/web3.js/badge.svg?branch=1.0&kill_cache=1)
 [![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This is the Ethereum [JavaScript API][docs]
@@ -75,6 +74,9 @@ Documentation can be found at [read the docs][docs]
 
 ## Contributing
 
+- All contributions have to go into the 1.0 branch
+- Please follow the code style of the other files, we use 4 spaces as tabs.
+
 ### Requirements
 
 * [Node.js](https://nodejs.org)
@@ -90,16 +92,9 @@ npm run dev // runs rollup with a watcher
 
 ```
 
-### Contributing
-
-- All contributions have to go into develop (0.20.x), or the 1.0 branch
-- Please follow the code style of the other files, we use 4 spaces as tabs.
-
 ### Support
 
-![chrome](https://img.shields.io/badge/chrome-latest%202%20versions-green.svg)
-![firefox](https://img.shields.io/badge/firefox-latest%202%20versions-green.svg)
-![opera](https://img.shields.io/badge/opera-latest%202%20versions-green.svg)
+![browsers](https://img.shields.io/badge/browsers-latest%202%20versions-brightgreen.svg)
 ![node](https://img.shields.io/badge/node->=6-green.svg)
 
 ### Community

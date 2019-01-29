@@ -1,6 +1,7 @@
 import {formatters} from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
 import GetTransactionFromBlockMethod from '../../../../src/methods/transaction/GetTransactionFromBlockMethod';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 
 // Mocks
 jest.mock('formatters');
@@ -16,16 +17,16 @@ describe('GetTransactionFromBlockMethodTest', () => {
         method = new GetTransactionFromBlockMethod(Utils, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetTransactionFromBlockMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', () => {
         expect(method.rpcMethod).toEqual('eth_getTransactionByBlockNumberAndIndex');
-    });
 
-    it('parametersAmount should return 2', () => {
         expect(method.parametersAmount).toEqual(2);
+
+        expect(method.utils).toEqual(Utils);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it(
