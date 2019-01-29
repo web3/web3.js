@@ -23,7 +23,7 @@
 import BigNumber from 'bn.js';
 
 export type Unit =
-    'noether'
+    | 'noether'
     | 'wei'
     | 'kwei'
     | 'Kwei'
@@ -52,32 +52,24 @@ export type Unit =
     | 'tether';
 
 export type Mixed =
-    string
+    | string
     | number
     | BN
     | {
-        type: string;
-        value: string;
-    }
+          type: string;
+          value: string;
+      }
     | {
-        t: string;
-        v: string | BN | number;
-    }
+          t: string;
+          v: string | BN | number;
+      }
     | boolean;
 
 export type Hex = string | number;
 
 export class BN extends BigNumber {
-    constructor(
-        number: number | string | number[] | Buffer | BN,
-        base?: number | 'hex',
-        endian?: 'le' | 'be'
-    )
-    super(
-        number: number | string | number[] | Buffer | BN,
-        base?: number | 'hex',
-        endian?: 'le' | 'be'
-    ): BigNumber;
+    constructor(number: number | string | number[] | Buffer | BN, base?: number | 'hex', endian?: 'le' | 'be');
+    super(number: number | string | number[] | Buffer | BN, base?: number | 'hex', endian?: 'le' | 'be'): BigNumber;
 }
 
 // utils types
@@ -97,7 +89,7 @@ export function checkAddressChecksum(address: string): boolean;
 export function fromAscii(string: string): string;
 export function fromDecimal(value: string | number): string;
 export function fromUtf8(string: string): string;
-export function fromWei(value: BN, unit?: Unit): BN | string;
+export function fromWei(value: string | BN, unit?: Unit): string;
 export function hexToBytes(hex: Hex): number[];
 export function hexToNumber(hex: Hex): number;
 export function hexToNumberString(hex: Hex): string;
@@ -116,7 +108,8 @@ export function toChecksumAddress(address: string): string;
 export function toDecimal(hex: Hex): number;
 export function toHex(value: number | string | BN): string;
 export function toUtf8(string: string): string;
-export function toWei(value: number | string | BN, unit?: Unit): string | BN;
+export function toWei(val: BN, unit?: Unit): BN;
+export function toWei(val: string, unit?: Unit): string;
 export function isBloom(bloom: string): boolean;
 export function isTopic(topic: string): boolean;
 export function jsonInterfaceMethodToString(abiItem: AbiItem): string;
@@ -128,7 +121,6 @@ export function testTopic(bloom: string, topic: string): boolean;
 export function getSignatureParameters(signature: string): object;
 
 // interfaces
-
 export interface Utils {
     isBN(value: string | number): boolean;
     isBigNumber(value: BN): boolean;
@@ -146,7 +138,7 @@ export interface Utils {
     fromAscii(string: string): string;
     fromDecimal(value: string | number): string;
     fromUtf8(string: string): string;
-    fromWei(value: BN, unit?: Unit): BN | string;
+    fromWei(value: string | BN, unit?: Unit): string;
     hexToBytes(hex: Hex): number[];
     hexToNumber(hex: Hex): number;
     hexToNumberString(hex: Hex): string;
@@ -165,7 +157,8 @@ export interface Utils {
     toDecimal(hex: Hex): number;
     toHex(value: number | string | BN): string;
     toUtf8(string: string): string;
-    toWei(value: number | string | BN, unit?: Unit): string | BN;
+    toWei(val: BN, unit?: Unit): BN;
+    toWei(val: string, unit?: Unit): string;
     isBloom(bloom: string): boolean;
     isTopic(topic: string): boolean;
     jsonInterfaceMethodToString(abiItem: AbiItem): string;

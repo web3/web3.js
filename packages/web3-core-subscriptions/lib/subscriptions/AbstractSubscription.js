@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {isFunction} from 'lodash';
+import isFunction from 'lodash/isFunction';
 import EventEmitter from 'eventemitter3';
 
 /**

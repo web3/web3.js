@@ -1,4 +1,5 @@
 import {formatters} from 'web3-core-helpers';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import LockAccountMethod from '../../../../src/methods/personal/LockAccountMethod';
 
 // Mocks
@@ -11,19 +12,19 @@ describe('LockAccountMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new LockAccountMethod({}, formatters);
+        method = new LockAccountMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(LockAccountMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return personal_lockAccount', () => {
         expect(method.rpcMethod).toEqual('personal_lockAccount');
-    });
 
-    it('parametersAmount should return 1', () => {
         expect(method.parametersAmount).toEqual(1);
+
+        expect(method.utils).toEqual(null);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('beforeExecution should call inputAddressFormatter', () => {
@@ -36,9 +37,5 @@ describe('LockAccountMethodTest', () => {
         expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
 
         expect(method.parameters[0]).toEqual('0x0');
-    });
-
-    it('afterExecution should just return the response', () => {
-        expect(method.afterExecution('lockAccount')).toEqual('lockAccount');
     });
 });

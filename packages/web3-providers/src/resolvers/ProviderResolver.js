@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isFunction, isObject} from 'lodash';
+import isFunction from 'lodash/isFunction';
+import isObject from 'lodash/isObject';
 import HttpProvider from '../providers/HttpProvider';
 import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';

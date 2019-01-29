@@ -1,4 +1,5 @@
 import {formatters} from 'web3-core-helpers';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 import GetPastLogsMethod from '../../../src/methods/GetPastLogsMethod';
 
 // Mocks
@@ -11,19 +12,19 @@ describe('GetPastLogsMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetPastLogsMethod({}, formatters);
+        method = new GetPastLogsMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetPastLogsMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_getLogs', () => {
         expect(method.rpcMethod).toEqual('eth_getLogs');
-    });
 
-    it('parametersAmount should return 1', () => {
         expect(method.parametersAmount).toEqual(1);
+
+        expect(method.utils).toEqual(null);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {
@@ -38,7 +39,7 @@ describe('GetPastLogsMethodTest', () => {
         expect(formatters.inputLogFormatter).toHaveBeenCalledWith({});
     });
 
-    it('afterExecution should just return the response', () => {
+    it('afterExecution should call the outputLogFormatter and return the response', () => {
         formatters.outputLogFormatter.mockReturnValueOnce({formatted: true});
 
         expect(method.afterExecution([{}])[0]).toHaveProperty('formatted', true);

@@ -147,6 +147,16 @@ describe('AbstractSocketProviderTest', () => {
         abstractSocketProvider.onMessage('{"id": "MY_ID"}');
     });
 
+    it('calls onMessage with a response object and the JSON-RPC message id will be used as event name', (done) => {
+        abstractSocketProvider.on('MY_ID', (response) => {
+            expect(response).toEqual({id: 'MY_ID'});
+
+            done();
+        });
+
+        abstractSocketProvider.onMessage({id: 'MY_ID'});
+    });
+
     it('calls onMessage and the subscription id will be used as event name', (done) => {
         abstractSocketProvider.subscriptions['0x0'] = {subscription: '0x0'};
 

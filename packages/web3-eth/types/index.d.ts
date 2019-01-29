@@ -118,11 +118,8 @@ export class Eth extends AbstractWeb3Module {
 
     sign(dataToSign: string, address: string | number, callback?: (error: Error, signature: string) => void): Promise<string>;
 
-    // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
     signTransaction(transaction: Transaction, callback?: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
-    // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
     signTransaction(transaction: Transaction, address: string): Promise<RLPEncodedTransaction>;
-    // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
     signTransaction(transaction: Transaction, address: string, callback: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
 
     call(transaction: Transaction): Promise<string>;

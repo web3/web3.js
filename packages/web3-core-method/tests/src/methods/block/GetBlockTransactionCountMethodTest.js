@@ -1,5 +1,6 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import GetBlockTransactionCountMethod from '../../../../src/methods/block/GetBlockTransactionCountMethod';
 
 // Mocks
@@ -16,16 +17,16 @@ describe('GetBlockTransactionCountMethod', () => {
         method = new GetBlockTransactionCountMethod(Utils, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(GetBlockTransactionCountMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', () => {
         expect(method.rpcMethod).toEqual('eth_getTransactionByBlockNumberAndIndex');
-    });
 
-    it('parametersAmount should return 1', () => {
         expect(method.parametersAmount).toEqual(1);
+
+        expect(method.utils).toEqual(Utils);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('beforeExecution should call method with block hash as parameter and call inputBlockNumberFormatter', () => {

@@ -20,7 +20,9 @@
  * @date 2018
  */
 
-import {isFunction, isUndefined} from 'lodash';
+import isFunction from 'lodash/isFunction';
+import isUndefined from 'lodash/isUndefined';
+import cloneDeep from 'lodash/cloneDeep';
 
 export default class EventSubscriptionsProxy {
     /**
@@ -66,13 +68,13 @@ export default class EventSubscriptionsProxy {
             get: (target, name) => {
                 if (this.abiModel.hasEvent(name)) {
                     return (options, callback) => {
-                        return target.subscribe(target.abiModel.getEvent(name), options, callback);
+                        return target.subscribe(target.abiModel.getEvent(name), cloneDeep(options), callback);
                     };
                 }
 
                 if (name === 'allEvents') {
                     return (options, callback) => {
-                        return target.subscribeAll(options, callback);
+                        return target.subscribeAll(cloneDeep(options), callback);
                     };
                 }
 

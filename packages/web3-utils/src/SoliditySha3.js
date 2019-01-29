@@ -20,7 +20,9 @@
  * @date 2017
  */
 
-import {isArray, isObject, map} from 'lodash';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
+import map from 'lodash/map';
 import BN from 'bn.js';
 import * as utils from './Utils.js';
 

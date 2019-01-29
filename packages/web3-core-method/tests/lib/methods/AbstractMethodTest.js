@@ -95,16 +95,6 @@ describe('AbstractMethodTest', () => {
         expect(abstractMethod.callback).toBeInstanceOf(Function);
     });
 
-    it('execution of request returns AbstractMethod with parameters set', () => {
-        abstractMethod.parametersAmount = 1;
-        abstractMethod.arguments = [true];
-        const request = abstractMethod.request(true);
-
-        expect(request).toBeInstanceOf(AbstractMethod);
-
-        expect(request.parameters[0]).toBeTruthy();
-    });
-
     it('check if execute method exists', () => {
         expect(abstractMethod.execute).toBeInstanceOf(Function);
     });

@@ -1,4 +1,5 @@
 import {formatters} from 'web3-core-helpers';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import EcRecoverMethod from '../../../../src/methods/personal/EcRecoverMethod';
 
 // Mocks
@@ -11,19 +12,19 @@ describe('EcRecoverMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new EcRecoverMethod({}, formatters);
+        method = new EcRecoverMethod(null, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(EcRecoverMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return personal_ecRecover', () => {
         expect(method.rpcMethod).toEqual('personal_ecRecover');
-    });
 
-    it('parametersAmount should return 3', () => {
         expect(method.parametersAmount).toEqual(3);
+
+        expect(method.utils).toEqual(null);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -42,9 +43,5 @@ describe('EcRecoverMethodTest', () => {
         expect(formatters.inputSignFormatter).toHaveBeenCalledWith({});
 
         expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
-    });
-
-    it('afterExecution should just return the response', () => {
-        expect(method.afterExecution('submitWork')).toEqual('submitWork');
     });
 });

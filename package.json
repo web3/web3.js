@@ -15,16 +15,16 @@
         "bootstrap": "lerna bootstrap",
         "install:all": "lerna add",
         "remove:all": "lerna exec npm uninstall",
+        "publish": "npm run clean && npm run bootstrap && npm run travis && lerna publish",
         "build": "lerna run build",
         "test": "lerna run test",
-        "coveralls": "cat ./coverage/lcov.info | coveralls",
         "test:coverage": "lerna run test -- -- --coverage && istanbul-combine -d coverage -r lcov -r html ./packages/**/coverage-final.json",
-        "release": "lerna bootstrap; lerna publish; gulp version; gulp; gulp publishTag; git push --tags",
-        "docs": "cd docs; make html;",
-        "format": "prettier --config ./.prettierrc --write ./packages/**/*.js",
-        "lint": "eslint --cache --fix .",
         "dtslint": "lerna run dtslint",
-        "travis": "npm run lint && npm run build && npm run test:coverage && npm run dtslint"
+        "docs": "cd docs; make html;",
+        "lint": "eslint --cache --fix .",
+        "format": "prettier --config ./.prettierrc --write ./packages/**/*.js",
+        "travis": "npm run lint && npm run build && npm run test:coverage && npm run dtslint",
+        "coveralls": "cat ./coverage/lcov.info | coveralls"
     },
     "repository": {
         "type": "git",
@@ -72,13 +72,14 @@
         }
     ],
     "devDependencies": {
+        "parsimmon": "^1.12.0",
         "@babel/core": "^7.1.5",
+        "@babel/runtime": "^7.1.5",
         "@babel/plugin-proposal-export-default-from": "^7.0.0",
         "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
         "@babel/plugin-transform-runtime": "^7.2.0",
         "@babel/polyfill": "^7.0.0",
         "@babel/preset-env": "^7.1.5",
-        "@babel/runtime": "^7.1.5",
         "@types/bn.js": "^4.11.3",
         "@types/node": "^10.12.12",
         "babel-core": "^7.0.0-bridge.0",

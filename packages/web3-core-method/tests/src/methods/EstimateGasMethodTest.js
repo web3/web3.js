@@ -1,5 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 import EstimateGasMethod from '../../../src/methods/EstimateGasMethod';
 
 // Mocks
@@ -16,16 +17,16 @@ describe('EstimateGasMethodTest', () => {
         method = new EstimateGasMethod(Utils, formatters);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(EstimateGasMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_estimateGas', () => {
         expect(method.rpcMethod).toEqual('eth_estimateGas');
-    });
 
-    it('parametersAmount should return 1', () => {
         expect(method.parametersAmount).toEqual(1);
+
+        expect(method.utils).toEqual(Utils);
+
+        expect(method.formatters).toEqual(formatters);
     });
 
     it('beforeExecution should call the inputCallFormatter', () => {

@@ -40,9 +40,13 @@ export default class IsSyncingMethod extends AbstractCallMethod {
      *
      * @param {Object} response
      *
-     * @returns {Object}
+     * @returns {Object|Boolean}
      */
     afterExecution(response) {
-        return this.formatters.outputSyncingFormatter(response);
+        if (typeof response !== 'boolean') {
+            return this.formatters.outputSyncingFormatter(response);
+        }
+
+        return response;
     }
 }

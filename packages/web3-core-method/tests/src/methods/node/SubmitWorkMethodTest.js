@@ -1,3 +1,4 @@
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import SubmitWorkMethod from '../../../../src/methods/node/SubmitWorkMethod';
 
 /**
@@ -7,29 +8,18 @@ describe('SubmitWorkMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SubmitWorkMethod({}, {});
+        method = new SubmitWorkMethod(null, null);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(SubmitWorkMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_submitWork', () => {
         expect(method.rpcMethod).toEqual('eth_submitWork');
-    });
 
-    it('parametersAmount should return 3', () => {
         expect(method.parametersAmount).toEqual(3);
-    });
 
-    it('beforeExecution should do nothing with the parameters', () => {
-        method.parameters = [];
-        method.beforeExecution();
+        expect(method.utils).toEqual(null);
 
-        expect(method.parameters[0]).toEqual(undefined);
-    });
-
-    it('afterExecution should just return the response', () => {
-        expect(method.afterExecution('submitWork')).toEqual('submitWork');
+        expect(method.formatters).toEqual(null);
     });
 });

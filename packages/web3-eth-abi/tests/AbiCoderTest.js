@@ -147,15 +147,15 @@ describe('AbiCoderTest', () => {
 
     it('calls decodeParameters and throws an error', () => {
         expect(() => {
-            abiCoder.decodeParameters([], '0x');
+            abiCoder.decodeParameters(['0'], '0x');
         }).toThrow("Returned values aren't valid, did it run Out of Gas?");
 
         expect(() => {
-            abiCoder.decodeParameters([], '0X');
+            abiCoder.decodeParameters(['0'], '0X');
         }).toThrow("Returned values aren't valid, did it run Out of Gas?");
 
         expect(() => {
-            abiCoder.decodeParameters([]);
+            abiCoder.decodeParameters(['0']);
         }).toThrow("Returned values aren't valid, did it run Out of Gas?");
     });
 

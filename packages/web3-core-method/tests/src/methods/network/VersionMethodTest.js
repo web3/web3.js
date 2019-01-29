@@ -1,4 +1,5 @@
 import * as Utils from 'web3-utils';
+import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 import VersionMethod from '../../../../src/methods/network/VersionMethod';
 
 // Mocks
@@ -11,26 +12,19 @@ describe('VersionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new VersionMethod(Utils, {});
+        method = new VersionMethod(Utils, null);
     });
 
-    it('static Type property returns "CALL"', () => {
-        expect(VersionMethod.Type).toEqual('CALL');
-    });
+    it('constructor check', () => {
+        expect(method).toBeInstanceOf(AbstractCallMethod);
 
-    it('rpcMethod should return eth_protocolVersion', () => {
-        expect(method.rpcMethod).toEqual('eth_protocolVersion');
-    });
+        expect(method.rpcMethod).toEqual('net_version');
 
-    it('parametersAmount should return 0', () => {
         expect(method.parametersAmount).toEqual(0);
-    });
 
-    it('beforeExecution should do nothing with the parameters', () => {
-        method.parameters = [];
-        method.beforeExecution();
+        expect(method.utils).toEqual(Utils);
 
-        expect(method.parameters[0]).toEqual(undefined);
+        expect(method.formatters).toEqual(null);
     });
 
     it('afterExecution should map the response', () => {
