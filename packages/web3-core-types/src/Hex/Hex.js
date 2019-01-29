@@ -143,8 +143,8 @@ export default class Hex {
      */
     toAscii() {
         let ascii = '';
-        for(let i = 0; i < this.props.hex.length; i += 2) {
-           ascii += String.fromCharCode(parseInt(this.props.hex.substr(i,2)));
+        for (let i = 0; i < this.props.hex.length; i += 2) {
+            ascii += String.fromCharCode(parseInt(this.props.hex.substr(i, 2)));
         }
 
         return ascii;
@@ -181,7 +181,7 @@ export default class Hex {
             str += String.fromCharCode(code);
         }
 
-        return utf8.decode(str);  
+        return utf8.decode(str);
     }
 
     /**
@@ -193,12 +193,12 @@ export default class Hex {
      * @return {Uint8Array}
      */
     toBytes() {
-        const hex = this.props.hex.replace(/^(-|-0x|0x)/i,'');
+        const hex = this.props.hex.replace(/^(-|-0x|0x)/i, '');
         const pad = hex.length % 2 === 0 ? hex : `0${hex}`;
-        const bytes = new Uint8Array(pad.length/2);
+        const bytes = new Uint8Array(pad.length / 2);
 
-        for(let i = 0; i < pad.length; i+=2) {
-            bytes[i/2] = parseInt(pad.substr(i,2),16);
+        for (let i = 0; i < pad.length; i += 2) {
+            bytes[i / 2] = parseInt(pad.substr(i, 2), 16);
         }
 
         return bytes;

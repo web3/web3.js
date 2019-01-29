@@ -71,6 +71,22 @@ describe('TransactionTest', () => {
         });
     });
 
+    it('accepts address string', () => {
+        txParamsTest.from = '0xE247A45c287191d435A8a5D72A7C8dc030451E9F';
+        transaction = new Transaction(txParamsTest, error, initParams);
+
+        expect(transaction).toHaveProperty('props');
+        expect(transaction.props.from).toHaveProperty('isAddress');
+    });
+    
+    it('accepts wallet index', () => {
+        txParamsTest.from = 0;
+        transaction = new Transaction(txParamsTest, error, initParams);
+
+        expect(transaction).toHaveProperty('props');
+        expect(transaction.props.from).toBe(0);
+    });
+
     it('accepts gas integer values', () => {
         const tests = [{value: 0}, {value: 10}];
 

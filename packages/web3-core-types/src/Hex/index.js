@@ -189,9 +189,9 @@ Hex.fromBytes = (value) => {
  *
  */
 Hex.from = (value) => {
-    if(isNumber(value)) {
+    if (isNumber(value)) {
         return Hex.fromNumber(value);
-    } else if(isString(value)) {
+    } else if (isString(value)) {
         return Hex.fromString(value);
     } else {
         throw new Error(`The given value ${value} needs to be a hex-encoded value string or a base 10 number.`);

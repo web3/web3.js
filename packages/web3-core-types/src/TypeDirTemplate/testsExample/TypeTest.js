@@ -5,9 +5,7 @@ import Type from '../Type';
  * Type test
  */
 describe('TypeTest', () => {
-    beforeEach(() => {
-    
-    });
+    beforeEach(() => {});
 
     it('constructor check', () => {
         type = new Type(txParamsTest, error, params);

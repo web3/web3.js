@@ -40,4 +40,4 @@ Type.method = TypeClass.method;
 /* Pre-process a static calls */
 Type.method = (value) => {
     return TypeClass.method(value);
-}
+};

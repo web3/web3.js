@@ -49,7 +49,7 @@ Address.isValid = AddressClass.isValid;
  * Expose toChecksum by taking an address
  * as string and creating the object
  *
- * @param {String} address 
+ * @param {String} address
  *
  * @returns {Address}
  *
@@ -61,11 +61,11 @@ Address.toChecksum = (address) => {
 /**
  * Create an Address object from an IBAN string
  *
- * @param {String} iban 
+ * @param {String} iban
  *
  * @returns {Address}
  *
  */
 Address.fromIban = (iban) => {
-   return new Address(Iban.toAddress(iban));
+    return new Address(Iban.toAddress(iban));
 };

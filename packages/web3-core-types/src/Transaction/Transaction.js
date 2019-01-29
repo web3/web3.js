@@ -22,12 +22,12 @@
 
 import * as Types from '..';
 import {isBN, isBigNumber, toBN} from 'web3-utils';
-import {isNaN, isInteger, omit, cloneDeep} from 'lodash';
+import {isNaN, isInteger, isString, omit, cloneDeep} from 'lodash';
 
 export default class Transaction {
     /**
      * @dev Wrap as object
-     * @param {Address} from
+     * @param {Address|Number|String} from
      * @param {Address|"deploy"} to
      * @param {Number|BN|BigNumber|String|"none"} value
      * @param {Number|"auto"} gas
@@ -43,8 +43,12 @@ export default class Transaction {
         this.props = cloneDeep(initParams);
 
         /* Check for type and format validity */
-        // TODO Link to local wallet index
-        this.props.from = params.from.isAddress ? Types.Address(params.from.props) : undefined;
+
+        /* Allow from an address string, Address object, or wallet index */
+        if (params.from.isAddress) this.props.from = Types.Address(params.from.props);
+        else if (isString(params.from) && Types.Address.isValid(params.from))
+            this.props.from = Types.Address(params.from);
+        else if (isInteger(params.from)) this.props.from = params.from;
 
         this.props.to = params.to.isAddress ? Types.Address(params.to.props) : undefined;
 
@@ -77,16 +81,13 @@ export default class Transaction {
         /* Set the default values */
         if (params.value === 'none') this.props.value = toBN(0);
 
-        if (params.gas === 'auto');
-        // TODO
+        if (params.gas === 'auto') this.props.gas = params.gas; // this.props = omit(this.props, 'gas');
 
-        if (params.gasPrice === 'auto');
-        // TODO this.gasPrice = web3.eth.gasPrice
+        if (params.gasPrice === 'auto') this.props.gasPrice = params.gasPrice; // this.props.gasPrice = omit(this.props, 'gasPrice');
 
         if (params.data === 'none') this.props.data = Types.Hex('empty');
 
-        if (params.nonce === 'auto');
-        // TODO default nonce
+        if (params.nonce === 'auto') this.props.nonce = params.nonce; // this.props.nonce = omit(this.props, 'nonce');
 
         if (/main/i.test(params.chainId)) this.props.chainId = '1';
 
@@ -102,34 +103,90 @@ export default class Transaction {
         Object.freeze(this.props);
     }
 
+    /**
+     * Gets the gas property
+     *
+     * @property gas
+     *
+     * @returns {String} value
+     */
     get gas() {
         return this.props.gas.toString();
     }
 
+    /**
+     * Gets the gas property
+     *
+     * @property gas
+     *
+     * @returns {String} value
+     */
     get gasPrice() {
         return this.props.gasPrice.toString();
     }
 
+    /**
+     * Gets the gasPrice property
+     *
+     * @property gasPrice
+     *
+     * @returns {String} value
+     */
     get to() {
         return this.props.to.toString();
     }
 
+    /**
+     * Gets the from property
+     *
+     * @property from
+     *
+     * @returns {String} value
+     */
     get from() {
         return this.props.from.toString();
     }
 
+    /**
+     * Gets the value property
+     *
+     * @property value
+     *
+     * @returns {String} value
+     */
     get value() {
         return this.props.value.toString();
     }
 
+    /**
+     * Gets the data property
+     *
+     * @property data
+     *
+     * @returns {String} value
+     */
     get data() {
         return this.props.data.toString();
     }
 
+    /**
+     * Gets the nonce property
+     *
+     * @property nonce
+     *
+     * @returns {Number} value
+     */
     get nonce() {
         return parseInt(this.props.nonce);
     }
 
+    /**
+     * Gets the chainId property
+     *
+     * @property chainId
+     *
+     * @returns {String} value
+     */
     get chainId() {
         return this.props.chainId.toString();
     }
@@ -142,13 +199,14 @@ export default class Transaction {
      * @return {boolean|Error}
      *
      */
-    isValid() {
+    isValid() {}
 
-    }
-
-    
     /**
-     * Sign the transaction object
+     * Sign the transaction object.
+     *  TODO Patch the account parameter
+     *  with the web3-eth-personal module
+     *  skipping the inputTransactionFormatter
+     *  and passing the this or account reference.
      *
      * @method sign
      *
@@ -158,7 +216,26 @@ export default class Transaction {
      *
      */
     sign(account) {
-        
+        const params = cloneDeep(this.props);
+        if(params.from.isAddress) params.from = params.from.toString();
+        if(params.to.isAddress) params.to= params.to.toString();
+
+        const unsignedTx = Object.keys(params).forEach(
+            (key) => (params[key] = params[key] === 'auto' ? undefined : params[key])
+        );
+
+        return account.sign(unsignedTx);
+    }
+
+    /**
+     * Override toString to print the transaction object
+     *
+     * @method toString
+     *
+     * @return {String}
+     */
+    toString() {
+        return this.props.toString();
     }
 
     /**

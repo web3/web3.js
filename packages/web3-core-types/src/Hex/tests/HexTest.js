@@ -42,7 +42,7 @@ describe('HexTest', () => {
         expect(strict).toBe(true);
         expect(notStrict).toBe(false);
     });
-    
+
     it('convert to bytes', () => {
         const tests = [
             {value: '1', expected: 1},
@@ -51,16 +51,16 @@ describe('HexTest', () => {
             {value: '0xf', expected: 15},
             {value: '-1', expected: 1},
             {value: '0xff', expected: 255},
-            {value: '0x0ff', expected: 255},
-        ]
-        
+            {value: '0x0ff', expected: 255}
+        ];
+
         tests.forEach((test) => {
             const bytes = new Hex(test.value, error, initParams).toBytes();
 
-            expect(bytes.reduce((v,acc) => acc + v, 0)).toBe(test.expected);
+            expect(bytes.reduce((v, acc) => acc + v, 0)).toBe(test.expected);
         });
     });
-    
+
     it('convert to utf8', () => {
         const tests = [
             {
@@ -75,14 +75,14 @@ describe('HexTest', () => {
                 expected: 'expect\u0000\u0000ed value'
             }
         ];
-        
+
         tests.forEach((test) => {
             const utf8 = new Hex(test.value, error, initParams).toUtf8();
 
             expect(utf8).toBe(test.expected);
         });
     });
-    
+
     it('convert to ascii', () => {
         const tests = [
             {expected: 'myString', value: '0x6d79537472696e67'},
@@ -95,7 +95,6 @@ describe('HexTest', () => {
             }
         ];
 
-        
         tests.forEach((test) => {
             const ascii = new Hex(test.value, error, initParams).toAscii();
 
