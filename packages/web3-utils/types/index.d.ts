@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import BigNumber from 'bn.js';
+import BigNumber = require('bn.js');
 
 export type Unit =
     | 'noether'
