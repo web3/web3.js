@@ -17,8 +17,7 @@
         "API"
     ],
     "author": "ethereum.org",
-    "authors": [
-        {
+    "authors": [{
             "name": "Samuel Furter",
             "email": "samuel@ethereum.org",
             "homepage": "https://github.com/nivida"
@@ -52,7 +51,8 @@
         "build": "rollup -c",
         "dev": "rollup -c -w",
         "test": "jest",
-        "dtslint": "dtslint types --onlyTestTsNext"
+        "dtslint": "dtslint types --onlyTestTsNext",
+        "postinstall": "node angular-patch.js"
     },
     "types": "types",
     "dependencies": {

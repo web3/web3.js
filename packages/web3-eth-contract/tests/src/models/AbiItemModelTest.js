@@ -11,6 +11,7 @@ describe('AbiItemModelTest', () => {
             signature: 'signature',
             name: 'name',
             anonymous: false,
+            payable: true,
             type: 'function',
             constant: true
         };

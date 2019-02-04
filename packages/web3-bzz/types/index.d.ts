@@ -17,6 +17,8 @@
  * @date 2018
  */
 
+import {Buffer} from 'buffer';
+
 export class Bzz {
     constructor(provider: string | {});
 
