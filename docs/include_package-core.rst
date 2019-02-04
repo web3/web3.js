@@ -227,7 +227,6 @@ Parameters
 ----------
 
 1. ``Object|String`` - ``provider``: a valid provider
-2. ``Net`` - ``net``: (optional) the node.js Net package. This is only required for the IPC provider.
 
 -------
 Returns
@@ -254,10 +253,8 @@ Example
     web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 
     // Using the IPC provider in node.js
-    const net = require('net');
-    const web3 = new Web3('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
+    import net from 'net';
 
-    // or
     const web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net)); // mac os path
     // on windows the path is: '\\\\.\\pipe\\geth.ipc'
     // on linux the path is: '/users/myuser/.ethereum/geth.ipc'
@@ -291,17 +288,16 @@ Example
 
 .. code-block:: javascript
 
-    const Web3 = require('web3');
+    import Web3 from 'web3';
+
     // use the given Provider, e.g in Mist, or instantiate a new websocket provider
     const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8546');
     // or
     const web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 
     // Using the IPC provider in node.js
-    const net = require('net');
+    import net from 'net';
 
-    const web3 = new Web3('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
-    // or
     const web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net)); // mac os path
     // on windows the path is: '\\\\.\\pipe\\geth.ipc'
     // on linux the path is: '/users/myuser/.ethereum/geth.ipc'

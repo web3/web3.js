@@ -86,12 +86,11 @@ export default class Shh extends AbstractWeb3Module {
      * This is required for updating the provider also in the sub package Net.
      *
      * @param {Object|String} provider
-     * @param {Net} net
      *
      * @returns {Boolean}
      */
-    setProvider(provider, net) {
-        return super.setProvider(provider, net) && this.net.setProvider(provider, net);
+    setProvider(provider) {
+        return super.setProvider(provider) && this.net.setProvider(provider);
     }
 
     /**

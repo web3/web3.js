@@ -119,9 +119,9 @@ describe('PersonalTest', () => {
         networkMock.setProvider = jest.fn();
         networkMock.setProvider.mockReturnValueOnce(true);
 
-        expect(personal.setProvider('provider', 'net')).toEqual(true);
+        expect(personal.setProvider('provider')).toEqual(true);
 
-        expect(networkMock.setProvider).toHaveBeenCalledWith('provider', 'net');
+        expect(networkMock.setProvider).toHaveBeenCalledWith('provider');
     });
 
     it('sets the defaultGasPrice property', () => {

@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import * as net from "net";
 import {ProviderResolver, ProvidersModuleFactory, HttpProvider} from 'web3-providers';
 
 const options = {
@@ -37,4 +36,4 @@ const providersModuleFactory = new ProvidersModuleFactory();
 const providerResolver = new ProviderResolver(providersModuleFactory);
 
 // $ExpectType provider
-providerResolver.resolve(provider, new net.Socket());
+providerResolver.resolve(provider);

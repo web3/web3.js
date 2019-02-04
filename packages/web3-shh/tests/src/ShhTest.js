@@ -161,18 +161,18 @@ describe('ShhTest', () => {
         networkMock.setProvider = jest.fn();
         networkMock.setProvider.mockReturnValueOnce(true);
 
-        expect(shh.setProvider('provider', 'net')).toEqual(true);
+        expect(shh.setProvider('provider')).toEqual(true);
 
-        expect(networkMock.setProvider).toHaveBeenCalledWith('provider', 'net');
+        expect(networkMock.setProvider).toHaveBeenCalledWith('provider');
     });
 
     it('calls setProvider and returns false', () => {
         networkMock.setProvider = jest.fn();
         networkMock.setProvider.mockReturnValueOnce(false);
 
-        expect(shh.setProvider('provider', 'net')).toEqual(false);
+        expect(shh.setProvider('provider')).toEqual(false);
 
-        expect(networkMock.setProvider).toHaveBeenCalledWith('provider', 'net');
+        expect(networkMock.setProvider).toHaveBeenCalledWith('provider');
     });
 
     it('sets the defaultGasPrice property', () => {

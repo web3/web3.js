@@ -113,16 +113,15 @@ export default class Registry extends AbstractContract {
      * @method setProvider
      *
      * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
-     * @param {Net} net
      *
      * @returns {Boolean}
      */
-    setProvider(provider, net) {
+    setProvider(provider) {
         if (this.resolverContract) {
-            return !!(super.setProvider(provider, net) && this.resolverContract.setProvider(provider, net));
+            return !!(super.setProvider(provider) && this.resolverContract.setProvider(provider));
         }
 
-        return super.setProvider(provider, net);
+        return super.setProvider(provider);
     }
 
     /**

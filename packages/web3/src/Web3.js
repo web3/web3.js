@@ -35,12 +35,11 @@ import {version} from '../package.json';
 export default class Web3 extends AbstractWeb3Module {
     /**
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {Net} net
      * @param {Object} options
      *
      * @constructor
      */
-    constructor(provider, net, options = {}) {
+    constructor(provider, options = {}) {
         super(provider, new ProvidersModuleFactory(), null, null, options);
 
         this.eth = new Eth(provider, options);
@@ -224,15 +223,14 @@ export default class Web3 extends AbstractWeb3Module {
      * @method setProvider
      *
      * @param {Object|String} provider
-     * @param {Net} net
      *
      * @returns {Boolean}
      */
-    setProvider(provider, net) {
+    setProvider(provider) {
         return (
-            super.setProvider(provider, net) &&
-            this.eth.setProvider(provider, net) &&
-            this.shh.setProvider(provider, net) &&
+            super.setProvider(provider) &&
+            this.eth.setProvider(provider) &&
+            this.shh.setProvider(provider) &&
             this.bzz.setProvider(provider)
         );
     }
@@ -255,17 +253,17 @@ export default class Web3 extends AbstractWeb3Module {
         const providerResolver = new ProvidersModuleFactory().createProviderResolver();
 
         return {
-            Eth: (provider, options, net) => {
-                return new Eth(providerResolver.resolve(provider, net), options);
+            Eth: (provider, options) => {
+                return new Eth(providerResolver.resolve(provider), options);
             },
-            Net: (provider, options, net) => {
-                return new Network(providerResolver.resolve(provider, net), options);
+            Net: (provider, options) => {
+                return new Network(providerResolver.resolve(provider), options);
             },
-            Personal: (provider, options, net) => {
-                return new Personal(providerResolver.resolve(provider, net), options);
+            Personal: (provider, options) => {
+                return new Personal(providerResolver.resolve(provider), options);
             },
-            Shh: (provider, options, net) => {
-                return new Shh(providerResolver.resolve(provider, net), options);
+            Shh: (provider, options) => {
+                return new Shh(providerResolver.resolve(provider), options);
             },
             Bzz: (provider) => {
                 return new Bzz(provider);

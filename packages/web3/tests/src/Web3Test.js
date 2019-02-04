@@ -120,13 +120,13 @@ describe('Web3Test', () => {
         shhMock.setProvider = jest.fn().mockReturnValueOnce(true);
         bzzMock.setProvider = jest.fn().mockReturnValueOnce(true);
 
-        expect(web3.setProvider('http://localhost', 'net')).toEqual(true);
+        expect(web3.setProvider('http://localhost')).toEqual(true);
 
         expect(web3.currentProvider.host).toEqual('http://localhost');
 
-        expect(ethMock.setProvider).toHaveBeenCalledWith('http://localhost', 'net');
+        expect(ethMock.setProvider).toHaveBeenCalledWith('http://localhost');
 
-        expect(shhMock.setProvider).toHaveBeenCalledWith('http://localhost', 'net');
+        expect(shhMock.setProvider).toHaveBeenCalledWith('http://localhost');
 
         expect(bzzMock.setProvider).toHaveBeenCalledWith('http://localhost');
     });
@@ -134,13 +134,13 @@ describe('Web3Test', () => {
     it('calls the static modules property and gets the expected object', () => {
         const modules = Web3.modules;
 
-        const eth = new modules.Eth('http://', 'net');
+        const eth = new modules.Eth('http://', {});
 
-        const net = new modules.Net('http://', 'net');
+        const net = new modules.Net('http://', {});
 
-        const personal = new modules.Personal('http://', 'net');
+        const personal = new modules.Personal('http://', {});
 
-        const shh = new modules.Shh('http://', 'net');
+        const shh = new modules.Shh('http://', {});
 
         const bzz = new modules.Bzz('http://');
 

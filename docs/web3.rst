@@ -25,12 +25,6 @@ Web3
 Web3.modules
 =====================
 
-    Static property of the Web3 class
-
-.. code-block:: javascript
-
-    Web3.modules
-
     Will return an object with the classes of all major sub modules, to be able to instantiate them manually.
 
 -------
@@ -52,11 +46,11 @@ Example
 
     Web3.modules
     > {
-        Eth: Eth function(provider, options?, net?),
-        Net: Net function(provider, options?, net?),
-        Personal: Personal function(provider, options?, net?),
-        Shh: Shh function(provider, options?, net?),
-        Bzz: Bzz function(provider, options?, net?),
+        Eth: Eth function(provider, options?),
+        Net: Net function(provider, options?),
+        Personal: Personal function(provider, options?),
+        Shh: Shh function(provider, options?),
+        Bzz: Bzz function(provider, options?),
     }
 
 
@@ -95,7 +89,6 @@ Example
 
 
 ------------------------------------------------------------------------------
-
 
 utils
 =====================

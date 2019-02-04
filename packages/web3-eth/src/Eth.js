@@ -353,20 +353,19 @@ export default class Eth extends AbstractWeb3Module {
      * This is required for updating the provider also in the sub packages and objects related to Eth.
      *
      * @param {Object|String} provider
-     * @param {Net} net
      *
      * @returns {Boolean}
      */
-    setProvider(provider, net) {
+    setProvider(provider) {
         const setContractProviders = this.initiatedContracts.every((contract) => {
-            return contract.setProvider(provider, net);
+            return contract.setProvider(provider);
         });
 
         return (
-            this.net.setProvider(provider, net) &&
-            this.personal.setProvider(provider, net) &&
-            this.accounts.setProvider(provider, net) &&
-            super.setProvider(provider, net) &&
+            this.net.setProvider(provider) &&
+            this.personal.setProvider(provider) &&
+            this.accounts.setProvider(provider) &&
+            super.setProvider(provider) &&
             setContractProviders
         );
     }

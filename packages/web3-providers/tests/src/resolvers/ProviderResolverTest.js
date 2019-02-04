@@ -47,19 +47,6 @@ describe('ProviderResolverTest', () => {
         expect(providersModuleFactoryMock.createWebsocketProvider).toHaveBeenCalledWith('ws://127.0.0.1:8545');
     });
 
-    it('calls resolve with Ipc path and net object', () => {
-        new IpcProvider({}, '/path/to/the/socket');
-        const ipcProviderMock = IpcProvider.mock.instances[0];
-
-        const net = {connect: () => {}};
-
-        providersModuleFactory.createIpcProvider.mockReturnValueOnce(ipcProviderMock);
-
-        expect(providerResolver.resolve('/path/to/the/socket', net)).toBeInstanceOf(IpcProvider);
-
-        expect(providersModuleFactoryMock.createIpcProvider).toHaveBeenCalledWith('/path/to/the/socket', net);
-    });
-
     it('calls resolve with the HttpProvider', () => {
         new HttpProvider('host', {}, providersModuleFactoryMock);
         const httpProviderMock = HttpProvider.mock.instances[0];

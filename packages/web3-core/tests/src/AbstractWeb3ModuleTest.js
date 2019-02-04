@@ -188,7 +188,7 @@ describe('AbstractWeb3ModuleTest', () => {
 
         expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(1, 'WS');
 
-        expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(2, 'SOCKET_PROVIDER', undefined);
+        expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(2, 'SOCKET_PROVIDER');
 
         expect(abstractWeb3Module.currentProvider).toEqual(providerMock);
     });
@@ -201,7 +201,7 @@ describe('AbstractWeb3ModuleTest', () => {
 
         expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(1, 'WS');
 
-        expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(2, 'SOCKET_PROVIDER', undefined);
+        expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(2, 'SOCKET_PROVIDER');
 
         expect(providerMock.clearSubscriptions).toHaveBeenCalled();
 
@@ -224,7 +224,7 @@ describe('AbstractWeb3ModuleTest', () => {
             abstractWeb3Module.setProvider(provider);
         }).toThrow('Invalid provider');
 
-        expect(providerResolverMock.resolve).toHaveBeenCalledWith(provider, undefined);
+        expect(providerResolverMock.resolve).toHaveBeenCalledWith(provider);
     });
 
     it('calls setProvider and returns false because of the equal host', () => {

@@ -435,14 +435,14 @@ describe('EthTest', () => {
 
         accountsMock.setProvider.mockReturnValueOnce(true);
 
-        expect(eth.setProvider('provider', 'net')).toEqual(true);
+        expect(eth.setProvider('provider')).toEqual(true);
 
-        expect(eth.initiatedContracts[0].setProvider).toHaveBeenCalledWith('provider', 'net');
+        expect(eth.initiatedContracts[0].setProvider).toHaveBeenCalledWith('provider');
 
-        expect(networkMock.setProvider).toHaveBeenCalledWith('provider', 'net');
+        expect(networkMock.setProvider).toHaveBeenCalledWith('provider');
 
-        expect(personalMock.setProvider).toHaveBeenCalledWith('provider', 'net');
+        expect(personalMock.setProvider).toHaveBeenCalledWith('provider');
 
-        expect(accountsMock.setProvider).toHaveBeenCalledWith('provider', 'net');
+        expect(accountsMock.setProvider).toHaveBeenCalledWith('provider');
     });
 });

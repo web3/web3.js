@@ -51,11 +51,10 @@ export default class ProviderResolver {
      * @method resolve
      *
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {Net} net
      *
      * @returns {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|Error}
      */
-    resolve(provider, net) {
+    resolve(provider) {
         if (typeof provider === 'string') {
             // HTTP
             if (/^http(s)?:\/\//i.test(provider)) {
@@ -64,11 +63,6 @@ export default class ProviderResolver {
             // WS
             if (/^ws(s)?:\/\//i.test(provider)) {
                 return this.providersModuleFactory.createWebsocketProvider(provider);
-            }
-
-            // IPC
-            if (provider && isObject(net) && isFunction(net.connect)) {
-                return this.providersModuleFactory.createIpcProvider(provider, net);
             }
         }
 

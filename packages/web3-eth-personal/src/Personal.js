@@ -26,6 +26,7 @@ import {AbstractWeb3Module} from 'web3-core';
 export default class Personal extends AbstractWeb3Module {
     /**
      * TODO: Add missing documentation for getAccounts, lockAccount and sendTransaction!
+     *
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
@@ -51,12 +52,11 @@ export default class Personal extends AbstractWeb3Module {
      * @method setProvider
      *
      * @param {Object|String} provider
-     * @param {Net} net
      *
      * @returns {Boolean}
      */
-    setProvider(provider, net) {
-        return !!(super.setProvider(provider, net) && this.net.setProvider(provider, net));
+    setProvider(provider) {
+        return !!(super.setProvider(provider) && this.net.setProvider(provider));
     }
 
     /**

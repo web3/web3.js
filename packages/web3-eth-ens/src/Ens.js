@@ -97,12 +97,11 @@ export default class Ens extends AbstractWeb3Module {
      * @method setProvider
      *
      * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
-     * @param {Net} net
      *
      * @returns {Boolean}
      */
-    setProvider(provider, net) {
-        return !!(super.setProvider(provider, net) && this.registry.setProvider(provider, net));
+    setProvider(provider) {
+        return !!(super.setProvider(provider) && this.registry.setProvider(provider));
     }
 
     /**

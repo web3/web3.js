@@ -259,18 +259,20 @@ export default class AbstractWeb3Module {
     }
 
     /**
+     * TODO: Remove the net parameter. Developers should pass a IpcProvider instance if they would like to connect to a
+     * local node.
+     *
      * Sets the currentProvider and provider property
      *
      * @method setProvider
      *
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {Net} net
      *
      * @returns {Boolean|Error}
      */
-    setProvider(provider, net) {
+    setProvider(provider) {
         if (!this.isSameProvider(provider)) {
-            const resolvedProvider = this.providerResolver.resolve(provider, net);
+            const resolvedProvider = this.providerResolver.resolve(provider);
             this.clearSubscriptions();
             this._currentProvider = resolvedProvider;
 
