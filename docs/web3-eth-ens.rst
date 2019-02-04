@@ -12,7 +12,7 @@ The ``web3.eth.ens`` functions let you interacting with Ens.
 
     import Web3 from 'web3';
     import {Ens} from 'web3-eth-ens';
-    import {Accounts} from 'web3-eth-accounts;
+    import {Accounts} from 'web3-eth-accounts';
 
     // "Web3.givenProvider" will be set if in an Ethereum supported browser.
     const eth = new Ens(
@@ -388,7 +388,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getText('ethereum.eth', 'key).then((result) => {
+    web3.eth.ens.getText('ethereum.eth', 'key').then((result) => {
         console.log(result);
     });
     > "0000000000000000000000000000000000000000000000000000000000000000"
