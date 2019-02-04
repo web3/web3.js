@@ -13,28 +13,55 @@
 */
 /**
  * @file index.d.ts
- * @author Huan Zhang <huanzhang30@gmail.com>
+ * @author Huan Zhang <huanzhang30@gmail.com>,
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
 
-import {Accounts} from 'web3-eth-accounts'
+import {Accounts} from 'web3-eth-accounts';
 import {provider} from 'web3-providers';
 import {AbstractWeb3Module, Providers, RLPEncodedTransaction, Transaction, Web3ModuleOptions} from 'web3-core';
 
 export class Personal extends AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        accounts: Accounts,
-        options?: Web3ModuleOptions
-    );
+    constructor(provider: provider, accounts: Accounts, options?: Web3ModuleOptions);
 
     newAccount(password: string, callback?: (error: Error, address: string) => void): Promise<string>;
 
-    sign(dataToSign: string, address: string, password: string, callback?: (error: Error, signature: string) => void): Promise<string>;
+    sign(
+        dataToSign: string,
+        address: string,
+        password: string,
+        callback?: (error: Error, signature: string) => void
+    ): Promise<string>;
 
-    ecRecover(dataThatWasSigned: string, signature: string, callback?: (error: Error, address: string) => void): Promise<string>;
+    ecRecover(
+        dataThatWasSigned: string,
+        signature: string,
+        callback?: (error: Error, address: string) => void
+    ): Promise<string>;
 
-    signTransaction(transation: Transaction, password: string, callback?: (error: Error, RLPEncodedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
+    signTransaction(
+        transation: Transaction,
+        password: string,
+        callback?: (error: Error, RLPEncodedTransaction: RLPEncodedTransaction) => void
+    ): Promise<RLPEncodedTransaction>;
 
-    unlockAccount(address: string, password: string, unlockDuration: number, callback?: (error: Error) => void): Promise<boolean>;
+    sendTransaction(
+        transation: Transaction,
+        password: string,
+        callback?: (error: Error, transactionHash: string) => void
+    ): Promise<string>;
+
+    unlockAccount(
+        address: string,
+        password: string,
+        unlockDuration: number,
+        callback?: (error: Error) => void
+    ): Promise<boolean>;
+
+    lockAccount(address: string, callback?: (error: Error, success: boolean) => void): Promise<boolean>;
+
+    getAccounts(callback?: (error: Error, accounts: string[]) => void): Promise<string[]>;
+
+    importRawKey(privateKey: string, password: string): Promise<string>;
 }

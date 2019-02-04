@@ -20,7 +20,7 @@ describe('NewAccountMethodTest', () => {
 
         expect(method.rpcMethod).toEqual('personal_newAccount');
 
-        expect(method.parametersAmount).toEqual(0);
+        expect(method.parametersAmount).toEqual(1);
 
         expect(method.utils).toEqual(Utils);
 
