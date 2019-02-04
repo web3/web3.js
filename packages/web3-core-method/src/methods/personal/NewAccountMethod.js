@@ -30,7 +30,7 @@ export default class NewAccountMethod extends AbstractCallMethod {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('personal_newAccount', 0, utils, formatters);
+        super('personal_newAccount', 1, utils, formatters);
     }
 
     /**
