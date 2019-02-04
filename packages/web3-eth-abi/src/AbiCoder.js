@@ -298,7 +298,7 @@ export default class AbiCoder {
 
         const notIndexedParams = nonIndexedData ? this.decodeParameters(notIndexedInputs.filter(Boolean), nonIndexedData) : [];
 
-        var notIndexedOffset = 0;
+        let notIndexedOffset = 0;
         const returnValues = {};
 
         inputs.forEach((res, i) => {
