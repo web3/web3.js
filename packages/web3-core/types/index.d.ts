@@ -17,6 +17,7 @@
  * @date 2018
  */
 
+///<reference path='../node_modules/@types/node/index.d.ts'/>
 import * as net from 'net';
 import {
     BatchRequest,
@@ -123,6 +124,7 @@ export interface RLPEncodedTransaction {
 }
 
 export interface TransactionReceipt {
+    status: boolean;
     transactionHash: string;
     transactionIndex: number;
     blockHash: string;

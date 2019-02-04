@@ -21,6 +21,7 @@
  */
 
 import BigNumber = require('bn.js');
+import {Buffer} from 'buffer';
 
 export type Unit =
     | 'noether'

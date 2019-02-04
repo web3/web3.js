@@ -32,6 +32,7 @@ export default class AbiItemModel {
         this.abiItem = abiItem;
         this.signature = this.abiItem.signature;
         this.name = this.abiItem.name;
+        this.payable = this.abiItem.payable;
         this.anonymous = this.abiItem.anonymous;
         this.contractMethodParameters = [];
     }
