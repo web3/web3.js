@@ -84,7 +84,9 @@ sign
 
     web3.eth.personal.sign(dataToSign, address, password [, callback])
 
-Signs data using a specific account.
+Signs data using a specific account. This data is before UTF-8 HEX decoded and enveloped as follows: ``"\x19Ethereum Signed Message:\n" + message.length + message``.
+
+
 
 .. note:: Sending your account password over an unsecured HTTP RPC connection is highly unsecure.
 
