@@ -124,6 +124,7 @@ export interface RLPEncodedTransaction {
 }
 
 export interface TransactionReceipt {
+    status: boolean;
     transactionHash: string;
     transactionIndex: number;
     blockHash: string;
