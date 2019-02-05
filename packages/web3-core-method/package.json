@@ -24,7 +24,7 @@
         "web3-core-promievent": "1.0.0-beta.41",
         "web3-core-subscriptions": "1.0.0-beta.41",
         "web3-utils": "1.0.0-beta.41",
-        "lodash": "^4.17.11",
+        "lodash": "^4.17.11"
     },
     "devDependencies": {
         "dtslint": "^0.4.2",
