@@ -15,7 +15,7 @@ jest.mock('../../../src/models/AbiModel');
  * AllPastEventLogsMethod test
  */
 describe('AllPastEventLogsMethodTest', () => {
-    let pastEventLogsMethod, allEventsLogDecoderMock, abiModelMock;
+    let allPastEventLogsMethod, allEventsLogDecoderMock, abiModelMock;
 
     beforeEach(() => {
         new AllEventsLogDecoder();
@@ -32,9 +32,9 @@ describe('AllPastEventLogsMethodTest', () => {
 
         expect(allPastEventLogsMethod.formatters).toEqual(formatters);
 
-        expect(allPastEventLogsMethod.eventLogDecoder).toEqual(allEventsLogDecoderMock);
+        expect(allPastEventLogsMethod.allEventsLogDecoder).toEqual(allEventsLogDecoderMock);
 
-        expect(allPastEventLogsMethod.abiItemModel).toEqual(abiModelMock);
+        expect(allPastEventLogsMethod.abiModel).toEqual(abiModelMock);
 
         expect(allPastEventLogsMethod).toBeInstanceOf(GetPastLogsMethod);
     });
@@ -54,6 +54,6 @@ describe('AllPastEventLogsMethodTest', () => {
 
         expect(allEventsLogDecoderMock.decode).toHaveBeenCalledTimes(3);
 
-        expect(allEventsLogDecoderMock.decode).toHaveBeenCalledWith(abiItemModelMock, true);
+        expect(allEventsLogDecoderMock.decode).toHaveBeenCalledWith(abiModelMock, true);
     });
 });
