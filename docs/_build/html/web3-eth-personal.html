@@ -422,7 +422,7 @@ created only on client and it’s up to the developer to manage it.</p>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">personal</span><span class="p">.</span><span class="nx">sign</span><span class="p">(</span><span class="nx">dataToSign</span><span class="p">,</span> <span class="nx">address</span><span class="p">,</span> <span class="nx">password</span> <span class="p">[,</span> <span class="nx">callback</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>Signs data using a specific account.</p>
+<p>Signs data using a specific account. This data is before UTF-8 HEX decoded and enveloped as follows: <code class="docutils literal notranslate"><span class="pre">&quot;\x19Ethereum</span> <span class="pre">Signed</span> <span class="pre">Message:\n&quot;</span> <span class="pre">+</span> <span class="pre">message.length</span> <span class="pre">+</span> <span class="pre">message</span></code>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Sending your account password over an unsecured HTTP RPC connection is highly unsecure.</p>

@@ -1,7 +1,7 @@
 {
     "name": "web3-eth-abi",
     "namespace": "ethereum",
-    "version": "1.0.0-beta.41",
+    "version": "1.0.0-beta.42",
     "description": "Web3 module encode and decode EVM in/output.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-eth-abi",
     "license": "LGPL-3.0",
@@ -19,7 +19,7 @@
         "@babel/runtime": "^7.3.1",
         "ethers": "^4.0.0",
         "lodash": "^4.17.11",
-        "web3-utils": "1.0.0-beta.41"
+        "web3-utils": "1.0.0-beta.42"
     },
     "devDependencies": {
         "dtslint": "^0.4.2"

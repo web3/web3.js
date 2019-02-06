@@ -5,7 +5,7 @@
 Web3
 ====
 
-    The Web3 class is an wrapper to house all Ethereum related modules.
+    The Web3 class is a wrapper to house all Ethereum related modules.
 
 .. code-block:: javascript
 
