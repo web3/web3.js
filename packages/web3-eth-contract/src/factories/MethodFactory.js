@@ -23,6 +23,7 @@
 import CallContractMethod from '../methods/CallContractMethod';
 import ContractDeployMethod from '../methods/ContractDeployMethod';
 import PastEventLogsMethod from '../methods/PastEventLogsMethod';
+import AllPastEventLogsMethod from '../methods/AllPastEventLogsMethod';
 import SendContractMethod from '../methods/SendContractMethod';
 import {EstimateGasMethod} from 'web3-core-method';
 
