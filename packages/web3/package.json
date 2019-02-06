@@ -17,8 +17,7 @@
         "API"
     ],
     "author": "ethereum.org",
-    "authors": [
-        {
+    "authors": [{
             "name": "Samuel Furter",
             "email": "samuel@ethereum.org",
             "homepage": "https://github.com/nivida"
@@ -75,6 +74,7 @@
     },
     "files": [
         "dist",
-        "types/index.d.ts"
+        "types/index.d.ts",
+        "angular-patch.js"
     ]
 }
