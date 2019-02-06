@@ -101,6 +101,24 @@ export default class MethodFactory {
     }
 
     /**
+     * Returns an object of type PastEventLogsMethod
+     *
+     * @method createPastEventLogsMethod
+     *
+     * @param {AbiModel} abiModel
+     *
+     * @returns {AllPastEventLogsMethod}
+     */
+    createAllPastEventLogsMethod(abiModel) {
+        return new AllPastEventLogsMethod(
+            this.utils,
+            this.formatters,
+            this.contractModuleFactory.createAllEventsLogDecoder(),
+            abiModel
+        );
+    }
+
+    /**
      * Returns an object of type CallContractMethod
      *
      * @method createCallContractMethod
