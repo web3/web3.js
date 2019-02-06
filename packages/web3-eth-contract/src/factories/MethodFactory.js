@@ -23,6 +23,7 @@
 import CallContractMethod from '../methods/CallContractMethod';
 import ContractDeployMethod from '../methods/ContractDeployMethod';
 import PastEventLogsMethod from '../methods/PastEventLogsMethod';
+import AllPastEventLogsMethod from '../methods/AllPastEventLogsMethod';
 import SendContractMethod from '../methods/SendContractMethod';
 import {EstimateGasMethod} from 'web3-core-method';
 
@@ -97,6 +98,24 @@ export default class MethodFactory {
             this.formatters,
             this.contractModuleFactory.createEventLogDecoder(),
             abiItem
+        );
+    }
+
+    /**
+     * Returns an object of type PastEventLogsMethod
+     *
+     * @method createPastEventLogsMethod
+     *
+     * @param {AbiModel} abiModel
+     *
+     * @returns {AllPastEventLogsMethod}
+     */
+    createAllPastEventLogsMethod(abiModel) {
+        return new AllPastEventLogsMethod(
+            this.utils,
+            this.formatters,
+            this.contractModuleFactory.createAllEventsLogDecoder(),
+            abiModel
         );
     }
 
