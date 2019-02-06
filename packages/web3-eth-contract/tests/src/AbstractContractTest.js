@@ -236,6 +236,25 @@ describe('AbstractContractTest', () => {
         expect(getPastLogsMethodMock.callback).toBeInstanceOf(Function);
     });
 
+    it('calls getPastEvents with "allEvents" and returns a resolved promise', async () => {
+        new GetPastLogsMethod();
+        const getPastLogsMethodMock = GetPastLogsMethod.mock.instances[0];
+
+        getPastLogsMethodMock.execute.mockReturnValueOnce(Promise.resolve(true));
+
+        methodFactoryMock.createAllPastEventLogsMethod.mockReturnValueOnce(getPastLogsMethodMock);
+
+        await expect(abstractContract.getPastEvents('allEvents', {}, () => {})).resolves.toEqual(true);
+
+        expect(getPastLogsMethodMock.execute).toHaveBeenCalledWith(abstractContract);
+
+        expect(methodFactoryMock.createAllPastEventLogsMethod).toHaveBeenCalledWith(abiModelMock);
+
+        expect(getPastLogsMethodMock.parameters).toEqual([{}]);
+
+        expect(getPastLogsMethodMock.callback).toBeInstanceOf(Function);
+    });
+
     it('calls getPastEvents and returns a rejected promise', async () => {
         abiModelMock.hasEvent.mockReturnValueOnce(false);
 
