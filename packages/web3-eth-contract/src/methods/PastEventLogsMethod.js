@@ -28,6 +28,7 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
      * @param {Object} formatters
      * @param {EventLogDecoder} eventLogDecoder
      * @param {AbiItemModel} abiItemModel
+     * @param {EventOptionsMapper} eventOptionsMapper
      *
      * @constructor
      */
