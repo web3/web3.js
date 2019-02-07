@@ -97,7 +97,8 @@ export default class MethodFactory {
             this.utils,
             this.formatters,
             this.contractModuleFactory.createEventLogDecoder(),
-            abiItem
+            abiItem,
+            this.contractModuleFactory.createEventOptionsMapper()
         );
     }
 
@@ -115,7 +116,8 @@ export default class MethodFactory {
             this.utils,
             this.formatters,
             this.contractModuleFactory.createAllEventsLogDecoder(),
-            abiModel
+            abiModel,
+            this.contractModuleFactory.createAllEventsOptionsMapper()
         );
     }
 
