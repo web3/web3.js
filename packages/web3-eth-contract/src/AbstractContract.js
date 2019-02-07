@@ -171,6 +171,7 @@ export default class AbstractContract extends AbstractWeb3Module {
                 method = this.methodFactory.createAllPastEventLogsMethod(this.abiModel);
             }
 
+            options.address = this.address;
             method.parameters = [options];
             method.callback = callback;
 
