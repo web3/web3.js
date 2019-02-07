@@ -2,7 +2,9 @@ import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {GetPastLogsMethod} from 'web3-core-method';
 import AllEventsLogDecoder from '../../../src/decoders/AllEventsLogDecoder';
+import AllEventsOptionsMapper from '../../../src/mappers/AllEventsOptionsMapper';
 import AbiModel from '../../../src/models/AbiModel';
+import AbstractContract from '../../../src/AbstractContract';
 import AllPastEventLogsMethod from '../../../src/methods/AllPastEventLogsMethod';
 
 // Mocks
@@ -10,12 +12,14 @@ jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('../../../src/decoders/AllEventsLogDecoder');
 jest.mock('../../../src/models/AbiModel');
+jest.mock('../../../src/mappers/AllEventsOptionsMapper');
+jest.mock('../../../src/AbstractContract');
 
 /**
  * AllPastEventLogsMethod test
  */
 describe('AllPastEventLogsMethodTest', () => {
-    let allPastEventLogsMethod, allEventsLogDecoderMock, abiModelMock;
+    let allPastEventLogsMethod, allEventsLogDecoderMock, abiModelMock, allEventsOptionsMapperMock;
 
     beforeEach(() => {
         new AllEventsLogDecoder();
@@ -24,7 +28,16 @@ describe('AllPastEventLogsMethodTest', () => {
         new AbiModel();
         abiModelMock = AbiModel.mock.instances[0];
 
-        allPastEventLogsMethod = new AllPastEventLogsMethod(Utils, formatters, allEventsLogDecoderMock, abiModelMock);
+        new AllEventsOptionsMapper();
+        allEventsOptionsMapperMock = AllEventsOptionsMapper.mock.instances[0];
+
+        allPastEventLogsMethod = new AllPastEventLogsMethod(
+            Utils,
+            formatters,
+            allEventsLogDecoderMock,
+            abiModelMock,
+            allEventsOptionsMapperMock
+        );
     });
 
     it('constructor check', () => {
@@ -37,6 +50,22 @@ describe('AllPastEventLogsMethodTest', () => {
         expect(allPastEventLogsMethod.abiModel).toEqual(abiModelMock);
 
         expect(allPastEventLogsMethod).toBeInstanceOf(GetPastLogsMethod);
+    });
+
+    it('calls beforeExecution and executes the expected methods', () => {
+        new AbstractContract();
+        const contractMock = AbstractContract.mock.instances[0];
+
+        allEventsOptionsMapperMock.map.mockReturnValueOnce({mapped: true});
+
+        formatters.inputLogFormatter.mockReturnValueOnce({options: true})
+
+        allPastEventLogsMethod.parameters = [{}];
+        const mappedResponse = allPastEventLogsMethod.beforeExecution(contractMock);
+
+        expect(allEventsOptionsMapperMock.map).toHaveBeenCalledWith(abiModelMock, contractMock, {options: true});
+
+        expect(formatters.inputLogFormatter).toHaveBeenCalledWith({});
     });
 
     it('calls afterExecution and returns the expected result', () => {
