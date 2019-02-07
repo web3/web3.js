@@ -173,7 +173,9 @@ export default class AbstractContract extends AbstractWeb3Module {
         method.parameters = [options];
         method.callback = callback;
 
-        return await method.execute(this);
+        const response = await method.execute(this);
+
+        return response;
     }
 
     /**

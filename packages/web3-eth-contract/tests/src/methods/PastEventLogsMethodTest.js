@@ -58,10 +58,10 @@ describe('PastEventLogsMethodTest', () => {
 
         eventOptionsMapperMock.map.mockReturnValueOnce({mapped: true});
 
-        formatters.inputLogFormatter.mockReturnValueOnce({options: true})
+        formatters.inputLogFormatter.mockReturnValueOnce({options: true});
 
         pastEventLogsMethod.parameters = [{}];
-        const mappedResponse = pastEventLogsMethod.beforeExecution(contractMock);
+        pastEventLogsMethod.beforeExecution(contractMock);
 
         expect(eventOptionsMapperMock.map).toHaveBeenCalledWith(abiItemModelMock, contractMock, {options: true});
 
