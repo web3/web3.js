@@ -833,7 +833,8 @@ asciiToHex
     web3.utils.fromAscii(string) // ALIAS, deprecated
 
 
-Returns the HEX representation of a given ASCII string.
+Returns the HEX representation of a given ASCII string. If you would like to transform an ASCII string into a valid
+``bytes4``, ``bytes8`` etc. value then please pass the correct length as the second parameter.
 
 
 ----------
@@ -841,6 +842,7 @@ Parameters
 ----------
 
 1. ``string`` - ``String``: A ASCII string to convert to a HEX string.
+2. ``length`` - ``Number``: The length of the returned hex string. The default size is ``32`` e.g.: ``bytes32``.
 
 -------
 Returns
@@ -855,8 +857,15 @@ Example
 .. code-block:: javascript
 
     web3.utils.asciiToHex('I have 100!');
-    > "0x4920686176652031303021"
+    > "0x4920686176652031303021000000000000000000000000000000000000000000"
 
+    // transforming to a bytes4 value:
+    web3.utils.asciiToHex('yes', 4);
+
+    // transforming to a bytes8 value:
+    web3.utils.asciiToHex('yes', 8);
+
+    //etc.
 
 ------------------------------------------------------------------------------
 
