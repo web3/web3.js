@@ -46,14 +46,17 @@ export default class Address {
         }
 
         /* Check for type and format validity */
+        /* Check the address for minimum requirements */
         this.props.address = /^(0x)?([0-9a-fA-F]{40})$/gm.test(params.address)
             ? params.address.replace(/^(0x)([0-9a-fA-F]{40})$/gm, '0x$2')
             : undefined;
 
-        this.props.isChecksummed =
-            isBoolean(params.isChecksummed) && (!params.isChecksummed || Address.isValid(params.address))
-                ? params.isChecksummed
-                : undefined;
+        /* If the address should be checksummed but isn't, throw. Otherwise, check and assign. */
+        if (isBoolean(params.isChecksummed) && (params.isChecksummed && !Address.isValid(params.address))) {
+            this.props.isChecksummed = params.isChecksummed;
+        } else if (isBoolean(params.isChecksummed) && !params.isChecksummed) {
+            this.props.isChecksummed = Address.isValid(this.props.address);
+        }
 
         /* Throw if any parameter is still undefined */
         Object.keys(this.props).forEach((key) => {
@@ -159,7 +162,7 @@ export default class Address {
      * @returns {boolean}
      */
     isValid() {
-        return Address.isValid(this.props.address);
+        return this.props.isChecksummed;
     }
 
     /**
