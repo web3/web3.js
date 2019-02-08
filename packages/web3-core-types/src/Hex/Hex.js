@@ -143,8 +143,8 @@ export default class Hex {
      */
     toAscii() {
         let ascii = '';
-        for (let i = 0; i < this.props.hex.length; i += 2) {
-            ascii += String.fromCharCode(parseInt(this.props.hex.substr(i, 2)));
+        for (let i = (this.isStrict() ? 2 : 0); i < this.props.hex.length; i += 2) {
+            ascii += String.fromCharCode(parseInt(this.props.hex.substr(i, 2), 16));
         }
 
         return ascii;

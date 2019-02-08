@@ -98,7 +98,7 @@ describe('HexTest', () => {
         tests.forEach((test) => {
             const ascii = new Hex(test.value, error, initParams).toAscii();
 
-            expect(ascii).toBe(test.expected);
+            expect(ascii).toEqual(test.expected);
         });
     });
 
