@@ -22,9 +22,6 @@
 
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
-import HttpProvider from '../providers/HttpProvider';
-import WebsocketProvider from '../providers/WebsocketProvider';
-import IpcProvider from '../providers/IpcProvider';
 
 /* eslint-disable no-new-func */
 let global;

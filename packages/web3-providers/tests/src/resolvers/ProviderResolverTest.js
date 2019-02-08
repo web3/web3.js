@@ -96,10 +96,11 @@ describe('ProviderResolverTest', () => {
     });
 
     it('calls resolve with the MetamaskInpageProvider', () => {
-        const provider = {constructor: {name: 'MetamaskInpageProvider'}};
+        new MetamaskInpageProvider();
+        const metamaskInpageProviderMock = MetamaskInpageProvider.mock.instances[0];
 
-        providersModuleFactoryMock.createMetamaskInpageProvider.mockReturnValueOnce(true)
+        providersModuleFactoryMock.createMetamaskInpageProvider.mockReturnValueOnce(metamaskInpageProviderMock);
 
-        expect(providerResolver.resolve(provider)).toEqual(true);
+        expect(providerResolver.resolve(metamaskInpageProviderMock)).toEqual(metamaskInpageProviderMock);
     });
 });
