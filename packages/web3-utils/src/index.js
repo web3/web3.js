@@ -131,10 +131,6 @@ export const hexToAscii = (hex) => {
  * @returns {String} hex representation of input string
  */
 export const asciiToHex = (str, length = 32) => {
-    if (!str) {
-        return '0x0000000000000000000000000000000000000000000000000000000000000000';
-    }
-
     let hex = '';
 
     for (let i = 0; i < str.length; i++) {
