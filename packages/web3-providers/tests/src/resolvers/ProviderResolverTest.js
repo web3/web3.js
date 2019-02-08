@@ -4,6 +4,7 @@ import HttpProvider from '../../../src/providers/HttpProvider';
 import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import IpcProvider from '../../../src/providers/IpcProvider';
 import EthereumProvider from '../../../src/providers/EthereumProvider';
+import MetamaskInpageProvider from '../../../src/providers/MetamaskInpageProvider';
 
 // Mocks
 jest.mock('../../../src/factories/ProvidersModuleFactory');
@@ -11,6 +12,7 @@ jest.mock('../../../src/providers/HttpProvider');
 jest.mock('../../../src/providers/WebsocketProvider');
 jest.mock('../../../src/providers/IpcProvider');
 jest.mock('../../../src/providers/EthereumProvider');
+jest.mock('../../../src/providers/MetamaskInpageProvider');
 
 /**
  * ProviderResolver test
@@ -70,6 +72,7 @@ describe('ProviderResolverTest', () => {
     it('calls resolve with the EthereumProvider', () => {
         new EthereumProvider({});
         const ethereumProviderMock = EthereumProvider.mock.instances[0];
+        ethereumProviderMock.isEIP1193 = true;
 
         providersModuleFactoryMock.createEthereumProvider.mockReturnValueOnce(ethereumProviderMock);
 
@@ -92,9 +95,11 @@ describe('ProviderResolverTest', () => {
         expect(providerResolver.resolve(ipcProviderMock)).toBeInstanceOf(IpcProvider);
     });
 
-    it("calls resolve with a provider that isn't supported", () => {
-        expect(() => {
-            providerResolver.resolve('LALALA');
-        }).toThrow('Please provide an valid Web3 provider');
+    it('calls resolve with the MetamaskInpageProvider', () => {
+        const provider = {constructor: {name: 'MetamaskInpageProvider'}};
+
+        providersModuleFactoryMock.createMetamaskInpageProvider.mockReturnValueOnce(true)
+
+        expect(providerResolver.resolve(provider)).toEqual(true);
     });
 });
