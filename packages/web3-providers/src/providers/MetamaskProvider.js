@@ -12,7 +12,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file MetamaskInpageProvider
+ * @file MetamaskProvider
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
@@ -21,7 +21,7 @@ import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 
-export default class MetamaskInpageProvider extends AbstractSocketProvider {
+export default class MetamaskProvider extends AbstractSocketProvider {
     /**
      * @param {MetamaskInpageProvider} inpageProvider
      *
@@ -185,6 +185,7 @@ export default class MetamaskInpageProvider extends AbstractSocketProvider {
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
+            console.log(this.connection.send);
             this.connection.send(payload, (error, response) => {
                 this.removeAllListeners(payload.id);
 
