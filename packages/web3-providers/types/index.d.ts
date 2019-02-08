@@ -112,7 +112,7 @@ export class EthereumProvider {
     host: string;
     registerEventListeners(): void;
 
-    send(method: string, callback: () => void): Promise<object>;
+    send(method: string, parameters: any[]): Promise<object>;
 
     sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<object[]>;
 
