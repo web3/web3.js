@@ -185,7 +185,6 @@ export default class MetamaskProvider extends AbstractSocketProvider {
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
-            console.log(this.connection.send);
             this.connection.send(payload, (error, response) => {
                 this.removeAllListeners(payload.id);
 
