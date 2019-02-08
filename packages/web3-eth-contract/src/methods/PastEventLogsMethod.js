@@ -28,13 +28,28 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
      * @param {Object} formatters
      * @param {EventLogDecoder} eventLogDecoder
      * @param {AbiItemModel} abiItemModel
+     * @param {EventOptionsMapper} eventOptionsMapper
      *
      * @constructor
      */
-    constructor(utils, formatters, eventLogDecoder, abiItemModel) {
+    constructor(utils, formatters, eventLogDecoder, abiItemModel, eventOptionsMapper) {
         super(utils, formatters);
         this.abiItemModel = abiItemModel;
         this.eventLogDecoder = eventLogDecoder;
+        this.eventOptionsMapper = eventOptionsMapper;
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        super.beforeExecution(moduleInstance);
+
+        this.parameters[0] = this.eventOptionsMapper.map(this.abiItemModel, moduleInstance, this.parameters[0]);
     }
 
     /**
