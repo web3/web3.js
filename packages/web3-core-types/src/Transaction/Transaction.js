@@ -53,14 +53,14 @@ export default class Transaction {
             this.props.from = params.from;
         }
 
-        /* Receipient address */
+        /* Recipient address */
         this.props.to = params.to.isAddress ? Types.Address(params.to.props) : undefined;
 
         // TODO Move this check to BigNumber as a constructor check
         this.props.value =
             (!isNaN(params.value) && Number.isInteger(params.value) && params.value >= 0) ||
             isBN(params.value) ||
-            isBigNumber(params.value) ||
+            // isBigNumber(params.value) ||
             (typeof params.value === 'string' && /(\d)+/gm.test(params.value) && isBN(toBN(params.value)))
                 ? toBN(params.value.toString())
                 : undefined;
@@ -72,7 +72,7 @@ export default class Transaction {
         this.props.gasPrice =
             (!isNaN(params.gasPrice) && Number.isInteger(params.gasPrice) && params.gasPrice >= 0) ||
             isBN(params.gasPrice) ||
-            isBigNumber(params.gasPrice) ||
+            // isBigNumber(params.gasPrice) ||
             (typeof params.gasPrice === 'string' && isBN(toBN(params.gasPrice)))
                 ? toBN(params.gasPrice.toString())
                 : undefined;

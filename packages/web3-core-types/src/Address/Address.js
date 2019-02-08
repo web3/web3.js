@@ -52,7 +52,7 @@ export default class Address {
             : undefined;
 
         /* If the address should be checksummed but isn't, throw. Otherwise, check and assign. */
-        if (isBoolean(params.isChecksummed) && (params.isChecksummed && !Address.isValid(params.address))) {
+        if (isBoolean(params.isChecksummed) && (params.isChecksummed && Address.isValid(params.address))) {
             this.props.isChecksummed = params.isChecksummed;
         } else if (isBoolean(params.isChecksummed) && !params.isChecksummed) {
             this.props.isChecksummed = Address.isValid(this.props.address);
