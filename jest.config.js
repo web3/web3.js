@@ -1,11 +1,12 @@
 const config = {
-    verbose: true,
+    verbose: false,
     notifyMode: 'success-change',
     notify: true,
     clearMocks: true,
     resetMocks: true,
     resetModules: true,
     testMatch: ['/**/**Test.js'],
+    testPathIgnorePatterns: ['TypeDirTemplate/'],
     transform: {
         '^.+\\.js$': '<rootDir>/../../jest.preprocessor.js'
     },
