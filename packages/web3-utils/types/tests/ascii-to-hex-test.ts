@@ -25,6 +25,9 @@ import {asciiToHex, BN} from 'web3-utils';
 // $ExpectType string
 asciiToHex('I have 100!');
 
+// $ExpectType string
+asciiToHex('I have 100!', 32);
+
 // $ExpectError
 asciiToHex(345);
 // $ExpectError
