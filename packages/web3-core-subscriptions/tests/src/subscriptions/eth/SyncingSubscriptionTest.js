@@ -21,7 +21,7 @@ describe('SyncingSubscriptionTest', () => {
 
         expect(syncingSubscription.type).toEqual('eth_subscribe');
 
-        expect(syncingSubscription.options).toEqual({});
+        expect(syncingSubscription.options).toEqual(null);
 
         expect(syncingSubscription.utils).toEqual({});
 
