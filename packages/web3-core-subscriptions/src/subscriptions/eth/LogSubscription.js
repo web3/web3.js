@@ -54,8 +54,10 @@ export default class LogSubscription extends AbstractSubscription {
                 .execute(this.moduleInstance)
                 .then((logs) => {
                     logs.forEach((log) => {
-                        callback(false, log);
-                        this.emit('data', log);
+                        const formattedLog = this.onNewSubscriptionItem(log);
+                        
+                        callback(false, formattedLog);
+                        this.emit('data', formattedLog);
                     });
 
                     delete this.options.fromBlock;

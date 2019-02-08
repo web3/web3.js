@@ -40,7 +40,9 @@ describe('LogSubscriptionTest', () => {
     it('calls subscribe executes GetPastLogsMethod and calls the callback twice because of the past logs', (done) => {
         formatters.inputLogFormatter.mockReturnValueOnce({});
 
-        formatters.outputLogFormatter.mockReturnValueOnce('ITEM');
+        formatters.outputLogFormatter
+            .mockReturnValueOnce(0)
+            .mockReturnValueOnce('ITEM');
 
         getPastLogsMethodMock.execute = jest.fn((moduleInstance) => {
             expect(moduleInstance).toEqual(moduleInstanceMock);
