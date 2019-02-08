@@ -139,7 +139,7 @@ export const asciiToHex = (str, length = 32) => {
         hex += n.length < 2 ? `0${n}` : n;
     }
 
-    return '0x' + utils.rightPad(hex, length * 2)
+    return '0x' + utils.rightPad(hex, length * 2);
 };
 
 /**
