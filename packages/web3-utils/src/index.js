@@ -126,19 +126,24 @@ export const hexToAscii = (hex) => {
  * @method asciiToHex
  *
  * @param {String} str
+ * @param {Number} length
  *
  * @returns {String} hex representation of input string
  */
-export const asciiToHex = (str) => {
-    if (!str) return '0x00';
+export const asciiToHex = (str, length = 32) => {
+    if (!str) {
+        return '0x0000000000000000000000000000000000000000000000000000000000000000';
+    }
+
     let hex = '';
+
     for (let i = 0; i < str.length; i++) {
         const code = str.charCodeAt(i);
         const n = code.toString(16);
         hex += n.length < 2 ? `0${n}` : n;
     }
 
-    return `0x${hex}`;
+    return '0x' + utils.rightPad(hex, length * 2)
 };
 
 /**
