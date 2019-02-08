@@ -81,7 +81,7 @@ export function toTwosComplement(value: number | string | BN): string;
 export function isAddress(address: string): boolean;
 export function isHex(hex: Hex): boolean;
 export function isHexStrict(hex: Hex): boolean;
-export function asciiToHex(string: string): string;
+export function asciiToHex(string: string, length?: number): string;
 export function hexToAscii(string: string): string;
 export function toAscii(string: string): string;
 export function bytesToHex(bytes: number[]): string;
@@ -130,7 +130,7 @@ export interface Utils {
     isAddress(address: string): boolean;
     isHex(hex: Hex): boolean;
     isHexStrict(hex: Hex): boolean;
-    asciiToHex(string: string): string;
+    asciiToHex(string: string, length?: number): string;
     hexToAscii(string: string): string;
     toAscii(string: string): string;
     bytesToHex(bytes: number[]): string;
