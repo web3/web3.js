@@ -30,7 +30,7 @@ import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
 import BatchRequest from '../batch-request/BatchRequest';
 import EthereumProvider from '../providers/EthereumProvider';
-import MetamaskInpageProvider from '../providers/MetamaskInpageProvider';
+import MetamaskProvider from '../providers/MetamaskProvider';
 import MistEthereumProvider from '../providers/MistEthereumProvider';
 
 export default class ProvidersModuleFactory {
@@ -179,16 +179,16 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an MetamaskInpageProvider object
+     * Returns an MetamaskProvider object
      *
      * @method createMetamaskInpageProvider
      *
      * @param {MetamaskInpageProvider} inpageProvider
      *
-     * @returns {MetamaskInpageProvider}
+     * @returns {MetamaskProvider}
      */
-    createMetamaskInpageProvider(inpageProvider) {
-        return new MetamaskInpageProvider(inpageProvider);
+    createMetamaskProvider(inpageProvider) {
+        return new MetamaskProvider(inpageProvider);
     }
 
     /**

@@ -157,19 +157,25 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<Array>}
      */
-    getPastEvents(eventName, options, callback) {
-        return new Promise(async (resolve, reject) => {
+    async getPastEvents(eventName, options, callback) {
+        let method;
+
+        if (eventName !== 'allEvents') {
             if (!this.abiModel.hasEvent(eventName)) {
-                reject(new Error(`Event with name "${eventName}" does not exists.`));
+                throw new Error(`Event with name "${eventName}" does not exists.`);
             }
 
-            const pastEventLogsMethod = this.methodFactory.createPastEventLogsMethod(this.abiModel.getEvent(eventName));
+            method = this.methodFactory.createPastEventLogsMethod(this.abiModel.getEvent(eventName));
+        } else {
+            method = this.methodFactory.createAllPastEventLogsMethod(this.abiModel);
+        }
 
-            pastEventLogsMethod.parameters = [options];
-            pastEventLogsMethod.callback = callback;
+        method.parameters = [options];
+        method.callback = callback;
 
-            return resolve(await pastEventLogsMethod.execute(this));
-        });
+        const response = await method.execute(this);
+
+        return response;
     }
 
     /**

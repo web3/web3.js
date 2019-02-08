@@ -26,8 +26,8 @@ import {
 describe('UtilsTest', () => {
     it('calls asciiToHex and returns the expected results', () => {
         const tests = [
-            {value: 'myString', expected: '0x6d79537472696e67'},
-            {value: 'myString\u0000', expected: '0x6d79537472696e6700'},
+            {value: 'myString', expected: '0x6d79537472696e67000000000000000000000000000000000000000000000000'},
+            {value: 'myString\u0000', expected: '0x6d79537472696e67000000000000000000000000000000000000000000000000'},
             {
                 value:
                     '\u0003\u0000\u0000\u00005èÆÕL]\u0012|Î¾\u001a7«\u00052\u0011(ÐY\n<\u0010\u0000\u0000\u0000\u0000\u0000\u0000e!ßd/ñõì\f:z¦Î¦±ç·÷Í¢Ëß\u00076*\bñùC1ÉUÀé2\u001aÓB',

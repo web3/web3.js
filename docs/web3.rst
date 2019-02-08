@@ -5,7 +5,7 @@
 Web3
 ====
 
-    The Web3 class is an wrapper to house all Ethereum related modules.
+    The Web3 class is a wrapper to house all Ethereum related modules.
 
 .. code-block:: javascript
 
@@ -92,20 +92,3 @@ Example
 
     web3.version;
     > "1.0.0"
-
-
-------------------------------------------------------------------------------
-
-
-utils
-=====================
-
-    Static property of the Web3 class.
-
-.. code-block:: javascript
-
-    Web3.utils
-
-    Utility functions are also exposes on the ``Web3`` class object directly.
-
-See :ref:`web3.utils <utils>` for more.

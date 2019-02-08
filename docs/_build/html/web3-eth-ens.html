@@ -51,11 +51,11 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">web3.eth.ens</span></code> functions let you interacting with Ens.</p>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nx">Web3</span> <span class="nx">from</span> <span class="s1">&#39;web3&#39;</span><span class="p">;</span>
 <span class="kr">import</span> <span class="p">{</span><span class="nx">Ens</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;web3-eth-ens&#39;</span><span class="p">;</span>
-<span class="kr">import</span> <span class="p">{</span><span class="nx">Accounts</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;web3-eth-accounts;</span>
+<span class="kr">import</span> <span class="p">{</span><span class="nx">Accounts</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;web3-eth-accounts&#39;</span><span class="p">;</span>
 
-<span class="s1">// &quot;Web3.givenProvider&quot; will be set if in an Ethereum supported browser.</span>
-<span class="s1">const eth = new Ens(</span>
-<span class="s1">    Web3.givenProvider || &#39;</span><span class="nx">ws</span><span class="o">:</span><span class="c1">//some.local-or-remote.node:8546&#39;,</span>
+<span class="c1">// &quot;Web3.givenProvider&quot; will be set if in an Ethereum supported browser.</span>
+<span class="kr">const</span> <span class="nx">eth</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Ens</span><span class="p">(</span>
+    <span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://some.local-or-remote.node:8546&#39;</span><span class="p">,</span>
     <span class="k">new</span> <span class="nx">Accounts</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://some.local-or-remote.node:8546&#39;</span><span class="p">,</span> <span class="nx">options</span><span class="p">),</span>
     <span class="nx">options</span>
 <span class="p">);</span>
@@ -376,10 +376,10 @@
 </div>
 <div class="section" id="id17">
 <h3>Example<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span>web3.eth.ens.getText(&#39;ethereum.eth&#39;, &#39;key).then((result) =&gt; {
-    console.log(result);
-});
-&gt; &quot;0000000000000000000000000000000000000000000000000000000000000000&quot;
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">ens</span><span class="p">.</span><span class="nx">getText</span><span class="p">(</span><span class="s1">&#39;ethereum.eth&#39;</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">result</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="o">&gt;</span> <span class="s2">&quot;0000000000000000000000000000000000000000000000000000000000000000&quot;</span>
 </pre></div>
 </div>
 </div>

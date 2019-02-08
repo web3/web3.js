@@ -971,8 +971,7 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </div>
 <div class="section" id="id79">
 <h3>Example<a class="headerlink" href="#id79" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">identities</span> <span class="o">=</span> <span class="p">[],</span>
-      <span class="nx">subscription</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">identities</span> <span class="o">=</span> <span class="p">[];</span>
 
 <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
     <span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">newSymKey</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="nx">identities</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">id</span><span class="p">);}),</span>
@@ -981,7 +980,7 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 <span class="p">]).</span><span class="nx">then</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
 
     <span class="c1">// will receive also its own message send, below</span>
-    <span class="nx">subscription</span> <span class="o">=</span> <span class="nx">shh</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s2">&quot;messages&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">subscription</span> <span class="o">=</span> <span class="nx">shh</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s2">&quot;messages&quot;</span><span class="p">,</span> <span class="p">{</span>
         <span class="nx">symKeyID</span><span class="o">:</span> <span class="nx">identities</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="nx">topics</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;0xffaadd11&#39;</span><span class="p">]</span>
     <span class="p">}).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
@@ -995,7 +994,7 @@ Will be used for encrypting and decrypting of messages where the sym key is know
         <span class="nx">payload</span><span class="o">:</span> <span class="s1">&#39;0xffffffdddddd1122&#39;</span><span class="p">,</span>
         <span class="nx">powTime</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
         <span class="nx">powTarget</span><span class="o">:</span> <span class="mf">0.5</span>
-    <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">hash</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Message with hash </span><span class="si">${</span><span class="nx">h</span><span class="si">}</span><span class="sb"> was successfuly sent`</span><span class="p">))</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">hash</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Message with hash </span><span class="si">${</span><span class="nx">hash</span><span class="si">}</span><span class="sb"> was successfuly sent`</span><span class="p">))</span>
     <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">err</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Error: &quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">));</span>
 <span class="p">});</span>
 </pre></div>
