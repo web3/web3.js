@@ -4,7 +4,7 @@ import HttpProvider from '../../../src/providers/HttpProvider';
 import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import IpcProvider from '../../../src/providers/IpcProvider';
 import EthereumProvider from '../../../src/providers/EthereumProvider';
-import MetamaskInpageProvider from '../../../src/providers/MetamaskInpageProvider';
+import MetamaskProvider from '../../../src/providers/MetamaskProvider';
 
 // Mocks
 jest.mock('../../../src/factories/ProvidersModuleFactory');
@@ -12,7 +12,7 @@ jest.mock('../../../src/providers/HttpProvider');
 jest.mock('../../../src/providers/WebsocketProvider');
 jest.mock('../../../src/providers/IpcProvider');
 jest.mock('../../../src/providers/EthereumProvider');
-jest.mock('../../../src/providers/MetamaskInpageProvider');
+jest.mock('../../../src/providers/MetamaskProvider');
 
 /**
  * ProviderResolver test
@@ -95,12 +95,12 @@ describe('ProviderResolverTest', () => {
         expect(providerResolver.resolve(ipcProviderMock)).toBeInstanceOf(IpcProvider);
     });
 
-    it('calls resolve with the MetamaskInpageProvider', () => {
-        new MetamaskInpageProvider();
-        const metamaskInpageProviderMock = MetamaskInpageProvider.mock.instances[0];
+    it('calls resolve with the MetamaskProvider', () => {
+        new MetamaskProvider();
+        const metamaskProviderMock = MetamaskProvider.mock.instances[0];
 
-        providersModuleFactoryMock.createMetamaskInpageProvider.mockReturnValueOnce(metamaskInpageProviderMock);
+        providersModuleFactoryMock.createMetamaskProvider.mockReturnValueOnce(metamaskProviderMock);
 
-        expect(providerResolver.resolve(metamaskInpageProviderMock)).toEqual(metamaskInpageProviderMock);
+        expect(providerResolver.resolve(metamaskProviderMock)).toEqual(metamaskProviderMock);
     });
 });

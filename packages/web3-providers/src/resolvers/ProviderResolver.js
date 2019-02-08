@@ -74,7 +74,7 @@ export default class ProviderResolver {
         }
 
         if (provider.constructor.name === 'MetamaskInpageProvider') {
-            return this.providersModuleFactory.createMetamaskInpageProvider(provider);
+            return this.providersModuleFactory.createMetamaskProvider(provider);
         }
 
         if (provider.isEIP1193) {
