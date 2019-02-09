@@ -77,6 +77,7 @@ export default class AbstractSendMethod extends AbstractMethod {
                     this.callback(false, response);
                 }
 
+                promiEvent.resolve(response);
                 promiEvent.emit('transactionHash', response);
             })
             .catch((error) => {

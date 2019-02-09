@@ -64,36 +64,39 @@ describe('AbstractSendMethodTest', () => {
         expect(abstractSendMethod.transactionConfirmationWorkflow).toEqual(transactionConfirmationWorkflowMock);
     });
 
-    it('calls execute and returns a PromiEvent object', async (done) => {
+    it('calls execute and returns a PromiEvent object', async () => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('0x0'));
 
         moduleInstanceMock.currentProvider = providerMock;
 
-        promiEvent.on('transactionHash', (response) => {
-            expect(response).toEqual('0x0');
+        const transactionHashEventFired = new Promise((resolve) => {
+            promiEvent.on('transactionHash', (response) => {
+                expect(response).toEqual('0x0');
 
-            expect(abstractSendMethod.beforeExecution).toHaveBeenCalledWith(moduleInstanceMock);
+                expect(abstractSendMethod.beforeExecution).toHaveBeenCalledWith(moduleInstanceMock);
 
-            expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(
-                abstractSendMethod,
-                moduleInstanceMock,
-                '0x0',
-                promiEvent
-            );
+                expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(
+                    abstractSendMethod,
+                    moduleInstanceMock,
+                    '0x0',
+                    promiEvent
+                );
 
-            expect(providerMock.send).toHaveBeenCalledWith(abstractSendMethod.rpcMethod, abstractSendMethod.parameters);
+                expect(providerMock.send).toHaveBeenCalledWith(abstractSendMethod.rpcMethod, abstractSendMethod.parameters);
 
-            done();
-        });
+                resolve();
+            });
+        })
 
         const response = await abstractSendMethod.execute(moduleInstanceMock, promiEvent);
+        await transactionHashEventFired;
 
         expect(response).toEqual('0x0');
 
         expect(abstractSendMethod.callback).toHaveBeenCalledWith(false, '0x0');
     });
 
-    it('calls execute and throws an error on send', async (done) => {
+    it('calls execute and throws an error on send', async () => {
         const error = new Error('ERROR ON SEND');
         providerMock.send = jest.fn(() => {
             return new Promise((resolve, reject) => {
@@ -115,16 +118,19 @@ describe('AbstractSendMethodTest', () => {
             expect(abstractSendMethod.callback).toHaveBeenCalledWith(error, null);
         }
 
-        abstractSendMethod.execute(moduleInstanceMock, promiEvent).on('error', (e) => {
-            expect(e).toEqual(error);
+        const errorEventFired = new Promise((resolve) => {
+            abstractSendMethod.execute(moduleInstanceMock, promiEvent).on('error', (e) => {
+                expect(e).toEqual(error);
 
-            expect(abstractSendMethod.beforeExecution).toHaveBeenCalledWith(moduleInstanceMock);
+                expect(abstractSendMethod.beforeExecution).toHaveBeenCalledWith(moduleInstanceMock);
 
-            expect(providerMock.send).toHaveBeenCalledWith(abstractSendMethod.rpcMethod, abstractSendMethod.parameters);
+                expect(providerMock.send).toHaveBeenCalledWith(abstractSendMethod.rpcMethod, abstractSendMethod.parameters);
 
-            expect(abstractSendMethod.callback).toHaveBeenCalledWith(error, null);
+                expect(abstractSendMethod.callback).toHaveBeenCalledWith(error, null);
 
-            done();
+                resolve();
+            });
         });
+        await errorEventFired;
     });
 });

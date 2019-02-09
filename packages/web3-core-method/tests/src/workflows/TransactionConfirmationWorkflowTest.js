@@ -124,7 +124,7 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
             expect(methodMock.afterExecution).toHaveBeenCalledWith({blockHash: '0x0'});
 
-            expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith({blockHash: '0x0'});
+            expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith({blockHash: '0x0'}, undefined);
         });
     });
 
@@ -158,13 +158,15 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
             expect(contractDeployMethodMock.afterExecution).toHaveBeenCalledWith({blockHash: '0x0'});
 
-            expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith({blockHash: '0x0'});
+            expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith({blockHash: '0x0'}, undefined);
         });
     });
 
-    it("calls executes and receipt doesn't already exists", async (done) => {
-        methodMock.callback = jest.fn(() => {
-            done();
+    it("calls executes and receipt doesn't already exists", async () => {
+        const callbackCalled = new Promise((resolve) => {
+            methodMock.callback = jest.fn(() => {
+                resolve();
+            });
         });
 
         getTransactionReceiptMethodMock.execute.mockReturnValueOnce(Promise.resolve(false));
@@ -195,34 +197,42 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
         transactionConfirmationWorkflow.execute(methodMock, moduleInstanceMock, '0x0', promiEvent);
 
+        const confirmationEventFired = new Promise((resolve) => {
+            promiEvent.on('confirmation', (confirmationsCounter, receipt) => {
+                expect(transactionConfirmationWorkflow.timeoutCounter).toEqual(1);
+
+                expect(confirmationsCounter).toEqual(1);
+
+                expect(receipt).toEqual({blockHash: '0x0'});
+
+                resolve();
+            });
+        });
+
+        const receiptEventFired = new Promise((resolve) => {
+            promiEvent.on('receipt', (receipt) => {
+                expect(receipt).toEqual({blockHash: '0x0'});
+
+                expect(promiEvent.listeners()).toHaveLength(0);
+
+                expect(methodMock.callback).toHaveBeenCalledWith(false, {blockHash: '0x0'});
+
+                expect(newHeadsWatcherMock.stop).toHaveBeenCalled();
+
+                expect(methodMock.afterExecution).toHaveBeenCalledWith({blockHash: '0x0'});
+
+                expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith({blockHash: '0x0'}, undefined);
+
+                resolve();
+            });
+        });
         await promiEvent;
-
-        promiEvent.on('confirmation', (confirmationsCounter, receipt) => {
-            expect(transactionConfirmationWorkflow.timeoutCounter).toEqual(1);
-
-            expect(confirmationsCounter).toEqual(1);
-
-            expect(receipt).toEqual({blockHash: '0x0'});
-        });
-
-        promiEvent.on('receipt', (receipt) => {
-            expect(receipt).toEqual({blockHash: '0x0'});
-
-            expect(promiEvent.listeners()).toHaveLength(0);
-
-            expect(methodMock.callback).toHaveBeenCalledWith(false, {blockHash: '0x0'});
-
-            expect(newHeadsWatcherMock.stop).toHaveBeenCalled();
-
-            expect(methodMock.afterExecution).toHaveBeenCalledWith({blockHash: '0x0'});
-
-            expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith({blockHash: '0x0'});
-
-            done();
-        });
+        await callbackCalled;
+        await confirmationEventFired;
+        await receiptEventFired;
     });
 
-    it("calls executes and receipt doesn't already exists and is invalid on first confirmation", async (done) => {
+    it("calls executes and receipt doesn't already exists and is invalid on first confirmation", async () => {
         methodMock.callback = jest.fn();
 
         getTransactionReceiptMethodMock.execute
@@ -251,31 +261,34 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
         transactionConfirmationWorkflow.execute(methodMock, moduleInstanceMock, '0x0', promiEvent);
 
-        promiEvent.on('error', (error) => {
-            expect(error).toEqual(false);
+        const errorEventFired = new Promise((resolve) => {
+            promiEvent.on('error', (error) => {
+                expect(error).toEqual(false);
 
-            expect(promiEvent.listeners()).toHaveLength(0);
+                expect(promiEvent.listeners()).toHaveLength(0);
 
-            expect(methodMock.callback).toHaveBeenCalledWith(false, null);
+                expect(methodMock.callback).toHaveBeenCalledWith(false, null);
 
-            expect(newHeadsWatcherMock.stop).toHaveBeenCalled();
+                expect(newHeadsWatcherMock.stop).toHaveBeenCalled();
 
-            expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith(
-                {blockHash: '0x0'},
-                methodMock.parameters
-            );
+                expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith(
+                    {blockHash: '0x0'},
+                    methodMock.parameters
+                );
 
-            expect(getTransactionReceiptMethodMock.execute).toHaveBeenNthCalledWith(2, moduleInstanceMock);
+                expect(getTransactionReceiptMethodMock.execute).toHaveBeenNthCalledWith(2, moduleInstanceMock);
 
-            expect(newHeadsWatcherMock.watch).toHaveBeenCalledWith(moduleInstanceMock);
+                expect(newHeadsWatcherMock.watch).toHaveBeenCalledWith(moduleInstanceMock);
 
-            done();
+                resolve();
+            });
         });
 
         await expect(promiEvent).rejects.toEqual(false);
+        await errorEventFired;
     });
 
-    it("calls executes and receipt doesn't already exists and is invalid on first confirmation (polling)", async (done) => {
+    it("calls executes and receipt doesn't already exists and is invalid on first confirmation (polling)", async () => {
         methodMock.callback = jest.fn();
 
         getTransactionReceiptMethodMock.execute
@@ -301,22 +314,25 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
         transactionConfirmationWorkflow.execute(methodMock, moduleInstanceMock, '0x0', promiEvent);
 
-        promiEvent.on('error', (error) => {
-            expect(error.message).toEqual(
-                'Transaction was not mined within 0 seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'
-            );
+        const errorEventFired = new Promise((resolve) => {
+            promiEvent.on('error', (error) => {
+                expect(error.message).toEqual(
+                    'Transaction was not mined within 0 seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'
+                );
 
-            expect(promiEvent.listeners()).toHaveLength(0);
+                expect(promiEvent.listeners()).toHaveLength(0);
 
-            expect(methodMock.callback).toHaveBeenCalledWith(error, null);
+                expect(methodMock.callback).toHaveBeenCalledWith(error, null);
 
-            expect(newHeadsWatcherMock.stop).toHaveBeenCalled();
+                expect(newHeadsWatcherMock.stop).toHaveBeenCalled();
 
-            done();
+                resolve();
+            });
         });
 
         await expect(promiEvent).rejects.toThrow(
             'Transaction was not mined within 0 seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'
         );
+        await errorEventFired;
     });
 });
