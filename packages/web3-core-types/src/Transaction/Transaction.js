@@ -121,21 +121,10 @@ export default class Transaction {
      *
      * @property gas
      *
-     * @returns {String} value
+     * @returns {String} gas 
      */
     get gas() {
-        return this.props.gas.toString();
-    }
-
-    /**
-     * Gets the gas property
-     *
-     * @property gas
-     *
-     * @returns {String} value
-     */
-    get gasPrice() {
-        return this.props.gasPrice.toString();
+        return ((v) => v ? v.toString() : undefined)(this.props.gas);
     }
 
     /**
@@ -143,10 +132,21 @@ export default class Transaction {
      *
      * @property gasPrice
      *
-     * @returns {String} value
+     * @returns {String} gasPrice 
+     */
+    get gasPrice() {
+        return ((v) => v ? v.toString() : undefined)(this.props.gasPrice);
+    }
+
+    /**
+     * Gets the to property
+     *
+     * @property to  
+     *
+     * @returns {String} to 
      */
     get to() {
-        return this.props.to.toString();
+        return ((v) => v ? v.toString() : undefined)(this.props.to);
     }
 
     /**
@@ -154,10 +154,10 @@ export default class Transaction {
      *
      * @property from
      *
-     * @returns {String} value
+     * @returns {String} from
      */
     get from() {
-        return this.props.from.toString();
+        return ((v) => v ? v.toString() : undefined)(this.props.from);
     }
 
     /**
@@ -168,7 +168,7 @@ export default class Transaction {
      * @returns {String} value
      */
     get value() {
-        return this.props.value.toString();
+        return ((v) => v ? v.toString() : undefined)(this.props.value);
     }
 
     /**
@@ -176,10 +176,10 @@ export default class Transaction {
      *
      * @property data
      *
-     * @returns {String} value
+     * @returns {String} data
      */
     get data() {
-        return this.props.data.toString();
+        return ((v) => v ? v.toString() : undefined)(this.props.data);
     }
 
     /**
@@ -187,21 +187,21 @@ export default class Transaction {
      *
      * @property nonce
      *
-     * @returns {Number} value
+     * @returns {Number} nonce
      */
     get nonce() {
-        return parseInt(this.props.nonce);
+        return ((v) => isInteger(v) ? parseInt(v) : undefined)(this.props.nonce);
     }
-
+    
     /**
      * Gets the chainId property
      *
      * @property chainId
      *
-     * @returns {String} value
+     * @returns {String} chainId
      */
     get chainId() {
-        return this.props.chainId.toString();
+        return ((v) => v ? v.toString() : undefined)(this.props.chainId);
     }
 
     /**
