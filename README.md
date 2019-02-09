@@ -81,15 +81,15 @@ Documentation can be found at [read the docs][docs]
 
 * [Node.js](https://nodejs.org)
 * npm
+* lerna
 
 ### Commands
 ```bash
-npm run clean // removes all the node_modules folders in all modules
-npm run bootstrap // install all dependencies and symlinks the internal modules for all modules
-npm run test // runs all tests 
-npm run build // runs rollup
-npm run dev // runs rollup with a watcher
-
+lerna clean     // removes all the node_modules folders in all modules
+lerna bootstrap // install all dependencies and symlinks the internal modules for all modules
+lerna run test  // runs all tests 
+lerna run build // runs rollup
+lerna run dev   // runs rollup with a watcher
 ```
 
 ### Support
