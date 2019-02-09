@@ -55,7 +55,7 @@ export default class LogSubscription extends AbstractSubscription {
                 .then((logs) => {
                     logs.forEach((log) => {
                         const formattedLog = this.onNewSubscriptionItem(log);
-                        
+
                         callback(false, formattedLog);
                         this.emit('data', formattedLog);
                     });
