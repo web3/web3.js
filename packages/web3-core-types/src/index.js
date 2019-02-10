@@ -20,7 +20,15 @@
  * @date 2019
  */
 
-export * from './Address';
-export * from './Hex';
-export * from './Transaction';
-export * from './Ether';
+/**
+ * Expose all the necessary exports from each type.
+ * These can be accessed as Types.Hex(15),
+ *  Types.Ether(10), etc.
+ */
+
+/* Rollup does not resolve directories into index.js automatically */
+
+export * from './Address/index.js';
+export * from './Hex/index.js';
+export * from './Transaction/index.js';
+export * from './Ether/index.js';
