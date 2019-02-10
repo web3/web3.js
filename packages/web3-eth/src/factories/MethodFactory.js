@@ -51,7 +51,8 @@ import {
     SubmitWorkMethod,
     GetWorkMethod,
     GetPastLogsMethod,
-    RequestAccountsMethod
+    RequestAccountsMethod,
+    VersionMethod
 } from 'web3-core-method';
 
 export default class MethodFactory extends AbstractMethodFactory {
@@ -95,7 +96,8 @@ export default class MethodFactory extends AbstractMethodFactory {
             submitWork: SubmitWorkMethod,
             getWork: GetWorkMethod,
             getPastLogs: GetPastLogsMethod,
-            requestAccounts: RequestAccountsMethod
+            requestAccounts: RequestAccountsMethod,
+            getId: VersionMethod
         };
     }
 }

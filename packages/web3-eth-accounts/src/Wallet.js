@@ -13,7 +13,7 @@
 */
 /**
  * @file Wallet.js
- * @author Samuel Furter <samuel@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2019
  */
 
@@ -45,9 +45,9 @@ class Wallet {
     _findSafeIndex(pointer = 0) {
         if (has(this, pointer)) {
             return this._findSafeIndex(pointer + 1);
-        } else {
-            return pointer;
         }
+
+        return pointer;
     }
 
     /**
@@ -59,16 +59,11 @@ class Wallet {
      * @returns {Number[]}
      */
     _currentIndexes() {
-        const keys = Object.keys(this);
-        const indexes = keys
-            .map((key) => {
-                return parseInt(key);
-            })
-            .filter((n) => {
-                return n < 9e20;
-            });
-
-        return indexes;
+        return Object.keys(this).map((key) => {
+            return parseInt(key);
+        }).filter((n) => {
+            return n < 9e20;
+        });
     }
 
     /**
@@ -85,6 +80,7 @@ class Wallet {
         for (let i = 0; i < numberOfAccounts; ++i) {
             this.add(this._accounts.create(entropy).privateKey);
         }
+
         return this;
     }
 
@@ -101,6 +97,7 @@ class Wallet {
         if (isString(account)) {
             account = this._accounts.privateKeyToAccount(account);
         }
+
         if (!this[account.address]) {
             account = this._accounts.privateKeyToAccount(account.privateKey);
             account.index = this._findSafeIndex();
@@ -112,9 +109,9 @@ class Wallet {
             this.length++;
 
             return account;
-        } else {
-            return this[account.address];
         }
+
+        return this[account.address];
     }
 
     /**
@@ -143,9 +140,9 @@ class Wallet {
             this.length--;
 
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -156,11 +153,8 @@ class Wallet {
      * @returns {Wallet}
      */
     clear() {
-        const _this = this;
-        const indexes = this._currentIndexes();
-
-        indexes.forEach((index) => {
-            _this.remove(index);
+        this._currentIndexes().forEach((index) => {
+            this.remove(index);
         });
 
         return this;
@@ -177,14 +171,9 @@ class Wallet {
      * @returns {any[]}
      */
     encrypt(password, options) {
-        const _this = this;
-        const indexes = this._currentIndexes();
-
-        const accounts = indexes.map((index) => {
-            return _this[index].encrypt(password, options);
+        return this._currentIndexes().map((index) => {
+            return this[index].encrypt(password, options);
         });
-
-        return accounts;
     }
 
     /**
@@ -198,16 +187,14 @@ class Wallet {
      * @returns {Wallet}
      */
     decrypt(encryptedWallet, password) {
-        const _this = this;
-
         encryptedWallet.forEach((keystore) => {
-            const account = _this._accounts.decrypt(keystore, password);
+            const account = this._accounts.decrypt(keystore, password);
 
-            if (account) {
-                _this.add(account);
-            } else {
+            if (!account) {
                 throw new Error('Couldn\'t decrypt accounts. Password wrong?');
             }
+
+            this.add(account);
         });
 
         return this;
@@ -225,7 +212,7 @@ class Wallet {
      */
     save(password, keyName) {
         if (typeof localStorage === 'undefined') {
-            throw new Error('window.localStorage is undefined.')
+            throw new Error('window.localStorage is undefined.');
         }
 
         try {
@@ -238,10 +225,10 @@ class Wallet {
             // so mask the error
             if (error.code === 18) {
                 return true;
-            } else {
-                // throw as normal if not
-                throw new Error(error);
             }
+
+            // throw as normal if not
+            throw new Error(error);
         }
 
         return true;
@@ -259,7 +246,7 @@ class Wallet {
      */
     load(password, keyName) {
         if (typeof localStorage === 'undefined') {
-            throw new Error('window.localStorage is undefined.')
+            throw new Error('window.localStorage is undefined.');
         }
 
         let keystore;
@@ -267,10 +254,7 @@ class Wallet {
             keystore = localStorage.getItem(keyName || this.defaultKeyName);
 
             if (keystore) {
-                try {
-                    keystore = JSON.parse(keystore);
-                } catch (error) {
-                }
+                keystore = JSON.parse(keystore);
             }
         } catch (error) {
             // code 18 means trying to use local storage in a iframe

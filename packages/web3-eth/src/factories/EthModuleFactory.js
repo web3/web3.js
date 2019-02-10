@@ -22,6 +22,7 @@
 
 import MethodFactory from './MethodFactory';
 import Eth from '../Eth';
+import {GetGasPriceMethod} from '../../../web3-core-method/types';
 
 export default class EthModuleFactory {
     /**
@@ -102,5 +103,18 @@ export default class EthModuleFactory {
      */
     createMethodFactory() {
         return new MethodFactory(this.methodModuleFactory, this.utils, this.formatters);
+    }
+
+
+    createGetGasPriceMethod() {
+        return new GetGasPriceMethod(this.utils, this.formatters);
+    }
+
+    createGetTransactionCountMethod() {
+        return new GetTransactionCountMethod(this.utils, this.formatters);
+    }
+
+    createVersionMethod() {
+        return new VersionMethod(this.utils, this.formatters);
     }
 }

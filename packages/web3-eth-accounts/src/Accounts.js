@@ -30,13 +30,12 @@ import Bytes from 'eth-lib/lib/bytes';
 import scryptsy from 'scrypt.js';
 import uuid from 'uuid';
 import {AbstractWeb3Module} from 'web3-core';
+const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto'); // TODO: This should moved later to the factory method
 
 export default class Accounts extends AbstractWeb3Module {
     /**
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
-     * @param {MethodFactory} methodFactory
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AccountsModuleFactory} accountsModuleFactory
@@ -44,15 +43,14 @@ export default class Accounts extends AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(provider, providersModuleFactory, methodModuleFactory, methodFactory, utils, formatters, accountsModuleFactory, crypto, transactionOptionsValidator, options) {
-        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
+    constructor(provider, providersModuleFactory, utils, formatters, accountsModuleFactory, transactionSigner, options) {
+        super(provider, providersModuleFactory, null, null, options);
 
         this.utils = utils;
         this.formatters = formatters;
         this.accountsModuleFactory = accountsModuleFactory;
         this.wallet = this.accountsModuleFactory.createWallet(this);
-        this.crypto = crypto;
-        this.transactionOptionsValidator = transactionOptionsValidator;
+        this.transactionSigner = transactionSigner;
     }
 
     /**
@@ -81,6 +79,7 @@ export default class Accounts extends AbstractWeb3Module {
         return this.accountsModuleFactory.createAccount(Account.fromPrivate(privateKey), this);
     }
 
+
     /**
      * Signs a transaction object with the given privateKey
      *
@@ -94,37 +93,22 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Promise<Object>}
      */
     async signTransaction(tx, privateKey, callback) {
-        if (this.isUndefinedOrNull(tx.chainId)) {
-           tx.chainId = await this.getId();
-        }
-        if (this.isUndefinedOrNull(tx.nonce)) {
-           tx.nonce = await this.getTransactionCount(this.privateKeyToAccount(privateKey).address);
-        }
-        if (this.isUndefinedOrNull(tx.gasPrice)) {
-           tx.gasPrice = await this.getGasPrice();
-        }
+        try {
+            const transaction = new Transaction(tx);
+            const signedTransaction = await this.transactionSigner.sign(transaction, privateKey);
+        } catch (error) {
+            if (isFunction(callback)) {
+                callback(error, null);
+            }
 
-        const validationResult = this.transactionOptionsValidator.validate(tx);
-
-        if (validationResult instanceof Error) {
-            callback(validationResult);
-            throw validationResult;
+            throw error;
         }
 
-        return this.transactionSigner.sign(tx);
-    }
+        if (isFunction(callback)) {
+            callback(false, signedTransaction);
+        }
 
-    /**
-     * Checks if the value is not undefined or null
-     *
-     * @method isNotUndefinedOrNull
-     *
-     * @param {any} value
-     *
-     * @returns {Boolean}
-     */
-    isUndefinedOrNull(value) {
-        return (typeof value === 'undefined' && value === null);
+        return signedTransaction;
     }
 
     /**
@@ -268,7 +252,7 @@ export default class Accounts extends AbstractWeb3Module {
                 throw new Error('Unsupported parameters to PBKDF2');
             }
 
-            derivedKey = this.crypto.pbkdf2Sync(
+            derivedKey = crypto.pbkdf2Sync(
                 Buffer.from(password),
                 Buffer.from(kdfparams.salt, 'hex'),
                 kdfparams.c,
@@ -286,7 +270,7 @@ export default class Accounts extends AbstractWeb3Module {
             throw new Error('Key derivation failed - possibly wrong password');
         }
 
-        const decipher = this.crypto.createDecipheriv(
+        const decipher = crypto.createDecipheriv(
             json.crypto.cipher,
             derivedKey.slice(0, 16),
             Buffer.from(json.crypto.cipherparams.iv, 'hex')
@@ -311,8 +295,8 @@ export default class Accounts extends AbstractWeb3Module {
         const account = this.privateKeyToAccount(privateKey);
 
         options = options || {};
-        const salt = options.salt || this.crypto.randomBytes(32);
-        const iv = options.iv || this.crypto.randomBytes(16);
+        const salt = options.salt || crypto.randomBytes(32);
+        const iv = options.iv || crypto.randomBytes(16);
 
         let derivedKey;
         const kdf = options.kdf || 'scrypt';
@@ -324,7 +308,7 @@ export default class Accounts extends AbstractWeb3Module {
         if (kdf === 'pbkdf2') {
             kdfparams.c = options.c || 262144;
             kdfparams.prf = 'hmac-sha256';
-            derivedKey = this.crypto.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+            derivedKey = crypto.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
         } else if (kdf === 'scrypt') {
             // FIXME: support progress reporting callback
             kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
@@ -335,7 +319,7 @@ export default class Accounts extends AbstractWeb3Module {
             throw new Error('Unsupported kdf');
         }
 
-        const cipher = this.crypto.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
+        const cipher = crypto.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
         if (!cipher) {
             throw new Error('Unsupported cipher');
         }
@@ -351,7 +335,7 @@ export default class Accounts extends AbstractWeb3Module {
 
         return {
             version: 3,
-            id: uuid.v4({random: options.uuid || this.crypto.randomBytes(16)}),
+            id: uuid.v4({random: options.uuid || crypto.randomBytes(16)}),
             address: account.address.toLowerCase().replace('0x', ''),
             crypto: {
                 ciphertext: ciphertext.toString('hex'),

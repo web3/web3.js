@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import MethodFactory from './MethodFactory';
 import Accounts from '../Accounts';
 import Account from '../Account';
 import Wallet from '../Wallet';
