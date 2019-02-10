@@ -21,7 +21,7 @@
  */
 
 import * as Types from '../index';
-import {cloneDeep} from 'lodash';
+import {cloneDeep, isObject} from 'lodash';
 
 export default class Type {
     /**

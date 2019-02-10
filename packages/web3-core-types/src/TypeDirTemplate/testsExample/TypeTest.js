@@ -8,7 +8,7 @@ describe('TypeTest', () => {
     beforeEach(() => {});
 
     it('constructor check', () => {
-        type = new Type(txParamsTest, error, params);
+        type = new Type(data, error, initParams);
 
         expect(type).toHaveProperty('error');
         expect(type).toHaveProperty('props');

@@ -15,12 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file index.js
+ * @file type-test.ts
  * @author Oscar Fonseca <hiro@cehh.io>
  * @date 2019
  */
-
-export * from './Address';
-export * from './Hex';
-export * from './Transaction';
-export * from './Ether';

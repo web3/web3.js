@@ -20,7 +20,31 @@
  * @date 2019
  */
 
-export * from './Address';
-export * from './Hex';
-export * from './Transaction';
-export * from './Ether';
+import EtherClass from './Ether';
+import EtherFactory from './factories/EtherFactory';
+
+/**
+ * Returns an object of Ether 
+ *
+ * @returns {Ether}
+ *
+ * @constructor
+ */
+export const Ether = (params) => {
+    return new EtherFactory().createEther(params);
+};
+
+export const Wei = (wei) => {
+    const params = {amount: wei, unit: 'wei'};
+    return Ether(params);
+}
+
+export const Gwei = (gwei) => {
+    const params = {amount: gwei, unit: 'gwei'};
+    return Ether(params);
+}
+
+export const Finney = (finney) => {
+    const params = {amount: finney, unit: 'finney'};
+    return Ether(params);
+}
