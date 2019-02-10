@@ -21,7 +21,7 @@
  */
 
 import * as Types from '..';
-import {isBN, isBigNumber, toBN} from 'web3-utils';
+import {isBN, toBN} from 'web3-utils';
 import {isNaN, isInteger, isString, omit, cloneDeep} from 'lodash';
 
 export default class Transaction {
@@ -121,10 +121,10 @@ export default class Transaction {
      *
      * @property gas
      *
-     * @returns {String} gas 
+     * @returns {String} gas
      */
     get gas() {
-        return ((v) => v ? v.toString() : undefined)(this.props.gas);
+        return ((v) => (v ? v.toString() : undefined))(this.props.gas);
     }
 
     /**
@@ -132,21 +132,21 @@ export default class Transaction {
      *
      * @property gasPrice
      *
-     * @returns {String} gasPrice 
+     * @returns {String} gasPrice
      */
     get gasPrice() {
-        return ((v) => v ? v.toString() : undefined)(this.props.gasPrice);
+        return ((v) => (v ? v.toString() : undefined))(this.props.gasPrice);
     }
 
     /**
      * Gets the to property
      *
-     * @property to  
+     * @property to
      *
-     * @returns {String} to 
+     * @returns {String} to
      */
     get to() {
-        return ((v) => v ? v.toString() : undefined)(this.props.to);
+        return ((v) => (v ? v.toString() : undefined))(this.props.to);
     }
 
     /**
@@ -157,7 +157,7 @@ export default class Transaction {
      * @returns {String} from
      */
     get from() {
-        return ((v) => v ? v.toString() : undefined)(this.props.from);
+        return ((v) => (v ? v.toString() : undefined))(this.props.from);
     }
 
     /**
@@ -168,7 +168,7 @@ export default class Transaction {
      * @returns {String} value
      */
     get value() {
-        return ((v) => v ? v.toString() : undefined)(this.props.value);
+        return ((v) => (v ? v.toString() : undefined))(this.props.value);
     }
 
     /**
@@ -179,7 +179,7 @@ export default class Transaction {
      * @returns {String} data
      */
     get data() {
-        return ((v) => v ? v.toString() : undefined)(this.props.data);
+        return ((v) => (v ? v.toString() : undefined))(this.props.data);
     }
 
     /**
@@ -190,9 +190,9 @@ export default class Transaction {
      * @returns {Number} nonce
      */
     get nonce() {
-        return ((v) => isInteger(v) ? parseInt(v) : undefined)(this.props.nonce);
+        return ((v) => (isInteger(v) ? parseInt(v) : undefined))(this.props.nonce);
     }
-    
+
     /**
      * Gets the chainId property
      *
@@ -201,7 +201,7 @@ export default class Transaction {
      * @returns {String} chainId
      */
     get chainId() {
-        return ((v) => v ? v.toString() : undefined)(this.props.chainId);
+        return ((v) => (v ? v.toString() : undefined))(this.props.chainId);
     }
 
     /**

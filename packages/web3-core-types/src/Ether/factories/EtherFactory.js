@@ -39,7 +39,7 @@ export default class EtherFactory {
          */
         const error = {
             amount: (value) => `The amount parameter ${value} needs to be ...`,
-            unit: (value) => `Explanation of why parameter ${value} was rejected`,
+            unit: (value) => `Explanation of why parameter ${value} was rejected`
         };
 
         /* Initialise the params */

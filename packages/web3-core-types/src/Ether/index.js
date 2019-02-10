@@ -20,11 +20,10 @@
  * @date 2019
  */
 
-import EtherClass from './Ether';
 import EtherFactory from './factories/EtherFactory';
 
 /**
- * Returns an object of Ether 
+ * Returns an object of Ether
  *
  * @returns {Ether}
  *
@@ -37,14 +36,14 @@ export const Ether = (params) => {
 export const Wei = (wei) => {
     const params = {amount: wei, unit: 'wei'};
     return Ether(params);
-}
+};
 
 export const Gwei = (gwei) => {
     const params = {amount: gwei, unit: 'gwei'};
     return Ether(params);
-}
+};
 
 export const Finney = (finney) => {
     const params = {amount: finney, unit: 'finney'};
     return Ether(params);
-}
+};

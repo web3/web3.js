@@ -8,9 +8,17 @@ jest.mock('../../Ether');
  * EtherFactory test
  */
 describe('EtherFactoryTest', () => {
-    beforeEach(() => {});
+    let etherFactory;
+    const data = {
+        amount: '1',
+        unit: 'wei'
+    };
+
+    beforeEach(() => {
+        etherFactory = new EtherFactory();
+    });
 
     it('calls createEther and returns Ether object', () => {
-        
+        expect(etherFactory.createEther(data)).toBeInstanceOf(Ether);
     });
 });

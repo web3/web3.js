@@ -1,6 +1,6 @@
 import * as Types from '..';
 import Address from '../Address/Address';
-import Iban from '../Address/Iban'; // eslint-disable no-unused-vars
+import Iban from '../Address/Iban'; // eslint-disable-line no-unused-vars
 
 // Mocks
 jest.mock('../Address/Address');
@@ -20,7 +20,7 @@ describe('TypeModuleAddressTest', () => {
         ];
 
         tests.forEach((test) => {
-            const obj = test.method(test.value); // eslint-disable-line new-cap
+            const obj = test.method(test.value); // eslint-disable-line new-cap, no-unused-vars
 
             // All Address interface calls go through isValid
             expect(Address.isValid).toHaveBeenCalled();

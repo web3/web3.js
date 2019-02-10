@@ -13,7 +13,7 @@ describe('TypeModuleEtherTest', () => {
             {value: '12', method: Types.Wei},
             {value: '12', method: Types.Gwei},
             {value: '12', method: Types.Finney},
-            {value: '12', method: Types.Ether},
+            {value: '12', method: Types.Ether}
         ];
 
         tests.forEach((test) => {

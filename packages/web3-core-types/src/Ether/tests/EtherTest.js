@@ -1,4 +1,3 @@
-import {cloneDeep} from 'lodash';
 import Ether from '../Ether';
 
 /**
@@ -8,7 +7,7 @@ describe('EtherTest', () => {
     let ether;
     const error = {
         amount: () => 'err msg',
-        unit: () => 'err msg',
+        unit: () => 'err msg'
     };
 
     const initParams = {
@@ -19,7 +18,7 @@ describe('EtherTest', () => {
     const data = {
         amount: '300',
         unit: 'finney'
-    }
+    };
 
     it('constructor check', () => {
         ether = new Ether(data, error, initParams);
@@ -29,18 +28,13 @@ describe('EtherTest', () => {
     });
 
     it('ether constructor check', () => {
-        const tests = [
-            {value: '2000.1'},
-            {value: '0.12'},
-            {value: '1'},
-            {value: '0'}
-        ];
+        const tests = [{value: '2000.1'}, {value: '0.12'}, {value: '1'}, {value: '0'}];
 
         tests.forEach((test) => {
             expect(new Ether(test.value, error, initParams).toString()).toEqual(`${test.value} ether`);
         });
     });
-    
+
     it('parses to wei', () => {
         const tests = [
             {amount: '1', unit: 'wei', expected: '1'},
@@ -55,7 +49,7 @@ describe('EtherTest', () => {
             expect(new Ether({...test}, error, initParams).toWei()).toEqual(`${test.expected}`);
         });
     });
-    
+
     // TODO: manage decimal places
     // These results implicitly run FLOOR()
     it('parses to other units', () => {
