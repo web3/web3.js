@@ -77,7 +77,7 @@ export class AbstractSocketProvider {
 
     sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<object[]>;
 
-    subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: []): Promise<string>;
+    subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: any[]): Promise<string>;
 
     unsubscribe(subscriptionId: string, unsubscribeMethod: string): Promise<boolean>;
 
@@ -116,7 +116,7 @@ export class EthereumProvider {
 
     sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<object[]>;
 
-    subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: []): Promise<string>;
+    subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: any[]): Promise<string>;
 
     unsubscribe(subscriptionId: string, unsubscribeMethod: string): Promise<boolean>;
 
