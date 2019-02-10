@@ -20,42 +20,16 @@
  * @date 2017
  */
 
-import isUndefined from 'lodash/isUndefined';
-import isNull from 'lodash/isNull';
 import isObject from 'lodash/isObject';
 import isBoolean from 'lodash/isBoolean';
 import isString from 'lodash/isString';
-import has from 'lodash/has';
-import extend from 'lodash/extend';
 import Account from 'eth-lib/lib/account';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
-import Nat from 'eth-lib/lib/nat';
 import Bytes from 'eth-lib/lib/bytes';
 import scryptsy from 'scrypt.js';
 import uuid from 'uuid';
 import {AbstractWeb3Module} from 'web3-core';
-
-const cryp = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
-
-const isNot = (value) => {
-    return isUndefined(value) || isNull(value);
-};
-
-const trimLeadingZero = (hex) => {
-    while (hex && hex.startsWith('0x0')) {
-        hex = `0x${hex.slice(3)}`;
-    }
-    return hex;
-};
-
-const makeEven = (hex) => {
-    if (hex.length % 2 === 1) {
-        hex = hex.replace('0x', '0x0');
-    }
-
-    return hex;
-};
 
 export default class Accounts extends AbstractWeb3Module {
     /**
@@ -65,42 +39,20 @@ export default class Accounts extends AbstractWeb3Module {
      * @param {MethodFactory} methodFactory
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AccountsModuleFactory} accountsModuleFactory
      * @param {Object} options
      *
      * @constructor
      */
-    constructor(provider, providersModuleFactory, methodModuleFactory, methodFactory, utils, formatters, options) {
+    constructor(provider, providersModuleFactory, methodModuleFactory, methodFactory, utils, formatters, accountsModuleFactory, crypto, transactionOptionsValidator, options) {
         super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
 
         this.utils = utils;
         this.formatters = formatters;
-        this.wallet = new Wallet(this);
-    }
-
-    /**
-     * Adds the account functions to the given object
-     *
-     * @method _addAccountFunctions
-     *
-     * @param {Object} account
-     *
-     * @returns {Object}
-     */
-    _addAccountFunctions(account) {
-        // add sign functions
-        account.signTransaction = (tx, callback) => {
-            return this.signTransaction(tx, account.privateKey, callback).bind(this);
-        };
-
-        account.sign = (data) => {
-            return this.sign(data, account.privateKey);
-        };
-
-        account.encrypt = (password, options) => {
-            return this.encrypt(account.privateKey, password, options);
-        };
-
-        return account;
+        this.accountsModuleFactory = accountsModuleFactory;
+        this.wallet = this.accountsModuleFactory.createWallet(this);
+        this.crypto = crypto;
+        this.transactionOptionsValidator = transactionOptionsValidator;
     }
 
     /**
@@ -110,10 +62,10 @@ export default class Accounts extends AbstractWeb3Module {
      *
      * @param {String} entropy
      *
-     * @returns {Object}
+     * @returns {Account}
      */
     create(entropy) {
-        return this._addAccountFunctions(Account.create(entropy || this.utils.randomHex(32)));
+        return this.accountsModuleFactory.createAccount(Account.create(entropy || this.utils.randomHex(32)), this);
     }
 
     /**
@@ -123,10 +75,10 @@ export default class Accounts extends AbstractWeb3Module {
      *
      * @param {String} privateKey
      *
-     * @returns {Object}
+     * @returns {Account}
      */
     privateKeyToAccount(privateKey) {
-        return this._addAccountFunctions(Account.fromPrivate(privateKey));
+        return this.accountsModuleFactory.createAccount(Account.fromPrivate(privateKey), this);
     }
 
     /**
@@ -141,109 +93,38 @@ export default class Accounts extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<Object>}
      */
-    signTransaction(tx, privateKey, callback) {
-        const _this = this;
-        let error = false;
-        let result;
-
-        callback = callback || (() => {});
-
-        if (!tx) {
-            error = new Error('No transaction object given!');
-
-            callback(error);
-            return Promise.reject(error);
+    async signTransaction(tx, privateKey, callback) {
+        if (this.isUndefinedOrNull(tx.chainId)) {
+           tx.chainId = await this.getId();
+        }
+        if (this.isUndefinedOrNull(tx.nonce)) {
+           tx.nonce = await this.getTransactionCount(this.privateKeyToAccount(privateKey).address);
+        }
+        if (this.isUndefinedOrNull(tx.gasPrice)) {
+           tx.gasPrice = await this.getGasPrice();
         }
 
-        function signed(tx) {
-            if (!tx.gas && !tx.gasLimit) {
-                error = new Error('gas is missing');
-            }
+        const validationResult = this.transactionOptionsValidator.validate(tx);
 
-            if (tx.nonce < 0 || tx.gas < 0 || tx.gasPrice < 0 || tx.chainId < 0) {
-                error = new Error('Gas, gasPrice, nonce or chainId is lower than 0');
-            }
-
-            if (error) {
-                callback(error);
-                return Promise.reject(error);
-            }
-
-            try {
-                tx = _this.formatters.inputCallFormatter(tx, _this);
-
-                const transaction = tx;
-                transaction.to = tx.to || '0x';
-                transaction.data = tx.data || '0x';
-                transaction.value = tx.value || '0x';
-                transaction.chainId = _this.utils.numberToHex(tx.chainId);
-
-                const rlpEncoded = RLP.encode([
-                    Bytes.fromNat(transaction.nonce),
-                    Bytes.fromNat(transaction.gasPrice),
-                    Bytes.fromNat(transaction.gas),
-                    transaction.to.toLowerCase(),
-                    Bytes.fromNat(transaction.value),
-                    transaction.data,
-                    Bytes.fromNat(transaction.chainId || '0x1'),
-                    '0x',
-                    '0x'
-                ]);
-
-                const hash = Hash.keccak256(rlpEncoded);
-
-                const signature = Account.makeSigner(Nat.toNumber(transaction.chainId || '0x1') * 2 + 35)(
-                    Hash.keccak256(rlpEncoded),
-                    privateKey
-                );
-
-                const rawTx = RLP.decode(rlpEncoded)
-                    .slice(0, 6)
-                    .concat(Account.decodeSignature(signature));
-
-                rawTx[6] = makeEven(trimLeadingZero(rawTx[6]));
-                rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
-                rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
-
-                const rawTransaction = RLP.encode(rawTx);
-
-                const values = RLP.decode(rawTransaction);
-                result = {
-                    messageHash: hash,
-                    v: trimLeadingZero(values[6]),
-                    r: trimLeadingZero(values[7]),
-                    s: trimLeadingZero(values[8]),
-                    rawTransaction
-                };
-            } catch (error) {
-                callback(error);
-                return Promise.reject(error);
-            }
-
-            callback(null, result);
-
-            return result;
+        if (validationResult instanceof Error) {
+            callback(validationResult);
+            throw validationResult;
         }
 
-        // Resolve immediately if nonce, chainId and price are provided
-        if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
-            return Promise.resolve(signed(tx));
-        }
+        return this.transactionSigner.sign(tx);
+    }
 
-        // Otherwise, get the missing info from the Ethereum Node
-        return Promise.all([
-            isNot(tx.chainId) ? _this.getId() : tx.chainId,
-            isNot(tx.gasPrice) ? _this.getGasPrice() : tx.gasPrice,
-            isNot(tx.nonce) ? _this.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
-        ]).then((args) => {
-            if (isNot(args[0]) || isNot(args[1]) || isNot(args[2])) {
-                throw new Error(
-                    `One of the values 'chainId', 'gasPrice', or 'nonce' couldn't be fetched: ${JSON.stringify(args)}`
-                );
-            }
-
-            return signed(extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2]}));
-        });
+    /**
+     * Checks if the value is not undefined or null
+     *
+     * @method isNotUndefinedOrNull
+     *
+     * @param {any} value
+     *
+     * @returns {Boolean}
+     */
+    isUndefinedOrNull(value) {
+        return (typeof value === 'undefined' && value === null);
     }
 
     /**
@@ -353,7 +234,7 @@ export default class Accounts extends AbstractWeb3Module {
      * @param {String} password
      * @param {Boolean} nonStrict
      *
-     * @returns {Object}
+     * @returns {Account}
      */
     decrypt(v3Keystore, password, nonStrict) {
         if (!isString(password)) {
@@ -387,7 +268,7 @@ export default class Accounts extends AbstractWeb3Module {
                 throw new Error('Unsupported parameters to PBKDF2');
             }
 
-            derivedKey = cryp.pbkdf2Sync(
+            derivedKey = this.crypto.pbkdf2Sync(
                 Buffer.from(password),
                 Buffer.from(kdfparams.salt, 'hex'),
                 kdfparams.c,
@@ -405,7 +286,7 @@ export default class Accounts extends AbstractWeb3Module {
             throw new Error('Key derivation failed - possibly wrong password');
         }
 
-        const decipher = cryp.createDecipheriv(
+        const decipher = this.crypto.createDecipheriv(
             json.crypto.cipher,
             derivedKey.slice(0, 16),
             Buffer.from(json.crypto.cipherparams.iv, 'hex')
@@ -430,8 +311,8 @@ export default class Accounts extends AbstractWeb3Module {
         const account = this.privateKeyToAccount(privateKey);
 
         options = options || {};
-        const salt = options.salt || cryp.randomBytes(32);
-        const iv = options.iv || cryp.randomBytes(16);
+        const salt = options.salt || this.crypto.randomBytes(32);
+        const iv = options.iv || this.crypto.randomBytes(16);
 
         let derivedKey;
         const kdf = options.kdf || 'scrypt';
@@ -443,7 +324,7 @@ export default class Accounts extends AbstractWeb3Module {
         if (kdf === 'pbkdf2') {
             kdfparams.c = options.c || 262144;
             kdfparams.prf = 'hmac-sha256';
-            derivedKey = cryp.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+            derivedKey = this.crypto.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
         } else if (kdf === 'scrypt') {
             // FIXME: support progress reporting callback
             kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
@@ -454,7 +335,7 @@ export default class Accounts extends AbstractWeb3Module {
             throw new Error('Unsupported kdf');
         }
 
-        const cipher = cryp.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
+        const cipher = this.crypto.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
         if (!cipher) {
             throw new Error('Unsupported cipher');
         }
@@ -470,7 +351,7 @@ export default class Accounts extends AbstractWeb3Module {
 
         return {
             version: 3,
-            id: uuid.v4({random: options.uuid || cryp.randomBytes(16)}),
+            id: uuid.v4({random: options.uuid || this.crypto.randomBytes(16)}),
             address: account.address.toLowerCase().replace('0x', ''),
             crypto: {
                 ciphertext: ciphertext.toString('hex'),
@@ -483,285 +364,5 @@ export default class Accounts extends AbstractWeb3Module {
                 mac: mac.toString('hex')
             }
         };
-    }
-}
-
-// Note: this is trying to follow closely the specs on
-// http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html
-
-/**
- * @param {Object} accounts
- *
- * @constructor
- */
-class Wallet {
-    constructor(accounts) {
-        this._accounts = accounts;
-        this.length = 0;
-        this.defaultKeyName = 'web3js_wallet';
-    }
-
-    /**
-     * Finds the safe index
-     *
-     * @method _findSafeIndex
-     * @private
-     *
-     * @param {Number} pointer
-     *
-     * @returns {*}
-     */
-    _findSafeIndex(pointer = 0) {
-        if (has(this, pointer)) {
-            return this._findSafeIndex(pointer + 1);
-        } else {
-            return pointer;
-        }
-    }
-
-    /**
-     * Gets the correntIndexes array
-     *
-     * @method _currentIndexes
-     * @private
-     *
-     * @returns {Number[]}
-     */
-    _currentIndexes() {
-        const keys = Object.keys(this);
-        const indexes = keys
-            .map((key) => {
-                return parseInt(key);
-            })
-            .filter((n) => {
-                return n < 9e20;
-            });
-
-        return indexes;
-    }
-
-    /**
-     * Creates new accounts with a given entropy
-     *
-     * @method create
-     *
-     * @param {Number} numberOfAccounts
-     * @param {String} entropy
-     *
-     * @returns {Wallet}
-     */
-    create(numberOfAccounts, entropy) {
-        for (let i = 0; i < numberOfAccounts; ++i) {
-            this.add(this._accounts.create(entropy).privateKey);
-        }
-        return this;
-    }
-
-    /**
-     * Adds a account to the wallet
-     *
-     * @method add
-     *
-     * @param {Object} account
-     *
-     * @returns {Object}
-     */
-    add(account) {
-        if (isString(account)) {
-            account = this._accounts.privateKeyToAccount(account);
-        }
-        if (!this[account.address]) {
-            account = this._accounts.privateKeyToAccount(account.privateKey);
-            account.index = this._findSafeIndex();
-
-            this[account.index] = account;
-            this[account.address] = account;
-            this[account.address.toLowerCase()] = account;
-
-            this.length++;
-
-            return account;
-        } else {
-            return this[account.address];
-        }
-    }
-
-    /**
-     * Removes a account from the number by his address or index
-     *
-     * @method remove
-     *
-     * @param {String|Number} addressOrIndex
-     *
-     * @returns {boolean}
-     */
-    remove(addressOrIndex) {
-        const account = this[addressOrIndex];
-
-        if (account && account.address) {
-            // address
-            this[account.address].privateKey = null;
-            delete this[account.address];
-            // address lowercase
-            this[account.address.toLowerCase()].privateKey = null;
-            delete this[account.address.toLowerCase()];
-            // index
-            this[account.index].privateKey = null;
-            delete this[account.index];
-
-            this.length--;
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Clears the wallet
-     *
-     * @method clear
-     *
-     * @returns {Wallet}
-     */
-    clear() {
-        const _this = this;
-        const indexes = this._currentIndexes();
-
-        indexes.forEach((index) => {
-            _this.remove(index);
-        });
-
-        return this;
-    }
-
-    /**
-     * Encrypts all accounts
-     *
-     * @method encrypt
-     *
-     * @param {String} password
-     * @param {Object} options
-     *
-     * @returns {any[]}
-     */
-    encrypt(password, options) {
-        const _this = this;
-        const indexes = this._currentIndexes();
-
-        const accounts = indexes.map((index) => {
-            return _this[index].encrypt(password, options);
-        });
-
-        return accounts;
-    }
-
-    /**
-     * Decrypts all accounts
-     *
-     * @method decrypt
-     *
-     * @param {Wallet} encryptedWallet
-     * @param {String} password
-     *
-     * @returns {Wallet}
-     */
-    decrypt(encryptedWallet, password) {
-        const _this = this;
-
-        encryptedWallet.forEach((keystore) => {
-            const account = _this._accounts.decrypt(keystore, password);
-
-            if (account) {
-                _this.add(account);
-            } else {
-                throw new Error("Couldn't decrypt accounts. Password wrong?");
-            }
-        });
-
-        return this;
-    }
-
-    /**
-     * Saves the current wallet in the localStorage of the browser
-     *
-     * @method save
-     *
-     * @param {String} password
-     * @param {String} keyName
-     *
-     * @returns {boolean}
-     */
-    save(password, keyName) {
-        try {
-            localStorage.setItem(keyName || this.defaultKeyName, JSON.stringify(this.encrypt(password)));
-        } catch (error) {
-            // code 18 means trying to use local storage in a iframe
-            // with third party cookies turned off
-            // we still want to support using web3 in a iframe
-            // as by default safari turn these off for all iframes
-            // so mask the error
-            if (error.code === 18) {
-                return true;
-            } else {
-                // throw as normal if not
-                throw new Error(error);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Loads the stored wallet by his keyName from the localStorage of the browser
-     *
-     * @method load
-     *
-     * @param {String} password
-     * @param {String} keyName
-     *
-     * @returns {Wallet}
-     */
-    load(password, keyName) {
-        let keystore;
-        try {
-            keystore = localStorage.getItem(keyName || this.defaultKeyName);
-
-            if (keystore) {
-                try {
-                    keystore = JSON.parse(keystore);
-                } catch (error) {}
-            }
-        } catch (error) {
-            // code 18 means trying to use local storage in a iframe
-            // with third party cookies turned off
-            // we still want to support using web3 in a iframe
-            // as by default safari turn these off for all iframes
-            // so mask the error
-            if (error.code === 18) {
-                keystore = this.defaultKeyName;
-            } else {
-                // throw as normal if not
-                throw new Error(error);
-            }
-        }
-
-        return this.decrypt(keystore || [], password);
-    }
-}
-
-try {
-    if (typeof localStorage === 'undefined') {
-        delete Wallet.prototype.save;
-        delete Wallet.prototype.load;
-    }
-} catch (error) {
-    // code 18 means trying to use local storage in a iframe
-    // with third party cookies turned off
-    // we still want to support using web3 in a iframe
-    // as by default safari turn these off for all iframes
-    // so mask the error
-    if (error.code !== 18) {
-        throw new Error(error);
     }
 }

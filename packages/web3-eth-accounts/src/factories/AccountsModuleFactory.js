@@ -22,6 +22,8 @@
 
 import MethodFactory from './MethodFactory';
 import Accounts from '../Accounts';
+import Account from '../Account';
+import Wallet from '../Wallet';
 
 export default class AccountsModuleFactory {
     /**
@@ -53,8 +55,36 @@ export default class AccountsModuleFactory {
             this.createMethodFactory(methodModuleFactory),
             this.utils,
             this.formatters,
+            // const cryp = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
             options
         );
+    }
+
+    /**
+     * Returns an object of type Wallet
+     *
+     * @method createWallet
+     *
+     * @param {Accounts} accounts
+     *
+     * @returns {Wallet}
+     */
+    createWallet(accounts) {
+        return new Wallet(accounts);
+    }
+
+    /**
+     * Returns an object of type Account
+     *
+     * @method createAccount
+     *
+     * @param {object} accountOptions
+     * @param {Accounts} accounts
+     *
+     * @returns {Account}
+     */
+    createAccount(accountOptions, accounts) {
+        return new Account(accountOptions, accounts)
     }
 
     /**
