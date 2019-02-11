@@ -26,8 +26,8 @@ class Wallet {
      *
      * @constructor
      */
-    constructor(accounts) {
-        this._accounts = accounts;
+    constructor(accountsModuleFacotry, utils) {
+        this.utils = utils;
         this.length = 0;
         this.defaultKeyName = 'web3js_wallet';
     }
@@ -77,8 +77,10 @@ class Wallet {
      * @returns {Wallet}
      */
     create(numberOfAccounts, entropy) {
+        const account = Account.from(entropy || this.utils.randomHex(32)));
+
         for (let i = 0; i < numberOfAccounts; ++i) {
-            this.add(this._accounts.create(entropy).privateKey);
+            this.add(account.privateKey);
         }
 
         return this;
@@ -95,11 +97,10 @@ class Wallet {
      */
     add(account) {
         if (isString(account)) {
-            account = this._accounts.privateKeyToAccount(account);
+            account = Account.fromPrivateKey(account);
         }
 
         if (!this[account.address]) {
-            account = this._accounts.privateKeyToAccount(account.privateKey);
             account.index = this._findSafeIndex();
 
             this[account.index] = account;

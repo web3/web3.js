@@ -45,7 +45,6 @@ export default class TransactionSigner extends AbstractSigner {
         const wallet = this.getWallet(transaction.from);
 
         if (wallet && wallet.privateKey) {
-            delete transaction.from;
             try {
                 return await this.accounts.signTransaction(transaction, wallet.privateKey);
             } catch (error) {

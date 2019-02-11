@@ -109,8 +109,6 @@ export default class AbstractMethodFactory {
                         this.utils,
                         this.formatters,
                         this.methodModuleFactory.createTransactionConfirmationWorkflow(),
-                        this.methodModuleFactory.accounts,
-                        this.methodModuleFactory.createTransactionSigner()
                     );
                     /* eslint-enable new-cap */
                 }

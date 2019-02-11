@@ -29,21 +29,23 @@ export default class TransactionSigner {
      *
      * @constructor
      */
-    constructor(formatters, utils) {
+    constructor(formatters, utils, accounts) {
         this.formatters = formatters;
         this.utils = utils;
+        this.accounts = accounts;
     }
 
     /**
      * Signs the transaction
      *
-     * @param {object} tx
+     * @param {Transaction} tx
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {Promise<Transaction>}
      */
     async sign(tx, moduleInstance) {
         let result;
+        const privateKey = this.accounts.wallet[from];
 
         if (this.isUndefinedOrNull(tx.chainId)) {
             tx.chainId = await moduleInstance.getId();
@@ -55,6 +57,7 @@ export default class TransactionSigner {
             tx.gasPrice = await moduleInstance.getGasPrice();
         }
 
+        // delete tx.from;
         tx = this.formatters.inputCallFormatter(tx, moduleInstance);
 
         const transaction = tx;

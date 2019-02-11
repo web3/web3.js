@@ -59,17 +59,6 @@ export default class ModuleFactory {
     }
 
     /**
-     * Returns the TransactionSigner object
-     *
-     * @method createTransactionSigner
-     *
-     * @returns {TransactionSigner}
-     */
-    createTransactionSigner() {
-        return new TransactionSigner(this.accounts);
-    }
-
-    /**
      * Returns the MessageSigner object
      *
      * @method createMessageSigner
@@ -96,6 +85,7 @@ export default class ModuleFactory {
     }
 
     /**
+     * TODO: Create TransactionReceipt object e.g.: "TransactionReceipt.from(response)"
      * Returns the TransactionReceiptValidator object
      *
      * @method createTransactionReceiptValidator

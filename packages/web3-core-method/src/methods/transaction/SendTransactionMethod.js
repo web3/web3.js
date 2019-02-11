@@ -28,15 +28,11 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
-     * @param {Accounts} accounts
-     * @param {TransactionSigner} transactionSigner
      *
      * @constructor
      */
-    constructor(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner) {
+    constructor(utils, formatters, transactionConfirmationWorkflow) {
         super('eth_sendTransaction', 1, utils, formatters, transactionConfirmationWorkflow);
-        this.accounts = accounts;
-        this.transactionSigner = transactionSigner;
     }
 
     /**
@@ -81,11 +77,11 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             return promiEvent;
         }
 
-        if (this.hasWallets()) {
+        if (moduleInstance.transactionSigner.client) {// TODO: Find a better name for having a boolean to check if the transaction should be signed locally or not.
             this.rpcMethod = 'eth_sendRawTransaction';
 
-            this.transactionSigner
-                .sign(this.parameters[0])
+            moduleInstance.transactionSigner
+                .sign(this.parameters[0]))
                 .then((response) => {
                     this.parameters = [response.rawTransaction];
                     super.execute(moduleInstance, promiEvent);

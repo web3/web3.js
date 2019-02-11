@@ -23,7 +23,6 @@
 import isObject from 'lodash/isObject';
 import isBoolean from 'lodash/isBoolean';
 import isString from 'lodash/isString';
-import Account from 'eth-lib/lib/account';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
@@ -63,7 +62,7 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Account}
      */
     create(entropy) {
-        return this.accountsModuleFactory.createAccount(Account.create(entropy || this.utils.randomHex(32)), this);
+        return Account.from(entropy);
     }
 
     /**
@@ -76,11 +75,13 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Account}
      */
     privateKeyToAccount(privateKey) {
-        return this.accountsModuleFactory.createAccount(Account.fromPrivate(privateKey), this);
+        return Account.fromPrivateKey(privateKey));
     }
 
 
     /**
+     * TODO: Add deprecation message and extend the signTransaction method in the eth module
+     *
      * Signs a transaction object with the given privateKey
      *
      * @method signTransaction
@@ -93,6 +94,7 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Promise<Object>}
      */
     async signTransaction(tx, privateKey, callback) {
+
         try {
             const transaction = new Transaction(tx);
             const signedTransaction = await this.transactionSigner.sign(transaction, privateKey);
@@ -162,8 +164,8 @@ export default class Accounts extends AbstractWeb3Module {
      */
     sign(data, privateKey) {
         const hash = this.hashMessage(data);
-        const signature = Account.sign(hash, privateKey);
-        const vrs = Account.decodeSignature(signature);
+        const account = Account.fromPrivateKey(privateKey);
+        const vrs = account.decodeSignature(account.sign(hash));
 
         return {
             message: data,
@@ -176,7 +178,7 @@ export default class Accounts extends AbstractWeb3Module {
     }
 
     /**
-     * Recovers
+     * Recovers the Ethereum address which was used to sign the given data.
      *
      * @method recover
      *
@@ -184,7 +186,7 @@ export default class Accounts extends AbstractWeb3Module {
      * @param {String} signature
      * @param {Boolean} preFixed
      *
-     * @returns {*}
+     * @returns {String}
      */
     recover(message, signature, preFixed) {
         const args = [].slice.apply(arguments);
@@ -221,63 +223,7 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Account}
      */
     decrypt(v3Keystore, password, nonStrict) {
-        if (!isString(password)) {
-            throw new Error('No password given.');
-        }
-
-        const json = isObject(v3Keystore) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
-
-        if (json.version !== 3) {
-            throw new Error('Not a valid V3 wallet');
-        }
-
-        let derivedKey;
-        let kdfparams;
-        if (json.crypto.kdf === 'scrypt') {
-            kdfparams = json.crypto.kdfparams;
-
-            // FIXME: support progress reporting callback
-            derivedKey = scryptsy(
-                Buffer.from(password),
-                Buffer.from(kdfparams.salt, 'hex'),
-                kdfparams.n,
-                kdfparams.r,
-                kdfparams.p,
-                kdfparams.dklen
-            );
-        } else if (json.crypto.kdf === 'pbkdf2') {
-            kdfparams = json.crypto.kdfparams;
-
-            if (kdfparams.prf !== 'hmac-sha256') {
-                throw new Error('Unsupported parameters to PBKDF2');
-            }
-
-            derivedKey = crypto.pbkdf2Sync(
-                Buffer.from(password),
-                Buffer.from(kdfparams.salt, 'hex'),
-                kdfparams.c,
-                kdfparams.dklen,
-                'sha256'
-            );
-        } else {
-            throw new Error('Unsupported key derivation scheme');
-        }
-
-        const ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
-
-        const mac = this.utils.sha3(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
-        if (mac !== json.crypto.mac) {
-            throw new Error('Key derivation failed - possibly wrong password');
-        }
-
-        const decipher = crypto.createDecipheriv(
-            json.crypto.cipher,
-            derivedKey.slice(0, 16),
-            Buffer.from(json.crypto.cipherparams.iv, 'hex')
-        );
-        const seed = `0x${Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex')}`;
-
-        return this.privateKeyToAccount(seed);
+        return Account.fromV3Keystore(v3Keystore, password, nonStrict);
     }
 
     /**
@@ -292,61 +238,6 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Object}
      */
     encrypt(privateKey, password, options) {
-        const account = this.privateKeyToAccount(privateKey);
-
-        options = options || {};
-        const salt = options.salt || crypto.randomBytes(32);
-        const iv = options.iv || crypto.randomBytes(16);
-
-        let derivedKey;
-        const kdf = options.kdf || 'scrypt';
-        const kdfparams = {
-            dklen: options.dklen || 32,
-            salt: salt.toString('hex')
-        };
-
-        if (kdf === 'pbkdf2') {
-            kdfparams.c = options.c || 262144;
-            kdfparams.prf = 'hmac-sha256';
-            derivedKey = crypto.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
-        } else if (kdf === 'scrypt') {
-            // FIXME: support progress reporting callback
-            kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
-            kdfparams.r = options.r || 8;
-            kdfparams.p = options.p || 1;
-            derivedKey = scryptsy(Buffer.from(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
-        } else {
-            throw new Error('Unsupported kdf');
-        }
-
-        const cipher = crypto.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
-        if (!cipher) {
-            throw new Error('Unsupported cipher');
-        }
-
-        const ciphertext = Buffer.concat([
-            cipher.update(Buffer.from(account.privateKey.replace('0x', ''), 'hex')),
-            cipher.final()
-        ]);
-
-        const mac = this.utils
-            .sha3(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')]))
-            .replace('0x', '');
-
-        return {
-            version: 3,
-            id: uuid.v4({random: options.uuid || crypto.randomBytes(16)}),
-            address: account.address.toLowerCase().replace('0x', ''),
-            crypto: {
-                ciphertext: ciphertext.toString('hex'),
-                cipherparams: {
-                    iv: iv.toString('hex')
-                },
-                cipher: options.cipher || 'aes-128-ctr',
-                kdf,
-                kdfparams,
-                mac: mac.toString('hex')
-            }
-        };
+        return Account.fromPrivateKey(privateKey).toV3Keystore(password, option)
     }
 }
