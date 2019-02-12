@@ -1,4 +1,4 @@
-import * as Types from '..';
+import * as Types from './src';
 
 /**
  * Type Module Hex test

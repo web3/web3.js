@@ -78,7 +78,7 @@ export default class Hex {
      * @return {boolean}
      */
     static isValid(hex) {
-        return /^(-)?(0x)?[0-9a-f]*$/.test(hex);
+        return /^(-)?(0x)?[0-9a-f]*$/i.test(hex);
     }
 
     /**
@@ -91,7 +91,7 @@ export default class Hex {
      * @return {boolean}
      */
     static isStrict(hex) {
-        return /^(-0x|0x)[0-9a-f]*$/.test(hex);
+        return /^(-0x|0x)[0-9a-f]*$/i.test(hex);
     }
 
     /* Instance accessors */

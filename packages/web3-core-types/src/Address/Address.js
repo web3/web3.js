@@ -94,7 +94,9 @@ export default class Address {
          *  i.e. if the hex value is between 8 and f. (1___) */
         const isChecksummed = address.split('').every((v, i) => {
             /* test for digit ? test for 8 or higher || test for uppercase hex : true */
-            return !/\d/gm.test(v) ? !/[8-9a-f]/gm.test(addressHash[i]) || /[A-F]/gm.test(v) : true;
+            return !/\d/gm.test(v)
+                ? (!/[8-9a-f]/gm.test(addressHash[i]) || /[A-F]/gm.test(v))
+                : true;
         });
 
         return isChecksummed;
@@ -125,8 +127,10 @@ export default class Address {
         const checksummed = address
             .split('')
             .map((v, i) => {
-                /* test for digit ? test for 8 or higher || to uppercase : to lowercase */
-                return !/\d/gm.test(v) && /[8-9a-f]/gm.test(addressHash[i]) ? v.toUpperCase() : v.toLowerCase();
+                /* (test for digit && test for 8 or higher) ? to uppercase : to lowercase */
+                return (!/\d/gm.test(v) && /[8-9a-f]/gm.test(addressHash[i]))
+                    ? v.toUpperCase()
+                    : v.toLowerCase();
             })
             .join('');
 

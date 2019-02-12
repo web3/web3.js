@@ -1,6 +1,6 @@
-import * as Types from '..';
-import Address from '../Address/Address';
-import Iban from '../Address/Iban'; // eslint-disable-line no-unused-vars
+import * as Types from './src';
+import Address from '.src//Address/Address';
+import Iban from './src/Address/Iban'; // eslint-disable-line no-unused-vars
 
 // Mocks
 jest.mock('../Address/Address');
