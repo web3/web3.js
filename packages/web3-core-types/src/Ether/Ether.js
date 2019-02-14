@@ -20,7 +20,7 @@
  * @date 2019
  */
 
-import BigNumber, {isBigNumber} from "bignumber.js";
+import BigNumber from 'bignumber.js';
 import {cloneDeep, isObject, isString} from 'lodash';
 
 /* Unit map from ethjs-unit */

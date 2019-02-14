@@ -22,7 +22,7 @@
 
 import isObject from 'lodash/isObject';
 import {HttpProvider, WebsocketProvider, IpcProvider} from 'web3-providers';
-import {toChecksumAddress} from 'web3-utils'; // TODO: This could be removed with a web3-core-types module
+import {Address} from 'web3-core-types';
 
 export default class AbstractWeb3Module {
     /**
@@ -47,7 +47,7 @@ export default class AbstractWeb3Module {
         this.givenProvider = this.providerDetector.detect();
         this._currentProvider = this.providerResolver.resolve(provider);
 
-        this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
+        this._defaultAccount = options.defaultAccount ? Address.toChecksum(options.defaultAccount) : undefined;
         this._defaultBlock = options.defaultBlock || 'latest';
         this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
         this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
@@ -235,7 +235,7 @@ export default class AbstractWeb3Module {
      * @param {String} value
      */
     set defaultAccount(value) {
-        this._defaultAccount = toChecksumAddress(value);
+        this._defaultAccount = Address.toChecksum(value);
     }
 
     /**

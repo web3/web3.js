@@ -1,5 +1,4 @@
-import * as Utils from 'web3-utils';
-import BigNumber, {isBigNumber} from "bignumber.js"
+import BigNumber from 'bignumber.js';
 import {cloneDeep} from 'lodash';
 import * as Types from '../..';
 import Transaction from '../Transaction';

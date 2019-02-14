@@ -21,7 +21,7 @@
  */
 
 import * as Types from '..';
-import BigNumber, {isBigNumber} from "bignumber.js";
+import BigNumber, {isBigNumber} from 'bignumber.js';
 import {isNaN, isInteger, isString, omit, cloneDeep} from 'lodash';
 
 export default class Transaction {
