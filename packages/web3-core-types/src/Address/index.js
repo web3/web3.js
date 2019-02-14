@@ -55,7 +55,7 @@ Address.isValid = AddressClass.isValid;
  *
  */
 Address.toChecksum = (address) => {
-    return new Address(address).toChecksum();
+    return Address(address).toChecksum();
 };
 
 /**
@@ -67,5 +67,5 @@ Address.toChecksum = (address) => {
  *
  */
 Address.fromIban = (iban) => {
-    return new Address(Iban.toAddress(iban));
+    return Address(Iban.toAddress(iban));
 };

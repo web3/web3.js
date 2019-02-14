@@ -157,6 +157,6 @@ export default class Ether {
      * _throw is wrap the error throw when checking for parsing errors
      */
     _throw(message, value) {
-        throw message(value);
+        throw new Error(message(value));
     }
 }

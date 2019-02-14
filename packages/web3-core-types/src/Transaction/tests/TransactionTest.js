@@ -72,7 +72,7 @@ describe('TransactionTest', () => {
     });
 
     it('accepts address string', () => {
-        txParamsTest.from = '0xE247A45c287191d435A8a5D72A7C8dc030451E9F';
+        txParamsTest.from = '0x4F38f4229924bfa28D58eeda496Cc85e8016bCCC';
         transaction = new Transaction(txParamsTest, error, initParams);
 
         expect(transaction).toHaveProperty('props');

@@ -34,29 +34,30 @@ export default class TransactionFactory {
         /* Set the error messages */
         const error = {
             from: (value) =>
-                `The 'from' parameter ${value} needs to be an address string, a Web3 Address object, or a wallet index number.\n` +
+                `The given "from" parameter "${value}" needs to be an address string, a Web3 Address object, or a wallet index number.\n` +
                 'The address string needs to be hex encoded, supplied as a string, and checksummed.\n' +
                 'A Web3 Address object can be created using the Address class in the types module.\n' +
                 'A wallet index number parameter corresponds to the address of the locally unlocked wallet index.',
             to: (value) =>
-                `The 'to' parameter ${value} needs to be an address or 'deploy' when deploying code.\n` +
+                `The given "to" parameter "${value}" needs to be an address or 'deploy' when deploying code.\n` +
                 'The address string needs to be hex encoded, supplied as a string, and checksummed.\n' +
                 'A Web3 Address object can be created using the Address class in the types module.\n' +
                 'A wallet index number parameter corresponds to the address of the locally unlocked wallet index.',
             value: (value) =>
-                `The 'value' parameter ${value} needs to be zero or positive, and in number, BigNumber or string format.\n` +
-                "Use 'none' to add 0 ether to the transaction.",
-            gas: (value) => `${value}`,
-            gasPrice: (value) => `${value}`,
+                `The given "value" parameter "${value}" needs to be zero or positive, and in number, BigNumber or string format.\n` +
+                'Use "none" to add 0 ether to the transaction.',
+            gas: (value) => `"${value}"`,
+            gasPrice: (value) => `"${value}"`,
             data: (value) =>
-                `The 'data' parameter ${value} needs to be hex encoded.\n` +
+                `The given "data" parameter "${value}" needs to be hex encoded.\n` +
                 'A Web3 Hex object can be created using the Hex class in the types module.\n' +
                 "Use 'none' for no payload.",
             nonce: (value) =>
-                `The 'nonce' parameter ${value} needs to be an integer.\n` +
+                `The given "nonce" parameter "${value}" needs to be an integer.\n` +
                 "Use 'auto' to set the RPC-calculated nonce.",
             chainId: (value) =>
-                `The 'chainId' parameter ${value} needs to be an integer.\n` + "Use 'main' to set the mainnet chain ID."
+                `The given "chainId" parameter "${value}" needs to be an integer.\n` +
+                "Use 'main' to set the mainnet chain ID."
         };
 
         /* Initialise the params */

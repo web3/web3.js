@@ -221,6 +221,6 @@ export default class Hex {
      * @method _throw
      */
     _throw(message, value) {
-        throw message(value);
+        throw new Error(message(value));
     }
 }

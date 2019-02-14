@@ -21,7 +21,7 @@
  */
 
 import {sha3} from 'web3-utils';
-import {cloneDeep, isBoolean, isObject} from 'lodash';
+import {cloneDeep, isBoolean, isObject, isString} from 'lodash';
 
 export default class Address {
     /**
@@ -47,15 +47,16 @@ export default class Address {
 
         /* Check for type and format validity */
         /* Check the address for minimum requirements */
-        this.props.address = /^(0x)?([0-9a-fA-F]{40})$/.test(params.address)
-            ? params.address.replace(/^(0x)([0-9a-fA-F]{40})$/, '0x$2')
-            : undefined;
+        this.props.address =
+            isString(params.address) && /^(0x)?([0-9a-fA-F]{40})$/.test(params.address)
+                ? params.address.replace(/^(0x)([0-9a-fA-F]{40})$/, '0x$2')
+                : undefined;
 
         /* If the address should be checksummed but isn't, throw. Otherwise, check and assign. */
         if (isBoolean(params.isChecksummed) && (params.isChecksummed && Address.isValid(params.address))) {
             this.props.isChecksummed = params.isChecksummed;
-        } else if (isBoolean(params.isChecksummed) && !params.isChecksummed) {
-            this.props.isChecksummed = Address.isValid(this.props.address);
+        } else if (isBoolean(params.isChecksummed)) {
+            this.props.isChecksummed = Address.isValid(params.address);
         }
 
         /* Throw if any parameter is still undefined */
@@ -80,6 +81,8 @@ export default class Address {
      * @returns {boolean}
      */
     static isValid(_address) {
+        if (!isString(_address)) return false;
+
         /* Remove the prefix in case it still has it */
         const address = _address.replace('0x', '');
 
@@ -193,6 +196,6 @@ export default class Address {
      * @method _throw
      */
     _throw(message, value) {
-        throw message(value);
+        throw new Error(message(value));
     }
 }
