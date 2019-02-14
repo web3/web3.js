@@ -50,13 +50,11 @@ describe('EtherTest', () => {
         });
     });
 
-    // TODO: manage decimal places
-    // These results implicitly run FLOOR()
     it('parses to other units', () => {
         const tests = [
-            {amount: '1', unit: 'wei', to: 'mwei', expected: '0'},
-            {amount: '1', unit: 'wei', to: 'ether', expected: '0'},
-            {amount: '1', unit: 'gwei', to: 'ether', expected: '0'},
+            {amount: '1', unit: 'wei', to: 'mwei', expected: '0.000001'},
+            {amount: '1', unit: 'wei', to: 'ether', expected: '0.000000000000000001'},
+            {amount: '1', unit: 'gwei', to: 'ether', expected: '0.000000001'},
             {amount: '1', unit: 'szabo', to: 'gwei', expected: '1000'},
             {amount: '1', unit: 'finney', to: 'gwei', expected: '1000000'},
             {amount: '1', unit: 'ether', to: 'gwei', expected: '1000000000'}

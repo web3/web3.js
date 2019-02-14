@@ -20,7 +20,7 @@
  * @date 2019
  */
 
-import {toBN} from 'web3-utils';
+import BigNumber, {isBigNumber} from "bignumber.js";
 import {cloneDeep, isObject, isString} from 'lodash';
 
 /* Unit map from ethjs-unit */
@@ -108,9 +108,9 @@ export default class Ether {
      * @return {String}
      */
     toWei() {
-        return toBN(this.props.amount)
-            .mul(toBN(unitMap[this.props.unit]))
-            .toString();
+        return BigNumber(this.props.amount)
+            .times(BigNumber(unitMap[this.props.unit]))
+            .toFixed();
     }
 
     /**
@@ -127,10 +127,10 @@ export default class Ether {
         const from = unitMap[this.props.unit];
         const to = unitMap[unit];
 
-        return toBN(this.props.amount)
-            .mul(toBN(from))
-            .div(toBN(to))
-            .toString();
+        return BigNumber(this.props.amount)
+            .times(BigNumber(from))
+            .div(BigNumber(to))
+            .toFixed();
     }
 
     /**

@@ -1,10 +1,10 @@
-import * as Types from './src';
-import Address from '.src//Address/Address';
-import Iban from './src/Address/Iban'; // eslint-disable-line no-unused-vars
+import * as Types from '../../src';
+import Address from '../../src/Address/Address';
+import Iban from '../../src/Address/Iban'; // eslint-disable-line no-unused-vars
 
 // Mocks
-jest.mock('../Address/Address');
-jest.mock('../Address/Iban');
+jest.mock('../../src/Address/Address');
+jest.mock('../../src/Address/Iban');
 
 /**
  * Type Module Address test

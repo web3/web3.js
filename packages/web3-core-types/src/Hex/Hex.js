@@ -78,7 +78,7 @@ export default class Hex {
      * @return {boolean}
      */
     static isValid(hex) {
-        return /^(-)?(0x)?[0-9a-f]*$/i.test(hex);
+        return /^(-)?(0x)?[0-9a-fA-F]*$/.test(hex);
     }
 
     /**
@@ -91,7 +91,7 @@ export default class Hex {
      * @return {boolean}
      */
     static isStrict(hex) {
-        return /^(-0x|0x)[0-9a-f]*$/i.test(hex);
+        return /^(-0x|0x)[0-9a-fA-F]*$/.test(hex);
     }
 
     /* Instance accessors */
@@ -120,7 +120,7 @@ export default class Hex {
         /* pass the -0x0 = 0x0 case to a condition */
         // return cleanup === "-0x0" ? "0x0" : cleanup;
 
-        return this.props.hex.replace(/(-)?(0x)?([0-9a-f]*)/i, '$10x$3');
+        return this.props.hex.replace(/(-)?(0x)?([0-9a-fA-F]*)/, '$10x$3');
     }
 
     /**

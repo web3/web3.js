@@ -21,7 +21,7 @@
  */
 
 import * as Types from '..';
-import {isBN, toBN} from 'web3-utils';
+import BigNumber, {isBigNumber} from "bignumber.js";
 import {isNaN, isInteger, isString, omit, cloneDeep} from 'lodash';
 
 export default class Transaction {
@@ -29,9 +29,9 @@ export default class Transaction {
      * @dev Wrap as object
      * @param {Address|Number|String} from
      * @param {Address|"deploy"} to
-     * @param {Number|BN|BigNumber|String|"none"} value
+     * @param {Number|BigNumber|String|"none"} value
      * @param {Number|"auto"} gas
-     * @param {Number|BN|BigNumber|String|"auto"} gasPrice
+     * @param {Number|BigNumber|String|"auto"} gasPrice
      * @param {String|"none"} data
      * @param {Number|"auto"} nonce
      *
@@ -59,10 +59,9 @@ export default class Transaction {
         // TODO Move this check to BigNumber as a constructor check
         this.props.value =
             (!isNaN(params.value) && Number.isInteger(params.value) && params.value >= 0) ||
-            isBN(params.value) ||
-            // isBigNumber(params.value) ||
-            (typeof params.value === 'string' && /(\d)+/gm.test(params.value) && isBN(toBN(params.value)))
-                ? toBN(params.value.toString())
+            isBigNumber(params.value) ||
+            (typeof params.value === 'string' && /(\d)+/gm.test(params.value) && BigNumber(params.value))
+                ? BigNumber(params.value.toString())
                 : undefined;
 
         /* Transaction gas */
@@ -71,10 +70,9 @@ export default class Transaction {
         // TODO Move this check to BigNumber as a constructor check
         this.props.gasPrice =
             (!isNaN(params.gasPrice) && Number.isInteger(params.gasPrice) && params.gasPrice >= 0) ||
-            isBN(params.gasPrice) ||
-            // isBigNumber(params.gasPrice) ||
-            (typeof params.gasPrice === 'string' && isBN(toBN(params.gasPrice)))
-                ? toBN(params.gasPrice.toString())
+            isBigNumber(params.gasPrice) ||
+            (typeof params.gasPrice === 'string' && BigNumber(params.gasPrice))
+                ? BigNumber(params.gasPrice.toString())
                 : undefined;
 
         /* Allow Hex object or valid hex string */
@@ -92,7 +90,7 @@ export default class Transaction {
         this.props.chainId = isInteger(params.chainId) ? params.chainId.toString() : undefined;
 
         /* Set the default values */
-        if (params.value === 'none') this.props.value = toBN(0);
+        if (params.value === 'none') this.props.value = BigNumber(0);
 
         if (params.gas === 'auto') this.props.gas = params.gas; // this.props = omit(this.props, 'gas');
 

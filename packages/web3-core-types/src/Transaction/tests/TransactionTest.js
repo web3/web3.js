@@ -1,4 +1,5 @@
 import * as Utils from 'web3-utils';
+import BigNumber, {isBigNumber} from "bignumber.js"
 import {cloneDeep} from 'lodash';
 import * as Types from '../..';
 import Transaction from '../Transaction';
@@ -54,11 +55,11 @@ describe('TransactionTest', () => {
         expect(transaction).toHaveProperty('props');
     });
 
-    it('accepts value types and parses to BN', () => {
+    it('accepts value types and parses to BigNumber', () => {
         const tests = [
-            {value: 101, is: Utils.toBN(101)},
-            {value: Utils.toBN(102), is: Utils.toBN(102)},
-            {value: '103', is: Utils.toBN(103)}
+            {value: 101, is: BigNumber(101)},
+            {value: BigNumber(102), is: BigNumber(102)},
+            {value: '103', is: BigNumber(103)}
         ];
 
         tests.forEach((test) => {
@@ -113,7 +114,7 @@ describe('TransactionTest', () => {
         transaction = new Transaction(txParamsTest, error, initParams);
 
         expect(transaction).toHaveProperty('props');
-        expect(transaction.props.value).toMatchObject(Utils.toBN(0));
+        expect(transaction.props.value).toMatchObject(BigNumber(0));
     });
 
     it('sets 0x data for "none"', () => {

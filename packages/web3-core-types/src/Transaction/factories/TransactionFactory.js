@@ -44,7 +44,7 @@ export default class TransactionFactory {
                 'A Web3 Address object can be created using the Address class in the types module.\n' +
                 'A wallet index number parameter corresponds to the address of the locally unlocked wallet index.',
             value: (value) =>
-                `The 'value' parameter ${value} needs to be zero or positive, and in number, BN, BigNumber or string format.\n` +
+                `The 'value' parameter ${value} needs to be zero or positive, and in number, BigNumber or string format.\n` +
                 "Use 'none' to add 0 ether to the transaction.",
             gas: (value) => `${value}`,
             gasPrice: (value) => `${value}`,
