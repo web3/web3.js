@@ -47,8 +47,8 @@ export default class Address {
 
         /* Check for type and format validity */
         /* Check the address for minimum requirements */
-        this.props.address = /^(0x)?([0-9a-fA-F]{40})$/gm.test(params.address)
-            ? params.address.replace(/^(0x)([0-9a-fA-F]{40})$/gm, '0x$2')
+        this.props.address = /^(0x)?([0-9a-fA-F]{40})$/.test(params.address)
+            ? params.address.replace(/^(0x)([0-9a-fA-F]{40})$/, '0x$2')
             : undefined;
 
         /* If the address should be checksummed but isn't, throw. Otherwise, check and assign. */
@@ -94,8 +94,8 @@ export default class Address {
          *  i.e. if the hex value is between 8 and f. (1___) */
         const isChecksummed = address.split('').every((v, i) => {
             /* test for digit ? test for 8 or higher || test for uppercase hex : true */
-            return !/\d/gm.test(v)
-                ? (!/[8-9a-f]/gm.test(addressHash[i]) || /[A-F]/gm.test(v))
+            return !/^\d$/.test(v)
+                ? (!/^[8-9a-f]$/.test(addressHash[i]) || /^[A-F]$/.test(v))
                 : true;
         });
 
@@ -128,7 +128,7 @@ export default class Address {
             .split('')
             .map((v, i) => {
                 /* (test for digit && test for 8 or higher) ? to uppercase : to lowercase */
-                return (!/\d/gm.test(v) && /[8-9a-f]/gm.test(addressHash[i]))
+                return (!/^\d$/.test(v) && /^[8-9a-f]$/.test(addressHash[i]))
                     ? v.toUpperCase()
                     : v.toLowerCase();
             })
