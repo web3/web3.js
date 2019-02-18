@@ -797,10 +797,12 @@ describe('AccountsTest', () => {
         expect(crypto.scryptSync).toHaveBeenCalledWith(
             Buffer.from('password'),
             Buffer.from('salt', 'hex'),
-            'n',
-            'r',
-            'p',
-            'dklen'
+            'dklen',
+            {
+              N: 'n',
+              r: 'r',
+              p: 'p'
+            }
         );
 
         expect(Utils.sha3).toHaveBeenCalledWith(
@@ -1034,7 +1036,7 @@ describe('AccountsTest', () => {
 
         expect(crypto.randomBytes).toHaveBeenNthCalledWith(3, 16);
 
-        expect(crypto.scryptSync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 8192, 8, 1, 32);
+        expect(crypto.scryptSync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 32, {N: 8192, r: 8, p:1});
 
         expect(crypto.createCipheriv).toHaveBeenCalledWith(
             'aes-128-ctr',
