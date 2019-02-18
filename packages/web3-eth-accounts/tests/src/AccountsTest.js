@@ -26,6 +26,7 @@ jest.mock('eth-lib/lib/nat');
 jest.mock('eth-lib/lib/bytes');
 jest.mock('eth-lib/lib/hash');
 jest.mock('crypto');
+jest.mock('scryptSync');
 jest.mock('uuid');
 
 /**
