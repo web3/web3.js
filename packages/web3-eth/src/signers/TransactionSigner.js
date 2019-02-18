@@ -48,7 +48,7 @@ export default class TransactionSigner {
         const privateKey = this.accounts.wallet[from];
 
         if (this.isUndefinedOrNull(tx.chainId)) {
-            tx.chainId = await moduleInstance.getId();
+            tx.chainId = await moduleInstance.getChainId();
         }
         if (this.isUndefinedOrNull(tx.nonce)) {
             tx.nonce = await moduleInstance.getTransactionCount(tx.from);
