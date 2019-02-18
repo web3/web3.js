@@ -8,7 +8,6 @@ import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Nat from 'eth-lib/lib/nat';
 import Bytes from 'eth-lib/lib/bytes';
-import scryptsy from 'scrypt.js';
 import crypto from 'crypto';
 import uuid from 'uuid';
 import MethodFactory from '../../src/factories/MethodFactory';
@@ -26,7 +25,6 @@ jest.mock('eth-lib/lib/rlp');
 jest.mock('eth-lib/lib/nat');
 jest.mock('eth-lib/lib/bytes');
 jest.mock('eth-lib/lib/hash');
-jest.mock('scryptsy');
 jest.mock('crypto');
 jest.mock('uuid');
 
