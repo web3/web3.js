@@ -32,7 +32,6 @@ import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Nat from 'eth-lib/lib/nat';
 import Bytes from 'eth-lib/lib/bytes';
-import scryptsy from 'scrypt.js';
 import uuid from 'uuid';
 import {AbstractWeb3Module} from 'web3-core';
 
@@ -372,13 +371,15 @@ export default class Accounts extends AbstractWeb3Module {
             kdfparams = json.crypto.kdfparams;
 
             // FIXME: support progress reporting callback
-            derivedKey = scryptsy(
+            derivedKey = cryp.scryptSync(
                 Buffer.from(password),
                 Buffer.from(kdfparams.salt, 'hex'),
-                kdfparams.n,
-                kdfparams.r,
-                kdfparams.p,
-                kdfparams.dklen
+                kdfparams.dklen,
+                {
+                  N: kdfparams.n,
+                  r: kdfparams.r,
+                  p: kdfparams.p
+                }
             );
         } else if (json.crypto.kdf === 'pbkdf2') {
             kdfparams = json.crypto.kdfparams;
@@ -449,7 +450,12 @@ export default class Accounts extends AbstractWeb3Module {
             kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
             kdfparams.r = options.r || 8;
             kdfparams.p = options.p || 1;
-            derivedKey = scryptsy(Buffer.from(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+            derivedKey = cryp.scryptSync(Buffer.from(password), salt, kdfparams.dklen, {
+              N: kdfparams.n,
+              r: kdfparams.r,
+              p: kdfparams.p
+
+            });
         } else {
             throw new Error('Unsupported kdf');
         }

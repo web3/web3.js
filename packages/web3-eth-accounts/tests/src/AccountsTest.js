@@ -8,7 +8,6 @@ import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Nat from 'eth-lib/lib/nat';
 import Bytes from 'eth-lib/lib/bytes';
-import scryptsy from 'scrypt.js';
 import crypto from 'crypto';
 import uuid from 'uuid';
 import MethodFactory from '../../src/factories/MethodFactory';
@@ -25,7 +24,6 @@ jest.mock('eth-lib/lib/rlp');
 jest.mock('eth-lib/lib/nat');
 jest.mock('eth-lib/lib/bytes');
 jest.mock('eth-lib/lib/hash');
-jest.mock('scryptsy');
 jest.mock('crypto');
 jest.mock('uuid');
 
@@ -771,7 +769,7 @@ describe('AccountsTest', () => {
             return object;
         });
 
-        scryptsy.mockReturnValueOnce(Buffer.from('00000000000000000000000000000000'));
+        crypto.scryptSync.mockReturnValueOnce(Buffer.from('00000000000000000000000000000000'));
 
         Utils.sha3.mockReturnValueOnce('0xmac');
 
@@ -796,7 +794,7 @@ describe('AccountsTest', () => {
 
         expect(accounts.decrypt(json, 'password', false)).toEqual(object);
 
-        expect(scryptsy).toHaveBeenCalledWith(
+        expect(crypto.scryptSync).toHaveBeenCalledWith(
             Buffer.from('password'),
             Buffer.from('salt', 'hex'),
             'n',
@@ -1004,7 +1002,7 @@ describe('AccountsTest', () => {
 
         crypto.createCipheriv.mockReturnValue(cipher);
 
-        scryptsy.mockReturnValueOnce(Buffer.from('0000000000000000'));
+        crypto.scryptSync.mockReturnValueOnce(Buffer.from('0000000000000000'));
 
         Utils.sha3.mockReturnValueOnce('0xmac');
 
@@ -1036,7 +1034,7 @@ describe('AccountsTest', () => {
 
         expect(crypto.randomBytes).toHaveBeenNthCalledWith(3, 16);
 
-        expect(scryptsy).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 8192, 8, 1, 32);
+        expect(crypto.scryptSync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 8192, 8, 1, 32);
 
         expect(crypto.createCipheriv).toHaveBeenCalledWith(
             'aes-128-ctr',
