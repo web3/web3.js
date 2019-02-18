@@ -158,7 +158,10 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
             expect(contractDeployMethodMock.afterExecution).toHaveBeenCalledWith({blockHash: '0x0'});
 
-            expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith({blockHash: '0x0'}, contractDeployMethodMock);
+            expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith(
+                {blockHash: '0x0'},
+                contractDeployMethodMock
+            );
         });
     });
 
@@ -260,10 +263,7 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
             expect(newHeadsWatcherMock.stop).toHaveBeenCalled();
 
-            expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith(
-                {blockHash: '0x0'},
-                methodMock
-            );
+            expect(transactionReceiptValidatorMock.validate).toHaveBeenCalledWith({blockHash: '0x0'}, methodMock);
 
             expect(getTransactionReceiptMethodMock.execute).toHaveBeenNthCalledWith(2, moduleInstanceMock);
 
