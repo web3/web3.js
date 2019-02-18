@@ -272,6 +272,7 @@ export const toDecimal = utils.hexToNumber;
 export const hexToNumber = utils.hexToNumber;
 export const fromDecimal = utils.numberToHex;
 export const numberToHex = utils.numberToHex;
+export const hexToUtf8 = utils.hexToUtf8;
 export const hexToString = utils.hexToUtf8;
 export const toUtf8 = utils.hexToUtf8;
 export const stringToHex = utils.utf8ToHex;
