@@ -7,5 +7,6 @@ module.exports = jestConfig({
     ProvidersModuleFactory: 'web3-providers',
     ProviderDetector: 'web3-providers',
     ProviderResolver: 'web3-providers',
-    MethodModuleFactory: 'web3-core-method'
+    MethodModuleFactory: 'web3-core-method',
+    scryptsy: 'scrypt.js'
 });

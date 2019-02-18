@@ -8,10 +8,12 @@ import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Nat from 'eth-lib/lib/nat';
 import Bytes from 'eth-lib/lib/bytes';
+import scryptsy from 'scrypt.js';
 import crypto from 'crypto';
 import uuid from 'uuid';
 import MethodFactory from '../../src/factories/MethodFactory';
 import Accounts from '../../src/Accounts';
+import scryptSync from '../../src/Scrypt';
 
 // Mocks
 jest.mock('Utils');
@@ -24,6 +26,7 @@ jest.mock('eth-lib/lib/rlp');
 jest.mock('eth-lib/lib/nat');
 jest.mock('eth-lib/lib/bytes');
 jest.mock('eth-lib/lib/hash');
+jest.mock('scryptsy');
 jest.mock('crypto');
 jest.mock('uuid');
 
@@ -769,7 +772,7 @@ describe('AccountsTest', () => {
             return object;
         });
 
-        crypto.scryptSync.mockReturnValueOnce(Buffer.from('00000000000000000000000000000000'));
+        scryptSync.mockReturnValueOnce(Buffer.from('00000000000000000000000000000000'));
 
         Utils.sha3.mockReturnValueOnce('0xmac');
 
@@ -794,7 +797,7 @@ describe('AccountsTest', () => {
 
         expect(accounts.decrypt(json, 'password', false)).toEqual(object);
 
-        expect(crypto.scryptSync).toHaveBeenCalledWith(
+        expect(scryptSync).toHaveBeenCalledWith(
             Buffer.from('password'),
             Buffer.from('salt', 'hex'),
             'dklen',
@@ -1004,7 +1007,7 @@ describe('AccountsTest', () => {
 
         crypto.createCipheriv.mockReturnValue(cipher);
 
-        crypto.scryptSync.mockReturnValueOnce(Buffer.from('0000000000000000'));
+        scryptSync.mockReturnValueOnce(Buffer.from('0000000000000000'));
 
         Utils.sha3.mockReturnValueOnce('0xmac');
 
@@ -1036,7 +1039,7 @@ describe('AccountsTest', () => {
 
         expect(crypto.randomBytes).toHaveBeenNthCalledWith(3, 16);
 
-        expect(crypto.scryptSync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 32, {N: 8192, r: 8, p:1});
+        expect(scryptSync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 32, {N: 8192, r: 8, p:1});
 
         expect(crypto.createCipheriv).toHaveBeenCalledWith(
             'aes-128-ctr',

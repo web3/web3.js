@@ -33,6 +33,7 @@ import RLP from 'eth-lib/lib/rlp';
 import Nat from 'eth-lib/lib/nat';
 import Bytes from 'eth-lib/lib/bytes';
 import uuid from 'uuid';
+import scryptSync from './Scrypt';
 import {AbstractWeb3Module} from 'web3-core';
 
 const cryp = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
@@ -371,7 +372,7 @@ export default class Accounts extends AbstractWeb3Module {
             kdfparams = json.crypto.kdfparams;
 
             // FIXME: support progress reporting callback
-            derivedKey = cryp.scryptSync(
+            derivedKey = scryptSync(
                 Buffer.from(password),
                 Buffer.from(kdfparams.salt, 'hex'),
                 kdfparams.dklen,
@@ -450,7 +451,7 @@ export default class Accounts extends AbstractWeb3Module {
             kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
             kdfparams.r = options.r || 8;
             kdfparams.p = options.p || 1;
-            derivedKey = cryp.scryptSync(Buffer.from(password), salt, kdfparams.dklen, {
+            derivedKey = scryptSync(Buffer.from(password), salt, kdfparams.dklen, {
               N: kdfparams.n,
               r: kdfparams.r,
               p: kdfparams.p
