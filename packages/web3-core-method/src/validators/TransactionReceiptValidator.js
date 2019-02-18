@@ -29,14 +29,14 @@ export default class TransactionReceiptValidator {
      * @method validate
      *
      * @param {Object} receipt
-     * @param {Array} methodParameters
+     * @param {AbstractMethod} method
      *
      * @returns {Error|Boolean}
      */
-    validate(receipt, methodParameters) {
+    validate(receipt, method) {
         const receiptJSON = JSON.stringify(receipt, null, 2);
 
-        if (!this.isValidGasUsage(receipt, methodParameters)) {
+        if (!this.isValidGasUsage(receipt, method)) {
             return new Error(`Transaction ran out of gas. Please provide more gas:\n${receiptJSON}`);
         }
 
@@ -66,15 +66,16 @@ export default class TransactionReceiptValidator {
      * @method isValidGasUsage
      *
      * @param {Object} receipt
-     * @param {Array} methodParameters
+     * @param {AbstractMethod} method
      *
      * @returns {Boolean}
      */
-    isValidGasUsage(receipt, methodParameters) {
+    isValidGasUsage(receipt, method) {
         let gasProvided = null;
+        const parameters = method.parameters[0];
 
-        if (isObject(methodParameters[0]) && methodParameters[0].gas) {
-            gasProvided = methodParameters[0].gas;
+        if (isObject(parameters[0]) && parameters[0].gas) {
+            gasProvided = method.utils.numberToHex(parameters[0].gas);
         }
 
         return !receipt.outOfGas && (!gasProvided || gasProvided !== receipt.gasUsed);
