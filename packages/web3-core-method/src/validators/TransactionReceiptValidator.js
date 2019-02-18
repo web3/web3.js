@@ -71,13 +71,6 @@ export default class TransactionReceiptValidator {
      * @returns {Boolean}
      */
     isValidGasUsage(receipt, method) {
-        let gasProvided = null;
-        const parameters = method.parameters[0];
-
-        if (isObject(parameters[0]) && parameters[0].gas) {
-            gasProvided = method.utils.numberToHex(parameters[0].gas);
-        }
-
-        return !receipt.outOfGas && (!gasProvided || gasProvided !== receipt.gasUsed);
+        return !receipt.outOfGas && method.utils.hexToNumber(method.parameters[0].gas) !== receipt.gasUsed;
     }
 }
