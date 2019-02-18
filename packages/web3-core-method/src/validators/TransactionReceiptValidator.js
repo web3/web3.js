@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-import isObject from 'lodash/isObject';
-
 export default class TransactionReceiptValidator {
     /**
      * Validates the receipt

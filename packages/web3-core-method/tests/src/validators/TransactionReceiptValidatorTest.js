@@ -26,44 +26,45 @@ describe('TransactionReceiptValidatorTest', () => {
     it('calls validate and returns true', () => {
         Utils.hexToNumber.mockReturnValueOnce(110);
 
-        method.parameters = [{
-            gas: 110
-        }];
+        method.parameters = [
+            {
+                gas: 110
+            }
+        ];
 
-        expect(
-            transactionReceiptValidator.validate(receipt, method)
-        ).toEqual(true);
+        expect(transactionReceiptValidator.validate(receipt, method)).toEqual(true);
 
         expect(Utils.hexToNumber).toHaveBeenCalledWith(110);
     });
 
-    it(
-        'calls validate and returns error because of invalid gasUsage',
-        () => {
-            Utils.hexToNumber.mockReturnValueOnce(100);
+    it('calls validate and returns error because of invalid gasUsage', () => {
+        Utils.hexToNumber.mockReturnValueOnce(100);
 
-            method.parameters = [{
+        method.parameters = [
+            {
                 gas: 110
-            }];
+            }
+        ];
 
-            const error = transactionReceiptValidator.validate(receipt, method);
+        const error = transactionReceiptValidator.validate(receipt, method);
 
-            expect(error).toBeInstanceOf(Error);
+        expect(error).toBeInstanceOf(Error);
 
-            expect(error.message).toEqual(
-                `Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(receipt, null, 2)}`
-            );
+        expect(error.message).toEqual(
+            `Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(receipt, null, 2)}`
+        );
 
-            expect(Utils.hexToNumber).toHaveBeenCalledWith(110);
-        }
-    );
+        expect(Utils.hexToNumber).toHaveBeenCalledWith(110);
+    });
 
     it('calls validate and returns error because the EVM has reverted it', () => {
         Utils.hexToNumber.mockReturnValueOnce(110);
 
-        method.parameters = [{
-            gas: 101
-        }];
+        method.parameters = [
+            {
+                gas: 101
+            }
+        ];
 
         receipt.status = false;
 
