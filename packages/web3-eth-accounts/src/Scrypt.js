@@ -5,4 +5,4 @@ const scryptSync = (key, salt, dklen, options) => {
   return version >= 10 ? cryp.scryptSync(key, salt, dklen, {N: options.N, r: options.r, p: options.p}) : require('scrypt.js')(key, salt, options.N, options.r, options.p, dklen);
 }
 
-module.exports = scryptSync;
+export default scryptSync
