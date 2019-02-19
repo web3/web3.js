@@ -40,6 +40,7 @@ describe('MethodFactoryTest', () => {
         methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
         methodModuleFactoryMock.createTransactionSigner = jest.fn();
         methodModuleFactoryMock.createTransactionConfirmationWorkflow = jest.fn();
+        methodModuleFactoryMock.createSendRawTransactionMethod = jest.fn();
 
         new ContractModuleFactory({}, {}, {}, {}, {});
         contractModuleFactoryMock = ContractModuleFactory.mock.instances[0];

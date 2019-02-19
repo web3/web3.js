@@ -5,8 +5,8 @@ import {SendTransactionMethod} from 'web3-core-method';
 import TransactionConfirmationWorkflow from '../../__mocks__/TransactionConfirmationWorkflow';
 import TransactionSigner from '../../__mocks__/TransactionSigner';
 import AllEventsLogDecoder from '../../../src/decoders/AllEventsLogDecoder';
-import SendContractMethod from '../../../src/methods/SendContractMethod';
 import AbiModel from '../../../src/models/AbiModel';
+import SendContractMethod from '../../../src/methods/SendContractMethod';
 
 // Mocks
 jest.mock('Utils');
@@ -24,6 +24,7 @@ describe('SendContractMethodTest', () => {
         transactionConfirmationWorkflowMock,
         accountsMock,
         transactionSignerMock,
+        sendRawTransactionMethodMock,
         allEventsLogDecoderMock,
         abiModelMock;
 
@@ -47,6 +48,7 @@ describe('SendContractMethodTest', () => {
             transactionConfirmationWorkflowMock,
             accountsMock,
             transactionSignerMock,
+            {},
             allEventsLogDecoderMock,
             abiModelMock
         );
@@ -58,6 +60,8 @@ describe('SendContractMethodTest', () => {
         expect(sendContractMethod.formatters).toEqual(formatters);
 
         expect(sendContractMethod.transactionConfirmationWorkflow).toEqual(transactionConfirmationWorkflowMock);
+
+        expect(sendContractMethod.sendRawTransactionMethod).toEqual({});
 
         expect(sendContractMethod.accounts).toEqual(accountsMock);
 
