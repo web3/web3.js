@@ -151,6 +151,7 @@ export default class MethodFactory {
             this.methodModuleFactory.createTransactionConfirmationWorkflow(),
             this.accounts,
             this.methodModuleFactory.createTransactionSigner(),
+            this.methodModuleFactory.createSendRawTransactionMethod(),
             this.contractModuleFactory.createAllEventsLogDecoder(),
             abiModel
         );
