@@ -49,6 +49,11 @@ export default class AllEventsLogDecoder extends EventLogDecoder {
             return super.decode(abiItemModel, response);
         }
 
-        return response;
+        return {
+            raw: {
+                data: response.data,
+                topics: response.topics
+            }
+        };
     }
 }
