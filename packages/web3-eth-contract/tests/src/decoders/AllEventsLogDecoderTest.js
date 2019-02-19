@@ -73,17 +73,13 @@ describe('AllEventsLogDecoderTest', () => {
             data: '0x0'
         };
 
-        abiCoderMock.decodeLog.mockReturnValueOnce(['0x0']);
-
         abiModelMock.getEventBySignature.mockReturnValueOnce(false);
-
-        abiItemModel.getInputs.mockReturnValueOnce([]);
 
         const decodedLog = allEventsLogDecoder.decode(abiModelMock, response);
 
-        expect(decodedLog.data).toEqual(['0x0']);
+        expect(decodedLog.raw.data).toEqual('0x0');
 
-        expect(decodedLog.topics).toEqual('0x0');
+        expect(decodedLog.raw.topics).toEqual(['0x0']);
 
         expect(abiModelMock.getEventBySignature).toHaveBeenCalledWith('0x0');
     });
