@@ -43,6 +43,10 @@ export default class GetTransactionMethod extends AbstractCallMethod {
      * @returns {Object}
      */
     afterExecution(response) {
-        return this.formatters.outputTransactionFormatter(response);
+        if (response !== null) {
+            return this.formatters.outputTransactionFormatter(response);
+        }
+
+        return response;
     }
 }
