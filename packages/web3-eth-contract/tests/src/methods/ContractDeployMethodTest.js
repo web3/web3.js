@@ -17,7 +17,11 @@ jest.mock('../../../src/AbstractContract');
  * ContractDeployMethod test
  */
 describe('ContractDeployMethodTest', () => {
-    let contractDeployMethod, transactionConfirmationWorkflowMock, accountsMock, transactionSignerMock, contractMock;
+    let contractDeployMethod,
+        transactionConfirmationWorkflowMock,
+        accountsMock,
+        transactionSignerMock,
+        contractMock;
 
     beforeEach(() => {
         new Accounts();
@@ -35,6 +39,7 @@ describe('ContractDeployMethodTest', () => {
             transactionConfirmationWorkflowMock,
             accountsMock,
             transactionSignerMock,
+            {},
             contractMock
         );
     });
@@ -45,6 +50,8 @@ describe('ContractDeployMethodTest', () => {
         expect(contractDeployMethod.formatters).toEqual(formatters);
 
         expect(contractDeployMethod.transactionConfirmationWorkflow).toEqual(transactionConfirmationWorkflowMock);
+
+        expect(contractDeployMethod.sendRawTransactionMethod).toEqual({});
 
         expect(contractDeployMethod.accounts).toEqual(accountsMock);
 

@@ -118,6 +118,8 @@ describe('MethodFactoryTest', () => {
         expect(methodModuleFactoryMock.createTransactionSigner).toHaveBeenCalled();
 
         expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow).toHaveBeenCalled();
+
+        expect(methodModuleFactoryMock.createSendRawTransactionMethod).toHaveBeenCalled();
     });
 
     it('calls createContractDeployMethod and returns ContractDeployMethod object', () => {
@@ -126,6 +128,8 @@ describe('MethodFactoryTest', () => {
         expect(methodModuleFactoryMock.createTransactionSigner).toHaveBeenCalled();
 
         expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow).toHaveBeenCalled();
+
+        expect(methodModuleFactoryMock.createSendRawTransactionMethod).toHaveBeenCalled();
     });
 
     it('calls createEstimateGasMethod and returns EstimateGasMethod object', () => {
