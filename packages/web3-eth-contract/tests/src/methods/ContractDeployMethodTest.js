@@ -17,11 +17,7 @@ jest.mock('../../../src/AbstractContract');
  * ContractDeployMethod test
  */
 describe('ContractDeployMethodTest', () => {
-    let contractDeployMethod,
-        transactionConfirmationWorkflowMock,
-        accountsMock,
-        transactionSignerMock,
-        contractMock;
+    let contractDeployMethod, transactionConfirmationWorkflowMock, accountsMock, transactionSignerMock, contractMock;
 
     beforeEach(() => {
         new Accounts();

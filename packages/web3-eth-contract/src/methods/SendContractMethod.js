@@ -44,9 +44,16 @@ export default class SendContractMethod extends SendTransactionMethod {
         transactionSigner,
         sendRawTransactionMethod,
         allEventsLogDecoder,
-        abiModel,
+        abiModel
     ) {
-        super(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner, sendRawTransactionMethod);
+        super(
+            utils,
+            formatters,
+            transactionConfirmationWorkflow,
+            accounts,
+            transactionSigner,
+            sendRawTransactionMethod
+        );
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.abiModel = abiModel;
     }

@@ -43,7 +43,14 @@ export default class ContractDeployMethod extends SendTransactionMethod {
         sendRawTransactionMethod,
         contract
     ) {
-        super(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner, sendRawTransactionMethod);
+        super(
+            utils,
+            formatters,
+            transactionConfirmationWorkflow,
+            accounts,
+            transactionSigner,
+            sendRawTransactionMethod
+        );
         this.contract = contract;
     }
 

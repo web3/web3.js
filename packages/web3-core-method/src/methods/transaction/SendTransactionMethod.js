@@ -35,7 +35,14 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      *
      * @constructor
      */
-    constructor(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner, sendRawTransactionMethod) {
+    constructor(
+        utils,
+        formatters,
+        transactionConfirmationWorkflow,
+        accounts,
+        transactionSigner,
+        sendRawTransactionMethod
+    ) {
         super('eth_sendTransaction', 1, utils, formatters, transactionConfirmationWorkflow);
         this.accounts = accounts;
         this.transactionSigner = transactionSigner;

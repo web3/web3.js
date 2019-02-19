@@ -24,7 +24,6 @@ describe('SendContractMethodTest', () => {
         transactionConfirmationWorkflowMock,
         accountsMock,
         transactionSignerMock,
-        sendRawTransactionMethodMock,
         allEventsLogDecoderMock,
         abiModelMock;
 
