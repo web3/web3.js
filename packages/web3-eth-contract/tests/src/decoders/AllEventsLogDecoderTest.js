@@ -62,7 +62,7 @@ describe('AllEventsLogDecoderTest', () => {
 
         expect(abiModelMock.getEventBySignature).toHaveBeenCalledWith('0x0');
 
-        expect(abiCoderMock.decodeLog).toHaveBeenCalledWith([], '0x0', ['0x0']);
+        expect(abiCoderMock.decodeLog).toHaveBeenCalledWith([], '0x0', []);
 
         expect(abiItemModel.getInputs).toHaveBeenCalled();
     });
