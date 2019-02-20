@@ -32,8 +32,6 @@ describe('EcRecoverMethodTest', () => {
 
         formatters.inputSignFormatter.mockReturnValueOnce({sign: true});
 
-        formatters.inputAddressFormatter.mockReturnValueOnce('0x0');
-
         method.beforeExecution();
 
         expect(method.parameters[0]).toHaveProperty('sign', true);
@@ -41,7 +39,5 @@ describe('EcRecoverMethodTest', () => {
         expect(method.parameters[1]).toEqual('0x0');
 
         expect(formatters.inputSignFormatter).toHaveBeenCalledWith({});
-
-        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
     });
 });
