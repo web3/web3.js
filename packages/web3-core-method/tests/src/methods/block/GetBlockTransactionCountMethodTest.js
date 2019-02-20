@@ -20,7 +20,7 @@ describe('GetBlockTransactionCountMethod', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractCallMethod);
 
-        expect(method.rpcMethod).toEqual('eth_getTransactionByBlockNumberAndIndex');
+        expect(method.rpcMethod).toEqual('eth_getBlockTransactionCountByNumber');
 
         expect(method.parametersAmount).toEqual(1);
 
@@ -40,7 +40,7 @@ describe('GetBlockTransactionCountMethod', () => {
 
         expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith('0x0');
 
-        expect(method.rpcMethod).toEqual('eth_getTransactionByBlockHashAndIndex');
+        expect(method.rpcMethod).toEqual('eth_getBlockTransactionCountByHash');
     });
 
     it('beforeExecution should call method with block number as parameter and call inputBlockNumberFormatter', () => {
@@ -54,7 +54,7 @@ describe('GetBlockTransactionCountMethod', () => {
 
         expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(100);
 
-        expect(method.rpcMethod).toEqual('eth_getTransactionByBlockNumberAndIndex');
+        expect(method.rpcMethod).toEqual('eth_getBlockTransactionCountByNumber');
     });
 
     it('afterExecution should map the hex string to a number', () => {
