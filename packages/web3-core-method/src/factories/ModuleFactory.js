@@ -27,6 +27,7 @@ import MethodProxy from '../proxy/MethodProxy';
 import MessageSigner from '../signers/MessageSigner';
 import TransactionSigner from '../signers/TransactionSigner';
 import GetTransactionReceiptMethod from '../methods/transaction/GetTransactionReceiptMethod';
+import SendRawTransactionMethod from '../methods/transaction/SendRawTransactionMethod';
 
 export default class ModuleFactory {
     /**
@@ -115,5 +116,16 @@ export default class ModuleFactory {
      */
     createNewHeadsWatcher() {
         return new NewHeadsWatcher(this.subscriptionsFactory);
+    }
+
+    /**
+     * Returns the SendRawTransactionMethod object
+     *
+     * @method createSendRawTransactionMethod
+     *
+     * @returns {SendRawTransactionMethod}
+     */
+    createSendRawTransactionMethod() {
+        return new SendRawTransactionMethod(this.utils, this.formatters, this.createTransactionConfirmationWorkflow());
     }
 }
