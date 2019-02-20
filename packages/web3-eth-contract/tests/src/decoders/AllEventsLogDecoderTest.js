@@ -66,4 +66,21 @@ describe('AllEventsLogDecoderTest', () => {
 
         expect(abiItemModel.getInputs).toHaveBeenCalled();
     });
+
+    it('calls decode and returns the response without decoding it because there is no event with this name in the ABI', () => {
+        const response = {
+            topics: ['0x0'],
+            data: '0x0'
+        };
+
+        abiModelMock.getEventBySignature.mockReturnValueOnce(false);
+
+        const decodedLog = allEventsLogDecoder.decode(abiModelMock, response);
+
+        expect(decodedLog.raw.data).toEqual('0x0');
+
+        expect(decodedLog.raw.topics).toEqual(['0x0']);
+
+        expect(abiModelMock.getEventBySignature).toHaveBeenCalledWith('0x0');
+    });
 });
