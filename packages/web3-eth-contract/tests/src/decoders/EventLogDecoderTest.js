@@ -56,7 +56,7 @@ describe('EventLogDecoderTest', () => {
 
         expect(decodedLog.returnValues).toEqual(['0x0']);
 
-        expect(abiCoderMock.decodeLog).toHaveBeenCalledWith([], '0x0', ['0x0']);
+        expect(abiCoderMock.decodeLog).toHaveBeenCalledWith([], '0x0', []);
 
         expect(abiItemModel.getInputs).toHaveBeenCalled();
     });
