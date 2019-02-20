@@ -86,40 +86,36 @@ export default class AbstractMethodFactory {
     createMethod(name) {
         const method = this.methods[name];
 
+        /* eslint-disable new-cap */
         switch (method.Type) {
             case 'CALL':
                 if (method.name === 'SignMethod') {
-                    /* eslint-disable new-cap */
                     return new method(
                         this.utils,
                         this.formatters,
                         this.methodModuleFactory.accounts,
                         this.methodModuleFactory.createMessageSigner()
                     );
-                    /* eslint-enable new-cap */
                 }
 
-                /* eslint-disable new-cap */
                 return new method(this.utils, this.formatters);
-            /* eslint-enable new-cap */
             case 'SEND':
                 if (method.name === 'SendTransactionMethod') {
-                    /* eslint-disable new-cap */
                     return new method(
                         this.utils,
                         this.formatters,
                         this.methodModuleFactory.createTransactionConfirmationWorkflow(),
+                        this.methodModuleFactory.createTransactionSigner(),
+                        this.methodModuleFactory.createSendRawTransactionMethod()
                     );
-                    /* eslint-enable new-cap */
                 }
 
-                /* eslint-disable new-cap */
                 return new method(
                     this.utils,
                     this.formatters,
                     this.methodModuleFactory.createTransactionConfirmationWorkflow()
                 );
-            /* eslint-enable new-cap */
         }
+        /* eslint-enable new-cap */
     }
 }

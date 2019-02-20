@@ -23,16 +23,27 @@
 import isObject from 'lodash/isObject';
 import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
 
+// TODO: Clean up this method and move the signing logic etc. to the eth module
 export default class SendTransactionMethod extends AbstractSendMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
+     * @param {TransactionSigner} transactionSigner
+     * @param {SendRawTransactionMethod} sendRawTransactionMethod
      *
      * @constructor
      */
-    constructor(utils, formatters, transactionConfirmationWorkflow) {
+    constructor(
+        utils,
+        formatters,
+        transactionConfirmationWorkflow,
+        transactionSigner,
+        sendRawTransactionMethod
+    ) {
         super('eth_sendTransaction', 1, utils, formatters, transactionConfirmationWorkflow);
+        this.transactionSigner = transactionSigner;
+        this.sendRawTransactionMethod = sendRawTransactionMethod;
     }
 
     /**
@@ -77,14 +88,12 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             return promiEvent;
         }
 
-        if (moduleInstance.transactionSigner.client) {// TODO: Find a better name for having a boolean to check if the transaction should be signed locally or not.
-            this.rpcMethod = 'eth_sendRawTransaction';
-
-            moduleInstance.transactionSigner
-                .sign(this.parameters[0]))
+        if (this.hasWallets()) {
+             moduleInstance.transactionSigner
+                .sign(this.parameters[0])
                 .then((response) => {
-                    this.parameters = [response.rawTransaction];
-                    super.execute(moduleInstance, promiEvent);
+                    this.sendRawTransactionMethod.parameters = [response.rawTransaction];
+                    this.sendRawTransactionMethod.execute(moduleInstance, promiEvent);
                 })
                 .catch((error) => {
                     if (this.callback) {

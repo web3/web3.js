@@ -42,6 +42,5 @@ export default class EcRecoverMethod extends AbstractCallMethod {
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
-        this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
     }
 }

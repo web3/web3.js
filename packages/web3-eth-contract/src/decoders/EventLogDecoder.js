@@ -43,7 +43,7 @@ export default class EventLogDecoder {
     decode(abiItemModel, response) {
         let argTopics = response.topics;
 
-        if (abiItemModel.anonymous) {
+        if (!abiItemModel.anonymous) {
             argTopics = response.topics.slice(1);
         }
 

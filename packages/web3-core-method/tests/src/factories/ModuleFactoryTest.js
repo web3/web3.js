@@ -1,9 +1,10 @@
-import ModuleFactory from '../../../src/factories/ModuleFactory';
 import TransactionConfirmationWorkflow from '../../../src/workflows/TransactionConfirmationWorkflow';
 import TransactionSigner from '../../../src/signers/TransactionSigner';
 import MessageSigner from '../../../src/signers/MessageSigner';
 import TransactionReceiptValidator from '../../../src/validators/TransactionReceiptValidator';
 import NewHeadsWatcher from '../../../src/watchers/NewHeadsWatcher';
+import SendRawTransactionMethod from '../../../src/methods/transaction/SendRawTransactionMethod';
+import ModuleFactory from '../../../src/factories/ModuleFactory';
 
 /**
  * ModuleFactory test
@@ -39,5 +40,9 @@ describe('ModuleFactoryTest', () => {
 
     it('calls createMethodProxy and should return an instance of MethodProxy', () => {
         expect(moduleFactory.createMethodProxy({}, {hasMethod: () => {}})).toBeInstanceOf(Object);
+    });
+
+    it('calls createSendRawTransactionMethod and should return an instance of SendRawTransactionMethod', () => {
+        expect(moduleFactory.createSendRawTransactionMethod()).toBeInstanceOf(SendRawTransactionMethod);
     });
 });

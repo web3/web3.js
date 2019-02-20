@@ -83,4 +83,20 @@ describe('AbstractCallMethodTest', () => {
             expect(abstractCallMethod.beforeExecution).toHaveBeenCalledWith(moduleInstanceMock);
         }
     });
+
+    it('calls execute and it returns null', async () => {
+        providerMock.send.mockReturnValueOnce(Promise.resolve(null));
+
+        moduleInstanceMock.currentProvider = providerMock;
+
+        const response = await abstractCallMethod.execute(moduleInstanceMock);
+
+        expect(response).toEqual(null);
+
+        expect(providerMock.send).toHaveBeenCalledWith(abstractCallMethod.rpcMethod, abstractCallMethod.parameters);
+
+        expect(abstractCallMethod.callback).toHaveBeenCalledWith(false, null);
+
+        expect(abstractCallMethod.beforeExecution).toHaveBeenCalledWith(moduleInstanceMock);
+    });
 });

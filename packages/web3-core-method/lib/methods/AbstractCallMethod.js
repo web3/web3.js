@@ -68,15 +68,17 @@ export default class AbstractCallMethod extends AbstractMethod {
         }
 
         try {
-            const response = await moduleInstance.currentProvider.send(this.rpcMethod, this.parameters);
+            let response = await moduleInstance.currentProvider.send(this.rpcMethod, this.parameters);
 
-            const mappedResponse = this.afterExecution(response);
-
-            if (this.callback) {
-                this.callback(false, mappedResponse);
+            if (response) {
+                response = this.afterExecution(response);
             }
 
-            return mappedResponse;
+            if (this.callback) {
+                this.callback(false, response);
+            }
+
+            return response;
         } catch (error) {
             if (this.callback) {
                 this.callback(error, null);
