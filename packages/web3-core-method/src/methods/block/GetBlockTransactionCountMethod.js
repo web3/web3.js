@@ -30,7 +30,7 @@ export default class GetBlockTransactionCountMethod extends AbstractCallMethod {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_getTransactionByBlockNumberAndIndex', 1, utils, formatters);
+        super('eth_getBlockTransactionCountByNumber', 1, utils, formatters);
     }
 
     /**
@@ -42,7 +42,7 @@ export default class GetBlockTransactionCountMethod extends AbstractCallMethod {
      */
     beforeExecution(moduleInstance) {
         if (this.isHash(this.parameters[0])) {
-            this.rpcMethod = 'eth_getTransactionByBlockHashAndIndex';
+            this.rpcMethod = 'eth_getBlockTransactionCountByHash';
         }
 
         this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
