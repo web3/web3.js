@@ -55,7 +55,7 @@ export default class TransactionConfirmationWorkflow {
 
         this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
             if (receipt && receipt.blockHash) {
-                const validationResult = this.transactionReceiptValidator.validate(receipt, method.parameters);
+                const validationResult = this.transactionReceiptValidator.validate(receipt, method);
                 if (validationResult === true) {
                     this.handleSuccessState(receipt, method, promiEvent);
 
@@ -72,10 +72,7 @@ export default class TransactionConfirmationWorkflow {
                 if (!this.isTimeoutTimeExceeded(moduleInstance, this.newHeadsWatcher.isPolling)) {
                     this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
                         if (receipt && receipt.blockHash) {
-                            const validationResult = this.transactionReceiptValidator.validate(
-                                receipt,
-                                method.parameters
-                            );
+                            const validationResult = this.transactionReceiptValidator.validate(receipt, method);
 
                             if (validationResult === true) {
                                 this.confirmationsCounter++;
