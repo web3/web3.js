@@ -13,40 +13,10 @@ The goal of the Web3 Module API is to provide the possibility to extend and cust
 to project specific classes with a similar kind of API the DApp developer knows from the Web3.js library.
 It's possible with the Web3 Module API to create complex contract APIs and tools for the development of a DApp.
 
-The Web3 Module API provides the following ES6 classes:
 
-- :ref:`AbstractWeb3Module <web3-abtract-module>`
-- :ref:`AbstractMethodFactory <web3-module-abstract-method-factory>`
-- :ref:`AbstractMethod <web3-module-abstract-method>`
-- :ref:`AbstractCallMethod <web3-module-abstract-call-method>`
-- :ref:`AbstractSendMethod <web3-module-abstract-send-method>`
-- :ref:`AbstractSubscription <web3-module-abstract-subscription>`
-
-=======
-Methods
-=======
-
-The Web3.js library does have implemented most of the provided JSON-RPC methods a Ethereum node does provide.
-If you're interested to know which methods you could extend from then please check out the folders in the code.
-
-Source: `Web3.js method classes <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/src/methods>`_
-
-------------------------------------------------------------------------------------------------------------------------
-
-=============
-Subscriptions
-=============
-
-The Web3.js library does have implemented the subscriptions a Ethereum node does provide.
-If you're interested to know which subscriptions you could extend from then please check out the folders in the code.
-
-Source: `Web3.js subscription classes <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions/src/subscriptions>`_
-
-------------------------------------------------------------------------------------------------------------------------
-
-=======
-Example
-=======
+==============
+Module Example
+==============
 
 Clone the ``web3-examples`` GitHub repository and copy the following `starter folder: <https://github.com/ethereum/web3-examples/tree/development/modules/starter-module>`_
 
@@ -61,6 +31,41 @@ These ES6 classes are included in the example folder:
 - ``StarterMethod``
 - ``StarterContract``
 - ``StarterSubscription``
+
+=======
+Methods
+=======
+
+The Web3.js library does have implemented most of the provided JSON-RPC methods a Ethereum node does provide.
+Please check out the ``methods`` folder if you're interested to know which methods you could extend from.
+
+Source: `Web3.js method classes <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/src/methods>`_
+
+------------------------------------------------------------------------------------------------------------------------
+
+=============
+Subscriptions
+=============
+
+We have implemented all the subscriptions a Ethereum node does provide.
+Please check out the ``subscriptions`` folder if you're interested to know which subscriptions you could extend from.
+
+Source: `Web3.js subscription classes <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions/src/subscriptions>`_
+
+------------------------------------------------------------------------------------------------------------------------
+
+================
+Abstract Classes
+================
+
+These are the abstract classes the Web3 Module API does provide:
+
+- :ref:`AbstractWeb3Module <web3-abtract-module>`
+- :ref:`AbstractMethodFactory <web3-module-abstract-method-factory>`
+- :ref:`AbstractMethod <web3-module-abstract-method>`
+- :ref:`AbstractCallMethod <web3-module-abstract-call-method>`
+- :ref:`AbstractSendMethod <web3-module-abstract-send-method>`
+- :ref:`AbstractSubscription <web3-module-abstract-subscription>`
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -167,6 +172,7 @@ of the method class.
         console.log(response);
     };
     // > "result"
+
 
 
 The ``AbstractMethod`` class does have the following methods and properties:
