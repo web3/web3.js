@@ -20,6 +20,7 @@ Contents:
    :caption: User Documentation
 
    getting-started
+   web3-module
    callbacks-promises-events
    glossary
 
