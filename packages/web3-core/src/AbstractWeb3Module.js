@@ -35,8 +35,8 @@ export default class AbstractWeb3Module {
      * @constructor
      */
     constructor(
-        provider = AbstractWeb3Module.throwIfMissing('provider'),
-        providersModuleFactory = AbstractWeb3Module.throwIfMissing('ProvidersModuleFactory'),
+        provider,
+        providersModuleFactory,
         methodModuleFactory = null,
         methodFactory = null,
         options = {}
@@ -319,14 +319,5 @@ export default class AbstractWeb3Module {
         }
 
         return Promise.resolve(true);
-    }
-
-    /**
-     * Throws an error if the parameter is missing
-     *
-     * @param {String} name
-     */
-    static throwIfMissing(name) {
-        throw new Error(`Missing parameter: ${name}`);
     }
 }
