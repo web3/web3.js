@@ -24,15 +24,18 @@ import Account from 'eth-lib/lib/account';
  */
 export default class TransactionSigner {
     /**
-     * @param {object} formatters
+     * @param {Wallet} wallet
+     * @param {SignMethod} signMethod
+     * @param {Object} formatters
      * @param {Utils} utils
      *
      * @constructor
      */
-    constructor(formatters, utils, accounts) {
+    constructor(wallet, signMethod, formatters, utils) {
+        this.wallet = wallet;
+        this.signMethod = signMethod;
         this.formatters = formatters;
         this.utils = utils;
-        this.accounts = accounts;
     }
 
     /**
@@ -43,9 +46,44 @@ export default class TransactionSigner {
      *
      * @returns {Promise<Transaction>}
      */
-    async sign(tx, moduleInstance) {
+    sign(tx, moduleInstance) {
+        if (this.wallet.length > 0) {
+            return this.signLocal(tx, moduleInstance);
+        }
+
+        return this.signRemote(tx, moduleInstance);
+
+    }
+
+    /**
+     * This method signs the transaction remotely on the node.
+     *
+     * @method signLocal
+     *
+     * @param {Object} tx
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Promise<{messageHash: *, v: String, r: String, s: String, rawTransaction: *}>}
+     */
+    signRemote(tx, moduleInstance) {
+        this.signMethod.parameters = [tx];
+
+        return this.signMethod.execute(moduleInstance);
+    }
+
+    /**
+     * This method signs the transaction with the local decrypted account.
+     *
+     * @method signLocal
+     *
+     * @param {Object} tx
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Promise<{messageHash: *, v: String, r: String, s: String, rawTransaction: *}>}
+     */
+    async signLocal(tx, moduleInstance) {
         let result;
-        const privateKey = this.accounts.wallet[from];
+        const privateKey = this.wallet[from];
 
         if (this.isUndefinedOrNull(tx.chainId)) {
             tx.chainId = await moduleInstance.getChainId();

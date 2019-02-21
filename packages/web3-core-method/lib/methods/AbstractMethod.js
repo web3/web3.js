@@ -214,15 +214,4 @@ export default class AbstractMethod {
     isHash(parameter) {
         return isString(parameter) && parameter.indexOf('0x') === 0;
     }
-
-    /**
-     * Checks if accounts is defined and if wallet is not empty
-     *
-     * @method hasWallet
-     *
-     * @returns {Boolean}
-     */
-    hasWallets() {
-        return this.accounts && this.accounts.wallet.length > 0;
-    }
 }

@@ -26,6 +26,7 @@ import isString from 'lodash/isString';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
+import Account from './Account';
 import scryptsy from 'scrypt.js';
 import uuid from 'uuid';
 const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto'); // TODO: This should moved later to the factory method
@@ -80,7 +81,6 @@ export default class Accounts {
         return Account.fromPrivateKey(privateKey);
     }
 
-
     /**
      * TODO: Add deprecation message and extend the signTransaction method in the eth module
      *
@@ -97,7 +97,7 @@ export default class Accounts {
      */
     async signTransaction(tx, privateKey, callback) {
         try {
-            const transaction = new Transaction(tx);
+            const transaction = new Transaction(tx);// TODO: Create Transaction VO or add validation here.
             const signedTransaction = await this.transactionSigner.sign(transaction, privateKey);
 
             if (isFunction(callback)) {

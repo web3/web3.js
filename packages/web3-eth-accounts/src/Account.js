@@ -30,14 +30,21 @@ export default class Account {
      *
      * @constructor
      */
-    constructor(accounts, options) {
+    constructor(options) {
         this.address = options.address; // TODO: Add address validation here (if enough time create a Address VO)
         this.privateKey = options.privateKey;
-        this.accounts = accounts;
+
+        return new Proxy(this, {
+            get: (target, name) => {
+                return target[name];
+            }
+        });
     }
 
     /**
-     * This method does sign the given transaction with the current account
+     * TODO: Add deprecation message and extend the signTransaction method in the eth module
+     *
+     * Signs a transaction object with the given privateKey
      *
      * @method signTransaction
      *
@@ -45,7 +52,7 @@ export default class Account {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {Promise<SignedTransaction> | *}
+     * @returns {Promise<Object>}
      */
     signTransaction(tx, callback) {
         return this.accounts.signTransaction(tx, this.privateKey, callback);
