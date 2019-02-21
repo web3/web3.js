@@ -61,14 +61,14 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      * @returns {PromiEvent}
      */
     execute(moduleInstance, promiEvent) {
-        if (!this.isGasLimitDefined() && this.hasDefaultGasLimit(moduleInstance)) {
+        if (!this.parameters[0].gas && moduleInstance.defaultGas) {
             this.parameters[0]['gas'] = moduleInstance.defaultGas;
         }
 
-        if (!this.isGasPriceDefined()) {
-            if (!this.hasDefaultGasPrice(moduleInstance)) {
+        if (!this.parameters[0].gasPrice) {
+            if (!moduleInstance.defaultGasPrice) {
                 moduleInstance.currentProvider.send('eth_gasPrice', []).then((gasPrice) => {
-                    this.parameters[0]['gasPrice'] = gasPrice;
+                    this.parameters[0].gasPrice = gasPrice;
                     this.execute(moduleInstance, promiEvent);
                 });
 
@@ -78,13 +78,29 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
         }
 
-        if (
-            moduleInstance.accounts && moduleInstance.accounts.wallet[this.parameters[0].from] ||
-            moduleInstance.transactionSigner.constructor.name !== 'TransactionSigner'
-        ) {
-            this.sendRawTransaction(promiEvent, moduleInstance);
+        if (!this.parameters[0].nonce) {
+            moduleInstance.getTransactionCount().then((count) => {
+                this.parameters[0].nonce = count;
+                
+                this.execute(moduleInstance, promiEvent);
+            });
+
+            return promiEvent
+        }
+
+        if (this.isWeb3Signing(moduleInstance)) {
+            this.sendRawTransaction(
+                this.formatTransactionForSigning(transaction),
+                moduleInstance.accounts.wallet[this.parameters[0].from],
+                promiEvent,
+                moduleInstance
+            );
 
             return promiEvent;
+        }
+
+        if (this.hasCustomSigner(moduleInstance)) {
+            this.sendRawTransaction(this.formatTransactionForSigning(transaction), null, promiEvent, moduleInstance);
         }
 
         super.execute(moduleInstance, promiEvent);
@@ -92,35 +108,16 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         return promiEvent;
     }
 
-    /**
-     * Signs the transaction and executes the SendRawTransaction method.
-     *
-     * @method sendRawTransaction
-     *
-     * @param {PromiEvent} promiEvent
-     * @param {AbstractWeb3Module} moduleInstance
-     */
-    sendRawTransaction(promiEvent, moduleInstance) {
-        let missingTxProperties = [],
-            transaction = this.parameters[0];
+    formatTransactionForSigning(transaction) {
+        let transaction = this.parameters[0];
 
         if (transaction.chainId) {
-            missingTxProperties.push(moduleInstance.getChainId());
+            moduleInstance.getChainId().then((chainId) => {
+                this.parameters[0].chainId = chainId;
+
+                this.execute(moduleInstance, promiEvent);
+            });
         }
-
-        if (transaction.nonce) {
-            missingTxProperties.push(moduleInstance.getTransactionCount());
-        }
-
-        Promise.all(missingTxProperties).then((txProperties) => {
-            if (txProperties[0]) {
-                transaction.chainId = txProperties[0];
-            }
-
-            if (txProperties[1]) {
-                transaction.nonce = txProperties[1];
-            }
-        });
 
         transaction = this.formatters.txInputFormatter(transaction);
         transaction.to = tx.to || '0x';
@@ -128,8 +125,22 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         transaction.value = tx.value || '0x';
         transaction.chainId = this.utils.numberToHex(transaction.chainId);
 
+        return transaction;
+    }
+
+    /**
+     * Signs the transaction and executes the SendRawTransaction method.
+     *
+     * @method sendRawTransaction
+     *
+     * @param {Object} transaction
+     * @param {String} privateKey
+     * @param {PromiEvent} promiEvent
+     * @param {AbstractWeb3Module} moduleInstance
+     */
+    sendRawTransaction(transactiom, privateKey, promiEvent, moduleInstance) {
         moduleInstance.transactionSigner
-            .sign(transaction, moduleInstance.accounts.wallet[this.parameters[0].from])
+            .sign(transaction, privateKey)
             .then((response) => {
                 this.sendRawTransactionMethod.parameters = [response.rawTransaction];
                 this.sendRawTransactionMethod.callback = this.callback;
@@ -147,51 +158,11 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             });
     }
 
-    /**
-     * Checks if the given Web3Module has an default gasPrice defined
-     *
-     * @method hasDefaultGasPrice
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Boolean}
-     */
-    hasDefaultGasPrice(moduleInstance) {
-        return moduleInstance.defaultGasPrice !== null && typeof moduleInstance.defaultGasPrice !== 'undefined';
+    isWeb3Signing(moduleInstance) {
+        return moduleInstance.accounts && moduleInstance.accounts.wallet.length > 0;
     }
 
-    /**
-     * Checks if gasPrice is defined in the method options
-     *
-     * @method isGasPriceDefined
-     *
-     * @returns {Boolean}
-     */
-    isGasPriceDefined() {
-        return isObject(this.parameters[0]) && typeof this.parameters[0].gasPrice !== 'undefined';
-    }
-
-    /**
-     * Checks if the given Web3Module has an default gas limit defined
-     *
-     * @method hasDefaultGasLimit
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Boolean}
-     */
-    hasDefaultGasLimit(moduleInstance) {
-        return moduleInstance.defaultGas !== null && typeof moduleInstance.defaultGas !== 'undefined';
-    }
-
-    /**
-     * Checks if a gas limit is defined
-     *
-     * @method isGasLimitDefined
-     *
-     * @returns {Boolean}
-     */
-    isGasLimitDefined() {
-        return isObject(this.parameters[0]) && typeof this.parameters[0].gas !== 'undefined';
+    hasCustomSigner(moduleInstance) {
+        return moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
     }
 }
