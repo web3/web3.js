@@ -21,8 +21,8 @@
  */
 
 import AbstractCallMethod from '../../lib/methods/AbstractCallMethod';
-import Account from '../../../web3-eth-accounts/src/models/Account';
 
+// TODO: Move local signing logic to the eth module
 export default class SignMethod extends AbstractCallMethod {
     /**
      * @param {Utils} utils
@@ -67,7 +67,9 @@ export default class SignMethod extends AbstractCallMethod {
         let signedMessage;
 
         try {
-            signedMessage = Account.fromPrivateKey(moduleInstance.accounts.wallet[this.parameters[1]]).sign(
+            signedMessage = moduleInstance.accounts.privateKeyToAccount(
+                moduleInstance.accounts.wallet[this.parameters[1]]
+            ).sign(
                 this.parameters[0]
             );
         } catch (error) {
