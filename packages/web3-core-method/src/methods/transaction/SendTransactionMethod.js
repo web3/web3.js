@@ -78,8 +78,11 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
         }
 
-        if (moduleInstance.accounts && moduleInstance.accounts.wallet[this.parameters[0].from]) {
-            this.sendRawTransaction(this.parameters[0], promiEvent, moduleInstance);
+        if (
+            moduleInstance.accounts && moduleInstance.accounts.wallet[this.parameters[0].from] ||
+            moduleInstance.transactionSigner.constructor.name !== 'TransactionSigner'
+        ) {
+            this.sendRawTransaction(promiEvent, moduleInstance);
 
             return promiEvent;
         }
@@ -94,39 +97,39 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      *
      * @method sendRawTransaction
      *
-     * @param {Object} tx
      * @param {PromiEvent} promiEvent
      * @param {AbstractWeb3Module} moduleInstance
      */
-    sendRawTransaction(tx, promiEvent, moduleInstance) {
-        let missingTxProperties = [];
+    sendRawTransaction(promiEvent, moduleInstance) {
+        let missingTxProperties = [],
+            transaction = this.parameters[0];
 
-        if (tx.chainId) {
+        if (transaction.chainId) {
             missingTxProperties.push(moduleInstance.getChainId());
         }
 
-        if (tx.nonce) {
+        if (transaction.nonce) {
             missingTxProperties.push(moduleInstance.getTransactionCount());
         }
 
         Promise.all(missingTxProperties).then((txProperties) => {
             if (txProperties[0]) {
-                tx.chainId = txProperties[0];
+                transaction.chainId = txProperties[0];
             }
 
             if (txProperties[1]) {
-                tx.nonce = txProperties[1];
+                transaction.nonce = txProperties[1];
             }
         });
 
-        const transaction = this.formatters.txInputFormatter(tx);
+        transaction = this.formatters.txInputFormatter(transaction);
         transaction.to = tx.to || '0x';
         transaction.data = tx.data || '0x';
         transaction.value = tx.value || '0x';
-        transaction.chainId = this.utils.numberToHex(tx.chainId);
+        transaction.chainId = this.utils.numberToHex(transaction.chainId);
 
         moduleInstance.transactionSigner
-            .sign(this.parameters[0], moduleInstance.accounts.wallet[tx.from])
+            .sign(transaction, moduleInstance.accounts.wallet[this.parameters[0].from])
             .then((response) => {
                 this.sendRawTransactionMethod.parameters = [response.rawTransaction];
                 this.sendRawTransactionMethod.callback = this.callback;
