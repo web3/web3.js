@@ -25,9 +25,7 @@ import isBoolean from 'lodash/isBoolean';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
-import Account from './Account';
-
-const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto'); // TODO: This should moved later to the factory method
+import Account from './models/Account';
 
 //TODO: Rename Accounts module to Wallet and add the functionalities of the current Wallet class.
 export default class Accounts {
@@ -36,11 +34,10 @@ export default class Accounts {
      * @param {Object} formatters
      * @param {TransactionSigner} transactionSigner
      * @param {Wallet} wallet
-     * @param {Object} options
      *
      * @constructor
      */
-    constructor(utils, formatters, transactionSigner, wallet, options) {
+    constructor(utils, formatters, transactionSigner, wallet) {
         this.utils = utils;
         this.formatters = formatters;
         this.wallet = wallet;

@@ -21,8 +21,8 @@
  */
 
 import Accounts from '../Accounts';
-import Account from '../Account';
-import Wallet from '../Wallet';
+import Account from '../models/Account';
+import Wallet from '../models/Wallet';
 
 export default class AccountsModuleFactory {
     /**
@@ -39,49 +39,20 @@ export default class AccountsModuleFactory {
     /**
      * Returns an object of type Accounts
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
-     * @param {Object} options
+     * @method createAccounts
+     *
+     * @param {TransactionSigner} transactionSigner
+     * @param {Wallet} wallet
      *
      * @returns {Accounts}
      */
-    createAccounts(provider, providersModuleFactory, methodModuleFactory, options) {
+    createAccounts(transactionSigner, wallet) {
         return new Accounts(
-            provider,
-            providersModuleFactory,
             this.utils,
             this.formatters,
             transactionSigner,
-            this.createWallet(),
-            // const cryp = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
-            options
+            wallet
         );
-    }
-
-    /**
-     * Returns an object of type Wallet
-     *
-     * @method createWallet
-     *
-     * @returns {Wallet}
-     */
-    createWallet() {
-        return new Wallet();
-    }
-
-    /**
-     * Returns an object of type Account
-     *
-     * @method createAccount
-     *
-     * @param {Object} options
-     * @param {Accounts} accounts
-     *
-     * @returns {Account}
-     */
-    createAccount(accounts, options) {
-        return new Account(accounts, options)
     }
 
     /**

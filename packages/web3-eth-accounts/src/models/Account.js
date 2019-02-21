@@ -13,10 +13,11 @@
 */
 /**
  * @file Account.js
- * @author Samuel Furter <samuel@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2019
  */
 
+const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
 import scryptsy from 'scrypt.js';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
@@ -50,9 +51,7 @@ export default class Account {
      * @method signTransaction
      *
      * @param {Object} tx
-     * @param {Function} callback
      *
-     * @callback callback callback(error, result)
      * @returns {Promise<Object>}
      */
     async signTransaction(tx) {
