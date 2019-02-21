@@ -95,7 +95,7 @@ export default class LogSubscription extends AbstractSubscription {
     onNewSubscriptionItem(subscriptionItem) {
         const formattedLog = this.formatters.outputLogFormatter(subscriptionItem);
         this.options.fromBlock = formattedLog.fromBlock;
-        
-        return this.formatters.outputLogFormatter(subscriptionItem);
+
+        return formattedLog;
     }
 }
