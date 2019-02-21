@@ -20,18 +20,20 @@
 import scryptsy from 'scrypt.js';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
-import * as EthAccount from 'eth-lib/lib/account';// TODO: Remove this dependency
+import * as EthAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
 
 export default class Account {
     /**
      * @param {Object} options
+     * @param {TransactionSigner} transactionSigner
      *
      * @constructor
      */
-    constructor(options) {
+    constructor(options, transactionSigner) {
         this.address = options.address; // TODO: Add address validation here (if enough time create a Address VO)
         this.privateKey = options.privateKey;
+        this.transactionSinger = transactionSigner;
 
         return new Proxy(this, {
             get: (target, name) => {
@@ -41,8 +43,8 @@ export default class Account {
     }
 
     /**
-     * TODO: Add deprecation message and extend the signTransaction method in the eth module
-     *
+     * TODO: Add deprecation message, remove TransactionSigner dependency and extend the signTransaction method in the eth module.
+     * TODO: Create Transaction VO or add validation here.
      * Signs a transaction object with the given privateKey
      *
      * @method signTransaction
@@ -53,8 +55,8 @@ export default class Account {
      * @callback callback callback(error, result)
      * @returns {Promise<Object>}
      */
-    signTransaction(tx, callback) {
-        return this.signTransaction(tx, this.privateKey, callback);
+    async signTransaction(tx) {
+        return await this.transactionSigner.sign(new Transaction(tx), this.privateKey);
     }
 
     /**
@@ -79,29 +81,31 @@ export default class Account {
      * @returns {EncryptedKeystoreV3Json | {version, id, address, crypto}}
      */
     encrypt(password, options) {
-        return Account.fromPrivateKey(this.privateKey).toV3Keystore(password, option);
+        return Account.fromPrivateKey(this.privateKey, this.transactionSinger).toV3Keystore(password, option);
     }
 
     /**
      * This static methods gives us the possibility to create a new account.
      *
      * @param {String} entropy
+     * @param {TransactionSigner} transactionSigner
      *
      * @returns {Account}
      */
-    static from(entropy) {
-        return new Account(EthAccount.create(entropy || this.utils.randomHex(32)));
+    static from(entropy, transactionSigner) {
+        return new Account(EthAccount.create(entropy || this.utils.randomHex(32)), transactionSigner);
     }
 
     /**
      * This static method gived us the possibility to create a Account object from a private key.
      *
      * @param {String} privateKey
+     * @param {TransactionSigner} transactionSigner
      *
      * @returns {Account}
      */
-    static fromPrivateKey(privateKey) {
-        return new Account(EthAccount.fromPrivate(privateKey));
+    static fromPrivateKey(privateKey, transactionSigner) {
+        return new Account(EthAccount.fromPrivate(privateKey), transactionSigner);
     }
 
     /**
@@ -183,10 +187,11 @@ export default class Account {
      * @param {Object|String} v3Keystore
      * @param {String} password
      * @param {Boolean} nonStrict
+     * @param {TransactionSigner} transactionSigner
      *
      * @returns {Account}
      */
-    static fromV3Keystore(v3Keystore, password, nonStrict = false) {
+    static fromV3Keystore(v3Keystore, password, nonStrict = false, transactionSigner) {
         if (!isString(password)) {
             throw new Error('No password given.');
         }
@@ -243,6 +248,6 @@ export default class Account {
         );
         const seed = `0x${Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex')}`;
 
-        return this.fromPrivateKey(seed);
+        return this.fromPrivateKey(seed, transactionSigner);
     }
 }

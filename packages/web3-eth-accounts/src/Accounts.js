@@ -22,13 +22,11 @@
 
 import isObject from 'lodash/isObject';
 import isBoolean from 'lodash/isBoolean';
-import isString from 'lodash/isString';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import Account from './Account';
-import scryptsy from 'scrypt.js';
-import uuid from 'uuid';
+
 const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto'); // TODO: This should moved later to the factory method
 
 //TODO: Rename Accounts module to Wallet and add the functionalities of the current Wallet class.
@@ -97,8 +95,7 @@ export default class Accounts {
      */
     async signTransaction(tx, privateKey, callback) {
         try {
-            const transaction = new Transaction(tx);// TODO: Create Transaction VO or add validation here.
-            const signedTransaction = await this.transactionSigner.sign(transaction, privateKey);
+            const signedTransaction = Account.fromPrivateKey(privateKey, this.transactionSigner).signTransaction(tx);
 
             if (isFunction(callback)) {
                 callback(false, signedTransaction);
@@ -228,6 +225,6 @@ export default class Accounts {
      * @returns {Object}
      */
     encrypt(privateKey, password, options) {
-        return Account.fromPrivateKey(privateKey).toV3Keystore(password, option)
+        return Account.fromPrivateKey(privateKey).toV3Keystore(password, option);
     }
 }
