@@ -1174,7 +1174,8 @@ signTransaction
 
     web3.eth.signTransaction(transactionObject [, address] [, callback])
 
-Signs a transaction. This account needs to be unlocked.
+The method ``signTransaction`` signs a transaction with the private key of the given address.
+This method does only work if you're connected to a Parity node.
 
 ----------
 Parameters
