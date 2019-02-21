@@ -21,7 +21,6 @@
  */
 
 import Accounts from '../Accounts';
-import Account from '../models/Account';
 import Wallet from '../models/Wallet';
 
 export default class AccountsModuleFactory {

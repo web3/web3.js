@@ -80,17 +80,25 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         }
 
         if (!this.isGasPriceDefined() && !this.hasDefaultGasPrice(moduleInstance)) {
-            moduleInstance.currentProvider.send('eth_gasPrice', []).then((gasPrice) => {
-                this.parameters[0]['gasPrice'] = gasPrice;
-                this.execute(moduleInstance, promiEvent);
-            });
+            moduleInstance.currentProvider
+                .send('eth_gasPrice', [])
+                .then((gasPrice) => {
+                    this.parameters[0]['gasPrice'] = gasPrice;
+                    this.execute(moduleInstance, promiEvent);
+                });
 
             return promiEvent;
         }
 
-        if (this.hasWallets()) {
-             moduleInstance.transactionSigner
-                .sign(this.parameters[0])
+        let wallet;
+
+        if (moduleInstance.accounts) {
+            wallet = moduleInstance.accounts.wallet;
+        }
+
+        if (wallet.length > 0) {
+            moduleInstance.transactionSigner
+                .sign(this.parameters[0], moduleInstance, moduleInstance.accounts.wallet[this.parameters[0].from])
                 .then((response) => {
                     this.sendRawTransactionMethod.parameters = [response.rawTransaction];
                     this.sendRawTransactionMethod.execute(moduleInstance, promiEvent);

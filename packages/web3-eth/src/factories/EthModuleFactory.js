@@ -106,12 +106,9 @@ export default class EthModuleFactory {
     /**
      * Returns an object of type TransactionSigner
      *
-     * @param {Wallet} wallet
-     * @param {SignMethod} signMethod
-     *
      * @returns {TransactionSigner}
      */
-    createTransactionSigner(wallet, signMethod) {
-        return new TransactionSigner(wallet, signMethod, this.formatters, this.utils);
+    createTransactionSigner() {
+        return new TransactionSigner(this.formatters, this.utils);
     }
 }

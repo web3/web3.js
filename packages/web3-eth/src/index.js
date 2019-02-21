@@ -69,9 +69,9 @@ export const Eth = (provider, options) => {
 };
 
 
-export const TransactionSigner = (wallet) => {
+export const TransactionSigner = () => {
     return new EthModuleFactory(
         Utils,
         formatters,
-    ).createTransactionSigner(wallet, new SignMethod());
+    ).createTransactionSigner();
 };

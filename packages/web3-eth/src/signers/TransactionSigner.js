@@ -24,16 +24,12 @@ import Account from 'eth-lib/lib/account';
  */
 export default class TransactionSigner {
     /**
-     * @param {Wallet} wallet
-     * @param {SignMethod} signMethod
      * @param {Object} formatters
      * @param {Utils} utils
      *
      * @constructor
      */
-    constructor(wallet, signMethod, formatters, utils) {
-        this.wallet = wallet;
-        this.signMethod = signMethod;
+    constructor(formatters, utils) {
         this.formatters = formatters;
         this.utils = utils;
     }
@@ -43,46 +39,12 @@ export default class TransactionSigner {
      *
      * @param {Transaction} tx
      * @param {AbstractWeb3Module} moduleInstance
+     * @param {String} privateKey
      *
      * @returns {Promise<Transaction>}
      */
-    sign(tx, moduleInstance) {
-        if (this.wallet.length > 0) {
-            return this.signLocal(tx, moduleInstance);
-        }
-
-        return this.signRemote(tx, moduleInstance);
-    }
-
-    /**
-     * This method signs the transaction remotely on the node.
-     *
-     * @method signLocal
-     *
-     * @param {Object} tx
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Promise<{messageHash: *, v: String, r: String, s: String, rawTransaction: *}>}
-     */
-    signRemote(tx, moduleInstance) {
-        this.signMethod.parameters = [tx];
-
-        return this.signMethod.execute(moduleInstance);
-    }
-
-    /**
-     * This method signs the transaction with the local decrypted account.
-     *
-     * @method signLocal
-     *
-     * @param {Object} tx
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Promise<{messageHash: *, v: String, r: String, s: String, rawTransaction: *}>}
-     */
-    async signLocal(tx, moduleInstance) {
+    async sign(tx, moduleInstance, privateKey) {
         let result;
-        const privateKey = this.wallet[from];
 
         if (this.isUndefinedOrNull(tx.chainId)) {
             tx.chainId = await moduleInstance.getChainId();
@@ -143,7 +105,6 @@ export default class TransactionSigner {
 
         return result;
     }
-
 
     /**
      * Removes the zeros until no zero follows after '0x'

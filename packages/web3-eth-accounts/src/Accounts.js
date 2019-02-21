@@ -28,6 +28,7 @@ import Bytes from 'eth-lib/lib/bytes';
 import Account from './models/Account';
 
 //TODO: Rename Accounts module to Wallet and add the functionalities of the current Wallet class.
+//TODO: After this refactoring will it be possible to move the wallet class to the eth module and to remove the accounts module.
 export default class Accounts {
     /**
      * @param {Utils} utils
@@ -60,7 +61,7 @@ export default class Accounts {
      * @returns {Account}
      */
     create(entropy) {
-        return Account.from(entropy);
+        return Account.from(entropy, this.transactionSigner);
     }
 
     /**
@@ -73,7 +74,7 @@ export default class Accounts {
      * @returns {Account}
      */
     privateKeyToAccount(privateKey) {
-        return Account.fromPrivateKey(privateKey);
+        return Account.fromPrivateKey(privateKey, this.transactionSigner);
     }
 
     /**
@@ -222,6 +223,6 @@ export default class Accounts {
      * @returns {Object}
      */
     encrypt(privateKey, password, options) {
-        return Account.fromPrivateKey(privateKey).toV3Keystore(password, option);
+        return Account.fromPrivateKey(privateKey, this.transactionSigner).toV3Keystore(password, option);
     }
 }
