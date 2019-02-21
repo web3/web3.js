@@ -69,49 +69,27 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      * @returns {PromiEvent}
      */
     execute(moduleInstance, promiEvent) {
-        if (!this.isGasLimitDefined()) {
-            if (this.hasDefaultGasLimit(moduleInstance)) {
-                this.parameters[0]['gas'] = moduleInstance.defaultGas;
-            }
+        if (!this.isGasLimitDefined() && this.hasDefaultGasLimit(moduleInstance)) {
+            this.parameters[0]['gas'] = moduleInstance.defaultGas;
         }
 
-        if (!this.isGasPriceDefined() && this.hasDefaultGasPrice(moduleInstance)) {
+        if (!this.isGasPriceDefined()) {
+            if (!this.hasDefaultGasPrice(moduleInstance)) {
+                moduleInstance.currentProvider
+                    .send('eth_gasPrice', [])
+                    .then((gasPrice) => {
+                        this.parameters[0]['gasPrice'] = gasPrice;
+                        this.execute(moduleInstance, promiEvent);
+                    });
+
+                return promiEvent;
+            }
+
             this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
         }
 
-        if (!this.isGasPriceDefined() && !this.hasDefaultGasPrice(moduleInstance)) {
-            moduleInstance.currentProvider
-                .send('eth_gasPrice', [])
-                .then((gasPrice) => {
-                    this.parameters[0]['gasPrice'] = gasPrice;
-                    this.execute(moduleInstance, promiEvent);
-                });
-
-            return promiEvent;
-        }
-
-        let wallet;
-
-        if (moduleInstance.accounts) {
-            wallet = moduleInstance.accounts.wallet;
-        }
-
-        if (wallet.length > 0) {
-            moduleInstance.transactionSigner
-                .sign(this.parameters[0],  moduleInstance.accounts.wallet[this.parameters[0].from], moduleInstance)
-                .then((response) => {
-                    this.sendRawTransactionMethod.parameters = [response.rawTransaction];
-                    this.sendRawTransactionMethod.execute(moduleInstance, promiEvent);
-                })
-                .catch((error) => {
-                    if (this.callback) {
-                        this.callback(error, null);
-                    }
-
-                    promiEvent.reject(error);
-                    promiEvent.emit('error', error);
-                    promiEvent.removeAllListeners();
-                });
+        if (moduleInstance.accounts && moduleInstance.accounts.wallet.length > 0) {
+            this.sendRawTransaction(this.parameters[0], promiEvent, moduleInstance);
 
             return promiEvent;
         }
@@ -119,6 +97,62 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         super.execute(moduleInstance, promiEvent);
 
         return promiEvent;
+    }
+
+    /**
+     * Signs the transaction and executes the SendRawTransaction method.
+     *
+     * @method sendRawTransaction
+     *
+     * @param {Object} tx
+     * @param {PromiEvent} promiEvent
+     * @param {AbstractWeb3Module} moduleInstance
+     */
+    sendRawTransaction(tx, promiEvent, moduleInstance) {
+        let missingTxProperties = [];
+
+        if (tx.chainId) {
+            missingTxProperties.push(moduleInstance.getChainId());
+        }
+
+        if (tx.nonce) {
+            missingTxProperties.push(moduleInstance.getTransactionCount());
+        }
+
+        Promise.all(missingTxProperties).then((txProperties) => {
+            if (txProperties[0]) {
+                tx.chainId = txProperties[0];
+            }
+
+            if (txProperties[1]) {
+                tx.nonce = txProperties[1];
+            }
+
+        });
+
+        const transaction = this.formatters.txInputFormatter(tx);
+        transaction.to = tx.to || '0x';
+        transaction.data = tx.data || '0x';
+        transaction.value = tx.value || '0x';
+        transaction.chainId = this.utils.numberToHex(tx.chainId);
+
+        moduleInstance.transactionSigner
+            .sign(this.parameters[0], moduleInstance.accounts.wallet[tx.from])
+            .then((response) => {
+                this.sendRawTransactionMethod.parameters = [response.rawTransaction];
+                this.sendRawTransactionMethod.callback = this.callback;
+
+                this.sendRawTransactionMethod.execute(moduleInstance, promiEvent);
+            })
+            .catch((error) => {
+                if (this.callback) {
+                    this.callback(error, null);
+                }
+
+                promiEvent.reject(error);
+                promiEvent.emit('error', error);
+                promiEvent.removeAllListeners();
+            });
     }
 
     /**

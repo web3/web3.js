@@ -24,46 +24,15 @@ import Account from 'eth-lib/lib/account';
  */
 export default class TransactionSigner {
     /**
-     * @param {Object} formatters
-     * @param {Utils} utils
-     *
-     * @constructor
-     */
-    constructor(formatters, utils) {
-        this.formatters = formatters;
-        this.utils = utils;
-    }
-
-    /**
      * Signs the transaction
      *
      * @param {Transaction} tx
      * @param {String} privateKey
-     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {Promise<Transaction>}
      */
-    async sign(tx, privateKey, moduleInstance) {
+    async sign(tx, privateKey) {
         let result;
-
-        if (this.isUndefinedOrNull(tx.chainId)) {
-            tx.chainId = await moduleInstance.getChainId();
-        }
-        if (this.isUndefinedOrNull(tx.nonce)) {
-            tx.nonce = await moduleInstance.getTransactionCount(tx.from);
-        }
-        if (this.isUndefinedOrNull(tx.gasPrice)) {
-            tx.gasPrice = await moduleInstance.getGasPrice();
-        }
-
-        // delete tx.from;
-        tx = this.formatters.inputCallFormatter(tx, moduleInstance);
-
-        const transaction = tx;
-        transaction.to = tx.to || '0x';
-        transaction.data = tx.data || '0x';
-        transaction.value = tx.value || '0x';
-        transaction.chainId = this.utils.numberToHex(tx.chainId);
 
         const rlpEncoded = RLP.encode([
             Bytes.fromNat(transaction.nonce),
