@@ -22,9 +22,11 @@ import isString from 'lodash/isString';
 
 class Wallet {
     /**
+     * @param {Utils} utils
+     *
      * @constructor
      */
-    constructor() {
+    constructor(utils) {
         this.utils = utils;
         this.length = 0;
         this.defaultKeyName = 'web3js_wallet';

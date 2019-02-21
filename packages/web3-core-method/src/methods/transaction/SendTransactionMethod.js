@@ -23,7 +23,7 @@
 import isObject from 'lodash/isObject';
 import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
 
-// TODO: Clean up this method and move the signing logic etc. to the eth module
+// TODO: Clean up this method and move the signing and observing logic to the eth module
 export default class SendTransactionMethod extends AbstractSendMethod {
     /**
      * @param {Utils} utils
@@ -98,7 +98,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
 
         if (wallet.length > 0) {
             moduleInstance.transactionSigner
-                .sign(this.parameters[0], moduleInstance, moduleInstance.accounts.wallet[this.parameters[0].from])
+                .sign(this.parameters[0],  moduleInstance.accounts.wallet[this.parameters[0].from], moduleInstance)
                 .then((response) => {
                     this.sendRawTransactionMethod.parameters = [response.rawTransaction];
                     this.sendRawTransactionMethod.execute(moduleInstance, promiEvent);

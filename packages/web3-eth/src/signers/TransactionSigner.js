@@ -38,12 +38,12 @@ export default class TransactionSigner {
      * Signs the transaction
      *
      * @param {Transaction} tx
-     * @param {AbstractWeb3Module} moduleInstance
      * @param {String} privateKey
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {Promise<Transaction>}
      */
-    async sign(tx, moduleInstance, privateKey) {
+    async sign(tx, privateKey, moduleInstance) {
         let result;
 
         if (this.isUndefinedOrNull(tx.chainId)) {

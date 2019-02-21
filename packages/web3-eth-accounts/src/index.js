@@ -20,10 +20,9 @@
  * @date 2018
  */
 
-import {MethodModuleFactory} from 'web3-core-method';
-import {ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
+import Wallet from './models/Wallet';
 import AccountsModuleFactory from './factories/AccountsModuleFactory';
 
 /**
@@ -31,16 +30,10 @@ import AccountsModuleFactory from './factories/AccountsModuleFactory';
  *
  * @method Accounts
  *
- * @params {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
- * @params {Object} options
+ * @params {TransactionSigner} transactionSigner
  *
  * @returns {Accounts}
  */
-export const Accounts = (provider, options) => {
-    return new AccountsModuleFactory(Utils, formatters).createAccounts(
-        provider,
-        new ProvidersModuleFactory(),
-        new MethodModuleFactory(),
-        options
-    );
+export const Accounts = (transactionSigner) => {
+    return new AccountsModuleFactory().createAccounts(Utils, formatters, transactionSigner, new Wallet(Utils));
 };

@@ -25,45 +25,23 @@ import Wallet from '../models/Wallet';
 
 export default class AccountsModuleFactory {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     *
-     * @constructor
-     */
-    constructor(utils, formatters) {
-        this.utils = utils;
-        this.formatters = formatters;
-    }
-
-    /**
      * Returns an object of type Accounts
      *
      * @method createAccounts
      *
      * @param {TransactionSigner} transactionSigner
      * @param {Wallet} wallet
+     * @param {Utils} utils
+     * @param {Object}formatters
      *
      * @returns {Accounts}
      */
-    createAccounts(transactionSigner, wallet) {
+    createAccounts(transactionSigner, wallet, utils, formatters) {
         return new Accounts(
             this.utils,
             this.formatters,
             transactionSigner,
             wallet
         );
-    }
-
-    /**
-     * Returns an object of type MethodFactory
-     *
-     * @method createMethodFactory
-     *
-     * @param {MethodModuleFactory} methodModuleFactory
-     *
-     * @returns {MethodFactory}
-     */
-    createMethodFactory(methodModuleFactory) {
-        return new MethodFactory(methodModuleFactory, this.utils, this.formatters);
     }
 }
