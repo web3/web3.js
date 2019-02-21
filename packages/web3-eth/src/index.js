@@ -20,9 +20,8 @@
  * @date 2018
  */
 
-import {MethodModuleFactory} from 'web3-core-method';
+import {MethodModuleFactory, SignMethod} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
-import {PromiEvent} from 'web3-core-promievent';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Accounts} from 'web3-eth-accounts';
 import {Ens} from 'web3-eth-ens';
@@ -47,27 +46,32 @@ import EthModuleFactory from './factories/EthModuleFactory';
  */
 export const Eth = (provider, options) => {
     const accounts = new Accounts(provider, options);
-
     const abiCoder = new AbiCoder();
-
     const methodModuleFactory = new MethodModuleFactory(accounts);
 
     return new EthModuleFactory(
+        Utils,
+        formatters,
+    ).createEthModule(
         provider,
         new ProvidersModuleFactory(),
         methodModuleFactory,
-        accounts,
-        PromiEvent,
-        Utils,
-        formatters,
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
-        abiCoder
-    ).createEthModule(
         new Network(provider, options),
+        accounts,
         new Personal(provider, accounts, options),
         Iban,
-        new Ens(provider, accounts),
+        abiCoder,
+        new Ens(provider, accounts, options),
         new SubscriptionsFactory(),
+        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
         options
     );
+};
+
+
+export const TransactionSigner = (wallet) => {
+    return new EthModuleFactory(
+        Utils,
+        formatters,
+    ).createTransactionSigner(wallet, new SignMethod());
 };

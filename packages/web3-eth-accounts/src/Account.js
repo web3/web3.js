@@ -25,7 +25,6 @@ import uuid from 'uuid';
 
 export default class Account {
     /**
-     * @param {Accounts} accounts
      * @param {Object} options
      *
      * @constructor
@@ -55,7 +54,7 @@ export default class Account {
      * @returns {Promise<Object>}
      */
     signTransaction(tx, callback) {
-        return this.accounts.signTransaction(tx, this.privateKey, callback);
+        return this.signTransaction(tx, this.privateKey, callback);
     }
 
     /**

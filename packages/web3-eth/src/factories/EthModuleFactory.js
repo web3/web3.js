@@ -23,41 +23,21 @@
 import MethodFactory from './MethodFactory';
 import Eth from '../Eth';
 import {GetGasPriceMethod} from '../../../web3-core-method/types';
+import TransactionSigner from '../signers/TransactionSigner';
 
 export default class EthModuleFactory {
     /**
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
-     * @param {Accounts} accounts
-     * @param {PromiEvent} PromiEvent
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {ContractModuleFactory} contractModuleFactory
-     * @param {AbiCoder} abiCoder
      *
      * @constructor
      */
     constructor(
-        provider,
-        providersModuleFactory,
-        methodModuleFactory,
-        accounts,
-        PromiEvent,
         utils,
         formatters,
-        contractModuleFactory,
-        abiCoder
     ) {
-        this.provider = provider;
-        this.providersModuleFactory = providersModuleFactory;
-        this.methodModuleFactory = methodModuleFactory;
-        this.accounts = accounts;
         this.utils = utils;
         this.formatters = formatters;
-        this.contractModuleFactory = contractModuleFactory;
-        this.PromiEvent = PromiEvent;
-        this.abiCoder = abiCoder;
     }
 
     /**
@@ -65,31 +45,49 @@ export default class EthModuleFactory {
      *
      * @method createEthModule
      *
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Network} net
+     * @param {Accounts} accounts
      * @param {Personal} personal
      * @param {Iban} iban
+     * @param {AbiCoder} abiCoder
      * @param {Ens} ens
      * @param {SubscriptionsFactory} subscriptionsFactory
+     * @param {ContractModuleFactory} contractModuleFactory
      * @param {Object} options
      *
      * @returns {Eth}
      */
-    createEthModule(net, personal, iban, ens, subscriptionsFactory, options) {
+    createEthModule(
+        provider,
+        providersModuleFactory,
+        methodModuleFactory,
+        net,
+        accounts,
+        personal,
+        iban,
+        abiCoder,
+        ens,
+        subscriptionsFactory,
+        contractModuleFactory,
+        options
+    ) {
         return new Eth(
-            this.provider,
-            this.providersModuleFactory,
-            this.methodModuleFactory,
+            providersModuleFactory,
+            methodModuleFactory,
             this.createMethodFactory(),
             net,
-            this.accounts,
+            accounts,
             personal,
             iban,
-            this.abiCoder,
+            abiCoder,
             ens,
             this.utils,
             this.formatters,
             subscriptionsFactory,
-            this.contractModuleFactory,
+            contractModuleFactory,
             options
         );
     }
@@ -105,16 +103,15 @@ export default class EthModuleFactory {
         return new MethodFactory(this.methodModuleFactory, this.utils, this.formatters);
     }
 
-
-    createGetGasPriceMethod() {
-        return new GetGasPriceMethod(this.utils, this.formatters);
-    }
-
-    createGetTransactionCountMethod() {
-        return new GetTransactionCountMethod(this.utils, this.formatters);
-    }
-
-    createVersionMethod() {
-        return new VersionMethod(this.utils, this.formatters);
+    /**
+     * Returns an object of type TransactionSigner
+     *
+     * @param {Wallet} wallet
+     * @param {SignMethod} signMethod
+     *
+     * @returns {TransactionSigner}
+     */
+    createTransactionSigner(wallet, signMethod) {
+        return new TransactionSigner(wallet, signMethod, this.formatters, this.utils);
     }
 }

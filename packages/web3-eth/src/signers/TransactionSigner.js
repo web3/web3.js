@@ -52,7 +52,6 @@ export default class TransactionSigner {
         }
 
         return this.signRemote(tx, moduleInstance);
-
     }
 
     /**
