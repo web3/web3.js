@@ -21,20 +21,17 @@
  */
 
 import AbstractCallMethod from '../../lib/methods/AbstractCallMethod';
+import Account from '../../../web3-eth-accounts/src/models/Account';
 
 export default class SignMethod extends AbstractCallMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {Accounts} accounts
-     * @param {MessageSigner} messageSigner
      *
      * @constructor
      */
-    constructor(utils, formatters, accounts, messageSigner) {
+    constructor(utils, formatters) {
         super('eth_sign', 2, utils, formatters);
-        this.accounts = accounts;
-        this.messageSigner = messageSigner;
     }
 
     /**
@@ -48,10 +45,10 @@ export default class SignMethod extends AbstractCallMethod {
      * @returns {Promise<Object|String>}
      */
     execute(moduleInstance) {
-        if (this.hasWallets()) {
+        if (moduleInstance.accounts && moduleInstance.accounts.wallet.length > 0) {
             this.beforeExecution(moduleInstance);
 
-            return this.signOnClient();
+            return this.signOnClient(moduleInstance);
         }
 
         return super.execute(moduleInstance);
@@ -62,13 +59,17 @@ export default class SignMethod extends AbstractCallMethod {
      *
      * @method signOnClient
      *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
      * @returns {Promise<String>}
      */
-    signOnClient() {
+    signOnClient(moduleInstance) {
         let signedMessage;
 
         try {
-            signedMessage = this.afterExecution(this.messageSigner.sign(this.parameters[0], this.parameters[1]));
+            signedMessage = Account.fromPrivateKey(
+                moduleInstance.accounts.wallet[this.parameters[1]]
+            ).sign(this.parameters[0]);
         } catch (error) {
             if (this.callback) {
                 this.callback(error, null);

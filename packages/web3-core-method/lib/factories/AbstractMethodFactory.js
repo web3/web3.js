@@ -89,15 +89,6 @@ export default class AbstractMethodFactory {
         /* eslint-disable new-cap */
         switch (method.Type) {
             case 'CALL':
-                if (method.name === 'SignMethod') {
-                    return new method(
-                        this.utils,
-                        this.formatters,
-                        this.methodModuleFactory.accounts,
-                        this.methodModuleFactory.createMessageSigner()
-                    );
-                }
-
                 return new method(this.utils, this.formatters);
             case 'SEND':
                 if (method.name === 'SendTransactionMethod') {
@@ -105,7 +96,6 @@ export default class AbstractMethodFactory {
                         this.utils,
                         this.formatters,
                         this.methodModuleFactory.createTransactionConfirmationWorkflow(),
-                        this.methodModuleFactory.createTransactionSigner(),
                         this.methodModuleFactory.createSendRawTransactionMethod()
                     );
                 }

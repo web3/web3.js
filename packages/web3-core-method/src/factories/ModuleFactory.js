@@ -24,22 +24,18 @@ import TransactionConfirmationWorkflow from '../workflows/TransactionConfirmatio
 import TransactionReceiptValidator from '../validators/TransactionReceiptValidator';
 import NewHeadsWatcher from '../watchers/NewHeadsWatcher';
 import MethodProxy from '../proxy/MethodProxy';
-import MessageSigner from '../signers/MessageSigner';
-import TransactionSigner from '../signers/TransactionSigner';
 import GetTransactionReceiptMethod from '../methods/transaction/GetTransactionReceiptMethod';
 import SendRawTransactionMethod from '../methods/transaction/SendRawTransactionMethod';
 
 export default class ModuleFactory {
     /**
-     * @param {Accounts} accounts
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(accounts, subscriptionsFactory, utils, formatters) {
-        this.accounts = accounts || {};
+    constructor(subscriptionsFactory, utils, formatters) {
         this.subscriptionsFactory = subscriptionsFactory;
         this.formatters = formatters;
         this.utils = utils;
@@ -57,17 +53,6 @@ export default class ModuleFactory {
      */
     createMethodProxy(target, methodFactory) {
         return new MethodProxy(target, methodFactory);
-    }
-
-    /**
-     * Returns the MessageSigner object
-     *
-     * @method createMessageSigner
-     *
-     * @returns {MessageSigner}
-     */
-    createMessageSigner() {
-        return new MessageSigner(this.accounts);
     }
 
     /**
