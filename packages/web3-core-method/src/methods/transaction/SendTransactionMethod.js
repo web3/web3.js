@@ -69,6 +69,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             if (!moduleInstance.defaultGasPrice) {
                 moduleInstance.currentProvider.send('eth_gasPrice', []).then((gasPrice) => {
                     this.parameters[0].gasPrice = gasPrice;
+
                     this.execute(moduleInstance, promiEvent);
                 });
 
@@ -81,11 +82,11 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         if (!this.parameters[0].nonce) {
             moduleInstance.getTransactionCount().then((count) => {
                 this.parameters[0].nonce = count;
-                
+
                 this.execute(moduleInstance, promiEvent);
             });
 
-            return promiEvent
+            return promiEvent;
         }
 
         if (this.isWeb3Signing(moduleInstance)) {
@@ -101,6 +102,8 @@ export default class SendTransactionMethod extends AbstractSendMethod {
 
         if (this.hasCustomSigner(moduleInstance)) {
             this.sendRawTransaction(this.formatTransactionForSigning(transaction), null, promiEvent, moduleInstance);
+
+            return promiEvent;
         }
 
         super.execute(moduleInstance, promiEvent);
@@ -108,6 +111,13 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         return promiEvent;
     }
 
+    /**
+     * Formats the transaction options object
+     *
+     * @param {Object} transaction
+     *
+     * @returns {Object}
+     */
     formatTransactionForSigning(transaction) {
         let transaction = this.parameters[0];
 
@@ -158,11 +168,31 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             });
     }
 
+    /**
+     * Checks if the current module has decrypted accounts
+     *
+     * @method isWeb3Signing
+     *
+     * @param moduleInstance
+     *
+     * @returns {Boolean}
+     */
     isWeb3Signing(moduleInstance) {
-        return moduleInstance.accounts && moduleInstance.accounts.wallet.length > 0;
+        return moduleInstance.accounts &&
+               moduleInstance.accounts.wallet.length > 0 &&
+               moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
     }
 
+    /**
+     * Checks if a custom signer is given.
+     *
+     * @method hasCustomerSigner
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Boolean}
+     */
     hasCustomSigner(moduleInstance) {
-        return moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
+        return moduleInstance.transactionSigner.constructor.name !== 'TransactionSigner';
     }
 }
