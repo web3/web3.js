@@ -22,11 +22,9 @@ import isString from 'lodash/isString';
 
 class Wallet {
     /**
-     * @param {Accounts} accounts
-     *
      * @constructor
      */
-    constructor(accountsModuleFacotry, utils) {
+    constructor() {
         this.utils = utils;
         this.length = 0;
         this.defaultKeyName = 'web3js_wallet';
@@ -77,7 +75,7 @@ class Wallet {
      * @returns {Wallet}
      */
     create(numberOfAccounts, entropy) {
-        const account = Account.from(entropy || this.utils.randomHex(32)));
+        const account = Account.from(entropy || this.utils.randomHex(32));
 
         for (let i = 0; i < numberOfAccounts; ++i) {
             this.add(account.privateKey);
@@ -91,7 +89,7 @@ class Wallet {
      *
      * @method add
      *
-     * @param {Object} account
+     * @param {Account} account
      *
      * @returns {Object}
      */
@@ -122,7 +120,7 @@ class Wallet {
      *
      * @param {String|Number} addressOrIndex
      *
-     * @returns {boolean}
+     * @returns {Boolean}
      */
     remove(addressOrIndex) {
         const account = this[addressOrIndex];
@@ -189,7 +187,7 @@ class Wallet {
      */
     decrypt(encryptedWallet, password) {
         encryptedWallet.forEach((keystore) => {
-            const account = this._accounts.decrypt(keystore, password);
+            const account = Account.fromV3Keystore(keystore, password);
 
             if (!account) {
                 throw new Error('Couldn\'t decrypt accounts. Password wrong?');

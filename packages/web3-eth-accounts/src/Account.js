@@ -11,48 +11,103 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-
-import scryptsy from 'scrypt.js';
-import isString from 'lodash/isString';
-import isObject from 'lodash/isObject';
-import {Account as EthAccount} from 'eth-lib/lib/account';
-import uuid from 'uuid';
-
 /**
  * @file Account.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
 
+import scryptsy from 'scrypt.js';
+import isString from 'lodash/isString';
+import isObject from 'lodash/isObject';
+import * as EthAccount from 'eth-lib/lib/account';// TODO: Remove this dependency
+import uuid from 'uuid';
+
 export default class Account {
-
-    constructor(accountOptions) {
-        this.address = accountOptions.address; // TODO: Add address validation here (if enough time create a Address VO)
-        this.privateKey = accountOptions.privateKey;
-        this.accountsModule = accounts;
+    /**
+     * @param {Accounts} accounts
+     * @param {Object} options
+     *
+     * @constructor
+     */
+    constructor(accounts, options) {
+        this.address = options.address; // TODO: Add address validation here (if enough time create a Address VO)
+        this.privateKey = options.privateKey;
+        this.accounts = accounts;
     }
 
+    /**
+     * This method does sign the given transaction with the current account
+     *
+     * @method signTransaction
+     *
+     * @param {Object} tx
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {Promise<SignedTransaction> | *}
+     */
     signTransaction(tx, callback) {
-        return this.accountsModule.signTransaction(tx, this.privateKey, callback);
+        return this.accounts.signTransaction(tx, this.privateKey, callback);
     }
 
+    /**
+     * This method does sign a given string with the current account.
+     *
+     * @method sign
+     *
+     * @param {String} data
+     *
+     * @returns {String}
+     */
     sign(data) {
-        return Account.sign(hash, this.privateKey);
+        return EthAccount.sign(hash, this.privateKey);
     }
 
+    /**
+     * This methods returns the EncryptedKeystoreV3Json object from the current account.
+     *
+     * @param {String} password
+     * @param {Object} options
+     *
+     * @returns {EncryptedKeystoreV3Json | {version, id, address, crypto}}
+     */
     encrypt(password, options) {
-        return this.accountsModule.encrypt(this.privateKey, password, options);
+        return Account.fromPrivateKey(this.privateKey).toV3Keystore(password, option);
     }
 
+    /**
+     * This static methods gives us the possibility to create a new account.
+     *
+     * @param {String} entropy
+     *
+     * @returns {Account}
+     */
     static from(entropy) {
         return new Account(EthAccount.create(entropy || this.utils.randomHex(32)));
     }
 
+    /**
+     * This static method gived us the possibility to create a Account object from a private key.
+     *
+     * @param {String} privateKey
+     *
+     * @returns {Account}
+     */
     static fromPrivateKey(privateKey) {
         return new Account(EthAccount.fromPrivate(privateKey));
     }
 
+    /**
+     * This method will map the current Account object to V3Keystore object.
+     *
+     * @method toV3Keystore
+     *
+     * @param {String} password
+     * @param {Object} options
+     *
+     * @returns {{version, id, address, crypto}}
+     */
     toV3Keystore(password, options) {
         options = options || {};
         const salt = options.salt || crypto.randomBytes(32);
@@ -111,11 +166,13 @@ export default class Account {
     }
 
     /**
-     * Decrypts account
+     * TODO: Clean up this method
+     *
+     * Returns an Account object by the given V3Keystore object.
      *
      * Note: Taken from https://github.com/ethereumjs/ethereumjs-wallet
      *
-     * @method decrypt
+     * @method fromV3Keystore
      *
      * @param {Object|String} v3Keystore
      * @param {String} password
@@ -123,7 +180,7 @@ export default class Account {
      *
      * @returns {Account}
      */
-    static fromV3Keystore(v3Keystore, password, nonStrict) {
+    static fromV3Keystore(v3Keystore, password, nonStrict = false) {
         if (!isString(password)) {
             throw new Error('No password given.');
         }

@@ -16,7 +16,7 @@
 */
 /**
  * @file Accounts.js
- * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2017
  */
 
@@ -28,27 +28,23 @@ import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import scryptsy from 'scrypt.js';
 import uuid from 'uuid';
-import {AbstractWeb3Module} from 'web3-core';
 const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto'); // TODO: This should moved later to the factory method
 
-export default class Accounts extends AbstractWeb3Module {
+//TODO: Rename Accounts module to Wallet and add the functionalities of the current Wallet class.
+export default class Accounts {
     /**
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AccountsModuleFactory} accountsModuleFactory
+     * @param {TransactionSigner} transactionSigner
+     * @param {Wallet} wallet
      * @param {Object} options
      *
      * @constructor
      */
-    constructor(provider, providersModuleFactory, utils, formatters, accountsModuleFactory, transactionSigner, options) {
-        super(provider, providersModuleFactory, null, null, options);
-
+    constructor(utils, formatters, transactionSigner, wallet, options) {
         this.utils = utils;
         this.formatters = formatters;
-        this.accountsModuleFactory = accountsModuleFactory;
-        this.wallet = this.accountsModuleFactory.createWallet(this);
+        this.wallet = wallet;
         this.transactionSigner = transactionSigner;
     }
 
@@ -75,7 +71,7 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Account}
      */
     privateKeyToAccount(privateKey) {
-        return Account.fromPrivateKey(privateKey));
+        return Account.fromPrivateKey(privateKey);
     }
 
 
@@ -94,10 +90,15 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Promise<Object>}
      */
     async signTransaction(tx, privateKey, callback) {
-
         try {
             const transaction = new Transaction(tx);
             const signedTransaction = await this.transactionSigner.sign(transaction, privateKey);
+
+            if (isFunction(callback)) {
+                callback(false, signedTransaction);
+            }
+
+            return signedTransaction;
         } catch (error) {
             if (isFunction(callback)) {
                 callback(error, null);
@@ -105,12 +106,6 @@ export default class Accounts extends AbstractWeb3Module {
 
             throw error;
         }
-
-        if (isFunction(callback)) {
-            callback(false, signedTransaction);
-        }
-
-        return signedTransaction;
     }
 
     /**
@@ -163,18 +158,7 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Object}
      */
     sign(data, privateKey) {
-        const hash = this.hashMessage(data);
-        const account = Account.fromPrivateKey(privateKey);
-        const vrs = account.decodeSignature(account.sign(hash));
-
-        return {
-            message: data,
-            messageHash: hash,
-            v: vrs[0],
-            r: vrs[1],
-            s: vrs[2],
-            signature
-        };
+        return Account.fromPrivateKey(privateKey).sign(data);
     }
 
     /**

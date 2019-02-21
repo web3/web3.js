@@ -50,10 +50,10 @@ export default class AccountsModuleFactory {
         return new Accounts(
             provider,
             providersModuleFactory,
-            methodModuleFactory,
-            this.createMethodFactory(methodModuleFactory),
             this.utils,
             this.formatters,
+            transactionSigner,
+            this.createWallet(),
             // const cryp = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
             options
         );
@@ -64,12 +64,10 @@ export default class AccountsModuleFactory {
      *
      * @method createWallet
      *
-     * @param {Accounts} accounts
-     *
      * @returns {Wallet}
      */
-    createWallet(accounts) {
-        return new Wallet(accounts);
+    createWallet() {
+        return new Wallet();
     }
 
     /**
@@ -77,13 +75,13 @@ export default class AccountsModuleFactory {
      *
      * @method createAccount
      *
-     * @param {object} accountOptions
+     * @param {Object} options
      * @param {Accounts} accounts
      *
      * @returns {Account}
      */
-    createAccount(accountOptions, accounts) {
-        return new Account(accountOptions, accounts)
+    createAccount(accounts, options) {
+        return new Account(accounts, options)
     }
 
     /**
