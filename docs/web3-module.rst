@@ -32,13 +32,14 @@ These ES6 classes are included in the example folder:
 - ``StarterContract``
 - ``StarterSubscription``
 
-===========
+================
 Modules API
-===========
+================
 
 These are the core modules which are providing all the classes for the Web3 Module API.
 
 - :ref:`web3-core <web3-core>`
 - :ref:`web3-core-method <web3-core-method>`
 - :ref:`web3-core-subscriptions <web3-core-subscriptions>`
+- :ref:`Contract <web3-module-contract>`
 
