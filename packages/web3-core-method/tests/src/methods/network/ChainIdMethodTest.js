@@ -6,9 +6,9 @@ import ChainIdMethod from '../../../../src/methods/network/ChainIdMethod';
 jest.mock('Utils');
 
 /**
- * PeerCountMethod test
+ * ChainIdMethod test
  */
-describe('PeerCountMethodTest', () => {
+describe('ChainIdMethodTest', () => {
     let method;
 
     beforeEach(() => {

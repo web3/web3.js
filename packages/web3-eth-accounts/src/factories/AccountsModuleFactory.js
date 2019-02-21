@@ -21,7 +21,6 @@
  */
 
 import Accounts from '../Accounts';
-import Wallet from '../models/Wallet';
 
 export default class AccountsModuleFactory {
     /**
@@ -37,11 +36,6 @@ export default class AccountsModuleFactory {
      * @returns {Accounts}
      */
     createAccounts(transactionSigner, wallet, utils, formatters) {
-        return new Accounts(
-            this.utils,
-            this.formatters,
-            transactionSigner,
-            wallet
-        );
+        return new Accounts(this.utils, this.formatters, transactionSigner, wallet);
     }
 }

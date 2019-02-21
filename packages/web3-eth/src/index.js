@@ -51,10 +51,7 @@ export const Eth = (provider, options) => {
     const abiCoder = new AbiCoder();
     const methodModuleFactory = new MethodModuleFactory();
 
-    return new EthModuleFactory(
-        Utils,
-        formatters,
-    ).createEthModule(
+    return new EthModuleFactory(Utils, formatters).createEthModule(
         provider,
         new ProvidersModuleFactory(),
         methodModuleFactory,

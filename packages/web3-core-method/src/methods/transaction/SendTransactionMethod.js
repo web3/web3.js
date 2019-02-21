@@ -33,12 +33,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      *
      * @constructor
      */
-    constructor(
-        utils,
-        formatters,
-        transactionConfirmationWorkflow,
-        sendRawTransactionMethod
-    ) {
+    constructor(utils, formatters, transactionConfirmationWorkflow, sendRawTransactionMethod) {
         super('eth_sendTransaction', 1, utils, formatters, transactionConfirmationWorkflow);
         this.sendRawTransactionMethod = sendRawTransactionMethod;
     }
@@ -72,12 +67,10 @@ export default class SendTransactionMethod extends AbstractSendMethod {
 
         if (!this.isGasPriceDefined()) {
             if (!this.hasDefaultGasPrice(moduleInstance)) {
-                moduleInstance.currentProvider
-                    .send('eth_gasPrice', [])
-                    .then((gasPrice) => {
-                        this.parameters[0]['gasPrice'] = gasPrice;
-                        this.execute(moduleInstance, promiEvent);
-                    });
+                moduleInstance.currentProvider.send('eth_gasPrice', []).then((gasPrice) => {
+                    this.parameters[0]['gasPrice'] = gasPrice;
+                    this.execute(moduleInstance, promiEvent);
+                });
 
                 return promiEvent;
             }
@@ -85,7 +78,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
         }
 
-        if (moduleInstance.accounts && moduleInstance.accounts.wallet.length > 0) {
+        if (moduleInstance.accounts && moduleInstance.accounts.wallet[this.parameters[0].from]) {
             this.sendRawTransaction(this.parameters[0], promiEvent, moduleInstance);
 
             return promiEvent;
@@ -124,7 +117,6 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             if (txProperties[1]) {
                 tx.nonce = txProperties[1];
             }
-
         });
 
         const transaction = this.formatters.txInputFormatter(tx);

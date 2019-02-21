@@ -31,10 +31,7 @@ export default class EthModuleFactory {
      *
      * @constructor
      */
-    constructor(
-        utils,
-        formatters,
-    ) {
+    constructor(utils, formatters) {
         this.utils = utils;
         this.formatters = formatters;
     }

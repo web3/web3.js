@@ -20,6 +20,7 @@
  * @date 2017
  */
 
+import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
 import isBoolean from 'lodash/isBoolean';
 import Hash from 'eth-lib/lib/hash';
@@ -27,8 +28,8 @@ import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import Account from './models/Account';
 
-//TODO: Rename Accounts module to Wallet and add the functionalities of the current Wallet class.
-//TODO: After this refactoring will it be possible to move the wallet class to the eth module and to remove the accounts module.
+// TODO: Rename Accounts module to Wallet and add the functionalities of the current Wallet class.
+// TODO: After this refactoring will it be possible to move the wallet class to the eth module and to remove the accounts module.
 export default class Accounts {
     /**
      * @param {Utils} utils
@@ -223,6 +224,6 @@ export default class Accounts {
      * @returns {Object}
      */
     encrypt(privateKey, password, options) {
-        return Account.fromPrivateKey(privateKey, this.transactionSigner).toV3Keystore(password, option);
+        return Account.fromPrivateKey(privateKey, this.transactionSigner).toV3Keystore(password, options);
     }
 }

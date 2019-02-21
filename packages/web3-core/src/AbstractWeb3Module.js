@@ -34,13 +34,7 @@ export default class AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(
-        provider,
-        providersModuleFactory,
-        methodModuleFactory = null,
-        methodFactory = null,
-        options = {}
-    ) {
+    constructor(provider, providersModuleFactory, methodModuleFactory = null, methodFactory = null, options = {}) {
         this.providersModuleFactory = providersModuleFactory;
         this.providerDetector = providersModuleFactory.createProviderDetector(); // TODO: detection of an provider and setting of givenProvider could be removed.
         this.providerResolver = providersModuleFactory.createProviderResolver();

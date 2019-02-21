@@ -396,7 +396,6 @@ export default class Eth extends AbstractWeb3Module {
         return (
             this.net.setProvider(provider, net) &&
             this.personal.setProvider(provider, net) &&
-            this.accounts.setProvider(provider, net) &&
             super.setProvider(provider, net) &&
             setContractProviders
         );

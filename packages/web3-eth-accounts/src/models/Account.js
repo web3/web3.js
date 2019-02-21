@@ -17,12 +17,12 @@
  * @date 2019
  */
 
-const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
 import scryptsy from 'scrypt.js';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
 import * as EthAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
+const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
 
 export default class Account {
     /**
@@ -55,7 +55,7 @@ export default class Account {
      * @returns {Promise<Object>}
      */
     signTransaction(tx) {
-        return this.transactionSigner.sign(new Transaction(tx), this.privateKey);
+        return this.transactionSigner.sign(tx, this.privateKey);
     }
 
     /**
@@ -68,7 +68,7 @@ export default class Account {
      * @returns {String}
      */
     sign(data) {
-        return EthAccount.sign(hash, this.privateKey);
+        return EthAccount.sign(data, this.privateKey);
     }
 
     /**
@@ -80,7 +80,7 @@ export default class Account {
      * @returns {EncryptedKeystoreV3Json | {version, id, address, crypto}}
      */
     encrypt(password, options) {
-        return Account.fromPrivateKey(this.privateKey, this.transactionSinger).toV3Keystore(password, option);
+        return Account.fromPrivateKey(this.privateKey, this.transactionSinger).toV3Keystore(password, options);
     }
 
     /**

@@ -31,14 +31,12 @@ import * as Utils from 'web3-utils';
 /**
  * Returns the ModuleFactory of the method module
  *
- * @param {Accounts} accounts
- *
  * @returns {ModuleFactory}
  *
  * @constructor
  */
-export const MethodModuleFactory = (accounts) => {
-    return new ModuleFactory(accounts, new SubscriptionsFactory(), Utils, formatters);
+export const MethodModuleFactory = () => {
+    return new ModuleFactory(new SubscriptionsFactory(), Utils, formatters);
 };
 
 export AbstractMethod from '../lib/methods/AbstractMethod';

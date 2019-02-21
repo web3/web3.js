@@ -67,9 +67,9 @@ export default class SignMethod extends AbstractCallMethod {
         let signedMessage;
 
         try {
-            signedMessage = Account.fromPrivateKey(
-                moduleInstance.accounts.wallet[this.parameters[1]]
-            ).sign(this.parameters[0]);
+            signedMessage = Account.fromPrivateKey(moduleInstance.accounts.wallet[this.parameters[1]]).sign(
+                this.parameters[0]
+            );
         } catch (error) {
             if (this.callback) {
                 this.callback(error, null);

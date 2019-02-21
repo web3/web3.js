@@ -19,8 +19,9 @@
 
 import has from 'lodash/has';
 import isString from 'lodash/isString';
+import Account from './Account';
 
-class Wallet {
+export default class Wallet {
     /**
      * @param {Utils} utils
      *
@@ -59,11 +60,13 @@ class Wallet {
      * @returns {Number[]}
      */
     _currentIndexes() {
-        return Object.keys(this).map((key) => {
-            return parseInt(key);
-        }).filter((n) => {
-            return n < 9e20;
-        });
+        return Object.keys(this)
+            .map((key) => {
+                return parseInt(key);
+            })
+            .filter((n) => {
+                return n < 9e20;
+            });
     }
 
     /**
@@ -91,7 +94,7 @@ class Wallet {
      *
      * @method add
      *
-     * @param {Account} account
+     * @param {Account|String} account
      *
      * @returns {Object}
      */
@@ -192,7 +195,7 @@ class Wallet {
             const account = Account.fromV3Keystore(keystore, password);
 
             if (!account) {
-                throw new Error('Couldn\'t decrypt accounts. Password wrong?');
+                throw new Error("Couldn't decrypt accounts. Password wrong?");
             }
 
             this.add(account);
@@ -213,7 +216,7 @@ class Wallet {
      */
     save(password, keyName) {
         if (typeof localStorage === 'undefined') {
-            throw new Error('window.localStorage is undefined.');
+            throw new TypeError('window.localStorage is undefined.');
         }
 
         try {
@@ -247,7 +250,7 @@ class Wallet {
      */
     load(password, keyName) {
         if (typeof localStorage === 'undefined') {
-            throw new Error('window.localStorage is undefined.');
+            throw new TypeError('window.localStorage is undefined.');
         }
 
         let keystore;

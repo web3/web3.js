@@ -37,4 +37,3 @@ import AccountsModuleFactory from './factories/AccountsModuleFactory';
 export const Accounts = (transactionSigner) => {
     return new AccountsModuleFactory().createAccounts(Utils, formatters, transactionSigner, new Wallet(Utils));
 };
-

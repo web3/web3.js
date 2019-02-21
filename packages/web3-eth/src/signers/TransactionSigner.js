@@ -26,12 +26,12 @@ export default class TransactionSigner {
     /**
      * Signs the transaction
      *
-     * @param {Transaction} tx
+     * @param {Transaction} transaction
      * @param {String} privateKey
      *
      * @returns {Promise<Transaction>}
      */
-    async sign(tx, privateKey) {
+    async sign(transaction, privateKey) {
         let result;
 
         const rlpEncoded = RLP.encode([
@@ -119,6 +119,6 @@ export default class TransactionSigner {
      * @returns {Boolean}
      */
     isUndefinedOrNull(value) {
-        return (typeof value === 'undefined' && value === null);
+        return typeof value === 'undefined' && value === null;
     }
 }
