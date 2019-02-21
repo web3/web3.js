@@ -54,8 +54,8 @@ export default class Account {
      *
      * @returns {Promise<Object>}
      */
-    async signTransaction(tx) {
-        return await this.transactionSigner.sign(new Transaction(tx), this.privateKey);
+    signTransaction(tx) {
+        return this.transactionSigner.sign(new Transaction(tx), this.privateKey);
     }
 
     /**

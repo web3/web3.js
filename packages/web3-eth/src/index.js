@@ -34,6 +34,8 @@ import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import EthModuleFactory from './factories/EthModuleFactory';
 
+export TransactionSigner from './signers/TransactionSigner';
+
 /**
  * Creates the Eth object
  *
@@ -47,7 +49,7 @@ import EthModuleFactory from './factories/EthModuleFactory';
 export const Eth = (provider, options) => {
     const accounts = new Accounts(provider, options);
     const abiCoder = new AbiCoder();
-    const methodModuleFactory = new MethodModuleFactory(accounts);
+    const methodModuleFactory = new MethodModuleFactory();
 
     return new EthModuleFactory(
         Utils,
@@ -66,12 +68,4 @@ export const Eth = (provider, options) => {
         new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
         options
     );
-};
-
-
-export const TransactionSigner = () => {
-    return new EthModuleFactory(
-        Utils,
-        formatters,
-    ).createTransactionSigner();
 };

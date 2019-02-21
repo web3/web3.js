@@ -22,7 +22,6 @@
 
 import MethodFactory from './MethodFactory';
 import Eth from '../Eth';
-import {GetGasPriceMethod} from '../../../web3-core-method/types';
 import TransactionSigner from '../signers/TransactionSigner';
 
 export default class EthModuleFactory {
@@ -75,9 +74,10 @@ export default class EthModuleFactory {
         options
     ) {
         return new Eth(
+            provider,
             providersModuleFactory,
             methodModuleFactory,
-            this.createMethodFactory(),
+            this.createMethodFactory(methodModuleFactory),
             net,
             accounts,
             personal,
@@ -88,6 +88,7 @@ export default class EthModuleFactory {
             this.formatters,
             subscriptionsFactory,
             contractModuleFactory,
+            new TransactionSigner(),
             options
         );
     }
@@ -99,16 +100,7 @@ export default class EthModuleFactory {
      *
      * @returns {MethodFactory}
      */
-    createMethodFactory() {
-        return new MethodFactory(this.methodModuleFactory, this.utils, this.formatters);
-    }
-
-    /**
-     * Returns an object of type TransactionSigner
-     *
-     * @returns {TransactionSigner}
-     */
-    createTransactionSigner() {
-        return new TransactionSigner(this.formatters, this.utils);
+    createMethodFactory(methodModuleFactory) {
+        return new MethodFactory(methodModuleFactory, this.utils, this.formatters);
     }
 }
