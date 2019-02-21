@@ -46,6 +46,12 @@ export default class Accounts {
         this.formatters = formatters;
         this.wallet = wallet;
         this.transactionSigner = transactionSigner;
+
+        return new Proxy(this, {
+            get: (target, name) => {
+                return target[name];
+            }
+        });
     }
 
     /**
