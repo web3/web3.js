@@ -20,10 +20,10 @@
 import scryptsy from 'scrypt.js';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
-import * as EthAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
+import {fromPrivate, create, sign, decodeSignature} from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
-import {isHexStrict, hexToBytes, randomHex} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
+import {isHexStrict, hexToBytes, randomHex, sha3} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
 
 export default class Account {
@@ -76,12 +76,12 @@ export default class Account {
         }
 
         const messageBuffer = Buffer.from(data);
-        const preamble = `\u0019Ethereum Signed Message:\n${message.length}`;
+        const preamble = `\u0019Ethereum Signed Message:\n${data.length}`;
         const preambleBuffer = Buffer.from(preamble);
         const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
         const hash = Hash.keccak256s(ethMessage);
-        const signature = EthAccount.sign(hash, this.privateKey);
-        const vrs = EthAccount.decodeSignature(signature);
+        const signature = sign(hash, this.privateKey);
+        const vrs = decodeSignature(signature);
 
         return {
             message: data,
@@ -113,8 +113,8 @@ export default class Account {
      *
      * @returns {Account}
      */
-    static from(entropy, accounts = null) {
-        return new Account(EthAccount.create(entropy || randomHex(32)), accounts.transactionSigner);
+    static from(entropy, accounts = {}) {
+        return new Account(create(entropy || randomHex(32)), accounts['transactionSigner']);
     }
 
     /**
@@ -125,8 +125,8 @@ export default class Account {
      *
      * @returns {Account}
      */
-    static fromPrivateKey(privateKey, accounts = null) {
-        return new Account(EthAccount.fromPrivate(privateKey), accounts.transactionSigner);
+    static fromPrivateKey(privateKey, accounts = {}) {
+        return new Account(fromPrivate(privateKey), accounts['transactionSigner']);
     }
 
     /**
@@ -175,9 +175,11 @@ export default class Account {
             cipher.final()
         ]);
 
-        const mac = this.utils
-            .sha3(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')]))
-            .replace('0x', '');
+        const mac = sha3(
+            Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')])
+        ).replace(
+            '0x', ''
+        );
 
         return {
             version: 3,
@@ -212,7 +214,7 @@ export default class Account {
      *
      * @returns {Account}
      */
-    static fromV3Keystore(v3Keystore, password, nonStrict = false, accounts = null) {
+    static fromV3Keystore(v3Keystore, password, nonStrict = false, accounts = {}) {
         if (!isString(password)) {
             throw new Error('No password given.');
         }
@@ -257,7 +259,7 @@ export default class Account {
 
         const ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
 
-        const mac = this.utils.sha3(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
+        const mac = sha3(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
         if (mac !== json.crypto.mac) {
             throw new Error('Key derivation failed - possibly wrong password');
         }

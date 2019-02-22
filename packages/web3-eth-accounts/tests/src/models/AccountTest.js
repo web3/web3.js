@@ -2,22 +2,37 @@ import scryptsy from 'scrypt.js';
 import crypto from 'crypto';
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
+import {fromPrivate, create, sign, decodeSignature} from 'eth-lib/lib/account';
+import {hexToBytes, isHexStrict, sha3} from 'web3-utils';
 import TransactionSigner from '../../__mocks__/TransactionSigner';
+import Accounts from '../../../src/Accounts';
 import Account from '../../../src/models/Account';
 
 // Mocks
-jest.mock('');
+jest.mock('eth-lib/lib/account');
+jest.mock('eth-lib/lib/hash');
+jest.mock('isHexStrict');
+jest.mock('hexToBytes');
+jest.mock('uuid');
+jest.mock('crypto');
+jest.mock('scryptsy');
+jest.mock('EthAccount');
+jest.mock('../../../src/Accounts');
 
 /**
  * AccountTest test
  */
-describe('AccountTestTest', () => {
-    let account, transactionSignerMock;
+describe('AccountTest', () => {
+    let account, accountsMock, transactionSignerMock;
 
     beforeEach(() => {
         transactionSignerMock = new TransactionSigner();
 
-        account = new Account({address: 'address', privateKey: 'pk'}, transactionSignerMock);
+        new Accounts();
+        accountsMock = Accounts.mock.instances[0];
+        accountsMock.transactionSigner = transactionSignerMock;
+
+        account = new Account({address: 'address', privateKey: 'pk'}, accountsMock);
     });
 
     it('constructor check', () => {
@@ -25,23 +40,27 @@ describe('AccountTestTest', () => {
 
         expect(account.privateKey).toEqual('pk');
 
-        expect(account.transactionSigner).toEqual(transactionSignerMock);
+        expect(account.accounts).toEqual(accountsMock);
     });
 
     it('calls signTransaction and returns the expected value', () => {
-        transactionSignerMock.sign.mockReturnValueOnce(true);
+        const callback = jest.fn();
 
-        expect(account.sign({})).toEqual(true);
+        accountsMock.signTransaction.mockReturnValueOnce(true);
 
-        expect(transactionSignerMock.sign).toHaveBeenCalledWith({}, 'pk');
+        expect(account.signTransaction({}, callback)).toEqual(true);
+
+        expect(accountsMock.signTransaction).toHaveBeenCalledWith({}, 'pk', callback);
     });
 
     it('calls sign with non-strict hex and returns the expected string', () => {
+        isHexStrict.mockReturnValue(false);
+
         Hash.keccak256s.mockReturnValueOnce('keccak');
 
-        Account.sign.mockReturnValueOnce('signed');
+        sign.mockReturnValueOnce('signed');
 
-        Account.decodeSignature.mockReturnValueOnce(['v', 'r', 's']);
+        decodeSignature.mockReturnValueOnce(['v', 'r', 's']);
 
         expect(account.sign('message')).toEqual({
             message: 'message',
@@ -59,23 +78,32 @@ describe('AccountTestTest', () => {
                 )
             );
 
-        expect(Account.sign).toHaveBeenCalledWith('keccak', 'pk');
+        expect(sign).toHaveBeenCalledWith('keccak', 'pk');
 
-        expect(Account.decodeSignature).toHaveBeenCalledWith('signed');
+        expect(decodeSignature).toHaveBeenCalledWith('signed');
+
+        expect(isHexStrict).toHaveBeenCalledWith('message');
     });
 
-    it('calls hashMessage with strict hex and returns the expected string', () => {
-        Utils.isHexStrict.mockReturnValueOnce(true);
+    it('calls sign with strict hex and returns the expected string', () => {
+        isHexStrict.mockReturnValue(true);
 
-        Utils.hexToBytes.mockReturnValueOnce('message');
+        hexToBytes.mockReturnValue('message');
 
         Hash.keccak256s.mockReturnValueOnce('keccak');
 
-        expect(accounts.hashMessage('data')).toEqual('keccak');
+        sign.mockReturnValueOnce('signed');
 
-        expect(Utils.isHexStrict).toHaveBeenCalledWith('data');
+        decodeSignature.mockReturnValueOnce(['v', 'r', 's']);
 
-        expect(Utils.hexToBytes).toHaveBeenCalledWith('data');
+        expect(account.sign('message')).toEqual({
+            message: 'message',
+            messageHash: 'keccak',
+            v: 'v',
+            r: 'r',
+            s: 's',
+            signature: 'signed'
+        });
 
         expect(Hash.keccak256s)
             .toHaveBeenCalledWith(
@@ -83,26 +111,17 @@ describe('AccountTestTest', () => {
                     [Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')]
                 )
             );
+
+        expect(sign).toHaveBeenCalledWith('keccak', 'pk');
+
+        expect(decodeSignature).toHaveBeenCalledWith('signed');
+
+        expect(hexToBytes).toHaveBeenCalledWith('message');
+
+        expect(isHexStrict).toHaveBeenCalledWith('message');
     });
 
-    it('calls hashMessage with non-strict hex and returns the expected string', () => {
-        Utils.isHexStrict.mockReturnValueOnce(false);
-
-        Hash.keccak256s.mockReturnValueOnce('keccak');
-
-        expect(accounts.hashMessage('message')).toEqual('keccak');
-
-        expect(Utils.isHexStrict).toHaveBeenCalledWith('message');
-
-        expect(Hash.keccak256s)
-            .toHaveBeenCalledWith(
-                Buffer.concat(
-                    [Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')]
-                )
-            );
-    });
-
-    it('calls decrypt and returns the expected object', () => {
+    it('calls the factory method fromV3Keystore and returns the expected Account class', () => {
         const json = {
             version: 3,
             crypto: {
@@ -123,17 +142,14 @@ describe('AccountTestTest', () => {
             }
         };
 
-        const object = {};
-
-        Account.fromPrivate = jest.fn((seed) => {
-            expect(seed).toEqual(`0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`);
-
-            return object;
+        fromPrivate.mockReturnValueOnce({
+            address: '0x0',
+            privateKey: '0x0'
         });
 
         scryptsy.mockReturnValueOnce(Buffer.from('00000000000000000000000000000000'));
 
-        Utils.sha3.mockReturnValueOnce('0xmac');
+        sha3.mockReturnValueOnce('0xmac');
 
         const decipher = {
             update: jest.fn(),
@@ -154,7 +170,9 @@ describe('AccountTestTest', () => {
             return decipher;
         });
 
-        expect(accounts.decrypt(json, 'password', false)).toEqual(object);
+        expect(Account.fromV3Keystore(json, 'password', false)).toBeInstanceOf(Account);
+
+        expect(fromPrivate).toHaveBeenLastCalledWith(`0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`);
 
         expect(scryptsy).toHaveBeenCalledWith(
             Buffer.from('password'),
@@ -165,7 +183,7 @@ describe('AccountTestTest', () => {
             'dklen'
         );
 
-        expect(Utils.sha3).toHaveBeenCalledWith(
+        expect(sha3).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
         );
 
@@ -174,15 +192,9 @@ describe('AccountTestTest', () => {
         expect(decipher.update).toHaveBeenCalledWith(Buffer.from(json.crypto.ciphertext, 'hex'));
 
         expect(decipher.final).toHaveBeenCalled();
-
-        expect(object.signTransaction).toBeInstanceOf(Function);
-
-        expect(object.sign).toBeInstanceOf(Function);
-
-        expect(object.encrypt).toBeInstanceOf(Function);
     });
 
-    it('calls decrypt with pbkdf2 and returns the expected object', () => {
+    it('calls the factory method fromV3Keystore with pbkdf2 and returns the expected object', () => {
         const json = {
             version: 3,
             crypto: {
@@ -202,15 +214,12 @@ describe('AccountTestTest', () => {
             }
         };
 
-        const object = {};
-
-        Account.fromPrivate = jest.fn((seed) => {
-            expect(seed).toEqual(`0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`);
-
-            return object;
+        fromPrivate.mockReturnValueOnce({
+            address: '0x0',
+            privateKey: '0x0'
         });
 
-        Utils.sha3.mockReturnValueOnce('0xmac');
+        sha3.mockReturnValueOnce('0xmac');
 
         const decipher = {
             update: jest.fn(),
@@ -245,11 +254,13 @@ describe('AccountTestTest', () => {
             return Buffer.from('00000000000000000000000000000000');
         });
 
-        expect(accounts.decrypt(json, 'password', false)).toEqual(object);
+        expect(Account.fromV3Keystore(json, 'password', false)).toBeInstanceOf(Account);
+
+        expect(fromPrivate).toHaveBeenCalledWith(`0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`);
 
         expect(crypto.pbkdf2Sync).toHaveBeenCalled();
 
-        expect(Utils.sha3).toHaveBeenCalledWith(
+        expect(sha3).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
         );
 
@@ -258,35 +269,29 @@ describe('AccountTestTest', () => {
         expect(decipher.update).toHaveBeenCalledWith(Buffer.from(json.crypto.ciphertext, 'hex'));
 
         expect(decipher.final).toHaveBeenCalled();
-
-        expect(object.signTransaction).toBeInstanceOf(Function);
-
-        expect(object.sign).toBeInstanceOf(Function);
-
-        expect(object.encrypt).toBeInstanceOf(Function);
     });
 
     it('calls decrypt and throws an error because of the missing password paramerter', () => {
         expect(() => {
-            accounts.decrypt('');
+            Account.fromV3Keystore('');
         }).toThrow('No password given.');
     });
 
     it('calls decrypt and throws an error because of a wrong keystore version', () => {
         expect(() => {
-            accounts.decrypt({version: 0}, 'password', false);
+            Account.fromV3Keystore({version: 0}, 'password', false);
         }).toThrow('Not a valid V3 wallet');
     });
 
     it('calls decrypt with pbkdf2 and throws an error because of a wrong PRF property', () => {
         expect(() => {
-            accounts.decrypt({version: 3, crypto: {kdf: 'pbkdf2', kdfparams: {prf: 'nope'}}}, 'password', false);
+            Account.fromV3Keystore({version: 3, crypto: {kdf: 'pbkdf2', kdfparams: {prf: 'nope'}}}, 'password', false);
         }).toThrow('Unsupported parameters to PBKDF2');
     });
 
     it('calls decrypt with unsupported scheme and throws an error', () => {
         expect(() => {
-            accounts.decrypt({version: 3, crypto: {kdf: 'asdf'}}, 'password', false);
+            Account.fromV3Keystore({version: 3, crypto: {kdf: 'asdf'}}, 'password', false);
         }).toThrow('Unsupported key derivation scheme');
     });
 
@@ -310,7 +315,7 @@ describe('AccountTestTest', () => {
             }
         };
 
-        Utils.sha3.mockReturnValueOnce('0xmac');
+        sha3.mockReturnValueOnce('0xmac');
 
         crypto.pbkdf2Sync = jest.fn((password, salt, c, dklen, sha256) => {
             expect(password).toEqual(Buffer.from(password));
@@ -327,29 +332,22 @@ describe('AccountTestTest', () => {
         });
 
         expect(() => {
-            accounts.decrypt(json, 'password', false);
+            Account.fromV3Keystore(json, 'password', false);
         }).toThrow('Key derivation failed - possibly wrong password');
 
         expect(crypto.pbkdf2Sync).toHaveBeenCalled();
 
-        expect(Utils.sha3).toHaveBeenCalledWith(
+        expect(sha3).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
         );
     });
 
-
-    it('calls encrypt and returns the expected object', () => {
-        const account = {
-            privateKey: '0xxx',
-            address: '0xA'
-        };
-
+    it('calls toV3Keystore and returns the expected object', () => {
         const options = {};
 
-        Account.fromPrivate = jest.fn((pk) => {
-            expect(pk).toEqual('pk');
-
-            return account;
+        fromPrivate.mockReturnValueOnce({
+            privateKey: '0xxx',
+            address: '0xA'
         });
 
         crypto.randomBytes.mockReturnValue(Buffer.from('random'));
@@ -367,11 +365,11 @@ describe('AccountTestTest', () => {
 
         scryptsy.mockReturnValueOnce(Buffer.from('0000000000000000'));
 
-        Utils.sha3.mockReturnValueOnce('0xmac');
+        sha3.mockReturnValueOnce('0xmac');
 
         uuid.v4.mockReturnValueOnce(0);
 
-        expect(accounts.encrypt('pk', 'password', options)).toEqual({
+        expect(Account.fromPrivateKey('pk').toV3Keystore('password', options)).toEqual({
             version: 3,
             id: 0,
             address: 'a',
@@ -391,6 +389,8 @@ describe('AccountTestTest', () => {
             }
         });
 
+        expect(fromPrivate).toHaveBeenCalledWith('pk');
+
         expect(crypto.randomBytes).toHaveBeenNthCalledWith(1, 32);
 
         expect(crypto.randomBytes).toHaveBeenNthCalledWith(2, 16);
@@ -409,7 +409,7 @@ describe('AccountTestTest', () => {
 
         expect(cipher.final).toHaveBeenCalled();
 
-        expect(Utils.sha3).toHaveBeenCalledWith(
+        expect(sha3).toHaveBeenCalledWith(
             Buffer.concat([
                 Buffer.from('0000000000000000').slice(16, 32),
                 Buffer.from(Buffer.concat([Buffer.from('0'), Buffer.from('0')]), 'hex')
@@ -419,19 +419,15 @@ describe('AccountTestTest', () => {
         expect(uuid.v4).toHaveBeenCalledWith({random: Buffer.from('random')});
     });
 
-    it('calls encrypt with the pbkdf2 sheme and returns the expected object', () => {
-        const account = {
-            privateKey: '0xxx',
-            address: '0xA'
-        };
-
+    it('calls toV3Keystore with the pbkdf2 sheme and returns the expected object', () => {
         const options = {kdf: 'pbkdf2'};
 
-        Account.fromPrivate = jest.fn((pk) => {
-            expect(pk).toEqual('pk');
-
-            return account;
-        });
+        fromPrivate.mockReturnValueOnce(
+            {
+                privateKey: '0xxx',
+                address: '0xA'
+            }
+        );
 
         crypto.randomBytes.mockReturnValue(Buffer.from('random'));
 
@@ -450,11 +446,11 @@ describe('AccountTestTest', () => {
             return Buffer.from('0000000000000000');
         });
 
-        Utils.sha3.mockReturnValueOnce('0xmac');
+        sha3.mockReturnValueOnce('0xmac');
 
         uuid.v4.mockReturnValueOnce(0);
 
-        expect(accounts.encrypt('pk', 'password', options)).toEqual({
+        expect(Account.fromPrivateKey('pk').toV3Keystore('password', options)).toEqual({
             version: 3,
             id: 0,
             address: 'a',
@@ -472,6 +468,8 @@ describe('AccountTestTest', () => {
                 mac: 'mac'
             }
         });
+
+        expect(fromPrivate).toHaveBeenCalledWith('pk');
 
         expect(crypto.randomBytes).toHaveBeenNthCalledWith(1, 32);
 
@@ -497,7 +495,7 @@ describe('AccountTestTest', () => {
 
         expect(cipher.final).toHaveBeenCalled();
 
-        expect(Utils.sha3).toHaveBeenCalledWith(
+        expect(sha3).toHaveBeenCalledWith(
             Buffer.concat([
                 Buffer.from('0000000000000000').slice(16, 32),
                 Buffer.from(Buffer.concat([Buffer.from('0'), Buffer.from('0')]), 'hex')
@@ -508,22 +506,18 @@ describe('AccountTestTest', () => {
     });
 
     it('calls encrypt with a unsupported sheme', () => {
-        const account = {
+        fromPrivate.mockReturnValueOnce({
             privateKey: '0xxx',
             address: '0xA'
-        };
-
-        Account.fromPrivate = jest.fn((pk) => {
-            expect(pk).toEqual('pk');
-
-            return account;
         });
 
         crypto.randomBytes.mockReturnValue(Buffer.from('random'));
 
         expect(() => {
-            accounts.encrypt('pk', 'password', {kdf: 'nope'});
+            Account.fromPrivateKey('pk').toV3Keystore('password', {kdf: 'nope'});
         }).toThrow('Unsupported kdf');
+
+        expect(fromPrivate).toHaveBeenCalledWith('pk');
 
         expect(crypto.randomBytes).toHaveBeenNthCalledWith(1, 32);
 
@@ -531,17 +525,11 @@ describe('AccountTestTest', () => {
     });
 
     it('calls encrypt with a unsupported cipher', () => {
-        const account = {
-            privateKey: '0xxx',
-            address: '0xA'
-        };
-
         const options = {kdf: 'pbkdf2'};
 
-        Account.fromPrivate = jest.fn((pk) => {
-            expect(pk).toEqual('pk');
-
-            return account;
+        fromPrivate.mockReturnValueOnce({
+            privateKey: '0xxx',
+            address: '0xA'
         });
 
         crypto.randomBytes.mockReturnValue(Buffer.from('random'));
@@ -552,11 +540,13 @@ describe('AccountTestTest', () => {
             return Buffer.from('0000000000000000');
         });
 
-        Utils.sha3.mockReturnValueOnce('0xmac');
+        sha3.mockReturnValueOnce('0xmac');
 
         expect(() => {
-            accounts.encrypt('pk', 'password', options);
+            Account.fromPrivateKey('pk').toV3Keystore('password', options);
         }).toThrow('Unsupported cipher');
+
+        expect(fromPrivate).toHaveBeenCalledWith('pk');
 
         expect(crypto.randomBytes).toHaveBeenNthCalledWith(1, 32);
 

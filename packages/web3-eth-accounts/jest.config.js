@@ -12,5 +12,6 @@ module.exports = jestConfig({
     'ChainIdMethod': 'web3-core-method',
     'GetTransactionCountMethod': 'web3-core-method',
     'MethodModuleFactory': 'web3-core-method',
+    'EthAccount': 'eth-lib/lib/account',
     'scryptsy': 'scrypt.js'
 });

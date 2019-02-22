@@ -7,7 +7,7 @@ import Bytes from 'eth-lib/lib/bytes';
 import scryptsy from 'scrypt.js';
 import crypto from 'crypto';
 import uuid from 'uuid';
-import * as EthAccount from 'eth-lib/lib/account';
+import {encodeSignature, recover} from 'eth-lib/lib/account';
 import {HttpProvider, ProviderDetector, ProviderResolver, ProvidersModuleFactory} from 'web3-providers';
 import TransactionSigner from '../__mocks__/TransactionSigner';
 import Wallet from '../../src/models/Wallet';
@@ -170,7 +170,7 @@ describe('AccountsTest', () => {
     it('calls recoverTransaction and returns the expected string', () => {
         RLP.decode.mockReturnValueOnce([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
-        EthAccount.encodeSignature.mockReturnValueOnce('signature');
+        encodeSignature.mockReturnValueOnce('signature');
 
         Bytes.toNumber.mockReturnValueOnce(40);
 
@@ -180,13 +180,13 @@ describe('AccountsTest', () => {
 
         Hash.keccak256.mockReturnValueOnce('hash');
 
-        EthAccount.recover.mockReturnValueOnce('recovered');
+        recover.mockReturnValueOnce('recovered');
 
 
         expect(accounts.recoverTransaction('rawTransaction')).toEqual('recovered');
 
 
-        expect(EthAccount.recover).toHaveBeenCalledWith('hash', 'signature');
+        expect(recover).toHaveBeenCalledWith('hash', 'signature');
 
         expect(Hash.keccak256).toHaveBeenCalledWith('encoded');
 
@@ -196,7 +196,7 @@ describe('AccountsTest', () => {
 
         expect(Bytes.toNumber).toHaveBeenCalledWith(6);
 
-        expect(EthAccount.encodeSignature).toHaveBeenCalledWith([6, 7, 8]);
+        expect(encodeSignature).toHaveBeenCalledWith([6, 7, 8]);
 
         expect(RLP.decode).toHaveBeenCalledWith('rawTransaction');
     });
@@ -220,7 +220,7 @@ describe('AccountsTest', () => {
 
         Hash.keccak256s.mockReturnValueOnce('keccak');
 
-        EthAccount.recover.mockReturnValueOnce('recovered');
+        recover.mockReturnValueOnce('recovered');
 
         expect(accounts.recover('message', 'signature', false)).toEqual('recovered');
 
@@ -233,13 +233,13 @@ describe('AccountsTest', () => {
                 )
             );
 
-        expect(EthAccount.recover).toHaveBeenCalledWith('keccak', 'signature');
+        expect(recover).toHaveBeenCalledWith('keccak', 'signature');
     });
 
     it('calls recover with a object as message and returns the expected value', () => {
-        EthAccount.recover.mockReturnValueOnce('recovered');
+        recover.mockReturnValueOnce('recovered');
 
-        EthAccount.encodeSignature.mockReturnValueOnce('signature');
+        encodeSignature.mockReturnValueOnce('signature');
 
         expect(
             accounts.recover(
@@ -254,21 +254,21 @@ describe('AccountsTest', () => {
             )
         ).toEqual('recovered');
 
-        expect(EthAccount.recover).toHaveBeenCalledWith('message', 'signature');
+        expect(recover).toHaveBeenCalledWith('message', 'signature');
 
-        expect(EthAccount.encodeSignature).toHaveBeenCalledWith(['v', 'r', 's']);
+        expect(encodeSignature).toHaveBeenCalledWith(['v', 'r', 's']);
     });
 
     it('calls recover with a string as message, preFixed is true and it returns the expected value', () => {
-        EthAccount.recover.mockReturnValueOnce('recovered');
+        recover.mockReturnValueOnce('recovered');
 
-        EthAccount.encodeSignature.mockReturnValueOnce('signature');
+        encodeSignature.mockReturnValueOnce('signature');
 
         expect(accounts.recover('message', 'v', 'r', 's', true)).toEqual('recovered');
 
-        expect(EthAccount.recover).toHaveBeenCalledWith('message', 'signature');
+        expect(recover).toHaveBeenCalledWith('message', 'signature');
 
-        expect(EthAccount.encodeSignature).toHaveBeenCalledWith(['v', 'r', 's']);
+        expect(encodeSignature).toHaveBeenCalledWith(['v', 'r', 's']);
     });
 
     it('calls decrypt and returns the expected value', () => {

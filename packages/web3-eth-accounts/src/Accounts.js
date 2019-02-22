@@ -26,7 +26,7 @@ import isBoolean from 'lodash/isBoolean';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
-import * as EthAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
+import {encodeSignature, recover} from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import {isHexStrict, hexToBytes} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 import {AbstractWeb3Module} from 'web3-core';
 import Account from './models/Account';
@@ -156,13 +156,13 @@ export default class Accounts extends AbstractWeb3Module {
      */
     recoverTransaction(rawTx) {
         const values = RLP.decode(rawTx);
-        const signature = EthAccount.encodeSignature(values.slice(6, 9));
+        const signature = encodeSignature(values.slice(6, 9));
         const recovery = Bytes.toNumber(values[6]);
         const extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
         const signingData = values.slice(0, 6).concat(extraData);
         const signingDataHex = RLP.encode(signingData);
 
-        return EthAccount.recover(Hash.keccak256(signingDataHex), signature);
+        return recover(Hash.keccak256(signingDataHex), signature);
     }
 
     /**
@@ -198,7 +198,7 @@ export default class Accounts extends AbstractWeb3Module {
         const args = [].slice.apply(arguments);
 
         if (isObject(message)) {
-            return this.recover(message.messageHash, EthAccount.encodeSignature([message.v, message.r, message.s]), true);
+            return this.recover(message.messageHash, encodeSignature([message.v, message.r, message.s]), true);
         }
 
         if (!preFixed) {
@@ -218,10 +218,10 @@ export default class Accounts extends AbstractWeb3Module {
             preFixed = args.slice(-1)[0];
             preFixed = isBoolean(preFixed) ? preFixed : false;
 
-            return this.recover(message, EthAccount.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
+            return this.recover(message, encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
         }
 
-        return EthAccount.recover(message, signature);
+        return recover(message, signature);
     }
 
     /**
