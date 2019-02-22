@@ -4,9 +4,6 @@ import {ChainIdMethod, GetGasPriceMethod, GetTransactionCountMethod} from 'web3-
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
-import scryptsy from 'scrypt.js';
-import crypto from 'crypto';
-import uuid from 'uuid';
 import {encodeSignature, recover} from 'eth-lib/lib/account';
 import {HttpProvider, ProviderDetector, ProviderResolver, ProvidersModuleFactory} from 'web3-providers';
 import TransactionSigner from '../__mocks__/TransactionSigner';
@@ -125,8 +122,9 @@ describe('AccountsTest', () => {
     });
 
     it('calls signTransaction and resolves with a promise', async () => {
-        const callback = jest.fn(),
-            signTransaction = jest.fn();
+        const callback = jest.fn();
+
+        const signTransaction = jest.fn();
 
         signTransaction.mockReturnValueOnce(Promise.resolve('signed-transaction'));
 
@@ -143,17 +141,17 @@ describe('AccountsTest', () => {
 
     it('calls signTransaction and rejects with a promise', async () => {
         const signTransaction = jest.fn();
-        signTransaction.mockReturnValueOnce(Promise.reject('ERROR'));
+        signTransaction.mockReturnValueOnce(Promise.reject(new Error('ERROR')));
 
         const callback = jest.fn();
 
         Account.fromPrivateKey.mockReturnValueOnce({signTransaction: signTransaction});
 
-        await expect(accounts.signTransaction({}, 'pk', callback)).rejects.toEqual('ERROR');
+        await expect(accounts.signTransaction({}, 'pk', callback)).rejects.toEqual(new Error('ERROR'));
 
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
-        expect(callback).toHaveBeenCalledWith('ERROR', null);
+        expect(callback).toHaveBeenCalledWith(new Error('ERROR'), null);
 
         expect(signTransaction).toHaveBeenCalledWith({});
     });
@@ -173,9 +171,7 @@ describe('AccountsTest', () => {
 
         recover.mockReturnValueOnce('recovered');
 
-
         expect(accounts.recoverTransaction('rawTransaction')).toEqual('recovered');
-
 
         expect(recover).toHaveBeenCalledWith('hash', 'signature');
 
@@ -217,12 +213,9 @@ describe('AccountsTest', () => {
 
         expect(isHexStrict).toHaveBeenCalledWith('message');
 
-        expect(Hash.keccak256s)
-            .toHaveBeenCalledWith(
-                Buffer.concat(
-                    [Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')]
-                )
-            );
+        expect(Hash.keccak256s).toHaveBeenCalledWith(
+            Buffer.concat([Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')])
+        );
 
         expect(recover).toHaveBeenCalledWith('keccak', 'signature');
     });
@@ -405,7 +398,7 @@ describe('AccountsTest', () => {
 
         expect(() => {
             accounts.wallet.decrypt([true], 'pw');
-        }).toThrow('Couldn\'t decrypt accounts. Password wrong?');
+        }).toThrow("Couldn't decrypt accounts. Password wrong?");
 
         expect(Account.fromV3Keystore).toHaveBeenCalledWith(true, 'pw', false, accounts);
     });

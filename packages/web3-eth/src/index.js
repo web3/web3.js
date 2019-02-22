@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {MethodModuleFactory, SignMethod} from 'web3-core-method';
+import {MethodModuleFactory} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Accounts} from 'web3-eth-accounts';

@@ -14,9 +14,7 @@ describe('TransactionSignerTestTest', () => {
         TransactionSignerTest = new TransactionSignerTest();
     });
 
-    it('constructor check', () => {
-
-    });
+    it('constructor check', () => {});
 
     it('calls signTransaction and returns a resolved promise', async () => {
         const callback = jest.fn();

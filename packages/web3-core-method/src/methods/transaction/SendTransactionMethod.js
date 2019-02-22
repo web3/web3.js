@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import isObject from 'lodash/isObject';
 import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
 
 // TODO: Clean up this method and move the signing and observing logic to the eth module
@@ -91,7 +90,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
 
         if (this.isWeb3Signing(moduleInstance)) {
             this.sendRawTransaction(
-                this.formatTransactionForSigning(),
+                this.formatTransactionForSigning(moduleInstance, promiEvent),
                 moduleInstance.accounts.wallet[this.parameters[0].from],
                 promiEvent,
                 moduleInstance
@@ -101,7 +100,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         }
 
         if (this.hasCustomSigner(moduleInstance)) {
-            this.sendRawTransaction(this.formatTransactionForSigning(), null, promiEvent, moduleInstance);
+            this.sendRawTransaction(this.formatTransactionForSigning(moduleInstance, promiEvent), null, promiEvent, moduleInstance);
 
             return promiEvent;
         }
@@ -114,10 +113,12 @@ export default class SendTransactionMethod extends AbstractSendMethod {
     /**
      * Formats the transaction options object
      *
+     * @param {Eth} moduleInstance
+     * @param {PromiEvent} promiEvent
      *
      * @returns {Object}
      */
-    formatTransactionForSigning() {
+    formatTransactionForSigning(moduleInstance, promiEvent) {
         if (this.parameters[0].chainId) {
             moduleInstance.getChainId().then((chainId) => {
                 this.parameters[0].chainId = chainId;
@@ -127,9 +128,9 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         }
 
         let transaction = this.formatters.txInputFormatter(this.parameters[0]);
-        transaction.to = tx.to || '0x';
-        transaction.data = tx.data || '0x';
-        transaction.value = tx.value || '0x';
+        transaction.to = transaction.to || '0x';
+        transaction.data = transaction.data || '0x';
+        transaction.value = transaction.value || '0x';
         transaction.chainId = this.utils.numberToHex(transaction.chainId);
 
         return transaction;
@@ -175,9 +176,11 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      * @returns {Boolean}
      */
     isWeb3Signing(moduleInstance) {
-        return moduleInstance.accounts &&
-               moduleInstance.accounts.wallet.length > 0 &&
-               moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
+        return (
+            moduleInstance.accounts &&
+            moduleInstance.accounts.wallet.length > 0 &&
+            moduleInstance.transactionSigner.constructor.name === 'TransactionSigner'
+        );
     }
 
     /**

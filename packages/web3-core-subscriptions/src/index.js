@@ -45,4 +45,3 @@ export SyncingSubscription from './subscriptions/eth/SyncingSubscription';
 
 // Shh
 export MessagesSubscription from './subscriptions/shh/MessagesSubscription';
-

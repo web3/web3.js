@@ -2,7 +2,7 @@ import scryptsy from 'scrypt.js';
 import crypto from 'crypto';
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
-import {fromPrivate, create, sign, decodeSignature} from 'eth-lib/lib/account';
+import {fromPrivate, sign, decodeSignature} from 'eth-lib/lib/account';
 import {hexToBytes, isHexStrict, sha3} from 'web3-utils';
 import TransactionSigner from '../../__mocks__/TransactionSigner';
 import Accounts from '../../../src/Accounts';
@@ -71,12 +71,9 @@ describe('AccountTest', () => {
             signature: 'signed'
         });
 
-        expect(Hash.keccak256s)
-            .toHaveBeenCalledWith(
-                Buffer.concat(
-                    [Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')]
-                )
-            );
+        expect(Hash.keccak256s).toHaveBeenCalledWith(
+            Buffer.concat([Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')])
+        );
 
         expect(sign).toHaveBeenCalledWith('keccak', 'pk');
 
@@ -105,12 +102,9 @@ describe('AccountTest', () => {
             signature: 'signed'
         });
 
-        expect(Hash.keccak256s)
-            .toHaveBeenCalledWith(
-                Buffer.concat(
-                    [Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')]
-                )
-            );
+        expect(Hash.keccak256s).toHaveBeenCalledWith(
+            Buffer.concat([Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')])
+        );
 
         expect(sign).toHaveBeenCalledWith('keccak', 'pk');
 
@@ -172,7 +166,9 @@ describe('AccountTest', () => {
 
         expect(Account.fromV3Keystore(json, 'password', false)).toBeInstanceOf(Account);
 
-        expect(fromPrivate).toHaveBeenLastCalledWith(`0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`);
+        expect(fromPrivate).toHaveBeenLastCalledWith(
+            `0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`
+        );
 
         expect(scryptsy).toHaveBeenCalledWith(
             Buffer.from('password'),
@@ -256,7 +252,9 @@ describe('AccountTest', () => {
 
         expect(Account.fromV3Keystore(json, 'password', false)).toBeInstanceOf(Account);
 
-        expect(fromPrivate).toHaveBeenCalledWith(`0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`);
+        expect(fromPrivate).toHaveBeenCalledWith(
+            `0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`
+        );
 
         expect(crypto.pbkdf2Sync).toHaveBeenCalled();
 
@@ -422,12 +420,10 @@ describe('AccountTest', () => {
     it('calls toV3Keystore with the pbkdf2 sheme and returns the expected object', () => {
         const options = {kdf: 'pbkdf2'};
 
-        fromPrivate.mockReturnValueOnce(
-            {
-                privateKey: '0xxx',
-                address: '0xA'
-            }
-        );
+        fromPrivate.mockReturnValueOnce({
+            privateKey: '0xxx',
+            address: '0xA'
+        });
 
         crypto.randomBytes.mockReturnValue(Buffer.from('random'));
 

@@ -219,7 +219,7 @@ export default class Accounts extends AbstractWeb3Module {
             const account = Account.fromV3Keystore(keystore, password, false, this);
 
             if (!account) {
-                throw new Error('Couldn\'t decrypt accounts. Password wrong?');
+                throw new Error("Couldn't decrypt accounts. Password wrong?");
             }
 
             this.add(account);
@@ -282,7 +282,7 @@ export default class Accounts extends AbstractWeb3Module {
             keystore = localStorage.getItem(keyName || this.defaultKeyName);
 
             if (keystore) {
-                keystore = JSON.parse(keystore).map(item => Account.fromV3Keystore(item, password, false, this));
+                keystore = JSON.parse(keystore).map((item) => Account.fromV3Keystore(item, password, false, this));
             }
         } catch (error) {
             // code 18 means trying to use local storage in a iframe
