@@ -1,21 +1,30 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {GetGasPriceMethod, GetTransactionCountMethod, VersionMethod} from 'web3-core-method';
+import {GetGasPriceMethod, GetTransactionCountMethod, ChainIdMethod} from 'web3-core-method';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import scryptsy from 'scrypt.js';
 import crypto from 'crypto';
 import uuid from 'uuid';
+import * as EthAccount from 'eth-lib/lib/account';
+import {HttpProvider, ProviderDetector, ProviderResolver, ProvidersModuleFactory} from 'web3-providers';
 import TransactionSigner from '../__mocks__/TransactionSigner';
 import Wallet from '../../src/models/Wallet';
 import Accounts from '../../src/Accounts';
 import Account from '../../src/models/Account';
-import * as EthAccount from 'eth-lib/lib/account';
+import {AbstractWeb3Module} from 'web3-core';
 
 // Mocks
 jest.mock('Utils');
 jest.mock('formatters');
+jest.mock('HttpProvider');
+jest.mock('ProviderDetector');
+jest.mock('ProviderResolver');
+jest.mock('ProvidersModuleFactory');
+jest.mock('GetGasPriceMethod');
+jest.mock('GetTransactionCountMethod');
+jest.mock('ChainIdMethod');
 jest.mock('eth-lib/lib/rlp');
 jest.mock('eth-lib/lib/nat');
 jest.mock('eth-lib/lib/bytes');
@@ -32,26 +41,79 @@ jest.mock('../../src/models/Account');
  */
 describe('AccountsTest', () => {
     let accounts,
-        transactionSignerMock,
-        walletMock;
+        providerMock,
+        providersModuleFactoryMock,
+        providerDetectorMock,
+        providerResolverMock,
+        walletMock,
+        chainIdMethodMock,
+        getGasPriceMethodMock,
+        getTransactionCountMethodMock,
+        options;
 
     beforeEach(() => {
-        transactionSignerMock = new TransactionSigner();
+        new HttpProvider();
+        providerMock = HttpProvider.mock.instances[0];
 
-        new Wallet(Utils);
+        new ProvidersModuleFactory();
+        providersModuleFactoryMock = ProvidersModuleFactory.mock.instances[0];
+
+        new ProviderDetector();
+        providerDetectorMock = ProviderDetector.mock.instances[0];
+        providerDetectorMock.detect = jest.fn(() => {
+            return null;
+        });
+
+        new ProviderResolver();
+        providerResolverMock = ProviderResolver.mock.instances[0];
+        providerResolverMock.resolve = jest.fn(() => {
+            return providerMock;
+        });
+
+        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce(providerDetectorMock);
+
+        providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce(providerResolverMock);
+
+        new Wallet();
         walletMock = Wallet.mock.instances[0];
 
-        accounts = new Accounts(transactionSignerMock, walletMock, Utils, formatters);
+        new ChainIdMethod();
+        chainIdMethodMock = ChainIdMethod.mock.instances[0];
+
+        new GetGasPriceMethod();
+        getGasPriceMethodMock = GetGasPriceMethod.mock.instances[0];
+
+        new GetTransactionCountMethod();
+        getTransactionCountMethodMock = GetTransactionCountMethod.mock.instances[0];
+
+        options =  {transactionSigner: new TransactionSigner()};
+
+        accounts = new Accounts(
+            providerMock,
+            providersModuleFactoryMock,
+            walletMock,
+            formatters,
+            chainIdMethodMock,
+            getGasPriceMethodMock,
+            getTransactionCountMethodMock,
+            options
+        );
     });
 
     it('constructor check', () => {
-        expect(accounts.utils).toEqual(Utils);
+        expect(accounts.wallet).toEqual(walletMock);
 
         expect(accounts.formatters).toEqual(formatters);
 
-        expect(accounts.wallet).toEqual(walletMock);
+        expect(accounts.chainIdMethod).toEqual(chainIdMethodMock);
 
-        expect(accounts.transactionSigner).toEqual(transactionSignerMock);
+        expect(accounts.getGasPriceMethod).toEqual(getGasPriceMethodMock);
+
+        expect(accounts.getTransactionCountMethod).toEqual(getTransactionCountMethodMock);
+
+        expect(accounts.transactionSigner).toEqual(options.transactionSigner);
+
+        expect(accounts).toBeInstanceOf(AbstractWeb3Module);
     });
 
     it('calls create with the entropy parameter and returns the expected object', () => {
@@ -59,7 +121,7 @@ describe('AccountsTest', () => {
 
         expect(accounts.create('entropy')).toEqual(true);
 
-        expect(Account.from).toHaveBeenCalledWith('entropy', transactionSignerMock);
+        expect(Account.from).toHaveBeenCalledWith('entropy', accounts);
     });
 
     it('calls privateKeyToAccount with the privateKey parameter and returns the expected object', () => {
@@ -67,7 +129,7 @@ describe('AccountsTest', () => {
 
         expect(accounts.privateKeyToAccount('pk')).toEqual(true);
 
-        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', transactionSignerMock);
+        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
     });
 
     it('calls signTransaction and resolves with a promise', async () => {
@@ -80,7 +142,7 @@ describe('AccountsTest', () => {
 
         await expect(accounts.signTransaction({}, 'pk', callback)).resolves.toEqual('signed-transaction');
 
-        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', transactionSignerMock);
+        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
         expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
 
@@ -97,7 +159,7 @@ describe('AccountsTest', () => {
 
         await expect(accounts.signTransaction({}, 'pk', callback)).rejects.toEqual('ERROR');
 
-        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', transactionSignerMock);
+        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
         expect(callback).toHaveBeenCalledWith('ERROR', null);
 
@@ -149,7 +211,7 @@ describe('AccountsTest', () => {
 
         expect(sign).toHaveBeenCalledWith('data');
 
-        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', transactionSignerMock);
+        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
     });
 
     it('calls recover with a string as message and returns the expected value', () => {
@@ -213,7 +275,7 @@ describe('AccountsTest', () => {
 
         expect(accounts.decrypt('v3Keystore', 'password', false)).toEqual(true);
 
-        expect(Account.fromV3Keystore).toHaveBeenCalledWith('v3Keystore', 'password', false, transactionSignerMock);
+        expect(Account.fromV3Keystore).toHaveBeenCalledWith('v3Keystore', 'password', false, accounts);
     });
 
     it('calls encrypt and returns the expected value', () => {
@@ -225,7 +287,7 @@ describe('AccountsTest', () => {
 
         expect(accounts.encrypt('pk', 'password', {})).toEqual(true);
 
-        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', transactionSignerMock);
+        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
         expect(toV3Keystore).toHaveBeenCalledWith('password', {});
     });

@@ -109,24 +109,24 @@ export default class Account {
      * This static methods gives us the possibility to create a new account.
      *
      * @param {String} entropy
-     * @param {TransactionSigner} transactionSigner
+     * @param {Accounts} accounts
      *
      * @returns {Account}
      */
-    static from(entropy, transactionSigner = null) {
-        return new Account(EthAccount.create(entropy || randomHex(32)), this.accounts.transactionSigner);
+    static from(entropy, accounts = null) {
+        return new Account(EthAccount.create(entropy || randomHex(32)), accounts.transactionSigner);
     }
 
     /**
      * This static method gived us the possibility to create a Account object from a private key.
      *
      * @param {String} privateKey
-     * @param {TransactionSigner} transactionSigner
+     * @param {Accounts} accounts
      *
      * @returns {Account}
      */
-    static fromPrivateKey(privateKey, transactionSigner = null) {
-        return new Account(EthAccount.fromPrivate(privateKey), this.accounts.transactionSigner);
+    static fromPrivateKey(privateKey, accounts = null) {
+        return new Account(EthAccount.fromPrivate(privateKey), accounts.transactionSigner);
     }
 
     /**
@@ -208,11 +208,11 @@ export default class Account {
      * @param {Object|String} v3Keystore
      * @param {String} password
      * @param {Boolean} nonStrict
-     * @param {TransactionSigner} transactionSigner
+     * @param {Accounts} accounts
      *
      * @returns {Account}
      */
-    static fromV3Keystore(v3Keystore, password, nonStrict = false, transactionSigner = null) {
+    static fromV3Keystore(v3Keystore, password, nonStrict = false, accounts = null) {
         if (!isString(password)) {
             throw new Error('No password given.');
         }
@@ -269,6 +269,6 @@ export default class Account {
         );
         const seed = `0x${Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex')}`;
 
-        return this.fromPrivateKey(seed, this.accounts.transactionSigner);
+        return this.fromPrivateKey(seed, accounts);
     }
 }
