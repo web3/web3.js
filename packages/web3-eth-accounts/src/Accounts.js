@@ -27,14 +27,13 @@ import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import {encodeSignature, recover} from 'eth-lib/lib/account'; // TODO: Remove this dependency
-import {isHexStrict, hexToBytes} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
+import {isHexStrict, hexToBytes, randomHex} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 import {AbstractWeb3Module} from 'web3-core';
 import Account from './models/Account';
 import has from 'lodash/has';
 import isString from 'lodash/isString';
 
-// TODO: Rename Accounts module to Wallet and add the functionalities of the current Wallet class.
-// TODO: After this refactoring is it possible to move the wallet class to the eth module and to remove the accounts module.
+// TODO: Rename Accounts module to Wallet and move the Wallet class to the eth module.
 export default class Accounts extends AbstractWeb3Module {
     /**
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
@@ -64,6 +63,8 @@ export default class Accounts extends AbstractWeb3Module {
         this.chainIdMethod = chainIdMethod;
         this.getGasPriceMethod = getGasPriceMethod;
         this.getTransactionCountMethod = getTransactionCountMethod;
+        this.defaultKeyName = 'web3js_wallet';
+        this.accounts = [];
 
         /**
          * This is for compatibility reasons and will be removed later when it got added to the eth-module
@@ -94,43 +95,6 @@ export default class Accounts extends AbstractWeb3Module {
         });
     }
 
-
-    /**
-     * Finds the safe index
-     *
-     * @method findSafeIndex
-     * @private
-     *
-     * @param {Number} pointer
-     *
-     * @returns {*}
-     */
-    findSafeIndexWallet(pointer = 0) {
-        if (has(this, pointer)) {
-            return this.findSafeIndex(pointer + 1);
-        }
-
-        return pointer;
-    }
-
-    /**
-     * Gets the correntIndexes array
-     *
-     * @method currentIndexes
-     * @private
-     *
-     * @returns {Number[]}
-     */
-    currentIndexesWallet() {
-        return Object.keys(this)
-            .map((key) => {
-                return parseInt(key);
-            })
-            .filter((n) => {
-                return n < 9e20;
-            });
-    }
-
     /**
      * Creates new accounts with a given entropy
      *
@@ -142,7 +106,7 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Wallet}
      */
     addGeneratedAccountsToWallet(numberOfAccounts, entropy) {
-        const account = Account.from(entropy || randomHex(32));
+        const account = Account.from(entropy || randomHex(32), this);
 
         for (let i = 0; i < numberOfAccounts; ++i) {
             this.add(account.privateKey);
@@ -158,21 +122,17 @@ export default class Accounts extends AbstractWeb3Module {
      *
      * @param {Account|String} account
      *
-     * @returns {Object}
+     * @returns {Wallet}
      */
     add(account) {
         if (isString(account)) {
-            account = Account.fromPrivateKey(account);
+            account = Account.fromPrivateKey(account, this);
         }
 
         if (!this[account.address]) {
-            account.index = this.findSafeIndex();
-
-            this[account.index] = account;
-            this[account.address] = account;
-            this[account.address.toLowerCase()] = account;
-
-            this.length++;
+            this.accounts.push(account);
+            this.accounts[account.address] = account;
+            this.accounts[account.address.toLowerCase()] = account;
 
             return account;
         }
@@ -190,20 +150,15 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     remove(addressOrIndex) {
-        const account = this[addressOrIndex];
+        const account =  this.accounts[addressOrIndex];
 
         if (account && account.address) {
-            // address
-            this[account.address].privateKey = null;
-            delete this[account.address];
-            // address lowercase
-            this[account.address.toLowerCase()].privateKey = null;
-            delete this[account.address.toLowerCase()];
-            // index
-            this[account.index].privateKey = null;
-            delete this[account.index];
+            delete this.accounts[account.address];
+            delete this.accounts[account.address.toLowerCase()];
 
-            this.length--;
+            const index = this.accounts.findIndex(item => item.address === account.address);
+
+            delete this.accounts[index];
 
             return true;
         }
@@ -251,8 +206,8 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Wallet}
      */
     decryptWallet(encryptedWallet, password) {
-        encryptedWallet.accounts.forEach((keystore) => {
-            const account = Account.fromV3Keystore(keystore, password);
+        encryptedWallet.forEach((keystore) => {
+            const account = Account.fromV3Keystore(keystore, password, false, this);
 
             if (!account) {
                 throw new Error("Couldn't decrypt accounts. Password wrong?");
@@ -280,7 +235,7 @@ export default class Accounts extends AbstractWeb3Module {
         }
 
         try {
-            localStorage.setItem(keyName || this.defaultKeyName, JSON.stringify(this.encrypt(password)));
+            localStorage.setItem(keyName || this.defaultKeyName, JSON.stringify(this.encryptWallet(password)));
         } catch (error) {
             // code 18 means trying to use local storage in a iframe
             // with third party cookies turned off
@@ -318,7 +273,7 @@ export default class Accounts extends AbstractWeb3Module {
             keystore = localStorage.getItem(keyName || this.defaultKeyName);
 
             if (keystore) {
-                keystore = JSON.parse(keystore).map(item => Account.fromV3Keystore(item, password, false));
+                keystore = JSON.parse(keystore).map(item => Account.fromV3Keystore(item, password, false, this));
             }
         } catch (error) {
             // code 18 means trying to use local storage in a iframe
@@ -334,7 +289,7 @@ export default class Accounts extends AbstractWeb3Module {
             }
         }
 
-        return this.decrypt(keystore || [], password);
+        return this.decryptWallet(keystore || [], password);
     }
 
     /**
