@@ -28,22 +28,21 @@ import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import Account from './models/Account';
 import * as EthAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
+import {isHexStrict, hexToBytes} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 
 // TODO: Rename Accounts module to Wallet and add the functionalities of the current Wallet class.
-// TODO: After this refactoring will it be possible to move the wallet class to the eth module and to remove the accounts module.
+// TODO: After this refactoring is it possible to move the wallet class to the eth module and to remove the accounts module.
 export default class Accounts {
     /**
      * @param {TransactionSigner} transactionSigner
      * @param {Wallet} wallet
-     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(transactionSigner, wallet, utils, formatters) {
-        this.wallet = wallet;
+    constructor(transactionSigner, wallet, formatters) {
         this.transactionSigner = transactionSigner;
-        this.utils = utils;
+        this.wallet = wallet;
         this.formatters = formatters;
 
         return new Proxy(this, {
@@ -132,25 +131,6 @@ export default class Accounts {
     }
 
     /**
-     * Hashes a given message
-     *
-     * @method hashMessage
-     *
-     * @param {String} data
-     *
-     * @returns {String}
-     */
-    hashMessage(data) {
-        const message = this.utils.isHexStrict(data) ? this.utils.hexToBytes(data) : data;
-        const messageBuffer = Buffer.from(message);
-        const preamble = `\u0019Ethereum Signed Message:\n${message.length}`;
-        const preambleBuffer = Buffer.from(preamble);
-        const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
-
-        return Hash.keccak256s(ethMessage);
-    }
-
-    /**
      * Signs a string with the given privateKey
      *
      * @method sign
@@ -161,7 +141,11 @@ export default class Accounts {
      * @returns {Object}
      */
     sign(data, privateKey) {
-        return Account.fromPrivateKey(privateKey, this.transactionSigner).sign(data);
+        if (isHexStrict(data)) {
+            data = hexToBytes(data);
+        }
+
+        return Account.fromPrivateKey(privateKey).sign(data);
     }
 
     /**
@@ -183,7 +167,16 @@ export default class Accounts {
         }
 
         if (!preFixed) {
-            message = this.hashMessage(message);
+            if (isHexStrict(message)) {
+                message = hexToBytes(message);
+            }
+
+            const messageBuffer = Buffer.from(message);
+            const preamble = `\u0019Ethereum Signed Message:\n${message.length}`;
+            const preambleBuffer = Buffer.from(preamble);
+            const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
+
+            message = Hash.keccak256s(ethMessage);
         }
 
         if (args.length >= 4) {

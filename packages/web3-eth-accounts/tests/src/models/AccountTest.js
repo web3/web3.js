@@ -1,36 +1,49 @@
-// Mocks
-import Account from '../../../src/models/Account';
 import scryptsy from 'scrypt.js';
-import crypto from "crypto";
+import crypto from 'crypto';
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
+import TransactionSigner from '../../__mocks__/TransactionSigner';
+import Account from '../../../src/models/Account';
 
+// Mocks
 jest.mock('');
 
 /**
  * AccountTest test
  */
 describe('AccountTestTest', () => {
-    let AccountTest;
+    let account, transactionSignerMock;
 
     beforeEach(() => {
-        AccountTest = new AccountTest();
+        transactionSignerMock = new TransactionSigner();
+
+        account = new Account({address: 'address', privateKey: 'pk'}, transactionSignerMock);
     });
 
     it('constructor check', () => {
+        expect(account.address).toEqual('address');
 
+        expect(account.privateKey).toEqual('pk');
+
+        expect(account.transactionSigner).toEqual(transactionSignerMock);
+    });
+
+    it('calls signTransaction and returns the expected value', () => {
+        transactionSignerMock.sign.mockReturnValueOnce(true);
+
+        expect(account.sign({})).toEqual(true);
+
+        expect(transactionSignerMock.sign).toHaveBeenCalledWith({}, 'pk');
     });
 
     it('calls sign with non-strict hex and returns the expected string', () => {
-        Utils.isHexStrict.mockReturnValueOnce(false);
-
         Hash.keccak256s.mockReturnValueOnce('keccak');
 
         Account.sign.mockReturnValueOnce('signed');
 
         Account.decodeSignature.mockReturnValueOnce(['v', 'r', 's']);
 
-        expect(accounts.sign('message', 'pk')).toEqual({
+        expect(account.sign('message')).toEqual({
             message: 'message',
             messageHash: 'keccak',
             v: 'v',
@@ -38,8 +51,6 @@ describe('AccountTestTest', () => {
             s: 's',
             signature: 'signed'
         });
-
-        expect(Utils.isHexStrict).toHaveBeenCalledWith('message');
 
         expect(Hash.keccak256s)
             .toHaveBeenCalledWith(
@@ -51,6 +62,44 @@ describe('AccountTestTest', () => {
         expect(Account.sign).toHaveBeenCalledWith('keccak', 'pk');
 
         expect(Account.decodeSignature).toHaveBeenCalledWith('signed');
+    });
+
+    it('calls hashMessage with strict hex and returns the expected string', () => {
+        Utils.isHexStrict.mockReturnValueOnce(true);
+
+        Utils.hexToBytes.mockReturnValueOnce('message');
+
+        Hash.keccak256s.mockReturnValueOnce('keccak');
+
+        expect(accounts.hashMessage('data')).toEqual('keccak');
+
+        expect(Utils.isHexStrict).toHaveBeenCalledWith('data');
+
+        expect(Utils.hexToBytes).toHaveBeenCalledWith('data');
+
+        expect(Hash.keccak256s)
+            .toHaveBeenCalledWith(
+                Buffer.concat(
+                    [Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')]
+                )
+            );
+    });
+
+    it('calls hashMessage with non-strict hex and returns the expected string', () => {
+        Utils.isHexStrict.mockReturnValueOnce(false);
+
+        Hash.keccak256s.mockReturnValueOnce('keccak');
+
+        expect(accounts.hashMessage('message')).toEqual('keccak');
+
+        expect(Utils.isHexStrict).toHaveBeenCalledWith('message');
+
+        expect(Hash.keccak256s)
+            .toHaveBeenCalledWith(
+                Buffer.concat(
+                    [Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')]
+                )
+            );
     });
 
     it('calls decrypt and returns the expected object', () => {

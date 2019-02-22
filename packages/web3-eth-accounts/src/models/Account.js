@@ -22,17 +22,19 @@ import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
 import * as EthAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
+import Hash from 'eth-lib/lib/hash';
+import {isHexStrict, hexToBytes} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
 
 export default class Account {
     /**
-     * @param {Object} options
+     * @param {Object} options TODO: Pass a Address VO in the options
      * @param {TransactionSigner} transactionSigner
      *
      * @constructor
      */
-    constructor(options, transactionSigner) {
-        this.address = options.address; // TODO: Add address validation here (if enough time create a Address VO)
+    constructor(options, transactionSigner = null) {
+        this.address = options.address;
         this.privateKey = options.privateKey;
         this.transactionSinger = transactionSigner;
 
@@ -68,7 +70,26 @@ export default class Account {
      * @returns {String}
      */
     sign(data) {
-        return EthAccount.sign(data, this.privateKey);
+        if (isHexStrict(data)) {
+            data = hexToBytes(data);
+        }
+
+        const messageBuffer = Buffer.from(data);
+        const preamble = `\u0019Ethereum Signed Message:\n${message.length}`;
+        const preambleBuffer = Buffer.from(preamble);
+        const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
+        const hash = Hash.keccak256s(ethMessage);
+        const signature = EthAccount.sign(hash, this.privateKey);
+        const vrs = EthAccount.decodeSignature(signature);
+
+        return {
+            message: data,
+            messageHash: hash,
+            v: vrs[0],
+            r: vrs[1],
+            s: vrs[2],
+            signature
+        };
     }
 
     /**
@@ -91,7 +112,7 @@ export default class Account {
      *
      * @returns {Account}
      */
-    static from(entropy, transactionSigner) {
+    static from(entropy, transactionSigner = null) {
         return new Account(EthAccount.create(entropy || this.utils.randomHex(32)), transactionSigner);
     }
 
@@ -103,8 +124,8 @@ export default class Account {
      *
      * @returns {Account}
      */
-    static fromPrivateKey(privateKey, transactionSigner) {
-        return new Account(EthAccount.fromPrivate(privateKey), transactionSigner);
+    static fromPrivateKey(privateKey, transactionSigner = null) {
+        return new Account(EthAccount.fromPrivate(privateKey), transactionSigner = null);
     }
 
     /**
@@ -190,7 +211,7 @@ export default class Account {
      *
      * @returns {Account}
      */
-    static fromV3Keystore(v3Keystore, password, nonStrict = false, transactionSigner) {
+    static fromV3Keystore(v3Keystore, password, nonStrict = false, transactionSigner = null) {
         if (!isString(password)) {
             throw new Error('No password given.');
         }

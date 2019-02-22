@@ -138,44 +138,6 @@ describe('AccountsTest', () => {
         expect(RLP.decode).toHaveBeenCalledWith('rawTransaction');
     });
 
-    it('calls hashMessage with strict hex and returns the expected string', () => {
-        Utils.isHexStrict.mockReturnValueOnce(true);
-
-        Utils.hexToBytes.mockReturnValueOnce('message');
-
-        Hash.keccak256s.mockReturnValueOnce('keccak');
-
-        expect(accounts.hashMessage('data')).toEqual('keccak');
-
-        expect(Utils.isHexStrict).toHaveBeenCalledWith('data');
-
-        expect(Utils.hexToBytes).toHaveBeenCalledWith('data');
-
-        expect(Hash.keccak256s)
-            .toHaveBeenCalledWith(
-                Buffer.concat(
-                    [Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')]
-                )
-            );
-    });
-
-    it('calls hashMessage with non-strict hex and returns the expected string', () => {
-        Utils.isHexStrict.mockReturnValueOnce(false);
-
-        Hash.keccak256s.mockReturnValueOnce('keccak');
-
-        expect(accounts.hashMessage('message')).toEqual('keccak');
-
-        expect(Utils.isHexStrict).toHaveBeenCalledWith('message');
-
-        expect(Hash.keccak256s)
-            .toHaveBeenCalledWith(
-                Buffer.concat(
-                    [Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')]
-                )
-            );
-    });
-
     it('calls sign and returns the expected value', () => {
         const sign = jest.fn();
 

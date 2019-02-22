@@ -30,12 +30,11 @@ export default class AccountsModuleFactory {
      *
      * @param {TransactionSigner} transactionSigner
      * @param {Wallet} wallet
-     * @param {Utils} utils
      * @param {Object}formatters
      *
      * @returns {Accounts}
      */
-    createAccounts(transactionSigner, wallet, utils, formatters) {
-        return new Accounts(this.utils, this.formatters, transactionSigner, wallet);
+    createAccounts(transactionSigner, wallet, formatters) {
+        return new Accounts(transactionSigner, wallet, formatters);
     }
 }
