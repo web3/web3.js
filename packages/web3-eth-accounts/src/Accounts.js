@@ -37,10 +37,9 @@ export default class Accounts extends AbstractWeb3Module {
     /**
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {TransactionSigner} transactionSigner
      * @param {Wallet} wallet
      * @param {Object} formatters
-     * @param {GetChainIdMethod} getChainIdMethod
+     * @param {ChainIdMethod} chainIdMethod
      * @param {GetGasPriceMethod} getGasPriceMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
      * @param options
@@ -50,19 +49,18 @@ export default class Accounts extends AbstractWeb3Module {
     constructor(
         provider,
         providersModuleFactory,
-        transactionSigner,
         wallet,
         formatters,
-        getChainIdMethod,
+        chainIdMethod,
         getGasPriceMethod,
         getTransactionCountMethod,
         options
     ) {
         super(provider, providersModuleFactory, null, null, options);
-        this.transactionSigner = options.transactionSigner || transactionSigner;
+        this.transactionSigner = options.transactionSigner;
         this.wallet = wallet;
         this.formatters = formatters;
-        this.getChainIdMethod = getChainIdMethod;
+        this.chainIdMethod = chainIdMethod;
         this.getGasPriceMethod = getGasPriceMethod;
         this.getTransactionCountMethod = getTransactionCountMethod;
 
@@ -117,7 +115,7 @@ export default class Accounts extends AbstractWeb3Module {
         const account = Account.fromPrivateKey(privateKey, this);
 
         if (!tx.chainId) {
-            tx.chainId = await this.getChainIdMethod.execute(this);
+            tx.chainId = await this.chainIdMethod.execute(this);
         }
 
         if (!tx.getGasPrice) {

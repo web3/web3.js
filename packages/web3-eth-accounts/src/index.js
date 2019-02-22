@@ -23,17 +23,28 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import Wallet from './models/Wallet';
-import AccountsModuleFactory from './factories/AccountsModuleFactory';
+import {Accounts as AccountsModule} from './Accounts';
+import {ProvidersModuleFactory} from 'web3-providers';
+import {GetGasPriceMethod, GetChainIdMethod, GetTransactionCountMethod} from 'web3-core-method';
 
 /**
  * Returns the Accounts object
  *
- * @method Accounts
- *
- * @params {TransactionSigner} transactionSigner
+ * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @params {Object} options
  *
  * @returns {Accounts}
+ * @constructor
  */
-export const Accounts = (transactionSigner) => {
-    return new AccountsModuleFactory().createAccounts(Utils, formatters, transactionSigner, new Wallet(Utils));
+export const Accounts = (provider, options) => {
+    return new AccountsModule(
+        provider,
+        new ProvidersModuleFactory(),
+        new Wallet(Utils),
+        formatters,
+        new GetChainIdMethod(Utils, formatters),
+        new GetGasPriceMethod(Utils, formatters),
+        new GetTransactionCountMethod(Utils, formatters),
+        options
+    );
 };

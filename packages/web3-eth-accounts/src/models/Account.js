@@ -52,13 +52,12 @@ export default class Account {
      * @method signTransaction
      *
      * @param {Object} tx
-     * @param {String} privateKey
-     * @param {Function }callback
+     * @param {Function} callback
      *
      * @callback callback callback(error, result)
      * @returns {Promise<Object>}
      */
-    signTransaction(tx, privateKey, callback) {
+    signTransaction(tx, callback) {
         return this.accounts.signTransaction(tx, this.privateKey, callback);
     }
 

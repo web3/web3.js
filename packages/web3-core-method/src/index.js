@@ -47,6 +47,7 @@ export GetProtocolVersionMethod from './methods/network/GetProtocolVersionMethod
 export VersionMethod from './methods/network/VersionMethod';
 export ListeningMethod from './methods/network/ListeningMethod';
 export PeerCountMethod from './methods/network/PeerCountMethod';
+export ChainIdMethod from './methods/network/ChainIdMethod';
 
 // Node
 export GetNodeInfoMethod from './methods/node/GetNodeInfoMethod';
