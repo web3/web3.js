@@ -27,23 +27,24 @@ import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import Account from './models/Account';
+import * as EthAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 
 // TODO: Rename Accounts module to Wallet and add the functionalities of the current Wallet class.
 // TODO: After this refactoring will it be possible to move the wallet class to the eth module and to remove the accounts module.
 export default class Accounts {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {TransactionSigner} transactionSigner
      * @param {Wallet} wallet
+     * @param {Utils} utils
+     * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters, transactionSigner, wallet) {
-        this.utils = utils;
-        this.formatters = formatters;
+    constructor(transactionSigner, wallet, utils, formatters) {
         this.wallet = wallet;
         this.transactionSigner = transactionSigner;
+        this.utils = utils;
+        this.formatters = formatters;
 
         return new Proxy(this, {
             get: (target, name) => {
@@ -94,7 +95,7 @@ export default class Accounts {
      */
     async signTransaction(tx, privateKey, callback) {
         try {
-            const signedTransaction = Account.fromPrivateKey(privateKey, this.transactionSigner).signTransaction(tx);
+            const signedTransaction = await Account.fromPrivateKey(privateKey, this.transactionSigner).signTransaction(tx);
 
             if (isFunction(callback)) {
                 callback(false, signedTransaction);
@@ -121,13 +122,13 @@ export default class Accounts {
      */
     recoverTransaction(rawTx) {
         const values = RLP.decode(rawTx);
-        const signature = Account.encodeSignature(values.slice(6, 9));
+        const signature = EthAccount.encodeSignature(values.slice(6, 9));
         const recovery = Bytes.toNumber(values[6]);
         const extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
         const signingData = values.slice(0, 6).concat(extraData);
         const signingDataHex = RLP.encode(signingData);
 
-        return Account.recover(Hash.keccak256(signingDataHex), signature);
+        return EthAccount.recover(Hash.keccak256(signingDataHex), signature);
     }
 
     /**
@@ -160,7 +161,7 @@ export default class Accounts {
      * @returns {Object}
      */
     sign(data, privateKey) {
-        return Account.fromPrivateKey(privateKey).sign(data);
+        return Account.fromPrivateKey(privateKey, this.transactionSigner).sign(data);
     }
 
     /**
@@ -178,7 +179,7 @@ export default class Accounts {
         const args = [].slice.apply(arguments);
 
         if (isObject(message)) {
-            return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
+            return this.recover(message.messageHash, EthAccount.encodeSignature([message.v, message.r, message.s]), true);
         }
 
         if (!preFixed) {
@@ -189,10 +190,10 @@ export default class Accounts {
             preFixed = args.slice(-1)[0];
             preFixed = isBoolean(preFixed) ? preFixed : false;
 
-            return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
+            return this.recover(message, EthAccount.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
         }
 
-        return Account.recover(message, signature);
+        return EthAccount.recover(message, signature);
     }
 
     /**
@@ -209,7 +210,7 @@ export default class Accounts {
      * @returns {Account}
      */
     decrypt(v3Keystore, password, nonStrict) {
-        return Account.fromV3Keystore(v3Keystore, password, nonStrict);
+        return Account.fromV3Keystore(v3Keystore, password, nonStrict, this.transactionSigner);
     }
 
     /**
