@@ -1,7 +1,8 @@
 const jestConfig = require('../../jest.config');
 
 module.exports = jestConfig({
-    'Utils': 'web3-utils',
+    'hexToBytes': 'web3-utils',
+    'isHexStrict': 'web3-utils',
     'formatters': 'web3-core-helpers',
     'HttpProvider': 'web3-providers',
     'ProvidersModuleFactory': 'web3-providers',

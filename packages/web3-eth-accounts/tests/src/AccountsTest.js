@@ -1,4 +1,4 @@
-import * as Utils from 'web3-utils';
+import {isHexStrict, hexToBytes} from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {GetGasPriceMethod, GetTransactionCountMethod, ChainIdMethod} from 'web3-core-method';
 import Hash from 'eth-lib/lib/hash';
@@ -16,7 +16,8 @@ import Account from '../../src/models/Account';
 import {AbstractWeb3Module} from 'web3-core';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('isHexStrict');
+jest.mock('hexToBytes');
 jest.mock('formatters');
 jest.mock('HttpProvider');
 jest.mock('ProviderDetector');
@@ -215,7 +216,7 @@ describe('AccountsTest', () => {
     });
 
     it('calls recover with a string as message and returns the expected value', () => {
-        Utils.isHexStrict.mockReturnValueOnce(false);
+        isHexStrict.mockReturnValueOnce(false);
 
         Hash.keccak256s.mockReturnValueOnce('keccak');
 
@@ -223,7 +224,7 @@ describe('AccountsTest', () => {
 
         expect(accounts.recover('message', 'signature', false)).toEqual('recovered');
 
-        expect(Utils.isHexStrict).toHaveBeenCalledWith('message');
+        expect(isHexStrict).toHaveBeenCalledWith('message');
 
         expect(Hash.keccak256s)
             .toHaveBeenCalledWith(
