@@ -23,6 +23,7 @@
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
 import isBoolean from 'lodash/isBoolean';
+import isString from 'lodash/isString';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
@@ -30,15 +31,12 @@ import {encodeSignature, recover} from 'eth-lib/lib/account'; // TODO: Remove th
 import {isHexStrict, hexToBytes, randomHex} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 import {AbstractWeb3Module} from 'web3-core';
 import Account from './models/Account';
-import has from 'lodash/has';
-import isString from 'lodash/isString';
 
 // TODO: Rename Accounts module to Wallet and move the Wallet class to the eth module.
 export default class Accounts extends AbstractWeb3Module {
     /**
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Wallet} wallet
      * @param {Object} formatters
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetGasPriceMethod} getGasPriceMethod
@@ -50,7 +48,6 @@ export default class Accounts extends AbstractWeb3Module {
     constructor(
         provider,
         providersModuleFactory,
-        wallet,
         formatters,
         chainIdMethod,
         getGasPriceMethod,
@@ -64,33 +61,39 @@ export default class Accounts extends AbstractWeb3Module {
         this.getGasPriceMethod = getGasPriceMethod;
         this.getTransactionCountMethod = getTransactionCountMethod;
         this.defaultKeyName = 'web3js_wallet';
-        this.accounts = [];
-
-        /**
-         * This is for compatibility reasons and will be removed later when it got added to the eth-module
-         */
-        new Proxy(this.wallet, {
-            get: (target, name) => {
-                switch (name) {
-                    case 'create':
-                            return this.addGeneratedAccountsToWallet;
-                    case 'encrypt':
-                            return this.encrypt;
-                    case 'decrypt':
-                            return this.decrypt;
-                    default:
-                        if (this[name]) {
-                            return this[name];
-                        }
-
-                        return target[name];
-                }
-            }
-        });
+        this.accounts = {};
+        this.accountsIndex = 0;
+        this.wallet = this.createWalletProxy();
 
         return new Proxy(this, {
             get: (target, name) => {
                 return target[name];
+            }
+        });
+    }
+
+    /**
+     * This is for compatibility reasons and will be removed later when it got added to the eth-module
+     *
+     * @method createWalletProxy
+     *
+     * @returns {Accounts}
+     */
+    createWalletProxy() {
+        return new Proxy(this, {
+            get: (target, name) => {
+                switch (name) {
+                    case 'create':
+                        return target.addGeneratedAccountsToWallet;
+                    case 'encrypt':
+                        return target.encryptWallet;
+                    case 'decrypt':
+                        return target.decryptWallet;
+                    case 'clear':
+                        return target.clear;
+                    default:
+                        return target[name];
+                }
             }
         });
     }
@@ -109,7 +112,7 @@ export default class Accounts extends AbstractWeb3Module {
         const account = Account.from(entropy || randomHex(32), this);
 
         for (let i = 0; i < numberOfAccounts; ++i) {
-            this.add(account.privateKey);
+            this.add(account);
         }
 
         return this;
@@ -120,9 +123,9 @@ export default class Accounts extends AbstractWeb3Module {
      *
      * @method add
      *
-     * @param {Account|String} account
+     * @param {Account|String} account - A Account object or privateKey
      *
-     * @returns {Wallet}
+     * @returns {Account}
      */
     add(account) {
         if (isString(account)) {
@@ -130,14 +133,16 @@ export default class Accounts extends AbstractWeb3Module {
         }
 
         if (!this[account.address]) {
-            this.accounts.push(account);
+            this.accounts[this.accountsIndex] = account;
             this.accounts[account.address] = account;
             this.accounts[account.address.toLowerCase()] = account;
+
+            this.accountsIndex++;
 
             return account;
         }
 
-        return this[account.address];
+        return this.accounts[account.address];
     }
 
     /**
@@ -150,15 +155,14 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     remove(addressOrIndex) {
-        const account =  this.accounts[addressOrIndex];
+        if (this.accounts[addressOrIndex]) {
+            Object.keys(this.accounts).forEach((key) => {
+                if (this.accounts[key].address === addressOrIndex || key === addressOrIndex) {
+                    delete this.accounts[key];
 
-        if (account && account.address) {
-            delete this.accounts[account.address];
-            delete this.accounts[account.address.toLowerCase()];
-
-            const index = this.accounts.findIndex(item => item.address === account.address);
-
-            delete this.accounts[index];
+                    this.accountsIndex--;
+                }
+            });
 
             return true;
         }
@@ -174,7 +178,8 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Wallet}
      */
     clear() {
-        this.accounts = [];
+        this.accounts = {};
+        this.accountsIndex = 0;
 
         return this;
     }
@@ -190,9 +195,13 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {any[]}
      */
     encryptWallet(password, options) {
-        return this.accounts.map((account) => {
-            return account.encrypt(password, options);
+        let encryptedAccounts = [];
+
+        Object.keys(this.accounts).forEach((key) => {
+            return encryptedAccounts.push(this.accounts[key].encrypt(password, options));
         });
+
+        return encryptedAccounts;
     }
 
     /**
@@ -210,7 +219,7 @@ export default class Accounts extends AbstractWeb3Module {
             const account = Account.fromV3Keystore(keystore, password, false, this);
 
             if (!account) {
-                throw new Error("Couldn't decrypt accounts. Password wrong?");
+                throw new Error('Couldn\'t decrypt accounts. Password wrong?');
             }
 
             this.add(account);

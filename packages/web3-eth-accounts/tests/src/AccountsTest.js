@@ -1,6 +1,6 @@
-import {isHexStrict, hexToBytes} from 'web3-utils';
+import {isHexStrict, randomHex} from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {GetGasPriceMethod, GetTransactionCountMethod, ChainIdMethod} from 'web3-core-method';
+import {ChainIdMethod, GetGasPriceMethod, GetTransactionCountMethod} from 'web3-core-method';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
@@ -10,7 +10,6 @@ import uuid from 'uuid';
 import {encodeSignature, recover} from 'eth-lib/lib/account';
 import {HttpProvider, ProviderDetector, ProviderResolver, ProvidersModuleFactory} from 'web3-providers';
 import TransactionSigner from '../__mocks__/TransactionSigner';
-import Wallet from '../../src/models/Wallet';
 import Accounts from '../../src/Accounts';
 import Account from '../../src/models/Account';
 import {AbstractWeb3Module} from 'web3-core';
@@ -34,7 +33,6 @@ jest.mock('eth-lib/lib/account');
 jest.mock('scryptsy');
 jest.mock('crypto');
 jest.mock('uuid');
-jest.mock('../../src/models/Wallet');
 jest.mock('../../src/models/Account');
 
 /**
@@ -46,7 +44,6 @@ describe('AccountsTest', () => {
         providersModuleFactoryMock,
         providerDetectorMock,
         providerResolverMock,
-        walletMock,
         chainIdMethodMock,
         getGasPriceMethodMock,
         getTransactionCountMethodMock,
@@ -75,9 +72,6 @@ describe('AccountsTest', () => {
 
         providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce(providerResolverMock);
 
-        new Wallet();
-        walletMock = Wallet.mock.instances[0];
-
         new ChainIdMethod();
         chainIdMethodMock = ChainIdMethod.mock.instances[0];
 
@@ -87,12 +81,11 @@ describe('AccountsTest', () => {
         new GetTransactionCountMethod();
         getTransactionCountMethodMock = GetTransactionCountMethod.mock.instances[0];
 
-        options =  {transactionSigner: new TransactionSigner()};
+        options = {transactionSigner: new TransactionSigner()};
 
         accounts = new Accounts(
             providerMock,
             providersModuleFactoryMock,
-            walletMock,
             formatters,
             chainIdMethodMock,
             getGasPriceMethodMock,
@@ -102,8 +95,6 @@ describe('AccountsTest', () => {
     });
 
     it('constructor check', () => {
-        expect(accounts.wallet).toEqual(walletMock);
-
         expect(accounts.formatters).toEqual(formatters);
 
         expect(accounts.chainIdMethod).toEqual(chainIdMethodMock);
@@ -292,5 +283,130 @@ describe('AccountsTest', () => {
 
         expect(toV3Keystore).toHaveBeenCalledWith('password', {});
     });
-})
-;
+
+    it('calls wallet.create and returns the expected value', () => {
+        randomHex.mockReturnValueOnce('asdf');
+
+        Account.from.mockReturnValueOnce({address: '0x0', privateKey: '0x0'});
+
+        expect(accounts.wallet.create(1)).toEqual(accounts);
+
+        expect(randomHex).toHaveBeenCalledWith(32);
+
+        expect(Account.from).toHaveBeenCalledWith('asdf', accounts);
+
+        expect(accounts.accountsIndex).toEqual(1);
+    });
+
+    it('calls wallet.add with a Account object and returns the expected value', () => {
+        new Account();
+        const accountMock = Account.mock.instances[0];
+        accountMock.address = '0x0';
+
+        expect(accounts.wallet.add(accountMock)).toEqual(accountMock);
+
+        expect(accounts.accounts[accountMock.address]).toEqual(accountMock);
+
+        expect(accounts.accounts[0]).toEqual(accountMock);
+
+        expect(accounts.accounts[accountMock.address.toLowerCase()]).toEqual(accountMock);
+    });
+
+    it('calls wallet.add with a privateKey and returns the expected value', () => {
+        new Account();
+        const accountMock = Account.mock.instances[0];
+        accountMock.address = '0x0';
+
+        Account.fromPrivateKey.mockReturnValueOnce(accountMock);
+
+        expect(accounts.wallet.add('0x0')).toEqual(accountMock);
+
+        expect(Account.fromPrivateKey).toHaveBeenCalledWith('0x0', accounts);
+
+        expect(accounts.accounts[accountMock.address]).toEqual(accountMock);
+
+        expect(accounts.accounts[0]).toEqual(accountMock);
+
+        expect(accounts.accounts[accountMock.address.toLowerCase()]).toEqual(accountMock);
+    });
+
+    it('calls wallet.remove and returns true', () => {
+        new Account();
+        const accountMock = Account.mock.instances[0];
+        accountMock.address = '0x0';
+
+        accounts.accounts = {0: accountMock};
+
+        expect(accounts.wallet.remove(0)).toEqual(true);
+
+        expect(accounts.accountsIndex).toEqual(0);
+    });
+
+    it('calls wallet.remove and returns false', () => {
+        new Account();
+        const accountMock = Account.mock.instances[0];
+        delete accountMock.address;
+
+        accounts.accounts = {};
+
+        expect(accounts.wallet.remove(0)).toEqual(false);
+
+        expect(accounts.accountsIndex).toEqual(0);
+    });
+
+    it('calls wallet.clear and returns the expect value', () => {
+        new Account();
+        const accountMock = Account.mock.instances[0];
+        accountMock.address = '0x0';
+
+        accounts.accounts = {0: accountMock};
+
+        expect(accounts.wallet.clear()).toEqual(accounts);
+
+        expect(accounts.accountsIndex).toEqual(0);
+    });
+
+    it('calls wallet.encrypt and returns the expect value', () => {
+        new Account();
+        const accountMock = Account.mock.instances[0];
+        accountMock.address = '0x0';
+
+        accountMock.encrypt.mockReturnValueOnce(true);
+
+        accounts.accounts = {0: accountMock};
+
+        expect(accounts.wallet.encrypt('pw', {})).toEqual([true]);
+
+        expect(accountMock.encrypt).toHaveBeenCalledWith('pw', {});
+
+        expect(accounts.accountsIndex).toEqual(0);
+    });
+
+    it('calls wallet.decrypt and returns the expected value', () => {
+        new Account();
+        const accountMock = Account.mock.instances[0];
+        accountMock.address = '0x0';
+
+        Account.fromV3Keystore.mockReturnValueOnce(accountMock);
+
+        expect(accounts.wallet.decrypt([true], 'pw')).toEqual(accounts);
+
+        expect(Account.fromV3Keystore).toHaveBeenCalledWith(true, 'pw', false, accounts);
+
+        expect(accounts.accounts[accountMock.address]).toEqual(accountMock);
+
+        expect(accounts.accounts[0]).toEqual(accountMock);
+
+        expect(accounts.accounts[accountMock.address.toLowerCase()]).toEqual(accountMock);
+    });
+
+    it('calls wallet.decrypt and throws an error', () => {
+        Account.fromV3Keystore.mockReturnValueOnce(false);
+
+        expect(() => {
+            accounts.wallet.decrypt([true], 'pw');
+        }).toThrow('Couldn\'t decrypt accounts. Password wrong?');
+
+        expect(Account.fromV3Keystore).toHaveBeenCalledWith(true, 'pw', false, accounts);
+    });
+});
