@@ -23,20 +23,20 @@ import isObject from 'lodash/isObject';
 import * as EthAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
-import {isHexStrict, hexToBytes} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
+import {isHexStrict, hexToBytes, randomHex} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
 
 export default class Account {
     /**
      * @param {Object} options TODO: Pass a Address VO in the options
-     * @param {TransactionSigner} transactionSigner
+     * @param {Accounts} accounts
      *
      * @constructor
      */
-    constructor(options, transactionSigner = null) {
+    constructor(options, accounts = null) {
         this.address = options.address;
         this.privateKey = options.privateKey;
-        this.transactionSinger = transactionSigner;
+        this.accounts = accounts;
 
         return new Proxy(this, {
             get: (target, name) => {
@@ -46,18 +46,20 @@ export default class Account {
     }
 
     /**
-     * TODO: Add deprecation message, remove TransactionSigner dependency and extend the signTransaction method in the eth module.
-     * TODO: Create Transaction VO or add validation here.
+     * TODO: Add deprecation message, remove accounts dependency and extend the signTransaction method in the eth module.
      * Signs a transaction object with the given privateKey
      *
      * @method signTransaction
      *
      * @param {Object} tx
+     * @param {String} privateKey
+     * @param {Function }callback
      *
+     * @callback callback callback(error, result)
      * @returns {Promise<Object>}
      */
-    signTransaction(tx) {
-        return this.transactionSigner.sign(tx, this.privateKey);
+    signTransaction(tx, privateKey, callback) {
+        return this.accounts.signTransaction(tx, this.privateKey, callback);
     }
 
     /**
@@ -101,7 +103,7 @@ export default class Account {
      * @returns {EncryptedKeystoreV3Json | {version, id, address, crypto}}
      */
     encrypt(password, options) {
-        return Account.fromPrivateKey(this.privateKey, this.transactionSinger).toV3Keystore(password, options);
+        return Account.fromPrivateKey(this.privateKey, this.accounts.transactionSinger).toV3Keystore(password, options);
     }
 
     /**
@@ -113,7 +115,7 @@ export default class Account {
      * @returns {Account}
      */
     static from(entropy, transactionSigner = null) {
-        return new Account(EthAccount.create(entropy || this.utils.randomHex(32)), transactionSigner);
+        return new Account(EthAccount.create(entropy || randomHex(32)), this.accounts.transactionSigner);
     }
 
     /**
@@ -125,7 +127,7 @@ export default class Account {
      * @returns {Account}
      */
     static fromPrivateKey(privateKey, transactionSigner = null) {
-        return new Account(EthAccount.fromPrivate(privateKey), transactionSigner = null);
+        return new Account(EthAccount.fromPrivate(privateKey), this.accounts.transactionSigner);
     }
 
     /**
@@ -268,6 +270,6 @@ export default class Account {
         );
         const seed = `0x${Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex')}`;
 
-        return this.fromPrivateKey(seed, transactionSigner);
+        return this.fromPrivateKey(seed, this.accounts.transactionSigner);
     }
 }

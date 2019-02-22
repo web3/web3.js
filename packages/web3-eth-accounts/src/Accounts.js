@@ -26,24 +26,45 @@ import isBoolean from 'lodash/isBoolean';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
-import Account from './models/Account';
 import * as EthAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import {isHexStrict, hexToBytes} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
+import {AbstractWeb3Module} from 'web3-core';
+import Account from './models/Account';
 
 // TODO: Rename Accounts module to Wallet and add the functionalities of the current Wallet class.
 // TODO: After this refactoring is it possible to move the wallet class to the eth module and to remove the accounts module.
-export default class Accounts {
+export default class Accounts extends AbstractWeb3Module {
     /**
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {TransactionSigner} transactionSigner
      * @param {Wallet} wallet
      * @param {Object} formatters
+     * @param {GetChainIdMethod} getChainIdMethod
+     * @param {GetGasPriceMethod} getGasPriceMethod
+     * @param {GetTransactionCountMethod} getTransactionCountMethod
+     * @param options
      *
      * @constructor
      */
-    constructor(transactionSigner, wallet, formatters) {
-        this.transactionSigner = transactionSigner;
+    constructor(
+        provider,
+        providersModuleFactory,
+        transactionSigner,
+        wallet,
+        formatters,
+        getChainIdMethod,
+        getGasPriceMethod,
+        getTransactionCountMethod,
+        options
+    ) {
+        super(provider, providersModuleFactory, null, null, options);
+        this.transactionSigner = options.transactionSigner || transactionSigner;
         this.wallet = wallet;
         this.formatters = formatters;
+        this.getChainIdMethod = getChainIdMethod;
+        this.getGasPriceMethod = getGasPriceMethod;
+        this.getTransactionCountMethod = getTransactionCountMethod;
 
         return new Proxy(this, {
             get: (target, name) => {
@@ -62,7 +83,7 @@ export default class Accounts {
      * @returns {Account}
      */
     create(entropy) {
-        return Account.from(entropy, this.transactionSigner);
+        return Account.from(entropy, this);
     }
 
     /**
@@ -75,7 +96,7 @@ export default class Accounts {
      * @returns {Account}
      */
     privateKeyToAccount(privateKey) {
-        return Account.fromPrivateKey(privateKey, this.transactionSigner);
+        return Account.fromPrivateKey(privateKey, this);
     }
 
     /**
@@ -93,8 +114,24 @@ export default class Accounts {
      * @returns {Promise<Object>}
      */
     async signTransaction(tx, privateKey, callback) {
+        const account = Account.fromPrivateKey(privateKey, this);
+
+        if (!tx.chainId) {
+            tx.chainId = await this.getChainIdMethod.execute(this);
+        }
+
+        if (!tx.getGasPrice) {
+            tx.getGasPrice = await this.getGasPriceMethod.execute(this);
+        }
+
+        if (!tx.nonce) {
+            this.getTransactionCountMethod.parameters = [account.address];
+
+            tx.nonce = await this.getTransactionCountMethod.execute(this);
+        }
+
         try {
-            const signedTransaction = await Account.fromPrivateKey(privateKey, this.transactionSigner).signTransaction(tx);
+            const signedTransaction = await account.signTransaction(tx);
 
             if (isFunction(callback)) {
                 callback(false, signedTransaction);
@@ -145,7 +182,7 @@ export default class Accounts {
             data = hexToBytes(data);
         }
 
-        return Account.fromPrivateKey(privateKey).sign(data);
+        return Account.fromPrivateKey(privateKey, this).sign(data);
     }
 
     /**
@@ -203,7 +240,7 @@ export default class Accounts {
      * @returns {Account}
      */
     decrypt(v3Keystore, password, nonStrict) {
-        return Account.fromV3Keystore(v3Keystore, password, nonStrict, this.transactionSigner);
+        return Account.fromV3Keystore(v3Keystore, password, nonStrict, this);
     }
 
     /**
@@ -218,6 +255,6 @@ export default class Accounts {
      * @returns {Object}
      */
     encrypt(privateKey, password, options) {
-        return Account.fromPrivateKey(privateKey, this.transactionSigner).toV3Keystore(password, options);
+        return Account.fromPrivateKey(privateKey, this).toV3Keystore(password, options);
     }
 }

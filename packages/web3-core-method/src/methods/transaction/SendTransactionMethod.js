@@ -79,8 +79,8 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
         }
 
-        if (!this.parameters[0].nonce) {
-            moduleInstance.getTransactionCount().then((count) => {
+        if (moduleInstance.accounts.wallet[this.parameters[0].from]) {
+            moduleInstance.getTransactionCount(this.parameters[0].from).then((count) => {
                 this.parameters[0].nonce = count;
 
                 this.execute(moduleInstance, promiEvent);
@@ -91,7 +91,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
 
         if (this.isWeb3Signing(moduleInstance)) {
             this.sendRawTransaction(
-                this.formatTransactionForSigning(transaction),
+                this.formatTransactionForSigning(),
                 moduleInstance.accounts.wallet[this.parameters[0].from],
                 promiEvent,
                 moduleInstance
@@ -101,7 +101,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         }
 
         if (this.hasCustomSigner(moduleInstance)) {
-            this.sendRawTransaction(this.formatTransactionForSigning(transaction), null, promiEvent, moduleInstance);
+            this.sendRawTransaction(this.formatTransactionForSigning(), null, promiEvent, moduleInstance);
 
             return promiEvent;
         }
@@ -114,14 +114,11 @@ export default class SendTransactionMethod extends AbstractSendMethod {
     /**
      * Formats the transaction options object
      *
-     * @param {Object} transaction
      *
      * @returns {Object}
      */
-    formatTransactionForSigning(transaction) {
-        let transaction = this.parameters[0];
-
-        if (transaction.chainId) {
+    formatTransactionForSigning() {
+        if (this.parameters[0].chainId) {
             moduleInstance.getChainId().then((chainId) => {
                 this.parameters[0].chainId = chainId;
 
@@ -129,7 +126,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             });
         }
 
-        transaction = this.formatters.txInputFormatter(transaction);
+        let transaction = this.formatters.txInputFormatter(this.parameters[0]);
         transaction.to = tx.to || '0x';
         transaction.data = tx.data || '0x';
         transaction.value = tx.value || '0x';
@@ -148,7 +145,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      * @param {PromiEvent} promiEvent
      * @param {AbstractWeb3Module} moduleInstance
      */
-    sendRawTransaction(transactiom, privateKey, promiEvent, moduleInstance) {
+    sendRawTransaction(transaction, privateKey, promiEvent, moduleInstance) {
         moduleInstance.transactionSigner
             .sign(transaction, privateKey)
             .then((response) => {
