@@ -31,6 +31,12 @@ export default class Wallet {
         this.utils = utils;
         this.length = 0;
         this.defaultKeyName = 'web3js_wallet';
+
+        return new Proxy(this, {
+            get: (target, name) => {
+                return target[name];
+            }
+        });
     }
 
     /**
