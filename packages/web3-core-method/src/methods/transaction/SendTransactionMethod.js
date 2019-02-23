@@ -79,9 +79,8 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
         }
 
-        if (this.isWeb3Signing(moduleInstance)) {
+        if (this.hasAccounts(moduleInstance) && this.isDefaultSigner(moduleInstance)) {
             this.sendRawTransaction(
-                this.formatTransactionForSigning(moduleInstance, promiEvent),
                 moduleInstance.accounts.wallet[this.parameters[0].from],
                 promiEvent,
                 moduleInstance
@@ -91,7 +90,10 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         }
 
         if (this.hasCustomSigner(moduleInstance)) {
-            this.sendRawTransaction(this.formatTransactionForSigning(moduleInstance, promiEvent), null, promiEvent, moduleInstance);
+            this.sendRawTransaction(null,
+                promiEvent,
+                moduleInstance
+            );
 
             return promiEvent;
         }
@@ -102,14 +104,15 @@ export default class SendTransactionMethod extends AbstractSendMethod {
     }
 
     /**
-     * Formats the transaction options object
+     * Signs the transaction and executes the SendRawTransaction method.
      *
-     * @param {Eth} moduleInstance
+     * @method sendRawTransaction
+     *
+     * @param {String} privateKey
      * @param {PromiEvent} promiEvent
-     *
-     * @returns {Object}
+     * @param {AbstractWeb3Module} moduleInstance
      */
-    formatTransactionForSigning(moduleInstance, promiEvent) {
+    sendRawTransaction(privateKey, promiEvent, moduleInstance) {
         if (this.parameters[0].chainId) {
             moduleInstance.getChainId().then((chainId) => {
                 this.parameters[0].chainId = chainId;
@@ -132,20 +135,6 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         transaction.value = transaction.value || '0x';
         transaction.chainId = this.utils.numberToHex(transaction.chainId);
 
-        return transaction;
-    }
-
-    /**
-     * Signs the transaction and executes the SendRawTransaction method.
-     *
-     * @method sendRawTransaction
-     *
-     * @param {Object} transaction
-     * @param {String} privateKey
-     * @param {PromiEvent} promiEvent
-     * @param {AbstractWeb3Module} moduleInstance
-     */
-    sendRawTransaction(transaction, privateKey, promiEvent, moduleInstance) {
         moduleInstance.transactionSigner
             .sign(transaction, privateKey)
             .then((response) => {
@@ -168,18 +157,27 @@ export default class SendTransactionMethod extends AbstractSendMethod {
     /**
      * Checks if the current module has decrypted accounts
      *
-     * @method isWeb3Signing
+     * @method isDefaultSigner
      *
-     * @param moduleInstance
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {Boolean}
      */
-    isWeb3Signing(moduleInstance) {
-        return (
-            moduleInstance.accounts &&
-            Object.keys(moduleInstance.accounts.wallet).length > 0 &&
-            moduleInstance.transactionSigner.constructor.name === 'TransactionSigner'
-        );
+    isDefaultSigner(moduleInstance) {
+        return moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
+    }
+
+    /**
+     * Checks if the current module has decrypted accounts
+     *
+     * @method hasAccounts
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Boolean}
+     */
+    hasAccounts(moduleInstance) {
+        return moduleInstance.accounts && Object.keys(moduleInstance.accounts.wallet).length > 0;
     }
 
     /**
