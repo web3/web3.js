@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {cloneDeep} from 'lodash/cloneDeep';
 import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
 
 // TODO: Clean up this method and move the signing and observing logic to the eth module
@@ -78,16 +79,6 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
         }
 
-        if (moduleInstance.accounts.wallet[this.parameters[0].from]) {
-            moduleInstance.getTransactionCount(this.parameters[0].from).then((count) => {
-                this.parameters[0].nonce = count;
-
-                this.execute(moduleInstance, promiEvent);
-            });
-
-            return promiEvent;
-        }
-
         if (this.isWeb3Signing(moduleInstance)) {
             this.sendRawTransaction(
                 this.formatTransactionForSigning(moduleInstance, promiEvent),
@@ -127,7 +118,15 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             });
         }
 
-        let transaction = this.formatters.txInputFormatter(this.parameters[0]);
+        if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
+            moduleInstance.getTransactionCount(this.parameters[0].from).then((count) => {
+                this.parameters[0].nonce = count;
+
+                this.execute(moduleInstance, promiEvent);
+            });
+        }
+
+        let transaction = this.formatters.txInputFormatter(cloneDeep(this.parameters[0]));
         transaction.to = transaction.to || '0x';
         transaction.data = transaction.data || '0x';
         transaction.value = transaction.value || '0x';
@@ -178,7 +177,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
     isWeb3Signing(moduleInstance) {
         return (
             moduleInstance.accounts &&
-            moduleInstance.accounts.wallet.length > 0 &&
+            Object.keys(moduleInstance.accounts.wallet).length > 0 &&
             moduleInstance.transactionSigner.constructor.name === 'TransactionSigner'
         );
     }

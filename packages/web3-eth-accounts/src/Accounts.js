@@ -95,7 +95,7 @@ export default class Accounts extends AbstractWeb3Module {
                         if(target.accounts[name]) {
                             return target.accounts[name];
                         }
-                        
+
                         return target[name];
                 }
             }
