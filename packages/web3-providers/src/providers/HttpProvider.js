@@ -140,15 +140,25 @@ export default class HttpProvider {
             );
 
             request.onreadystatechange = () => {
+                if (request.response === null && request.status === 0 && ) {
+
+                }
+
                 if (request.readyState !== 0 && request.readyState !== 1) {
                     this.connected = true;
                 }
 
-                if (request.readyState === 4 && request.status === 200) {
-                    try {
-                        return resolve(JSON.parse(request.responseText));
-                    } catch (error) {
-                        reject(new Error(`Invalid JSON as response: ${request.responseText}`));
+                if (request.readyState === 4) {
+                    if (request.status === 200) {
+                        try {
+                            return resolve(JSON.parse(request.responseText));
+                        } catch (error) {
+                            reject(new Error(`Invalid JSON as response: ${request.responseText}`));
+                        }
+                    }
+
+                    if (request.response === null && request.status === 0) {
+                        reject(new Error(`Connection refused or URL couldn\'t be resolved: ${this.host}`))
                     }
                 }
             };
