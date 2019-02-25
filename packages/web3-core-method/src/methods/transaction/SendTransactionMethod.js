@@ -79,21 +79,20 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
         }
 
-        if (this.hasAccounts(moduleInstance) && this.isDefaultSigner(moduleInstance)) {
+        if (this.hasAccounts(moduleInstance) && this.isDefaultSigner(moduleInstance) || this.hasCustomSigner(moduleInstance)) {
             this.sendRawTransaction(
                 moduleInstance.accounts.wallet[this.parameters[0].from],
                 promiEvent,
                 moduleInstance
-            );
+            ).catch((error) => {
+                if (this.callback) {
+                    this.callback(error, null);
+                }
 
-            return promiEvent;
-        }
-
-        if (this.hasCustomSigner(moduleInstance)) {
-            this.sendRawTransaction(null,
-                promiEvent,
-                moduleInstance
-            );
+                promiEvent.reject(error);
+                promiEvent.emit('error', error);
+                promiEvent.removeAllListeners();
+            });
 
             return promiEvent;
         }
@@ -112,21 +111,13 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      * @param {PromiEvent} promiEvent
      * @param {AbstractWeb3Module} moduleInstance
      */
-    sendRawTransaction(privateKey, promiEvent, moduleInstance) {
+    async sendRawTransaction(privateKey, promiEvent, moduleInstance) {
         if (this.parameters[0].chainId) {
-            moduleInstance.getChainId().then((chainId) => {
-                this.parameters[0].chainId = chainId;
-
-                this.execute(moduleInstance, promiEvent);
-            });
+            this.parameters[0].chainId = await moduleInstance.getChainId();
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
-            moduleInstance.getTransactionCount(this.parameters[0].from).then((count) => {
-                this.parameters[0].nonce = count;
-
-                this.execute(moduleInstance, promiEvent);
-            });
+            this.parameters[0].nonce = await moduleInstance.getTransactionCount(this.parameters[0].from);
         }
 
         let transaction = this.formatters.txInputFormatter(cloneDeep(this.parameters[0]));
@@ -135,23 +126,10 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         transaction.value = transaction.value || '0x';
         transaction.chainId = this.utils.numberToHex(transaction.chainId);
 
-        moduleInstance.transactionSigner
-            .sign(transaction, privateKey)
-            .then((response) => {
-                this.sendRawTransactionMethod.parameters = [response.rawTransaction];
-                this.sendRawTransactionMethod.callback = this.callback;
-
-                this.sendRawTransactionMethod.execute(moduleInstance, promiEvent);
-            })
-            .catch((error) => {
-                if (this.callback) {
-                    this.callback(error, null);
-                }
-
-                promiEvent.reject(error);
-                promiEvent.emit('error', error);
-                promiEvent.removeAllListeners();
-            });
+        const response = await moduleInstance.transactionSigner.sign(transaction, privateKey);
+        this.sendRawTransactionMethod.parameters = [response.rawTransaction];
+        this.sendRawTransactionMethod.callback = this.callback;
+        this.sendRawTransactionMethod.execute(moduleInstance, promiEvent);
     }
 
     /**
