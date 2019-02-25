@@ -145,7 +145,11 @@ export default class ProvidersModuleFactory {
 
             connection = new W3CWebsocket(url, options.protocol, null, headers, null, options.clientConfig);
         } else {
-            connection = new window.WebSocket(url, options.protocol);
+            const args = [url];
+            if (options.protocol) {
+                args.push(options.protocol);
+            }
+            connection = new window.WebSocket(...args);
         }
 
         return new WebsocketProvider(connection, options.timeout);
