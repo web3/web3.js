@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import {cloneDeep} from 'lodash/cloneDeep';
 import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
 
 // TODO: Clean up this method and move the signing and observing logic to the eth module
@@ -78,10 +77,17 @@ export default class SendTransactionMethod extends AbstractSendMethod {
 
             this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
         }
+        if (
+            (this.hasAccounts(moduleInstance) && this.isDefaultSigner(moduleInstance)) ||
+            this.hasCustomSigner(moduleInstance)
+        ) {
+            let privateKey;
+            if (moduleInstance.accounts.wallet[this.parameters[0].from]) {
+                privateKey = moduleInstance.accounts.wallet[this.parameters[0].from].privateKey;
+            }
 
-        if (this.hasAccounts(moduleInstance) && this.isDefaultSigner(moduleInstance) || this.hasCustomSigner(moduleInstance)) {
             this.sendRawTransaction(
-                moduleInstance.accounts.wallet[this.parameters[0].from],
+                privateKey,
                 promiEvent,
                 moduleInstance
             ).catch((error) => {
@@ -112,7 +118,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      * @param {Eth} moduleInstance
      */
     async sendRawTransaction(privateKey, promiEvent, moduleInstance) {
-        if (this.parameters[0].chainId) {
+        if (!this.parameters[0].chainId) {
             this.parameters[0].chainId = await moduleInstance.getChainId();
         }
 
@@ -120,7 +126,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             this.parameters[0].nonce = await moduleInstance.getTransactionCount(this.parameters[0].from);
         }
 
-        let transaction = this.formatters.txInputFormatter(cloneDeep(this.parameters[0]));
+        let transaction = this.formatters.txInputFormatter(this.parameters[0]);
         transaction.to = transaction.to || '0x';
         transaction.data = transaction.data || '0x';
         transaction.value = transaction.value || '0x';

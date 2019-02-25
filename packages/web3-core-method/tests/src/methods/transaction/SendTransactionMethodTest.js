@@ -2,15 +2,17 @@ import {formatters} from 'web3-core-helpers';
 import {PromiEvent} from 'web3-core-promievent';
 import {WebsocketProvider} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
+import * as Utils from 'web3-utils';
 import Accounts from '../../../__mocks__/Accounts';
 import SendRawTransactionMethod from '../../../../src/methods/transaction/SendRawTransactionMethod';
 import TransactionSigner from '../../../__mocks__/TransactionSigner';
 import TransactionConfirmationWorkflow from '../../../../src/workflows/TransactionConfirmationWorkflow';
-import SendTransactionMethod from '../../../../src/methods/transaction/SendTransactionMethod';
 import AbstractSendMethod from '../../../../lib/methods/AbstractSendMethod';
+import SendTransactionMethod from '../../../../src/methods/transaction/SendTransactionMethod';
 
 // Mocks
 jest.mock('formatters');
+jest.mock('Utils');
 jest.mock('WebsocketProvider');
 jest.mock('AbstractWeb3Module');
 jest.mock('../../../../src/workflows/TransactionConfirmationWorkflow');
@@ -40,6 +42,7 @@ describe('SendTransactionMethodTest', () => {
         accountsMock = new Accounts();
 
         transactionSignerMock = new TransactionSigner();
+        transactionSignerMock.sign = jest.fn();
 
         promiEvent = new PromiEvent();
 
@@ -50,7 +53,7 @@ describe('SendTransactionMethodTest', () => {
         sendRawTransactionMethodMock = SendRawTransactionMethod.mock.instances[0];
 
         method = new SendTransactionMethod(
-            {},
+            Utils,
             formatters,
             transactionConfirmationWorkflowMock,
             sendRawTransactionMethodMock
@@ -71,13 +74,17 @@ describe('SendTransactionMethodTest', () => {
     });
 
     it('calls execute with wallets defined and returns with a resolved promise', async () => {
-        transactionSignerMock.sign.mockReturnValueOnce(Promise.resolve({rawTransaction: '0x0'}));
-
-        providerMock.send.mockReturnValueOnce(Promise.resolve('0x0'));
+        transactionSignerMock.sign = jest.fn(() => {
+            return Promise.resolve({rawTransaction: '0x0'});
+        });
 
         moduleInstanceMock.currentProvider = providerMock;
         moduleInstanceMock.accounts = {wallet: {0: {address: '0x0', privateKey: '0x0'}}};
         moduleInstanceMock.transactionSigner = transactionSignerMock;
+
+        sendRawTransactionMethodMock.execute = jest.fn((moduleInstance, promiEvent) => {
+            promiEvent.resolve('0x0');
+        });
 
         const transaction = {
             from: 0,
@@ -87,7 +94,16 @@ describe('SendTransactionMethodTest', () => {
             chainId: 1
         };
 
-        sendRawTransactionMethodMock.parameters = [transaction];
+        const mappedTransaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: '0x0',
+            data: '0x',
+            to: '0x',
+            value: '0x'
+        };
 
         formatters.txInputFormatter.mockReturnValueOnce(transaction);
 
@@ -97,37 +113,27 @@ describe('SendTransactionMethodTest', () => {
 
         const callback = jest.fn();
         method.callback = callback;
+        method.parameters = [transaction];
 
         const response = await method.execute(moduleInstanceMock, promiEvent);
 
         expect(response).toEqual(true);
 
-        const mappedTransaction = {
-            from: 0,
-            gas: 1,
-            gasPrice: 1,
-            nonce: 1,
-            chainId: '0x0'
-        };
-
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, '0x0');
 
         expect(formatters.txInputFormatter).toHaveBeenCalledWith(transaction);
-
-        expect(providerMock.send).toHaveBeenCalledWith('eth_sendRawTransaction', sendRawTransactionMethodMock.parameters);
 
         expect(Utils.numberToHex).toHaveBeenCalledWith(1);
 
         expect(sendRawTransactionMethodMock.execute).toHaveBeenCalledWith(moduleInstanceMock, promiEvent);
 
+        expect(sendRawTransactionMethodMock.parameters).toEqual(['0x0']);
+
         expect(sendRawTransactionMethodMock.callback).toEqual(callback);
+
     });
 
     it('calls execute with wallets defined and returns with a rejected promise', async () => {
-        transactionSignerMock.sign.mockReturnValueOnce(Promise.resolve({rawTransaction: '0x0'}));
-
-        providerMock.send.mockReturnValueOnce(Promise.resolve('0x0'));
-
         moduleInstanceMock.currentProvider = providerMock;
         moduleInstanceMock.accounts = {wallet: {0: {address: '0x0', privateKey: '0x0'}}};
         moduleInstanceMock.transactionSigner = transactionSignerMock;
@@ -142,11 +148,12 @@ describe('SendTransactionMethodTest', () => {
 
         const error = new Error('ERROR');
 
-        formatters.txInputFormatter.mockReturnValueOnce(() => {
-            promiEvent.reject(error);
+        formatters.txInputFormatter = jest.fn(() => {
+            throw error;
         });
 
         method.callback = jest.fn();
+        method.parameters = [transaction];
 
         const errorCallback = jest.fn();
         promiEvent.on('error', (e) => {
@@ -160,16 +167,18 @@ describe('SendTransactionMethodTest', () => {
         expect(formatters.txInputFormatter).toHaveBeenCalledWith(transaction);
 
         expect(method.callback).toHaveBeenCalledWith(error, null);
-
-        expect(promiEvent.listenerCount('error')).toEqual(0);
     });
 
     it('calls execute with a custom transaction signer defined and returns with a resolved promise', async () => {
-        const customSigner = {constructor: {name: 'CustomSigner'}, sign: jest.fn()};
+        const customSigner = {constructor: {name: 'CustomSigner'}};
 
-        customSigner.sign.mockReturnValueOnce(Promise.resolve({rawTransaction: '0x0'}));
+        customSigner.sign = jest.fn(() => {
+            return Promise.resolve({rawTransaction: '0x0'});
+        });
 
-        providerMock.send.mockReturnValueOnce(Promise.resolve('0x0'));
+        providerMock.send = jest.fn(() => {
+            return Promise.resolve('0x0');
+        });
 
         moduleInstanceMock.currentProvider = providerMock;
         moduleInstanceMock.accounts = {wallet: {}};
@@ -183,8 +192,6 @@ describe('SendTransactionMethodTest', () => {
             chainId: 1
         };
 
-        sendRawTransactionMethodMock.parameters = [transaction];
-
         formatters.txInputFormatter.mockReturnValueOnce(transaction);
 
         Utils.numberToHex.mockReturnValueOnce('0x0');
@@ -193,6 +200,7 @@ describe('SendTransactionMethodTest', () => {
 
         const callback = jest.fn();
         method.callback = callback;
+        method.parameters = [transaction];
 
         const response = await method.execute(moduleInstanceMock, promiEvent);
 
@@ -203,36 +211,42 @@ describe('SendTransactionMethodTest', () => {
             gas: 1,
             gasPrice: 1,
             nonce: 1,
-            chainId: '0x0'
+            chainId: '0x0',
+            data: '0x',
+            to: '0x',
+            value: '0x'
         };
 
-        expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, '0x0');
+        expect(customSigner.sign).toHaveBeenCalledWith(mappedTransaction, undefined);
 
         expect(formatters.txInputFormatter).toHaveBeenCalledWith(transaction);
-
-        expect(providerMock.send).toHaveBeenCalledWith('eth_sendRawTransaction', sendRawTransactionMethodMock.parameters);
 
         expect(Utils.numberToHex).toHaveBeenCalledWith(1);
 
         expect(sendRawTransactionMethodMock.execute).toHaveBeenCalledWith(moduleInstanceMock, promiEvent);
 
         expect(sendRawTransactionMethodMock.callback).toEqual(callback);
+
+        expect(sendRawTransactionMethodMock.parameters).toEqual(['0x0']);
     });
 
     it('calls execute signs locally but doesnt have chainId defined and returns with a resolved promise', async () => {
-        const customSigner = {constructor: {name: 'CustomSigner'}, sign: jest.fn()};
-
-        customSigner.sign.mockReturnValueOnce(Promise.resolve({rawTransaction: '0x0'}));
-
-        providerMock.send.mockReturnValueOnce(Promise.resolve('0x0'));
+        const customSigner = {constructor: {name: 'CustomSigner'}};
+        customSigner.sign = jest.fn(() => {
+            return Promise.resolve({rawTransaction: '0x0'});
+        });
 
         moduleInstanceMock.getChainId = jest.fn(() => {
             return Promise.resolve(1);
         });
 
         moduleInstanceMock.currentProvider = providerMock;
-        moduleInstanceMock.accounts = {wallet: {}};
+        moduleInstanceMock.accounts = {wallet: {0: {address: '0x0', privateKey: '0x0'}}};
         moduleInstanceMock.transactionSigner = customSigner;
+
+        sendRawTransactionMethodMock.execute = jest.fn((moduleInstance, promiEvent) => {
+            promiEvent.resolve('0x0');
+        });
 
         const transaction = {
             from: 0,
@@ -242,8 +256,6 @@ describe('SendTransactionMethodTest', () => {
             chainId: 0
         };
 
-        sendRawTransactionMethodMock.parameters = [transaction];
-
         formatters.txInputFormatter.mockReturnValueOnce(transaction);
 
         Utils.numberToHex.mockReturnValueOnce('0x0');
@@ -252,6 +264,7 @@ describe('SendTransactionMethodTest', () => {
 
         const callback = jest.fn();
         method.callback = callback;
+        method.parameters = [transaction];
 
         const response = await method.execute(moduleInstanceMock, promiEvent);
 
@@ -262,14 +275,15 @@ describe('SendTransactionMethodTest', () => {
             gas: 1,
             gasPrice: 1,
             nonce: 1,
-            chainId: '0x0'
+            chainId: '0x0',
+            data: '0x',
+            to: '0x',
+            value: '0x'
         };
 
-        expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, '0x0');
+        expect(customSigner.sign).toHaveBeenCalledWith(mappedTransaction, '0x0');
 
         expect(formatters.txInputFormatter).toHaveBeenCalledWith(transaction);
-
-        expect(providerMock.send).toHaveBeenCalledWith('eth_sendRawTransaction', sendRawTransactionMethodMock.parameters);
 
         expect(Utils.numberToHex).toHaveBeenCalledWith(1);
 
@@ -277,15 +291,16 @@ describe('SendTransactionMethodTest', () => {
 
         expect(sendRawTransactionMethodMock.callback).toEqual(callback);
 
+        expect(sendRawTransactionMethodMock.parameters).toEqual(['0x0']);
+
         expect(moduleInstanceMock.getChainId).toHaveBeenCalled();
     });
 
-    it('calls execute signs locally but doesnt have nonce defined and returns with a resolved promise', async () => {
-        const customSigner = {constructor: {name: 'CustomSigner'}, sign: jest.fn()};
-
-        customSigner.sign.mockReturnValueOnce(Promise.resolve({rawTransaction: '0x0'}));
-
-        providerMock.send.mockReturnValueOnce(Promise.resolve('0x0'));
+    it('calls execute signs locally but doesnt have an nonce defined and returns with a resolved promise', async () => {
+        const customSigner = {constructor: {name: 'CustomSigner'}};
+        customSigner.sign = jest.fn(() => {
+            return Promise.resolve({rawTransaction: '0x0'});
+        });
 
         moduleInstanceMock.getTransactionCount = jest.fn(() => {
             return Promise.resolve(1);
@@ -299,13 +314,19 @@ describe('SendTransactionMethodTest', () => {
             from: 0,
             gas: 1,
             gasPrice: 1,
-            nonce: 0,
+            nonce: undefined,
             chainId: 1
         };
 
-        sendRawTransactionMethodMock.parameters = [transaction];
+        const transactionWithNonce = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        };
 
-        formatters.txInputFormatter.mockReturnValueOnce(transaction);
+        formatters.txInputFormatter.mockReturnValueOnce(transactionWithNonce);
 
         Utils.numberToHex.mockReturnValueOnce('0x0');
 
@@ -313,6 +334,7 @@ describe('SendTransactionMethodTest', () => {
 
         const callback = jest.fn();
         method.callback = callback;
+        method.parameters = [transaction];
 
         const response = await method.execute(moduleInstanceMock, promiEvent);
 
@@ -323,14 +345,15 @@ describe('SendTransactionMethodTest', () => {
             gas: 1,
             gasPrice: 1,
             nonce: 1,
-            chainId: '0x0'
+            chainId: '0x0',
+            data: '0x',
+            to: '0x',
+            value: '0x'
         };
 
-        expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, '0x0');
+        expect(customSigner.sign).toHaveBeenCalledWith(mappedTransaction, undefined);
 
         expect(formatters.txInputFormatter).toHaveBeenCalledWith(transaction);
-
-        expect(providerMock.send).toHaveBeenCalledWith('eth_sendRawTransaction', sendRawTransactionMethodMock.parameters);
 
         expect(Utils.numberToHex).toHaveBeenCalledWith(1);
 
@@ -338,15 +361,13 @@ describe('SendTransactionMethodTest', () => {
 
         expect(sendRawTransactionMethodMock.callback).toEqual(callback);
 
-        expect(moduleInstanceMock.getChainId).toHaveBeenCalled();
+        expect(sendRawTransactionMethodMock.parameters).toEqual(['0x0']);
+
+        expect(moduleInstanceMock.getTransactionCount).toHaveBeenCalledWith(0);
     });
 
-    it('calls execute with no gas defined and uses the defaultGas and returns with a resolved promise', async () => {
+    it('calls execute with no gas defined and uses the defaultGas and returns with a resolved promise', (done) => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('0x0'));
-
-        transactionConfirmationWorkflowMock.execute = jest.fn((method, moduleInstance, promiEvent) => {
-            promiEvent.resolve(true);
-        });
 
         moduleInstanceMock.currentProvider = providerMock;
         moduleInstanceMock.transactionSigner = {constructor: {name: 'TransactionSigner'}};
@@ -360,43 +381,38 @@ describe('SendTransactionMethodTest', () => {
             chainId: 1
         };
 
-        method.callback = jest.fn();
-        method.parameters = [transaction];
-
-        const transactionhashCallback = jest.fn();
-        promiEvent.on('transactionHash', (hash) => {
-            expect(hash).toEqual('0x0');
-
-            transactionhashCallback();
-        });
-
-        const response = await method.execute(moduleInstanceMock, promiEvent);
-
-        expect(response).toEqual(true);
-
         const mappedTransaction = {
             from: 0,
             gas: 10,
             gasPrice: 1,
             nonce: 1,
-            chainId: '0x0'
+            chainId: 1
         };
 
-        expect(providerMock.send).toHaveBeenCalledWith('eth_sendTransaction', [mappedTransaction]);
+        formatters.inputTransactionFormatter.mockReturnValueOnce(transaction);
 
-        expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
+        method.callback = jest.fn();
+        method.parameters = [transaction];
 
-        expect(method.callback).toHaveBeenCalledWith(false, '0x0');
+        promiEvent.on('transactionHash', (hash) => {
+            expect(hash).toEqual('0x0');
 
-        expect(transactionhashCallback).toHaveBeenCalled();
+            expect(providerMock.send).toHaveBeenCalledWith('eth_sendTransaction', [transaction]);
+
+            expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
+
+            expect(method.callback).toHaveBeenCalledWith(false, '0x0');
+
+            expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(mappedTransaction, moduleInstanceMock);
+
+            done();
+        });
+
+        method.execute(moduleInstanceMock, promiEvent);
     });
 
-    it('calls execute with no gasPrice defined and uses the defaultGasPrice and returns with a resolved promise', async () => {
+    it('calls execute with no gasPrice defined and uses the defaultGasPrice and returns with a resolved promise', (done) => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('0x0'));
-
-        transactionConfirmationWorkflowMock.execute = jest.fn((method, moduleInstance, promiEvent) => {
-            promiEvent.resolve(true);
-        });
 
         moduleInstanceMock.currentProvider = providerMock;
         moduleInstanceMock.transactionSigner = {constructor: {name: 'TransactionSigner'}};
@@ -410,43 +426,40 @@ describe('SendTransactionMethodTest', () => {
             chainId: 1
         };
 
-        method.callback = jest.fn();
-        method.parameters = [transaction];
-
-        const transactionhashCallback = jest.fn();
-        promiEvent.on('transactionHash', (hash) => {
-            expect(hash).toEqual('0x0');
-
-            transactionhashCallback();
-        });
-
-        const response = await method.execute(moduleInstanceMock, promiEvent);
-
-        expect(response).toEqual(true);
-
         const mappedTransaction = {
             from: 0,
             gas: 1,
             gasPrice: 10,
             nonce: 1,
-            chainId: '0x0'
+            chainId: 1
         };
 
-        expect(providerMock.send).toHaveBeenCalledWith('eth_sendTransaction', [mappedTransaction]);
+        formatters.inputTransactionFormatter.mockReturnValueOnce(transaction);
 
-        expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
+        method.callback = jest.fn();
+        method.parameters = [transaction];
 
-        expect(method.callback).toHaveBeenCalledWith(false, '0x0');
+        promiEvent.on('transactionHash', (hash) => {
+            expect(hash).toEqual('0x0');
 
-        expect(transactionhashCallback).toHaveBeenCalled();
+            expect(providerMock.send).toHaveBeenCalledWith('eth_sendTransaction', [transaction]);
+
+            expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
+
+            expect(method.callback).toHaveBeenCalledWith(false, '0x0');
+
+            expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(mappedTransaction, moduleInstanceMock);
+
+            done();
+        });
+
+        method.execute(moduleInstanceMock, promiEvent);
+
     });
 
-    it('calls execute with no gasPrice defined and uses the defaultGasPrice and returns with a resolved promise', async () => {
+    it('calls execute and the gasPrice will be defined with "eth_gasPrice" and returns with a resolved promise', (done) => {
+        providerMock.send.mockReturnValueOnce(Promise.resolve(10));
         providerMock.send.mockReturnValueOnce(Promise.resolve('0x0'));
-
-        transactionConfirmationWorkflowMock.execute = jest.fn((method, moduleInstance, promiEvent) => {
-            promiEvent.resolve(true);
-        });
 
         moduleInstanceMock.currentProvider = providerMock;
         moduleInstanceMock.transactionSigner = {constructor: {name: 'TransactionSigner'}};
@@ -460,34 +473,34 @@ describe('SendTransactionMethodTest', () => {
             chainId: 1
         };
 
-        method.callback = jest.fn();
-        method.parameters = [transaction];
-
-        const transactionhashCallback = jest.fn();
-        promiEvent.on('transactionHash', (hash) => {
-            expect(hash).toEqual('0x0');
-
-            transactionhashCallback();
-        });
-
-        const response = await method.execute(moduleInstanceMock, promiEvent);
-
-        expect(response).toEqual(true);
-
         const mappedTransaction = {
             from: 0,
             gas: 1,
             gasPrice: 10,
             nonce: 1,
-            chainId: '0x0'
+            chainId: 1
         };
 
-        expect(providerMock.send).toHaveBeenCalledWith('eth_sendTransaction', [mappedTransaction]);
+        formatters.inputTransactionFormatter.mockReturnValueOnce(transaction);
 
-        expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
+        method.callback = jest.fn();
+        method.parameters = [transaction];
 
-        expect(method.callback).toHaveBeenCalledWith(false, '0x0');
+        promiEvent.on('transactionHash', (hash) => {
+            expect(hash).toEqual('0x0');
 
-        expect(transactionhashCallback).toHaveBeenCalled();
+            expect(providerMock.send).toHaveBeenNthCalledWith(1, 'eth_gasPrice', []);
+            expect(providerMock.send).toHaveBeenNthCalledWith(2, 'eth_sendTransaction', [transaction]);
+
+            expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
+
+            expect(method.callback).toHaveBeenCalledWith(false, '0x0');
+
+            expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(mappedTransaction, moduleInstanceMock);
+
+            done();
+        });
+
+        method.execute(moduleInstanceMock, promiEvent);
     });
 });
