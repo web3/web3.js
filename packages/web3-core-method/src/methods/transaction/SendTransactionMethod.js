@@ -54,7 +54,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      *
      * @method execute
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Eth} moduleInstance
      * @param {PromiEvent} promiEvent
      *
      * @callback callback callback(error, result)
@@ -109,7 +109,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      *
      * @param {String} privateKey
      * @param {PromiEvent} promiEvent
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Eth} moduleInstance
      */
     async sendRawTransaction(privateKey, promiEvent, moduleInstance) {
         if (this.parameters[0].chainId) {
