@@ -259,10 +259,6 @@ export const outputTransactionFormatter = (receipt) => {
  * @returns {Object}
  */
 export const outputTransactionReceiptFormatter = (receipt) => {
-    if (typeof receipt !== 'object') {
-        throw new TypeError(`Received receipt is invalid: ${receipt}`);
-    }
-
     if (receipt.blockNumber !== null) {
         receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
     }

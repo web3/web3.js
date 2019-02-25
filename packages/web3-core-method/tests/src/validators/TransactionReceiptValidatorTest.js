@@ -37,6 +37,22 @@ describe('TransactionReceiptValidatorTest', () => {
         expect(Utils.hexToNumber).toHaveBeenCalledWith(110);
     });
 
+    it('calls validate and returns true with undefined status property', () => {
+        delete receipt.status;
+        
+        Utils.hexToNumber.mockReturnValueOnce(110);
+
+        method.parameters = [
+            {
+                gas: 110
+            }
+        ];
+
+        expect(transactionReceiptValidator.validate(receipt, method)).toEqual(true);
+
+        expect(Utils.hexToNumber).toHaveBeenCalledWith(110);
+    });
+
     it('calls validate and returns error because of invalid gasUsage', () => {
         Utils.hexToNumber.mockReturnValueOnce(100);
 
