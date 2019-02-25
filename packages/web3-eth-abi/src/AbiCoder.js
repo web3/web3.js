@@ -241,7 +241,6 @@ export default class AbiCoder {
         const res = this.ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`);
 
         const returnValues = {};
-        returnValues.__length__ = 0;
 
         let decodedValue;
         outputs.forEach((output, i) => {
@@ -253,7 +252,6 @@ export default class AbiCoder {
             if (isObject(output) && output.name) {
                 returnValues[output.name] = decodedValue;
             }
-            returnValues.__length__ ++;
         });
 
         return returnValues;

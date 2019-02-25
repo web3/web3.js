@@ -140,7 +140,7 @@ describe('AbiCoderTest', () => {
     it('calls decodeParameters and returns the expected object', () => {
         ethersAbiCoderMock.decode.mockReturnValueOnce(['0']);
 
-        expect(abiCoder.decodeParameters([{name: 'output'}], '0x0')).toEqual({output: '0', '0': '0', __length__: 1});
+        expect(abiCoder.decodeParameters([{name: 'output'}], '0x0')).toEqual({output: '0', '0': '0'});
 
         expect(ethersAbiCoderMock.decode).toHaveBeenCalledWith([{name: 'output'}], '0x0');
     });
