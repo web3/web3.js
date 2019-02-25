@@ -43,17 +43,17 @@ describe('CallContractMethodTest', () => {
     });
 
     it('calls afterExecution and returns the result array', () => {
-        abiCoderMock.decodeParameters.mockReturnValueOnce(['0x0', '0x0']);
+        abiCoderMock.decodeParameters.mockReturnValueOnce({0: '0x0', 1: '0x0', __length__: 2});
 
         abiItemModelMock.getOutputs.mockReturnValueOnce([]);
 
-        expect(callContractMethod.afterExecution('0x0')).toEqual(['0x0', '0x0']);
+        expect(callContractMethod.afterExecution('0x0')).toEqual({0: '0x0', 1: '0x0', __length__: 2});
 
         expect(abiCoderMock.decodeParameters).toHaveBeenCalledWith([], '0');
     });
 
     it('calls afterExecution and returns the first array item as result', () => {
-        abiCoderMock.decodeParameters.mockReturnValueOnce(['0x0']);
+        abiCoderMock.decodeParameters.mockReturnValueOnce({0: '0x0', value: '0x0', __length__: 1});
 
         abiItemModelMock.getOutputs.mockReturnValueOnce([]);
 
