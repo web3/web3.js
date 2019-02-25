@@ -1,6 +1,4 @@
 import TransactionConfirmationWorkflow from '../../../src/workflows/TransactionConfirmationWorkflow';
-import TransactionSigner from '../../../src/signers/TransactionSigner';
-import MessageSigner from '../../../src/signers/MessageSigner';
 import TransactionReceiptValidator from '../../../src/validators/TransactionReceiptValidator';
 import NewHeadsWatcher from '../../../src/watchers/NewHeadsWatcher';
 import SendRawTransactionMethod from '../../../src/methods/transaction/SendRawTransactionMethod';
@@ -20,14 +18,6 @@ describe('ModuleFactoryTest', () => {
         expect(moduleFactory.createTransactionConfirmationWorkflow({}, {})).toBeInstanceOf(
             TransactionConfirmationWorkflow
         );
-    });
-
-    it('calls createTransactionSigner and should return an instance of TransactionSigner', () => {
-        expect(moduleFactory.createTransactionSigner()).toBeInstanceOf(TransactionSigner);
-    });
-
-    it('calls createMessageSigner and should return an instance of MessageSigner', () => {
-        expect(moduleFactory.createMessageSigner()).toBeInstanceOf(MessageSigner);
     });
 
     it('calls createTransactionReceiptValidator and should return an instance of TransactionReceiptValidator', () => {

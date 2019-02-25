@@ -3,7 +3,6 @@ import {WebsocketProvider} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
 import SignMethod from '../../../src/methods/SignMethod';
 import Accounts from '../../__mocks__/Accounts';
-import MessageSigner from '../../../src/signers/MessageSigner';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 // Mocks
@@ -28,10 +27,7 @@ describe('SignMethodTest', () => {
 
         accountsMock = new Accounts();
 
-        new MessageSigner(accountsMock);
-        messageSignerMock = MessageSigner.mock.instances[0];
-
-        method = new SignMethod({}, formatters, accountsMock, messageSignerMock);
+        method = new SignMethod({}, formatters, accountsMock);
         method.callback = jest.fn();
     });
 
@@ -49,8 +45,6 @@ describe('SignMethodTest', () => {
         expect(method.formatters).toEqual(formatters);
 
         expect(method.accounts).toEqual(accountsMock);
-
-        expect(method.messageSigner).toEqual(messageSignerMock);
     });
 
     it('calls execute with wallets defined', async () => {
