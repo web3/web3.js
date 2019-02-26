@@ -5,6 +5,7 @@ import {HttpProvider, ProvidersModuleFactory} from 'web3-providers';
 import {MethodModuleFactory} from 'web3-core-method';
 import {Network} from 'web3-net';
 import {AbiCoder} from 'web3-eth-abi';
+import {ContractModuleFactory} from 'web3-eth-contract';
 import Registry from '../../src/contracts/Registry';
 import namehash from 'eth-ens-namehash';
 import Ens from '../../src/Ens';
@@ -21,6 +22,7 @@ jest.mock('AbiCoder');
 jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('namehash');
+jest.mock('ContractModuleFactory');
 
 /**
  * Ens test
@@ -30,6 +32,7 @@ describe('EnsTest', () => {
         providerMock,
         providersModuleFactoryMock,
         methodModuleFactoryMock,
+        constractModuleFactoryMock,
         registryMock,
         ensModuleFactoryMock,
         abiCoderMock,
@@ -48,6 +51,9 @@ describe('EnsTest', () => {
         new Registry();
         registryMock = Registry.mock.instances[0];
         registryMock.PromiEvent = PromiEvent;
+
+        new ContractModuleFactory();
+        constractModuleFactoryMock = ContractModuleFactory.mock.instances[0];
 
         new EnsModuleFactory();
         ensModuleFactoryMock = EnsModuleFactory.mock.instances[0];
@@ -72,6 +78,7 @@ describe('EnsTest', () => {
             methodModuleFactoryMock,
             {},
             ensModuleFactoryMock,
+            constractModuleFactoryMock,
             PromiEvent,
             abiCoderMock,
             Utils,
@@ -83,6 +90,7 @@ describe('EnsTest', () => {
 
     it('constructor check', () => {
         expect(ens.registry).toEqual(registryMock);
+
         expect(ensModuleFactoryMock.createRegistry).toHaveBeenCalledWith(
             ens.currentProvider,
             ens.providersModuleFactory,
@@ -95,6 +103,20 @@ describe('EnsTest', () => {
             ens.registryOptions,
             ens.net
         );
+
+        expect(ens.ensModuleFactory).toEqual(ensModuleFactoryMock);
+
+        expect(ens.contractModuleFactory).toEqual(constractModuleFactoryMock);
+
+        expect(ens.promiEvent).toEqual(PromiEvent);
+
+        expect(ens.abiCoder).toEqual(abiCoderMock);
+
+        expect(ens.utils).toEqual(Utils);
+
+        expect(ens.registryOptions).toEqual({});
+
+        expect(ens.net).toEqual(networkMock);
     });
 
     it('calls resolver and returns with a resolved promise', async () => {

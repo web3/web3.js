@@ -20,14 +20,11 @@
  * @date 2018
  */
 
-/* eslint-disable no-new-func */
-let global;
-try {
-    global = new Function('return this')();
-} catch (error) {
-    global = window;
-}
-/* eslint-enable */
+const global =
+    (function() {
+        return this || (typeof self === 'object' && self);
+        // eslint-disable-next-line no-new-func
+    })() || new Function('return this')();
 
 export default class ProviderDetector {
     /**
