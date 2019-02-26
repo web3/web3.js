@@ -25,7 +25,7 @@ import ContractDeployMethod from '../methods/ContractDeployMethod';
 import PastEventLogsMethod from '../methods/PastEventLogsMethod';
 import AllPastEventLogsMethod from '../methods/AllPastEventLogsMethod';
 import SendContractMethod from '../methods/SendContractMethod';
-import {EstimateGasMethod} from 'web3-core-method';
+import {EstimateGasMethod, SendRawTransactionMethod, ChainIdMethod, GetTransactionCountMethod} from 'web3-core-method';
 
 export default class MethodFactory {
     /**
@@ -143,11 +143,15 @@ export default class MethodFactory {
      * @returns {SendContractMethod}
      */
     createSendContractMethod(abiItem, abiModel) {
+        const transactionConfirmationWorkflow = this.methodModuleFactory.createTransactionConfirmationWorkflow();
+
         return new SendContractMethod(
             this.utils,
             this.formatters,
-            this.methodModuleFactory.createTransactionConfirmationWorkflow(),
-            this.methodModuleFactory.createSendRawTransactionMethod(),
+            transactionConfirmationWorkflow,
+            new SendRawTransactionMethod(this.utils, this.formatters, transactionConfirmationWorkflow),
+            new ChainIdMethod(this.utils, this.formatters),
+            new GetTransactionCountMethod(this.utils, this.formatters),
             this.contractModuleFactory.createAllEventsLogDecoder(),
             abiModel
         );

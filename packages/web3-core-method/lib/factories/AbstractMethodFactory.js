@@ -20,6 +20,10 @@
  * @date 2018
  */
 
+import SendRawTransactionMethod from '../../src/methods/transaction/SendRawTransactionMethod';
+import GetTransactionCountMethod from '../../src/methods/account/GetTransactionCountMethod';
+import ChainIdMethod from '../../src/methods/network/ChainIdMethod';
+
 export default class AbstractMethodFactory {
     /**
      * @param {MethodModuleFactory} methodModuleFactory
@@ -92,11 +96,15 @@ export default class AbstractMethodFactory {
                 return new method(this.utils, this.formatters);
             case 'SEND':
                 if (method.name === 'SendTransactionMethod') {
+                    const transactionConfirmationWorkflow = this.methodModuleFactory.createTransactionConfirmationWorkflow();
+
                     return new method(
                         this.utils,
                         this.formatters,
-                        this.methodModuleFactory.createTransactionConfirmationWorkflow(),
-                        this.methodModuleFactory.createSendRawTransactionMethod()
+                        transactionConfirmationWorkflow,
+                        new SendRawTransactionMethod(this.utils, this.formatters, transactionConfirmationWorkflow),
+                        new ChainIdMethod(this.utils, this.formatters),
+                        new GetTransactionCountMethod(this.utils, this.formatters)
                     );
                 }
 

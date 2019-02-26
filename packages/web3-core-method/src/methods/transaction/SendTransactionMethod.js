@@ -29,12 +29,23 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      * @param {Object} formatters
      * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
      * @param {SendRawTransactionMethod} sendRawTransactionMethod
+     * @param {ChainIdMethod} chainIdMethod
+     * @param {GetTransactionCountMethod} getTransactionCountMethod
      *
      * @constructor
      */
-    constructor(utils, formatters, transactionConfirmationWorkflow, sendRawTransactionMethod) {
+    constructor(
+        utils,
+        formatters,
+        transactionConfirmationWorkflow,
+        sendRawTransactionMethod,
+        chainIdMethod,
+        getTransactionCountMethod
+    ) {
         super('eth_sendTransaction', 1, utils, formatters, transactionConfirmationWorkflow);
         this.sendRawTransactionMethod = sendRawTransactionMethod;
+        this.chainIdMethod = chainIdMethod;
+        this.getTransactionCountMethod = getTransactionCountMethod;
     }
 
     /**
@@ -115,11 +126,12 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      */
     async sendRawTransaction(privateKey, promiEvent, moduleInstance) {
         if (!this.parameters[0].chainId) {
-            this.parameters[0].chainId = await moduleInstance.getChainId();
+            this.parameters[0].chainId = await this.chainIdMethod.execute(moduleInstance);
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
-            this.parameters[0].nonce = await moduleInstance.getTransactionCount(this.parameters[0].from);
+            this.getTransactionCountMethod.parameters = [this.parameters[0].from];
+            this.parameters[0].nonce = await this.getTransactionCountMethod.execute(moduleInstance);
         }
 
         const response = await moduleInstance.transactionSigner.sign(this.parameters[0], privateKey);

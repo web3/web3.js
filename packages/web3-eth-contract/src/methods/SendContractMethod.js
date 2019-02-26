@@ -29,6 +29,8 @@ export default class SendContractMethod extends SendTransactionMethod {
      * @param {Object} formatters
      * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
      * @param {SendRawTransactionMethod} sendRawTransactionMethod
+     * @param {ChainIdMethod} chainIdMethod
+     * @param {GetTransactionCountMethod} getTransactionCountMethod
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
      *
@@ -39,10 +41,19 @@ export default class SendContractMethod extends SendTransactionMethod {
         formatters,
         transactionConfirmationWorkflow,
         sendRawTransactionMethod,
+        chainIdMethod,
+        getTransactionCountMethod,
         allEventsLogDecoder,
         abiModel
     ) {
-        super(utils, formatters, transactionConfirmationWorkflow, sendRawTransactionMethod);
+        super(
+            utils,
+            formatters,
+            transactionConfirmationWorkflow,
+            sendRawTransactionMethod,
+            chainIdMethod,
+            getTransactionCountMethod
+        );
 
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.abiModel = abiModel;

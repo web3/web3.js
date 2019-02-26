@@ -33,7 +33,7 @@ import {ProvidersModuleFactory} from 'web3-providers';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import EthTransactionSigner from './signers/TransactionSigner';
-import EthModule from './Eth';
+import EthModule from './Eth.js';
 import EthMethodFactory from './factories/MethodFactory';
 
 /**
@@ -75,7 +75,7 @@ export const Eth = (provider, options) => {
     const abiCoder = new AbiCoder();
     const methodModuleFactory = new MethodModuleFactory();
 
-    new EthModule(
+    return new EthModule(
         provider,
         new ProvidersModuleFactory(),
         methodModuleFactory,

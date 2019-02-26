@@ -232,14 +232,7 @@ export default class ContractModuleFactory {
      * @returns {MethodFactory}
      */
     createMethodFactory() {
-        return new MethodFactory(
-            this.accounts,
-            this.utils,
-            this.formatters,
-            this,
-            this.methodModuleFactory,
-            this.abiCoder
-        );
+        return new MethodFactory(this.utils, this.formatters, this, this.methodModuleFactory, this.abiCoder);
     }
 
     /**
