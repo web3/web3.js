@@ -59,6 +59,7 @@ export default class EnsModuleFactory {
             methodModuleFactory,
             ensModuleOptions,
             this,
+            contractModuleFactory,
             promiEvent,
             abiCoder,
             utils,
