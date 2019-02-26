@@ -118,6 +118,7 @@ describe('AbstractContractTest', () => {
             methodModuleFactoryMock,
             contractModuleFactoryMock,
             PromiEvent,
+            {},
             abiCoderMock,
             Utils,
             formatters,
@@ -156,9 +157,11 @@ describe('AbstractContractTest', () => {
 
         expect(abstractContract.abiMapper).toEqual(abiMapperMock);
 
-        expect(abstractContract.options).toEqual({address: '0x0'});
+        expect(abstractContract.options).toEqual({address: '0x0', transactionSigner: {}});
 
         expect(abstractContract.PromiEvent).toEqual(PromiEvent);
+
+        expect(abstractContract.accounts).toEqual({});
 
         expect(abstractContract.methodFactory).toEqual(methodFactoryMock);
 

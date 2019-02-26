@@ -421,9 +421,23 @@ describe('EthTest', () => {
     it('calls the Contract factory method from the constructor', () => {
         contractModuleFactoryMock.createContract.mockReturnValueOnce(new AbstractContract());
 
-        expect(new eth.Contract()).toBeInstanceOf(AbstractContract);
+        expect(new eth.Contract([], '0x0', {})).toBeInstanceOf(AbstractContract);
 
         expect(eth.initiatedContracts).toHaveLength(1);
+
+        const createContractCall = contractModuleFactoryMock.createContract.mock.calls[0];
+
+        expect(createContractCall[0]).toEqual(eth.currentProvider);
+
+        expect(createContractCall[1]).toEqual(eth.providersModuleFactory);
+
+        expect(createContractCall[3]).toEqual(eth.accounts);
+
+        expect(createContractCall[4]).toEqual([]);
+
+        expect(createContractCall[5]).toEqual('0x0');
+
+        expect(createContractCall[6]).toEqual({transactionSigner: transactionSignerMock});
     });
 
     it('calls setProvider and returns true', () => {
