@@ -33,8 +33,18 @@ import {ProvidersModuleFactory} from 'web3-providers';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import EthModuleFactory from './factories/EthModuleFactory';
+import EthTransactionSigner from './signers/TransactionSigner';
 
-export TransactionSigner from './signers/TransactionSigner';
+/**
+ * Creates the TransactionSigner class
+ *
+ * @returns {TransactionSigner}
+ *
+ * @constructor
+ */
+export const TransactionSigner = () => {
+    return new EthTransactionSigner(Utils, formatters);
+};
 
 /**
  * Creates the Eth object
@@ -45,6 +55,8 @@ export TransactionSigner from './signers/TransactionSigner';
  * @param {Object} options
  *
  * @returns {Eth}
+ *
+ * @constructor
  */
 export const Eth = (provider, options) => {
     const accounts = new Accounts(provider, options);

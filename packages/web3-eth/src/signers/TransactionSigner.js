@@ -24,6 +24,17 @@ import Account from 'eth-lib/lib/account';
 
 export default class TransactionSigner {
     /**
+     * @param {Utils} utils // TODO: Remove utils dependency and use a Hex VO
+     * @param {Object} formatters // TODO: Remove formatters dependency and use a Transaction VO
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        this.utils = utils;
+        this.formatters = formatters;
+    }
+
+    /**
      * Signs the transaction
      *
      * @param {Object} transaction
@@ -32,6 +43,12 @@ export default class TransactionSigner {
      * @returns {Promise<{messageHash, v, r, s, rawTransaction}>}
      */
     async sign(transaction, privateKey) {
+        transaction = this.formatters.inputCallFormatter(transaction);
+        transaction.to = transaction.to || '0x';
+        transaction.data = transaction.data || '0x';
+        transaction.value = transaction.value || '0x';
+        transaction.chainId = this.utils.numberToHex(transaction.chainId);
+
         const rlpEncoded = this.createRlpEncodedTransaction(transaction);
         const hash = Hash.keccak256(rlpEncoded);
         const signature = this.createAccountSignature(hash, privateKey);

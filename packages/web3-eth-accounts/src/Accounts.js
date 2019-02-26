@@ -363,7 +363,7 @@ export default class Accounts extends AbstractWeb3Module {
         }
 
         try {
-            const signedTransaction = await account.signTransaction(tx);
+            const signedTransaction = await this.transactionSigner.sign(tx, account.privateKey);
 
             if (isFunction(callback)) {
                 callback(false, signedTransaction);

@@ -1,22 +1,24 @@
-// Mocks
-import Account from 'web3-eth-accounts/src/models/Account';
 import {formatters} from 'web3-core-helpers';
+import TransactionSigner from '../../../src/signers/TransactionSigner';
 
-jest.mock('');
+// Mocks
+jest.mock('formatters');
 
 /**
- * TransactionSignerTest test
+ * TransactionSigner test
  */
-describe('TransactionSignerTestTest', () => {
-    let TransactionSignerTest;
+describe('TransactionSignerTest', () => {
+    let transactionSigner;
 
     beforeEach(() => {
-        TransactionSignerTest = new TransactionSignerTest();
+        transactionSigner = new TransactionSigner(formatters);
     });
 
-    it('constructor check', () => {});
+    it('constructor check', () => {
+        expect(transactionSigner.formatters).toEqual(formatters);
+    });
 
-    it('calls signTransaction and returns a resolved promise', async () => {
+    it('calls sign and returns the expected resolved promise', async () => {
         const callback = jest.fn();
 
         const tx = {
@@ -38,8 +40,6 @@ describe('TransactionSignerTestTest', () => {
         Bytes.fromNat = jest.fn();
 
         formatters.inputCallFormatter.mockReturnValueOnce(tx);
-
-        Utils.numberToHex.mockReturnValueOnce(1);
 
         RLP.encode.mockReturnValue('encoded');
 
