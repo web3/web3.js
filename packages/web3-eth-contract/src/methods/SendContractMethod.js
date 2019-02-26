@@ -28,8 +28,6 @@ export default class SendContractMethod extends SendTransactionMethod {
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
-     * @param {Accounts} accounts
-     * @param {TransactionSigner} transactionSigner
      * @param {SendRawTransactionMethod} sendRawTransactionMethod
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
@@ -40,8 +38,6 @@ export default class SendContractMethod extends SendTransactionMethod {
         utils,
         formatters,
         transactionConfirmationWorkflow,
-        accounts,
-        transactionSigner,
         sendRawTransactionMethod,
         allEventsLogDecoder,
         abiModel
@@ -50,10 +46,9 @@ export default class SendContractMethod extends SendTransactionMethod {
             utils,
             formatters,
             transactionConfirmationWorkflow,
-            accounts,
-            transactionSigner,
             sendRawTransactionMethod
         );
+
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.abiModel = abiModel;
     }

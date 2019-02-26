@@ -29,7 +29,6 @@ import {EstimateGasMethod} from 'web3-core-method';
 
 export default class MethodFactory {
     /**
-     * @param {Accounts} accounts
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {ContractModuleFactory} contractModuleFactory
@@ -38,8 +37,7 @@ export default class MethodFactory {
      *
      * @constructor
      */
-    constructor(accounts, utils, formatters, contractModuleFactory, methodModuleFactory, abiCoder) {
-        this.accounts = accounts;
+    constructor(utils, formatters, contractModuleFactory, methodModuleFactory, abiCoder) {
         this.utils = utils;
         this.formatters = formatters;
         this.contractModuleFactory = contractModuleFactory;
@@ -149,8 +147,6 @@ export default class MethodFactory {
             this.utils,
             this.formatters,
             this.methodModuleFactory.createTransactionConfirmationWorkflow(),
-            this.accounts,
-            this.methodModuleFactory.createTransactionSigner(),
             this.methodModuleFactory.createSendRawTransactionMethod(),
             this.contractModuleFactory.createAllEventsLogDecoder(),
             abiModel
@@ -171,8 +167,6 @@ export default class MethodFactory {
             this.utils,
             this.formatters,
             this.methodModuleFactory.createTransactionConfirmationWorkflow(),
-            this.accounts,
-            this.methodModuleFactory.createTransactionSigner(),
             this.methodModuleFactory.createSendRawTransactionMethod(),
             contract
         );

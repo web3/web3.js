@@ -1,9 +1,7 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {Accounts} from 'web3-eth-accounts';
 import {SendTransactionMethod} from 'web3-core-method';
 import TransactionConfirmationWorkflow from '../../__mocks__/TransactionConfirmationWorkflow';
-import TransactionSigner from '../../__mocks__/TransactionSigner';
 import AllEventsLogDecoder from '../../../src/decoders/AllEventsLogDecoder';
 import AbiModel from '../../../src/models/AbiModel';
 import SendContractMethod from '../../../src/methods/SendContractMethod';
@@ -22,18 +20,11 @@ jest.mock('../../../src/models/AbiModel');
 describe('SendContractMethodTest', () => {
     let sendContractMethod,
         transactionConfirmationWorkflowMock,
-        accountsMock,
-        transactionSignerMock,
         allEventsLogDecoderMock,
         abiModelMock;
 
     beforeEach(() => {
         transactionConfirmationWorkflowMock = new TransactionConfirmationWorkflow();
-
-        new Accounts();
-        accountsMock = Accounts.mock.instances[0];
-
-        transactionSignerMock = new TransactionSigner();
 
         new AbiModel();
         abiModelMock = AbiModel.mock.instances[0];
@@ -45,8 +36,6 @@ describe('SendContractMethodTest', () => {
             Utils,
             formatters,
             transactionConfirmationWorkflowMock,
-            accountsMock,
-            transactionSignerMock,
             {},
             allEventsLogDecoderMock,
             abiModelMock
@@ -54,18 +43,6 @@ describe('SendContractMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(sendContractMethod.utils).toEqual(Utils);
-
-        expect(sendContractMethod.formatters).toEqual(formatters);
-
-        expect(sendContractMethod.transactionConfirmationWorkflow).toEqual(transactionConfirmationWorkflowMock);
-
-        expect(sendContractMethod.sendRawTransactionMethod).toEqual({});
-
-        expect(sendContractMethod.accounts).toEqual(accountsMock);
-
-        expect(sendContractMethod.transactionSigner).toEqual(transactionSignerMock);
-
         expect(sendContractMethod.allEventsLogDecoder).toEqual(allEventsLogDecoderMock);
 
         expect(sendContractMethod.abiModel).toEqual(abiModelMock);

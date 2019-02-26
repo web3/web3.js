@@ -34,6 +34,7 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @param {Object} formatters
      * @param {Array} abi
      * @param {String} address
+     * @param {Accounts} accounts
      * @param {Object} options
      *
      * @constructor
@@ -47,8 +48,9 @@ export default class AbstractContract extends AbstractWeb3Module {
         abiCoder,
         utils,
         formatters,
-        abi = AbstractWeb3Module.throwIfMissing('abi'),
+        abi,
         address,
+        accounts,
         options = {}
     ) {
         super(provider, providersModuleFactory, methodModuleFactory, null, options);
@@ -61,6 +63,7 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.PromiEvent = PromiEvent;
         this.methodFactory = this.contractModuleFactory.createMethodFactory();
         this.abiModel = this.abiMapper.map(abi);
+        this.accounts = accounts;
         this.options = options;
 
         if (address) {

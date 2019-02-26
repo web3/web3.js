@@ -156,7 +156,7 @@ describe('AbstractContractTest', () => {
 
         expect(abstractContract.abiMapper).toEqual(abiMapperMock);
 
-        expect(abstractContract.options).toEqual(options);
+        expect(abstractContract.options).toEqual({address: '0x0'});
 
         expect(abstractContract.PromiEvent).toEqual(PromiEvent);
 
