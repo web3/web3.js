@@ -32,7 +32,9 @@ import {
     SendTransactionMethod,
     SignMethod,
     SignTransactionMethod,
-    SubmitWorkMethod
+    SubmitWorkMethod,
+    ChainIdMethod,
+    VersionMethod
 } from 'web3-core-method';
 import {AbiCoder} from 'web3-eth-abi';
 import {Accounts} from 'web3-eth-accounts';
@@ -65,6 +67,7 @@ jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('AbstractContract');
 jest.mock('ContractModuleFactory');
+jest.mock('../../src/signers/TransactionSigner');
 
 /**
  * Eth test
@@ -214,7 +217,9 @@ describe('EthTest', () => {
             submitWork: SubmitWorkMethod,
             getWork: GetWorkMethod,
             getPastLogs: GetPastLogsMethod,
-            requestAccounts: RequestAccountsMethod
+            requestAccounts: RequestAccountsMethod,
+            getChainId: ChainIdMethod,
+            getId: VersionMethod
         });
     });
 
@@ -432,13 +437,10 @@ describe('EthTest', () => {
 
         networkMock.setProvider = jest.fn();
         personalMock.setProvider = jest.fn();
-        accountsMock.setProvider = jest.fn();
 
         networkMock.setProvider.mockReturnValueOnce(true);
 
         personalMock.setProvider.mockReturnValueOnce(true);
-
-        accountsMock.setProvider.mockReturnValueOnce(true);
 
         expect(eth.setProvider('provider', 'net')).toEqual(true);
 
@@ -447,7 +449,5 @@ describe('EthTest', () => {
         expect(networkMock.setProvider).toHaveBeenCalledWith('provider', 'net');
 
         expect(personalMock.setProvider).toHaveBeenCalledWith('provider', 'net');
-
-        expect(accountsMock.setProvider).toHaveBeenCalledWith('provider', 'net');
     });
 });
