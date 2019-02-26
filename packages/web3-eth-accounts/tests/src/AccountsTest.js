@@ -228,7 +228,6 @@ describe('AccountsTest', () => {
 
         expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
 
-
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, account.privateKey);
@@ -278,14 +277,15 @@ describe('AccountsTest', () => {
     });
 
     it('calls signTransaction and rejects with a promise', async () => {
-        const callback = jest.fn(),
-            transaction = {
-                from: 0,
-                gas: 1,
-                gasPrice: 1,
-                nonce: 1,
-                chainId: 1
-            };
+        const callback = jest.fn();
+
+        const transaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        };
 
         const account = {privateKey: 'pk', address: '0x0'};
         Account.fromPrivateKey.mockReturnValueOnce(account);
@@ -605,7 +605,7 @@ describe('AccountsTest', () => {
 
         expect(() => {
             accounts.wallet.decrypt([true], 'pw');
-        }).toThrow('Couldn\'t decrypt accounts. Password wrong?');
+        }).toThrow("Couldn't decrypt accounts. Password wrong?");
 
         expect(Account.fromV3Keystore).toHaveBeenCalledWith(true, 'pw', false, accounts);
     });

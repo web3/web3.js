@@ -179,7 +179,7 @@ export default class HttpProvider {
 
     /**
      * Checks if the error `net::ERR_NAME_NOT_RESOLVED` or `net::ERR_CONNECTION_REFUSED` will appear.
-     * 
+     *
      * @method isInvalidHttpEndpoint
      *
      * @param {Object} request

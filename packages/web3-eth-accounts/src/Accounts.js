@@ -226,7 +226,7 @@ export default class Accounts extends AbstractWeb3Module {
             const account = Account.fromV3Keystore(keystore, password, false, this);
 
             if (!account) {
-                throw new Error('Couldn\'t decrypt accounts. Password wrong?');
+                throw new Error("Couldn't decrypt accounts. Password wrong?");
             }
 
             this.add(account);

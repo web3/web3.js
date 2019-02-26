@@ -32,19 +32,8 @@ export default class ContractDeployMethod extends SendTransactionMethod {
      *
      * @constructor
      */
-    constructor(
-        utils,
-        formatters,
-        transactionConfirmationWorkflow,
-        sendRawTransactionMethod,
-        contract
-    ) {
-        super(
-            utils,
-            formatters,
-            transactionConfirmationWorkflow,
-            sendRawTransactionMethod
-        );
+    constructor(utils, formatters, transactionConfirmationWorkflow, sendRawTransactionMethod, contract) {
+        super(utils, formatters, transactionConfirmationWorkflow, sendRawTransactionMethod);
 
         this.contract = contract;
     }

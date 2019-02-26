@@ -59,7 +59,7 @@ export const Contract = (provider, accounts, abi, address, options) => {
         new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
         PromiEvent,
         abiCoder,
-        utils,
+        Utils,
         formatters,
         abi,
         address,

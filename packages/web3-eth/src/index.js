@@ -33,7 +33,7 @@ import {ProvidersModuleFactory} from 'web3-providers';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import EthTransactionSigner from './signers/TransactionSigner';
-import EthModule from 'Eth';
+import EthModule from './Eth';
 import EthMethodFactory from './factories/MethodFactory';
 
 /**
@@ -86,8 +86,8 @@ export const Eth = (provider, options) => {
         Iban,
         abiCoder,
         new Ens(provider, accounts, options),
-        this.utils,
-        this.formatters,
+        Utils,
+        formatters,
         new SubscriptionsFactory(),
         new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
         new TransactionSigner(),

@@ -18,10 +18,7 @@ jest.mock('../../../src/models/AbiModel');
  * SendContractMethod test
  */
 describe('SendContractMethodTest', () => {
-    let sendContractMethod,
-        transactionConfirmationWorkflowMock,
-        allEventsLogDecoderMock,
-        abiModelMock;
+    let sendContractMethod, transactionConfirmationWorkflowMock, allEventsLogDecoderMock, abiModelMock;
 
     beforeEach(() => {
         transactionConfirmationWorkflowMock = new TransactionConfirmationWorkflow();
