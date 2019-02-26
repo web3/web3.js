@@ -22,7 +22,6 @@
 
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import Wallet from './models/Wallet';
 import {Accounts as AccountsModule} from './Accounts';
 import {ProvidersModuleFactory} from 'web3-providers';
 import {GetGasPriceMethod, GetChainIdMethod, GetTransactionCountMethod} from 'web3-core-method';
@@ -40,7 +39,6 @@ export const Accounts = (provider, options) => {
     return new AccountsModule(
         provider,
         new ProvidersModuleFactory(),
-        new Wallet(Utils),
         formatters,
         new GetChainIdMethod(Utils, formatters),
         new GetGasPriceMethod(Utils, formatters),
