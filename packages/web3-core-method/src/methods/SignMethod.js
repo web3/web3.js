@@ -45,7 +45,7 @@ export default class SignMethod extends AbstractCallMethod {
      * @returns {Promise<Object|String>}
      */
     execute(moduleInstance) {
-        if (moduleInstance.accounts && moduleInstance.accounts.wallet.length > 0) {
+        if (moduleInstance.accounts && moduleInstance.accounts.wallet[this.parameters[1]]) {
             this.beforeExecution(moduleInstance);
 
             return this.signOnClient(moduleInstance);
@@ -63,13 +63,18 @@ export default class SignMethod extends AbstractCallMethod {
      *
      * @returns {Promise<String>}
      */
-    signOnClient(moduleInstance) {
-        let signedMessage;
-
+    async signOnClient(moduleInstance) {
         try {
-            signedMessage = moduleInstance.accounts
-                .privateKeyToAccount(moduleInstance.accounts.wallet[this.parameters[1]])
-                .sign(this.parameters[0]);
+            let signedMessage = moduleInstance.accounts.sign(
+                this.parameters[0],
+                moduleInstance.accounts.wallet[this.parameters[1]].privateKey
+            );
+
+            if (this.callback) {
+                this.callback(false, signedMessage);
+            }
+
+            return signedMessage;
         } catch (error) {
             if (this.callback) {
                 this.callback(error, null);
@@ -77,12 +82,6 @@ export default class SignMethod extends AbstractCallMethod {
 
             throw error;
         }
-
-        if (this.callback) {
-            this.callback(false, signedMessage);
-        }
-
-        return Promise.resolve(signedMessage);
     }
 
     /**
