@@ -21,13 +21,13 @@ import {AbstractWeb3Module} from 'web3-core';
 import isFunction from 'lodash/isFunction';
 import namehash from 'eth-ens-namehash';
 
-// TODO: Maybe it would be better to extend from the CallContractMethod and SendContractMethod and to implement the
-// TODO: ENS methods as method objects. This would clean up the entire module and remove the duplicated code.
+// TODO: Remove the wrapped methods and create a proxy for handling a ENS method call.
 export default class Ens extends AbstractWeb3Module {
     /**
      * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
+     * @param {ContractModuleFactory} contractModuleFactory
      * @param {Object} options
      * @param {EnsModuleFactory} ensModuleFactory
      * @param {PromiEvent} promiEvent
@@ -45,6 +45,7 @@ export default class Ens extends AbstractWeb3Module {
         methodModuleFactory,
         options,
         ensModuleFactory,
+        contractModuleFactory,
         promiEvent,
         abiCoder,
         utils,
@@ -55,6 +56,7 @@ export default class Ens extends AbstractWeb3Module {
         super(provider, providersModuleFactory, methodModuleFactory, null, options);
 
         this.ensModuleFactory = ensModuleFactory;
+        this.contractModuleFactory = contractModuleFactory;
         this.promiEvent = promiEvent;
         this.abiCoder = abiCoder;
         this.utils = utils;
