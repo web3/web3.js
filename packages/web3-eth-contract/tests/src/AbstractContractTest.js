@@ -88,7 +88,7 @@ describe('AbstractContractTest', () => {
         providerResolverMock = ProviderResolver.mock.instances[0];
 
         abi = [];
-        options = {};
+        options = {transactionSigner: {}};
 
         providerDetectorMock.detect = jest.fn(() => {
             return null;
@@ -165,6 +165,8 @@ describe('AbstractContractTest', () => {
         expect(abstractContract.abiModel).toEqual(abiModelMock);
 
         expect(abstractContract.address).toEqual('0x0');
+
+        expect(abstractContract.transactionSigner).toEqual({});
 
         expect(abstractContract.methods).toEqual(methodsProxyMock);
 

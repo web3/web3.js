@@ -36,6 +36,7 @@ export default class Ens extends AbstractWeb3Module {
      * @param {Object} formatters
      * @param {Object} registryOptions
      * @param {Network} net
+     * @param {TransactionSigner} transactionSigner
      *
      * @constructor
      */
@@ -50,7 +51,8 @@ export default class Ens extends AbstractWeb3Module {
         utils,
         formatters,
         registryOptions,
-        net
+        net,
+        transactionSigner
     ) {
         super(provider, providersModuleFactory, methodModuleFactory, null, options);
 
@@ -61,6 +63,7 @@ export default class Ens extends AbstractWeb3Module {
         this.formatters = formatters;
         this.registryOptions = registryOptions;
         this.net = net;
+        this.transactionSigner = options.transactionSigner;
         this._registry = false;
     }
 

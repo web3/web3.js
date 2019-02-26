@@ -75,12 +75,7 @@ export default class Eth extends AbstractWeb3Module {
         this.subscriptionsFactory = subscriptionsFactory;
         this.contractModuleFactory = contractModuleFactory;
         this.initiatedContracts = [];
-        this._transactionSigner = transactionSigner;
-
-        if (options.transactionSigner) {
-            this._transactionSigner = options.transactionSigner;
-            this.accounts.transactionSigner = options.transactionSigner;
-        }
+        this._transactionSigner = options.transactionSigner || transactionSigner;
 
         /**
          * This wrapper function is required for the "new web3.eth.Contract(...)" call.
@@ -94,6 +89,8 @@ export default class Eth extends AbstractWeb3Module {
          * @constructor
          */
         this.Contract = (abi, address, options) => {
+            options.transactionSigner = this.transactionSigner;
+
             const contract = this.contractModuleFactory.createContract(
                 this.currentProvider,
                 this.providersModuleFactory,
@@ -130,6 +127,7 @@ export default class Eth extends AbstractWeb3Module {
     set transactionSigner(transactionSigner) {
         this._transactionSigner = transactionSigner;
         this.accounts.transactionSigner = transactionSigner;
+        this.ens.transactionSigner = transactionSigner;
     }
 
     /**
