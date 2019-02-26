@@ -153,7 +153,7 @@ export default class HttpProvider {
                         }
                     }
 
-                    if (request.response === null && request.status === 0) {
+                    if (this.isInvalidHttpEndpoint(request)) {
                         reject(new Error(`Connection refused or URL couldn't be resolved: ${this.host}`));
                     }
                 }
@@ -175,5 +175,18 @@ export default class HttpProvider {
                 reject(error);
             }
         });
+    }
+
+    /**
+     * Checks if the error `net::ERR_NAME_NOT_RESOLVED` or `net::ERR_CONNECTION_REFUSED` will appear.
+     * 
+     * @method isInvalidHttpEndpoint
+     *
+     * @param {Object} request
+     *
+     * @returns {Boolean}
+     */
+    isInvalidHttpEndpoint(request) {
+        return request.response === null && request.status === 0;
     }
 }
