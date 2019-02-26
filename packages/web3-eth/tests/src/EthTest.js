@@ -43,6 +43,7 @@ import {Network} from 'web3-net';
 import {AbstractContract, ContractModuleFactory} from 'web3-eth-contract';
 import {HttpProvider, ProviderDetector, ProviderResolver, ProvidersModuleFactory} from 'web3-providers';
 import MethodFactory from '../../src/factories/MethodFactory';
+import TransactionSigner from '../../src/signers/TransactionSigner';
 import Eth from '../../src/Eth';
 
 // Mocks
@@ -64,7 +65,6 @@ jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('AbstractContract');
 jest.mock('ContractModuleFactory');
-jest.mock('../../src/factories/EthModuleFactory');
 
 /**
  * Eth test
@@ -83,7 +83,8 @@ describe('EthTest', () => {
         personalMock,
         abiCoderMock,
         ensMock,
-        subscriptionsFactoryMock;
+        subscriptionsFactoryMock,
+        transactionSignerMock;
 
     beforeEach(() => {
         new HttpProvider();
@@ -135,6 +136,9 @@ describe('EthTest', () => {
         new SubscriptionsFactory();
         subscriptionsFactoryMock = SubscriptionsFactory.mock.instances[0];
 
+        new TransactionSigner();
+        transactionSignerMock = TransactionSigner.mock.instances[0];
+
         eth = new Eth(
             providerMock,
             providersModuleFactoryMock,
@@ -150,6 +154,7 @@ describe('EthTest', () => {
             formatters,
             subscriptionsFactoryMock,
             contractModuleFactoryMock,
+            transactionSignerMock,
             {}
         );
     });

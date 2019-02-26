@@ -32,8 +32,9 @@ import {Iban} from 'web3-eth-iban';
 import {ProvidersModuleFactory} from 'web3-providers';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
-import EthModuleFactory from './factories/EthModuleFactory';
 import EthTransactionSigner from './signers/TransactionSigner';
+import EthModule from 'Eth';
+import EthMethodFactory from './factories/MethodFactory';
 
 /**
  * Creates the TransactionSigner class
@@ -44,6 +45,17 @@ import EthTransactionSigner from './signers/TransactionSigner';
  */
 export const TransactionSigner = () => {
     return new EthTransactionSigner(Utils, formatters);
+};
+
+/**
+ * Creates the MethodFactory class of the eth module
+ *
+ * @returns {MethodFactory}
+ *
+ * @constructor
+ */
+export const MethodFactory = () => {
+    return new EthMethodFactory(new MethodModuleFactory(), Utils, formatters);
 };
 
 /**
@@ -63,18 +75,22 @@ export const Eth = (provider, options) => {
     const abiCoder = new AbiCoder();
     const methodModuleFactory = new MethodModuleFactory();
 
-    return new EthModuleFactory(Utils, formatters).createEthModule(
+    new EthModule(
         provider,
         new ProvidersModuleFactory(),
         methodModuleFactory,
+        new MethodFactory(),
         new Network(provider, options),
         accounts,
         new Personal(provider, accounts, options),
         Iban,
         abiCoder,
         new Ens(provider, accounts, options),
+        this.utils,
+        this.formatters,
         new SubscriptionsFactory(),
         new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
+        new TransactionSigner(),
         options
     );
 };
