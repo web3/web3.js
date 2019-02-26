@@ -43,14 +43,17 @@ describe('CallContractMethodTest', () => {
 
     it('calls afterExecution and returns the result array', () => {
         abiCoderMock.decodeParameters = jest.fn();
-        
+
         abiCoderMock.decodeParameters.mockReturnValueOnce(['0x0', '0x0']);
 
-        abiItemModelMock.getOutputs.mockReturnValueOnce([{name: "", type: 'bytes'}, {name: "", type: 'bytes'}]);
+        abiItemModelMock.getOutputs.mockReturnValueOnce([{name: '', type: 'bytes'}, {name: '', type: 'bytes'}]);
 
         expect(callContractMethod.afterExecution('0x0')).toEqual(['0x0', '0x0']);
 
-        expect(abiCoderMock.decodeParameters).toHaveBeenCalledWith([{name: "", type: 'bytes'}, {name: "", type: 'bytes'}], '0');
+        expect(abiCoderMock.decodeParameters).toHaveBeenCalledWith(
+            [{name: '', type: 'bytes'}, {name: '', type: 'bytes'}],
+            '0'
+        );
     });
 
     it('calls afterExecution and returns the first array item as result', () => {
@@ -58,7 +61,7 @@ describe('CallContractMethodTest', () => {
 
         abiCoderMock.decodeParameter.mockReturnValueOnce('0x0');
 
-        abiItemModelMock.getOutputs.mockReturnValueOnce([{name: "result", type: 'bytes'}]);
+        abiItemModelMock.getOutputs.mockReturnValueOnce([{name: 'result', type: 'bytes'}]);
 
         expect(callContractMethod.afterExecution('0x0')).toEqual('0x0');
 

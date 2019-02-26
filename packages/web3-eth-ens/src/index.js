@@ -34,10 +34,11 @@ import EnsModuleFactory from './factories/EnsModuleFactory';
  *
  * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
  * @param {Object} options
+ * @param {Accounts} accounts
  *
  * @returns {Ens}
  */
-export const Ens = (provider, options) => {
+export const Ens = (provider, options, accounts) => {
     const abiCoder = new AbiCoder();
 
     const methodModuleFactory = new MethodModuleFactory();
