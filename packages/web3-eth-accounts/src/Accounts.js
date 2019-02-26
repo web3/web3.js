@@ -28,7 +28,7 @@ import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import {encodeSignature, recover} from 'eth-lib/lib/account'; // TODO: Remove this dependency
-import {isHexStrict, hexToBytes, randomHex} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
+import {hexToBytes, isHexStrict, randomHex} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 import {AbstractWeb3Module} from 'web3-core';
 import Account from './models/Account';
 
@@ -159,16 +159,19 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     remove(addressOrIndex) {
+        let removed;
+
         if (this.accounts[addressOrIndex]) {
             Object.keys(this.accounts).forEach((key) => {
                 if (this.accounts[key].address === addressOrIndex || key === addressOrIndex) {
                     delete this.accounts[key];
 
                     this.accountsIndex--;
+                    removed = true;
                 }
             });
 
-            return true;
+            return !!removed;
         }
 
         return false;
@@ -223,7 +226,7 @@ export default class Accounts extends AbstractWeb3Module {
             const account = Account.fromV3Keystore(keystore, password, false, this);
 
             if (!account) {
-                throw new Error("Couldn't decrypt accounts. Password wrong?");
+                throw new Error('Couldn\'t decrypt accounts. Password wrong?');
             }
 
             this.add(account);
@@ -346,23 +349,23 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Promise<Object>}
      */
     async signTransaction(tx, privateKey, callback) {
-        const account = Account.fromPrivateKey(privateKey, this);
-
-        if (!tx.chainId) {
-            tx.chainId = await this.chainIdMethod.execute(this);
-        }
-
-        if (!tx.getGasPrice) {
-            tx.getGasPrice = await this.getGasPriceMethod.execute(this);
-        }
-
-        if (!tx.nonce) {
-            this.getTransactionCountMethod.parameters = [account.address];
-
-            tx.nonce = await this.getTransactionCountMethod.execute(this);
-        }
-
         try {
+            const account = Account.fromPrivateKey(privateKey, this);
+
+            if (!tx.chainId) {
+                tx.chainId = await this.chainIdMethod.execute(this);
+            }
+
+            if (!tx.gasPrice) {
+                tx.gasPrice = await this.getGasPriceMethod.execute(this);
+            }
+
+            if (!tx.nonce) {
+                this.getTransactionCountMethod.parameters = [account.address];
+
+                tx.nonce = await this.getTransactionCountMethod.execute(this);
+            }
+
             const signedTransaction = await this.transactionSigner.sign(tx, account.privateKey);
 
             if (isFunction(callback)) {

@@ -84,16 +84,6 @@ describe('AbstractWeb3ModuleTest', () => {
         );
     });
 
-    it('constructor throws error on missing required parameters', () => {
-        expect(() => {
-            new AbstractWeb3Module();
-        }).toThrow('Missing parameter: provider');
-
-        expect(() => {
-            new AbstractWeb3Module('');
-        }).toThrow('Missing parameter: ProvidersModuleFactory');
-    });
-
     it('constructor defines all properties', () => {
         expect(abstractWeb3Module.defaultAccount).toEqual('0x03C9A938fF7f54090d0d99e2c6f80380510Ea078');
 

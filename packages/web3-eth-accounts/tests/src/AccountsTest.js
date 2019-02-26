@@ -1,4 +1,4 @@
-import {isHexStrict, randomHex} from 'web3-utils';
+import {isHexStrict, randomHex, hexToBytes} from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {ChainIdMethod, GetGasPriceMethod, GetTransactionCountMethod} from 'web3-core-method';
 import Hash from 'eth-lib/lib/hash';
@@ -44,6 +44,7 @@ describe('AccountsTest', () => {
         chainIdMethodMock,
         getGasPriceMethodMock,
         getTransactionCountMethodMock,
+        transactionSignerMock,
         options;
 
     beforeEach(() => {
@@ -78,7 +79,9 @@ describe('AccountsTest', () => {
         new GetTransactionCountMethod();
         getTransactionCountMethodMock = GetTransactionCountMethod.mock.instances[0];
 
-        options = {transactionSigner: new TransactionSigner()};
+        transactionSignerMock = new TransactionSigner();
+
+        options = {transactionSigner: transactionSignerMock};
 
         accounts = new Accounts(
             providerMock,
@@ -124,36 +127,180 @@ describe('AccountsTest', () => {
     it('calls signTransaction and resolves with a promise', async () => {
         const callback = jest.fn();
 
-        const signTransaction = jest.fn();
+        const transaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        };
 
-        signTransaction.mockReturnValueOnce(Promise.resolve('signed-transaction'));
+        const account = {privateKey: 'pk', address: '0x0'};
+        Account.fromPrivateKey.mockReturnValueOnce(account);
 
-        Account.fromPrivateKey.mockReturnValueOnce({signTransaction: signTransaction});
+        transactionSignerMock.sign = jest.fn(() => {
+            return Promise.resolve('signed-transaction');
+        });
 
-        await expect(accounts.signTransaction({}, 'pk', callback)).resolves.toEqual('signed-transaction');
+        const response = await accounts.signTransaction(transaction, 'pk', callback);
 
-        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
+        expect(response).toEqual('signed-transaction');
 
         expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
 
-        expect(signTransaction).toHaveBeenCalledWith({});
+        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
+
+        expect(transactionSignerMock.sign).toHaveBeenCalledWith(transaction, account.privateKey);
+    });
+
+    it('calls signTransaction without the chainId property and resolves with a promise', async () => {
+        const callback = jest.fn();
+
+        const transaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 0
+        };
+
+        const mappedTransaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        };
+
+        const account = {privateKey: 'pk', address: '0x0'};
+        Account.fromPrivateKey.mockReturnValueOnce(account);
+
+        transactionSignerMock.sign = jest.fn(() => {
+            return Promise.resolve('signed-transaction');
+        });
+
+        chainIdMethodMock.execute = jest.fn(() => {
+            return Promise.resolve(1);
+        });
+
+        await expect(accounts.signTransaction(transaction, 'pk', callback)).resolves.toEqual('signed-transaction');
+
+        expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
+
+        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
+
+        expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, account.privateKey);
+
+        expect(chainIdMethodMock.execute).toHaveBeenCalledWith(accounts);
+    });
+
+    it('calls signTransaction without the gasPrice property and resolves with a promise', async () => {
+        const callback = jest.fn();
+
+        const transaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 0,
+            nonce: 1,
+            chainId: 1
+        };
+
+        const mappedTransaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        };
+
+        transactionSignerMock.sign = jest.fn(() => {
+            return Promise.resolve('signed-transaction');
+        });
+
+        const account = {privateKey: 'pk', address: '0x0'};
+        Account.fromPrivateKey.mockReturnValueOnce(account);
+
+        getGasPriceMethodMock.execute = jest.fn(() => {
+            return Promise.resolve(1);
+        });
+
+        await expect(accounts.signTransaction(transaction, 'pk', callback)).resolves.toEqual('signed-transaction');
+
+        expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
+
+
+        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
+
+        expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, account.privateKey);
+
+        expect(getGasPriceMethodMock.execute).toHaveBeenCalledWith(accounts);
+    });
+
+    it('calls signTransaction without the nonce property and resolves with a promise', async () => {
+        const callback = jest.fn();
+
+        const transaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 0,
+            chainId: 1
+        };
+
+        const mappedTransaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        };
+
+        transactionSignerMock.sign = jest.fn(() => {
+            return Promise.resolve('signed-transaction');
+        });
+
+        const account = {privateKey: 'pk', address: '0x0'};
+        Account.fromPrivateKey.mockReturnValueOnce(account);
+
+        getTransactionCountMethodMock.execute = jest.fn(() => {
+            return Promise.resolve(1);
+        });
+
+        await expect(accounts.signTransaction(transaction, 'pk', callback)).resolves.toEqual('signed-transaction');
+
+        expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
+
+        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
+
+        expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, account.privateKey);
+
+        expect(getTransactionCountMethodMock.execute).toHaveBeenCalledWith(accounts);
     });
 
     it('calls signTransaction and rejects with a promise', async () => {
-        const signTransaction = jest.fn();
-        signTransaction.mockReturnValueOnce(Promise.reject(new Error('ERROR')));
+        const callback = jest.fn(),
+            transaction = {
+                from: 0,
+                gas: 1,
+                gasPrice: 1,
+                nonce: 1,
+                chainId: 1
+            };
 
-        const callback = jest.fn();
+        const account = {privateKey: 'pk', address: '0x0'};
+        Account.fromPrivateKey.mockReturnValueOnce(account);
 
-        Account.fromPrivateKey.mockReturnValueOnce({signTransaction: signTransaction});
+        transactionSignerMock.sign = jest.fn(() => {
+            return Promise.reject(new Error('ERROR'));
+        });
 
-        await expect(accounts.signTransaction({}, 'pk', callback)).rejects.toEqual(new Error('ERROR'));
+        await expect(accounts.signTransaction(transaction, 'pk', callback)).rejects.toThrow('ERROR');
 
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
         expect(callback).toHaveBeenCalledWith(new Error('ERROR'), null);
 
-        expect(signTransaction).toHaveBeenCalledWith({});
+        expect(transactionSignerMock.sign).toHaveBeenCalledWith(transaction, 'pk');
     });
 
     it('calls recoverTransaction and returns the expected string', () => {
@@ -188,8 +335,12 @@ describe('AccountsTest', () => {
         expect(RLP.decode).toHaveBeenCalledWith('rawTransaction');
     });
 
-    it('calls sign and returns the expected value', () => {
+    it('calls sign with strict hex string and returns the expected value', () => {
         const sign = jest.fn();
+
+        isHexStrict.mockReturnValueOnce(true);
+
+        hexToBytes.mockReturnValueOnce('data');
 
         sign.mockReturnValueOnce(true);
 
@@ -198,6 +349,28 @@ describe('AccountsTest', () => {
         expect(accounts.sign('data', 'pk')).toEqual(true);
 
         expect(sign).toHaveBeenCalledWith('data');
+
+        expect(isHexStrict).toHaveBeenCalledWith('data');
+
+        expect(hexToBytes).toHaveBeenCalledWith('data');
+
+        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
+    });
+
+    it('calls sign with non-strict hex string and returns the expected value', () => {
+        const sign = jest.fn();
+
+        isHexStrict.mockReturnValueOnce(false);
+
+        sign.mockReturnValueOnce(true);
+
+        Account.fromPrivateKey.mockReturnValueOnce({sign: sign});
+
+        expect(accounts.sign('data', 'pk')).toEqual(true);
+
+        expect(sign).toHaveBeenCalledWith('data');
+
+        expect(isHexStrict).toHaveBeenCalledWith('data');
 
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
     });
@@ -212,6 +385,28 @@ describe('AccountsTest', () => {
         expect(accounts.recover('message', 'signature', false)).toEqual('recovered');
 
         expect(isHexStrict).toHaveBeenCalledWith('message');
+
+        expect(Hash.keccak256s).toHaveBeenCalledWith(
+            Buffer.concat([Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')])
+        );
+
+        expect(recover).toHaveBeenCalledWith('keccak', 'signature');
+    });
+
+    it('calls recover with a strict hex string as message and returns the expected value', () => {
+        isHexStrict.mockReturnValueOnce(true);
+
+        hexToBytes.mockReturnValueOnce('message');
+
+        Hash.keccak256s.mockReturnValueOnce('keccak');
+
+        recover.mockReturnValueOnce('recovered');
+
+        expect(accounts.recover('message', 'signature', false)).toEqual('recovered');
+
+        expect(isHexStrict).toHaveBeenCalledWith('message');
+
+        expect(hexToBytes).toHaveBeenCalledWith('message');
 
         expect(Hash.keccak256s).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')])
@@ -305,6 +500,17 @@ describe('AccountsTest', () => {
         expect(accounts.accounts[accountMock.address.toLowerCase()]).toEqual(accountMock);
     });
 
+    it('calls wallet.add with an already existing account and returns the expected value', () => {
+        new Account();
+        const accountMock = Account.mock.instances[0];
+        accountMock.address = '0x0';
+        accounts.accounts[accountMock.address] = accountMock;
+
+        expect(accounts.wallet.add(accountMock)).toEqual(accountMock);
+
+        expect(accounts.accounts[accountMock.address]).toEqual(accountMock);
+    });
+
     it('calls wallet.add with a privateKey and returns the expected value', () => {
         new Account();
         const accountMock = Account.mock.instances[0];
@@ -328,9 +534,10 @@ describe('AccountsTest', () => {
         const accountMock = Account.mock.instances[0];
         accountMock.address = '0x0';
 
-        accounts.accounts = {0: accountMock};
+        accounts.accounts = {'0x0': accountMock};
+        accounts.accountsIndex = 1;
 
-        expect(accounts.wallet.remove(0)).toEqual(true);
+        expect(accounts.wallet.remove('0x0')).toEqual(true);
 
         expect(accounts.accountsIndex).toEqual(0);
     });
@@ -398,7 +605,7 @@ describe('AccountsTest', () => {
 
         expect(() => {
             accounts.wallet.decrypt([true], 'pw');
-        }).toThrow("Couldn't decrypt accounts. Password wrong?");
+        }).toThrow('Couldn\'t decrypt accounts. Password wrong?');
 
         expect(Account.fromV3Keystore).toHaveBeenCalledWith(true, 'pw', false, accounts);
     });
