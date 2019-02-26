@@ -22,7 +22,7 @@
 
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {Accounts as AccountsModule} from './Accounts';
+import AccountsModule from './Accounts';
 import {ProvidersModuleFactory} from 'web3-providers';
 import {GetGasPriceMethod, GetChainIdMethod, GetTransactionCountMethod} from 'web3-core-method';
 

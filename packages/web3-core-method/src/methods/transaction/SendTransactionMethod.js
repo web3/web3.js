@@ -86,11 +86,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
                 privateKey = moduleInstance.accounts.wallet[this.parameters[0].from].privateKey;
             }
 
-            this.sendRawTransaction(
-                privateKey,
-                promiEvent,
-                moduleInstance
-            ).catch((error) => {
+            this.sendRawTransaction(privateKey, promiEvent, moduleInstance).catch((error) => {
                 if (this.callback) {
                     this.callback(error, null);
                 }

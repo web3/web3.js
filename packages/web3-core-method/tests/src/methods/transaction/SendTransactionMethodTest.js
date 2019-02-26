@@ -3,7 +3,6 @@ import {PromiEvent} from 'web3-core-promievent';
 import {WebsocketProvider} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
 import * as Utils from 'web3-utils';
-import Accounts from '../../../__mocks__/Accounts';
 import SendRawTransactionMethod from '../../../../src/methods/transaction/SendRawTransactionMethod';
 import TransactionSigner from '../../../__mocks__/TransactionSigner';
 import TransactionConfirmationWorkflow from '../../../../src/workflows/TransactionConfirmationWorkflow';
@@ -28,7 +27,6 @@ describe('SendTransactionMethodTest', () => {
         promiEvent,
         transactionConfirmationWorkflowMock,
         transactionSignerMock,
-        accountsMock,
         sendRawTransactionMethodMock;
 
     beforeEach(() => {
@@ -38,8 +36,6 @@ describe('SendTransactionMethodTest', () => {
 
         new AbstractWeb3Module(providerMock, {}, {}, {});
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
-
-        accountsMock = new Accounts();
 
         transactionSignerMock = new TransactionSigner();
         transactionSignerMock.sign = jest.fn();
@@ -130,7 +126,6 @@ describe('SendTransactionMethodTest', () => {
         expect(sendRawTransactionMethodMock.parameters).toEqual(['0x0']);
 
         expect(sendRawTransactionMethodMock.callback).toEqual(callback);
-
     });
 
     it('calls execute with wallets defined and returns with a rejected promise', async () => {
@@ -399,7 +394,12 @@ describe('SendTransactionMethodTest', () => {
 
             expect(providerMock.send).toHaveBeenCalledWith('eth_sendTransaction', [transaction]);
 
-            expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
+            expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(
+                method,
+                moduleInstanceMock,
+                '0x0',
+                promiEvent
+            );
 
             expect(method.callback).toHaveBeenCalledWith(false, '0x0');
 
@@ -444,7 +444,12 @@ describe('SendTransactionMethodTest', () => {
 
             expect(providerMock.send).toHaveBeenCalledWith('eth_sendTransaction', [transaction]);
 
-            expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
+            expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(
+                method,
+                moduleInstanceMock,
+                '0x0',
+                promiEvent
+            );
 
             expect(method.callback).toHaveBeenCalledWith(false, '0x0');
 
@@ -454,7 +459,6 @@ describe('SendTransactionMethodTest', () => {
         });
 
         method.execute(moduleInstanceMock, promiEvent);
-
     });
 
     it('calls execute and the gasPrice will be defined with "eth_gasPrice" and returns with a resolved promise', (done) => {
@@ -492,7 +496,12 @@ describe('SendTransactionMethodTest', () => {
             expect(providerMock.send).toHaveBeenNthCalledWith(1, 'eth_gasPrice', []);
             expect(providerMock.send).toHaveBeenNthCalledWith(2, 'eth_sendTransaction', [transaction]);
 
-            expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
+            expect(transactionConfirmationWorkflowMock.execute).toHaveBeenCalledWith(
+                method,
+                moduleInstanceMock,
+                '0x0',
+                promiEvent
+            );
 
             expect(method.callback).toHaveBeenCalledWith(false, '0x0');
 

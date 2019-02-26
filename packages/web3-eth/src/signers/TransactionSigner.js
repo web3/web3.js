@@ -26,53 +26,81 @@ export default class TransactionSigner {
     /**
      * Signs the transaction
      *
-     * @param {Transaction} transaction
+     * @param {Object} transaction
      * @param {String} privateKey
      *
-     * @returns {Promise<Transaction>}
+     * @returns {Promise<{messageHash, v, r, s, rawTransaction}>}
      */
     async sign(transaction, privateKey) {
-        let result;
-
-        const rlpEncoded = RLP.encode([
-            Bytes.fromNat(transaction.nonce),
-            Bytes.fromNat(transaction.gasPrice),
-            Bytes.fromNat(transaction.gas),
-            transaction.to.toLowerCase(),
-            Bytes.fromNat(transaction.value),
-            transaction.data,
-            Bytes.fromNat(transaction.chainId || '0x1'),
-            '0x',
-            '0x'
-        ]);
-
+        const rlpEncoded = this.createRlpEncodedTransaction(transaction);
         const hash = Hash.keccak256(rlpEncoded);
-
-        const signature = Account.makeSigner(Nat.toNumber(transaction.chainId || '0x1') * 2 + 35)(
-            Hash.keccak256(rlpEncoded),
-            privateKey
-        );
-
-        const rawTx = RLP.decode(rlpEncoded)
-            .slice(0, 6)
-            .concat(Account.decodeSignature(signature));
-
-        rawTx[6] = this.makeEven(this.trimLeadingZero(rawTx[6]));
-        rawTx[7] = this.makeEven(this.trimLeadingZero(rawTx[7]));
-        rawTx[8] = this.makeEven(this.trimLeadingZero(rawTx[8]));
-
-        const rawTransaction = RLP.encode(rawTx);
-
+        const signature = this.createAccountSignature(hash, privateKey);
+        const rawTransaction = RLP.encode(this.mapRlpEncodedTransaction(rlpEncoded, signature));
         const values = RLP.decode(rawTransaction);
-        result = {
+
+        return {
             messageHash: hash,
             v: this.trimLeadingZero(values[6]),
             r: this.trimLeadingZero(values[7]),
             s: this.trimLeadingZero(values[8]),
             rawTransaction
         };
+    }
 
-        return result;
+    /**
+     * RLP encodes the transaction object
+     *
+     * @method createRlpEncodedTransaction
+     *
+     * @param {Object} transaction
+     *
+     * @returns {String}
+     */
+    createRlpEncodedTransaction(transaction) {
+        return RLP.encode([
+            Bytes.fromNat(transaction.nonce),
+            Bytes.fromNat(transaction.gasPrice),
+            Bytes.fromNat(transaction.gas),
+            transaction.to.toLowerCase(),
+            Bytes.fromNat(transaction.value),
+            transaction.data,
+            Bytes.fromNat(transaction.chainId),
+            '0x',
+            '0x'
+        ]);
+    }
+
+    /**
+     * Creates the signature of the current account
+     *
+     * @method createAccountSignature
+     *
+     * @param {String} hash
+     * @param {String} privateKey
+     *
+     * @returns {String}
+     */
+    createAccountSignature(hash, privateKey) {
+        return Account.makeSigner(
+            Nat.toNumber(transaction.chainId) * 2 + 35
+        )(hash, privateKey);
+    }
+
+    /**
+     * Combines the decoded transaction with the account decoded account signature and formats the r,v and s.
+     *
+     * @param {String} rlpEncoded
+     * @param {String} signature
+     *
+     * @returns {Array}
+     */
+    mapRlpEncodedTransaction(rlpEncoded, signature) {
+        const rawTransaction = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
+        rawTransaction[6] = this.makeEven(this.trimLeadingZero(rawTransaction[6]));
+        rawTransaction[7] = this.makeEven(this.trimLeadingZero(rawTransaction[7]));
+        rawTransaction[8] = this.makeEven(this.trimLeadingZero(rawTransaction[8]));
+
+        return rawTransaction;
     }
 
     /**
@@ -107,18 +135,5 @@ export default class TransactionSigner {
         }
 
         return hex;
-    }
-
-    /**
-     * Checks if the value is not undefined or null
-     *
-     * @method isNotUndefinedOrNull
-     *
-     * @param {any} value
-     *
-     * @returns {Boolean}
-     */
-    isUndefinedOrNull(value) {
-        return typeof value === 'undefined' && value === null;
     }
 }
