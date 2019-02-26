@@ -23,7 +23,7 @@
 import BigNumber from 'bn.js';
 
 export type Unit =
-    'noether'
+    | 'noether'
     | 'wei'
     | 'kwei'
     | 'Kwei'
@@ -52,32 +52,24 @@ export type Unit =
     | 'tether';
 
 export type Mixed =
-    string
+    | string
     | number
     | BN
     | {
-        type: string;
-        value: string;
-    }
+          type: string;
+          value: string;
+      }
     | {
-        t: string;
-        v: string | BN | number;
-    }
+          t: string;
+          v: string | BN | number;
+      }
     | boolean;
 
 export type Hex = string | number;
 
 export class BN extends BigNumber {
-    constructor(
-        number: number | string | number[] | Buffer | BN,
-        base?: number | 'hex',
-        endian?: 'le' | 'be'
-    )
-    super(
-        number: number | string | number[] | Buffer | BN,
-        base?: number | 'hex',
-        endian?: 'le' | 'be'
-    ): BigNumber;
+    constructor(number: number | string | number[] | Buffer | BN, base?: number | 'hex', endian?: 'le' | 'be');
+    super(number: number | string | number[] | Buffer | BN, base?: number | 'hex', endian?: 'le' | 'be'): BigNumber;
 }
 
 // utils types
@@ -211,6 +203,7 @@ export type AbiType = 'function' | 'constructor' | 'event' | 'fallback';
 export type StateMutabilityType = 'pure' | 'view' | 'nonpayable' | 'payable';
 
 export interface AbiItem {
+    anonymous?: boolean;
     constant?: boolean;
     inputs?: AbiInput[];
     name?: string;
