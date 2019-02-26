@@ -38,11 +38,15 @@ export default class GetTransactionReceiptMethod extends AbstractCallMethod {
      *
      * @method afterExecution
      *
-     * @param {Object} response
+     * @param {Object|null} response
      *
-     * @returns {Object}
+     * @returns {Object|null}
      */
     afterExecution(response) {
-        return this.formatters.outputTransactionFormatter(response);
+        if (response !== null) {
+            return this.formatters.outputTransactionReceiptFormatter(response);
+        }
+
+        return response;
     }
 }

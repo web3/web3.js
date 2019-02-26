@@ -21,6 +21,7 @@
  */
 
 import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
+import isFunction from 'lodash/isFunction';
 
 export default class LogSubscription extends AbstractSubscription {
     /**
@@ -54,16 +55,24 @@ export default class LogSubscription extends AbstractSubscription {
                 .execute(this.moduleInstance)
                 .then((logs) => {
                     logs.forEach((log) => {
-                        callback(false, log);
-                        this.emit('data', log);
+                        const formattedLog = this.onNewSubscriptionItem(log);
+
+                        if (isFunction(callback)) {
+                            callback(false, formattedLog);
+                        }
+
+                        this.emit('data', formattedLog);
                     });
 
                     delete this.options.fromBlock;
                     super.subscribe(callback);
                 })
                 .catch((error) => {
+                    if (isFunction(callback)) {
+                        callback(error, null);
+                    }
+
                     this.emit('error', error);
-                    callback(error, null);
                 });
 
             return this;

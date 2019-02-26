@@ -21,22 +21,19 @@ import {AbstractWeb3Module, Transaction, Web3ModuleOptions} from 'web3-core';
 import {provider} from 'web3-providers';
 
 export class Accounts extends AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        options?: Web3ModuleOptions
-    );
+    constructor(provider: provider, options?: Web3ModuleOptions);
 
     create(entropy?: string): Account;
 
     privateKeyToAccount(privateKey: string): Account;
 
-    signTransaction(tx: Transaction, privateKey: string, callback?: () => void): SignedTransaction;
+    signTransaction(tx: Transaction, privateKey: string, callback?: () => void): Promise<SignedTransaction>;
 
     recoverTransaction(signature: string): string;
 
     hashMessage(message: string): string;
 
-    sign(data: string, privateKey: string): string | Sign;
+    sign(data: string, privateKey: string): Sign;
 
     recover(message: SignedTransaction): string;
     recover(message: string | SignedTransaction, signature: string, preFixed?: boolean): string;
@@ -54,7 +51,7 @@ export class Wallet {
 
     create(numberOfAccounts: number, entropy?: string): Wallet;
 
-    add(account: string | Account): AddedAccount;
+    add(account: string | AddAccount): AddedAccount;
 
     remove(account: string | number): boolean;
 
@@ -69,12 +66,20 @@ export class Wallet {
     load(password: string, keyName?: string): Wallet;
 }
 
+export interface AddAccount {
+    address: string;
+    privateKey: string;
+}
+
 export interface Account {
     address: string;
     privateKey: string;
-    signTransaction?: (tx: Transaction) => {};
-    sign?: (data: string) => {};
-    encrypt?: (password: string) => {};
+    signTransaction: (
+        tx: Transaction,
+        callback?: (signTransaction: SignedTransaction) => void
+    ) => Promise<SignedTransaction>;
+    sign: (data: string) => Sign;
+    encrypt: (password: string) => EncryptedKeystoreV3Json;
 }
 
 export interface AddedAccount extends Account {
@@ -83,25 +88,23 @@ export interface AddedAccount extends Account {
 
 export interface EncryptedKeystoreV3Json {
     version: number;
-    id: string,
-    address: string,
+    id: string;
+    address: string;
     crypto: {
-        ciphertext: string,
-        cipherparams: {iv: string},
-        cipher: string,
-        kdf: string,
+        ciphertext: string;
+        cipherparams: {iv: string};
+        cipher: string;
+        kdf: string;
         kdfparams: {
-            dklen: number,
-            salt: string,
-            n: number,
-            r: number,
-            p: number
-        },
+            dklen: number;
+            salt: string;
+            n: number;
+            r: number;
+            p: number;
+        };
         mac: string;
-    }
+    };
 }
-
-/** TODO - MOVE ALL BELOW TO WEB3-CORE ONCE FIXED CONFUSING WITH RETURN TYPES !!! */
 
 export interface SignedTransaction {
     messageHash?: string;
@@ -114,5 +117,3 @@ export interface SignedTransaction {
 export interface Sign extends SignedTransaction {
     message: string;
 }
-
-/** END !!! */

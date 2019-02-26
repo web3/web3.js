@@ -28,7 +28,7 @@ import * as utils from './Utils';
 import * as ethjsUnit from 'ethjs-unit';
 
 export {soliditySha3} from './SoliditySha3';
-export {randomHex} from 'randomhex';
+export randomHex from 'randomhex';
 
 /**
  * Should be used to create full function/event name from json abi
@@ -126,19 +126,20 @@ export const hexToAscii = (hex) => {
  * @method asciiToHex
  *
  * @param {String} str
+ * @param {Number} length
  *
  * @returns {String} hex representation of input string
  */
-export const asciiToHex = (str) => {
-    if (!str) return '0x00';
+export const asciiToHex = (str, length = 32) => {
     let hex = '';
+
     for (let i = 0; i < str.length; i++) {
         const code = str.charCodeAt(i);
         const n = code.toString(16);
         hex += n.length < 2 ? `0${n}` : n;
     }
 
-    return `0x${hex}`;
+    return '0x' + utils.rightPad(hex, length * 2);
 };
 
 /**
@@ -184,10 +185,10 @@ export const getUnitValue = (unit) => {
  *
  * @method fromWei
  *
- * @param {Number|String} number can be a number, number string or a HEX of a decimal
+ * @param {String|BN} number can be a BigNumber, number string or a HEX of a decimal
  * @param {String} unit the unit to convert to, default ether
  *
- * @returns {String|Object} When given a BN object it returns one as well, otherwise a number
+ * @returns {String} Returns a string
  */
 export const fromWei = (number, unit) => {
     unit = getUnitValue(unit);
@@ -218,10 +219,10 @@ export const fromWei = (number, unit) => {
  *
  * @method toWei
  *
- * @param {Number|String|BN} number can be a number, number string or a HEX of a decimal
+ * @param {String|BN} number can be a number, number string or a HEX of a decimal
  * @param {String} unit the unit to convert from, default ether
  *
- * @returns {String|Object} When given a BN object it returns one as well, otherwise a number
+ * @returns {String|BN} When given a BN object it returns one as well, otherwise a string
  */
 export const toWei = (number, unit) => {
     unit = getUnitValue(unit);
@@ -271,6 +272,7 @@ export const toDecimal = utils.hexToNumber;
 export const hexToNumber = utils.hexToNumber;
 export const fromDecimal = utils.numberToHex;
 export const numberToHex = utils.numberToHex;
+export const hexToUtf8 = utils.hexToUtf8;
 export const hexToString = utils.hexToUtf8;
 export const toUtf8 = utils.hexToUtf8;
 export const stringToHex = utils.utf8ToHex;

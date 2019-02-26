@@ -13,15 +13,14 @@ For more see `Whisper  Overview <https://github.com/ethereum/go-ethereum/wiki/Wh
 
 .. code-block:: javascript
 
+    import Web3 from 'web3';
     import {Shh} import 'web3-shh';
 
-    // "Shh.givenProvider" will be set if in an Ethereum supported browser.
-    const shh = new Shh(Shh.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+    // "Web3.givenProvider" will be set if in an Ethereum supported browser.
+    const shh = new Shh(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
 
 
     // or using the web3 umbrella package
-
-    import {Web3} from 'web3';
     const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options;
 
     // -> web3.shh
@@ -762,8 +761,7 @@ Example
 
 .. code-block:: javascript
 
-    const identities = [],
-          subscription = null;
+    const identities = [];
 
     Promise.all([
         web3.shh.newSymKey().then((id) => {identities.push(id);}),
@@ -772,7 +770,7 @@ Example
     ]).then(() => {
 
         // will receive also its own message send, below
-        subscription = shh.subscribe("messages", {
+        const subscription = shh.subscribe("messages", {
             symKeyID: identities[0],
             topics: ['0xffaadd11']
         }).on('data', console.log);
@@ -786,7 +784,7 @@ Example
             payload: '0xffffffdddddd1122',
             powTime: 3,
             powTarget: 0.5
-        }).then(hash => console.log(`Message with hash ${h} was successfuly sent`))
+        }).then(hash => console.log(`Message with hash ${hash} was successfuly sent`))
         .catch(err => console.log("Error: ", err));
     });
 
@@ -1024,5 +1022,3 @@ Example
         "topic": "0x01020304",
         "ttl": 50
     },{...}]
-
-

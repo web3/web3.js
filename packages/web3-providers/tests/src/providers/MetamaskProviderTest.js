@@ -2,29 +2,29 @@ import AbstractMethod from '../../__mocks__/AbstractMethod';
 import JsonRpcMapper from '../../../src/mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
-import MetamaskInpageProvider from '../../../src/providers/MetamaskInpageProvider';
+import MetamaskProvider from '../../../src/providers/MetamaskProvider';
 
 /**
- * MetamaskInpageProvider test
+ * MetamaskProvider test
  */
-describe('MetamaskInpageProviderTest', () => {
-    let metamaskInpageProvider, inpageProvider;
+describe('MetamaskProviderTest', () => {
+    let metamaskProvider, inpageProvider;
 
     beforeEach(() => {
         inpageProvider = {on: jest.fn(), isConnected: jest.fn()};
-        metamaskInpageProvider = new MetamaskInpageProvider(inpageProvider);
+        metamaskProvider = new MetamaskProvider(inpageProvider);
     });
 
     it('constructor check', () => {
-        expect(metamaskInpageProvider.connection).toEqual(inpageProvider);
+        expect(metamaskProvider.connection).toEqual(inpageProvider);
 
-        expect(metamaskInpageProvider.host).toEqual('metamask');
+        expect(metamaskProvider.host).toEqual('metamask');
 
-        expect(metamaskInpageProvider.timeout).toEqual(null);
+        expect(metamaskProvider.timeout).toEqual(null);
     });
 
     it('calls registerEventListeners and the expected listeners will be registered', () => {
-        metamaskInpageProvider.registerEventListeners();
+        metamaskProvider.registerEventListeners();
 
         expect(inpageProvider.on.mock.calls[0][0]).toEqual('accountsChanged');
         expect(inpageProvider.on.mock.calls[0][1]).toBeInstanceOf(Function);
@@ -42,13 +42,13 @@ describe('MetamaskInpageProviderTest', () => {
         expect(inpageProvider.on.mock.calls[4][1]).toBeInstanceOf(Function);
     });
     it('calls disconnect and returns true', () => {
-        expect(metamaskInpageProvider.disconnect()).toEqual(true);
+        expect(metamaskProvider.disconnect()).toEqual(true);
     });
 
     it('calls connected and returns true', () => {
         inpageProvider.isConnected.mockReturnValueOnce(true);
 
-        expect(metamaskInpageProvider.connected).toEqual(true);
+        expect(metamaskProvider.connected).toEqual(true);
 
         expect(inpageProvider.isConnected).toHaveBeenCalled();
     });
@@ -56,42 +56,42 @@ describe('MetamaskInpageProviderTest', () => {
     it('calls removeAllListeners and executes the expected methods', () => {
         inpageProvider.removeListener = jest.fn();
 
-        metamaskInpageProvider.removeAllListeners('socket_networkChanged');
-        metamaskInpageProvider.removeAllListeners('socket_accountsChanged');
-        metamaskInpageProvider.removeAllListeners('socket_message');
-        metamaskInpageProvider.removeAllListeners('socket_error');
+        metamaskProvider.removeAllListeners('socket_networkChanged');
+        metamaskProvider.removeAllListeners('socket_accountsChanged');
+        metamaskProvider.removeAllListeners('socket_message');
+        metamaskProvider.removeAllListeners('socket_error');
 
         expect(inpageProvider.removeListener).toHaveBeenNthCalledWith(
             1,
             'networkChanged',
-            metamaskInpageProvider.onNetworkChanged
+            metamaskProvider.onNetworkChanged
         );
 
         expect(inpageProvider.removeListener).toHaveBeenNthCalledWith(
             2,
             'accountsChanged',
-            metamaskInpageProvider.onAccountsChanged
+            metamaskProvider.onAccountsChanged
         );
 
-        expect(inpageProvider.removeListener).toHaveBeenNthCalledWith(3, 'data', metamaskInpageProvider.onMessage);
-        expect(inpageProvider.removeListener).toHaveBeenNthCalledWith(4, 'error', metamaskInpageProvider.onError);
+        expect(inpageProvider.removeListener).toHaveBeenNthCalledWith(3, 'data', metamaskProvider.onMessage);
+        expect(inpageProvider.removeListener).toHaveBeenNthCalledWith(4, 'error', metamaskProvider.onError);
     });
 
     it('calls removeAllSocketListeners and exectues the expected methods', () => {
         inpageProvider.removeListener = jest.fn();
 
-        metamaskInpageProvider.removeAllSocketListeners();
+        metamaskProvider.removeAllSocketListeners();
 
         expect(inpageProvider.removeListener).toHaveBeenNthCalledWith(
             1,
-            metamaskInpageProvider.SOCKET_NETWORK_CHANGED,
-            metamaskInpageProvider.onNetworkChanged
+            metamaskProvider.SOCKET_NETWORK_CHANGED,
+            metamaskProvider.onNetworkChanged
         );
 
         expect(inpageProvider.removeListener).toHaveBeenNthCalledWith(
             2,
-            metamaskInpageProvider.SOCKET_ACCOUNTS_CHANGED,
-            metamaskInpageProvider.onAccountsChanged
+            metamaskProvider.SOCKET_ACCOUNTS_CHANGED,
+            metamaskProvider.onAccountsChanged
         );
     });
 
@@ -110,7 +110,7 @@ describe('MetamaskInpageProviderTest', () => {
             callback(false, {result: true});
         });
 
-        const response = await metamaskInpageProvider.send('rpc_method', []);
+        const response = await metamaskProvider.send('rpc_method', []);
 
         expect(response).toEqual(true);
 
@@ -133,7 +133,7 @@ describe('MetamaskInpageProviderTest', () => {
             callback(true, {result: true});
         });
 
-        await expect(metamaskInpageProvider.send('rpc_method', [])).rejects.toEqual(true);
+        await expect(metamaskProvider.send('rpc_method', [])).rejects.toEqual(true);
 
         expect(inpageProvider.send).toHaveBeenCalled();
 
@@ -162,7 +162,7 @@ describe('MetamaskInpageProviderTest', () => {
         abstractMethodMock.rpcMethod = 'rpc_method';
         abstractMethodMock.parameters = [];
 
-        const response = await metamaskInpageProvider.sendBatch([abstractMethodMock], moduleInstanceMock);
+        const response = await metamaskProvider.sendBatch([abstractMethodMock], moduleInstanceMock);
 
         expect(response).toEqual({result: true});
 
@@ -193,7 +193,7 @@ describe('MetamaskInpageProviderTest', () => {
         abstractMethodMock.rpcMethod = 'rpc_method';
         abstractMethodMock.parameters = [];
 
-        await expect(metamaskInpageProvider.sendBatch([abstractMethodMock], moduleInstanceMock)).rejects.toEqual(true);
+        await expect(metamaskProvider.sendBatch([abstractMethodMock], moduleInstanceMock)).rejects.toEqual(true);
 
         expect(inpageProvider.send).toHaveBeenCalled();
 
@@ -209,7 +209,7 @@ describe('MetamaskInpageProviderTest', () => {
             callback(false, true);
         });
 
-        const response = await metamaskInpageProvider.sendPayload({id: 0});
+        const response = await metamaskProvider.sendPayload({id: 0});
 
         expect(response).toEqual(true);
 
@@ -225,7 +225,7 @@ describe('MetamaskInpageProviderTest', () => {
             callback(true, false);
         });
 
-        await expect(metamaskInpageProvider.sendPayload({id: 0})).rejects.toEqual(true);
+        await expect(metamaskProvider.sendPayload({id: 0})).rejects.toEqual(true);
 
         expect(inpageProvider.send).toHaveBeenCalled();
     });

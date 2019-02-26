@@ -10,6 +10,7 @@ import CallContractMethod from '../../../src/methods/CallContractMethod';
 import SendContractMethod from '../../../src/methods/SendContractMethod';
 import ContractDeployMethod from '../../../src/methods/ContractDeployMethod';
 import PastEventLogsMethod from '../../../src/methods/PastEventLogsMethod';
+import AllPastEventLogsMethod from '../../../src/methods/AllPastEventLogsMethod';
 
 // Mocks
 jest.mock('Accounts');
@@ -23,6 +24,7 @@ jest.mock('../../../src/methods/CallContractMethod');
 jest.mock('../../../src/methods/SendContractMethod');
 jest.mock('../../../src/methods/ContractDeployMethod');
 jest.mock('../../../src/methods/PastEventLogsMethod');
+jest.mock('../../../src/methods/AllPastEventLogsMethod');
 
 /**
  * MethodFactory test
@@ -38,6 +40,7 @@ describe('MethodFactoryTest', () => {
         methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
         methodModuleFactoryMock.createTransactionSigner = jest.fn();
         methodModuleFactoryMock.createTransactionConfirmationWorkflow = jest.fn();
+        methodModuleFactoryMock.createSendRawTransactionMethod = jest.fn();
 
         new ContractModuleFactory({}, {}, {}, {}, {});
         contractModuleFactoryMock = ContractModuleFactory.mock.instances[0];
@@ -97,6 +100,12 @@ describe('MethodFactoryTest', () => {
         expect(contractModuleFactoryMock.createEventLogDecoder).toHaveBeenCalled();
     });
 
+    it('calls createAllPastEventLogsMethod and returns PastEventLogsMethod object', () => {
+        expect(methodFactory.createAllPastEventLogsMethod({})).toBeInstanceOf(AllPastEventLogsMethod);
+
+        expect(contractModuleFactoryMock.createAllEventsLogDecoder).toHaveBeenCalled();
+    });
+
     it('calls createCallContractMethod and returns CallContractMethod object', () => {
         expect(methodFactory.createCallContractMethod({})).toBeInstanceOf(CallContractMethod);
     });
@@ -109,6 +118,8 @@ describe('MethodFactoryTest', () => {
         expect(methodModuleFactoryMock.createTransactionSigner).toHaveBeenCalled();
 
         expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow).toHaveBeenCalled();
+
+        expect(methodModuleFactoryMock.createSendRawTransactionMethod).toHaveBeenCalled();
     });
 
     it('calls createContractDeployMethod and returns ContractDeployMethod object', () => {
@@ -117,6 +128,8 @@ describe('MethodFactoryTest', () => {
         expect(methodModuleFactoryMock.createTransactionSigner).toHaveBeenCalled();
 
         expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow).toHaveBeenCalled();
+
+        expect(methodModuleFactoryMock.createSendRawTransactionMethod).toHaveBeenCalled();
     });
 
     it('calls createEstimateGasMethod and returns EstimateGasMethod object', () => {

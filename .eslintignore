@@ -9,3 +9,4 @@ jest.config.js
 jest.preprocessor.js
 W3cWebsocket.js
 packages/**/rollup.config.js
+angular-patch.js

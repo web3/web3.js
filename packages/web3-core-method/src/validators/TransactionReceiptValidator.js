@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-import isObject from 'lodash/isObject';
-
 export default class TransactionReceiptValidator {
     /**
      * Validates the receipt
@@ -29,14 +27,14 @@ export default class TransactionReceiptValidator {
      * @method validate
      *
      * @param {Object} receipt
-     * @param {Array} methodParameters
+     * @param {AbstractMethod} method
      *
      * @returns {Error|Boolean}
      */
-    validate(receipt, methodParameters) {
+    validate(receipt, method) {
         const receiptJSON = JSON.stringify(receipt, null, 2);
 
-        if (!this.isValidGasUsage(receipt, methodParameters)) {
+        if (!this.isValidGasUsage(receipt, method)) {
             return new Error(`Transaction ran out of gas. Please provide more gas:\n${receiptJSON}`);
         }
 
@@ -57,7 +55,7 @@ export default class TransactionReceiptValidator {
      * @returns {Boolean}
      */
     isValidReceiptStatus(receipt) {
-        return receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined';
+        return receipt.status === true || typeof receipt.status === 'undefined';
     }
 
     /**
@@ -66,17 +64,11 @@ export default class TransactionReceiptValidator {
      * @method isValidGasUsage
      *
      * @param {Object} receipt
-     * @param {Array} methodParameters
+     * @param {AbstractMethod} method
      *
      * @returns {Boolean}
      */
-    isValidGasUsage(receipt, methodParameters) {
-        let gasProvided = null;
-
-        if (isObject(methodParameters[0]) && methodParameters[0].gas) {
-            gasProvided = methodParameters[0].gas;
-        }
-
-        return !receipt.outOfGas && (!gasProvided || gasProvided !== receipt.gasUsed);
+    isValidGasUsage(receipt, method) {
+        return !receipt.outOfGas && method.utils.hexToNumber(method.parameters[0].gas) !== receipt.gasUsed;
     }
 }

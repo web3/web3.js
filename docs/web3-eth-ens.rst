@@ -10,20 +10,20 @@ The ``web3.eth.ens`` functions let you interacting with Ens.
 
 .. code-block:: javascript
 
+    import Web3 from 'web3';
     import {Ens} from 'web3-eth-ens';
-    import {Accounts} from 'web3-eth-accounts;
+    import {Accounts} from 'web3-eth-accounts';
 
-    // "Ens.providers.givenProvider" will be set if in an Ethereum supported browser.
+    // "Web3.givenProvider" will be set if in an Ethereum supported browser.
     const eth = new Ens(
-        Ens.givenProvider || 'ws://some.local-or-remote.node:8546',
-        new Accounts(Ens.givenProvider || 'ws://some.local-or-remote.node:8546', options),
+        Web3.givenProvider || 'ws://some.local-or-remote.node:8546',
+        new Accounts(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options),
         options
     );
 
 
     // or using the web3 umbrella package
 
-    import {Web3 } from 'web3';
     const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
 
     // -> web3.eth.ens
@@ -388,7 +388,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getText('ethereum.eth', 'key).then((result) => {
+    web3.eth.ens.getText('ethereum.eth', 'key').then((result) => {
         console.log(result);
     });
     > "0000000000000000000000000000000000000000000000000000000000000000"

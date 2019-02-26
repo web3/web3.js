@@ -89,7 +89,7 @@ export default class Accounts extends AbstractWeb3Module {
     _addAccountFunctions(account) {
         // add sign functions
         account.signTransaction = (tx, callback) => {
-            return this.signTransaction(tx, account.privateKey, callback);
+            return this.signTransaction(tx, account.privateKey, callback).bind(this);
         };
 
         account.sign = (data) => {
@@ -170,7 +170,7 @@ export default class Accounts extends AbstractWeb3Module {
             }
 
             try {
-                tx = _this.formatters.inputCallFormatter(tx);
+                tx = _this.formatters.inputCallFormatter(tx, _this);
 
                 const transaction = tx;
                 transaction.to = tx.to || '0x';

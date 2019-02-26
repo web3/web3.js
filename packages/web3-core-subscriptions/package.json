@@ -1,9 +1,9 @@
 {
     "name": "web3-core-subscriptions",
     "namespace": "ethereum",
-    "version": "1.0.0-beta.38",
+    "version": "1.0.0-beta.46",
     "description": "Manages web3 subscriptions. This is an internal package.",
-    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-core-subscriptions",
+    "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions",
     "license": "LGPL-3.0",
     "main": "dist/web3-core-subscriptions.cjs.js",
     "module": "dist/web3-core-subscriptions.esm.js",
@@ -15,10 +15,11 @@
         "test:watch": "jest --watchAll"
     },
     "dependencies": {
+        "@babel/runtime": "^7.3.1",
         "eventemitter3": "^3.1.0",
         "lodash": "^4.17.11",
-        "web3-core-helpers": "1.0.0-beta.38",
-        "web3-utils": "1.0.0-beta.38"
+        "web3-core-helpers": "1.0.0-beta.46",
+        "web3-utils": "1.0.0-beta.46"
     },
     "files": [
         "dist"

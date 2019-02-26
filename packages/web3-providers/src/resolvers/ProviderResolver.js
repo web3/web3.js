@@ -22,9 +22,6 @@
 
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
-import HttpProvider from '../providers/HttpProvider';
-import WebsocketProvider from '../providers/WebsocketProvider';
-import IpcProvider from '../providers/IpcProvider';
 
 /* eslint-disable no-new-func */
 let global;
@@ -76,25 +73,14 @@ export default class ProviderResolver {
             return this.providersModuleFactory.createMistEthereumProvider(provider);
         }
 
-        switch (provider.constructor.name) {
-            case 'EthereumProvider':
-                return this.providersModuleFactory.createEthereumProvider(provider);
-            case 'MetamaskInpageProvider':
-                return this.providersModuleFactory.createMetamaskInpageProvider(provider);
-            case 'HttpProvider':
-            case 'WebsocketProvider':
-            case 'IpcProvider':
-                return provider;
+        if (provider.constructor.name === 'MetamaskInpageProvider') {
+            return this.providersModuleFactory.createMetamaskProvider(provider);
         }
 
-        if (
-            provider instanceof HttpProvider ||
-            provider instanceof WebsocketProvider ||
-            provider instanceof IpcProvider
-        ) {
-            return provider;
+        if (provider.isEIP1193) {
+            return this.providersModuleFactory.createEthereumProvider(provider);
         }
 
-        throw new Error('Please provide an valid Web3 provider');
+        return provider;
     }
 }

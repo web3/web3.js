@@ -55,7 +55,7 @@ export default class TransactionConfirmationWorkflow {
 
         this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
             if (receipt && receipt.blockHash) {
-                const validationResult = this.transactionReceiptValidator.validate(receipt, method.parameters);
+                const validationResult = this.transactionReceiptValidator.validate(receipt, method);
                 if (validationResult === true) {
                     this.handleSuccessState(receipt, method, promiEvent);
 
@@ -71,20 +71,22 @@ export default class TransactionConfirmationWorkflow {
                 this.timeoutCounter++;
                 if (!this.isTimeoutTimeExceeded(moduleInstance, this.newHeadsWatcher.isPolling)) {
                     this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
-                        const validationResult = this.transactionReceiptValidator.validate(receipt, method.parameters);
+                        if (receipt && receipt.blockHash) {
+                            const validationResult = this.transactionReceiptValidator.validate(receipt, method);
 
-                        if (validationResult === true) {
-                            this.confirmationsCounter++;
-                            promiEvent.emit('confirmation', this.confirmationsCounter, receipt);
+                            if (validationResult === true) {
+                                this.confirmationsCounter++;
+                                promiEvent.emit('confirmation', this.confirmationsCounter, receipt);
 
-                            if (this.isConfirmed(moduleInstance)) {
-                                this.handleSuccessState(receipt, method, promiEvent);
+                                if (this.isConfirmed(moduleInstance)) {
+                                    this.handleSuccessState(receipt, method, promiEvent);
+                                }
+
+                                return;
                             }
 
-                            return;
+                            this.handleErrorState(validationResult, method, promiEvent);
                         }
-
-                        this.handleErrorState(validationResult, method, promiEvent);
                     });
 
                     return;

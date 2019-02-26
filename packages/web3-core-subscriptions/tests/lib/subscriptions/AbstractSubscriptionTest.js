@@ -20,7 +20,11 @@ describe('AbstractSubscriptionTest', () => {
 
             expect(method).toEqual(abstractSubscription.method);
 
-            expect(parameters).toEqual([abstractSubscription.options]);
+            if (abstractSubscription.options !== null) {
+                expect(parameters).toEqual([abstractSubscription.options]);
+            } else {
+                expect(parameters).toEqual([]);
+            }
 
             return Promise.resolve('MY_ID');
         });
@@ -73,6 +77,32 @@ describe('AbstractSubscriptionTest', () => {
 
             done();
         });
+
+        const subscription = abstractSubscription.subscribe(callback);
+
+        subscription.on('data', (data) => {
+            expect(data).toEqual('SUBSCRIPTION_ITEM');
+        });
+    });
+
+    it('calls subscribe with options set to null and returns a Subscription object', (done) => {
+        moduleInstanceMock.currentProvider.on = jest.fn((id, callback) => {
+            expect(id).toEqual('MY_ID');
+
+            callback({result: 'SUBSCRIPTION_ITEM'});
+        });
+
+        const callback = jest.fn((error, response) => {
+            expect(abstractSubscription.id).toEqual('MY_ID');
+
+            expect(error).toEqual(false);
+
+            expect(response).toEqual('SUBSCRIPTION_ITEM');
+
+            done();
+        });
+
+        abstractSubscription.options = null;
 
         const subscription = abstractSubscription.subscribe(callback);
 

@@ -44,20 +44,20 @@
             
   <div class="admonition note" id="eth">
 <p class="first admonition-title">Note</p>
-<p class="last">This documentation is work in progress and web3.js 1.0 is not yet released! You can find the current documentation for web3 0.x.x at <a class="reference external" href="https://github.com/ethereum/wiki/wiki/JavaScript-API">github.com/ethereum/wiki/wiki/JavaScript-API</a>.</p>
+<p class="last">This documentation is work in progress and web3.js 1.0 stable is not yet released! You can find the current documentation for web3 0.x.x at <a class="reference external" href="https://github.com/ethereum/wiki/wiki/JavaScript-API">github.com/ethereum/wiki/wiki/JavaScript-API</a>.</p>
 </div>
 <div class="section" id="web3-eth">
 <h1>web3.eth<a class="headerlink" href="#web3-eth" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">web3-eth</span></code> package allows you to interact with an Ethereum blockchain and Ethereum smart contracts.</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="p">{</span><span class="nx">Eth</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;web3-eth&#39;</span><span class="p">;</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nx">Web3</span> <span class="nx">from</span> <span class="s1">&#39;web3&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span><span class="nx">Eth</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;web3-eth&#39;</span><span class="p">;</span>
 
-<span class="c1">// &quot;Eth.providers.givenProvider&quot; will be set if in an Ethereum supported browser.</span>
-<span class="kr">const</span> <span class="nx">eth</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Eth</span><span class="p">(</span><span class="nx">Eth</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://some.local-or-remote.node:8546&#39;</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+<span class="c1">// &quot;Web3.givenProvider&quot; will be set if in an Ethereum supported browser.</span>
+<span class="kr">const</span> <span class="nx">eth</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Eth</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://some.local-or-remote.node:8546&#39;</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
 
 
 <span class="c1">// or using the web3 umbrella package</span>
 
-<span class="kr">import</span> <span class="p">{</span><span class="nx">Web3</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;web3&#39;</span><span class="p">;</span>
 <span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://some.local-or-remote.node:8546&#39;</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
 
 <span class="c1">// -&gt; web3.eth</span>
@@ -119,6 +119,148 @@ If you want to circumvent the checksum check you can make an address all lower- 
 <p>For <code class="docutils literal notranslate"><span class="pre">web3.eth.net</span></code> see the <a class="reference internal" href="web3-eth-net.html#eth-net"><span class="std std-ref">net reference documentation</span></a></p>
 </div>
 <hr class="docutils" />
+<div class="section" id="options">
+<h2>options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h2>
+<p>An Web3 module does provide several options for configuring the transaction confirmation worklfow or for defining default values.
+These are the currently available option properties on a Web3 module:</p>
+<div class="section" id="module-options">
+<h3>Module Options<a class="headerlink" href="#module-options" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="web3-shh.html#web3-module-defaultaccount"><span class="std std-ref">defaultAccount</span></a></p>
+<p><a class="reference internal" href="web3-shh.html#web3-module-defaultblock"><span class="std std-ref">defaultBlock</span></a></p>
+<p><a class="reference internal" href="web3-shh.html#web3-module-defaultgas"><span class="std std-ref">defaultGas</span></a></p>
+<p><a class="reference internal" href="web3-shh.html#web3-module-defaultaccount"><span class="std std-ref">defaultGasPrice</span></a></p>
+<p><a class="reference internal" href="web3-shh.html#web3-module-transactionblocktimeout"><span class="std std-ref">transactionBlockTimeout</span></a></p>
+<p><a class="reference internal" href="web3-shh.html#web3-module-transactionconfirmationblocks"><span class="std std-ref">transactionConfirmationBlocks</span></a></p>
+<p><a class="reference internal" href="web3-shh.html#web3-module-transactionpollingtimeout"><span class="std std-ref">transactionPollingTimeout</span></a></p>
+</div>
+<div class="section" id="id1">
+<h3>Example<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nx">Web3</span> <span class="nx">from</span> <span class="s1">&#39;web3&#39;</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">defaultAccount</span><span class="o">:</span> <span class="s1">&#39;0x0&#39;</span><span class="p">,</span>
+    <span class="nx">defaultBlock</span><span class="o">:</span> <span class="s1">&#39;latest&#39;</span><span class="p">,</span>
+    <span class="nx">defaultGas</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">defaultGasPrice</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">transactionBlockTimeout</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="nx">transactionConfirmationBlocks</span><span class="o">:</span> <span class="mi">24</span><span class="p">,</span>
+    <span class="nx">transactionPollingTimeout</span><span class="o">:</span> <span class="mi">480</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="s1">&#39;http://localhost:8545&#39;</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="defaultblock">
+<span id="web3-module-defaultblock"></span><h2>defaultBlock<a class="headerlink" href="#defaultblock" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">defaultBlock</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultBlock</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">defaultBlock</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>The default block which will be used for a requests.</p>
+<div class="section" id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultBlock property.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="defaultaccount">
+<span id="web3-module-defaultaccount"></span><h2>defaultAccount<a class="headerlink" href="#defaultaccount" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">defaultAccount</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultAccount</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">defaultAccount</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>The default account which will be used for a requests.</p>
+<div class="section" id="id2">
+<h3>Returns<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">null|string</span></code>: The current value of the defaultAccount property.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="defaultgasprice">
+<span id="web3-module-defaultgasprice"></span><h2>defaultGasPrice<a class="headerlink" href="#defaultgasprice" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">defaultGasPrice</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultGasPrice</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">defaultGasPrice</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>The default gas price which will be used for a request.</p>
+<div class="section" id="id3">
+<h3>Returns<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultGasPrice property.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="defaultgas">
+<span id="web3-module-defaultgas"></span><h2>defaultGas<a class="headerlink" href="#defaultgas" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">defaultGas</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultGas</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">defaultGas</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>The default gas which will be used for a request.</p>
+<div class="section" id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">string|number</span></code>: The current value of the defaultGas property.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="transactionblocktimeout">
+<span id="web3-module-transactionblocktimeout"></span><h2>transactionBlockTimeout<a class="headerlink" href="#transactionblocktimeout" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">transactionBlockTimeout</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">transactionBlockTimeout</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">transactionBlockTimeout</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>This can be used with a socket provider and defines the number of blocks until the PromiEvent
+rejects with a timeout error.</p>
+<div class="section" id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionBlockTimeout</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="transactionconfirmationblocks">
+<span id="web3-module-transactionconfirmationblocks"></span><h2>transactionConfirmationBlocks<a class="headerlink" href="#transactionconfirmationblocks" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">transactionConfirmationBlocks</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">transactionConfirmationBlocks</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">transactionConfirmationBlocks</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>This defines the number of blocks it requires until a transaction will be handled as confirmed.
+The PromiEvent will resolve with the desired receipt when enough confirmations happened.</p>
+<div class="section" id="id6">
+<h3>Returns<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionConfirmationBlocks</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="transactionpollingtimeout">
+<span id="web3-module-transactionpollingtimeout"></span><h2>transactionPollingTimeout<a class="headerlink" href="#transactionpollingtimeout" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">transactionPollingTimeout</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">transactionPollingTimeout</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">transactionPollingTimeout</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>This defines the polling cycles amount when you send a transaction with the HttpProvider.
+The PromiEvent rejects with a timeout error when the timeout got exceeded. (1 cycle == 1sec.).</p>
+<div class="section" id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">number</span></code>: The current value of transactionPollingTimeout</p>
+</div>
+</div>
+<hr class="docutils" />
 <div class="section" id="setprovider">
 <h2>setProvider<a class="headerlink" href="#setprovider" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="nx">myProvider</span><span class="p">)</span>
@@ -140,13 +282,14 @@ If you want to circumvent the checksum check you can make an address all lower- 
 <li><code class="docutils literal notranslate"><span class="pre">Net</span></code> - <code class="docutils literal notranslate"><span class="pre">net</span></code>: (optional) the node.js Net package. This is only required for the IPC provider.</li>
 </ol>
 </div>
-<div class="section" id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>Returns<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
 </div>
-<div class="section" id="id1">
-<h3>Example<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">Web3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3&#39;</span><span class="p">);</span>
+<div class="section" id="id9">
+<h3>Example<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nx">Web3</span> <span class="nx">from</span> <span class="s1">&#39;web3&#39;</span><span class="p">;</span>
+
 <span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="s1">&#39;http://localhost:8545&#39;</span><span class="p">);</span>
 
 <span class="c1">// or</span>
@@ -172,10 +315,8 @@ If you want to circumvent the checksum check you can make an address all lower- 
 <hr class="docutils" />
 <div class="section" id="providers">
 <h2>providers<a class="headerlink" href="#providers" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">providers</span>
-<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">providers</span>
-<span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">providers</span>
-<span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">providers</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">Web3</span><span class="p">.</span><span class="nx">providers</span>
+<span class="nx">Eth</span><span class="p">.</span><span class="nx">providers</span>
 <span class="p">...</span>
 </pre></div>
 </div>
@@ -191,8 +332,8 @@ If you want to circumvent the checksum check you can make an address all lower- 
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id2">
-<h3>Example<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3>Example<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">Web3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3&#39;</span><span class="p">);</span>
 <span class="c1">// use the given Provider, e.g in Mist, or instantiate a new websocket provider</span>
 <span class="kr">const</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">);</span>
@@ -214,7 +355,7 @@ If you want to circumvent the checksum check you can make an address all lower- 
 <hr class="docutils" />
 <div class="section" id="givenprovider">
 <h2>givenProvider<a class="headerlink" href="#givenprovider" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">givenProvider</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">givenProvider</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">givenProvider</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">givenProvider</span>
@@ -223,13 +364,13 @@ If you want to circumvent the checksum check you can make an address all lower- 
 </div>
 <p>When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser.
 Will return the given provider by the (browser) environment, otherwise <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p>
-<div class="section" id="id3">
-<h3>Returns<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3>Returns<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Object</span></code>: The given provider set or <code class="docutils literal notranslate"><span class="pre">null</span></code>;</p>
 </div>
-<div class="section" id="id4">
-<h3>Example<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="nx">web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">);</span>
+<div class="section" id="id12">
+<h3>Example<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -245,12 +386,12 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </pre></div>
 </div>
 <p>Will return the current provider, otherwise <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p>
-<div class="section" id="id5">
-<h3>Returns<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3>Returns<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Object</span></code>: The current provider set or <code class="docutils literal notranslate"><span class="pre">null</span></code>;</p>
 </div>
-<div class="section" id="id6">
-<h3>Example<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>Example<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">web3</span><span class="p">.</span><span class="nx">currentProvider</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">web3</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="s1">&#39;http://localhost:8545&#39;</span><span class="p">);</span>
 <span class="p">}</span>
@@ -264,16 +405,16 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">()</span>
 <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">()</span>
 <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">()</span>
-<span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">()</span>
+<span class="p">...</span>
 </pre></div>
 </div>
 <p>Class to create and execute batch requests.</p>
-<div class="section" id="id7">
-<h3>Parameters<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h3>Parameters<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <p>none</p>
 </div>
-<div class="section" id="id8">
-<h3>Returns<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h3>Returns<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Object</span></code>: With the following methods:</p>
 <blockquote>
 <div><ul class="simple">
@@ -282,8 +423,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id9">
-<h3>Example<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id17">
+<h3>Example<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">contract</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">Contract</span><span class="p">(</span><span class="nx">abi</span><span class="p">,</span> <span class="nx">address</span><span class="p">);</span>
 
 <span class="kr">const</span> <span class="nx">batch</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">BatchRequest</span><span class="p">();</span>
@@ -295,8 +436,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 <hr class="docutils" />
 </div>
 </div>
-<div class="section" id="defaultaccount">
-<span id="eth-defaultaccount"></span><h2>defaultAccount<a class="headerlink" href="#defaultaccount" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="eth-defaultaccount">
+<span id="id18"></span><h2>defaultAccount<a class="headerlink" href="#eth-defaultaccount" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultAccount</span>
 </pre></div>
 </div>
@@ -311,8 +452,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 <h3>Property<a class="headerlink" href="#property" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">String</span></code> - 20 Bytes: Any ethereum address. You should have the private key for that address in your node or keystore. (Default is <code class="docutils literal notranslate"><span class="pre">undefined</span></code>)</p>
 </div>
-<div class="section" id="id10">
-<h3>Example<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id19">
+<h3>Example<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultAccount</span><span class="p">;</span>
 <span class="o">&gt;</span> <span class="kc">undefined</span>
 
@@ -323,8 +464,8 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 <hr class="docutils" />
 </div>
 </div>
-<div class="section" id="defaultblock">
-<span id="eth-defaultblock"></span><h2>defaultBlock<a class="headerlink" href="#defaultblock" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="eth-defaultblock">
+<span id="id20"></span><h2>defaultBlock<a class="headerlink" href="#eth-defaultblock" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultBlock</span>
 </pre></div>
 </div>
@@ -338,8 +479,8 @@ The default value is “latest”.</p>
 <li><a class="reference internal" href="#eth-call"><span class="std std-ref">web3.eth.call()</span></a></li>
 <li><a class="reference internal" href="web3-eth-contract.html#contract-call"><span class="std std-ref">new web3.eth.Contract() -&gt; myContract.methods.myMethod().call()</span></a></li>
 </ul>
-<div class="section" id="id11">
-<h3>Property<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id21">
+<h3>Property<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
 <p>Default block parameters can be one of the following:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">Number</span></code>: A block number</li>
@@ -349,8 +490,8 @@ The default value is “latest”.</p>
 </ul>
 <p>Default is <code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code></p>
 </div>
-<div class="section" id="id12">
-<h3>Example<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id22">
+<h3>Example<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">defaultBlock</span><span class="p">;</span>
 <span class="o">&gt;</span> <span class="s2">&quot;latest&quot;</span>
 
@@ -367,12 +508,12 @@ The default value is “latest”.</p>
 </pre></div>
 </div>
 <p>Returns the ethereum protocol version of the node.</p>
-<div class="section" id="id13">
-<h3>Returns<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id23">
+<h3>Returns<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The protocol version.</p>
 </div>
-<div class="section" id="id14">
-<h3>Example<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id24">
+<h3>Example<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getProtocolVersion</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;63&quot;</span>
@@ -388,7 +529,7 @@ The default value is “latest”.</p>
 </div>
 <p>Checks if the node is currently syncing and returns either a syncing object, or <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
 <div class="section" id="eth-issyncing-return">
-<span id="id15"></span><h3>Returns<a class="headerlink" href="#eth-issyncing-return" title="Permalink to this headline">¶</a></h3>
+<span id="id25"></span><h3>Returns<a class="headerlink" href="#eth-issyncing-return" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;object|boolean&gt;</span></code> - A sync object when the node is currently syncing or <code class="docutils literal notranslate"><span class="pre">false</span></code>:</p>
 <blockquote>
 <div><ul class="simple">
@@ -400,8 +541,8 @@ The default value is “latest”.</p>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id16">
-<h3>Example<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id26">
+<h3>Example<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">isSyncing</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 
@@ -423,12 +564,12 @@ The default value is “latest”.</p>
 </pre></div>
 </div>
 <p>Returns the coinbase address to which mining rewards will go.</p>
-<div class="section" id="id17">
-<h3>Returns<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id27">
+<h3>Returns<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The coinbase address set in the node for mining rewards.</p>
 </div>
-<div class="section" id="id18">
-<h3>Example<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id28">
+<h3>Example<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getCoinbase</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span>
@@ -443,12 +584,12 @@ The default value is “latest”.</p>
 </pre></div>
 </div>
 <p>Checks whether the node is mining or not.</p>
-<div class="section" id="id19">
-<h3>Returns<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id29">
+<h3>Returns<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;boolean&gt;</span></code> - Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> if the node is mining, otherwise <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
 </div>
-<div class="section" id="id20">
-<h3>Example<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id30">
+<h3>Example<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">isMining</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
@@ -463,12 +604,12 @@ The default value is “latest”.</p>
 </pre></div>
 </div>
 <p>Returns the number of hashes per second that the node is mining with.</p>
-<div class="section" id="id21">
-<h3>Returns<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id31">
+<h3>Returns<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;number&gt;</span></code> - The Number of hashes per second.</p>
 </div>
-<div class="section" id="id22">
-<h3>Example<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id32">
+<h3>Example<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getHashrate</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="mi">493736</span>
@@ -485,13 +626,13 @@ The default value is “latest”.</p>
 <p>Returns the current gas price oracle.
 The gas price is determined by the last few blocks median gas price.
 GasPrice is the wei per unit of gas,.</p>
-<div class="section" id="id23">
-<h3>Returns<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id33">
+<h3>Returns<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - Number string of the current gas price in <span class="xref std std-ref">wei</span>.</p>
 <p>See the <a class="reference internal" href="web3-utils.html#utils-bn"><span class="std std-ref">A note on dealing with big numbers in JavaScript</span></a>.</p>
 </div>
-<div class="section" id="id24">
-<h3>Example<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id34">
+<h3>Example<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getGasPrice</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;20000000000&quot;</span>
@@ -511,12 +652,12 @@ will not add accounts into this list. For that use
 <a class="reference internal" href="web3-eth-personal.html#personal-newaccount"><span class="std std-ref">web3.eth.personal.newAccount()</span></a>.</p>
 <p>The results are the same as <a class="reference internal" href="web3-eth-personal.html#personal-getaccounts"><span class="std std-ref">web3.eth.personal.getAccounts()</span></a> except that calls
 the RPC method <code class="docutils literal notranslate"><span class="pre">personal_listAccounts</span></code>.</p>
-<div class="section" id="id25">
-<h3>Returns<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id35">
+<h3>Returns<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;Array&gt;</span></code> - An array of addresses controlled by node.</p>
 </div>
-<div class="section" id="id26">
-<h3>Example<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id36">
+<h3>Example<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getAccounts</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="p">[</span><span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span><span class="p">,</span> <span class="s2">&quot;0xDCc6960376d6C6dEa93647383FfB245CfCed97Cf&quot;</span><span class="p">]</span>
@@ -531,12 +672,12 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Returns the current block number.</p>
-<div class="section" id="id27">
-<h3>Returns<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id37">
+<h3>Returns<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;number&gt;</span></code> - The number of the most recent block.</p>
 </div>
-<div class="section" id="id28">
-<h3>Example<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id38">
+<h3>Example<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getBlockNumber</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="mi">2744</span>
@@ -551,21 +692,21 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Get the balance of an address at a given block.</p>
-<div class="section" id="id29">
-<h3>Parameters<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id39">
+<h3>Parameters<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The address to get the balance of.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Number|String</span></code> - (optional) If you pass this parameter it will not use the default block set with <a class="reference internal" href="#eth-defaultblock"><span class="std std-ref">web3.eth.defaultBlock</span></a>.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id30">
-<h3>Returns<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id40">
+<h3>Returns<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The current balance for the given address in <span class="xref std std-ref">wei</span>.</p>
 <p>See the <span class="xref std std-ref">A note on dealing with big numbers in JavaScript</span>.</p>
 </div>
-<div class="section" id="id31">
-<h3>Example<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id41">
+<h3>Example<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getBalance</span><span class="p">(</span><span class="s2">&quot;0x407d73d8a49eeb85d32cf465507dd71d507100c1&quot;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;1000000000000&quot;</span>
@@ -580,8 +721,8 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Get the storage at a specific position of an address.</p>
-<div class="section" id="id32">
-<h3>Parameters<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id42">
+<h3>Parameters<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The address to get the storage from.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Number</span></code> - The index position of the storage.</li>
@@ -589,12 +730,12 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id33">
-<h3>Returns<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id43">
+<h3>Returns<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The value in storage at the given position.</p>
 </div>
-<div class="section" id="id34">
-<h3>Example<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id44">
+<h3>Example<a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getStorageAt</span><span class="p">(</span><span class="s2">&quot;0x407d73d8a49eeb85d32cf465507dd71d507100c1&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234&quot;</span>
@@ -609,20 +750,20 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Get the code at a specific address.</p>
-<div class="section" id="id35">
-<h3>Parameters<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id45">
+<h3>Parameters<a class="headerlink" href="#id45" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The address to get the code from.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Number|String</span></code> - (optional) If you pass this parameter it will not use the default block set with <a class="reference internal" href="#eth-defaultblock"><span class="std std-ref">web3.eth.defaultBlock</span></a>.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id36">
-<h3>Returns<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id46">
+<h3>Returns<a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The data at given address <code class="docutils literal notranslate"><span class="pre">address</span></code>.</p>
 </div>
-<div class="section" id="id37">
-<h3>Example<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id47">
+<h3>Example<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getCode</span><span class="p">(</span><span class="s2">&quot;0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8&quot;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x600160008035811a818181146012578301005b601b6001356025565b8060005260206000f25b600060078202905091905056&quot;</span>
@@ -637,16 +778,16 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Returns a block matching the block number or block hash.</p>
-<div class="section" id="id38">
-<h3>Parameters<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id48">
+<h3>Parameters<a class="headerlink" href="#id48" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String|Number</span></code> - The block number or block hash. Or the string <code class="docutils literal notranslate"><span class="pre">&quot;genesis&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;pending&quot;</span></code> as in the <a class="reference internal" href="#eth-defaultblock"><span class="std std-ref">default block parameter</span></a>.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Boolean</span></code> - (optional, default <code class="docutils literal notranslate"><span class="pre">false</span></code>) If <code class="docutils literal notranslate"><span class="pre">true</span></code>, the returned block will contain all transactions as objects, if <code class="docutils literal notranslate"><span class="pre">false</span></code> it will only contains the transaction hashes.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id39">
-<h3>Returns<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id49">
+<h3>Returns<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;object&gt;</span></code> - The block object:</p>
 <blockquote>
 <div><ul class="simple">
@@ -672,8 +813,8 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id40">
-<h3>Example<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id50">
+<h3>Example<a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span>web3.eth.getBlock(3150)
 .then(console.log);
 
@@ -711,19 +852,19 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Returns the number of transaction in a given block.</p>
-<div class="section" id="id41">
-<h3>Parameters<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id51">
+<h3>Parameters<a class="headerlink" href="#id51" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String|Number</span></code> - The block number or hash. Or the string <code class="docutils literal notranslate"><span class="pre">&quot;genesis&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;pending&quot;</span></code> as in the <a class="reference internal" href="#eth-defaultblock"><span class="std std-ref">default block parameter</span></a>.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id42">
-<h3>Returns<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id52">
+<h3>Returns<a class="headerlink" href="#id52" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;number&gt;</span></code> - The number of transactions in the given block.</p>
 </div>
-<div class="section" id="id43">
-<h3>Example<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id53">
+<h3>Example<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getBlockTransactionCount</span><span class="p">(</span><span class="s2">&quot;0x407d73d8a49eeb85d32cf465507dd71d507100c1&quot;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="mi">1</span>
@@ -738,24 +879,24 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Returns a blocks uncle by a given uncle index position.</p>
-<div class="section" id="id44">
-<h3>Parameters<a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id54">
+<h3>Parameters<a class="headerlink" href="#id54" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String|Number</span></code> - The block number or hash. Or the string <code class="docutils literal notranslate"><span class="pre">&quot;genesis&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;pending&quot;</span></code> as in the <a class="reference internal" href="#eth-defaultblock"><span class="std std-ref">default block parameter</span></a>.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Number</span></code> - The index position of the uncle.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id45">
-<h3>Returns<a class="headerlink" href="#id45" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id55">
+<h3>Returns<a class="headerlink" href="#id55" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;object&gt;</span></code> - The returned uncle. For a return value see <a class="reference internal" href="#eth-getblock"><span class="std std-ref">web3.eth.getBlock()</span></a>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">An uncle doesn’t contain individual transactions.</p>
 </div>
 </div>
-<div class="section" id="id46">
-<h3>Example<a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id56">
+<h3>Example<a class="headerlink" href="#id56" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getUncle</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="c1">// see web3.eth.getBlock</span>
@@ -770,15 +911,15 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Returns a transaction matching the given transaction hash.</p>
-<div class="section" id="id47">
-<h3>Parameters<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id57">
+<h3>Parameters<a class="headerlink" href="#id57" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The transaction hash.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
 <div class="section" id="eth-gettransaction-return">
-<span id="id48"></span><h3>Returns<a class="headerlink" href="#eth-gettransaction-return" title="Permalink to this headline">¶</a></h3>
+<span id="id58"></span><h3>Returns<a class="headerlink" href="#eth-gettransaction-return" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;object&gt;</span></code> - A transaction object its hash <code class="docutils literal notranslate"><span class="pre">transactionHash</span></code>:</p>
 <blockquote>
 <div><ul class="simple">
@@ -796,8 +937,8 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id49">
-<h3>Example<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id59">
+<h3>Example<a class="headerlink" href="#id59" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getTransaction</span><span class="p">(</span><span class="s1">&#39;0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b§234&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 
@@ -825,20 +966,20 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Returns a transaction based on a block hash or number and the transactions index position.</p>
-<div class="section" id="id50">
-<h3>Parameters<a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id60">
+<h3>Parameters<a class="headerlink" href="#id60" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - A block number or hash. Or the string <code class="docutils literal notranslate"><span class="pre">&quot;genesis&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;pending&quot;</span></code> as in the <a class="reference internal" href="#eth-defaultblock"><span class="std std-ref">default block parameter</span></a>.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Number</span></code> - The transactions index position.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id51">
-<h3>Returns<a class="headerlink" href="#id51" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id61">
+<h3>Returns<a class="headerlink" href="#id61" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;object&gt;</span></code> - A transaction object, see <a class="reference internal" href="#eth-gettransaction-return"><span class="std std-ref">web3.eth.getTransaction</span></a>:</p>
 </div>
-<div class="section" id="id52">
-<h3>Example<a class="headerlink" href="#id52" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id62">
+<h3>Example<a class="headerlink" href="#id62" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">transaction</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getTransactionFromBlock</span><span class="p">(</span><span class="s1">&#39;0x4534534534&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="c1">// see web3.eth.getTransaction</span>
@@ -857,15 +998,15 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 <p class="first admonition-title">Note</p>
 <p class="last">The receipt is not available for pending transactions and returns <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p>
 </div>
-<div class="section" id="id53">
-<h3>Parameters<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id63">
+<h3>Parameters<a class="headerlink" href="#id63" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The transaction hash.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
 <div class="section" id="eth-gettransactionreceipt-return">
-<span id="id54"></span><h3>Returns<a class="headerlink" href="#eth-gettransactionreceipt-return" title="Permalink to this headline">¶</a></h3>
+<span id="id64"></span><h3>Returns<a class="headerlink" href="#eth-gettransactionreceipt-return" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise</span></code> returns <code class="docutils literal notranslate"><span class="pre">Object</span></code> - A transaction receipt object, or <code class="docutils literal notranslate"><span class="pre">null</span></code> when no receipt was found:</p>
 <blockquote>
 <div><ul class="simple">
@@ -883,8 +1024,8 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id55">
-<h3>Example<a class="headerlink" href="#id55" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id65">
+<h3>Example<a class="headerlink" href="#id65" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">receipt</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getTransactionReceipt</span><span class="p">(</span><span class="s1">&#39;0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 
@@ -912,20 +1053,20 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Get the numbers of transactions sent from this address.</p>
-<div class="section" id="id56">
-<h3>Parameters<a class="headerlink" href="#id56" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id66">
+<h3>Parameters<a class="headerlink" href="#id66" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - The address to get the numbers of transactions from.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Number|String</span></code> - (optional) If you pass this parameter it will not use the default block set with <a class="reference internal" href="#eth-defaultblock"><span class="std std-ref">web3.eth.defaultBlock</span></a>.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id57">
-<h3>Returns<a class="headerlink" href="#id57" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id67">
+<h3>Returns<a class="headerlink" href="#id67" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;number&gt;</span></code> - The number of transactions sent from the given address.</p>
 </div>
-<div class="section" id="id58">
-<h3>Example<a class="headerlink" href="#id58" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id68">
+<h3>Example<a class="headerlink" href="#id68" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getTransactionCount</span><span class="p">(</span><span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="mi">1</span>
@@ -940,8 +1081,8 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Sends a transaction to the network.</p>
-<div class="section" id="id59">
-<h3>Parameters<a class="headerlink" href="#id59" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id69">
+<h3>Parameters<a class="headerlink" href="#id69" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Object</span></code> - The transaction object to send:</li>
 </ol>
@@ -965,7 +1106,7 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </div>
 </div>
 <div class="section" id="eth-sendtransaction-return">
-<span id="id60"></span><h3>Returns<a class="headerlink" href="#eth-sendtransaction-return" title="Permalink to this headline">¶</a></h3>
+<span id="id70"></span><h3>Returns<a class="headerlink" href="#eth-sendtransaction-return" title="Permalink to this headline">¶</a></h3>
 <p>The <strong>callback</strong> will return the 32 bytes transaction hash.</p>
 <p><code class="docutils literal notranslate"><span class="pre">PromiEvent</span></code>: A <a class="reference internal" href="callbacks-promises-events.html#promievent"><span class="std std-ref">promise combined event emitter</span></a>. Will be resolved when the transaction <a class="reference internal" href="#eth-gettransactionreceipt-return"><span class="std std-ref">receipt</span></a> is available. Additionally the following events are available:</p>
 <ul class="simple">
@@ -975,8 +1116,8 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 <li><code class="docutils literal notranslate"><span class="pre">&quot;error&quot;</span></code> returns <code class="docutils literal notranslate"><span class="pre">Error</span></code>: Is fired if an error occurs during sending. If a out of gas error, the second parameter is the receipt.</li>
 </ul>
 </div>
-<div class="section" id="id61">
-<h3>Example<a class="headerlink" href="#id61" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id71">
+<h3>Example<a class="headerlink" href="#id71" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="c1">// compiled solidity source code using https://remix.ethereum.org</span>
 <span class="kr">const</span> <span class="nx">code</span> <span class="o">=</span> <span class="s2">&quot;603d80600c6000396000f3007c01000000000000000000000000000000000000000000000000000000006000350463c6888fa18114602d57005b6007600435028060005260206000f3&quot;</span><span class="p">;</span>
 
@@ -1025,20 +1166,20 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Sends an already signed transaction, generated for example using <a class="reference internal" href="web3-eth-accounts.html#eth-accounts-signtransaction"><span class="std std-ref">web3.eth.accounts.signTransaction</span></a>.</p>
-<div class="section" id="id62">
-<h3>Parameters<a class="headerlink" href="#id62" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id72">
+<h3>Parameters<a class="headerlink" href="#id72" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - Signed transaction data in HEX format</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id63">
-<h3>Returns<a class="headerlink" href="#id63" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id73">
+<h3>Returns<a class="headerlink" href="#id73" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">PromiEvent</span></code>: A <a class="reference internal" href="callbacks-promises-events.html#promievent"><span class="std std-ref">promise combined event emitter</span></a>. Will be resolved when the transaction <a class="reference internal" href="#eth-gettransactionreceipt-return"><span class="std std-ref">receipt</span></a> is available.</p>
 <p>Please see the return values for <a class="reference internal" href="#eth-sendtransaction-return"><span class="std std-ref">web3.eth.sendTransaction</span></a> for details.</p>
 </div>
-<div class="section" id="id64">
-<h3>Example<a class="headerlink" href="#id64" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id74">
+<h3>Example<a class="headerlink" href="#id74" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">Tx</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;ethereumjs-tx&#39;</span><span class="p">);</span>
 <span class="kr">const</span> <span class="nx">privateKey</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Buffer</span><span class="p">(</span><span class="s1">&#39;e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109&#39;</span><span class="p">,</span> <span class="s1">&#39;hex&#39;</span><span class="p">)</span>
 
@@ -1074,8 +1215,8 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Signs data using a specific account. This account needs to be unlocked.</p>
-<div class="section" id="id65">
-<h3>Parameters<a class="headerlink" href="#id65" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id75">
+<h3>Parameters<a class="headerlink" href="#id75" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - Data to sign. If String it will be converted using <a class="reference internal" href="web3-utils.html#utils-utf8tohex"><span class="std std-ref">web3.utils.utf8ToHex</span></a>.</li>
 <li><code class="docutils literal notranslate"><span class="pre">String|Number</span></code> - Address to sign data with. Or an address or index of a local wallet in <span class="xref std std-ref">web3.eth.accounts.wallet</span>.</li>
@@ -1086,12 +1227,12 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 <p class="last">The 2. <code class="docutils literal notranslate"><span class="pre">address</span></code> parameter can also be an address or index from the <span class="xref std std-ref">web3.eth.accounts.wallet</span>. It will then sign locally using the private key of this account.</p>
 </div>
 </div>
-<div class="section" id="id66">
-<h3>Returns<a class="headerlink" href="#id66" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id76">
+<h3>Returns<a class="headerlink" href="#id76" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The signature.</p>
 </div>
-<div class="section" id="id67">
-<h3>Example<a class="headerlink" href="#id67" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id77">
+<h3>Example<a class="headerlink" href="#id77" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">sign</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">,</span> <span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400&quot;</span>
@@ -1111,20 +1252,20 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Signs a transaction. This account needs to be unlocked.</p>
-<div class="section" id="id68">
-<h3>Parameters<a class="headerlink" href="#id68" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id78">
+<h3>Parameters<a class="headerlink" href="#id78" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Object</span></code> - The transaction data to sign <a class="reference internal" href="#eth-sendtransaction"><span class="std std-ref">web3.eth.sendTransaction()</span></a> for more.</li>
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> - (optional) Address to sign transaction with.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id69">
-<h3>Returns<a class="headerlink" href="#id69" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id79">
+<h3>Returns<a class="headerlink" href="#id79" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;object&gt;</span></code> - The RLP encoded transaction. The <code class="docutils literal notranslate"><span class="pre">raw</span></code> property can be used to send the transaction using <a class="reference internal" href="#eth-sendsignedtransaction"><span class="std std-ref">web3.eth.sendSignedTransaction</span></a>.</p>
 </div>
-<div class="section" id="id70">
-<h3>Example<a class="headerlink" href="#id70" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id80">
+<h3>Example<a class="headerlink" href="#id80" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">signTransaction</span><span class="p">({</span>
     <span class="nx">from</span><span class="o">:</span> <span class="s2">&quot;0xEB014f8c8B418Db6b45774c326A0E64C78914dC0&quot;</span><span class="p">,</span>
     <span class="nx">gasPrice</span><span class="o">:</span> <span class="s2">&quot;20000000000&quot;</span><span class="p">,</span>
@@ -1159,20 +1300,20 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Executes a message call transaction, which is directly executed in the VM of the node, but never mined into the blockchain.</p>
-<div class="section" id="id71">
-<h3>Parameters<a class="headerlink" href="#id71" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id81">
+<h3>Parameters<a class="headerlink" href="#id81" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Object</span></code> - A transaction object see <a class="reference internal" href="#eth-sendtransaction-return"><span class="std std-ref">web3.eth.sendTransaction</span></a>, with the difference that for calls the <code class="docutils literal notranslate"><span class="pre">from</span></code> property is optional as well.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Number|String</span></code> - (optional) If you pass this parameter it will not use the default block set with <a class="reference internal" href="#eth-defaultblock"><span class="std std-ref">web3.eth.defaultBlock</span></a>.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id72">
-<h3>Returns<a class="headerlink" href="#id72" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id82">
+<h3>Returns<a class="headerlink" href="#id82" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;string&gt;</span></code> - The returned data of the call, e.g. a smart contract functions return value.</p>
 </div>
-<div class="section" id="id73">
-<h3>Example<a class="headerlink" href="#id73" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id83">
+<h3>Example<a class="headerlink" href="#id83" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">call</span><span class="p">({</span>
     <span class="nx">to</span><span class="o">:</span> <span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span><span class="p">,</span> <span class="c1">// contract address</span>
     <span class="nx">data</span><span class="o">:</span> <span class="s2">&quot;0xc6888fa10000000000000000000000000000000000000000000000000000000000000003&quot;</span>
@@ -1190,19 +1331,19 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Executes a message call or transaction and returns the amount of the gas used.</p>
-<div class="section" id="id74">
-<h3>Parameters<a class="headerlink" href="#id74" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id84">
+<h3>Parameters<a class="headerlink" href="#id84" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Object</span></code> - A transaction object see <a class="reference internal" href="#eth-sendtransaction-return"><span class="std std-ref">web3.eth.sendTransaction</span></a>, with the difference that for calls the <code class="docutils literal notranslate"><span class="pre">from</span></code> property is optional as well.</li>
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id75">
-<h3>Returns<a class="headerlink" href="#id75" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id85">
+<h3>Returns<a class="headerlink" href="#id85" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;number&gt;</span></code> - The used gas for the simulated call/transaction.</p>
 </div>
-<div class="section" id="id76">
-<h3>Example<a class="headerlink" href="#id76" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id86">
+<h3>Example<a class="headerlink" href="#id86" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">estimateGas</span><span class="p">({</span>
     <span class="nx">to</span><span class="o">:</span> <span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span><span class="p">,</span>
     <span class="nx">data</span><span class="o">:</span> <span class="s2">&quot;0xc6888fa10000000000000000000000000000000000000000000000000000000000000003&quot;</span>
@@ -1220,8 +1361,8 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Gets past logs, matching the given options.</p>
-<div class="section" id="id77">
-<h3>Parameters<a class="headerlink" href="#id77" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id87">
+<h3>Parameters<a class="headerlink" href="#id87" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Object</span></code> - The filter options as follows:</li>
 </ol>
@@ -1235,7 +1376,7 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </div></blockquote>
 </div>
 <div class="section" id="eth-getpastlogs-return">
-<span id="id78"></span><h3>Returns<a class="headerlink" href="#eth-getpastlogs-return" title="Permalink to this headline">¶</a></h3>
+<span id="id88"></span><h3>Returns<a class="headerlink" href="#eth-getpastlogs-return" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;Array&gt;</span></code> - Array of log objects.</p>
 <p>The structure of the returned event <code class="docutils literal notranslate"><span class="pre">Object</span></code> in the <code class="docutils literal notranslate"><span class="pre">Array</span></code> looks as follows:</p>
 <ul class="simple">
@@ -1249,8 +1390,8 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 <li><code class="docutils literal notranslate"><span class="pre">blockNumber</span></code> - <code class="docutils literal notranslate"><span class="pre">Number</span></code>: The block number where this log was created in. <code class="docutils literal notranslate"><span class="pre">null</span></code> when still pending.</li>
 </ul>
 </div>
-<div class="section" id="id79">
-<h3>Example<a class="headerlink" href="#id79" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id89">
+<h3>Example<a class="headerlink" href="#id89" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getPastLogs</span><span class="p">({</span>
     <span class="nx">address</span><span class="o">:</span> <span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span><span class="p">,</span>
     <span class="nx">topics</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234&quot;</span><span class="p">]</span>
@@ -1278,14 +1419,14 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Gets work for miners to mine on. Returns the hash of the current block, the seedHash, and the boundary condition to be met (“target”).</p>
-<div class="section" id="id80">
-<h3>Parameters<a class="headerlink" href="#id80" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id90">
+<h3>Parameters<a class="headerlink" href="#id90" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id81">
-<h3>Returns<a class="headerlink" href="#id81" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id91">
+<h3>Returns<a class="headerlink" href="#id91" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;Array&gt;</span></code> - The mining work with the following structure:</p>
 <blockquote>
 <div><ul class="simple">
@@ -1295,8 +1436,8 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id82">
-<h3>Example<a class="headerlink" href="#id82" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id92">
+<h3>Example<a class="headerlink" href="#id92" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getWork</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="p">[</span>
@@ -1315,8 +1456,8 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 </pre></div>
 </div>
 <p>Used for submitting a proof-of-work solution.</p>
-<div class="section" id="id83">
-<h3>Parameters<a class="headerlink" href="#id83" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id93">
+<h3>Parameters<a class="headerlink" href="#id93" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> 8 Bytes: The nonce found (64 bits)</li>
 <li><code class="docutils literal notranslate"><span class="pre">String</span></code> 32 Bytes: The header’s pow-hash (256 bits)</li>
@@ -1324,12 +1465,12 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id84">
-<h3>Returns<a class="headerlink" href="#id84" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id94">
+<h3>Returns<a class="headerlink" href="#id94" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;boolean&gt;</span></code> - Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> if the provided solution is valid, otherwise false.</p>
 </div>
-<div class="section" id="id85">
-<h3>Example<a class="headerlink" href="#id85" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id95">
+<h3>Example<a class="headerlink" href="#id95" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">submitWork</span><span class="p">([</span>
     <span class="s2">&quot;0x0000000000000001&quot;</span><span class="p">,</span>
     <span class="s2">&quot;0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef&quot;</span><span class="p">,</span>
@@ -1351,18 +1492,18 @@ the RPC method <code class="docutils literal notranslate"><span class="pre">pers
 It doesn’t work if you’re connected to a node with a default Web3.js provider. (WebsocketProvider, HttpProvidder and IpcProvider)
 This method will only work if you’re using the injected provider from a application like Status, Mist or Metamask.</p>
 <p>For further information about the behavior of this method please read the EIP of it: <a class="reference external" href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md">EIP-1102</a></p>
-<div class="section" id="id86">
-<h3>Parameters<a class="headerlink" href="#id86" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id96">
+<h3>Parameters<a class="headerlink" href="#id96" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
 </ol>
 </div>
-<div class="section" id="id87">
-<h3>Returns<a class="headerlink" href="#id87" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id97">
+<h3>Returns<a class="headerlink" href="#id97" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Promise&lt;Array&gt;</span></code> - Returns an array of enabled accounts.</p>
 </div>
-<div class="section" id="id88">
-<h3>Example<a class="headerlink" href="#id88" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id98">
+<h3>Example<a class="headerlink" href="#id98" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">requestAccounts</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="p">[</span><span class="s1">&#39;0aae0B295369a9FD31d5F28D9Ec85E40f4cb692BAf&#39;</span><span class="p">,</span> <span class="mh">0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe</span><span class="p">]</span>
 </pre></div>
@@ -1393,201 +1534,234 @@ This method will only work if you’re using the injected provider from a applic
 <li><a class="reference internal" href="#ens">ens</a></li>
 <li><a class="reference internal" href="#abi">abi</a></li>
 <li><a class="reference internal" href="#net">net</a></li>
-<li><a class="reference internal" href="#setprovider">setProvider</a><ul>
-<li><a class="reference internal" href="#parameters">Parameters</a></li>
-<li><a class="reference internal" href="#returns">Returns</a></li>
+<li><a class="reference internal" href="#options">options</a><ul>
+<li><a class="reference internal" href="#module-options">Module Options</a></li>
 <li><a class="reference internal" href="#id1">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#providers">providers</a><ul>
-<li><a class="reference internal" href="#value">Value</a></li>
-<li><a class="reference internal" href="#id2">Example</a></li>
+<li><a class="reference internal" href="#defaultblock">defaultBlock</a><ul>
+<li><a class="reference internal" href="#returns">Returns</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#givenprovider">givenProvider</a><ul>
+<li><a class="reference internal" href="#defaultaccount">defaultAccount</a><ul>
+<li><a class="reference internal" href="#id2">Returns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#defaultgasprice">defaultGasPrice</a><ul>
 <li><a class="reference internal" href="#id3">Returns</a></li>
-<li><a class="reference internal" href="#id4">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#currentprovider">currentProvider</a><ul>
+<li><a class="reference internal" href="#defaultgas">defaultGas</a><ul>
+<li><a class="reference internal" href="#id4">Returns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#transactionblocktimeout">transactionBlockTimeout</a><ul>
 <li><a class="reference internal" href="#id5">Returns</a></li>
-<li><a class="reference internal" href="#id6">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#batchrequest">BatchRequest</a><ul>
-<li><a class="reference internal" href="#id7">Parameters</a></li>
+<li><a class="reference internal" href="#transactionconfirmationblocks">transactionConfirmationBlocks</a><ul>
+<li><a class="reference internal" href="#id6">Returns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#transactionpollingtimeout">transactionPollingTimeout</a><ul>
+<li><a class="reference internal" href="#id7">Returns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#setprovider">setProvider</a><ul>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
 <li><a class="reference internal" href="#id8">Returns</a></li>
 <li><a class="reference internal" href="#id9">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#defaultaccount">defaultAccount</a><ul>
-<li><a class="reference internal" href="#property">Property</a></li>
+<li><a class="reference internal" href="#providers">providers</a><ul>
+<li><a class="reference internal" href="#value">Value</a></li>
 <li><a class="reference internal" href="#id10">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#defaultblock">defaultBlock</a><ul>
-<li><a class="reference internal" href="#id11">Property</a></li>
+<li><a class="reference internal" href="#givenprovider">givenProvider</a><ul>
+<li><a class="reference internal" href="#id11">Returns</a></li>
 <li><a class="reference internal" href="#id12">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#getprotocolversion">getProtocolVersion</a><ul>
+<li><a class="reference internal" href="#currentprovider">currentProvider</a><ul>
 <li><a class="reference internal" href="#id13">Returns</a></li>
 <li><a class="reference internal" href="#id14">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#issyncing">isSyncing</a><ul>
-<li><a class="reference internal" href="#eth-issyncing-return">Returns</a></li>
-<li><a class="reference internal" href="#id16">Example</a></li>
+<li><a class="reference internal" href="#batchrequest">BatchRequest</a><ul>
+<li><a class="reference internal" href="#id15">Parameters</a></li>
+<li><a class="reference internal" href="#id16">Returns</a></li>
+<li><a class="reference internal" href="#id17">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#getcoinbase">getCoinbase</a><ul>
-<li><a class="reference internal" href="#id17">Returns</a></li>
-<li><a class="reference internal" href="#id18">Example</a></li>
+<li><a class="reference internal" href="#eth-defaultaccount">defaultAccount</a><ul>
+<li><a class="reference internal" href="#property">Property</a></li>
+<li><a class="reference internal" href="#id19">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#ismining">isMining</a><ul>
-<li><a class="reference internal" href="#id19">Returns</a></li>
-<li><a class="reference internal" href="#id20">Example</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gethashrate">getHashrate</a><ul>
-<li><a class="reference internal" href="#id21">Returns</a></li>
+<li><a class="reference internal" href="#eth-defaultblock">defaultBlock</a><ul>
+<li><a class="reference internal" href="#id21">Property</a></li>
 <li><a class="reference internal" href="#id22">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#getgasprice">getGasPrice</a><ul>
+<li><a class="reference internal" href="#getprotocolversion">getProtocolVersion</a><ul>
 <li><a class="reference internal" href="#id23">Returns</a></li>
 <li><a class="reference internal" href="#id24">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#getaccounts">getAccounts</a><ul>
-<li><a class="reference internal" href="#id25">Returns</a></li>
+<li><a class="reference internal" href="#issyncing">isSyncing</a><ul>
+<li><a class="reference internal" href="#eth-issyncing-return">Returns</a></li>
 <li><a class="reference internal" href="#id26">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#getblocknumber">getBlockNumber</a><ul>
+<li><a class="reference internal" href="#getcoinbase">getCoinbase</a><ul>
 <li><a class="reference internal" href="#id27">Returns</a></li>
 <li><a class="reference internal" href="#id28">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#getbalance">getBalance</a><ul>
-<li><a class="reference internal" href="#id29">Parameters</a></li>
-<li><a class="reference internal" href="#id30">Returns</a></li>
-<li><a class="reference internal" href="#id31">Example</a></li>
+<li><a class="reference internal" href="#ismining">isMining</a><ul>
+<li><a class="reference internal" href="#id29">Returns</a></li>
+<li><a class="reference internal" href="#id30">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#getstorageat">getStorageAt</a><ul>
-<li><a class="reference internal" href="#id32">Parameters</a></li>
+<li><a class="reference internal" href="#gethashrate">getHashrate</a><ul>
+<li><a class="reference internal" href="#id31">Returns</a></li>
+<li><a class="reference internal" href="#id32">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#getgasprice">getGasPrice</a><ul>
 <li><a class="reference internal" href="#id33">Returns</a></li>
 <li><a class="reference internal" href="#id34">Example</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#getaccounts">getAccounts</a><ul>
+<li><a class="reference internal" href="#id35">Returns</a></li>
+<li><a class="reference internal" href="#id36">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#getblocknumber">getBlockNumber</a><ul>
+<li><a class="reference internal" href="#id37">Returns</a></li>
+<li><a class="reference internal" href="#id38">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#getbalance">getBalance</a><ul>
+<li><a class="reference internal" href="#id39">Parameters</a></li>
+<li><a class="reference internal" href="#id40">Returns</a></li>
+<li><a class="reference internal" href="#id41">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#getstorageat">getStorageAt</a><ul>
+<li><a class="reference internal" href="#id42">Parameters</a></li>
+<li><a class="reference internal" href="#id43">Returns</a></li>
+<li><a class="reference internal" href="#id44">Example</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#getcode">getCode</a><ul>
-<li><a class="reference internal" href="#id35">Parameters</a></li>
-<li><a class="reference internal" href="#id36">Returns</a></li>
-<li><a class="reference internal" href="#id37">Example</a></li>
+<li><a class="reference internal" href="#id45">Parameters</a></li>
+<li><a class="reference internal" href="#id46">Returns</a></li>
+<li><a class="reference internal" href="#id47">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#getblock">getBlock</a><ul>
-<li><a class="reference internal" href="#id38">Parameters</a></li>
-<li><a class="reference internal" href="#id39">Returns</a></li>
-<li><a class="reference internal" href="#id40">Example</a></li>
+<li><a class="reference internal" href="#id48">Parameters</a></li>
+<li><a class="reference internal" href="#id49">Returns</a></li>
+<li><a class="reference internal" href="#id50">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#getblocktransactioncount">getBlockTransactionCount</a><ul>
-<li><a class="reference internal" href="#id41">Parameters</a></li>
-<li><a class="reference internal" href="#id42">Returns</a></li>
-<li><a class="reference internal" href="#id43">Example</a></li>
+<li><a class="reference internal" href="#id51">Parameters</a></li>
+<li><a class="reference internal" href="#id52">Returns</a></li>
+<li><a class="reference internal" href="#id53">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#getuncle">getUncle</a><ul>
-<li><a class="reference internal" href="#id44">Parameters</a></li>
-<li><a class="reference internal" href="#id45">Returns</a></li>
-<li><a class="reference internal" href="#id46">Example</a></li>
+<li><a class="reference internal" href="#id54">Parameters</a></li>
+<li><a class="reference internal" href="#id55">Returns</a></li>
+<li><a class="reference internal" href="#id56">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#gettransaction">getTransaction</a><ul>
-<li><a class="reference internal" href="#id47">Parameters</a></li>
+<li><a class="reference internal" href="#id57">Parameters</a></li>
 <li><a class="reference internal" href="#eth-gettransaction-return">Returns</a></li>
-<li><a class="reference internal" href="#id49">Example</a></li>
+<li><a class="reference internal" href="#id59">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#gettransactionfromblock">getTransactionFromBlock</a><ul>
-<li><a class="reference internal" href="#id50">Parameters</a></li>
-<li><a class="reference internal" href="#id51">Returns</a></li>
-<li><a class="reference internal" href="#id52">Example</a></li>
+<li><a class="reference internal" href="#id60">Parameters</a></li>
+<li><a class="reference internal" href="#id61">Returns</a></li>
+<li><a class="reference internal" href="#id62">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#gettransactionreceipt">getTransactionReceipt</a><ul>
-<li><a class="reference internal" href="#id53">Parameters</a></li>
+<li><a class="reference internal" href="#id63">Parameters</a></li>
 <li><a class="reference internal" href="#eth-gettransactionreceipt-return">Returns</a></li>
-<li><a class="reference internal" href="#id55">Example</a></li>
+<li><a class="reference internal" href="#id65">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#gettransactioncount">getTransactionCount</a><ul>
-<li><a class="reference internal" href="#id56">Parameters</a></li>
-<li><a class="reference internal" href="#id57">Returns</a></li>
-<li><a class="reference internal" href="#id58">Example</a></li>
+<li><a class="reference internal" href="#id66">Parameters</a></li>
+<li><a class="reference internal" href="#id67">Returns</a></li>
+<li><a class="reference internal" href="#id68">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#sendtransaction">sendTransaction</a><ul>
-<li><a class="reference internal" href="#id59">Parameters</a></li>
+<li><a class="reference internal" href="#id69">Parameters</a></li>
 <li><a class="reference internal" href="#eth-sendtransaction-return">Returns</a></li>
-<li><a class="reference internal" href="#id61">Example</a></li>
+<li><a class="reference internal" href="#id71">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#sendsignedtransaction">sendSignedTransaction</a><ul>
-<li><a class="reference internal" href="#id62">Parameters</a></li>
-<li><a class="reference internal" href="#id63">Returns</a></li>
-<li><a class="reference internal" href="#id64">Example</a></li>
+<li><a class="reference internal" href="#id72">Parameters</a></li>
+<li><a class="reference internal" href="#id73">Returns</a></li>
+<li><a class="reference internal" href="#id74">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#sign">sign</a><ul>
-<li><a class="reference internal" href="#id65">Parameters</a></li>
-<li><a class="reference internal" href="#id66">Returns</a></li>
-<li><a class="reference internal" href="#id67">Example</a></li>
+<li><a class="reference internal" href="#id75">Parameters</a></li>
+<li><a class="reference internal" href="#id76">Returns</a></li>
+<li><a class="reference internal" href="#id77">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#signtransaction">signTransaction</a><ul>
-<li><a class="reference internal" href="#id68">Parameters</a></li>
-<li><a class="reference internal" href="#id69">Returns</a></li>
-<li><a class="reference internal" href="#id70">Example</a></li>
+<li><a class="reference internal" href="#id78">Parameters</a></li>
+<li><a class="reference internal" href="#id79">Returns</a></li>
+<li><a class="reference internal" href="#id80">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#call">call</a><ul>
-<li><a class="reference internal" href="#id71">Parameters</a></li>
-<li><a class="reference internal" href="#id72">Returns</a></li>
-<li><a class="reference internal" href="#id73">Example</a></li>
+<li><a class="reference internal" href="#id81">Parameters</a></li>
+<li><a class="reference internal" href="#id82">Returns</a></li>
+<li><a class="reference internal" href="#id83">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#estimategas">estimateGas</a><ul>
-<li><a class="reference internal" href="#id74">Parameters</a></li>
-<li><a class="reference internal" href="#id75">Returns</a></li>
-<li><a class="reference internal" href="#id76">Example</a></li>
+<li><a class="reference internal" href="#id84">Parameters</a></li>
+<li><a class="reference internal" href="#id85">Returns</a></li>
+<li><a class="reference internal" href="#id86">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#getpastlogs">getPastLogs</a><ul>
-<li><a class="reference internal" href="#id77">Parameters</a></li>
+<li><a class="reference internal" href="#id87">Parameters</a></li>
 <li><a class="reference internal" href="#eth-getpastlogs-return">Returns</a></li>
-<li><a class="reference internal" href="#id79">Example</a></li>
+<li><a class="reference internal" href="#id89">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#getwork">getWork</a><ul>
-<li><a class="reference internal" href="#id80">Parameters</a></li>
-<li><a class="reference internal" href="#id81">Returns</a></li>
-<li><a class="reference internal" href="#id82">Example</a></li>
+<li><a class="reference internal" href="#id90">Parameters</a></li>
+<li><a class="reference internal" href="#id91">Returns</a></li>
+<li><a class="reference internal" href="#id92">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#submitwork">submitWork</a><ul>
-<li><a class="reference internal" href="#id83">Parameters</a></li>
-<li><a class="reference internal" href="#id84">Returns</a></li>
-<li><a class="reference internal" href="#id85">Example</a></li>
+<li><a class="reference internal" href="#id93">Parameters</a></li>
+<li><a class="reference internal" href="#id94">Returns</a></li>
+<li><a class="reference internal" href="#id95">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#requestaccounts">requestAccounts</a><ul>
-<li><a class="reference internal" href="#id86">Parameters</a></li>
-<li><a class="reference internal" href="#id87">Returns</a></li>
-<li><a class="reference internal" href="#id88">Example</a></li>
+<li><a class="reference internal" href="#id96">Parameters</a></li>
+<li><a class="reference internal" href="#id97">Returns</a></li>
+<li><a class="reference internal" href="#id98">Example</a></li>
 </ul>
 </li>
 </ul>

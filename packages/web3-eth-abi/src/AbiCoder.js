@@ -296,15 +296,20 @@ export default class AbiCoder {
 
         const nonIndexedData = data;
 
-        const notIndexedParams = nonIndexedData ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [];
+        const notIndexedParams = nonIndexedData
+            ? this.decodeParameters(notIndexedInputs.filter(Boolean), nonIndexedData)
+            : [];
 
+        let notIndexedOffset = 0;
         const returnValues = {};
 
         inputs.forEach((res, i) => {
+            if (res.indexed) notIndexedOffset++;
+
             returnValues[i] = res.type === 'string' ? '' : null;
 
-            if (typeof notIndexedParams[i] !== 'undefined') {
-                returnValues[i] = notIndexedParams[i];
+            if (!res.indexed && typeof notIndexedParams[i - notIndexedOffset] !== 'undefined') {
+                returnValues[i] = notIndexedParams[i - notIndexedOffset];
             }
             if (typeof indexedParams[i] !== 'undefined') {
                 returnValues[i] = indexedParams[i];

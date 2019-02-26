@@ -35,6 +35,7 @@ describe('ContractDeployMethodTest', () => {
             transactionConfirmationWorkflowMock,
             accountsMock,
             transactionSignerMock,
+            {},
             contractMock
         );
     });
@@ -45,6 +46,8 @@ describe('ContractDeployMethodTest', () => {
         expect(contractDeployMethod.formatters).toEqual(formatters);
 
         expect(contractDeployMethod.transactionConfirmationWorkflow).toEqual(transactionConfirmationWorkflowMock);
+
+        expect(contractDeployMethod.sendRawTransactionMethod).toEqual({});
 
         expect(contractDeployMethod.accounts).toEqual(accountsMock);
 

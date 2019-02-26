@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import BigNumber from 'bn.js';
+import BigNumber = require('bn.js');
+import {Buffer} from 'buffer';
 
 export type Unit =
     | 'noether'
@@ -80,7 +81,7 @@ export function toTwosComplement(value: number | string | BN): string;
 export function isAddress(address: string): boolean;
 export function isHex(hex: Hex): boolean;
 export function isHexStrict(hex: Hex): boolean;
-export function asciiToHex(string: string): string;
+export function asciiToHex(string: string, length?: number): string;
 export function hexToAscii(string: string): string;
 export function toAscii(string: string): string;
 export function bytesToHex(bytes: number[]): string;
@@ -89,7 +90,7 @@ export function checkAddressChecksum(address: string): boolean;
 export function fromAscii(string: string): string;
 export function fromDecimal(value: string | number): string;
 export function fromUtf8(string: string): string;
-export function fromWei(value: BN, unit?: Unit): BN | string;
+export function fromWei(value: string | BN, unit?: Unit): string;
 export function hexToBytes(hex: Hex): number[];
 export function hexToNumber(hex: Hex): number;
 export function hexToNumberString(hex: Hex): string;
@@ -108,7 +109,8 @@ export function toChecksumAddress(address: string): string;
 export function toDecimal(hex: Hex): number;
 export function toHex(value: number | string | BN): string;
 export function toUtf8(string: string): string;
-export function toWei(value: number | string | BN, unit?: Unit): string | BN;
+export function toWei(val: BN, unit?: Unit): BN;
+export function toWei(val: string, unit?: Unit): string;
 export function isBloom(bloom: string): boolean;
 export function isTopic(topic: string): boolean;
 export function jsonInterfaceMethodToString(abiItem: AbiItem): string;
@@ -120,7 +122,6 @@ export function testTopic(bloom: string, topic: string): boolean;
 export function getSignatureParameters(signature: string): object;
 
 // interfaces
-
 export interface Utils {
     isBN(value: string | number): boolean;
     isBigNumber(value: BN): boolean;
@@ -129,7 +130,7 @@ export interface Utils {
     isAddress(address: string): boolean;
     isHex(hex: Hex): boolean;
     isHexStrict(hex: Hex): boolean;
-    asciiToHex(string: string): string;
+    asciiToHex(string: string, length?: number): string;
     hexToAscii(string: string): string;
     toAscii(string: string): string;
     bytesToHex(bytes: number[]): string;
@@ -138,7 +139,7 @@ export interface Utils {
     fromAscii(string: string): string;
     fromDecimal(value: string | number): string;
     fromUtf8(string: string): string;
-    fromWei(value: BN, unit?: Unit): BN | string;
+    fromWei(value: string | BN, unit?: Unit): string;
     hexToBytes(hex: Hex): number[];
     hexToNumber(hex: Hex): number;
     hexToNumberString(hex: Hex): string;
@@ -157,7 +158,8 @@ export interface Utils {
     toDecimal(hex: Hex): number;
     toHex(value: number | string | BN): string;
     toUtf8(string: string): string;
-    toWei(value: number | string | BN, unit?: Unit): string | BN;
+    toWei(val: BN, unit?: Unit): BN;
+    toWei(val: string, unit?: Unit): string;
     isBloom(bloom: string): boolean;
     isTopic(topic: string): boolean;
     jsonInterfaceMethodToString(abiItem: AbiItem): string;

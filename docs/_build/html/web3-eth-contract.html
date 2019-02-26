@@ -44,7 +44,7 @@
             
   <div class="admonition note" id="eth-contract">
 <p class="first admonition-title">Note</p>
-<p class="last">This documentation is work in progress and web3.js 1.0 is not yet released! You can find the current documentation for web3 0.x.x at <a class="reference external" href="https://github.com/ethereum/wiki/wiki/JavaScript-API">github.com/ethereum/wiki/wiki/JavaScript-API</a>.</p>
+<p class="last">This documentation is work in progress and web3.js 1.0 stable is not yet released! You can find the current documentation for web3 0.x.x at <a class="reference external" href="https://github.com/ethereum/wiki/wiki/JavaScript-API">github.com/ethereum/wiki/wiki/JavaScript-API</a>.</p>
 </div>
 <div class="section" id="web3-eth-contract">
 <h1>web3.eth.Contract<a class="headerlink" href="#web3-eth-contract" title="Permalink to this headline">¶</a></h1>
@@ -485,8 +485,8 @@ If it returns a single value, it’s returned as is. If it has multiple return v
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">&quot;transactionHash&quot;</span></code> returns <code class="docutils literal notranslate"><span class="pre">String</span></code>: is fired right after the transaction is sent and a transaction hash is available.</li>
 <li><code class="docutils literal notranslate"><span class="pre">&quot;receipt&quot;</span></code> returns <code class="docutils literal notranslate"><span class="pre">Object</span></code>: is fired when the transaction <em>receipt</em> is available. Receipts from contracts will have no <code class="docutils literal notranslate"><span class="pre">logs</span></code> property, but instead an <code class="docutils literal notranslate"><span class="pre">events</span></code> property with event names as keys and events as properties. See <a class="reference internal" href="#contract-events-return"><span class="std std-ref">getPastEvents return values</span></a> for details about the returned event object.</li>
-<li><code class="docutils literal notranslate"><span class="pre">&quot;confirmation&quot;</span></code> returns <code class="docutils literal notranslate"><span class="pre">Number</span></code>, <code class="docutils literal notranslate"><span class="pre">Object</span></code>: is fired for every confirmation up to the 24th confirmation. Receives the confirmation number as the first and the receipt as the second argument. Fired from confirmation 1 on, which is the block where it’s minded.</li>
-<li><code class="docutils literal notranslate"><span class="pre">&quot;error&quot;</span></code> returns <code class="docutils literal notranslate"><span class="pre">Error</span></code>: is fired if an error occurs during sending. If a out of gas error, the second parameter is the receipt.</li>
+<li><code class="docutils literal notranslate"><span class="pre">&quot;confirmation&quot;</span></code> returns <code class="docutils literal notranslate"><span class="pre">Number</span></code>, <code class="docutils literal notranslate"><span class="pre">Object</span></code>: is fired for every confirmation up to the 24th confirmation. Receives the confirmation number as the first and the receipt as the second argument. Fired from confirmation 1 on, which is the block where it’s mined.</li>
+<li><code class="docutils literal notranslate"><span class="pre">&quot;error&quot;</span></code> returns <code class="docutils literal notranslate"><span class="pre">Error</span></code>: is fired if an error occurs during sending. If an out of gas error, the second parameter is the receipt.</li>
 </ul>
 </div>
 <div class="section" id="id23">

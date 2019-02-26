@@ -44,4 +44,25 @@ describe('CallMethodTest', () => {
 
         expect(formatters.inputCallFormatter).toHaveBeenCalledWith({}, {});
     });
+
+    it('calls beforeExecution with a callback instead of the optional paramter and it calls the inputCallFormatter and inputDefaultBlockNumberFormatter', () => {
+        const callback = jest.fn();
+        method.parameters = [{}, callback];
+
+        formatters.inputCallFormatter.mockReturnValueOnce({empty: true});
+
+        formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+
+        method.beforeExecution({defaultBlock: 'latest'});
+
+        expect(method.callback).toEqual(callback);
+
+        expect(method.parameters[0]).toEqual({empty: true});
+
+        expect(method.parameters[1]).toEqual('0x0');
+
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith({}, {defaultBlock: 'latest'});
+
+        expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {defaultBlock: 'latest'});
+    });
 });

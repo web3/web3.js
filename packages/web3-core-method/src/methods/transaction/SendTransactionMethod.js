@@ -23,6 +23,7 @@
 import isObject from 'lodash/isObject';
 import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
 
+// TODO: Clean up this method and move the signing logic etc. to the eth module
 export default class SendTransactionMethod extends AbstractSendMethod {
     /**
      * @param {Utils} utils
@@ -30,13 +31,22 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
      * @param {Accounts} accounts
      * @param {TransactionSigner} transactionSigner
+     * @param {SendRawTransactionMethod} sendRawTransactionMethod
      *
      * @constructor
      */
-    constructor(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner) {
+    constructor(
+        utils,
+        formatters,
+        transactionConfirmationWorkflow,
+        accounts,
+        transactionSigner,
+        sendRawTransactionMethod
+    ) {
         super('eth_sendTransaction', 1, utils, formatters, transactionConfirmationWorkflow);
         this.accounts = accounts;
         this.transactionSigner = transactionSigner;
+        this.sendRawTransactionMethod = sendRawTransactionMethod;
     }
 
     /**
@@ -82,13 +92,11 @@ export default class SendTransactionMethod extends AbstractSendMethod {
         }
 
         if (this.hasWallets()) {
-            this.rpcMethod = 'eth_sendRawTransaction';
-
             this.transactionSigner
                 .sign(this.parameters[0])
                 .then((response) => {
-                    this.parameters = [response.rawTransaction];
-                    super.execute(moduleInstance, promiEvent);
+                    this.sendRawTransactionMethod.parameters = [response.rawTransaction];
+                    this.sendRawTransactionMethod.execute(moduleInstance, promiEvent);
                 })
                 .catch((error) => {
                     if (this.callback) {
