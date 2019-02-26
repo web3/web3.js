@@ -130,10 +130,11 @@ export interface TransactionReceipt {
     blockNumber: number;
     from: string;
     to: string;
-    contractAddress: string;
+    contractAddress?: string;
     cumulativeGasUsed: number;
     gasUsed: number;
-    logs?: Log[];
+    logs: Log[];
+    logsBloom: string;
     events?: {
         [eventName: string]: EventLog;
     };
