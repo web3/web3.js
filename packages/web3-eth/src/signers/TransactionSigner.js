@@ -43,7 +43,7 @@ export default class TransactionSigner {
      * @returns {Promise<{messageHash, v, r, s, rawTransaction}>}
      */
     async sign(transaction, privateKey) {
-        transaction = this.formatters.inputCallFormatter(transaction);
+        transaction = this.formatters.txInputFormatter(transaction);
         transaction.to = transaction.to || '0x';
         transaction.data = transaction.data || '0x';
         transaction.value = transaction.value || '0x';
@@ -51,7 +51,7 @@ export default class TransactionSigner {
 
         const rlpEncoded = this.createRlpEncodedTransaction(transaction);
         const hash = Hash.keccak256(rlpEncoded);
-        const signature = this.createAccountSignature(hash, privateKey);
+        const signature = this.createAccountSignature(hash, privateKey, transaction.chainId);
         const rawTransaction = RLP.encode(this.mapRlpEncodedTransaction(rlpEncoded, signature));
         const values = RLP.decode(rawTransaction);
 
@@ -94,13 +94,12 @@ export default class TransactionSigner {
      *
      * @param {String} hash
      * @param {String} privateKey
+     * @param {String} chainId
      *
      * @returns {String}
      */
-    createAccountSignature(hash, privateKey) {
-        return Account.makeSigner(
-            Nat.toNumber(transaction.chainId) * 2 + 35
-        )(hash, privateKey);
+    createAccountSignature(hash, privateKey, chainId) {
+        return Account.makeSigner(Nat.toNumber(chainId) * 2 + 35)(hash, privateKey);
     }
 
     /**
@@ -112,7 +111,9 @@ export default class TransactionSigner {
      * @returns {Array}
      */
     mapRlpEncodedTransaction(rlpEncoded, signature) {
-        const rawTransaction = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
+        const rawTransaction = RLP.decode(rlpEncoded)
+            .slice(0, 6)
+            .concat(Account.decodeSignature(signature));
         rawTransaction[6] = this.makeEven(this.trimLeadingZero(rawTransaction[6]));
         rawTransaction[7] = this.makeEven(this.trimLeadingZero(rawTransaction[7]));
         rawTransaction[8] = this.makeEven(this.trimLeadingZero(rawTransaction[8]));

@@ -122,7 +122,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             this.parameters[0].nonce = await moduleInstance.getTransactionCount(this.parameters[0].from);
         }
 
-        const response = await moduleInstance.transactionSigner.sign(transaction, privateKey);
+        const response = await moduleInstance.transactionSigner.sign(this.parameters[0], privateKey);
         this.sendRawTransactionMethod.parameters = [response.rawTransaction];
         this.sendRawTransactionMethod.callback = this.callback;
         this.sendRawTransactionMethod.execute(moduleInstance, promiEvent);
