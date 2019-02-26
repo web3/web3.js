@@ -140,10 +140,6 @@ export default class HttpProvider {
             );
 
             request.onreadystatechange = () => {
-                if (request.response === null && request.status === 0 && ) {
-
-                }
-
                 if (request.readyState !== 0 && request.readyState !== 1) {
                     this.connected = true;
                 }
