@@ -76,10 +76,4 @@ describe('OutputTransactionReceiptFormatterTest', () => {
             ]
         });
     });
-
-    it('call outputTransactionReceiptFormatter with invalid argument', () => {
-        expect(() => {
-            outputTransactionReceiptFormatter('STRING');
-        }).toThrow('Received receipt is invalid: STRING');
-    });
 });

@@ -44,7 +44,7 @@ export default class GetTransactionReceiptMethod extends AbstractCallMethod {
      */
     afterExecution(response) {
         if (response !== null) {
-            return this.formatters.outputTransactionFormatter(response);
+            return this.formatters.outputTransactionReceiptFormatter(response);
         }
 
         return response;
