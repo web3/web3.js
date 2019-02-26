@@ -154,7 +154,7 @@ export default class HttpProvider {
                     }
 
                     if (request.response === null && request.status === 0) {
-                        reject(new Error(`Connection refused or URL couldn\'t be resolved: ${this.host}`))
+                        reject(new Error(`Connection refused or URL couldn't be resolved: ${this.host}`));
                     }
                 }
             };

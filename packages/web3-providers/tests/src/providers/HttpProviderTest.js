@@ -239,7 +239,9 @@ describe('HttpProviderTest', () => {
             xhrMock.onreadystatechange();
         }, 1);
 
-        await expect(httpProvider.sendPayload({id: '0x0'})).rejects.toThrow(`Connection refused or URL couldn\'t be resolved: ${httpProvider.host}`);
+        await expect(httpProvider.sendPayload({id: '0x0'})).rejects.toThrow(
+            `Connection refused or URL couldn't be resolved: ${httpProvider.host}`
+        );
 
         expect(providersModuleFactoryMock.createXMLHttpRequest).toHaveBeenCalledWith(
             httpProvider.host,
