@@ -55,7 +55,7 @@ export default class TransactionReceiptValidator {
      * @returns {Boolean}
      */
     isValidReceiptStatus(receipt) {
-        return receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined';
+        return receipt.status === true || typeof receipt.status === 'undefined';
     }
 
     /**

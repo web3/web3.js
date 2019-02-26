@@ -225,6 +225,34 @@ describe('HttpProviderTest', () => {
         expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
     });
 
+    it('calls sendPayload and returns with a rejected promise because of an not existing http endpoint', async () => {
+        new XHR();
+        const xhrMock = XHR.mock.instances[0];
+
+        xhrMock.readyState = 4;
+        xhrMock.status = 0;
+        xhrMock.response = null;
+
+        providersModuleFactoryMock.createXMLHttpRequest.mockReturnValueOnce(xhrMock);
+
+        setTimeout(() => {
+            xhrMock.onreadystatechange();
+        }, 1);
+
+        await expect(httpProvider.sendPayload({id: '0x0'})).rejects.toThrow(
+            `Connection refused or URL couldn't be resolved: ${httpProvider.host}`
+        );
+
+        expect(providersModuleFactoryMock.createXMLHttpRequest).toHaveBeenCalledWith(
+            httpProvider.host,
+            httpProvider.timeout,
+            httpProvider.headers,
+            httpProvider.agent
+        );
+
+        expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
+    });
+
     it('calls sendPayload and returns with a rejected promise because of the exceeded timeout', async () => {
         new XHR();
         const xhrMock = XHR.mock.instances[0];

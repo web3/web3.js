@@ -28,11 +28,11 @@ describe('GetTransactionReceiptMethodTest', () => {
     });
 
     it('afterExecution should map the response', () => {
-        formatters.outputTransactionFormatter.mockReturnValueOnce({empty: false});
+        formatters.outputTransactionReceiptFormatter.mockReturnValueOnce({empty: false});
 
         expect(method.afterExecution({})).toHaveProperty('empty', false);
 
-        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({});
+        expect(formatters.outputTransactionReceiptFormatter).toHaveBeenCalledWith({});
     });
 
     it('afterExecution should return null', () => {
