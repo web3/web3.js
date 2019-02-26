@@ -8,7 +8,7 @@
         "strictNullChecks": true,
         "strictFunctionTypes": true,
         "noEmit": true,
-        "allowSyntheticDefaultImports": true,
+        "allowSyntheticDefaultImports": false,
         "baseUrl": ".",
         "paths": {
             "web3-core-helpers": ["."]
