@@ -39,8 +39,8 @@ export ContractModuleFactory from './factories/ContractModuleFactory';
  * @method Contract
  *
  * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Array} abi
  * @param {Accounts} accounts
- * @param {Object} abi
  * @param {String} address
  * @param {Object} options
  *
@@ -48,7 +48,7 @@ export ContractModuleFactory from './factories/ContractModuleFactory';
  *
  * @constructor
  */
-export const Contract = (provider, accounts, abi, address, options) => {
+export const Contract = (provider, abi, accounts, address, options) => {
     const abiCoder = new AbiCoder();
     const methodModuleFactory = new MethodModuleFactory();
 
@@ -58,12 +58,12 @@ export const Contract = (provider, accounts, abi, address, options) => {
         new MethodModuleFactory(),
         new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
         PromiEvent,
+        accounts,
         abiCoder,
         Utils,
         formatters,
         abi,
         address,
-        accounts,
         options
     );
 };

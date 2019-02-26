@@ -70,6 +70,7 @@ export default class Eth extends AbstractWeb3Module {
         this.Iban = Iban;
         this.abi = abiCoder;
         this.ens = ens;
+
         this.utils = utils;
         this.formatters = formatters;
         this.subscriptionsFactory = subscriptionsFactory;
@@ -95,6 +96,7 @@ export default class Eth extends AbstractWeb3Module {
                 this.currentProvider,
                 this.providersModuleFactory,
                 PromiEvent,
+                this.accounts,
                 abi,
                 address,
                 options
@@ -128,6 +130,10 @@ export default class Eth extends AbstractWeb3Module {
         this._transactionSigner = transactionSigner;
         this.accounts.transactionSigner = transactionSigner;
         this.ens.transactionSigner = transactionSigner;
+
+        this.initiatedContracts.forEach((contract) => {
+            contract.transactionSigner = transactionSigner;
+        });
     }
 
     /**
