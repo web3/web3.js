@@ -39,7 +39,7 @@ describe('TransactionReceiptValidatorTest', () => {
 
     it('calls validate and returns true with undefined status property', () => {
         delete receipt.status;
-        
+
         Utils.hexToNumber.mockReturnValueOnce(110);
 
         method.parameters = [
