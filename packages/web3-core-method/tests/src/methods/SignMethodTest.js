@@ -26,6 +26,7 @@ describe('SignMethodTest', () => {
         accountsMock = new Accounts();
         accountsMock.sign = jest.fn();
         accountsMock.wallet = {'0x0': {privateKey: '0x0'}};
+        accountsMock.accountsIndex = 1;
 
         new AbstractWeb3Module(providerMock, {}, {}, {});
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
@@ -94,7 +95,7 @@ describe('SignMethodTest', () => {
     });
 
     it('calls execute and the account does not exist in the eth-accounts wallet', async () => {
-        moduleInstanceMock.accounts = false;
+        accountsMock.wallet = {'nope': {privateKey: '0x0'}};
 
         formatters.inputSignFormatter.mockReturnValueOnce('string');
 

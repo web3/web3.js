@@ -321,7 +321,7 @@ describe('SendTransactionMethodTest', () => {
 
         expect(sendRawTransactionMethodMock.parameters).toEqual(['0x0']);
 
-        expect(getTransactionCountMethodMock.parameters).toEqual([method.parameters[0].from])
+        expect(getTransactionCountMethodMock.parameters).toEqual([method.parameters[0].from]);
 
         expect(getTransactionCountMethodMock.execute).toHaveBeenCalledWith(moduleInstanceMock);
     });

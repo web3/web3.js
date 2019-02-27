@@ -45,10 +45,14 @@ export default class SignMethod extends AbstractCallMethod {
      * @returns {Promise<Object|String>}
      */
     execute(moduleInstance) {
-        if (moduleInstance.accounts && moduleInstance.accounts.wallet[this.parameters[1]]) {
-            this.beforeExecution(moduleInstance);
+        if (this.hasAccounts(moduleInstance) && this.isDefaultSigner(moduleInstance)) {
+            if (moduleInstance.accounts.wallet[this.parameters[0].from]) {
+                return this.signLocally(moduleInstance);
+            }
+        }
 
-            return this.signOnClient(moduleInstance);
+        if (this.hasCustomSigner(moduleInstance)) {
+            return this.signLocally(moduleInstance);
         }
 
         return super.execute(moduleInstance);
@@ -57,14 +61,16 @@ export default class SignMethod extends AbstractCallMethod {
     /**
      * Signs the message on the client.
      *
-     * @method signOnClient
+     * @method signLocally
      *
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {Promise<String>}
      */
-    async signOnClient(moduleInstance) {
+    async signLocally(moduleInstance) {
         try {
+            this.beforeExecution(moduleInstance);
+
             let signedMessage = moduleInstance.accounts.sign(
                 this.parameters[0],
                 moduleInstance.accounts.wallet[this.parameters[1]].privateKey
@@ -94,5 +100,44 @@ export default class SignMethod extends AbstractCallMethod {
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
         this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
+    }
+
+    /**
+     * Checks if the current module has decrypted accounts
+     *
+     * @method isDefaultSigner
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Boolean}
+     */
+    isDefaultSigner(moduleInstance) {
+        return moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
+    }
+
+    /**
+     * Checks if the current module has decrypted accounts
+     *
+     * @method hasAccounts
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Boolean}
+     */
+    hasAccounts(moduleInstance) {
+        return moduleInstance.accounts && moduleInstance.accounts.accountsIndex > 0;
+    }
+
+    /**
+     * Checks if a custom signer is given.
+     *
+     * @method hasCustomerSigner
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Boolean}
+     */
+    hasCustomSigner(moduleInstance) {
+        return moduleInstance.transactionSigner.constructor.name !== 'TransactionSigner';
     }
 }
