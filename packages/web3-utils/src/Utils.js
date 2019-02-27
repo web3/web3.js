@@ -29,6 +29,7 @@ import numberToBN from 'number-to-bn';
 import utf8 from 'utf8';
 import Hash from 'eth-lib/lib/hash';
 import BN from 'bn.js';
+
 const crypto = typeof global === 'undefined' ? window.crypto || window.msCrypto : require('crypto');
 
 /**
@@ -538,29 +539,39 @@ export const randomHex = (size, callback) => {
 
             return returnValue;
         } catch (error) {
-            callback(error, false);
+            if (isFunction(callback)) {
+                callback(error, false);
+
+                return;
+            }
+
+            throw error;
         }
     }
 
     if (crypto.getRandomValues) {
-        const randomBytes = crypto.getRandomValues(new Uint8Array(size));
+        try {
+            const returnValue = '0x0' + crypto.getRandomValues(new Uint8Array(size)).join('');
+            callback(false, returnValue);
 
-        let returnValue = '0x';
-        for (let i = 0; i <= randomBytes.length - 1; i += 1) {
-            let bStr = randomBytes[i].toString(16);
-            if (bStr.length === 1) {
-                bStr = `0${bStr}`;
+            return returnValue;
+        } catch (error) {
+            if (isFunction(callback)) {
+                callback(error, false);
+
+                return;
             }
-            returnValue += bStr;
-        }
 
-        return returnValue;
+            throw error;
+        }
     }
 
     const error = new Error('No "crypto" object available. This Browser doesn\'t support generating secure random bytes.');
 
     if (isFunction(callback)) {
-        callback(error);
+        callback(error, false);
+
+        return;
     }
 
     throw error;
