@@ -78,6 +78,6 @@ export default class ProviderResolver {
             return this.providersModuleFactory.createEthereumProvider(provider);
         }
 
-        return provider;
+        return this.providersModuleFactory.createCustomProvider(provider);
     }
 }

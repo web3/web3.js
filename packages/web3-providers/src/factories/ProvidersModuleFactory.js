@@ -203,4 +203,17 @@ export default class ProvidersModuleFactory {
     createMistEthereumProvider(mistEthereumProvider) {
         return new MistEthereumProvider(mistEthereumProvider);
     }
+
+    /**
+     * Returns an CustomProvider object
+     *
+     * @method createCustomProvider
+     *
+     * @param {Object} connection
+     *
+     * @returns {CustomProvider}
+     */
+    createCustomProvider(connection) {
+        return new CustomProvider(connection);
+    }
 }

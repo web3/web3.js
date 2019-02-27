@@ -11,17 +11,20 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import JsonRpcMapper from '../mappers/JsonRpcMapper';
-import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
-
 /**
  * @file CustomProvider.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
+import JsonRpcMapper from '../mappers/JsonRpcMapper';
+import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class CustomProvider {
-
+    /**
+     * @param {Object} connection
+     *
+     * @constructor
+     */
     constructor(connection) {
         this.host = 'CustomProvider';
         this.connection = connection;
@@ -31,25 +34,14 @@ export default class CustomProvider {
      * Added this method to have a better error message if someone is trying to create a subscription with this provider.
      */
     subscribe() {
-        throw new Error('Subscriptions are not supported with the HttpProvider.');
+        throw new Error('Subscriptions are not supported with the CustomProvider.');
     }
 
     /**
      * Added this method to have a better error message if someone is trying to unsubscribe with this provider.
      */
     unsubscribe() {
-        throw new Error('Subscriptions are not supported with the HttpProvider.');
-    }
-
-    /**
-     * This method has to exists to have the same interface as the socket providers.
-     *
-     * @method disconnect
-     *
-     * @returns {Boolean}
-     */
-    disconnect() {
-        return true;
+        throw new Error('Subscriptions are not supported with the CustomProvider.');
     }
 
     /**
@@ -72,6 +64,27 @@ export default class CustomProvider {
 
             return response.result;
         });
+    }
+
+    /**
+     * Creates the JSON-RPC batch payload and sends it to the node.
+     *
+     * @method sendBatch
+     *
+     * @param {AbstractMethod[]} methods
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns Promise<Object[]>
+     */
+    sendBatch(methods, moduleInstance) {
+        let payload = [];
+
+        methods.forEach((method) => {
+            method.beforeExecution(moduleInstance);
+            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
+        });
+
+        return this.sendPayload(payload);
     }
 
     /**
