@@ -46,7 +46,7 @@ export default class SignMethod extends AbstractCallMethod {
      */
     execute(moduleInstance) {
         if (this.hasAccount(moduleInstance)) {
-                return this.signLocally(moduleInstance);
+            return this.signLocally(moduleInstance);
         }
 
         return super.execute(moduleInstance);
@@ -67,7 +67,7 @@ export default class SignMethod extends AbstractCallMethod {
 
             let signedMessage = moduleInstance.accounts.sign(
                 this.parameters[0],
-                moduleInstance.accounts.wallet[this.parameters[0].from]
+                moduleInstance.accounts.wallet[this.parameters[1]].address
             );
 
             if (this.callback) {
@@ -107,7 +107,7 @@ export default class SignMethod extends AbstractCallMethod {
      */
     hasAccount(moduleInstance) {
         return moduleInstance.accounts &&
-               moduleInstance.accounts.accountsIndex > 0 &&
-               moduleInstance.accounts.wallet[this.parameters[1]];
+            moduleInstance.accounts.accountsIndex > 0 &&
+            moduleInstance.accounts.wallet[this.parameters[1]];
     }
 }

@@ -25,7 +25,7 @@ describe('SignMethodTest', () => {
 
         accountsMock = new Accounts();
         accountsMock.sign = jest.fn();
-        accountsMock.wallet = {'0x0': {privateKey: '0x0'}};
+        accountsMock.wallet = {'0x0': {privateKey: '0x0', address: '0x0'}};
         accountsMock.accountsIndex = 1;
 
         new AbstractWeb3Module(providerMock, {}, {}, {});
