@@ -65,8 +65,6 @@ describe('AbstractMethodFactoryTest', () => {
         expect(abstractMethodFactory.createMethod('sendTransaction')).toBeInstanceOf(SendTransactionMethod);
 
         expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow).toHaveBeenCalled();
-        expect(methodModuleFactoryMock.createTransactionSigner).toHaveBeenCalled();
-        expect(methodModuleFactoryMock.createSendRawTransactionMethod).toHaveBeenCalled();
     });
 
     it('calls createMethod and returns SignMethod', () => {
@@ -78,7 +76,5 @@ describe('AbstractMethodFactoryTest', () => {
         expect(abstractMethodFactory.hasMethod('sign')).toEqual(true);
 
         expect(abstractMethodFactory.createMethod('sign')).toBeInstanceOf(SignMethod);
-
-        expect(methodModuleFactoryMock.createMessageSigner).toHaveBeenCalled();
     });
 });

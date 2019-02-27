@@ -63,6 +63,7 @@ export default class Ens extends AbstractWeb3Module {
         this.formatters = formatters;
         this.registryOptions = registryOptions;
         this.net = net;
+        this.transactionSigner = options.transactionSigner;
         this._registry = false;
     }
 

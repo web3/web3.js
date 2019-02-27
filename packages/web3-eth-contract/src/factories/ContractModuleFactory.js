@@ -64,19 +64,21 @@ export default class ContractModuleFactory {
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {PromiEvent} PromiEvent
-     * @param {Object} abi
+     * @param {Accounts} accounts
+     * @param {Array} abi
      * @param {String} address
      * @param {Object} options
      *
      * @returns {AbstractContract}
      */
-    createContract(provider, providersModuleFactory, PromiEvent, abi, address, options) {
+    createContract(provider, providersModuleFactory, PromiEvent, accounts, abi, address, options) {
         return new AbstractContract(
             provider,
             providersModuleFactory,
             this.methodModuleFactory,
             this,
             PromiEvent,
+            accounts,
             this.abiCoder,
             this.utils,
             this.formatters,
@@ -230,14 +232,7 @@ export default class ContractModuleFactory {
      * @returns {MethodFactory}
      */
     createMethodFactory() {
-        return new MethodFactory(
-            this.accounts,
-            this.utils,
-            this.formatters,
-            this,
-            this.methodModuleFactory,
-            this.abiCoder
-        );
+        return new MethodFactory(this.utils, this.formatters, this, this.methodModuleFactory, this.abiCoder);
     }
 
     /**

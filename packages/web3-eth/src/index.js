@@ -22,7 +22,6 @@
 
 import {MethodModuleFactory} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
-import {PromiEvent} from 'web3-core-promievent';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Accounts} from 'web3-eth-accounts';
 import {Ens} from 'web3-eth-ens';
@@ -33,7 +32,31 @@ import {Iban} from 'web3-eth-iban';
 import {ProvidersModuleFactory} from 'web3-providers';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
-import EthModuleFactory from './factories/EthModuleFactory';
+import EthTransactionSigner from './signers/TransactionSigner';
+import EthModule from './Eth.js';
+import EthMethodFactory from './factories/MethodFactory';
+
+/**
+ * Creates the TransactionSigner class
+ *
+ * @returns {TransactionSigner}
+ *
+ * @constructor
+ */
+export const TransactionSigner = () => {
+    return new EthTransactionSigner(Utils, formatters);
+};
+
+/**
+ * Creates the MethodFactory class of the eth module
+ *
+ * @returns {MethodFactory}
+ *
+ * @constructor
+ */
+export const MethodFactory = () => {
+    return new EthMethodFactory(new MethodModuleFactory(), Utils, formatters);
+};
 
 /**
  * Creates the Eth object
@@ -44,30 +67,30 @@ import EthModuleFactory from './factories/EthModuleFactory';
  * @param {Object} options
  *
  * @returns {Eth}
+ *
+ * @constructor
  */
 export const Eth = (provider, options) => {
     const accounts = new Accounts(provider, options);
-
     const abiCoder = new AbiCoder();
+    const methodModuleFactory = new MethodModuleFactory();
 
-    const methodModuleFactory = new MethodModuleFactory(accounts);
-
-    return new EthModuleFactory(
+    return new EthModule(
         provider,
         new ProvidersModuleFactory(),
         methodModuleFactory,
-        accounts,
-        PromiEvent,
-        Utils,
-        formatters,
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
-        abiCoder
-    ).createEthModule(
+        new MethodFactory(),
         new Network(provider, options),
+        accounts,
         new Personal(provider, accounts, options),
         Iban,
-        new Ens(provider, accounts),
+        abiCoder,
+        new Ens(provider, accounts, options),
+        Utils,
+        formatters,
         new SubscriptionsFactory(),
+        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
+        new TransactionSigner(),
         options
     );
 };

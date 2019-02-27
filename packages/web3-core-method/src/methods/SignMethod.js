@@ -22,19 +22,16 @@
 
 import AbstractCallMethod from '../../lib/methods/AbstractCallMethod';
 
+// TODO: Move local signing logic to the eth module
 export default class SignMethod extends AbstractCallMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {Accounts} accounts
-     * @param {MessageSigner} messageSigner
      *
      * @constructor
      */
-    constructor(utils, formatters, accounts, messageSigner) {
+    constructor(utils, formatters) {
         super('eth_sign', 2, utils, formatters);
-        this.accounts = accounts;
-        this.messageSigner = messageSigner;
     }
 
     /**
@@ -48,10 +45,8 @@ export default class SignMethod extends AbstractCallMethod {
      * @returns {Promise<Object|String>}
      */
     execute(moduleInstance) {
-        if (this.hasWallets()) {
-            this.beforeExecution(moduleInstance);
-
-            return this.signOnClient();
+        if (this.hasAccount(moduleInstance)) {
+            return this.signLocally(moduleInstance);
         }
 
         return super.execute(moduleInstance);
@@ -60,15 +55,26 @@ export default class SignMethod extends AbstractCallMethod {
     /**
      * Signs the message on the client.
      *
-     * @method signOnClient
+     * @method signLocally
+     *
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {Promise<String>}
      */
-    signOnClient() {
-        let signedMessage;
-
+    async signLocally(moduleInstance) {
         try {
-            signedMessage = this.afterExecution(this.messageSigner.sign(this.parameters[0], this.parameters[1]));
+            this.beforeExecution(moduleInstance);
+
+            let signedMessage = moduleInstance.accounts.sign(
+                this.parameters[0],
+                moduleInstance.accounts.wallet[this.parameters[1]].address
+            );
+
+            if (this.callback) {
+                this.callback(false, signedMessage);
+            }
+
+            return signedMessage;
         } catch (error) {
             if (this.callback) {
                 this.callback(error, null);
@@ -76,12 +82,6 @@ export default class SignMethod extends AbstractCallMethod {
 
             throw error;
         }
-
-        if (this.callback) {
-            this.callback(false, signedMessage);
-        }
-
-        return Promise.resolve(signedMessage);
     }
 
     /**
@@ -94,5 +94,22 @@ export default class SignMethod extends AbstractCallMethod {
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
         this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
+    }
+
+    /**
+     * Checks if the current account is unlocked
+     *
+     * @method hasAccount
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Boolean}
+     */
+    hasAccount(moduleInstance) {
+        return (
+            moduleInstance.accounts &&
+            moduleInstance.accounts.accountsIndex > 0 &&
+            moduleInstance.accounts.wallet[this.parameters[1]]
+        );
     }
 }

@@ -128,13 +128,4 @@ describe('AbstractMethodTest', () => {
     it('isHash returns false', () => {
         expect(abstractMethod.isHash(100)).toBeFalsy();
     });
-
-    it('hasWallets returns true', () => {
-        abstractMethod.accounts = {wallet: [0]};
-        expect(abstractMethod.hasWallets()).toBeTruthy();
-    });
-
-    it('hasWallets returns false', () => {
-        expect(abstractMethod.hasWallets()).toBeFalsy();
-    });
 });

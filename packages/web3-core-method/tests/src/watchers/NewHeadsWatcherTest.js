@@ -46,6 +46,7 @@ describe('NewHeadsWatcherTest', () => {
 
         new AbstractWeb3Module(providerMock, {}, {}, {});
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        moduleInstanceMock.currentProvider = providerMock;
 
         const newHeadsWatcherObject = newHeadsWatcher.watch(moduleInstanceMock);
 

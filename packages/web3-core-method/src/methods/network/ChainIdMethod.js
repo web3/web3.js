@@ -15,39 +15,34 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file MessageSigner.js
+ * @file ListeningMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractSigner from '../../lib/signers/AbstractSigner';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
-export default class MessageSigner extends AbstractSigner {
+export default class ChainIdMethod extends AbstractCallMethod {
     /**
-     * @param {Accounts} accounts
+     * @param {Utils} utils
+     * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(accounts) {
-        super(accounts);
+    constructor(utils, formatters) {
+        super('eth_chainId', 0, utils, formatters);
     }
 
     /**
-     * Signs a given message
+     * This method will be executed after the RPC request.
      *
-     * @method sign
+     * @method afterExecution
      *
-     * @param {String} data
-     * @param {String} address
+     * @param {Object} response
      *
-     * @returns {String|Error}
+     * @returns {Number}
      */
-    sign(data, address) {
-        const wallet = this.getWallet(address);
-        if (wallet && wallet.privateKey) {
-            return this.accounts.sign(data, wallet.privateKey).signature;
-        }
-
-        throw new Error('Wallet or privateKey in wallet is not set!');
+    afterExecution(response) {
+        return this.utils.hexToNumber(response);
     }
 }
