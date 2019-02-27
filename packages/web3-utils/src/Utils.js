@@ -524,6 +524,8 @@ export const getSignatureParameters = (signature) => {
 /**
  * Returns a randomHex value
  *
+ * @author Fabian Vogelsteller, Samuel Furter
+ *
  * @method randomHex
  *
  * @param {Number} size
@@ -546,7 +548,12 @@ export const randomHex = (size, callback) => {
         }
 
         if (crypto.getRandomValues) {
-            const returnValue = '0x0' + crypto.getRandomValues(new Uint8Array(size)).join('');
+            const returnValue = '0x'+ crypto.getRandomValues(
+                new Uint8Array(size)
+            ).map(arr => {
+                return arr.toString(16);
+            }).join('');
+
             callback(false, returnValue);
 
             return returnValue;
