@@ -114,11 +114,11 @@ export default class Account {
      * @returns {Account}
      */
     static from(entropy, accounts = {}) {
-        return new Account(create(entropy || randomHex(32)), accounts['transactionSigner']);
+        return new Account(create(entropy || randomHex(32)), accounts.transactionSigner);
     }
 
     /**
-     * This static method gived us the possibility to create a Account object from a private key.
+     * This static method gives us the possibility to create a Account object from a private key.
      *
      * @param {String} privateKey
      * @param {Accounts} accounts
@@ -126,7 +126,7 @@ export default class Account {
      * @returns {Account}
      */
     static fromPrivateKey(privateKey, accounts = {}) {
-        return new Account(fromPrivate(privateKey), accounts['transactionSigner']);
+        return new Account(fromPrivate(privateKey), accounts.transactionSigner);
     }
 
     /**

@@ -23,10 +23,11 @@
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
 
-const global = (function() {
-    return this || (typeof self === 'object' && self);
-    // eslint-disable-next-line no-new-func
-})() || new Function('return this')();
+const global =
+    (function() {
+        return this || (typeof self === 'object' && self);
+        // eslint-disable-next-line no-new-func
+    })() || new Function('return this')();
 
 export default class ProviderResolver {
     /**
