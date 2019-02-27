@@ -167,11 +167,15 @@ export default class MethodFactory {
      * @returns {ContractDeployMethod}
      */
     createContractDeployMethod(contract) {
+        const transactionConfirmationWorkflow = this.methodModuleFactory.createTransactionConfirmationWorkflow();
+
         return new ContractDeployMethod(
             this.utils,
             this.formatters,
-            this.methodModuleFactory.createTransactionConfirmationWorkflow(),
-            this.methodModuleFactory.createSendRawTransactionMethod(),
+            transactionConfirmationWorkflow,
+            new SendRawTransactionMethod(this.utils, this.formatters, transactionConfirmationWorkflow),
+            new ChainIdMethod(this.utils, this.formatters),
+            new GetTransactionCountMethod(this.utils, this.formatters),
             contract
         );
     }

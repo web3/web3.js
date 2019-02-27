@@ -88,6 +88,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
 
             this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
         }
+
         if (
             (this.hasAccounts(moduleInstance) && this.isDefaultSigner(moduleInstance)) ||
             this.hasCustomSigner(moduleInstance)
@@ -163,7 +164,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      * @returns {Boolean}
      */
     hasAccounts(moduleInstance) {
-        return moduleInstance.accounts && Object.keys(moduleInstance.accounts.wallet).length > 0;
+        return moduleInstance.accounts && moduleInstance.accounts.accountsIndex > 0;
     }
 
     /**
