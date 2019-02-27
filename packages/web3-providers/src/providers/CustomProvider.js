@@ -28,6 +28,20 @@ export default class CustomProvider {
     constructor(connection) {
         this.host = 'CustomProvider';
         this.connection = connection;
+        this.checkConnectionMethods();
+    }
+
+    /**
+     * Checks if the given custom provider does have the required methods
+     *
+     * @method checkConnectionMethods
+     */
+    checkConnectionMethods() {
+        if (this.connection.send || this.connection.sendAsync) {
+            return true;
+        }
+
+        throw new Error('Invalid provider injected!');
     }
 
     /**
@@ -88,9 +102,13 @@ export default class CustomProvider {
     }
 
     /**
+     * Sends the JSON-RPC payload to the node.
      *
-     * @param payload
-     * @returns {Promise}
+     * @method sendPayload
+     *
+     * @param {Object} payload
+     *
+     * @returns {Promise<any>}
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
@@ -106,19 +124,14 @@ export default class CustomProvider {
                 return;
             }
 
-            if (this.connection.send) {
-                this.connection.send(payload, (error, response) => {
-                    if (!error) {
-                        resolve(response);
-                    }
+            this.connection.send(payload, (error, response) => {
+                if (!error) {
+                    resolve(response);
+                }
 
-                    reject(error);
-                });
+                reject(error);
+            });
 
-                return;
-            }
-
-            reject(new Error('Invalid provider injected!'));
         });
     }
 }
