@@ -22,7 +22,7 @@ Module Options
 
 :ref:`transactionPollingTimeout <web3-module-transactionpollingtimeout>`
 
-:ref:`transactionPollingTimeout <web3-module-transactionpollingtimeout>`
+:ref:`transactionSigner <web3-module-transactionSigner>`
 
 -------
 Example

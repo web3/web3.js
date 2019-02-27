@@ -47,7 +47,7 @@ export default class TransactionSigner {
             throw new Error('No privateKey given to the TransactionSigner.');
         }
 
-        if (!privateKey.startsWith('0x')) {
+        if (privateKey.startsWith('0x')) {
             privateKey = privateKey.substring(2);
         }
 
