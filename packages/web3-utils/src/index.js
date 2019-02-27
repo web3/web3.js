@@ -28,7 +28,6 @@ import * as utils from './Utils';
 import * as ethjsUnit from 'ethjs-unit';
 
 export {soliditySha3} from './SoliditySha3';
-export randomHex from 'randomhex';
 
 /**
  * Should be used to create full function/event name from json abi

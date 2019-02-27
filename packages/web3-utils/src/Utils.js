@@ -29,6 +29,7 @@ import numberToBN from 'number-to-bn';
 import utf8 from 'utf8';
 import Hash from 'eth-lib/lib/hash';
 import BN from 'bn.js';
+const crypto = typeof global === 'undefined' ? window.crypto || window.msCrypto : require('crypto');
 
 /**
  * Returns true if object is BN, otherwise false
@@ -517,4 +518,50 @@ export const getSignatureParameters = (signature) => {
         s,
         v
     };
+};
+
+export const randomHex = (size, callback) => {
+    if (size > 65536) {
+        if (isFunction(callback)) {
+            callback(new Error('Requested too many random bytes.'));
+
+            return;
+        }
+
+        throw new Error('Requested too many random bytes.');
+    }
+
+    if (crypto.randomBytes) {
+        try {
+            const returnValue = '0x' + crypto.randomBytes(size).toString('hex');
+            callback(false, returnValue);
+
+            return returnValue;
+        } catch (error) {
+            callback(error, false);
+        }
+    }
+
+    if (crypto.getRandomValues) {
+        const randomBytes = crypto.getRandomValues(new Uint8Array(size));
+
+        let returnValue = '0x';
+        for (let i = 0; i <= randomBytes.length - 1; i += 1) {
+            let bStr = randomBytes[i].toString(16);
+            if (bStr.length === 1) {
+                bStr = `0${bStr}`;
+            }
+            returnValue += bStr;
+        }
+
+        return returnValue;
+    }
+
+    const error = new Error('No "crypto" object available. This Browser doesn\'t support generating secure random bytes.');
+
+    if (isFunction(callback)) {
+        callback(error);
+    }
+
+    throw error;
 };
