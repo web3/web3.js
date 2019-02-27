@@ -295,3 +295,4 @@ export const isBloom = utils.isBloom;
 export const isTopic = utils.isTopic;
 export const bytesToHex = utils.bytesToHex;
 export const hexToBytes = utils.hexToBytes;
+export const randomHex = utils.randomHex;

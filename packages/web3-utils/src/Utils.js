@@ -521,58 +521,51 @@ export const getSignatureParameters = (signature) => {
     };
 };
 
+/**
+ * Returns a randomHex value
+ *
+ * @method randomHex
+ *
+ * @param {Number} size
+ * @param {Function} callback
+ *
+ * @callback callback callback(error,result)
+ * @returns {String}
+ */
 export const randomHex = (size, callback) => {
-    if (size > 65536) {
-        if (isFunction(callback)) {
-            callback(new Error('Requested too many random bytes.'));
+    try {
+        if (size > 65536) {
+            if (isFunction(callback)) {
+                callback(new Error('Requested too many random bytes.'));
 
-            return;
+                return;
+            }
+
+            throw new Error('Requested too many random bytes.');
         }
 
-        throw new Error('Requested too many random bytes.');
-    }
-
-    if (crypto.randomBytes) {
-        try {
+        if (crypto.randomBytes) {
             const returnValue = '0x' + crypto.randomBytes(size).toString('hex');
             callback(false, returnValue);
 
             return returnValue;
-        } catch (error) {
-            if (isFunction(callback)) {
-                callback(error, false);
-
-                return;
-            }
-
-            throw error;
         }
-    }
 
-    if (crypto.getRandomValues) {
-        try {
+        if (crypto.getRandomValues) {
             const returnValue = '0x0' + crypto.getRandomValues(new Uint8Array(size)).join('');
             callback(false, returnValue);
 
             return returnValue;
-        } catch (error) {
-            if (isFunction(callback)) {
-                callback(error, false);
-
-                return;
-            }
-
-            throw error;
         }
+
+        throw new Error('No "crypto" object available. This Browser doesn\'t support generating secure random bytes.');
+    } catch (error) {
+        if (isFunction(callback)) {
+            callback(error, false);
+
+            return;
+        }
+
+        throw error;
     }
-
-    const error = new Error('No "crypto" object available. This Browser doesn\'t support generating secure random bytes.');
-
-    if (isFunction(callback)) {
-        callback(error, false);
-
-        return;
-    }
-
-    throw error;
 };
