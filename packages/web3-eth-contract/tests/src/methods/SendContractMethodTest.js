@@ -1,6 +1,11 @@
+import {
+    SendTransactionMethod,
+    SendRawTransactionMethod,
+    ChainIdMethod,
+    GetTransactionCountMethod
+} from 'web3-core-method';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {SendTransactionMethod} from 'web3-core-method';
 import TransactionConfirmationWorkflow from '../../__mocks__/TransactionConfirmationWorkflow';
 import AllEventsLogDecoder from '../../../src/decoders/AllEventsLogDecoder';
 import AbiModel from '../../../src/models/AbiModel';
@@ -10,6 +15,9 @@ import SendContractMethod from '../../../src/methods/SendContractMethod';
 jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('Accounts');
+jest.mock('SendRawTransactionMethod');
+jest.mock('ChainIdMethod');
+jest.mock('GetTransactionCountMethod');
 jest.mock('../../../src/decoders/AllEventsLogDecoder');
 jest.mock('../../../src/models/AbiItemModel');
 jest.mock('../../../src/models/AbiModel');
@@ -18,7 +26,13 @@ jest.mock('../../../src/models/AbiModel');
  * SendContractMethod test
  */
 describe('SendContractMethodTest', () => {
-    let sendContractMethod, transactionConfirmationWorkflowMock, allEventsLogDecoderMock, abiModelMock;
+    let sendContractMethod,
+        transactionConfirmationWorkflowMock,
+        allEventsLogDecoderMock,
+        abiModelMock,
+        sendRawTransactionMethodMock,
+        chainIdMethodMock,
+        getTransactionCountMethodMock;
 
     beforeEach(() => {
         transactionConfirmationWorkflowMock = new TransactionConfirmationWorkflow();
@@ -29,11 +43,22 @@ describe('SendContractMethodTest', () => {
         new AllEventsLogDecoder();
         allEventsLogDecoderMock = AllEventsLogDecoder.mock.instances[0];
 
+        new SendRawTransactionMethod();
+        sendRawTransactionMethodMock = SendRawTransactionMethod.mock.instances[0];
+
+        new ChainIdMethod();
+        chainIdMethodMock = ChainIdMethod.mock.instances[0];
+
+        new GetTransactionCountMethod();
+        getTransactionCountMethodMock = GetTransactionCountMethod.mock.instances[0];
+
         sendContractMethod = new SendContractMethod(
             Utils,
             formatters,
             transactionConfirmationWorkflowMock,
-            {},
+            sendRawTransactionMethodMock,
+            chainIdMethodMock,
+            getTransactionCountMethodMock,
             allEventsLogDecoderMock,
             abiModelMock
         );
