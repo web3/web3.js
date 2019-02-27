@@ -1,4 +1,3 @@
-
 options
 =====================
 
@@ -23,6 +22,8 @@ Module Options
 
 :ref:`transactionPollingTimeout <web3-module-transactionpollingtimeout>`
 
+:ref:`transactionPollingTimeout <web3-module-transactionpollingtimeout>`
+
 -------
 Example
 -------
@@ -38,7 +39,8 @@ Example
         defaultGasPrice: 0,
         transactionBlockTimeout: 50,
         transactionConfirmationBlocks: 24,
-        transactionPollingTimeout: 480
+        transactionPollingTimeout: 480,
+        transactionSigner: new CustomTransactionSigner()
     }
 
     const web3 = new Web3('http://localhost:8545', options);
@@ -204,6 +206,48 @@ Returns
 -------
 
 ``number``: The current value of transactionPollingTimeout
+
+------------------------------------------------------------------------------
+
+
+.. _web3-module-transactionSigner:
+
+transactionSigner
+=================
+
+.. code-block:: javascript
+
+    web3.eth.transactionSigner
+    ...
+
+
+
+The ``transactionSigner`` property does provide us the possibility to customize the signing process
+of the ``Eth`` module and the related sub-modules.
+
+The interface of a ``TransactionSigner``:
+
+.. code-block:: javascript
+
+    interface TransactionSigner {
+        sign(txObject: Transaction): Promise<SignedTransaction>
+    }
+
+    interface SignedTransaction {
+        messageHash: string,
+        v: string,
+        r: string,
+        s: string,
+        rawTransaction: string
+    }
+
+
+
+-------
+Returns
+-------
+
+``TransactionSigner``: A JavaScript class of type TransactionSigner.
 
 ------------------------------------------------------------------------------
 

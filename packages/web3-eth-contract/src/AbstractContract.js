@@ -65,7 +65,6 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.methodFactory = this.contractModuleFactory.createMethodFactory();
         this.abiModel = this.abiMapper.map(abi);
         this.transactionSigner = options.transactionSigner;
-        this.options = options;
 
         if (address) {
             this.address = address;

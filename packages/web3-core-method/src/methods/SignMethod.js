@@ -106,8 +106,10 @@ export default class SignMethod extends AbstractCallMethod {
      * @returns {Boolean}
      */
     hasAccount(moduleInstance) {
-        return moduleInstance.accounts &&
+        return (
+            moduleInstance.accounts &&
             moduleInstance.accounts.accountsIndex > 0 &&
-            moduleInstance.accounts.wallet[this.parameters[1]];
+            moduleInstance.accounts.wallet[this.parameters[1]]
+        );
     }
 }

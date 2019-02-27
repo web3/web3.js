@@ -43,6 +43,14 @@ export default class TransactionSigner {
      * @returns {Promise<{messageHash, v, r, s, rawTransaction}>}
      */
     async sign(transaction, privateKey) {
+        if (!privateKey) {
+            throw new Error('No privateKey given to the TransactionSigner.');
+        }
+
+        if (!privateKey.startsWith('0x')) {
+            privateKey = privateKey.substring(2);
+        }
+
         transaction = this.formatters.txInputFormatter(transaction);
         transaction.to = transaction.to || '0x';
         transaction.data = transaction.data || '0x';

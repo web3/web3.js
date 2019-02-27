@@ -95,7 +95,7 @@ describe('SignMethodTest', () => {
     });
 
     it('calls execute and the account does not exist in the eth-accounts wallet', async () => {
-        accountsMock.wallet = {'nope': {privateKey: '0x0'}};
+        accountsMock.wallet = {nope: {privateKey: '0x0'}};
 
         formatters.inputSignFormatter.mockReturnValueOnce('string');
 
