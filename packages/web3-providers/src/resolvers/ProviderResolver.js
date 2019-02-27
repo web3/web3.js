@@ -74,7 +74,7 @@ export default class ProviderResolver {
             return this.providersModuleFactory.createEthereumProvider(provider);
         }
 
-        switch(provider.constructor.name) {
+        switch (provider.constructor.name) {
             case 'MetamaskInpageProvider':
                 return this.providersModuleFactory.createMetamaskProvider(provider);
             case 'HttpProvider':

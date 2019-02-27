@@ -1,4 +1,3 @@
-import ProvidersModuleFactory from '../../../src/factories/ProvidersModuleFactory';
 import JsonRpcMapper from '../../../src/mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
@@ -12,12 +11,9 @@ jest.mock('../../../src/factories/ProvidersModuleFactory');
  * CustomProvider test
  */
 describe('CustomProviderTest', () => {
-    let customProvider, providersModuleFactoryMock, connectionMock;
+    let customProvider, connectionMock;
 
     beforeEach(() => {
-        new ProvidersModuleFactory();
-        providersModuleFactoryMock = ProvidersModuleFactory.mock.instances[0];
-
         connectionMock = {send: jest.fn(), sendAsync: jest.fn()};
 
         customProvider = new CustomProvider(connectionMock);

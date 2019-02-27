@@ -133,7 +133,6 @@ export default class CustomProvider {
 
                 reject(error);
             });
-
         });
     }
 }

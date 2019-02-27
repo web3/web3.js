@@ -105,6 +105,8 @@ describe('ProviderResolverTest', () => {
         providersModuleFactoryMock.createMetamaskProvider.mockReturnValueOnce(metamaskProviderMock);
 
         expect(providerResolver.resolve(metamaskInpageProvider)).toEqual(metamaskProviderMock);
+
+        expect(providersModuleFactoryMock.createMetamaskProvider).toHaveBeenCalledWith(metamaskInpageProvider);
     });
 
     it('calls resolve with a custom provider', () => {
@@ -114,5 +116,7 @@ describe('ProviderResolverTest', () => {
         providersModuleFactoryMock.createCustomProvider.mockReturnValueOnce(customProviderMock);
 
         expect(providerResolver.resolve({})).toEqual(customProviderMock);
+
+        expect(providersModuleFactoryMock.createCustomProvider).toHaveBeenCalledWith({});
     });
 });
