@@ -45,14 +45,8 @@ export default class SignMethod extends AbstractCallMethod {
      * @returns {Promise<Object|String>}
      */
     execute(moduleInstance) {
-        if (this.hasAccounts(moduleInstance) && this.isDefaultSigner(moduleInstance)) {
-            if (moduleInstance.accounts.wallet[this.parameters[0].from]) {
+        if (this.hasAccount(moduleInstance)) {
                 return this.signLocally(moduleInstance);
-            }
-        }
-
-        if (this.hasCustomSigner(moduleInstance)) {
-            return this.signLocally(moduleInstance);
         }
 
         return super.execute(moduleInstance);
@@ -73,7 +67,7 @@ export default class SignMethod extends AbstractCallMethod {
 
             let signedMessage = moduleInstance.accounts.sign(
                 this.parameters[0],
-                moduleInstance.accounts.wallet[this.parameters[1]].privateKey
+                moduleInstance.accounts.wallet[this.parameters[0].from]
             );
 
             if (this.callback) {
@@ -103,41 +97,17 @@ export default class SignMethod extends AbstractCallMethod {
     }
 
     /**
-     * Checks if the current module has decrypted accounts
+     * Checks if the current account is unlocked
      *
-     * @method isDefaultSigner
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Boolean}
-     */
-    isDefaultSigner(moduleInstance) {
-        return moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
-    }
-
-    /**
-     * Checks if the current module has decrypted accounts
-     *
-     * @method hasAccounts
+     * @method hasAccount
      *
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {Boolean}
      */
-    hasAccounts(moduleInstance) {
-        return moduleInstance.accounts && moduleInstance.accounts.accountsIndex > 0;
-    }
-
-    /**
-     * Checks if a custom signer is given.
-     *
-     * @method hasCustomerSigner
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Boolean}
-     */
-    hasCustomSigner(moduleInstance) {
-        return moduleInstance.transactionSigner.constructor.name !== 'TransactionSigner';
+    hasAccount(moduleInstance) {
+        return moduleInstance.accounts &&
+               moduleInstance.accounts.accountsIndex > 0 &&
+               moduleInstance.accounts.wallet[this.parameters[1]];
     }
 }
