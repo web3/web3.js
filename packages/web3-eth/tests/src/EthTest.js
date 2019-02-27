@@ -32,7 +32,9 @@ import {
     SendTransactionMethod,
     SignMethod,
     SignTransactionMethod,
-    SubmitWorkMethod
+    SubmitWorkMethod,
+    ChainIdMethod,
+    VersionMethod
 } from 'web3-core-method';
 import {AbiCoder} from 'web3-eth-abi';
 import {Accounts} from 'web3-eth-accounts';
@@ -43,6 +45,7 @@ import {Network} from 'web3-net';
 import {AbstractContract, ContractModuleFactory} from 'web3-eth-contract';
 import {HttpProvider, ProviderDetector, ProviderResolver, ProvidersModuleFactory} from 'web3-providers';
 import MethodFactory from '../../src/factories/MethodFactory';
+import TransactionSigner from '../../src/signers/TransactionSigner';
 import Eth from '../../src/Eth';
 
 // Mocks
@@ -64,7 +67,7 @@ jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('AbstractContract');
 jest.mock('ContractModuleFactory');
-jest.mock('../../src/factories/EthModuleFactory');
+jest.mock('../../src/signers/TransactionSigner');
 
 /**
  * Eth test
@@ -83,7 +86,8 @@ describe('EthTest', () => {
         personalMock,
         abiCoderMock,
         ensMock,
-        subscriptionsFactoryMock;
+        subscriptionsFactoryMock,
+        transactionSignerMock;
 
     beforeEach(() => {
         new HttpProvider();
@@ -135,6 +139,9 @@ describe('EthTest', () => {
         new SubscriptionsFactory();
         subscriptionsFactoryMock = SubscriptionsFactory.mock.instances[0];
 
+        new TransactionSigner();
+        transactionSignerMock = TransactionSigner.mock.instances[0];
+
         eth = new Eth(
             providerMock,
             providersModuleFactoryMock,
@@ -150,6 +157,7 @@ describe('EthTest', () => {
             formatters,
             subscriptionsFactoryMock,
             contractModuleFactoryMock,
+            transactionSignerMock,
             {}
         );
     });
@@ -209,7 +217,9 @@ describe('EthTest', () => {
             submitWork: SubmitWorkMethod,
             getWork: GetWorkMethod,
             getPastLogs: GetPastLogsMethod,
-            requestAccounts: RequestAccountsMethod
+            requestAccounts: RequestAccountsMethod,
+            getChainId: ChainIdMethod,
+            getId: VersionMethod
         });
     });
 
@@ -411,9 +421,23 @@ describe('EthTest', () => {
     it('calls the Contract factory method from the constructor', () => {
         contractModuleFactoryMock.createContract.mockReturnValueOnce(new AbstractContract());
 
-        expect(new eth.Contract()).toBeInstanceOf(AbstractContract);
+        expect(new eth.Contract([], '0x0', {})).toBeInstanceOf(AbstractContract);
 
         expect(eth.initiatedContracts).toHaveLength(1);
+
+        const createContractCall = contractModuleFactoryMock.createContract.mock.calls[0];
+
+        expect(createContractCall[0]).toEqual(eth.currentProvider);
+
+        expect(createContractCall[1]).toEqual(eth.providersModuleFactory);
+
+        expect(createContractCall[3]).toEqual(eth.accounts);
+
+        expect(createContractCall[4]).toEqual([]);
+
+        expect(createContractCall[5]).toEqual('0x0');
+
+        expect(createContractCall[6]).toEqual({transactionSigner: transactionSignerMock});
     });
 
     it('calls setProvider and returns true', () => {
@@ -427,13 +451,10 @@ describe('EthTest', () => {
 
         networkMock.setProvider = jest.fn();
         personalMock.setProvider = jest.fn();
-        accountsMock.setProvider = jest.fn();
 
         networkMock.setProvider.mockReturnValueOnce(true);
 
         personalMock.setProvider.mockReturnValueOnce(true);
-
-        accountsMock.setProvider.mockReturnValueOnce(true);
 
         expect(eth.setProvider('provider', 'net')).toEqual(true);
 
@@ -442,7 +463,5 @@ describe('EthTest', () => {
         expect(networkMock.setProvider).toHaveBeenCalledWith('provider', 'net');
 
         expect(personalMock.setProvider).toHaveBeenCalledWith('provider', 'net');
-
-        expect(accountsMock.setProvider).toHaveBeenCalledWith('provider', 'net');
     });
 });

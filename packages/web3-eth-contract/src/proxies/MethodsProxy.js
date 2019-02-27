@@ -82,14 +82,20 @@ export default class MethodsProxy {
                         // have I to check here if it is a contract deployment. If this call is a contract deployment
                         // then I have to set the right contract data and to map the arguments.
                         // TODO: Change API or improve this
-                        if (!isArray(abiItemModel) && abiItemModel.isOfType('constructor')) {
-                            if (methodArguments[0]['data']) {
-                                target.contract.options.data = methodArguments[0]['data'];
+                        if (name === 'contractConstructor') {
+                            if (methodArguments[0]) {
+                                if (methodArguments[0]['data']) {
+                                    target.contract.options.data = methodArguments[0]['data'];
+                                }
+
+                                if (methodArguments[0]['arguments']) {
+                                    abiItemModel.contractMethodParameters = methodArguments[0]['arguments'];
+                                }
+
+                                return anonymousFunction;
                             }
 
-                            if (methodArguments[0]['arguments']) {
-                                abiItemModel.contractMethodParameters = methodArguments[0]['arguments'];
-                            }
+                            abiItemModel.contractMethodParameters = [];
 
                             return anonymousFunction;
                         }

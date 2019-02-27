@@ -20,27 +20,29 @@
  * @date 2018
  */
 
-import {MethodModuleFactory} from 'web3-core-method';
-import {ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import AccountsModuleFactory from './factories/AccountsModuleFactory';
+import AccountsModule from './Accounts';
+import {ProvidersModuleFactory} from 'web3-providers';
+import {GetGasPriceMethod, ChainIdMethod, GetTransactionCountMethod} from 'web3-core-method';
 
 /**
  * Returns the Accounts object
  *
- * @method Accounts
- *
- * @params {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @params {Object} options
  *
  * @returns {Accounts}
+ * @constructor
  */
 export const Accounts = (provider, options) => {
-    return new AccountsModuleFactory(Utils, formatters).createAccounts(
+    return new AccountsModule(
         provider,
         new ProvidersModuleFactory(),
-        new MethodModuleFactory(),
+        formatters,
+        new ChainIdMethod(Utils, formatters),
+        new GetGasPriceMethod(Utils, formatters),
+        new GetTransactionCountMethod(Utils, formatters),
         options
     );
 };

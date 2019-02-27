@@ -25,11 +25,10 @@ import ContractDeployMethod from '../methods/ContractDeployMethod';
 import PastEventLogsMethod from '../methods/PastEventLogsMethod';
 import AllPastEventLogsMethod from '../methods/AllPastEventLogsMethod';
 import SendContractMethod from '../methods/SendContractMethod';
-import {EstimateGasMethod} from 'web3-core-method';
+import {EstimateGasMethod, SendRawTransactionMethod, ChainIdMethod, GetTransactionCountMethod} from 'web3-core-method';
 
 export default class MethodFactory {
     /**
-     * @param {Accounts} accounts
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {ContractModuleFactory} contractModuleFactory
@@ -38,8 +37,7 @@ export default class MethodFactory {
      *
      * @constructor
      */
-    constructor(accounts, utils, formatters, contractModuleFactory, methodModuleFactory, abiCoder) {
-        this.accounts = accounts;
+    constructor(utils, formatters, contractModuleFactory, methodModuleFactory, abiCoder) {
         this.utils = utils;
         this.formatters = formatters;
         this.contractModuleFactory = contractModuleFactory;
@@ -145,13 +143,15 @@ export default class MethodFactory {
      * @returns {SendContractMethod}
      */
     createSendContractMethod(abiItem, abiModel) {
+        const transactionConfirmationWorkflow = this.methodModuleFactory.createTransactionConfirmationWorkflow();
+
         return new SendContractMethod(
             this.utils,
             this.formatters,
-            this.methodModuleFactory.createTransactionConfirmationWorkflow(),
-            this.accounts,
-            this.methodModuleFactory.createTransactionSigner(),
-            this.methodModuleFactory.createSendRawTransactionMethod(),
+            transactionConfirmationWorkflow,
+            new SendRawTransactionMethod(this.utils, this.formatters, transactionConfirmationWorkflow),
+            new ChainIdMethod(this.utils, this.formatters),
+            new GetTransactionCountMethod(this.utils, this.formatters),
             this.contractModuleFactory.createAllEventsLogDecoder(),
             abiModel
         );
@@ -167,13 +167,15 @@ export default class MethodFactory {
      * @returns {ContractDeployMethod}
      */
     createContractDeployMethod(contract) {
+        const transactionConfirmationWorkflow = this.methodModuleFactory.createTransactionConfirmationWorkflow();
+
         return new ContractDeployMethod(
             this.utils,
             this.formatters,
-            this.methodModuleFactory.createTransactionConfirmationWorkflow(),
-            this.accounts,
-            this.methodModuleFactory.createTransactionSigner(),
-            this.methodModuleFactory.createSendRawTransactionMethod(),
+            transactionConfirmationWorkflow,
+            new SendRawTransactionMethod(this.utils, this.formatters, transactionConfirmationWorkflow),
+            new ChainIdMethod(this.utils, this.formatters),
+            new GetTransactionCountMethod(this.utils, this.formatters),
             contract
         );
     }

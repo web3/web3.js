@@ -1,73 +1,72 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {Accounts} from 'web3-eth-accounts';
-import {SendTransactionMethod} from 'web3-core-method';
+import {
+    ChainIdMethod,
+    GetTransactionCountMethod,
+    SendRawTransactionMethod,
+    SendTransactionMethod
+} from 'web3-core-method';
 import TransactionConfirmationWorkflow from '../../__mocks__/TransactionConfirmationWorkflow';
-import TransactionSigner from '../../__mocks__/TransactionSigner';
 import AbstractContract from '../../../src/AbstractContract';
 import ContractDeployMethod from '../../../src/methods/ContractDeployMethod';
 
 // Mocks
 jest.mock('Utils');
 jest.mock('formatters');
-jest.mock('Accounts');
+jest.mock('SendRawTransactionMethod');
+jest.mock('ChainIdMethod');
+jest.mock('GetTransactionCountMethod');
 jest.mock('../../../src/AbstractContract');
 
 /**
  * ContractDeployMethod test
  */
 describe('ContractDeployMethodTest', () => {
-    let contractDeployMethod, transactionConfirmationWorkflowMock, accountsMock, transactionSignerMock, contractMock;
+    let contractDeployMethod,
+        transactionConfirmationWorkflowMock,
+        contractMock,
+        sendRawTransactionMethodMock,
+        chainIdMethodMock,
+        getTransactionCountMethodMock;
 
     beforeEach(() => {
-        new Accounts();
-        accountsMock = Accounts.mock.instances[0];
-
         new AbstractContract();
         contractMock = AbstractContract.mock.instances[0];
 
+        new SendRawTransactionMethod();
+        sendRawTransactionMethodMock = SendRawTransactionMethod.mock.instances[0];
+
+        new ChainIdMethod();
+        chainIdMethodMock = ChainIdMethod.mock.instances[0];
+
+        new GetTransactionCountMethod();
+        getTransactionCountMethodMock = GetTransactionCountMethod.mock.instances[0];
+
         transactionConfirmationWorkflowMock = new TransactionConfirmationWorkflow();
-        transactionSignerMock = new TransactionSigner();
 
         contractDeployMethod = new ContractDeployMethod(
             Utils,
             formatters,
             transactionConfirmationWorkflowMock,
-            accountsMock,
-            transactionSignerMock,
-            {},
+            sendRawTransactionMethodMock,
+            chainIdMethodMock,
+            getTransactionCountMethodMock,
             contractMock
         );
     });
 
     it('constructor check', () => {
-        expect(contractDeployMethod.utils).toEqual(Utils);
-
-        expect(contractDeployMethod.formatters).toEqual(formatters);
-
-        expect(contractDeployMethod.transactionConfirmationWorkflow).toEqual(transactionConfirmationWorkflowMock);
-
-        expect(contractDeployMethod.sendRawTransactionMethod).toEqual({});
-
-        expect(contractDeployMethod.accounts).toEqual(accountsMock);
-
-        expect(contractDeployMethod.transactionSigner).toEqual(transactionSignerMock);
-
         expect(contractDeployMethod.contract).toEqual(contractMock);
 
         expect(contractDeployMethod).toBeInstanceOf(SendTransactionMethod);
     });
 
     it('calls beforeExecution and removes the to property from the options', () => {
-        contractDeployMethod.arguments = [{to: true}];
-
-        formatters.inputTransactionFormatter.mockReturnValueOnce({});
+        contractDeployMethod.parameters = [{to: true}];
 
         contractDeployMethod.beforeExecution(contractMock);
 
         expect(contractDeployMethod.parameters[0].to).toBeUndefined();
-
-        expect(formatters.inputTransactionFormatter).toHaveBeenCalled();
     });
 
     it('calls afterExecution and returns the cloned contract object', () => {

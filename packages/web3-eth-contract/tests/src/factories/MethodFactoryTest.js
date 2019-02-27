@@ -1,5 +1,4 @@
 import {MethodModuleFactory, EstimateGasMethod} from 'web3-core-method';
-import {Accounts} from 'web3-eth-accounts';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
@@ -30,17 +29,12 @@ jest.mock('../../../src/methods/AllPastEventLogsMethod');
  * MethodFactory test
  */
 describe('MethodFactoryTest', () => {
-    let methodFactory, accountsMock, contractModuleFactoryMock, methodModuleFactoryMock, abiCoderMock;
+    let methodFactory, contractModuleFactoryMock, methodModuleFactoryMock, abiCoderMock;
 
     beforeEach(() => {
-        new Accounts();
-        accountsMock = Accounts.mock.instances[0];
-
-        new MethodModuleFactory(accountsMock);
+        new MethodModuleFactory();
         methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
-        methodModuleFactoryMock.createTransactionSigner = jest.fn();
         methodModuleFactoryMock.createTransactionConfirmationWorkflow = jest.fn();
-        methodModuleFactoryMock.createSendRawTransactionMethod = jest.fn();
 
         new ContractModuleFactory({}, {}, {}, {}, {});
         contractModuleFactoryMock = ContractModuleFactory.mock.instances[0];
@@ -49,7 +43,6 @@ describe('MethodFactoryTest', () => {
         abiCoderMock = AbiCoder.mock.instances[0];
 
         methodFactory = new MethodFactory(
-            accountsMock,
             Utils,
             formatters,
             contractModuleFactoryMock,
@@ -59,8 +52,6 @@ describe('MethodFactoryTest', () => {
     });
 
     it('constructor check', () => {
-        expect(methodFactory.accounts).toEqual(accountsMock);
-
         expect(methodFactory.utils).toEqual(Utils);
 
         expect(methodFactory.formatters).toEqual(formatters);
@@ -115,21 +106,13 @@ describe('MethodFactoryTest', () => {
 
         expect(contractModuleFactoryMock.createAllEventsLogDecoder).toHaveBeenCalled();
 
-        expect(methodModuleFactoryMock.createTransactionSigner).toHaveBeenCalled();
-
         expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow).toHaveBeenCalled();
-
-        expect(methodModuleFactoryMock.createSendRawTransactionMethod).toHaveBeenCalled();
     });
 
     it('calls createContractDeployMethod and returns ContractDeployMethod object', () => {
         expect(methodFactory.createContractDeployMethod({})).toBeInstanceOf(ContractDeployMethod);
 
-        expect(methodModuleFactoryMock.createTransactionSigner).toHaveBeenCalled();
-
         expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow).toHaveBeenCalled();
-
-        expect(methodModuleFactoryMock.createSendRawTransactionMethod).toHaveBeenCalled();
     });
 
     it('calls createEstimateGasMethod and returns EstimateGasMethod object', () => {

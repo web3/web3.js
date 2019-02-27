@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import {WebsocketProvider, IpcProvider, EthereumProvider} from 'web3-providers';
 import EventEmitter from 'eventemitter3';
 
 export default class NewHeadsWatcher extends EventEmitter {
@@ -47,10 +46,11 @@ export default class NewHeadsWatcher extends EventEmitter {
      * @returns {NewHeadsWatcher}
      */
     watch(moduleInstance) {
-        if (this.isSocketConnection(moduleInstance.currentProvider)) {
+        if (moduleInstance.currentProvider.constructor.name !== 'HttpProvider') {
             this.confirmationSubscription = this.subscriptionsFactory
                 .createNewHeadsSubscription(moduleInstance)
                 .subscribe(() => {
+                    console.log('newHEAD');
                     this.emit('newHead');
                 });
 
@@ -80,22 +80,5 @@ export default class NewHeadsWatcher extends EventEmitter {
         }
 
         this.removeAllListeners('newHead');
-    }
-
-    /**
-     * Checks if the given provider is a socket provider
-     *
-     * @method isSocketConnection
-     *
-     * @param {WebsocketProvider|EthereumProvider|IpcProvider} provider
-     *
-     * @returns {Boolean}
-     */
-    isSocketConnection(provider) {
-        return (
-            provider instanceof WebsocketProvider ||
-            provider instanceof IpcProvider ||
-            provider instanceof EthereumProvider
-        );
     }
 }

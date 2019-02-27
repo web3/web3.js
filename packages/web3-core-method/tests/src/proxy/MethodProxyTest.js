@@ -27,7 +27,7 @@ describe('MethodProxyTest', () => {
         methodMock = AbstractMethod.mock.instances[0];
     });
 
-    it('methodProxy return property from target', () => {
+    it('returns a property from the target object', () => {
         moduleInstanceMock.defaultGasPrice = 100;
 
         methodFactoryMock.hasMethod.mockReturnValueOnce(false);
@@ -39,7 +39,7 @@ describe('MethodProxyTest', () => {
         expect(methodFactoryMock.hasMethod).toHaveBeenCalledWith('defaultGasPrice');
     });
 
-    it('methodProxy throws error because the property is defined on the target and as method', () => {
+    it('throws an error because the property is defined on the target and as method', () => {
         moduleInstanceMock.myMethod = 100;
 
         methodFactoryMock.hasMethod.mockReturnValueOnce(true);
@@ -59,7 +59,7 @@ describe('MethodProxyTest', () => {
         }
     });
 
-    it('the methodProxy executes the AbstractCallMethod myMethod and it returns the expected value', () => {
+    it('executes the AbstractCallMethod myMethod and it returns the expected value', () => {
         methodMock.parameters = [];
         methodMock.parametersAmount = 0;
 
@@ -107,7 +107,7 @@ describe('MethodProxyTest', () => {
         expect(methodMock.execute).toHaveBeenCalledWith(moduleInstanceMock, PromiEvent.mock.instances[0]);
     });
 
-    it('methodProxy throws error because of invalid parameter length', () => {
+    it('throws an error because of an invalid parameter length', () => {
         methodMock.parameters = [];
         methodMock.parametersAmount = 2;
 

@@ -34,13 +34,7 @@ export default class AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(
-        provider = AbstractWeb3Module.throwIfMissing('provider'),
-        providersModuleFactory = AbstractWeb3Module.throwIfMissing('ProvidersModuleFactory'),
-        methodModuleFactory = null,
-        methodFactory = null,
-        options = {}
-    ) {
+    constructor(provider, providersModuleFactory, methodModuleFactory = null, methodFactory = null, options = {}) {
         this.providersModuleFactory = providersModuleFactory;
         this.providerDetector = providersModuleFactory.createProviderDetector(); // TODO: detection of an provider and setting of givenProvider could be removed.
         this.providerResolver = providersModuleFactory.createProviderResolver();
@@ -319,14 +313,5 @@ export default class AbstractWeb3Module {
         }
 
         return Promise.resolve(true);
-    }
-
-    /**
-     * Throws an error if the parameter is missing
-     *
-     * @param {String} name
-     */
-    static throwIfMissing(name) {
-        throw new Error(`Missing parameter: ${name}`);
     }
 }

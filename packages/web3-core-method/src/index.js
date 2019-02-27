@@ -31,14 +31,12 @@ import * as Utils from 'web3-utils';
 /**
  * Returns the ModuleFactory of the method module
  *
- * @param {Accounts} accounts
- *
  * @returns {ModuleFactory}
  *
  * @constructor
  */
-export const MethodModuleFactory = (accounts) => {
-    return new ModuleFactory(accounts, new SubscriptionsFactory(), Utils, formatters);
+export const MethodModuleFactory = () => {
+    return new ModuleFactory(new SubscriptionsFactory(), Utils, formatters);
 };
 
 export AbstractMethod from '../lib/methods/AbstractMethod';
@@ -49,6 +47,7 @@ export GetProtocolVersionMethod from './methods/network/GetProtocolVersionMethod
 export VersionMethod from './methods/network/VersionMethod';
 export ListeningMethod from './methods/network/ListeningMethod';
 export PeerCountMethod from './methods/network/PeerCountMethod';
+export ChainIdMethod from './methods/network/ChainIdMethod';
 
 // Node
 export GetNodeInfoMethod from './methods/node/GetNodeInfoMethod';
