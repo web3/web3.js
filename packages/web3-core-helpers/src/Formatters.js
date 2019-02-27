@@ -278,7 +278,7 @@ export const outputTransactionReceiptFormatter = (receipt) => {
         receipt.contractAddress = Utils.toChecksumAddress(receipt.contractAddress);
     }
 
-    if (typeof receipt.status !== 'undefined') {
+    if (typeof receipt.status !== 'undefined' && receipt.status !== null) {
         receipt.status = Boolean(parseInt(receipt.status));
     }
 
