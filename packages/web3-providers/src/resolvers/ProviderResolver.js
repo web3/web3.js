@@ -70,14 +70,19 @@ export default class ProviderResolver {
             return this.providersModuleFactory.createMistEthereumProvider(provider);
         }
 
-        if (provider.constructor.name === 'MetamaskInpageProvider') {
-            return this.providersModuleFactory.createMetamaskProvider(provider);
-        }
-
         if (provider.isEIP1193) {
             return this.providersModuleFactory.createEthereumProvider(provider);
         }
 
-        return this.providersModuleFactory.createCustomProvider(provider);
+        switch(provider.constructor.name) {
+            case 'MetamaskInpageProvider':
+                return this.providersModuleFactory.createMetamaskProvider(provider);
+            case 'HttpProvider':
+            case 'IpcProvider':
+            case 'WebsocketProvider':
+                return provider;
+            default:
+                return this.providersModuleFactory.createCustomProvider(provider);
+        }
     }
 }

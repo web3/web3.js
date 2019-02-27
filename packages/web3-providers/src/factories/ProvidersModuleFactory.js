@@ -32,6 +32,7 @@ import BatchRequest from '../batch-request/BatchRequest';
 import EthereumProvider from '../providers/EthereumProvider';
 import MetamaskProvider from '../providers/MetamaskProvider';
 import MistEthereumProvider from '../providers/MistEthereumProvider';
+import CustomProvider from '../providers/CustomProvider';
 
 export default class ProvidersModuleFactory {
     /**
