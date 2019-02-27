@@ -535,12 +535,6 @@ export const getSignatureParameters = (signature) => {
 export const randomHex = (size, callback) => {
     try {
         if (size > 65536) {
-            if (isFunction(callback)) {
-                callback(new Error('Requested too many random bytes.'));
-
-                return;
-            }
-
             throw new Error('Requested too many random bytes.');
         }
 
