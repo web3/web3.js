@@ -283,6 +283,7 @@ export default class AbiCoder {
 
         inputs.forEach((input, i) => {
             if (input.indexed) {
+                topics = topics.slice(1);
                 indexedParams[i] = ['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find((staticType) => {
                     return input.type.indexOf(staticType) !== -1;
                 })
