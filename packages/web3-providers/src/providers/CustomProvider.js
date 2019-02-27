@@ -35,6 +35,8 @@ export default class CustomProvider {
      * Checks if the given custom provider does have the required methods
      *
      * @method checkConnectionMethods
+     *
+     * @returns {Boolean}
      */
     checkConnectionMethods() {
         if (this.connection.send || this.connection.sendAsync) {
