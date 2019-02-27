@@ -89,16 +89,28 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
         }
 
-        if (
-            (this.hasAccounts(moduleInstance) && this.isDefaultSigner(moduleInstance)) ||
-            this.hasCustomSigner(moduleInstance)
-        ) {
-            let privateKey;
+        if (this.hasAccounts(moduleInstance) && this.isDefaultSigner(moduleInstance)) {
             if (moduleInstance.accounts.wallet[this.parameters[0].from]) {
-                privateKey = moduleInstance.accounts.wallet[this.parameters[0].from].privateKey;
-            }
+                this.sendRawTransaction(
+                    moduleInstance.accounts.wallet[this.parameters[0].from].privateKey,
+                    promiEvent,
+                    moduleInstance
+                ).catch((error) => {
+                    if (this.callback) {
+                        this.callback(error, null);
+                    }
 
-            this.sendRawTransaction(privateKey, promiEvent, moduleInstance).catch((error) => {
+                    promiEvent.reject(error);
+                    promiEvent.emit('error', error);
+                    promiEvent.removeAllListeners();
+                });
+
+                return promiEvent;
+            }
+        }
+
+        if (this.hasCustomSigner(moduleInstance)) {
+            this.sendRawTransaction(null, promiEvent, moduleInstance).catch((error) => {
                 if (this.callback) {
                     this.callback(error, null);
                 }
