@@ -335,6 +335,28 @@ export default class Accounts extends AbstractWeb3Module {
     }
 
     /**
+     * Hashes a given message
+     *
+     * @method hashMessage
+     *
+     * @param {String} data
+     *
+     * @returns {String}
+     */
+    hashMessage(data) {
+        if (isHexStrict(data)) {
+            data = hexToBytes(data);
+        }
+
+        const messageBuffer = Buffer.from(data);
+        const preamble = `\u0019Ethereum Signed Message:\n${data.length}`;
+        const preambleBuffer = Buffer.from(preamble);
+        const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
+
+        return Hash.keccak256s(ethMessage);
+    }
+
+    /**
      * TODO: Add deprecation message and extend the signTransaction method in the eth module
      *
      * Signs a transaction object with the given privateKey
@@ -439,16 +461,7 @@ export default class Accounts extends AbstractWeb3Module {
         }
 
         if (!preFixed) {
-            if (isHexStrict(message)) {
-                message = hexToBytes(message);
-            }
-
-            const messageBuffer = Buffer.from(message);
-            const preamble = `\u0019Ethereum Signed Message:\n${message.length}`;
-            const preambleBuffer = Buffer.from(preamble);
-            const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
-
-            message = Hash.keccak256s(ethMessage);
+            message = this.hashMessage(message);
         }
 
         if (args.length >= 4) {
