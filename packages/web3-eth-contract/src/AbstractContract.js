@@ -67,9 +67,12 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.methodFactory = this.contractModuleFactory.createMethodFactory();
         this.abiModel = this.abiMapper.map(abi);
         this.transactionSigner = options.transactionSigner;
-        this.address = address;
         this.methods = this.contractModuleFactory.createMethodsProxy(this, this.abiModel, this.PromiEvent);
         this.events = this.contractModuleFactory.createEventSubscriptionsProxy(this, this.abiModel, this.PromiEvent);
+
+        if (address) {
+            this.address = address;
+        }
 
         return new Proxy(this, {
             get: (target, name) => {
