@@ -32,6 +32,7 @@ import BatchRequest from '../batch-request/BatchRequest';
 import EthereumProvider from '../providers/EthereumProvider';
 import MetamaskProvider from '../providers/MetamaskProvider';
 import MistEthereumProvider from '../providers/MistEthereumProvider';
+import CustomProvider from '../providers/CustomProvider';
 
 export default class ProvidersModuleFactory {
     /**
@@ -202,5 +203,18 @@ export default class ProvidersModuleFactory {
      */
     createMistEthereumProvider(mistEthereumProvider) {
         return new MistEthereumProvider(mistEthereumProvider);
+    }
+
+    /**
+     * Returns an CustomProvider object
+     *
+     * @method createCustomProvider
+     *
+     * @param {Object} connection
+     *
+     * @returns {CustomProvider}
+     */
+    createCustomProvider(connection) {
+        return new CustomProvider(connection);
     }
 }

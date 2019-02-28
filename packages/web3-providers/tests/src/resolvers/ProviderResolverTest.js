@@ -5,6 +5,7 @@ import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import IpcProvider from '../../../src/providers/IpcProvider';
 import EthereumProvider from '../../../src/providers/EthereumProvider';
 import MetamaskProvider from '../../../src/providers/MetamaskProvider';
+import CustomProvider from '../../../src/providers/CustomProvider';
 
 // Mocks
 jest.mock('../../../src/factories/ProvidersModuleFactory');
@@ -13,25 +14,26 @@ jest.mock('../../../src/providers/WebsocketProvider');
 jest.mock('../../../src/providers/IpcProvider');
 jest.mock('../../../src/providers/EthereumProvider');
 jest.mock('../../../src/providers/MetamaskProvider');
+jest.mock('../../../src/providers/CustomProvider');
 
 /**
  * ProviderResolver test
  */
 describe('ProviderResolverTest', () => {
-    let providerResolver, providersModuleFactory, providersModuleFactoryMock;
+    let providerResolver, providersModuleFactoryMock;
 
     beforeEach(() => {
-        providersModuleFactory = new ProvidersModuleFactory();
+        new ProvidersModuleFactory();
         providersModuleFactoryMock = ProvidersModuleFactory.mock.instances[0];
 
-        providerResolver = new ProviderResolver(providersModuleFactory);
+        providerResolver = new ProviderResolver(providersModuleFactoryMock);
     });
 
     it('calls resolve with HTTP url', () => {
-        new HttpProvider('host', {}, providersModuleFactoryMock);
+        new HttpProvider();
         const httpProviderMock = HttpProvider.mock.instances[0];
 
-        providersModuleFactory.createHttpProvider.mockReturnValueOnce(httpProviderMock);
+        providersModuleFactoryMock.createHttpProvider.mockReturnValueOnce(httpProviderMock);
 
         expect(providerResolver.resolve('http://localhost:8545')).toBeInstanceOf(HttpProvider);
 
@@ -42,7 +44,7 @@ describe('ProviderResolverTest', () => {
         new WebsocketProvider({}, 1);
         const websocketProviderMock = WebsocketProvider.mock.instances[0];
 
-        providersModuleFactory.createWebsocketProvider.mockReturnValueOnce(websocketProviderMock);
+        providersModuleFactoryMock.createWebsocketProvider.mockReturnValueOnce(websocketProviderMock);
 
         expect(providerResolver.resolve('ws://127.0.0.1:8545')).toBeInstanceOf(WebsocketProvider);
 
@@ -55,7 +57,7 @@ describe('ProviderResolverTest', () => {
 
         const net = {connect: () => {}};
 
-        providersModuleFactory.createIpcProvider.mockReturnValueOnce(ipcProviderMock);
+        providersModuleFactoryMock.createIpcProvider.mockReturnValueOnce(ipcProviderMock);
 
         expect(providerResolver.resolve('/path/to/the/socket', net)).toBeInstanceOf(IpcProvider);
 
@@ -63,7 +65,7 @@ describe('ProviderResolverTest', () => {
     });
 
     it('calls resolve with the HttpProvider', () => {
-        new HttpProvider('host', {}, providersModuleFactoryMock);
+        new HttpProvider();
         const httpProviderMock = HttpProvider.mock.instances[0];
 
         expect(providerResolver.resolve(httpProviderMock)).toBeInstanceOf(HttpProvider);
@@ -98,9 +100,23 @@ describe('ProviderResolverTest', () => {
     it('calls resolve with the MetamaskProvider', () => {
         new MetamaskProvider();
         const metamaskProviderMock = MetamaskProvider.mock.instances[0];
+        const metamaskInpageProvider = {constructor: {name: 'MetamaskInpageProvider'}};
 
         providersModuleFactoryMock.createMetamaskProvider.mockReturnValueOnce(metamaskProviderMock);
 
-        expect(providerResolver.resolve(metamaskProviderMock)).toEqual(metamaskProviderMock);
+        expect(providerResolver.resolve(metamaskInpageProvider)).toEqual(metamaskProviderMock);
+
+        expect(providersModuleFactoryMock.createMetamaskProvider).toHaveBeenCalledWith(metamaskInpageProvider);
+    });
+
+    it('calls resolve with a custom provider', () => {
+        new CustomProvider();
+        const customProviderMock = CustomProvider.mock.instances[0];
+
+        providersModuleFactoryMock.createCustomProvider.mockReturnValueOnce(customProviderMock);
+
+        expect(providerResolver.resolve({})).toEqual(customProviderMock);
+
+        expect(providersModuleFactoryMock.createCustomProvider).toHaveBeenCalledWith({});
     });
 });
