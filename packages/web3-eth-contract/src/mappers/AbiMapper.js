@@ -109,9 +109,7 @@ export default class AbiMapper {
                 inputs: [],
                 payable: false,
                 constant: false,
-                stateMutability: 'nonpayable',
-                type: 'constructor',
-                signature: 'constructor'
+                type: 'constructor'
             });
         }
 

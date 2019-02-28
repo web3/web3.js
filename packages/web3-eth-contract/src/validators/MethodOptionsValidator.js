@@ -69,7 +69,7 @@ export default class MethodOptionsValidator {
      * @returns {Boolean}
      */
     isToSet(abiItemModel, method) {
-        if (abiItemModel.signature === 'constructor') {
+        if (abiItemModel.isOfType('constructor')) {
             return true;
         }
 
@@ -100,6 +100,6 @@ export default class MethodOptionsValidator {
      * @returns {Boolean}
      */
     isValueValid(abiItemModel, method) {
-        return !(!abiItemModel.payable && method.parameters[0].value && method.parameters[0].value > 0);
+        return abiItemModel.payable && method.parameters[0].value > 0;
     }
 }

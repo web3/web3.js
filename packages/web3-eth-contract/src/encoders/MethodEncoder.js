@@ -52,7 +52,7 @@ export default class MethodEncoder {
             }
         }
 
-        if (abiItemModel.signature === 'constructor') {
+        if (abiItemModel.isOfType('constructor')) {
             if (!deployData) {
                 throw new Error(
                     'The contract has no contract data option set. This is necessary to append the constructor parameters.'
