@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
@@ -22,6 +23,7 @@ jest.mock('ProviderResolver');
 jest.mock('MethodModuleFactory');
 jest.mock('GetPastLogsMethod');
 jest.mock('AbiCoder');
+jest.mock('lodash/cloneDeep');
 jest.mock('../../src/mappers/AbiMapper');
 jest.mock('../../src/factories/ContractModuleFactory');
 jest.mock('../../src/factories/MethodFactory');
@@ -281,27 +283,11 @@ describe('AbstractContractTest', () => {
     });
 
     it('calls clone and returns the cloned contract object', () => {
-        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce(providerDetectorMock);
+        cloneDeep.mockReturnValueOnce({});
 
-        providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce(providerResolverMock);
+        expect(abstractContract.clone()).toEqual({methods: abstractContract.methods, events: abstractContract.events});
 
-        contractModuleFactoryMock.createAbiMapper.mockReturnValueOnce(abiMapperMock);
-
-        contractModuleFactoryMock.createMethodFactory.mockReturnValueOnce(methodFactoryMock);
-
-        contractModuleFactoryMock.createMethodsProxy.mockReturnValueOnce(methodsProxyMock);
-
-        contractModuleFactoryMock.createEventSubscriptionsProxy.mockReturnValueOnce(eventSubscriptionsProxyMock);
-
-        abiMapperMock.map.mockReturnValueOnce(abiModelMock);
-
-        const clone = abstractContract.clone();
-
-        expect(clone).toBeInstanceOf(AbstractContract);
-
-        clone.address = '000';
-
-        expect(clone.address).toEqual('000');
+        expect(cloneDeep).toHaveBeenCalledWith(abstractContract);
     });
 
     it('gets the jsonInterface property', () => {

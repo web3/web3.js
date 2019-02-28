@@ -36,6 +36,8 @@ describe('MethodEncoderTest', () => {
 
         abiItemModelMock.isOfType.mockReturnValueOnce(false);
 
+        abiItemModelMock.isOfType.mockReturnValueOnce(false);
+
         const result = methodEncoder.encode(abiItemModelMock);
 
         expect(result).toEqual('0');
@@ -47,12 +49,12 @@ describe('MethodEncoderTest', () => {
         expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('function');
     });
 
-    it('calls encode with "constructor" as signature and a error is thrown because of the missing data argumetn', () => {
+    it('calls encode with "constructor" as type and a error is thrown because of the missing data argument', () => {
         abiCoderMock.encodeParameters.mockReturnValueOnce('0x0');
 
         abiItemModelMock.getInputs.mockReturnValueOnce([]);
 
-        abiItemModelMock.signature = 'constructor';
+        abiItemModelMock.isOfType.mockReturnValueOnce(true);
 
         expect(() => {
             methodEncoder.encode(abiItemModelMock);
@@ -63,22 +65,26 @@ describe('MethodEncoderTest', () => {
         expect(abiCoderMock.encodeParameters).toHaveBeenCalledWith([], []);
 
         expect(abiItemModelMock.getInputs).toHaveBeenCalled();
+
+        expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('constructor');
     });
 
-    it('calls encode with "constructor" as signature and return the expected value', () => {
+    it('calls encode with "constructor" as type and returns the expected value', () => {
         abiCoderMock.encodeParameters.mockReturnValueOnce('0x0');
 
         abiItemModelMock.getInputs.mockReturnValueOnce([]);
 
-        abiItemModelMock.signature = 'constructor';
+        abiItemModelMock.isOfType.mockReturnValueOnce(true);
 
-        const result = methodEncoder.encode(abiItemModelMock, '0x0');
+        const result = methodEncoder.encode(abiItemModelMock, '0');
 
-        expect(result).toEqual('0x00');
+        expect(result).toEqual('00');
 
         expect(abiCoderMock.encodeParameters).toHaveBeenCalledWith([], []);
 
         expect(abiItemModelMock.getInputs).toHaveBeenCalled();
+
+        expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('constructor');
     });
 
     it('calls encode with "function" as type and returns the expected value', () => {
@@ -86,18 +92,20 @@ describe('MethodEncoderTest', () => {
 
         abiItemModelMock.getInputs.mockReturnValueOnce([]);
 
+        abiItemModelMock.isOfType.mockReturnValueOnce(false);
         abiItemModelMock.isOfType.mockReturnValueOnce(true);
 
-        abiItemModelMock.signature = '0x0';
+        abiItemModelMock.signature = '0';
 
         const result = methodEncoder.encode(abiItemModelMock);
 
-        expect(result).toEqual('0x00');
+        expect(result).toEqual('00');
 
         expect(abiCoderMock.encodeParameters).toHaveBeenCalledWith([], []);
 
         expect(abiItemModelMock.getInputs).toHaveBeenCalled();
 
-        expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('function');
+        expect(abiItemModelMock.isOfType).toHaveBeenNthCalledWith(1, 'constructor');
+        expect(abiItemModelMock.isOfType).toHaveBeenNthCalledWith(2, 'function');
     });
 });

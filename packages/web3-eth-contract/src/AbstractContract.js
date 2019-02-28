@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import cloneDeep from 'lodash/cloneDeep';
 import {AbstractWeb3Module} from 'web3-core';
 
 export default class AbstractContract extends AbstractWeb3Module {
@@ -49,11 +50,12 @@ export default class AbstractContract extends AbstractWeb3Module {
         abiCoder,
         utils,
         formatters,
-        abi,
-        address,
+        abi = [],
+        address = '',
         options = {}
     ) {
         super(provider, providersModuleFactory, methodModuleFactory, null, options);
+
         this.contractModuleFactory = contractModuleFactory;
         this.abiCoder = abiCoder;
         this.utils = utils;
@@ -65,13 +67,18 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.methodFactory = this.contractModuleFactory.createMethodFactory();
         this.abiModel = this.abiMapper.map(abi);
         this.transactionSigner = options.transactionSigner;
+        this.methods = this.contractModuleFactory.createMethodsProxy(this, this.abiModel, this.PromiEvent);
+        this.events = this.contractModuleFactory.createEventSubscriptionsProxy(this, this.abiModel, this.PromiEvent);
 
         if (address) {
             this.address = address;
         }
 
-        this.methods = this.contractModuleFactory.createMethodsProxy(this, this.abiModel, this.PromiEvent);
-        this.events = this.contractModuleFactory.createEventSubscriptionsProxy(this, this.abiModel, this.PromiEvent);
+        return new Proxy(this, {
+            get: (target, name) => {
+                return target[name];
+            }
+        });
     }
 
     /**
@@ -204,24 +211,10 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @returns {AbstractContract}
      */
     clone() {
-        const contract = new this.constructor(
-            this.currentProvider,
-            this.providersModuleFactory,
-            this.methodModuleFactory,
-            this.contractModuleFactory,
-            this.PromiEvent,
-            this.abiCoder,
-            this.utils,
-            this.formatters,
-            [],
-            this.address,
-            this.options
-        );
+        const clone = cloneDeep(this);
+        clone.methods = this.methods;
+        clone.events = this.events;
 
-        contract.abiModel = this.abiModel;
-        contract.methods.abiModel = this.abiModel;
-        contract.events.abiModel = this.abiModel;
-
-        return contract;
+        return clone;
     }
 }
