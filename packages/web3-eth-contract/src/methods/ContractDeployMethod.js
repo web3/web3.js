@@ -80,6 +80,10 @@ export default class ContractDeployMethod extends SendTransactionMethod {
         const clonedContract = this.contract.clone();
         clonedContract.options.address = response.contractAddress;
 
-        return clonedContract;
+        return new Proxy(clonedContract, {
+            get: (target, name) => {
+                return target[name];
+            }
+        });
     }
 }
