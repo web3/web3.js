@@ -283,9 +283,10 @@ describe('AbstractContractTest', () => {
     });
 
     it('calls clone and returns the cloned contract object', () => {
-        cloneDeep.mockReturnValueOnce(true);
+        cloneDeep.mockReturnValueOnce({});
 
-        expect(abstractContract.clone()).toEqual(true);
+        expect(abstractContract.clone())
+            .toEqual({methods: abstractContract.methods, events: abstractContract.events});
 
         expect(cloneDeep).toHaveBeenCalledWith(abstractContract);
     });

@@ -70,6 +70,12 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.address = address;
         this.methods = this.contractModuleFactory.createMethodsProxy(this, this.abiModel, this.PromiEvent);
         this.events = this.contractModuleFactory.createEventSubscriptionsProxy(this, this.abiModel, this.PromiEvent);
+
+        return new Proxy(this, {
+            get: (target, name) => {
+                return target[name];
+            }
+        });
     }
 
     /**
@@ -202,6 +208,10 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @returns {AbstractContract}
      */
     clone() {
-        return cloneDeep(this);
+        const clone = cloneDeep(this);
+        clone.methods = this.methods;
+        clone.events = this.events;
+
+        return clone;
     }
 }
