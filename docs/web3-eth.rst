@@ -1026,7 +1026,7 @@ Example
     // using the callback
     web3.eth.sendTransaction({
         from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
-        data: code // deploying a contracrt
+        data: code // deploying a contract
     }, function(error, hash){
         ...
     });
