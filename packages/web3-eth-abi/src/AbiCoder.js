@@ -21,6 +21,7 @@
  * @date 2018
  */
 
+import {utils} from 'ethers';
 import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
 
@@ -238,7 +239,7 @@ export default class AbiCoder {
             throw new Error("Returned values aren't valid, did it run Out of Gas?");
         }
 
-        const res = this.ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`);
+        const res = this.ethersAbiCoder.decode(this._mapTypes(outputs), utils.arrayify(bytes));
 
         const returnValues = {};
 

@@ -57,7 +57,7 @@ export default class CallContractMethod extends CallMethod {
 
         const outputs = this.abiItemModel.getOutputs();
         if (outputs.length === 1) {
-            return this.abiCoder.decodeParameter(outputs[0].type, response);
+            return this.abiCoder.decodeParameter(outputs[0].type, '0x' + response);
         }
 
         return this.abiCoder.decodeParameters(outputs, response);
