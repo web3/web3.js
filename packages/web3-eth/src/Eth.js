@@ -90,7 +90,6 @@ export default class Eth extends AbstractWeb3Module {
          */
         this.Contract = (abi, address, options = {}) => {
             options.transactionSigner = this.transactionSigner;
-            console.log(abi);
 
             const contract = this.contractModuleFactory.createContract(
                 this.currentProvider,

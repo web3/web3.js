@@ -38,7 +38,17 @@ export default class AbiModuleFactory {
     createAbiCoder(utils) {
         return new AbiCoder(
             utils,
-            new EthersAbiCoder()
+            // TODO: Change this anonymous method to a accessable method because of the testing.
+            new EthersAbiCoder((type, value) => {
+                if (
+                    (type.match(/^u?int/) && !isArray(value) && !isObject(value)) ||
+                    value.constructor.name !== 'BigNumber'
+                ) {
+                    return value.toString();
+                }
+
+                return value;
+            })
         );
     }
 }

@@ -34,13 +34,7 @@ export default class MethodsProxy {
      *
      * @constructor
      */
-    constructor(
-        contract,
-        methodFactory,
-        methodEncoder,
-        methodOptionsValidator,
-        methodOptionsMapper
-    ) {
+    constructor(contract, methodFactory, methodEncoder, methodOptionsValidator, methodOptionsMapper) {
         this.contract = contract;
         this.methodFactory = methodFactory;
         this.methodEncoder = methodEncoder;

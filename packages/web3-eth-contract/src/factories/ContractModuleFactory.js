@@ -248,7 +248,7 @@ export default class ContractModuleFactory {
             this.createMethodFactory(),
             this.createMethodEncoder(),
             this.createMethodOptionsValidator(),
-            this.createMethodOptionsMapper(),
+            this.createMethodOptionsMapper()
         );
     }
 
@@ -268,7 +268,7 @@ export default class ContractModuleFactory {
             this.createEventOptionsMapper(),
             this.createEventLogDecoder(),
             this.createAllEventsLogDecoder(),
-            this.createAllEventsOptionsMapper(),
+            this.createAllEventsOptionsMapper()
         );
     }
 

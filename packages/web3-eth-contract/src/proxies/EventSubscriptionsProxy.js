@@ -41,7 +41,7 @@ export default class EventSubscriptionsProxy {
         eventOptionsMapper,
         eventLogDecoder,
         allEventsLogDecoder,
-        allEventsOptionsMapper,
+        allEventsOptionsMapper
     ) {
         this.contract = contract;
         this.eventSubscriptionFactory = eventSubscriptionFactory;
