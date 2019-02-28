@@ -90,7 +90,7 @@ export default class MethodOptionsValidator {
     }
 
     /**
-     * Checks if no value is set for an non-payable method
+     * Checks the value and payable property are having valid values.
      *
      * @method isValueValid
      *
@@ -100,6 +100,7 @@ export default class MethodOptionsValidator {
      * @returns {Boolean}
      */
     isValueValid(abiItemModel, method) {
-        return !abiItemModel.payable || method.parameters[0].value > 0;
+        return (!abiItemModel.payable && !method.parameters[0].value > 0) ||
+               (abiItemModel.payable && method.parameters[0].value > 0);
     }
 }
