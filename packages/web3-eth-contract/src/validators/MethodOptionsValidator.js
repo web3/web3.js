@@ -100,6 +100,6 @@ export default class MethodOptionsValidator {
      * @returns {Boolean}
      */
     isValueValid(abiItemModel, method) {
-        return abiItemModel.payable && method.parameters[0].value > 0;
+        return !abiItemModel.payable || method.parameters[0].value > 0;
     }
 }
