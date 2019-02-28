@@ -56,8 +56,6 @@ describe('MethodEncoderTest', () => {
 
         abiItemModelMock.isOfType.mockReturnValueOnce(true);
 
-        abiItemModelMock.signature = 'constructor';
-
         expect(() => {
             methodEncoder.encode(abiItemModelMock);
         }).toThrow(
@@ -71,18 +69,16 @@ describe('MethodEncoderTest', () => {
         expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('constructor');
     });
 
-    it('calls encode with "constructor" as signature and returns the expected value', () => {
+    it('calls encode with "constructor" as type and returns the expected value', () => {
         abiCoderMock.encodeParameters.mockReturnValueOnce('0x0');
 
         abiItemModelMock.getInputs.mockReturnValueOnce([]);
 
         abiItemModelMock.isOfType.mockReturnValueOnce(true);
 
-        abiItemModelMock.signature = 'constructor';
+        const result = methodEncoder.encode(abiItemModelMock, '0');
 
-        const result = methodEncoder.encode(abiItemModelMock, '0x0');
-
-        expect(result).toEqual('0x00');
+        expect(result).toEqual('00');
 
         expect(abiCoderMock.encodeParameters).toHaveBeenCalledWith([], []);
 
@@ -99,11 +95,11 @@ describe('MethodEncoderTest', () => {
         abiItemModelMock.isOfType.mockReturnValueOnce(false);
         abiItemModelMock.isOfType.mockReturnValueOnce(true);
 
-        abiItemModelMock.signature = '0x0';
+        abiItemModelMock.signature = '0';
 
         const result = methodEncoder.encode(abiItemModelMock);
 
-        expect(result).toEqual('0x00');
+        expect(result).toEqual('00');
 
         expect(abiCoderMock.encodeParameters).toHaveBeenCalledWith([], []);
 
