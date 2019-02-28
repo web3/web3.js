@@ -41,7 +41,10 @@ export default class MethodEncoder {
      * @returns {String|Error}
      */
     encode(abiItemModel, deployData) {
-        let encodedParameters = this.abiCoder.encodeParameters(abiItemModel.getInputs(), abiItemModel.contractMethodParameters);
+        let encodedParameters = this.abiCoder.encodeParameters(
+            abiItemModel.getInputs(),
+            abiItemModel.contractMethodParameters
+        );
 
         if (encodedParameters.startsWith('0x')) {
             encodedParameters = encodedParameters.slice(2);

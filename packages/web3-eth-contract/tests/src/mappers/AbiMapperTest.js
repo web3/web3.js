@@ -56,6 +56,12 @@ describe('AbiMapperTest', () => {
                 type: 'function',
                 constant: true,
                 payable: true
+            },
+            {
+                name: 'item',
+                type: 'constructor',
+                constant: true,
+                payable: true
             }
         ];
 

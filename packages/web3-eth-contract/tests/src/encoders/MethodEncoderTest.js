@@ -105,7 +105,7 @@ describe('MethodEncoderTest', () => {
 
         expect(abiItemModelMock.getInputs).toHaveBeenCalled();
 
-        expect(abiItemModelMock.isOfType).toHaveBeenNthCalledWith(1,'constructor');
-        expect(abiItemModelMock.isOfType).toHaveBeenNthCalledWith(2,'function');
+        expect(abiItemModelMock.isOfType).toHaveBeenNthCalledWith(1, 'constructor');
+        expect(abiItemModelMock.isOfType).toHaveBeenNthCalledWith(2, 'function');
     });
 });
