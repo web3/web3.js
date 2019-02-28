@@ -27,34 +27,28 @@ import cloneDeep from 'lodash/cloneDeep';
 export default class EventSubscriptionsProxy {
     /**
      * @param {AbstractContract} contract
-     * @param {AbiModel} abiModel
      * @param {EventSubscriptionFactory} eventSubscriptionFactory
      * @param {EventOptionsMapper} eventOptionsMapper
      * @param {EventLogDecoder} eventLogDecoder
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AllEventsOptionsMapper} allEventsOptionsMapper
-     * @param {PromiEvent} PromiEvent
      *
      * @constructor
      */
     constructor(
         contract,
-        abiModel,
         eventSubscriptionFactory,
         eventOptionsMapper,
         eventLogDecoder,
         allEventsLogDecoder,
         allEventsOptionsMapper,
-        PromiEvent
     ) {
         this.contract = contract;
         this.eventSubscriptionFactory = eventSubscriptionFactory;
-        this.abiModel = abiModel;
         this.eventOptionsMapper = eventOptionsMapper;
         this.eventLogDecoder = eventLogDecoder;
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.allEventsOptionsMapper = allEventsOptionsMapper;
-        this.PromiEvent = PromiEvent;
 
         return new Proxy(this, {
             /**
@@ -66,7 +60,7 @@ export default class EventSubscriptionsProxy {
              * @returns {Function|Error}
              */
             get: (target, name) => {
-                if (this.abiModel.hasEvent(name)) {
+                if (this.contract.abiModel.hasEvent(name)) {
                     return (options, callback) => {
                         return target.subscribe(target.abiModel.getEvent(name), cloneDeep(options), callback);
                     };
@@ -138,7 +132,7 @@ export default class EventSubscriptionsProxy {
             .createAllEventsLogSubscription(
                 this.allEventsLogDecoder,
                 this.contract,
-                this.allEventsOptionsMapper.map(this.abiModel, this.contract, options)
+                this.allEventsOptionsMapper.map(this.contract.abiModel, this.contract, options)
             )
             .subscribe(callback);
     }

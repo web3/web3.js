@@ -21,7 +21,6 @@
         "web3-core": "1.0.0-beta.46",
         "web3-core-helpers": "1.0.0-beta.46",
         "web3-core-method": "1.0.0-beta.46",
-        "web3-core-promievent": "1.0.0-beta.46",
         "web3-core-subscriptions": "1.0.0-beta.46",
         "web3-eth-abi": "1.0.0-beta.46",
         "web3-eth-accounts": "1.0.0-beta.46",

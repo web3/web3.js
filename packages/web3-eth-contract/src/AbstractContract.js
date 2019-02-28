@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import cloneDeep from 'lodash/cloneDeep';
 import {AbstractWeb3Module} from 'web3-core';
 
 export default class AbstractContract extends AbstractWeb3Module {
@@ -29,7 +28,6 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory
-     * @param {PromiEvent} PromiEvent
      * @param {AbiCoder} abiCoder
      * @param {Accounts} accounts
      * @param {Object} utils
@@ -45,7 +43,6 @@ export default class AbstractContract extends AbstractWeb3Module {
         providersModuleFactory,
         methodModuleFactory,
         contractModuleFactory,
-        PromiEvent,
         accounts,
         abiCoder,
         utils,
@@ -62,23 +59,16 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.formatters = formatters;
         this.abiMapper = this.contractModuleFactory.createAbiMapper();
         this.options = options;
-        this.PromiEvent = PromiEvent;
         this.accounts = accounts;
         this.methodFactory = this.contractModuleFactory.createMethodFactory();
         this.abiModel = this.abiMapper.map(abi);
         this.transactionSigner = options.transactionSigner;
-        this.methods = this.contractModuleFactory.createMethodsProxy(this, this.abiModel, this.PromiEvent);
-        this.events = this.contractModuleFactory.createEventSubscriptionsProxy(this, this.abiModel, this.PromiEvent);
+        this.methods = this.contractModuleFactory.createMethodsProxy(this);
+        this.events = this.contractModuleFactory.createEventSubscriptionsProxy(this);
 
         if (address) {
             this.address = address;
         }
-
-        return new Proxy(this, {
-            get: (target, name) => {
-                return target[name];
-            }
-        });
     }
 
     /**
@@ -211,9 +201,16 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @returns {AbstractContract}
      */
     clone() {
-        const clone = cloneDeep(this);
-        clone.methods = this.methods;
-        clone.events = this.events;
+        const clone = this.contractModuleFactory.createContract(
+            this.currentProvider,
+            this.providersModuleFactory,
+            this.accounts,
+            [],
+            '',
+            this.options
+        );
+
+        clone.abiModel = this.abiModel;
 
         return clone;
     }

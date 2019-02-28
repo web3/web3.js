@@ -63,7 +63,6 @@ export default class ContractModuleFactory {
      *
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {PromiEvent} PromiEvent
      * @param {Accounts} accounts
      * @param {Array} abi
      * @param {String} address
@@ -71,13 +70,12 @@ export default class ContractModuleFactory {
      *
      * @returns {AbstractContract}
      */
-    createContract(provider, providersModuleFactory, PromiEvent, accounts, abi, address, options) {
+    createContract(provider, providersModuleFactory, accounts, abi, address, options) {
         return new AbstractContract(
             provider,
             providersModuleFactory,
             this.methodModuleFactory,
             this,
-            PromiEvent,
             accounts,
             this.abiCoder,
             this.utils,
@@ -240,21 +238,17 @@ export default class ContractModuleFactory {
      *
      * @method createMethodsProxy
      *
-     * @param {AbstractContract} target
-     * @param {AbiModel} abiModel
-     * @param {PromiEvent} PromiEvent
+     * @param {AbstractContract} contract
      *
      * @returns {MethodsProxy}
      */
-    createMethodsProxy(target, abiModel, PromiEvent) {
+    createMethodsProxy(contract) {
         return new MethodsProxy(
-            target,
-            abiModel,
+            contract,
             this.createMethodFactory(),
             this.createMethodEncoder(),
             this.createMethodOptionsValidator(),
             this.createMethodOptionsMapper(),
-            PromiEvent
         );
     }
 
@@ -263,22 +257,18 @@ export default class ContractModuleFactory {
      *
      * @method createEventSubscriptionsProxy
      *
-     * @param {Contract} contract
-     * @param {AbiModel} abiModel
-     * @param {PromiEvent} PromiEvent
+     * @param {AbstractContract} contract
      *
      * @returns {EventSubscriptionsProxy}
      */
-    createEventSubscriptionsProxy(contract, abiModel, PromiEvent) {
+    createEventSubscriptionsProxy(contract) {
         return new EventSubscriptionsProxy(
             contract,
-            abiModel,
             this.createEventSubscriptionFactory(),
             this.createEventOptionsMapper(),
             this.createEventLogDecoder(),
             this.createAllEventsLogDecoder(),
             this.createAllEventsOptionsMapper(),
-            PromiEvent
         );
     }
 

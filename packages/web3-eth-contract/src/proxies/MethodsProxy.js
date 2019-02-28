@@ -20,37 +20,32 @@
  * @date 2018
  */
 
+import {PromiEvent} from 'web3-core-promievent';
 import isArray from 'lodash/isArray';
 import isFunction from 'lodash/isFunction';
 
 export default class MethodsProxy {
     /**
      * @param {AbstractContract} contract
-     * @param {AbiModel} abiModel
      * @param {MethodFactory} methodFactory
      * @param {MethodEncoder} methodEncoder
      * @param {MethodOptionsValidator} methodOptionsValidator
      * @param {MethodOptionsMapper} methodOptionsMapper
-     * @param {PromiEvent} PromiEvent
      *
      * @constructor
      */
     constructor(
         contract,
-        abiModel,
         methodFactory,
         methodEncoder,
         methodOptionsValidator,
-        methodOptionsMapper,
-        PromiEvent
+        methodOptionsMapper
     ) {
         this.contract = contract;
-        this.abiModel = abiModel;
         this.methodFactory = methodFactory;
         this.methodEncoder = methodEncoder;
         this.methodOptionsValidator = methodOptionsValidator;
         this.methodOptionsMapper = methodOptionsMapper;
-        this.PromiEvent = PromiEvent;
 
         return new Proxy(this, {
             /**
@@ -63,8 +58,8 @@ export default class MethodsProxy {
              * @returns {Function|Error}
              */
             get: (target, name) => {
-                if (this.abiModel.hasMethod(name)) {
-                    let abiItemModel = this.abiModel.getMethod(name);
+                if (this.contract.abiModel.hasMethod(name)) {
+                    let abiItemModel = this.contract.abiModel.getMethod(name);
 
                     let requestType = abiItemModel.requestType;
 
@@ -173,7 +168,7 @@ export default class MethodsProxy {
         try {
             method = this.createMethod(abiItemModel, methodArguments, requestType);
         } catch (error) {
-            const promiEvent = new this.PromiEvent();
+            const promiEvent = new PromiEvent();
 
             method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
             method.arguments = methodArguments;
@@ -194,7 +189,7 @@ export default class MethodsProxy {
 
         // TODO: The promiEvent will just be used for send methods I could move this logic directly to the AbstractSendMethod
         // TODO: Because of this I could remove the promievent module because it's just used in the SendTransaction- & SendRawTransaction method.
-        return method.execute(this.contract, new this.PromiEvent());
+        return method.execute(this.contract, new PromiEvent());
     }
 
     /**
