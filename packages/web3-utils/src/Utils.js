@@ -540,6 +540,7 @@ export const randomHex = (size, callback) => {
             throw new Error('Requested too many random bytes.');
         }
 
+        // NodeJS
         if (crypto.randomBytes) {
             const returnValue = '0x' + crypto.randomBytes(size).toString('hex');
             callback(false, returnValue);
@@ -547,6 +548,7 @@ export const randomHex = (size, callback) => {
             return returnValue;
         }
 
+        // Browser
         if (crypto.getRandomValues) {
             const returnValue = '0x'+ crypto.getRandomValues(
                 new Uint8Array(size)
