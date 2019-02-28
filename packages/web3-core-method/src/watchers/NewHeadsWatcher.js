@@ -50,7 +50,6 @@ export default class NewHeadsWatcher extends EventEmitter {
             this.confirmationSubscription = this.subscriptionsFactory
                 .createNewHeadsSubscription(moduleInstance)
                 .subscribe(() => {
-                    console.log('newHEAD');
                     this.emit('newHead');
                 });
 
