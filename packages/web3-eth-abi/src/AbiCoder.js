@@ -201,6 +201,10 @@ export default class AbiCoder {
 
         inputs.forEach((input, i) => {
             if (input.indexed) {
+                if (input.type === 'string') {
+                    return;
+                }
+
                 value = topics[topicCount];
 
                 if (this.isStaticType(input.type)) {
