@@ -45,7 +45,6 @@ describe('MethodsProxyTest', () => {
         contractMock.options = {data: ''};
         contractMock.abiModel = abiModelMock;
 
-
         new MethodFactory();
         methodFactoryMock = MethodFactory.mock.instances[0];
 

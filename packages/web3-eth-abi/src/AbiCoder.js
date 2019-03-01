@@ -22,7 +22,6 @@
  */
 
 import isArray from 'lodash/isArray';
-import map from 'lodash/map';
 import isObject from 'lodash/isObject';
 
 // TODO: Implement it by our self this can't be a dependency because of the importance of it.
@@ -146,7 +145,7 @@ export default class AbiCoder {
             throw new Error('Empty outputs array given!');
         }
 
-        if ((!bytes || bytes === '0x' || bytes === '0X')) {
+        if (!bytes || bytes === '0x' || bytes === '0X') {
             throw new Error(`Invalid bytes string given: ${bytes}`);
         }
 
