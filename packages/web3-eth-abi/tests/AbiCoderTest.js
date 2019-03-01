@@ -164,7 +164,7 @@ describe('AbiCoderTest', () => {
             {
                 indexed: true,
                 type: 'string',
-                name: 'five'
+                name: 'fifth'
             }
         ];
 
