@@ -150,9 +150,9 @@ export default class AbiCoder {
         }
 
         const result = this.ethersAbiCoder.decode(outputs, bytes);
+        let returnValues = {};
 
-        if (isArray(result) && result.length > 0) {
-            const returnValues = {};
+        if (outputs.length > 1) {
             let decodedValue;
             outputs.forEach((output, i) => {
                 decodedValue = result[i];
@@ -171,7 +171,10 @@ export default class AbiCoder {
             return returnValues;
         }
 
-        return result;
+        returnValues = {0: result};
+        returnValues[outputs[0].name] = result;
+
+        return returnValues;
     }
 
     /**
@@ -186,57 +189,70 @@ export default class AbiCoder {
      * @returns {Object} Object with named and indexed properties of the returnValues
      */
     decodeLog(inputs, data = '', topics) {
+        const returnValues = {};
         let topicCount = 0;
+        let value;
+        let nonIndexedInputKeys = [];
 
         if (!isArray(topics)) {
             topics = [topics];
         }
 
-        // TODO: check for anonymous logs?
-        // TODO: Refactor this to one loop
-        const notIndexedInputs = [];
-
-        const indexedParams = [];
-
         inputs.forEach((input, i) => {
             if (input.indexed) {
-                indexedParams[i] = ['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find((staticType) => {
-                    return input.type.indexOf(staticType) !== -1;
-                })
-                    ? this.decodeParameter(input.type, topics[topicCount])
-                    : topics[topicCount];
+                value = topics[topicCount];
+
+                if (this.isStaticType(input.type)) {
+                    value = this.decodeParameter(input, topics[topicCount]);
+                }
+
+                if (input.type === 'string') {
+                    return;
+                }
+
+                returnValues[i] = value;
+                returnValues[input.name] = value;
                 topicCount++;
-            } else {
-                notIndexedInputs[i] = input;
+
+                return;
             }
+
+            nonIndexedInputKeys.push({key: i, input: input});
         });
 
-        const nonIndexedData = data;
-
-        const notIndexedParams = nonIndexedData
-            ? this.decodeParameters(notIndexedInputs.filter(Boolean), nonIndexedData)
-            : [];
-
-        let notIndexedOffset = 0;
-        const returnValues = {};
-
-        inputs.forEach((res, i) => {
-            if (res.indexed) notIndexedOffset++;
-
-            returnValues[i] = res.type === 'string' ? '' : null;
-
-            if (!res.indexed && typeof notIndexedParams[i - notIndexedOffset] !== 'undefined') {
-                returnValues[i] = notIndexedParams[i - notIndexedOffset];
-            }
-            if (typeof indexedParams[i] !== 'undefined') {
-                returnValues[i] = indexedParams[i];
-            }
-
-            if (res.name) {
-                returnValues[res.name] = returnValues[i];
-            }
-        });
+        if (data) {
+            nonIndexedInputKeys.forEach((item) => {
+                value = this.decodeParameter(item.input, data);
+                returnValues[item.key] = value;
+                returnValues[item.input.name] = value;
+            });
+        }
 
         return returnValues;
+    }
+
+    /**
+     * Checks if a given type string is a static solidity type
+     *
+     * @method isStaticType
+     *
+     * @param {String} type
+     *
+     * @returns {Boolean}
+     */
+    isStaticType(type) {
+        if (type === 'bytes') {
+            return false;
+        }
+
+        if (type === 'string') {
+            return false;
+        }
+
+        if (type.indexOf('[') && type.slice(type.indexOf('[')).length === 2) {
+            return false;
+        }
+
+        return true;
     }
 }

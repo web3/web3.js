@@ -21,7 +21,10 @@
  */
 
 import * as Utils from 'web3-utils';
-import AbiModuleFactory from './factories/AbiModuleFactory';
+import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
+import EthAbiCoder from './AbiCoder.js';
 
 /**
  * Returns an object of AbiCoder
@@ -31,5 +34,18 @@ import AbiModuleFactory from './factories/AbiModuleFactory';
  * @constructor
  */
 export const AbiCoder = () => {
-    return new AbiModuleFactory().createAbiCoder(Utils);
+    return new EthAbiCoder(
+        Utils,
+        // TODO: Change this anonymous method to a accessable method because of the testing.
+        new EthersAbiCoder((type, value) => {
+            if (
+                (type.match(/^u?int/) && !isArray(value) && !isObject(value)) ||
+                value.constructor.name !== 'BigNumber'
+            ) {
+                return value.toString();
+            }
+
+            return value;
+        })
+    );
 };

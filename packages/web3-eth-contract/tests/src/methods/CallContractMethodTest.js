@@ -59,7 +59,7 @@ describe('CallContractMethodTest', () => {
     it('calls afterExecution and returns the first array item as result', () => {
         abiCoderMock.decodeParameters = jest.fn();
 
-        abiCoderMock.decodeParameters.mockReturnValueOnce(['0x0']);
+        abiCoderMock.decodeParameters.mockReturnValueOnce('0x0');
 
         abiItemModelMock.getOutputs.mockReturnValueOnce([{name: 'result', type: 'bytes'}]);
 
