@@ -242,15 +242,6 @@ export default class AbiCoder {
      * @returns {Boolean}
      */
     isStaticType(type) {
-        switch (type) {
-            case 'bytes':
-                return false;
-            case (type.indexOf('[') || type.indexOf('(')):
-                return false;
-            case 'string':
-                return false;
-            default:
-                return true;
-        }
+        return !(type === 'bytes' || type === 'string' || type.indexOf('[') || type.indexOf('('));
     }
 }
