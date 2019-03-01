@@ -25,9 +25,7 @@ import {ProvidersModuleFactory} from 'web3-providers';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
 import {MethodModuleFactory} from 'web3-core-method';
-import {PromiEvent} from 'web3-core-promievent';
 import ContractModuleFactory from './factories/ContractModuleFactory';
-import AbstractContract from './AbstractContract';
 
 export AbstractContract from './AbstractContract';
 export ContractModuleFactory from './factories/ContractModuleFactory';
@@ -49,21 +47,11 @@ export ContractModuleFactory from './factories/ContractModuleFactory';
  * @constructor
  */
 export const Contract = (provider, abi, accounts, address, options) => {
-    const abiCoder = new AbiCoder();
-    const methodModuleFactory = new MethodModuleFactory();
-
-    return new AbstractContract(
-        provider,
-        new ProvidersModuleFactory(),
-        new MethodModuleFactory(),
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
-        PromiEvent,
-        accounts,
-        abiCoder,
+    return new ContractModuleFactory(
         Utils,
         formatters,
-        abi,
-        address,
-        options
-    );
+        new AbiCoder(),
+        accounts,
+        new MethodModuleFactory()
+    ).createContract(provider, new ProvidersModuleFactory(), accounts, abi, address, options);
 };

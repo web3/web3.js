@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import {PromiEvent} from 'web3-core-promievent';
 import {AbstractWeb3Module} from 'web3-core';
 
 export default class Eth extends AbstractWeb3Module {
@@ -95,7 +94,6 @@ export default class Eth extends AbstractWeb3Module {
             const contract = this.contractModuleFactory.createContract(
                 this.currentProvider,
                 this.providersModuleFactory,
-                PromiEvent,
                 this.accounts,
                 abi,
                 address,

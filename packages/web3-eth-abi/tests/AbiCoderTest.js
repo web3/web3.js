@@ -89,42 +89,6 @@ describe('AbiCoderTest', () => {
         expect(ethersAbiCoderMock.encode).toHaveBeenCalledWith([{components: true}], ['']);
     });
 
-    it('calls _mapTypes and returns the expected types format', () => {
-        const types = [
-            {
-                'StructName[]': {
-                    item: 'type',
-                    ChildStruct: {
-                        item: 'type'
-                    }
-                }
-            }
-        ];
-
-        expect(abiCoder._mapTypes(types)).toEqual([
-            {
-                type: 'tuple[]',
-                name: 'StructName',
-                components: [
-                    {
-                        name: 'item',
-                        type: 'type'
-                    },
-                    {
-                        type: 'tuple',
-                        name: 'ChildStruct',
-                        components: [
-                            {
-                                name: 'item',
-                                type: 'type'
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]);
-    });
-
     it('calls encodeFunctionCall and returns the expected string', () => {
         Utils.sha3 = jest.fn(() => {
             return '0x000000000';
@@ -148,15 +112,19 @@ describe('AbiCoderTest', () => {
     it('calls decodeParameters and throws an error', () => {
         expect(() => {
             abiCoder.decodeParameters(['0'], '0x');
-        }).toThrow("Returned values aren't valid, did it run Out of Gas?");
-
-        expect(() => {
-            abiCoder.decodeParameters(['0'], '0X');
-        }).toThrow("Returned values aren't valid, did it run Out of Gas?");
+        }).toThrow('Invalid bytes string given: 0x');
 
         expect(() => {
             abiCoder.decodeParameters(['0']);
-        }).toThrow("Returned values aren't valid, did it run Out of Gas?");
+        }).toThrow('Invalid bytes string given: undefined');
+
+        expect(() => {
+            abiCoder.decodeParameters(['0'], '0X');
+        }).toThrow('Invalid bytes string given: 0X');
+
+        expect(() => {
+            abiCoder.decodeParameters([], '0X');
+        }).toThrow('Empty outputs array given!');
     });
 
     it('calls decodeParameter and returns the expected object', () => {

@@ -1,10 +1,8 @@
-import cloneDeep from 'lodash/cloneDeep';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
 import {HttpProvider, ProvidersModuleFactory, ProviderDetector, ProviderResolver} from 'web3-providers';
 import {MethodModuleFactory, GetPastLogsMethod} from 'web3-core-method';
-import {PromiEvent} from 'web3-core-promievent';
 import {AbstractWeb3Module} from 'web3-core';
 import AbiMapper from '../../src/mappers/AbiMapper';
 import ContractModuleFactory from '../../src/factories/ContractModuleFactory';
@@ -23,7 +21,6 @@ jest.mock('ProviderResolver');
 jest.mock('MethodModuleFactory');
 jest.mock('GetPastLogsMethod');
 jest.mock('AbiCoder');
-jest.mock('lodash/cloneDeep');
 jest.mock('../../src/mappers/AbiMapper');
 jest.mock('../../src/factories/ContractModuleFactory');
 jest.mock('../../src/factories/MethodFactory');
@@ -119,7 +116,6 @@ describe('AbstractContractTest', () => {
             providersModuleFactoryMock,
             methodModuleFactoryMock,
             contractModuleFactoryMock,
-            PromiEvent,
             {},
             abiCoderMock,
             Utils,
@@ -135,17 +131,9 @@ describe('AbstractContractTest', () => {
 
         expect(contractModuleFactoryMock.createMethodFactory).toHaveBeenCalled();
 
-        expect(contractModuleFactoryMock.createMethodsProxy).toHaveBeenCalledWith(
-            abstractContract,
-            abiModelMock,
-            PromiEvent
-        );
+        expect(contractModuleFactoryMock.createMethodsProxy).toHaveBeenCalledWith(abstractContract);
 
-        expect(contractModuleFactoryMock.createEventSubscriptionsProxy).toHaveBeenCalledWith(
-            abstractContract,
-            abiModelMock,
-            PromiEvent
-        );
+        expect(contractModuleFactoryMock.createEventSubscriptionsProxy).toHaveBeenCalledWith(abstractContract);
 
         expect(abiMapperMock.map).toHaveBeenCalledWith([]);
 
@@ -160,8 +148,6 @@ describe('AbstractContractTest', () => {
         expect(abstractContract.abiMapper).toEqual(abiMapperMock);
 
         expect(abstractContract.options).toEqual({address: '0x0', transactionSigner: {}});
-
-        expect(abstractContract.PromiEvent).toEqual(PromiEvent);
 
         expect(abstractContract.accounts).toEqual({});
 
@@ -283,11 +269,18 @@ describe('AbstractContractTest', () => {
     });
 
     it('calls clone and returns the cloned contract object', () => {
-        cloneDeep.mockReturnValueOnce({});
+        contractModuleFactoryMock.createContract.mockReturnValueOnce({});
 
-        expect(abstractContract.clone()).toEqual({methods: abstractContract.methods, events: abstractContract.events});
+        expect(abstractContract.clone()).toEqual({abiModel: abstractContract.abiModel});
 
-        expect(cloneDeep).toHaveBeenCalledWith(abstractContract);
+        expect(contractModuleFactoryMock.createContract).toHaveBeenCalledWith(
+            abstractContract.currentProvider,
+            abstractContract.providersModuleFactory,
+            abstractContract.accounts,
+            [],
+            '',
+            abstractContract.options
+        );
     });
 
     it('gets the jsonInterface property', () => {

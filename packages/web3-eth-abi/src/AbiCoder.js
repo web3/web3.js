@@ -96,100 +96,7 @@ export default class AbiCoder {
      * @returns {String} encoded list of params
      */
     encodeParameters(types, params) {
-        return this.ethersAbiCoder.encode(this._mapTypes(types), params);
-    }
-
-    /**
-     * Map types if simplified format is used
-     *
-     * @method _mapTypes
-     *
-     * @param {Array} types
-     *
-     * @returns {Array}
-     */
-    _mapTypes(types) {
-        const mappedTypes = [];
-        types.forEach((type) => {
-            if (this._isSimplifiedStructFormat(type)) {
-                const structName = Object.keys(type)[0];
-                mappedTypes.push(
-                    Object.assign(this._mapStructNameAndType(structName), {
-                        components: this._mapStructToCoderFormat(type[structName])
-                    })
-                );
-
-                return;
-            }
-
-            mappedTypes.push(type);
-        });
-
-        return mappedTypes;
-    }
-
-    /**
-     * Check if type is simplified struct format
-     *
-     * @method _isSimplifiedStructFormat
-     *
-     * @param {String | Object} type
-     *
-     * @returns {Boolean}
-     */
-    _isSimplifiedStructFormat(type) {
-        return typeof type === 'object' && typeof type.components === 'undefined' && typeof type.name === 'undefined';
-    }
-
-    /**
-     * Maps the correct tuple type and name when the simplified format in encode/decodeParameter is used
-     *
-     * @method _mapStructNameAndType
-     *
-     * @param {String} structName
-     *
-     * @returns {{type: string, name: *}}
-     */
-    _mapStructNameAndType(structName) {
-        let type = 'tuple';
-
-        if (structName.indexOf('[]') > -1) {
-            type = 'tuple[]';
-            structName = structName.slice(0, -2);
-        }
-
-        return {type, name: structName};
-    }
-
-    /**
-     * Maps the simplified format in to the expected format of the AbiCoder
-     *
-     * @method _mapStructToCoderFormat
-     *
-     * @param {Object} struct
-     *
-     * @returns {Array}
-     */
-    _mapStructToCoderFormat(struct) {
-        const components = [];
-        Object.keys(struct).forEach((key) => {
-            if (typeof struct[key] === 'object') {
-                components.push(
-                    Object.assign(this._mapStructNameAndType(key), {
-                        components: this._mapStructToCoderFormat(struct[key])
-                    })
-                );
-
-                return;
-            }
-
-            components.push({
-                name: key,
-                type: struct[key]
-            });
-        });
-
-        return components;
+        return this.ethersAbiCoder.encode(types, params);
     }
 
     /**
@@ -228,33 +135,43 @@ export default class AbiCoder {
      *
      * @method decodeParameter
      *
-     * @param {Array} outputs
+     * @param {Array<String|Object>|Object} outputs
      * @param {String} bytes
      *
      * @returns {Object} Object with named and indexed properties of the returnValues
      */
     decodeParameters(outputs, bytes) {
-        if (outputs.length > 0 && (!bytes || bytes === '0x' || bytes === '0X')) {
-            throw new Error("Returned values aren't valid, did it run Out of Gas?");
+        if (isArray(outputs) && outputs.length === 0) {
+            throw new Error('Empty outputs array given!');
         }
 
-        const res = this.ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`);
+        if (!bytes || bytes === '0x' || bytes === '0X') {
+            throw new Error(`Invalid bytes string given: ${bytes}`);
+        }
 
-        const returnValues = {};
+        const result = this.ethersAbiCoder.decode(outputs, bytes);
 
-        let decodedValue;
-        outputs.forEach((output, i) => {
-            decodedValue = res[i];
-            decodedValue = decodedValue === '0x' ? null : decodedValue;
+        if (isArray(result) && result.length > 0) {
+            const returnValues = {};
+            let decodedValue;
+            outputs.forEach((output, i) => {
+                decodedValue = result[i];
 
-            returnValues[i] = decodedValue;
+                if (decodedValue === '0x') {
+                    decodedValue = null;
+                }
 
-            if (isObject(output) && output.name) {
-                returnValues[output.name] = decodedValue;
-            }
-        });
+                returnValues[i] = decodedValue;
 
-        return returnValues;
+                if (isObject(output) && output.name) {
+                    returnValues[output.name] = decodedValue;
+                }
+            });
+
+            return returnValues;
+        }
+
+        return result;
     }
 
     /**

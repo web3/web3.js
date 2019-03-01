@@ -38,9 +38,12 @@ export default class AbiModuleFactory {
     createAbiCoder(utils) {
         return new AbiCoder(
             utils,
+            // TODO: Change this anonymous method to a accessable method because of the testing.
             new EthersAbiCoder((type, value) => {
-                // TODO: Change this anonymous method to a accessable method because of the testing.
-                if (type.match(/^u?int/) && !isArray(value) && (!isObject(value) || value.constructor.name !== 'BN')) {
+                if (
+                    (type.match(/^u?int/) && !isArray(value) && !isObject(value)) ||
+                    value.constructor.name !== 'BigNumber'
+                ) {
                     return value.toString();
                 }
 
