@@ -220,7 +220,7 @@ export default class AbiCoder {
 
         if (data) {
             nonIndexedInputKeys.forEach((item) => {
-                value = this.decodeParameter(item.input, topics[topicCount]);
+                value = this.decodeParameter(item.input, data);
                 returnValues[item.key] = value;
                 returnValues[item.input.name] = value;
             });
