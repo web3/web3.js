@@ -157,26 +157,29 @@ export default class AbiCoder {
             });
         }
 
-        const res = this.ethersAbiCoder.decode(mappedOutputs, bytes);
+        const result = this.ethersAbiCoder.decode(mappedOutputs, bytes);
 
-        const returnValues = {};
+        if (isArray(result) && result.length > 0) {
+            const returnValues = {};
+            let decodedValue;
+            outputs.forEach((output, i) => {
+                decodedValue = result[i];
 
-        let decodedValue;
-        outputs.forEach((output, i) => {
-            decodedValue = res[i];
+                if (decodedValue === '0x') {
+                    decodedValue = null;
+                }
 
-            if (decodedValue === '0x') {
-                decodedValue = null;
-            }
+                returnValues[i] = decodedValue;
 
-            returnValues[i] = decodedValue;
+                if (isObject(output) && output.name) {
+                    returnValues[output.name] = decodedValue;
+                }
+            });
 
-            if (isObject(output) && output.name) {
-                returnValues[output.name] = decodedValue;
-            }
-        });
+            return returnValues;
+        }
 
-        return returnValues;
+        return result;
     }
 
     /**
