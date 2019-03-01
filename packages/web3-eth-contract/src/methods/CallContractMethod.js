@@ -55,7 +55,7 @@ export default class CallContractMethod extends CallMethod {
         response = this.abiCoder.decodeParameters(outputs, response);
 
         if (outputs.length === 1) {
-            return response[0];
+            return response;
         }
 
         return response;

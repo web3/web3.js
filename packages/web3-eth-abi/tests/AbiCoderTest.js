@@ -102,7 +102,7 @@ describe('AbiCoderTest', () => {
     });
 
     it('calls decodeParameters and returns the expected object', () => {
-        ethersAbiCoderMock.decode.mockReturnValueOnce(['0']);
+        ethersAbiCoderMock.decode.mockReturnValueOnce('0');
 
         expect(abiCoder.decodeParameters([{name: 'output'}], '0x0')).toEqual({output: '0', '0': '0'});
 
@@ -128,7 +128,7 @@ describe('AbiCoderTest', () => {
     });
 
     it('calls decodeParameter and returns the expected object', () => {
-        ethersAbiCoderMock.decode.mockReturnValueOnce(['0']);
+        ethersAbiCoderMock.decode.mockReturnValueOnce('0');
 
         expect(abiCoder.decodeParameter({name: 'output'}, '0x0')).toEqual('0');
 
@@ -136,29 +136,33 @@ describe('AbiCoderTest', () => {
     });
 
     it('calls decodeLog and returns the expected object', () => {
-        ethersAbiCoderMock.decode.mockReturnValueOnce(['0']).mockReturnValueOnce(['', '', '0']);
+        ethersAbiCoderMock.decode.mockReturnValueOnce('0');
+        ethersAbiCoderMock.decode.mockReturnValueOnce(['', '', '0']);
 
         const inputs = [
             {
                 components: true,
                 indexed: true,
-                type: 'bool'
+                type: 'bool',
+                name: 'first'
             },
             {
                 components: true,
                 indexed: true,
-                type: ''
+                type: '',
+                name: 'second'
             },
             {
                 components: true,
                 indexed: false,
-                name: 'input'
+                name: 'input',
             }
         ];
 
-        expect(abiCoder.decodeLog(inputs, '0x0', ['0x0', '0x0'])).toEqual({'0': '0', '1': '0x0', '2': '', input: ''});
+        expect(abiCoder.decodeLog(inputs, '0x0', ['0x0', '0x0']))
+            .toEqual({'0': '0', 'first': '0', 'second': '0x0', '1': '0x0', '2': ['', '', '0'], input: ['', '', '0']});
 
-        expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(1, [inputs[0].type], '0x0');
+        expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(1, [inputs[0]], '0x0');
 
         expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(2, [inputs[2]], '0x0');
     });
