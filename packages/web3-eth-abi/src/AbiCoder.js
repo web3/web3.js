@@ -202,6 +202,7 @@ export default class AbiCoder {
         inputs.forEach((input, i) => {
             if (input.indexed) {
                 if (input.type === 'string') {
+                    topicCount++;
                     return;
                 }
 
@@ -209,10 +210,6 @@ export default class AbiCoder {
 
                 if (this.isStaticType(input.type)) {
                     value = this.decodeParameter(input, topics[topicCount]);
-                }
-
-                if (input.type === 'string') {
-                    return;
                 }
 
                 returnValues[i] = value;
