@@ -356,7 +356,7 @@ Decodes ABI encoded log data and indexed topic data.
 Parameters
 ----------
 
-1. ``inputs`` - ``Object``: A :ref:`JSON interface <glossary-json-interface>` inputs array. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
+1. ``inputs`` - ``Array``: A :ref:`JSON interface <glossary-json-interface>` inputs array. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
 2. ``hexString`` - ``String``: The ABI byte code in the ``data`` field of a log.
 3. ``topics`` - ``Array``: An array with the index parameter topics of the log, without the topic[0] if its a non-anonymous event, otherwise with topic[0].
 
