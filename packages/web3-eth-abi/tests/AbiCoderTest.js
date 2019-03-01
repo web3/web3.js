@@ -170,7 +170,7 @@ describe('AbiCoderTest', () => {
         expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(1, [inputs[0]], '0x0');
 
         expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(2, [inputs[1]], '0x0');
-        
+
         expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(3, [inputs[2]], '0x0');
     });
 });
