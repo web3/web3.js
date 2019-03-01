@@ -193,6 +193,7 @@ export default class AbiCoder {
         let topicCount = 0;
         let value;
         let nonIndexedInputKeys = [];
+        let nonIndexedInputItems = [];
 
         if (!isArray(topics)) {
             topics = [topics];
@@ -217,14 +218,16 @@ export default class AbiCoder {
                 return;
             }
 
-            nonIndexedInputKeys.push({key: i, input: input});
+            nonIndexedInputKeys.push(i);
+            nonIndexedInputItems.push(input);
         });
 
         if (data) {
-            nonIndexedInputKeys.forEach((item) => {
-                value = this.decodeParameter(item.input, data);
-                returnValues[item.key] = value;
-                returnValues[item.input.name] = value;
+            let values = this.decodeParameters(nonIndexedInputItems, data);
+
+            nonIndexedInputKeys.forEach((itemKey, index) => {
+                returnValues[itemKey] = values[index];
+                returnValues[nonIndexedInputItems[index].name] = values[index];
             });
         }
 
