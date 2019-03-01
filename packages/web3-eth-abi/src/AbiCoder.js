@@ -189,7 +189,6 @@ export default class AbiCoder {
      * @returns {Object} Object with named and indexed properties of the returnValues
      */
     decodeLog(inputs, data = '', topics) {
-        const staticTypes = ['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'];
         const returnValues = {};
         let topicCount = 0;
         let value;
@@ -203,10 +202,14 @@ export default class AbiCoder {
             if (input.indexed) {
                 value = topics[topicCount];
 
-                if (staticTypes.indexOf(input.type) > -1) {
+                if (this.isStaticType(input.type)) {
                     value = this.decodeParameter(input, topics[topicCount]);
 
                     topicCount++;
+                }
+
+                if (input.type === 'string') {
+                    return;
                 }
 
                 returnValues[i] = value;
@@ -227,5 +230,27 @@ export default class AbiCoder {
         }
 
         return returnValues;
+    }
+
+    /**
+     * Checks if a given type string is a static solidity type
+     *
+     * @method isStaticType
+     *
+     * @param {String} type
+     *
+     * @returns {Boolean}
+     */
+    isStaticType(type) {
+        switch (type) {
+            case 'bytes':
+                return false;
+            case (type.indexOf('[') || type.indexOf('(')):
+                return false;
+            case 'string':
+                return false;
+            default:
+                return true;
+        }
     }
 }

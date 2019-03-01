@@ -155,12 +155,18 @@ describe('AbiCoderTest', () => {
             {
                 components: true,
                 indexed: false,
-                name: 'input',
+                name: 'input'
             }
         ];
 
-        expect(abiCoder.decodeLog(inputs, '0x0', ['0x0', '0x0']))
-            .toEqual({'0': '0', 'first': '0', 'second': '0x0', '1': '0x0', '2': ['', '', '0'], input: ['', '', '0']});
+        expect(abiCoder.decodeLog(inputs, '0x0', ['0x0', '0x0'])).toEqual({
+            '0': '0',
+            first: '0',
+            second: '0x0',
+            '1': '0x0',
+            '2': ['', '', '0'],
+            input: ['', '', '0']
+        });
 
         expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(1, [inputs[0]], '0x0');
 
