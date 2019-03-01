@@ -4,7 +4,7 @@ import AbiCoder from '../src/AbiCoder';
 
 // Mocks
 jest.mock('Utils');
-jest.mock('ethers/utils/abi-coder');
+jest.mock('ethers');
 
 /**
  * AbiCoder test
@@ -142,7 +142,7 @@ describe('AbiCoderTest', () => {
 
         expect(abiCoder.decodeParameters([{name: 'output'}], '0x0')).toEqual({output: '0', '0': '0'});
 
-        expect(ethersAbiCoderMock.decode).toHaveBeenCalledWith([{name: 'output'}], '0x0');
+        expect(ethersAbiCoderMock.decode).toHaveBeenCalledWith([{name: 'output'}], '0x00');
     });
 
     it('calls decodeParameters and throws an error', () => {
@@ -164,7 +164,7 @@ describe('AbiCoderTest', () => {
 
         expect(abiCoder.decodeParameter({name: 'output'}, '0x0')).toEqual('0');
 
-        expect(ethersAbiCoderMock.decode).toHaveBeenCalledWith([{name: 'output'}], '0x0');
+        expect(ethersAbiCoderMock.decode).toHaveBeenCalledWith([{name: 'output'}], '0x00');
     });
 
     it('calls decodeLog and returns the expected object', () => {
@@ -190,8 +190,8 @@ describe('AbiCoderTest', () => {
 
         expect(abiCoder.decodeLog(inputs, '0x0', ['0x0', '0x0'])).toEqual({'0': '0', '1': '0x0', '2': '', input: ''});
 
-        expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(1, [inputs[0].type], '0x0');
+        expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(1, [inputs[0].type], '0x00');
 
-        expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(2, [inputs[2]], '0x0');
+        expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(2, [inputs[2]], '0x00');
     });
 });

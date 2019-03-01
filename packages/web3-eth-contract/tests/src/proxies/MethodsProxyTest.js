@@ -37,12 +37,14 @@ describe('MethodsProxyTest', () => {
         abiItemModelMock;
 
     beforeEach(() => {
+        new AbiModel();
+        abiModelMock = AbiModel.mock.instances[0];
+
         new AbstractContract();
         contractMock = AbstractContract.mock.instances[0];
         contractMock.options = {data: ''};
+        contractMock.abiModel = abiModelMock;
 
-        new AbiModel();
-        abiModelMock = AbiModel.mock.instances[0];
 
         new MethodFactory();
         methodFactoryMock = MethodFactory.mock.instances[0];
@@ -61,19 +63,15 @@ describe('MethodsProxyTest', () => {
 
         methodsProxy = new MethodsProxy(
             contractMock,
-            abiModelMock,
             methodFactoryMock,
             methodEncoderMock,
             methodOptionsValidatorMock,
-            methodOptionsMapperMock,
-            PromiEvent
+            methodOptionsMapperMock
         );
     });
 
     it('constructor check', () => {
         expect(methodsProxy.contract).toEqual(contractMock);
-
-        expect(methodsProxy.abiModel).toEqual(abiModelMock);
 
         expect(methodsProxy.methodFactory).toEqual(methodFactoryMock);
 
@@ -82,8 +80,6 @@ describe('MethodsProxyTest', () => {
         expect(methodsProxy.methodOptionsValidator).toEqual(methodOptionsValidatorMock);
 
         expect(methodsProxy.methodOptionsMapper).toEqual(methodOptionsMapperMock);
-
-        expect(methodsProxy.PromiEvent).toEqual(PromiEvent);
     });
 
     it('calls a call method over the proxy', async () => {

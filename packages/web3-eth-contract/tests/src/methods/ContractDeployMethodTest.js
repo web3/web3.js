@@ -74,7 +74,7 @@ describe('ContractDeployMethodTest', () => {
 
         const clonedContract = contractDeployMethod.afterExecution({contractAddress: '0x0'});
 
-        expect(clonedContract.options.address).toEqual('0x0');
+        expect(clonedContract.address).toEqual('0x0');
 
         expect(contractMock.clone).toHaveBeenCalled();
     });

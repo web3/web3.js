@@ -38,11 +38,12 @@ describe('EventSubscriptionsProxyTest', () => {
         abiItemModelMock;
 
     beforeEach(() => {
-        new AbstractContract();
-        contractMock = AbstractContract.mock.instances[0];
-
         new AbiModel();
         abiModelMock = AbiModel.mock.instances[0];
+
+        new AbstractContract();
+        contractMock = AbstractContract.mock.instances[0];
+        contractMock.abiModel = abiModelMock;
 
         new EventSubscriptionFactory();
         eventSubscriptionFactoryMock = EventSubscriptionFactory.mock.instances[0];
@@ -64,13 +65,11 @@ describe('EventSubscriptionsProxyTest', () => {
 
         eventSubscriptionsProxy = new EventSubscriptionsProxy(
             contractMock,
-            abiModelMock,
             eventSubscriptionFactoryMock,
             eventOptionsMapperMock,
             eventLogDecoderMock,
             allEventsLogDecoderMock,
-            allEventsOptionsMapperMock,
-            PromiEvent
+            allEventsOptionsMapperMock
         );
     });
 
@@ -79,8 +78,6 @@ describe('EventSubscriptionsProxyTest', () => {
 
         expect(eventSubscriptionsProxy.eventSubscriptionFactory).toEqual(eventSubscriptionFactoryMock);
 
-        expect(eventSubscriptionsProxy.abiModel).toEqual(abiModelMock);
-
         expect(eventSubscriptionsProxy.eventOptionsMapper).toEqual(eventOptionsMapperMock);
 
         expect(eventSubscriptionsProxy.eventLogDecoder).toEqual(eventLogDecoderMock);
@@ -88,8 +85,6 @@ describe('EventSubscriptionsProxyTest', () => {
         expect(eventSubscriptionsProxy.allEventsLogDecoder).toEqual(allEventsLogDecoderMock);
 
         expect(eventSubscriptionsProxy.allEventsOptionsMapper).toEqual(allEventsOptionsMapperMock);
-
-        expect(eventSubscriptionsProxy.PromiEvent).toEqual(PromiEvent);
     });
 
     it('subscribes an event over the proxy', () => {

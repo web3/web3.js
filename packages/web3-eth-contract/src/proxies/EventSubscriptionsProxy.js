@@ -62,7 +62,7 @@ export default class EventSubscriptionsProxy {
             get: (target, name) => {
                 if (this.contract.abiModel.hasEvent(name)) {
                     return (options, callback) => {
-                        return target.subscribe(target.abiModel.getEvent(name), cloneDeep(options), callback);
+                        return target.subscribe(target.contract.abiModel.getEvent(name), cloneDeep(options), callback);
                     };
                 }
 
