@@ -136,28 +136,21 @@ export default class AbiCoder {
      *
      * @method decodeParameter
      *
-     * @param {Array|Objects} outputs
+     * @param {Array<String|Object>|Object} outputs
      * @param {String} bytes
      *
      * @returns {Object} Object with named and indexed properties of the returnValues
      */
     decodeParameters(outputs, bytes) {
         if (isArray(outputs) && outputs.length === 0) {
-            throw new Error('Parameter outputs is empty or not of type Array.');
+            throw new Error('Empty outputs array given!');
         }
 
         if ((!bytes || bytes === '0x' || bytes === '0X')) {
             throw new Error(`Invalid bytes string given: ${bytes}`);
         }
 
-        let mappedOutputs = outputs;
-        if (isObject(outputs)) {
-            mappedOutputs = map(outputs, (value) => {
-                return value.type;
-            });
-        }
-
-        const result = this.ethersAbiCoder.decode(mappedOutputs, bytes);
+        const result = this.ethersAbiCoder.decode(outputs, bytes);
 
         if (isArray(result) && result.length > 0) {
             const returnValues = {};
