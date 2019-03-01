@@ -204,8 +204,6 @@ export default class AbiCoder {
 
                 if (this.isStaticType(input.type)) {
                     value = this.decodeParameter(input, topics[topicCount]);
-
-                    topicCount++;
                 }
 
                 if (input.type === 'string') {
@@ -214,6 +212,7 @@ export default class AbiCoder {
 
                 returnValues[i] = value;
                 returnValues[input.name] = value;
+                topicCount++;
 
                 return;
             }
