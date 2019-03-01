@@ -160,14 +160,19 @@ describe('AbiCoderTest', () => {
                 indexed: false,
                 type: 'string',
                 name: 'fourth'
+            },
+            {
+                indexed: true,
+                type: 'string',
+                name: 'five'
             }
         ];
 
         expect(abiCoder.decodeLog(inputs, '0x0', ['0x0', '0x0'])).toEqual({
             '0': '0',
             first: '0',
-            second: ['', '', '0'],
             '1': ['', '', '0'],
+            second: ['', '', '0'],
             '2': '0',
             third: '0',
             '3': '0',
