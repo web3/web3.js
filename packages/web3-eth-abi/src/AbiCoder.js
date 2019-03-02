@@ -202,7 +202,6 @@ export default class AbiCoder {
         inputs.forEach((input, i) => {
             if (input.indexed) {
                 if (input.type === 'string') {
-                    topicCount++;
                     return;
                 }
 
