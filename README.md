@@ -27,6 +27,19 @@ npm install web3
 yarn add web3
 ```
 
+### Meteor
+
+```bash
+meteor npm install --save web3@1.x
+```
+
+In your files simply do:
+```js
+import Web3 from 'web3';
+// or
+const Web3 = require('web3');
+```
+
 ## Usage
 
 ```js
