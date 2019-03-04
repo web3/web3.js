@@ -73,8 +73,6 @@ export default class AbstractMethodFactory {
     }
 
     /**
-     * TODO: Find a cleaner way for the dependency resolution here.
-     *
      * Returns an MethodModel
      *
      * @param {String} name

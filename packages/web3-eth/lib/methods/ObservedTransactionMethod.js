@@ -40,6 +40,10 @@ export default class ObservedTransactionMethod extends AbstractMethod {
         this.promiEvent = new PromiEvent();
     }
 
+    static get ObservedTransactionMethod() {
+        return true;
+    }
+
     /**
      * Sends the request and returns a PromiEvent Object
      *

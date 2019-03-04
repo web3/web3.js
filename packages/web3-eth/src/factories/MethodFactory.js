@@ -55,16 +55,19 @@ import {
     VersionMethod,
     ChainIdMethod
 } from 'web3-core-method';
+import TransactionObserver from '../observers/TransactionObserver';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {SubscriptionsFactory} subscriptionsFactory
      *
      * @constructor
      */
-    constructor(utils, formatters) {
+    constructor(utils, formatters, subscriptionsFactory) {
         super(utils, formatters);
+        this.subscriptionsFactory = subscriptionsFactory;
 
         this.methods = {
             getNodeInfo: GetNodeInfoMethod,
@@ -100,5 +103,22 @@ export default class MethodFactory extends AbstractMethodFactory {
             getId: VersionMethod,
             getChainId: ChainIdMethod
         };
+    }
+
+    /**
+     * Returns an MethodModel
+     *
+     * @param {String} name
+     *
+     * @returns {AbstractMethod}
+     */
+    createMethod(name) {
+        const method = this.methods[name];
+
+        if (method.ObservedTransactionMethod) {
+            return new method(this.utils, this.formatters, new TransactionObserver(this, this.subscriptionsFactory));
+        }
+
+        return new method(this.utils, this.formatters);
     }
 }
