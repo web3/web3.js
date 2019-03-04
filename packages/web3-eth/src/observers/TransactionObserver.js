@@ -70,30 +70,30 @@ export default class TransactionObserver {
         this.newHeadsSubscription.moduleInstance = moduleInstance;
 
         this.newHeadsSubscription.subscribe((newHead) => {
-                this.getTransactionReceiptMethod.parameters = [transactionHash];
+            this.getTransactionReceiptMethod.parameters = [transactionHash];
 
-                this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
-                    if (receipt) {
-                        this.confirmations++;
+            this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
+                if (receipt) {
+                    this.confirmations++;
 
-                        observer.next(receipt);
+                    observer.next(receipt);
 
-                        if (this.isConfirmed(moduleInstance)) {
-                            this.newHeadsSubscription.unsubscribe();
-
-                            observer.complete(receipt);
-                        }
-                    }
-
-                    this.confirmationChecks++;
-
-                    if (this.isTimeoutTimeExceeded(moduleInstance)) {
+                    if (this.isConfirmed(moduleInstance)) {
                         this.newHeadsSubscription.unsubscribe();
 
-                        observer.error('Timeout exceeded during the transaction confirmation observation!');
+                        observer.complete(receipt);
                     }
-                });
+                }
+
+                this.confirmationChecks++;
+
+                if (this.isTimeoutTimeExceeded(moduleInstance)) {
+                    this.newHeadsSubscription.unsubscribe();
+
+                    observer.error('Timeout exceeded during the transaction confirmation observation!');
+                }
             });
+        });
     }
 
     /**
@@ -131,7 +131,6 @@ export default class TransactionObserver {
 
                     this.lastBlock = block;
                 }
-
             }
 
             this.confirmationChecks++;

@@ -44,14 +44,7 @@ export default class Accounts extends AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(
-        provider,
-        formatters,
-        chainIdMethod,
-        getGasPriceMethod,
-        getTransactionCountMethod,
-        options
-    ) {
+    constructor(provider, formatters, chainIdMethod, getGasPriceMethod, getTransactionCountMethod, options) {
         super(provider, options);
 
         this.transactionSigner = options.transactionSigner;

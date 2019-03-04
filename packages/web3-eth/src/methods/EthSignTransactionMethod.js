@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {EthSignTransactionMethod} from 'web3-core-method';
+import isString from 'lodash/isString';
+import {SignTransactionMethod} from 'web3-core-method';
 
 export default class EthSignTransactionMethod extends SignTransactionMethod {
     /**

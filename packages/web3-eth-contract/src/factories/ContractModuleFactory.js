@@ -43,15 +43,13 @@ export default class ContractModuleFactory {
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbiCoder} abiCoder
-     * @param {Accounts} accounts
      *
      * @constructor
      */
-    constructor(utils, formatters, abiCoder, accounts) {
+    constructor(utils, formatters, abiCoder) {
         this.utils = utils;
         this.formatters = formatters;
         this.abiCoder = abiCoder;
-        this.accounts = accounts;
     }
 
     /**

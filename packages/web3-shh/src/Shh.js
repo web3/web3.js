@@ -32,13 +32,7 @@ export default class Shh extends AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(
-        provider,
-        methodFactory,
-        subscriptionsFactory,
-        net,
-        options
-    ) {
+    constructor(provider, methodFactory, subscriptionsFactory, net, options) {
         super(provider, options, methodFactory);
 
         this.subscriptionsFactory = subscriptionsFactory;

@@ -54,8 +54,8 @@ export default class SubscriptionsFactory {
             case 'logs':
                 return new LogSubscription(
                     options,
-                    utils,
-                    formatters,
+                    this.utils,
+                    this.formatters,
                     moduleInstance,
                     new GetPastLogsMethod(this.utils, this.formatters)
                 );

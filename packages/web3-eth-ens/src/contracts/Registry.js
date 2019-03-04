@@ -27,6 +27,7 @@ export default class Registry extends AbstractContract {
     /**
      * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
      * @param {ContractModuleFactory} contractModuleFactory
+     * @param {Accounts} accounts
      * @param {AbiCoder} abiCoder
      * @param {Utils} utils
      * @param {Object} formatters
@@ -35,26 +36,8 @@ export default class Registry extends AbstractContract {
      *
      * @constructor
      */
-    constructor(
-        provider,
-        contractModuleFactory,
-        abiCoder,
-        utils,
-        formatters,
-        options,
-        net
-    ) {
-        super(
-            provider,
-            contractModuleFactory,
-            accounts,
-            abiCoder,
-            utils,
-            formatters,
-            REGISTRY_ABI,
-            '',
-            options
-        );
+    constructor(provider, contractModuleFactory, accounts, abiCoder, utils, formatters, options, net) {
+        super(provider, contractModuleFactory, accounts, abiCoder, utils, formatters, REGISTRY_ABI, '', options);
 
         this.net = net;
         this.resolverContract = null;

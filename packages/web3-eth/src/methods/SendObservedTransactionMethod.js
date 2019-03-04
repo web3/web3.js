@@ -21,7 +21,6 @@
  */
 
 import ObservedTransactionMethod from '../../lib/methods/ObservedTransactionMethod';
-import PromiEvent from '../../lib/PromiEvent';
 
 export default class SendObservedTransactionMethod extends ObservedTransactionMethod {
     /**

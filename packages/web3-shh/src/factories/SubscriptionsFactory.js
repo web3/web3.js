@@ -17,6 +17,8 @@
  * @date 2019
  */
 
+import {MessagesSubscription} from 'web3-core-subscriptions';
+
 export default class SubscriptionsFactory {
     /**
      * @param {Utils} utils
@@ -37,19 +39,13 @@ export default class SubscriptionsFactory {
      * @param {AbstractWeb3Module} moduleInstance
      * @param {String} type
      * @param {Object} options
-     * @param {Function} callback
      *
-     * @returns {Subscription}
+     * @returns {AbstractSubscription}
      */
     getSubscription(moduleInstance, type, options) {
         switch (type) {
             case 'messages':
-                return new MessagesSubscription(
-                    options,
-                    utils,
-                    formatters,
-                    moduleInstance
-                );
+                return new MessagesSubscription(options, this.utils, this.formatters, moduleInstance);
             default:
                 throw new Error(`Unknown subscription: ${type}`);
         }

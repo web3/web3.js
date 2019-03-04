@@ -119,6 +119,7 @@ export default class MethodFactory extends AbstractMethodFactory {
         const method = this.methods[name];
 
         if (method.name === 'SendObservedTransactionMethod') {
+            // eslint-disable-next-line new-cap
             return new method(
                 this.utils,
                 this.formatters,
@@ -137,6 +138,7 @@ export default class MethodFactory extends AbstractMethodFactory {
                 new NewHeadsSubscription(this.utils, this.formatters)
             );
 
+            // eslint-disable-next-line new-cap
             return new method(
                 this.utils,
                 this.formatters,
@@ -147,6 +149,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             );
         }
 
+        // eslint-disable-next-line new-cap
         return new method(this.utils, this.formatters);
     }
 }

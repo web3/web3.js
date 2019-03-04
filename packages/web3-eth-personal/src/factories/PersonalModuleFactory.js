@@ -47,14 +47,7 @@ export default class PersonalModuleFactory {
      * @returns {Personal}
      */
     createPersonalModule(provider, net, options) {
-        return new Personal(
-            provider,
-            this.createMethodFactory(),
-            net,
-            this.utils,
-            this.formatters,
-            options
-        );
+        return new Personal(provider, this.createMethodFactory(), net, this.utils, this.formatters, options);
     }
 
     /**

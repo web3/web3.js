@@ -82,6 +82,7 @@ export default class AbstractMethodFactory {
     createMethod(name) {
         const method = this.methods[name];
 
+        // eslint-disable-next-line new-cap
         return new method(this.utils, this.formatters);
     }
 }

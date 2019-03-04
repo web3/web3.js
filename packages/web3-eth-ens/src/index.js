@@ -17,11 +17,8 @@
  * @date 2018
  */
 
-import {PromiEvent} from 'web3-core-promievent';
-import {ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {MethodModuleFactory} from 'web3-core-method';
 import {ContractModuleFactory} from 'web3-eth-contract';
 import {AbiCoder} from 'web3-eth-abi';
 import {Network} from 'web3-net';
@@ -43,13 +40,12 @@ export const Ens = (provider, options, accounts) => {
 
     return new EnsModuleFactory().createENS(
         provider,
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
-        PromiEvent,
+        new ContractModuleFactory(Utils, formatters, abiCoder),
+        accounts,
         abiCoder,
         Utils,
         formatters,
         new Network(provider),
-        {},
         options
     );
 };

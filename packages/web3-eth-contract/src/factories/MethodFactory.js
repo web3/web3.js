@@ -22,7 +22,6 @@
 
 import {
     EstimateGasMethod,
-    SendRawTransactionMethod,
     ChainIdMethod,
     GetTransactionCountMethod,
     GetTransactionReceiptMethod,

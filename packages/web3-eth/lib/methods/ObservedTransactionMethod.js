@@ -63,37 +63,36 @@ export default class ObservedTransactionMethod extends AbstractMethod {
             this.promiEvent.emit('transactionHash', transactionHash);
 
             if (this.callback) {
-                this.callback(false, response);
+                this.callback(false, transactionHash);
             }
 
             let count, receipt;
-            this.transactionObserver.observe(transactionHash, moduleInstance)
-                .subscribe(
-                    (confirmation) => {
-                        count = confirmation.count;
-                        receipt = confirmation.receipt;
+            this.transactionObserver.observe(transactionHash, moduleInstance).subscribe(
+                (confirmation) => {
+                    count = confirmation.count;
+                    receipt = confirmation.receipt;
 
-                        this.promiEvent.emit('confirmation', count, receipt);
-                    },
-                    (error) => {
-                        if (this.callback) {
-                            this.callback(error, null);
-                        }
-
-                        this.promiEvent.reject(error);
-                        this.promiEvent.emit('error', error, receipt, count);
-                        this.promiEvent.removeAllListeners();
-                    },
-                    () => {
-                        if (method.callback) {
-                            method.callback(false, receipt);
-                        }
-
-                        this.promiEvent.resolve(receipt);
-                        this.promiEvent.emit('receipt', receipt);
-                        this.promiEvent.removeAllListeners();
+                    this.promiEvent.emit('confirmation', count, receipt);
+                },
+                (error) => {
+                    if (this.callback) {
+                        this.callback(error, null);
                     }
-                );
+
+                    this.promiEvent.reject(error);
+                    this.promiEvent.emit('error', error, receipt, count);
+                    this.promiEvent.removeAllListeners();
+                },
+                () => {
+                    if (this.callback) {
+                        this.callback(false, receipt);
+                    }
+
+                    this.promiEvent.resolve(receipt);
+                    this.promiEvent.emit('receipt', receipt);
+                    this.promiEvent.removeAllListeners();
+                }
+            );
         });
 
         return this.promiEvent;
