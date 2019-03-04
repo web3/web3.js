@@ -17,9 +17,25 @@
  * @date 2019
  */
 
+import {Observable} from 'rxjs';
+
 export default class TransactionObserver {
 
     constructor() {
 
+    }
+
+    /**
+     * Observes the transaction by the given transactionHash
+     *
+     * @method observe
+     *
+     * @param transactionHash
+     * @param moduleInstance
+     */
+    observe(transactionHash, moduleInstance) {
+        Observable.create((observer) => {
+
+        });
     }
 }

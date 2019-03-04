@@ -23,7 +23,7 @@
 import {AbstractMethod} from 'web3-core-method';
 import PromiEvent from './PromiEvent';
 
-export default class AbstractSendMethod extends AbstractMethod {
+export default class ObservedTransactionMethod extends AbstractMethod {
     /**
      * @param {String} rpcMethod
      * @param {Number} parametersAmount
@@ -66,28 +66,34 @@ export default class AbstractSendMethod extends AbstractMethod {
                 this.callback(false, response);
             }
 
+            let count, receipt;
             this.transactionObserver.observe(transactionHash, moduleInstance)
-                .on('confirmation', (receipt, confirmations) => {
-                    promiEvent.emit('confirmation', confirmations, receipt);
-                })
-                .on('confirmed', (receipt) => {
-                    if (method.callback) {
-                        method.callback(false, receipt);
-                    }
+                .subscribe(
+                    (confirmation) => {
+                        count = confirmation.count;
+                        receipt = confirmation.receipt;
 
-                    promiEvent.resolve(receipt);
-                    promiEvent.emit('receipt', receipt);
-                    promiEvent.removeAllListeners();
-                })
-                .on('error', (error, receipt, confirmations) => {
-                    if (this.callback) {
-                        this.callback(error, null);
-                    }
+                        promiEvent.emit('confirmation', count, receipt);
+                    },
+                    (error) => {
+                        if (this.callback) {
+                            this.callback(error, null);
+                        }
 
-                    promiEvent.reject(error);
-                    promiEvent.emit('error', error, receipt, confirmations);
-                    promiEvent.removeAllListeners();
-                });
+                        promiEvent.reject(error);
+                        promiEvent.emit('error', error, receipt, count);
+                        promiEvent.removeAllListeners();
+                    },
+                    () => {
+                            if (method.callback) {
+                                method.callback(false, receipt);
+                            }
+
+                            promiEvent.resolve(receipt);
+                            promiEvent.emit('receipt', receipt);
+                            promiEvent.removeAllListeners();
+                    }
+                );
         });
 
         return promiEvent;
