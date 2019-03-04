@@ -357,24 +357,7 @@ export default class Eth extends AbstractWeb3Module {
      * @returns {Subscription}
      */
     subscribe(type, options, callback) {
-        switch (type) {
-            case 'logs':
-                return this.subscriptionsFactory
-                    .createLogSubscription(options, this, this.methodFactory.createMethod('getPastLogs'))
-                    .subscribe(callback);
-
-            case 'newBlockHeaders':
-                return this.subscriptionsFactory.createNewHeadsSubscription(this).subscribe(callback);
-
-            case 'pendingTransactions':
-                return this.subscriptionsFactory.createNewPendingTransactionsSubscription(this).subscribe(callback);
-
-            case 'syncing':
-                return this.subscriptionsFactory.createSyncingSubscription(this).subscribe(callback);
-
-            default:
-                throw new Error(`Unknown subscription: ${type}`);
-        }
+        return this.subscriptionsFactory.getSubscription(this, type, options).subscribe(callback);
     }
 
     /**

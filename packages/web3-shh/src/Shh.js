@@ -50,7 +50,7 @@ export default class Shh extends AbstractWeb3Module {
      *
      * @method subscribe
      *
-     * @param {String} method
+     * @param {String} type
      * @param {Object} options
      * @param {Function} callback
      *
@@ -58,12 +58,8 @@ export default class Shh extends AbstractWeb3Module {
      * @returns {AbstractSubscription}
      * @throws {Error}
      */
-    subscribe(method, options, callback) {
-        if (method === 'messages') {
-            return this.subscriptionsFactory.createShhMessagesSubscription(options, this).subscribe(callback);
-        }
-
-        throw new Error(`Unknown subscription: ${method}`);
+    subscribe(type, options, callback) {
+        return this.subscriptionsFactory.getSubscription(this, type, options).subscribe(callback);
     }
 
     /**

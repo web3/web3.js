@@ -21,7 +21,6 @@
  */
 
 import {formatters} from 'web3-core-helpers';
-import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Accounts} from 'web3-eth-accounts';
 import {Ens} from 'web3-eth-ens';
 import {ContractModuleFactory} from 'web3-eth-contract';
@@ -33,6 +32,7 @@ import * as Utils from 'web3-utils';
 import EthTransactionSigner from './signers/TransactionSigner';
 import EthModule from './Eth.js';
 import MethodFactory from './factories/MethodFactory';
+import SubscriptionsFactory from './factories/SubscriptionsFactory';
 
 /**
  * Creates the TransactionSigner class
@@ -73,7 +73,7 @@ export const Eth = (provider, options) => {
         new Ens(provider, accounts, options),
         Utils,
         formatters,
-        new SubscriptionsFactory(),
+        new SubscriptionsFactory(Utils, formatters),
         new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
         new TransactionSigner(),
         options

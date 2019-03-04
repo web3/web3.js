@@ -20,12 +20,12 @@
  * @date 2018
  */
 
-import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import ShhModule from './Shh.js'
 import MethodFactory from './factories/MethodFactory';
+import MethodFactory from './factories/SubscriptionsFactory';
 
 /**
  * Returns the Shh object.
@@ -41,7 +41,7 @@ export const Shh = (provider, options) => {
     return new ShhModule(
         provider,
         new MethodFactory(Utils, formatters),
-        new SubscriptionsFactory(),
+        new SubscriptionsFactory(Utils, formatters),
         new Network(provider, options),
         options
     );

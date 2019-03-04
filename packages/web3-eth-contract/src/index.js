@@ -21,10 +21,8 @@
  */
 
 import * as Utils from 'web3-utils';
-import {ProvidersModuleFactory} from 'web3-providers';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
-import {MethodModuleFactory} from 'web3-core-method';
 import ContractModuleFactory from './factories/ContractModuleFactory';
 
 export AbstractContract from './AbstractContract';

@@ -20,21 +20,6 @@
  * @date 2018
  */
 
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
-import SubscriptionsModuleFactory from './factories/SubscriptionsModuleFactory';
-
-/**
- * Returns an object of type SubscriptionsFactory
- *
- * @method SubscriptionsFactory
- *
- * @returns {SubscriptionsFactory}
- */
-export const SubscriptionsFactory = () => {
-    return new SubscriptionsModuleFactory().createSubscriptionsFactory(Utils, formatters);
-};
-
 export AbstractSubscription from '../lib/subscriptions/AbstractSubscription';
 
 // Eth
