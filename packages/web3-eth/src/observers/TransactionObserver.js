@@ -183,7 +183,7 @@ export default class TransactionObserver {
     isTimeoutTimeExceeded(moduleInstance) {
         let confirmationChecks = moduleInstance.transactionBlockTimeout;
 
-        if (this.isSocketBasedProvider(moduleInstance)) {
+        if (this.isSocketBasedProvider(moduleInstance.currentProvider)) {
             confirmationChecks = moduleInstance.transactionPollingTimeout;
         }
 

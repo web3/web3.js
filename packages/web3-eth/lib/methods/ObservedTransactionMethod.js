@@ -21,7 +21,7 @@
  */
 
 import {AbstractMethod} from 'web3-core-method';
-import PromiEvent from './PromiEvent';
+import PromiEvent from '../PromiEvent';
 
 export default class ObservedTransactionMethod extends AbstractMethod {
     /**
@@ -35,7 +35,9 @@ export default class ObservedTransactionMethod extends AbstractMethod {
      */
     constructor(rpcMethod, parametersAmount, utils, formatters, transactionObserver) {
         super(rpcMethod, parametersAmount, utils, formatters);
+
         this.transactionObserver = transactionObserver;
+        this.promiEvent = new PromiEvent();
     }
 
     /**
@@ -49,8 +51,6 @@ export default class ObservedTransactionMethod extends AbstractMethod {
      * @returns {PromiEvent}
      */
     execute(moduleInstance) {
-        const promiEvent = new PromiEvent();
-
         this.beforeExecution(moduleInstance);
 
         if (this.parameters.length !== this.parametersAmount) {
@@ -85,13 +85,13 @@ export default class ObservedTransactionMethod extends AbstractMethod {
                         promiEvent.removeAllListeners();
                     },
                     () => {
-                            if (method.callback) {
-                                method.callback(false, receipt);
-                            }
+                        if (method.callback) {
+                            method.callback(false, receipt);
+                        }
 
-                            promiEvent.resolve(receipt);
-                            promiEvent.emit('receipt', receipt);
-                            promiEvent.removeAllListeners();
+                        promiEvent.resolve(receipt);
+                        promiEvent.emit('receipt', receipt);
+                        promiEvent.removeAllListeners();
                     }
                 );
         });

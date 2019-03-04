@@ -20,10 +20,9 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../lib/methods/AbstractMethod';
+import {SignMethod} from 'web3-core-method';
 
-// TODO: Move local signing logic to the eth module
-export default class SignMethod extends AbstractMethod {
+export default class EthSignMethod extends SignMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -31,7 +30,7 @@ export default class SignMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_sign', 2, utils, formatters);
+        super(utils, formatters);
     }
 
     /**
@@ -45,7 +44,7 @@ export default class SignMethod extends AbstractMethod {
      * @returns {Promise<Object|String>}
      */
     execute(moduleInstance) {
-        if (this.hasAccount(moduleInstance)) {
+        if (moduleInstance.accounts.wallet[this.parameters[1]]) {
             return this.signLocally(moduleInstance);
         }
 
@@ -82,34 +81,5 @@ export default class SignMethod extends AbstractMethod {
 
             throw error;
         }
-    }
-
-    /**
-     * This method will be executed before the RPC request.
-     *
-     * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
-     */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
-        this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
-    }
-
-    /**
-     * Checks if the current account is unlocked
-     *
-     * @method hasAccount
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Boolean}
-     */
-    hasAccount(moduleInstance) {
-        return (
-            moduleInstance.accounts &&
-            moduleInstance.accounts.accountsIndex > 0 &&
-            moduleInstance.accounts.wallet[this.parameters[1]]
-        );
     }
 }

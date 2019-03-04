@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import {SignTransactionMethod} from 'web3-core-method';
 
-export default class SignTransactionMethod extends AbstractCallMethod {
+export default class EthSignTransactionMethod extends SignTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -30,7 +30,7 @@ export default class SignTransactionMethod extends AbstractCallMethod {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_signTransaction', 1, utils, formatters);
+        super(utils, formatters);
     }
 
     /**
@@ -42,5 +42,26 @@ export default class SignTransactionMethod extends AbstractCallMethod {
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
+    }
+
+    /**
+     * Sends a JSON-RPC call request
+     *
+     * @method execute
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @callback callback callback(error, result)
+     * @returns {Promise<Object|String>}
+     */
+    execute(moduleInstance) {
+        if (isString(this.parameters[1])) {
+            const account = moduleInstance.accounts.wallet[this.parameters[1]];
+            if (account) {
+                return this.moduleInstance.transactionSigner.sign(this.parameters[0], account.privateKey);
+            }
+        }
+
+        return super.execute(moduleInstance);
     }
 }
