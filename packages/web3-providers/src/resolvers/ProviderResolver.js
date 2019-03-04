@@ -80,6 +80,8 @@ export default class ProviderResolver {
             case 'HttpProvider':
             case 'IpcProvider':
             case 'WebsocketProvider':
+            case 'MetamaskProvider':
+            case 'CustomProvider':
                 return provider;
             default:
                 return this.providersModuleFactory.createCustomProvider(provider);
