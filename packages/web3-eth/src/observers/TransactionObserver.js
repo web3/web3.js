@@ -41,15 +41,15 @@ export default class TransactionObserver {
      *
      * @param {String} transactionHash
      * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Observable}
      */
     observe(transactionHash, moduleInstance) {
         return Observable.create((observer) => {
             if (this.isSocketBasedProvider(moduleInstance.currentProvider)) {
                 this.startSocketObserver(transactionHash, moduleInstance, observer);
             } else {
-                setInterval(() => {
-                    this.checkOverHttp(transactionHash, moduleInstance, observer);
-                }, 1000);
+                this.checkOverHttp(transactionHash, moduleInstance, observer);
             }
         });
     }
@@ -64,7 +64,7 @@ export default class TransactionObserver {
      * @param {Observer} observer
      */
     startSocketObserver(transactionHash, moduleInstance, observer) {
-        this.subscriptionsFactory.getSubscription('newHeads')
+        const newHeadsSubscription = this.subscriptionsFactory.getSubscription('newHeads')
             .subscribe((newHead) => {
                 const getTransactionReceipt = this.methodFactory.getMethod('getTransactionReceipt');
                 getTransactionReceipt.parameters = [transactionHash];
@@ -76,11 +76,19 @@ export default class TransactionObserver {
                         observer.next(receipt);
 
                         if (this.isConfirmed(moduleInstance)) {
+                            newHeadsSubscription.unsubscribe();
+
                             observer.complete(receipt);
                         }
                     }
 
                     this.confirmationChecks++;
+
+                    if (this.isTimeoutTimeExceeded(moduleInstance)) {
+                        newHeadsSubscription.unsubscribe();
+
+                        observer.error('Timeout exceeded during the transaction confirmation observation!');
+                    }
                 });
             });
     }
@@ -93,42 +101,44 @@ export default class TransactionObserver {
      * @param {String} transactionHash
      * @param {AbstractWeb3Module} moduleInstance
      * @param {Observer} observer
-     *
-     * @returns {Promise<void>}
      */
-    async checkOverHttp(transactionHash, moduleInstance, observer) {
-        const getTransactionReceipt = this.methodFactory.getMethod('getTransactionReceipt');
-        getTransactionReceipt.parameters = [transactionHash];
+    checkOverHttp(transactionHash, moduleInstance, observer) {
+        const interval = setInterval(async () => {
+            const getTransactionReceipt = this.methodFactory.getMethod('getTransactionReceipt');
+            getTransactionReceipt.parameters = [transactionHash];
 
-        const receipt = await getTransactionReceipt.execute(moduleInstance);
+            const receipt = await getTransactionReceipt.execute(moduleInstance);
 
-        if (receipt) {
-            const block =  await this.getBlock(receipt.blockHash, moduleInstance);
+            if (receipt) {
+                const block = await this.getBlock(receipt.blockHash, moduleInstance);
 
-            if (!this.lastBlock) {
-                this.lastBlock = block;
-                this.confirmations++;
-                observer.next(receipt);
-            }
-
-            if (this.lastBlock.hash === block.parentHash) {
-                this.confirmations++;
-                observer.next(receipt);
-
-                if (this.isConfirmed(moduleInstance)) {
-                    observer.complete(receipt);
+                if (!this.lastBlock) {
+                    this.lastBlock = block;
+                    this.confirmations++;
+                    observer.next(receipt);
                 }
 
-                this.lastBlock = block;
+                if (this.lastBlock.hash === block.parentHash) {
+                    this.confirmations++;
+                    observer.next(receipt);
+
+                    if (this.isConfirmed(moduleInstance)) {
+                        clearInterval(interval);
+                        observer.complete(receipt);
+                    }
+
+                    this.lastBlock = block;
+                }
+
             }
 
-        }
+            this.confirmationChecks++;
 
-        this.confirmationChecks++;
-
-        if (this.isTimeoutTimeExceeded(moduleInstance)) {
-            observer.error('Timeout exceeded during the transaction confirmation observation!')
-        }
+            if (this.isTimeoutTimeExceeded(moduleInstance)) {
+                clearInterval(interval);
+                observer.error('Timeout exceeded during the transaction confirmation observation!');
+            }
+        }, 1000);
     }
 
     /**
