@@ -31,15 +31,16 @@ export default class AbstractWeb3Module {
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {AbstractMethodFactory} methodFactory
      * @param {Object} options
+     * @param {Net} net
      *
      * @constructor
      */
-    constructor(provider, providersModuleFactory, methodModuleFactory = null, methodFactory = null, options = {}) {
+    constructor(provider, providersModuleFactory, methodModuleFactory = null, methodFactory = null, options = {}, net = null) {
         this.providersModuleFactory = providersModuleFactory;
         this.providerDetector = providersModuleFactory.createProviderDetector(); // TODO: detection of an provider and setting of givenProvider could be removed.
         this.providerResolver = providersModuleFactory.createProviderResolver();
         this.givenProvider = this.providerDetector.detect();
-        this._currentProvider = this.providerResolver.resolve(provider);
+        this.setProvider(provider, net);
 
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
         this._defaultBlock = options.defaultBlock || 'latest';
@@ -237,7 +238,7 @@ export default class AbstractWeb3Module {
      *
      * @property currentProvider
      *
-     * @returns {AbstractProviderAdapter}
+     * @returns {AbstractSocketProvider|HttpProvider|CustomProvider}
      */
     get currentProvider() {
         return this._currentProvider;

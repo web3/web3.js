@@ -64,13 +64,14 @@ export const MethodFactory = () => {
  * @method Eth
  *
  * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Net} net
  * @param {Object} options
  *
  * @returns {Eth}
  *
  * @constructor
  */
-export const Eth = (provider, options) => {
+export const Eth = (provider, net, options) => {
     const accounts = new Accounts(provider, options);
     const abiCoder = new AbiCoder();
     const methodModuleFactory = new MethodModuleFactory();
@@ -91,6 +92,7 @@ export const Eth = (provider, options) => {
         new SubscriptionsFactory(),
         new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
         new TransactionSigner(),
-        options
+        options,
+        net
     );
 };

@@ -36,7 +36,8 @@ export class AbstractWeb3Module {
         providersModuleFactory: ProvidersModuleFactory,
         methodModuleFactory: any,
         methodFactory?: any,
-        options?: Web3ModuleOptions
+        options?: Web3ModuleOptions,
+        net?: net.Socket
     );
 
     BatchRequest: new () => BatchRequest;

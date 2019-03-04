@@ -44,10 +44,10 @@ export default class ProviderResolver {
      *
      * @method resolve
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
      * @param {Net} net
      *
-     * @returns {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|Error}
+     * @returns {AbstractSocketProvider|HttpProvider|CustomProvider}
      */
     resolve(provider, net) {
         if (typeof provider === 'string') {
@@ -80,8 +80,6 @@ export default class ProviderResolver {
             case 'HttpProvider':
             case 'IpcProvider':
             case 'WebsocketProvider':
-            case 'MetamaskProvider':
-            case 'CustomProvider':
                 return provider;
             default:
                 return this.providersModuleFactory.createCustomProvider(provider);

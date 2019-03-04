@@ -40,6 +40,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {TransactionSigner} transactionSigner
      * @param {Object} options
+     * @param {Net} nodeNet
      *
      * @constructor
      */
@@ -59,9 +60,10 @@ export default class Eth extends AbstractWeb3Module {
         subscriptionsFactory,
         contractModuleFactory,
         transactionSigner,
-        options
+        options,
+        nodeNet
     ) {
-        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
+        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options, nodeNet);
 
         this.net = net;
         this.accounts = accounts;
