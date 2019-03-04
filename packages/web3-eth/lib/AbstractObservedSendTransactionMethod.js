@@ -28,24 +28,13 @@ export default class AbstractSendMethod extends AbstractMethod {
      * @param {Number} parametersAmount
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
+     * @param {TransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(rpcMethod, parametersAmount, utils, formatters, transactionConfirmationWorkflow) {
+    constructor(rpcMethod, parametersAmount, utils, formatters, transactionObserver) {
         super(rpcMethod, parametersAmount, utils, formatters);
-        this.transactionConfirmationWorkflow = transactionConfirmationWorkflow;
-    }
-
-    /**
-     * Returns the commandType of this Method
-     *
-     * @property CommandType
-     *
-     * @returns {String}
-     */
-    static get Type() {
-        return 'SEND';
+        this.transactionObserver = transactionObserver;
     }
 
     /**
@@ -71,7 +60,16 @@ export default class AbstractSendMethod extends AbstractMethod {
         moduleInstance.currentProvider
             .send(this.rpcMethod, this.parameters)
             .then((response) => {
-                this.transactionConfirmationWorkflow.execute(this, moduleInstance, response, promiEvent);
+                this.transactionObserver.observe(moduleInstance, response)
+                    .on('confirmation', (receipt, counter) => {
+                        promiEvent.emit('confirmation', counter, receipt);
+                    })
+                    .on('confirmed', (receipt) => {
+                        this.handleSuccessState(method.afterExecution(receipt), method, promiEvent);
+                    })
+                    .on('error', (error, receipt, counter) => {
+                        this.handleErrorState(error, method, promiEvent);
+                    });
 
                 if (this.callback) {
                     this.callback(false, response);

@@ -51,10 +51,6 @@ export default class PromiEvent {
      * @returns {Function}
      */
     proxyHandler(target, name) {
-        if (target[name]) {
-            return Reflect.get(...arguments);
-        }
-
         if (name === 'resolve' || name === 'reject') {
             return target[name];
         }
