@@ -27,8 +27,6 @@ export default class Personal extends AbstractWeb3Module {
     /**
      * TODO: Add missing documentation for getAccounts, lockAccount and sendTransaction!
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {MethodFactory} methodFactory
      * @param {Network} net
      * @param {Utils} utils
@@ -37,8 +35,8 @@ export default class Personal extends AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(provider, providersModuleFactory, methodModuleFactory, methodFactory, net, utils, formatters, options) {
-        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
+    constructor(provider, methodFactory, net, utils, formatters, options) {
+        super(provider, options, methodFactory);
 
         this.utils = utils;
         this.formatters = formatters;

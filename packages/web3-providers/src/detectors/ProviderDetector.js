@@ -26,6 +26,7 @@ const global =
         // eslint-disable-next-line no-new-func
     })() || new Function('return this')();
 
+// TODO: Remove the detector because of window/global.ethereum
 export default class ProviderDetector {
     /**
      * Detects which provider is given in the current environment

@@ -1,6 +1,6 @@
 import {AbstractWeb3Module} from 'web3-core';
 import {PromiEvent} from 'web3-core-promievent';
-import MethodProxy from '../../../src/proxy/MethodProxy';
+import MethodProxy from '../../../../web3-core/src/proxy/MethodProxy';
 import AbstractMethodFactory from '../../../lib/factories/AbstractMethodFactory';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 

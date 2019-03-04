@@ -32,16 +32,14 @@ export default class MethodFactory {
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {ContractModuleFactory} contractModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {AbiCoder} abiCoder
      *
      * @constructor
      */
-    constructor(utils, formatters, contractModuleFactory, methodModuleFactory, abiCoder) {
+    constructor(utils, formatters, contractModuleFactory, abiCoder) {
         this.utils = utils;
         this.formatters = formatters;
         this.contractModuleFactory = contractModuleFactory;
-        this.methodModuleFactory = methodModuleFactory;
         this.abiCoder = abiCoder;
     }
 
@@ -143,13 +141,10 @@ export default class MethodFactory {
      * @returns {SendContractMethod}
      */
     createSendContractMethod(abiItem, abiModel) {
-        const transactionConfirmationWorkflow = this.methodModuleFactory.createTransactionConfirmationWorkflow();
-
         return new SendContractMethod(
             this.utils,
             this.formatters,
-            transactionConfirmationWorkflow,
-            new SendRawTransactionMethod(this.utils, this.formatters, transactionConfirmationWorkflow),
+            new SendRawTransactionMethod(this.utils, this.formatters),
             new ChainIdMethod(this.utils, this.formatters),
             new GetTransactionCountMethod(this.utils, this.formatters),
             this.contractModuleFactory.createAllEventsLogDecoder(),
@@ -167,13 +162,10 @@ export default class MethodFactory {
      * @returns {ContractDeployMethod}
      */
     createContractDeployMethod(contract) {
-        const transactionConfirmationWorkflow = this.methodModuleFactory.createTransactionConfirmationWorkflow();
-
         return new ContractDeployMethod(
             this.utils,
             this.formatters,
-            transactionConfirmationWorkflow,
-            new SendRawTransactionMethod(this.utils, this.formatters, transactionConfirmationWorkflow),
+            new SendRawTransactionMethod(this.utils, this.formatters),
             new ChainIdMethod(this.utils, this.formatters),
             new GetTransactionCountMethod(this.utils, this.formatters),
             contract

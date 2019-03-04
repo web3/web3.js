@@ -23,14 +23,13 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import AccountsModule from './Accounts';
-import {ProvidersModuleFactory} from 'web3-providers';
 import {GetGasPriceMethod, ChainIdMethod, GetTransactionCountMethod} from 'web3-core-method';
 
 /**
  * Returns the Accounts object
  *
  * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
- * @params {Object} options
+ * @param {Object} options
  *
  * @returns {Accounts}
  * @constructor
@@ -38,7 +37,6 @@ import {GetGasPriceMethod, ChainIdMethod, GetTransactionCountMethod} from 'web3-
 export const Accounts = (provider, options) => {
     return new AccountsModule(
         provider,
-        new ProvidersModuleFactory(),
         formatters,
         new ChainIdMethod(Utils, formatters),
         new GetGasPriceMethod(Utils, formatters),

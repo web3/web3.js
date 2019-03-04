@@ -41,13 +41,9 @@ import EnsModuleFactory from './factories/EnsModuleFactory';
 export const Ens = (provider, options, accounts) => {
     const abiCoder = new AbiCoder();
 
-    const methodModuleFactory = new MethodModuleFactory();
-
     return new EnsModuleFactory().createENS(
         provider,
-        new ProvidersModuleFactory(),
-        new MethodModuleFactory(),
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
+        new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
         PromiEvent,
         abiCoder,
         Utils,

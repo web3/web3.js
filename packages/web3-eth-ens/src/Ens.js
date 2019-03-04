@@ -25,8 +25,6 @@ import namehash from 'eth-ens-namehash';
 export default class Ens extends AbstractWeb3Module {
     /**
      * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {Object} options
      * @param {EnsModuleFactory} ensModuleFactory
@@ -41,8 +39,6 @@ export default class Ens extends AbstractWeb3Module {
      */
     constructor(
         provider,
-        providersModuleFactory,
-        methodModuleFactory,
         options,
         ensModuleFactory,
         contractModuleFactory,
@@ -53,7 +49,7 @@ export default class Ens extends AbstractWeb3Module {
         registryOptions,
         net
     ) {
-        super(provider, providersModuleFactory, methodModuleFactory, null, options);
+        super(provider, options);
 
         this.ensModuleFactory = ensModuleFactory;
         this.contractModuleFactory = contractModuleFactory;

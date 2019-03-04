@@ -25,8 +25,6 @@ import {AbstractWeb3Module} from 'web3-core';
 export default class Eth extends AbstractWeb3Module {
     /**
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {MethodFactory} methodFactory
      * @param {Network} net
      * @param {Accounts} accounts
@@ -45,8 +43,6 @@ export default class Eth extends AbstractWeb3Module {
      */
     constructor(
         provider,
-        providersModuleFactory,
-        methodModuleFactory,
         methodFactory,
         net,
         accounts,
@@ -61,7 +57,7 @@ export default class Eth extends AbstractWeb3Module {
         transactionSigner,
         options
     ) {
-        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
+        super(provider, options, methodFactory);
 
         this.net = net;
         this.accounts = accounts;

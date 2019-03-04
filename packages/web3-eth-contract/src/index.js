@@ -51,7 +51,6 @@ export const Contract = (provider, abi, accounts, address, options) => {
         Utils,
         formatters,
         new AbiCoder(),
-        accounts,
-        new MethodModuleFactory()
-    ).createContract(provider, new ProvidersModuleFactory(), accounts, abi, address, options);
+        accounts
+    ).createContract(provider, accounts, abi, address, options);
 };

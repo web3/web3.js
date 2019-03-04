@@ -20,20 +20,6 @@
  * @date 2018
  */
 
-import CoreMethodProxy from './proxy/MethodProxy.js';
-
-/**
- * Returns a object of type MethodProxy
- *
- * @param {AbstractWeb3Module} target
- * @param {AbstractMethodFactory} methodFactory
- *
- * @constructor
- */
-export const MethodProxy = (target, methodFactory) => {
-    new CoreMethodProxy(target, methodFactory);
-};
-
 export AbstractMethod from '../lib/methods/AbstractMethod';
 export AbstractMethodFactory from '../lib/factories/AbstractMethodFactory';
 

@@ -21,26 +21,26 @@
  */
 
 import isObject from 'lodash/isObject';
-import {HttpProvider, WebsocketProvider, IpcProvider} from 'web3-providers';
-import {toChecksumAddress} from 'web3-utils'; // TODO: This could be removed with a web3-core-types module
+import {HttpProvider, WebsocketProvider, IpcProvider, BatchRequest} from 'web3-providers';
+import {toChecksumAddress} from 'web3-utils';
+import MethodProxy from './proxy/MethodProxy'; // TODO: This could be removed with a web3-core-types module
 
 export default class AbstractWeb3Module {
     /**
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
-     * @param {AbstractMethodFactory} methodFactory
+     * @param {ProviderDetector} providerDetector
+     * @param {ProviderResolver} providerResolver
+     * @param {MethodFactory} methodFactory
      * @param {Object} options
      *
      * @constructor
      */
-    constructor(provider, providersModuleFactory, methodModuleFactory = null, methodFactory = null, options = {}) {
-        this.providersModuleFactory = providersModuleFactory;
-        this.providerDetector = providersModuleFactory.createProviderDetector(); // TODO: detection of an provider and setting of givenProvider could be removed.
-        this.providerResolver = providersModuleFactory.createProviderResolver();
+    constructor(provider, providerDetector, providerResolver, methodFactory = null, options = {}) {
+        this.providerDetector = providerDetector;
+        this.providerResolver = providerResolver;
         this.givenProvider = this.providerDetector.detect();
-        this._currentProvider = this.providerResolver.resolve(provider);
 
+        this._currentProvider = this.providerResolver.resolve(provider);
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
         this._defaultBlock = options.defaultBlock || 'latest';
         this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
@@ -50,13 +50,13 @@ export default class AbstractWeb3Module {
         this._defaultGas = options.defaultGas;
 
         this.BatchRequest = () => {
-            return this.providersModuleFactory.createBatchRequest(this);
+            console.warn('It is recommended to import the BatchRequest directly from the web3-providers module.');
+
+            return new BatchRequest(this);
         };
 
-        if (methodFactory !== null && methodModuleFactory !== null) {
-            this.methodFactory = methodFactory;
-
-            return methodModuleFactory.createMethodProxy(this, this.methodFactory);
+        if (methodFactory) {
+            return new MethodProxy(this, methodFactory);
         }
     }
 

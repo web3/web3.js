@@ -41,19 +41,15 @@ export default class PersonalModuleFactory {
      * @method createPersonal
      *
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Network} net
      * @param {Object} options
      *
      * @returns {Personal}
      */
-    createPersonalModule(provider, providersModuleFactory, methodModuleFactory, net, options) {
+    createPersonalModule(provider, net, options) {
         return new Personal(
             provider,
-            providersModuleFactory,
-            methodModuleFactory,
-            this.createMethodFactory(methodModuleFactory),
+            this.createMethodFactory(),
             net,
             this.utils,
             this.formatters,
@@ -66,11 +62,9 @@ export default class PersonalModuleFactory {
      *
      * @method createMethodFactory
      *
-     * @param {MethodModuleFactory} methodModuleFactory
-     *
      * @returns {MethodFactory}
      */
-    createMethodFactory(methodModuleFactory) {
-        return new MethodFactory(methodModuleFactory, this.utils, this.formatters);
+    createMethodFactory() {
+        return new MethodFactory(this.utils, this.formatters);
     }
 }

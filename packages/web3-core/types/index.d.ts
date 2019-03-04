@@ -24,7 +24,7 @@ import {
     HttpProvider,
     HttpProviderOptions,
     IpcProvider,
-    provider,
+    provider, ProviderDetector, ProviderResolver,
     ProvidersModuleFactory,
     WebsocketProvider,
     WebsocketProviderOptions
@@ -33,10 +33,8 @@ import {
 export class AbstractWeb3Module {
     constructor(
         provider: provider,
-        providersModuleFactory: ProvidersModuleFactory,
-        methodModuleFactory: any,
-        methodFactory?: any,
-        options?: Web3ModuleOptions
+        options?: Web3ModuleOptions,
+        methodFactory?: any
     );
 
     BatchRequest: new () => BatchRequest;

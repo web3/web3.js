@@ -36,7 +36,6 @@ import Account from './models/Account';
 export default class Accounts extends AbstractWeb3Module {
     /**
      * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} formatters
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetGasPriceMethod} getGasPriceMethod
@@ -47,14 +46,14 @@ export default class Accounts extends AbstractWeb3Module {
      */
     constructor(
         provider,
-        providersModuleFactory,
         formatters,
         chainIdMethod,
         getGasPriceMethod,
         getTransactionCountMethod,
         options
     ) {
-        super(provider, providersModuleFactory, null, null, options);
+        super(provider, options);
+
         this.transactionSigner = options.transactionSigner;
         this.formatters = formatters;
         this.chainIdMethod = chainIdMethod;

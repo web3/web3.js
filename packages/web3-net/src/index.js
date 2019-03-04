@@ -20,11 +20,10 @@
  * @date 2018
  */
 
-import {ProvidersModuleFactory} from 'web3-providers';
-import {MethodModuleFactory} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
-import NetworkModuleFactory from './factories/NetworkModuleFactory';
+import MethodFactory from './factories/MethodFactory';
+import NetworkModule from './Network.js';
 
 /**
  * Creates the Network Object
@@ -37,10 +36,11 @@ import NetworkModuleFactory from './factories/NetworkModuleFactory';
  * @returns {Network}
  */
 export const Network = (provider, options) => {
-    return new NetworkModuleFactory(Utils, formatters).createNetworkModule(
+    return new NetworkModule(
         provider,
-        new ProvidersModuleFactory(),
-        new MethodModuleFactory(),
+        new MethodFactory(Utils, formatters),
+        Utils,
+        formatters,
         options
     );
 };

@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import {MethodModuleFactory} from 'web3-core-method';
 import {Network} from 'web3-net';
 import {ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
@@ -42,7 +41,6 @@ export const Personal = (provider, accounts, options) => {
     return new PersonalModuleFactory(Utils, formatters).createPersonalModule(
         provider,
         new ProvidersModuleFactory(),
-        new MethodModuleFactory(accounts),
         new Network(provider, options),
         options
     );

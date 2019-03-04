@@ -136,8 +136,6 @@ export class JsonRpcMapper {
 }
 
 export class ProviderResolver {
-    constructor(providersPackageFactory: ProvidersModuleFactory);
-
     resolve(provider: provider, net: net.Socket): provider;
 }
 

@@ -27,8 +27,6 @@ export default class EnsModuleFactory {
      * @method createENS
      *
      * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {PromiEvent} promiEvent
      * @param {AbiCoder} abiCoder
@@ -42,8 +40,6 @@ export default class EnsModuleFactory {
      */
     createENS(
         provider,
-        providersModuleFactory,
-        methodModuleFactory,
         contractModuleFactory,
         promiEvent,
         abiCoder,
@@ -55,8 +51,6 @@ export default class EnsModuleFactory {
     ) {
         return new Ens(
             provider,
-            providersModuleFactory,
-            methodModuleFactory,
             ensModuleOptions,
             this,
             contractModuleFactory,

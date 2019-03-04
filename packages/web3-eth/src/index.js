@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import {MethodModuleFactory} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Accounts} from 'web3-eth-accounts';
@@ -29,12 +28,11 @@ import {ContractModuleFactory} from 'web3-eth-contract';
 import {Personal} from 'web3-eth-personal';
 import {AbiCoder} from 'web3-eth-abi';
 import {Iban} from 'web3-eth-iban';
-import {ProvidersModuleFactory} from 'web3-providers';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import EthTransactionSigner from './signers/TransactionSigner';
 import EthModule from './Eth.js';
-import EthMethodFactory from './factories/MethodFactory';
+import MethodFactory from './factories/MethodFactory';
 
 /**
  * Creates the TransactionSigner class
@@ -47,16 +45,6 @@ export const TransactionSigner = () => {
     return new EthTransactionSigner(Utils, formatters);
 };
 
-/**
- * Creates the MethodFactory class of the eth module
- *
- * @returns {MethodFactory}
- *
- * @constructor
- */
-export const MethodFactory = () => {
-    return new EthMethodFactory(new MethodModuleFactory(), Utils, formatters);
-};
 
 /**
  * Creates the Eth object
@@ -73,13 +61,10 @@ export const MethodFactory = () => {
 export const Eth = (provider, options) => {
     const accounts = new Accounts(provider, options);
     const abiCoder = new AbiCoder();
-    const methodModuleFactory = new MethodModuleFactory();
 
     return new EthModule(
         provider,
-        new ProvidersModuleFactory(),
-        methodModuleFactory,
-        new MethodFactory(),
+        new MethodFactory(Utils, formatters),
         new Network(provider, options),
         accounts,
         new Personal(provider, accounts, options),
@@ -89,7 +74,7 @@ export const Eth = (provider, options) => {
         Utils,
         formatters,
         new SubscriptionsFactory(),
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
+        new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
         new TransactionSigner(),
         options
     );
