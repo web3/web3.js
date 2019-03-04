@@ -17,9 +17,9 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class RequestAccountsMethod extends AbstractCallMethod {
+export default class RequestAccountsMethod extends AbstractMethod {
     /**
      * @constructor
      */

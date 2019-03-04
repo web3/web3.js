@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetNodeInfoMethod extends AbstractCallMethod {
+export default class GetNodeInfoMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

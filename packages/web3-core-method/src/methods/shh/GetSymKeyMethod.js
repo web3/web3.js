@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetSymKeyMethod extends AbstractCallMethod {
+export default class GetSymKeyMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

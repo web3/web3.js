@@ -20,10 +20,9 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../lib/methods/AbstractMethod';
 
-// TODO: Move local signing logic to the eth module
-export default class SignMethod extends AbstractCallMethod {
+export default class SignMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -32,56 +31,6 @@ export default class SignMethod extends AbstractCallMethod {
      */
     constructor(utils, formatters) {
         super('eth_sign', 2, utils, formatters);
-    }
-
-    /**
-     * Sends a JSON-RPC call request
-     *
-     * @method execute
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @callback callback callback(error, result)
-     * @returns {Promise<Object|String>}
-     */
-    execute(moduleInstance) {
-        if (this.hasAccount(moduleInstance)) {
-            return this.signLocally(moduleInstance);
-        }
-
-        return super.execute(moduleInstance);
-    }
-
-    /**
-     * Signs the message on the client.
-     *
-     * @method signLocally
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Promise<String>}
-     */
-    async signLocally(moduleInstance) {
-        try {
-            this.beforeExecution(moduleInstance);
-
-            let signedMessage = moduleInstance.accounts.sign(
-                this.parameters[0],
-                moduleInstance.accounts.wallet[this.parameters[1]].address
-            );
-
-            if (this.callback) {
-                this.callback(false, signedMessage);
-            }
-
-            return signedMessage;
-        } catch (error) {
-            if (this.callback) {
-                this.callback(error, null);
-            }
-
-            throw error;
-        }
     }
 
     /**
@@ -94,22 +43,5 @@ export default class SignMethod extends AbstractCallMethod {
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
         this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
-    }
-
-    /**
-     * Checks if the current account is unlocked
-     *
-     * @method hasAccount
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Boolean}
-     */
-    hasAccount(moduleInstance) {
-        return (
-            moduleInstance.accounts &&
-            moduleInstance.accounts.accountsIndex > 0 &&
-            moduleInstance.accounts.wallet[this.parameters[1]]
-        );
     }
 }

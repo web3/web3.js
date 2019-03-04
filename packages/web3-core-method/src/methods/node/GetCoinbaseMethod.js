@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetCoinbaseMethod extends AbstractCallMethod {
+export default class GetCoinbaseMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

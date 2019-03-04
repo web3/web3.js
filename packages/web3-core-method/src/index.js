@@ -15,28 +15,23 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * TODO: Overthink the handling of PromiEvent its just wrong to do it over injection.
- * TODO: Watching transactions with an Observable would solve it.
- *
  * @file index.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import ModuleFactory from './factories/ModuleFactory';
-import {SubscriptionsFactory} from 'web3-core-subscriptions';
-import {formatters} from 'web3-core-helpers';
-import * as Utils from 'web3-utils';
+import CoreMethodProxy from './proxy/MethodProxy.js';
 
 /**
- * Returns the ModuleFactory of the method module
+ * Returns a object of type MethodProxy
  *
- * @returns {ModuleFactory}
+ * @param {AbstractWeb3Module} target
+ * @param {AbstractMethodFactory} methodFactory
  *
  * @constructor
  */
-export const MethodModuleFactory = () => {
-    return new ModuleFactory(new SubscriptionsFactory(), Utils, formatters);
+export const MethodProxy = (target, methodFactory) => {
+    new CoreMethodProxy(target, methodFactory);
 };
 
 export AbstractMethod from '../lib/methods/AbstractMethod';

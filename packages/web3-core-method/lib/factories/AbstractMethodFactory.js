@@ -20,20 +20,14 @@
  * @date 2018
  */
 
-import SendRawTransactionMethod from '../../src/methods/transaction/SendRawTransactionMethod';
-import GetTransactionCountMethod from '../../src/methods/account/GetTransactionCountMethod';
-import ChainIdMethod from '../../src/methods/network/ChainIdMethod';
-
 export default class AbstractMethodFactory {
     /**
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(methodModuleFactory, utils, formatters) {
-        this.methodModuleFactory = methodModuleFactory;
+    constructor(utils, formatters) {
         this.utils = utils;
         this.formatters = formatters;
         this._methods = null;
@@ -90,30 +84,6 @@ export default class AbstractMethodFactory {
     createMethod(name) {
         const method = this.methods[name];
 
-        /* eslint-disable new-cap */
-        switch (method.Type) {
-            case 'CALL':
-                return new method(this.utils, this.formatters);
-            case 'SEND':
-                if (method.name === 'SendTransactionMethod') {
-                    const transactionConfirmationWorkflow = this.methodModuleFactory.createTransactionConfirmationWorkflow();
-
-                    return new method(
-                        this.utils,
-                        this.formatters,
-                        transactionConfirmationWorkflow,
-                        new SendRawTransactionMethod(this.utils, this.formatters, transactionConfirmationWorkflow),
-                        new ChainIdMethod(this.utils, this.formatters),
-                        new GetTransactionCountMethod(this.utils, this.formatters)
-                    );
-                }
-
-                return new method(
-                    this.utils,
-                    this.formatters,
-                    this.methodModuleFactory.createTransactionConfirmationWorkflow()
-                );
-        }
-        /* eslint-enable new-cap */
+        return new method(this.utils, this.formatters);
     }
 }

@@ -23,7 +23,6 @@
 import isFunction from 'lodash/isFunction';
 import isString from 'lodash/isString';
 import cloneDeep from 'lodash/cloneDeep';
-import {PromiEvent} from 'web3-core-promievent';
 
 export default class AbstractMethod {
     /**
@@ -37,7 +36,6 @@ export default class AbstractMethod {
     constructor(rpcMethod, parametersAmount, utils, formatters) {
         this.utils = utils;
         this.formatters = formatters;
-        this.promiEvent = new PromiEvent();
         this._arguments = {
             parameters: []
         };
@@ -68,15 +66,44 @@ export default class AbstractMethod {
     }
 
     /**
-     * Checks which command should be executed
+     * Sends a JSON-RPC call request
      *
      * @method execute
      *
      * @param {AbstractWeb3Module} moduleInstance
      *
-     * @returns {Promise<Object|String>|PromiEvent|String}
+     * @callback callback callback(error, result)
+     * @returns {Promise<Object|String>}
      */
-    execute(moduleInstance) {}
+    async execute(moduleInstance) {
+        this.beforeExecution(moduleInstance);
+
+        if (this.parameters.length !== this.parametersAmount) {
+            throw new Error(
+                `Invalid Arguments length: expected: ${this.parametersAmount}, given: ${this.parameters.length}`
+            );
+        }
+
+        try {
+            let response = await moduleInstance.currentProvider.send(this.rpcMethod, this.parameters);
+
+            if (response) {
+                response = this.afterExecution(response);
+            }
+
+            if (this.callback) {
+                this.callback(false, response);
+            }
+
+            return response;
+        } catch (error) {
+            if (this.callback) {
+                this.callback(error, null);
+            }
+
+            throw error;
+        }
+    }
 
     /**
      * Setter for the rpcMethod property

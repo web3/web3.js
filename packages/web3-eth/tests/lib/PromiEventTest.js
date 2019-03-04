@@ -1,4 +1,4 @@
-import PromiEvent from '../../src/PromiEvent';
+import PromiEvent from '../../lib/PromiEvent';
 
 /**
  * PromiEvent test

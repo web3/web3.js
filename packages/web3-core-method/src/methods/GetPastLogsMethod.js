@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../lib/methods/AbstractMethod';
 
-export default class GetPastLogsMethod extends AbstractCallMethod {
+export default class GetPastLogsMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

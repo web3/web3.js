@@ -21,9 +21,9 @@
  */
 
 import isFunction from 'lodash/isFunction';
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetBalanceMethod extends AbstractCallMethod {
+export default class GetBalanceMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

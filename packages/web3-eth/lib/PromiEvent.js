@@ -22,6 +22,7 @@
 
 import EventEmitter from 'eventemitter3';
 
+// TODO: add handleSuccess() and handleError() method instead of having them in the send method class
 export default class PromiEvent {
     /**
      * @constructor
@@ -50,6 +51,10 @@ export default class PromiEvent {
      * @returns {Function}
      */
     proxyHandler(target, name) {
+        if (target[name]) {
+            return Reflect.get(...arguments);
+        }
+
         if (name === 'resolve' || name === 'reject') {
             return target[name];
         }

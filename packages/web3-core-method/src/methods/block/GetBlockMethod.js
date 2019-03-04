@@ -21,9 +21,10 @@
  */
 
 import isFunction from 'lodash/isFunction';
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetBlockMethod extends AbstractCallMethod {
+// TODO: Split this method up in GetBlockByNumberMethod and GeBlockByHashMethod and implement the concrete GetBlockMethod in the Eth module.
+export default class GetBlockMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

@@ -19,17 +19,16 @@
  * @date 2018
  */
 
-import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class SendRawTransactionMethod extends AbstractSendMethod {
+export default class SendRawTransactionMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
      *
      * @constructor
      */
-    constructor(utils, formatters, transactionConfirmationWorkflow) {
-        super('eth_sendRawTransaction', 1, utils, formatters, transactionConfirmationWorkflow);
+    constructor(utils, formatters) {
+        super('eth_sendRawTransaction', 1, utils, formatters);
     }
 }

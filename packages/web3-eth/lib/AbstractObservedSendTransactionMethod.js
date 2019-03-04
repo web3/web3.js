@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import AbstractMethod from './AbstractMethod';
+import {AbstractMethod} from 'web3-core-method';
 
 export default class AbstractSendMethod extends AbstractMethod {
     /**

@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetBlockNumberMethod extends AbstractCallMethod {
+export default class GetBlockNumberMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
