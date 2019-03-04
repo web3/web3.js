@@ -15,9 +15,32 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file index.js
+ * @file SignTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-export PromiEvent from './PromiEvent';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+
+export default class SignTransactionMethod extends AbstractCallMethod {
+    /**
+     * @param {Utils} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('eth_signTransaction', 1, utils, formatters);
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
+    }
+}

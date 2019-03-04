@@ -54,7 +54,6 @@ export default class MethodsProxy {
             get: (target, name) => {
                 if (this.contract.abiModel.hasMethod(name)) {
                     let abiItemModel = this.contract.abiModel.getMethod(name);
-
                     let requestType = abiItemModel.requestType;
 
                     // TODO: Improve the requestType detection and defining of the call/send method.

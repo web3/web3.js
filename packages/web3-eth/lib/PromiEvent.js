@@ -22,8 +22,6 @@
 
 import EventEmitter from 'eventemitter3';
 
-// TODO: Remove this module and use the EventEmitter or Promise separately. This kind of object could be implemented in
-// TODO: the AbstractSendMethod. I think the better way would be a API with just Observable and Promise objects.
 export default class PromiEvent {
     /**
      * @constructor
