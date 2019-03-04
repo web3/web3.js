@@ -56,7 +56,7 @@ import {
     VersionMethod
 } from 'web3-core-method';
 
-import NewHeadsSubscription from '../../../web3-core-subscriptions';
+import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import TransactionObserver from '../observers/TransactionObserver';
 import SendSignedTransactionMethod from '../methods/SendSignedTransactionMethod';
 
