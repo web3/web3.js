@@ -20,9 +20,15 @@
 import {Observable} from 'rxjs';
 
 export default class TransactionObserver {
-
-    constructor() {
-
+    /**
+     * @param {MethodFactory} methodFactory
+     * @param {SubscriptionsFactory} subscriptionsFactory
+     *
+     * @constructor
+     */
+    constructor(methodFactory, subscriptionsFactory) {
+        this.methodFactory = methodFactory;
+        this.subscriptionsFactory = subscriptionsFactory;
     }
 
     /**
@@ -34,8 +40,61 @@ export default class TransactionObserver {
      * @param moduleInstance
      */
     observe(transactionHash, moduleInstance) {
-        Observable.create((observer) => {
-
+        return Observable.create((observer) => {
+            if (this.isSocketBasedProvider(moduleInstance.currentProvider)) {
+                this.startSocketObserver(transactionHash, moduleInstance, observer);
+            } else {
+                this.startHttpObserver(transactionHash, moduleInstance, observer);
+            }
         });
+    }
+
+    startSocketObserver(transactionHash, moduleInstance, observer) {
+        this.subscriptionsFactory.getSubscription('newHeads')
+            .subscribe((newHeads) => {
+                // check if lastBlock is set
+                // get block
+                // check if txHash exists
+                // set lastBlock property
+                // increase confirmations counter
+                // Check if enough confirmations
+                // wait on new head
+                // check if lastBlock depends on new block
+                // increase confirmations counter
+                // check if enough confirmations
+            });
+    }
+
+    startHttpObserver(observer) {
+        const getTransactionReceipt = this.methodFactory.getMethod('getTransactionReceipt');
+        getTransactionReceipt.parameters = [transactionHash];
+
+        getTransactionReceipt.execute(moduleInstance).then((receipt) => {
+            if (receipt) {
+                // check blocks since receipt block aka confirmations
+                if (this.isConfirmed(receipt)) {
+                    observer.next(receipt);
+                    observer.complete(receipt);
+
+                    return;
+                }
+
+                this.startHttpObserver(observer);
+
+                return;
+            }
+
+            this.startHttpObserver(observer);
+        });
+    }
+
+    isSocketBasedProvider(provider) {
+        switch (provider.constructor.name) {
+            case 'CustomProvider':
+            case 'HttpProvider':
+                return false;
+            default:
+                return true;
+        }
     }
 }
