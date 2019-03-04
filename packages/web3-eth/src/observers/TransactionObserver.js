@@ -29,6 +29,9 @@ export default class TransactionObserver {
     constructor(methodFactory, subscriptionsFactory) {
         this.methodFactory = methodFactory;
         this.subscriptionsFactory = subscriptionsFactory;
+        this.lastBlock = false;
+        this.confirmations = 0;
+        this.confirmationChecks = 0;
     }
 
     /**
@@ -36,58 +39,156 @@ export default class TransactionObserver {
      *
      * @method observe
      *
-     * @param transactionHash
-     * @param moduleInstance
+     * @param {String} transactionHash
+     * @param {AbstractWeb3Module} moduleInstance
      */
     observe(transactionHash, moduleInstance) {
         return Observable.create((observer) => {
             if (this.isSocketBasedProvider(moduleInstance.currentProvider)) {
                 this.startSocketObserver(transactionHash, moduleInstance, observer);
             } else {
-                this.startHttpObserver(transactionHash, moduleInstance, observer);
+                setInterval(() => {
+                    this.checkOverHttp(transactionHash, moduleInstance, observer);
+                }, 1000);
             }
         });
     }
 
+    /**
+     * Observes the transaction with the newHeads subscriptions which sends the eth_getTransactionReceipt method on each item
+     *
+     * @method startSocketObserver
+     *
+     * @param {String} transactionHash
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Observer} observer
+     */
     startSocketObserver(transactionHash, moduleInstance, observer) {
         this.subscriptionsFactory.getSubscription('newHeads')
-            .subscribe((newHeads) => {
-                // check if lastBlock is set
-                // get block
-                // check if txHash exists
-                // set lastBlock property
-                // increase confirmations counter
-                // Check if enough confirmations
-                // wait on new head
-                // check if lastBlock depends on new block
-                // increase confirmations counter
-                // check if enough confirmations
+            .subscribe((newHead) => {
+                const getTransactionReceipt = this.methodFactory.getMethod('getTransactionReceipt');
+                getTransactionReceipt.parameters = [transactionHash];
+
+                getTransactionReceipt.execute(moduleInstance).then((receipt) => {
+                    if (receipt) {
+                        this.confirmations++;
+
+                        observer.next(receipt);
+
+                        if (this.isConfirmed(moduleInstance)) {
+                            observer.complete(receipt);
+                        }
+                    }
+
+                    this.confirmationChecks++;
+                });
             });
     }
 
-    startHttpObserver(observer) {
+    /**
+     * Observes the transaction with sending eth_getTransactionReceipt and checking if there is really a new block
+     *
+     * @method checkOverHttp
+     *
+     * @param {String} transactionHash
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Observer} observer
+     *
+     * @returns {Promise<void>}
+     */
+    async checkOverHttp(transactionHash, moduleInstance, observer) {
         const getTransactionReceipt = this.methodFactory.getMethod('getTransactionReceipt');
         getTransactionReceipt.parameters = [transactionHash];
 
-        getTransactionReceipt.execute(moduleInstance).then((receipt) => {
-            if (receipt) {
-                // check blocks since receipt block aka confirmations
-                if (this.isConfirmed(receipt)) {
-                    observer.next(receipt);
-                    observer.complete(receipt);
+        const receipt = await getTransactionReceipt.execute(moduleInstance);
 
-                    return;
-                }
+        if (receipt) {
+            const block =  await this.getBlock(receipt.blockHash, moduleInstance);
 
-                this.startHttpObserver(observer);
-
-                return;
+            if (!this.lastBlock) {
+                this.lastBlock = block;
+                this.confirmations++;
+                observer.next(receipt);
             }
 
-            this.startHttpObserver(observer);
-        });
+            if (this.lastBlock.hash === block.parentHash) {
+                this.confirmations++;
+                observer.next(receipt);
+
+                if (this.isConfirmed(moduleInstance)) {
+                    observer.complete(receipt);
+                }
+
+                this.lastBlock = block;
+            }
+
+        }
+
+        this.confirmationChecks++;
+
+        if (this.isTimeoutTimeExceeded(moduleInstance)) {
+            observer.error('Timeout exceeded during the transaction confirmation observation!')
+        }
     }
 
+    /**
+     * Returns a the block by the given blockHash
+     *
+     * @method getBlock
+     *
+     * @param {String} blockHash
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Promise<Object>}
+     */
+    getBlock(blockHash, moduleInstance) {
+        const getBlock = this.methodFactory.getMethod('getBlock');
+        getBlock.parameters = [blockHash];
+
+        return getBlock.execute(moduleInstance);
+    }
+
+    /**
+     * Checks if enough confirmations happened
+     *
+     * @method isConfirmed
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Boolean}
+     */
+    isConfirmed(moduleInstance) {
+        return this.confirmations >= moduleInstance.transactionConfirmationBlocks;
+    }
+
+    /**
+     * Checks if the timeout time is reached
+     *
+     * @method isTimeoutTimeExceeded
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Boolean}
+     */
+    isTimeoutTimeExceeded(moduleInstance) {
+        let confirmationChecks = moduleInstance.transactionBlockTimeout;
+
+        if (this.isSocketBasedProvider(moduleInstance)) {
+            confirmationChecks = moduleInstance.transactionPollingTimeout;
+        }
+
+        return this.confirmationChecks > confirmationChecks;
+    }
+
+    /**
+     * Checks if the given provider is a socket based provider.
+     *
+     * @method isSocketBasedProvider
+     *
+     * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
+     *
+     * @returns {Boolean}
+     */
     isSocketBasedProvider(provider) {
         switch (provider.constructor.name) {
             case 'CustomProvider':
