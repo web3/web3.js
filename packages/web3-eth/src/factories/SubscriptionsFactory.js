@@ -17,29 +17,35 @@
  * @date 2019
  */
 
+import {
+    LogSubscription,
+    NewHeadsSubscription,
+    NewPendingTransactionsSubscription,
+    SyncingSubscription
+} from 'web3-core-subscriptions';
+
+import {GetPastLogsMethod} from 'web3-core-method';
+
 export default class SubscriptionsFactory {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {MethodFactory} methodFactory
      *
      * @constructor
      */
-    constructor(utils, formatters, methodFactory) {
+    constructor(utils, formatters) {
         this.utils = utils;
         this.formatters = formatters;
-        this.methodFactory = methodFactory;
     }
 
     /**
-     * Gets and executes subscription for an given type
+     * Gets the correct subscription class by the given name.
      *
      * @method getSubscription
      *
      * @param {AbstractWeb3Module} moduleInstance
      * @param {String} type
      * @param {Object} options
-     * @param {Function} callback
      *
      * @returns {Subscription}
      */
@@ -51,7 +57,7 @@ export default class SubscriptionsFactory {
                     utils,
                     formatters,
                     moduleInstance,
-                    this.methodFactory.createMethod('getPastLogs')
+                    new GetPastLogsMethod(this.utils, this.formatters)
                 );
             case 'newBlockHeaders':
                 return new NewHeadsSubscription(this.utils, this.formatters, moduleInstance);

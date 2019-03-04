@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file AbstractSendMethod.js
+ * @file ObservedTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -40,6 +40,11 @@ export default class ObservedTransactionMethod extends AbstractMethod {
         this.promiEvent = new PromiEvent();
     }
 
+    /**
+     * This static property is required for checking the type of the method class before it got initiated.
+     *
+     * @returns {Boolean}
+     */
     static get ObservedTransactionMethod() {
         return true;
     }

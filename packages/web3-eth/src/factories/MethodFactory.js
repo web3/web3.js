@@ -55,6 +55,8 @@ import {
     VersionMethod,
     ChainIdMethod
 } from 'web3-core-method';
+
+import NewHeadsSubscription from '../../../web3-core-subscriptions';
 import TransactionObserver from '../observers/TransactionObserver';
 
 export default class MethodFactory extends AbstractMethodFactory {
@@ -116,7 +118,15 @@ export default class MethodFactory extends AbstractMethodFactory {
         const method = this.methods[name];
 
         if (method.ObservedTransactionMethod) {
-            return new method(this.utils, this.formatters, new TransactionObserver(this, this.subscriptionsFactory));
+            return new method(
+                this.utils,
+                this.formatters,
+                new TransactionObserver(
+                    this.getMethod('getTransactionReceipt'),
+                    this.getMethod('GetBlockMethod'),
+                    new NewHeadsSubscription(this.utils, this.formatters)
+                )
+            );
         }
 
         return new method(this.utils, this.formatters);

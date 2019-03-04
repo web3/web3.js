@@ -34,17 +34,17 @@ import EthModule from './Eth.js';
 import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';
 
+export TransactionObserver from './observers/TransactionObserver.js';
+
 /**
  * Creates the TransactionSigner class
  *
  * @returns {TransactionSigner}
- *
  * @constructor
  */
 export const TransactionSigner = () => {
     return new EthTransactionSigner(Utils, formatters);
 };
-
 
 /**
  * Creates the Eth object
@@ -55,7 +55,6 @@ export const TransactionSigner = () => {
  * @param {Object} options
  *
  * @returns {Eth}
- *
  * @constructor
  */
 export const Eth = (provider, options) => {

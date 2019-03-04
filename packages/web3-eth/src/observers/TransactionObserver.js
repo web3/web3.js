@@ -21,14 +21,16 @@ import {Observable} from 'rxjs';
 
 export default class TransactionObserver {
     /**
-     * @param {MethodFactory} methodFactory
-     * @param {SubscriptionsFactory} subscriptionsFactory
+     * @param {GetTransactionReceiptMethod} getTransactionReceiptMethod
+     * @param {GetBlockMethod} getBlockMethod
+     * @param {NewHeadsSubscription} newHeadsSubscription
      *
      * @constructor
      */
-    constructor(methodFactory, subscriptionsFactory) {
-        this.methodFactory = methodFactory;
-        this.subscriptionsFactory = subscriptionsFactory;
+    constructor(getTransactionReceiptMethod, getBlockMethod, newHeadsSubscription) {
+        this.getTransactionReceiptMethod = getTransactionReceiptMethod;
+        this.getBlockMethod = getBlockMethod;
+        this.newHeadsSubscription = newHeadsSubscription;
         this.lastBlock = false;
         this.confirmations = 0;
         this.confirmationChecks = 0;
@@ -49,7 +51,7 @@ export default class TransactionObserver {
             if (this.isSocketBasedProvider(moduleInstance.currentProvider)) {
                 this.startSocketObserver(transactionHash, moduleInstance, observer);
             } else {
-                this.checkOverHttp(transactionHash, moduleInstance, observer);
+                this.startHttpObserver(transactionHash, moduleInstance, observer);
             }
         });
     }
@@ -64,19 +66,20 @@ export default class TransactionObserver {
      * @param {Observer} observer
      */
     startSocketObserver(transactionHash, moduleInstance, observer) {
-        const newHeadsSubscription = this.subscriptionsFactory.getSubscription('newHeads')
-            .subscribe((newHead) => {
-                const getTransactionReceipt = this.methodFactory.getMethod('getTransactionReceipt');
-                getTransactionReceipt.parameters = [transactionHash];
+        // TODO: Improve moduleInstance handling for subscriptions
+        this.newHeadsSubscription.moduleInstance = moduleInstance;
 
-                getTransactionReceipt.execute(moduleInstance).then((receipt) => {
+        this.newHeadsSubscription.subscribe((newHead) => {
+                this.getTransactionReceiptMethod.parameters = [transactionHash];
+
+                this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
                     if (receipt) {
                         this.confirmations++;
 
                         observer.next(receipt);
 
                         if (this.isConfirmed(moduleInstance)) {
-                            newHeadsSubscription.unsubscribe();
+                            this.newHeadsSubscription.unsubscribe();
 
                             observer.complete(receipt);
                         }
@@ -85,7 +88,7 @@ export default class TransactionObserver {
                     this.confirmationChecks++;
 
                     if (this.isTimeoutTimeExceeded(moduleInstance)) {
-                        newHeadsSubscription.unsubscribe();
+                        this.newHeadsSubscription.unsubscribe();
 
                         observer.error('Timeout exceeded during the transaction confirmation observation!');
                     }
@@ -102,12 +105,11 @@ export default class TransactionObserver {
      * @param {AbstractWeb3Module} moduleInstance
      * @param {Observer} observer
      */
-    checkOverHttp(transactionHash, moduleInstance, observer) {
+    startHttpObserver(transactionHash, moduleInstance, observer) {
         const interval = setInterval(async () => {
-            const getTransactionReceipt = this.methodFactory.getMethod('getTransactionReceipt');
-            getTransactionReceipt.parameters = [transactionHash];
+            this.getTransactionReceiptMethod.parameters = [transactionHash];
 
-            const receipt = await getTransactionReceipt.execute(moduleInstance);
+            const receipt = await this.getTransactionReceiptMethod.execute(moduleInstance);
 
             if (receipt) {
                 const block = await this.getBlock(receipt.blockHash, moduleInstance);
@@ -152,10 +154,9 @@ export default class TransactionObserver {
      * @returns {Promise<Object>}
      */
     getBlock(blockHash, moduleInstance) {
-        const getBlock = this.methodFactory.getMethod('getBlock');
-        getBlock.parameters = [blockHash];
+        this.getBlockMethod.parameters = [blockHash];
 
-        return getBlock.execute(moduleInstance);
+        return this.getBlockMethod.execute(moduleInstance);
     }
 
     /**
