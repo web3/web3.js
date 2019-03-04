@@ -21,6 +21,7 @@
  */
 
 import {AbstractMethod} from 'web3-core-method';
+import PromiEvent from './PromiEvent';
 
 export default class AbstractSendMethod extends AbstractMethod {
     /**
@@ -43,12 +44,13 @@ export default class AbstractSendMethod extends AbstractMethod {
      * @method execute
      *
      * @param {AbstractWeb3Module} moduleInstance
-     * @param {PromiEvent} promiEvent
      *
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    execute(moduleInstance, promiEvent) {
+    execute(moduleInstance) {
+        const promiEvent = new PromiEvent();
+
         this.beforeExecution(moduleInstance);
 
         if (this.parameters.length !== this.parametersAmount) {
@@ -57,35 +59,36 @@ export default class AbstractSendMethod extends AbstractMethod {
             );
         }
 
-        moduleInstance.currentProvider
-            .send(this.rpcMethod, this.parameters)
-            .then((response) => {
-                this.transactionObserver.observe(moduleInstance, response)
-                    .on('confirmation', (receipt, counter) => {
-                        promiEvent.emit('confirmation', counter, receipt);
-                    })
-                    .on('confirmed', (receipt) => {
-                        this.handleSuccessState(method.afterExecution(receipt), method, promiEvent);
-                    })
-                    .on('error', (error, receipt, counter) => {
-                        this.handleErrorState(error, method, promiEvent);
-                    });
+        moduleInstance.currentProvider.send(this.rpcMethod, this.parameters).then((transactionHash) => {
+            promiEvent.emit('transactionHash', transactionHash);
 
-                if (this.callback) {
-                    this.callback(false, response);
-                }
+            if (this.callback) {
+                this.callback(false, response);
+            }
 
-                promiEvent.emit('transactionHash', response);
-            })
-            .catch((error) => {
-                if (this.callback) {
-                    this.callback(error, null);
-                }
+            this.transactionObserver.observe(transactionHash, moduleInstance)
+                .on('confirmation', (receipt, confirmations) => {
+                    promiEvent.emit('confirmation', confirmations, receipt);
+                })
+                .on('confirmed', (receipt) => {
+                    if (method.callback) {
+                        method.callback(false, receipt);
+                    }
 
-                promiEvent.reject(error);
-                promiEvent.emit('error', error);
-                promiEvent.removeAllListeners();
-            });
+                    promiEvent.resolve(receipt);
+                    promiEvent.emit('receipt', receipt);
+                    promiEvent.removeAllListeners();
+                })
+                .on('error', (error, receipt, confirmations) => {
+                    if (this.callback) {
+                        this.callback(error, null);
+                    }
+
+                    promiEvent.reject(error);
+                    promiEvent.emit('error', error, receipt, confirmations);
+                    promiEvent.removeAllListeners();
+                });
+        });
 
         return promiEvent;
     }
