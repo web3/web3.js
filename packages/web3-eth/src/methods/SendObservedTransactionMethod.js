@@ -28,7 +28,9 @@ export default class SendObservedTransactionMethod extends ObservedTransactionMe
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {TransactionObserver} transactionObserver
-     * @param {MethodFactory} methodFactory
+     * @param {ChainIdMethod} chainIdMethod
+     * @param {GetTransactionCountMethod} getTransactionCountMethod
+     * @param {SendSignedTransactionMethod} sendSignedTransactionMethod
      *
      * @constructor
      */
@@ -36,10 +38,15 @@ export default class SendObservedTransactionMethod extends ObservedTransactionMe
         utils,
         formatters,
         transactionObserver,
-        methodFactory
+        chainIdMethod,
+        getTransactionCountMethod,
+        sendSignedTransactionMethod
     ) {
         super('eth_sendTransaction', 1, utils, formatters, transactionObserver);
-        this.methodFactory = methodFactory;
+
+        this.chainIdMethod = chainIdMethod;
+        this.getTransactionCountMethod = getTransactionCountMethod;
+        this.sendSignedTransactionMethod = sendSignedTransactionMethod;
     }
 
     /**
@@ -128,24 +135,22 @@ export default class SendObservedTransactionMethod extends ObservedTransactionMe
      */
     async sendRawTransaction(privateKey, moduleInstance) {
         if (!this.parameters[0].chainId) {
-            this.parameters[0].chainId = await this.methodFactory('getChainId').execute(moduleInstance);
+            this.parameters[0].chainId = await this.chainIdMethod.execute(moduleInstance);
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
-            const getTransactionCountMethod = this.methodFactory('getTransactionCountMethod');
-            getTransactionCountMethod.parameters = [this.parameters[0].from];
+            this.getTransactionCountMethod.parameters = [this.parameters[0].from];
 
-            this.parameters[0].nonce = await getTransactionCountMethod.execute(moduleInstance);
+            this.parameters[0].nonce = await this.getTransactionCountMethod.execute(moduleInstance);
         }
 
         const response = await moduleInstance.transactionSigner.sign(this.parameters[0], privateKey);
 
-        const sendSignedTransactionMethod = this.methodFactory('sendSignedTransactionMethod');
-        sendSignedTransactionMethod.parameters = [response.rawTransaction];
-        sendSignedTransactionMethod.callback = this.callback;
-        sendSignedTransactionMethod.promiEvent = this.promiEvent;
+        this.sendSignedTransactionMethod.parameters = [response.rawTransaction];
+        this.sendSignedTransactionMethod.callback = this.callback;
+        this.sendSignedTransactionMethod.promiEvent = this.promiEvent;
 
-        sendSignedTransactionMethod.execute(moduleInstance);
+        this.sendSignedTransactionMethod.execute(moduleInstance);
     }
 
     /**

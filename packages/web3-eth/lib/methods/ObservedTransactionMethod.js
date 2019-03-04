@@ -41,15 +41,6 @@ export default class ObservedTransactionMethod extends AbstractMethod {
     }
 
     /**
-     * This static property is required for checking the type of the method class before it got initiated.
-     *
-     * @returns {Boolean}
-     */
-    static get ObservedTransactionMethod() {
-        return true;
-    }
-
-    /**
      * Sends the request and returns a PromiEvent Object
      *
      * @method execute
@@ -69,7 +60,7 @@ export default class ObservedTransactionMethod extends AbstractMethod {
         }
 
         moduleInstance.currentProvider.send(this.rpcMethod, this.parameters).then((transactionHash) => {
-            promiEvent.emit('transactionHash', transactionHash);
+            this.promiEvent.emit('transactionHash', transactionHash);
 
             if (this.callback) {
                 this.callback(false, response);
@@ -82,29 +73,29 @@ export default class ObservedTransactionMethod extends AbstractMethod {
                         count = confirmation.count;
                         receipt = confirmation.receipt;
 
-                        promiEvent.emit('confirmation', count, receipt);
+                        this.promiEvent.emit('confirmation', count, receipt);
                     },
                     (error) => {
                         if (this.callback) {
                             this.callback(error, null);
                         }
 
-                        promiEvent.reject(error);
-                        promiEvent.emit('error', error, receipt, count);
-                        promiEvent.removeAllListeners();
+                        this.promiEvent.reject(error);
+                        this.promiEvent.emit('error', error, receipt, count);
+                        this.promiEvent.removeAllListeners();
                     },
                     () => {
                         if (method.callback) {
                             method.callback(false, receipt);
                         }
 
-                        promiEvent.resolve(receipt);
-                        promiEvent.emit('receipt', receipt);
-                        promiEvent.removeAllListeners();
+                        this.promiEvent.resolve(receipt);
+                        this.promiEvent.emit('receipt', receipt);
+                        this.promiEvent.removeAllListeners();
                     }
                 );
         });
 
-        return promiEvent;
+        return this.promiEvent;
     }
 }

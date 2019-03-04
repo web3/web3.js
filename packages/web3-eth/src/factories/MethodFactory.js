@@ -22,42 +22,43 @@
 
 import {
     AbstractMethodFactory,
-    GetNodeInfoMethod,
-    GetProtocolVersionMethod,
-    GetCoinbaseMethod,
-    IsMiningMethod,
-    GetHashrateMethod,
-    IsSyncingMethod,
-    GetGasPriceMethod,
+    CallMethod,
+    ChainIdMethod,
+    EstimateGasMethod,
     GetAccountsMethod,
-    GetBlockNumberMethod,
     GetBalanceMethod,
-    GetStorageAtMethod,
-    GetCodeMethod,
     GetBlockMethod,
-    GetUncleMethod,
+    GetBlockNumberMethod,
     GetBlockTransactionCountMethod,
     GetBlockUncleCountMethod,
-    GetTransactionMethod,
-    GetTransactionFromBlockMethod,
-    GetTransactionReceipt,
+    GetCodeMethod,
+    GetCoinbaseMethod,
+    GetGasPriceMethod,
+    GetHashrateMethod,
+    GetNodeInfoMethod,
+    GetPastLogsMethod,
+    GetProtocolVersionMethod,
+    GetStorageAtMethod,
     GetTransactionCountMethod,
+    GetTransactionFromBlockMethod,
+    GetTransactionMethod,
+    GetTransactionReceipt,
+    GetUncleMethod,
+    GetWorkMethod,
+    IsMiningMethod,
+    IsSyncingMethod,
+    RequestAccountsMethod,
     SendRawTransactionMethod,
-    SignTransactionMethod,
     SendTransactionMethod,
     SignMethod,
-    CallMethod,
-    EstimateGasMethod,
+    SignTransactionMethod,
     SubmitWorkMethod,
-    GetWorkMethod,
-    GetPastLogsMethod,
-    RequestAccountsMethod,
-    VersionMethod,
-    ChainIdMethod
+    VersionMethod
 } from 'web3-core-method';
 
 import NewHeadsSubscription from '../../../web3-core-subscriptions';
 import TransactionObserver from '../observers/TransactionObserver';
+import SendSignedTransactionMethod from '../methods/SendSignedTransactionMethod';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
@@ -117,7 +118,7 @@ export default class MethodFactory extends AbstractMethodFactory {
     createMethod(name) {
         const method = this.methods[name];
 
-        if (method.ObservedTransactionMethod) {
+        if (method.name === 'SendObservedTransactionMethod') {
             return new method(
                 this.utils,
                 this.formatters,
@@ -126,6 +127,23 @@ export default class MethodFactory extends AbstractMethodFactory {
                     this.getMethod('GetBlockMethod'),
                     new NewHeadsSubscription(this.utils, this.formatters)
                 )
+            );
+        }
+
+        if (method.name === 'SendSignedTransactionMethod') {
+            const transactionObserver = new TransactionObserver(
+                this.getMethod('getTransactionReceipt'),
+                this.getMethod('GetBlockMethod'),
+                new NewHeadsSubscription(this.utils, this.formatters)
+            );
+
+            return new method(
+                this.utils,
+                this.formatters,
+                transactionObserver,
+                new ChainIdMethod(this.utils, this.formatters),
+                new GetTransactionCountMethod(this.utils, this.formatters),
+                new SendSignedTransactionMethod(this.utils, this.formatters, transactionObserver)
             );
         }
 

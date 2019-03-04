@@ -20,12 +20,22 @@
  * @date 2018
  */
 
+import {
+    EstimateGasMethod,
+    SendRawTransactionMethod,
+    ChainIdMethod,
+    GetTransactionCountMethod,
+    GetTransactionReceiptMethod,
+    GetBlockMethod,
+    NewHeadsSubscription,
+    SendSignedTransactionMethod
+} from 'web3-core-method';
+import {TransactionObserver} from 'web3-eth'; // TODO: This can be removed with the new folder structure
 import CallContractMethod from '../methods/CallContractMethod';
 import ContractDeployMethod from '../methods/ContractDeployMethod';
 import PastEventLogsMethod from '../methods/PastEventLogsMethod';
 import AllPastEventLogsMethod from '../methods/AllPastEventLogsMethod';
 import SendContractMethod from '../methods/SendContractMethod';
-import {EstimateGasMethod, SendRawTransactionMethod, ChainIdMethod, GetTransactionCountMethod} from 'web3-core-method';
 
 export default class MethodFactory {
     /**
@@ -141,12 +151,19 @@ export default class MethodFactory {
      * @returns {SendContractMethod}
      */
     createSendContractMethod(abiItem, abiModel) {
+        const transactionObserver = new TransactionObserver(
+            new GetTransactionReceiptMethod(this.utils, this.formatters),
+            new GetBlockMethod(this.utils, this.formatters),
+            new NewHeadsSubscription(this.utils, this.formatters, {})
+        );
+
         return new SendContractMethod(
             this.utils,
             this.formatters,
-            new SendRawTransactionMethod(this.utils, this.formatters),
+            transactionObserver,
             new ChainIdMethod(this.utils, this.formatters),
             new GetTransactionCountMethod(this.utils, this.formatters),
+            new SendSignedTransactionMethod(this.utils, this.formatters, transactionObserver),
             this.contractModuleFactory.createAllEventsLogDecoder(),
             abiModel
         );
@@ -165,9 +182,14 @@ export default class MethodFactory {
         return new ContractDeployMethod(
             this.utils,
             this.formatters,
-            new SendRawTransactionMethod(this.utils, this.formatters),
+            new TransactionObserver(
+                new GetTransactionReceiptMethod(this.utils, this.formatters),
+                new GetBlockMethod(this.utils, this.formatters),
+                new NewHeadsSubscription(this.utils, this.formatters, {})
+            ),
             new ChainIdMethod(this.utils, this.formatters),
             new GetTransactionCountMethod(this.utils, this.formatters),
+            new SendSignedTransactionMethod(this.utils, this.formatters),
             contract
         );
     }

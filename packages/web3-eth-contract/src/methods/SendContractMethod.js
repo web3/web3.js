@@ -21,11 +21,16 @@
  */
 
 import isArray from 'lodash/isArray';
+import {SendObservedTransactionMethod} from 'web3-eth';
 
-export default class SendContractMethod extends ObservedTransactionMethod {
+export default class SendContractMethod extends SendObservedTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {TransactionObserver} transactionObserver
+     * @param {ChainIdMethod} chainIdMethod
+     * @param {GetTransactionCountMethod} getTransactionCountMethod
+     * @param {SendSignedTransactionMethod} sendSignedTransactionMethod
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
      *
@@ -34,10 +39,21 @@ export default class SendContractMethod extends ObservedTransactionMethod {
     constructor(
         utils,
         formatters,
+        transactionObserver,
+        chainIdMethod,
+        getTransactionCountMethod,
+        sendSignedTransactionMethod,
         allEventsLogDecoder,
         abiModel
     ) {
-        super(utils, formatters);
+        super(
+            utils,
+            formatters,
+            transactionObserver,
+            chainIdMethod,
+            getTransactionCountMethod,
+            sendSignedTransactionMethod
+        );
 
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.abiModel = abiModel;
