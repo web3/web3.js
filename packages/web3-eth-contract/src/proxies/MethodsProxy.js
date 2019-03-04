@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {PromiEvent} from 'web3-core-promievent';
+import {PromiEvent} from 'web3-core';
 import isArray from 'lodash/isArray';
 import isFunction from 'lodash/isFunction';
 
@@ -180,9 +180,7 @@ export default class MethodsProxy {
             return method.execute(this.contract);
         }
 
-        // TODO: The promiEvent will just be used for send methods I could move this logic directly to the AbstractSendMethod
-        // TODO: Because of this I could remove the promievent module because it's just used in the SendTransaction- & SendRawTransaction method.
-        return method.execute(this.contract, new PromiEvent());
+        return method.execute(this.contract);
     }
 
     /**

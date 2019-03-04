@@ -23,6 +23,8 @@
 import {ProviderDetector, ProviderResolver} from 'web3-providers';
 import Web3Module from './AbstractWeb3Module.js';
 
+export PromiEvent from './PromiEvent';
+
 /**
  * Returns a object of type AbstractWeb3Module
  *

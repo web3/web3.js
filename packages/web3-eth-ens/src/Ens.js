@@ -17,10 +17,9 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'web3-core';
+import {AbstractWeb3Module, PromiEvent} from 'web3-core';
 import isFunction from 'lodash/isFunction';
 import namehash from 'eth-ens-namehash';
-import {PromiEvent} from 'web3-eth'; // TODO: Move the PromiEvent class to the core module before merging this branch!
 
 // TODO: Remove the wrapped methods and create a proxy for handling a ENS method call.
 export default class Ens extends AbstractWeb3Module {

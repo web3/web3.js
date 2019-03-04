@@ -20,8 +20,8 @@
  * @date 2018
  */
 
+import {PromiEvent} from 'web3-core';
 import {AbstractMethod} from 'web3-core-method';
-import PromiEvent from '../PromiEvent';
 
 export default class ObservedTransactionMethod extends AbstractMethod {
     /**
