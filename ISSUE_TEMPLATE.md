@@ -4,12 +4,6 @@ Welcome to the Web3.js Issue Template!
 
 If you're new around here, reading this will make sure you're helped ASAP.
 
-First off, in this file, text inside arrows are comments. These paragraphs won't render 
-after your submission.
-
-You can search for errors others before you solved by clicking the links below.
-This is faster than having to wait for a reply of a collaborator.
-
 * Ethereum.SE:
     https://ethereum.stackexchange.com/
 * StackOverflow:
@@ -43,20 +37,19 @@ The more details you include, the better the community will be able to help you!
 ---------------------------------------------------------------------------------------->
 
 
+<!-- The issue template starts here. Give as much info as possible :) -->
 
-<!-- The issue template starts here. Give as much info as possible :P -->
-
-### Description <!-- In plain words, what happened? (or didn't oops) -->
+### Description <!-- In plain words, what happened -->
 
 
-#### Expected behavior <!-- What it should do -->
+#### Expected behavior
 <!---------------------------------------------------------------------
     Example:
     Calling `await web3.eth.getAccounts()` should return an array.
 ----------------------------------------------------------------------->
 
 
-#### Actual behavior <!-- What it do -->
+#### Actual behavior
 <!---------------------------------------------------------------------
     Example:
     Calling `await web3.eth.getAccounts()` returns "monkey".
@@ -78,7 +71,7 @@ The more details you include, the better the community will be able to help you!
 ----------------------------------------------------------------------->
 
 
-#### Error Logs <!-- Please include these whenever possible! -->
+#### Error Logs 
 
 
 #### Gists
@@ -87,18 +80,15 @@ The more details you include, the better the community will be able to help you!
     * ABI JSON,
     * working Solidity code, etc.
 
-    helps A LOT. Instead of collaborators guessing how your code is implemented
-    we can copypasta and test in the blink of an eye.
-
     gist tutorial: https://help.github.com/en/articles/creating-gists
 ----------------------------------------------------------------------->
 
 
-### Versions  <!-- This is super-ultra-duper important -->
+### Versions 
 * web3.js:
-* javascript environment:
-
-
+* nodejs:
+* browser:
+* ethereum node:
 
 
 <!---------------------------------------------------------------------
