@@ -154,21 +154,25 @@ export default class AbiCoder {
         let decodedValue;
 
         if (isArray(result)) {
-            outputs.forEach((output, i) => {
-                decodedValue = result[i];
+            if (outputs.length > 1) {
+                outputs.forEach((output, i) => {
+                    decodedValue = result[i];
 
-                if (decodedValue === '0x') {
-                    decodedValue = null;
-                }
+                    if (decodedValue === '0x') {
+                        decodedValue = null;
+                    }
 
-                returnValues[i] = decodedValue;
+                    returnValues[i] = decodedValue;
 
-                if (isObject(output) && output.name) {
-                    returnValues[output.name] = decodedValue;
-                }
-            });
+                    if (isObject(output) && output.name) {
+                        returnValues[output.name] = decodedValue;
+                    }
+                });
 
-            return returnValues;
+                return returnValues;
+            }
+
+            return result[0];
         }
 
         return result;
