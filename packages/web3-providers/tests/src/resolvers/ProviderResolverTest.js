@@ -3,7 +3,6 @@ import ProvidersModuleFactory from '../../../src/factories/ProvidersModuleFactor
 import HttpProvider from '../../../src/providers/HttpProvider';
 import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import IpcProvider from '../../../src/providers/IpcProvider';
-import Web3EthereumProvider from '../../../src/providers/Web3EthereumProvider';
 import MetamaskProvider from '../../../src/providers/MetamaskProvider';
 import CustomProvider from '../../../src/providers/CustomProvider';
 

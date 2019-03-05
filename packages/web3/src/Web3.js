@@ -34,13 +34,13 @@ import {version} from '../package.json';
 
 export default class Web3 extends AbstractWeb3Module {
     /**
-     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {AbstractSocketProvider|HttpProvider|CustomProvider|String} provider
      * @param {Net} net
      * @param {Object} options
      *
      * @constructor
      */
-    constructor(provider, net, options = {}) {
+    constructor(provider, net = null, options = {}) {
         super(provider, new ProvidersModuleFactory(), null, null, options, net);
 
         this.eth = new Eth(this.currentProvider, options);
