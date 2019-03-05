@@ -1,4 +1,4 @@
-import Web3EthereumProvider from '../../../src/providers/EthereumProvider';
+import Web3EthereumProvider from '../../../src/providers/Web3EthereumProvider';
 import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
 import AbstractMethod from '../../__mocks__/AbstractMethod';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
@@ -7,9 +7,9 @@ import AbstractSocketProvider from '../../../lib/providers/AbstractSocketProvide
 // Mocks
 
 /**
- * EthereumProvider test
+ * Web3EthereumProvider test
  */
-describe('EthereumProviderTest', () => {
+describe('Web3EthereumProviderTest', () => {
     let ethereumProvider, socketMock;
 
     beforeEach(() => {
@@ -27,7 +27,7 @@ describe('EthereumProviderTest', () => {
 
         expect(ethereumProvider).toBeInstanceOf(AbstractSocketProvider);
 
-        expect(ethereumProvider.host).toEqual('EthereumProvider');
+        expect(ethereumProvider.host).toEqual('Web3EthereumProvider');
     });
 
     it('calls registerEventListeners and the expected listeners will be registered', () => {

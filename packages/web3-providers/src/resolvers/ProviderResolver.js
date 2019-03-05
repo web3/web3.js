@@ -75,7 +75,7 @@ export default class ProviderResolver {
         }
 
         if (provider.isEIP1193) {
-            return this.providersModuleFactory.createEthereumProvider(provider);
+            return this.providersModuleFactory.createWeb3EthereumProvider(provider);
         }
 
         if (this.isMetamaskInpageProvider(provider)) {
