@@ -106,4 +106,4 @@ export const ProviderDetector = () => {
 };
 
 export ProvidersModuleFactory from './factories/ProvidersModuleFactory';
-export EthereumProvider from './providers/EthereumProvider';
+export Web3EthereumProvider from './providers/Web3EthereumProvider';

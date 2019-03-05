@@ -44,10 +44,10 @@ export default class ProviderResolver {
      *
      * @method resolve
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
      * @param {Net} net
      *
-     * @returns {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|Error}
+     * @returns {AbstractSocketProvider|HttpProvider|CustomProvider}
      */
     resolve(provider, net) {
         if (typeof provider === 'string') {
@@ -66,23 +66,57 @@ export default class ProviderResolver {
             }
         }
 
+        if (this.isWeb3Provider(provider)) {
+            return provider;
+        }
+
         if (typeof global.mist !== 'undefined' && provider.constructor.name === 'EthereumProvider') {
             return this.providersModuleFactory.createMistEthereumProvider(provider);
         }
 
         if (provider.isEIP1193) {
-            return this.providersModuleFactory.createEthereumProvider(provider);
+            return this.providersModuleFactory.createWeb3EthereumProvider(provider);
         }
 
+        if (this.isMetamaskInpageProvider(provider)) {
+            return this.providersModuleFactory.createMetamaskProvider(provider);
+        }
+
+        return this.providersModuleFactory.createCustomProvider(provider);
+    }
+
+    /**
+     * Checks if the given provider is an internal Web3 provider.
+     *
+     * @method isWeb3Provider
+     *
+     * @param {Object} provider
+     *
+     * @returns {Boolean}
+     */
+    isWeb3Provider(provider) {
         switch (provider.constructor.name) {
-            case 'MetamaskInpageProvider':
-                return this.providersModuleFactory.createMetamaskProvider(provider);
             case 'HttpProvider':
             case 'IpcProvider':
             case 'WebsocketProvider':
-                return provider;
-            default:
-                return this.providersModuleFactory.createCustomProvider(provider);
+            case 'CustomProvider':
+            case 'MetamaskProvider':
+            case 'MistEthereumProvider':
+            case 'Web3EthereumProvider':
+                return true;
         }
+    }
+
+    /**
+     * Checks if the given provider is the MetamaskInpageProvider
+     *
+     * @method isMetamaskInpageProvider
+     *
+     * @param {Object} provider
+     *
+     * @returns {Boolean}
+     */
+    isMetamaskInpageProvider(provider) {
+        return provider.constructor.name === 'MetamaskInpageProvider';
     }
 }

@@ -26,7 +26,7 @@ export default class EnsModuleFactory {
      *
      * @method createENS
      *
-     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|Web3EthereumProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory
@@ -74,7 +74,7 @@ export default class EnsModuleFactory {
      *
      * @method createRegistry
      *
-     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|Web3EthereumProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory
