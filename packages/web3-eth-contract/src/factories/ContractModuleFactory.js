@@ -61,7 +61,7 @@ export default class ContractModuleFactory {
      *
      * @method createContract
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Accounts} accounts
      * @param {Array} abi

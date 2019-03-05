@@ -34,7 +34,7 @@ import {version} from '../package.json';
 
 export default class Web3 extends AbstractWeb3Module {
     /**
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Net} net
      * @param {Object} options
      *

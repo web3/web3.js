@@ -6,7 +6,7 @@ import ProviderDetector from '../../../src/detectors/ProviderDetector';
 import HttpProvider from '../../../src/providers/HttpProvider';
 import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import IpcProvider from '../../../src/providers/IpcProvider';
-import EthereumProvider from '../../../src/providers/EthereumProvider';
+import Web3EthereumProvider from '../../../src/providers/EthereumProvider';
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import {w3cwebsocket as W3CWebsocket} from 'websocket';
 
@@ -101,6 +101,6 @@ describe('ProvidersModuleFactoryTest', () => {
     });
 
     it('createEthereumProvider returns instance of EthereumProvider', () => {
-        expect(providersModuleFactory.createEthereumProvider({})).toBeInstanceOf(EthereumProvider);
+        expect(providersModuleFactory.createEthereumProvider({})).toBeInstanceOf(Web3EthereumProvider);
     });
 });

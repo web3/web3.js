@@ -1,4 +1,4 @@
-import EthereumProvider from '../../../src/providers/EthereumProvider';
+import Web3EthereumProvider from '../../../src/providers/EthereumProvider';
 import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
 import AbstractMethod from '../../__mocks__/AbstractMethod';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
@@ -17,7 +17,7 @@ describe('EthereumProviderTest', () => {
             on: jest.fn()
         };
 
-        ethereumProvider = new EthereumProvider(socketMock);
+        ethereumProvider = new Web3EthereumProvider(socketMock);
     });
 
     it('constructor check', () => {

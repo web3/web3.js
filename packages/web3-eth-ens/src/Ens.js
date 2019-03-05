@@ -24,7 +24,7 @@ import namehash from 'eth-ens-namehash';
 // TODO: Remove the wrapped methods and create a proxy for handling a ENS method call.
 export default class Ens extends AbstractWeb3Module {
     /**
-     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|Web3EthereumProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory
@@ -99,7 +99,7 @@ export default class Ens extends AbstractWeb3Module {
      *
      * @method setProvider
      *
-     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|Web3EthereumProvider|String} provider
      * @param {Net} net
      *
      * @returns {Boolean}

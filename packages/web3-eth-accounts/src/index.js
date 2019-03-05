@@ -29,7 +29,7 @@ import {GetGasPriceMethod, ChainIdMethod, GetTransactionCountMethod} from 'web3-
 /**
  * Returns the Accounts object
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Object} options
  *
  * @returns {Accounts}

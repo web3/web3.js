@@ -26,7 +26,7 @@ import {toChecksumAddress} from 'web3-utils'; // TODO: This could be removed wit
 
 export default class AbstractWeb3Module {
     /**
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {AbstractMethodFactory} methodFactory
@@ -47,8 +47,8 @@ export default class AbstractWeb3Module {
         this.providerDetector = providersModuleFactory.createProviderDetector(); // TODO: detection of an provider and setting of givenProvider could be removed.
         this.providerResolver = providersModuleFactory.createProviderResolver();
         this.givenProvider = this.providerDetector.detect();
-        this.setProvider(provider, net);
 
+        this._currentProvider = this.providerResolver.resolve(provider, net);
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
         this._defaultBlock = options.defaultBlock || 'latest';
         this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
@@ -265,13 +265,13 @@ export default class AbstractWeb3Module {
      *
      * @method setProvider
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Net} net
      *
      * @returns {Boolean|Error}
      */
     setProvider(provider, net) {
-        if (!this.currentProvider || !this.isSameProvider(provider)) {
+        if (!this.isSameProvider(provider)) {
             const resolvedProvider = this.providerResolver.resolve(provider, net);
             this.clearSubscriptions();
             this._currentProvider = resolvedProvider;
@@ -287,7 +287,7 @@ export default class AbstractWeb3Module {
      *
      * @method isSameProvider
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      *
      * @returns {Boolean}
      */
@@ -314,7 +314,6 @@ export default class AbstractWeb3Module {
      */
     clearSubscriptions(unsubscribeMethod) {
         if (
-            this.currentProvider &&
             typeof this.currentProvider.clearSubscriptions !== 'undefined' &&
             this.currentProvider.subscriptions.length > 0
         ) {

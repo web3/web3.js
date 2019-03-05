@@ -3,7 +3,7 @@ import ProvidersModuleFactory from '../../../src/factories/ProvidersModuleFactor
 import HttpProvider from '../../../src/providers/HttpProvider';
 import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import IpcProvider from '../../../src/providers/IpcProvider';
-import EthereumProvider from '../../../src/providers/EthereumProvider';
+import Web3EthereumProvider from '../../../src/providers/EthereumProvider';
 import MetamaskProvider from '../../../src/providers/MetamaskProvider';
 import CustomProvider from '../../../src/providers/CustomProvider';
 
@@ -72,13 +72,13 @@ describe('ProviderResolverTest', () => {
     });
 
     it('calls resolve with the EthereumProvider', () => {
-        new EthereumProvider({});
-        const ethereumProviderMock = EthereumProvider.mock.instances[0];
+        new Web3EthereumProvider({});
+        const ethereumProviderMock = Web3EthereumProvider.mock.instances[0];
         ethereumProviderMock.isEIP1193 = true;
 
         providersModuleFactoryMock.createEthereumProvider.mockReturnValueOnce(ethereumProviderMock);
 
-        expect(providerResolver.resolve(ethereumProviderMock)).toBeInstanceOf(EthereumProvider);
+        expect(providerResolver.resolve(ethereumProviderMock)).toBeInstanceOf(Web3EthereumProvider);
 
         expect(providersModuleFactoryMock.createEthereumProvider).toHaveBeenCalledWith(ethereumProviderMock);
     });

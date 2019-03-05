@@ -66,6 +66,10 @@ export default class ProviderResolver {
             }
         }
 
+        if (this.isWeb3Provider(provider)) {
+            return provider;
+        }
+
         if (typeof global.mist !== 'undefined' && provider.constructor.name === 'EthereumProvider') {
             return this.providersModuleFactory.createMistEthereumProvider(provider);
         }
@@ -74,15 +78,45 @@ export default class ProviderResolver {
             return this.providersModuleFactory.createEthereumProvider(provider);
         }
 
+        if (this.isMetamaskInpageProvider(provider)) {
+            return this.providersModuleFactory.createMetamaskProvider(provider);
+        }
+
+        return this.providersModuleFactory.createCustomProvider(provider);
+    }
+
+    /**
+     * Checks if the given provider is an internal Web3 provider.
+     *
+     * @method isWeb3Provider
+     *
+     * @param {Object} provider
+     *
+     * @returns {Boolean}
+     */
+    isWeb3Provider(provider) {
         switch (provider.constructor.name) {
-            case 'MetamaskInpageProvider':
-                return this.providersModuleFactory.createMetamaskProvider(provider);
             case 'HttpProvider':
             case 'IpcProvider':
             case 'WebsocketProvider':
-                return provider;
-            default:
-                return this.providersModuleFactory.createCustomProvider(provider);
+            case 'CustomProvider':
+            case 'MetamaskProvider':
+            case 'MistEthereumProvider':
+            case 'Web3EthereumProvider':
+                return true;
         }
+    }
+
+    /**
+     * Checks if the given provider is the MetamaskInpageProvider
+     *
+     * @method isMetamaskInpageProvider
+     *
+     * @param {Object} provider
+     *
+     * @returns {Boolean}
+     */
+    isMetamaskInpageProvider(provider) {
+        return provider.constructor.name === 'MetamaskInpageProvider';
     }
 }

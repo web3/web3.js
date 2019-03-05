@@ -33,7 +33,7 @@ import ShhModuleFactory from './factories/ShhModuleFactory';
  *
  * @method Shh
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Object} options
  *
  * @returns {Shh}

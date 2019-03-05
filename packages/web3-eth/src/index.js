@@ -63,7 +63,7 @@ export const MethodFactory = () => {
  *
  * @method Eth
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Net} net
  * @param {Object} options
  *
