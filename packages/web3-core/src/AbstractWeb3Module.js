@@ -35,7 +35,14 @@ export default class AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(provider, providersModuleFactory, methodModuleFactory = null, methodFactory = null, options = {}, net = null) {
+    constructor(
+        provider,
+        providersModuleFactory,
+        methodModuleFactory = null,
+        methodFactory = null,
+        options = {},
+        net = null
+    ) {
         this.providersModuleFactory = providersModuleFactory;
         this.providerDetector = providersModuleFactory.createProviderDetector(); // TODO: detection of an provider and setting of givenProvider could be removed.
         this.providerResolver = providersModuleFactory.createProviderResolver();
@@ -264,7 +271,7 @@ export default class AbstractWeb3Module {
      * @returns {Boolean|Error}
      */
     setProvider(provider, net) {
-        if (!this.isSameProvider(provider)) {
+        if (!this.currentProvider || !this.isSameProvider(provider)) {
             const resolvedProvider = this.providerResolver.resolve(provider, net);
             this.clearSubscriptions();
             this._currentProvider = resolvedProvider;
@@ -307,6 +314,7 @@ export default class AbstractWeb3Module {
      */
     clearSubscriptions(unsubscribeMethod) {
         if (
+            this.currentProvider &&
             typeof this.currentProvider.clearSubscriptions !== 'undefined' &&
             this.currentProvider.subscriptions.length > 0
         ) {

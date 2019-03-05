@@ -52,7 +52,7 @@ export default class Accounts extends AbstractWeb3Module {
         chainIdMethod,
         getGasPriceMethod,
         getTransactionCountMethod,
-        options,
+        options
     ) {
         super(provider, providersModuleFactory, null, null, options);
         this.transactionSigner = options.transactionSigner;
