@@ -127,13 +127,7 @@ export default class AbiCoder {
      * @returns {Object} plain param
      */
     decodeParameter(type, bytes) {
-        const decodedParameters = this.decodeParameters([type], bytes);
-
-        if (isArray(decodedParameters)) {
-            return decodedParameters[0];
-        }
-
-        return decodedParameters;
+        return this.decodeParameters([type], bytes)[0];
     }
 
     /**
@@ -178,10 +172,10 @@ export default class AbiCoder {
                 return returnValues;
             }
 
-            return result[0];
+            return result;
         }
 
-        return result;
+        return [result];
     }
 
     /**
@@ -232,9 +226,12 @@ export default class AbiCoder {
         if (data) {
             let values = this.decodeParameters(nonIndexedInputItems, data);
 
+            let decodedValue;
             nonIndexedInputKeys.forEach((itemKey, index) => {
-                returnValues[itemKey] = values[index];
-                returnValues[nonIndexedInputItems[index].name] = values[index];
+                decodedValue = values[index];
+
+                returnValues[itemKey] = decodedValue;
+                returnValues[nonIndexedInputItems[index].name] = decodedValue;
             });
         }
 
