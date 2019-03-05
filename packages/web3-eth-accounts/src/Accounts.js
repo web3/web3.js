@@ -35,17 +35,18 @@ import Account from './models/Account';
 // TODO: Rename Accounts module to Wallet and move the Wallet class to the eth module.
 export default class Accounts extends AbstractWeb3Module {
     /**
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Object} formatters
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetGasPriceMethod} getGasPriceMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param options
+     * @param {Object} options
+     * @param {Net.Socket} net
      *
      * @constructor
      */
-    constructor(provider, formatters, chainIdMethod, getGasPriceMethod, getTransactionCountMethod, options) {
-        super(provider, options);
+    constructor(provider, formatters, chainIdMethod, getGasPriceMethod, getTransactionCountMethod, options, net) {
+        super(provider, options, null, net);
 
         this.transactionSigner = options.transactionSigner;
         this.formatters = formatters;

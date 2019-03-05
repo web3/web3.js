@@ -24,7 +24,7 @@ import {AbstractWeb3Module} from 'web3-core';
 
 export default class AbstractContract extends AbstractWeb3Module {
     /**
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {AbiCoder} abiCoder
      * @param {Accounts} accounts
@@ -47,7 +47,7 @@ export default class AbstractContract extends AbstractWeb3Module {
         address = '',
         options = {}
     ) {
-        super(provider, options);
+        super(provider, options, null, null);
 
         this.contractModuleFactory = contractModuleFactory;
         this.abiCoder = abiCoder;

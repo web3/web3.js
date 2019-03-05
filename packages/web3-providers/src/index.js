@@ -107,4 +107,4 @@ export const ProviderDetector = () => {
 
 // TODO: Do not expose the providers module factory this should only be used in this module
 export ProvidersModuleFactory from './factories/ProvidersModuleFactory';
-export EthereumProvider from './providers/EthereumProvider';
+export Web3EthereumProvider from './providers/Web3EthereumProvider';

@@ -40,7 +40,7 @@ export const AbiCoder = () => {
         new EthersAbiCoder((type, value) => {
             if (
                 (type.match(/^u?int/) && !isArray(value) && !isObject(value)) ||
-                value.constructor.name !== 'BigNumber'
+                value.constructor.name === 'BigNumber'
             ) {
                 return value.toString();
             }

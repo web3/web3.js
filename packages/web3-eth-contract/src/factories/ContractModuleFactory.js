@@ -57,7 +57,7 @@ export default class ContractModuleFactory {
      *
      * @method createContract
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Accounts} accounts
      * @param {Array} abi
      * @param {String} address

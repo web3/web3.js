@@ -22,7 +22,7 @@ import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
  */
 export default class MistEthereumProvider extends AbstractSocketProvider {
     /**
-     * @param {EthereumProvider} connection
+     * @param {Web3EthereumProvider} connection
      *
      * @constructor
      */

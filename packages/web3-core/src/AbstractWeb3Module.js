@@ -27,20 +27,20 @@ import MethodProxy from './proxy/MethodProxy'; // TODO: This could be removed wi
 
 export default class AbstractWeb3Module {
     /**
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProviderDetector} providerDetector
      * @param {ProviderResolver} providerResolver
      * @param {MethodFactory} methodFactory
      * @param {Object} options
+     * @param {Net} net
      *
      * @constructor
      */
-    constructor(provider, providerDetector, providerResolver, methodFactory = null, options = {}) {
+    constructor(provider, providerDetector, providerResolver, methodFactory = null, options = {}, nodeNet = null) {
         this.providerDetector = providerDetector;
         this.providerResolver = providerResolver;
         this.givenProvider = this.providerDetector.detect();
 
-        this._currentProvider = this.providerResolver.resolve(provider);
+        this._currentProvider = this.providerResolver.resolve(provider, nodeNet);
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
         this._defaultBlock = options.defaultBlock || 'latest';
         this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
@@ -237,7 +237,7 @@ export default class AbstractWeb3Module {
      *
      * @property currentProvider
      *
-     * @returns {AbstractProviderAdapter}
+     * @returns {AbstractSocketProvider|HttpProvider|CustomProvider}
      */
     get currentProvider() {
         return this._currentProvider;
@@ -257,7 +257,7 @@ export default class AbstractWeb3Module {
      *
      * @method setProvider
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Net} net
      *
      * @returns {Boolean|Error}
@@ -279,7 +279,7 @@ export default class AbstractWeb3Module {
      *
      * @method isSameProvider
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      *
      * @returns {Boolean}
      */

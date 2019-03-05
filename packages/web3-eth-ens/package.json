@@ -1,6 +1,6 @@
 {
     "name": "web3-eth-ens",
-    "version": "1.0.0-beta.47",
+    "version": "1.0.0-beta.48",
     "description": "ENS support for web3.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-eth-ens",
     "license": "LGPL-3.0",
@@ -18,19 +18,19 @@
         "@babel/runtime": "^7.3.1",
         "eth-ens-namehash": "2.0.8",
         "lodash": "^4.17.11",
-        "web3-core": "1.0.0-beta.47",
-        "web3-core-helpers": "1.0.0-beta.47",
-        "web3-core-method": "1.0.0-beta.47",
-        "web3-core-promievent": "1.0.0-beta.47",
-        "web3-eth-abi": "1.0.0-beta.47",
-        "web3-eth-contract": "1.0.0-beta.47",
-        "web3-net": "1.0.0-beta.47",
-        "web3-providers": "1.0.0-beta.47",
-        "web3-utils": "1.0.0-beta.47"
+        "web3-core": "1.0.0-beta.48",
+        "web3-core-helpers": "1.0.0-beta.48",
+        "web3-core-method": "1.0.0-beta.48",
+        "web3-core-promievent": "1.0.0-beta.48",
+        "web3-eth-abi": "1.0.0-beta.48",
+        "web3-eth-contract": "1.0.0-beta.48",
+        "web3-net": "1.0.0-beta.48",
+        "web3-providers": "1.0.0-beta.48",
+        "web3-utils": "1.0.0-beta.48"
     },
     "devDependencies": {
         "dtslint": "^0.4.2",
-        "web3-eth-accounts": "1.0.0-beta.47"
+        "web3-eth-accounts": "1.0.0-beta.48"
     },
     "files": [
         "dist",

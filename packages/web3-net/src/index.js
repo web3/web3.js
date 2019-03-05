@@ -30,11 +30,12 @@ import NetworkModule from './Network.js';
  *
  * @method Network
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Net.Socket} net
  * @param {Object} options
  *
  * @returns {Network}
  */
-export const Network = (provider, options) => {
-    return new NetworkModule(provider, new MethodFactory(Utils, formatters), Utils, formatters, options);
+export const Network = (provider, net, options) => {
+    return new NetworkModule(provider, new MethodFactory(Utils, formatters), Utils, formatters, options, net);
 };

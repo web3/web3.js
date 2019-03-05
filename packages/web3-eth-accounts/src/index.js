@@ -28,19 +28,21 @@ import {GetGasPriceMethod, ChainIdMethod, GetTransactionCountMethod} from 'web3-
 /**
  * Returns the Accounts object
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Object} options
+ * @param {Net.Socket} net
  *
  * @returns {Accounts}
  * @constructor
  */
-export const Accounts = (provider, options) => {
+export const Accounts = (provider, net, options) => {
     return new AccountsModule(
         provider,
         formatters,
         new ChainIdMethod(Utils, formatters),
         new GetGasPriceMethod(Utils, formatters),
         new GetTransactionCountMethod(Utils, formatters),
-        options
+        options,
+        net
     );
 };

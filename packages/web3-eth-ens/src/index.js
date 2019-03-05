@@ -29,13 +29,14 @@ import EnsModuleFactory from './factories/EnsModuleFactory';
  *
  * @method Ens
  *
- * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+ * @param {HttpProvider|WebsocketProvider|IpcProvider|Web3EthereumProvider|String} provider
+ * @param {Net.Socket} net
  * @param {Object} options
  * @param {Accounts} accounts
  *
  * @returns {Ens}
  */
-export const Ens = (provider, options, accounts) => {
+export const Ens = (provider, net, options, accounts) => {
     const abiCoder = new AbiCoder();
 
     return new EnsModuleFactory().createENS(
@@ -46,6 +47,7 @@ export const Ens = (provider, options, accounts) => {
         Utils,
         formatters,
         new Network(provider),
-        options
+        options,
+        net
     );
 };

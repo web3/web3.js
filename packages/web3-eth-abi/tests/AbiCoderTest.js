@@ -104,7 +104,7 @@ describe('AbiCoderTest', () => {
     it('calls decodeParameters and returns the expected object', () => {
         ethersAbiCoderMock.decode.mockReturnValueOnce('0');
 
-        expect(abiCoder.decodeParameters([{name: 'output'}], '0x0')).toEqual({output: '0', '0': '0'});
+        expect(abiCoder.decodeParameters([{name: 'output'}], '0x0')).toEqual({output: '0', 0: '0'});
 
         expect(ethersAbiCoderMock.decode).toHaveBeenCalledWith([{name: 'output'}], '0x0');
     });
@@ -136,9 +136,10 @@ describe('AbiCoderTest', () => {
     });
 
     it('calls decodeLog and returns the expected object', () => {
-        ethersAbiCoderMock.decode.mockReturnValueOnce('0');
-        ethersAbiCoderMock.decode.mockReturnValueOnce(['', '', '0']);
-        ethersAbiCoderMock.decode.mockReturnValueOnce(['0', '0']);
+        ethersAbiCoderMock.decode
+            .mockReturnValueOnce('0')
+            .mockReturnValueOnce([['', '', '0']])
+            .mockReturnValueOnce(['0', '0']);
 
         const inputs = [
             {
@@ -148,7 +149,7 @@ describe('AbiCoderTest', () => {
             },
             {
                 indexed: true,
-                type: '',
+                type: 'bool',
                 name: 'second'
             },
             {
@@ -179,9 +180,9 @@ describe('AbiCoderTest', () => {
             fourth: '0'
         });
 
-        expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(1, [inputs[0]], '0x0');
+        expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(1, [inputs[0].type], '0x0');
 
-        expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(2, [inputs[1]], '0x0');
+        expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(2, [inputs[1].type], '0x0');
 
         expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(3, [inputs[2], inputs[3]], '0x0');
     });

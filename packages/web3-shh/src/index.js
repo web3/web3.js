@@ -32,17 +32,19 @@ import SubscriptionsFactory from './factories/SubscriptionsFactory';
  *
  * @method Shh
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Net} net
  * @param {Object} options
  *
  * @returns {Shh}
  */
-export const Shh = (provider, options) => {
+export const Shh = (provider, net, options) => {
     return new ShhModule(
         provider,
         new MethodFactory(Utils, formatters),
         new SubscriptionsFactory(Utils, formatters),
         new Network(provider, options),
-        options
+        options,
+        net
     );
 };

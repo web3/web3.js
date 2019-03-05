@@ -51,13 +51,14 @@ export const TransactionSigner = () => {
  *
  * @method Eth
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {AbstractSocketProvider|HttpProvider|CustomProvider|String} provider
+ * @param {Net} net
  * @param {Object} options
  *
  * @returns {Eth}
  * @constructor
  */
-export const Eth = (provider, options) => {
+export const Eth = (provider, net, options) => {
     const accounts = new Accounts(provider, options);
     const abiCoder = new AbiCoder();
 
@@ -75,6 +76,7 @@ export const Eth = (provider, options) => {
         new SubscriptionsFactory(Utils, formatters),
         new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
         new TransactionSigner(),
-        options
+        options,
+        net
     );
 };
