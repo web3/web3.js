@@ -50,6 +50,10 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
         super.beforeExecution(moduleInstance);
 
         this.parameters[0] = this.eventOptionsMapper.map(this.abiItemModel, moduleInstance, this.parameters[0]);
+
+        if (this.parameters[0].filter) {
+            delete this.parameters[0].filter;
+        }
     }
 
     /**

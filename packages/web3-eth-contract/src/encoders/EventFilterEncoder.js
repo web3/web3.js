@@ -48,6 +48,12 @@ export default class EventFilterEncoder {
             if (filter[indexedInput.name]) {
                 let filterItem = filter[indexedInput.name];
 
+                if (!filterItem) {
+                    topics.push(null);
+
+                    return;
+                }
+
                 if (isArray(filterItem)) {
                     filterItem = filterItem.map((item) => {
                         return this.abiCoder.encodeParameter(indexedInput.type, item);

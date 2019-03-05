@@ -157,7 +157,7 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<Array>}
      */
-    async getPastEvents(eventName, options, callback) {
+    getPastEvents(eventName, options, callback) {
         let method;
 
         if (eventName !== 'allEvents') {
@@ -173,9 +173,7 @@ export default class AbstractContract extends AbstractWeb3Module {
         method.parameters = [options];
         method.callback = callback;
 
-        const response = await method.execute(this);
-
-        return response;
+        return method.execute(this);
     }
 
     /**

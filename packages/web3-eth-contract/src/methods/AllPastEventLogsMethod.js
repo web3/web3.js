@@ -26,7 +26,7 @@ export default class AllPastEventLogsMethod extends GetPastLogsMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AllEventsLogDecoder} eventLogDecoder
+     * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
      * @param {AllEventsOptionsMapper} allEventsOptionsMapper
      *
@@ -50,6 +50,10 @@ export default class AllPastEventLogsMethod extends GetPastLogsMethod {
         super.beforeExecution(moduleInstance);
 
         this.parameters[0] = this.allEventsOptionsMapper.map(this.abiModel, moduleInstance, this.parameters[0]);
+
+        if (this.parameters[0].filter) {
+            delete this.parameters[0].filter;
+        }
     }
 
     /**
