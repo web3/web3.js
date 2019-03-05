@@ -175,7 +175,13 @@ export default class AbiCoder {
             return result;
         }
 
-        return [result];
+        if (isObject(outputs[0]) && outputs[0].name) {
+            returnValues[outputs[0].name] = result;
+        }
+
+        returnValues[0] = result;
+
+        return returnValues;
     }
 
     /**
