@@ -151,9 +151,9 @@ export default class AbiCoder {
 
         const result = this.ethersAbiCoder.decode(outputs, bytes);
         let returnValues = {};
+        let decodedValue;
 
-        if (outputs.length > 1) {
-            let decodedValue;
+        if (isArray(result)) {
             outputs.forEach((output, i) => {
                 decodedValue = result[i];
 
@@ -171,10 +171,7 @@ export default class AbiCoder {
             return returnValues;
         }
 
-        returnValues = {0: result};
-        returnValues[outputs[0].name] = result;
-
-        return returnValues;
+        return result;
     }
 
     /**
