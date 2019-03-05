@@ -151,28 +151,35 @@ export default class AbiCoder {
 
         const result = this.ethersAbiCoder.decode(outputs, bytes);
         let returnValues = {};
+        let decodedValue;
 
-        if (outputs.length > 1) {
-            let decodedValue;
-            outputs.forEach((output, i) => {
-                decodedValue = result[i];
+        if (isArray(result)) {
+            if (outputs.length > 1) {
+                outputs.forEach((output, i) => {
+                    decodedValue = result[i];
 
-                if (decodedValue === '0x') {
-                    decodedValue = null;
-                }
+                    if (decodedValue === '0x') {
+                        decodedValue = null;
+                    }
 
-                returnValues[i] = decodedValue;
+                    returnValues[i] = decodedValue;
 
-                if (isObject(output) && output.name) {
-                    returnValues[output.name] = decodedValue;
-                }
-            });
+                    if (isObject(output) && output.name) {
+                        returnValues[output.name] = decodedValue;
+                    }
+                });
 
-            return returnValues;
+                return returnValues;
+            }
+
+            return result;
         }
 
-        returnValues = {0: result};
-        returnValues[outputs[0].name] = result;
+        if (isObject(outputs[0]) && outputs[0].name) {
+            returnValues[outputs[0].name] = result;
+        }
+
+        returnValues[0] = result;
 
         return returnValues;
     }
@@ -208,7 +215,7 @@ export default class AbiCoder {
                 value = topics[topicCount];
 
                 if (this.isStaticType(input.type)) {
-                    value = this.decodeParameter(input, topics[topicCount]);
+                    value = this.decodeParameter(input.type, topics[topicCount]);
                 }
 
                 returnValues[i] = value;
@@ -225,9 +232,12 @@ export default class AbiCoder {
         if (data) {
             let values = this.decodeParameters(nonIndexedInputItems, data);
 
+            let decodedValue;
             nonIndexedInputKeys.forEach((itemKey, index) => {
-                returnValues[itemKey] = values[index];
-                returnValues[nonIndexedInputItems[index].name] = values[index];
+                decodedValue = values[index];
+
+                returnValues[itemKey] = decodedValue;
+                returnValues[nonIndexedInputItems[index].name] = decodedValue;
             });
         }
 
