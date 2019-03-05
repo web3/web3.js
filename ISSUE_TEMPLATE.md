@@ -4,25 +4,6 @@ Welcome to the Web3.js Issue Template!
 
 If you're new around here, reading this will make sure you're helped ASAP.
 
-* Ethereum.SE:
-    https://ethereum.stackexchange.com/
-* StackOverflow:
-    - Ethereum tag:
-        https://stackoverflow.com/questions/tagged/ethereum
-    - web3js tag:
-        https://stackoverflow.com/questions/tagged/web3js
-* Gitter channel:
-    https://gitter.im/ethereum/web3.js
-* Github:
-    Examples of useful Github search syntax:
-in:title	        warning in:title matches issues with "warning" in their title.
-in:body	            error in:title,body matches issues with "error" in their title or body.
-in:comments	        shipit in:comments matches issues mentioning "shipit" in their comments.
-
-————————————————————————————————————————————————————————————————————————————————————————
-
-Choosing a title
-
 Using a descriptive title will help others after you find what you contributed!
 Consider submitting the title as one below:
 
@@ -35,7 +16,6 @@ Consider submitting the title as one below:
 The more details you include, the better the community will be able to help you!
 
 ---------------------------------------------------------------------------------------->
-
 
 <!-- The issue template starts here. Give as much info as possible :) -->
 
