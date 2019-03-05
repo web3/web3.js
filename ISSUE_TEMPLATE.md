@@ -3,21 +3,9 @@
 Welcome to the Web3.js Issue Template!
 
 If you're new around here, reading this will make sure you're helped ASAP.
-
-Using a descriptive title will help others after you find what you contributed!
-Consider submitting the title as one below:
-
-* Error: [first line console.error description]
-* Bug: [web3.moduleName.method] returns "monkey"
-* Meta: npm package version mismatch
-* Documentation: [web3.moduleName.method] is outdated
-* Request: Add support for Wallet object
-
 The more details you include, the better the community will be able to help you!
 
 ---------------------------------------------------------------------------------------->
-
-<!-- The issue template starts here. Give as much info as possible :) -->
 
 ### Description <!-- In plain words, what happened -->
 
@@ -43,10 +31,12 @@ The more details you include, the better the community will be able to help you!
     2. Set the provider to `localhost`
     3. Fetch latest block
 
-    When you include code, using code blocks makes your report pretty:
+    Please use the code blocks Markdown does provide:
 
     ```js
-    console.log('Pretty syntax!');
+      
+        console.log('Pretty syntax!');
+    
     ```
 ----------------------------------------------------------------------->
 
