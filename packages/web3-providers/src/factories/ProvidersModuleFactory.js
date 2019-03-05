@@ -29,7 +29,7 @@ import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
 import BatchRequest from '../batch-request/BatchRequest';
-import EthereumProvider from '../providers/EthereumProvider';
+import Web3EthereumProvider from '../providers/Web3EthereumProvider';
 import MetamaskProvider from '../providers/MetamaskProvider';
 import MistEthereumProvider from '../providers/MistEthereumProvider';
 import CustomProvider from '../providers/CustomProvider';
@@ -167,16 +167,16 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an EthereumProvider object
+     * Returns an Web3EthereumProvider object
      *
-     * @method createEthereumProvider
+     * @method createWeb3EthereumProvider
      *
      * @param {EthereumProvider} connection
      *
-     * @returns {EthereumProvider}
+     * @returns {Web3EthereumProvider}
      */
-    createEthereumProvider(connection) {
-        return new EthereumProvider(connection);
+    createWeb3EthereumProvider(connection) {
+        return new Web3EthereumProvider(connection);
     }
 
     /**

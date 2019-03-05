@@ -24,13 +24,14 @@ import {AbstractWeb3Module} from 'web3-core';
 
 export default class Shh extends AbstractWeb3Module {
     /**
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {MethodFactory} methodFactory
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Network} net
      * @param {Object} options
+     * @param {Net} nodeNet
      *
      * @constructor
      */
@@ -41,9 +42,10 @@ export default class Shh extends AbstractWeb3Module {
         methodFactory,
         subscriptionsFactory,
         net,
-        options
+        options,
+        nodeNet
     ) {
-        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
+        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options, nodeNet);
 
         this.subscriptionsFactory = subscriptionsFactory;
         this.net = net;

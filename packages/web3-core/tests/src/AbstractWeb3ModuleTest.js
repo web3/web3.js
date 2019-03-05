@@ -84,7 +84,7 @@ describe('AbstractWeb3ModuleTest', () => {
         );
     });
 
-    it('constructor defines all properties', () => {
+    it('constructor check', () => {
         expect(abstractWeb3Module.defaultAccount).toEqual('0x03C9A938fF7f54090d0d99e2c6f80380510Ea078');
 
         expect(abstractWeb3Module.defaultBlock).toEqual('latest');
@@ -109,7 +109,7 @@ describe('AbstractWeb3ModuleTest', () => {
 
         expect(methodModuleFactoryMock.createMethodProxy).toHaveBeenCalledWith(abstractWeb3Module, methodFactoryMock);
 
-        expect(providerResolverMock.resolve).toHaveBeenCalledWith('WS');
+        expect(providerResolverMock.resolve).toHaveBeenCalledWith('WS', null);
     });
 
     it('gets the BatchRequest property and it is of type BatchRequest', () => {
@@ -176,7 +176,7 @@ describe('AbstractWeb3ModuleTest', () => {
     it('calls setProvider returns true and sets the provider as currentProvider', () => {
         expect(abstractWeb3Module.setProvider('SOCKET_PROVIDER')).toEqual(true);
 
-        expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(1, 'WS');
+        expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(1, 'WS', null);
 
         expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(2, 'SOCKET_PROVIDER', undefined);
 
@@ -189,7 +189,7 @@ describe('AbstractWeb3ModuleTest', () => {
 
         expect(abstractWeb3Module.setProvider('SOCKET_PROVIDER')).toEqual(true);
 
-        expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(1, 'WS');
+        expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(1, 'WS', null);
 
         expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(2, 'SOCKET_PROVIDER', undefined);
 

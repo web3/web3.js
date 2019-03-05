@@ -25,7 +25,7 @@ import isFunction from 'lodash/isFunction';
 
 export default class Network extends AbstractWeb3Module {
     /**
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {MethodFactory} methodFactory

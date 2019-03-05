@@ -23,7 +23,7 @@ import isArray from 'lodash/isArray';
 
 export default class AbstractSocketProvider extends EventEmitter {
     /**
-     * @param {WebSocket|Socket|EthereumProvider} connection
+     * @param {WebSocket|Socket|Web3EthereumProvider} connection
      * @param {Number} timeout
      *
      * @constructor

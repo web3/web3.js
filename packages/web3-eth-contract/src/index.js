@@ -36,7 +36,7 @@ export ContractModuleFactory from './factories/ContractModuleFactory';
  *
  * @method Contract
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Array} abi
  * @param {Accounts} accounts
  * @param {String} address

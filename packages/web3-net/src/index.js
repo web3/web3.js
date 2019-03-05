@@ -31,7 +31,7 @@ import NetworkModuleFactory from './factories/NetworkModuleFactory';
  *
  * @method Network
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Object} options
  *
  * @returns {Network}

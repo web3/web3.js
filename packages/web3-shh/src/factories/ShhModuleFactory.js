@@ -42,7 +42,7 @@ export default class ShhModuleFactory {
      *
      * @method createShhModule
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Network} net

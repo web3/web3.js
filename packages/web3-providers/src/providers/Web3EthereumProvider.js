@@ -12,7 +12,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file EthereumProvider
+ * @file Web3EthereumProvider.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -20,7 +20,7 @@
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 
-export default class EthereumProvider extends AbstractSocketProvider {
+export default class Web3EthereumProvider extends AbstractSocketProvider {
     /**
      * @param {EthereumProvider} connection
      *
@@ -28,7 +28,7 @@ export default class EthereumProvider extends AbstractSocketProvider {
      */
     constructor(connection) {
         super(connection, null);
-        this.host = 'EthereumProvider';
+        this.host = 'Web3EthereumProvider';
     }
 
     /**
