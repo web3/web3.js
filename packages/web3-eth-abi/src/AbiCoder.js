@@ -127,7 +127,13 @@ export default class AbiCoder {
      * @returns {Object} plain param
      */
     decodeParameter(type, bytes) {
-        return this.decodeParameters([type], bytes)[0];
+        const decodedParameters = this.decodeParameters([type], bytes);
+
+        if (isArray(decodedParameters)) {
+            return decodedParameters[0];
+        }
+
+        return decodedParameters;
     }
 
     /**
@@ -209,7 +215,7 @@ export default class AbiCoder {
                 value = topics[topicCount];
 
                 if (this.isStaticType(input.type)) {
-                    value = this.decodeParameter(input, topics[topicCount]);
+                    value = this.decodeParameter(input.type, topics[topicCount]);
                 }
 
                 returnValues[i] = value;
