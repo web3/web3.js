@@ -15,15 +15,15 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file EthSignTransactionMethod.js
+ * @file SignTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import isString from 'lodash/isString';
-import {SignTransactionMethod} from 'web3-core-method';
+import {SignTransactionMethod as CoreSignTransactionMethod} from 'web3-core-method';
 
-export default class EthSignTransactionMethod extends SignTransactionMethod {
+export default class SignTransactionMethod extends CoreSignTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
