@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import ObservedTransactionMethod from '../../lib/methods/ObservedTransactionMethod';
+import ObservedTransactionMethod from '../../../web3-core-method/src/methods/transaction/ObservedTransactionMethod';
 
 export default class SendObservedTransactionMethod extends ObservedTransactionMethod {
     /**

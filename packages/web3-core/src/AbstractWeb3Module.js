@@ -23,7 +23,7 @@
 import isObject from 'lodash/isObject';
 import {HttpProvider, WebsocketProvider, IpcProvider, BatchRequest} from 'web3-providers';
 import {toChecksumAddress} from 'web3-utils';
-import MethodProxy from './proxy/MethodProxy'; // TODO: This could be removed with a web3-core-types module
+import MethodProxy from '../../web3-core-method/src/proxy/MethodProxy'; // TODO: This could be removed with a web3-core-types module
 
 export default class AbstractWeb3Module {
     /**

@@ -34,7 +34,7 @@ import EthModule from './Eth.js';
 import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';
 
-export TransactionObserver from './observers/TransactionObserver.js';
+export TransactionObserver from '../../web3-core-method/src/observers/TransactionObserver.js';
 
 /**
  * Creates the TransactionSigner class

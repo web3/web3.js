@@ -15,23 +15,22 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file SendSignedTransactionMethod.js
+ * @file GetUncleMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import ObservedTransactionMethod from '../../../web3-core-method/src/methods/transaction/ObservedTransactionMethod';
+import AbstractGetUncleMethod from '../../../lib/methods/block/AbstractGetUncleMethod';
 
-export default class SendSignedTransactionMethod extends ObservedTransactionMethod {
+export default class GetUncleByBlockNumberAndIndexMethod extends AbstractGetUncleMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
-     * @param {TransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance, transactionObserver) {
-        super('eth_sendRawTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_getUncleByBlockNumberAndIndex', utils, formatters, moduleInstance);
     }
 }

@@ -22,7 +22,7 @@ import {AbstractWeb3Module, PromiEvent} from 'web3-core';
 import {formatters} from 'web3-core-helpers';
 
 export class AbstractMethod {
-    constructor(rpcMethod: string, parametersAmount: number, utils: Utils, formatters: formatters);
+    constructor(rpcMethod: string, parametersAmount: number, utils: Utils, formatters: formatters, moduleInstance: AbstractWeb3Module);
 
     utils: Utils;
     formatters: formatters;
@@ -40,7 +40,7 @@ export class AbstractMethod {
 
     afterExecution(response: any): any;
 
-    execute(moduleInstance: AbstractWeb3Module): Promise<object|string>|PromiEvent<any>|string;
+    execute(): Promise<object|string>|PromiEvent<any>|string;
 
     clearSubscriptions(unsubscribeMethod: string): Promise<boolean | Error>;
 }

@@ -15,23 +15,37 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file SendSignedTransactionMethod.js
+ * @file GetBlockMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import ObservedTransactionMethod from '../../../web3-core-method/src/methods/transaction/ObservedTransactionMethod';
+import {AbstractGetBlockMethod} from 'web3-core-method';
 
-export default class SendSignedTransactionMethod extends ObservedTransactionMethod {
+export default class GetBlockMethod extends AbstractGetBlockMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
-     * @param {TransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance, transactionObserver) {
-        super('eth_sendRawTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_getBlockByNumber', utils, formatters, moduleInstance);
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        if (this.isHash(this.parameters[0])) {
+            this.rpcMethod = 'eth_getBlockByHash';
+        }
+
+        super.beforeExecution(moduleInstance);
     }
 }

@@ -24,14 +24,15 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class GetUncleMethod extends AbstractMethod {
     /**
+     * @param {String} rpcMethod
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getUncleByBlockNumberAndIndex', 2, utils, formatters, moduleInstance);
+    constructor(rpcMethod, utils, formatters, moduleInstance) {
+        super(rpcMethod, 2, utils, formatters, moduleInstance);
     }
 
     /**
@@ -42,10 +43,6 @@ export default class GetUncleMethod extends AbstractMethod {
      * @param {AbstractWeb3Module} moduleInstance
      */
     beforeExecution(moduleInstance) {
-        if (this.isHash(this.parameters[0])) {
-            this.rpcMethod = 'eth_getUncleByBlockHashAndIndex';
-        }
-
         this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
         this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
     }

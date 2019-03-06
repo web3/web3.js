@@ -21,8 +21,11 @@ import {Observable} from 'rxjs';
 
 export default class TransactionObserver {
     /**
+     * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
+     * @param {Number} timeout
+     * @param {Number} blockConfirmations
      * @param {GetTransactionReceiptMethod} getTransactionReceiptMethod
-     * @param {GetBlockMethod} getBlockMethod
+     * @param {GetBlockByHashMethod} getBlockByHashMethod
      * @param {NewHeadsSubscription} newHeadsSubscription
      *
      * @constructor
@@ -32,14 +35,14 @@ export default class TransactionObserver {
         timeout,
         blockConfirmations,
         getTransactionReceiptMethod,
-        getBlockMethod,
+        getBlockByHashMethod,
         newHeadsSubscription
     ) {
         this.provider = provider;
         this.timeout = timeout;
         this.blockConfirmations = blockConfirmations;
         this.getTransactionReceiptMethod = getTransactionReceiptMethod;
-        this.getBlockMethod = getBlockMethod;
+        this.getBlockByHashMethod = getBlockByHashMethod;
         this.newHeadsSubscription = newHeadsSubscription;
 
         this.lastBlock = false;
@@ -48,8 +51,6 @@ export default class TransactionObserver {
     }
 
     /**
-     * TODO: Pass timeout, blockConfirmations, and provider over the constructor
-     *
      * Observes the transaction by the given transactionHash
      *
      * @method observe
@@ -60,7 +61,7 @@ export default class TransactionObserver {
      */
     observe(transactionHash) {
         return Observable.create((observer) => {
-            if (this.isSocketBasedProvider(provider)) {
+            if (this.isSocketBasedProvider()) {
                 this.startSocketObserver(transactionHash, observer);
             } else {
                 this.startHttpObserver(transactionHash, observer);
@@ -77,16 +78,16 @@ export default class TransactionObserver {
      * @param {Observer} observer
      */
     startSocketObserver(transactionHash, observer) {
-        this.newHeadsSubscription.subscribe((newHead) => {
+        this.newHeadsSubscription.subscribe(() => {
             this.getTransactionReceiptMethod.parameters = [transactionHash];
 
-            this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
+            this.getTransactionReceiptMethod.execute().then((receipt) => {
                 if (receipt) {
                     this.confirmations++;
 
                     observer.next(receipt);
 
-                    if (this.isConfirmed(blockConfirmations)) {
+                    if (this.isConfirmed()) {
                         this.newHeadsSubscription.unsubscribe();
 
                         observer.complete(receipt);
@@ -95,7 +96,7 @@ export default class TransactionObserver {
 
                 this.confirmationChecks++;
 
-                if (this.isTimeoutTimeExceeded(timeout)) {
+                if (this.isTimeoutTimeExceeded()) {
                     this.newHeadsSubscription.unsubscribe();
 
                     observer.error('Timeout exceeded during the transaction confirmation observation!');
@@ -116,10 +117,10 @@ export default class TransactionObserver {
         const interval = setInterval(async () => {
             this.getTransactionReceiptMethod.parameters = [transactionHash];
 
-            const receipt = await this.getTransactionReceiptMethod.execute(moduleInstance);
+            const receipt = await this.getTransactionReceiptMethod.execute();
 
             if (receipt) {
-                const block = await this.getBlock(receipt.blockHash, moduleInstance);
+                const block = await this.getBlock(receipt.blockHash);
 
                 if (!this.lastBlock) {
                     this.lastBlock = block;
@@ -131,7 +132,7 @@ export default class TransactionObserver {
                     this.confirmations++;
                     observer.next(receipt);
 
-                    if (this.isConfirmed(blockConfirmations)) {
+                    if (this.isConfirmed()) {
                         clearInterval(interval);
                         observer.complete(receipt);
                     }
@@ -142,7 +143,7 @@ export default class TransactionObserver {
 
             this.confirmationChecks++;
 
-            if (this.isTimeoutTimeExceeded(timeout)) {
+            if (this.isTimeoutTimeExceeded()) {
                 clearInterval(interval);
                 observer.error('Timeout exceeded during the transaction confirmation observation!');
             }
@@ -161,9 +162,9 @@ export default class TransactionObserver {
      * @returns {Promise<Object>}
      */
     getBlock(blockHash) {
-        this.getBlockMethod.parameters = [blockHash];
+        this.getBlockByHashMethod.parameters = [blockHash];
 
-        return this.getBlockMethod.execute();
+        return this.getBlockByHashMethod.execute();
     }
 
     /**

@@ -15,25 +15,24 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetBlockMethod.js
+ * @file AbstractGetBlockTransactionCountMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import isFunction from 'lodash/isFunction';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-// TODO: Split this method up in GetBlockByNumberMethod and GeBlockByHashMethod and implement the concrete GetBlockMethod in the Eth module.
-export default class GetBlockMethod extends AbstractMethod {
+export default class AbstractGetBlockTransactionCountMethod extends AbstractMethod {
     /**
+     * @param {String} rpcMethod
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getBlockByNumber', 2, utils, formatters, moduleInstance);
+    constructor(rpcMethod, utils, formatters, moduleInstance) {
+        super(rpcMethod, 1, utils, formatters, moduleInstance);
     }
 
     /**
@@ -41,22 +40,10 @@ export default class GetBlockMethod extends AbstractMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     * @param {AbstractWeb3Module} moduleInstance
      */
     beforeExecution(moduleInstance) {
-        if (this.isHash(this.parameters[0])) {
-            this.rpcMethod = 'eth_getBlockByHash';
-        }
-
         this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
-
-        // Optional second parameter 'returnTransactionObjects' could also be the callback
-        if (isFunction(this.parameters[1])) {
-            this.callback = this.parameters[1];
-            this.parameters[1] = false;
-        } else {
-            this.parameters[1] = !!this.parameters[1];
-        }
     }
 
     /**
@@ -66,9 +53,9 @@ export default class GetBlockMethod extends AbstractMethod {
      *
      * @param {Object} response
      *
-     * @returns {Object}
+     * @returns {Number}
      */
     afterExecution(response) {
-        return this.formatters.outputBlockFormatter(response);
+        return this.utils.hexToNumber(response);
     }
 }

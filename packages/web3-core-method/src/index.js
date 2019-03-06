@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+// Lib
+export PromiEvent from '../lib/PromiEvent';
 export AbstractMethod from '../lib/methods/AbstractMethod';
 export AbstractMethodFactory from '../lib/factories/AbstractMethodFactory';
 
@@ -102,3 +104,6 @@ export PostMethod from './methods/shh/PostMethod';
 export SetMaxMessageSizeMethod from './methods/shh/SetMaxMessageSizeMethod';
 export SetMinPoWMethod from './methods/shh/SetMinPoWMethod';
 export ShhVersionMethod from './methods/shh/ShhVersionMethod';
+
+// Custom
+export ObservedTransactionMethod from './methods/transaction/ObservedTransactionMethod';

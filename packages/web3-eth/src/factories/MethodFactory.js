@@ -57,7 +57,7 @@ import {
 } from 'web3-core-method';
 
 import {NewHeadsSubscription} from 'web3-core-subscriptions';
-import TransactionObserver from '../observers/TransactionObserver';
+import TransactionObserver from '../../../web3-core-method/src/observers/TransactionObserver';
 import SendSignedTransactionMethod from '../methods/SendSignedTransactionMethod';
 
 export default class MethodFactory extends AbstractMethodFactory {

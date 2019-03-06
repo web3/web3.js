@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetBlockTransactionCountMethod.js
+ * @file GetBlockUncleCountByBlockHashMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import AbstractGetBlockUncleCountMethod from '../../../lib/methods/block/AbstractGetBlockUncleCountMethod';
 
-export default class GetBlockTransactionCountMethod extends AbstractMethod {
+export default class GetBlockUncleCountByBlockHashMethod extends AbstractGetBlockUncleCountMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -31,34 +31,6 @@ export default class GetBlockTransactionCountMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getBlockTransactionCountByNumber', 1, utils, formatters, moduleInstance);
-    }
-
-    /**
-     * This method will be executed before the RPC request.
-     *
-     * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     */
-    beforeExecution(moduleInstance) {
-        if (this.isHash(this.parameters[0])) {
-            this.rpcMethod = 'eth_getBlockTransactionCountByHash';
-        }
-
-        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
-    }
-
-    /**
-     * This method will be executed after the RPC request.
-     *
-     * @method afterExecution
-     *
-     * @param {Object} response
-     *
-     * @returns {Number}
-     */
-    afterExecution(response) {
-        return this.utils.hexToNumber(response);
+        super('eth_getUncleCountByBlockHash', utils, formatters, moduleInstance);
     }
 }

@@ -15,15 +15,15 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file ObservedTransactionMethod.js
+ * @file AbstractObservedTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {PromiEvent} from 'web3-core';
-import {AbstractMethod} from 'web3-core-method';
+import {PromiEvent} from 'packages/web3-core/types';
+import {AbstractMethod} from 'packages/web3-core-method/types';
 
-export default class ObservedTransactionMethod extends AbstractMethod {
+export default class AbstractObservedTransactionMethod extends AbstractMethod {
     /**
      * @param {String} rpcMethod
      * @param {Number} parametersAmount
