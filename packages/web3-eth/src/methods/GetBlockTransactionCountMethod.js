@@ -35,6 +35,8 @@ export default class GetBlockTransactionCountMethod extends AbstractGetBlockTran
     }
 
     /**
+     * TODO: Refactor public API and create two methods out of it: eth.getBlockTransactionCountByHash(...)
+     *
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution

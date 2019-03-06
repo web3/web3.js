@@ -115,44 +115,46 @@ export default class TransactionObserver {
      */
     startHttpObserver(transactionHash, observer) {
         const interval = setInterval(async () => {
-            this.getTransactionReceiptMethod.parameters = [transactionHash];
+            try {
+                this.getTransactionReceiptMethod.parameters = [transactionHash];
 
-            const receipt = await this.getTransactionReceiptMethod.execute();
+                const receipt = await this.getTransactionReceiptMethod.execute();
 
-            if (receipt) {
-                const block = await this.getBlock(receipt.blockHash);
+                if (receipt) {
+                    const block = await this.getBlock(receipt.blockHash);
+                    if (this.lastBlock && this.lastBlock.hash === block.parentHash) {
+                        this.confirmations++;
+                        observer.next(receipt);
 
-                if (!this.lastBlock) {
-                    this.lastBlock = block;
-                    this.confirmations++;
-                    observer.next(receipt);
-                }
+                        if (this.isConfirmed()) {
+                            clearInterval(interval);
+                            observer.complete(receipt);
+                        }
 
-                if (this.lastBlock.hash === block.parentHash) {
-                    this.confirmations++;
-                    observer.next(receipt);
+                        this.lastBlock = block;
+                    } else {
+                        this.lastBlock = block;
 
-                    if (this.isConfirmed()) {
-                        clearInterval(interval);
-                        observer.complete(receipt);
+                        this.confirmations++;
+                        observer.next(receipt);
                     }
-
-                    this.lastBlock = block;
                 }
-            }
 
-            this.confirmationChecks++;
+                this.confirmationChecks++;
 
-            if (this.isTimeoutTimeExceeded()) {
+                if (this.isTimeoutTimeExceeded()) {
+                    clearInterval(interval);
+                    observer.error('Timeout exceeded during the transaction confirmation observation!');
+                }
+
+            } catch(error) {
                 clearInterval(interval);
-                observer.error('Timeout exceeded during the transaction confirmation observation!');
+                observer.error(error);
             }
         }, 1000);
     }
 
     /**
-     * TODO: Create GetBlockByHashMethod and GetBlockByNumberMethod and combine them in the Eth module to a GetBlockMethod.
-     *
      * Returns a the block by the given blockHash
      *
      * @method getBlock
