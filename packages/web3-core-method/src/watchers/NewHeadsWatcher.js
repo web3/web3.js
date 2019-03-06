@@ -46,7 +46,9 @@ export default class NewHeadsWatcher extends EventEmitter {
      * @returns {NewHeadsWatcher}
      */
     watch(moduleInstance) {
-        if (moduleInstance.currentProvider.constructor.name !== 'HttpProvider') {
+        const providerName = moduleInstance.currentProvider.constructor.name;
+
+        if (providerName !== 'HttpProvider' && providerName !== 'CustomProvider') {
             this.confirmationSubscription = this.subscriptionsFactory
                 .createNewHeadsSubscription(moduleInstance)
                 .subscribe(() => {
