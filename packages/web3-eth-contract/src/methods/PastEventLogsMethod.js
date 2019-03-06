@@ -49,7 +49,12 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
     beforeExecution(moduleInstance) {
         super.beforeExecution(moduleInstance);
 
+        // TODO: Clean up the event options and topics handling instead of deleting the property here.
         this.parameters[0] = this.eventOptionsMapper.map(this.abiItemModel, moduleInstance, this.parameters[0]);
+
+        if (this.parameters[0].filter) {
+            delete this.parameters[0].filter;
+        }
     }
 
     /**
