@@ -41,22 +41,15 @@ export default class EventFilterEncoder {
      * @returns {Array}
      */
     encode(abiItemModel, filter) {
-        const indexedInputs = abiItemModel.getIndexedInputs();
         let topics = [];
 
-        indexedInputs.forEach((indexedInput) => {
-            if (filter[indexedInput.name]) {
-                let filterItem = filter[indexedInput.name];
-
-                if (!filterItem) {
-                    topics.push(null);
-
-                    return;
-                }
+        abiItemModel.getInputs().forEach((input) => {
+            if (filter[input.name]) {
+                let filterItem = filter[input.name];
 
                 if (isArray(filterItem)) {
                     filterItem = filterItem.map((item) => {
-                        return this.abiCoder.encodeParameter(indexedInput.type, item);
+                        return this.abiCoder.encodeParameter(input.type, item);
                     });
 
                     topics.push(filterItem);
@@ -64,8 +57,12 @@ export default class EventFilterEncoder {
                     return;
                 }
 
-                topics.push(this.abiCoder.encodeParameter(indexedInput.type, filterItem));
+                topics.push(this.abiCoder.encodeParameter(input.type, filterItem));
+
+                return;
             }
+
+            topics.push(null);
         });
 
         return topics;
