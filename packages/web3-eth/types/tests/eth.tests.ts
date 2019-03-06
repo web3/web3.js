@@ -18,7 +18,7 @@
  */
 
 import {Log, Transaction, TransactionReceipt, RLPEncodedTransaction} from 'web3-core';
-import {Eth, Subscribe, BlockHeader, Syncing, Block} from 'web3-eth';
+import {Eth, BlockHeader, Syncing, Block} from 'web3-eth';
 
 const eth = new Eth('http://localhost:8545');
 
@@ -45,31 +45,28 @@ eth.net;
 
 eth.clearSubscriptions();
 
-// $ExpectType Promise<Subscribe<Log>>
+// $ExpectType Subscription<Log>
 eth.subscribe('logs');
-// $ExpectType Promise<Subscribe<Log>>
-eth.subscribe('logs');
-// $ExpectType Promise<Subscribe<Log>>
-eth.subscribe('logs', (error: Error, result: Subscribe<Log>) => {});
-// $ExpectType Promise<Subscribe<Log>>
+
+// $ExpectType Subscription<Log>
 eth.subscribe('logs', {});
-// $ExpectType Promise<Subscribe<Log>>
-eth.subscribe('logs', {}, (error: Error, result: Subscribe<Log>) => {});
+// $ExpectType Subscription<Log>
+eth.subscribe('logs', {}, (error: Error, log: Log) => {});
 
-// $ExpectType Promise<Subscribe<any>>
+// $ExpectType Subscription<any>
 eth.subscribe('syncing');
-// $ExpectType Promise<Subscribe<any>>
-eth.subscribe('syncing', (error: Error, result: Subscribe<any>) => {});
+// $ExpectType Subscription<any>
+eth.subscribe('syncing', null, (error: Error, result: any) => {});
 
-// $ExpectType Promise<Subscribe<BlockHeader>>
+// $ExpectType Subscription<BlockHeader>
 eth.subscribe('newBlockHeaders');
-// $ExpectType Promise<Subscribe<BlockHeader>>
-eth.subscribe('newBlockHeaders', (error: Error, result: Subscribe<BlockHeader>) => {});
+// $ExpectType Subscription<BlockHeader>
+eth.subscribe('newBlockHeaders', null, (error: Error, blockHeader: BlockHeader) => {});
 
-// $ExpectType Promise<Subscribe<Transaction>>
+// $ExpectType Subscription<string>
 eth.subscribe('pendingTransactions');
-// $ExpectType Promise<Subscribe<Transaction>>
-eth.subscribe('pendingTransactions', (error: Error, result: Subscribe<Transaction>) => {});
+// $ExpectType Subscription<string>
+eth.subscribe('pendingTransactions', null, (error: Error, transactionHash: string) => {});
 
 // $ExpectType Providers
 Eth.providers;

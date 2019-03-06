@@ -157,8 +157,7 @@ describe('EthTest', () => {
             formatters,
             subscriptionsFactoryMock,
             contractModuleFactoryMock,
-            transactionSignerMock,
-            {}
+            {transactionSigner: transactionSignerMock}
         );
     });
 
