@@ -15,23 +15,24 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetTransactionFromBlockMethod.js
+ * @file AbstractGetTransactionFromBlockMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetTransactionFromBlockMethod extends AbstractMethod {
+export default class AbstractGetTransactionFromBlockMethod extends AbstractMethod {
     /**
+     * @param {String} rpcMethod
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getTransactionByBlockNumberAndIndex', 2, utils, formatters, moduleInstance);
+    constructor(rpcMethod, utils, formatters, moduleInstance) {
+        super(rpcMethod, 2, utils, formatters, moduleInstance);
     }
 
     /**
@@ -42,10 +43,6 @@ export default class GetTransactionFromBlockMethod extends AbstractMethod {
      * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        if (this.isHash(this.parameters[0])) {
-            this.rpcMethod = 'eth_getTransactionByBlockHashAndIndex';
-        }
-
         this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
         this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
     }

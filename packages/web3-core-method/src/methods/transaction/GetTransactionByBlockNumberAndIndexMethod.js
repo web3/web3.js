@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file VersionMethod.js
+ * @file GetTransactionByBlockNumberAndIndexMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import AbstractGetTransactionFromBlockMethod from '../../../lib/methods/transaction/AbstractGetTransactionFromBlockMethod';
 
-export default class VersionMethod extends AbstractMethod {
+export default class GetTransactionByBlockNumberAndIndexMethod extends AbstractGetTransactionFromBlockMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -31,19 +31,6 @@ export default class VersionMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('net_version', 0, utils, formatters, moduleInstance);
-    }
-
-    /**
-     * This method will be executed after the RPC request.
-     *
-     * @method afterExecution
-     *
-     * @param {Object} response
-     *
-     * @returns {Number}
-     */
-    afterExecution(response) {
-        return this.utils.hexToNumber(response);
+        super('eth_getTransactionByBlockNumberAndIndex', utils, formatters, moduleInstance);
     }
 }
