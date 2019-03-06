@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module, Transaction, Web3ModuleOptions} from 'web3-core';
+import {AbstractWeb3Module, Transaction, Web3ModuleOptions, SignedTransaction} from 'web3-core';
 import {provider} from 'web3-providers';
 
 export class Accounts extends AbstractWeb3Module {
@@ -104,14 +104,6 @@ export interface EncryptedKeystoreV3Json {
         };
         mac: string;
     };
-}
-
-export interface SignedTransaction {
-    messageHash?: string;
-    r: string;
-    s: string;
-    v: string;
-    rawTransaction?: string;
 }
 
 export interface Sign extends SignedTransaction {
