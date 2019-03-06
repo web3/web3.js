@@ -72,6 +72,10 @@ export const MethodFactory = () => {
  * @constructor
  */
 export const Eth = (provider, net, options) => {
+    if (!options.transactionSigner) {
+        options.transactionSigner = new TransactionSigner();
+    }
+
     const accounts = new Accounts(provider, options);
     const abiCoder = new AbiCoder();
     const methodModuleFactory = new MethodModuleFactory();
@@ -91,7 +95,6 @@ export const Eth = (provider, net, options) => {
         formatters,
         new SubscriptionsFactory(),
         new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
-        new TransactionSigner(),
         options,
         net
     );
