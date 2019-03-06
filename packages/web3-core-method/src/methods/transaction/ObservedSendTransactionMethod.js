@@ -31,7 +31,7 @@ export default class ObservedSendTransactionMethod extends AbstractObservedTrans
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {SendSignedTransactionMethod} sendSignedTransactionMethod
+     * @param {ObservedSendRawTransactionMethod} observedSendRawTransactionMethod
      *
      * @constructor
      */
@@ -42,13 +42,13 @@ export default class ObservedSendTransactionMethod extends AbstractObservedTrans
         transactionObserver,
         chainIdMethod,
         getTransactionCountMethod,
-        sendSignedTransactionMethod
+        observedSendRawTransactionMethod
     ) {
         super('eth_sendTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
 
         this.chainIdMethod = chainIdMethod;
         this.getTransactionCountMethod = getTransactionCountMethod;
-        this.sendSignedTransactionMethod = sendSignedTransactionMethod;
+        this.observedSendRawTransactionMethod = observedSendRawTransactionMethod;
     }
 
     /**
@@ -133,11 +133,11 @@ export default class ObservedSendTransactionMethod extends AbstractObservedTrans
 
         const response = await this.moduleInstance.transactionSigner.sign(this.parameters[0], privateKey);
 
-        this.sendSignedTransactionMethod.parameters = [response.rawTransaction];
-        this.sendSignedTransactionMethod.callback = this.callback;
-        this.sendSignedTransactionMethod.promiEvent = this.promiEvent;
+        this.observedSendRawTransactionMethod.parameters = [response.rawTransaction];
+        this.observedSendRawTransactionMethod.callback = this.callback;
+        this.observedSendRawTransactionMethod.promiEvent = this.promiEvent;
 
-        this.sendSignedTransactionMethod.execute();
+        this.observedSendRawTransactionMethod.execute();
     }
 
     /**

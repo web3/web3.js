@@ -156,16 +156,9 @@ export default class MethodFactory {
      * @returns {SendContractMethod}
      */
     createSendContractMethod(abiItem, abiModel, contract) {
-        let timeout = contract.transactionBlockTimeout;
-        const providerName = contract.currentProvider.constructor.name;
-
-        if (providerName === 'HttpProvider' || providerName === 'CustomProvider') {
-            timeout = contract.transactionPollingTimeout;
-        }
-
         const transactionObserver = new TransactionObserver(
             contract.currentProvider,
-            timeout,
+            this.getTransactionObserverTimeout(contract),
             contract.transactionConfirmationBlocks,
             new GetTransactionReceiptMethod(this.utils, this.formatters, contract),
             new GetBlockByHashMethod(this.utils, this.formatters, contract),
@@ -200,6 +193,9 @@ export default class MethodFactory {
             this.formatters,
             contract,
             new TransactionObserver(
+                contract.currentProvider,
+                this.getTransactionObserverTimeout(contract),
+                contract.transactionConfirmationBlocks,
                 new GetTransactionReceiptMethod(this.utils, this.formatters, contract),
                 new GetBlockByHashMethod(this.utils, this.formatters, contract),
                 new NewHeadsSubscription(this.utils, this.formatters, contract)
@@ -221,5 +217,25 @@ export default class MethodFactory {
      */
     createEstimateGasMethod(contract) {
         return new EstimateGasMethod(this.utils, this.formatters, contract);
+    }
+
+    /**
+     * Returns the correct timeout value based on the provider type
+     *
+     * @method getTransactionObserverTimeout
+     *
+     * @param {AbstractContract} contract
+     *
+     * @returns {Number}
+     */
+    getTransactionObserverTimeout(contract) {
+        let timeout = contract.transactionBlockTimeout;
+        const providerName = contract.currentProvider.constructor.name;
+
+        if (providerName === 'HttpProvider' || providerName === 'CustomProvider') {
+            timeout = contract.transactionPollingTimeout;
+        }
+
+        return timeout;
     }
 }

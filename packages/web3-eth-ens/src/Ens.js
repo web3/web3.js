@@ -17,7 +17,8 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module, PromiEvent} from 'web3-core';
+import {PromiEvent} from 'web3-core-method';
+import {AbstractWeb3Module} from 'web3-core';
 import isFunction from 'lodash/isFunction';
 import namehash from 'eth-ens-namehash';
 
