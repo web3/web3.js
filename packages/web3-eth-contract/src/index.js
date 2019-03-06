@@ -29,7 +29,8 @@ export AbstractContract from './AbstractContract';
 export ContractModuleFactory from './factories/ContractModuleFactory';
 
 /**
- * TODO: Remove ContractModuleFactory and resolve dependencies here
+ * TODO: Improve this factory method for the TransactionSigner handling.
+ *
  * Returns an object of type Contract
  *
  * @method Contract

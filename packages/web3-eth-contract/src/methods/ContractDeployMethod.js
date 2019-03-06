@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import {SendObservedTransactionMethod} from 'web3-eth'; // TODO: Remove this dependency with moving the eth modules together to one @web3/Eth module.
+import {ObservedSendTransactionMethod} from 'web3-core-method';
 
-export default class ContractDeployMethod extends SendObservedTransactionMethod {
+export default class ContractDeployMethod extends ObservedSendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -30,7 +30,7 @@ export default class ContractDeployMethod extends SendObservedTransactionMethod 
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {SendSignedTransactionMethod} sendSignedTransactionMethod
+     * @param {ObservedSendRawTransactionMethod} observedSendRawTransactionMethod
      *
      * @constructor
      */
@@ -41,7 +41,7 @@ export default class ContractDeployMethod extends SendObservedTransactionMethod 
         transactionObserver,
         chainIdMethod,
         getTransactionCountMethod,
-        sendSignedTransactionMethod
+        observedSendRawTransactionMethod
     ) {
         super(
             utils,
@@ -50,7 +50,7 @@ export default class ContractDeployMethod extends SendObservedTransactionMethod 
             transactionObserver,
             chainIdMethod,
             getTransactionCountMethod,
-            sendSignedTransactionMethod
+            observedSendRawTransactionMethod
         );
     }
 

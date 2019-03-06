@@ -15,14 +15,15 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file SendObservedTransactionMethod.js
+ * @file ObservedSendTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {AbstractObservedTransactionMethod} from 'web3-core-method';
+import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
-export default class SendObservedTransactionMethod extends AbstractObservedTransactionMethod {
+// TODO: The Eth specific logic can only be moved out of the core-method module after merging of the submodules together to one eth module.
+export default class ObservedSendTransactionMethod extends AbstractObservedTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -51,66 +52,52 @@ export default class SendObservedTransactionMethod extends AbstractObservedTrans
     }
 
     /**
-     * This method will be executed before the RPC request.
-     *
-     * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
-     */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
-    }
-
-    /**
      * Checks if gasPrice is set, sends the request and returns a PromiEvent Object
      *
      * @method execute
      *
-     * @param {Eth} moduleInstance
      *
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    execute(moduleInstance) {
-        if (!this.parameters[0].gas && moduleInstance.defaultGas) {
-            this.parameters[0]['gas'] = moduleInstance.defaultGas;
+    execute() {
+        if (!this.parameters[0].gas && this.moduleInstance.defaultGas) {
+            this.parameters[0]['gas'] = this.moduleInstance.defaultGas;
         }
 
         if (!this.parameters[0].gasPrice) {
-            if (!moduleInstance.defaultGasPrice) {
-                moduleInstance.currentProvider.send('eth_gasPrice', []).then((gasPrice) => {
+            if (!this.moduleInstance.defaultGasPrice) {
+                this.moduleInstance.currentProvider.send('eth_gasPrice', []).then((gasPrice) => {
                     this.parameters[0].gasPrice = gasPrice;
 
-                    this.execute(moduleInstance);
+                    this.execute();
                 });
 
                 return this.promiEvent;
             }
 
-            this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
+            this.parameters[0]['gasPrice'] = this.moduleInstance.defaultGasPrice;
         }
 
-        if (this.hasAccounts(moduleInstance) && this.isDefaultSigner(moduleInstance)) {
-            if (moduleInstance.accounts.wallet[this.parameters[0].from]) {
-                this.sendRawTransaction(
-                    moduleInstance.accounts.wallet[this.parameters[0].from].privateKey,
-                    moduleInstance
-                ).catch((error) => {
-                    if (this.callback) {
-                        this.callback(error, null);
-                    }
+        if (this.hasAccounts() && this.isDefaultSigner()) {
+            if (this.moduleInstance.accounts.wallet[this.parameters[0].from]) {
+                this.sendRawTransaction(this.moduleInstance.accounts.wallet[this.parameters[0].from].privateKey)
+                    .catch((error) => {
+                        if (this.callback) {
+                            this.callback(error, null);
+                        }
 
-                    this.promiEvent.reject(error);
-                    this.promiEvent.emit('error', error);
-                    this.promiEvent.removeAllListeners();
-                });
+                        this.promiEvent.reject(error);
+                        this.promiEvent.emit('error', error);
+                        this.promiEvent.removeAllListeners();
+                    });
 
                 return this.promiEvent;
             }
         }
 
-        if (this.hasCustomSigner(moduleInstance)) {
-            this.sendRawTransaction(null, moduleInstance).catch((error) => {
+        if (this.hasCustomSigner()) {
+            this.sendRawTransaction().catch((error) => {
                 if (this.callback) {
                     this.callback(error, null);
                 }
@@ -132,9 +119,8 @@ export default class SendObservedTransactionMethod extends AbstractObservedTrans
      * @method sendRawTransaction
      *
      * @param {String} privateKey
-     * @param {Eth} moduleInstance
      */
-    async sendRawTransaction(privateKey, moduleInstance) {
+    async sendRawTransaction(privateKey = null) {
         if (!this.parameters[0].chainId) {
             this.parameters[0].chainId = await this.chainIdMethod.execute();
         }
@@ -145,7 +131,7 @@ export default class SendObservedTransactionMethod extends AbstractObservedTrans
             this.parameters[0].nonce = await this.getTransactionCountMethod.execute();
         }
 
-        const response = await moduleInstance.transactionSigner.sign(this.parameters[0], privateKey);
+        const response = await this.moduleInstance.transactionSigner.sign(this.parameters[0], privateKey);
 
         this.sendSignedTransactionMethod.parameters = [response.rawTransaction];
         this.sendSignedTransactionMethod.callback = this.callback;
@@ -159,12 +145,10 @@ export default class SendObservedTransactionMethod extends AbstractObservedTrans
      *
      * @method isDefaultSigner
      *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
      * @returns {Boolean}
      */
-    isDefaultSigner(moduleInstance) {
-        return moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
+    isDefaultSigner() {
+        return this.moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
     }
 
     /**
@@ -172,12 +156,10 @@ export default class SendObservedTransactionMethod extends AbstractObservedTrans
      *
      * @method hasAccounts
      *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
      * @returns {Boolean}
      */
-    hasAccounts(moduleInstance) {
-        return moduleInstance.accounts && moduleInstance.accounts.accountsIndex > 0;
+    hasAccounts() {
+        return this.moduleInstance.accounts && this.moduleInstance.accounts.accountsIndex > 0;
     }
 
     /**
@@ -185,11 +167,9 @@ export default class SendObservedTransactionMethod extends AbstractObservedTrans
      *
      * @method hasCustomerSigner
      *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
      * @returns {Boolean}
      */
-    hasCustomSigner(moduleInstance) {
-        return moduleInstance.transactionSigner.constructor.name !== 'TransactionSigner';
+    hasCustomSigner() {
+        return this.moduleInstance.transactionSigner.constructor.name !== 'TransactionSigner';
     }
 }

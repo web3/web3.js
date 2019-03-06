@@ -20,18 +20,4 @@
  * @date 2018
  */
 
-import {ProviderDetector, ProviderResolver} from 'web3-providers';
-import Web3Module from './AbstractWeb3Module.js';
-
-/**
- * Returns a object of type AbstractWeb3Module
- *
- * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
- * @param {Object} options
- * @param {MethodFactory} methodFactory
- *
- * @constructor
- */
-export const AbstractWeb3Module = (provider, options, methodFactory = null) => {
-    return new Web3Module(provider, new ProviderDetector(), new ProviderResolver(), methodFactory, options);
-};
+export AbstractWeb3Module from './AbstractWeb3Module.js';

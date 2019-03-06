@@ -46,13 +46,12 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
      *
      * @method execute
      *
-     * @param {AbstractWeb3Module} moduleInstance
      *
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    execute(moduleInstance) {
-        this.beforeExecution(moduleInstance);
+    execute() {
+        this.beforeExecution(this.moduleInstance);
 
         if (this.parameters.length !== this.parametersAmount) {
             throw new Error(
@@ -60,7 +59,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
             );
         }
 
-        moduleInstance.currentProvider.send(this.rpcMethod, this.parameters).then((transactionHash) => {
+        this.moduleInstance.currentProvider.send(this.rpcMethod, this.parameters).then((transactionHash) => {
             this.promiEvent.emit('transactionHash', transactionHash);
 
             if (this.callback) {
@@ -68,7 +67,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
             }
 
             let count, receipt;
-            this.transactionObserver.observe(transactionHash, moduleInstance).subscribe(
+            this.transactionObserver.observe(transactionHash).subscribe(
                 (confirmation) => {
                     count = confirmation.count;
                     receipt = confirmation.receipt;

@@ -34,8 +34,6 @@ import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';
 import EthModule from './Eth.js';
 
-export SendObservedTransactionMethod from './methods/SendObservedTransactionMethod';
-
 /**
  * Creates the TransactionSigner class
  *
@@ -63,18 +61,18 @@ export const Eth = (provider, net, options) => {
         options.transactionSigner = new TransactionSigner();
     }
 
-    const accounts = new Accounts(provider, options);
+    const accounts = new Accounts(provider, net, options);
     const abiCoder = new AbiCoder();
 
     return new EthModule(
         provider,
         new MethodFactory(Utils, formatters),
-        new Network(provider, options),
+        new Network(provider, net, options),
         accounts,
-        new Personal(provider, accounts, options),
+        new Personal(provider, net, accounts, options),
         Iban,
         abiCoder,
-        new Ens(provider, accounts, options),
+        new Ens(provider, net, accounts, options),
         Utils,
         formatters,
         new SubscriptionsFactory(),

@@ -52,12 +52,6 @@ export default class Accounts extends AbstractWeb3Module {
         this.accounts = {};
         this.accountsIndex = 0;
         this.wallet = this.createWalletProxy();
-
-        return new Proxy(this, {
-            get: (target, name) => {
-                return target[name];
-            }
-        });
     }
 
     /**

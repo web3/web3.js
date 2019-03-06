@@ -21,24 +21,30 @@
  */
 
 import isObject from 'lodash/isObject';
-import {HttpProvider, WebsocketProvider, IpcProvider, BatchRequest} from 'web3-providers';
+import {
+    HttpProvider,
+    WebsocketProvider,
+    IpcProvider,
+    BatchRequest,
+    ProviderDetector,
+    ProviderResolver
+} from 'web3-providers';
+import {MethodProxy} from 'web3-core-method';
 import {toChecksumAddress} from 'web3-utils';
-import MethodProxy from '../../web3-core-method/src/proxy/MethodProxy'; // TODO: This could be removed with a web3-core-types module
 
 export default class AbstractWeb3Module {
     /**
-     * @param {ProviderDetector} providerDetector
-     * @param {ProviderResolver} providerResolver
-     * @param {MethodFactory} methodFactory
+     * @param {AbstractSocketProvider|HttpProvider|String|EthereumProvider} provider
      * @param {Object} options
-     * @param {Net} net
+     * @param {MethodFactory} methodFactory
+     * @param {Net.Socket} nodeNet
      *
      * @constructor
      */
-    constructor(provider, providerDetector, providerResolver, methodFactory = null, options = {}, nodeNet = null) {
-        this.providerDetector = providerDetector;
-        this.providerResolver = providerResolver;
-        this.givenProvider = this.providerDetector.detect();
+    constructor(provider, options = {}, methodFactory = null, nodeNet = null) {
+        // ProviderDetector and ProviderResolver are created in the constructor for providing a simpler Web3 Module API.
+        this.providerResolver = new ProviderResolver();
+        this.givenProvider = new ProviderDetector();
 
         this._currentProvider = this.providerResolver.resolve(provider, nodeNet);
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;

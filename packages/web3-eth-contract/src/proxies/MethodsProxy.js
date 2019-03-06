@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {PromiEvent} from 'web3-core';
+import {PromiEvent} from 'web3-core-method';
 import isArray from 'lodash/isArray';
 import isFunction from 'lodash/isFunction';
 

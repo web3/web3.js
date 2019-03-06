@@ -68,8 +68,6 @@ export default class AbstractMethod {
     }
 
     /**
-     * TODO: Pass moduleInstance dependency over the constructor
-     *
      * Sends a JSON-RPC call request
      *
      * @method execute

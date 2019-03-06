@@ -22,8 +22,9 @@
 
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import AccountsModule from './Accounts';
 import {GetGasPriceMethod, ChainIdMethod, GetTransactionCountMethod} from 'web3-core-method';
+import MethodFactory from './factories/MethodFactory'
+import AccountsModule from './Accounts';
 
 /**
  * Returns the Accounts object

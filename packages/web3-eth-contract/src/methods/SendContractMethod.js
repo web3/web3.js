@@ -21,9 +21,9 @@
  */
 
 import isArray from 'lodash/isArray';
-import {SendObservedTransactionMethod} from 'web3-eth';// TODO: Simplify module structure with moving the submodules together to one eth module
+import {ObservedSendTransactionMethod} from 'web3-core-method';
 
-export default class SendContractMethod extends SendObservedTransactionMethod {
+export default class SendContractMethod extends ObservedSendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -31,7 +31,7 @@ export default class SendContractMethod extends SendObservedTransactionMethod {
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {SendSignedTransactionMethod} sendSignedTransactionMethod
+     * @param {ObservedSendRawTransactionMethod} observedSendRawTransactionMethod
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
      *
@@ -44,7 +44,7 @@ export default class SendContractMethod extends SendObservedTransactionMethod {
         transactionObserver,
         chainIdMethod,
         getTransactionCountMethod,
-        sendSignedTransactionMethod,
+        observedSendRawTransactionMethod,
         allEventsLogDecoder,
         abiModel
     ) {
@@ -55,7 +55,7 @@ export default class SendContractMethod extends SendObservedTransactionMethod {
             transactionObserver,
             chainIdMethod,
             getTransactionCountMethod,
-            sendSignedTransactionMethod
+            observedSendRawTransactionMethod
         );
 
         this.allEventsLogDecoder = allEventsLogDecoder;

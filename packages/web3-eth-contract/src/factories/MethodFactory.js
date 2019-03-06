@@ -25,11 +25,11 @@ import {
     ChainIdMethod,
     GetTransactionCountMethod,
     GetTransactionReceiptMethod,
-    GetBlockMethod,
-    NewHeadsSubscription,
-    SendSignedTransactionMethod
+    GetBlockByHashMethod,
+    ObservedSendRawTransactionMethod,
+    TransactionObserver
 } from 'web3-core-method';
-import {TransactionObserver} from 'web3-eth'; // TODO: This can be removed with the new folder structure
+import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import CallContractMethod from '../methods/CallContractMethod';
 import ContractDeployMethod from '../methods/ContractDeployMethod';
 import PastEventLogsMethod from '../methods/PastEventLogsMethod';
@@ -168,7 +168,7 @@ export default class MethodFactory {
             timeout,
             contract.transactionConfirmationBlocks,
             new GetTransactionReceiptMethod(this.utils, this.formatters, contract),
-            new GetBlockMethod(this.utils, this.formatters, contract),
+            new GetBlockByHashMethod(this.utils, this.formatters, contract),
             new NewHeadsSubscription(this.utils, this.formatters, contract)
         );
 
@@ -179,7 +179,7 @@ export default class MethodFactory {
             transactionObserver,
             new ChainIdMethod(this.utils, this.formatters, contract),
             new GetTransactionCountMethod(this.utils, this.formatters, contract),
-            new SendSignedTransactionMethod(this.utils, this.formatters, contract, transactionObserver),
+            new ObservedSendRawTransactionMethod(this.utils, this.formatters, contract, transactionObserver),
             this.contractModuleFactory.createAllEventsLogDecoder(),
             abiModel
         );
@@ -200,13 +200,13 @@ export default class MethodFactory {
             this.formatters,
             contract,
             new TransactionObserver(
-                new GetTransactionReceiptMethod(this.utils, this.formatters),
-                new GetBlockMethod(this.utils, this.formatters),
-                new NewHeadsSubscription(this.utils, this.formatters, {})
+                new GetTransactionReceiptMethod(this.utils, this.formatters, contract),
+                new GetBlockByHashMethod(this.utils, this.formatters, contract),
+                new NewHeadsSubscription(this.utils, this.formatters, contract)
             ),
-            new ChainIdMethod(this.utils, this.formatters),
-            new GetTransactionCountMethod(this.utils, this.formatters),
-            new SendSignedTransactionMethod(this.utils, this.formatters)
+            new ChainIdMethod(this.utils, this.formatters, contract),
+            new GetTransactionCountMethod(this.utils, this.formatters, contract),
+            new ObservedSendRawTransactionMethod(this.utils, this.formatters, contract)
         );
     }
 
@@ -215,9 +215,11 @@ export default class MethodFactory {
      *
      * @method createEstimateGasMethod
      *
+     * @param {AbstractContract} contract
+     *
      * @returns {EstimateGasMethod}
      */
-    createEstimateGasMethod() {
-        return new EstimateGasMethod(this.utils, this.formatters);
+    createEstimateGasMethod(contract) {
+        return new EstimateGasMethod(this.utils, this.formatters, contract);
     }
 }

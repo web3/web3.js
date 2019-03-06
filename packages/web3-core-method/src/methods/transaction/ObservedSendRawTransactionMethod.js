@@ -15,14 +15,15 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file SendSignedTransactionMethod.js
+ * @file ObservedSendRawTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {AbstractObservedTransactionMethod} from 'web3-core-method';
+import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
-export default class SendSignedTransactionMethod extends AbstractObservedTransactionMethod {
+// TODO: The only way to remove the duplication of this JSON-RPC method string is to create a AbstractSendRawTransaction which is probably to much.
+export default class ObservedSendRawTransactionMethod extends AbstractObservedTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

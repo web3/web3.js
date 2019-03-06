@@ -23,6 +23,8 @@
 export PromiEvent from '../lib/PromiEvent';
 export AbstractMethodFactory from '../lib/factories/AbstractMethodFactory';
 export AbstractMethod from '../lib/methods/AbstractMethod';
+export MethodProxy from './proxy/MethodProxy'
+export TransactionObserver from './observers/TransactionObserver'
 
 // Network
 export GetProtocolVersionMethod from './methods/network/GetProtocolVersionMethod';
@@ -63,7 +65,10 @@ export GetUncleByBlockHashAndIndexMethod from './methods/block/GetUncleByBlockHa
 export GetUncleByBlockNumberAndIndexMethod from './methods/block/GetUncleByBlockNumberAndIndexMethod';
 
 // Transaction
+export AbstractGetTransactionFromBlockMethod from '../lib/methods/transaction/AbstractGetTransactionFromBlockMethod';
 export AbstractObservedTransactionMethod from '../lib/methods/transaction/AbstractObservedTransactionMethod';
+export ObservedSendRawTransactionMethod from './methods/transaction/ObservedSendRawTransactionMethod';
+export ObservedSendTransactionMethod from './methods/transaction/ObservedSendTransactionMethod';
 export GetTransactionMethod from './methods/transaction/GetTransactionMethod';
 export GetTransactionByBlockHashAndIndexMethod from './methods/transaction/GetTransactionByBlockHashAndIndexMethod';
 export GetTransactionByBlockNumberAndIndexMethod from './methods/transaction/GetTransactionByBlockNumberAndIndexMethod';
