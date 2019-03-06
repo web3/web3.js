@@ -59,7 +59,6 @@ export default class Eth extends AbstractWeb3Module {
         formatters,
         subscriptionsFactory,
         contractModuleFactory,
-        transactionSigner,
         options,
         nodeNet
     ) {
@@ -77,7 +76,7 @@ export default class Eth extends AbstractWeb3Module {
         this.subscriptionsFactory = subscriptionsFactory;
         this.contractModuleFactory = contractModuleFactory;
         this.initiatedContracts = [];
-        this._transactionSigner = options.transactionSigner || transactionSigner;
+        this._transactionSigner = options.transactionSigner;
 
         /**
          * This wrapper function is required for the "new web3.eth.Contract(...)" call.
