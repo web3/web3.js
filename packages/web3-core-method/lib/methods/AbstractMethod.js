@@ -241,6 +241,6 @@ export default class AbstractMethod {
      * @returns {Boolean}
      */
     isHash(parameter) {
-        return isString(parameter) && parameter.indexOf('0x') === 0;
+        return isString(parameter) && parameter.startsWith('0x');
     }
 }

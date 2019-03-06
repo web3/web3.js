@@ -20,10 +20,9 @@
  * @date 2018
  */
 
-// Lib
 export PromiEvent from '../lib/PromiEvent';
-export AbstractMethod from '../lib/methods/AbstractMethod';
 export AbstractMethodFactory from '../lib/factories/AbstractMethodFactory';
+export AbstractMethod from '../lib/methods/AbstractMethod';
 
 // Network
 export GetProtocolVersionMethod from './methods/network/GetProtocolVersionMethod';
@@ -49,16 +48,26 @@ export GetTransactionCountMethod from './methods/account/GetTransactionCountMeth
 export RequestAccountsMethod from './methods/account/RequestAccountsMethod';
 
 // Block
+export AbstractGetBlockMethod from '../lib/methods/block/AbstractGetBlockMethod';
+export AbstractGetUncleMethod from '../lib/methods/block/AbstractGetUncleMethod';
+export AbstractGetBlockTransactionCountMethod from '../lib/methods/block/AbstractGetBlockTransactionCountMethod';
+export AbstractGetBlockUncleCountMethod from '../lib/methods/block/AbstractGetBlockUncleCountMethod';
+export GetBlockByHashMethod from './methods/block/GetBlockByHashMethod';
+export GetBlockByNumberMethod from './methods/block/GetBlockByNumberMethod';
 export GetBlockNumberMethod from './methods/block/GetBlockNumberMethod';
-export GetBlockMethod from './methods/block/GetBlockMethod';
-export GetUncleMethod from './methods/block/GetUncleMethod';
-export GetBlockTransactionCountMethod from './methods/block/GetBlockTransactionCountMethod';
-export GetBlockUncleCountMethod from './methods/block/GetBlockUncleCountMethod';
+export GetBlockTransactionCountByHashMethod from './methods/block/GetBlockTransactionCountByHashMethod';
+export GetBlockTransactionCountByNumberMethod from './methods/block/GetBlockTransactionCountByNumberMethod';
+export GetBlockUncleCountByBlockHashMethod from './methods/block/GetBlockUncleCountByBlockHashMethod';
+export GetBlockUncleCountByBlockNumberMethod from './methods/block/GetBlockUncleCountByBlockNumberMethod';
+export GetUncleByBlockHashAndIndexMethod from './methods/block/GetUncleByBlockHashAndIndexMethod';
+export GetUncleByBlockNumberAndIndexMethod from './methods/block/GetUncleByBlockNumberAndIndexMethod';
 
 // Transaction
+export AbstractObservedTransactionMethod from '../lib/methods/transaction/AbstractObservedTransactionMethod';
 export GetTransactionMethod from './methods/transaction/GetTransactionMethod';
-export GetTransactionFromBlockMethod from './methods/transaction/GetTransactionFromBlockMethod';
-export GetTransactionReceipt from './methods/transaction/GetTransactionReceiptMethod';
+export GetTransactionByBlockHashAndIndexMethod from './methods/transaction/GetTransactionByBlockHashAndIndexMethod';
+export GetTransactionByBlockNumberAndIndexMethod from './methods/transaction/GetTransactionByBlockNumberAndIndexMethod';
+export GetTransactionReceiptMethod from './methods/transaction/GetTransactionReceiptMethod';
 export SendRawTransactionMethod from './methods/transaction/SendRawTransactionMethod';
 export SignTransactionMethod from './methods/transaction/SignTransactionMethod';
 export SendTransactionMethod from './methods/transaction/SendTransactionMethod';
@@ -104,6 +113,3 @@ export PostMethod from './methods/shh/PostMethod';
 export SetMaxMessageSizeMethod from './methods/shh/SetMaxMessageSizeMethod';
 export SetMinPoWMethod from './methods/shh/SetMinPoWMethod';
 export ShhVersionMethod from './methods/shh/ShhVersionMethod';
-
-// Custom
-export ObservedTransactionMethod from './methods/transaction/ObservedTransactionMethod';
