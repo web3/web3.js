@@ -34,8 +34,6 @@ import EthModule from './Eth.js';
 import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';
 
-export TransactionObserver from '../../web3-core-method/src/observers/TransactionObserver.js';
-
 /**
  * Creates the TransactionSigner class
  *
@@ -78,7 +76,7 @@ export const Eth = (provider, net, options) => {
         Utils,
         formatters,
         new SubscriptionsFactory(),
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
+        new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
         options,
         net
     );

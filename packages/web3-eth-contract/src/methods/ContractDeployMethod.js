@@ -41,12 +41,12 @@ export default class ContractDeployMethod extends SendObservedTransactionMethod 
         transactionObserver,
         chainIdMethod,
         getTransactionCountMethod,
-        sendSignedTransactionMethod,
+        sendSignedTransactionMethod
     ) {
         super(
             utils,
             formatters,
-            moduleInstance
+            moduleInstance,
             transactionObserver,
             chainIdMethod,
             getTransactionCountMethod,

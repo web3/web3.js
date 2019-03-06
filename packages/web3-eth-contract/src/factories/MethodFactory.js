@@ -160,13 +160,13 @@ export default class MethodFactory {
         const providerName = contract.currentProvider.constructor.name;
 
         if (providerName === 'HttpProvider' || providerName === 'CustomProvider') {
-            timeout = moduleInstance.transactionPollingTimeout;
+            timeout = contract.transactionPollingTimeout;
         }
 
         const transactionObserver = new TransactionObserver(
-            moduleInstance.currentProvider,
+            contract.currentProvider,
             timeout,
-            transactionConfirmationBlocks,
+            contract.transactionConfirmationBlocks,
             new GetTransactionReceiptMethod(this.utils, this.formatters, contract),
             new GetBlockMethod(this.utils, this.formatters, contract),
             new NewHeadsSubscription(this.utils, this.formatters, contract)
@@ -175,7 +175,7 @@ export default class MethodFactory {
         return new SendContractMethod(
             this.utils,
             this.formatters,
-            contract
+            contract,
             transactionObserver,
             new ChainIdMethod(this.utils, this.formatters, contract),
             new GetTransactionCountMethod(this.utils, this.formatters, contract),

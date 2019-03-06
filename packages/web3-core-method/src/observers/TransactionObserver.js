@@ -146,8 +146,7 @@ export default class TransactionObserver {
                     clearInterval(interval);
                     observer.error('Timeout exceeded during the transaction confirmation observation!');
                 }
-
-            } catch(error) {
+            } catch (error) {
                 clearInterval(interval);
                 observer.error(error);
             }

@@ -42,7 +42,7 @@ import {
     GetTransactionCountMethod,
     GetTransactionFromBlockMethod,
     GetTransactionMethod,
-    GetTransactionReceipt,
+    GetTransactionReceiptMethod,
     GetUncleMethod,
     GetWorkMethod,
     IsMiningMethod,
@@ -91,7 +91,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             getBlockUncleCount: GetBlockUncleCountMethod,
             getTransaction: GetTransactionMethod,
             getTransactionFromBlock: GetTransactionFromBlockMethod,
-            getTransactionReceipt: GetTransactionReceipt,
+            getTransactionReceipt: GetTransactionReceiptMethod,
             getTransactionCount: GetTransactionCountMethod,
             sendSignedTransaction: SendRawTransactionMethod,
             signTransaction: SignTransactionMethod,
@@ -131,29 +131,19 @@ export default class MethodFactory extends AbstractMethodFactory {
             timeout = moduleInstance.transactionPollingTimeout;
         }
 
-        if (method.name === 'SendObservedTransactionMethod') {
-            // eslint-disable-next-line new-cap
-            return new method(
-                this.utils,
-                this.formatters,
-                moduleInstance,
-                new TransactionObserver(
-                    this.getMethod('getTransactionReceipt'),
-                    this.getMethod('GetBlockMethod'),
-                    new NewHeadsSubscription(this.utils, this.formatters)
-                )
-            );
-        }
-
-
         const transactionObserver = new TransactionObserver(
             moduleInstance.currentProvider,
             timeout,
-            transactionConfirmationBlocks,
+            moduleInstance.transactionConfirmationBlocks,
             new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
             new GetBlockMethod(this.utils, this.formatters, moduleInstance),
             new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
         );
+
+        if (method.name === 'SendObservedTransactionMethod') {
+            // eslint-disable-next-line new-cap
+            return new method(this.utils, this.formatters, moduleInstance, transactionObserver);
+        }
 
         // eslint-disable-next-line new-cap
         return new method(
