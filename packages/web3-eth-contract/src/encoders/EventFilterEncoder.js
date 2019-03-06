@@ -43,7 +43,7 @@ export default class EventFilterEncoder {
     encode(abiItemModel, filter) {
         let topics = [];
 
-        abiItemModel.getInputs().forEach((input) => {
+        abiItemModel.getIndexedInputs().forEach((input) => {
             if (filter[input.name]) {
                 let filterItem = filter[input.name];
 
