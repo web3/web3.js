@@ -161,15 +161,15 @@ export default class AbstractContract extends AbstractWeb3Module {
                 return Promise.reject(new Error(`Event with name "${eventName}" does not exists.`));
             }
 
-            method = this.methodFactory.createPastEventLogsMethod(this.abiModel.getEvent(eventName));
+            method = this.methodFactory.createPastEventLogsMethod(this.abiModel.getEvent(eventName), this);
         } else {
-            method = this.methodFactory.createAllPastEventLogsMethod(this.abiModel);
+            method = this.methodFactory.createAllPastEventLogsMethod(this.abiModel, this);
         }
 
         method.parameters = [options];
         method.callback = callback;
 
-        return method.execute(this);
+        return method.execute();
     }
 
     /**

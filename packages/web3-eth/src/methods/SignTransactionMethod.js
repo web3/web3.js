@@ -64,6 +64,6 @@ export default class SignTransactionMethod extends CoreSignTransactionMethod {
             }
         }
 
-        return super.execute(moduleInstance);
+        return super.execute();
     }
 }

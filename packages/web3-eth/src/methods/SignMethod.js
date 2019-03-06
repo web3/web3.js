@@ -49,7 +49,7 @@ export default class SignMethod extends CoreSignMethod {
             return this.signLocally(moduleInstance);
         }
 
-        return super.execute(moduleInstance);
+        return super.execute();
     }
 
     /**

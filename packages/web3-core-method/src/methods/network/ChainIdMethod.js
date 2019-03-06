@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file ListeningMethod.js
+ * @file ChainIdMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */

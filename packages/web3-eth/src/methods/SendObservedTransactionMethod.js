@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import {ObservedTransactionMethod} from 'web3-core-method';
+import {AbstractObservedTransactionMethod} from 'web3-core-method';
 
-export default class SendObservedTransactionMethod extends ObservedTransactionMethod {
+export default class SendObservedTransactionMethod extends AbstractObservedTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -123,7 +123,7 @@ export default class SendObservedTransactionMethod extends ObservedTransactionMe
             return this.promiEvent;
         }
 
-        return super.execute(moduleInstance);
+        return super.execute();
     }
 
     /**
@@ -136,13 +136,13 @@ export default class SendObservedTransactionMethod extends ObservedTransactionMe
      */
     async sendRawTransaction(privateKey, moduleInstance) {
         if (!this.parameters[0].chainId) {
-            this.parameters[0].chainId = await this.chainIdMethod.execute(moduleInstance);
+            this.parameters[0].chainId = await this.chainIdMethod.execute();
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
             this.getTransactionCountMethod.parameters = [this.parameters[0].from];
 
-            this.parameters[0].nonce = await this.getTransactionCountMethod.execute(moduleInstance);
+            this.parameters[0].nonce = await this.getTransactionCountMethod.execute();
         }
 
         const response = await moduleInstance.transactionSigner.sign(this.parameters[0], privateKey);
@@ -151,7 +151,7 @@ export default class SendObservedTransactionMethod extends ObservedTransactionMe
         this.sendSignedTransactionMethod.callback = this.callback;
         this.sendSignedTransactionMethod.promiEvent = this.promiEvent;
 
-        this.sendSignedTransactionMethod.execute(moduleInstance);
+        this.sendSignedTransactionMethod.execute();
     }
 
     /**

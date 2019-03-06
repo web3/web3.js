@@ -23,6 +23,7 @@
         "web3-core-method": "1.0.0-beta.48",
         "web3-core-promievent": "1.0.0-beta.48",
         "web3-core-subscriptions": "1.0.0-beta.48",
+        "web3-eth": "1.0.0-beta.48",
         "web3-eth-abi": "1.0.0-beta.48",
         "web3-eth-accounts": "1.0.0-beta.48",
         "web3-providers": "1.0.0-beta.48",

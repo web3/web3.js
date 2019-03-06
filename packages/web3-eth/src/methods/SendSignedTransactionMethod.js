@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import ObservedTransactionMethod from '../../../web3-core-method/src/methods/transaction/ObservedTransactionMethod';
+import {AbstractObservedTransactionMethod} from 'web3-core-method';
 
-export default class SendSignedTransactionMethod extends ObservedTransactionMethod {
+export default class SendSignedTransactionMethod extends AbstractObservedTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

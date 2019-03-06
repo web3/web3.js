@@ -30,9 +30,11 @@ import {Iban} from 'web3-eth-iban';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import EthTransactionSigner from './signers/TransactionSigner';
-import EthModule from './Eth.js';
 import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';
+import EthModule from './Eth.js';
+
+export SendObservedTransactionMethod from './methods/SendObservedTransactionMethod';
 
 /**
  * Creates the TransactionSigner class

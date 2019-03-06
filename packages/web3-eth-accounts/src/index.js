@@ -39,9 +39,7 @@ export const Accounts = (provider, net, options) => {
     return new AccountsModule(
         provider,
         formatters,
-        new ChainIdMethod(Utils, formatters),
-        new GetGasPriceMethod(Utils, formatters),
-        new GetTransactionCountMethod(Utils, formatters),
+        new MethodFactory(Utils, formatters),
         options,
         net
     );

@@ -27,10 +27,7 @@ import {
     EstimateGasMethod,
     GetAccountsMethod,
     GetBalanceMethod,
-    GetBlockMethod,
     GetBlockNumberMethod,
-    GetBlockTransactionCountMethod,
-    GetBlockUncleCountMethod,
     GetCodeMethod,
     GetCoinbaseMethod,
     GetGasPriceMethod,
@@ -40,18 +37,13 @@ import {
     GetProtocolVersionMethod,
     GetStorageAtMethod,
     GetTransactionCountMethod,
-    GetTransactionFromBlockMethod,
     GetTransactionMethod,
     GetTransactionReceiptMethod,
-    GetUncleMethod,
     GetWorkMethod,
     IsMiningMethod,
     IsSyncingMethod,
     RequestAccountsMethod,
     SendRawTransactionMethod,
-    SendTransactionMethod,
-    SignMethod,
-    SignTransactionMethod,
     SubmitWorkMethod,
     VersionMethod
 } from 'web3-core-method';
@@ -59,6 +51,15 @@ import {
 import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import TransactionObserver from '../../../web3-core-method/src/observers/TransactionObserver';
 import SendSignedTransactionMethod from '../methods/SendSignedTransactionMethod';
+import GetBlockMethod from '../methods/GetBlockMethod';
+import GetUncleMethod from '../methods/GetUncleMethod';
+import GetBlockTransactionCountMethod from '../methods/GetBlockTransactionCountMethod';
+import GetBlockUncleCountMethod from '../methods/GetBlockUncleCountMethod';
+import GetTransactionFromBlockMethod from '../methods/GetTransactionFromBlockMethod';
+import SignTransactionMethod from '../methods/SignTransactionMethod';
+import SendTransactionMethod from 'web3-core-method/src/methods/transaction/SendTransactionMethod';
+import SignMethod from '../methods/SignMethod';
+import GetBlockByHashMethod from 'web3-core-method/src/methods/block/GetBlockByHashMethod';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
@@ -136,7 +137,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             timeout,
             moduleInstance.transactionConfirmationBlocks,
             new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
-            new GetBlockMethod(this.utils, this.formatters, moduleInstance),
+            new GetBlockByHashMethod(this.utils, this.formatters, moduleInstance),
             new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
         );
 

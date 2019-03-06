@@ -21,7 +21,7 @@
  */
 
 import isArray from 'lodash/isArray';
-import {SendObservedTransactionMethod} from 'web3-eth';
+import {SendObservedTransactionMethod} from 'web3-eth';// TODO: Simplify module structure with moving the submodules together to one eth module
 
 export default class SendContractMethod extends SendObservedTransactionMethod {
     /**
