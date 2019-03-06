@@ -177,10 +177,10 @@ export default class MethodsProxy {
         }
 
         if (requestType === 'call' || requestType === 'estimate') {
-            return method.execute(this.contract);
+            return method.execute();
         }
 
-        return method.execute(this.contract);
+        return method.execute();
     }
 
     /**

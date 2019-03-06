@@ -22,16 +22,16 @@
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-// TODO: Clean up this method and move the signing and observing logic to the eth module
 export default class SendTransactionMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_sendTransaction', 1, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_sendTransaction', 1, utils, formatters, moduleInstance);
     }
 
     /**

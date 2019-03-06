@@ -76,13 +76,14 @@ export default class AbstractMethodFactory {
      * Returns an MethodModel
      *
      * @param {String} name
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {AbstractMethod}
      */
-    createMethod(name) {
+    createMethod(name, moduleInstance) {
         const method = this.methods[name];
 
         // eslint-disable-next-line new-cap
-        return new method(this.utils, this.formatters);
+        return new method(this.utils, this.formatters, moduleInstance);
     }
 }

@@ -112,17 +112,31 @@ export default class MethodFactory extends AbstractMethodFactory {
      * Returns an MethodModel
      *
      * @param {String} name
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {AbstractMethod}
      */
-    createMethod(name) {
+    createMethod(name, moduleInstance) {
         const method = this.methods[name];
+
+        if (!method.name.startsWith('Send')) {
+            // eslint-disable-next-line new-cap
+            return new method(this.utils, this.formatters, moduleInstance);
+        }
+
+        let timeout = moduleInstance.transactionBlockTimeout;
+        const providerName = moduleInstance.currentProvider.constructor.name;
+
+        if (providerName === 'HttpProvider' || providerName === 'CustomProvider') {
+            timeout = moduleInstance.transactionPollingTimeout;
+        }
 
         if (method.name === 'SendObservedTransactionMethod') {
             // eslint-disable-next-line new-cap
             return new method(
                 this.utils,
                 this.formatters,
+                moduleInstance,
                 new TransactionObserver(
                     this.getMethod('getTransactionReceipt'),
                     this.getMethod('GetBlockMethod'),
@@ -131,25 +145,25 @@ export default class MethodFactory extends AbstractMethodFactory {
             );
         }
 
-        if (method.name === 'SendSignedTransactionMethod') {
-            const transactionObserver = new TransactionObserver(
-                this.getMethod('getTransactionReceipt'),
-                this.getMethod('GetBlockMethod'),
-                new NewHeadsSubscription(this.utils, this.formatters)
-            );
 
-            // eslint-disable-next-line new-cap
-            return new method(
-                this.utils,
-                this.formatters,
-                transactionObserver,
-                new ChainIdMethod(this.utils, this.formatters),
-                new GetTransactionCountMethod(this.utils, this.formatters),
-                new SendSignedTransactionMethod(this.utils, this.formatters, transactionObserver)
-            );
-        }
+        const transactionObserver = new TransactionObserver(
+            moduleInstance.currentProvider,
+            timeout,
+            transactionConfirmationBlocks,
+            new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
+            new GetBlockMethod(this.utils, this.formatters, moduleInstance),
+            new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
+        );
 
         // eslint-disable-next-line new-cap
-        return new method(this.utils, this.formatters);
+        return new method(
+            this.utils,
+            this.formatters,
+            moduleInstance,
+            transactionObserver,
+            new ChainIdMethod(this.utils, this.formatters, moduleInstance),
+            new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance),
+            new SendSignedTransactionMethod(this.utils, this.formatters, moduleInstance, transactionObserver)
+        );
     }
 }

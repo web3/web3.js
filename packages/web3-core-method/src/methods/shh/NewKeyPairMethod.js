@@ -26,10 +26,11 @@ export default class NewKeyPairMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('shh_newKeyPair', 1, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('shh_newKeyPair', 1, utils, formatters, moduleInstance);
     }
 }

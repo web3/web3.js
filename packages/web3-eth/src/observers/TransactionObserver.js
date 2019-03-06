@@ -27,31 +27,43 @@ export default class TransactionObserver {
      *
      * @constructor
      */
-    constructor(getTransactionReceiptMethod, getBlockMethod, newHeadsSubscription) {
+    constructor(
+        provider,
+        timeout,
+        blockConfirmations,
+        getTransactionReceiptMethod,
+        getBlockMethod,
+        newHeadsSubscription
+    ) {
+        this.provider = provider;
+        this.timeout = timeout;
+        this.blockConfirmations = blockConfirmations;
         this.getTransactionReceiptMethod = getTransactionReceiptMethod;
         this.getBlockMethod = getBlockMethod;
         this.newHeadsSubscription = newHeadsSubscription;
+
         this.lastBlock = false;
         this.confirmations = 0;
         this.confirmationChecks = 0;
     }
 
     /**
+     * TODO: Pass timeout, blockConfirmations, and provider over the constructor
+     *
      * Observes the transaction by the given transactionHash
      *
      * @method observe
      *
      * @param {String} transactionHash
-     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {Observable}
      */
-    observe(transactionHash, moduleInstance) {
+    observe(transactionHash) {
         return Observable.create((observer) => {
-            if (this.isSocketBasedProvider(moduleInstance.currentProvider)) {
-                this.startSocketObserver(transactionHash, moduleInstance, observer);
+            if (this.isSocketBasedProvider(provider)) {
+                this.startSocketObserver(transactionHash, observer);
             } else {
-                this.startHttpObserver(transactionHash, moduleInstance, observer);
+                this.startHttpObserver(transactionHash, observer);
             }
         });
     }
@@ -62,13 +74,9 @@ export default class TransactionObserver {
      * @method startSocketObserver
      *
      * @param {String} transactionHash
-     * @param {AbstractWeb3Module} moduleInstance
      * @param {Observer} observer
      */
-    startSocketObserver(transactionHash, moduleInstance, observer) {
-        // TODO: Improve moduleInstance handling for subscriptions
-        this.newHeadsSubscription.moduleInstance = moduleInstance;
-
+    startSocketObserver(transactionHash, observer) {
         this.newHeadsSubscription.subscribe((newHead) => {
             this.getTransactionReceiptMethod.parameters = [transactionHash];
 
@@ -78,7 +86,7 @@ export default class TransactionObserver {
 
                     observer.next(receipt);
 
-                    if (this.isConfirmed(moduleInstance)) {
+                    if (this.isConfirmed(blockConfirmations)) {
                         this.newHeadsSubscription.unsubscribe();
 
                         observer.complete(receipt);
@@ -87,7 +95,7 @@ export default class TransactionObserver {
 
                 this.confirmationChecks++;
 
-                if (this.isTimeoutTimeExceeded(moduleInstance)) {
+                if (this.isTimeoutTimeExceeded(timeout)) {
                     this.newHeadsSubscription.unsubscribe();
 
                     observer.error('Timeout exceeded during the transaction confirmation observation!');
@@ -102,10 +110,9 @@ export default class TransactionObserver {
      * @method checkOverHttp
      *
      * @param {String} transactionHash
-     * @param {AbstractWeb3Module} moduleInstance
      * @param {Observer} observer
      */
-    startHttpObserver(transactionHash, moduleInstance, observer) {
+    startHttpObserver(transactionHash, observer) {
         const interval = setInterval(async () => {
             this.getTransactionReceiptMethod.parameters = [transactionHash];
 
@@ -124,7 +131,7 @@ export default class TransactionObserver {
                     this.confirmations++;
                     observer.next(receipt);
 
-                    if (this.isConfirmed(moduleInstance)) {
+                    if (this.isConfirmed(blockConfirmations)) {
                         clearInterval(interval);
                         observer.complete(receipt);
                     }
@@ -135,7 +142,7 @@ export default class TransactionObserver {
 
             this.confirmationChecks++;
 
-            if (this.isTimeoutTimeExceeded(moduleInstance)) {
+            if (this.isTimeoutTimeExceeded(timeout)) {
                 clearInterval(interval);
                 observer.error('Timeout exceeded during the transaction confirmation observation!');
             }
@@ -143,19 +150,20 @@ export default class TransactionObserver {
     }
 
     /**
+     * TODO: Create GetBlockByHashMethod and GetBlockByNumberMethod and combine them in the Eth module to a GetBlockMethod.
+     *
      * Returns a the block by the given blockHash
      *
      * @method getBlock
      *
      * @param {String} blockHash
-     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {Promise<Object>}
      */
-    getBlock(blockHash, moduleInstance) {
+    getBlock(blockHash) {
         this.getBlockMethod.parameters = [blockHash];
 
-        return this.getBlockMethod.execute(moduleInstance);
+        return this.getBlockMethod.execute();
     }
 
     /**
@@ -163,12 +171,11 @@ export default class TransactionObserver {
      *
      * @method isConfirmed
      *
-     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {Boolean}
      */
-    isConfirmed(moduleInstance) {
-        return this.confirmations >= moduleInstance.transactionConfirmationBlocks;
+    isConfirmed() {
+        return this.confirmations === this.blockConfirmations;
     }
 
     /**
@@ -176,18 +183,10 @@ export default class TransactionObserver {
      *
      * @method isTimeoutTimeExceeded
      *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
      * @returns {Boolean}
      */
-    isTimeoutTimeExceeded(moduleInstance) {
-        let confirmationChecks = moduleInstance.transactionBlockTimeout;
-
-        if (this.isSocketBasedProvider(moduleInstance.currentProvider)) {
-            confirmationChecks = moduleInstance.transactionPollingTimeout;
-        }
-
-        return this.confirmationChecks > confirmationChecks;
+    isTimeoutTimeExceeded() {
+        return this.confirmationChecks === this.timeout;
     }
 
     /**
@@ -195,12 +194,10 @@ export default class TransactionObserver {
      *
      * @method isSocketBasedProvider
      *
-     * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
-     *
      * @returns {Boolean}
      */
-    isSocketBasedProvider(provider) {
-        switch (provider.constructor.name) {
+    isSocketBasedProvider() {
+        switch (this.provider.constructor.name) {
             case 'CustomProvider':
             case 'HttpProvider':
                 return false;

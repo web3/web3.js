@@ -26,11 +26,12 @@ export default class GetHashrateMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_hashrate', 0, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_hashrate', 0, utils, formatters, moduleInstance);
     }
 
     /**

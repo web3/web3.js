@@ -30,12 +30,14 @@ export default class AbstractMethod {
      * @param {Number} parametersAmount
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(rpcMethod, parametersAmount, utils, formatters) {
+    constructor(rpcMethod, parametersAmount, utils, formatters, moduleInstance) {
         this.utils = utils;
         this.formatters = formatters;
+        this.moduleInstance = moduleInstance;
         this._arguments = {
             parameters: []
         };
@@ -66,17 +68,17 @@ export default class AbstractMethod {
     }
 
     /**
+     * TODO: Pass moduleInstance dependency over the constructor
+     *
      * Sends a JSON-RPC call request
      *
      * @method execute
      *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
      * @callback callback callback(error, result)
      * @returns {Promise<Object|String>}
      */
-    async execute(moduleInstance) {
-        this.beforeExecution(moduleInstance);
+    async execute() {
+        this.beforeExecution(this.moduleInstance);
 
         if (this.parameters.length !== this.parametersAmount) {
             throw new Error(
@@ -85,7 +87,7 @@ export default class AbstractMethod {
         }
 
         try {
-            let response = await moduleInstance.currentProvider.send(this.rpcMethod, this.parameters);
+            let response = await this.moduleInstance.currentProvider.send(this.rpcMethod, this.parameters);
 
             if (response) {
                 response = this.afterExecution(response);

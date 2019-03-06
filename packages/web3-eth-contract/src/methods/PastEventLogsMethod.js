@@ -26,14 +26,15 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      * @param {EventLogDecoder} eventLogDecoder
      * @param {AbiItemModel} abiItemModel
      * @param {EventOptionsMapper} eventOptionsMapper
      *
      * @constructor
      */
-    constructor(utils, formatters, eventLogDecoder, abiItemModel, eventOptionsMapper) {
-        super(utils, formatters);
+    constructor(utils, formatters, moduleInstance, eventLogDecoder, abiItemModel, eventOptionsMapper) {
+        super(utils, formatters, moduleInstance);
         this.abiItemModel = abiItemModel;
         this.eventLogDecoder = eventLogDecoder;
         this.eventOptionsMapper = eventOptionsMapper;
@@ -49,7 +50,12 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
     beforeExecution(moduleInstance) {
         super.beforeExecution(moduleInstance);
 
+        // TODO: Clean up the event options and topics handling instead of deleting the property here.
         this.parameters[0] = this.eventOptionsMapper.map(this.abiItemModel, moduleInstance, this.parameters[0]);
+
+        if (this.parameters[0].filter) {
+            delete this.parameters[0].filter;
+        }
     }
 
     /**

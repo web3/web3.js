@@ -153,12 +153,12 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<Array>}
      */
-    async getPastEvents(eventName, options, callback) {
+    getPastEvents(eventName, options, callback) {
         let method;
 
         if (eventName !== 'allEvents') {
             if (!this.abiModel.hasEvent(eventName)) {
-                throw new Error(`Event with name "${eventName}" does not exists.`);
+                return Promise.reject(new Error(`Event with name "${eventName}" does not exists.`));
             }
 
             method = this.methodFactory.createPastEventLogsMethod(this.abiModel.getEvent(eventName));
@@ -169,9 +169,7 @@ export default class AbstractContract extends AbstractWeb3Module {
         method.parameters = [options];
         method.callback = callback;
 
-        const response = await method.execute(this);
-
-        return response;
+        return method.execute(this);
     }
 
     /**

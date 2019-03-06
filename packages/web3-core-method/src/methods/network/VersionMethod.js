@@ -26,11 +26,12 @@ export default class VersionMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
     constructor(utils, formatters) {
-        super('net_version', 0, utils, formatters);
+        super('net_version', 0, utils, formatters, moduleInstance);
     }
 
     /**

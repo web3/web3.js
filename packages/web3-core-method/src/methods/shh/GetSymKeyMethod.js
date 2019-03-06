@@ -26,10 +26,11 @@ export default class GetSymKeyMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('shh_getSymKey', 1, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('shh_getSymKey', 1, utils, formatters, moduleInstance);
     }
 }

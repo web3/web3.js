@@ -57,6 +57,18 @@ export class AbstractWeb3Module {
     clearSubscriptions(subscriptionType: string): Promise<boolean>;
 }
 
+export interface TransactionSigner {
+    sign(tx: Transaction): Promise<SignedTransaction>;
+}
+
+export interface SignedTransaction {
+    messageHash?: string;
+    r: string;
+    s: string;
+    v: string;
+    rawTransaction?: string;
+}
+
 export interface Web3ModuleOptions {
     defaultAccount?: string;
     defaultBlock?: string | number;
@@ -65,6 +77,7 @@ export interface Web3ModuleOptions {
     transactionPollingTimeout?: number;
     defaultGasPrice?: string;
     defaultGas?: number;
+    transactionSigner: TransactionSigner;
 }
 
 export interface Providers {

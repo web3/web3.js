@@ -43,13 +43,13 @@ export default class MethodProxy {
                         );
                     }
 
-                    const method = methodFactory.createMethod(name);
+                    const method = methodFactory.createMethod(name, target);
 
                     /* eslint-disable no-inner-declarations */
                     function anonymousFunction() {
                         method.arguments = arguments;
 
-                        return method.execute(target);
+                        return method.execute();
                     }
                     /* eslint-enable no-inner-declarations */
 

@@ -26,6 +26,7 @@ export default class SendObservedTransactionMethod extends ObservedTransactionMe
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
@@ -36,12 +37,13 @@ export default class SendObservedTransactionMethod extends ObservedTransactionMe
     constructor(
         utils,
         formatters,
+        moduleInstance
         transactionObserver,
         chainIdMethod,
         getTransactionCountMethod,
         sendSignedTransactionMethod
     ) {
-        super('eth_sendTransaction', 1, utils, formatters, transactionObserver);
+        super('eth_sendTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
 
         this.chainIdMethod = chainIdMethod;
         this.getTransactionCountMethod = getTransactionCountMethod;

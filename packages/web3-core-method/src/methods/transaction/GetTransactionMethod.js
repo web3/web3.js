@@ -26,11 +26,12 @@ export default class GetTransactionMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_getTransactionByHash', 1, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_getTransactionByHash', 1, utils, formatters, moduleInstance);
     }
 
     /**

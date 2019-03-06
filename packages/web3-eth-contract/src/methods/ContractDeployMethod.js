@@ -26,33 +26,32 @@ export default class ContractDeployMethod extends SendObservedTransactionMethod 
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
      * @param {SendSignedTransactionMethod} sendSignedTransactionMethod
-     * @param {AbstractContract} contract
      *
      * @constructor
      */
     constructor(
         utils,
         formatters,
+        moduleInstance,
         transactionObserver,
         chainIdMethod,
         getTransactionCountMethod,
         sendSignedTransactionMethod,
-        contract
     ) {
         super(
             utils,
             formatters,
+            moduleInstance
             transactionObserver,
             chainIdMethod,
             getTransactionCountMethod,
             sendSignedTransactionMethod
         );
-
-        this.contract = contract;
     }
 
     /**
@@ -77,7 +76,7 @@ export default class ContractDeployMethod extends SendObservedTransactionMethod 
      * @returns {AbstractContract}
      */
     afterExecution(response) {
-        const clonedContract = this.contract.clone();
+        const clonedContract = this.moduleInstance.clone();
         clonedContract.address = response.contractAddress;
 
         return clonedContract;

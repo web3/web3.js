@@ -26,10 +26,11 @@ export default class SubmitWorkMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_submitWork', 3, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_submitWork', 3, utils, formatters, moduleInstance);
     }
 }

@@ -68,13 +68,13 @@ export default class MethodFactory {
 
         switch (requestType) {
             case 'call':
-                rpcMethod = this.createCallContractMethod(abiItem);
+                rpcMethod = this.createCallContractMethod(abiItem, contract);
                 break;
             case 'send':
-                rpcMethod = this.createSendContractMethod(abiItem, contract.abiModel);
+                rpcMethod = this.createSendContractMethod(abiItem, contract);
                 break;
             case 'estimate':
-                rpcMethod = this.createEstimateGasMethod();
+                rpcMethod = this.createEstimateGasMethod(contract);
                 break;
             case 'contract-deployment':
                 rpcMethod = this.createContractDeployMethod(contract);
@@ -94,13 +94,15 @@ export default class MethodFactory {
      * @method createPastEventLogsMethod
      *
      * @param {AbiItemModel} abiItem
+     * @param {AbstractContract} contract
      *
      * @returns {PastEventLogsMethod}
      */
-    createPastEventLogsMethod(abiItem) {
+    createPastEventLogsMethod(abiItem, contract) {
         return new PastEventLogsMethod(
             this.utils,
             this.formatters,
+            contract,
             this.contractModuleFactory.createEventLogDecoder(),
             abiItem,
             this.contractModuleFactory.createEventOptionsMapper()
@@ -113,13 +115,15 @@ export default class MethodFactory {
      * @method createPastEventLogsMethod
      *
      * @param {AbiModel} abiModel
+     * @param {AbstractContract} contract
      *
      * @returns {AllPastEventLogsMethod}
      */
-    createAllPastEventLogsMethod(abiModel) {
+    createAllPastEventLogsMethod(abiModel, contract) {
         return new AllPastEventLogsMethod(
             this.utils,
             this.formatters,
+            contract,
             this.contractModuleFactory.createAllEventsLogDecoder(),
             abiModel,
             this.contractModuleFactory.createAllEventsOptionsMapper()
@@ -132,11 +136,12 @@ export default class MethodFactory {
      * @method createCallContractMethod
      *
      * @param {AbiItemModel} abiItem
+     * @param {AbstractContract} contract
      *
      * @returns {CallContractMethod}
      */
-    createCallContractMethod(abiItem) {
-        return new CallContractMethod(this.utils, this.formatters, this.abiCoder, abiItem);
+    createCallContractMethod(abiItem, contract) {
+        return new CallContractMethod(this.utils, this.formatters, contract, this.abiCoder, abiItem);
     }
 
     /**
@@ -146,23 +151,35 @@ export default class MethodFactory {
      *
      * @param {AbiItemModel} abiItem
      * @param {AbiModel} abiModel
+     * @param {AbstractContract} contract
      *
      * @returns {SendContractMethod}
      */
-    createSendContractMethod(abiItem, abiModel) {
+    createSendContractMethod(abiItem, abiModel, contract) {
+        let timeout = contract.transactionBlockTimeout;
+        const providerName = contract.currentProvider.constructor.name;
+
+        if (providerName === 'HttpProvider' || providerName === 'CustomProvider') {
+            timeout = moduleInstance.transactionPollingTimeout;
+        }
+
         const transactionObserver = new TransactionObserver(
-            new GetTransactionReceiptMethod(this.utils, this.formatters),
-            new GetBlockMethod(this.utils, this.formatters),
-            new NewHeadsSubscription(this.utils, this.formatters, {})
+            moduleInstance.currentProvider,
+            timeout,
+            transactionConfirmationBlocks,
+            new GetTransactionReceiptMethod(this.utils, this.formatters, contract),
+            new GetBlockMethod(this.utils, this.formatters, contract),
+            new NewHeadsSubscription(this.utils, this.formatters, contract)
         );
 
         return new SendContractMethod(
             this.utils,
             this.formatters,
+            contract
             transactionObserver,
-            new ChainIdMethod(this.utils, this.formatters),
-            new GetTransactionCountMethod(this.utils, this.formatters),
-            new SendSignedTransactionMethod(this.utils, this.formatters, transactionObserver),
+            new ChainIdMethod(this.utils, this.formatters, contract),
+            new GetTransactionCountMethod(this.utils, this.formatters, contract),
+            new SendSignedTransactionMethod(this.utils, this.formatters, contract, transactionObserver),
             this.contractModuleFactory.createAllEventsLogDecoder(),
             abiModel
         );
@@ -181,6 +198,7 @@ export default class MethodFactory {
         return new ContractDeployMethod(
             this.utils,
             this.formatters,
+            contract,
             new TransactionObserver(
                 new GetTransactionReceiptMethod(this.utils, this.formatters),
                 new GetBlockMethod(this.utils, this.formatters),
@@ -188,8 +206,7 @@ export default class MethodFactory {
             ),
             new ChainIdMethod(this.utils, this.formatters),
             new GetTransactionCountMethod(this.utils, this.formatters),
-            new SendSignedTransactionMethod(this.utils, this.formatters),
-            contract
+            new SendSignedTransactionMethod(this.utils, this.formatters)
         );
     }
 

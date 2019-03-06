@@ -29,12 +29,13 @@ export default class ObservedTransactionMethod extends AbstractMethod {
      * @param {Number} parametersAmount
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      * @param {TransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(rpcMethod, parametersAmount, utils, formatters, transactionObserver) {
-        super(rpcMethod, parametersAmount, utils, formatters);
+    constructor(rpcMethod, parametersAmount, utils, formatters, moduleInstance, transactionObserver) {
+        super(rpcMethod, parametersAmount, utils, formatters, moduleInstance);
 
         this.transactionObserver = transactionObserver;
         this.promiEvent = new PromiEvent();

@@ -26,11 +26,12 @@ export default class EcRecoverMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('personal_ecRecover', 3, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('personal_ecRecover', 3, utils, formatters, moduleInstance);
     }
 
     /**

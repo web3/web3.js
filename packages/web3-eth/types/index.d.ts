@@ -51,12 +51,10 @@ export class Eth extends AbstractWeb3Module {
 
     clearSubscriptions(): Promise<boolean>;
 
-    subscribe(type: 'logs', options?: Logs): Promise<Subscribe<Log>>;
-    subscribe(type: 'logs', callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>
-    subscribe(type: 'logs', options?: Logs, callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>;
-    subscribe(type: 'syncing', callback?: (error: Error, result: Subscribe<any>) => void): Promise<Subscribe<any>>
-    subscribe(type: 'newBlockHeaders', callback?: (error: Error, result: Subscribe<BlockHeader>) => void): Promise<Subscribe<BlockHeader>>
-    subscribe(type: 'pendingTransactions', callback?: (error: Error, result: Subscribe<Transaction>) => void): Promise<Subscribe<Transaction>>
+    subscribe(type: 'logs', options?: Logs, callback?: (error: Error, log: Log) => void): Subscription<Log>;
+    subscribe(type: 'syncing', options?: null, callback?: (error: Error, result: any) => void): Subscription<any>;
+    subscribe(type: 'newBlockHeaders', options?: null, callback?: (error: Error, blockHeader: BlockHeader) => void): Subscription<BlockHeader>;
+    subscribe(type: 'pendingTransactions', options?: null, callback?: (error: Error, transactionHash: string) => void): Subscription<string>;
 
     getProtocolVersion(callback?: (error: Error, protocolVersion: string) => void): Promise<string>;
 
@@ -195,13 +193,13 @@ export interface Logs {
     topics?: Array<string | string[]>
 }
 
-export interface Subscribe<T> {
-    subscription: {
-        id: string
-        subscribe(callback?: (error: Error, result: Subscribe<T>) => void): Subscribe<T>
-        unsubscribe(callback?: (error: Error, result: boolean) => void): void | boolean
-        options: {}
-    }
+export interface Subscription<T> {
+    id: string;
+    options: {};
+
+    subscribe(callback?: (error: Error, result: T) => void): Subscription<T>;
+
+    unsubscribe(callback?: (error: Error, result: boolean) => void): Promise<undefined | boolean>;
 
     on(type: 'data', handler: (data: T) => void): void
 

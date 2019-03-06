@@ -26,11 +26,12 @@ export default class PersonalSignTransactionMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('personal_signTransaction', 2, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('personal_signTransaction', 2, utils, formatters, moduleInstance);
     }
 
     /**

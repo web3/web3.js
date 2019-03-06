@@ -60,12 +60,12 @@ export default class EventOptionsMapper {
             options.toBlock = this.formatters.inputBlockNumberFormatter(options.toBlock);
         }
 
-        if (!abiItemModel.anonymous) {
-            options.topics.unshift(abiItemModel.signature);
-        }
-
         if (typeof options.filter !== 'undefined') {
             options.topics = options.topics.concat(this.eventFilterEncoder.encode(abiItemModel, options.filter));
+        }
+
+        if (!abiItemModel.anonymous) {
+            options.topics.unshift(abiItemModel.signature);
         }
 
         if (!options.address) {

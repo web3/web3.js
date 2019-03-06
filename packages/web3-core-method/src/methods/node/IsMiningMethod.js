@@ -26,10 +26,11 @@ export default class IsMiningMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_mining', 0, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_mining', 0, utils, formatters, moduleInstance);
     }
 }

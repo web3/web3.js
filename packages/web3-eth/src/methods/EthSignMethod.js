@@ -26,11 +26,12 @@ export default class EthSignMethod extends SignMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super(utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super(utils, formatters, moduleInstance);
     }
 
     /**

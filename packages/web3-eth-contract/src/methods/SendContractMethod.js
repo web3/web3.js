@@ -27,6 +27,7 @@ export default class SendContractMethod extends SendObservedTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
@@ -39,6 +40,7 @@ export default class SendContractMethod extends SendObservedTransactionMethod {
     constructor(
         utils,
         formatters,
+        moduleInstance,
         transactionObserver,
         chainIdMethod,
         getTransactionCountMethod,
@@ -49,6 +51,7 @@ export default class SendContractMethod extends SendObservedTransactionMethod {
         super(
             utils,
             formatters,
+            moduleInstance,
             transactionObserver,
             chainIdMethod,
             getTransactionCountMethod,

@@ -26,10 +26,11 @@ export default class GetNodeInfoMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('web3_clientVersion', 0, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('web3_clientVersion', 0, utils, formatters, moduleInstance);
     }
 }

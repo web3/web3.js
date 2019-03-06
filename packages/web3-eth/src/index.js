@@ -59,6 +59,10 @@ export const TransactionSigner = () => {
  * @constructor
  */
 export const Eth = (provider, net, options) => {
+    if (!options.transactionSigner) {
+        options.transactionSigner = new TransactionSigner();
+    }
+
     const accounts = new Accounts(provider, options);
     const abiCoder = new AbiCoder();
 
@@ -73,9 +77,8 @@ export const Eth = (provider, net, options) => {
         new Ens(provider, accounts, options),
         Utils,
         formatters,
-        new SubscriptionsFactory(Utils, formatters),
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
-        new TransactionSigner(),
+        new SubscriptionsFactory(),
+        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
         options,
         net
     );

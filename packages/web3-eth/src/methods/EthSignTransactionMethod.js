@@ -27,11 +27,12 @@ export default class EthSignTransactionMethod extends SignTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super(utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super(utils, formatters, moduleInstance);
     }
 
     /**

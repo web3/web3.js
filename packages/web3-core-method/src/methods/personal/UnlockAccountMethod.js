@@ -26,11 +26,12 @@ export default class UnlockAccountMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('personal_unlockAccount', 3, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('personal_unlockAccount', 3, utils, formatters, moduleInstance);
     }
 
     /**

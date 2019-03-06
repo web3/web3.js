@@ -26,11 +26,12 @@ export default class PersonalSendTransactionMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('personal_sendTransaction', 2, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('personal_sendTransaction', 2, utils, formatters, moduleInstance);
     }
 
     /**

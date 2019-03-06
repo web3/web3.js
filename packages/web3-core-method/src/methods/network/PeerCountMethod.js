@@ -26,11 +26,12 @@ export default class PeerCountMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('net_peerCount', 0, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('net_peerCount', 0, utils, formatters, moduleInstance);
     }
 
     /**
