@@ -110,7 +110,9 @@ export interface EventOptions {
 }
 
 export interface EventData {
-    returnValues: {},
+    returnValues: {
+        [key: string]: any;
+    },
     raw: {
         data: string;
         topics: string[];
