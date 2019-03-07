@@ -52,6 +52,17 @@ export default class ObservedSendTransactionMethod extends AbstractObservedTrans
     }
 
     /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
+    }
+
+    /**
      * Checks if gasPrice is set, sends the request and returns a PromiEvent Object
      *
      * @method execute
