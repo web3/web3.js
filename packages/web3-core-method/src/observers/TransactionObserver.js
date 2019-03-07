@@ -26,6 +26,7 @@ export default class TransactionObserver {
      * @param {Number} blockConfirmations
      * @param {GetTransactionReceiptMethod} getTransactionReceiptMethod
      * @param {GetBlockByHashMethod} getBlockByHashMethod
+     * @param {GetBlockByNumberMethod} getBlockByNumberMethod
      * @param {NewHeadsSubscription} newHeadsSubscription
      *
      * @constructor
@@ -36,6 +37,7 @@ export default class TransactionObserver {
         blockConfirmations,
         getTransactionReceiptMethod,
         getBlockByHashMethod,
+        getBlockByNumberMethod,
         newHeadsSubscription
     ) {
         this.provider = provider;
@@ -43,8 +45,10 @@ export default class TransactionObserver {
         this.blockConfirmations = blockConfirmations;
         this.getTransactionReceiptMethod = getTransactionReceiptMethod;
         this.getBlockByHashMethod = getBlockByHashMethod;
+        this.getBlockByNumberMethod = getBlockByNumberMethod;
         this.newHeadsSubscription = newHeadsSubscription;
 
+        this.blockNumbers = [];
         this.lastBlock = false;
         this.confirmations = 0;
         this.confirmationChecks = 0;
@@ -78,28 +82,32 @@ export default class TransactionObserver {
      * @param {Observer} observer
      */
     startSocketObserver(transactionHash, observer) {
-        this.newHeadsSubscription.subscribe(() => {
+        this.newHeadsSubscription.subscribe((newHead) => {
             this.getTransactionReceiptMethod.parameters = [transactionHash];
 
             this.getTransactionReceiptMethod.execute().then((receipt) => {
-                if (receipt) {
-                    this.confirmations++;
+                if (!this.blockNumbers.contains(newHead.number)) {
+                    if (receipt) {
+                        this.confirmations++;
 
-                    observer.next({receipt, count: this.confirmations});
+                        observer.next({receipt, count: this.confirmations});
 
-                    if (this.isConfirmed()) {
+                        if (this.isConfirmed()) {
+                            this.newHeadsSubscription.unsubscribe();
+
+                            observer.complete();
+                        }
+                    }
+
+                    this.blockNumbers.push(newHead.number);
+
+                    this.confirmationChecks++;
+
+                    if (this.isTimeoutTimeExceeded()) {
                         this.newHeadsSubscription.unsubscribe();
 
-                        observer.complete();
+                        observer.error('Timeout exceeded during the transaction confirmation observation!');
                     }
-                }
-
-                this.confirmationChecks++;
-
-                if (this.isTimeoutTimeExceeded()) {
-                    this.newHeadsSubscription.unsubscribe();
-
-                    observer.error('Timeout exceeded during the transaction confirmation observation!');
                 }
             });
         });
@@ -122,14 +130,14 @@ export default class TransactionObserver {
 
                 if (receipt) {
                     if (this.lastBlock) {
-                        const block = await this.getBlock(receipt.blockHash);
-                        if(this.isValidConfirmation(block)) {
+                        const block = await this.getBlockByHash(receipt.blockHash);
+                        if (this.isValidConfirmation(block)) {
                             this.confirmations++;
                             observer.next({receipt, count: this.confirmations});
                             this.lastBlock = block;
                         }
                     } else {
-                        this.lastBlock = await this.getBlock(receipt.blockHash);
+                        this.lastBlock = await this.getBlockByHash(receipt.blockHash);
                         this.confirmations++;
                         observer.next({receipt, count: this.confirmations});
                     }
@@ -154,18 +162,33 @@ export default class TransactionObserver {
     }
 
     /**
-     * Returns a the block by the given blockHash
+     * Returns a block by the given blockHash
      *
-     * @method getBlock
+     * @method getBlockByHash
      *
      * @param {String} blockHash
      *
      * @returns {Promise<Object>}
      */
-    getBlock(blockHash) {
+    getBlockByHash(blockHash) {
         this.getBlockByHashMethod.parameters = [blockHash];
 
         return this.getBlockByHashMethod.execute();
+    }
+
+    /**
+     * Returns a block by the given blockNumber
+     *
+     * @method getBlockByNumber
+     *
+     * @param {Number} blockNumber
+     *
+     * @returns {Promise<Object>}
+     */
+    getBlockByNumber(blockNumber) {
+        this.getBlockByNumberMethod.parameters = [blockNumber];
+
+        return this.getBlockByNumberMethod.execute();
     }
 
     /**
