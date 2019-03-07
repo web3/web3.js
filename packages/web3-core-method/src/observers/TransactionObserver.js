@@ -26,7 +26,6 @@ export default class TransactionObserver {
      * @param {Number} blockConfirmations
      * @param {GetTransactionReceiptMethod} getTransactionReceiptMethod
      * @param {GetBlockByHashMethod} getBlockByHashMethod
-     * @param {GetBlockByNumberMethod} getBlockByNumberMethod
      * @param {NewHeadsSubscription} newHeadsSubscription
      *
      * @constructor
@@ -37,7 +36,6 @@ export default class TransactionObserver {
         blockConfirmations,
         getTransactionReceiptMethod,
         getBlockByHashMethod,
-        getBlockByNumberMethod,
         newHeadsSubscription
     ) {
         this.provider = provider;
@@ -45,7 +43,6 @@ export default class TransactionObserver {
         this.blockConfirmations = blockConfirmations;
         this.getTransactionReceiptMethod = getTransactionReceiptMethod;
         this.getBlockByHashMethod = getBlockByHashMethod;
-        this.getBlockByNumberMethod = getBlockByNumberMethod;
         this.newHeadsSubscription = newHeadsSubscription;
 
         this.blockNumbers = [];
@@ -86,7 +83,7 @@ export default class TransactionObserver {
             this.getTransactionReceiptMethod.parameters = [transactionHash];
 
             this.getTransactionReceiptMethod.execute().then((receipt) => {
-                if (!this.blockNumbers.contains(newHead.number)) {
+                if (!this.blockNumbers.includes(newHead.number)) {
                     if (receipt) {
                         this.confirmations++;
 
@@ -174,21 +171,6 @@ export default class TransactionObserver {
         this.getBlockByHashMethod.parameters = [blockHash];
 
         return this.getBlockByHashMethod.execute();
-    }
-
-    /**
-     * Returns a block by the given blockNumber
-     *
-     * @method getBlockByNumber
-     *
-     * @param {Number} blockNumber
-     *
-     * @returns {Promise<Object>}
-     */
-    getBlockByNumber(blockNumber) {
-        this.getBlockByNumberMethod.parameters = [blockNumber];
-
-        return this.getBlockByNumberMethod.execute();
     }
 
     /**
