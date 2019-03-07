@@ -75,7 +75,7 @@ export const Eth = (provider, net, options) => {
         new Ens(provider, net, accounts, options),
         Utils,
         formatters,
-        new SubscriptionsFactory(),
+        new SubscriptionsFactory(Utils, formatters),
         new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
         options,
         net

@@ -93,7 +93,16 @@ export default class Eth extends AbstractWeb3Module {
                 this.accounts,
                 abi,
                 address,
-                options
+                {
+                    defaultAccount: this.defaultAccount,
+                    defaultBlock: this.defaultBlock,
+                    defaultGas: this.defaultGas,
+                    defaultGasPrice: this.defaultGasPrice,
+                    transactionBlockTimeout: this.transactionBlockTimeout,
+                    transactionConfirmationBlocks: this.transactionConfirmationBlocks,
+                    transactionPollingTimeout: this.transactionPollingTimeout,
+                    transactionSigner: this.transactionSigner,
+                }
             );
 
             this.initiatedContracts.push(contract);
@@ -114,6 +123,8 @@ export default class Eth extends AbstractWeb3Module {
     }
 
     /**
+     * TODO: Remove setter
+     *
      * Setter for the transactionSigner property
      *
      * @property transactionSigner

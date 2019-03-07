@@ -81,7 +81,7 @@ export default class TransactionObserver {
     startSocketObserver(transactionHash, observer) {
         this.newHeadsSubscription.subscribe(async (newHeadError, newHead) => {
             try {
-                if (!newHeadError) {
+                if (newHeadError) {
                     throw newHeadError;
                 }
 
