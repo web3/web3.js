@@ -46,7 +46,7 @@ export const Ens = (provider, net, options, accounts) => {
         abiCoder,
         Utils,
         formatters,
-        new Network(provider),
+        new Network(provider, net, options),
         options,
         net
     );

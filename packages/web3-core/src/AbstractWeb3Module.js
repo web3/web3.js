@@ -44,7 +44,7 @@ export default class AbstractWeb3Module {
     constructor(provider, options = {}, methodFactory = null, nodeNet = null) {
         // ProviderDetector and ProviderResolver are created in the constructor for providing a simpler Web3 Module API.
         this.providerResolver = new ProviderResolver();
-        this.givenProvider = new ProviderDetector();
+        this.givenProvider = new ProviderDetector().detect();
 
         this._currentProvider = this.providerResolver.resolve(provider, nodeNet);
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;

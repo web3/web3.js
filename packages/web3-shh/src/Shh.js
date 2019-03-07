@@ -34,7 +34,7 @@ export default class Shh extends AbstractWeb3Module {
      * @constructor
      */
     constructor(provider, methodFactory, subscriptionsFactory, net, options, nodeNet) {
-        super(provider, methodFactory, options, nodeNet);
+        super(provider, options, methodFactory, nodeNet);
 
         this.subscriptionsFactory = subscriptionsFactory;
         this.net = net;

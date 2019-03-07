@@ -23,9 +23,9 @@
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import ShhModule from './Shh.js';
 import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';
+import ShhModule from './Shh.js';
 
 /**
  * Returns the Shh object.
@@ -43,7 +43,7 @@ export const Shh = (provider, net, options) => {
         provider,
         new MethodFactory(Utils, formatters),
         new SubscriptionsFactory(Utils, formatters),
-        new Network(provider, options),
+        new Network(provider, net, options),
         options,
         net
     );

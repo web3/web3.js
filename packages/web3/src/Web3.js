@@ -106,9 +106,9 @@ export default class Web3 extends AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionBlockTimeout(value) {
+        super.transactionBlockTimeout = value;
         this.eth.transactionBlockTimeout = value;
         this.shh.transactionBlockTimeout = value;
-        super.transactionBlockTimeout = value;
     }
 
     /**
@@ -130,9 +130,9 @@ export default class Web3 extends AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionConfirmationBlocks(value) {
+        super.transactionConfirmationBlocks = value;
         this.eth.transactionConfirmationBlocks = value;
         this.shh.transactionConfirmationBlocks = value;
-        super.transactionConfirmationBlocks = value;
     }
 
     /**
@@ -154,9 +154,9 @@ export default class Web3 extends AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionPollingTimeout(value) {
+        super.transactionPollingTimeout = value;
         this.eth.transactionPollingTimeout = value;
         this.shh.transactionPollingTimeout = value;
-        super.transactionPollingTimeout = value;
     }
 
     /**
