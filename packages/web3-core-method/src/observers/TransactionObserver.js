@@ -121,14 +121,15 @@ export default class TransactionObserver {
                 const receipt = await this.getTransactionReceiptMethod.execute();
 
                 if (receipt) {
-                    const block = await this.getBlock(receipt.blockHash);
-
-                    if (this.lastBlock && this.lastBlock.hash === block.parentHash) {
-                        this.confirmations++;
-                        observer.next({receipt, count: this.confirmations});
-                        this.lastBlock = block;
+                    if (this.lastBlock) {
+                        const block = await this.getBlock(receipt.blockHash);
+                        if(this.isValidConfirmation(block)) {
+                            this.confirmations++;
+                            observer.next({receipt, count: this.confirmations});
+                            this.lastBlock = block;
+                        }
                     } else {
-                        this.lastBlock = block;
+                        this.lastBlock = await this.getBlock(receipt.blockHash);
                         this.confirmations++;
                         observer.next({receipt, count: this.confirmations});
                     }
@@ -177,6 +178,19 @@ export default class TransactionObserver {
      */
     isConfirmed() {
         return this.confirmations === this.blockConfirmations;
+    }
+
+    /**
+     * Checks if the new block counts as confirmation
+     *
+     * @method isValidConfirmation
+     *
+     * @param {Object} block
+     *
+     * @returns {Boolean}
+     */
+    isValidConfirmation(block) {
+        return this.lastBlock.hash === block.parentHash && this.lastBlock.number !== block.number;
     }
 
     /**

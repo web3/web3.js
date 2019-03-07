@@ -118,11 +118,50 @@ export default class MethodFactory extends AbstractMethodFactory {
     createMethod(name, moduleInstance) {
         const method = this.methods[name];
 
-        if (!method.name.startsWith('Send')) {
+        if (method.name === 'ObservedSendRawTransactionMethod') {
             // eslint-disable-next-line new-cap
-            return new method(this.utils, this.formatters, moduleInstance);
+            return new method(
+                this.utils,
+                this.formatters,
+                moduleInstance,
+                this.createTransactionObserver(moduleInstance)
+            );
         }
 
+        if (method.name === 'ObservedSendTransactionMethod') {
+            const transactionObserver = this.createTransactionObserver(moduleInstance);
+
+            // eslint-disable-next-line new-cap
+            return new method(
+                this.utils,
+                this.formatters,
+                moduleInstance,
+                transactionObserver,
+                new ChainIdMethod(this.utils, this.formatters, moduleInstance),
+                new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance),
+                new ObservedSendRawTransactionMethod(
+                    this.utils,
+                    this.formatters,
+                    moduleInstance,
+                    transactionObserver
+                )
+            );
+        }
+
+        // eslint-disable-next-line new-cap
+        return new method(this.utils, this.formatters, moduleInstance);
+    }
+
+    /**
+     * Creates a object of type TransactionObserver
+     *
+     * @method createTransactionObserver
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {TransactionObserver}
+     */
+    createTransactionObserver(moduleInstance) {
         let timeout = moduleInstance.transactionBlockTimeout;
         const providerName = moduleInstance.currentProvider.constructor.name;
 
@@ -130,29 +169,13 @@ export default class MethodFactory extends AbstractMethodFactory {
             timeout = moduleInstance.transactionPollingTimeout;
         }
 
-        const transactionObserver = new TransactionObserver(
+        return new TransactionObserver(
             moduleInstance.currentProvider,
             timeout,
             moduleInstance.transactionConfirmationBlocks,
             new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
             new GetBlockByHashMethod(this.utils, this.formatters, moduleInstance),
             new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
-        );
-
-        if (method.name === 'ObservedSendRawTransactionMethod') {
-            // eslint-disable-next-line new-cap
-            return new method(this.utils, this.formatters, moduleInstance, transactionObserver);
-        }
-
-        // eslint-disable-next-line new-cap
-        return new method(
-            this.utils,
-            this.formatters,
-            moduleInstance,
-            transactionObserver,
-            new ChainIdMethod(this.utils, this.formatters, moduleInstance),
-            new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance),
-            new ObservedSendRawTransactionMethod(this.utils, this.formatters, moduleInstance, transactionObserver)
         );
     }
 }
