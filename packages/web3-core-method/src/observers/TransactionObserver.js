@@ -105,7 +105,7 @@ export default class TransactionObserver {
                             this.newHeadsSubscription.unsubscribe();
 
                             observer.error(
-                                new Error('Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get mined!'),
+                                new Error('Timeout exceeded during the transaction confirmation process. Be aware, the transaction could still get confirmed!'),
                                 receipt,
                                 this.confirmations,
                                 this.confirmationChecks
@@ -171,7 +171,7 @@ export default class TransactionObserver {
                 if (this.isTimeoutTimeExceeded()) {
                     clearInterval(interval);
                     observer.error(
-                        new Error('Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get mined!'),
+                        new Error('Timeout exceeded during the transaction confirmation process. Be aware, the transaction could still get confirmed!'),
                         receipt,
                         this.confirmations,
                         this.confirmationChecks

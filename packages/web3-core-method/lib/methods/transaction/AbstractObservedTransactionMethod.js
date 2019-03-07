@@ -82,6 +82,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                         this.callback(error, null);
                     }
 
+                    // TODO: Create TransactionError object and reject with this to provide all information.
                     this.promiEvent.reject(error);
                     this.promiEvent.emit('error', error, receipt, count);
                     this.promiEvent.removeAllListeners();
