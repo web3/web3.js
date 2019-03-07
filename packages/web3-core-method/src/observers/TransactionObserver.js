@@ -85,12 +85,12 @@ export default class TransactionObserver {
                 if (receipt) {
                     this.confirmations++;
 
-                    observer.next(receipt);
+                    observer.next({receipt, count: this.confirmations});
 
                     if (this.isConfirmed()) {
                         this.newHeadsSubscription.unsubscribe();
 
-                        observer.complete(receipt);
+                        observer.complete();
                     }
                 }
 
