@@ -84,12 +84,14 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                     this.promiEvent.removeAllListeners();
                 },
                 () => {
+                    const mappedReceipt = this.afterExecution(receipt);
+
                     if (this.callback) {
-                        this.callback(false, receipt);
+                        this.callback(false, mappedReceipt);
                     }
 
-                    this.promiEvent.resolve(receipt);
-                    this.promiEvent.emit('receipt', receipt);
+                    this.promiEvent.resolve(mappedReceipt);
+                    this.promiEvent.emit('receipt', mappedReceipt);
                     this.promiEvent.removeAllListeners();
                 }
             );

@@ -197,7 +197,6 @@ export default class AbstractContract extends AbstractWeb3Module {
     clone() {
         const clone = this.contractModuleFactory.createContract(
             this.currentProvider,
-            this.providersModuleFactory,
             this.accounts,
             [],
             '',

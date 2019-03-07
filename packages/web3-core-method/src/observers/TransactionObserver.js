@@ -122,21 +122,20 @@ export default class TransactionObserver {
 
                 if (receipt) {
                     const block = await this.getBlock(receipt.blockHash);
+
                     if (this.lastBlock && this.lastBlock.hash === block.parentHash) {
                         this.confirmations++;
-                        observer.next(receipt);
-
-                        if (this.isConfirmed()) {
-                            clearInterval(interval);
-                            observer.complete(receipt);
-                        }
-
+                        observer.next({receipt, count: this.confirmations});
                         this.lastBlock = block;
                     } else {
                         this.lastBlock = block;
-
                         this.confirmations++;
-                        observer.next(receipt);
+                        observer.next({receipt, count: this.confirmations});
+                    }
+
+                    if (this.isConfirmed()) {
+                        clearInterval(interval);
+                        observer.complete();
                     }
                 }
 
