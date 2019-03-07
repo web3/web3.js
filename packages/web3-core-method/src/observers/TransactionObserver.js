@@ -79,55 +79,46 @@ export default class TransactionObserver {
      * @param {Observer} observer
      */
     startSocketObserver(transactionHash, observer) {
-        this.newHeadsSubscription.subscribe((newHeadError, newHead) => {
-            if (!newHeadError) {
+        this.newHeadsSubscription.subscribe(async (newHeadError, newHead) => {
+            try {
+                if (!newHeadError) {
+                    throw newHeadError;
+                }
+
                 this.getTransactionReceiptMethod.parameters = [transactionHash];
+                const receipt = await this.getTransactionReceiptMethod.execute();
 
-                this.getTransactionReceiptMethod.execute().then((receipt) => {
-                    if (!this.blockNumbers.includes(newHead.number)) {
-                        if (receipt) {
-                            this.confirmations++;
+                if (!this.blockNumbers.includes(newHead.number)) {
+                    if (receipt) {
+                        this.confirmations++;
+                        this.emitNext(receipt, observer);
 
-                            observer.next({receipt, count: this.confirmations});
-
-                            if (this.isConfirmed()) {
-                                this.newHeadsSubscription.unsubscribe();
-
-                                observer.complete();
-                            }
-                        }
-
-                        this.blockNumbers.push(newHead.number);
-
-                        this.confirmationChecks++;
-
-                        if (this.isTimeoutTimeExceeded()) {
+                        if (this.isConfirmed()) {
                             this.newHeadsSubscription.unsubscribe();
-
-                            observer.error(
-                                new Error('Timeout exceeded during the transaction confirmation process. Be aware, the transaction could still get confirmed!'),
-                                receipt,
-                                this.confirmations,
-                                this.confirmationChecks
-                            );
+                            observer.complete();
                         }
                     }
-                }).catch((getTransactionReceiptError) => {
-                    observer.error(
-                        getTransactionReceiptError,
-                        false,
-                        this.confirmations,
-                        this.confirmationChecks
-                    );
-                });
-            }
 
-            observer.error(
-                newHeadError,
-                false,
-                0,
-                0
-            );
+                    this.blockNumbers.push(newHead.number);
+                    this.confirmationChecks++;
+
+                    if (this.isTimeoutTimeExceeded()) {
+                        this.emitError(
+                            new Error('Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'),
+                            receipt,
+                            observer
+                        );
+
+                        this.newHeadsSubscription.unsubscribe();
+                    }
+                }
+            } catch (error) {
+                this.emitError(
+                    error,
+                    false,
+                    observer
+                );
+            }
         });
     }
 
@@ -151,13 +142,13 @@ export default class TransactionObserver {
                         const block = await this.getBlockByHash(receipt.blockHash);
                         if (this.isValidConfirmation(block)) {
                             this.confirmations++;
-                            observer.next({receipt, count: this.confirmations});
+                            this.emitNext(receipt, observer);
                             this.lastBlock = block;
                         }
                     } else {
                         this.lastBlock = await this.getBlockByHash(receipt.blockHash);
                         this.confirmations++;
-                        observer.next({receipt, count: this.confirmations});
+                        this.emitNext(receipt, observer);
                     }
 
                     if (this.isConfirmed()) {
@@ -170,23 +161,49 @@ export default class TransactionObserver {
 
                 if (this.isTimeoutTimeExceeded()) {
                     clearInterval(interval);
-                    observer.error(
-                        new Error('Timeout exceeded during the transaction confirmation process. Be aware, the transaction could still get confirmed!'),
+
+                    this.emitError(
+                        new Error('Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'),
                         receipt,
-                        this.confirmations,
-                        this.confirmationChecks
+                        observer
                     );
                 }
             } catch (error) {
                 clearInterval(interval);
-                observer.error(
-                    error,
-                    false,
-                    this.confirmations,
-                    this.confirmationChecks
-                );
+                this.emitError(error, receipt, observer);
             }
         }, 1000);
+    }
+
+    /**
+     * Calls the next callback method of the Observer
+     *
+     * @method emitNext
+     *
+     * @param {Object} receipt
+     * @param {Observer} observer
+     */
+    emitNext(receipt, observer) {
+        observer.next({receipt, count: this.confirmations});
+    }
+
+
+    /**
+     * Calls the error callback method of the Observer
+     *
+     * @method emitError
+     *
+     * @param {Error} error
+     * @param {Object} receipt
+     * @param {Observer} observer
+     */
+    emitError(error, receipt, observer) {
+        observer.error(
+            error,
+            receipt,
+            this.confirmations,
+            this.confirmationChecks
+        );
     }
 
     /**

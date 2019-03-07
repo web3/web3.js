@@ -70,6 +70,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
 
             const transactionSubscription = this.transactionObserver.observe(transactionHash).subscribe(
                 (confirmation) => {
+                    console.log(confirmation);
                     count = confirmation.count;
                     receipt = confirmation.receipt;
 
