@@ -1,24 +1,37 @@
 import * as Utils from 'web3-utils';
+import {WebsocketProvider} from 'web3-providers';
 import {formatters} from 'web3-core-helpers';
+import {AbstractWeb3Module} from 'web3-core';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 // Mocks
 jest.mock('Utils');
 jest.mock('formatters');
+jest.mock('WebsocketProvider');
+jest.mock('AbstractWeb3Module');
 
 /**
  * AbstractMethod test
  */
 describe('AbstractMethodTest', () => {
-    let abstractMethod;
+    let abstractMethod, moduleInstanceMock, providerMock, callback;
 
     beforeEach(() => {
-        abstractMethod = new AbstractMethod('RPC_TEST', 0, Utils, formatters);
+        callback = jest.fn();
+
+        new WebsocketProvider('host', {});
+        providerMock = WebsocketProvider.mock.instances[0];
+        providerMock.send = jest.fn();
+
+        new AbstractWeb3Module();
+        moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+
+        abstractMethod = new AbstractMethod('RPC_TEST', 0, Utils, formatters, moduleInstanceMock);
+        abstractMethod.callback = callback;
+        abstractMethod.beforeExecution = jest.fn();
     });
 
     it('constructor check', () => {
-        expect(AbstractMethod.Type).toEqual(undefined);
-
         expect(abstractMethod.rpcMethod).toEqual('RPC_TEST');
 
         expect(abstractMethod.parametersAmount).toEqual(0);
@@ -27,9 +40,11 @@ describe('AbstractMethodTest', () => {
 
         expect(abstractMethod.formatters).toEqual(formatters);
 
+        expect(abstractMethod.moduleInstance).toEqual(moduleInstanceMock);
+
         expect(abstractMethod.parameters).toEqual([]);
 
-        expect(abstractMethod.callback).toEqual(undefined);
+        expect(abstractMethod.callback).toEqual(callback);
     });
 
     it('set arguments throws error on missing arguments', () => {
@@ -63,7 +78,8 @@ describe('AbstractMethodTest', () => {
 
     it('set arguments with callback', () => {
         abstractMethod.parametersAmount = 1;
-        abstractMethod.arguments = [true, () => {}];
+        abstractMethod.arguments = [true, () => {
+        }];
 
         expect(abstractMethod.parameters).toEqual([true]);
 
@@ -90,31 +106,14 @@ describe('AbstractMethodTest', () => {
     });
 
     it('set callback', () => {
-        abstractMethod.callback = () => {};
+        abstractMethod.callback = () => {
+        };
 
         expect(abstractMethod.callback).toBeInstanceOf(Function);
     });
 
     it('check if execute method exists', () => {
         expect(abstractMethod.execute).toBeInstanceOf(Function);
-    });
-
-    it('beforeExecution changes nothing', () => {
-        abstractMethod.beforeExecution();
-
-        expect(AbstractMethod.Type).toEqual(undefined);
-
-        expect(abstractMethod.rpcMethod).toEqual('RPC_TEST');
-
-        expect(abstractMethod.parametersAmount).toEqual(0);
-
-        expect(abstractMethod.utils).toEqual(Utils);
-
-        expect(abstractMethod.formatters).toEqual(formatters);
-
-        expect(abstractMethod.parameters).toEqual([]);
-
-        expect(abstractMethod.callback).toEqual(undefined);
     });
 
     it('afterExecution just returns the value', () => {
@@ -127,5 +126,68 @@ describe('AbstractMethodTest', () => {
 
     it('isHash returns false', () => {
         expect(abstractMethod.isHash(100)).toBeFalsy();
+    });
+
+    it('calls execute and returns with the expected value', async () => {
+        abstractMethod.afterExecution = jest.fn(() => {
+            return '0x00';
+        });
+
+        providerMock.send.mockReturnValueOnce(Promise.resolve('0x0'));
+
+        moduleInstanceMock.currentProvider = providerMock;
+
+        const response = await abstractMethod.execute(moduleInstanceMock);
+
+        expect(response).toEqual('0x00');
+
+        expect(providerMock.send).toHaveBeenCalledWith(abstractMethod.rpcMethod, abstractMethod.parameters);
+
+        expect(abstractMethod.callback).toHaveBeenCalledWith(false, '0x00');
+
+        expect(abstractMethod.beforeExecution).toHaveBeenCalledWith(moduleInstanceMock);
+
+        expect(abstractMethod.afterExecution).toHaveBeenCalledWith('0x0');
+    });
+
+    it('calls execute and throws an error on sending the request to the connected node', async () => {
+        providerMock.send = jest.fn(() => {
+            return Promise.reject(new Error('ERROR ON SEND'));
+        });
+
+        moduleInstanceMock.currentProvider = providerMock;
+        await expect(abstractMethod.execute(moduleInstanceMock)).rejects.toThrow('ERROR ON SEND');
+
+        expect(providerMock.send).toHaveBeenCalledWith(abstractMethod.rpcMethod, abstractMethod.parameters);
+
+        expect(abstractMethod.callback).toHaveBeenCalledWith(new Error('ERROR ON SEND'), null);
+
+        expect(abstractMethod.beforeExecution).toHaveBeenCalledWith(moduleInstanceMock);
+    });
+
+    it('calls execute and throws an error because of a invalid parameters length', async () => {
+        abstractMethod.parametersAmount = 0;
+        abstractMethod.parameters = [true];
+
+        await expect(abstractMethod.execute(moduleInstanceMock)).rejects
+            .toThrow(`Invalid Arguments length: expected: 0, given: 1`);
+
+        expect(abstractMethod.beforeExecution).toHaveBeenCalledWith(moduleInstanceMock);
+    });
+
+    it('calls execute and it returns null', async () => {
+        providerMock.send.mockReturnValueOnce(Promise.resolve(null));
+
+        moduleInstanceMock.currentProvider = providerMock;
+
+        const response = await abstractMethod.execute(moduleInstanceMock);
+
+        expect(response).toEqual(null);
+
+        expect(providerMock.send).toHaveBeenCalledWith(abstractMethod.rpcMethod, abstractMethod.parameters);
+
+        expect(abstractMethod.callback).toHaveBeenCalledWith(false, null);
+
+        expect(abstractMethod.beforeExecution).toHaveBeenCalledWith(moduleInstanceMock);
     });
 });
