@@ -79,34 +79,55 @@ export default class TransactionObserver {
      * @param {Observer} observer
      */
     startSocketObserver(transactionHash, observer) {
-        this.newHeadsSubscription.subscribe((newHead) => {
-            this.getTransactionReceiptMethod.parameters = [transactionHash];
+        this.newHeadsSubscription.subscribe((newHeadError, newHead) => {
+            if (!newHeadError) {
+                this.getTransactionReceiptMethod.parameters = [transactionHash];
 
-            this.getTransactionReceiptMethod.execute().then((receipt) => {
-                if (!this.blockNumbers.includes(newHead.number)) {
-                    if (receipt) {
-                        this.confirmations++;
+                this.getTransactionReceiptMethod.execute().then((receipt) => {
+                    if (!this.blockNumbers.includes(newHead.number)) {
+                        if (receipt) {
+                            this.confirmations++;
 
-                        observer.next({receipt, count: this.confirmations});
+                            observer.next({receipt, count: this.confirmations});
 
-                        if (this.isConfirmed()) {
+                            if (this.isConfirmed()) {
+                                this.newHeadsSubscription.unsubscribe();
+
+                                observer.complete();
+                            }
+                        }
+
+                        this.blockNumbers.push(newHead.number);
+
+                        this.confirmationChecks++;
+
+                        if (this.isTimeoutTimeExceeded()) {
                             this.newHeadsSubscription.unsubscribe();
 
-                            observer.complete();
+                            observer.error(
+                                new Error('Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get mined!'),
+                                receipt,
+                                this.confirmations,
+                                this.confirmationChecks
+                            );
                         }
                     }
+                }).catch((getTransactionReceiptError) => {
+                    observer.error(
+                        getTransactionReceiptError,
+                        false,
+                        this.confirmations,
+                        this.confirmationChecks
+                    );
+                });
+            }
 
-                    this.blockNumbers.push(newHead.number);
-
-                    this.confirmationChecks++;
-
-                    if (this.isTimeoutTimeExceeded()) {
-                        this.newHeadsSubscription.unsubscribe();
-
-                        observer.error('Timeout exceeded during the transaction confirmation observation!');
-                    }
-                }
-            });
+            observer.error(
+                newHeadError,
+                false,
+                0,
+                0
+            );
         });
     }
 
@@ -149,11 +170,21 @@ export default class TransactionObserver {
 
                 if (this.isTimeoutTimeExceeded()) {
                     clearInterval(interval);
-                    observer.error('Timeout exceeded during the transaction confirmation observation!');
+                    observer.error(
+                        new Error('Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get mined!'),
+                        receipt,
+                        this.confirmations,
+                        this.confirmationChecks
+                    );
                 }
             } catch (error) {
                 clearInterval(interval);
-                observer.error(error);
+                observer.error(
+                    error,
+                    false,
+                    this.confirmations,
+                    this.confirmationChecks
+                );
             }
         }, 1000);
     }

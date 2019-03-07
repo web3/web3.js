@@ -60,14 +60,15 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
         }
 
         this.moduleInstance.currentProvider.send(this.rpcMethod, this.parameters).then((transactionHash) => {
+            let count, receipt;
+
             this.promiEvent.emit('transactionHash', transactionHash);
 
             if (this.callback) {
                 this.callback(false, transactionHash);
             }
 
-            let count, receipt;
-            this.transactionObserver.observe(transactionHash).subscribe(
+            const transactionSubscription = this.transactionObserver.observe(transactionHash).subscribe(
                 (confirmation) => {
                     count = confirmation.count;
                     receipt = confirmation.receipt;
@@ -75,6 +76,8 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                     this.promiEvent.emit('confirmation', count, receipt);
                 },
                 (error) => {
+                    transactionSubscription.unsubscribe();
+
                     if (this.callback) {
                         this.callback(error, null);
                     }
@@ -84,6 +87,8 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                     this.promiEvent.removeAllListeners();
                 },
                 () => {
+                    transactionSubscription.unsubscribe();
+
                     const mappedReceipt = this.afterExecution(receipt);
 
                     if (this.callback) {
