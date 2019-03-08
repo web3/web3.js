@@ -29,6 +29,7 @@ import {
     WebsocketProvider,
     WebsocketProviderOptions
 } from 'web3-providers';
+import {BN} from 'web3-utils';
 
 export class AbstractWeb3Module {
     constructor(
@@ -133,9 +134,9 @@ export interface Transaction {
 export interface TransactionConfig {
     from?: string | number;
     to?: string;
-    value?: number | string;
+    value?: number | string | BN;
     gas?: number | string;
-    gasPrice?: number | string;
+    gasPrice?: number | string | BN;
     data?: string;
     nonce?: number;
     chainId?: number;
