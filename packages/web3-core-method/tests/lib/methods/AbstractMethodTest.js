@@ -1,14 +1,12 @@
 import * as Utils from 'web3-utils';
 import {WebsocketProvider} from 'web3-providers';
 import {formatters} from 'web3-core-helpers';
-import {AbstractWeb3Module} from 'web3-core';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 // Mocks
 jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('WebsocketProvider');
-jest.mock('AbstractWeb3Module');
 
 /**
  * AbstractMethod test
@@ -23,8 +21,7 @@ describe('AbstractMethodTest', () => {
         providerMock = WebsocketProvider.mock.instances[0];
         providerMock.send = jest.fn();
 
-        new AbstractWeb3Module();
-        moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        moduleInstanceMock = {};
 
         abstractMethod = new AbstractMethod('RPC_TEST', 0, Utils, formatters, moduleInstanceMock);
         abstractMethod.callback = callback;

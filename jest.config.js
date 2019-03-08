@@ -9,7 +9,6 @@ const config = {
     transform: {
         '^.+\\.js$': '<rootDir>/../../jest.preprocessor.js'
     },
-    transformIgnorePatterns: ['node_modules/(?!(underscore-es)/)'],
     bail: true
 };
 
