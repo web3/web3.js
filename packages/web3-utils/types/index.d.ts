@@ -209,7 +209,7 @@ export interface AbiItem {
     constant?: boolean;
     inputs?: AbiInput[];
     name?: string;
-    outputs?: AbiOuput[];
+    outputs?: AbiOutput[];
     payable?: boolean;
     stateMutability?: StateMutabilityType;
     type: AbiType;
@@ -219,9 +219,11 @@ export interface AbiInput {
     name: string;
     type: string;
     indexed?: boolean;
+	components?: AbiInput[];
 }
 
-export interface AbiOuput {
+export interface AbiOutput {
     name: string;
     type: string;
+	components?: AbiOutput[];
 }
