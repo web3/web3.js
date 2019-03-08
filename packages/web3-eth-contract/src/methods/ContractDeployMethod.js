@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import {ObservedSendTransactionMethod} from 'web3-core-method';
+import {EthSendTransactionMethod} from 'web3-core-method';
 
-export default class ContractDeployMethod extends ObservedSendTransactionMethod {
+export default class ContractDeployMethod extends EthSendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

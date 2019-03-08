@@ -53,12 +53,6 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
     execute() {
         this.beforeExecution(this.moduleInstance);
 
-        if (this.parameters.length !== this.parametersAmount) {
-            throw new Error(
-                `Invalid Arguments length: expected: ${this.parametersAmount}, given: ${this.parameters.length}`
-            );
-        }
-
         this.moduleInstance.currentProvider.send(this.rpcMethod, this.parameters).then((transactionHash) => {
             let count, receipt;
 

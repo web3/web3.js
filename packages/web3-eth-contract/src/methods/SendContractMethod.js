@@ -21,9 +21,9 @@
  */
 
 import isArray from 'lodash/isArray';
-import {ObservedSendTransactionMethod} from 'web3-core-method';
+import {EthSendTransactionMethod} from 'web3-core-method';
 
-export default class SendContractMethod extends ObservedSendTransactionMethod {
+export default class SendContractMethod extends EthSendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

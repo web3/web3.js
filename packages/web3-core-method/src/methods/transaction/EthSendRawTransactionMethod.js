@@ -22,7 +22,6 @@
 
 import SendRawTransactionMethod from './SendRawTransactionMethod';
 
-// TODO: The only way to remove the duplication of this JSON-RPC method string is to create a AbstractSendRawTransaction which is probably to much.
 export default class EthSendRawTransactionMethod extends SendRawTransactionMethod {
     /**
      * @param {Utils} utils

@@ -47,8 +47,8 @@ import {
     VersionMethod,
     TransactionObserver,
     GetBlockByHashMethod,
-    ObservedSendRawTransactionMethod,
-    ObservedSendTransactionMethod
+    EthSendRawTransactionMethod,
+    EthSendTransactionMethod
 } from 'web3-core-method';
 import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import GetBlockMethod from '../methods/GetBlockMethod';
@@ -92,9 +92,9 @@ export default class MethodFactory extends AbstractMethodFactory {
             getTransactionFromBlock: GetTransactionFromBlockMethod,
             getTransactionReceipt: GetTransactionReceiptMethod,
             getTransactionCount: GetTransactionCountMethod,
-            sendSignedTransaction: ObservedSendRawTransactionMethod,
+            sendSignedTransaction: EthSendRawTransactionMethod,
             signTransaction: SignTransactionMethod,
-            sendTransaction: ObservedSendTransactionMethod,
+            sendTransaction: EthSendTransactionMethod,
             sign: SignMethod,
             call: CallMethod,
             estimateGas: EstimateGasMethod,
@@ -118,7 +118,7 @@ export default class MethodFactory extends AbstractMethodFactory {
     createMethod(name, moduleInstance) {
         const method = this.methods[name];
 
-        if (method.name === 'ObservedSendRawTransactionMethod') {
+        if (method.name === 'EthSendRawTransactionMethod') {
             // eslint-disable-next-line new-cap
             return new method(
                 this.utils,
@@ -128,7 +128,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             );
         }
 
-        if (method.name === 'ObservedSendTransactionMethod') {
+        if (method.name === 'EthSendTransactionMethod') {
             const transactionObserver = this.createTransactionObserver(moduleInstance);
 
             // eslint-disable-next-line new-cap
@@ -139,7 +139,7 @@ export default class MethodFactory extends AbstractMethodFactory {
                 transactionObserver,
                 new ChainIdMethod(this.utils, this.formatters, moduleInstance),
                 new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance),
-                new ObservedSendRawTransactionMethod(
+                new EthSendRawTransactionMethod(
                     this.utils,
                     this.formatters,
                     moduleInstance,

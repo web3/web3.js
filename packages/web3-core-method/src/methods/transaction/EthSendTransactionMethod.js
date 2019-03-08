@@ -22,7 +22,6 @@
 
 import SendTransactionMethod from './SendTransactionMethod';
 
-// TODO: The Eth specific logic can only be moved out of the core-method module after merging of the submodules together to one eth module.
 export default class EthSendTransactionMethod extends SendTransactionMethod {
     /**
      * @param {Utils} utils
