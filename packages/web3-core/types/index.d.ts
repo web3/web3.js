@@ -129,6 +129,7 @@ export interface Transaction {
     r?: string;
     s?: string;
     hash?: string;
+    input?: string;
 }
 
 export interface RLPEncodedTransaction {
