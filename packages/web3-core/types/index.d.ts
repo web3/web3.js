@@ -60,7 +60,7 @@ export class AbstractWeb3Module {
 }
 
 export interface TransactionSigner {
-    sign(tx: Transaction): Promise<SignedTransaction>;
+    sign(transactionConfig: TransactionConfig): Promise<SignedTransaction>;
 }
 
 export interface SignedTransaction {
@@ -117,23 +117,44 @@ export interface PromiEvent<T> extends Promise<T> {
 }
 
 export interface Transaction {
+	hash: string;
+	nonce: number;
+	blockHash: string | null;
+	blockNumber: number | null;
+	transactionIndex: number | null;
+	from: string;
+	to: string;
+	value: string;
+	gasPrice: string;
+	gas: number;
+	input: string;
+}
+
+export interface TransactionConfig {
     from?: string | number;
     to?: string;
-    gasPrice?: string;
-    gas?: number | string;
     value?: number | string;
-    chainId?: number;
+    gas?: number | string;
+    gasPrice?: number | string;
     data?: string;
     nonce?: number;
-    v?: string;
-    r?: string;
-    s?: string;
-    hash?: string;
+    chainId?: number;
 }
 
 export interface RLPEncodedTransaction {
     raw: string;
-    tx: Transaction;
+    tx: {
+        nonce: string;
+        gasPrice: string;
+        gas: string;
+        to: string;
+        value: string;
+        input: string;
+        r: string;
+        s: string;
+        v: string;
+        hash: string;
+    }
 }
 
 export interface TransactionReceipt {

@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module, Transaction, Web3ModuleOptions, SignedTransaction} from 'web3-core';
+import {AbstractWeb3Module, TransactionConfig, Web3ModuleOptions, SignedTransaction} from 'web3-core';
 import {provider} from 'web3-providers';
 
 export class Accounts extends AbstractWeb3Module {
@@ -27,7 +27,7 @@ export class Accounts extends AbstractWeb3Module {
 
     privateKeyToAccount(privateKey: string): Account;
 
-    signTransaction(tx: Transaction, privateKey: string, callback?: () => void): Promise<SignedTransaction>;
+    signTransaction(transactionConfig: TransactionConfig, privateKey: string, callback?: () => void): Promise<SignedTransaction>;
 
     recoverTransaction(signature: string): string;
 
@@ -35,8 +35,8 @@ export class Accounts extends AbstractWeb3Module {
 
     sign(data: string, privateKey: string): Sign;
 
-    recover(message: SignedTransaction): string;
-    recover(message: string | SignedTransaction, signature: string, preFixed?: boolean): string;
+    recover(signedTransaction: SignedTransaction): string;
+    recover(message: string, signature: string, preFixed?: boolean): string;
     recover(message: string, v: string, r: string, s: string, preFixed?: boolean): string;
 
     encrypt(privateKey: string, password: string): EncryptedKeystoreV3Json;
@@ -75,7 +75,7 @@ export interface Account {
     address: string;
     privateKey: string;
     signTransaction: (
-        tx: Transaction,
+        transactionConfig: TransactionConfig,
         callback?: (signTransaction: SignedTransaction) => void
     ) => Promise<SignedTransaction>;
     sign: (data: string) => Sign;
