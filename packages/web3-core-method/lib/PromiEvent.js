@@ -16,7 +16,7 @@
 */
 /**
  * @file PromiEvent.js
- * @author Samuel Furter <samuel@ethereum.org>
+ * @author Fabian Vogelsteller <fabian@ethereum.org>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 

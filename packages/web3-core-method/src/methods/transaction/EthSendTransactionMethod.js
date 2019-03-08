@@ -15,15 +15,15 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file ObservedSendTransactionMethod.js
+ * @file EthSendTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
+import SendTransactionMethod from './SendTransactionMethod';
 
 // TODO: The Eth specific logic can only be moved out of the core-method module after merging of the submodules together to one eth module.
-export default class ObservedSendTransactionMethod extends AbstractObservedTransactionMethod {
+export default class EthSendTransactionMethod extends SendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -31,7 +31,7 @@ export default class ObservedSendTransactionMethod extends AbstractObservedTrans
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {ObservedSendRawTransactionMethod} observedSendRawTransactionMethod
+     * @param {EthSendRawTransactionMethod} ethSendRawTransactionMethod
      *
      * @constructor
      */
@@ -42,24 +42,13 @@ export default class ObservedSendTransactionMethod extends AbstractObservedTrans
         transactionObserver,
         chainIdMethod,
         getTransactionCountMethod,
-        observedSendRawTransactionMethod
+        ethSendRawTransactionMethod
     ) {
-        super('eth_sendTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
+        super(utils, formatters, moduleInstance, transactionObserver);
 
         this.chainIdMethod = chainIdMethod;
         this.getTransactionCountMethod = getTransactionCountMethod;
-        this.observedSendRawTransactionMethod = observedSendRawTransactionMethod;
-    }
-
-    /**
-     * This method will be executed before the RPC request.
-     *
-     * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
-     */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
+        this.ethSendRawTransactionMethod = ethSendRawTransactionMethod;
     }
 
     /**
@@ -144,11 +133,11 @@ export default class ObservedSendTransactionMethod extends AbstractObservedTrans
 
         const response = await this.moduleInstance.transactionSigner.sign(this.parameters[0], privateKey);
 
-        this.observedSendRawTransactionMethod.parameters = [response.rawTransaction];
-        this.observedSendRawTransactionMethod.callback = this.callback;
-        this.observedSendRawTransactionMethod.promiEvent = this.promiEvent;
+        this.ethSendRawTransactionMethod.parameters = [response.rawTransaction];
+        this.ethSendRawTransactionMethod.callback = this.callback;
+        this.ethSendRawTransactionMethod.promiEvent = this.promiEvent;
 
-        this.observedSendRawTransactionMethod.execute();
+        this.ethSendRawTransactionMethod.execute();
     }
 
     /**

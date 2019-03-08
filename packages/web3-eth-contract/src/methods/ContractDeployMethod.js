@@ -30,7 +30,7 @@ export default class ContractDeployMethod extends ObservedSendTransactionMethod 
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {ObservedSendRawTransactionMethod} observedSendRawTransactionMethod
+     * @param {EthSendRawTransactionMethod} observedSendRawTransactionMethod
      *
      * @constructor
      */

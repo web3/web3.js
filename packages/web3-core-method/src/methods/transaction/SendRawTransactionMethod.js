@@ -20,17 +20,18 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
-export default class SendRawTransactionMethod extends AbstractMethod {
+export default class SendRawTransactionMethod extends AbstractObservedTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
+     * @param {TransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_sendRawTransaction', 1, utils, formatters, moduleInstance);
+    constructor(utils, formatters, moduleInstance, transactionObserver) {
+        super('eth_sendRawTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
     }
 }
