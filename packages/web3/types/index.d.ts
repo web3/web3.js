@@ -37,7 +37,7 @@ export default class Web3 extends AbstractWeb3Module {
     static modules: Modules;
     static readonly givenProvider: provider | null;
 
-    static utils: Utils;
+    utils: Utils;
     eth: Eth;
     shh: Shh;
     bzz: Bzz;
