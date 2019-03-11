@@ -26,7 +26,7 @@ import {
     GetTransactionCountMethod,
     GetTransactionReceiptMethod,
     GetBlockByHashMethod,
-    ObservedSendRawTransactionMethod,
+    SendRawTransactionMethod,
     TransactionObserver
 } from 'web3-core-method';
 import {NewHeadsSubscription} from 'web3-core-subscriptions';
@@ -71,7 +71,7 @@ export default class MethodFactory {
                 rpcMethod = this.createCallContractMethod(abiItem, contract);
                 break;
             case 'send':
-                rpcMethod = this.createSendContractMethod(abiItem, contract);
+                rpcMethod = this.createSendContractMethod(contract);
                 break;
             case 'estimate':
                 rpcMethod = this.createEstimateGasMethod(contract);
@@ -149,13 +149,11 @@ export default class MethodFactory {
      *
      * @method createSendContractMethod
      *
-     * @param {AbiItemModel} abiItem
-     * @param {AbiModel} abiModel
      * @param {AbstractContract} contract
      *
      * @returns {SendContractMethod}
      */
-    createSendContractMethod(abiItem, abiModel, contract) {
+    createSendContractMethod(contract) {
         const transactionObserver = new TransactionObserver(
             contract.currentProvider,
             this.getTransactionObserverTimeout(contract),
@@ -172,9 +170,9 @@ export default class MethodFactory {
             transactionObserver,
             new ChainIdMethod(this.utils, this.formatters, contract),
             new GetTransactionCountMethod(this.utils, this.formatters, contract),
-            new ObservedSendRawTransactionMethod(this.utils, this.formatters, contract, transactionObserver),
+            new SendRawTransactionMethod(this.utils, this.formatters, contract, transactionObserver),
             this.contractModuleFactory.createAllEventsLogDecoder(),
-            abiModel
+            contract.abiModel
         );
     }
 
@@ -202,7 +200,7 @@ export default class MethodFactory {
             ),
             new ChainIdMethod(this.utils, this.formatters, contract),
             new GetTransactionCountMethod(this.utils, this.formatters, contract),
-            new ObservedSendRawTransactionMethod(this.utils, this.formatters, contract)
+            new SendRawTransactionMethod(this.utils, this.formatters, contract)
         );
     }
 

@@ -31,7 +31,7 @@ export default class SendContractMethod extends EthSendTransactionMethod {
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {EthSendRawTransactionMethod} observedSendRawTransactionMethod
+     * @param {SendRawTransactionMethod} sendRawTransactionMethod
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
      *
@@ -44,7 +44,7 @@ export default class SendContractMethod extends EthSendTransactionMethod {
         transactionObserver,
         chainIdMethod,
         getTransactionCountMethod,
-        observedSendRawTransactionMethod,
+        sendRawTransactionMethod,
         allEventsLogDecoder,
         abiModel
     ) {
@@ -55,7 +55,7 @@ export default class SendContractMethod extends EthSendTransactionMethod {
             transactionObserver,
             chainIdMethod,
             getTransactionCountMethod,
-            observedSendRawTransactionMethod
+            sendRawTransactionMethod
         );
 
         this.allEventsLogDecoder = allEventsLogDecoder;
