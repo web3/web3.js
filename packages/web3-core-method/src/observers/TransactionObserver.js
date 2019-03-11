@@ -25,7 +25,7 @@ export default class TransactionObserver {
      * @param {Number} timeout
      * @param {Number} blockConfirmations
      * @param {GetTransactionReceiptMethod} getTransactionReceiptMethod
-     * @param {GetBlockByHashMethod} getBlockByHashMethod
+     * @param {GetBlockByNumberMethod} getBlockByNumberMethod
      * @param {NewHeadsSubscription} newHeadsSubscription
      *
      * @constructor
@@ -35,14 +35,14 @@ export default class TransactionObserver {
         timeout,
         blockConfirmations,
         getTransactionReceiptMethod,
-        getBlockByHashMethod,
+        getBlockByNumberMethod,
         newHeadsSubscription
     ) {
         this.provider = provider;
         this.timeout = timeout;
         this.blockConfirmations = blockConfirmations;
         this.getTransactionReceiptMethod = getTransactionReceiptMethod;
-        this.getBlockByHashMethod = getBlockByHashMethod;
+        this.getBlockByNumberMethod = getBlockByNumberMethod;
         this.newHeadsSubscription = newHeadsSubscription;
 
         this.blockNumbers = [];
@@ -160,14 +160,15 @@ export default class TransactionObserver {
 
                 if (receipt) {
                     if (this.lastBlock) {
-                        const block = await this.getBlockByHash(receipt.blockHash);
-                        if (this.isValidConfirmation(block)) {
+                        const block = await this.getBlockByNumber(this.increaseBlockNumberHash(this.lastBlock.number));
+
+                        if (block && this.isValidConfirmation(block)) {
                             this.confirmations++;
                             this.emitNext(receipt, observer);
                             this.lastBlock = block;
                         }
                     } else {
-                        this.lastBlock = await this.getBlockByHash(receipt.blockHash);
+                        this.lastBlock = await this.getBlockByNumber(receipt.blockNumber);
                         this.confirmations++;
                         this.emitNext(receipt, observer);
                     }
@@ -236,10 +237,10 @@ export default class TransactionObserver {
      *
      * @returns {Promise<Object>}
      */
-    getBlockByHash(blockHash) {
-        this.getBlockByHashMethod.parameters = [blockHash];
+    getBlockByNumber(blockHash) {
+        this.getBlockByNumberMethod.parameters = [blockHash];
 
-        return this.getBlockByHashMethod.execute();
+        return this.getBlockByNumberMethod.execute();
     }
 
     /**
@@ -293,5 +294,18 @@ export default class TransactionObserver {
             default:
                 return true;
         }
+    }
+
+    /**
+     * Increases the blockNumber hash by one.
+     *
+     * @method increaseBlockNumberHash
+     *
+     * @param {String} blockNumberHash
+     *
+     * @returns {String}
+     */
+    increaseBlockNumberHash(blockNumberHash) {
+        return (parseInt(blockNumberHash, 16) + 1).toString(16)
     }
 }

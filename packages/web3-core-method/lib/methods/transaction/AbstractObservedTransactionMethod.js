@@ -70,7 +70,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                         confirmations = transactionConfirmation.confirmations;
                         receipt = transactionConfirmation.receipt;
 
-                        if (!Boolean(parseInt(receipt.status)) === true) {
+                        if (Boolean(parseInt(receipt.status)) !== true) {
                             this.handleError(
                                 new Error(`Transaction has been reverted by the EVM:\n${receiptJSON}`),
                                 receipt,
