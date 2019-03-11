@@ -46,7 +46,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
      *
      * @returns {String}
      */
-    static Type() {
+    static get Type() {
         return 'observed-transaction-method'
     }
 
@@ -80,7 +80,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
 
                     if (Boolean(parseInt(receipt.status)) !== true) {
                         this.handleError(
-                            new Error(`Transaction has been reverted by the EVM:\n${receiptJSON}`),
+                            new Error(`Transaction has been reverted by the EVM:\n${JSON.stringify(receipt, null, 2)}`),
                             receipt,
                             confirmations
                         );
