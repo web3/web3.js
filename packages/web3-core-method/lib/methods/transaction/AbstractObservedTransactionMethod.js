@@ -76,10 +76,14 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                         this.callback(error, null);
                     }
 
-                    // TODO: Create TransactionError object and reject with this to provide all information.
+                    if (this.promiEvent.listenerCount('error') > 0 ) {
+                        this.promiEvent.emit('error', error, receipt, count);
+                        this.promiEvent.removeAllListeners();
+
+                        return;
+                    }
+
                     this.promiEvent.reject(error);
-                    this.promiEvent.emit('error', error, receipt, count);
-                    this.promiEvent.removeAllListeners();
                 },
                 () => {
                     transactionSubscription.unsubscribe();
@@ -90,9 +94,14 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                         this.callback(false, mappedReceipt);
                     }
 
+                    if (this.promiEvent.listenerCount('receipt') > 0 ) {
+                        this.promiEvent.emit('receipt', mappedReceipt);
+                        this.promiEvent.removeAllListeners();
+
+                        return;
+                    }
+
                     this.promiEvent.resolve(mappedReceipt);
-                    this.promiEvent.emit('receipt', mappedReceipt);
-                    this.promiEvent.removeAllListeners();
                 }
             );
         });
