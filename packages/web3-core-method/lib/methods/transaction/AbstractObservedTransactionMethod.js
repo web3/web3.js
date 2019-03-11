@@ -53,58 +53,65 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
     execute() {
         this.beforeExecution(this.moduleInstance);
 
-        this.moduleInstance.currentProvider.send(this.rpcMethod, this.parameters).then((transactionHash) => {
-            let count, receipt;
+        this.moduleInstance.currentProvider.send(this.rpcMethod, this.parameters)
+            .then((transactionHash) => {
+                let count, receipt;
 
-            this.promiEvent.emit('transactionHash', transactionHash);
+                if (this.callback) {
+                    this.callback(false, transactionHash);
 
-            if (this.callback) {
-                this.callback(false, transactionHash);
-            }
-
-            const transactionSubscription = this.transactionObserver.observe(transactionHash).subscribe(
-                (confirmation) => {
-                    count = confirmation.count;
-                    receipt = confirmation.receipt;
-
-                    this.promiEvent.emit('confirmation', count, receipt);
-                },
-                (error) => {
-                    transactionSubscription.unsubscribe();
-
-                    if (this.callback) {
-                        this.callback(error, null);
-                    }
-
-                    if (this.promiEvent.listenerCount('error') > 0 ) {
-                        this.promiEvent.emit('error', error, receipt, count);
-                        this.promiEvent.removeAllListeners();
-
-                        return;
-                    }
-
-                    this.promiEvent.reject(error);
-                },
-                () => {
-                    transactionSubscription.unsubscribe();
-
-                    const mappedReceipt = this.afterExecution(receipt);
-
-                    if (this.callback) {
-                        this.callback(false, mappedReceipt);
-                    }
-
-                    if (this.promiEvent.listenerCount('receipt') > 0 ) {
-                        this.promiEvent.emit('receipt', mappedReceipt);
-                        this.promiEvent.removeAllListeners();
-
-                        return;
-                    }
-
-                    this.promiEvent.resolve(mappedReceipt);
+                    return;
                 }
-            );
-        });
+
+                this.promiEvent.emit('transactionHash', transactionHash);
+
+                this.transactionObserver.observe(transactionHash).subscribe(
+                    (confirmation) => {
+                        count = confirmation.count;
+                        receipt = confirmation.receipt;
+
+                        this.promiEvent.emit('confirmation', count, receipt);
+                    },
+                    (error) => {
+                        if (this.promiEvent.listenerCount('error') > 0) {
+                            this.promiEvent.emit('error', error, receipt, count);
+                            this.promiEvent.removeAllListeners();
+
+                            return;
+                        }
+
+                        this.promiEvent.reject(error);
+                    },
+                    () => {
+                        const mappedReceipt = this.afterExecution(receipt);
+
+                        if (this.promiEvent.listenerCount('receipt') > 0) {
+                            this.promiEvent.emit('receipt', mappedReceipt);
+                            this.promiEvent.removeAllListeners();
+
+                            return;
+                        }
+
+                        this.promiEvent.resolve(mappedReceipt);
+                    }
+                );
+            })
+            .catch((error) => {
+                if (this.callback) {
+                    this.callback(error, null);
+
+                    return;
+                }
+
+                if (this.promiEvent.listenerCount('error') > 0) {
+                    this.promiEvent.emit('error', error);
+                    this.promiEvent.removeAllListeners();
+
+                    return;
+                }
+
+                this.promiEvent.reject(error);
+            });
 
         return this.promiEvent;
     }
