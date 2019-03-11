@@ -40,7 +40,7 @@ export default class SignTransactionMethod extends CoreSignTransactionMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from.
+     * @param {AbstractWeb3Module} moduleInstance
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);

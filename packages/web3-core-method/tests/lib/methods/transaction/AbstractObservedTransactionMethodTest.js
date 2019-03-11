@@ -46,6 +46,8 @@ describe('AbstractObservedTransactionMethodTest', () => {
     });
 
     it('constructor check', () => {
+        expect(AbstractObservedTransactionMethod.Type).toEqual('observed-transaction-method');
+
         expect(method.rpcMethod).toEqual('rpcMethod');
 
         expect(method.parametersAmount).toEqual(5);

@@ -88,8 +88,7 @@ export default class AbstractMethodFactory {
     createMethod(name, moduleInstance) {
         const method = this.methods[name];
 
-        // TODO: Find a better way to check the method type
-        if (name.indexOf('Send')) {
+        if (method.Type === 'observed-transaction-method') {
             let timeout = moduleInstance.transactionBlockTimeout;
             const providerName = moduleInstance.currentProvider.constructor.name;
 

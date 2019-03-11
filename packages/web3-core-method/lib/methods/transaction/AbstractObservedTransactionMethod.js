@@ -42,6 +42,15 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
     }
 
     /**
+     * This type will be used in the AbstractMethodFactory.
+     *
+     * @returns {String}
+     */
+    static Type() {
+        return 'observed-transaction-method'
+    }
+
+    /**
      * Sends the request and returns a PromiEvent Object
      *
      * @method execute

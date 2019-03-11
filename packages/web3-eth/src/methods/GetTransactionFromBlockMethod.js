@@ -39,7 +39,7 @@ export default class GetTransactionFromBlockMethod extends AbstractGetTransactio
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     * @param {AbstractWeb3Module} moduleInstance
      */
     beforeExecution(moduleInstance) {
         if (this.isHash(this.parameters[0])) {

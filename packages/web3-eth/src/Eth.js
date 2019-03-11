@@ -36,7 +36,6 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Object} formatters
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {ContractModuleFactory} contractModuleFactory
-     * @param {TransactionSigner} transactionSigner
      * @param {Object} options
      * @param {Net} nodeNet
      *
