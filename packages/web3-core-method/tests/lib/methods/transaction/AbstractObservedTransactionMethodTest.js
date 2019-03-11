@@ -154,8 +154,6 @@ describe('AbstractObservedTransactionMethodTest', () => {
         await expect(method.execute()).rejects.toThrow(`Transaction has been reverted by the EVM:\n${JSON.stringify({status: '0x0'}, null, 2)}`);
 
         expect(providerMock.send).toHaveBeenCalledWith('rpcMethod', []);
-
-        expect(transactionObserverMock.stop).toHaveBeenCalled();
     });
 
     it('calls execute and returns a rejected Promise because the transaction ran out of gas', async () => {
@@ -170,8 +168,6 @@ describe('AbstractObservedTransactionMethodTest', () => {
         await expect(method.execute()).rejects.toThrow(`Transaction ran out of gas. Please provide more gas:\n${JSON.stringify({status: '0x1', outOfGas: true}, null, 2)}`);
 
         expect(providerMock.send).toHaveBeenCalledWith('rpcMethod', []);
-
-        expect(transactionObserverMock.stop).toHaveBeenCalled();
     });
 
     it('calls execute and calls the given callback with the transaction hash', (done) => {

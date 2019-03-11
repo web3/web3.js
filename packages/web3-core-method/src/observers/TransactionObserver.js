@@ -72,20 +72,6 @@ export default class TransactionObserver {
     }
 
     /**
-     * TODO: Remove this method with changing the Web3 subscriptions interface to the tc39 interface and the usage of flatMap.
-     * The method stop will unsubscribe the newHead subscription or it stops the interval.
-     *
-     * @method stop
-     */
-    stop() {
-        if (this.isSocketBasedProvider()) {
-            this.newHeadsSubscription.unsubscribe();
-        } else {
-            clearInterval(this.interval);
-        }
-    }
-
-    /**
      * Observes the transaction with the newHeads subscriptions which sends the eth_getTransactionReceipt method on each item
      *
      * @method startSocketObserver
@@ -94,10 +80,16 @@ export default class TransactionObserver {
      * @param {Observer} observer
      */
     startSocketObserver(transactionHash, observer) {
-        this.newHeadsSubscription.subscribe(async (newHeadError, newHead) => {
+        this.newHeadsSubscription.subscribe(async (error, newHead) => {
             try {
-                if (newHeadError) {
-                    throw newHeadError;
+                if (observer.closed) {
+                    await this.newHeadsSubscription.unsubscribe();
+
+                    return;
+                }
+
+                if (error) {
+                    throw error;
                 }
 
                 this.getTransactionReceiptMethod.parameters = [transactionHash];
@@ -146,8 +138,14 @@ export default class TransactionObserver {
      * @param {Observer} observer
      */
     startHttpObserver(transactionHash, observer) {
-        this.interval = setInterval(async () => {
+        const interval = setInterval(async () => {
             try {
+                if (observer.closed) {
+                    clearInterval(interval);
+
+                    return;
+                }
+
                 this.getTransactionReceiptMethod.parameters = [transactionHash];
 
                 const receipt = await this.getTransactionReceiptMethod.execute();
@@ -168,7 +166,7 @@ export default class TransactionObserver {
                     }
 
                     if (this.isConfirmed()) {
-                        clearInterval(this.interval);
+                        clearInterval(interval);
                         observer.complete();
                     }
                 }
@@ -176,7 +174,7 @@ export default class TransactionObserver {
                 this.confirmationChecks++;
 
                 if (this.isTimeoutTimeExceeded()) {
-                    clearInterval(this.interval);
+                    clearInterval(interval);
 
                     this.emitError(
                         new Error('Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'),
@@ -185,7 +183,7 @@ export default class TransactionObserver {
                     );
                 }
             } catch (error) {
-                clearInterval(this.interval);
+                clearInterval(interval);
                 this.emitError(error, false, observer);
             }
         }, 1000);

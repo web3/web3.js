@@ -73,7 +73,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
 
             this.promiEvent.emit('transactionHash', transactionHash);
 
-            this.transactionObserver.observe(transactionHash).subscribe(
+            const transactionConfirmationSubscription = this.transactionObserver.observe(transactionHash).subscribe(
                 (transactionConfirmation) => {
                     confirmations = transactionConfirmation.confirmations;
                     receipt = transactionConfirmation.receipt;
@@ -85,7 +85,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                             confirmations
                         );
 
-                        this.transactionObserver.stop();
+                        transactionConfirmationSubscription.unsubscribe();
 
                         return;
                     }
@@ -97,7 +97,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                             confirmations
                         );
 
-                        this.transactionObserver.stop();
+                        transactionConfirmationSubscription.unsubscribe();
 
                         return;
                     }
