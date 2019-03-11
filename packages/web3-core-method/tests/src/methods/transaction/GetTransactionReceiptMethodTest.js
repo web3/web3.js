@@ -1,6 +1,6 @@
 import {formatters} from 'web3-core-helpers';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetTransactionReceiptMethod from '../../../../src/methods/transaction/GetTransactionReceiptMethod';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 
 // Mocks
 jest.mock('formatters');
@@ -12,11 +12,11 @@ describe('GetTransactionReceiptMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetTransactionReceiptMethod(null, formatters);
+        method = new GetTransactionReceiptMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_getTransactionReceipt');
 

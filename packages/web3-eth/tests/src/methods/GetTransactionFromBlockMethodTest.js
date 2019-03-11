@@ -1,7 +1,7 @@
 import {formatters} from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetTransactionFromBlockMethod from '../../../../src/methods/transaction/GetTransactionFromBlockMethod';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 
 // Mocks
 jest.mock('formatters');
@@ -14,11 +14,11 @@ describe('GetTransactionFromBlockMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetTransactionFromBlockMethod(Utils, formatters);
+        method = new GetTransactionFromBlockMethod(Utils, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_getTransactionByBlockNumberAndIndex');
 

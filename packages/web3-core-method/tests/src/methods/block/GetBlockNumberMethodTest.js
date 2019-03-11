@@ -12,7 +12,7 @@ describe('GetBlockNumberMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBlockNumberMethod(Utils, null);
+        method = new GetBlockNumberMethod(Utils, null, {});
     });
 
     it('constructor check', () => {

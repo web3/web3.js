@@ -1,4 +1,4 @@
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetProtocolVersionMethod from '../../../../src/methods/network/GetProtocolVersionMethod';
 
 /**
@@ -8,11 +8,11 @@ describe('GetProtocolVersionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetProtocolVersionMethod(null, null);
+        method = new GetProtocolVersionMethod(null, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_protocolVersion');
 
