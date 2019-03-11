@@ -70,7 +70,7 @@ describe('MethodProxyTest', () => {
         const response = methodProxy.myMethod();
 
         expect(methodProxy.myMethod.request()).toEqual(methodMock);
-        
+
         expect(methodProxy.myMethod.method).toEqual(methodMock);
 
         expect(response).toEqual(100);

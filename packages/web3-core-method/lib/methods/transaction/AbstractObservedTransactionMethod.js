@@ -55,7 +55,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
 
         this.moduleInstance.currentProvider.send(this.rpcMethod, this.parameters)
             .then((transactionHash) => {
-                let count, receipt;
+                let confirmations, receipt;
 
                 if (this.callback) {
                     this.callback(false, transactionHash);
@@ -66,33 +66,50 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                 this.promiEvent.emit('transactionHash', transactionHash);
 
                 this.transactionObserver.observe(transactionHash).subscribe(
-                    (confirmation) => {
-                        count = confirmation.count;
-                        receipt = confirmation.receipt;
+                    (transactionConfirmation) => {
+                        confirmations = transactionConfirmation.confirmations;
+                        receipt = transactionConfirmation.receipt;
 
-                        this.promiEvent.emit('confirmation', count, receipt);
+                        if (!Boolean(parseInt(receipt.status)) === true) {
+                            this.handleError(
+                                new Error(`Transaction has been reverted by the EVM:\n${receiptJSON}`),
+                                receipt,
+                                confirmations
+                            );
+
+                            //TODO: Remove the stop method and use the flatMap and unsubscribe method
+                            this.transactionObserver.stop();
+
+                            return;
+                        }
+
+                        if (receipt.outOfGas) {
+                            this.handleError(
+                                new Error(`Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(receipt, null, 2)}`),
+                                receipt,
+                                confirmations
+                            );
+
+                            //TODO: Remove the stop method and use the flatMap and unsubscribe method
+                            this.transactionObserver.stop();
+
+                            return;
+                        }
+
+                        this.promiEvent.emit('confirmation', confirmations, this.afterExecution(receipt));
                     },
                     (error) => {
-                        if (this.promiEvent.listenerCount('error') > 0) {
-                            this.promiEvent.emit('error', error, receipt, count);
-                            this.promiEvent.removeAllListeners();
-
-                            return;
-                        }
-
-                        this.promiEvent.reject(error);
+                        this.handleError(error, receipt, confirmations);
                     },
                     () => {
-                        const mappedReceipt = this.afterExecution(receipt);
-
                         if (this.promiEvent.listenerCount('receipt') > 0) {
-                            this.promiEvent.emit('receipt', mappedReceipt);
+                            this.promiEvent.emit('receipt', receipt);
                             this.promiEvent.removeAllListeners();
 
                             return;
                         }
 
-                        this.promiEvent.resolve(mappedReceipt);
+                        this.promiEvent.resolve(receipt);
                     }
                 );
             })
@@ -103,16 +120,29 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                     return;
                 }
 
-                if (this.promiEvent.listenerCount('error') > 0) {
-                    this.promiEvent.emit('error', error);
-                    this.promiEvent.removeAllListeners();
-
-                    return;
-                }
-
-                this.promiEvent.reject(error);
+                this.handleError(error, false, 0);
             });
 
         return this.promiEvent;
+    }
+
+    /**
+     * This methods calls the correct error methods of the PromiEvent object.
+     *
+     * @method handleError
+     *
+     * @param {Error} error
+     * @param {Object} receipt
+     * @param {Number} confirmations
+     */
+    handleError(error, receipt, confirmations) {
+        if (this.promiEvent.listenerCount('error') > 0) {
+            this.promiEvent.emit('error', error, receipt, confirmations);
+            this.promiEvent.removeAllListeners();
+
+            return;
+        }
+
+        this.promiEvent.reject(error);
     }
 }
