@@ -47,10 +47,10 @@ import {
     VersionMethod,
     TransactionObserver,
     GetBlockByHashMethod,
-    EthSendRawTransactionMethod,
+    SendRawTransactionMethod,
     EthSendTransactionMethod
 } from 'web3-core-method';
-import {NewHeadsSubscription} from 'web3-core-subscriptions';
+
 import GetBlockMethod from '../methods/GetBlockMethod';
 import GetUncleMethod from '../methods/GetUncleMethod';
 import GetBlockTransactionCountMethod from '../methods/GetBlockTransactionCountMethod';
@@ -92,7 +92,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             getTransactionFromBlock: GetTransactionFromBlockMethod,
             getTransactionReceipt: GetTransactionReceiptMethod,
             getTransactionCount: GetTransactionCountMethod,
-            sendSignedTransaction: EthSendRawTransactionMethod,
+            sendSignedTransaction: SendRawTransactionMethod,
             signTransaction: SignTransactionMethod,
             sendTransaction: EthSendTransactionMethod,
             sign: SignMethod,
@@ -105,77 +105,5 @@ export default class MethodFactory extends AbstractMethodFactory {
             getId: VersionMethod,
             getChainId: ChainIdMethod
         };
-    }
-
-    /**
-     * Returns an MethodModel
-     *
-     * @param {String} name
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {AbstractMethod}
-     */
-    createMethod(name, moduleInstance) {
-        const method = this.methods[name];
-
-        if (method.name === 'EthSendRawTransactionMethod') {
-            // eslint-disable-next-line new-cap
-            return new method(
-                this.utils,
-                this.formatters,
-                moduleInstance,
-                this.createTransactionObserver(moduleInstance)
-            );
-        }
-
-        if (method.name === 'EthSendTransactionMethod') {
-            const transactionObserver = this.createTransactionObserver(moduleInstance);
-
-            // eslint-disable-next-line new-cap
-            return new method(
-                this.utils,
-                this.formatters,
-                moduleInstance,
-                transactionObserver,
-                new ChainIdMethod(this.utils, this.formatters, moduleInstance),
-                new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance),
-                new EthSendRawTransactionMethod(
-                    this.utils,
-                    this.formatters,
-                    moduleInstance,
-                    transactionObserver
-                )
-            );
-        }
-
-        // eslint-disable-next-line new-cap
-        return new method(this.utils, this.formatters, moduleInstance);
-    }
-
-    /**
-     * Creates a object of type TransactionObserver
-     *
-     * @method createTransactionObserver
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {TransactionObserver}
-     */
-    createTransactionObserver(moduleInstance) {
-        let timeout = moduleInstance.transactionBlockTimeout;
-        const providerName = moduleInstance.currentProvider.constructor.name;
-
-        if (providerName === 'HttpProvider' || providerName === 'CustomProvider') {
-            timeout = moduleInstance.transactionPollingTimeout;
-        }
-
-        return new TransactionObserver(
-            moduleInstance.currentProvider,
-            timeout,
-            moduleInstance.transactionConfirmationBlocks,
-            new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
-            new GetBlockByHashMethod(this.utils, this.formatters, moduleInstance),
-            new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
-        );
     }
 }

@@ -49,7 +49,6 @@ export default class TransactionObserver {
         this.lastBlock = false;
         this.confirmations = 0;
         this.confirmationChecks = 0;
-        this.observable = false;
         this.interval = false;
     }
 
@@ -63,23 +62,20 @@ export default class TransactionObserver {
      * @returns {Observable}
      */
     observe(transactionHash) {
-        this.observable = Observable.create((observer) => {
+        return Observable.create((observer) => {
             if (this.isSocketBasedProvider()) {
                 this.startSocketObserver(transactionHash, observer);
             } else {
                 this.startHttpObserver(transactionHash, observer);
             }
         });
-
-        return this.observable;
     }
 
     /**
      * TODO: Remove this method with changing the Web3 subscriptions interface to the tc39 interface and the usage of flatMap.
+     * The method stop will unsubscribe the newHead subscription or it stops the interval.
      *
      * @method stop
-     *
-     * Will unsubscribe anything.
      */
     stop() {
         if (this.isSocketBasedProvider()) {
@@ -87,8 +83,6 @@ export default class TransactionObserver {
         } else {
             clearInterval(this.interval);
         }
-
-        this.observable.unsubscribe();
     }
 
     /**
@@ -115,8 +109,8 @@ export default class TransactionObserver {
                         this.emitNext(receipt, observer);
 
                         if (this.isConfirmed()) {
-                            this.newHeadsSubscription.unsubscribe();
                             observer.complete();
+                            await this.newHeadsSubscription.unsubscribe();
                         }
                     }
 
@@ -160,7 +154,7 @@ export default class TransactionObserver {
 
                 if (receipt) {
                     if (this.lastBlock) {
-                        const block = await this.getBlockByNumber(this.increaseBlockNumberHash(this.lastBlock.number));
+                        const block = await this.getBlockByNumber(this.increaseBlockNumber(this.lastBlock.number));
 
                         if (block && this.isValidConfirmation(block)) {
                             this.confirmations++;
@@ -299,13 +293,13 @@ export default class TransactionObserver {
     /**
      * Increases the blockNumber hash by one.
      *
-     * @method increaseBlockNumberHash
+     * @method increaseBlockNumber
      *
-     * @param {String} blockNumberHash
+     * @param {String} blockNumber
      *
      * @returns {String}
      */
-    increaseBlockNumberHash(blockNumberHash) {
-        return (parseInt(blockNumberHash, 16) + 1).toString(16)
+    increaseBlockNumber(blockNumber) {
+        return (parseInt(blockNumber, 16) + 1).toString(16)
     }
 }

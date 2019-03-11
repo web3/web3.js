@@ -20,6 +20,11 @@
  * @date 2018
  */
 
+import {NewHeadsSubscription} from 'web3-core-subscriptions';
+import GetBlockByNumberMethod from '../../src/methods/block/GetBlockByNumberMethod';
+import GetTransactionReceiptMethod from '../../src/methods/transaction/GetTransactionReceiptMethod';
+import TransactionObserver from '../../src/observers/TransactionObserver';
+
 export default class AbstractMethodFactory {
     /**
      * @param {Utils} utils
@@ -82,6 +87,31 @@ export default class AbstractMethodFactory {
      */
     createMethod(name, moduleInstance) {
         const method = this.methods[name];
+
+        // TODO: Find a better way to check the method type
+        if (name.indexOf('Send')) {
+            let timeout = moduleInstance.transactionBlockTimeout;
+            const providerName = moduleInstance.currentProvider.constructor.name;
+
+            if (providerName === 'HttpProvider' || providerName === 'CustomProvider') {
+                timeout = moduleInstance.transactionPollingTimeout;
+            }
+
+            // eslint-disable-next-line new-cap
+            return new method(
+                this.utils,
+                this.formatters,
+                moduleInstance,
+                new TransactionObserver(
+                    moduleInstance.currentProvider,
+                    timeout,
+                    moduleInstance.transactionConfirmationBlocks,
+                    new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
+                    new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance),
+                    new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
+                )
+            );
+        }
 
         // eslint-disable-next-line new-cap
         return new method(this.utils, this.formatters, moduleInstance);
