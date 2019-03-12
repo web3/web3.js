@@ -18,6 +18,7 @@
     "types": "types",
     "dependencies": {
         "@babel/runtime": "^7.3.1",
+        "dtslint": "0.5.4",
         "eventemitter3": "3.1.0",
         "lodash": "^4.17.11",
         "web3-core": "1.0.0-beta.48",
