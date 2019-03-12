@@ -80,7 +80,8 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                         confirmations = transactionConfirmation.confirmations;
                         receipt = transactionConfirmation.receipt;
 
-                        if (Boolean(parseInt(receipt.status)) !== true) {
+                        if (this.hasRevertReceiptStatus(receipt)) {
+                            console.log(receipt);
                             this.handleError(
                                 new Error(
                                     `Transaction has been reverted by the EVM:\n${JSON.stringify(receipt, null, 2)}`
@@ -119,13 +120,13 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                     },
                     () => {
                         if (this.promiEvent.listenerCount('receipt') > 0) {
-                            this.promiEvent.emit('receipt', receipt);
+                            this.promiEvent.emit('receipt', this.afterExecution(receipt));
                             this.promiEvent.removeAllListeners();
 
                             return;
                         }
 
-                        this.promiEvent.resolve(receipt);
+                        this.promiEvent.resolve(this.afterExecution(receipt));
                     }
                 );
             })
@@ -160,5 +161,18 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
         }
 
         this.promiEvent.reject(error);
+    }
+
+    /**
+     * Checks if the status property has a revert state
+     *
+     * @method hasRevertReceiptStatus
+     *
+     * @param {Object} receipt
+     *
+     * @returns {Boolean}
+     */
+    hasRevertReceiptStatus(receipt) {
+        return Boolean(parseInt(receipt.status)) === false && receipt.status !== undefined && receipt.status !== null;
     }
 }

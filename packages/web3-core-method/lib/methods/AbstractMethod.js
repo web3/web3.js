@@ -216,12 +216,6 @@ export default class AbstractMethod {
             callback,
             parameters
         };
-
-        if (this.parameters.length !== this.parametersAmount) {
-            throw new Error(
-                `Invalid Arguments length: expected: ${this.parametersAmount}, given: ${this.parameters.length}`
-            );
-        }
     }
 
     /**

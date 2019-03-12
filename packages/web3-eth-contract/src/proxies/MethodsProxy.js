@@ -153,7 +153,7 @@ export default class MethodsProxy {
      * @param {IArguments} methodArguments
      * @param {String} requestType
      *
-     * @returns {Promise|PromiEvent|String|Boolean}
+     * @returns {Promise|PromiEvent}
      */
     executeMethod(abiItemModel, methodArguments, requestType) {
         let method;
@@ -166,18 +166,14 @@ export default class MethodsProxy {
             method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
             method.arguments = methodArguments;
 
-            promiEvent.reject(error);
-            promiEvent.emit('error', error);
-
             if (isFunction(method.callback)) {
                 method.callback(error, null);
             }
 
-            return promiEvent;
-        }
+            promiEvent.reject(error);
+            promiEvent.emit('error', error);
 
-        if (requestType === 'call' || requestType === 'estimate') {
-            return method.execute();
+            return promiEvent;
         }
 
         return method.execute();
@@ -193,8 +189,6 @@ export default class MethodsProxy {
      * @returns {AbstractMethod}
      */
     createMethod(abiItemModel, methodArguments, requestType) {
-        abiItemModel.givenParametersLengthIsValid();
-
         // Get correct rpc method model
         const method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
         method.arguments = methodArguments;
