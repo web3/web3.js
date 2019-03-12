@@ -6,5 +6,6 @@ module.exports = jestConfig({
     'AbstractWeb3Module': 'web3-core',
     'Utils': 'web3-utils',
     'formatters': 'web3-core-helpers',
-    'AbstractSubscription': 'web3-core-subscriptions'
+    'AbstractSubscription': 'web3-core-subscriptions',
+    'NewHeadsSubscription': 'web3-core-subscriptions'
 });

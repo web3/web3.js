@@ -22,6 +22,7 @@
         "lodash": "^4.17.11"
     },
     "devDependencies": {
+        "rxjs": "^6.4.0",
         "dtslint": "^0.4.2",
         "web3-providers": "1.0.0-beta.48",
         "web3-utils": "1.0.0-beta.48",

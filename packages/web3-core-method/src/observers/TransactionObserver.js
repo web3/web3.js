@@ -101,8 +101,8 @@ export default class TransactionObserver {
                         this.emitNext(receipt, observer);
 
                         if (this.isConfirmed()) {
-                            observer.complete();
                             await this.newHeadsSubscription.unsubscribe();
+                            observer.complete();
                         }
                     }
 
@@ -110,13 +110,13 @@ export default class TransactionObserver {
                     this.confirmationChecks++;
 
                     if (this.isTimeoutTimeExceeded()) {
+                        await this.newHeadsSubscription.unsubscribe();
+
                         this.emitError(
                             new Error('Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'),
                             receipt,
                             observer
                         );
-
-                        this.newHeadsSubscription.unsubscribe();
                     }
                 }
             } catch (error) {
@@ -155,9 +155,9 @@ export default class TransactionObserver {
                         const block = await this.getBlockByNumber(this.increaseBlockNumber(this.lastBlock.number));
 
                         if (block && this.isValidConfirmation(block)) {
+                            this.lastBlock = block;
                             this.confirmations++;
                             this.emitNext(receipt, observer);
-                            this.lastBlock = block;
                         }
                     } else {
                         this.lastBlock = await this.getBlockByNumber(receipt.blockNumber);
@@ -212,12 +212,12 @@ export default class TransactionObserver {
      * @param {Observer} observer
      */
     emitError(error, receipt, observer) {
-        observer.error(
+        observer.error({
             error,
             receipt,
-            this.confirmations,
-            this.confirmationChecks
-        );
+            confirmations: this.confirmations,
+            confirmationChecks: this.confirmationChecks
+        });
     }
 
     /**
@@ -298,6 +298,6 @@ export default class TransactionObserver {
      * @returns {String}
      */
     increaseBlockNumber(blockNumber) {
-        return (parseInt(blockNumber, 16) + 1).toString(16)
+        return '0x' + (parseInt(blockNumber, 16) + 1).toString(16);
     }
 }
