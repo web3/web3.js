@@ -78,7 +78,7 @@ export default class Shh extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        return super.setProvider(provider, net) && this.net.setProvider(provider, net);
+        return this.net.setProvider(provider, net) && super.setProvider(provider, net) ;
     }
 
     /**

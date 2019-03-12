@@ -21,6 +21,7 @@
  */
 
 import ProvidersModuleFactory from './factories/ProvidersModuleFactory';
+export ProviderDetector from './detectors/ProviderDetector';
 
 /**
  * Creates the HttpProvider object.
@@ -90,19 +91,6 @@ export const BatchRequest = (moduleInstance) => {
  */
 export const ProviderResolver = () => {
     return new ProvidersModuleFactory().createProviderResolver();
-};
-
-/**
- * Creates the ProviderDetector object
- *
- * @method detect
- *
- * @returns {ProviderDetector}
- *
- * @constructor
- */
-export const ProviderDetector = () => {
-    return new ProvidersModuleFactory().createProviderDetector();
 };
 
 // TODO: Do not expose the providers module factory this should only be used in this module

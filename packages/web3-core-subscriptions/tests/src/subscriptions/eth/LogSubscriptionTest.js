@@ -19,6 +19,7 @@ describe('LogSubscriptionTest', () => {
         moduleInstanceMock = new AbstractWeb3Module();
         socketProviderAdapterMock = new SocketProviderAdapter();
         getPastLogsMethodMock = new GetPastLogsMethod();
+        getPastLogsMethodMock.execute = jest.fn();
 
         logSubscription = new LogSubscription({}, Utils, formatters, moduleInstanceMock, getPastLogsMethodMock);
     });
@@ -42,11 +43,7 @@ describe('LogSubscriptionTest', () => {
 
         formatters.outputLogFormatter.mockReturnValueOnce(0).mockReturnValueOnce('ITEM');
 
-        getPastLogsMethodMock.execute = jest.fn((moduleInstance) => {
-            expect(moduleInstance).toEqual(moduleInstanceMock);
-
-            return Promise.resolve([0]);
-        });
+        getPastLogsMethodMock.execute.mockReturnValueOnce(Promise.resolve([0]));
 
         socketProviderAdapterMock.subscribe = jest.fn((type, method, parameters) => {
             expect(type).toEqual('eth_subscribe');
@@ -85,7 +82,7 @@ describe('LogSubscriptionTest', () => {
 
             expect(getPastLogsMethodMock.parameters).toEqual([{}]);
 
-            expect(getPastLogsMethodMock.execute).toHaveBeenCalledWith(moduleInstanceMock);
+            expect(getPastLogsMethodMock.execute).toHaveBeenCalled();
 
             expect(logSubscription.id).toEqual(expectedId);
 
@@ -102,9 +99,7 @@ describe('LogSubscriptionTest', () => {
     it('calls subscribe executes GetPastLogsMethod and the method throws an error', (done) => {
         formatters.inputLogFormatter.mockReturnValueOnce({});
 
-        getPastLogsMethodMock.execute = jest.fn((moduleInstance) => {
-            expect(moduleInstance).toEqual(moduleInstanceMock);
-
+        getPastLogsMethodMock.execute = jest.fn(() => {
             return Promise.reject(new Error('ERROR'));
         });
 
@@ -119,7 +114,7 @@ describe('LogSubscriptionTest', () => {
 
                 expect(getPastLogsMethodMock.parameters).toEqual([{}]);
 
-                expect(getPastLogsMethodMock.execute).toHaveBeenCalledWith(moduleInstanceMock);
+                expect(getPastLogsMethodMock.execute).toHaveBeenCalled();
 
                 done();
             })

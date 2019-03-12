@@ -98,7 +98,8 @@ describe('TransactionObserverTest', () => {
                 expect(transactionConfirmation.receipt).toEqual(receipt);
                 expect(transactionConfirmation.confirmations).toEqual(2);
             },
-            () => {},
+            () => {
+            },
             () => {
                 expect(newHeadsSubscriptionMock.unsubscribe).toHaveBeenCalled();
 
@@ -156,17 +157,19 @@ describe('TransactionObserverTest', () => {
             callback(true, false);
         });
 
-        transactionObserver.observe('transactionHash').subscribe((error) => {
-            expect(error.error).toEqual(true);
+        transactionObserver.observe('transactionHash').subscribe(
+            () => {},
+            (error) => {
+                expect(error.error).toEqual(true);
 
-            expect(error.receipt).toEqual(false);
+                expect(error.receipt).toEqual(false);
 
-            expect(error.confirmations).toEqual(0);
+                expect(error.confirmations).toEqual(0);
 
-            expect(error.confirmationChecks).toEqual(0);
+                expect(error.confirmationChecks).toEqual(0);
 
-            done();
-        });
+                done();
+            });
     });
 
     it('calls observe with a http provider and returns a transaction receipt', (done) => {
@@ -199,7 +202,8 @@ describe('TransactionObserverTest', () => {
                 expect(transactionConfirmation.confirmations).toEqual(2);
                 expect(transactionObserver.lastBlock).toEqual(blockTwo);
             },
-            () => {},
+            () => {
+            },
             () => {
                 expect(getTransactionReceiptMethodMock.execute).toHaveBeenCalledTimes(2);
 
@@ -260,7 +264,8 @@ describe('TransactionObserverTest', () => {
         });
 
         transactionObserver.observe('transactionHash').subscribe(
-            (transactionConfirmation) => {},
+            (transactionConfirmation) => {
+            },
             (error) => {
                 expect(error.error).toEqual(new Error('ERROR'));
                 expect(error.receipt).toEqual(false);

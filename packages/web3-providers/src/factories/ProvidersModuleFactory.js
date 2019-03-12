@@ -60,17 +60,6 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an ProviderDetector object
-     *
-     * @method createProviderDetector
-     *
-     * @returns {ProviderDetector}
-     */
-    createProviderDetector() {
-        return new ProviderDetector();
-    }
-
-    /**
      * Returns an HttpProvider object
      *
      * @method createHttpProvider

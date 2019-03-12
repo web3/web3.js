@@ -81,7 +81,6 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                         receipt = transactionConfirmation.receipt;
 
                         if (this.hasRevertReceiptStatus(receipt)) {
-                            console.log(receipt);
                             this.handleError(
                                 new Error(
                                     `Transaction has been reverted by the EVM:\n${JSON.stringify(receipt, null, 2)}`

@@ -35,7 +35,7 @@ export default class ProviderDetector {
      *
      * @returns {Object|null} provider
      */
-    detect() {
+    static detect() {
         if (
             typeof global.ethereumProvider !== 'undefined' &&
             global.ethereumProvider.constructor.name === 'EthereumProvider'
