@@ -52,7 +52,9 @@ export default class LogSubscription extends AbstractSubscription {
     subscribe(callback) {
         if ((this.options.fromBlock && this.options.fromBlock !== 'latest') || this.options.fromBlock === 0) {
             this.getPastLogsMethod.parameters = [this.formatters.inputLogFormatter(this.options)];
-            this.getPastLogsMethod.execute().then((logs) => {
+            this.getPastLogsMethod
+                .execute()
+                .then((logs) => {
                     logs.forEach((log) => {
                         const formattedLog = this.onNewSubscriptionItem(log);
 

@@ -113,18 +113,16 @@ export default class TransactionObserver {
                         await this.newHeadsSubscription.unsubscribe();
 
                         this.emitError(
-                            new Error('Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'),
+                            new Error(
+                                'Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
+                            ),
                             receipt,
                             observer
                         );
                     }
                 }
-            } catch (error) {
-                this.emitError(
-                    error,
-                    false,
-                    observer
-                );
+            } catch (error2) {
+                this.emitError(error2, false, observer);
             }
         });
     }
@@ -177,7 +175,9 @@ export default class TransactionObserver {
                     clearInterval(interval);
 
                     this.emitError(
-                        new Error('Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'),
+                        new Error(
+                            'Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
+                        ),
                         receipt,
                         observer
                     );
@@ -200,7 +200,6 @@ export default class TransactionObserver {
     emitNext(receipt, observer) {
         observer.next({receipt, confirmations: this.confirmations});
     }
-
 
     /**
      * Calls the error callback method of the Observer

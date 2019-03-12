@@ -33,6 +33,6 @@ export default class MethodFactory extends AbstractMethodFactory {
             getChainIdMethod: ChainIdMethod,
             getGasPriceMethod: GasPriceMethod,
             getTransactionCountMethod: GetTransactionCountMethod
-        }
+        };
     }
 }

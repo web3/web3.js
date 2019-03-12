@@ -51,7 +51,9 @@ describe('MethodProxyTest', () => {
         } catch (error) {
             expect(methodFactoryMock.hasMethod).toHaveBeenCalledWith('myMethod');
 
-            expect(error.message).toEqual('Duplicated method myMethod. This method is defined as RPC call and as Object method.');
+            expect(error.message).toEqual(
+                'Duplicated method myMethod. This method is defined as RPC call and as Object method.'
+            );
         }
     });
 

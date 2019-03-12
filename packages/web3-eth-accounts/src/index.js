@@ -22,8 +22,7 @@
 
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {GetGasPriceMethod, ChainIdMethod, GetTransactionCountMethod} from 'web3-core-method';
-import MethodFactory from './factories/MethodFactory'
+import MethodFactory from './factories/MethodFactory';
 import AccountsModule from './Accounts';
 
 /**
@@ -37,11 +36,5 @@ import AccountsModule from './Accounts';
  * @constructor
  */
 export const Accounts = (provider, net, options) => {
-    return new AccountsModule(
-        provider,
-        formatters,
-        new MethodFactory(Utils, formatters),
-        options,
-        net
-    );
+    return new AccountsModule(provider, formatters, new MethodFactory(Utils, formatters), options, net);
 };

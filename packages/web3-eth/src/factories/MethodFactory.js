@@ -45,8 +45,6 @@ import {
     RequestAccountsMethod,
     SubmitWorkMethod,
     VersionMethod,
-    TransactionObserver,
-    GetBlockByHashMethod,
     SendRawTransactionMethod,
     EthSendTransactionMethod
 } from 'web3-core-method';

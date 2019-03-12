@@ -23,8 +23,8 @@
 export PromiEvent from '../lib/PromiEvent';
 export AbstractMethodFactory from '../lib/factories/AbstractMethodFactory';
 export AbstractMethod from '../lib/methods/AbstractMethod';
-export MethodProxy from './proxy/MethodProxy'
-export TransactionObserver from './observers/TransactionObserver'
+export MethodProxy from './proxy/MethodProxy';
+export TransactionObserver from './observers/TransactionObserver';
 
 // Network
 export GetProtocolVersionMethod from './methods/network/GetProtocolVersionMethod';

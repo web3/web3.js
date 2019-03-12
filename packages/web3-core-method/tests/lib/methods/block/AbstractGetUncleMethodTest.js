@@ -1,6 +1,6 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import AbstractMethod from '../../../../lib/methods/block/AbstractGetUncleMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import AbstractGetUncleMethod from '../../../../lib/methods/block/AbstractGetUncleMethod';
 
 // Mocks

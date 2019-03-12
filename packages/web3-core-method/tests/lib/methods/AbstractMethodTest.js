@@ -75,8 +75,7 @@ describe('AbstractMethodTest', () => {
 
     it('set arguments with callback', () => {
         abstractMethod.parametersAmount = 1;
-        abstractMethod.arguments = [true, () => {
-        }];
+        abstractMethod.arguments = [true, () => {}];
 
         expect(abstractMethod.parameters).toEqual([true]);
 
@@ -103,8 +102,7 @@ describe('AbstractMethodTest', () => {
     });
 
     it('set callback', () => {
-        abstractMethod.callback = () => {
-        };
+        abstractMethod.callback = () => {};
 
         expect(abstractMethod.callback).toBeInstanceOf(Function);
     });
@@ -166,8 +164,9 @@ describe('AbstractMethodTest', () => {
         abstractMethod.parametersAmount = 0;
         abstractMethod.parameters = [true];
 
-        await expect(abstractMethod.execute(moduleInstanceMock)).rejects
-            .toThrow(`Invalid Arguments length: expected: 0, given: 1`);
+        await expect(abstractMethod.execute(moduleInstanceMock)).rejects.toThrow(
+            'Invalid Arguments length: expected: 0, given: 1'
+        );
 
         expect(abstractMethod.beforeExecution).toHaveBeenCalledWith(moduleInstanceMock);
     });

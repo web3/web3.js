@@ -98,9 +98,7 @@ describe('TransactionObserverTest', () => {
                 expect(transactionConfirmation.receipt).toEqual(receipt);
                 expect(transactionConfirmation.confirmations).toEqual(2);
             },
-            (error) => {
-
-            },
+            () => {},
             () => {
                 expect(newHeadsSubscriptionMock.unsubscribe).toHaveBeenCalled();
 
@@ -132,8 +130,11 @@ describe('TransactionObserverTest', () => {
                 expect(transactionConfirmation.receipt).toEqual(receipt);
             },
             (error) => {
-                expect(error.error)
-                    .toEqual(new Error('Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'));
+                expect(error.error).toEqual(
+                    new Error(
+                        'Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
+                    )
+                );
 
                 expect(error.receipt).toEqual(receipt);
 
@@ -155,29 +156,17 @@ describe('TransactionObserverTest', () => {
             callback(true, false);
         });
 
-        transactionObserver.observe('transactionHash').subscribe(
-            (transactionConfirmation) => {
-                if (transactionConfirmation.confirmations === 1) {
-                    expect(transactionConfirmation.receipt).toEqual(receipt);
+        transactionObserver.observe('transactionHash').subscribe((error) => {
+            expect(error.error).toEqual(true);
 
-                    return;
-                }
+            expect(error.receipt).toEqual(false);
 
-                expect(transactionConfirmation.receipt).toEqual(receipt);
-                expect(transactionConfirmation.confirmations).toEqual(2);
-            },
-            (error) => {
-                expect(error.error).toEqual(true);
+            expect(error.confirmations).toEqual(0);
 
-                expect(error.receipt).toEqual(false);
+            expect(error.confirmationChecks).toEqual(0);
 
-                expect(error.confirmations).toEqual(0);
-
-                expect(error.confirmationChecks).toEqual(0);
-
-                done();
-            }
-        );
+            done();
+        });
     });
 
     it('calls observe with a http provider and returns a transaction receipt', (done) => {
@@ -210,7 +199,7 @@ describe('TransactionObserverTest', () => {
                 expect(transactionConfirmation.confirmations).toEqual(2);
                 expect(transactionObserver.lastBlock).toEqual(blockTwo);
             },
-            (error) => {},
+            () => {},
             () => {
                 expect(getTransactionReceiptMethodMock.execute).toHaveBeenCalledTimes(2);
 
@@ -232,11 +221,9 @@ describe('TransactionObserverTest', () => {
         const receipt = {blockNumber: '0xa'};
         const blockOne = {number: '0xa', hash: '0x0'};
 
-        getTransactionReceiptMethodMock.execute
-            .mockReturnValueOnce(Promise.resolve(receipt));
+        getTransactionReceiptMethodMock.execute.mockReturnValueOnce(Promise.resolve(receipt));
 
-        getBlockByNumberMethodMock.execute
-            .mockReturnValueOnce(Promise.resolve(blockOne));
+        getBlockByNumberMethodMock.execute.mockReturnValueOnce(Promise.resolve(blockOne));
 
         transactionObserver.observe('transactionHash').subscribe(
             (transactionConfirmation) => {
@@ -244,7 +231,11 @@ describe('TransactionObserverTest', () => {
                 expect(transactionObserver.lastBlock).toEqual(blockOne);
             },
             (error) => {
-                expect(error.error).toEqual(new Error('Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'));
+                expect(error.error).toEqual(
+                    new Error(
+                        'Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
+                    )
+                );
                 expect(error.receipt).toEqual(receipt);
                 expect(error.confirmations).toEqual(1);
                 expect(error.confirmationChecks).toEqual(1);
@@ -258,20 +249,20 @@ describe('TransactionObserverTest', () => {
         );
     });
 
-    it('calls observe with a http provider and the timeout got exceeded', (done) => {
+    it('calls observe with a http provider and the getTransactionMethod throws an error', (done) => {
         transactionObserver.blockConfirmations = 2;
         transactionObserver.timeout = 1;
 
         providerMock.constructor.name = 'CustomProvider';
 
         getTransactionReceiptMethodMock.execute = jest.fn(() => {
-            return Promise.reject(false);
+            return Promise.reject(new Error('ERROR'));
         });
 
         transactionObserver.observe('transactionHash').subscribe(
             (transactionConfirmation) => {},
             (error) => {
-                expect(error.error).toEqual(false);
+                expect(error.error).toEqual(new Error('ERROR'));
                 expect(error.receipt).toEqual(false);
                 expect(error.confirmations).toEqual(0);
                 expect(error.confirmationChecks).toEqual(0);

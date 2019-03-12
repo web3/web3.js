@@ -14,7 +14,7 @@ describe('AbstractGetTransactionFromBlockMethodTest', () => {
 
     beforeEach(() => {
         method = new AbstractGetTransactionFromBlockMethod('rpcMethod', Utils, formatters, {});
-        method.parameters = [{}, 1]
+        method.parameters = [{}, 1];
     });
 
     it('constructor check', () => {

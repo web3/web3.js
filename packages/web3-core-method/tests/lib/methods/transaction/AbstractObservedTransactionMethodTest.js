@@ -39,10 +39,16 @@ describe('AbstractObservedTransactionMethodTest', () => {
             return value;
         });
 
-        method = new AbstractObservedTransactionMethod('rpcMethod', 5, {}, {}, moduleInstanceMock, transactionObserverMock);
+        method = new AbstractObservedTransactionMethod(
+            'rpcMethod',
+            5,
+            {},
+            {},
+            moduleInstanceMock,
+            transactionObserverMock
+        );
         method.beforeExecution = beforeExecutionMock;
         method.afterExecution = afterExecutionMock;
-
     });
 
     it('constructor check', () => {
@@ -151,7 +157,9 @@ describe('AbstractObservedTransactionMethodTest', () => {
             complete();
         });
 
-        await expect(method.execute()).rejects.toThrow(`Transaction has been reverted by the EVM:\n${JSON.stringify({status: '0x0'}, null, 2)}`);
+        await expect(method.execute()).rejects.toThrow(
+            `Transaction has been reverted by the EVM:\n${JSON.stringify({status: '0x0'}, null, 2)}`
+        );
 
         expect(providerMock.send).toHaveBeenCalledWith('rpcMethod', []);
     });
@@ -165,7 +173,13 @@ describe('AbstractObservedTransactionMethodTest', () => {
             complete();
         });
 
-        await expect(method.execute()).rejects.toThrow(`Transaction ran out of gas. Please provide more gas:\n${JSON.stringify({status: '0x1', outOfGas: true}, null, 2)}`);
+        await expect(method.execute()).rejects.toThrow(
+            `Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(
+                {status: '0x1', outOfGas: true},
+                null,
+                2
+            )}`
+        );
 
         expect(providerMock.send).toHaveBeenCalledWith('rpcMethod', []);
     });
@@ -189,9 +203,9 @@ describe('AbstractObservedTransactionMethodTest', () => {
     });
 
     it('calls execute and the provider send method throws an error', async () => {
-        providerMock.send.mockReturnValueOnce(Promise.reject('ERROR'));
+        providerMock.send.mockReturnValueOnce(Promise.reject(new Error('ERROR')));
 
-        await expect(method.execute()).rejects.toEqual('ERROR');
+        await expect(method.execute()).rejects.toThrow('ERROR');
 
         expect(providerMock.send).toHaveBeenCalledWith('rpcMethod', []);
 
@@ -199,12 +213,12 @@ describe('AbstractObservedTransactionMethodTest', () => {
     });
 
     it('calls execute with event listeners and the provider send method throws an error', (done) => {
-        providerMock.send.mockReturnValueOnce(Promise.reject('ERROR'));
+        providerMock.send.mockReturnValueOnce(Promise.reject(new Error('ERROR')));
 
         const promiEvent = method.execute();
 
         promiEvent.on('error', (error) => {
-            expect(error).toEqual('ERROR');
+            expect(error).toEqual(new Error('ERROR'));
 
             expect(providerMock.send).toHaveBeenCalledWith('rpcMethod', []);
 
@@ -215,10 +229,10 @@ describe('AbstractObservedTransactionMethodTest', () => {
     });
 
     it('calls execute with a callback and the provider send method throws an error', (done) => {
-        providerMock.send.mockReturnValueOnce(Promise.reject('ERROR'));
+        providerMock.send.mockReturnValueOnce(Promise.reject(new Error('ERROR')));
 
         method.callback = jest.fn((error, receipt) => {
-            expect(error).toEqual('ERROR');
+            expect(error).toEqual(new Error('ERROR'));
 
             expect(receipt).toEqual(null);
 

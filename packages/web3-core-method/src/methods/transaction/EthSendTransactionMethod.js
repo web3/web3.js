@@ -80,8 +80,8 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
 
         if (this.hasAccounts() && this.isDefaultSigner()) {
             if (this.moduleInstance.accounts.wallet[this.parameters[0].from]) {
-                this.sendRawTransaction(this.moduleInstance.accounts.wallet[this.parameters[0].from].privateKey)
-                    .catch((error) => {
+                this.sendRawTransaction(this.moduleInstance.accounts.wallet[this.parameters[0].from].privateKey).catch(
+                    (error) => {
                         if (this.callback) {
                             this.callback(error, null);
                         }
@@ -89,7 +89,8 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
                         this.promiEvent.reject(error);
                         this.promiEvent.emit('error', error);
                         this.promiEvent.removeAllListeners();
-                    });
+                    }
+                );
 
                 return this.promiEvent;
             }
