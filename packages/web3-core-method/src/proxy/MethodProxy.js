@@ -47,7 +47,7 @@ export default class MethodProxy {
 
                     /* eslint-disable no-inner-declarations */
                     function anonymousFunction() {
-                        method.arguments = arguments;
+                        method.setArguments(arguments);
 
                         return method.execute();
                     }
@@ -55,7 +55,7 @@ export default class MethodProxy {
 
                     anonymousFunction.method = method;
                     anonymousFunction.request = function() {
-                        method.arguments = arguments;
+                        method.setArguments(arguments);
 
                         return method;
                     };

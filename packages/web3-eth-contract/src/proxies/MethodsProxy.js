@@ -91,23 +91,18 @@ export default class MethodsProxy {
                         // If there exists more than one method with this name then find the correct abiItemModel
                         if (isArray(abiItemModel)) {
                             const abiItemModelFound = abiItemModel.some((model) => {
-                                model.contractMethodParameters = methodArguments;
+                                if (model.getInputLength() === methodArguments.length) {
+                                    abiItemModel = model;
 
-                                try {
-                                    model.givenParametersLengthIsValid();
-                                } catch (error) {
-                                    return false;
+                                    return true;
                                 }
 
-                                abiItemModel = model;
-                                return true;
+                                return false;
                             });
 
                             if (!abiItemModelFound) {
                                 throw new Error(`Methods with name "${name}" found but the given parameters are wrong`);
                             }
-
-                            return anonymousFunction;
                         }
 
                         abiItemModel.contractMethodParameters = methodArguments;
@@ -164,7 +159,7 @@ export default class MethodsProxy {
             const promiEvent = new PromiEvent();
 
             method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
-            method.arguments = methodArguments;
+            method.setArguments(methodArguments);
 
             if (isFunction(method.callback)) {
                 method.callback(error, null);
@@ -191,7 +186,7 @@ export default class MethodsProxy {
     createMethod(abiItemModel, methodArguments, requestType) {
         // Get correct rpc method model
         const method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
-        method.arguments = methodArguments;
+        method.setArguments(methodArguments);
 
         // If no parameters are given for the eth_call or eth_send* methods then it will set a empty options object.
         if (typeof method.parameters[0] === 'undefined') {

@@ -196,11 +196,11 @@ export default class AbstractMethod {
     /**
      * Setter for the arguments property
      *
-     * @property arguments
+     * @method setArguments
      *
      * @param {IArguments} args
      */
-    set arguments(args) {
+    setArguments(args) {
         let parameters = cloneDeep([...args]);
         let callback = null;
 
@@ -221,11 +221,11 @@ export default class AbstractMethod {
     /**
      * Getter for the arguments property
      *
-     * @property arguments
+     * @property getArguments
      *
      * @returns {{callback: Function|null, parameters: Array}}
      */
-    get arguments() {
+    getArguments() {
         return this._arguments;
     }
 
