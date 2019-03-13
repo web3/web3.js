@@ -30,9 +30,9 @@ export default class MethodFactory extends AbstractMethodFactory {
         super(utils, formatters);
 
         this.methods = {
-            getChainIdMethod: ChainIdMethod,
-            getGasPriceMethod: GasPriceMethod,
-            getTransactionCountMethod: GetTransactionCountMethod
+            getChainId: ChainIdMethod,
+            getGasPrice: GasPriceMethod,
+            getTransactionCount: GetTransactionCountMethod
         };
     }
 }
