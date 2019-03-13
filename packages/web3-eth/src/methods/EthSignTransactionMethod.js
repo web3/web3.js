@@ -21,9 +21,9 @@
  */
 
 import isString from 'lodash/isString';
-import {SignTransactionMethod as CoreSignTransactionMethod} from 'web3-core-method';
+import {SignTransactionMethod} from 'web3-core-method';
 
-export default class SignTransactionMethod extends CoreSignTransactionMethod {
+export default class EthSignTransactionMethod extends SignTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -51,14 +51,12 @@ export default class SignTransactionMethod extends CoreSignTransactionMethod {
      *
      * @method execute
      *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
      * @callback callback callback(error, result)
      * @returns {Promise<Object|String>}
      */
-    execute(moduleInstance) {
+    execute() {
         if (isString(this.parameters[1])) {
-            const account = moduleInstance.accounts.wallet[this.parameters[1]];
+            const account = this.moduleInstance.accounts.wallet[this.parameters[1]];
             if (account) {
                 return this.moduleInstance.transactionSigner.sign(this.parameters[0], account.privateKey);
             }

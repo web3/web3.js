@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file SignMethod.js
+ * @file EthSignMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {SignMethod as CoreSignMethod} from 'web3-core-method';
+import {SignMethod} from 'web3-core-method';
 
-export default class SignMethod extends CoreSignMethod {
+export default class EthSignMethod extends SignMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -39,14 +39,12 @@ export default class SignMethod extends CoreSignMethod {
      *
      * @method execute
      *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
      * @callback callback callback(error, result)
      * @returns {Promise<Object|String>}
      */
-    execute(moduleInstance) {
-        if (moduleInstance.accounts.wallet[this.parameters[1]]) {
-            return this.signLocally(moduleInstance);
+    execute() {
+        if (this.moduleInstance.accounts.wallet[this.parameters[1]]) {
+            return this.signLocally();
         }
 
         return super.execute();
@@ -57,17 +55,15 @@ export default class SignMethod extends CoreSignMethod {
      *
      * @method signLocally
      *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
      * @returns {Promise<String>}
      */
-    async signLocally(moduleInstance) {
+    async signLocally() {
         try {
-            this.beforeExecution(moduleInstance);
+            this.beforeExecution(this.moduleInstance);
 
-            let signedMessage = moduleInstance.accounts.sign(
+            let signedMessage = this.moduleInstance.accounts.sign(
                 this.parameters[0],
-                moduleInstance.accounts.wallet[this.parameters[1]].address
+                this.moduleInstance.accounts.wallet[this.parameters[1]].address
             );
 
             if (this.callback) {

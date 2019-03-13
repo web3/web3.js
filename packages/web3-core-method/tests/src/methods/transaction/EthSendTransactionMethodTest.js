@@ -507,7 +507,7 @@ describe('EthSendTransactionMethodTest', () => {
 
     it('calls execute and signs on the node', () => {
         moduleInstanceMock.transactionSigner = transactionSignerMock;
-        
+
         const parameters = [{
             from: 0,
             gas: 1,

@@ -1,87 +1,32 @@
-import {formatters} from 'web3-core-helpers';
-import * as Utils from 'web3-utils';
-import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import GetTransactionFromBlockMethod from '../../../../src/methods/transaction/GetTransactionFromBlockMethod';
-
-// Mocks
-jest.mock('formatters');
-jest.mock('Utils');
+import GetTransactionFromBlockMethod from '../../../src/methods/GetTransactionFromBlockMethod';
 
 /**
  * GetTransactionFromBlockMethod test
  */
 describe('GetTransactionFromBlockMethodTest', () => {
-    let method;
+    let getTransactionFromBlockMethod;
 
     beforeEach(() => {
-        method = new GetTransactionFromBlockMethod(Utils, formatters, {});
+        getTransactionFromBlockMethod = new GetTransactionFromBlockMethod({}, {}, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractMethod);
-
-        expect(method.rpcMethod).toEqual('eth_getTransactionByBlockNumberAndIndex');
-
-        expect(method.parametersAmount).toEqual(2);
-
-        expect(method.utils).toEqual(Utils);
-
-        expect(method.formatters).toEqual(formatters);
+        expect(getTransactionFromBlockMethod.rpcMethod).toEqual('eth_getTransactionByBlockNumberAndIndex');
     });
 
-    it(
-        'should call beforeExecution with block hash as parameter ' +
-            'and should call formatters.inputBlockNumberFormatter and utils.numberToHex',
-        () => {
-            method.parameters = ['0x0', 100];
+    it('calls execute with hash', () => {
+        getTransactionFromBlockMethod.parameters = ['0x0'];
 
-            formatters.inputBlockNumberFormatter.mockReturnValueOnce('0x0');
+        getTransactionFromBlockMethod.execute();
 
-            Utils.numberToHex.mockReturnValueOnce('0x0');
+        expect(getTransactionFromBlockMethod.rpcMethod).toEqual('eth_getTransactionByBlockHashAndIndex');
+    });
 
-            method.beforeExecution({});
+    it('calls execute with number', () => {
+        getTransactionFromBlockMethod.parameters = [100];
 
-            expect(method.parameters[0]).toEqual('0x0');
+        getTransactionFromBlockMethod.execute();
 
-            expect(method.parameters[1]).toEqual('0x0');
-
-            expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith('0x0');
-
-            expect(Utils.numberToHex).toHaveBeenCalledWith(100);
-
-            expect(method.rpcMethod).toEqual('eth_getTransactionByBlockHashAndIndex');
-        }
-    );
-
-    it(
-        'should call beforeExecution with block number as parameter  ' +
-            'and should call formatters.inputBlockNumberFormatter and utils.numberToHex',
-        () => {
-            method.parameters = [100, 100];
-
-            formatters.inputBlockNumberFormatter.mockReturnValueOnce('0x0');
-
-            Utils.numberToHex.mockReturnValueOnce('0x0');
-
-            method.beforeExecution({});
-
-            expect(method.parameters[0]).toEqual('0x0');
-
-            expect(method.parameters[1]).toEqual('0x0');
-
-            expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(100);
-
-            expect(Utils.numberToHex).toHaveBeenCalledWith(100);
-
-            expect(method.rpcMethod).toEqual('eth_getTransactionByBlockNumberAndIndex');
-        }
-    );
-
-    it('afterExecution should map the response', () => {
-        formatters.outputTransactionFormatter.mockReturnValueOnce({empty: false});
-
-        expect(method.afterExecution({})).toHaveProperty('empty', false);
-
-        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({});
+        expect(getTransactionFromBlockMethod.rpcMethod).toEqual('eth_getTransactionByBlockNumberAndIndex');
     });
 });
