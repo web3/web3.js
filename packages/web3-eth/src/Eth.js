@@ -108,6 +108,7 @@ export default class Eth extends AbstractWeb3Module {
 
             return contract;
         };
+
     }
 
     /**
