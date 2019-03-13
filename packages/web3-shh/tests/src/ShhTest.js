@@ -1,5 +1,4 @@
 import * as Utils from 'web3-utils';
-import {AbstractWeb3Module} from 'web3-core';
 import {formatters} from 'web3-core-helpers';
 import {AbstractSubscription} from 'web3-core-subscriptions';
 import {
@@ -26,13 +25,11 @@ import {
     ShhVersionMethod
 } from 'web3-core-method';
 import {Network} from 'web3-net';
-import {HttpProvider} from 'web3-providers';
 import MethodFactory from '../../src/factories/MethodFactory';
 import SubscriptionsFactory from '../../src/factories/SubscriptionsFactory';
 import Shh from '../../src/Shh';
 
 // Mocks
-jest.mock('HttpProvider');
 jest.mock('AbstractSubscription');
 jest.mock('Network');
 jest.mock('Utils');
@@ -45,15 +42,12 @@ jest.mock('../../src/factories/MethodFactory');
  */
 describe('ShhTest', () => {
     let shh,
-        providerMock,
         methodFactory,
         subscriptionsFactoryMock,
+        providerMock,
         networkMock;
 
     beforeEach(() => {
-        new HttpProvider();
-        providerMock = HttpProvider.mock.instances[0];
-
         methodFactory = new MethodFactory(Utils, formatters);
 
         new SubscriptionsFactory();
@@ -62,6 +56,8 @@ describe('ShhTest', () => {
         new Network();
         networkMock = Network.mock.instances[0];
         networkMock.setProvider = jest.fn();
+
+        providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
 
         shh = new Shh(
             providerMock,
@@ -102,7 +98,8 @@ describe('ShhTest', () => {
         });
 
         expect(() => {
-            shh.subscribe('error', {}, () => {});
+            shh.subscribe('error', {}, () => {
+            });
         }).toThrow('ERROR');
     });
 
@@ -137,14 +134,29 @@ describe('ShhTest', () => {
     });
 
     it('sets the defaultAccount property', () => {
+        Utils.toChecksumAddress.mockReturnValue('0x2');
+
         shh.defaultAccount = '0x1';
 
-        expect(shh.defaultAccount).toEqual('0x1');
+        expect(shh.defaultAccount).toEqual('0x2');
+        expect(networkMock.defaultAccount).toEqual('0x2');
     });
 
     it('sets the defaultBlock property', () => {
         shh.defaultBlock = 10;
 
         expect(shh.defaultBlock).toEqual(10);
+    });
+
+    it('calls clearSubscriptions with a non-socket based provider and returns true', async () => {
+        await expect(shh.clearSubscriptions()).resolves.toEqual(true);
+    });
+
+    it('calls setProvider and returns true', () => {
+        networkMock.setProvider.mockReturnValueOnce(true);
+
+        expect(shh.setProvider(providerMock, 'net')).toEqual(true);
+
+        expect(networkMock.setProvider).toHaveBeenCalledWith(providerMock, 'net');
     });
 });

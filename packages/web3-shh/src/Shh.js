@@ -90,7 +90,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set defaultGasPrice(value) {
         super.defaultGasPrice = value;
-        this.net.defaultGasPrice = value;
+        this.net.defaultGasPrice = this.defaultGasPrice;
     }
 
     /**
@@ -113,7 +113,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set defaultGas(value) {
         super.defaultGas = value;
-        this.net.defaultGas = value;
+        this.net.defaultGas = this.defaultGas;
     }
 
     /**
@@ -136,7 +136,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set transactionBlockTimeout(value) {
         super.transactionBlockTimeout = value;
-        this.net.transactionBlockTimeout = value;
+        this.net.transactionBlockTimeout = this.transactionBlockTimeout;
     }
 
     /**
@@ -159,7 +159,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set transactionConfirmationBlocks(value) {
         super.transactionConfirmationBlocks = value;
-        this.net.transactionConfirmationBlocks = value;
+        this.net.transactionConfirmationBlocks = this.transactionConfirmationBlocks;
     }
 
     /**
@@ -182,7 +182,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set transactionPollingTimeout(value) {
         super.transactionPollingTimeout = value;
-        this.net.transactionPollingTimeout = value;
+        this.net.transactionPollingTimeout = this.transactionPollingTimeout;
     }
 
     /**
@@ -205,7 +205,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set defaultAccount(value) {
         super.defaultAccount = value;
-        this.net.defaultAccount = value;
+        this.net.defaultAccount = this.defaultAccount;
     }
 
     /**
@@ -228,7 +228,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set defaultBlock(value) {
         super.defaultBlock = value;
-        this.net.defaultBlock = value;
+        this.net.defaultBlock = this.defaultBlock;
     }
 
     /**

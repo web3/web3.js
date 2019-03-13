@@ -5,7 +5,7 @@ module.exports = jestConfig({
     formatters: 'web3-core-helpers',
     AbstractSubscription: 'web3-core-subscriptions',
     MessagesSubscription: 'web3-core-subscriptions',
-    HttpProvider: 'web3-providers',
-    Network: 'web3-net',
-    AbstractWeb3Module: 'web3-core'
+    WebsocketProvider: 'web3-providers',
+    ProviderResolver: 'web3-providers',
+    Network: 'web3-net'
 });
