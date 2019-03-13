@@ -1,6 +1,4 @@
 import {AbiCoder} from 'web3-eth-abi';
-import {MethodModuleFactory} from 'web3-core-method';
-import {Accounts} from 'web3-eth-accounts';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 
@@ -25,8 +23,6 @@ import ContractModuleFactory from '../../../src/factories/ContractModuleFactory'
 
 // Mocks
 jest.mock('AbiCoder');
-jest.mock('MethodModuleFactory');
-jest.mock('Accounts');
 jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('../../../src/validators/MethodOptionsValidator');
@@ -51,24 +47,16 @@ jest.mock('../../../src/factories/MethodFactory');
  * ContractModuleFactory test
  */
 describe('ContractModuleFactoryTest', () => {
-    let contractModuleFactory, abiCoderMock, accountsMock, methodModuleFactoryMock;
+    let contractModuleFactory, abiCoderMock;
 
     beforeEach(() => {
         new AbiCoder();
         abiCoderMock = AbiCoder.mock.instances[0];
 
-        new Accounts({}, {});
-        accountsMock = Accounts.mock.instances[0];
-
-        new MethodModuleFactory();
-        methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
-
         contractModuleFactory = new ContractModuleFactory(
             Utils,
             formatters,
-            abiCoderMock,
-            accountsMock,
-            methodModuleFactoryMock
+            abiCoderMock
         );
     });
 
@@ -78,10 +66,6 @@ describe('ContractModuleFactoryTest', () => {
         expect(contractModuleFactory.formatters).toEqual(formatters);
 
         expect(contractModuleFactory.abiCoder).toEqual(abiCoderMock);
-
-        expect(contractModuleFactory.accounts).toEqual(accountsMock);
-
-        expect(contractModuleFactory.methodModuleFactory).toEqual(methodModuleFactoryMock);
     });
 
     it('calls createContract and returns an AbstractContract object', () => {
