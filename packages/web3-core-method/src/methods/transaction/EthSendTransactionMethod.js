@@ -55,7 +55,6 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      *
      * @method execute
      *
-     *
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
@@ -119,6 +118,8 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @method sendRawTransaction
      *
      * @param {String} privateKey
+     *
+     * @returns {PromiEvent}
      */
     async sendRawTransaction(privateKey = null) {
         if (!this.parameters[0].chainId) {
@@ -137,7 +138,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         this.sendRawTransactionMethod.callback = this.callback;
         this.sendRawTransactionMethod.promiEvent = this.promiEvent;
 
-        this.sendRawTransactionMethod.execute();
+        return this.sendRawTransactionMethod.execute();
     }
 
     /**
