@@ -12,9 +12,7 @@ jest.mock('../../../src/models/AbiModel');
  * SendContractMethod test
  */
 describe('SendContractMethodTest', () => {
-    let sendContractMethod,
-        allEventsLogDecoderMock,
-        abiModelMock;
+    let sendContractMethod, allEventsLogDecoderMock, abiModelMock;
 
     beforeEach(() => {
         new AbiModel();
@@ -23,17 +21,7 @@ describe('SendContractMethodTest', () => {
         new AllEventsLogDecoder();
         allEventsLogDecoderMock = AllEventsLogDecoder.mock.instances[0];
 
-        sendContractMethod = new SendContractMethod(
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            allEventsLogDecoderMock,
-            abiModelMock
-        );
+        sendContractMethod = new SendContractMethod({}, {}, {}, {}, {}, {}, {}, allEventsLogDecoderMock, abiModelMock);
     });
 
     it('constructor check', () => {

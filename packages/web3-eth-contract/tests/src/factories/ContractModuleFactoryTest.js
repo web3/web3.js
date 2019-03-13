@@ -53,11 +53,7 @@ describe('ContractModuleFactoryTest', () => {
         new AbiCoder();
         abiCoderMock = AbiCoder.mock.instances[0];
 
-        contractModuleFactory = new ContractModuleFactory(
-            Utils,
-            formatters,
-            abiCoderMock
-        );
+        contractModuleFactory = new ContractModuleFactory(Utils, formatters, abiCoderMock);
     });
 
     it('constructor check', () => {

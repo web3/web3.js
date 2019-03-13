@@ -36,12 +36,7 @@ describe('MethodFactoryTest', () => {
         new AbiCoder();
         abiCoderMock = AbiCoder.mock.instances[0];
 
-        methodFactory = new MethodFactory(
-            Utils,
-            formatters,
-            contractModuleFactoryMock,
-            abiCoderMock
-        );
+        methodFactory = new MethodFactory(Utils, formatters, contractModuleFactoryMock, abiCoderMock);
     });
 
     it('constructor check', () => {

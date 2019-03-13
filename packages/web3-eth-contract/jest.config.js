@@ -2,6 +2,7 @@ const jestConfig = require('../../jest.config');
 
 module.exports = jestConfig({
     'formatters': 'web3-core-helpers',
+    'GetPastLogsMethod': 'web3-core-method',
     'AbiCoder': 'web3-eth-abi',
     'Accounts': 'web3-eth-accounts',
     'HttpProvider': 'web3-providers',

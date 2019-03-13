@@ -1,7 +1,6 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
-import {GetPastLogsMethod} from 'web3-core-method';
 import {AbstractWeb3Module} from 'web3-core';
 import AbiMapper from '../../src/mappers/AbiMapper';
 import AbiModel from '../../src/models/AbiModel';
@@ -13,7 +12,6 @@ import EventSubscriptionsProxy from '../../src/proxies/EventSubscriptionsProxy';
 import AbstractContract from '../../src/AbstractContract';
 
 // Mocks
-jest.mock('GetPastLogsMethod');
 jest.mock('AbiCoder');
 jest.mock('../../src/models/AbiModel');
 jest.mock('../../src/mappers/AbiMapper');
@@ -167,9 +165,8 @@ describe('AbstractContractTest', () => {
 
         abiModelMock.getEvent.mockReturnValueOnce({});
 
-        new GetPastLogsMethod();
-        const getPastLogsMethodMock = GetPastLogsMethod.mock.instances[0];
-
+        const getPastLogsMethodMock = {};
+        getPastLogsMethodMock.execute = jest.fn();
         getPastLogsMethodMock.execute.mockReturnValueOnce(Promise.resolve(true));
 
         methodFactoryMock.createPastEventLogsMethod.mockReturnValueOnce(getPastLogsMethodMock);
@@ -190,9 +187,8 @@ describe('AbstractContractTest', () => {
     });
 
     it('calls getPastEvents with "allEvents" and returns a resolved promise', async () => {
-        new GetPastLogsMethod();
-        const getPastLogsMethodMock = GetPastLogsMethod.mock.instances[0];
-
+        const getPastLogsMethodMock = {};
+        getPastLogsMethodMock.execute = jest.fn();
         getPastLogsMethodMock.execute.mockReturnValueOnce(Promise.resolve(true));
 
         methodFactoryMock.createAllPastEventLogsMethod.mockReturnValueOnce(getPastLogsMethodMock);
