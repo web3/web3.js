@@ -1,9 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import GetBlockTransactionCountMethod from '../../../src/methods/GetBlockTransactionCountMethod';
 
-// Mocks
-jest.mock('formatters');
-
 /**
  * GetBlockTransactionCountMethod test
  */
@@ -21,7 +18,7 @@ describe('GetBlockTransactionCountMethodTest', () => {
     it('calls execute with hash', () => {
         getBlockTransactionCountMethod.parameters = ['0x0'];
 
-        getBlockTransactionCountMethod.execute();
+        getBlockTransactionCountMethod.beforeExecution({});
 
         expect(getBlockTransactionCountMethod.rpcMethod).toEqual('eth_getBlockTransactionCountByHash');
     });
@@ -29,7 +26,7 @@ describe('GetBlockTransactionCountMethodTest', () => {
     it('calls execute with number', () => {
         getBlockTransactionCountMethod.parameters = [100];
 
-        getBlockTransactionCountMethod.execute();
+        getBlockTransactionCountMethod.beforeExecution({});
 
         expect(getBlockTransactionCountMethod.rpcMethod).toEqual('eth_getBlockTransactionCountByNumber');
     });

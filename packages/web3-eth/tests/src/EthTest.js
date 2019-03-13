@@ -325,16 +325,6 @@ describe('EthTest', () => {
         expect(abstractSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
     });
 
-    it('calls subscribe wih unknown type', () => {
-        subscriptionsFactoryMock.getSubscription = jest.fn(() => {
-            throw new Error('ERROR');
-        });
-
-        expect(() => {
-            eth.subscribe('NOPE', {}, () => {});
-        }).toThrow('ERROR');
-    });
-
     it('calls the Contract factory method from the constructor', () => {
         contractModuleFactoryMock.createContract.mockReturnValueOnce({});
 

@@ -1,9 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import GetBlockUncleCountMethod from '../../../src/methods/GetBlockUncleCountMethod';
 
-// Mocks
-jest.mock('formatters');
-
 /**
  * GetBlockUncleCountMethod test
  */
@@ -21,7 +18,7 @@ describe('GetBlockUncleCountMethodTest', () => {
     it('calls execute with hash', () => {
         getBlockUncleCountMethod.parameters = ['0x0'];
 
-        getBlockUncleCountMethod.execute();
+        getBlockUncleCountMethod.beforeExecution({});
 
         expect(getBlockUncleCountMethod.rpcMethod).toEqual('eth_getUncleCountByBlockHash');
     });
@@ -29,7 +26,7 @@ describe('GetBlockUncleCountMethodTest', () => {
     it('calls execute with number', () => {
         getBlockUncleCountMethod.parameters = [100];
 
-        getBlockUncleCountMethod.execute();
+        getBlockUncleCountMethod.beforeExecution({});
 
         expect(getBlockUncleCountMethod.rpcMethod).toEqual('eth_getUncleCountByBlockNumber');
     });

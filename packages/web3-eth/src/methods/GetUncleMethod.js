@@ -31,7 +31,7 @@ export default class GetUncleMethod extends AbstractGetUncleMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getUncleByBlockNumberAndIndex', 2, utils, formatters, moduleInstance);
+        super('eth_getUncleByBlockNumberAndIndex', utils, formatters, moduleInstance);
     }
 
     /**

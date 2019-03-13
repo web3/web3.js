@@ -23,6 +23,7 @@ import {
     NewPendingTransactionsSubscription,
     SyncingSubscription
 } from 'web3-core-subscriptions';
+
 import {GetPastLogsMethod} from 'web3-core-method';
 
 export default class SubscriptionsFactory {
