@@ -26,9 +26,9 @@ describe('SubscriptionsFactoryTest', () => {
         expect(MessagesSubscription).toHaveBeenCalledTimes(1);
     });
 
-    it('calls getSubscription and returns the MessagesSubscription', () => {
+    it('calls getSubscription and throws an error', () => {
         expect(() => {
-            subscriptionsFactory.getSubscription({}, 'ERROR', 'options')
+            subscriptionsFactory.getSubscription({}, 'ERROR', 'options');
         }).toThrow('Unknown subscription: ERROR');
     });
 });

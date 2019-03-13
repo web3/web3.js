@@ -6,9 +6,9 @@ import EthSignTransactionMethod from '../../../src/methods/EthSignTransactionMet
 jest.mock('formatters');
 
 /**
- * SignTransactionMethod test
+ * EthSignTransactionMethod test
  */
-describe('SignTransactionMethodTest', () => {
+describe('EthSignTransactionMethodTest', () => {
     let method, moduleInstanceMock;
 
     beforeEach(() => {
@@ -49,7 +49,7 @@ describe('SignTransactionMethodTest', () => {
         expect(method.moduleInstance.transactionSigner.sign).toHaveBeenCalledWith({}, '0x0');
     });
 
-    it('calls execute and a local unlocked account does exist', async () => {
+    it('calls execute and a local unlocked account does not exist', async () => {
         moduleInstanceMock.accounts = {wallet: {}};
         moduleInstanceMock.currentProvider = {send: jest.fn()};
 

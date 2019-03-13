@@ -1,40 +1,6 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbstractSubscription, LogSubscription} from 'web3-core-subscriptions';
-import {
-    CallMethod,
-    EstimateGasMethod,
-    GetAccountsMethod,
-    GetBalanceMethod,
-    GetBlockMethod,
-    GetBlockNumberMethod,
-    GetBlockTransactionCountMethod,
-    GetBlockUncleCountMethod,
-    GetCodeMethod,
-    GetCoinbaseMethod,
-    GetGasPriceMethod,
-    GetHashrateMethod,
-    GetNodeInfoMethod,
-    GetPastLogsMethod,
-    GetProtocolVersionMethod,
-    GetStorageAtMethod,
-    GetTransactionCountMethod,
-    GetTransactionFromBlockMethod,
-    GetTransactionMethod,
-    GetTransactionReceipt,
-    GetUncleMethod,
-    GetWorkMethod,
-    IsMiningMethod,
-    IsSyncingMethod,
-    RequestAccountsMethod,
-    SendRawTransactionMethod,
-    SendTransactionMethod,
-    SignMethod,
-    SignTransactionMethod,
-    SubmitWorkMethod,
-    ChainIdMethod,
-    VersionMethod
-} from 'web3-core-method';
 import {AbiCoder} from 'web3-eth-abi';
 import {Accounts} from 'web3-eth-accounts';
 import {Ens} from 'web3-eth-ens';
@@ -51,7 +17,6 @@ import Eth from '../../src/Eth';
 jest.mock('AbstractWeb3Module');
 jest.mock('AbstractSubscription');
 jest.mock('LogSubscription');
-jest.mock('GetPastLogsMethod');
 jest.mock('AbiCoder');
 jest.mock('Accounts');
 jest.mock('Ens');
@@ -333,21 +298,15 @@ describe('EthTest', () => {
 
         expect(eth.initiatedContracts).toHaveLength(1);
 
-        expect(contractModuleFactoryMock.createContract).toHaveBeenCalledWith(
-            providerMock,
-            eth.accounts,
-            [],
-            '0x0',
-            {
-                defaultAccount: eth.defaultAccount,
-                defaultBlock: eth.defaultBlock,
-                defaultGas: eth.defaultGas,
-                defaultGasPrice: eth.defaultGasPrice,
-                transactionBlockTimeout: eth.transactionBlockTimeout,
-                transactionConfirmationBlocks: eth.transactionConfirmationBlocks,
-                transactionPollingTimeout: eth.transactionPollingTimeout,
-                transactionSigner: eth.transactionSigner
-            }
-        );
+        expect(contractModuleFactoryMock.createContract).toHaveBeenCalledWith(providerMock, eth.accounts, [], '0x0', {
+            defaultAccount: eth.defaultAccount,
+            defaultBlock: eth.defaultBlock,
+            defaultGas: eth.defaultGas,
+            defaultGasPrice: eth.defaultGasPrice,
+            transactionBlockTimeout: eth.transactionBlockTimeout,
+            transactionConfirmationBlocks: eth.transactionConfirmationBlocks,
+            transactionPollingTimeout: eth.transactionPollingTimeout,
+            transactionSigner: eth.transactionSigner
+        });
     });
 });

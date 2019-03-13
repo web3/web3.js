@@ -2,12 +2,10 @@ import {formatters} from 'web3-core-helpers';
 import {AbstractWeb3Module} from 'web3-core';
 import {SignMethod} from 'web3-core-method';
 import * as Utils from 'web3-utils';
-import {Accounts} from 'web3-eth-accounts';
 import EthSignMethod from '../../../src/methods/EthSignMethod';
 
 // Mocks
 jest.mock('Utils');
-jest.mock('Accounts');
 jest.mock('formatters');
 jest.mock('AbstractWeb3Module');
 

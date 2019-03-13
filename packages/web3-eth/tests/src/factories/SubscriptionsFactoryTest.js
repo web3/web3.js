@@ -42,7 +42,9 @@ describe('SubscriptionsFactoryTest', () => {
     });
 
     it('calls getSubscription with "pendingTransactions" and returns the LogsSubscription', () => {
-        expect(subscriptionsFactory.getSubscription({}, 'pendingTransactions', {})).toBeInstanceOf(NewPendingTransactionsSubscription);
+        expect(subscriptionsFactory.getSubscription({}, 'pendingTransactions', {})).toBeInstanceOf(
+            NewPendingTransactionsSubscription
+        );
     });
 
     it('calls getSubscription with "syncing" and returns the LogsSubscription', () => {

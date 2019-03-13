@@ -508,13 +508,15 @@ describe('EthSendTransactionMethodTest', () => {
     it('calls execute and signs on the node', () => {
         moduleInstanceMock.transactionSigner = transactionSignerMock;
 
-        const parameters = [{
-            from: 0,
-            gas: 1,
-            gasPrice: 1,
-            nonce: 1,
-            chainId: 1
-        }];
+        const parameters = [
+            {
+                from: 0,
+                gas: 1,
+                gasPrice: 1,
+                nonce: 1,
+                chainId: 1
+            }
+        ];
 
         providerMock.send.mockReturnValueOnce(Promise.resolve('0x0'));
 
@@ -522,6 +524,6 @@ describe('EthSendTransactionMethodTest', () => {
 
         method.execute();
 
-        expect(providerMock.send).toHaveBeenCalledWith('eth_sendTransaction', parameters)
+        expect(providerMock.send).toHaveBeenCalledWith('eth_sendTransaction', parameters);
     });
 });

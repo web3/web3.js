@@ -1,7 +1,8 @@
 import {
     AddPrivateKeyMethod,
     AddSymKeyMethod,
-    DeleteKeyPairMethod, DeleteMessageFilterMethod,
+    DeleteKeyPairMethod,
+    DeleteMessageFilterMethod,
     DeleteSymKeyMethod,
     GenerateSymKeyFromPasswordMethod,
     GetFilterMessagesMethod,
@@ -14,7 +15,8 @@ import {
     MarkTrustedPeerMethod,
     NewKeyPairMethod,
     NewMessageFilterMethod,
-    NewSymKeyMethod, PostMethod,
+    NewSymKeyMethod,
+    PostMethod,
     SetMaxMessageSizeMethod,
     SetMinPoWMethod,
     ShhVersionMethod

@@ -1,29 +1,6 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbstractSubscription} from 'web3-core-subscriptions';
-import {
-    AddPrivateKeyMethod,
-    AddSymKeyMethod,
-    DeleteKeyPairMethod,
-    DeleteMessageFilterMethod,
-    DeleteSymKeyMethod,
-    GenerateSymKeyFromPasswordMethod,
-    GetFilterMessagesMethod,
-    GetInfoMethod,
-    GetPrivateKeyMethod,
-    GetPublicKeyMethod,
-    GetSymKeyMethod,
-    HasKeyPairMethod,
-    HasSymKeyMethod,
-    MarkTrustedPeerMethod,
-    NewKeyPairMethod,
-    NewMessageFilterMethod,
-    NewSymKeyMethod,
-    PostMethod,
-    SetMaxMessageSizeMethod,
-    SetMinPoWMethod,
-    ShhVersionMethod
-} from 'web3-core-method';
 import {Network} from 'web3-net';
 import MethodFactory from '../../src/factories/MethodFactory';
 import SubscriptionsFactory from '../../src/factories/SubscriptionsFactory';
@@ -41,11 +18,7 @@ jest.mock('../../src/factories/MethodFactory');
  * Shh test
  */
 describe('ShhTest', () => {
-    let shh,
-        methodFactory,
-        subscriptionsFactoryMock,
-        providerMock,
-        networkMock;
+    let shh, methodFactory, subscriptionsFactoryMock, providerMock, networkMock;
 
     beforeEach(() => {
         methodFactory = new MethodFactory(Utils, formatters);
@@ -59,14 +32,7 @@ describe('ShhTest', () => {
 
         providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
 
-        shh = new Shh(
-            providerMock,
-            methodFactory,
-            subscriptionsFactoryMock,
-            networkMock,
-            {},
-            null
-        );
+        shh = new Shh(providerMock, methodFactory, subscriptionsFactoryMock, networkMock, {}, null);
     });
 
     it('constructor check', () => {
@@ -98,8 +64,7 @@ describe('ShhTest', () => {
         });
 
         expect(() => {
-            shh.subscribe('error', {}, () => {
-            });
+            shh.subscribe('error', {}, () => {});
         }).toThrow('ERROR');
     });
 
