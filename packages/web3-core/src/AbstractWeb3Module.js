@@ -56,8 +56,6 @@ export default class AbstractWeb3Module {
         this._defaultGas = options.defaultGas;
 
         this.BatchRequest = () => {
-            console.warn('It is recommended to import the BatchRequest directly from the web3-providers module.');
-
             return new BatchRequest(this);
         };
 
