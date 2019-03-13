@@ -44,21 +44,21 @@ describe('AbstractMethodTest', () => {
         expect(abstractMethod.callback).toEqual(callback);
     });
 
-    it('set arguments throws error on missing arguments', () => {
+    it('setArguments throws error on missing arguments', () => {
         abstractMethod.parametersAmount = 3;
 
         try {
-            abstractMethod.arguments = [];
+            abstractMethod.setArguments([]);
         } catch (error) {
             expect(error).toBeInstanceOf(Error);
         }
     });
 
-    it('set arguments throws error if callback is not of type Function', () => {
+    it('setArguments throws error if callback is not of type Function', () => {
         abstractMethod.parametersAmount = 1;
 
         try {
-            abstractMethod.arguments = [true, true];
+            abstractMethod.setArguments([true, true]);
         } catch (error) {
             expect(error).toBeInstanceOf(Error);
         }
@@ -66,7 +66,7 @@ describe('AbstractMethodTest', () => {
 
     it('set arguments without callback', () => {
         abstractMethod.parametersAmount = 1;
-        abstractMethod.arguments = [true];
+        abstractMethod.setArguments([true]);
 
         expect(abstractMethod.parameters).toEqual([true]);
 
@@ -75,7 +75,7 @@ describe('AbstractMethodTest', () => {
 
     it('set arguments with callback', () => {
         abstractMethod.parametersAmount = 1;
-        abstractMethod.arguments = [true, () => {}];
+        abstractMethod.setArguments([true, () => {}]);
 
         expect(abstractMethod.parameters).toEqual([true]);
 
@@ -84,9 +84,9 @@ describe('AbstractMethodTest', () => {
 
     it('get arguments', () => {
         abstractMethod.parametersAmount = 1;
-        abstractMethod.arguments = [true];
+        abstractMethod.setArguments([true]);
 
-        expect(abstractMethod.arguments).toEqual({callback: null, parameters: [true]});
+        expect(abstractMethod.getArguments()).toEqual({callback: null, parameters: [true]});
     });
 
     it('set rpcMethod', () => {
