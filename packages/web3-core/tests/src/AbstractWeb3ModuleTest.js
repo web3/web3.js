@@ -1,9 +1,3 @@
-import {
-    BatchRequest,
-    WebsocketProvider,
-    HttpProvider,
-    IpcProvider
-} from 'web3-providers';
 import AbstractWeb3Module from '../../src/AbstractWeb3Module';
 import MethodFactory from '../__mocks__/MethodFactory';
 
@@ -158,5 +152,11 @@ describe('AbstractWeb3ModuleTest', () => {
         expect(
             new AbstractWeb3Module.providers.HttpProvider('http://localhost:7545', {}).host
         ).toEqual('http://localhost:7545');
+    });
+
+    it('checks if all providers exists on the static providers property', () => {
+        expect(AbstractWeb3Module.providers.HttpProvider).toBeInstanceOf(Function);
+        expect(AbstractWeb3Module.providers.WebsocketProvider).toBeInstanceOf(Function);
+        expect(AbstractWeb3Module.providers.IpcProvider).toBeInstanceOf(Function);
     });
 });
