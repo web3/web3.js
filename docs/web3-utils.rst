@@ -214,7 +214,7 @@ Example
     > "0xbc36789e7a1e281436464229828f817d6612f7b477d66591ff96a9e064bcc98a"
 
     web3.utils.sha3(234);
-    > null // can't calculate the has of a number
+    > null // can't calculate the hash of a number
 
     web3.utils.sha3(0xea); // same as above, just the HEX representation of the number
     > null
