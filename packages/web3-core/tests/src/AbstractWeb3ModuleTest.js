@@ -5,8 +5,7 @@ import MethodFactory from '../__mocks__/MethodFactory';
  * AbstractWeb3Module test
  */
 describe('AbstractWeb3ModuleTest', () => {
-    let abstractWeb3Module,
-        methodFactoryMock;
+    let abstractWeb3Module, methodFactoryMock;
 
     beforeEach(() => {
         methodFactoryMock = new MethodFactory();
@@ -149,9 +148,9 @@ describe('AbstractWeb3ModuleTest', () => {
     });
 
     it('initiates a HttpProvider with the providers property of the module', () => {
-        expect(
-            new AbstractWeb3Module.providers.HttpProvider('http://localhost:7545', {}).host
-        ).toEqual('http://localhost:7545');
+        expect(new AbstractWeb3Module.providers.HttpProvider('http://localhost:7545', {}).host).toEqual(
+            'http://localhost:7545'
+        );
     });
 
     it('checks if all providers exists on the static providers property', () => {

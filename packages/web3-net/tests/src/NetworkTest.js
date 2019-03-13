@@ -1,7 +1,6 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbstractWeb3Module} from 'web3-core';
-import MethodFactory from '../../src/factories/MethodFactory';
 import Network from '../../src/Network';
 
 // Mocks
@@ -12,22 +11,17 @@ jest.mock('formatters');
  * Network test
  */
 describe('NetworkTest', () => {
-    let network,
-        providerMock,
-        methodFactoryMock;
+    let network, providerMock, methodFactoryMock;
 
     beforeEach(() => {
         providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
-        methodFactoryMock = {hasMethod: () => {return false;}};
+        methodFactoryMock = {
+            hasMethod: () => {
+                return false;
+            }
+        };
 
-        network = new Network(
-            providerMock,
-            methodFactoryMock,
-            Utils,
-            formatters,
-            {},
-            {}
-        );
+        network = new Network(providerMock, methodFactoryMock, Utils, formatters, {}, {});
     });
 
     it('constructor check', () => {

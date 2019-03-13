@@ -14,10 +14,7 @@ jest.mock('Network');
  * Personal test
  */
 describe('PersonalTest', () => {
-    let personal,
-        providerMock,
-        methodFactory,
-        networkMock;
+    let personal, providerMock, methodFactory, networkMock;
 
     beforeEach(() => {
         providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
@@ -26,15 +23,7 @@ describe('PersonalTest', () => {
         new Network();
         networkMock = Network.mock.instances[0];
 
-        personal = new Personal(
-            providerMock,
-            methodFactory,
-            networkMock,
-            Utils,
-            formatters,
-            {},
-            {}
-        );
+        personal = new Personal(providerMock, methodFactory, networkMock, Utils, formatters, {}, {});
     });
 
     it('constructor check', () => {

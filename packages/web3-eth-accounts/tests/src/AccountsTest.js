@@ -1,6 +1,5 @@
 import {hexToBytes, isHexStrict, randomHex} from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {ChainIdMethod, GetGasPriceMethod, GetTransactionCountMethod} from 'web3-core-method';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
@@ -28,11 +27,7 @@ jest.mock('../../src/models/Account');
  * Accounts test
  */
 describe('AccountsTest', () => {
-    let accounts,
-        providerMock,
-        transactionSignerMock,
-        methodFactoryMock,
-        options;
+    let accounts, providerMock, transactionSignerMock, methodFactoryMock, options;
 
     beforeEach(() => {
         providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
@@ -46,13 +41,7 @@ describe('AccountsTest', () => {
 
         options = {transactionSigner: transactionSignerMock};
 
-        accounts = new Accounts(
-            providerMock,
-            formatters,
-            methodFactoryMock,
-            options,
-            {}
-        );
+        accounts = new Accounts(providerMock, formatters, methodFactoryMock, options, {});
     });
 
     it('constructor check', () => {
@@ -566,7 +555,7 @@ describe('AccountsTest', () => {
 
         expect(() => {
             accounts.wallet.decrypt([true], 'pw');
-        }).toThrow('Couldn\'t decrypt accounts. Password wrong?');
+        }).toThrow("Couldn't decrypt accounts. Password wrong?");
 
         expect(Account.fromV3Keystore).toHaveBeenCalledWith(true, 'pw', false, accounts);
     });
