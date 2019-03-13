@@ -1,7 +1,5 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {HttpProvider, ProvidersModuleFactory, ProviderDetector, ProviderResolver} from 'web3-providers';
-import {MethodModuleFactory, VersionMethod, GetBlockMethod, ListeningMethod, PeerCountMethod} from 'web3-core-method';
 import {AbstractWeb3Module} from 'web3-core';
 import MethodFactory from '../../src/factories/MethodFactory';
 import Network from '../../src/Network';
@@ -9,11 +7,6 @@ import Network from '../../src/Network';
 // Mocks
 jest.mock('Utils');
 jest.mock('formatters');
-jest.mock('HttpProvider');
-jest.mock('ProvidersModuleFactory');
-jest.mock('ProviderDetector');
-jest.mock('ProviderResolver');
-jest.mock('MethodModuleFactory');
 
 /**
  * Network test
@@ -21,73 +14,28 @@ jest.mock('MethodModuleFactory');
 describe('NetworkTest', () => {
     let network,
         providerMock,
-        providersModuleFactoryMock,
-        providerDetectorMock,
-        providerResolverMock,
-        methodModuleFactoryMock,
-        methodFactory;
+        methodFactoryMock;
 
     beforeEach(() => {
-        new HttpProvider();
-        providerMock = HttpProvider.mock.instances[0];
-
-        new ProvidersModuleFactory();
-        providersModuleFactoryMock = ProvidersModuleFactory.mock.instances[0];
-
-        new ProviderDetector();
-        providerDetectorMock = ProviderDetector.mock.instances[0];
-        providerDetectorMock.detect = jest.fn(() => {
-            return null;
-        });
-
-        new ProviderResolver();
-        providerResolverMock = ProviderResolver.mock.instances[0];
-        providerResolverMock.resolve = jest.fn(() => {
-            return providerMock;
-        });
-
-        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce(providerDetectorMock);
-
-        providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce(providerResolverMock);
-
-        new MethodModuleFactory();
-        methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
-        methodModuleFactoryMock.createMethodProxy = jest.fn();
-
-        methodFactory = new MethodFactory(methodModuleFactoryMock, Utils, formatters);
+        providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
+        methodFactoryMock = {hasMethod: () => {return false;}};
 
         network = new Network(
             providerMock,
-            providersModuleFactoryMock,
-            methodModuleFactoryMock,
-            methodFactory,
+            methodFactoryMock,
             Utils,
             formatters,
+            {},
             {}
         );
     });
 
     it('constructor check', () => {
-        expect(network.currentProvider).toEqual(providerMock);
-
-        expect(network.providersModuleFactory).toEqual(providersModuleFactoryMock);
-
-        expect(network.methodFactory).toEqual(methodFactory);
-
         expect(network.utils).toEqual(Utils);
 
         expect(network.formatters).toEqual(formatters);
 
         expect(network).toBeInstanceOf(AbstractWeb3Module);
-    });
-
-    it('JSON-RPC methods check', () => {
-        expect(network.methodFactory.methods).toEqual({
-            getId: VersionMethod,
-            getBlock: GetBlockMethod,
-            isListening: ListeningMethod,
-            getPeerCount: PeerCountMethod
-        });
     });
 
     it('calls getNetworkType and resolves to the network name "private', async () => {
