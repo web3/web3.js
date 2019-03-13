@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetUncleMethod.js
+ * @file AbstractGetUncleMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetUncleMethod extends AbstractMethod {
+export default class AbstractGetUncleMethod extends AbstractMethod {
     /**
      * @param {String} rpcMethod
      * @param {Utils} utils
