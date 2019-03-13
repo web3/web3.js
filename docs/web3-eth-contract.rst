@@ -361,7 +361,7 @@ methods
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]])
+    myContract.methods.myMethod([param1, [param2, [...]]])
 
 Creates a transaction object for that method, which then can be :ref:`called <contract-call>`, :ref:`send <contract-send>`, :ref:`estimated  <contract-estimateGas>`or :ref:`ABI encoded <contract-encodeABI>`.
 
@@ -436,7 +436,7 @@ methods.myMethod.call
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]]).call(transactionObject, blockNumber, callback])
+    myContract.methods.myMethod([param1, [param2, [...]]]).call(transactionObject, blockNumber, callback])
 
 Will call a "constant" method and execute its smart contract method in the EVM without sending any transaction. Note calling can not alter the smart contract state.
 
@@ -524,7 +524,7 @@ methods.myMethod.send
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]]).send(options[, callback])
+    myContract.methods.myMethod([param1, [param2, [...]]]).send(options[, callback])
 
 Will send a transaction to the smart contract and execute its method. Note this can alter the smart contract state.
 
@@ -630,7 +630,7 @@ methods.myMethod.estimateGas
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]]).estimateGas(options[, callback])
+    myContract.methods.myMethod([param1, [param2, [...]]]).estimateGas(options, [callback])
 
 Will call estimate the gas a method execution will take when executed in the EVM without.
 The estimation can differ from the actual gas used when later sending a transaction, as the state of the smart contract can be different at that time.
@@ -683,7 +683,7 @@ methods.myMethod.encodeABI
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]]).encodeABI()
+    myContract.methods.myMethod([param1, [param2, [...]]]).encodeABI()
 
 Encodes the ABI for this method. This can be used to send a transaction, call a method, or pass it into another smart contracts method as arguments.
 
