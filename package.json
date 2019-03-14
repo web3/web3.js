@@ -6,13 +6,12 @@
     "license": "LGPL-3.0",
     "main": "./packages/web3/src/index.js",
     "directories": {
-        "doc": "./doc",
-        "test": "./test"
+        "doc": "./doc"
     },
     "scripts": {
         "clean": "lerna clean",
         "link": "lerna link",
-        "bootstrap": "lerna bootstrap",
+        "bootstrap": "lerna bootstrap --hoist",
         "install:all": "lerna add",
         "remove:all": "lerna exec npm uninstall",
         "install:dev:all": "lerna exec npm install --save-dev",
