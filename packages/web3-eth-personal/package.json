@@ -17,7 +17,6 @@
     "types": "types",
     "dependencies": {
         "@babel/runtime": "^7.3.1",
-        "dtslint": "0.5.4",
         "web3-core": "1.0.0-beta.48",
         "web3-core-helpers": "1.0.0-beta.48",
         "web3-core-method": "1.0.0-beta.48",
@@ -26,7 +25,7 @@
         "web3-utils": "1.0.0-beta.48"
     },
     "devDependencies": {
-        "dtslint": "^0.4.2",
+        "dtslint": "^0.5.5",
         "web3-eth-accounts": "1.0.0-beta.48"
     },
     "files": [

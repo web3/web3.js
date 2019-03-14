@@ -1,7 +1,7 @@
 {
     "name": "web3",
     "namespace": "ethereum",
-    "version": "1.0.0-beta.46",
+    "version": "1.0.0-beta.48",
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
     "main": "./packages/web3/src/index.js",
@@ -15,6 +15,7 @@
         "bootstrap": "lerna bootstrap",
         "install:all": "lerna add",
         "remove:all": "lerna exec npm uninstall",
+        "install:dev:all": "lerna exec npm install --save-dev",
         "publish": "npm run clean && npm run bootstrap && npm run travis && lerna publish",
         "build": "lerna run build",
         "test": "lerna run test",
@@ -107,6 +108,6 @@
         "rollup-plugin-babel": "^4.3.2",
         "rollup-plugin-cleanup": "^3.1.1",
         "rollup-plugin-json": "^3.1.0",
-        "typescript": "^3.2.2"
+        "typescript": "^3.3.3333"
     }
 }
