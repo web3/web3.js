@@ -100,7 +100,6 @@
         "istanbul-combine": "^0.3.0",
         "jest": "^23.6.0",
         "lerna": "^3.13.1",
-        "parsimmon": "^1.12.0",
         "prettier": "1.14.3",
         "regenerator-runtime": "^0.13.1",
         "rollup": "^0.67.4",
