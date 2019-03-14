@@ -20,12 +20,11 @@
  * @date 2018
  */
 
-import {MethodModuleFactory} from 'web3-core-method';
 import {Network} from 'web3-net';
-import {ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import PersonalModuleFactory from './factories/PersonalModuleFactory';
+import MethodFactory from './factories/MethodFactory';
+import PersonalModule from './Personal.js';
 
 /**
  * Returns the Personal object
@@ -33,17 +32,20 @@ import PersonalModuleFactory from './factories/PersonalModuleFactory';
  * @method Personal
  *
  * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Net.Socket} net
  * @param {Accounts} accounts
  * @param {Object} options
  *
  * @returns {Personal}
  */
-export const Personal = (provider, accounts, options) => {
-    return new PersonalModuleFactory(Utils, formatters).createPersonalModule(
+export const Personal = (provider, net, accounts, options) => {
+    return new PersonalModule(
         provider,
-        new ProvidersModuleFactory(),
-        new MethodModuleFactory(accounts),
-        new Network(provider, options),
-        options
+        new MethodFactory(Utils, formatters),
+        new Network(provider, net, options),
+        Utils,
+        formatters,
+        options,
+        net
     );
 };

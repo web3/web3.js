@@ -18,7 +18,6 @@
     "dependencies": {
         "@babel/runtime": "^7.3.1",
         "bn.js": "4.11.8",
-        "dtslint": "0.5.4",
         "web3-utils": "1.0.0-beta.48"
     },
     "devDependencies": {

@@ -1,5 +1,5 @@
 import * as Utils from 'web3-utils';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetCoinbaseMethod from '../../../../src/methods/node/GetCoinbaseMethod';
 
 // Mocks
@@ -12,11 +12,11 @@ describe('GetCoinbaseMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetCoinbaseMethod(Utils, null);
+        method = new GetCoinbaseMethod(Utils, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_coinbase');
 

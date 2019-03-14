@@ -1,4 +1,4 @@
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetNodeInfoMethod from '../../../../src/methods/node/GetNodeInfoMethod';
 
 /**
@@ -8,11 +8,11 @@ describe('GetNodeInfoMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetNodeInfoMethod(null, null);
+        method = new GetNodeInfoMethod(null, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('web3_clientVersion');
 

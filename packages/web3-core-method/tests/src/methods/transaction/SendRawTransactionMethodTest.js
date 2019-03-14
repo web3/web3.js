@@ -1,4 +1,4 @@
-import AbstractSendMethod from '../../../../lib/methods/AbstractSendMethod';
+import AbstractObservedTransactionMethod from '../../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 import SendRawTransactionMethod from '../../../../src/methods/transaction/SendRawTransactionMethod';
 
 /**
@@ -8,20 +8,12 @@ describe('SendRawTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SendRawTransactionMethod(null, null, null);
+        method = new SendRawTransactionMethod(null, null, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractSendMethod);
+        expect(method).toBeInstanceOf(AbstractObservedTransactionMethod);
 
         expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
-
-        expect(method.parametersAmount).toEqual(1);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(null);
-
-        expect(method.transactionConfirmationWorkflow).toEqual(null);
     });
 });

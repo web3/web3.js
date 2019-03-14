@@ -17,6 +17,7 @@
  * @date 2018
  */
 
+import {PromiEvent} from 'web3-core-method';
 import {AbstractWeb3Module} from 'web3-core';
 import isFunction from 'lodash/isFunction';
 import namehash from 'eth-ens-namehash';
@@ -25,43 +26,39 @@ import namehash from 'eth-ens-namehash';
 export default class Ens extends AbstractWeb3Module {
     /**
      * @param {HttpProvider|WebsocketProvider|IpcProvider|Web3EthereumProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
-     * @param {ContractModuleFactory} contractModuleFactory
      * @param {Object} options
      * @param {EnsModuleFactory} ensModuleFactory
-     * @param {PromiEvent} promiEvent
+     * @param {ContractModuleFactory} contractModuleFactory
+     * @param {Accounts} accounts
      * @param {AbiCoder} abiCoder
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {Object} registryOptions
      * @param {Network} net
+     * @param {Net.Socket} nodeNet
      *
      * @constructor
      */
     constructor(
         provider,
-        providersModuleFactory,
-        methodModuleFactory,
         options,
         ensModuleFactory,
         contractModuleFactory,
-        promiEvent,
+        accounts,
         abiCoder,
         utils,
         formatters,
-        registryOptions,
-        net
+        net,
+        nodeNet
     ) {
-        super(provider, providersModuleFactory, methodModuleFactory, null, options);
+        super(provider, options, null, nodeNet);
 
+        this.accounts = accounts;
         this.ensModuleFactory = ensModuleFactory;
         this.contractModuleFactory = contractModuleFactory;
-        this.promiEvent = promiEvent;
         this.abiCoder = abiCoder;
         this.utils = utils;
         this.formatters = formatters;
-        this.registryOptions = registryOptions;
+        this.registryOptions = options;
         this.net = net;
         this.transactionSigner = options.transactionSigner;
         this._registry = false;
@@ -78,10 +75,8 @@ export default class Ens extends AbstractWeb3Module {
         if (!this._registry) {
             this._registry = this.ensModuleFactory.createRegistry(
                 this.currentProvider,
-                this.providersModuleFactory,
-                this.methodModuleFactory,
                 this.contractModuleFactory,
-                this.promiEvent,
+                this.accounts,
                 this.abiCoder,
                 this.utils,
                 this.formatters,
@@ -105,7 +100,7 @@ export default class Ens extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        return !!(super.setProvider(provider, net) && this.registry.setProvider(provider, net));
+        return super.setProvider(provider, net) && this.registry.setProvider(provider, net);
     }
 
     /**
@@ -133,7 +128,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async supportsInterface(name, interfaceId, callback = null) {
+    async supportsInterface(name, interfaceId, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.supportsInterface(interfaceId).call(callback);
@@ -150,7 +145,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async getAddress(name, callback = null) {
+    async getAddress(name, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.addr(namehash.hash(name)).call(callback);
@@ -169,8 +164,8 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    setAddress(name, address, sendOptions, callback = null) {
-        const promiEvent = new this.registry.PromiEvent();
+    setAddress(name, address, sendOptions, callback) {
+        const promiEvent = new PromiEvent();
 
         this.registry.resolver(name).then((resolver) => {
             resolver.methods
@@ -214,7 +209,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async getPubkey(name, callback = null) {
+    async getPubkey(name, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.pubkey(namehash.hash(name)).call(callback);
@@ -234,8 +229,8 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    setPubkey(name, x, y, sendOptions, callback = null) {
-        const promiEvent = new this.registry.PromiEvent();
+    setPubkey(name, x, y, sendOptions, callback) {
+        const promiEvent = new PromiEvent();
 
         this.registry.resolver(name).then((resolver) => {
             resolver.methods
@@ -280,7 +275,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async getText(name, key, callback = null) {
+    async getText(name, key, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.text(namehash.hash(name), key).call(callback);
@@ -300,8 +295,8 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    setText(name, key, value, sendOptions, callback = null) {
-        const promiEvent = new this.registry.PromiEvent();
+    setText(name, key, value, sendOptions, callback) {
+        const promiEvent = new PromiEvent();
 
         this.registry.resolver(name).then((resolver) => {
             resolver.methods
@@ -345,7 +340,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async getContent(name, callback = null) {
+    async getContent(name, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.content(namehash.hash(name)).call(callback);
@@ -364,8 +359,8 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    setContent(name, hash, sendOptions, callback = null) {
-        const promiEvent = new this.registry.PromiEvent();
+    setContent(name, hash, sendOptions, callback) {
+        const promiEvent = new PromiEvent();
 
         this.registry.resolver(name).then((resolver) => {
             resolver.methods
@@ -409,7 +404,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async getMultihash(name, callback = null) {
+    async getMultihash(name, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.multihash(namehash.hash(name)).call(callback);
@@ -428,8 +423,8 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    setMultihash(name, hash, sendOptions, callback = null) {
-        const promiEvent = new this.registry.PromiEvent();
+    setMultihash(name, hash, sendOptions, callback) {
+        const promiEvent = new PromiEvent();
 
         this.registry.resolver(name).then((resolver) => {
             resolver.methods
@@ -473,7 +468,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async getContenthash(name, callback = null) {
+    async getContenthash(name, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.contenthash(namehash.hash(name)).call(callback);
@@ -492,8 +487,8 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    setContenthash(name, hash, sendOptions, callback = null) {
-        const promiEvent = new this.registry.PromiEvent();
+    setContenthash(name, hash, sendOptions, callback) {
+        const promiEvent = new PromiEvent();
 
         this.registry.resolver(name).then((resolver) => {
             resolver.methods

@@ -168,9 +168,7 @@ export default class HttpProvider {
             try {
                 request.send(JSON.stringify(payload));
             } catch (error) {
-                if (error.constructor.name === 'NetworkError') {
-                    this.connected = false;
-                }
+                this.connected = false;
 
                 reject(error);
             }

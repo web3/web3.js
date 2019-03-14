@@ -26,14 +26,15 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      * @param {EventLogDecoder} eventLogDecoder
      * @param {AbiItemModel} abiItemModel
      * @param {EventOptionsMapper} eventOptionsMapper
      *
      * @constructor
      */
-    constructor(utils, formatters, eventLogDecoder, abiItemModel, eventOptionsMapper) {
-        super(utils, formatters);
+    constructor(utils, formatters, moduleInstance, eventLogDecoder, abiItemModel, eventOptionsMapper) {
+        super(utils, formatters, moduleInstance);
         this.abiItemModel = abiItemModel;
         this.eventLogDecoder = eventLogDecoder;
         this.eventOptionsMapper = eventOptionsMapper;

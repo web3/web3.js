@@ -20,20 +20,19 @@
  * @date 2018
  */
 
-import SendRawTransactionMethod from '../../src/methods/transaction/SendRawTransactionMethod';
-import GetTransactionCountMethod from '../../src/methods/account/GetTransactionCountMethod';
-import ChainIdMethod from '../../src/methods/network/ChainIdMethod';
+import {NewHeadsSubscription} from 'web3-core-subscriptions';
+import GetBlockByNumberMethod from '../../src/methods/block/GetBlockByNumberMethod';
+import GetTransactionReceiptMethod from '../../src/methods/transaction/GetTransactionReceiptMethod';
+import TransactionObserver from '../../src/observers/TransactionObserver';
 
 export default class AbstractMethodFactory {
     /**
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(methodModuleFactory, utils, formatters) {
-        this.methodModuleFactory = methodModuleFactory;
+    constructor(utils, formatters) {
         this.utils = utils;
         this.formatters = formatters;
         this._methods = null;
@@ -79,41 +78,41 @@ export default class AbstractMethodFactory {
     }
 
     /**
-     * TODO: Find a cleaner way for the dependency resolution here.
-     *
      * Returns an MethodModel
      *
      * @param {String} name
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {AbstractMethod}
      */
-    createMethod(name) {
+    createMethod(name, moduleInstance) {
         const method = this.methods[name];
 
-        /* eslint-disable new-cap */
-        switch (method.Type) {
-            case 'CALL':
-                return new method(this.utils, this.formatters);
-            case 'SEND':
-                if (method.name === 'SendTransactionMethod') {
-                    const transactionConfirmationWorkflow = this.methodModuleFactory.createTransactionConfirmationWorkflow();
+        if (method.Type === 'observed-transaction-method') {
+            let timeout = moduleInstance.transactionBlockTimeout;
+            const providerName = moduleInstance.currentProvider.constructor.name;
 
-                    return new method(
-                        this.utils,
-                        this.formatters,
-                        transactionConfirmationWorkflow,
-                        new SendRawTransactionMethod(this.utils, this.formatters, transactionConfirmationWorkflow),
-                        new ChainIdMethod(this.utils, this.formatters),
-                        new GetTransactionCountMethod(this.utils, this.formatters)
-                    );
-                }
+            if (providerName === 'HttpProvider' || providerName === 'CustomProvider') {
+                timeout = moduleInstance.transactionPollingTimeout;
+            }
 
-                return new method(
-                    this.utils,
-                    this.formatters,
-                    this.methodModuleFactory.createTransactionConfirmationWorkflow()
-                );
+            // eslint-disable-next-line new-cap
+            return new method(
+                this.utils,
+                this.formatters,
+                moduleInstance,
+                new TransactionObserver(
+                    moduleInstance.currentProvider,
+                    timeout,
+                    moduleInstance.transactionConfirmationBlocks,
+                    new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
+                    new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance),
+                    new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
+                )
+            );
         }
-        /* eslint-enable new-cap */
+
+        // eslint-disable-next-line new-cap
+        return new method(this.utils, this.formatters, moduleInstance);
     }
 }

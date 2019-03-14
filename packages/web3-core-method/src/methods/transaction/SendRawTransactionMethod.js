@@ -15,21 +15,23 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file SendRawTransactionMethod.js @author Samuel Furter <samuel@ethereum.org>
+ * @file SendRawTransactionMethod.js
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
+import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
-export default class SendRawTransactionMethod extends AbstractSendMethod {
+export default class SendRawTransactionMethod extends AbstractObservedTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {TransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(utils, formatters, transactionConfirmationWorkflow) {
-        super('eth_sendRawTransaction', 1, utils, formatters, transactionConfirmationWorkflow);
+    constructor(utils, formatters, moduleInstance, transactionObserver) {
+        super('eth_sendRawTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
     }
 }

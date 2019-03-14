@@ -33,15 +33,13 @@ export class BatchRequest {
 }
 
 export class ProviderDetector {
-    detect(): provider | undefined;
+    static detect(): provider | undefined;
 }
 
 export class ProvidersModuleFactory {
     createBatchRequest(moduleInstance: AbstractWeb3Module): BatchRequest;
 
     createProviderResolver(): ProviderResolver;
-
-    createProviderDetector(): ProviderDetector;
 
     createHttpProvider(url: string): HttpProvider;
 
@@ -136,8 +134,6 @@ export class JsonRpcMapper {
 }
 
 export class ProviderResolver {
-    constructor(providersPackageFactory: ProvidersModuleFactory);
-
     resolve(provider: provider, net: net.Socket): provider;
 }
 

@@ -16,6 +16,7 @@
  * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2019
  */
+
 import Nat from 'eth-lib/lib/nat';
 import Bytes from 'eth-lib/lib/bytes';
 import Hash from 'eth-lib/lib/hash';

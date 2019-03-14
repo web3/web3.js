@@ -1,5 +1,3 @@
-import {PromiEvent} from 'web3-core-promievent';
-import {EstimateGasMethod} from 'web3-core-method';
 import MethodEncoder from '../../../src/encoders/MethodEncoder';
 import MethodFactory from '../../../src/factories/MethodFactory';
 import MethodOptionsMapper from '../../../src/mappers/MethodOptionsMapper';
@@ -8,8 +6,6 @@ import AbiModel from '../../../src/models/AbiModel';
 import AbstractContract from '../../../src/AbstractContract';
 import MethodsProxy from '../../../src/proxies/MethodsProxy';
 import AbiItemModel from '../../../src/models/AbiItemModel';
-import CallContractMethod from '../../../src/methods/CallContractMethod';
-import SendContractMethod from '../../../src/methods/SendContractMethod';
 
 // Mocks
 jest.mock('../../../src/encoders/MethodEncoder');
@@ -19,9 +15,6 @@ jest.mock('../../../src/models/AbiModel');
 jest.mock('../../../src/AbstractContract');
 jest.mock('../../../src/factories/MethodFactory');
 jest.mock('../../../src/models/AbiItemModel');
-jest.mock('../../../src/methods/CallContractMethod');
-jest.mock('../../../src/methods/SendContractMethod');
-jest.mock('EstimateGasMethod');
 
 /**
  * MethodsProxy test
@@ -88,13 +81,10 @@ describe('MethodsProxyTest', () => {
 
         abiModelMock.getMethod.mockReturnValueOnce(abiItemModelMock);
 
-        new CallContractMethod();
-        const callMethodMock = CallContractMethod.mock.instances[0];
+        const callMethodMock = {};
         callMethodMock.parameters = [{}];
-
-        callMethodMock.execute = jest.fn((contractInstance) => {
-            expect(contractInstance).toEqual(contractMock);
-
+        callMethodMock.setArguments = jest.fn();
+        callMethodMock.execute = jest.fn(() => {
             return Promise.resolve(true);
         });
 
@@ -111,8 +101,6 @@ describe('MethodsProxyTest', () => {
         expect(abiModelMock.getMethod).toHaveBeenCalledWith('myMethod');
 
         expect(abiItemModelMock.contractMethodParameters[0]).toEqual(true);
-
-        expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
 
         expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
             abiItemModelMock,
@@ -138,15 +126,10 @@ describe('MethodsProxyTest', () => {
 
         abiItemModelMock.isOfType.mockReturnValue(true);
 
-        new SendContractMethod();
-        const sendMethodMock = SendContractMethod.mock.instances[0];
+        const sendMethodMock = {};
         sendMethodMock.parameters = [{}];
-
-        sendMethodMock.execute = jest.fn((contractInstance, promiEventInstance) => {
-            expect(contractInstance).toEqual(contractMock);
-
-            expect(promiEventInstance).toBeInstanceOf(PromiEvent);
-
+        sendMethodMock.setArguments = jest.fn();
+        sendMethodMock.execute = jest.fn(() => {
             return Promise.resolve(true);
         });
 
@@ -170,8 +153,6 @@ describe('MethodsProxyTest', () => {
 
         expect(abiItemModelMock.contractMethodParameters).toEqual([true]);
 
-        expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
-
         expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
             abiItemModelMock,
             contractMock,
@@ -190,19 +171,16 @@ describe('MethodsProxyTest', () => {
     it('calls a method that exists with different arguments over the proxy', async () => {
         abiItemModelMock.requestType = 'send';
 
+        abiItemModelMock.getInputLength.mockReturnValueOnce(1);
+
         abiModelMock.hasMethod.mockReturnValueOnce(true);
 
         abiModelMock.getMethod.mockReturnValueOnce([abiItemModelMock]);
 
-        new SendContractMethod();
-        const sendMethodMock = SendContractMethod.mock.instances[0];
+        const sendMethodMock = {};
         sendMethodMock.parameters = [{}];
-
-        sendMethodMock.execute = jest.fn((contractInstance, promiEventInstance) => {
-            expect(contractInstance).toEqual(contractMock);
-
-            expect(promiEventInstance).toBeInstanceOf(PromiEvent);
-
+        sendMethodMock.setArguments = jest.fn();
+        sendMethodMock.execute = jest.fn(() => {
             return Promise.resolve(true);
         });
 
@@ -220,8 +198,6 @@ describe('MethodsProxyTest', () => {
 
         expect(abiItemModelMock.contractMethodParameters[0]).toEqual(true);
 
-        expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
-
         expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
             abiItemModelMock,
             contractMock,
@@ -237,7 +213,7 @@ describe('MethodsProxyTest', () => {
         expect(methodOptionsValidatorMock.validate).toHaveBeenCalledWith(abiItemModelMock, sendMethodMock);
     });
 
-    it('calls a method that exists with different arguments but also not with the given and throws an error', async () => {
+    it('calls a method that exists with different arguments but with a invalid arguments length and throws an error', async () => {
         abiItemModelMock.requestType = 'send';
 
         abiItemModelMock.givenParametersLengthIsValid = jest.fn(() => {
@@ -259,22 +235,21 @@ describe('MethodsProxyTest', () => {
         expect(abiModelMock.hasMethod).toHaveBeenCalledWith('myMethod');
 
         expect(abiModelMock.getMethod).toHaveBeenCalledWith('myMethod');
-
-        expect(abiItemModelMock.contractMethodParameters[0]).toEqual({arguments: [true], data: '0x0'});
-
-        expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
     });
 
     it('calls executeMethod and returns a rejected PromiEvent', async () => {
-        abiItemModelMock.givenParametersLengthIsValid = jest.fn(() => {
-            throw new Error('Nope');
-        });
-
         const method = {
-            callback: jest.fn()
+            parameters: [],
+            callback: jest.fn(),
+            setArguments: jest.fn()
         };
 
-        methodFactoryMock.createMethodByRequestType.mockReturnValue(method);
+        methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(method);
+        methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(method);
+
+        methodEncoderMock.encode = jest.fn(() => {
+            throw new Error('Nope');
+        });
 
         await expect(methodsProxy.executeMethod(abiItemModelMock, [true], 'send')).rejects.toThrow('Nope');
 
@@ -286,7 +261,7 @@ describe('MethodsProxyTest', () => {
             'send'
         );
 
-        expect(method.arguments).toEqual([true]);
+        expect(method.setArguments).toHaveBeenCalledWith([true]);
     });
 
     it('calls the request method on a contract method and returns the expect AbstractMethod object', () => {
@@ -294,11 +269,12 @@ describe('MethodsProxyTest', () => {
 
         abiModelMock.hasMethod.mockReturnValueOnce(true);
 
-        abiModelMock.getMethod.mockReturnValueOnce([abiItemModelMock]);
+        abiModelMock.getMethod.mockReturnValueOnce(abiItemModelMock);
 
-        new CallContractMethod();
-        const callMethodMock = CallContractMethod.mock.instances[0];
+        const callMethodMock = {};
         callMethodMock.parameters = [{}];
+        callMethodMock.setArguments = jest.fn();
+        callMethodMock.execute = jest.fn();
 
         methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(callMethodMock);
 
@@ -307,8 +283,6 @@ describe('MethodsProxyTest', () => {
         methodOptionsMapperMock.map.mockReturnValueOnce({options: true});
 
         expect(methodsProxy.myMethod(true).call.request({options: false})).toEqual(callMethodMock);
-
-        expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
 
         expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
             abiItemModelMock,
@@ -330,15 +304,12 @@ describe('MethodsProxyTest', () => {
 
         abiModelMock.hasMethod.mockReturnValueOnce(true);
 
-        abiModelMock.getMethod.mockReturnValueOnce([abiItemModelMock]);
+        abiModelMock.getMethod.mockReturnValueOnce(abiItemModelMock);
 
-        new EstimateGasMethod();
-        const estimateGasMethod = EstimateGasMethod.mock.instances[0];
+        const estimateGasMethod = {};
         estimateGasMethod.parameters = [{}];
-
-        estimateGasMethod.execute = jest.fn((contractInstance) => {
-            expect(contractInstance).toEqual(contractMock);
-
+        estimateGasMethod.setArguments = jest.fn();
+        estimateGasMethod.execute = jest.fn(() => {
             return Promise.resolve(true);
         });
 
@@ -350,8 +321,6 @@ describe('MethodsProxyTest', () => {
 
         await expect(methodsProxy.myMethod(true).estimateGas({options: false})).resolves.toEqual(true);
 
-        expect(abiItemModelMock.givenParametersLengthIsValid).toHaveBeenCalled();
-
         expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
             abiItemModelMock,
             contractMock,
@@ -359,6 +328,8 @@ describe('MethodsProxyTest', () => {
         );
 
         expect(estimateGasMethod.parameters[0]).toEqual({options: true});
+
+        expect(estimateGasMethod.execute).toHaveBeenCalled();
 
         expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
 
