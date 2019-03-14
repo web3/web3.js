@@ -20,6 +20,10 @@
         "eventemitter3": "^3.1.0",
         "lodash": "^4.17.11"
     },
+    "devDependencies": {
+        "web3-utils": "1.0.0-beta.48",
+        "web3-core-helpers": "1.0.0-beta.48"
+    },
     "files": [
         "dist"
     ]
