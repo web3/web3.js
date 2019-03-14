@@ -11,7 +11,7 @@
     "scripts": {
         "clean": "lerna clean",
         "link": "lerna link",
-        "bootstrap": "lerna bootstrap --hoist",
+        "bootstrap": "lerna bootstrap",
         "install:all": "lerna add",
         "remove:all": "lerna exec npm uninstall",
         "install:dev:all": "lerna exec npm install --save-dev",

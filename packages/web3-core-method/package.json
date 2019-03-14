@@ -23,7 +23,7 @@
     },
     "devDependencies": {
         "rxjs": "^6.4.0",
-        "dtslint": "^0.5.5",
+        "dtslint": "^0.4.2",
         "web3-providers": "1.0.0-beta.48",
         "web3-utils": "1.0.0-beta.48",
         "web3-core": "1.0.0-beta.48",
