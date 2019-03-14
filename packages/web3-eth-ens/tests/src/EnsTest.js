@@ -20,11 +20,7 @@ jest.mock('namehash');
  * Ens test
  */
 describe('EnsTest', () => {
-    let ens,
-        registryMock,
-        ensModuleFactoryMock,
-        abiCoderMock,
-        networkMock;
+    let ens, registryMock, ensModuleFactoryMock, abiCoderMock, networkMock;
 
     beforeEach(() => {
         new Registry();
@@ -108,8 +104,7 @@ describe('EnsTest', () => {
 
         registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
 
-        await expect(ens.supportsInterface('name', 'interfaceId', () => {
-        })).resolves.toEqual(true);
+        await expect(ens.supportsInterface('name', 'interfaceId', () => {})).resolves.toEqual(true);
 
         expect(registryMock.resolver).toHaveBeenCalledWith('name');
 
@@ -133,8 +128,7 @@ describe('EnsTest', () => {
 
         registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
 
-        await expect(ens.getAddress('name', () => {
-        })).resolves.toEqual('address');
+        await expect(ens.getAddress('name', () => {})).resolves.toEqual('address');
 
         expect(registryMock.resolver).toHaveBeenCalledWith('name');
 
@@ -312,8 +306,7 @@ describe('EnsTest', () => {
 
         registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
 
-        await expect(ens.getPubkey('name', () => {
-        })).resolves.toEqual('pubkey');
+        await expect(ens.getPubkey('name', () => {})).resolves.toEqual('pubkey');
 
         expect(registryMock.resolver).toHaveBeenCalledWith('name');
 
@@ -499,8 +492,7 @@ describe('EnsTest', () => {
 
         registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
 
-        await expect(ens.getText('name', 'key', () => {
-        })).resolves.toEqual('text');
+        await expect(ens.getText('name', 'key', () => {})).resolves.toEqual('text');
 
         expect(registryMock.resolver).toHaveBeenCalledWith('name');
 
@@ -686,8 +678,7 @@ describe('EnsTest', () => {
 
         registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
 
-        await expect(ens.getContent('name', () => {
-        })).resolves.toEqual('content');
+        await expect(ens.getContent('name', () => {})).resolves.toEqual('content');
 
         expect(registryMock.resolver).toHaveBeenCalledWith('name');
 
@@ -869,8 +860,7 @@ describe('EnsTest', () => {
 
         registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
 
-        await expect(ens.getMultihash('name', () => {
-        })).resolves.toEqual('content');
+        await expect(ens.getMultihash('name', () => {})).resolves.toEqual('content');
 
         expect(registryMock.resolver).toHaveBeenCalledWith('name');
 
@@ -1052,8 +1042,7 @@ describe('EnsTest', () => {
 
         registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
 
-        await expect(ens.getContenthash('name', () => {
-        })).resolves.toEqual('content');
+        await expect(ens.getContenthash('name', () => {})).resolves.toEqual('content');
 
         expect(registryMock.resolver).toHaveBeenCalledWith('name');
 
@@ -1219,7 +1208,7 @@ describe('EnsTest', () => {
     });
 
     it('calls setProvider and returns true', () => {
-        const providerMock =  {send: jest.fn(), clearSubscriptions: jest.fn()};
+        const providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
 
         registryMock.setProvider.mockReturnValueOnce(true);
 

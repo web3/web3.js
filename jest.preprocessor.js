@@ -5,7 +5,12 @@ module.exports = require('babel-jest').createTransformer({
             plugins: [
                 '@babel/plugin-proposal-export-default-from',
                 '@babel/plugin-proposal-export-namespace-from',
-                '@babel/plugin-transform-runtime'
+                '@babel/plugin-transform-runtime',
+                ['istanbul', {
+                    'exclude': [
+                        'dist'
+                    ]
+                }]
             ]
         }
     }

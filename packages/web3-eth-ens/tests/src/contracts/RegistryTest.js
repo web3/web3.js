@@ -12,10 +12,7 @@ jest.mock('namehash');
  * Registry test
  */
 describe('RegistryTest', () => {
-    let registry,
-        providerMock,
-        contractModuleFactoryMock,
-        networkMock;
+    let registry, providerMock, contractModuleFactoryMock, networkMock;
 
     beforeEach(() => {
         providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
@@ -39,16 +36,7 @@ describe('RegistryTest', () => {
             return Promise.resolve('rinkeby');
         });
 
-        registry = new Registry(
-            providerMock,
-            contractModuleFactoryMock,
-            {},
-            {},
-            {},
-            {},
-            {},
-            networkMock
-        );
+        registry = new Registry(providerMock, contractModuleFactoryMock, {}, {}, {}, {}, {}, networkMock);
 
         registry.methods = {};
         registry.events = {};

@@ -1,6 +1,3 @@
-/**
- * Manual CustomProvider mock
- */
 export default class CustomProvider {
     constructor() {
         this.host = 'CustomProvider';
