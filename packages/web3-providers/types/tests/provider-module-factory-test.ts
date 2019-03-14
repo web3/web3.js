@@ -27,13 +27,10 @@ import {ProvidersModuleFactory} from 'web3-providers';
 const providersModuleFactory = new ProvidersModuleFactory();
 
 // $ExpectType BatchRequest
-providersModuleFactory.createBatchRequest(new AbstractWeb3Module('http://localhost:7545', new ProvidersModuleFactory(), {}));
+providersModuleFactory.createBatchRequest(new AbstractWeb3Module('http://localhost:7545'));
 
 // $ExpectType ProviderResolver
 providersModuleFactory.createProviderResolver();
-
-// $ExpectType ProviderDetector
-providersModuleFactory.createProviderDetector();
 
 // $ExpectType HttpProvider
 providersModuleFactory.createHttpProvider('http://localhost:8545');

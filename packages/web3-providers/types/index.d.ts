@@ -33,15 +33,13 @@ export class BatchRequest {
 }
 
 export class ProviderDetector {
-    detect(): provider | undefined;
+    static detect(): provider | undefined;
 }
 
 export class ProvidersModuleFactory {
     createBatchRequest(moduleInstance: AbstractWeb3Module): BatchRequest;
 
     createProviderResolver(): ProviderResolver;
-
-    createProviderDetector(): ProviderDetector;
 
     createHttpProvider(url: string): HttpProvider;
 

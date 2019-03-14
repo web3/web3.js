@@ -30,7 +30,8 @@ export class AbstractMethod {
     rpcMethod: string;
     parametersAmount: number;
     parameters: any[];
-    arguments: object;
+    getArguments(): object;
+    setArguments(args: any[]): void;
     isHash(parameter: string): boolean;
     hasWallets(): boolean;
 

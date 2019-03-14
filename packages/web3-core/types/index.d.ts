@@ -48,7 +48,7 @@ export class AbstractWeb3Module {
     static readonly providers: Providers;
     defaultAccount: string | null;
     readonly currentProvider: EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider;
-    readonly givenProvider: provider | null;
+    readonly givenProvider: object | null;
 
     setProvider(provider: provider, net?: net.Socket): boolean;
 

@@ -15,13 +15,13 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file provider-adapter-resolver-test.ts
+ * @file provider-resolver-test.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import * as net from "net";
-import {ProviderResolver, ProvidersModuleFactory, HttpProvider} from 'web3-providers';
+import {ProviderResolver, HttpProvider} from 'web3-providers';
 
 const options = {
     timeout: 20000,
@@ -32,9 +32,7 @@ const options = {
     ]
 };
 const provider = new HttpProvider('http://localhost:8545', options);
-
-const providersModuleFactory = new ProvidersModuleFactory();
-const providerResolver = new ProviderResolver(providersModuleFactory);
+const providerResolver = new ProviderResolver();
 
 // $ExpectType provider
 providerResolver.resolve(provider, new net.Socket());

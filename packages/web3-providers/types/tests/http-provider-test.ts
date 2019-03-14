@@ -38,7 +38,7 @@ const httpProvider = new HttpProvider(
 httpProvider.send('rpc_method', []);
 
 // $ExpectType Promise<object[]>
-httpProvider.sendBatch([], new AbstractWeb3Module('http://localhost:7545', new ProvidersModuleFactory(), {}));
+httpProvider.sendBatch([], new AbstractWeb3Module('http://localhost:7545'));
 
 // $ExpectType boolean
 httpProvider.disconnect();
