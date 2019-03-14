@@ -1,23 +1,10 @@
-import {AbstractContract, ContractModuleFactory} from 'web3-eth-contract';
-import {formatters} from 'web3-core-helpers';
-import * as Utils from 'web3-utils';
-import {HttpProvider, ProvidersModuleFactory} from 'web3-providers';
-import {MethodModuleFactory} from 'web3-core-method';
-import {AbiCoder} from 'web3-eth-abi';
+import {AbstractContract} from 'web3-eth-contract';
 import {Network} from 'web3-net';
-import {PromiEvent} from 'web3-core-promievent';
 import namehash from 'eth-ens-namehash';
 import {RESOLVER_ABI} from '../../../ressources/ABI/Resolver';
 import Registry from '../../../src/contracts/Registry';
 
 // Mocks
-jest.mock('ContractModuleFactory');
-jest.mock('formatters');
-jest.mock('Utils');
-jest.mock('ProvidersModuleFactory');
-jest.mock('HttpProvider');
-jest.mock('MethodModuleFactory');
-jest.mock('AbiCoder');
 jest.mock('Network');
 jest.mock('namehash');
 
@@ -27,27 +14,19 @@ jest.mock('namehash');
 describe('RegistryTest', () => {
     let registry,
         providerMock,
-        providersModuleFactoryMock,
-        methodModuleFactoryMock,
         contractModuleFactoryMock,
-        abiCoderMock,
         networkMock;
 
     beforeEach(() => {
-        new HttpProvider();
-        providerMock = HttpProvider.mock.instances[0];
-
-        new ProvidersModuleFactory();
-        providersModuleFactoryMock = ProvidersModuleFactory.mock.instances[0];
-
-        new MethodModuleFactory();
-        methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
-
-        new ContractModuleFactory();
-        contractModuleFactoryMock = ContractModuleFactory.mock.instances[0];
-
-        new AbiCoder();
-        abiCoderMock = AbiCoder.mock.instances[0];
+        providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
+        contractModuleFactoryMock = {
+            createAbiMapper: () => {
+                return {map: jest.fn()};
+            },
+            createMethodFactory: jest.fn(),
+            createEventSubscriptionsProxy: jest.fn(),
+            createMethodsProxy: jest.fn()
+        };
 
         new Network();
         networkMock = Network.mock.instances[0];
@@ -62,13 +41,11 @@ describe('RegistryTest', () => {
 
         registry = new Registry(
             providerMock,
-            providersModuleFactoryMock,
-            methodModuleFactoryMock,
             contractModuleFactoryMock,
-            PromiEvent,
-            abiCoderMock,
-            Utils,
-            formatters,
+            {},
+            {},
+            {},
+            {},
             {},
             networkMock
         );
@@ -202,5 +179,19 @@ describe('RegistryTest', () => {
         expect(networkMock.getBlock).toHaveBeenCalledWith('latest', false);
 
         expect(networkMock.getNetworkType).toHaveBeenCalled();
+    });
+
+    it('calls setProvider with resolver defined and returns true', () => {
+        const providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
+        registry.resolverContract = {setProvider: jest.fn()};
+        registry.resolverContract.setProvider.mockReturnValueOnce(true);
+
+        expect(registry.setProvider(providerMock, 'net')).toEqual(true);
+
+        expect(registry.resolverContract.setProvider).toHaveBeenCalledWith(providerMock, 'net');
+    });
+
+    it('calls setProvider returns true', () => {
+        expect(registry.setProvider({send: jest.fn(), clearSubscriptions: jest.fn()}, 'net')).toEqual(true);
     });
 });

@@ -100,7 +100,7 @@ export default class Ens extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        return !!(super.setProvider(provider, net) && this.registry.setProvider(provider, net));
+        return super.setProvider(provider, net) && this.registry.setProvider(provider, net);
     }
 
     /**
@@ -128,7 +128,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async supportsInterface(name, interfaceId, callback = null) {
+    async supportsInterface(name, interfaceId, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.supportsInterface(interfaceId).call(callback);
@@ -145,7 +145,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async getAddress(name, callback = null) {
+    async getAddress(name, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.addr(namehash.hash(name)).call(callback);
@@ -164,7 +164,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    setAddress(name, address, sendOptions, callback = null) {
+    setAddress(name, address, sendOptions, callback) {
         const promiEvent = new PromiEvent();
 
         this.registry.resolver(name).then((resolver) => {
@@ -209,7 +209,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async getPubkey(name, callback = null) {
+    async getPubkey(name, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.pubkey(namehash.hash(name)).call(callback);
@@ -229,7 +229,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    setPubkey(name, x, y, sendOptions, callback = null) {
+    setPubkey(name, x, y, sendOptions, callback) {
         const promiEvent = new PromiEvent();
 
         this.registry.resolver(name).then((resolver) => {
@@ -275,7 +275,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async getText(name, key, callback = null) {
+    async getText(name, key, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.text(namehash.hash(name), key).call(callback);
@@ -295,7 +295,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    setText(name, key, value, sendOptions, callback = null) {
+    setText(name, key, value, sendOptions, callback) {
         const promiEvent = new PromiEvent();
 
         this.registry.resolver(name).then((resolver) => {
@@ -340,7 +340,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async getContent(name, callback = null) {
+    async getContent(name, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.content(namehash.hash(name)).call(callback);
@@ -359,7 +359,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    setContent(name, hash, sendOptions, callback = null) {
+    setContent(name, hash, sendOptions, callback) {
         const promiEvent = new PromiEvent();
 
         this.registry.resolver(name).then((resolver) => {
@@ -404,7 +404,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async getMultihash(name, callback = null) {
+    async getMultihash(name, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.multihash(namehash.hash(name)).call(callback);
@@ -423,7 +423,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    setMultihash(name, hash, sendOptions, callback = null) {
+    setMultihash(name, hash, sendOptions, callback) {
         const promiEvent = new PromiEvent();
 
         this.registry.resolver(name).then((resolver) => {
@@ -468,7 +468,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async getContenthash(name, callback = null) {
+    async getContenthash(name, callback) {
         const resolver = await this.registry.resolver(name);
 
         return resolver.methods.contenthash(namehash.hash(name)).call(callback);
@@ -487,7 +487,7 @@ export default class Ens extends AbstractWeb3Module {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    setContenthash(name, hash, sendOptions, callback = null) {
+    setContenthash(name, hash, sendOptions, callback) {
         const promiEvent = new PromiEvent();
 
         this.registry.resolver(name).then((resolver) => {

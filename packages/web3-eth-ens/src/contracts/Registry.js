@@ -59,7 +59,7 @@ export default class Registry extends AbstractContract {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    owner(name, callback = null) {
+    owner(name, callback) {
         return new Promise((resolve, reject) => {
             this.methods
                 .owner(namehash.hash(name))
@@ -94,7 +94,7 @@ export default class Registry extends AbstractContract {
      */
     setProvider(provider, net) {
         if (this.resolverContract) {
-            return !!(super.setProvider(provider, net) && this.resolverContract.setProvider(provider, net));
+            return this.resolverContract.setProvider(provider, net) && super.setProvider(provider, net);
         }
 
         return super.setProvider(provider, net);
