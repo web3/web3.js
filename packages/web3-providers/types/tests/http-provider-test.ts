@@ -23,21 +23,20 @@
 import {AbstractWeb3Module} from 'web3-core';
 import {HttpProvider, ProvidersModuleFactory} from 'web3-providers';
 
-const httpProvider = new HttpProvider(
-    'http://localhost:8545',
-    {
-        timeout: 20000,
-        headers: [
-            {
-                name: 'Access-Control-Allow-Origin', value: '*'
-            }
-        ]
-    });
+const httpProvider = new HttpProvider('http://localhost:8545', {
+    timeout: 20000,
+    headers: [
+        {
+            name: 'Access-Control-Allow-Origin',
+            value: '*'
+        }
+    ]
+});
 
-// $ExpectType Promise<object>
+// $ExpectType Promise<any>
 httpProvider.send('rpc_method', []);
 
-// $ExpectType Promise<object[]>
+// $ExpectType Promise<any[]>
 httpProvider.sendBatch([], new AbstractWeb3Module('http://localhost:7545'));
 
 // $ExpectType boolean

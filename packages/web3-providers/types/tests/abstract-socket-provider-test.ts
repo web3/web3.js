@@ -34,10 +34,10 @@ abstractSocketProvider.connected;
 // $ExpectType void
 abstractSocketProvider.registerEventListeners();
 
-// $ExpectType Promise<object>
+// $ExpectType Promise<any>
 abstractSocketProvider.send('rpc_method', []);
 
-// $ExpectType Promise<object[]>
+// $ExpectType Promise<any[]>
 abstractSocketProvider.sendBatch([], new AbstractWeb3Module('http://localhost:7545'));
 
 // $ExpectType Promise<string>

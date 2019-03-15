@@ -26,20 +26,12 @@ import {BatchRequest} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 
-const batchRequest = new BatchRequest(
-    new AbstractWeb3Module('http://localhost:7545')
-);
+const batchRequest = new BatchRequest(new AbstractWeb3Module('http://localhost:7545'));
 
 // $ExpectType void
 batchRequest.add(
-    new AbstractMethod(
-        'rpc_method',
-        1,
-        Utils,
-        formatters,
-        new AbstractWeb3Module('http://localhost:7545')
-    )
+    new AbstractMethod('rpc_method', 1, Utils, formatters, new AbstractWeb3Module('http://localhost:7545'))
 );
 
-// $ExpectType Promise<{ methods: AbstractMethod[]; response: object[]; } | Error[]>
+// $ExpectType Promise<{ methods: AbstractMethod[]; response: any[]; } | Error[]>
 batchRequest.execute();
