@@ -22,6 +22,7 @@
 
 import * as net from 'net';
 import {AbstractWeb3Module} from 'web3-core';
+import {ProvidersModuleFactory} from 'web3-providers';
 
 const providersModuleFactory = new ProvidersModuleFactory();
 
