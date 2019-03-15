@@ -69,6 +69,8 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
                     this.parameters[0].gasPrice = gasPrice;
 
                     this.execute();
+                }).catch((error) => {
+                    this.handleError(error, false, 0);
                 });
 
                 return this.promiEvent;
@@ -79,17 +81,11 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
 
         if (this.hasAccounts() && this.isDefaultSigner()) {
             if (this.moduleInstance.accounts.wallet[this.parameters[0].from]) {
-                this.sendRawTransaction(this.moduleInstance.accounts.wallet[this.parameters[0].from].privateKey).catch(
-                    (error) => {
-                        if (this.callback) {
-                            this.callback(error, null);
-                        }
-
-                        this.promiEvent.reject(error);
-                        this.promiEvent.emit('error', error);
-                        this.promiEvent.removeAllListeners();
-                    }
-                );
+                this.sendRawTransaction(
+                    this.moduleInstance.accounts.wallet[this.parameters[0].from].privateKey
+                ).catch((error) => {
+                    this.handleError(error, false, 0);
+                });
 
                 return this.promiEvent;
             }
@@ -97,13 +93,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
 
         if (this.hasCustomSigner()) {
             this.sendRawTransaction().catch((error) => {
-                if (this.callback) {
-                    this.callback(error, null);
-                }
-
-                this.promiEvent.reject(error);
-                this.promiEvent.emit('error', error);
-                this.promiEvent.removeAllListeners();
+                this.handleError(error, false, 0);
             });
 
             return this.promiEvent;
