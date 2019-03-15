@@ -80,6 +80,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                         confirmations = transactionConfirmation.confirmations;
                         receipt = transactionConfirmation.receipt;
 
+                        // TODO: Implement revert handling
                         if (this.hasRevertReceiptStatus(receipt)) {
                             if (this.parameters[0].gas === receipt.gasUsed) {
                                 this.handleError(
