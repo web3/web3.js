@@ -505,7 +505,7 @@ describe('EthSendTransactionMethodTest', () => {
         expect(providerMock.send).toHaveBeenNthCalledWith(1, 'eth_gasPrice', []);
     });
 
-    it('calls execute and the gasPrice will be defined with "eth_gasPrice" and returns with a resolved promise', async () => {
+    it('calls execute and the gasPrice will be defined with "eth_gasPrice" and returns with a reject promise', async () => {
         providerMock.send = jest.fn(() => {
             return Promise.reject(new Error('Nope'));
         });
