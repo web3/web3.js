@@ -34,7 +34,7 @@
         "web3-utils": "1.0.0-beta.48"
     },
     "devDependencies": {
-        "dtslint": "^0.4.2"
+        "dtslint": "0.4.2"
     },
     "files": [
         "dist",
