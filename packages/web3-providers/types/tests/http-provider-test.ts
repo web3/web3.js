@@ -37,7 +37,10 @@ const httpProvider = new HttpProvider('http://localhost:8545', {
 httpProvider.send('rpc_method', []);
 
 // $ExpectType Promise<any[]>
-httpProvider.sendBatch([], new AbstractWeb3Module('http://localhost:7545'));
+httpProvider.sendBatch(
+    [],
+    new AbstractWeb3Module('http://localhost:7545', new ProvidersModuleFactory(), 'eth_coinbase')
+);
 
 // $ExpectType boolean
 httpProvider.disconnect();

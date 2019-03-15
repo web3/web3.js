@@ -22,16 +22,16 @@
 
 import {AbstractWeb3Module} from 'web3-core';
 import {AbstractMethod} from 'web3-core-method';
-import {BatchRequest} from 'web3-providers';
+import {BatchRequest, ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 
-const batchRequest = new BatchRequest(new AbstractWeb3Module('http://localhost:7545'));
+const batchRequest = new BatchRequest(
+    new AbstractWeb3Module('http://localhost:7545', new ProvidersModuleFactory(), 'eth_coinbase')
+);
 
 // $ExpectType void
-batchRequest.add(
-    new AbstractMethod('rpc_method', 1, Utils, formatters, new AbstractWeb3Module('http://localhost:7545'))
-);
+batchRequest.add(new AbstractMethod('eth_coinbase', 1, Utils, new formatters()));
 
 // $ExpectType Promise<{ methods: AbstractMethod[]; response: any[]; } | Error[]>
 batchRequest.execute();

@@ -21,7 +21,7 @@
  */
 
 import {AbstractWeb3Module} from 'web3-core';
-import {AbstractSocketProvider} from 'web3-providers';
+import {AbstractSocketProvider, ProvidersModuleFactory} from 'web3-providers';
 
 const abstractSocketProvider = new AbstractSocketProvider({});
 
@@ -38,7 +38,10 @@ abstractSocketProvider.registerEventListeners();
 abstractSocketProvider.send('rpc_method', []);
 
 // $ExpectType Promise<any[]>
-abstractSocketProvider.sendBatch([], new AbstractWeb3Module('http://localhost:7545'));
+abstractSocketProvider.sendBatch(
+    [],
+    new AbstractWeb3Module('http://localhost:7545', new ProvidersModuleFactory(), 'eth_coinbase')
+);
 
 // $ExpectType Promise<string>
 abstractSocketProvider.subscribe('eth_subscribe', 'logs', []);
