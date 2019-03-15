@@ -16,7 +16,7 @@
 */
 /**
  * @file http-provider-test.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk> , Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
