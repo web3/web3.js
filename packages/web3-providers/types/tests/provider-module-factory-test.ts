@@ -22,13 +22,12 @@
 
 import * as net from 'net';
 import {AbstractWeb3Module} from 'web3-core';
-import {ProvidersModuleFactory} from 'web3-providers';
 
 const providersModuleFactory = new ProvidersModuleFactory();
 
 // $ExpectType BatchRequest
 providersModuleFactory.createBatchRequest(
-    new AbstractWeb3Module('http://localhost:7545', new ProvidersModuleFactory(), 'eth_coinbase')
+    new AbstractWeb3Module('http://localhost:7545')
 );
 
 // $ExpectType ProviderResolver
