@@ -97,7 +97,6 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                                 transactionConfirmationSubscription.unsubscribe();
 
                                 return;
-
                             }
 
                             this.handleError(
