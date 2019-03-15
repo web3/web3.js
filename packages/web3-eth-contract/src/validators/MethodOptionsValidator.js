@@ -44,7 +44,7 @@ export default class MethodOptionsValidator {
      */
     validate(abiItemModel, method) {
         if (!this.isToSet(abiItemModel, method)) {
-            throw new Error('This contract object doesn\'t have address set yet, please set an address first.');
+            throw new Error("This contract object doesn't have address set yet, please set an address first.");
         }
 
         if (!this.isFromSet(method) && method instanceof SendContractMethod) {
@@ -100,6 +100,6 @@ export default class MethodOptionsValidator {
      * @returns {Boolean}
      */
     isValueValid(abiItemModel, method) {
-        return abiItemModel.payable || !abiItemModel.payable && !method.parameters[0].value;
+        return abiItemModel.payable || (!abiItemModel.payable && !method.parameters[0].value);
     }
 }
