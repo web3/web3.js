@@ -64,7 +64,7 @@ abstractMethod.beforeExecution(abstractWeb3Module);
 // $ExpectType any
 abstractMethod.afterExecution('response');
 
-// $ExpectType string | PromiEvent<any> | Promise<string | any>
+// $ExpectType string | PromiEvent<any> | Promise<any>
 abstractMethod.execute();
 
 // $ExpectType Promise<boolean | Error>
