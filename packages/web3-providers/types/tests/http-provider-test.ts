@@ -21,7 +21,7 @@
  */
 
 import {AbstractWeb3Module} from 'web3-core';
-import {HttpProvider, ProvidersModuleFactory} from 'web3-providers';
+import {HttpProvider} from 'web3-providers';
 
 const httpProvider = new HttpProvider('http://localhost:8545', {
     timeout: 20000,
@@ -39,7 +39,7 @@ httpProvider.send('rpc_method', []);
 // $ExpectType Promise<any[]>
 httpProvider.sendBatch(
     [],
-    new AbstractWeb3Module('http://localhost:7545', new ProvidersModuleFactory(), 'eth_coinbase')
+    new AbstractWeb3Module('http://localhost:7545')
 );
 
 // $ExpectType boolean
