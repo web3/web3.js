@@ -24,7 +24,7 @@ Adding web3.js
 
 First you need to get web3.js into your project. This can be done using the following methods:
 
-- npm: ``npm install web3``
+- npm: ``npm install web3 --unsafe-perm=true``
 - meteor: ``meteor add ethereum:web3``
 - pure js: link the ``dist/web3.min.js``
 
