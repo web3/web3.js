@@ -88,16 +88,15 @@ export default class HttpProvider {
      *
      * @returns {Promise<any>}
      */
-    send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
-            const validationResult = JsonRpcResponseValidator.validate(response);
+    async send(method, parameters) {
+        const response = await this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
+        const validationResult = JsonRpcResponseValidator.validate(response);
 
-            if (validationResult instanceof Error) {
-                throw validationResult;
-            }
+        if (validationResult instanceof Error) {
+            throw validationResult;
+        }
 
-            return response.result;
-        });
+        return response.result;
     }
 
     /**
