@@ -23,6 +23,7 @@
 import isArray from 'lodash/isArray';
 import {EthSendTransactionMethod} from 'web3-core-method';
 
+// TODO: Implement revert handling (AbstractContractMethod)
 export default class SendContractMethod extends EthSendTransactionMethod {
     /**
      * @param {Utils} utils
