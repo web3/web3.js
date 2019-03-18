@@ -25,8 +25,6 @@ import {AbstractWeb3Module} from 'web3-core';
 export default class Shh extends AbstractWeb3Module {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {MethodFactory} methodFactory
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Network} net
@@ -35,17 +33,8 @@ export default class Shh extends AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(
-        provider,
-        providersModuleFactory,
-        methodModuleFactory,
-        methodFactory,
-        subscriptionsFactory,
-        net,
-        options,
-        nodeNet
-    ) {
-        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options, nodeNet);
+    constructor(provider, methodFactory, subscriptionsFactory, net, options, nodeNet) {
+        super(provider, options, methodFactory, nodeNet);
 
         this.subscriptionsFactory = subscriptionsFactory;
         this.net = net;
@@ -56,7 +45,7 @@ export default class Shh extends AbstractWeb3Module {
      *
      * @method subscribe
      *
-     * @param {String} method
+     * @param {String} type
      * @param {Object} options
      * @param {Function} callback
      *
@@ -64,12 +53,8 @@ export default class Shh extends AbstractWeb3Module {
      * @returns {AbstractSubscription}
      * @throws {Error}
      */
-    subscribe(method, options, callback) {
-        if (method === 'messages') {
-            return this.subscriptionsFactory.createShhMessagesSubscription(options, this).subscribe(callback);
-        }
-
-        throw new Error(`Unknown subscription: ${method}`);
+    subscribe(type, options, callback) {
+        return this.subscriptionsFactory.getSubscription(this, type, options).subscribe(callback);
     }
 
     /**
@@ -93,7 +78,7 @@ export default class Shh extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        return super.setProvider(provider, net) && this.net.setProvider(provider, net);
+        return this.net.setProvider(provider, net) && super.setProvider(provider, net);
     }
 
     /**
@@ -105,7 +90,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set defaultGasPrice(value) {
         super.defaultGasPrice = value;
-        this.net.defaultGasPrice = value;
+        this.net.defaultGasPrice = this.defaultGasPrice;
     }
 
     /**
@@ -128,7 +113,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set defaultGas(value) {
         super.defaultGas = value;
-        this.net.defaultGas = value;
+        this.net.defaultGas = this.defaultGas;
     }
 
     /**
@@ -151,7 +136,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set transactionBlockTimeout(value) {
         super.transactionBlockTimeout = value;
-        this.net.transactionBlockTimeout = value;
+        this.net.transactionBlockTimeout = this.transactionBlockTimeout;
     }
 
     /**
@@ -174,7 +159,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set transactionConfirmationBlocks(value) {
         super.transactionConfirmationBlocks = value;
-        this.net.transactionConfirmationBlocks = value;
+        this.net.transactionConfirmationBlocks = this.transactionConfirmationBlocks;
     }
 
     /**
@@ -197,7 +182,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set transactionPollingTimeout(value) {
         super.transactionPollingTimeout = value;
-        this.net.transactionPollingTimeout = value;
+        this.net.transactionPollingTimeout = this.transactionPollingTimeout;
     }
 
     /**
@@ -220,7 +205,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set defaultAccount(value) {
         super.defaultAccount = value;
-        this.net.defaultAccount = value;
+        this.net.defaultAccount = this.defaultAccount;
     }
 
     /**
@@ -243,7 +228,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     set defaultBlock(value) {
         super.defaultBlock = value;
-        this.net.defaultBlock = value;
+        this.net.defaultBlock = this.defaultBlock;
     }
 
     /**

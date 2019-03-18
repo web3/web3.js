@@ -18,12 +18,12 @@
     "dependencies": {
         "@babel/runtime": "^7.3.1",
         "@types/node": "^10.12.18",
-        "dtslint": "0.5.4",
         "lodash": "^4.17.11",
         "swarm-js": "^0.1.39"
     },
     "devDependencies": {
-        "dtslint": "^0.4.2"
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     },
     "files": [
         "dist",

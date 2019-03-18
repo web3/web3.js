@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {PromiEvent} from 'web3-core-promievent';
+import {PromiEvent} from 'web3-core-method';
 import isArray from 'lodash/isArray';
 import isFunction from 'lodash/isFunction';
 
@@ -54,7 +54,6 @@ export default class MethodsProxy {
             get: (target, name) => {
                 if (this.contract.abiModel.hasMethod(name)) {
                     let abiItemModel = this.contract.abiModel.getMethod(name);
-
                     let requestType = abiItemModel.requestType;
 
                     // TODO: Improve the requestType detection and defining of the call/send method.
@@ -92,23 +91,18 @@ export default class MethodsProxy {
                         // If there exists more than one method with this name then find the correct abiItemModel
                         if (isArray(abiItemModel)) {
                             const abiItemModelFound = abiItemModel.some((model) => {
-                                model.contractMethodParameters = methodArguments;
+                                if (model.getInputLength() === methodArguments.length) {
+                                    abiItemModel = model;
 
-                                try {
-                                    model.givenParametersLengthIsValid();
-                                } catch (error) {
-                                    return false;
+                                    return true;
                                 }
 
-                                abiItemModel = model;
-                                return true;
+                                return false;
                             });
 
                             if (!abiItemModelFound) {
                                 throw new Error(`Methods with name "${name}" found but the given parameters are wrong`);
                             }
-
-                            return anonymousFunction;
                         }
 
                         abiItemModel.contractMethodParameters = methodArguments;
@@ -154,7 +148,7 @@ export default class MethodsProxy {
      * @param {IArguments} methodArguments
      * @param {String} requestType
      *
-     * @returns {Promise|PromiEvent|String|Boolean}
+     * @returns {Promise|PromiEvent}
      */
     executeMethod(abiItemModel, methodArguments, requestType) {
         let method;
@@ -165,25 +159,19 @@ export default class MethodsProxy {
             const promiEvent = new PromiEvent();
 
             method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
-            method.arguments = methodArguments;
-
-            promiEvent.reject(error);
-            promiEvent.emit('error', error);
+            method.setArguments(methodArguments);
 
             if (isFunction(method.callback)) {
                 method.callback(error, null);
             }
 
+            promiEvent.reject(error);
+            promiEvent.emit('error', error);
+
             return promiEvent;
         }
 
-        if (requestType === 'call' || requestType === 'estimate') {
-            return method.execute(this.contract);
-        }
-
-        // TODO: The promiEvent will just be used for send methods I could move this logic directly to the AbstractSendMethod
-        // TODO: Because of this I could remove the promievent module because it's just used in the SendTransaction- & SendRawTransaction method.
-        return method.execute(this.contract, new PromiEvent());
+        return method.execute();
     }
 
     /**
@@ -196,11 +184,9 @@ export default class MethodsProxy {
      * @returns {AbstractMethod}
      */
     createMethod(abiItemModel, methodArguments, requestType) {
-        abiItemModel.givenParametersLengthIsValid();
-
         // Get correct rpc method model
         const method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
-        method.arguments = methodArguments;
+        method.setArguments(methodArguments);
 
         // If no parameters are given for the eth_call or eth_send* methods then it will set a empty options object.
         if (typeof method.parameters[0] === 'undefined') {

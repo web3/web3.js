@@ -13,12 +13,12 @@
 */
 /**
  * @file index.d.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {AbstractWeb3Module, Providers, Web3ModuleOptions} from 'web3-core';
-import {BatchRequest, provider} from 'web3-providers';
+import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
+import {provider} from 'web3-providers';
 import {Network} from 'web3-net';
 
 export class Shh extends AbstractWeb3Module {

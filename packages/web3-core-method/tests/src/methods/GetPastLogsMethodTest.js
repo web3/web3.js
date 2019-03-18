@@ -1,5 +1,5 @@
 import {formatters} from 'web3-core-helpers';
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import GetPastLogsMethod from '../../../src/methods/GetPastLogsMethod';
 
 // Mocks
@@ -12,11 +12,11 @@ describe('GetPastLogsMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetPastLogsMethod(null, formatters);
+        method = new GetPastLogsMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_getLogs');
 

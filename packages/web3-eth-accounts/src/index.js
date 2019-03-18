@@ -22,27 +22,19 @@
 
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
+import MethodFactory from './factories/MethodFactory';
 import AccountsModule from './Accounts';
-import {ProvidersModuleFactory} from 'web3-providers';
-import {GetGasPriceMethod, ChainIdMethod, GetTransactionCountMethod} from 'web3-core-method';
 
 /**
  * Returns the Accounts object
  *
  * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Object} options
+ * @param {Net.Socket} net
  *
  * @returns {Accounts}
  * @constructor
  */
-export const Accounts = (provider, options) => {
-    return new AccountsModule(
-        provider,
-        new ProvidersModuleFactory(),
-        formatters,
-        new ChainIdMethod(Utils, formatters),
-        new GetGasPriceMethod(Utils, formatters),
-        new GetTransactionCountMethod(Utils, formatters),
-        options
-    );
+export const Accounts = (provider, net, options) => {
+    return new AccountsModule(provider, formatters, new MethodFactory(Utils, formatters), options, net);
 };

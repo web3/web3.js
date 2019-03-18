@@ -1,80 +1,116 @@
+import {AbstractWeb3Module} from 'web3-core';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import AbstractMethodFactory from '../../../lib/factories/AbstractMethodFactory';
-import MethodModuleFactory from '../../../src/factories/ModuleFactory';
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
-import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
-import SendTransactionMethod from '../../../src/methods/transaction/SendTransactionMethod';
-import SignMethod from '../../../src/methods/SignMethod';
+import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
+import TransactionObserver from '../../../src/observers/TransactionObserver';
+import GetTransactionReceiptMethod from '../../../src/methods/transaction/GetTransactionReceiptMethod';
+import GetBlockByNumberMethod from '../../../src/methods/block/GetBlockByNumberMethod';
+import {NewHeadsSubscription} from 'web3-core-subscriptions';
 
 // Mocks
-jest.mock('../../../src/factories/ModuleFactory');
+jest.mock('AbstractWeb3Module');
+jest.mock('NewHeadsSubscription');
+jest.mock('../../../lib/methods/AbstractMethod');
+jest.mock('../../../src/methods/block/GetBlockByNumberMethod');
+jest.mock('../../../src/methods/transaction/GetTransactionReceiptMethod');
+jest.mock('../../../src/observers/TransactionObserver');
 
 /**
  * AbstractMethodFactory test
  */
 describe('AbstractMethodFactoryTest', () => {
-    let abstractMethodFactory, methodModuleFactoryMock;
+    let abstractMethodFactory;
 
     beforeEach(() => {
-        new MethodModuleFactory({});
-        methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
-
-        abstractMethodFactory = new AbstractMethodFactory(methodModuleFactoryMock, {}, {});
+        abstractMethodFactory = new AbstractMethodFactory({}, {});
 
         abstractMethodFactory.methods = {
-            call: AbstractCallMethod,
-            send: AbstractSendMethod
+            send: AbstractMethod,
+            sendObserved: AbstractObservedTransactionMethod
         };
     });
 
+    it('constructor check', () => {
+        expect(abstractMethodFactory.utils).toEqual({});
+
+        expect(abstractMethodFactory.formatters).toEqual({});
+    });
+
+    it('throws an error on calling the methods property if now methods are defined', () => {
+        abstractMethodFactory.methods = null;
+
+        expect(() => {
+            // eslint-disable-next-line no-unused-vars
+            const methods = abstractMethodFactory.methods;
+        }).toThrow('No methods defined for MethodFactory!');
+    });
+
     it('calls hasMethod and returns true', () => {
-        abstractMethodFactory = new AbstractMethodFactory({}, {}, {});
+        abstractMethodFactory = new AbstractMethodFactory({}, {});
         abstractMethodFactory.methods = {call: true};
 
         expect(abstractMethodFactory.hasMethod('call')).toEqual(true);
     });
 
     it('calls hasMethod and returns false', () => {
-        abstractMethodFactory = new AbstractMethodFactory({}, {}, {});
+        abstractMethodFactory = new AbstractMethodFactory({}, {});
         abstractMethodFactory.methods = {};
 
         expect(abstractMethodFactory.hasMethod('call')).toEqual(false);
     });
 
-    it('calls createMethod and returns AbstractCallMethod', () => {
-        expect(abstractMethodFactory.hasMethod('call')).toEqual(true);
+    it('calls createMethod and returns a object of type AbstractMethod', () => {
+        new AbstractWeb3Module();
+        const moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
 
-        expect(abstractMethodFactory.createMethod('call')).toBeInstanceOf(AbstractCallMethod);
-    });
-
-    it('calls createMethod and returns AbstractSendMethod', () => {
         expect(abstractMethodFactory.hasMethod('send')).toEqual(true);
 
-        expect(abstractMethodFactory.createMethod('send')).toBeInstanceOf(AbstractSendMethod);
+        expect(abstractMethodFactory.createMethod('send', moduleInstanceMock)).toBeInstanceOf(AbstractMethod);
 
-        expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow).toHaveBeenCalled();
+        expect(AbstractMethod).toHaveBeenCalledWith({}, {}, moduleInstanceMock);
     });
 
-    it('calls createMethod and returns SendTransactionMethod', () => {
-        abstractMethodFactory = new AbstractMethodFactory(methodModuleFactoryMock, {}, {});
-        abstractMethodFactory.methods = {
-            sendTransaction: SendTransactionMethod
-        };
+    it('calls createMethod and returns a object of type AbstractObservedTransactionMethod', () => {
+        new AbstractWeb3Module();
+        const moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        moduleInstanceMock.currentProvider = {constructor: {name: 'HttpProvider'}};
 
-        expect(abstractMethodFactory.hasMethod('sendTransaction')).toEqual(true);
+        expect(abstractMethodFactory.hasMethod('sendObserved')).toEqual(true);
 
-        expect(abstractMethodFactory.createMethod('sendTransaction')).toBeInstanceOf(SendTransactionMethod);
+        const observedMethod = abstractMethodFactory.createMethod('sendObserved', moduleInstanceMock);
 
-        expect(methodModuleFactoryMock.createTransactionConfirmationWorkflow).toHaveBeenCalled();
+        expect(observedMethod).toBeInstanceOf(AbstractObservedTransactionMethod);
+
+        expect(GetTransactionReceiptMethod).toHaveBeenCalledTimes(1);
+
+        expect(AbstractObservedTransactionMethod).toHaveBeenCalledTimes(1);
+
+        expect(GetBlockByNumberMethod).toHaveBeenCalledTimes(1);
+
+        expect(NewHeadsSubscription).toHaveBeenCalledTimes(1);
+
+        expect(TransactionObserver).toHaveBeenCalledTimes(1);
     });
 
-    it('calls createMethod and returns SignMethod', () => {
-        abstractMethodFactory = new AbstractMethodFactory(methodModuleFactoryMock, {}, {});
-        abstractMethodFactory.methods = {
-            sign: SignMethod
-        };
+    it('calls createMethod with a socket provider and returns a object of type AbstractObservedTransactionMethod', () => {
+        new AbstractWeb3Module();
+        const moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        moduleInstanceMock.currentProvider = {constructor: {name: 'WebsocketProvider'}};
 
-        expect(abstractMethodFactory.hasMethod('sign')).toEqual(true);
+        expect(abstractMethodFactory.hasMethod('sendObserved')).toEqual(true);
 
-        expect(abstractMethodFactory.createMethod('sign')).toBeInstanceOf(SignMethod);
+        const observedMethod = abstractMethodFactory.createMethod('sendObserved', moduleInstanceMock);
+
+        expect(observedMethod).toBeInstanceOf(AbstractObservedTransactionMethod);
+
+        expect(GetTransactionReceiptMethod).toHaveBeenCalledTimes(1);
+
+        expect(AbstractObservedTransactionMethod).toHaveBeenCalledTimes(1);
+
+        expect(GetBlockByNumberMethod).toHaveBeenCalledTimes(1);
+
+        expect(NewHeadsSubscription).toHaveBeenCalledTimes(1);
+
+        expect(TransactionObserver).toHaveBeenCalledTimes(1);
     });
 });

@@ -1,5 +1,5 @@
 import * as Utils from 'web3-utils';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import ChainIdMethod from '../../../../src/methods/network/ChainIdMethod';
 
 // Mocks
@@ -12,11 +12,11 @@ describe('ChainIdMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new ChainIdMethod(Utils, null);
+        method = new ChainIdMethod(Utils, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_chainId');
 

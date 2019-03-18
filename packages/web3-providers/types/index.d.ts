@@ -29,19 +29,17 @@ export class BatchRequest {
 
     add(method: AbstractMethod): void;
 
-    execute(): Promise<{methods: AbstractMethod[], response: object[]}|Error[]>;
+    execute(): Promise<{methods: AbstractMethod[]; response: any[]} | Error[]>;
 }
 
 export class ProviderDetector {
-    detect(): provider | undefined;
+    static detect(): provider | undefined;
 }
 
 export class ProvidersModuleFactory {
     createBatchRequest(moduleInstance: AbstractWeb3Module): BatchRequest;
 
     createProviderResolver(): ProviderResolver;
-
-    createProviderDetector(): ProviderDetector;
 
     createHttpProvider(url: string): HttpProvider;
 
@@ -58,9 +56,9 @@ export class HttpProvider {
     host: string;
     connected: boolean;
 
-    send(method: string, parameters: any[]): Promise<object>;
+    send(method: string, parameters: any[]): Promise<any>;
 
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<object[]>;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<any[]>;
 
     disconnect(): boolean;
 }
@@ -73,15 +71,15 @@ export class AbstractSocketProvider {
 
     registerEventListeners(): void;
 
-    send(method: string, parameters: any[]): Promise<object>;
+    send(method: string, parameters: any[]): Promise<any>;
 
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<object[]>;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<any[]>;
 
     subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: any[]): Promise<string>;
 
     unsubscribe(subscriptionId: string, unsubscribeMethod: string): Promise<boolean>;
 
-    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>
+    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>;
 
     on(type: string, callback: () => void): void;
 
@@ -91,7 +89,7 @@ export class AbstractSocketProvider {
 
     reset(): void;
 
-    reconnect(): void
+    reconnect(): void;
 
     disconnect(code: number, reason: string): void;
 }
@@ -112,15 +110,15 @@ export class EthereumProvider {
     host: string;
     registerEventListeners(): void;
 
-    send(method: string, parameters: any[]): Promise<object>;
+    send(method: string, parameters: any[]): Promise<any>;
 
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<object[]>;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<any[]>;
 
     subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: any[]): Promise<string>;
 
     unsubscribe(subscriptionId: string, unsubscribeMethod: string): Promise<boolean>;
 
-    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>
+    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>;
 
     on(type: string, callback: () => void): void;
 
@@ -136,8 +134,6 @@ export class JsonRpcMapper {
 }
 
 export class ProviderResolver {
-    constructor(providersPackageFactory: ProvidersModuleFactory);
-
     resolve(provider: provider, net: net.Socket): provider;
 }
 

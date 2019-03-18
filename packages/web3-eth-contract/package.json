@@ -17,12 +17,10 @@
     },
     "dependencies": {
         "@babel/runtime": "^7.3.1",
-        "dtslint": "0.5.4",
         "lodash": "^4.17.11",
         "web3-core": "1.0.0-beta.48",
         "web3-core-helpers": "1.0.0-beta.48",
         "web3-core-method": "1.0.0-beta.48",
-        "web3-core-promievent": "1.0.0-beta.48",
         "web3-core-subscriptions": "1.0.0-beta.48",
         "web3-eth-abi": "1.0.0-beta.48",
         "web3-eth-accounts": "1.0.0-beta.48",
@@ -30,7 +28,8 @@
         "web3-utils": "1.0.0-beta.48"
     },
     "devDependencies": {
-        "dtslint": "^0.4.2"
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     },
     "files": [
         "dist",

@@ -43,17 +43,13 @@ export default class ContractModuleFactory {
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbiCoder} abiCoder
-     * @param {Accounts} accounts
-     * @param {MethodModuleFactory} methodModuleFactory
      *
      * @constructor
      */
-    constructor(utils, formatters, abiCoder, accounts, methodModuleFactory) {
+    constructor(utils, formatters, abiCoder) {
         this.utils = utils;
         this.formatters = formatters;
         this.abiCoder = abiCoder;
-        this.accounts = accounts;
-        this.methodModuleFactory = methodModuleFactory;
     }
 
     /**
@@ -62,7 +58,6 @@ export default class ContractModuleFactory {
      * @method createContract
      *
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Accounts} accounts
      * @param {Array} abi
      * @param {String} address
@@ -70,11 +65,9 @@ export default class ContractModuleFactory {
      *
      * @returns {AbstractContract}
      */
-    createContract(provider, providersModuleFactory, accounts, abi, address, options) {
+    createContract(provider, accounts, abi, address, options) {
         return new AbstractContract(
             provider,
-            providersModuleFactory,
-            this.methodModuleFactory,
             this,
             accounts,
             this.abiCoder,
@@ -230,7 +223,7 @@ export default class ContractModuleFactory {
      * @returns {MethodFactory}
      */
     createMethodFactory() {
-        return new MethodFactory(this.utils, this.formatters, this, this.methodModuleFactory, this.abiCoder);
+        return new MethodFactory(this.utils, this.formatters, this, this.abiCoder);
     }
 
     /**

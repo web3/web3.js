@@ -119,7 +119,7 @@ export function getUnitValue(unit: Unit): string;
 export function unitMap(): Units;
 export function testAddress(bloom: string, address: string): boolean;
 export function testTopic(bloom: string, topic: string): boolean;
-export function getSignatureParameters(signature: string): object;
+export function getSignatureParameters(signature: string): {r: string; s: string; v: number};
 
 // interfaces
 export interface Utils {
@@ -168,7 +168,7 @@ export interface Utils {
     unitMap(): Units;
     testAddress(bloom: string, address: string): boolean;
     testTopic(bloom: string, topic: string): boolean;
-    getSignatureParameters(signature: string): object;
+    getSignatureParameters(signature: string): {r: string; s: string; v: number};
 }
 
 export interface Units {
