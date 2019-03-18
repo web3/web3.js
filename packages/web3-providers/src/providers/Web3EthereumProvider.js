@@ -128,16 +128,15 @@ export default class Web3EthereumProvider extends AbstractSocketProvider {
      *
      * @returns {Promise<Object>}
      */
-    send(method, parameters) {
-        return this.connection.send(method, parameters).then((response) => {
-            const validationResult = JsonRpcResponseValidator.validate(response);
+    async send(method, parameters) {
+        const response = this.connection.send(method, parameters);
+        const validationResult = JsonRpcResponseValidator.validate(response);
 
-            if (validationResult instanceof Error) {
-                throw validationResult;
-            }
+        if (validationResult instanceof Error) {
+            throw validationResult;
+        }
 
-            return response;
-        });
+        return response;
     }
 
     /**

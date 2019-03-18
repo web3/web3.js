@@ -20,6 +20,8 @@
 import EventEmitter from 'eventemitter3';
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
+import JsonRpcMapper from '../../src/mappers/JsonRpcMapper';
+import JsonRpcResponseValidator from '../../src/validators/JsonRpcResponseValidator';
 
 export default class AbstractSocketProvider extends EventEmitter {
     /**
@@ -96,9 +98,18 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {String} method
      * @param {Array} parameters
      *
-     * @returns {Promise<any>}
+     * @returns {Promise<Object>}
      */
-    send(method, parameters) {}
+    async send(method, parameters) {
+        const response = await this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
+        const validationResult = JsonRpcResponseValidator.validate(response);
+
+        if (validationResult instanceof Error) {
+            throw validationResult;
+        }
+
+        return response.result;
+    }
 
     /**
      * Creates the JSON-RPC batch payload and sends it to the node.
@@ -110,7 +121,16 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns Promise<Object|Error>
      */
-    sendBatch(methods, moduleInstance) {}
+    sendBatch(methods, moduleInstance) {
+        let payload = [];
+
+        methods.forEach((method) => {
+            method.beforeExecution(moduleInstance);
+            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
+        });
+
+        return this.sendPayload(payload);
+    }
 
     /**
      * Emits the ready event when the connection is established
@@ -176,6 +196,7 @@ export default class AbstractSocketProvider extends EventEmitter {
             }
         }
 
+        this.emit(this.SOCKET_CONNECT);
         this.emit(this.CONNECT);
     }
 
