@@ -35,7 +35,7 @@ describe('MethodsProxyTest', () => {
 
         new AbstractContract();
         contractMock = AbstractContract.mock.instances[0];
-        contractMock.options = {data: ''};
+        contractMock.data = '';
         contractMock.abiModel = abiModelMock;
 
         new MethodFactory();
@@ -110,7 +110,7 @@ describe('MethodsProxyTest', () => {
 
         expect(callMethodMock.parameters[0]).toEqual({options: true});
 
-        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.data);
 
         expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
 
@@ -149,7 +149,7 @@ describe('MethodsProxyTest', () => {
 
         expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('constructor');
 
-        expect(methodsProxy.contract.options.data).toEqual('0x0');
+        expect(methodsProxy.contract.data).toEqual('0x0');
 
         expect(abiItemModelMock.contractMethodParameters).toEqual([true]);
 
@@ -161,7 +161,7 @@ describe('MethodsProxyTest', () => {
 
         expect(sendMethodMock.parameters[0]).toEqual({options: true});
 
-        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.data);
 
         expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
 
@@ -206,7 +206,7 @@ describe('MethodsProxyTest', () => {
 
         expect(sendMethodMock.parameters[0]).toEqual({options: true});
 
-        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.data);
 
         expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
 
@@ -292,7 +292,7 @@ describe('MethodsProxyTest', () => {
 
         expect(callMethodMock.parameters[0]).toEqual({options: true});
 
-        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.data);
 
         expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
 
@@ -331,7 +331,7 @@ describe('MethodsProxyTest', () => {
 
         expect(estimateGasMethod.execute).toHaveBeenCalled();
 
-        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.data);
 
         expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
 
@@ -347,6 +347,6 @@ describe('MethodsProxyTest', () => {
 
         expect(methodsProxy.myMethod(true).encodeABI()).toEqual('encoded');
 
-        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.options.data);
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.data);
     });
 });
