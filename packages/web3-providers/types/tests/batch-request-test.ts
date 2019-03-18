@@ -31,15 +31,7 @@ const batchRequest = new BatchRequest(
 );
 
 // $ExpectType void
-batchRequest.add(
-    new AbstractMethod(
-        'rpc_method',
-        1,
-        Utils,
-        formatters,
-        new AbstractWeb3Module('http://localhost:7545')
-    )
-);
+batchRequest.add(new AbstractMethod('eth_coinbase', 1, Utils, new formatters(), new AbstractWeb3Module('http://localhost:7545')));
 
-// $ExpectType Promise<{ methods: AbstractMethod[]; response: object[]; } | Error[]>
+// $ExpectType Promise<{ methods: AbstractMethod[]; response: any[]; } | Error[]>
 batchRequest.execute();

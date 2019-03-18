@@ -24,19 +24,16 @@ import {
     HttpProvider,
     HttpProviderOptions,
     IpcProvider,
-    provider, ProviderDetector, ProviderResolver,
+    provider,
+    ProviderDetector,
+    ProviderResolver,
     ProvidersModuleFactory,
     WebsocketProvider,
     WebsocketProviderOptions
 } from 'web3-providers';
 
 export class AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        options?: Web3ModuleOptions,
-        methodFactory?: any,
-        net?: net.Socket
-    );
+    constructor(provider: provider, options?: Web3ModuleOptions, methodFactory?: any, net?: net.Socket);
 
     BatchRequest: new () => BatchRequest;
     defaultBlock: string | number;
@@ -155,7 +152,7 @@ export interface TransactionReceipt {
 export interface EventLog {
     event: string;
     address: string;
-    returnValues: object;
+    returnValues: any;
     logIndex: number;
     transactionIndex: number;
     transactionHash: string;
