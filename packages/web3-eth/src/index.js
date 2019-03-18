@@ -32,6 +32,7 @@ import * as Utils from 'web3-utils';
 import EthTransactionSigner from './signers/TransactionSigner';
 import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';
+import {ProviderResolver} from 'web3-providers';
 import EthModule from './Eth.js';
 
 /**
@@ -40,9 +41,9 @@ import EthModule from './Eth.js';
  * @returns {TransactionSigner}
  * @constructor
  */
-export const TransactionSigner = () => {
+export function TransactionSigner() {
     return new EthTransactionSigner(Utils, formatters);
-};
+}
 
 /**
  * Creates the Eth object
@@ -56,23 +57,24 @@ export const TransactionSigner = () => {
  * @returns {Eth}
  * @constructor
  */
-export const Eth = (provider, net, options) => {
+export function Eth(provider, net = null, options = {}) {
     if (!options.transactionSigner) {
         options.transactionSigner = new TransactionSigner();
     }
 
-    const accounts = new Accounts(provider, net, options);
+    const resolvedProvider = new ProviderResolver().resolve(provider, net);
+    const accounts = new Accounts(resolvedProvider, null, options);
     const abiCoder = new AbiCoder();
 
     return new EthModule(
-        provider,
+        resolvedProvider,
         new MethodFactory(Utils, formatters),
-        new Network(provider, net, options),
+        new Network(resolvedProvider, null, options),
         accounts,
-        new Personal(provider, net, accounts, options),
+        new Personal(resolvedProvider, null, accounts, options),
         Iban,
         abiCoder,
-        new Ens(provider, net, accounts, options),
+        new Ens(resolvedProvider, null, accounts, options),
         Utils,
         formatters,
         new SubscriptionsFactory(Utils, formatters),
@@ -80,4 +82,4 @@ export const Eth = (provider, net, options) => {
         options,
         net
     );
-};
+}

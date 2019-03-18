@@ -19,6 +19,7 @@
 
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
+import {ProviderResolver} from 'web3-providers';
 import {ContractModuleFactory} from 'web3-eth-contract';
 import {AbiCoder} from 'web3-eth-abi';
 import {Network} from 'web3-net';
@@ -36,18 +37,19 @@ import EnsModuleFactory from './factories/EnsModuleFactory';
  *
  * @returns {Ens}
  */
-export const Ens = (provider, net, options, accounts) => {
+export function Ens(provider, net = null, options = {}, accounts = {}) {
     const abiCoder = new AbiCoder();
+    const resolvedProvider = new ProviderResolver().resolver(provider, net);
 
     return new EnsModuleFactory().createENS(
-        provider,
+        resolvedProvider,
         new ContractModuleFactory(Utils, formatters, abiCoder),
         accounts,
         abiCoder,
         Utils,
         formatters,
-        new Network(provider, net, options),
+        new Network(resolvedProvider, null, options),
         options,
-        net
+        null
     );
-};
+}

@@ -80,7 +80,7 @@ export default class IpcProvider extends AbstractSocketProvider {
         }
 
         super.onMessage(this.chunks + chunk.substring(0, chunk.indexOf('\n')));
-        this.chunks = chunk.substring(chunk.indexOf('\n') + 1)
+        this.chunks = chunk.substring(chunk.indexOf('\n') + 1);
     }
 
     /**

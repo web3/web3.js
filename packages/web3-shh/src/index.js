@@ -23,6 +23,7 @@
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
+import {ProviderResolver} from 'web3-providers';
 import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';
 import ShhModule from './Shh.js';
@@ -38,13 +39,15 @@ import ShhModule from './Shh.js';
  *
  * @returns {Shh}
  */
-export const Shh = (provider, net, options) => {
+export function Shh(provider, net = null, options = {}) {
+    const resolvedProvider = new ProviderResolver().resolve(provider, net);
+
     return new ShhModule(
-        provider,
+        resolvedProvider,
         new MethodFactory(Utils, formatters),
         new SubscriptionsFactory(Utils, formatters),
-        new Network(provider, net, options),
+        new Network(resolvedProvider, null, options),
         options,
-        net
+        null
     );
-};
+}

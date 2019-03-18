@@ -21,17 +21,19 @@ import {MethodModuleFactory} from 'web3-core-method';
 import {Accounts} from 'web3-eth-accounts';
 import {AbiCoder} from 'web3-eth-abi';
 import {Contract, ContractModuleFactory} from 'web3-eth-contract';
-import {ProvidersModuleFactory, provider} from 'web3-providers';
-import {AbstractWeb3Module, PromiEvent} from 'web3-core';
+import {provider, ProvidersModuleFactory} from 'web3-providers';
+import {AbstractWeb3Module, PromiEvent, Web3ModuleOptions} from 'web3-core';
 import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
 import {Utils} from 'web3-utils';
+import * as net from 'net';
 
 export class Ens extends AbstractWeb3Module {
     constructor(
         provider: provider,
-        accounts: Accounts,
-        ensModuleOptions: object
+        net?: net.Socket,
+        accounts?: Accounts,
+        options?: Web3ModuleOptions
     );
 
     registry: Registry;
