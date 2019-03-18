@@ -306,7 +306,7 @@ Parameters
 Returns
 -------
 
-``String|Object``: The signed data RLP encoded signature, or if ``returnSignature`` is ``true`` the signature values as follows:
+``Object``: The signed data RLP encoded signature, or if ``returnSignature`` is ``true`` the signature values as follows:
     - ``message`` - ``String``: The the given message.
     - ``messageHash`` - ``String``: The hash of the given message.
     - ``r`` - ``String``: First 32 bytes of the signature
