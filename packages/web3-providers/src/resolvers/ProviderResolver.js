@@ -22,13 +22,6 @@
 
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
-import HttpProvider from '../providers/HttpProvider';
-import MetamaskProvider from '../providers/MetamaskProvider';
-import CustomProvider from '../providers/CustomProvider';
-import IpcProvider from '../providers/IpcProvider';
-import WebsocketProvider from '../providers/WebsocketProvider';
-import MistEthereumProvider from '../providers/MistEthereumProvider';
-import Web3EthereumProvider from '../providers/Web3EthereumProvider';
 
 const global =
     (function() {
