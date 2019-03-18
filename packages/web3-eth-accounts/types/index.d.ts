@@ -19,9 +19,10 @@
 
 import {AbstractWeb3Module, TransactionConfig, Web3ModuleOptions, SignedTransaction} from 'web3-core';
 import {provider} from 'web3-providers';
+import * as net from 'net';
 
 export class Accounts extends AbstractWeb3Module {
-    constructor(provider: provider, options?: Web3ModuleOptions);
+    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions);
 
     create(entropy?: string): Account;
 

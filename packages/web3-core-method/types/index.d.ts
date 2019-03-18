@@ -36,9 +36,13 @@ export class AbstractMethod {
     rpcMethod: string;
     parametersAmount: number;
     parameters: any[];
+
     getArguments(): any;
+
     setArguments(args: any[]): void;
+
     isHash(parameter: string): boolean;
+
     hasWallets(): boolean;
 
     callback(error: string | Error, response: any): void;
@@ -52,4 +56,11 @@ export class AbstractMethod {
     clearSubscriptions(unsubscribeMethod: string): Promise<boolean | Error>;
 }
 
-export class MethodModuleFactory {} // TODO: Define methods
+export class AbstractMethodFactory {
+    constructor(utils: Utils, formatters: formatters);
+
+    methods: null | object;
+    hasMethod: boolean;
+
+    createMethod(name: string, moduleInstance: AbstractWeb3Module): AbstractMethod;
+}

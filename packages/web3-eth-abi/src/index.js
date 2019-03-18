@@ -33,7 +33,7 @@ import EthAbiCoder from './AbiCoder.js';
  *
  * @constructor
  */
-export const AbiCoder = () => {
+export function AbiCoder() {
     return new EthAbiCoder(
         Utils,
         // TODO: Change this anonymous method to a accessable method because of the testing.
@@ -48,4 +48,4 @@ export const AbiCoder = () => {
             return value;
         })
     );
-};
+}

@@ -36,6 +36,6 @@ import NetworkModule from './Network.js';
  *
  * @returns {Network}
  */
-export const Network = (provider, net, options) => {
-    return new NetworkModule(provider, new MethodFactory(Utils, formatters), Utils, formatters, options, net);
-};
+export function Network(provider, net = null, options = {}) {
+    return new NetworkModule(provider, new MethodFactory(Utils, formatters), Utils, formatters, options, null);
+}
