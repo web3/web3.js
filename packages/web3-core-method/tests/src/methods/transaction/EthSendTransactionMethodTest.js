@@ -505,6 +505,25 @@ describe('EthSendTransactionMethodTest', () => {
         expect(providerMock.send).toHaveBeenNthCalledWith(1, 'eth_gasPrice', []);
     });
 
+    it('calls execute and the gasPrice will be defined with "eth_gasPrice" and returns with a reject promise', async () => {
+        providerMock.send = jest.fn(() => {
+            return Promise.reject(new Error('Nope'));
+        });
+
+        const transaction = {
+            from: 0,
+            gas: 1,
+            nonce: 1,
+            chainId: 1
+        };
+
+        method.parameters = [transaction];
+
+        await expect(method.execute()).rejects.toThrow('Nope');
+
+        expect(providerMock.send).toHaveBeenNthCalledWith(1, 'eth_gasPrice', []);
+    });
+
     it('calls execute and signs on the node', () => {
         moduleInstanceMock.transactionSigner = transactionSignerMock;
 
