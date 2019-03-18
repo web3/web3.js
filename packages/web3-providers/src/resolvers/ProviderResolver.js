@@ -22,6 +22,13 @@
 
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
+import HttpProvider from '../providers/HttpProvider';
+import MetamaskProvider from '../providers/MetamaskProvider';
+import CustomProvider from '../providers/CustomProvider';
+import IpcProvider from '../providers/IpcProvider';
+import WebsocketProvider from '../providers/WebsocketProvider';
+import MistEthereumProvider from '../providers/MistEthereumProvider';
+import Web3EthereumProvider from '../providers/Web3EthereumProvider';
 
 const global =
     (function() {
@@ -66,7 +73,7 @@ export default class ProviderResolver {
             }
         }
 
-        if (this.isWeb3Provider(provider)) {
+        if (provider.sendPayload && provider.subscribe) {
             return provider;
         }
 
@@ -83,28 +90,6 @@ export default class ProviderResolver {
         }
 
         return this.providersModuleFactory.createCustomProvider(provider);
-    }
-
-    /**
-     * Checks if the given provider is an internal Web3 provider.
-     *
-     * @method isWeb3Provider
-     *
-     * @param {Object} provider
-     *
-     * @returns {Boolean}
-     */
-    isWeb3Provider(provider) {
-        switch (provider.constructor.name) {
-            case 'HttpProvider':
-            case 'IpcProvider':
-            case 'WebsocketProvider':
-            case 'CustomProvider':
-            case 'MetamaskProvider':
-            case 'MistEthereumProvider':
-            case 'Web3EthereumProvider':
-                return true;
-        }
     }
 
     /**
