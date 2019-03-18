@@ -114,6 +114,24 @@ export default class AbstractContract extends AbstractWeb3Module {
     }
 
     /**
+     * Getter for the contract bytecode
+     *
+     * @returns {String}
+     */
+    get data() {
+        return this.options.data;
+    }
+
+    /**
+     * Setter for the contract bytecode
+     *
+     * @param {String} value
+     */
+    set data(value) {
+        this.options.data = value;
+    }
+
+    /**
      * Adds event listeners and creates a subscription, and remove it once its fired.
      *
      * @method once
