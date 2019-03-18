@@ -1,5 +1,5 @@
 import * as Utils from 'web3-utils';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetBlockNumberMethod from '../../../../src/methods/block/GetBlockNumberMethod';
 
 // Mocks
@@ -12,11 +12,11 @@ describe('GetBlockNumberMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBlockNumberMethod(Utils, null);
+        method = new GetBlockNumberMethod(Utils, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_blockNumber');
 

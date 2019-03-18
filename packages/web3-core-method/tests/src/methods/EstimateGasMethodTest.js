@@ -1,6 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import EstimateGasMethod from '../../../src/methods/EstimateGasMethod';
 
 // Mocks
@@ -14,11 +14,11 @@ describe('EstimateGasMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new EstimateGasMethod(Utils, formatters);
+        method = new EstimateGasMethod(Utils, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_estimateGas');
 

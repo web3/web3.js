@@ -1,4 +1,3 @@
-import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {GetPastLogsMethod} from 'web3-core-method';
 import EventLogDecoder from '../../../src/decoders/EventLogDecoder';
@@ -8,7 +7,6 @@ import AbstractContract from '../../../src/AbstractContract';
 import PastEventLogsMethod from '../../../src/methods/PastEventLogsMethod';
 
 // Mocks
-jest.mock('Utils');
 jest.mock('formatters');
 jest.mock('../../../src/decoders/EventLogDecoder');
 jest.mock('../../../src/models/AbiItemModel');
@@ -32,8 +30,9 @@ describe('PastEventLogsMethodTest', () => {
         eventOptionsMapperMock = EventOptionsMapper.mock.instances[0];
 
         pastEventLogsMethod = new PastEventLogsMethod(
-            Utils,
+            {},
             formatters,
+            {},
             eventLogDecoderMock,
             abiItemModelMock,
             eventOptionsMapperMock
@@ -41,15 +40,31 @@ describe('PastEventLogsMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(pastEventLogsMethod.utils).toEqual(Utils);
-
-        expect(pastEventLogsMethod.formatters).toEqual(formatters);
-
         expect(pastEventLogsMethod.eventLogDecoder).toEqual(eventLogDecoderMock);
 
         expect(pastEventLogsMethod.abiItemModel).toEqual(abiItemModelMock);
 
+        expect(pastEventLogsMethod.eventOptionsMapper).toEqual(eventOptionsMapperMock);
+
         expect(pastEventLogsMethod).toBeInstanceOf(GetPastLogsMethod);
+    });
+
+    it('calls beforeExecution with filter property and executes the expected methods', () => {
+        new AbstractContract();
+        const contractMock = AbstractContract.mock.instances[0];
+
+        eventOptionsMapperMock.map.mockReturnValueOnce({mapped: true, filter: true});
+
+        formatters.inputLogFormatter.mockReturnValueOnce({options: true});
+
+        pastEventLogsMethod.parameters = [{}];
+        pastEventLogsMethod.beforeExecution(contractMock);
+
+        expect(eventOptionsMapperMock.map).toHaveBeenCalledWith(abiItemModelMock, contractMock, {options: true});
+
+        expect(formatters.inputLogFormatter).toHaveBeenCalledWith({});
+
+        expect(pastEventLogsMethod.parameters[0].filter).toBeUndefined();
     });
 
     it('calls beforeExecution and executes the expected methods', () => {

@@ -25,8 +25,6 @@ import {AbstractWeb3Module} from 'web3-core';
 export default class Eth extends AbstractWeb3Module {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {MethodFactory} methodFactory
      * @param {Network} net
      * @param {Accounts} accounts
@@ -38,7 +36,6 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Object} formatters
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {ContractModuleFactory} contractModuleFactory
-     * @param {TransactionSigner} transactionSigner
      * @param {Object} options
      * @param {Net} nodeNet
      *
@@ -46,8 +43,6 @@ export default class Eth extends AbstractWeb3Module {
      */
     constructor(
         provider,
-        providersModuleFactory,
-        methodModuleFactory,
         methodFactory,
         net,
         accounts,
@@ -62,7 +57,7 @@ export default class Eth extends AbstractWeb3Module {
         options,
         nodeNet
     ) {
-        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options, nodeNet);
+        super(provider, options, methodFactory, nodeNet);
 
         this.net = net;
         this.accounts = accounts;
@@ -94,11 +89,19 @@ export default class Eth extends AbstractWeb3Module {
 
             const contract = this.contractModuleFactory.createContract(
                 this.currentProvider,
-                this.providersModuleFactory,
                 this.accounts,
                 abi,
                 address,
-                options
+                {
+                    defaultAccount: this.defaultAccount,
+                    defaultBlock: this.defaultBlock,
+                    defaultGas: this.defaultGas,
+                    defaultGasPrice: this.defaultGasPrice,
+                    transactionBlockTimeout: this.transactionBlockTimeout,
+                    transactionConfirmationBlocks: this.transactionConfirmationBlocks,
+                    transactionPollingTimeout: this.transactionPollingTimeout,
+                    transactionSigner: this.transactionSigner
+                }
             );
 
             this.initiatedContracts.push(contract);
@@ -119,6 +122,8 @@ export default class Eth extends AbstractWeb3Module {
     }
 
     /**
+     * TODO: Remove setter
+     *
      * Setter for the transactionSigner property
      *
      * @property transactionSigner
@@ -362,24 +367,7 @@ export default class Eth extends AbstractWeb3Module {
      * @returns {Subscription}
      */
     subscribe(type, options, callback) {
-        switch (type) {
-            case 'logs':
-                return this.subscriptionsFactory
-                    .createLogSubscription(options, this, this.methodFactory.createMethod('getPastLogs'))
-                    .subscribe(callback);
-
-            case 'newBlockHeaders':
-                return this.subscriptionsFactory.createNewHeadsSubscription(this).subscribe(callback);
-
-            case 'pendingTransactions':
-                return this.subscriptionsFactory.createNewPendingTransactionsSubscription(this).subscribe(callback);
-
-            case 'syncing':
-                return this.subscriptionsFactory.createSyncingSubscription(this).subscribe(callback);
-
-            default:
-                throw new Error(`Unknown subscription: ${type}`);
-        }
+        return this.subscriptionsFactory.getSubscription(this, type, options).subscribe(callback);
     }
 
     /**

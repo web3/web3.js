@@ -24,7 +24,6 @@ import {w3cwebsocket as W3CWebsocket} from 'websocket';
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import URL from 'url-parse';
 import ProviderResolver from '../resolvers/ProviderResolver';
-import ProviderDetector from '../detectors/ProviderDetector';
 import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
@@ -57,17 +56,6 @@ export default class ProvidersModuleFactory {
      */
     createProviderResolver() {
         return new ProviderResolver(this);
-    }
-
-    /**
-     * Returns an ProviderDetector object
-     *
-     * @method createProviderDetector
-     *
-     * @returns {ProviderDetector}
-     */
-    createProviderDetector() {
-        return new ProviderDetector();
     }
 
     /**

@@ -1,5 +1,5 @@
 import * as Utils from 'web3-utils';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import PeerCountMethod from '../../../../src/methods/network/PeerCountMethod';
 
 // Mocks
@@ -12,11 +12,11 @@ describe('PeerCountMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new PeerCountMethod(Utils, null);
+        method = new PeerCountMethod(Utils, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('net_peerCount');
 

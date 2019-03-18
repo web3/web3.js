@@ -36,40 +36,22 @@ import Account from './models/Account';
 export default class Accounts extends AbstractWeb3Module {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} formatters
-     * @param {ChainIdMethod} chainIdMethod
-     * @param {GetGasPriceMethod} getGasPriceMethod
-     * @param {GetTransactionCountMethod} getTransactionCountMethod
+     * @param {MethodFactory} methodFactory
      * @param {Object} options
+     * @param {Net.Socket} net
      *
      * @constructor
      */
-    constructor(
-        provider,
-        providersModuleFactory,
-        formatters,
-        chainIdMethod,
-        getGasPriceMethod,
-        getTransactionCountMethod,
-        options
-    ) {
-        super(provider, providersModuleFactory, null, null, options);
+    constructor(provider, formatters, methodFactory, options, net) {
+        super(provider, options, methodFactory, net);
+
         this.transactionSigner = options.transactionSigner;
         this.formatters = formatters;
-        this.chainIdMethod = chainIdMethod;
-        this.getGasPriceMethod = getGasPriceMethod;
-        this.getTransactionCountMethod = getTransactionCountMethod;
         this.defaultKeyName = 'web3js_wallet';
         this.accounts = {};
         this.accountsIndex = 0;
         this.wallet = this.createWalletProxy();
-
-        return new Proxy(this, {
-            get: (target, name) => {
-                return target[name];
-            }
-        });
     }
 
     /**
@@ -375,17 +357,15 @@ export default class Accounts extends AbstractWeb3Module {
             const account = Account.fromPrivateKey(privateKey, this);
 
             if (!tx.chainId) {
-                tx.chainId = await this.chainIdMethod.execute(this);
+                tx.chainId = await this.getChainId();
             }
 
             if (!tx.gasPrice) {
-                tx.gasPrice = await this.getGasPriceMethod.execute(this);
+                tx.gasPrice = await this.getGasPrice();
             }
 
             if (!tx.nonce) {
-                this.getTransactionCountMethod.parameters = [account.address];
-
-                tx.nonce = await this.getTransactionCountMethod.execute(this);
+                tx.nonce = await this.getTransactionCount(account.address);
             }
 
             const signedTransaction = await this.transactionSigner.sign(tx, account.privateKey);

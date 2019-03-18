@@ -1,4 +1,4 @@
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import ListeningMethod from '../../../../src/methods/network/ListeningMethod';
 
 /**
@@ -8,11 +8,11 @@ describe('ListeningMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new ListeningMethod(null, null);
+        method = new ListeningMethod(null, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('net_listening');
 

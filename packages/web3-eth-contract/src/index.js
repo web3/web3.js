@@ -21,17 +21,16 @@
  */
 
 import * as Utils from 'web3-utils';
-import {ProvidersModuleFactory} from 'web3-providers';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
-import {MethodModuleFactory} from 'web3-core-method';
 import ContractModuleFactory from './factories/ContractModuleFactory';
 
 export AbstractContract from './AbstractContract';
 export ContractModuleFactory from './factories/ContractModuleFactory';
 
 /**
- * TODO: Remove ContractModuleFactory and resolve dependencies here
+ * TODO: Improve this factory method for the TransactionSigner handling.
+ *
  * Returns an object of type Contract
  *
  * @method Contract
@@ -47,11 +46,11 @@ export ContractModuleFactory from './factories/ContractModuleFactory';
  * @constructor
  */
 export const Contract = (provider, abi, accounts, address, options) => {
-    return new ContractModuleFactory(
-        Utils,
-        formatters,
-        new AbiCoder(),
+    return new ContractModuleFactory(Utils, formatters, new AbiCoder(), accounts).createContract(
+        provider,
         accounts,
-        new MethodModuleFactory()
-    ).createContract(provider, new ProvidersModuleFactory(), accounts, abi, address, options);
+        abi,
+        address,
+        options
+    );
 };

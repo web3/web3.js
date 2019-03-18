@@ -1,5 +1,5 @@
 import {formatters} from 'web3-core-helpers';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import IsSyncingMethod from '../../../../src/methods/node/IsSyncingMethod';
 
 // Mocks
@@ -12,11 +12,11 @@ describe('IsSyncingMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new IsSyncingMethod(null, formatters);
+        method = new IsSyncingMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_syncing');
 

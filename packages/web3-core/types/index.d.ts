@@ -25,6 +25,8 @@ import {
     HttpProviderOptions,
     IpcProvider,
     provider,
+    ProviderDetector,
+    ProviderResolver,
     ProvidersModuleFactory,
     WebsocketProvider,
     WebsocketProviderOptions
@@ -32,14 +34,7 @@ import {
 import {BN} from 'web3-utils';
 
 export class AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        providersModuleFactory: ProvidersModuleFactory,
-        methodModuleFactory: any,
-        methodFactory?: any,
-        options?: Web3ModuleOptions,
-        net?: net.Socket
-    );
+    constructor(provider: provider, options?: Web3ModuleOptions, methodFactory?: any, net?: net.Socket);
 
     BatchRequest: new () => BatchRequest;
     defaultBlock: string | number;
@@ -51,7 +46,7 @@ export class AbstractWeb3Module {
     static readonly providers: Providers;
     defaultAccount: string | null;
     readonly currentProvider: EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider;
-    readonly givenProvider: provider | null;
+    readonly givenProvider: object | null;
 
     setProvider(provider: provider, net?: net.Socket): boolean;
 
@@ -179,7 +174,7 @@ export interface TransactionReceipt {
 export interface EventLog {
     event: string;
     address: string;
-    returnValues: object;
+    returnValues: any;
     logIndex: number;
     transactionIndex: number;
     transactionHash: string;

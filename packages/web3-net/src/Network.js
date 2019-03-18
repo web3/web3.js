@@ -26,17 +26,16 @@ import isFunction from 'lodash/isFunction';
 export default class Network extends AbstractWeb3Module {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {MethodFactory} methodFactory
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {Object} options
+     * @param {Net.Socket} nodeNet
      *
      * @constructor
      */
-    constructor(provider, providersModuleFactory, methodModuleFactory, methodFactory, utils, formatters, options) {
-        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
+    constructor(provider, methodFactory, utils, formatters, options, nodeNet) {
+        super(provider, options, methodFactory, nodeNet);
 
         this.utils = utils;
         this.formatters = formatters;

@@ -20,39 +20,38 @@
  * @date 2018
  */
 
-import {SendTransactionMethod} from 'web3-core-method';
+import {EthSendTransactionMethod} from 'web3-core-method';
 
-export default class ContractDeployMethod extends SendTransactionMethod {
+export default class ContractDeployMethod extends EthSendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
-     * @param {SendRawTransactionMethod} sendRawTransactionMethod
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {AbstractContract} contract
+     * @param {SendRawTransactionMethod} sendRawTransactionMethod
      *
      * @constructor
      */
     constructor(
         utils,
         formatters,
-        transactionConfirmationWorkflow,
-        sendRawTransactionMethod,
+        moduleInstance,
+        transactionObserver,
         chainIdMethod,
         getTransactionCountMethod,
-        contract
+        sendRawTransactionMethod
     ) {
         super(
             utils,
             formatters,
-            transactionConfirmationWorkflow,
-            sendRawTransactionMethod,
+            moduleInstance,
+            transactionObserver,
             chainIdMethod,
-            getTransactionCountMethod
+            getTransactionCountMethod,
+            sendRawTransactionMethod
         );
-
-        this.contract = contract;
     }
 
     /**
@@ -77,7 +76,7 @@ export default class ContractDeployMethod extends SendTransactionMethod {
      * @returns {AbstractContract}
      */
     afterExecution(response) {
-        const clonedContract = this.contract.clone();
+        const clonedContract = this.moduleInstance.clone();
         clonedContract.address = response.contractAddress;
 
         return clonedContract;

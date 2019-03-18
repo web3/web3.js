@@ -35,14 +35,13 @@ import {
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(methodModuleFactory, utils, formatters) {
-        super(methodModuleFactory, utils, formatters);
+    constructor(utils, formatters) {
+        super(utils, formatters);
 
         this.methods = {
             getAccounts: GetAccountsMethod,
