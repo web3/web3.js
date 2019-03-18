@@ -35,6 +35,7 @@ export default class IpcProvider extends AbstractSocketProvider {
     constructor(connection, path) {
         super(connection, null);
         this.host = path;
+        this.chunks = '';
     }
 
     /**
@@ -70,7 +71,18 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @param {String|Buffer} message
      */
     onMessage(message) {
-        super.onMessage(message.toString());
+        const chunk = message.toString('utf8');
+
+        if (chunk.indexOf('\n') < 0) {
+            this.chunks += chunk;
+
+            return;
+        }
+
+        const data = this.chunks + chunk.substring(0, chunk.indexOf('\n'));
+        this.chunks = chunk.substring(chunk.indexOf('\n') + 1);
+
+        super.onMessage(data);
     }
 
     /**
@@ -82,7 +94,6 @@ export default class IpcProvider extends AbstractSocketProvider {
         this.connection.on('data', this.onMessage.bind(this));
         this.connection.on('connect', this.onConnect.bind(this));
         this.connection.on('error', this.onError.bind(this));
-        this.connection.on('end', this.onError.bind(this));
         this.connection.on('close', this.onClose.bind(this));
         this.connection.on('timeout', this.onClose.bind(this));
         this.connection.on('ready', this.onReady.bind(this));

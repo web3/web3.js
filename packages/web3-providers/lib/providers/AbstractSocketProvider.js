@@ -90,8 +90,6 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     get connected() {}
 
-
-
     /**
      * Creates the JSON-RPC payload and sends it to the node.
      *
@@ -112,7 +110,6 @@ export default class AbstractSocketProvider extends EventEmitter {
 
         return response.result;
     }
-
 
     /**
      * Creates the JSON-RPC batch payload and sends it to the node.
