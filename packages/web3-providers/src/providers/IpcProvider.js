@@ -79,7 +79,7 @@ export default class IpcProvider extends AbstractSocketProvider {
             return;
         }
 
-        super.onMessage((this.chunks + chunk.substring(0, chunk.indexOf('\n'))));
+        super.onMessage(this.chunks + chunk.substring(0, chunk.indexOf('\n')));
     }
 
     /**
@@ -154,7 +154,7 @@ export default class IpcProvider extends AbstractSocketProvider {
                 return;
             }
 
-            return reject(new Error('Connection error: Couldn\'t write on the socket with Socket.write(payload)'));
+            return reject(new Error("Connection error: Couldn't write on the socket with Socket.write(payload)"));
         });
     }
 }

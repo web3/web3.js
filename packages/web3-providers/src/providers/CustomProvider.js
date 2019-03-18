@@ -71,7 +71,7 @@ export default class CustomProvider {
      * @returns {Promise<any>}
      */
     async send(method, parameters) {
-        const response = this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
+        const response = await this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
         const validationResult = JsonRpcResponseValidator.validate(response);
 
         if (validationResult instanceof Error) {
