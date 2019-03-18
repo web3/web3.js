@@ -31,6 +31,7 @@ import {
     WebsocketProvider,
     WebsocketProviderOptions
 } from 'web3-providers';
+import {BN} from 'web3-utils';
 
 export class AbstractWeb3Module {
     constructor(provider: provider, options?: Web3ModuleOptions, methodFactory?: any, net?: net.Socket);
@@ -55,7 +56,7 @@ export class AbstractWeb3Module {
 }
 
 export interface TransactionSigner {
-    sign(tx: Transaction): Promise<SignedTransaction>;
+    sign(transactionConfig: TransactionConfig): Promise<SignedTransaction>;
 }
 
 export interface SignedTransaction {
@@ -112,23 +113,44 @@ export interface PromiEvent<T> extends Promise<T> {
 }
 
 export interface Transaction {
+	hash: string;
+	nonce: number;
+	blockHash: string | null;
+	blockNumber: number | null;
+	transactionIndex: number | null;
+	from: string;
+	to: string;
+	value: string;
+	gasPrice: string;
+	gas: number;
+	input: string;
+}
+
+export interface TransactionConfig {
     from?: string | number;
     to?: string;
-    gasPrice?: string;
+    value?: number | string | BN;
     gas?: number | string;
-    value?: number | string;
-    chainId?: number;
+    gasPrice?: number | string | BN;
     data?: string;
     nonce?: number;
-    v?: string;
-    r?: string;
-    s?: string;
-    hash?: string;
+    chainId?: number;
 }
 
 export interface RLPEncodedTransaction {
     raw: string;
-    tx: Transaction;
+    tx: {
+        nonce: string;
+        gasPrice: string;
+        gas: string;
+        to: string;
+        value: string;
+        input: string;
+        r: string;
+        s: string;
+        v: string;
+        hash: string;
+    }
 }
 
 export interface TransactionReceipt {

@@ -20,7 +20,7 @@
 
 import {Accounts} from 'web3-eth-accounts';
 import {provider} from 'web3-providers';
-import {AbstractWeb3Module, Providers, RLPEncodedTransaction, Transaction, Web3ModuleOptions} from 'web3-core';
+import {AbstractWeb3Module, Providers, RLPEncodedTransaction, TransactionConfig, Web3ModuleOptions} from 'web3-core';
 
 export class Personal extends AbstractWeb3Module {
     constructor(provider: provider, accounts: Accounts, options?: Web3ModuleOptions);
@@ -41,13 +41,13 @@ export class Personal extends AbstractWeb3Module {
     ): Promise<string>;
 
     signTransaction(
-        transation: Transaction,
+        transactionConfig: TransactionConfig,
         password: string,
         callback?: (error: Error, RLPEncodedTransaction: RLPEncodedTransaction) => void
     ): Promise<RLPEncodedTransaction>;
 
     sendTransaction(
-        transation: Transaction,
+        transactionConfig: TransactionConfig,
         password: string,
         callback?: (error: Error, transactionHash: string) => void
     ): Promise<string>;
