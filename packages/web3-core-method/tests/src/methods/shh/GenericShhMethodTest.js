@@ -94,7 +94,7 @@ const tests = [
     {
         method: NewKeyPairMethod,
         rpcMethod: 'shh_newKeyPair',
-        parametersAmount: 1
+        parametersAmount: 0
     },
     {
         method: NewMessageFilterMethod,
