@@ -73,7 +73,7 @@ export default class MethodsProxy {
                         if (name === 'contractConstructor') {
                             if (methodArguments[0]) {
                                 if (methodArguments[0]['data']) {
-                                    target.contract.options.data = methodArguments[0]['data'];
+                                    target.contract.data = methodArguments[0]['data'];
                                 }
 
                                 if (methodArguments[0]['arguments']) {
@@ -127,7 +127,7 @@ export default class MethodsProxy {
                     };
 
                     anonymousFunction.encodeABI = function() {
-                        return target.methodEncoder.encode(abiItemModel, target.contract.options.data);
+                        return target.methodEncoder.encode(abiItemModel, target.contract.data);
                     };
 
                     return anonymousFunction;
@@ -194,7 +194,7 @@ export default class MethodsProxy {
         }
 
         // Encode contract method
-        method.parameters[0]['data'] = this.methodEncoder.encode(abiItemModel, this.contract.options.data);
+        method.parameters[0]['data'] = this.methodEncoder.encode(abiItemModel, this.contract.data);
 
         // Set default options in the TxObject if required
         method.parameters[0] = this.methodOptionsMapper.map(this.contract, method.parameters[0]);
