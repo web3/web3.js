@@ -24,7 +24,7 @@ import {AbstractWeb3Module, RLPEncodedTransaction, TransactionConfig, Web3Module
 import * as net from 'net';
 
 export class Personal extends AbstractWeb3Module {
-    constructor(provider: provider, net?: net.Socket, options?: Web3ModuleOptions, accounts?: Accounts);
+    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions, accounts?: Accounts|null);
 
     newAccount(password: string, callback?: (error: Error, address: string) => void): Promise<string>;
 

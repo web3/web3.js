@@ -18,6 +18,7 @@
  */
 
 import * as net from 'net';
+import {AbstractMethodFactory} from 'web3-core-method';
 import {
     BatchRequest,
     EthereumProvider,
@@ -25,16 +26,18 @@ import {
     HttpProviderOptions,
     IpcProvider,
     provider,
-    ProviderDetector,
-    ProviderResolver,
-    ProvidersModuleFactory,
     WebsocketProvider,
     WebsocketProviderOptions
 } from 'web3-providers';
 import {BN} from 'web3-utils';
 
 export class AbstractWeb3Module {
-    constructor(provider: provider, options?: Web3ModuleOptions, methodFactory?: any, net?: net.Socket);
+    constructor(
+        provider: provider,
+        options?: Web3ModuleOptions,
+        methodFactory?: AbstractMethodFactory,
+        net?: net.Socket | null
+    );
 
     BatchRequest: new () => BatchRequest;
     defaultBlock: string | number;
@@ -113,17 +116,17 @@ export interface PromiEvent<T> extends Promise<T> {
 }
 
 export interface Transaction {
-	hash: string;
-	nonce: number;
-	blockHash: string | null;
-	blockNumber: number | null;
-	transactionIndex: number | null;
-	from: string;
-	to: string;
-	value: string;
-	gasPrice: string;
-	gas: number;
-	input: string;
+    hash: string;
+    nonce: number;
+    blockHash: string | null;
+    blockNumber: number | null;
+    transactionIndex: number | null;
+    from: string;
+    to: string;
+    value: string;
+    gasPrice: string;
+    gas: number;
+    input: string;
 }
 
 export interface TransactionConfig {

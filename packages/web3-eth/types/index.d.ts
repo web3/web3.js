@@ -35,12 +35,12 @@ import {AbiCoder} from 'web3-eth-abi';
 import {Network} from 'web3-net';
 import {Personal} from 'web3-eth-personal';
 import {AbiItem} from 'web3-utils';
-import * as net from "net";
+import * as net from 'net';
 
 export class Eth extends AbstractWeb3Module {
     constructor(
         provider: provider,
-        net?: net.Socket,
+        net?: net.Socket|null,
         options?: Web3ModuleOptions
     );
 

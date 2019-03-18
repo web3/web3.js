@@ -24,7 +24,7 @@ import * as net from 'net';
 export class Network extends AbstractWeb3Module {
     constructor(
         provider: provider,
-        net?: net.Socket,
+        net?: net.Socket|null,
         options?: Web3ModuleOptions
     );
 
