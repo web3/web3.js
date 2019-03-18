@@ -20,32 +20,19 @@
  * @date 2018
  */
 
-import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
+import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
-// TODO: Clean up this method and move the signing and observing logic to the eth module
-export default class SendTransactionMethod extends AbstractSendMethod {
+export default class SendTransactionMethod extends AbstractObservedTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
-     * @param {SendRawTransactionMethod} sendRawTransactionMethod
-     * @param {ChainIdMethod} chainIdMethod
-     * @param {GetTransactionCountMethod} getTransactionCountMethod
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {TransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(
-        utils,
-        formatters,
-        transactionConfirmationWorkflow,
-        sendRawTransactionMethod,
-        chainIdMethod,
-        getTransactionCountMethod
-    ) {
-        super('eth_sendTransaction', 1, utils, formatters, transactionConfirmationWorkflow);
-        this.sendRawTransactionMethod = sendRawTransactionMethod;
-        this.chainIdMethod = chainIdMethod;
-        this.getTransactionCountMethod = getTransactionCountMethod;
+    constructor(utils, formatters, moduleInstance, transactionObserver) {
+        super('eth_sendTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
     }
 
     /**
@@ -57,138 +44,5 @@ export default class SendTransactionMethod extends AbstractSendMethod {
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
-    }
-
-    /**
-     * Checks if gasPrice is set, sends the request and returns a PromiEvent Object
-     *
-     * @method execute
-     *
-     * @param {Eth} moduleInstance
-     * @param {PromiEvent} promiEvent
-     *
-     * @callback callback callback(error, result)
-     * @returns {PromiEvent}
-     */
-    execute(moduleInstance, promiEvent) {
-        if (!this.parameters[0].gas && moduleInstance.defaultGas) {
-            this.parameters[0]['gas'] = moduleInstance.defaultGas;
-        }
-
-        if (!this.parameters[0].gasPrice) {
-            if (!moduleInstance.defaultGasPrice) {
-                moduleInstance.currentProvider.send('eth_gasPrice', []).then((gasPrice) => {
-                    this.parameters[0].gasPrice = gasPrice;
-
-                    this.execute(moduleInstance, promiEvent);
-                });
-
-                return promiEvent;
-            }
-
-            this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
-        }
-
-        if (this.hasAccounts(moduleInstance) && this.isDefaultSigner(moduleInstance)) {
-            if (moduleInstance.accounts.wallet[this.parameters[0].from]) {
-                this.sendRawTransaction(
-                    moduleInstance.accounts.wallet[this.parameters[0].from].privateKey,
-                    promiEvent,
-                    moduleInstance
-                ).catch((error) => {
-                    if (this.callback) {
-                        this.callback(error, null);
-                    }
-
-                    promiEvent.reject(error);
-                    promiEvent.emit('error', error);
-                    promiEvent.removeAllListeners();
-                });
-
-                return promiEvent;
-            }
-        }
-
-        if (this.hasCustomSigner(moduleInstance)) {
-            this.sendRawTransaction(null, promiEvent, moduleInstance).catch((error) => {
-                if (this.callback) {
-                    this.callback(error, null);
-                }
-
-                promiEvent.reject(error);
-                promiEvent.emit('error', error);
-                promiEvent.removeAllListeners();
-            });
-
-            return promiEvent;
-        }
-
-        super.execute(moduleInstance, promiEvent);
-
-        return promiEvent;
-    }
-
-    /**
-     * Signs the transaction and executes the SendRawTransaction method.
-     *
-     * @method sendRawTransaction
-     *
-     * @param {String} privateKey
-     * @param {PromiEvent} promiEvent
-     * @param {Eth} moduleInstance
-     */
-    async sendRawTransaction(privateKey, promiEvent, moduleInstance) {
-        if (!this.parameters[0].chainId) {
-            this.parameters[0].chainId = await this.chainIdMethod.execute(moduleInstance);
-        }
-
-        if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
-            this.getTransactionCountMethod.parameters = [this.parameters[0].from];
-            this.parameters[0].nonce = await this.getTransactionCountMethod.execute(moduleInstance);
-        }
-
-        const response = await moduleInstance.transactionSigner.sign(this.parameters[0], privateKey);
-        this.sendRawTransactionMethod.parameters = [response.rawTransaction];
-        this.sendRawTransactionMethod.callback = this.callback;
-        this.sendRawTransactionMethod.execute(moduleInstance, promiEvent);
-    }
-
-    /**
-     * Checks if the current module has decrypted accounts
-     *
-     * @method isDefaultSigner
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Boolean}
-     */
-    isDefaultSigner(moduleInstance) {
-        return moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
-    }
-
-    /**
-     * Checks if the current module has decrypted accounts
-     *
-     * @method hasAccounts
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Boolean}
-     */
-    hasAccounts(moduleInstance) {
-        return moduleInstance.accounts && moduleInstance.accounts.accountsIndex > 0;
-    }
-
-    /**
-     * Checks if a custom signer is given.
-     *
-     * @method hasCustomerSigner
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Boolean}
-     */
-    hasCustomSigner(moduleInstance) {
-        return moduleInstance.transactionSigner.constructor.name !== 'TransactionSigner';
     }
 }

@@ -18,7 +18,6 @@
     "dependencies": {
         "@babel/runtime": "^7.3.1",
         "crypto-browserify": "3.12.0",
-        "dtslint": "0.5.4",
         "eth-lib": "0.2.8",
         "lodash": "^4.17.11",
         "scrypt.js": "0.2.0",
@@ -30,7 +29,8 @@
         "web3-utils": "1.0.0-beta.48"
     },
     "devDependencies": {
-        "dtslint": "^0.4.2"
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     },
     "files": [
         "dist",

@@ -1,13 +1,9 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
 import {CallMethod} from 'web3-core-method';
 import AbiItemModel from '../../../src/models/AbiItemModel';
 import CallContractMethod from '../../../src/methods/CallContractMethod';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
 jest.mock('AbiCoder');
 jest.mock('../../../src/models/AbiItemModel');
 
@@ -24,13 +20,11 @@ describe('CallContractMethodTest', () => {
         new AbiItemModel();
         abiItemModelMock = AbiItemModel.mock.instances[0];
 
-        callContractMethod = new CallContractMethod(Utils, formatters, abiCoderMock, abiItemModelMock);
+        callContractMethod = new CallContractMethod({}, {}, {}, abiCoderMock, abiItemModelMock);
     });
 
     it('constructor check', () => {
-        expect(callContractMethod.utils).toEqual(Utils);
-
-        expect(callContractMethod.formatters).toEqual(formatters);
+        expect(callContractMethod.abiCoder).toEqual(abiCoderMock);
 
         expect(callContractMethod.abiItemModel).toEqual(abiItemModelMock);
 

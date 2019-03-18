@@ -1,4 +1,4 @@
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetWorkMethod from '../../../../src/methods/node/GetWorkMethod';
 
 /**
@@ -8,11 +8,11 @@ describe('GetWorkMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetWorkMethod(null, null);
+        method = new GetWorkMethod(null, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_getWork');
 

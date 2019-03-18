@@ -15,22 +15,23 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file ListeningMethod.js
+ * @file ChainIdMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class ChainIdMethod extends AbstractCallMethod {
+export default class ChainIdMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_chainId', 0, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_chainId', 0, utils, formatters, moduleInstance);
     }
 
     /**

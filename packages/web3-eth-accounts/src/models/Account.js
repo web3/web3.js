@@ -102,7 +102,7 @@ export default class Account {
      * @returns {EncryptedKeystoreV3Json | {version, id, address, crypto}}
      */
     encrypt(password, options) {
-        return Account.fromPrivateKey(this.privateKey, this.accounts.transactionSinger).toV3Keystore(password, options);
+        return Account.fromPrivateKey(this.privateKey, this.accounts.transactionSigner).toV3Keystore(password, options);
     }
 
     /**

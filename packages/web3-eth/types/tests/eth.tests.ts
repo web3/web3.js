@@ -71,7 +71,7 @@ eth.subscribe('pendingTransactions', null, (error: Error, transactionHash: strin
 // $ExpectType Providers
 Eth.providers;
 
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
+// $ExpectType object | null
 eth.givenProvider;
 
 // $ExpectType BatchRequest

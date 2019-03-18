@@ -2,7 +2,6 @@
 import ProvidersModuleFactory from '../../../src/factories/ProvidersModuleFactory';
 import BatchRequest from '../../../src/batch-request/BatchRequest';
 import ProviderResolver from '../../../src/resolvers/ProviderResolver';
-import ProviderDetector from '../../../src/detectors/ProviderDetector';
 import HttpProvider from '../../../src/providers/HttpProvider';
 import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import IpcProvider from '../../../src/providers/IpcProvider';
@@ -16,7 +15,6 @@ jest.mock('websocket');
 // Mocks
 jest.mock('../../../src/batch-request/BatchRequest');
 jest.mock('../../../src/resolvers/ProviderResolver');
-jest.mock('../../../src/detectors/ProviderDetector');
 jest.mock('../../../src/providers/HttpProvider');
 jest.mock('../../../src/providers/WebsocketProvider');
 jest.mock('../../../src/providers/IpcProvider');
@@ -38,10 +36,6 @@ describe('ProvidersModuleFactoryTest', () => {
 
     it('createProviderResolver returns instance of ProviderResolver', () => {
         expect(providersModuleFactory.createProviderResolver()).toBeInstanceOf(ProviderResolver);
-    });
-
-    it('createProviderDetector returns instance of ProviderDetector', () => {
-        expect(providersModuleFactory.createProviderDetector()).toBeInstanceOf(ProviderDetector);
     });
 
     it('createHttpProvider returns instance of HttpProvider', () => {

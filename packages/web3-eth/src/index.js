@@ -20,42 +20,28 @@
  * @date 2018
  */
 
-import {MethodModuleFactory} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
-import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Accounts} from 'web3-eth-accounts';
 import {Ens} from 'web3-eth-ens';
 import {ContractModuleFactory} from 'web3-eth-contract';
 import {Personal} from 'web3-eth-personal';
 import {AbiCoder} from 'web3-eth-abi';
 import {Iban} from 'web3-eth-iban';
-import {ProvidersModuleFactory} from 'web3-providers';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import EthTransactionSigner from './signers/TransactionSigner';
+import MethodFactory from './factories/MethodFactory';
+import SubscriptionsFactory from './factories/SubscriptionsFactory';
 import EthModule from './Eth.js';
-import EthMethodFactory from './factories/MethodFactory';
 
 /**
  * Creates the TransactionSigner class
  *
  * @returns {TransactionSigner}
- *
  * @constructor
  */
 export const TransactionSigner = () => {
     return new EthTransactionSigner(Utils, formatters);
-};
-
-/**
- * Creates the MethodFactory class of the eth module
- *
- * @returns {MethodFactory}
- *
- * @constructor
- */
-export const MethodFactory = () => {
-    return new EthMethodFactory(new MethodModuleFactory(), Utils, formatters);
 };
 
 /**
@@ -68,7 +54,6 @@ export const MethodFactory = () => {
  * @param {Object} options
  *
  * @returns {Eth}
- *
  * @constructor
  */
 export const Eth = (provider, net, options) => {
@@ -76,25 +61,22 @@ export const Eth = (provider, net, options) => {
         options.transactionSigner = new TransactionSigner();
     }
 
-    const accounts = new Accounts(provider, options);
+    const accounts = new Accounts(provider, net, options);
     const abiCoder = new AbiCoder();
-    const methodModuleFactory = new MethodModuleFactory();
 
     return new EthModule(
         provider,
-        new ProvidersModuleFactory(),
-        methodModuleFactory,
-        new MethodFactory(),
-        new Network(provider, options),
+        new MethodFactory(Utils, formatters),
+        new Network(provider, net, options),
         accounts,
-        new Personal(provider, accounts, options),
+        new Personal(provider, net, accounts, options),
         Iban,
         abiCoder,
-        new Ens(provider, accounts, options),
+        new Ens(provider, net, accounts, options),
         Utils,
         formatters,
-        new SubscriptionsFactory(),
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
+        new SubscriptionsFactory(Utils, formatters),
+        new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
         options,
         net
     );

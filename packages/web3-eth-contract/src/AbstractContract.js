@@ -25,8 +25,6 @@ import {AbstractWeb3Module} from 'web3-core';
 export default class AbstractContract extends AbstractWeb3Module {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {AbiCoder} abiCoder
      * @param {Accounts} accounts
@@ -40,8 +38,6 @@ export default class AbstractContract extends AbstractWeb3Module {
      */
     constructor(
         provider,
-        providersModuleFactory,
-        methodModuleFactory,
         contractModuleFactory,
         accounts,
         abiCoder,
@@ -51,7 +47,7 @@ export default class AbstractContract extends AbstractWeb3Module {
         address = '',
         options = {}
     ) {
-        super(provider, providersModuleFactory, methodModuleFactory, null, options);
+        super(provider, options, null, null);
 
         this.contractModuleFactory = contractModuleFactory;
         this.abiCoder = abiCoder;
@@ -165,15 +161,15 @@ export default class AbstractContract extends AbstractWeb3Module {
                 return Promise.reject(new Error(`Event with name "${eventName}" does not exists.`));
             }
 
-            method = this.methodFactory.createPastEventLogsMethod(this.abiModel.getEvent(eventName));
+            method = this.methodFactory.createPastEventLogsMethod(this.abiModel.getEvent(eventName), this);
         } else {
-            method = this.methodFactory.createAllPastEventLogsMethod(this.abiModel);
+            method = this.methodFactory.createAllPastEventLogsMethod(this.abiModel, this);
         }
 
         method.parameters = [options];
         method.callback = callback;
 
-        return method.execute(this);
+        return method.execute();
     }
 
     /**
@@ -201,7 +197,6 @@ export default class AbstractContract extends AbstractWeb3Module {
     clone() {
         const clone = this.contractModuleFactory.createContract(
             this.currentProvider,
-            this.providersModuleFactory,
             this.accounts,
             [],
             '',

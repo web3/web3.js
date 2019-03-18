@@ -20,16 +20,17 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class SetMaxMessageSizeMethod extends AbstractCallMethod {
+export default class SetMaxMessageSizeMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('shh_setMaxMessageSize', 1, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('shh_setMaxMessageSize', 1, utils, formatters, moduleInstance);
     }
 }

@@ -26,13 +26,14 @@ export default class CallContractMethod extends CallMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      * @param {AbiCoder} abiCoder
      * @param {AbiItemModel} abiItemModel
      *
      * @constructor
      */
-    constructor(utils, formatters, abiCoder, abiItemModel) {
-        super(utils, formatters);
+    constructor(utils, formatters, moduleInstance, abiCoder, abiItemModel) {
+        super(utils, formatters, moduleInstance);
         this.abiCoder = abiCoder;
         this.abiItemModel = abiItemModel;
     }

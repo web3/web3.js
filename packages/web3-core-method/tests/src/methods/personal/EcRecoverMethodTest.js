@@ -1,5 +1,5 @@
 import {formatters} from 'web3-core-helpers';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import EcRecoverMethod from '../../../../src/methods/personal/EcRecoverMethod';
 
 // Mocks
@@ -12,11 +12,11 @@ describe('EcRecoverMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new EcRecoverMethod(null, formatters);
+        method = new EcRecoverMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('personal_ecRecover');
 

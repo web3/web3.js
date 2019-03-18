@@ -23,7 +23,7 @@
 // TODO: objects and do them the functional way because of the tree shaking.
 // TODO: Move the folders back to simpler structure e.g.: "packages/core/<methods|subscriptions|providers>"
 import {AbstractWeb3Module} from 'web3-core';
-import {ProvidersModuleFactory} from 'web3-providers';
+import {ProviderDetector, ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {Eth} from 'web3-eth';
 import {Shh} from 'web3-shh';
@@ -40,8 +40,8 @@ export default class Web3 extends AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(provider, net = null, options = {}) {
-        super(provider, new ProvidersModuleFactory(), null, null, options, net);
+    constructor(provider, net, options = {}) {
+        super(provider, options, null, net);
 
         this.eth = new Eth(this.currentProvider, net, options);
         this.shh = new Shh(this.currentProvider, net, options);
@@ -106,9 +106,9 @@ export default class Web3 extends AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionBlockTimeout(value) {
+        super.transactionBlockTimeout = value;
         this.eth.transactionBlockTimeout = value;
         this.shh.transactionBlockTimeout = value;
-        super.transactionBlockTimeout = value;
     }
 
     /**
@@ -130,9 +130,9 @@ export default class Web3 extends AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionConfirmationBlocks(value) {
+        super.transactionConfirmationBlocks = value;
         this.eth.transactionConfirmationBlocks = value;
         this.shh.transactionConfirmationBlocks = value;
-        super.transactionConfirmationBlocks = value;
     }
 
     /**
@@ -154,9 +154,9 @@ export default class Web3 extends AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionPollingTimeout(value) {
+        super.transactionPollingTimeout = value;
         this.eth.transactionPollingTimeout = value;
         this.shh.transactionPollingTimeout = value;
-        super.transactionPollingTimeout = value;
     }
 
     /**
@@ -243,7 +243,7 @@ export default class Web3 extends AbstractWeb3Module {
      * @returns {Object}
      */
     static get givenProvider() {
-        return new ProvidersModuleFactory().createProviderDetector().detect();
+        return ProviderDetector.detect();
     }
 
     /**

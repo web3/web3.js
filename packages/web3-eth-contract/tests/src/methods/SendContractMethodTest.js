@@ -1,23 +1,9 @@
-import {
-    SendTransactionMethod,
-    SendRawTransactionMethod,
-    ChainIdMethod,
-    GetTransactionCountMethod
-} from 'web3-core-method';
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
-import TransactionConfirmationWorkflow from '../../__mocks__/TransactionConfirmationWorkflow';
-import AllEventsLogDecoder from '../../../src/decoders/AllEventsLogDecoder';
+import {EthSendTransactionMethod} from 'web3-core-method';
 import AbiModel from '../../../src/models/AbiModel';
+import AllEventsLogDecoder from '../../../src/decoders/AllEventsLogDecoder';
 import SendContractMethod from '../../../src/methods/SendContractMethod';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
-jest.mock('Accounts');
-jest.mock('SendRawTransactionMethod');
-jest.mock('ChainIdMethod');
-jest.mock('GetTransactionCountMethod');
 jest.mock('../../../src/decoders/AllEventsLogDecoder');
 jest.mock('../../../src/models/AbiItemModel');
 jest.mock('../../../src/models/AbiModel');
@@ -26,42 +12,16 @@ jest.mock('../../../src/models/AbiModel');
  * SendContractMethod test
  */
 describe('SendContractMethodTest', () => {
-    let sendContractMethod,
-        transactionConfirmationWorkflowMock,
-        allEventsLogDecoderMock,
-        abiModelMock,
-        sendRawTransactionMethodMock,
-        chainIdMethodMock,
-        getTransactionCountMethodMock;
+    let sendContractMethod, allEventsLogDecoderMock, abiModelMock;
 
     beforeEach(() => {
-        transactionConfirmationWorkflowMock = new TransactionConfirmationWorkflow();
-
         new AbiModel();
         abiModelMock = AbiModel.mock.instances[0];
 
         new AllEventsLogDecoder();
         allEventsLogDecoderMock = AllEventsLogDecoder.mock.instances[0];
 
-        new SendRawTransactionMethod();
-        sendRawTransactionMethodMock = SendRawTransactionMethod.mock.instances[0];
-
-        new ChainIdMethod();
-        chainIdMethodMock = ChainIdMethod.mock.instances[0];
-
-        new GetTransactionCountMethod();
-        getTransactionCountMethodMock = GetTransactionCountMethod.mock.instances[0];
-
-        sendContractMethod = new SendContractMethod(
-            Utils,
-            formatters,
-            transactionConfirmationWorkflowMock,
-            sendRawTransactionMethodMock,
-            chainIdMethodMock,
-            getTransactionCountMethodMock,
-            allEventsLogDecoderMock,
-            abiModelMock
-        );
+        sendContractMethod = new SendContractMethod({}, {}, {}, {}, {}, {}, {}, allEventsLogDecoderMock, abiModelMock);
     });
 
     it('constructor check', () => {
@@ -69,7 +29,7 @@ describe('SendContractMethodTest', () => {
 
         expect(sendContractMethod.abiModel).toEqual(abiModelMock);
 
-        expect(sendContractMethod).toBeInstanceOf(SendTransactionMethod);
+        expect(sendContractMethod).toBeInstanceOf(EthSendTransactionMethod);
     });
 
     it('calls afterExecution and returns the expected result', () => {
