@@ -22,7 +22,8 @@
         "swarm-js": "^0.1.39"
     },
     "devDependencies": {
-        "dtslint": "^0.4.2"
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     },
     "files": [
         "dist",
