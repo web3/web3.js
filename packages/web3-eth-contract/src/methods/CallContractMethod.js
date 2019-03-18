@@ -22,6 +22,7 @@
 
 import {CallMethod} from 'web3-core-method';
 
+// TODO: Implement revert handling (AbstractContractMethod)
 export default class CallContractMethod extends CallMethod {
     /**
      * @param {Utils} utils

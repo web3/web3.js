@@ -31,6 +31,6 @@ export default class NewKeyPairMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('shh_newKeyPair', 1, utils, formatters, moduleInstance);
+        super('shh_newKeyPair', 0, utils, formatters, moduleInstance);
     }
 }
