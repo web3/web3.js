@@ -108,4 +108,5 @@ export interface EncryptedKeystoreV3Json {
 
 export interface Sign extends SignedTransaction {
     message: string;
+    signature: string;
 }
