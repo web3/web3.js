@@ -127,7 +127,7 @@ export default class MethodsProxy {
                     };
 
                     anonymousFunction.encodeABI = function() {
-                        return target.methodEncoder.encode(abiItemModel, target.contract.options.data);
+                        return target.methodEncoder.encode(abiItemModel, target.contract.data);
                     };
 
                     return anonymousFunction;
