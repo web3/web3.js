@@ -66,7 +66,7 @@ export default class ProviderResolver {
             }
         }
 
-        if (this.isWeb3Provider(provider)) {
+        if (provider.sendPayload && provider.subscribe) {
             return provider;
         }
 
@@ -83,28 +83,6 @@ export default class ProviderResolver {
         }
 
         return this.providersModuleFactory.createCustomProvider(provider);
-    }
-
-    /**
-     * Checks if the given provider is an internal Web3 provider.
-     *
-     * @method isWeb3Provider
-     *
-     * @param {Object} provider
-     *
-     * @returns {Boolean}
-     */
-    isWeb3Provider(provider) {
-        switch (provider.constructor.name) {
-            case 'HttpProvider':
-            case 'IpcProvider':
-            case 'WebsocketProvider':
-            case 'CustomProvider':
-            case 'MetamaskProvider':
-            case 'MistEthereumProvider':
-            case 'Web3EthereumProvider':
-                return true;
-        }
     }
 
     /**
