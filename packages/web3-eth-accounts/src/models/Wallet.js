@@ -17,32 +17,22 @@
  * @date 2019
  */
 
-import has from 'lodash/has';
 import isString from 'lodash/isString';
 import Account from './Account';
 
 export default class Wallet {
     /**
      * @param {Utils} utils
-     * @param {Accounts} accounts
+     * @param {Accounts} accountsModule
      *
      * @constructor
      */
-    constructor(utils, accounts) {
+    constructor(utils, accountsModule) {
         this.utils = utils;
-        this.accounts = accounts;
-        this.length = 0;
+        this.accountsModule = accountsModule;
         this.defaultKeyName = 'web3js_wallet';
         this.accounts = {};
         this.accountsIndex = 0;
-
-        return new Proxy(this, {
-            get: (target, name) => {
-                if (this.readWhiteList.includes(name)) {
-                    return target[name];
-                }
-            }
-        });
     }
 
     /**
@@ -56,7 +46,7 @@ export default class Wallet {
      * @returns {Wallet}
      */
     create(numberOfAccounts, entropy) {
-        const account = Account.from(entropy || this.utils.randomHex(32));
+        const account = Account.from(entropy || this.utils.randomHex(32), this.accountsModule);
 
         for (let i = 0; i < numberOfAccounts; ++i) {
             this.add(account.privateKey);
@@ -76,11 +66,10 @@ export default class Wallet {
      */
     add(account) {
         if (isString(account)) {
-            account = Account.fromPrivateKey(account);
+            account = Account.fromPrivateKey(account, this.accountsModule);
         }
-
         if (!this.accounts[account.address]) {
-            this.accounts[account.index] = account;
+            this.accounts[this.accountsIndex] = account;
             this.accounts[account.address] = account;
             this.accounts[account.address.toLowerCase()] = account;
 
@@ -127,10 +116,8 @@ export default class Wallet {
      * @returns {Wallet}
      */
     clear() {
-        while(let i <= this.accountsIndex) {
+        for (let i = 0; i <= this.accountsIndex; i++) {
             this.remove(i);
-
-            i++;
         }
 
         this.accountsIndex = 0;
@@ -151,10 +138,8 @@ export default class Wallet {
     encrypt(password, options) {
         let encryptedAccounts = [];
 
-        while(let i <= this.accountsIndex) {
+        for (let i = 0; i <= this.accountsIndex; i++) {
             encryptedAccounts.push(this.accounts[index].encrypt(password, options));
-
-            i++;
         }
 
         return encryptedAccounts;
@@ -172,10 +157,10 @@ export default class Wallet {
      */
     decrypt(encryptedWallet, password) {
         encryptedWallet.forEach((keystore) => {
-            const account = Account.fromV3Keystore(keystore, password);
+            const account = Account.fromV3Keystore(keystore, password, this.accountsModule);
 
             if (!account) {
-                throw new Error("Couldn't decrypt accounts. Password wrong?");
+                throw new Error('Couldn\'t decrypt accounts. Password wrong?');
             }
 
             this.add(account);
@@ -195,6 +180,8 @@ export default class Wallet {
      * @returns {boolean}
      */
     save(password, keyName) {
+        console.warn(`SECURITY WARNING: It's not highly insecure to store accounts in the localStorage!`);
+
         if (typeof localStorage === 'undefined') {
             throw new TypeError('window.localStorage is undefined.');
         }
@@ -229,6 +216,8 @@ export default class Wallet {
      * @returns {Wallet}
      */
     load(password, keyName) {
+        console.warn(`SECURITY WARNING: It's not highly insecure to store accounts in the localStorage!`);
+
         if (typeof localStorage === 'undefined') {
             throw new TypeError('window.localStorage is undefined.');
         }
@@ -238,7 +227,9 @@ export default class Wallet {
             keystore = localStorage.getItem(keyName || this.defaultKeyName);
 
             if (keystore) {
-                keystore = JSON.parse(keystore);
+                keystore = JSON.parse(keystore).map((item) => {
+                    Account.fromV3Keystore(item, password, false, this.accountsModule);
+                });
             }
         } catch (error) {
             // code 18 means trying to use local storage in a iframe

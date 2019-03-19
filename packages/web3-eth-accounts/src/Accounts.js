@@ -23,14 +23,14 @@
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
 import isBoolean from 'lodash/isBoolean';
-import isString from 'lodash/isString';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import {encodeSignature, recover} from 'eth-lib/lib/account'; // TODO: Remove this dependency
-import {hexToBytes, isHexStrict, randomHex} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
+import {hexToBytes, isHexStrict} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 import {AbstractWeb3Module} from 'web3-core';
 import Account from './models/Account';
+import Wallet from './models/Wallet';
 
 // TODO: Rename Accounts module to Wallet and move the Wallet class to the eth module.
 export default class Accounts extends AbstractWeb3Module {
