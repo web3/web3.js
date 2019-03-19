@@ -35,6 +35,7 @@ import EnsModuleFactory from './factories/EnsModuleFactory';
  * @param {Object} options
  * @param {Accounts} accounts
  *
+ * @constructor
  * @returns {Ens}
  */
 export function Ens(provider, net = null, options = {}, accounts = {}) {
