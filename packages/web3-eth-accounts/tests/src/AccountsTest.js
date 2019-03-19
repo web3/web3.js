@@ -11,6 +11,7 @@ import {AbstractWeb3Module} from 'web3-core';
 
 // Mocks
 jest.mock('formatters');
+jest.mock('Utils');
 jest.mock('eth-lib/lib/rlp');
 jest.mock('eth-lib/lib/nat');
 jest.mock('eth-lib/lib/bytes');
