@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import BigNumber = require('bn.js');
+import BN = require('bn.js');
 import {Buffer} from 'buffer';
 
 export type Unit =
@@ -67,11 +67,6 @@ export type Mixed =
     | boolean;
 
 export type Hex = string | number;
-
-export class BN extends BigNumber {
-    constructor(number: number | string | number[] | Buffer | BN, base?: number | 'hex', endian?: 'le' | 'be');
-    super(number: number | string | number[] | Buffer | BN, base?: number | 'hex', endian?: 'le' | 'be'): BigNumber;
-}
 
 // utils types
 export function isBN(value: string | number): boolean;
@@ -219,11 +214,11 @@ export interface AbiInput {
     name: string;
     type: string;
     indexed?: boolean;
-	components?: AbiInput[];
+    components?: AbiInput[];
 }
 
 export interface AbiOutput {
     name: string;
     type: string;
-	components?: AbiOutput[];
+    components?: AbiOutput[];
 }

@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, keccak256} from 'web3-utils';
+import BN = require('bn.js');
+import {keccak256} from 'web3-utils';
 
 // $ExpectType string
 keccak256('234');

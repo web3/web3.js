@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, getSignatureParameters} from 'web3-utils';
+import BN = require('bn.js');
+import {getSignatureParameters} from 'web3-utils';
 
 // $ExpectType { r: string; s: string; v: number; }
 getSignatureParameters(

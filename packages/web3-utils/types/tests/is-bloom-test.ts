@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, isBloom} from 'web3-utils';
+import BN = require('bn.js');
+import {isBloom} from 'web3-utils';
 
 // $ExpectType boolean
 isBloom('0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef');

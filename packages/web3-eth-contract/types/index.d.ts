@@ -17,8 +17,9 @@
  * @date 2018
  */
 
+import BN = require('bn.js');
 import {provider} from 'web3-providers';
-import {AbiItem, BN} from 'web3-utils';
+import {AbiItem} from 'web3-utils';
 import {PromiEvent} from 'web3-core';
 
 export class Contract {

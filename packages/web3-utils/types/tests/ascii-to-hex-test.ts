@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {asciiToHex, BN} from 'web3-utils';
+import BN = require('bn.js');
+import {asciiToHex} from 'web3-utils';
 
 // $ExpectType string
 asciiToHex('I have 100!');
