@@ -46,13 +46,24 @@ export default class Wallet {
      * @returns {Wallet}
      */
     create(numberOfAccounts, entropy) {
-        const account = Account.from(entropy || this.utils.randomHex(32), this.accountsModule);
-
         for (let i = 0; i < numberOfAccounts; ++i) {
-            this.add(account.privateKey);
+            this.add(Account.from(entropy || this.utils.randomHex(32), this.accountsModule));
         }
 
         return this;
+    }
+
+    /**
+     * Returns the account by the given index or address.
+     *
+     * @method get
+     *
+     * @param {Number|String} account
+     *
+     * @returns {Account}
+     */
+    get(account) {
+        return this.accounts[account];
     }
 
     /**
@@ -68,10 +79,13 @@ export default class Wallet {
         if (isString(account)) {
             account = Account.fromPrivateKey(account, this.accountsModule);
         }
+
         if (!this.accounts[account.address]) {
             this.accounts[this.accountsIndex] = account;
             this.accounts[account.address] = account;
             this.accounts[account.address.toLowerCase()] = account;
+
+            this.accountsIndex++;
 
             return account;
         }
@@ -89,17 +103,11 @@ export default class Wallet {
      * @returns {Boolean}
      */
     remove(addressOrIndex) {
-        const account = this[addressOrIndex];
+        const account = this.accounts[addressOrIndex];
 
-        if (account && account.address) {
-            // address
-            this.accounts[account.address].privateKey = null;
+        if (account) {
             delete this.accounts[account.address];
-            // address lowercase
-            this.accounts[account.address.toLowerCase()].privateKey = null;
             delete this.accounts[account.address.toLowerCase()];
-            // index
-            this.accounts[account.index].privateKey = null;
             delete this.accounts[account.index];
 
             return true;
@@ -139,7 +147,7 @@ export default class Wallet {
         let encryptedAccounts = [];
 
         for (let i = 0; i <= this.accountsIndex; i++) {
-            encryptedAccounts.push(this.accounts[index].encrypt(password, options));
+            encryptedAccounts.push(this.accounts[i].encrypt(password, options));
         }
 
         return encryptedAccounts;
@@ -157,7 +165,7 @@ export default class Wallet {
      */
     decrypt(encryptedWallet, password) {
         encryptedWallet.forEach((keystore) => {
-            const account = Account.fromV3Keystore(keystore, password, this.accountsModule);
+            const account = Account.fromV3Keystore(keystore, password, false, this.accountsModule);
 
             if (!account) {
                 throw new Error('Couldn\'t decrypt accounts. Password wrong?');
@@ -179,7 +187,7 @@ export default class Wallet {
      *
      * @returns {boolean}
      */
-    save(password, keyName) {
+    /* istanbul ignore next */ save(password, keyName) {
         console.warn(`SECURITY WARNING: It's not highly insecure to store accounts in the localStorage!`);
 
         if (typeof localStorage === 'undefined') {
@@ -215,7 +223,7 @@ export default class Wallet {
      *
      * @returns {Wallet}
      */
-    load(password, keyName) {
+    /* istanbul ignore next */ load(password, keyName) {
         console.warn(`SECURITY WARNING: It's not highly insecure to store accounts in the localStorage!`);
 
         if (typeof localStorage === 'undefined') {
