@@ -1,5 +1,4 @@
 import * as Utils from 'web3-utils';
-import {hexToBytes, isHexStrict} from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
@@ -11,8 +10,6 @@ import Account from '../../src/models/Account';
 import {AbstractWeb3Module} from 'web3-core';
 
 // Mocks
-jest.mock('isHexStrict');
-jest.mock('hexToBytes');
 jest.mock('formatters');
 jest.mock('eth-lib/lib/rlp');
 jest.mock('eth-lib/lib/nat');
@@ -289,9 +286,9 @@ describe('AccountsTest', () => {
     it('calls sign with strict hex string and returns the expected value', () => {
         const sign = jest.fn();
 
-        isHexStrict.mockReturnValueOnce(true);
+        Utils.isHexStrict.mockReturnValueOnce(true);
 
-        hexToBytes.mockReturnValueOnce('data');
+        Utils.hexToBytes.mockReturnValueOnce('data');
 
         sign.mockReturnValueOnce(true);
 
@@ -301,9 +298,9 @@ describe('AccountsTest', () => {
 
         expect(sign).toHaveBeenCalledWith('data');
 
-        expect(isHexStrict).toHaveBeenCalledWith('data');
+        expect(Utils.isHexStrict).toHaveBeenCalledWith('data');
 
-        expect(hexToBytes).toHaveBeenCalledWith('data');
+        expect(Utils.hexToBytes).toHaveBeenCalledWith('data');
 
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
     });
@@ -311,7 +308,7 @@ describe('AccountsTest', () => {
     it('calls sign with non-strict hex string and returns the expected value', () => {
         const sign = jest.fn();
 
-        isHexStrict.mockReturnValueOnce(false);
+        Utils.isHexStrict.mockReturnValueOnce(false);
 
         sign.mockReturnValueOnce(true);
 
@@ -321,13 +318,13 @@ describe('AccountsTest', () => {
 
         expect(sign).toHaveBeenCalledWith('data');
 
-        expect(isHexStrict).toHaveBeenCalledWith('data');
+        expect(Utils.isHexStrict).toHaveBeenCalledWith('data');
 
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
     });
 
     it('calls recover with a string as message and returns the expected value', () => {
-        isHexStrict.mockReturnValueOnce(false);
+        Utils.isHexStrict.mockReturnValueOnce(false);
 
         Hash.keccak256s.mockReturnValueOnce('keccak');
 
@@ -335,7 +332,7 @@ describe('AccountsTest', () => {
 
         expect(accounts.recover('message', 'signature', false)).toEqual('recovered');
 
-        expect(isHexStrict).toHaveBeenCalledWith('message');
+        expect(Utils.isHexStrict).toHaveBeenCalledWith('message');
 
         expect(Hash.keccak256s).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')])
@@ -345,9 +342,9 @@ describe('AccountsTest', () => {
     });
 
     it('calls recover with a strict hex string as message and returns the expected value', () => {
-        isHexStrict.mockReturnValueOnce(true);
+        Utils.isHexStrict.mockReturnValueOnce(true);
 
-        hexToBytes.mockReturnValueOnce('message');
+        Utils.hexToBytes.mockReturnValueOnce('message');
 
         Hash.keccak256s.mockReturnValueOnce('keccak');
 
@@ -355,9 +352,9 @@ describe('AccountsTest', () => {
 
         expect(accounts.recover('message', 'signature', false)).toEqual('recovered');
 
-        expect(isHexStrict).toHaveBeenCalledWith('message');
+        expect(Utils.isHexStrict).toHaveBeenCalledWith('message');
 
-        expect(hexToBytes).toHaveBeenCalledWith('message');
+        expect(Utils.hexToBytes).toHaveBeenCalledWith('message');
 
         expect(Hash.keccak256s).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')])

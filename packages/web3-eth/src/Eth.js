@@ -96,10 +96,11 @@ export default class Eth extends AbstractWeb3Module {
                     defaultGas: options.gas || options.defaultGas || this.defaultGas,
                     defaultGasPrice: options.gasPrice || options.defaultGasPrice || this.defaultGasPrice,
                     transactionBlockTimeout: options.transactionBlockTimeout || this.transactionBlockTimeout,
-                    transactionConfirmationBlocks: options.transactionConfirmationBlocks || this.transactionConfirmationBlocks,
+                    transactionConfirmationBlocks:
+                        options.transactionConfirmationBlocks || this.transactionConfirmationBlocks,
                     transactionPollingTimeout: options.transactionPollingTimeout || this.transactionPollingTimeout,
                     transactionSigner: this.transactionSigner,
-                    data: options.data,
+                    data: options.data
                 }
             );
 

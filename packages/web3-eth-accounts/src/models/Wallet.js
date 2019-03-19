@@ -168,7 +168,7 @@ export default class Wallet {
             const account = Account.fromV3Keystore(keystore, password, false, this.accountsModule);
 
             if (!account) {
-                throw new Error('Couldn\'t decrypt accounts. Password wrong?');
+                throw new Error("Couldn't decrypt accounts. Password wrong?");
             }
 
             this.add(account);
@@ -188,7 +188,7 @@ export default class Wallet {
      * @returns {boolean}
      */
     /* istanbul ignore next */ save(password, keyName) {
-        console.warn(`SECURITY WARNING: It's not highly insecure to store accounts in the localStorage!`);
+        console.warn("SECURITY WARNING: It's not highly insecure to store accounts in the localStorage!");
 
         if (typeof localStorage === 'undefined') {
             throw new TypeError('window.localStorage is undefined.');
@@ -224,7 +224,7 @@ export default class Wallet {
      * @returns {Wallet}
      */
     /* istanbul ignore next */ load(password, keyName) {
-        console.warn(`SECURITY WARNING: It's not highly insecure to store accounts in the localStorage!`);
+        console.warn("SECURITY WARNING: It's not highly insecure to store accounts in the localStorage!");
 
         if (typeof localStorage === 'undefined') {
             throw new TypeError('window.localStorage is undefined.');

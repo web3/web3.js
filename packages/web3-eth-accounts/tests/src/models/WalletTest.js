@@ -17,7 +17,7 @@ describe('WalletTest', () => {
     beforeEach(() => {
         new Accounts();
         accountsMock = Accounts.mock.instances[0];
-        
+
         wallet = new Wallet(Utils, accountsMock);
     });
 
@@ -89,7 +89,7 @@ describe('WalletTest', () => {
 
         expect(wallet.accounts[accountMock.address.toLowerCase()]).toEqual(accountMock);
     });
-    
+
     it('calls get returns the expected value', () => {
         new Account();
         const accountMock = Account.mock.instances[0];
