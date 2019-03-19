@@ -188,7 +188,7 @@ export default class Wallet {
      * @returns {boolean}
      */
     /* istanbul ignore next */ save(password, keyName) {
-        console.warn("SECURITY WARNING: It's not highly insecure to store accounts in the localStorage!");
+        console.warn("SECURITY WARNING: It's highly insecure to store accounts in the localStorage!");
 
         if (typeof localStorage === 'undefined') {
             throw new TypeError('window.localStorage is undefined.');
@@ -224,7 +224,7 @@ export default class Wallet {
      * @returns {Wallet}
      */
     /* istanbul ignore next */ load(password, keyName) {
-        console.warn("SECURITY WARNING: It's not highly insecure to store accounts in the localStorage!");
+        console.warn("SECURITY WARNING: It's highly insecure to store accounts in the localStorage!");
 
         if (typeof localStorage === 'undefined') {
             throw new TypeError('window.localStorage is undefined.');
