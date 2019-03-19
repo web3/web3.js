@@ -39,7 +39,7 @@ import EnsModuleFactory from './factories/EnsModuleFactory';
  */
 export function Ens(provider, net = null, options = {}, accounts = {}) {
     const abiCoder = new AbiCoder();
-    const resolvedProvider = new ProviderResolver().resolver(provider, net);
+    const resolvedProvider = new ProviderResolver().resolve(provider, net);
 
     return new EnsModuleFactory().createENS(
         resolvedProvider,
