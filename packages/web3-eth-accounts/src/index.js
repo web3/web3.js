@@ -36,5 +36,5 @@ import AccountsModule from './Accounts';
  * @constructor
  */
 export function Accounts(provider, net = null, options = {}) {
-    return new AccountsModule(provider, formatters, new MethodFactory(Utils, formatters), options, net);
+    return new AccountsModule(provider, Utils, formatters, new MethodFactory(Utils, formatters), options, net);
 }

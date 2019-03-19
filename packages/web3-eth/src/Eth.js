@@ -99,7 +99,7 @@ export default class Eth extends AbstractWeb3Module {
                     transactionConfirmationBlocks: options.transactionConfirmationBlocks || this.transactionConfirmationBlocks,
                     transactionPollingTimeout: options.transactionPollingTimeout || this.transactionPollingTimeout,
                     transactionSigner: this.transactionSigner,
-                    data: options.data,
+                    data: options.data
                 }
             );
 
