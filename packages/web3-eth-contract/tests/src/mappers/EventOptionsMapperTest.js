@@ -51,7 +51,9 @@ describe('EventOptionsMapperTest', () => {
             address: true
         };
 
-        expect(eventOptionsMapper.map({anonymous: true}, {defaultBlock: 'block', address: true}, {})).toEqual(mappedOptions);
+        expect(eventOptionsMapper.map({anonymous: true}, {defaultBlock: 'block', address: true}, {})).toEqual(
+            mappedOptions
+        );
     });
 
     it('calls map with defined toBlock property and returns the expected result', () => {
@@ -106,10 +108,7 @@ describe('EventOptionsMapperTest', () => {
 
         const mappedOptions = {
             fromBlock: 0,
-            topics: [
-                'signature',
-                0
-            ],
+            topics: ['signature', 0],
             address: true
         };
 

@@ -58,6 +58,7 @@ export default class AllEventsOptionsMapper {
 
         if (typeof options.filter !== 'undefined') {
             options.topics = options.topics.concat(this.allEventsFilterEncoder.encode(abiModel, options.filter));
+            delete options.filter;
         }
 
         if (!options.address) {
