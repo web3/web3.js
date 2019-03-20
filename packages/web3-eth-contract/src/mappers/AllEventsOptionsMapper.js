@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+// TODO: Remove code duplication and create a AbstractEventsOptionsMapper
 export default class AllEventsOptionsMapper {
     /**
      * @param {Object} formatters
@@ -44,7 +45,9 @@ export default class AllEventsOptionsMapper {
             options = {};
         }
 
-        options.topics = [];
+        if (!isArray(options.topics)) {
+            options.topics = [];
+        }
 
         if (typeof options.fromBlock !== 'undefined') {
             options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);
