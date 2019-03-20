@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import isArray from 'lodash/isArray';
+
 // TODO: Remove code duplication and create a AbstractEventsOptionsMapper
 export default class AllEventsOptionsMapper {
     /**

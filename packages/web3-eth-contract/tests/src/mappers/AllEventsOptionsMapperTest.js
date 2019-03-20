@@ -31,15 +31,27 @@ describe('AllEventsOptionsMapperTest', () => {
             fromBlock: 0
         };
 
+        const mappedOptions = {
+            fromBlock: 'block',
+            topics: [],
+            address: true,
+        };
+
         formatters.inputBlockNumberFormatter.mockReturnValueOnce('block');
 
-        expect(allEventsOptionsMapper.map({}, {}, options)).toHaveProperty('fromBlock', 'block');
+        expect(allEventsOptionsMapper.map({}, {address: true}, options)).toEqual(mappedOptions);
 
         expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
     });
 
     it('calls map with undefined fromBlock property and returns the expected result', () => {
-        expect(allEventsOptionsMapper.map({}, {defaultBlock: 'block'}, {})).toHaveProperty('fromBlock', 'block');
+        const mappedOptions = {
+            fromBlock: 'block',
+            topics: [],
+            address: true,
+        };
+
+        expect(allEventsOptionsMapper.map({}, {defaultBlock: 'block', address: true}, {})).toEqual(mappedOptions);
     });
 
     it('calls map with defined toBlock property and returns the expected result', () => {
@@ -48,9 +60,16 @@ describe('AllEventsOptionsMapperTest', () => {
             toBlock: 0
         };
 
+        const mappedOptions = {
+            fromBlock: 'block',
+            toBlock: 'block',
+            topics: [],
+            address: true,
+        };
+
         formatters.inputBlockNumberFormatter.mockReturnValue('block');
 
-        expect(allEventsOptionsMapper.map({}, {}, options)).toHaveProperty('toBlock', 'block');
+        expect(allEventsOptionsMapper.map({}, {address: true}, options)).toEqual(mappedOptions);
 
         expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
     });
@@ -60,21 +79,25 @@ describe('AllEventsOptionsMapperTest', () => {
             filter: []
         };
 
+        const mappedOptions = {
+            fromBlock: 0,
+            topics: [0],
+            address: true,
+        };
+
         allEventsFilterEncoderMock.encode.mockReturnValueOnce([0]);
 
-        expect(allEventsOptionsMapper.map({}, {defaultBlock: 0}, options)).toHaveProperty('topics', [0]);
+        expect(allEventsOptionsMapper.map({}, {defaultBlock: 0, address: true}, options)).toHaveProperty('topics', [0]);
 
         expect(allEventsFilterEncoderMock.encode).toHaveBeenCalledWith({}, []);
     });
 
-    it('calls map with undefined address property and returns the expected result', () => {
-        const options = {
-            fromBlock: 0
+    it('calls map with without address property and returns the expected result', () => {
+        const mappedOptions = {
+            topics: [],
+            address: true,
         };
 
-        expect(allEventsOptionsMapper.map({}, {defaultBlock: 0, address: true}, options)).toHaveProperty(
-            'address',
-            true
-        );
+        expect(allEventsOptionsMapper.map({}, {address: true}, {})).toEqual(mappedOptions);
     });
 });
