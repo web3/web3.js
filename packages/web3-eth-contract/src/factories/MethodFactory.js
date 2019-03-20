@@ -25,7 +25,7 @@ import {
     ChainIdMethod,
     GetTransactionCountMethod,
     GetTransactionReceiptMethod,
-    GetBlockByHashMethod,
+    GetBlockByNumberMethod,
     SendRawTransactionMethod,
     TransactionObserver
 } from 'web3-core-method';
@@ -159,7 +159,7 @@ export default class MethodFactory {
             this.getTransactionObserverTimeout(contract),
             contract.transactionConfirmationBlocks,
             new GetTransactionReceiptMethod(this.utils, this.formatters, contract),
-            new GetBlockByHashMethod(this.utils, this.formatters, contract),
+            new GetBlockByNumberMethod(this.utils, this.formatters, contract),
             new NewHeadsSubscription(this.utils, this.formatters, contract)
         );
 
@@ -195,7 +195,7 @@ export default class MethodFactory {
                 this.getTransactionObserverTimeout(contract),
                 contract.transactionConfirmationBlocks,
                 new GetTransactionReceiptMethod(this.utils, this.formatters, contract),
-                new GetBlockByHashMethod(this.utils, this.formatters, contract),
+                new GetBlockByNumberMethod(this.utils, this.formatters, contract),
                 new NewHeadsSubscription(this.utils, this.formatters, contract)
             ),
             new ChainIdMethod(this.utils, this.formatters, contract),
