@@ -71,27 +71,24 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @param {String|Buffer} message
      */
     onMessage(message) {
-        let chunk = message.toString('utf8');
-        console.log(chunk);
+        let chunk = message.toString().replace(new RegExp('\n', 'g'), '');
 
-        if (chunk.indexOf('\n') < 0) {
-            this.chunks.push(chunk.replace('\n', ''));
+        if (!chunk.includes('}')) {
+            this.chunks.push(chunk);
 
             return;
         }
 
-        this.chunks.push(chunk.replace('\n', ''));
-
-        if (this.chunks.length > 1) {
-            JSON.parse('[' + this.chunks.join() + ']').forEach((chunk) => {
-                super.onMessage(chunk);
-            });
-
-            this.chunks = [];
-            return;
+        if (chunk.includes('}{')) {
+            this.chunks.concat(chunk.replace(new RegExp('}{', 'g'), '}--{').split('--'));
+        } else {
+            this.chunks.push(chunk);
         }
 
-        super.onMessage(JSON.parse(this.chunks[0]));
+        JSON.parse('[' + this.chunks.join() + ']').forEach((chunk) => {
+            super.onMessage(chunk);
+        });
+
         this.chunks = [];
     }
 
