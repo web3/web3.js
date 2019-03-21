@@ -91,7 +91,7 @@ export default class IpcProvider extends AbstractSocketProvider {
 
         if (isArray(parsedChunk)) {
             parsedChunk.forEach((chunk) => {
-                super.onMessage(chunk));
+                super.onMessage(chunk);
             });
         }
 
