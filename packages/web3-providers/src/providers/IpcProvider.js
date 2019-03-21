@@ -74,13 +74,21 @@ export default class IpcProvider extends AbstractSocketProvider {
         const chunk = message.toString('utf8');
 
         if (chunk.indexOf('\n') < 0) {
-            this.chunks += chunk;
+            this.chunks += chunk.substring(chunk.indexOf('\n') + 1);
 
             return;
         }
 
-        super.onMessage(this.chunks + chunk.substring(0, chunk.indexOf('\n')));
-        this.chunks = chunk.substring(chunk.indexOf('\n') + 1);
+        this.chunks += chunk.substring(0, chunk.indexOf('\n'));
+        const parsedChunk = JSON.parse(this.chunks);
+
+        if (isArray(parsedChunk)) {
+            parsedChunk.forEach(chunk => {
+                super.onMessage(chunk));
+            })
+        }
+
+        super.onMessage(parsedChunk);
     }
 
     /**
