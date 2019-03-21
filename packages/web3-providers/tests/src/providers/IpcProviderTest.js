@@ -66,16 +66,52 @@ describe('IpcProviderTest', () => {
         expect(socketMock.connect).toHaveBeenCalledWith({path: ipcProvider.path});
     });
 
-    it('calls onMessage', () => {
+    it('calls onMessage with one chunk', (done) => {
         const objWithToString = {
             toString: jest.fn(() => {
                 return '{"id":"0x0"}';
             })
         };
 
+        ipcProvider.on('0x0', (response) => {
+            expect(response).toEqual({id: '0x0'});
+
+            done();
+        });
+
         ipcProvider.onMessage(objWithToString);
 
-        expect(objWithToString.toString).toHaveBeenCalled();
+        expect(objWithToString.toString).toHaveBeenCalledWith('utf8');
+    });
+
+    it('calls onMessage with more than one chunk', (done) => {
+        let callCount = 0;
+        const firstChunk = {
+            toString: jest.fn(() => {
+                return '\n[{"id":"0x0"}';
+            })
+        };
+        const secondChunk = {
+            toString: jest.fn(() => {
+                return ',{"id":"0x0"}]';
+            })
+        };
+
+        ipcProvider.on('0x0', (response) => {
+            expect(response).toEqual({id: '0x0'});
+
+            if (callCount === 1) {
+                done();
+            }
+
+            callCount++;
+        });
+
+        ipcProvider.onMessage(firstChunk);
+        ipcProvider.onMessage(secondChunk);
+
+        expect(firstChunk.toString).toHaveBeenCalledWith('utf8');
+        expect(secondChunk.toString).toHaveBeenCalledWith('utf8');
     });
 
     it('calls registEventListener with a Socket object as connection', () => {

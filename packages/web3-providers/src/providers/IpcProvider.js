@@ -35,7 +35,7 @@ export default class IpcProvider extends AbstractSocketProvider {
     constructor(connection, path) {
         super(connection, null);
         this.host = path;
-        this.chunks = '';
+        this.chunks = [];
     }
 
     /**
@@ -71,31 +71,28 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @param {String|Buffer} message
      */
     onMessage(message) {
-        const chunk = message.toString('utf8');
-        const breakIndex = chunk.indexOf('\n');
+        let chunk = message.toString('utf8');
+        console.log(chunk);
 
-        if (breakIndex < 0) {
-            this.chunks += chunk.substring(breakIndex + 1);
+        if (chunk.indexOf('\n') < 0) {
+            this.chunks.push(chunk.replace('\n', ''));
 
             return;
         }
 
-        if (this.chunks.length > 0) {
-            this.chunks += chunk.substring(0, breakIndex);
-        } else {
-            this.chunks = chunk;
-        }
+        this.chunks.push(chunk.replace('\n', ''));
 
-        const parsedChunk = JSON.parse(this.chunks);
-        this.chunks = '';
-
-        if (isArray(parsedChunk)) {
-            parsedChunk.forEach((chunk) => {
+        if (this.chunks.length > 1) {
+            JSON.parse('[' + this.chunks.join() + ']').forEach((chunk) => {
                 super.onMessage(chunk);
             });
+
+            this.chunks = [];
+            return;
         }
 
-        super.onMessage(parsedChunk);
+        super.onMessage(JSON.parse(this.chunks[0]));
+        this.chunks = [];
     }
 
     /**
@@ -170,7 +167,7 @@ export default class IpcProvider extends AbstractSocketProvider {
                 return;
             }
 
-            return reject(new Error("Connection error: Couldn't write on the socket with Socket.write(payload)"));
+            return reject(new Error('Connection error: Couldn\'t write on the socket with Socket.write(payload)'));
         });
     }
 }
