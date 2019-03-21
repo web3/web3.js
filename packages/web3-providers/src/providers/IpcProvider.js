@@ -72,15 +72,16 @@ export default class IpcProvider extends AbstractSocketProvider {
      */
     onMessage(message) {
         const chunk = message.toString('utf8');
+        const breakIndex = chunk.indexOf('\n');
 
-        if (chunk.indexOf('\n') < 0) {
-            this.chunks += chunk.substring(chunk.indexOf('\n') + 1);
+        if (breakIndex < 0) {
+            this.chunks += chunk.substring(breakIndex + 1);
 
             return;
         }
 
         if (this.chunks.length > 0) {
-            this.chunks += chunk.substring(0, chunk.indexOf('\n'));
+            this.chunks += chunk.substring(0, breakIndex);
         } else {
             this.chunks = chunk;
         }
@@ -91,7 +92,7 @@ export default class IpcProvider extends AbstractSocketProvider {
         if (isArray(parsedChunk)) {
             parsedChunk.forEach((chunk) => {
                 super.onMessage(chunk));
-            })
+            });
         }
 
         super.onMessage(parsedChunk);
