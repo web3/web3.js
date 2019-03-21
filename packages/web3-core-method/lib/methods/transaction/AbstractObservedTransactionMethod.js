@@ -172,6 +172,9 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
      * @returns {Boolean}
      */
     hasRevertReceiptStatus(receipt) {
+        if (typeof receipt.status === 'boolean') {
+            return !receipt.status;
+        }
         return Boolean(parseInt(receipt.status)) === false && receipt.status !== undefined && receipt.status !== null;
     }
 }

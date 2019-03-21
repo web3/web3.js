@@ -134,6 +134,24 @@ describe('AbstractObservedTransactionMethodTest', () => {
         expect(afterExecutionMock).toHaveBeenCalledWith({status: '0x1'});
     });
 
+    it('calls execute and returns with the expected resolved Promise when the status is a boolean', async () => {
+        providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
+
+        observableMock.subscribe = jest.fn((next, error, complete) => {
+            next({count: 0, receipt: {status: true}});
+
+            complete();
+        });
+
+        await expect(method.execute()).resolves.toEqual({status: true});
+
+        expect(providerMock.send).toHaveBeenCalledWith('rpcMethod', []);
+
+        expect(beforeExecutionMock).toHaveBeenCalledWith(moduleInstanceMock);
+
+        expect(afterExecutionMock).toHaveBeenCalledWith({status: true});
+    });
+
     it('calls execute and returns with the expected rejected Promise', async () => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
 
