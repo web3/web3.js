@@ -35,8 +35,7 @@ export default class IpcProvider extends AbstractSocketProvider {
     constructor(connection, path) {
         super(connection, null);
         this.host = path;
-        this.chunks = [];
-        this.loadingChunk = false;
+        this.lastChunk = '';
     }
 
     /**
@@ -72,33 +71,36 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @param {String|Buffer} message
      */
     onMessage(message) {
-        let chunk = message.toString().replace(new RegExp('\n', 'g'), '');
-        const JSONrpcValidStart = chunk.startsWith('{"jsonrpc"');
+        let result = null;
+        let returnValues = [];
+        let dechunkedData = message.toString()
+            .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
+            .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
+            .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
+            .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
+            .split('|--|');
 
-        if (JSONrpcValidStart && !chunk.endsWith('}')) {
-            this.loadingChunk = (this.chunks.push(chunk) - 1);
+        dechunkedData.forEach((data) => {
+            result = null;
+            if (this.lastChunk) {
+                data = this.lastChunk + data;
+            }
 
-            return;
-        }
+            try {
+                result = JSON.parse(data);
+            } catch (e) {
+                this.lastChunk = data;
 
-        if (!JSONrpcValidStart) {
-            this.chunks[this.loadingChunk] = this.chunks[this.loadingChunk].concat(chunk);
+                return;
+            }
 
-            return;
-        }
-
-        if (chunk.includes('}{')) {
-            this.chunks.concat(chunk.replace(new RegExp('}{', 'g'), '}--{').split('--'));
-        } else {
-            this.chunks.push(chunk);
-        }
-
-        JSON.parse('{"chunks": [' + this.chunks.join() + ']}').chunks.forEach((chunk) => {
-            super.onMessage(chunk);
+            this.lastChunk = null;
+            returnValues.push(result);
         });
 
-        this.chunks = [];
-        this.loadingChunk = false;
+        returnValues.forEach((chunk) => {
+            super.onMessage(chunk);
+        });
     }
 
     /**
