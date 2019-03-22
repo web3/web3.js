@@ -18,16 +18,13 @@ Source: `AbstractWeb3Module <https://github.com/ethereum/web3.js/tree/1.0/packag
 The ``AbstractWeb3Module`` does have the following constructor parameters:
 
 - ``provider`` - The provider class or string.
-- ``providersModuleFactory`` - The ``ProvidersModuleFactory`` which will be used to resolve the provider in the constructor.
-- ``methodModuleFactory`` - The ``MethodModuleFactory`` is optional and will just be used if the ``MethodFactory`` is given.
-- ``methodFactory`` - The ``MethodFactory`` is only required if you extend the module with methods.
-- ``options`` - These are the default ``options`` of a Web3 module.
+- ``options`` - These are the default ``options`` of a Web3 module. (optional)
+- ``methodFactory`` - The ``MethodFactory`` is only required if you extend the module with methods. (optional)
+- ``net`` - The ``net.Socket`` object of the NodeJS net module. (optional)
 
 
 If you would like to support the latest features of Web3.js and also provide the same API for your module then please pass
-the ``methodModuleFactory`` and the ``methodFactory`` parameter for extending the module with your methods.
-
-The parameters ``methodModuleFactory`` and ``methodFactory`` aren't required if you providing your own way to interact with a Web3 method.
+the ``methodFactory`` class for extending the module with your methods.
 
 These are the available methods and properties the AbstractWeb3Module does provide:
 
