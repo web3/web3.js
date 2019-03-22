@@ -73,15 +73,16 @@ export default class IpcProvider extends AbstractSocketProvider {
      */
     onMessage(message) {
         let chunk = message.toString().replace(new RegExp('\n', 'g'), '');
+        const JSONrpcValidStart = chunk.startsWith('{"jsonrpc"');
 
-        if (!chunk.includes('}')) {
+        if (JSONrpcValidStart && !chunk.endsWith('}')) {
             this.loadingChunk = (this.chunks.push(chunk) - 1);
 
             return;
         }
 
-        if (!chunk.includes('{')) {
-            this.chunks[this.loadingChunk] = this.chunks[this.loadingChunk] + chunk;
+        if (!JSONrpcValidStart) {
+            this.chunks[this.loadingChunk] = this.chunks[this.loadingChunk].concat(chunk);
 
             return;
         }
@@ -92,7 +93,7 @@ export default class IpcProvider extends AbstractSocketProvider {
             this.chunks.push(chunk);
         }
 
-        JSON.parse('[' + this.chunks.join() + ']').forEach((chunk) => {
+        JSON.parse('{"chunks": [' + this.chunks.join() + ']}').chunks.forEach((chunk) => {
             super.onMessage(chunk);
         });
 
