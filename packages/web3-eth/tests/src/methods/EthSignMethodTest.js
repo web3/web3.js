@@ -46,9 +46,9 @@ describe('EthSignMethodTest', () => {
 
         expect(method.callback).toHaveBeenCalledWith(false, '0x00');
 
-        expect(method.parameters[0]).toEqual('string');
+        expect(method.parameters[0]).toEqual('0x0');
 
-        expect(method.parameters[1]).toEqual('0x0');
+        expect(method.parameters[1]).toEqual('string');
 
         expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
 
