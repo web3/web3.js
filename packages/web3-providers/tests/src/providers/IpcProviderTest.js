@@ -81,19 +81,24 @@ describe('IpcProviderTest', () => {
 
         ipcProvider.onMessage(objWithToString);
 
-        expect(objWithToString.toString).toHaveBeenCalledWith('utf8');
+        expect(objWithToString.toString).toHaveBeenCalledWith();
     });
 
     it('calls onMessage with more than one chunk', (done) => {
         let callCount = 0;
         const firstChunk = {
             toString: jest.fn(() => {
-                return '\n[{"id":"0x0"}';
+                return '{"id":"0x0"}{"id":"0x0"}';
             })
         };
         const secondChunk = {
             toString: jest.fn(() => {
-                return ',{"id":"0x0"}]';
+                return '{"id":"0x0"}{"id":"0x';
+            })
+        };
+        const thirdChunk = {
+            toString: jest.fn(() => {
+                return '0"}';
             })
         };
 
@@ -109,9 +114,11 @@ describe('IpcProviderTest', () => {
 
         ipcProvider.onMessage(firstChunk);
         ipcProvider.onMessage(secondChunk);
+        ipcProvider.onMessage(thirdChunk);
 
-        expect(firstChunk.toString).toHaveBeenCalledWith('utf8');
-        expect(secondChunk.toString).toHaveBeenCalledWith('utf8');
+        expect(firstChunk.toString).toHaveBeenCalledWith();
+        expect(secondChunk.toString).toHaveBeenCalledWith();
+        expect(thirdChunk.toString).toHaveBeenCalledWith();
     });
 
     it('calls registEventListener with a Socket object as connection', () => {
