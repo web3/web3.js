@@ -101,7 +101,7 @@ export interface ContractOptions {
 }
 
 export interface EventOptions {
-    filter: {};
+    filter?: {};
     fromBlock?: number;
     toBlock?: string | number;
     topics?: any[];

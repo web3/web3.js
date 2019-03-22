@@ -50,6 +50,9 @@ contract.getPastEvents('MyEvent', {
 });
 
 // $ExpectType Promise<EventData[]>
+contract.getPastEvents('MyEvent', {});
+
+// $ExpectType Promise<EventData[]>
 contract.getPastEvents('MyEvent', {
     filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'},
     fromBlock: 0,
