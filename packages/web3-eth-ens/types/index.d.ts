@@ -17,21 +17,22 @@
  * @date 2018
  */
 
-import {MethodModuleFactory} from 'web3-core-method';
 import {Accounts} from 'web3-eth-accounts';
 import {AbiCoder} from 'web3-eth-abi';
 import {Contract, ContractModuleFactory} from 'web3-eth-contract';
-import {ProvidersModuleFactory, provider} from 'web3-providers';
-import {AbstractWeb3Module, PromiEvent} from 'web3-core';
+import {provider} from 'web3-providers';
+import {AbstractWeb3Module, PromiEvent, Web3ModuleOptions} from 'web3-core';
 import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
 import {Utils} from 'web3-utils';
+import * as net from 'net';
 
 export class Ens extends AbstractWeb3Module {
     constructor(
         provider: provider,
-        accounts: Accounts,
-        ensModuleOptions: object
+        net?: net.Socket|null,
+        accounts?: Accounts|null,
+        options?: Web3ModuleOptions
     );
 
     registry: Registry;
@@ -68,14 +69,12 @@ export class Ens extends AbstractWeb3Module {
 export class Registry {
     constructor(
         provider: provider,
-        providersModuleFactory: ProvidersModuleFactory,
-        methodModuleFactory: MethodModuleFactory,
         contractModuleFactory: ContractModuleFactory,
-        promiEvent: PromiEvent<any>,
+        accounts: Accounts,
         abiCoder: AbiCoder,
         utils: Utils,
         formatters: formatters,
-        options: object,
+        options: Web3ModuleOptions,
         net: Network
     );
 

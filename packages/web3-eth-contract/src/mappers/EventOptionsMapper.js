@@ -62,6 +62,7 @@ export default class EventOptionsMapper {
 
         if (typeof options.filter !== 'undefined') {
             options.topics = options.topics.concat(this.eventFilterEncoder.encode(abiItemModel, options.filter));
+            delete options.filter;
         }
 
         if (!abiItemModel.anonymous) {

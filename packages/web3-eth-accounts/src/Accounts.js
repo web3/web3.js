@@ -23,27 +23,28 @@
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
 import isBoolean from 'lodash/isBoolean';
-import isString from 'lodash/isString';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import {encodeSignature, recover} from 'eth-lib/lib/account'; // TODO: Remove this dependency
-import {hexToBytes, isHexStrict, randomHex} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
+import {hexToBytes, isHexStrict} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 import {AbstractWeb3Module} from 'web3-core';
 import Account from './models/Account';
+import Wallet from './models/Wallet';
 
 // TODO: Rename Accounts module to Wallet and move the Wallet class to the eth module.
 export default class Accounts extends AbstractWeb3Module {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Object} formatters
+     * @param {Utils} utils
      * @param {MethodFactory} methodFactory
      * @param {Object} options
      * @param {Net.Socket} net
      *
      * @constructor
      */
-    constructor(provider, formatters, methodFactory, options, net) {
+    constructor(provider, utils, formatters, methodFactory, options, net) {
         super(provider, options, methodFactory, net);
 
         this.transactionSigner = options.transactionSigner;
@@ -51,243 +52,7 @@ export default class Accounts extends AbstractWeb3Module {
         this.defaultKeyName = 'web3js_wallet';
         this.accounts = {};
         this.accountsIndex = 0;
-        this.wallet = this.createWalletProxy();
-    }
-
-    /**
-     * This is for compatibility reasons and will be removed later when it got added to the eth-module
-     *
-     * @method createWalletProxy
-     *
-     * @returns {Accounts}
-     */
-    createWalletProxy() {
-        return new Proxy(this, {
-            get: (target, name) => {
-                switch (name) {
-                    case 'create':
-                        return target.addGeneratedAccountsToWallet;
-                    case 'encrypt':
-                        return target.encryptWallet;
-                    case 'decrypt':
-                        return target.decryptWallet;
-                    case 'clear':
-                        return target.clear;
-                    default:
-                        if (target.accounts[name]) {
-                            return target.accounts[name];
-                        }
-
-                        return target[name];
-                }
-            }
-        });
-    }
-
-    /**
-     * Creates new accounts with a given entropy
-     *
-     * @method create
-     *
-     * @param {Number} numberOfAccounts
-     * @param {String} entropy
-     *
-     * @returns {Wallet}
-     */
-    addGeneratedAccountsToWallet(numberOfAccounts, entropy) {
-        const account = Account.from(entropy || randomHex(32), this);
-
-        for (let i = 0; i < numberOfAccounts; ++i) {
-            this.add(account);
-        }
-
-        return this;
-    }
-
-    /**
-     * Adds a account to the wallet
-     *
-     * @method add
-     *
-     * @param {Account|String} account - A Account object or privateKey
-     *
-     * @returns {Account}
-     */
-    add(account) {
-        if (isString(account)) {
-            account = Account.fromPrivateKey(account, this);
-        }
-
-        if (!this[account.address]) {
-            this.accounts[this.accountsIndex] = account;
-            this.accounts[account.address] = account;
-            this.accounts[account.address.toLowerCase()] = account;
-
-            this.accountsIndex++;
-
-            return account;
-        }
-
-        return this.accounts[account.address];
-    }
-
-    /**
-     * Removes a account from the number by his address or index
-     *
-     * @method remove
-     *
-     * @param {String|Number} addressOrIndex
-     *
-     * @returns {Boolean}
-     */
-    remove(addressOrIndex) {
-        let removed;
-
-        if (this.accounts[addressOrIndex]) {
-            Object.keys(this.accounts).forEach((key) => {
-                if (this.accounts[key].address === addressOrIndex || key === addressOrIndex) {
-                    delete this.accounts[key];
-
-                    this.accountsIndex--;
-                    removed = true;
-                }
-            });
-
-            return !!removed;
-        }
-
-        return false;
-    }
-
-    /**
-     * Clears the wallet
-     *
-     * @method clear
-     *
-     * @returns {Wallet}
-     */
-    clear() {
-        this.accounts = {};
-        this.accountsIndex = 0;
-
-        return this;
-    }
-
-    /**
-     * Encrypts all accounts
-     *
-     * @method encrypt
-     *
-     * @param {String} password
-     * @param {Object} options
-     *
-     * @returns {any[]}
-     */
-    encryptWallet(password, options) {
-        let encryptedAccounts = [];
-
-        Object.keys(this.accounts).forEach((key) => {
-            return encryptedAccounts.push(this.accounts[key].encrypt(password, options));
-        });
-
-        return encryptedAccounts;
-    }
-
-    /**
-     * Decrypts all accounts
-     *
-     * @method decrypt
-     *
-     * @param {Wallet} encryptedWallet
-     * @param {String} password
-     *
-     * @returns {Wallet}
-     */
-    decryptWallet(encryptedWallet, password) {
-        encryptedWallet.forEach((keystore) => {
-            const account = Account.fromV3Keystore(keystore, password, false, this);
-
-            if (!account) {
-                throw new Error("Couldn't decrypt accounts. Password wrong?");
-            }
-
-            this.add(account);
-        });
-
-        return this;
-    }
-
-    /**
-     * Saves the current wallet in the localStorage of the browser
-     *
-     * @method save
-     *
-     * @param {String} password
-     * @param {String} keyName
-     *
-     * @returns {boolean}
-     */
-    save(password, keyName) {
-        if (typeof localStorage === 'undefined') {
-            throw new TypeError('window.localStorage is undefined.');
-        }
-
-        try {
-            localStorage.setItem(keyName || this.defaultKeyName, JSON.stringify(this.encryptWallet(password)));
-        } catch (error) {
-            // code 18 means trying to use local storage in a iframe
-            // with third party cookies turned off
-            // we still want to support using web3 in a iframe
-            // as by default safari turn these off for all iframes
-            // so mask the error
-            if (error.code === 18) {
-                return true;
-            }
-
-            // throw as normal if not
-            throw new Error(error);
-        }
-
-        return true;
-    }
-
-    /**
-     * Loads the stored wallet by his keyName from the localStorage of the browser
-     *
-     * @method load
-     *
-     * @param {String} password
-     * @param {String} keyName
-     *
-     * @returns {Wallet}
-     */
-    load(password, keyName) {
-        if (typeof localStorage === 'undefined') {
-            throw new TypeError('window.localStorage is undefined.');
-        }
-
-        let keystore;
-        try {
-            keystore = localStorage.getItem(keyName || this.defaultKeyName);
-
-            if (keystore) {
-                keystore = JSON.parse(keystore).map((item) => Account.fromV3Keystore(item, password, false, this));
-            }
-        } catch (error) {
-            // code 18 means trying to use local storage in a iframe
-            // with third party cookies turned off
-            // we still want to support using web3 in a iframe
-            // as by default safari turn these off for all iframes
-            // so mask the error
-            if (error.code === 18) {
-                keystore = this.defaultKeyName;
-            } else {
-                // throw as normal if not
-                throw new Error(error);
-            }
-        }
-
-        return this.decryptWallet(keystore || [], password);
+        this.wallet = new Wallet(utils, this);
     }
 
     /**

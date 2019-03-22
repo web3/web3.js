@@ -1,7 +1,7 @@
 {
     "name": "web3-core-helpers",
     "namespace": "ethereum",
-    "version": "1.0.0-beta.48",
+    "version": "1.0.0-beta.50",
     "description": "Web3 core tools helper for sub packages. This is an internal package.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-helpers",
     "license": "LGPL-3.0",
@@ -18,16 +18,18 @@
     "dependencies": {
         "@babel/runtime": "^7.3.1",
         "lodash": "^4.17.11",
-        "web3-eth-iban": "1.0.0-beta.48",
-        "web3-utils": "1.0.0-beta.48"
+        "web3-eth-iban": "1.0.0-beta.50",
+        "web3-utils": "1.0.0-beta.50"
     },
     "devDependencies": {
-        "dtslint": "^0.4.2",
-        "web3-core": "1.0.0-beta.48",
-        "web3-providers": "1.0.0-beta.48"
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2",
+        "web3-core": "1.0.0-beta.50",
+        "web3-providers": "1.0.0-beta.50"
     },
     "files": [
         "dist",
         "types/index.d.ts"
-    ]
+    ],
+    "gitHead": "90353080483037843a55874729a6f22ae9217539"
 }

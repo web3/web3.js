@@ -39,19 +39,9 @@ describe('NetworkTest', () => {
             return Promise.resolve(0);
         });
 
-        network.getBlock = jest.fn((block, txObjects) => {
-            expect(block).toEqual(0);
-
-            expect(txObjects).toEqual(false);
-
-            return Promise.resolve({hash: 'private'});
-        });
-
         await expect(network.getNetworkType(callback)).resolves.toEqual('private');
 
         expect(callback).toHaveBeenCalledWith(null, 'private');
-
-        expect(network.getBlock).toHaveBeenCalled();
 
         expect(network.getId).toHaveBeenCalled();
     });
@@ -63,19 +53,9 @@ describe('NetworkTest', () => {
             return Promise.resolve(1);
         });
 
-        network.getBlock = jest.fn((block, txObjects) => {
-            expect(block).toEqual(0);
-
-            expect(txObjects).toEqual(false);
-
-            return Promise.resolve({hash: '0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3'});
-        });
-
         await expect(network.getNetworkType(callback)).resolves.toEqual('main');
 
         expect(callback).toHaveBeenCalledWith(null, 'main');
-
-        expect(network.getBlock).toHaveBeenCalled();
 
         expect(network.getId).toHaveBeenCalled();
     });
@@ -87,19 +67,9 @@ describe('NetworkTest', () => {
             return Promise.resolve(2);
         });
 
-        network.getBlock = jest.fn((block, txObjects) => {
-            expect(block).toEqual(0);
-
-            expect(txObjects).toEqual(false);
-
-            return Promise.resolve({hash: '0cd786a2425d16f152c658316c423e6ce1181e15c3295826d7c9904cba9ce303'});
-        });
-
         await expect(network.getNetworkType(callback)).resolves.toEqual('morden');
 
         expect(callback).toHaveBeenCalledWith(null, 'morden');
-
-        expect(network.getBlock).toHaveBeenCalled();
 
         expect(network.getId).toHaveBeenCalled();
     });
@@ -111,19 +81,9 @@ describe('NetworkTest', () => {
             return Promise.resolve(3);
         });
 
-        network.getBlock = jest.fn((block, txObjects) => {
-            expect(block).toEqual(0);
-
-            expect(txObjects).toEqual(false);
-
-            return Promise.resolve({hash: '0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d'});
-        });
-
         await expect(network.getNetworkType(callback)).resolves.toEqual('ropsten');
 
         expect(callback).toHaveBeenCalledWith(null, 'ropsten');
-
-        expect(network.getBlock).toHaveBeenCalled();
 
         expect(network.getId).toHaveBeenCalled();
     });
@@ -135,19 +95,9 @@ describe('NetworkTest', () => {
             return Promise.resolve(4);
         });
 
-        network.getBlock = jest.fn((block, txObjects) => {
-            expect(block).toEqual(0);
-
-            expect(txObjects).toEqual(false);
-
-            return Promise.resolve({hash: '0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177'});
-        });
-
         await expect(network.getNetworkType(callback)).resolves.toEqual('rinkeby');
 
         expect(callback).toHaveBeenCalledWith(null, 'rinkeby');
-
-        expect(network.getBlock).toHaveBeenCalled();
 
         expect(network.getId).toHaveBeenCalled();
     });
@@ -159,19 +109,9 @@ describe('NetworkTest', () => {
             return Promise.resolve(42);
         });
 
-        network.getBlock = jest.fn((block, txObjects) => {
-            expect(block).toEqual(0);
-
-            expect(txObjects).toEqual(false);
-
-            return Promise.resolve({hash: '0xa3c565fc15c7478862d50ccd6561e3c06b24cc509bf388941c25ea985ce32cb9'});
-        });
-
         await expect(network.getNetworkType(callback)).resolves.toEqual('kovan');
 
         expect(callback).toHaveBeenCalledWith(null, 'kovan');
-
-        expect(network.getBlock).toHaveBeenCalled();
 
         expect(network.getId).toHaveBeenCalled();
     });

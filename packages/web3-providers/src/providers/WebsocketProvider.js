@@ -20,9 +20,7 @@
  * @date 2018
  */
 
-import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
-import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 import isArray from 'lodash/isArray';
 
 export default class WebsocketProvider extends AbstractSocketProvider {
@@ -188,49 +186,6 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      */
     isConnecting() {
         return this.connection.readyState === this.connection.CONNECTING;
-    }
-
-    /**
-     * Creates the JSON-RPC payload and sends it to the node.
-     *
-     * @method send
-     *
-     * @param {String} method
-     * @param {Array} parameters
-     *
-     * @returns {Promise<Object>}
-     */
-    send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
-            const validationResult = JsonRpcResponseValidator.validate(response);
-
-            if (validationResult instanceof Error) {
-                throw validationResult;
-            }
-
-            return response.result;
-        });
-    }
-
-    /**
-     * Creates the JSON-RPC batch payload and sends it to the node.
-     *
-     * @method sendBatch
-     *
-     * @param {AbstractMethod[]} methods
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns Promise<Object[]>
-     */
-    sendBatch(methods, moduleInstance) {
-        let payload = [];
-
-        methods.forEach((method) => {
-            method.beforeExecution(moduleInstance);
-            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
-        });
-
-        return this.sendPayload(payload);
     }
 
     /**

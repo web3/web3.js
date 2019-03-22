@@ -23,7 +23,7 @@ import {RLPEncodedTransaction} from 'web3-core';
 import {Personal} from 'web3-eth-personal';
 import {Accounts} from 'web3-eth-accounts';
 
-const personal = new Personal('http://localhost:7545', new Accounts('http://localhost:7545'));
+const personal = new Personal('http://localhost:7545');
 
 // $ExpectType Promise<string>
 personal.newAccount('test password');

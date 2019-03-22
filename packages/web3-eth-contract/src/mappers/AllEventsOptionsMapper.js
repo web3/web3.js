@@ -20,6 +20,9 @@
  * @date 2018
  */
 
+import isArray from 'lodash/isArray';
+
+// TODO: Remove code duplication and create a AbstractEventsOptionsMapper
 export default class AllEventsOptionsMapper {
     /**
      * @param {Object} formatters
@@ -44,7 +47,9 @@ export default class AllEventsOptionsMapper {
             options = {};
         }
 
-        options.topics = [];
+        if (!isArray(options.topics)) {
+            options.topics = [];
+        }
 
         if (typeof options.fromBlock !== 'undefined') {
             options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);
@@ -58,6 +63,7 @@ export default class AllEventsOptionsMapper {
 
         if (typeof options.filter !== 'undefined') {
             options.topics = options.topics.concat(this.allEventsFilterEncoder.encode(abiModel, options.filter));
+            delete options.filter;
         }
 
         if (!options.address) {

@@ -81,27 +81,27 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                         receipt = transactionConfirmation.receipt;
 
                         if (this.hasRevertReceiptStatus(receipt)) {
+                            if (this.parameters[0].gas === receipt.gasUsed) {
+                                this.handleError(
+                                    new Error(
+                                        `Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(
+                                            receipt,
+                                            null,
+                                            2
+                                        )}`
+                                    ),
+                                    receipt,
+                                    confirmations
+                                );
+
+                                transactionConfirmationSubscription.unsubscribe();
+
+                                return;
+                            }
+
                             this.handleError(
                                 new Error(
                                     `Transaction has been reverted by the EVM:\n${JSON.stringify(receipt, null, 2)}`
-                                ),
-                                receipt,
-                                confirmations
-                            );
-
-                            transactionConfirmationSubscription.unsubscribe();
-
-                            return;
-                        }
-
-                        if (receipt.outOfGas) {
-                            this.handleError(
-                                new Error(
-                                    `Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(
-                                        receipt,
-                                        null,
-                                        2
-                                    )}`
                                 ),
                                 receipt,
                                 confirmations

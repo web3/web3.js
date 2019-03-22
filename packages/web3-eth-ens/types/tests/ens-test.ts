@@ -20,7 +20,7 @@
 import {Accounts} from 'web3-eth-accounts';
 import {Ens} from 'web3-eth-ens';
 
-const ens = new Ens('http://localhost:7545', new Accounts('http://localhost:7545'), {});
+const ens = new Ens('http://localhost:7545', null, new Accounts('http://localhost:7545'));
 
 // $ExpectType Registry
 ens.registry;
