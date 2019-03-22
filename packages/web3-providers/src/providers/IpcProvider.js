@@ -36,6 +36,7 @@ export default class IpcProvider extends AbstractSocketProvider {
         super(connection, null);
         this.host = path;
         this.chunks = [];
+        this.loadingChunk = false;
     }
 
     /**
@@ -74,7 +75,13 @@ export default class IpcProvider extends AbstractSocketProvider {
         let chunk = message.toString().replace(new RegExp('\n', 'g'), '');
 
         if (!chunk.includes('}')) {
-            this.chunks.push(chunk);
+            this.loadingChunk = (this.chunks.push(chunk) - 1);
+
+            return;
+        }
+
+        if (!chunk.includes('{')) {
+            this.chunks[this.loadingChunk] = this.chunks[this.loadingChunk] + chunk;
 
             return;
         }
@@ -90,6 +97,7 @@ export default class IpcProvider extends AbstractSocketProvider {
         });
 
         this.chunks = [];
+        this.loadingChunk = false;
     }
 
     /**
