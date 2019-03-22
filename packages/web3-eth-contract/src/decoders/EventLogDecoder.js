@@ -47,6 +47,10 @@ export default class EventLogDecoder {
             argTopics = response.topics.slice(1);
         }
 
+        if (response.data === '0x') {
+            response.data = null;
+        }
+
         response.returnValues = this.abiCoder.decodeLog(abiItemModel.getInputs(), response.data, argTopics);
         response.event = abiItemModel.name;
         response.signature = abiItemModel.signature;
