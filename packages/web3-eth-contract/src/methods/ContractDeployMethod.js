@@ -20,22 +20,38 @@
  * @date 2018
  */
 
-import {SendTransactionMethod} from 'web3-core-method';
+import {EthSendTransactionMethod} from 'web3-core-method';
 
-export default class ContractDeployMethod extends SendTransactionMethod {
+export default class ContractDeployMethod extends EthSendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
-     * @param {Accounts} accounts
-     * @param {TransactionSigner} transactionSigner
-     * @param {AbstractContract} contract
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {TransactionObserver} transactionObserver
+     * @param {ChainIdMethod} chainIdMethod
+     * @param {GetTransactionCountMethod} getTransactionCountMethod
+     * @param {SendRawTransactionMethod} sendRawTransactionMethod
      *
      * @constructor
      */
-    constructor(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner, contract) {
-        super(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner);
-        this.contract = contract;
+    constructor(
+        utils,
+        formatters,
+        moduleInstance,
+        transactionObserver,
+        chainIdMethod,
+        getTransactionCountMethod,
+        sendRawTransactionMethod
+    ) {
+        super(
+            utils,
+            formatters,
+            moduleInstance,
+            transactionObserver,
+            chainIdMethod,
+            getTransactionCountMethod,
+            sendRawTransactionMethod
+        );
     }
 
     /**
@@ -60,8 +76,8 @@ export default class ContractDeployMethod extends SendTransactionMethod {
      * @returns {AbstractContract}
      */
     afterExecution(response) {
-        const clonedContract = this.contract.clone();
-        clonedContract.options.address = response.contractAddress;
+        const clonedContract = this.moduleInstance.clone();
+        clonedContract.address = response.contractAddress;
 
         return clonedContract;
     }

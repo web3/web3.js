@@ -24,12 +24,10 @@ import {AbstractWeb3Module} from 'web3-core';
 
 export default class AbstractContract extends AbstractWeb3Module {
     /**
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ContractModuleFactory} contractModuleFactory
-     * @param {PromiEvent} PromiEvent
      * @param {AbiCoder} abiCoder
+     * @param {Accounts} accounts
      * @param {Object} utils
      * @param {Object} formatters
      * @param {Array} abi
@@ -40,35 +38,33 @@ export default class AbstractContract extends AbstractWeb3Module {
      */
     constructor(
         provider,
-        providersModuleFactory,
-        methodModuleFactory,
         contractModuleFactory,
-        PromiEvent,
+        accounts,
         abiCoder,
         utils,
         formatters,
-        abi = AbstractWeb3Module.throwIfMissing('abi'),
-        address,
+        abi = [],
+        address = '',
         options = {}
     ) {
-        super(provider, providersModuleFactory, methodModuleFactory, null, options);
+        super(provider, options, null, null);
+
         this.contractModuleFactory = contractModuleFactory;
         this.abiCoder = abiCoder;
         this.utils = utils;
         this.formatters = formatters;
         this.abiMapper = this.contractModuleFactory.createAbiMapper();
         this.options = options;
-        this.PromiEvent = PromiEvent;
+        this.accounts = accounts;
         this.methodFactory = this.contractModuleFactory.createMethodFactory();
         this.abiModel = this.abiMapper.map(abi);
-        this.options = options;
+        this.transactionSigner = options.transactionSigner;
+        this.methods = this.contractModuleFactory.createMethodsProxy(this);
+        this.events = this.contractModuleFactory.createEventSubscriptionsProxy(this);
 
         if (address) {
             this.address = address;
         }
-
-        this.methods = this.contractModuleFactory.createMethodsProxy(this, this.abiModel, this.PromiEvent);
-        this.events = this.contractModuleFactory.createEventSubscriptionsProxy(this, this.abiModel, this.PromiEvent);
     }
 
     /**
@@ -118,6 +114,24 @@ export default class AbstractContract extends AbstractWeb3Module {
     }
 
     /**
+     * Getter for the contract bytecode
+     *
+     * @returns {String}
+     */
+    get data() {
+        return this.options.data;
+    }
+
+    /**
+     * Setter for the contract bytecode
+     *
+     * @param {String} value
+     */
+    set data(value) {
+        this.options.data = value;
+    }
+
+    /**
      * Adds event listeners and creates a subscription, and remove it once its fired.
      *
      * @method once
@@ -158,18 +172,22 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @returns {Promise<Array>}
      */
     getPastEvents(eventName, options, callback) {
-        return new Promise(async (resolve, reject) => {
+        let method;
+
+        if (eventName !== 'allEvents') {
             if (!this.abiModel.hasEvent(eventName)) {
-                reject(new Error(`Event with name "${eventName}" does not exists.`));
+                return Promise.reject(new Error(`Event with name "${eventName}" does not exists.`));
             }
 
-            const pastEventLogsMethod = this.methodFactory.createPastEventLogsMethod(this.abiModel.getEvent(eventName));
+            method = this.methodFactory.createPastEventLogsMethod(this.abiModel.getEvent(eventName), this);
+        } else {
+            method = this.methodFactory.createAllPastEventLogsMethod(this.abiModel, this);
+        }
 
-            pastEventLogsMethod.parameters = [options];
-            pastEventLogsMethod.callback = callback;
+        method.parameters = [options];
+        method.callback = callback;
 
-            return resolve(await pastEventLogsMethod.execute(this));
-        });
+        return method.execute();
     }
 
     /**
@@ -195,24 +213,16 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @returns {AbstractContract}
      */
     clone() {
-        const contract = new this.constructor(
+        const clone = this.contractModuleFactory.createContract(
             this.currentProvider,
-            this.providersModuleFactory,
-            this.methodModuleFactory,
-            this.contractModuleFactory,
-            this.PromiEvent,
-            this.abiCoder,
-            this.utils,
-            this.formatters,
+            this.accounts,
             [],
-            this.address,
+            '',
             this.options
         );
 
-        contract.abiModel = this.abiModel;
-        contract.methods.abiModel = this.abiModel;
-        contract.events.abiModel = this.abiModel;
+        clone.abiModel = this.abiModel;
 
-        return contract;
+        return clone;
     }
 }

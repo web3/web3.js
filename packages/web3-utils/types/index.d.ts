@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import BigNumber from 'bn.js';
+import BigNumber = require('bn.js');
+import {Buffer} from 'buffer';
 
 export type Unit =
     | 'noether'
@@ -80,7 +81,7 @@ export function toTwosComplement(value: number | string | BN): string;
 export function isAddress(address: string): boolean;
 export function isHex(hex: Hex): boolean;
 export function isHexStrict(hex: Hex): boolean;
-export function asciiToHex(string: string): string;
+export function asciiToHex(string: string, length?: number): string;
 export function hexToAscii(string: string): string;
 export function toAscii(string: string): string;
 export function bytesToHex(bytes: number[]): string;
@@ -118,7 +119,7 @@ export function getUnitValue(unit: Unit): string;
 export function unitMap(): Units;
 export function testAddress(bloom: string, address: string): boolean;
 export function testTopic(bloom: string, topic: string): boolean;
-export function getSignatureParameters(signature: string): object;
+export function getSignatureParameters(signature: string): {r: string; s: string; v: number};
 
 // interfaces
 export interface Utils {
@@ -129,7 +130,7 @@ export interface Utils {
     isAddress(address: string): boolean;
     isHex(hex: Hex): boolean;
     isHexStrict(hex: Hex): boolean;
-    asciiToHex(string: string): string;
+    asciiToHex(string: string, length?: number): string;
     hexToAscii(string: string): string;
     toAscii(string: string): string;
     bytesToHex(bytes: number[]): string;
@@ -167,7 +168,7 @@ export interface Utils {
     unitMap(): Units;
     testAddress(bloom: string, address: string): boolean;
     testTopic(bloom: string, topic: string): boolean;
-    getSignatureParameters(signature: string): object;
+    getSignatureParameters(signature: string): {r: string; s: string; v: number};
 }
 
 export interface Units {
@@ -204,10 +205,11 @@ export type AbiType = 'function' | 'constructor' | 'event' | 'fallback';
 export type StateMutabilityType = 'pure' | 'view' | 'nonpayable' | 'payable';
 
 export interface AbiItem {
+    anonymous?: boolean;
     constant?: boolean;
     inputs?: AbiInput[];
     name?: string;
-    outputs?: AbiOuput[];
+    outputs?: AbiOutput[];
     payable?: boolean;
     stateMutability?: StateMutabilityType;
     type: AbiType;
@@ -217,9 +219,11 @@ export interface AbiInput {
     name: string;
     type: string;
     indexed?: boolean;
+	components?: AbiInput[];
 }
 
-export interface AbiOuput {
+export interface AbiOutput {
     name: string;
     type: string;
+	components?: AbiOutput[];
 }

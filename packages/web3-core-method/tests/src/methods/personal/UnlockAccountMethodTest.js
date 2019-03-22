@@ -1,6 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import UnlockAccountMethod from '../../../../src/methods/personal/UnlockAccountMethod';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 
 // Mocks
 jest.mock('formatters');
@@ -12,11 +12,11 @@ describe('UnlockAccountMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new UnlockAccountMethod(null, formatters);
+        method = new UnlockAccountMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('personal_unlockAccount');
 

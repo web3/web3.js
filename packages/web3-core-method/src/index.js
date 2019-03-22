@@ -15,40 +15,23 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * TODO: Overthink the handling of PromiEvent its just wrong to do it over injection.
- * TODO: Watching transactions with an Observable would solve it.
- *
  * @file index.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import ModuleFactory from './factories/ModuleFactory';
-import {SubscriptionsFactory} from 'web3-core-subscriptions';
-import {formatters} from 'web3-core-helpers';
-import * as Utils from 'web3-utils';
-
-/**
- * Returns the ModuleFactory of the method module
- *
- * @param {Accounts} accounts
- *
- * @returns {ModuleFactory}
- *
- * @constructor
- */
-export const MethodModuleFactory = (accounts) => {
-    return new ModuleFactory(accounts, new SubscriptionsFactory(), Utils, formatters);
-};
-
-export AbstractMethod from '../lib/methods/AbstractMethod';
+export PromiEvent from '../lib/PromiEvent';
 export AbstractMethodFactory from '../lib/factories/AbstractMethodFactory';
+export AbstractMethod from '../lib/methods/AbstractMethod';
+export MethodProxy from './proxy/MethodProxy';
+export TransactionObserver from './observers/TransactionObserver';
 
 // Network
 export GetProtocolVersionMethod from './methods/network/GetProtocolVersionMethod';
 export VersionMethod from './methods/network/VersionMethod';
 export ListeningMethod from './methods/network/ListeningMethod';
 export PeerCountMethod from './methods/network/PeerCountMethod';
+export ChainIdMethod from './methods/network/ChainIdMethod';
 
 // Node
 export GetNodeInfoMethod from './methods/node/GetNodeInfoMethod';
@@ -67,16 +50,28 @@ export GetTransactionCountMethod from './methods/account/GetTransactionCountMeth
 export RequestAccountsMethod from './methods/account/RequestAccountsMethod';
 
 // Block
+export AbstractGetBlockMethod from '../lib/methods/block/AbstractGetBlockMethod';
+export AbstractGetUncleMethod from '../lib/methods/block/AbstractGetUncleMethod';
+export AbstractGetBlockTransactionCountMethod from '../lib/methods/block/AbstractGetBlockTransactionCountMethod';
+export AbstractGetBlockUncleCountMethod from '../lib/methods/block/AbstractGetBlockUncleCountMethod';
+export GetBlockByHashMethod from './methods/block/GetBlockByHashMethod';
+export GetBlockByNumberMethod from './methods/block/GetBlockByNumberMethod';
 export GetBlockNumberMethod from './methods/block/GetBlockNumberMethod';
-export GetBlockMethod from './methods/block/GetBlockMethod';
-export GetUncleMethod from './methods/block/GetUncleMethod';
-export GetBlockTransactionCountMethod from './methods/block/GetBlockTransactionCountMethod';
-export GetBlockUncleCountMethod from './methods/block/GetBlockUncleCountMethod';
+export GetBlockTransactionCountByHashMethod from './methods/block/GetBlockTransactionCountByHashMethod';
+export GetBlockTransactionCountByNumberMethod from './methods/block/GetBlockTransactionCountByNumberMethod';
+export GetBlockUncleCountByBlockHashMethod from './methods/block/GetBlockUncleCountByBlockHashMethod';
+export GetBlockUncleCountByBlockNumberMethod from './methods/block/GetBlockUncleCountByBlockNumberMethod';
+export GetUncleByBlockHashAndIndexMethod from './methods/block/GetUncleByBlockHashAndIndexMethod';
+export GetUncleByBlockNumberAndIndexMethod from './methods/block/GetUncleByBlockNumberAndIndexMethod';
 
 // Transaction
+export AbstractGetTransactionFromBlockMethod from '../lib/methods/transaction/AbstractGetTransactionFromBlockMethod';
+export AbstractObservedTransactionMethod from '../lib/methods/transaction/AbstractObservedTransactionMethod';
+export EthSendTransactionMethod from './methods/transaction/EthSendTransactionMethod';
 export GetTransactionMethod from './methods/transaction/GetTransactionMethod';
-export GetTransactionFromBlockMethod from './methods/transaction/GetTransactionFromBlockMethod';
-export GetTransactionReceipt from './methods/transaction/GetTransactionReceiptMethod';
+export GetTransactionByBlockHashAndIndexMethod from './methods/transaction/GetTransactionByBlockHashAndIndexMethod';
+export GetTransactionByBlockNumberAndIndexMethod from './methods/transaction/GetTransactionByBlockNumberAndIndexMethod';
+export GetTransactionReceiptMethod from './methods/transaction/GetTransactionReceiptMethod';
 export SendRawTransactionMethod from './methods/transaction/SendRawTransactionMethod';
 export SignTransactionMethod from './methods/transaction/SignTransactionMethod';
 export SendTransactionMethod from './methods/transaction/SendTransactionMethod';

@@ -1,5 +1,5 @@
 import * as Utils from 'web3-utils';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import VersionMethod from '../../../../src/methods/network/VersionMethod';
 
 // Mocks
@@ -12,13 +12,13 @@ describe('VersionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new VersionMethod(Utils, null);
+        method = new VersionMethod(Utils, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
-        expect(method.rpcMethod).toEqual('eth_protocolVersion');
+        expect(method.rpcMethod).toEqual('net_version');
 
         expect(method.parametersAmount).toEqual(0);
 

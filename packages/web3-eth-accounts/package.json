@@ -1,9 +1,9 @@
 {
     "name": "web3-eth-accounts",
     "namespace": "ethereum",
-    "version": "1.0.0-beta.38",
+    "version": "1.0.0-beta.50",
     "description": "Web3 module to generate Ethereum accounts and sign data and transactions.",
-    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-eth-accounts",
+    "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-eth-accounts",
     "license": "LGPL-3.0",
     "main": "dist/web3-eth-accounts.cjs.js",
     "module": "dist/web3-eth-accounts.esm.js",
@@ -16,22 +16,25 @@
         "dtslint": "dtslint types --onlyTestTsNext"
     },
     "dependencies": {
+        "@babel/runtime": "^7.3.1",
         "crypto-browserify": "3.12.0",
         "eth-lib": "0.2.8",
         "lodash": "^4.17.11",
         "scrypt.js": "0.2.0",
         "uuid": "3.3.2",
-        "web3-core": "1.0.0-beta.38",
-        "web3-core-helpers": "1.0.0-beta.38",
-        "web3-core-method": "1.0.0-beta.38",
-        "web3-providers": "1.0.0-beta.38",
-        "web3-utils": "1.0.0-beta.38"
+        "web3-core": "1.0.0-beta.50",
+        "web3-core-helpers": "1.0.0-beta.50",
+        "web3-core-method": "1.0.0-beta.50",
+        "web3-providers": "1.0.0-beta.50",
+        "web3-utils": "1.0.0-beta.50"
     },
     "devDependencies": {
-        "dtslint": "^0.4.2"
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     },
     "files": [
         "dist",
         "types/index.d.ts"
-    ]
+    ],
+    "gitHead": "90353080483037843a55874729a6f22ae9217539"
 }

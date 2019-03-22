@@ -27,7 +27,7 @@ shh.setProvider('https://localhost:3000');
 // $ExpectType Providers
 Shh.providers;
 
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
+// $ExpectType object | null
 shh.givenProvider;
 
 // $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider

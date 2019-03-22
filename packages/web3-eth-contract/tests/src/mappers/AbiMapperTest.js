@@ -33,6 +33,8 @@ describe('AbiMapperTest', () => {
         expect(abiMapper.abiCoder).toEqual(abiCoderMock);
 
         expect(abiMapper.utils).toEqual(Utils);
+
+        expect(abiMapper.hasConstructor).toEqual(false);
     });
 
     it('calls map with ABI items of type function and returns the expected result', () => {
@@ -52,6 +54,12 @@ describe('AbiMapperTest', () => {
             {
                 name: 'item',
                 type: 'function',
+                constant: true,
+                payable: true
+            },
+            {
+                name: 'item',
+                type: 'constructor',
                 constant: true,
                 payable: true
             }
@@ -84,7 +92,8 @@ describe('AbiMapperTest', () => {
             methods: {
                 item: [true, true, true],
                 funcSignature: true,
-                funcName: true
+                funcName: true,
+                contractConstructor: true
             }
         });
     });
@@ -139,7 +148,7 @@ describe('AbiMapperTest', () => {
                 eventSignature: true,
                 eventName: true
             },
-            methods: {}
+            methods: {contractConstructor: true}
         });
     });
 

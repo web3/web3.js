@@ -28,7 +28,7 @@ import * as utils from './Utils';
 import * as ethjsUnit from 'ethjs-unit';
 
 export {soliditySha3} from './SoliditySha3';
-export {randomHex} from 'randomhex';
+export randomHex from 'randomhex';
 
 /**
  * Should be used to create full function/event name from json abi
@@ -126,19 +126,20 @@ export const hexToAscii = (hex) => {
  * @method asciiToHex
  *
  * @param {String} str
+ * @param {Number} length
  *
  * @returns {String} hex representation of input string
  */
-export const asciiToHex = (str) => {
-    if (!str) return '0x00';
+export const asciiToHex = (str, length = 32) => {
     let hex = '';
+
     for (let i = 0; i < str.length; i++) {
         const code = str.charCodeAt(i);
         const n = code.toString(16);
         hex += n.length < 2 ? `0${n}` : n;
     }
 
-    return `0x${hex}`;
+    return '0x' + utils.rightPad(hex, length * 2);
 };
 
 /**
@@ -271,6 +272,7 @@ export const toDecimal = utils.hexToNumber;
 export const hexToNumber = utils.hexToNumber;
 export const fromDecimal = utils.numberToHex;
 export const numberToHex = utils.numberToHex;
+export const hexToUtf8 = utils.hexToUtf8;
 export const hexToString = utils.hexToUtf8;
 export const toUtf8 = utils.hexToUtf8;
 export const stringToHex = utils.utf8ToHex;

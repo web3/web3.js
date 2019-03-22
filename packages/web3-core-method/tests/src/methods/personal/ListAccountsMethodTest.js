@@ -1,5 +1,5 @@
 import * as Utils from 'web3-utils';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import ListAccountsMethod from '../../../../src/methods/personal/ListAccountsMethod';
 
 // Mocks
@@ -12,11 +12,11 @@ describe('ListAccountsMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new ListAccountsMethod(Utils, null);
+        method = new ListAccountsMethod(Utils, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('personal_listAccounts');
 

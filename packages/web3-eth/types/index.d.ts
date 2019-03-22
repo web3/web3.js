@@ -24,6 +24,7 @@ import {
     PromiEvent,
     RLPEncodedTransaction,
     Transaction,
+    TransactionConfig,
     TransactionReceipt,
     Web3ModuleOptions
 } from 'web3-core';
@@ -34,10 +35,12 @@ import {AbiCoder} from 'web3-eth-abi';
 import {Network} from 'web3-net';
 import {Personal} from 'web3-eth-personal';
 import {AbiItem} from 'web3-utils';
+import * as net from 'net';
 
 export class Eth extends AbstractWeb3Module {
     constructor(
         provider: provider,
+        net?: net.Socket|null,
         options?: Web3ModuleOptions
     );
 
@@ -51,12 +54,10 @@ export class Eth extends AbstractWeb3Module {
 
     clearSubscriptions(): Promise<boolean>;
 
-    subscribe(type: 'logs', options?: Logs): Promise<Subscribe<Log>>;
-    subscribe(type: 'logs', callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>
-    subscribe(type: 'logs', options?: Logs, callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>;
-    subscribe(type: 'syncing', callback?: (error: Error, result: Subscribe<any>) => void): Promise<Subscribe<any>>
-    subscribe(type: 'newBlockHeaders', callback?: (error: Error, result: Subscribe<BlockHeader>) => void): Promise<Subscribe<BlockHeader>>
-    subscribe(type: 'pendingTransactions', callback?: (error: Error, result: Subscribe<Transaction>) => void): Promise<Subscribe<Transaction>>
+    subscribe(type: 'logs', options?: Logs, callback?: (error: Error, log: Log) => void): Subscription<Log>;
+    subscribe(type: 'syncing', options?: null, callback?: (error: Error, result: any) => void): Subscription<any>;
+    subscribe(type: 'newBlockHeaders', options?: null, callback?: (error: Error, blockHeader: BlockHeader) => void): Subscription<BlockHeader>;
+    subscribe(type: 'pendingTransactions', options?: null, callback?: (error: Error, transactionHash: string) => void): Subscription<string>;
 
     getProtocolVersion(callback?: (error: Error, protocolVersion: string) => void): Promise<string>;
 
@@ -112,25 +113,22 @@ export class Eth extends AbstractWeb3Module {
     getTransactionCount(address: string, callback?: (error: Error, count: number) => void): Promise<number>;
     getTransactionCount(address: string, defaultBlock: number | string, callback?: (error: Error, count: number) => void): Promise<number>;
 
-    sendTransaction(transaction: Transaction, callback?: (error: Error, hash: string) => void): PromiEvent<TransactionReceipt>;
+    sendTransaction(transactionConfig: TransactionConfig, callback?: (error: Error, hash: string) => void): PromiEvent<TransactionReceipt>;
 
     sendSignedTransaction(signedTransactionData: string, callback?: (error: Error, gas: string) => void): PromiEvent<TransactionReceipt>
 
     sign(dataToSign: string, address: string | number, callback?: (error: Error, signature: string) => void): Promise<string>;
 
-    // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
-    signTransaction(transaction: Transaction, callback?: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
-    // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
-    signTransaction(transaction: Transaction, address: string): Promise<RLPEncodedTransaction>;
-    // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
-    signTransaction(transaction: Transaction, address: string, callback: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
+    signTransaction(transactionConfig: TransactionConfig, callback?: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
+    signTransaction(transactionConfig: TransactionConfig, address: string): Promise<RLPEncodedTransaction>;
+    signTransaction(transactionConfig: TransactionConfig, address: string, callback: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
 
-    call(transaction: Transaction): Promise<string>;
-    call(transaction: Transaction, defaultBlock?: number | string): Promise<string>;
-    call(transaction: Transaction, callback?: (error: Error, data: string) => void): Promise<string>;
-    call(transaction: Transaction, defaultBlock: number | string, callback: (error: Error, data: string) => void): Promise<string>;
+    call(transactionConfig: TransactionConfig): Promise<string>;
+    call(transactionConfig: TransactionConfig, defaultBlock?: number | string): Promise<string>;
+    call(transactionConfig: TransactionConfig, callback?: (error: Error, data: string) => void): Promise<string>;
+    call(transactionConfig: TransactionConfig, defaultBlock: number | string, callback: (error: Error, data: string) => void): Promise<string>;
 
-    estimateGas(transaction: Transaction, callback?: (error: Error, gas: number) => void): Promise<number>;
+    estimateGas(transactionConfig: TransactionConfig, callback?: (error: Error, gas: number) => void): Promise<number>;
 
     getPastLogs(options: PastLogsOptions, callback?: (error: Error, logs: Log[]) => void): Promise<Log[]>;
 
@@ -198,13 +196,13 @@ export interface Logs {
     topics?: Array<string | string[]>
 }
 
-export interface Subscribe<T> {
-    subscription: {
-        id: string
-        subscribe(callback?: (error: Error, result: Subscribe<T>) => void): Subscribe<T>
-        unsubscribe(callback?: (error: Error, result: boolean) => void): void | boolean
-        options: {}
-    }
+export interface Subscription<T> {
+    id: string;
+    options: {};
+
+    subscribe(callback?: (error: Error, result: T) => void): Subscription<T>;
+
+    unsubscribe(callback?: (error: Error, result: boolean) => void): Promise<undefined | boolean>;
 
     on(type: 'data', handler: (data: T) => void): void
 

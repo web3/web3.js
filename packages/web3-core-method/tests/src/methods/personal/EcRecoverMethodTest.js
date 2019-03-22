@@ -1,5 +1,5 @@
 import {formatters} from 'web3-core-helpers';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import EcRecoverMethod from '../../../../src/methods/personal/EcRecoverMethod';
 
 // Mocks
@@ -12,11 +12,11 @@ describe('EcRecoverMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new EcRecoverMethod(null, formatters);
+        method = new EcRecoverMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('personal_ecRecover');
 
@@ -32,8 +32,6 @@ describe('EcRecoverMethodTest', () => {
 
         formatters.inputSignFormatter.mockReturnValueOnce({sign: true});
 
-        formatters.inputAddressFormatter.mockReturnValueOnce('0x0');
-
         method.beforeExecution();
 
         expect(method.parameters[0]).toHaveProperty('sign', true);
@@ -41,7 +39,5 @@ describe('EcRecoverMethodTest', () => {
         expect(method.parameters[1]).toEqual('0x0');
 
         expect(formatters.inputSignFormatter).toHaveBeenCalledWith({});
-
-        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
     });
 });

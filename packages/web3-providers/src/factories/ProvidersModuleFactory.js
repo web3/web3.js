@@ -24,14 +24,14 @@ import {w3cwebsocket as W3CWebsocket} from 'websocket';
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import URL from 'url-parse';
 import ProviderResolver from '../resolvers/ProviderResolver';
-import ProviderDetector from '../detectors/ProviderDetector';
 import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
 import BatchRequest from '../batch-request/BatchRequest';
-import EthereumProvider from '../providers/EthereumProvider';
-import MetamaskInpageProvider from '../providers/MetamaskInpageProvider';
+import Web3EthereumProvider from '../providers/Web3EthereumProvider';
+import MetamaskProvider from '../providers/MetamaskProvider';
 import MistEthereumProvider from '../providers/MistEthereumProvider';
+import CustomProvider from '../providers/CustomProvider';
 
 export default class ProvidersModuleFactory {
     /**
@@ -56,17 +56,6 @@ export default class ProvidersModuleFactory {
      */
     createProviderResolver() {
         return new ProviderResolver(this);
-    }
-
-    /**
-     * Returns an ProviderDetector object
-     *
-     * @method createProviderDetector
-     *
-     * @returns {ProviderDetector}
-     */
-    createProviderDetector() {
-        return new ProviderDetector();
     }
 
     /**
@@ -166,29 +155,29 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an EthereumProvider object
+     * Returns an Web3EthereumProvider object
      *
-     * @method createEthereumProvider
+     * @method createWeb3EthereumProvider
      *
      * @param {EthereumProvider} connection
      *
-     * @returns {EthereumProvider}
+     * @returns {Web3EthereumProvider}
      */
-    createEthereumProvider(connection) {
-        return new EthereumProvider(connection);
+    createWeb3EthereumProvider(connection) {
+        return new Web3EthereumProvider(connection);
     }
 
     /**
-     * Returns an MetamaskInpageProvider object
+     * Returns an MetamaskProvider object
      *
      * @method createMetamaskInpageProvider
      *
      * @param {MetamaskInpageProvider} inpageProvider
      *
-     * @returns {MetamaskInpageProvider}
+     * @returns {MetamaskProvider}
      */
-    createMetamaskInpageProvider(inpageProvider) {
-        return new MetamaskInpageProvider(inpageProvider);
+    createMetamaskProvider(inpageProvider) {
+        return new MetamaskProvider(inpageProvider);
     }
 
     /**
@@ -202,5 +191,18 @@ export default class ProvidersModuleFactory {
      */
     createMistEthereumProvider(mistEthereumProvider) {
         return new MistEthereumProvider(mistEthereumProvider);
+    }
+
+    /**
+     * Returns an CustomProvider object
+     *
+     * @method createCustomProvider
+     *
+     * @param {Object} connection
+     *
+     * @returns {CustomProvider}
+     */
+    createCustomProvider(connection) {
+        return new CustomProvider(connection);
     }
 }

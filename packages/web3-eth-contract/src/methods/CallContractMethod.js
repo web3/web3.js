@@ -22,17 +22,19 @@
 
 import {CallMethod} from 'web3-core-method';
 
+// TODO: Implement revert handling (AbstractContractMethod)
 export default class CallContractMethod extends CallMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      * @param {AbiCoder} abiCoder
      * @param {AbiItemModel} abiItemModel
      *
      * @constructor
      */
-    constructor(utils, formatters, abiCoder, abiItemModel) {
-        super(utils, formatters);
+    constructor(utils, formatters, moduleInstance, abiCoder, abiItemModel) {
+        super(utils, formatters, moduleInstance);
         this.abiCoder = abiCoder;
         this.abiItemModel = abiItemModel;
     }
@@ -51,16 +53,11 @@ export default class CallContractMethod extends CallMethod {
             return null;
         }
 
-        if (response.length >= 2) {
-            response = response.slice(2);
+        const outputs = this.abiItemModel.getOutputs();
+        if (outputs.length > 1) {
+            return this.abiCoder.decodeParameters(outputs, response);
         }
 
-        const result = this.abiCoder.decodeParameters(this.abiItemModel.getOutputs(), response);
-
-        if (Object.keys(result).length === 1) {
-            return result[0];
-        }
-
-        return result;
+        return this.abiCoder.decodeParameter(outputs[0].type, response);
     }
 }

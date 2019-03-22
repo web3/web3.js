@@ -1,8 +1,5 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {PromiEvent} from 'web3-core-promievent';
-import {HttpProvider, ProvidersModuleFactory} from 'web3-providers';
-import {MethodModuleFactory} from 'web3-core-method';
 import {Network} from 'web3-net';
 import {AbiCoder} from 'web3-eth-abi';
 import Registry from '../../src/contracts/Registry';
@@ -13,9 +10,6 @@ import EnsModuleFactory from '../../src/factories/EnsModuleFactory';
 // Mocks
 jest.mock('../../src/factories/EnsModuleFactory');
 jest.mock('../../src/contracts/Registry');
-jest.mock('ProvidersModuleFactory');
-jest.mock('HttpProvider');
-jest.mock('MethodModuleFactory');
 jest.mock('Network');
 jest.mock('AbiCoder');
 jest.mock('Utils');
@@ -26,28 +20,11 @@ jest.mock('namehash');
  * Ens test
  */
 describe('EnsTest', () => {
-    let ens,
-        providerMock,
-        providersModuleFactoryMock,
-        methodModuleFactoryMock,
-        registryMock,
-        ensModuleFactoryMock,
-        abiCoderMock,
-        networkMock;
+    let ens, registryMock, ensModuleFactoryMock, abiCoderMock, networkMock;
 
     beforeEach(() => {
-        new HttpProvider();
-        providerMock = HttpProvider.mock.instances[0];
-
-        new ProvidersModuleFactory();
-        providersModuleFactoryMock = ProvidersModuleFactory.mock.instances[0];
-
-        new MethodModuleFactory();
-        methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
-
         new Registry();
         registryMock = Registry.mock.instances[0];
-        registryMock.PromiEvent = PromiEvent;
 
         new EnsModuleFactory();
         ensModuleFactoryMock = EnsModuleFactory.mock.instances[0];
@@ -59,42 +36,49 @@ describe('EnsTest', () => {
         new Network();
         networkMock = Network.mock.instances[0];
 
-        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce({detect: jest.fn()});
-        providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce({resolve: jest.fn()});
-
         namehash.hash = jest.fn(() => {
             return '0x0';
         });
 
         ens = new Ens(
-            providerMock,
-            providersModuleFactoryMock,
-            methodModuleFactoryMock,
+            {send: jest.fn(), clearSubscriptions: jest.fn()},
             {},
             ensModuleFactoryMock,
-            PromiEvent,
+            {},
+            {},
             abiCoderMock,
             Utils,
             formatters,
-            {},
-            networkMock
+            networkMock,
+            {}
         );
     });
 
     it('constructor check', () => {
         expect(ens.registry).toEqual(registryMock);
+
         expect(ensModuleFactoryMock.createRegistry).toHaveBeenCalledWith(
             ens.currentProvider,
-            ens.providersModuleFactory,
-            ens.methodModuleFactory,
             ens.contractModuleFactory,
-            ens.promiEvent,
+            ens.accounts,
             ens.abiCoder,
             ens.utils,
             ens.formatters,
             ens.registryOptions,
             ens.net
         );
+
+        expect(ens.ensModuleFactory).toEqual(ensModuleFactoryMock);
+
+        expect(ens.contractModuleFactory).toEqual({});
+
+        expect(ens.abiCoder).toEqual(abiCoderMock);
+
+        expect(ens.utils).toEqual(Utils);
+
+        expect(ens.registryOptions).toEqual({});
+
+        expect(ens.net).toEqual(networkMock);
     });
 
     it('calls resolver and returns with a resolved promise', async () => {
@@ -1221,5 +1205,15 @@ describe('EnsTest', () => {
         expect(callback).toHaveBeenCalled();
 
         expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
+    it('calls setProvider and returns true', () => {
+        const providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
+
+        registryMock.setProvider.mockReturnValueOnce(true);
+
+        expect(ens.setProvider(providerMock, 'net')).toEqual(true);
+
+        expect(registryMock.setProvider).toHaveBeenCalledWith(providerMock, 'net');
     });
 });

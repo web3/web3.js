@@ -11,6 +11,7 @@ describe('AbiItemModelTest', () => {
             signature: 'signature',
             name: 'name',
             anonymous: false,
+            payable: true,
             type: 'function',
             constant: true
         };
@@ -61,24 +62,6 @@ describe('AbiItemModelTest', () => {
         abiItem.outputs = [true];
 
         expect(abiItemModel.getOutputs()).toEqual([true]);
-    });
-
-    it('calls givenParametersLengthIsValid and returns true', () => {
-        abiItem.inputs = [true];
-        abiItemModel.contractMethodParameters = [true];
-
-        expect(abiItemModel.givenParametersLengthIsValid()).toEqual(true);
-    });
-
-    it('calls givenParametersLengthIsValid and throw an error', () => {
-        abiItem.inputs = [true];
-        abiItemModel.contractMethodParameters = [];
-
-        expect(() => {
-            abiItemModel.givenParametersLengthIsValid();
-        }).toThrow(
-            'The number of arguments is not matching the methods required number. You need to pass 1 arguments.'
-        );
     });
 
     it('calls getIndexedInputs and returns the expected inputs', () => {

@@ -15,25 +15,19 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file ProviderResolverTest.js
+ * @file ProviderResolver.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
-import HttpProvider from '../providers/HttpProvider';
-import WebsocketProvider from '../providers/WebsocketProvider';
-import IpcProvider from '../providers/IpcProvider';
 
-/* eslint-disable no-new-func */
-let global;
-try {
-    global = new Function('return this')();
-} catch (error) {
-    global = window;
-}
-/* eslint-enable */
+const global =
+    (function() {
+        return this || (typeof self === 'object' && self);
+        // eslint-disable-next-line no-new-func
+    })() || new Function('return this')();
 
 export default class ProviderResolver {
     /**
@@ -50,10 +44,10 @@ export default class ProviderResolver {
      *
      * @method resolve
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
      * @param {Net} net
      *
-     * @returns {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|Error}
+     * @returns {AbstractSocketProvider|HttpProvider|CustomProvider}
      */
     resolve(provider, net) {
         if (typeof provider === 'string') {
@@ -72,29 +66,35 @@ export default class ProviderResolver {
             }
         }
 
+        if (provider.sendPayload && provider.subscribe) {
+            return provider;
+        }
+
         if (typeof global.mist !== 'undefined' && provider.constructor.name === 'EthereumProvider') {
             return this.providersModuleFactory.createMistEthereumProvider(provider);
         }
 
-        switch (provider.constructor.name) {
-            case 'EthereumProvider':
-                return this.providersModuleFactory.createEthereumProvider(provider);
-            case 'MetamaskInpageProvider':
-                return this.providersModuleFactory.createMetamaskInpageProvider(provider);
-            case 'HttpProvider':
-            case 'WebsocketProvider':
-            case 'IpcProvider':
-                return provider;
+        if (provider.isEIP1193) {
+            return this.providersModuleFactory.createWeb3EthereumProvider(provider);
         }
 
-        if (
-            provider instanceof HttpProvider ||
-            provider instanceof WebsocketProvider ||
-            provider instanceof IpcProvider
-        ) {
-            return provider;
+        if (this.isMetamaskInpageProvider(provider)) {
+            return this.providersModuleFactory.createMetamaskProvider(provider);
         }
 
-        throw new Error('Please provide an valid Web3 provider');
+        return this.providersModuleFactory.createCustomProvider(provider);
+    }
+
+    /**
+     * Checks if the given provider is the MetamaskInpageProvider
+     *
+     * @method isMetamaskInpageProvider
+     *
+     * @param {Object} provider
+     *
+     * @returns {Boolean}
+     */
+    isMetamaskInpageProvider(provider) {
+        return provider.constructor.name === 'MetamaskInpageProvider';
     }
 }

@@ -41,7 +41,7 @@ export default class AbstractSubscription extends EventEmitter {
         super();
         this.type = type;
         this.method = method;
-        this.options = options || {};
+        this.options = options || null;
         this.utils = utils;
         this.formatters = formatters;
         this.moduleInstance = moduleInstance;
@@ -82,9 +82,14 @@ export default class AbstractSubscription extends EventEmitter {
      */
     subscribe(callback) {
         this.beforeSubscription(this.moduleInstance);
+        let subscriptionParameters = [];
+
+        if (this.options !== null) {
+            subscriptionParameters = [this.options];
+        }
 
         this.moduleInstance.currentProvider
-            .subscribe(this.type, this.method, [this.options])
+            .subscribe(this.type, this.method, subscriptionParameters)
             .then((subscriptionId) => {
                 this.id = subscriptionId;
 

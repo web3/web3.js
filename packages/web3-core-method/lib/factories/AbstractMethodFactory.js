@@ -20,16 +20,19 @@
  * @date 2018
  */
 
+import {NewHeadsSubscription} from 'web3-core-subscriptions';
+import GetBlockByNumberMethod from '../../src/methods/block/GetBlockByNumberMethod';
+import GetTransactionReceiptMethod from '../../src/methods/transaction/GetTransactionReceiptMethod';
+import TransactionObserver from '../../src/observers/TransactionObserver';
+
 export default class AbstractMethodFactory {
     /**
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(methodModuleFactory, utils, formatters) {
-        this.methodModuleFactory = methodModuleFactory;
+    constructor(utils, formatters) {
         this.utils = utils;
         this.formatters = formatters;
         this._methods = null;
@@ -75,53 +78,41 @@ export default class AbstractMethodFactory {
     }
 
     /**
-     * TODO: Find a cleaner way for the dependency resolution here.
-     *
      * Returns an MethodModel
      *
      * @param {String} name
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {AbstractMethod}
      */
-    createMethod(name) {
+    createMethod(name, moduleInstance) {
         const method = this.methods[name];
 
-        switch (method.Type) {
-            case 'CALL':
-                if (method.name === 'SignMethod') {
-                    /* eslint-disable new-cap */
-                    return new method(
-                        this.utils,
-                        this.formatters,
-                        this.methodModuleFactory.accounts,
-                        this.methodModuleFactory.createMessageSigner()
-                    );
-                    /* eslint-enable new-cap */
-                }
+        if (method.Type === 'observed-transaction-method') {
+            let timeout = moduleInstance.transactionBlockTimeout;
+            const providerName = moduleInstance.currentProvider.constructor.name;
 
-                /* eslint-disable new-cap */
-                return new method(this.utils, this.formatters);
-            /* eslint-enable new-cap */
-            case 'SEND':
-                if (method.name === 'SendTransactionMethod') {
-                    /* eslint-disable new-cap */
-                    return new method(
-                        this.utils,
-                        this.formatters,
-                        this.methodModuleFactory.createTransactionConfirmationWorkflow(),
-                        this.methodModuleFactory.accounts,
-                        this.methodModuleFactory.createTransactionSigner()
-                    );
-                    /* eslint-enable new-cap */
-                }
+            if (providerName === 'HttpProvider' || providerName === 'CustomProvider') {
+                timeout = moduleInstance.transactionPollingTimeout;
+            }
 
-                /* eslint-disable new-cap */
-                return new method(
-                    this.utils,
-                    this.formatters,
-                    this.methodModuleFactory.createTransactionConfirmationWorkflow()
-                );
-            /* eslint-enable new-cap */
+            // eslint-disable-next-line new-cap
+            return new method(
+                this.utils,
+                this.formatters,
+                moduleInstance,
+                new TransactionObserver(
+                    moduleInstance.currentProvider,
+                    timeout,
+                    moduleInstance.transactionConfirmationBlocks,
+                    new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
+                    new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance),
+                    new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
+                )
+            );
         }
+
+        // eslint-disable-next-line new-cap
+        return new method(this.utils, this.formatters, moduleInstance);
     }
 }

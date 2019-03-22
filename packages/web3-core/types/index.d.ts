@@ -18,6 +18,7 @@
  */
 
 import * as net from 'net';
+import {AbstractMethodFactory} from 'web3-core-method';
 import {
     BatchRequest,
     EthereumProvider,
@@ -25,18 +26,17 @@ import {
     HttpProviderOptions,
     IpcProvider,
     provider,
-    ProvidersModuleFactory,
     WebsocketProvider,
     WebsocketProviderOptions
 } from 'web3-providers';
+import {BN} from 'web3-utils';
 
 export class AbstractWeb3Module {
     constructor(
         provider: provider,
-        providersModuleFactory: ProvidersModuleFactory,
-        methodModuleFactory: any,
-        methodFactory?: any,
-        options?: Web3ModuleOptions
+        options?: Web3ModuleOptions,
+        methodFactory?: AbstractMethodFactory,
+        net?: net.Socket | null
     );
 
     BatchRequest: new () => BatchRequest;
@@ -49,13 +49,25 @@ export class AbstractWeb3Module {
     static readonly providers: Providers;
     defaultAccount: string | null;
     readonly currentProvider: EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider;
-    readonly givenProvider: provider | null;
+    readonly givenProvider: object | null;
 
     setProvider(provider: provider, net?: net.Socket): boolean;
 
     isSameProvider(provider: provider): boolean;
 
     clearSubscriptions(subscriptionType: string): Promise<boolean>;
+}
+
+export interface TransactionSigner {
+    sign(transactionConfig: TransactionConfig): Promise<SignedTransaction>;
+}
+
+export interface SignedTransaction {
+    messageHash?: string;
+    r: string;
+    s: string;
+    v: string;
+    rawTransaction?: string;
 }
 
 export interface Web3ModuleOptions {
@@ -66,6 +78,7 @@ export interface Web3ModuleOptions {
     transactionPollingTimeout?: number;
     defaultGasPrice?: string;
     defaultGas?: number;
+    transactionSigner: TransactionSigner;
 }
 
 export interface Providers {
@@ -103,36 +116,59 @@ export interface PromiEvent<T> extends Promise<T> {
 }
 
 export interface Transaction {
+    hash: string;
+    nonce: number;
+    blockHash: string | null;
+    blockNumber: number | null;
+    transactionIndex: number | null;
+    from: string;
+    to: string;
+    value: string;
+    gasPrice: string;
+    gas: number;
+    input: string;
+}
+
+export interface TransactionConfig {
     from?: string | number;
     to?: string;
-    gasPrice?: string;
+    value?: number | string | BN;
     gas?: number | string;
-    value?: number | string;
-    chainId?: number;
+    gasPrice?: number | string | BN;
     data?: string;
     nonce?: number;
-    v?: string;
-    r?: string;
-    s?: string;
-    hash?: string;
+    chainId?: number;
 }
 
 export interface RLPEncodedTransaction {
     raw: string;
-    tx: Transaction;
+    tx: {
+        nonce: string;
+        gasPrice: string;
+        gas: string;
+        to: string;
+        value: string;
+        input: string;
+        r: string;
+        s: string;
+        v: string;
+        hash: string;
+    }
 }
 
 export interface TransactionReceipt {
+    status: boolean;
     transactionHash: string;
     transactionIndex: number;
     blockHash: string;
     blockNumber: number;
     from: string;
     to: string;
-    contractAddress: string;
+    contractAddress?: string;
     cumulativeGasUsed: number;
     gasUsed: number;
-    logs?: Log[];
+    logs: Log[];
+    logsBloom: string;
     events?: {
         [eventName: string]: EventLog;
     };
@@ -141,7 +177,7 @@ export interface TransactionReceipt {
 export interface EventLog {
     event: string;
     address: string;
-    returnValues: object;
+    returnValues: any;
     logIndex: number;
     transactionIndex: number;
     transactionHash: string;

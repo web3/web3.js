@@ -88,16 +88,15 @@ export default class HttpProvider {
      *
      * @returns {Promise<any>}
      */
-    send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
-            const validationResult = JsonRpcResponseValidator.validate(response);
+    async send(method, parameters) {
+        const response = await this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
+        const validationResult = JsonRpcResponseValidator.validate(response);
 
-            if (validationResult instanceof Error) {
-                throw validationResult;
-            }
+        if (validationResult instanceof Error) {
+            throw validationResult;
+        }
 
-            return response.result;
-        });
+        return response.result;
     }
 
     /**
@@ -144,11 +143,17 @@ export default class HttpProvider {
                     this.connected = true;
                 }
 
-                if (request.readyState === 4 && request.status === 200) {
-                    try {
-                        return resolve(JSON.parse(request.responseText));
-                    } catch (error) {
-                        reject(new Error(`Invalid JSON as response: ${request.responseText}`));
+                if (request.readyState === 4) {
+                    if (request.status === 200) {
+                        try {
+                            return resolve(JSON.parse(request.responseText));
+                        } catch (error) {
+                            reject(new Error(`Invalid JSON as response: ${request.responseText}`));
+                        }
+                    }
+
+                    if (this.isInvalidHttpEndpoint(request)) {
+                        reject(new Error(`Connection refused or URL couldn't be resolved: ${this.host}`));
                     }
                 }
             };
@@ -162,12 +167,23 @@ export default class HttpProvider {
             try {
                 request.send(JSON.stringify(payload));
             } catch (error) {
-                if (error.constructor.name === 'NetworkError') {
-                    this.connected = false;
-                }
+                this.connected = false;
 
                 reject(error);
             }
         });
+    }
+
+    /**
+     * Checks if the error `net::ERR_NAME_NOT_RESOLVED` or `net::ERR_CONNECTION_REFUSED` will appear.
+     *
+     * @method isInvalidHttpEndpoint
+     *
+     * @param {Object} request
+     *
+     * @returns {Boolean}
+     */
+    isInvalidHttpEndpoint(request) {
+        return request.response === null && request.status === 0;
     }
 }

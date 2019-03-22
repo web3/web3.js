@@ -20,68 +20,18 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../lib/methods/AbstractMethod';
 
-export default class SignMethod extends AbstractCallMethod {
+export default class SignMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {Accounts} accounts
-     * @param {MessageSigner} messageSigner
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, accounts, messageSigner) {
-        super('eth_sign', 2, utils, formatters);
-        this.accounts = accounts;
-        this.messageSigner = messageSigner;
-    }
-
-    /**
-     * Sends a JSON-RPC call request
-     *
-     * @method execute
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @callback callback callback(error, result)
-     * @returns {Promise<Object|String>}
-     */
-    execute(moduleInstance) {
-        if (this.hasWallets()) {
-            this.beforeExecution(moduleInstance);
-
-            return this.signOnClient();
-        }
-
-        return super.execute(moduleInstance);
-    }
-
-    /**
-     * Signs the message on the client.
-     *
-     * @method signOnClient
-     *
-     * @returns {Promise<String>}
-     */
-    signOnClient() {
-        let signedMessage;
-
-        try {
-            signedMessage = this.afterExecution(this.messageSigner.sign(this.parameters[0], this.parameters[1]));
-        } catch (error) {
-            if (this.callback) {
-                this.callback(error, null);
-            }
-
-            throw error;
-        }
-
-        if (this.callback) {
-            this.callback(false, signedMessage);
-        }
-
-        return Promise.resolve(signedMessage);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_sign', 2, utils, formatters, moduleInstance);
     }
 
     /**
@@ -94,5 +44,6 @@ export default class SignMethod extends AbstractCallMethod {
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
         this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
+        this.parameters.reverse();
     }
 }

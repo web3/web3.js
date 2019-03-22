@@ -1,5 +1,5 @@
 import {formatters} from 'web3-core-helpers';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import LockAccountMethod from '../../../../src/methods/personal/LockAccountMethod';
 
 // Mocks
@@ -12,11 +12,11 @@ describe('LockAccountMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new LockAccountMethod(null, formatters);
+        method = new LockAccountMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('personal_lockAccount');
 
