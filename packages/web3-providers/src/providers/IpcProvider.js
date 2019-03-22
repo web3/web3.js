@@ -73,7 +73,8 @@ export default class IpcProvider extends AbstractSocketProvider {
     onMessage(message) {
         let result = null;
         let returnValues = [];
-        let dechunkedData = message.toString()
+        let dechunkedData = message
+            .toString()
             .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
             .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
             .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
@@ -88,7 +89,7 @@ export default class IpcProvider extends AbstractSocketProvider {
 
             try {
                 result = JSON.parse(data);
-            } catch (e) {
+            } catch (error) {
                 this.lastChunk = data;
 
                 return;
@@ -175,7 +176,7 @@ export default class IpcProvider extends AbstractSocketProvider {
                 return;
             }
 
-            return reject(new Error('Connection error: Couldn\'t write on the socket with Socket.write(payload)'));
+            return reject(new Error("Connection error: Couldn't write on the socket with Socket.write(payload)"));
         });
     }
 }
