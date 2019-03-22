@@ -24,7 +24,7 @@ const contract = new Contract('http://localhost:500', {type: 'constructor'});
 // $ExpectType Contract
 contract.clone();
 
-// $ExpectType DeployTransactionResponse
+// $ExpectType ContractSendMethod
 contract.deploy({
     data: '0x12345...',
     arguments: [123, 'My String']

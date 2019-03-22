@@ -33,7 +33,7 @@ export class Contract {
 
     clone(): Contract;
 
-    deploy(options: DeployOptions): DeployTransactionResponse;
+    deploy(options: DeployOptions): ContractSendMethod;
 
     methods: any;
 
@@ -64,9 +64,7 @@ export interface DeployOptions {
     arguments?: any[];
 }
 
-export interface DeployTransactionResponse {
-    array: any[];
-
+export interface ContractSendMethod {
     send(options: SendOptions, callback?: (err: Error, contracts: Contract) => void): PromiEvent<Contract>;
 
     estimateGas(options: EstimateGasOptions, callback?: (err: Error, gas: number) => void): Promise<number>;
