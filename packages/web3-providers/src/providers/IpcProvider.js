@@ -35,7 +35,7 @@ export default class IpcProvider extends AbstractSocketProvider {
     constructor(connection, path) {
         super(connection, null);
         this.host = path;
-        this.chunks = '';
+        this.lastChunk = '';
     }
 
     /**
@@ -71,16 +71,37 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @param {String|Buffer} message
      */
     onMessage(message) {
-        const chunk = message.toString('utf8');
+        let result = null;
+        let returnValues = [];
+        let dechunkedData = message
+            .toString()
+            .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
+            .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
+            .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
+            .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
+            .split('|--|');
 
-        if (chunk.indexOf('\n') < 0) {
-            this.chunks += chunk;
+        dechunkedData.forEach((data) => {
+            result = null;
+            if (this.lastChunk) {
+                data = this.lastChunk + data;
+            }
 
-            return;
-        }
+            try {
+                result = JSON.parse(data);
+            } catch (error) {
+                this.lastChunk = data;
 
-        super.onMessage(this.chunks + chunk.substring(0, chunk.indexOf('\n')));
-        this.chunks = chunk.substring(chunk.indexOf('\n') + 1);
+                return;
+            }
+
+            this.lastChunk = null;
+            returnValues.push(result);
+        });
+
+        returnValues.forEach((chunk) => {
+            super.onMessage(chunk);
+        });
     }
 
     /**
