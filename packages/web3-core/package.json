@@ -16,8 +16,8 @@
         "dtslint": "dtslint types --onlyTestTsNext"
     },
     "dependencies": {
-        "@types/bn.js": "^4.11.4",
         "@babel/runtime": "^7.3.1",
+        "@types/bn.js": "^4.11.4",
         "@types/node": "^10.12.18",
         "lodash": "^4.17.11",
         "web3-utils": "1.0.0-beta.50"
