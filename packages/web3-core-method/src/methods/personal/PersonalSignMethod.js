@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import isFunction from 'lodash/isFunction'
+import isFunction from 'lodash/isFunction';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class PersonalSignMethod extends AbstractMethod {

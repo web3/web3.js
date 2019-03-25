@@ -22,8 +22,6 @@
 
 import * as Utils from 'web3-utils';
 import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
-import isArray from 'lodash/isArray';
-import isObject from 'lodash/isObject';
 import EthAbiCoder from './AbiCoder.js';
 
 /**
@@ -34,8 +32,5 @@ import EthAbiCoder from './AbiCoder.js';
  * @constructor
  */
 export function AbiCoder() {
-    return new EthAbiCoder(
-        Utils,
-        new EthersAbiCoder()
-    );
+    return new EthAbiCoder(Utils, new EthersAbiCoder());
 }

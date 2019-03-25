@@ -43,9 +43,9 @@ describe('ProvidersModuleFactoryTest', () => {
     });
 
     it('createXMLHttpRequest returns instance of XMLHttpRequest', () => {
-        expect(providersModuleFactory.createXMLHttpRequest('', 0, [{name: 'name', value: 'value'}], {}, true)).toBeInstanceOf(
-            XHR
-        );
+        expect(
+            providersModuleFactory.createXMLHttpRequest('', 0, [{name: 'name', value: 'value'}], {}, true)
+        ).toBeInstanceOf(XHR);
 
         expect(XHR).toHaveBeenCalledTimes(1);
 
