@@ -102,7 +102,7 @@ export default class Account {
      * @returns {EncryptedKeystoreV3Json | {version, id, address, crypto}}
      */
     encrypt(password, options) {
-        return Account.fromPrivateKey(this.privateKey, this.accounts.transactionSigner).toV3Keystore(password, options);
+        return Account.fromPrivateKey(this.privateKey, this.accounts).toV3Keystore(password, options);
     }
 
     /**
@@ -114,7 +114,7 @@ export default class Account {
      * @returns {Account}
      */
     static from(entropy, accounts = {}) {
-        return new Account(create(entropy || randomHex(32)), accounts.transactionSigner);
+        return new Account(create(entropy || randomHex(32)), accounts);
     }
 
     /**
@@ -126,7 +126,7 @@ export default class Account {
      * @returns {Account}
      */
     static fromPrivateKey(privateKey, accounts = {}) {
-        return new Account(fromPrivate(privateKey), accounts.transactionSigner);
+        return new Account(fromPrivate(privateKey), accounts);
     }
 
     /**
@@ -267,6 +267,6 @@ export default class Account {
         );
         const seed = `0x${Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex')}`;
 
-        return this.fromPrivateKey(seed, accounts);
+        return Account.fromPrivateKey(seed, accounts);
     }
 }
