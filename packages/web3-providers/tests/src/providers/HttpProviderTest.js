@@ -52,7 +52,7 @@ describe('HttpProviderTest', () => {
             {headers: [], timeout: 1, keepAlive: true, withCredentials: true},
             providersModuleFactoryMock
         );
-        
+
         expect(httpProvider.host).toEqual('http');
 
         expect(httpProvider.headers).toEqual([]);
