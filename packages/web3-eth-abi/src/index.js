@@ -36,16 +36,6 @@ import EthAbiCoder from './AbiCoder.js';
 export function AbiCoder() {
     return new EthAbiCoder(
         Utils,
-        // TODO: Change this anonymous method to a accessable method because of the testing.
-        new EthersAbiCoder((type, value) => {
-            if (
-                (type.match(/^u?int/) && !isArray(value) && !isObject(value)) ||
-                value.constructor.name === 'BigNumber'
-            ) {
-                return value.toString();
-            }
-
-            return value;
-        })
+        new EthersAbiCoder()
     );
 }
