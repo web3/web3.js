@@ -20,7 +20,7 @@ describe('EcRecoverMethodTest', () => {
 
         expect(method.rpcMethod).toEqual('personal_ecRecover');
 
-        expect(method.parametersAmount).toEqual(3);
+        expect(method.parametersAmount).toEqual(2);
 
         expect(method.utils).toEqual(null);
 
