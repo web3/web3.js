@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, bytesToHex} from 'web3-utils';
+import BN = require('bn.js');
+import {bytesToHex} from 'web3-utils';
 
 // $ExpectType string
 bytesToHex([72]);

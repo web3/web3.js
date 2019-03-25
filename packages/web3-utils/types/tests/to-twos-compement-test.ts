@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {toTwosComplement, BN} from 'web3-utils';
+import BN = require('bn.js');
+import {toTwosComplement} from 'web3-utils';
 
 // $ExpectType string
 toTwosComplement(4);

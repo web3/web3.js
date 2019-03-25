@@ -18,6 +18,7 @@
  */
 
 import * as net from 'net';
+import BN = require('bn.js');
 import {AbstractMethodFactory} from 'web3-core-method';
 import {
     BatchRequest,
@@ -29,7 +30,6 @@ import {
     WebsocketProvider,
     WebsocketProviderOptions
 } from 'web3-providers';
-import {BN} from 'web3-utils';
 
 export class AbstractWeb3Module {
     constructor(
