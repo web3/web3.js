@@ -69,11 +69,7 @@ describe('HttpProviderTest', () => {
     });
 
     it('constructor check without the property withCredentials in the options', () => {
-        httpProvider = new HttpProvider(
-            'http',
-            {headers: [], timeout: 1},
-            providersModuleFactoryMock
-        );
+        httpProvider = new HttpProvider('http', {headers: [], timeout: 1}, providersModuleFactoryMock);
 
         expect(httpProvider.host).toEqual('http');
 
@@ -139,7 +135,7 @@ describe('HttpProviderTest', () => {
             httpProvider.timeout,
             httpProvider.headers,
             httpProvider.agent,
-            httpProvider.withCredentials,
+            httpProvider.withCredentials
         );
 
         expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
