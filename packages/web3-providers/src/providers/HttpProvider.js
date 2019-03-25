@@ -37,6 +37,7 @@ export default class HttpProvider {
         this.host = host;
         this.timeout = options.timeout || 0;
         this.headers = options.headers;
+        this.withCredentials = options.withCredentials || false;
         this.connected = true;
         this.providersModuleFactory = providersModuleFactory;
         this.agent = {};
@@ -135,7 +136,8 @@ export default class HttpProvider {
                 this.host,
                 this.timeout,
                 this.headers,
-                this.agent
+                this.agent,
+                this.withCredentials
             );
 
             request.onreadystatechange = () => {
