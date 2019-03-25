@@ -152,10 +152,15 @@ export interface JsonRpcPayload {
     id?: string | number;
 }
 
+export interface HttpHeader {
+    name: string;
+    value: string;
+}
+
 export interface HttpProviderOptions {
     host?: string;
     timeout?: number;
-    headers?: {};
+    headers?: HttpHeader[];
     withCredentials?: boolean;
 }
 
