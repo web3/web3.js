@@ -156,6 +156,7 @@ export interface HttpProviderOptions {
     host?: string;
     timeout?: number;
     headers?: {};
+    withCredentials?: boolean;
 }
 
 export interface WebsocketProviderOptions {
