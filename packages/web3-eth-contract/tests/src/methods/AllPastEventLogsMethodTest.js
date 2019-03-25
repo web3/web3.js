@@ -65,24 +65,6 @@ describe('AllPastEventLogsMethodTest', () => {
         expect(formatters.inputLogFormatter).toHaveBeenCalledWith({});
     });
 
-    it('calls beforeExecution with the filter property and executes the expected methods', () => {
-        new AbstractContract();
-        const contractMock = AbstractContract.mock.instances[0];
-
-        allEventsOptionsMapperMock.map.mockReturnValueOnce({mapped: true, filter: true});
-
-        formatters.inputLogFormatter.mockReturnValueOnce({options: true});
-
-        allPastEventLogsMethod.parameters = [{}];
-        allPastEventLogsMethod.beforeExecution(contractMock);
-
-        expect(allEventsOptionsMapperMock.map).toHaveBeenCalledWith(abiModelMock, contractMock, {options: true});
-
-        expect(formatters.inputLogFormatter).toHaveBeenCalledWith({});
-
-        expect(allPastEventLogsMethod.parameters[0].filter).toBeUndefined();
-    });
-
     it('calls afterExecution and returns the expected result', () => {
         const response = [false, false, false];
 

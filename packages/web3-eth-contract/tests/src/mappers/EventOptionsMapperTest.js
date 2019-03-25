@@ -31,26 +31,45 @@ describe('EventOptionsMapperTest', () => {
             fromBlock: 0
         };
 
+        const mappedOptions = {
+            fromBlock: 'block',
+            topics: [],
+            address: true
+        };
+
         formatters.inputBlockNumberFormatter.mockReturnValueOnce('block');
 
-        expect(eventOptionsMapper.map({}, {}, options)).toHaveProperty('fromBlock', 'block');
+        expect(eventOptionsMapper.map({anonymous: true}, {address: true}, options)).toEqual(mappedOptions);
 
         expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
     });
 
     it('calls map with undefined fromBlock property and returns the expected result', () => {
-        expect(eventOptionsMapper.map({}, {defaultBlock: 'block'}, {})).toHaveProperty('fromBlock', 'block');
+        const mappedOptions = {
+            fromBlock: 'block',
+            topics: [],
+            address: true
+        };
+
+        expect(eventOptionsMapper.map({anonymous: true}, {defaultBlock: 'block', address: true}, {})).toEqual(
+            mappedOptions
+        );
     });
 
     it('calls map with defined toBlock property and returns the expected result', () => {
         const options = {
-            fromBlock: 0,
             toBlock: 0
+        };
+
+        const mappedOptions = {
+            toBlock: 'block',
+            topics: [],
+            address: true
         };
 
         formatters.inputBlockNumberFormatter.mockReturnValue('block');
 
-        expect(eventOptionsMapper.map({}, {}, options)).toHaveProperty('toBlock', 'block');
+        expect(eventOptionsMapper.map({anonymous: true}, {address: true}, options)).toEqual(mappedOptions);
 
         expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
     });
@@ -60,24 +79,37 @@ describe('EventOptionsMapperTest', () => {
             filter: []
         };
 
+        const mappedOptions = {
+            topics: [0],
+            address: true
+        };
+
         eventFilterEncoderMock.encode.mockReturnValueOnce([0]);
 
-        expect(eventOptionsMapper.map({anonymous: true}, {defaultBlock: 0}, options)).toHaveProperty('topics', [0]);
+        expect(eventOptionsMapper.map({anonymous: true}, {address: true}, options)).toEqual(mappedOptions);
 
         expect(eventFilterEncoderMock.encode).toHaveBeenCalledWith({anonymous: true}, []);
     });
 
     it('calls map with undefined address property and returns the expected result', () => {
-        const options = {
-            fromBlock: 0
+        const mappedOptions = {
+            fromBlock: 0,
+            address: true,
+            topics: []
         };
 
-        expect(eventOptionsMapper.map({}, {defaultBlock: 0, address: true}, options)).toHaveProperty('address', true);
+        expect(eventOptionsMapper.map({anonymous: true}, {defaultBlock: 0, address: true}, {})).toEqual(mappedOptions);
     });
 
     it('calls map with anonymous property false and returns the expected result', () => {
         const options = {
             filter: []
+        };
+
+        const mappedOptions = {
+            fromBlock: 0,
+            topics: ['signature', 0],
+            address: true
         };
 
         const abiItemModel = {
@@ -87,11 +119,18 @@ describe('EventOptionsMapperTest', () => {
 
         eventFilterEncoderMock.encode.mockReturnValueOnce([0]);
 
-        expect(eventOptionsMapper.map(abiItemModel, {defaultBlock: 0}, options)).toHaveProperty('topics', [
-            'signature',
-            0
-        ]);
+        expect(eventOptionsMapper.map(abiItemModel, {defaultBlock: 0, address: true}, options)).toEqual(mappedOptions);
 
         expect(eventFilterEncoderMock.encode).toHaveBeenCalledWith(abiItemModel, []);
+    });
+
+    it('calls map with undefined options parameter and returns the expected result', () => {
+        const mappedOptions = {
+            fromBlock: 0,
+            address: true,
+            topics: []
+        };
+
+        expect(eventOptionsMapper.map({anonymous: true}, {defaultBlock: 0, address: true})).toEqual(mappedOptions);
     });
 });
