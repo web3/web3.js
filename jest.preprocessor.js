@@ -8,7 +8,9 @@ module.exports = require('babel-jest').createTransformer({
                 '@babel/plugin-transform-runtime',
                 ['istanbul', {
                     'exclude': [
-                        'dist'
+                        'dist',
+                        'tests',
+                        'node_modules'
                     ]
                 }]
             ]
