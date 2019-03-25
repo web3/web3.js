@@ -81,17 +81,18 @@ export default class ProvidersModuleFactory {
      * @param {Number} timeout
      * @param {Array} headers
      * @param {Object} agent
+     * @param {Boolean} withCredentials
      *
      * @returns {XMLHttpRequest}
      */
-    createXMLHttpRequest(host, timeout = 0, headers, agent) {
+    createXMLHttpRequest(host, timeout = 0, headers, agent, withCredentials) {
         const request = new XHR();
         request.nodejsSet(agent);
 
         request.open('POST', host, true);
         request.setRequestHeader('Content-Type', 'application/json');
         request.timeout = timeout;
-        request.withCredentials = true;
+        request.withCredentials = withCredentials;
 
         if (headers) {
             headers.forEach((header) => {
