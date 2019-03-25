@@ -267,6 +267,6 @@ export default class Account {
         );
         const seed = `0x${Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex')}`;
 
-        return this.fromPrivateKey(seed, accounts);
+        return Account.fromPrivateKey(seed, accounts);
     }
 }
