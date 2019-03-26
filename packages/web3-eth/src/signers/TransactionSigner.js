@@ -61,7 +61,7 @@ export default class TransactionSigner {
         const rawTransaction = '0x' + rlpEncoded;
 
         return {
-            messageHash: ethTx.hash(false),
+            messageHash: Buffer.from(ethTx.hash(false)).toString('hex'),
             v: '0x' + Buffer.from(ethTx.v).toString('hex'),
             r: '0x' + Buffer.from(ethTx.r).toString('hex'),
             s: '0x' + Buffer.from(ethTx.s).toString('hex'),
