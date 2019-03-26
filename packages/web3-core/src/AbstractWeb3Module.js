@@ -76,7 +76,7 @@ export default class AbstractWeb3Module {
     }
 
     /**
-     * Setter for the defaultAccount property
+     * Setter for the defaultBlock property
      *
      * @property defaultBlock
      *
