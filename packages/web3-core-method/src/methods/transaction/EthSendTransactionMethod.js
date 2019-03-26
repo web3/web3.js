@@ -134,7 +134,14 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
             this.parameters[0].nonce = await this.getTransactionCountMethod.execute();
         }
 
-        const response = await this.moduleInstance.transactionSigner.sign(this.parameters[0], privateKey);
+        let transaction = this.formatters.inputCallFormatter(this.parameters[0], this.moduleInstance);
+        transaction.to = transaction.to || '0x';
+        transaction.data = transaction.data || '0x';
+        transaction.value = transaction.value || '0x';
+        transaction.chainId = this.utils.numberToHex(transaction.chainId);
+        delete transaction.from;
+
+        const response = await this.moduleInstance.transactionSigner.sign(transaction, privateKey);
 
         this.sendRawTransactionMethod.parameters = [response.rawTransaction];
         this.sendRawTransactionMethod.callback = this.callback;
