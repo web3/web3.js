@@ -57,7 +57,6 @@ export default class TransactionSigner {
             throw new Error(`TransactionSigner Error: ${validationResult}`);
         }
 
-
         const rlpEncoded = ethTx.serialize().toString('hex');
         const rawTransaction = '0x' + rlpEncoded;
 

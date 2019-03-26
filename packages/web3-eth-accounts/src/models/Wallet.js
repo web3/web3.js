@@ -37,7 +37,7 @@ export default class Wallet {
         return new Proxy(this, {
             get: (target, name) => {
                 if (target.accounts[name]) {
-                    return target.accounts[name]
+                    return target.accounts[name];
                 }
 
                 return target[name];

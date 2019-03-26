@@ -105,6 +105,7 @@ export default class AbstractMethodFactory {
         if (method.Type === 'eth-send-transaction-method') {
             const transactionObserver = this.createTransactionObserver(moduleInstance);
 
+            // eslint-disable-next-line new-cap
             return new method(
                 this.utils,
                 this.formatters,
@@ -157,6 +158,6 @@ export default class AbstractMethodFactory {
             new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
             new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance),
             new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
-        )
+        );
     }
 }
