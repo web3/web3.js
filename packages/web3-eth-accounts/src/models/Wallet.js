@@ -97,8 +97,6 @@ export default class Wallet {
 
             this.accountsIndex++;
 
-            console.log('ADD:', account);
-
             return account;
         }
 

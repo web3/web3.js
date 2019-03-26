@@ -226,8 +226,6 @@ describe('AccountsTest', () => {
     });
 
     it('calls signTransaction and rejects with a promise', async () => {
-        const callback = jest.fn();
-
         const transaction = {
             from: 0,
             gas: 1,
@@ -243,13 +241,38 @@ describe('AccountsTest', () => {
             return Promise.reject(new Error('ERROR'));
         });
 
-        await expect(accounts.signTransaction(transaction, 'pk', callback)).rejects.toThrow('ERROR');
+        await expect(accounts.signTransaction(transaction, 'pk')).rejects.toThrow('ERROR');
 
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
-        expect(callback).toHaveBeenCalledWith(new Error('ERROR'), null);
-
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(transaction, 'pk');
+    });
+
+    it('calls signTransaction and calls the callback with a error', (done) => {
+        const transaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        };
+
+        const account = {privateKey: 'pk', address: '0x0'};
+        Account.fromPrivateKey.mockReturnValueOnce(account);
+
+        transactionSignerMock.sign = jest.fn(() => {
+            return Promise.reject(new Error('ERROR'));
+        });
+
+        accounts.signTransaction(transaction, 'pk', (error, response) => {
+            expect(error).toEqual(new Error('ERROR'));
+
+            expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
+
+            expect(transactionSignerMock.sign).toHaveBeenCalledWith(transaction, 'pk');
+
+            done();
+        });
     });
 
     it('calls recoverTransaction and returns the expected string', () => {
