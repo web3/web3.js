@@ -17,7 +17,7 @@
  * @date 2019
  */
 
-import EthereumTx from 'ethereumjs-tx'
+import EthereumTx from 'ethereumjs-tx';
 
 export default class TransactionSigner {
     /**
@@ -51,20 +51,20 @@ export default class TransactionSigner {
         const ethTx = new EthereumTx(transaction);
         const validationResult = ethTx.validate(true);
 
-        if (validationResult !== true)  {
-            throw new Error(`Transaction signer error: ${JSON.stringify(JSON.stringify(validationResult))}`);
+        if (validationResult !== true) {
+            throw new Error(`TransactionSigner Error: ${JSON.stringify(validationResult)}`);
         }
 
-        ethTx.sign(Buffer.from(privateKey, "hex"));
+        ethTx.sign(Buffer.from(privateKey, 'hex'));
 
         const rlpEncoded = ethTx.serialize().toString('hex');
         const rawTransaction = '0x' + rlpEncoded;
 
         return {
-            messageHash: ethTx.hash(),
-            v: '0x' + ethTx.v.toString('hex'),
-            r: '0x' + ethTx.r.toString('hex'),
-            s: '0x' + ethTx.s.toString('hex'),
+            messageHash: ethTx.hash(false),
+            v: '0x' + Buffer.from(ethTx.v).toString('hex'),
+            r: '0x' + Buffer.from(ethTx.r).toString('hex'),
+            s: '0x' + Buffer.from(ethTx.s).toString('hex'),
             rawTransaction
         };
     }
