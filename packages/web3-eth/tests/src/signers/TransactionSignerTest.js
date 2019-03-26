@@ -1,10 +1,5 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import Nat from 'eth-lib/lib/nat';
-import Bytes from 'eth-lib/lib/bytes';
-import Hash from 'eth-lib/lib/hash';
-import RLP from 'eth-lib/lib/rlp';
-import Account from 'eth-lib/lib/account';
 import TransactionSigner from '../../../src/signers/TransactionSigner';
 
 // Mocks
@@ -29,94 +24,24 @@ describe('TransactionSignerTest', () => {
 
     it('calls sign and returns the expected resolved promise', async () => {
         const tx = {
-            gas: 1,
-            nonce: 2,
-            gasPrice: 3,
-            chainId: 4,
-            value: 5,
-            to: 'LOWERCASE',
-            data: 'data'
+            chainId: '0x11',
+            data: '0x',
+            gas: '0x7530',
+            gasPrice: '0x3b9aca00',
+            nonce: '0x3',
+            to: '0xb414031Aa4838A69e27Cb2AE31E709Bcd674F0Cb',
+            value: '0x64'
         };
 
-        RLP.encode = jest.fn();
-        RLP.decode = jest.fn();
-        Hash.keccak256 = jest.fn();
-        Account.makeSigner = jest.fn();
-        Account.decodeSignature = jest.fn();
-        Nat.toNumber = jest.fn();
-        Bytes.fromNat = jest.fn();
-
-        formatters.txInputFormatter.mockReturnValueOnce(tx);
-
-        Utils.numberToHex.mockReturnValueOnce(1);
-
-        RLP.encode.mockReturnValue('encoded');
-
-        Bytes.fromNat.mockReturnValue(1);
-
-        Hash.keccak256.mockReturnValue('hash');
-
-        const signer = jest.fn();
-
-        Account.makeSigner.mockReturnValueOnce(signer);
-
-        signer.mockReturnValueOnce('signature');
-
-        Nat.toNumber.mockReturnValueOnce(1);
-
-        Account.decodeSignature.mockReturnValueOnce(['seven', 'eight', 'nine']);
-
-        RLP.decode
-            .mockReturnValueOnce(['zero', 'one', 'two', 'three', 'four', 'five', 'six'])
-            .mockReturnValueOnce(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight']);
-
-        await expect(transactionSigner.sign(tx, 'pk')).resolves.toEqual({
-            messageHash: 'hash',
-            v: 'six',
-            r: 'seven',
-            s: 'eight',
-            rawTransaction: 'encoded'
-        });
-
-        expect(formatters.txInputFormatter).toHaveBeenCalledWith(tx);
-
-        expect(Utils.numberToHex).toHaveBeenCalledWith(4);
-
-        expect(Bytes.fromNat).toHaveBeenNthCalledWith(1, 2);
-
-        expect(Bytes.fromNat).toHaveBeenNthCalledWith(2, 3);
-
-        expect(Bytes.fromNat).toHaveBeenNthCalledWith(3, 1);
-
-        expect(Bytes.fromNat).toHaveBeenNthCalledWith(4, 5);
-
-        expect(Bytes.fromNat).toHaveBeenNthCalledWith(5, 1);
-
-        expect(RLP.encode).toHaveBeenNthCalledWith(1, [1, 1, 1, 'lowercase', 1, 'data', 1, '0x', '0x']);
-
-        expect(RLP.encode).toHaveBeenNthCalledWith(2, [
-            'zero',
-            'one',
-            'two',
-            'three',
-            'four',
-            'five',
-            'seven',
-            'eight',
-            'nine'
-        ]);
-
-        expect(Hash.keccak256).toHaveBeenCalledWith('encoded');
-
-        expect(Nat.toNumber).toHaveBeenCalledWith(1);
-
-        expect(Account.makeSigner).toHaveBeenCalledWith(37);
-
-        expect(signer).toHaveBeenCalledWith('hash', 'pk');
-
-        expect(RLP.decode).toHaveBeenCalledWith('encoded');
-
-        expect(Account.decodeSignature).toHaveBeenCalledWith('signature');
+        await expect(transactionSigner.sign(tx, '3a0ce9a362c73439adb38c595e739539be1e34d19c5e9f04962c101c86bd7616'))
+            .resolves.toEqual(
+                {
+                    'messageHash': '91e0ad336c23d84f757aa4cde2d0bb557daf5e1ca0a0b850b6431f3277fc167b',
+                    'r': '0x1fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867',
+                    'rawTransaction': '0xf86303843b9aca0082753094b414031aa4838a69e27cb2ae31e709bcd674f0cb648045a01fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867a01415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
+                    's': '0x1415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
+                    'v': '0x45'
+                });
     });
 
     it('calls sign and throws an error because no private key is given', async () => {
@@ -125,93 +50,39 @@ describe('TransactionSignerTest', () => {
 
     it('calls sign with a prefixed pk and returns the expected resolved promise', async () => {
         const tx = {
-            gas: 1,
-            nonce: 2,
-            gasPrice: 3,
-            chainId: 4,
-            value: 5,
-            to: 'LOWERCASE',
-            data: 'data'
+            chainId: '0x11',
+            data: '0x',
+            gas: '0x7530',
+            gasPrice: '0x3b9aca00',
+            nonce: '0x3',
+            to: '0xb414031Aa4838A69e27Cb2AE31E709Bcd674F0Cb',
+            value: '0x64'
         };
 
-        RLP.encode = jest.fn();
-        RLP.decode = jest.fn();
-        Hash.keccak256 = jest.fn();
-        Account.makeSigner = jest.fn();
-        Account.decodeSignature = jest.fn();
-        Nat.toNumber = jest.fn();
-        Bytes.fromNat = jest.fn();
+        await expect(transactionSigner.sign(tx, '0x3a0ce9a362c73439adb38c595e739539be1e34d19c5e9f04962c101c86bd7616'))
+            .resolves.toEqual(
+                {
+                    'messageHash': '91e0ad336c23d84f757aa4cde2d0bb557daf5e1ca0a0b850b6431f3277fc167b',
+                    'r': '0x1fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867',
+                    'rawTransaction': '0xf86303843b9aca0082753094b414031aa4838a69e27cb2ae31e709bcd674f0cb648045a01fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867a01415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
+                    's': '0x1415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
+                    'v': '0x45'
+                });
+    });
 
-        formatters.txInputFormatter.mockReturnValueOnce(tx);
+    it('calls sign and returns a rejected promise', async () => {
+        const tx = {
+            chainId: '0x11',
+            data: '0x',
+            gas: '0x0',
+            gasPrice: '0x3b9aca00',
+            nonce: '0x3',
+            to: '0xb414031Aa4838A69e27Cb2AE31E709Bcd674F0Cb',
+            value: '0x64'
+        };
 
-        Utils.numberToHex.mockReturnValueOnce(1);
-
-        RLP.encode.mockReturnValue('encoded');
-
-        Bytes.fromNat.mockReturnValue(1);
-
-        Hash.keccak256.mockReturnValue('hash');
-
-        const signer = jest.fn();
-
-        Account.makeSigner.mockReturnValueOnce(signer);
-
-        signer.mockReturnValueOnce('signature');
-
-        Nat.toNumber.mockReturnValueOnce(1);
-
-        Account.decodeSignature.mockReturnValueOnce(['seven', 'eight', 'nine']);
-
-        RLP.decode
-            .mockReturnValueOnce(['zero', 'one', 'two', 'three', 'four', 'five', 'six'])
-            .mockReturnValueOnce(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight']);
-
-        await expect(transactionSigner.sign(tx, '0xpk')).resolves.toEqual({
-            messageHash: 'hash',
-            v: 'six',
-            r: 'seven',
-            s: 'eight',
-            rawTransaction: 'encoded'
-        });
-
-        expect(formatters.txInputFormatter).toHaveBeenCalledWith(tx);
-
-        expect(Utils.numberToHex).toHaveBeenCalledWith(4);
-
-        expect(Bytes.fromNat).toHaveBeenNthCalledWith(1, 2);
-
-        expect(Bytes.fromNat).toHaveBeenNthCalledWith(2, 3);
-
-        expect(Bytes.fromNat).toHaveBeenNthCalledWith(3, 1);
-
-        expect(Bytes.fromNat).toHaveBeenNthCalledWith(4, 5);
-
-        expect(Bytes.fromNat).toHaveBeenNthCalledWith(5, 1);
-
-        expect(RLP.encode).toHaveBeenNthCalledWith(1, [1, 1, 1, 'lowercase', 1, 'data', 1, '0x', '0x']);
-
-        expect(RLP.encode).toHaveBeenNthCalledWith(2, [
-            'zero',
-            'one',
-            'two',
-            'three',
-            'four',
-            'five',
-            'seven',
-            'eight',
-            'nine'
-        ]);
-
-        expect(Hash.keccak256).toHaveBeenCalledWith('encoded');
-
-        expect(Nat.toNumber).toHaveBeenCalledWith(1);
-
-        expect(Account.makeSigner).toHaveBeenCalledWith(37);
-
-        expect(signer).toHaveBeenCalledWith('hash', 'pk');
-
-        expect(RLP.decode).toHaveBeenCalledWith('encoded');
-
-        expect(Account.decodeSignature).toHaveBeenCalledWith('signature');
+        await expect(
+            transactionSigner.sign(tx, '0x3a0ce9a362c73439adb38c595e739539be1e34d19c5e9f04962c101c86bd7616')
+        ).rejects.toThrow('TransactionSigner Error: gas limit is too low. Need at least 21000');
     });
 });
