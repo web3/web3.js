@@ -45,13 +45,28 @@ eth.net;
 
 eth.clearSubscriptions();
 
-// $ExpectType Subscription<string | Log | BlockHeader | Syncing>
+// $ExpectType Subscription<Log>
 eth.subscribe('logs');
 
-// $ExpectType Subscription<string | Log | BlockHeader | Syncing>
+// $ExpectType Subscription<Log>
 eth.subscribe('logs', {});
-// $ExpectType Subscription<string | Log | BlockHeader | Syncing>
-eth.subscribe('logs', {}, (error: Error, log: string | Log | Syncing | BlockHeader) => {});
+// $ExpectType Subscription<Log>
+eth.subscribe('logs', {}, (error: Error, log: Log) => {});
+
+// $ExpectType Subscription<Syncing>
+eth.subscribe('syncing');
+// $ExpectType Subscription<Syncing>
+eth.subscribe('syncing', null, (error: Error, result: Syncing) => {});
+
+// $ExpectType Subscription<BlockHeader>
+eth.subscribe('newBlockHeaders');
+// $ExpectType Subscription<BlockHeader>
+eth.subscribe('newBlockHeaders', null, (error: Error, blockHeader: BlockHeader) => {});
+
+// $ExpectType Subscription<string>
+eth.subscribe('pendingTransactions');
+// $ExpectType Subscription<string>
+eth.subscribe('pendingTransactions', null, (error: Error, transactionHash: string) => {});
 
 // $ExpectType Providers
 Eth.providers;
