@@ -49,13 +49,14 @@ export default class TransactionSigner {
         }
 
         const ethTx = new EthereumTx(transaction);
+        ethTx.sign(Buffer.from(privateKey, 'hex'));
+
         const validationResult = ethTx.validate(true);
 
-        if (validationResult !== true) {
-            throw new Error(`TransactionSigner Error: ${JSON.stringify(validationResult)}`);
+        if (validationResult !== '') {
+            throw new Error(`TransactionSigner Error: ${validationResult}`);
         }
 
-        ethTx.sign(Buffer.from(privateKey, 'hex'));
 
         const rlpEncoded = ethTx.serialize().toString('hex');
         const rawTransaction = '0x' + rlpEncoded;
