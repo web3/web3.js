@@ -268,7 +268,7 @@ export const hexToNumber = (value) => {
         return value;
     }
 
-    return toBN(value).toNumber();
+    return parseInt(value, 16);
 };
 
 /**
@@ -283,7 +283,7 @@ export const hexToNumber = (value) => {
 export const hexToNumberString = (value) => {
     if (!value) return value;
 
-    return toBN(value).toString(10);
+    return parseInt(value, 16).toString();
 };
 
 /**
