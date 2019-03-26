@@ -40,7 +40,7 @@ import * as net from 'net';
 export class Eth extends AbstractWeb3Module {
     constructor(
         provider: provider,
-        net?: net.Socket|null,
+        net?: net.Socket | null,
         options?: Web3ModuleOptions
     );
 
@@ -54,10 +54,15 @@ export class Eth extends AbstractWeb3Module {
 
     clearSubscriptions(): Promise<boolean>;
 
-    subscribe(type: 'logs', options?: Logs, callback?: (error: Error, log: Log) => void): Subscription<Log>;
-    subscribe(type: 'syncing', options?: null, callback?: (error: Error, result: any) => void): Subscription<any>;
+    subscribe(type: 'logs', options?: LogsOptions, callback?: (error: Error, log: Log) => void): Subscription<Log>;
+    subscribe(type: 'syncing', options?: null, callback?: (error: Error, result: Syncing) => void): Subscription<Syncing>;
     subscribe(type: 'newBlockHeaders', options?: null, callback?: (error: Error, blockHeader: BlockHeader) => void): Subscription<BlockHeader>;
     subscribe(type: 'pendingTransactions', options?: null, callback?: (error: Error, transactionHash: string) => void): Subscription<string>;
+    subscribe(
+        type: 'pendingTransactions' | 'logs' | 'syncing' | 'newBlockHeaders',
+        options?: null | LogsOptions,
+        callback?: (error: Error, item: Log | Syncing | BlockHeader | string) => void
+    ): Subscription<Log | BlockHeader | Syncing | string>;
 
     getProtocolVersion(callback?: (error: Error, protocolVersion: string) => void): Promise<string>;
 
@@ -186,13 +191,13 @@ export interface Block extends BlockHeader {
 export interface PastLogsOptions {
     fromBlock?: number | string;
     toBlock?: number | string;
-    address: string | string[];
+    address?: string | string[];
     topics?: Array<string | string[]>;
 }
 
-export interface Logs {
-    fromBlock?: number
-    address?: string
+export interface LogsOptions {
+    fromBlock?: number | string;
+    address?: string | string[];
     topics?: Array<string | string[]>
 }
 
