@@ -20,7 +20,7 @@
 import scryptsy from 'scrypt.js';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
-import {fromPrivate, create, sign, decodeSignature} from 'eth-lib/lib/account'; // TODO: Remove this dependency
+import * as EthLibAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
 import {isHexStrict, hexToBytes, randomHex, sha3} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
@@ -37,12 +37,6 @@ export default class Account {
         this.address = options.address;
         this.privateKey = options.privateKey;
         this.accounts = accounts;
-
-        return new Proxy(this, {
-            get: (target, name) => {
-                return target[name];
-            }
-        });
     }
 
     /**
@@ -80,8 +74,8 @@ export default class Account {
         const preambleBuffer = Buffer.from(preamble);
         const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
         const hash = Hash.keccak256s(ethMessage);
-        const signature = sign(hash, this.privateKey);
-        const vrs = decodeSignature(signature);
+        const signature = EthLibAccount.sign(hash, this.privateKey);
+        const vrs = EthLibAccount.decodeSignature(signature);
 
         return {
             message: data,
@@ -114,7 +108,7 @@ export default class Account {
      * @returns {Account}
      */
     static from(entropy, accounts = {}) {
-        return new Account(create(entropy || randomHex(32)), accounts);
+        return new Account(EthLibAccount.create(entropy || randomHex(32)), accounts);
     }
 
     /**
@@ -126,7 +120,7 @@ export default class Account {
      * @returns {Account}
      */
     static fromPrivateKey(privateKey, accounts = {}) {
-        return new Account(fromPrivate(privateKey), accounts);
+        return new Account(EthLibAccount.fromPrivate(privateKey), accounts);
     }
 
     /**

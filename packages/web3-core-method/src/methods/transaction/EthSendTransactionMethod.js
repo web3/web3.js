@@ -51,6 +51,15 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
     }
 
     /**
+     * This type will be used in the AbstractMethodFactory.
+     *
+     * @returns {String}
+     */
+    static get Type() {
+        return 'eth-send-transaction-method';
+    }
+
+    /**
      * Checks if gasPrice is set, sends the request and returns a PromiEvent Object
      *
      * @method execute
@@ -63,7 +72,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
             this.parameters[0]['gas'] = this.moduleInstance.defaultGas;
         }
 
-        if (!this.parameters[0].gasPrice) {
+        if (!this.parameters[0].gasPrice && this.parameters[0].gasPrice !== 0) {
             if (!this.moduleInstance.defaultGasPrice) {
                 this.moduleInstance.currentProvider
                     .send('eth_gasPrice', [])
@@ -153,7 +162,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Boolean}
      */
     hasAccounts() {
-        return this.moduleInstance.accounts && this.moduleInstance.accounts.accountsIndex > 0;
+        return this.moduleInstance.accounts && this.moduleInstance.accounts.wallet.accountsIndex > 0;
     }
 
     /**
