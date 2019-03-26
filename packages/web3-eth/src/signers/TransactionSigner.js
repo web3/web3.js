@@ -13,7 +13,7 @@
 */
 /**
  * @file TransactionSigner.js
- * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
 
@@ -49,13 +49,19 @@ export default class TransactionSigner {
         }
 
         const ethTx = new EthereumTx(transaction);
+        const validationResult = ethTx.validate(true);
+
+        if (validationResult !== true)  {
+            throw new Error(`Transaction signer error: ${JSON.stringify(JSON.stringify(validationResult))}`);
+        }
+
         ethTx.sign(Buffer.from(privateKey, "hex"));
 
         const rlpEncoded = ethTx.serialize().toString('hex');
         const rawTransaction = '0x' + rlpEncoded;
 
         return {
-            messageHash: ethTx.hash(true),
+            messageHash: ethTx.hash(),
             v: '0x' + ethTx.v.toString('hex'),
             r: '0x' + ethTx.r.toString('hex'),
             s: '0x' + ethTx.s.toString('hex'),
