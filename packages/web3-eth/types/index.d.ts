@@ -40,7 +40,7 @@ import * as net from 'net';
 export class Eth extends AbstractWeb3Module {
     constructor(
         provider: provider,
-        net?: net.Socket|null,
+        net?: net.Socket | null,
         options?: Web3ModuleOptions
     );
 
@@ -192,7 +192,7 @@ export interface PastLogsOptions {
 
 export interface Logs {
     fromBlock?: number
-    address?: string
+    address?: string | string[]
     topics?: Array<string | string[]>
 }
 
