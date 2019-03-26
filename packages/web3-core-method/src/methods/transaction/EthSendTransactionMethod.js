@@ -135,9 +135,9 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         }
 
         let transaction = this.formatters.inputCallFormatter(this.parameters[0], this.moduleInstance);
-        transaction.to = transaction.to || '0x';
-        transaction.data = transaction.data || '0x';
-        transaction.value = transaction.value || '0x';
+        transaction.to = transaction.to || '0x0';
+        transaction.data = transaction.data || '0x0';
+        transaction.value = transaction.value || '0x0';
         transaction.chainId = this.utils.numberToHex(transaction.chainId);
         delete transaction.from;
 
