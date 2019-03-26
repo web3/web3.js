@@ -58,7 +58,11 @@ export class Eth extends AbstractWeb3Module {
     subscribe(type: 'syncing', options?: null, callback?: (error: Error, result: Syncing) => void): Subscription<Syncing>;
     subscribe(type: 'newBlockHeaders', options?: null, callback?: (error: Error, blockHeader: BlockHeader) => void): Subscription<BlockHeader>;
     subscribe(type: 'pendingTransactions', options?: null, callback?: (error: Error, transactionHash: string) => void): Subscription<string>;
-    subscribe(type: 'pendingTransactions' | 'logs' | 'syncing' | 'newBlockHeaders', options?: any, callback?: (error: Error, result: any) => void): Subscription<Log | BlockHeader | Syncing | string>;
+    subscribe(
+        type: 'pendingTransactions' | 'logs' | 'syncing' | 'newBlockHeaders',
+        options?: null | LogsOptions,
+        callback?: (error: Error, item: Log | Syncing | BlockHeader | string) => void
+    ): Subscription<Log | BlockHeader | Syncing | string>;
 
     getProtocolVersion(callback?: (error: Error, protocolVersion: string) => void): Promise<string>;
 
