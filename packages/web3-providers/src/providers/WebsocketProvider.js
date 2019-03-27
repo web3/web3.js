@@ -208,7 +208,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
                 try {
                     this.connection.send(JSON.stringify(payload));
-                } catch(error) {
+                } catch (error) {
                     reject(error);
                 }
 
@@ -236,7 +236,9 @@ export default class WebsocketProvider extends AbstractSocketProvider {
             }
 
             this.once('connect', () => {
-                this.sendPayload(payload).then(resolve).catch(reject);
+                this.sendPayload(payload)
+                    .then(resolve)
+                    .catch(reject);
             });
         });
     }

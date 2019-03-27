@@ -353,6 +353,20 @@ describe('WebsocketProviderTest', () => {
         expect(socketMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
     });
 
+    it('calls sendPayload and returns with a rejected promise because of the connection.send() method', async () => {
+        socketMock.OPEN = 4;
+        socketMock.readyState = 4;
+        socketMock.CONNECTING = 0;
+        socketMock.send = jest.fn(() => {
+            throw new Error('Nope');
+        });
+        websocketProvider.timeout = 2;
+
+        await expect(websocketProvider.sendPayload({id: '0x0'})).rejects.toThrow('Nope');
+
+        expect(socketMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
+    });
+
     it('calls sendPayload with a timeout defined and returns with a resolved promise', async () => {
         socketMock.OPEN = 4;
         socketMock.readyState = 4;
