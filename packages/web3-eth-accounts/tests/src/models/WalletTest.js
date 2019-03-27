@@ -33,7 +33,13 @@ describe('WalletTest', () => {
         expect(wallet.defaultKeyName).toEqual('web3js_wallet');
     });
 
-    it('calls wallet.create and returns the expected value', () => {
+    it('calls the length property and returns the accountsIndex', () => {
+        wallet.accountsIndex = 99;
+        
+        expect(wallet.length).toEqual(99);
+    });
+
+    it('calls create and returns the expected value', () => {
         Utils.randomHex.mockReturnValueOnce('asdf');
 
         Account.from.mockReturnValueOnce({address: '0x0', privateKey: '0x0'});
@@ -164,7 +170,7 @@ describe('WalletTest', () => {
 
         expect(() => {
             wallet.decrypt([true], 'pw');
-        }).toThrow("Couldn't decrypt accounts. Password wrong?");
+        }).toThrow('Couldn\'t decrypt accounts. Password wrong?');
 
         expect(Account.fromV3Keystore).toHaveBeenCalledWith(true, 'pw', false, accountsMock);
     });
