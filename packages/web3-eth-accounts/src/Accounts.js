@@ -209,12 +209,8 @@ export default class Accounts extends AbstractWeb3Module {
         }
 
         if (arguments.length >= 4) {
-            const args = [...arguments];
-
-            preFixed = args[args.length - 1];
-            preFixed = isBoolean(preFixed) ? preFixed : false;
-
-            return this.recover(message, encodeSignature([args[1], args[2], args[3]]), preFixed); // v, r, s
+            // v, r, s
+            return this.recover(message, encodeSignature([arguments[1], arguments[2], arguments[3]]), !!arguments[4]);
         }
 
         return recover(message, signature);
