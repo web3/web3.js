@@ -27,7 +27,6 @@ import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import {encodeSignature, recover} from 'eth-lib/lib/account'; // TODO: Remove this dependency
-import {hexToBytes, isHexStrict} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 import {AbstractWeb3Module} from 'web3-core';
 import Account from './models/Account';
 import Wallet from './models/Wallet';
@@ -91,8 +90,8 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {String}
      */
     hashMessage(data) {
-        if (isHexStrict(data)) {
-            data = hexToBytes(data);
+        if (this.utils.isHexStrict(data)) {
+            data = this.utils.hexToBytes(data);
         }
 
         const messageBuffer = Buffer.from(data);
@@ -201,8 +200,6 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {String}
      */
     recover(message, signature, preFixed) {
-        const args = [].slice.apply(arguments);
-
         if (isObject(message)) {
             return this.recover(message.messageHash, encodeSignature([message.v, message.r, message.s]), true);
         }
@@ -211,7 +208,9 @@ export default class Accounts extends AbstractWeb3Module {
             message = this.hashMessage(message);
         }
 
-        if (args.length >= 4) {
+        if (arguments.length >= 4) {
+            const args = [...arguments];
+
             preFixed = args.slice(-1)[0];
             preFixed = isBoolean(preFixed) ? preFixed : false;
 
