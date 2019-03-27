@@ -143,6 +143,8 @@ export default class Accounts extends AbstractWeb3Module {
         } catch (error) {
             if (isFunction(callback)) {
                 callback(error, null);
+
+                return;
             }
 
             throw error;

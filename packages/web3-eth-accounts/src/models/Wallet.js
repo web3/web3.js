@@ -33,6 +33,16 @@ export default class Wallet {
         this.defaultKeyName = 'web3js_wallet';
         this.accounts = {};
         this.accountsIndex = 0;
+
+        return new Proxy(this, {
+            get: (target, name) => {
+                if (target.accounts[name]) {
+                    return target.accounts[name];
+                }
+
+                return target[name];
+            }
+        });
     }
 
     /**
@@ -73,7 +83,7 @@ export default class Wallet {
      *
      * @param {Account|String} account
      *
-     * @returns {Object}
+     * @returns {Account}
      */
     add(account) {
         if (isString(account)) {
