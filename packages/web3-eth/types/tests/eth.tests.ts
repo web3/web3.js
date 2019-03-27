@@ -53,10 +53,10 @@ eth.subscribe('logs', {});
 // $ExpectType Subscription<Log>
 eth.subscribe('logs', {}, (error: Error, log: Log) => {});
 
-// $ExpectType Subscription<any>
+// $ExpectType Subscription<Syncing>
 eth.subscribe('syncing');
-// $ExpectType Subscription<any>
-eth.subscribe('syncing', null, (error: Error, result: any) => {});
+// $ExpectType Subscription<Syncing>
+eth.subscribe('syncing', null, (error: Error, result: Syncing) => {});
 
 // $ExpectType Subscription<BlockHeader>
 eth.subscribe('newBlockHeaders');

@@ -59,7 +59,7 @@ The BatchRequest provides the possibility to send JSON-RPC requests as batch.
 Please read the [documentation][docs] for more.
 
 ```js 
-import {ProvidersModuleFactory, BatchRequest} 'web3-providers;
+import {ProvidersModuleFactory, BatchRequest} 'web3-providers';
 
 const provider = new ProvidersModuleFactory()
                         .createProviderResolver
@@ -91,7 +91,7 @@ The ProviderResolver resolves an url or an given provider object to the correct 
 Because of the resolves does web3 has internally just one provider interface and we have no direct dependency to third party providers.
 
 ```js 
-import {ProvidersModuleFactory} 'web3-providers;
+import {ProvidersModuleFactory} 'web3-providers';
 
 const socketProviderAdapter = new ProvidersModuleFactory()
                         .createProviderResolver
