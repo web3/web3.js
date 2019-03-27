@@ -132,11 +132,11 @@ export default class ProvidersModuleFactory {
             const urlObject = new URL(url);
 
             if (urlObject.username && urlObject.password) {
-                authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`, 'base64');
+                authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`).toString('base64');
                 headers.authorization = `Basic ${authToken}`;
             }
 
-            if (urlObject.auth) {
+            else if (urlObject.auth) {
                 headers.authorization = Buffer.from(urlObject.auth, 'base64');
             }
 
