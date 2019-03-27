@@ -206,7 +206,11 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     return reject(new Error('Connection error: Connection is not open on send()'));
                 }
 
-                this.connection.send(JSON.stringify(payload));
+                try {
+                    this.connection.send(JSON.stringify(payload));
+                } catch(error) {
+                    reject(error);
+                }
 
                 if (this.timeout) {
                     timeout = setTimeout(() => {
@@ -231,12 +235,8 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 return;
             }
 
-            this.on('connect', () => {
-                this.sendPayload(payload)
-                    .then(resolve)
-                    .catch(reject);
-
-                this.removeAllListeners('connect');
+            this.once('connect', () => {
+                this.sendPayload(payload).then(resolve).catch(reject);
             });
         });
     }
