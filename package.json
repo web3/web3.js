@@ -107,5 +107,14 @@
         "rollup-plugin-cleanup": "^3.1.1",
         "rollup-plugin-json": "^3.1.0",
         "typescript": "^3.3.3333"
+    },
+    "dependencies": {
+        "bn.js": "^4.11.8",
+        "crypto-js": "^3.1.9-1",
+        "eth-lib": "^0.2.8",
+        "ethjs-unit": "^0.1.6",
+        "number-to-bn": "^1.7.0",
+        "randomhex": "^0.1.5",
+        "utf8": "^3.0.0"
     }
 }

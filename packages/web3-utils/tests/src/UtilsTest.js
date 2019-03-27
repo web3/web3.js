@@ -6,6 +6,7 @@ import {
     checkAddressChecksum,
     fromWei,
     hexToNumberString,
+    hexToNumber,
     isAddress,
     isBN,
     numberToHex,
@@ -369,9 +370,20 @@ describe('UtilsTest', () => {
         expect(hexToNumberString('0x1f0fe294a36')).toEqual('2134567897654');
 
         // allow compatiblity
-        expect(hexToNumberString(100000)).toEqual('100000');
+        expect(hexToNumberString(100000)).toEqual('1048576');
 
-        expect(hexToNumberString('100000')).toEqual('100000');
+        expect(hexToNumberString('100000')).toEqual('1048576');
+    });
+
+    it('calls hexToNumber and returns the expected results', () => {
+        expect(hexToNumber('0x3e8')).toEqual(1000);
+
+        expect(hexToNumber('0x1f0fe294a36')).toEqual(2134567897654);
+
+        // allow compatiblity
+        expect(hexToNumber(100000)).toEqual(1048576);
+
+        expect(hexToNumber('100000')).toEqual(1048576);
     });
 
     it('calls toTwosComplement and returns the expected results', () => {
