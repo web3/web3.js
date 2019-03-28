@@ -213,23 +213,17 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @returns {AbstractContract}
      */
     clone() {
-        const clone = this.contractModuleFactory.createContract(
-            this.currentProvider,
-            this.accounts,
-            [],
-            '',
-            {
-                defaultAccount: this.defaultAccount,
-                defaultBlock: this.defaultBlock,
-                defaultGas: this.defaultGas,
-                defaultGasPrice: this.defaultGasPrice,
-                transactionBlockTimeout: this.transactionBlockTimeout,
-                transactionConfirmationBlocks: this.transactionConfirmationBlocks,
-                transactionPollingTimeout: this.transactionPollingTimeout,
-                transactionSigner: this.transactionSigner,
-                data: this.options.data
-            }
-        );
+        const clone = this.contractModuleFactory.createContract(this.currentProvider, this.accounts, [], '', {
+            defaultAccount: this.defaultAccount,
+            defaultBlock: this.defaultBlock,
+            defaultGas: this.defaultGas,
+            defaultGasPrice: this.defaultGasPrice,
+            transactionBlockTimeout: this.transactionBlockTimeout,
+            transactionConfirmationBlocks: this.transactionConfirmationBlocks,
+            transactionPollingTimeout: this.transactionPollingTimeout,
+            transactionSigner: this.transactionSigner,
+            data: this.options.data
+        });
 
         clone.abiModel = this.abiModel;
 
