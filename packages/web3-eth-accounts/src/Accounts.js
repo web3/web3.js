@@ -48,7 +48,6 @@ export default class Accounts extends AbstractWeb3Module {
         this.utils = utils;
         this.formatters = formatters;
         this.transactionSigner = options.transactionSigner;
-        this.formatters = formatters;
         this.defaultKeyName = 'web3js_wallet';
         this.accounts = {};
         this.accountsIndex = 0;
@@ -131,6 +130,8 @@ export default class Accounts extends AbstractWeb3Module {
             if (!tx.nonce) {
                 tx.nonce = await this.getTransactionCount(account.address);
             }
+
+            tx = this.formatters.inputCallFormatter(tx, this.moduleInstance);
 
             const signedTransaction = await this.transactionSigner.sign(tx, account.privateKey);
 
