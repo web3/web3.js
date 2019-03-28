@@ -91,6 +91,8 @@ describe('AccountsTest', () => {
             return Promise.resolve('signed-transaction');
         });
 
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
         const response = await accounts.signTransaction(transaction, 'pk', callback);
 
         expect(response).toEqual('signed-transaction');
@@ -98,6 +100,8 @@ describe('AccountsTest', () => {
         expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
 
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
+
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
 
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(transaction, account.privateKey);
     });
@@ -132,6 +136,8 @@ describe('AccountsTest', () => {
             return Promise.resolve(1);
         });
 
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
         await expect(accounts.signTransaction(transaction, 'pk', callback)).resolves.toEqual('signed-transaction');
 
         expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
@@ -139,6 +145,8 @@ describe('AccountsTest', () => {
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, account.privateKey);
+
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
 
         expect(accounts.getChainId).toHaveBeenCalled();
     });
@@ -173,6 +181,8 @@ describe('AccountsTest', () => {
             return Promise.resolve(1);
         });
 
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
         await expect(accounts.signTransaction(transaction, 'pk', callback)).resolves.toEqual('signed-transaction');
 
         expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
@@ -180,6 +190,8 @@ describe('AccountsTest', () => {
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, account.privateKey);
+
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
 
         expect(accounts.getGasPrice).toHaveBeenCalled();
     });
@@ -214,6 +226,8 @@ describe('AccountsTest', () => {
             return Promise.resolve(1);
         });
 
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
         await expect(accounts.signTransaction(transaction, 'pk', callback)).resolves.toEqual('signed-transaction');
 
         expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
@@ -221,6 +235,8 @@ describe('AccountsTest', () => {
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, account.privateKey);
+
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
 
         expect(accounts.getTransactionCount).toHaveBeenCalledWith('0x0');
     });
@@ -241,9 +257,13 @@ describe('AccountsTest', () => {
             return Promise.reject(new Error('ERROR'));
         });
 
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
         await expect(accounts.signTransaction(transaction, 'pk')).rejects.toThrow('ERROR');
 
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
+
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
 
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(transaction, 'pk');
     });
@@ -264,12 +284,16 @@ describe('AccountsTest', () => {
             return Promise.reject(new Error('ERROR'));
         });
 
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
         accounts.signTransaction(transaction, 'pk', (error, response) => {
             expect(error).toEqual(new Error('ERROR'));
 
             expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
             expect(transactionSignerMock.sign).toHaveBeenCalledWith(transaction, 'pk');
+
+            expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
 
             done();
         });

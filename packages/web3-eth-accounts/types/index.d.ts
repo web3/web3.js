@@ -13,16 +13,16 @@
 */
 /**
  * @file index.d.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {AbstractWeb3Module, TransactionConfig, Web3ModuleOptions, SignedTransaction} from 'web3-core';
+import {AbstractWeb3Module, SignedTransaction, TransactionConfig, Web3ModuleOptions} from 'web3-core';
 import {provider} from 'web3-providers';
 import * as net from 'net';
 
 export class Accounts extends AbstractWeb3Module {
-    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions);
+    constructor(provider: provider, net?: net.Socket | null, options?: Web3ModuleOptions);
 
     create(entropy?: string): Account;
 
@@ -36,7 +36,7 @@ export class Accounts extends AbstractWeb3Module {
 
     sign(data: string, privateKey: string): Sign;
 
-    recover(signedTransaction: SignedTransaction): string;
+    recover(signatureObject: SignatureObject): string;
     recover(message: string, signature: string, preFixed?: boolean): string;
     recover(message: string, v: string, r: string, s: string, preFixed?: boolean): string;
 
@@ -49,6 +49,10 @@ export class Accounts extends AbstractWeb3Module {
 
 export class Wallet {
     constructor(accounts: Accounts);
+
+    accountsIndex: number;
+    length: number;
+    defaultKeyName: string;
 
     create(numberOfAccounts: number, entropy?: string): Wallet;
 
@@ -110,4 +114,11 @@ export interface EncryptedKeystoreV3Json {
 export interface Sign extends SignedTransaction {
     message: string;
     signature: string;
+}
+
+export interface SignatureObject {
+    messageHash: string;
+    r: string;
+    s: string;
+    v: string;
 }
