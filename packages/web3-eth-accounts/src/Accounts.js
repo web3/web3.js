@@ -131,9 +131,10 @@ export default class Accounts extends AbstractWeb3Module {
                 tx.nonce = await this.getTransactionCount(account.address);
             }
 
-            tx = this.formatters.inputCallFormatter(tx, this.moduleInstance);
-
-            const signedTransaction = await this.transactionSigner.sign(tx, account.privateKey);
+            const signedTransaction = await this.transactionSigner.sign(
+                this.formatters.inputCallFormatter(tx, this),
+                account.privateKey
+            );
 
             if (isFunction(callback)) {
                 callback(false, signedTransaction);
