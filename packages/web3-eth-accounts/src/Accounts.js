@@ -22,7 +22,6 @@
 
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
-import isBoolean from 'lodash/isBoolean';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
@@ -95,8 +94,7 @@ export default class Accounts extends AbstractWeb3Module {
         }
 
         const messageBuffer = Buffer.from(data);
-        const preamble = `\u0019Ethereum Signed Message:\n${data.length}`;
-        const preambleBuffer = Buffer.from(preamble);
+        const preambleBuffer = Buffer.from(`\u0019Ethereum Signed Message:\n${data.length}`);
         const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
 
         return Hash.keccak256s(ethMessage);
@@ -181,8 +179,8 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Object}
      */
     sign(data, privateKey) {
-        if (isHexStrict(data)) {
-            data = hexToBytes(data);
+        if (this.utils.isHexStrict(data)) {
+            data = this.utils.hexToBytes(data);
         }
 
         return Account.fromPrivateKey(privateKey, this).sign(data);
@@ -210,7 +208,11 @@ export default class Accounts extends AbstractWeb3Module {
 
         if (arguments.length >= 4) {
             // v, r, s
-            return this.recover(message, encodeSignature([arguments[1], arguments[2], arguments[3]]), !!arguments[4]);
+            return this.recover(
+                arguments[0],
+                encodeSignature([arguments[1], arguments[2], arguments[3]]),
+                !!arguments[4]
+            );
         }
 
         return recover(message, signature);
