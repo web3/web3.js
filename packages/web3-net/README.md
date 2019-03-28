@@ -18,6 +18,7 @@ import {Network} from 'web3-net';
 
 const net = new Network(
     'http://127.0.0.1:4546',
+    null,
     options
 );
 ```
