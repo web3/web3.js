@@ -45,6 +45,8 @@ export default class Accounts extends AbstractWeb3Module {
     constructor(provider, utils, formatters, methodFactory, options, net) {
         super(provider, options, methodFactory, net);
 
+        this.utils = utils;
+        this.formatters = formatters;
         this.transactionSigner = options.transactionSigner;
         this.formatters = formatters;
         this.defaultKeyName = 'web3js_wallet';
