@@ -227,7 +227,7 @@ export default class AbstractContract extends AbstractWeb3Module {
                 transactionConfirmationBlocks: this.transactionConfirmationBlocks,
                 transactionPollingTimeout: this.transactionPollingTimeout,
                 transactionSigner: this.transactionSigner,
-                data: options.data
+                data: this.options.data
             }
         );
 
