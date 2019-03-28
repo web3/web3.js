@@ -13,14 +13,6 @@ If you would like to know all supported subscriptions please have a look in the 
 npm install web3-core-subscriptions
 ```
 
-## Exported classes
-
-```js
-SubscriptionsFactory
-LogSubscription
-AbstractSubscription
-```
-
 ## Types 
 
 All the typescript typings are placed in the types folder. 
