@@ -80,7 +80,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                         confirmations = transactionConfirmation.confirmations;
                         receipt = transactionConfirmation.receipt;
 
-                        if (this.hasRevertReceiptStatus(receipt)) {
+                        if (!receipt.status) {
                             if (this.parameters[0].gas === receipt.gasUsed) {
                                 this.handleError(
                                     new Error(
@@ -160,18 +160,5 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
         }
 
         this.promiEvent.reject(error);
-    }
-
-    /**
-     * Checks if the status property has a revert state
-     *
-     * @method hasRevertReceiptStatus
-     *
-     * @param {Object} receipt
-     *
-     * @returns {Boolean}
-     */
-    hasRevertReceiptStatus(receipt) {
-        return receipt.status === false && receipt.status !== undefined && receipt.status !== null;
     }
 }
