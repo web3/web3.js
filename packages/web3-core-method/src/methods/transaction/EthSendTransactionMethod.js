@@ -158,7 +158,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Boolean}
      */
     isDefaultSigner() {
-        return this.moduleInstance.transactionSigner.type && this.moduleInstance.transactionSigner.type === 'TransactionSigner';
+        return this.moduleInstance.transactionSigner.type === 'TransactionSigner';
     }
 
     /**
