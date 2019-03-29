@@ -132,9 +132,8 @@ export default class AbstractMethodFactory {
      */
     getTimeout(moduleInstance) {
         let timeout = moduleInstance.transactionBlockTimeout;
-        const providerName = moduleInstance.currentProvider.constructor.name;
 
-        if (providerName === 'HttpProvider' || providerName === 'CustomProvider') {
+        if (!moduleInstance.currentProvider.SOCKET_MESSAGE) {
             timeout = moduleInstance.transactionPollingTimeout;
         }
 

@@ -236,7 +236,17 @@ describe('AbstractContractTest', () => {
             abstractContract.accounts,
             [],
             '',
-            abstractContract.options
+            {
+                data: '',
+                defaultAccount: undefined,
+                defaultBlock: 'latest',
+                defaultGas: undefined,
+                defaultGasPrice: undefined,
+                transactionBlockTimeout: 50,
+                transactionConfirmationBlocks: 24,
+                transactionPollingTimeout: 750,
+                transactionSigner: {}
+            }
         );
     });
 
