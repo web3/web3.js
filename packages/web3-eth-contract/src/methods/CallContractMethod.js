@@ -49,7 +49,7 @@ export default class CallContractMethod extends CallMethod {
      * @returns {Array|String}
      */
     afterExecution(response) {
-        if (!response) {
+        if (!response || response === '0x') {
             return null;
         }
 
