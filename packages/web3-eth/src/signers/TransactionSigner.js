@@ -32,6 +32,17 @@ export default class TransactionSigner {
     }
 
     /**
+     * Add to be production build save
+     *
+     * @property Type
+     *
+     * @returns {String}
+     */
+    static get Type() {
+        return 'TransactionSigner';
+    }
+
+    /**
      * Signs the transaction
      *
      * @param {Object} transaction
