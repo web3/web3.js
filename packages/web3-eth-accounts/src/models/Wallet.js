@@ -40,6 +40,10 @@ export default class Wallet {
                     return target.accounts[name];
                 }
 
+                if (name === 'length') {
+                    return target.accountsIndex;
+                }
+
                 return target[name];
             }
         });

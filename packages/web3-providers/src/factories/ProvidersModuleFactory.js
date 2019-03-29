@@ -85,7 +85,7 @@ export default class ProvidersModuleFactory {
      *
      * @returns {XMLHttpRequest}
      */
-    createXMLHttpRequest(host, timeout = 0, headers, agent, withCredentials) {
+    createXMLHttpRequest(host, timeout, headers, agent, withCredentials) {
         let request;
 
         // runtime is of type node

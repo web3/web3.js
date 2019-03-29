@@ -220,16 +220,16 @@ export default class TransactionObserver {
     }
 
     /**
-     * Returns a block by the given blockHash
+     * Returns a block by the given blockNumber
      *
-     * @method getBlockByHash
+     * @method getBlockByNumber
      *
-     * @param {String} blockHash
+     * @param {String} blockNumber
      *
      * @returns {Promise<Object>}
      */
-    getBlockByNumber(blockHash) {
-        this.getBlockByNumberMethod.parameters = [blockHash];
+    getBlockByNumber(blockNumber) {
+        this.getBlockByNumberMethod.parameters = [blockNumber];
 
         return this.getBlockByNumberMethod.execute();
     }

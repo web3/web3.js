@@ -22,12 +22,10 @@
 
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
-import isBoolean from 'lodash/isBoolean';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import {encodeSignature, recover} from 'eth-lib/lib/account'; // TODO: Remove this dependency
-import {hexToBytes, isHexStrict} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 import {AbstractWeb3Module} from 'web3-core';
 import Account from './models/Account';
 import Wallet from './models/Wallet';
@@ -47,8 +45,9 @@ export default class Accounts extends AbstractWeb3Module {
     constructor(provider, utils, formatters, methodFactory, options, net) {
         super(provider, options, methodFactory, net);
 
-        this.transactionSigner = options.transactionSigner;
+        this.utils = utils;
         this.formatters = formatters;
+        this.transactionSigner = options.transactionSigner;
         this.defaultKeyName = 'web3js_wallet';
         this.accounts = {};
         this.accountsIndex = 0;
@@ -91,13 +90,12 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {String}
      */
     hashMessage(data) {
-        if (isHexStrict(data)) {
-            data = hexToBytes(data);
+        if (this.utils.isHexStrict(data)) {
+            data = this.utils.hexToBytes(data);
         }
 
         const messageBuffer = Buffer.from(data);
-        const preamble = `\u0019Ethereum Signed Message:\n${data.length}`;
-        const preambleBuffer = Buffer.from(preamble);
+        const preambleBuffer = Buffer.from(`\u0019Ethereum Signed Message:\n${data.length}`);
         const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
 
         return Hash.keccak256s(ethMessage);
@@ -133,7 +131,10 @@ export default class Accounts extends AbstractWeb3Module {
                 tx.nonce = await this.getTransactionCount(account.address);
             }
 
-            const signedTransaction = await this.transactionSigner.sign(tx, account.privateKey);
+            const signedTransaction = await this.transactionSigner.sign(
+                this.formatters.inputCallFormatter(tx, this),
+                account.privateKey
+            );
 
             if (isFunction(callback)) {
                 callback(false, signedTransaction);
@@ -182,8 +183,8 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Object}
      */
     sign(data, privateKey) {
-        if (isHexStrict(data)) {
-            data = hexToBytes(data);
+        if (this.utils.isHexStrict(data)) {
+            data = this.utils.hexToBytes(data);
         }
 
         return Account.fromPrivateKey(privateKey, this).sign(data);
@@ -201,8 +202,6 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {String}
      */
     recover(message, signature, preFixed) {
-        const args = [].slice.apply(arguments);
-
         if (isObject(message)) {
             return this.recover(message.messageHash, encodeSignature([message.v, message.r, message.s]), true);
         }
@@ -211,11 +210,13 @@ export default class Accounts extends AbstractWeb3Module {
             message = this.hashMessage(message);
         }
 
-        if (args.length >= 4) {
-            preFixed = args.slice(-1)[0];
-            preFixed = isBoolean(preFixed) ? preFixed : false;
-
-            return this.recover(message, encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
+        if (arguments.length >= 4) {
+            // v, r, s
+            return this.recover(
+                arguments[0],
+                encodeSignature([arguments[1], arguments[2], arguments[3]]),
+                !!arguments[4]
+            );
         }
 
         return recover(message, signature);

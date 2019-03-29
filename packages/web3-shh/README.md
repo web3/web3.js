@@ -18,6 +18,7 @@ import {Shh} from 'web3-shh';
 
 const shh = new Shh(
     'http://127.0.0.1:4546',
+    null,
     options
 );
 ```

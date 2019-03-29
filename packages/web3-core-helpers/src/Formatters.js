@@ -280,6 +280,8 @@ export const outputTransactionReceiptFormatter = (receipt) => {
 
     if (typeof receipt.status !== 'undefined' && receipt.status !== null) {
         receipt.status = Boolean(parseInt(receipt.status));
+    } else {
+        receipt.status = true;
     }
 
     return receipt;
