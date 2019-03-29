@@ -76,7 +76,7 @@ describe('ProvidersModuleFactoryTest', () => {
             'ws://username:password@hallo:5544',
             'string',
             null,
-            {authorization: Buffer.from([186, 199, 171, 157, 169, 158, 165, 171, 44, 194, 138, 221])},
+            {authorization: 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='},
             null,
             'string'
         );
