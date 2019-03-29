@@ -113,7 +113,6 @@ export default class AbstractMethodFactory {
                 transactionObserver,
                 new ChainIdMethod(this.utils, this.formatters, moduleInstance),
                 new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance),
-                new SendRawTransactionMethod(this.utils, this.formatters, moduleInstance, transactionObserver)
             );
         }
 

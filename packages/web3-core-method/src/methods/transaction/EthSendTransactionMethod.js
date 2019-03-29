@@ -30,7 +30,6 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {SendRawTransactionMethod} sendRawTransactionMethod
      *
      * @constructor
      */
@@ -40,14 +39,12 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         moduleInstance,
         transactionObserver,
         chainIdMethod,
-        getTransactionCountMethod,
-        sendRawTransactionMethod
+        getTransactionCountMethod
     ) {
         super(utils, formatters, moduleInstance, transactionObserver);
 
         this.chainIdMethod = chainIdMethod;
         this.getTransactionCountMethod = getTransactionCountMethod;
-        this.sendRawTransactionMethod = sendRawTransactionMethod;
     }
 
     /**
@@ -143,11 +140,10 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
 
         const response = await this.moduleInstance.transactionSigner.sign(transaction, privateKey);
 
-        this.sendRawTransactionMethod.parameters = [response.rawTransaction];
-        this.sendRawTransactionMethod.callback = this.callback;
-        this.sendRawTransactionMethod.promiEvent = this.promiEvent;
+        this.parameters = [response.rawTransaction];
+        this.rpcMethod = 'eth_sendRawTransaction';
 
-        return this.sendRawTransactionMethod.execute();
+        return super.execute();
     }
 
     /**

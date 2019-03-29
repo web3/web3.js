@@ -163,7 +163,6 @@ export default class MethodFactory {
             transactionObserver,
             new ChainIdMethod(this.utils, this.formatters, contract),
             new GetTransactionCountMethod(this.utils, this.formatters, contract),
-            new SendRawTransactionMethod(this.utils, this.formatters, contract, transactionObserver),
             this.contractModuleFactory.createAllEventsLogDecoder(),
             contract.abiModel
         );
@@ -188,7 +187,6 @@ export default class MethodFactory {
             transactionObserver,
             new ChainIdMethod(this.utils, this.formatters, contract),
             new GetTransactionCountMethod(this.utils, this.formatters, contract),
-            new SendRawTransactionMethod(this.utils, this.formatters, contract, transactionObserver)
         );
     }
 

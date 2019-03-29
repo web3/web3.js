@@ -30,7 +30,6 @@ export default class ContractDeployMethod extends EthSendTransactionMethod {
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {SendRawTransactionMethod} sendRawTransactionMethod
      *
      * @constructor
      */
@@ -40,8 +39,7 @@ export default class ContractDeployMethod extends EthSendTransactionMethod {
         moduleInstance,
         transactionObserver,
         chainIdMethod,
-        getTransactionCountMethod,
-        sendRawTransactionMethod
+        getTransactionCountMethod
     ) {
         super(
             utils,
@@ -49,8 +47,7 @@ export default class ContractDeployMethod extends EthSendTransactionMethod {
             moduleInstance,
             transactionObserver,
             chainIdMethod,
-            getTransactionCountMethod,
-            sendRawTransactionMethod
+            getTransactionCountMethod
         );
     }
 

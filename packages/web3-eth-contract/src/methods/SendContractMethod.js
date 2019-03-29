@@ -45,7 +45,6 @@ export default class SendContractMethod extends EthSendTransactionMethod {
         transactionObserver,
         chainIdMethod,
         getTransactionCountMethod,
-        sendRawTransactionMethod,
         allEventsLogDecoder,
         abiModel
     ) {
@@ -55,8 +54,7 @@ export default class SendContractMethod extends EthSendTransactionMethod {
             moduleInstance,
             transactionObserver,
             chainIdMethod,
-            getTransactionCountMethod,
-            sendRawTransactionMethod
+            getTransactionCountMethod
         );
 
         this.allEventsLogDecoder = allEventsLogDecoder;
