@@ -38,7 +38,7 @@ export default class TransactionSigner {
      *
      * @returns {String}
      */
-    static get Type() {
+    get type() {
         return 'TransactionSigner';
     }
 
