@@ -211,15 +211,15 @@ export default class MethodFactory {
      *
      * @method getTimeout
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractContract} contract
      *
      * @returns {Number}
      */
-    getTimeout(moduleInstance) {
-        let timeout = moduleInstance.transactionBlockTimeout;
+    getTimeout(contract) {
+        let timeout = contract.transactionBlockTimeout;
 
-        if (!moduleInstance.currentProvider.SOCKET_MESSAGE) {
-            timeout = moduleInstance.transactionPollingTimeout;
+        if (!contract.currentProvider.SOCKET_MESSAGE) {
+            timeout = contract.transactionPollingTimeout;
         }
 
         return timeout;
