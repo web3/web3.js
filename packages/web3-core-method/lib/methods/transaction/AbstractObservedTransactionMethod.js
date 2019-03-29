@@ -118,6 +118,8 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                         this.handleError(error, receipt, confirmations);
                     },
                     () => {
+                        transactionConfirmationSubscription.unsubscribe();
+
                         if (this.promiEvent.listenerCount('receipt') > 0) {
                             this.promiEvent.emit('receipt', this.afterExecution(receipt));
                             this.promiEvent.removeAllListeners();
