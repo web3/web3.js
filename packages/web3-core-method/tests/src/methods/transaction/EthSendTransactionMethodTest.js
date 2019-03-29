@@ -43,6 +43,7 @@ describe('EthSendTransactionMethodTest', () => {
         moduleInstanceMock.currentProvider = providerMock;
 
         transactionSignerMock = new TransactionSigner();
+        transactionSignerMock.type = 'TransactionSigner';
         transactionSignerMock.sign = jest.fn();
 
         new SendRawTransactionMethod();
@@ -79,6 +80,10 @@ describe('EthSendTransactionMethodTest', () => {
         expect(method.getTransactionCountMethod).toEqual(getTransactionCountMethodMock);
 
         expect(method).toBeInstanceOf(AbstractObservedTransactionMethod);
+    });
+
+    it('calls the static property Type and it returns the expect value', () => {
+        expect(EthSendTransactionMethod.Type).toEqual('eth-send-transaction-method');
     });
 
     it('calls execute with wallets defined and returns with a resolved promise', async () => {
@@ -384,7 +389,7 @@ describe('EthSendTransactionMethodTest', () => {
 
         expect(sendRawTransactionMethodMock.parameters).toEqual(['0x0']);
 
-        expect(getTransactionCountMethodMock.parameters).toEqual([method.parameters[0].from]);
+        expect(getTransactionCountMethodMock.parameters).toEqual([method.parameters[0].from, 'latest']);
 
         expect(getTransactionCountMethodMock.execute).toHaveBeenCalledWith();
 

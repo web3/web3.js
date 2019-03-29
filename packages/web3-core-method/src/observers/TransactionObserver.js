@@ -278,13 +278,7 @@ export default class TransactionObserver {
      * @returns {Boolean}
      */
     isSocketBasedProvider() {
-        switch (this.provider.constructor.name) {
-            case 'CustomProvider':
-            case 'HttpProvider':
-                return false;
-            default:
-                return true;
-        }
+        return !!this.provider.SOCKET_MESSAGE;
     }
 
     /**

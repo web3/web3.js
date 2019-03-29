@@ -58,7 +58,7 @@ export function TransactionSigner() {
  * @constructor
  */
 export function Eth(provider, net = null, options = {}) {
-    if (!options.transactionSigner) {
+    if (!options.transactionSigner || options.transactionSigner.type === 'TransactionSigner') {
         options.transactionSigner = new TransactionSigner();
     }
 

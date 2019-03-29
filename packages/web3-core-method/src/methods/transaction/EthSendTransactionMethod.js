@@ -129,7 +129,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
-            this.getTransactionCountMethod.parameters = [this.parameters[0].from];
+            this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
 
             this.parameters[0].nonce = await this.getTransactionCountMethod.execute();
         }
@@ -158,7 +158,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Boolean}
      */
     isDefaultSigner() {
-        return this.moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
+        return this.moduleInstance.transactionSigner.type === 'TransactionSigner';
     }
 
     /**
@@ -180,6 +180,6 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Boolean}
      */
     hasCustomSigner() {
-        return this.moduleInstance.transactionSigner.constructor.name !== 'TransactionSigner';
+        return this.moduleInstance.transactionSigner.type !== 'TransactionSigner';
     }
 }

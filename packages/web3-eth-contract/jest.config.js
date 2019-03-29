@@ -9,5 +9,9 @@ module.exports = jestConfig({
     'ProvidersModuleFactory': 'web3-providers',
     'ProviderDetector': 'web3-providers',
     'ProviderResolver': 'web3-providers',
-    'Utils': 'web3-utils'
+    'Utils': 'web3-utils',
+    'ChainIdMethod': 'web3-core-method',
+    'EstimateGasMethod': 'web3-core-method',
+    'GetTransactionCountMethod': 'web3-core-method',
+    'SendRawTransactionMethod': 'web3-core-method'
 });
