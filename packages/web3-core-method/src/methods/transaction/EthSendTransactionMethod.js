@@ -129,7 +129,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
-            this.getTransactionCountMethod.parameters = [this.parameters[0].from];
+            this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
 
             this.parameters[0].nonce = await this.getTransactionCountMethod.execute();
         }
