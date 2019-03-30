@@ -13,7 +13,7 @@
 */
 /**
  * @file ens-test.ts
- * @author Samuel Furter <samuel@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>, Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
 
