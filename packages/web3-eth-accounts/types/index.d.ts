@@ -54,6 +54,8 @@ export class Wallet {
     length: number;
     defaultKeyName: string;
 
+    [key: number]: Account;
+
     create(numberOfAccounts: number, entropy?: string): Wallet;
 
     add(account: string | AddAccount): AddedAccount;
