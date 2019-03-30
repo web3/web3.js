@@ -57,7 +57,7 @@ export default class MethodsProxy {
 
                     // TODO: Find a better solution for the handling of the contractMethodParameters
                     /* eslint-disable no-inner-declarations */
-                    function anonymousFunction() {
+                    function method() {
                         let methodArguments = [...arguments];
 
                         // Because of the possibility to overwrite the contract data if I call contract.deploy()
@@ -74,12 +74,12 @@ export default class MethodsProxy {
                                     abiItemModel.contractMethodParameters = methodArguments[0]['arguments'];
                                 }
 
-                                return anonymousFunction;
+                                return method;
                             }
 
                             abiItemModel.contractMethodParameters = [];
 
-                            return anonymousFunction;
+                            return method;
                         }
 
                         // If there exists more than one method with this name then find the correct abiItemModel
@@ -101,18 +101,14 @@ export default class MethodsProxy {
 
                         abiItemModel.contractMethodParameters = methodArguments;
 
-                        return anonymousFunction;
+                        return method;
                     }
 
-                    anonymousFunction['call'] = function() {
+                    method.call = function() {
                         return target.executeMethod(abiItemModel, arguments, 'call');
                     };
 
-                    anonymousFunction['call'].request = function() {
-                        return target.createMethod(abiItemModel, arguments, 'call');
-                    };
-
-                    anonymousFunction['send'] = function() {
+                    method.send = function() {
                         if (abiItemModel.isOfType('constructor')) {
                             return target.executeMethod(abiItemModel, arguments, 'contract-deployment');
                         }
@@ -120,19 +116,23 @@ export default class MethodsProxy {
                         return target.executeMethod(abiItemModel, arguments, 'send');
                     };
 
-                    anonymousFunction['send'].request = function() {
+                    method.call.request = function() {
+                        return target.createMethod(abiItemModel, arguments, 'call');
+                    };
+
+                    method.send.request = function() {
                         return target.createMethod(abiItemModel, arguments, 'send');
                     };
 
-                    anonymousFunction.estimateGas = function() {
+                    method.estimateGas = function() {
                         return target.executeMethod(abiItemModel, arguments, 'estimate');
                     };
 
-                    anonymousFunction.encodeABI = function() {
+                    method.encodeABI = function() {
                         return target.methodEncoder.encode(abiItemModel, target.contract.data);
                     };
 
-                    return anonymousFunction;
+                    return method;
                     /* eslint-enable no-inner-declarations */
                 }
 
@@ -186,7 +186,7 @@ export default class MethodsProxy {
      * @returns {AbstractMethod}
      */
     createMethod(abiItemModel, methodArguments, requestType) {
-        // Get correct rpc method model
+        // Get correct method class
         const method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
         method.setArguments(methodArguments);
 
@@ -198,10 +198,10 @@ export default class MethodsProxy {
         // Encode contract method
         method.parameters[0]['data'] = this.methodEncoder.encode(abiItemModel, this.contract.data);
 
-        // Set default options in the TxObject if required
+        // Set default options in the transaction object if required
         method.parameters[0] = this.methodOptionsMapper.map(this.contract, method.parameters[0]);
 
-        // Validate TxObject
+        // Validate transaction object
         this.methodOptionsValidator.validate(abiItemModel, method);
 
         return method;
