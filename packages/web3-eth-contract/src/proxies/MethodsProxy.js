@@ -105,10 +105,6 @@ export default class MethodsProxy {
                     }
 
                     anonymousFunction['call'] = function() {
-                        if (abiItemModel.isOfType('constructor')) {
-                            return target.executeMethod(abiItemModel, arguments, 'contract-deployment');
-                        }
-
                         return target.executeMethod(abiItemModel, arguments, 'call');
                     };
 
