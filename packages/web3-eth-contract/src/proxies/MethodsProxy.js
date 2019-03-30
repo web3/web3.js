@@ -54,12 +54,6 @@ export default class MethodsProxy {
             get: (target, name) => {
                 if (this.contract.abiModel.hasMethod(name)) {
                     let abiItemModel = this.contract.abiModel.getMethod(name);
-                    let requestType = abiItemModel.requestType;
-
-                    // TODO: Improve the requestType detection and defining of the call/send method.
-                    if (isArray(abiItemModel)) {
-                        requestType = abiItemModel[0].requestType;
-                    }
 
                     // TODO: Find a better solution for the handling of the contractMethodParameters
                     /* eslint-disable no-inner-declarations */
@@ -110,16 +104,28 @@ export default class MethodsProxy {
                         return anonymousFunction;
                     }
 
-                    anonymousFunction[requestType] = function() {
+                    anonymousFunction['call'] = function() {
                         if (abiItemModel.isOfType('constructor')) {
                             return target.executeMethod(abiItemModel, arguments, 'contract-deployment');
                         }
 
-                        return target.executeMethod(abiItemModel, arguments, requestType);
+                        return target.executeMethod(abiItemModel, arguments, 'call');
                     };
 
-                    anonymousFunction[requestType].request = function() {
-                        return target.createMethod(abiItemModel, arguments, requestType);
+                    anonymousFunction['call'].request = function() {
+                        return target.createMethod(abiItemModel, arguments, 'call');
+                    };
+
+                    anonymousFunction['send'] = function() {
+                        if (abiItemModel.isOfType('constructor')) {
+                            return target.executeMethod(abiItemModel, arguments, 'contract-deployment');
+                        }
+
+                        return target.executeMethod(abiItemModel, arguments, 'send');
+                    };
+
+                    anonymousFunction['send'].request = function() {
+                        return target.createMethod(abiItemModel, arguments, 'send');
                     };
 
                     anonymousFunction.estimateGas = function() {
