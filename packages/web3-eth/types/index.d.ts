@@ -34,18 +34,16 @@ import {AbiCoder} from 'web3-eth-abi';
 import {Network} from 'web3-net';
 import {Personal} from 'web3-eth-personal';
 import {AbiItem} from 'web3-utils';
+import {Ens} from 'web3-eth-ens';
 
 export class Eth extends AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        options?: Web3ModuleOptions
-    );
+    constructor(provider: provider, options?: Web3ModuleOptions);
 
     Contract: new (jsonInterface: AbiItem[] | AbiItem, address?: string, options?: ContractOptions) => Contract;
-    Iban: new(iban: string) => Iban;
+    Iban: new (iban: string) => Iban;
     personal: Personal;
     accounts: Accounts;
-    ens: any; // change once ens types as written
+    ens: Ens;
     abi: AbiCoder;
     net: Network;
 
@@ -53,8 +51,16 @@ export class Eth extends AbstractWeb3Module {
 
     subscribe(type: 'logs', options?: Logs, callback?: (error: Error, log: Log) => void): Subscription<Log>;
     subscribe(type: 'syncing', options?: null, callback?: (error: Error, result: any) => void): Subscription<any>;
-    subscribe(type: 'newBlockHeaders', options?: null, callback?: (error: Error, blockHeader: BlockHeader) => void): Subscription<BlockHeader>;
-    subscribe(type: 'pendingTransactions', options?: null, callback?: (error: Error, transactionHash: string) => void): Subscription<string>;
+    subscribe(
+        type: 'newBlockHeaders',
+        options?: null,
+        callback?: (error: Error, blockHeader: BlockHeader) => void
+    ): Subscription<BlockHeader>;
+    subscribe(
+        type: 'pendingTransactions',
+        options?: null,
+        callback?: (error: Error, transactionHash: string) => void
+    ): Subscription<string>;
 
     getProtocolVersion(callback?: (error: Error, protocolVersion: string) => void): Promise<string>;
 
@@ -75,55 +81,127 @@ export class Eth extends AbstractWeb3Module {
     getBalance(address: string): Promise<string>;
     getBalance(address: string, defaultBlock: string | number): Promise<string>;
     getBalance(address: string, callback?: (error: Error, balance: string) => void): Promise<string>;
-    getBalance(address: string, defaultBlock: string | number, callback?: (error: Error, balance: string) => void): Promise<string>;
+    getBalance(
+        address: string,
+        defaultBlock: string | number,
+        callback?: (error: Error, balance: string) => void
+    ): Promise<string>;
 
     getStorageAt(address: string, position: number): Promise<string>;
     getStorageAt(address: string, position: number, defaultBlock: number | string): Promise<string>;
-    getStorageAt(address: string, position: number, callback?: (error: Error, storageAt: string) => void): Promise<string>;
-    getStorageAt(address: string, position: number, defaultBlock: number | string, callback?: (error: Error, storageAt: string) => void): Promise<string>;
+    getStorageAt(
+        address: string,
+        position: number,
+        callback?: (error: Error, storageAt: string) => void
+    ): Promise<string>;
+    getStorageAt(
+        address: string,
+        position: number,
+        defaultBlock: number | string,
+        callback?: (error: Error, storageAt: string) => void
+    ): Promise<string>;
 
     getCode(address: string): Promise<string>;
     getCode(address: string, defaultBlock: string | number): Promise<string>;
     getCode(address: string, callback?: (error: Error, code: string) => void): Promise<string>;
-    getCode(address: string, defaultBlock: string | number, callback?: (error: Error, code: string) => void): Promise<string>;
+    getCode(
+        address: string,
+        defaultBlock: string | number,
+        callback?: (error: Error, code: string) => void
+    ): Promise<string>;
 
     getBlock(blockHashOrBlockNumber: string | number): Promise<Block>;
     getBlock(blockHashOrBlockNumber: string | number, returnTransactionObjects: boolean): Promise<Block>;
     getBlock(blockHashOrBlockNumber: string | number, callback?: (error: Error, block: Block) => void): Promise<Block>;
-    getBlock(blockHashOrBlockNumber: string | number, returnTransactionObjects: boolean, callback?: (error: Error, block: Block) => void): Promise<Block>;
+    getBlock(
+        blockHashOrBlockNumber: string | number,
+        returnTransactionObjects: boolean,
+        callback?: (error: Error, block: Block) => void
+    ): Promise<Block>;
 
-    getBlockTransactionCount(blockHashOrBlockNumber: string | number, callback?: (error: Error, numberOfTransactions: number) => void): Promise<number>;
+    getBlockTransactionCount(
+        blockHashOrBlockNumber: string | number,
+        callback?: (error: Error, numberOfTransactions: number) => void
+    ): Promise<number>;
 
-    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number): Promise<Block>
-    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, returnTransactionObjects: boolean): Promise<Block>
-    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, callback?: (error: Error, uncle: {}) => void): Promise<Block>
-    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, returnTransactionObjects: boolean, callback?: (error: Error, uncle: {}) => void): Promise<Block>
+    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number): Promise<Block>;
+    getUncle(
+        blockHashOrBlockNumber: string | number,
+        uncleIndex: number,
+        returnTransactionObjects: boolean
+    ): Promise<Block>;
+    getUncle(
+        blockHashOrBlockNumber: string | number,
+        uncleIndex: number,
+        callback?: (error: Error, uncle: {}) => void
+    ): Promise<Block>;
+    getUncle(
+        blockHashOrBlockNumber: string | number,
+        uncleIndex: number,
+        returnTransactionObjects: boolean,
+        callback?: (error: Error, uncle: {}) => void
+    ): Promise<Block>;
 
-    getTransaction(transactionHash: string, callback?: (error: Error, transaction: Transaction) => void): Promise<Transaction>;
+    getTransaction(
+        transactionHash: string,
+        callback?: (error: Error, transaction: Transaction) => void
+    ): Promise<Transaction>;
 
-    getTransactionFromBlock(hashStringOrNumber: string | number, indexNumber: number, callback?: (error: Error, transaction: Transaction) => void): Promise<Transaction>;
+    getTransactionFromBlock(
+        hashStringOrNumber: string | number,
+        indexNumber: number,
+        callback?: (error: Error, transaction: Transaction) => void
+    ): Promise<Transaction>;
 
-    getTransactionReceipt(hash: string, callback?: (error: Error, transactionReceipt: TransactionReceipt) => void): Promise<TransactionReceipt>;
+    getTransactionReceipt(
+        hash: string,
+        callback?: (error: Error, transactionReceipt: TransactionReceipt) => void
+    ): Promise<TransactionReceipt>;
 
     getTransactionCount(address: string): Promise<number>;
     getTransactionCount(address: string, defaultBlock: number | string): Promise<number>;
     getTransactionCount(address: string, callback?: (error: Error, count: number) => void): Promise<number>;
-    getTransactionCount(address: string, defaultBlock: number | string, callback?: (error: Error, count: number) => void): Promise<number>;
+    getTransactionCount(
+        address: string,
+        defaultBlock: number | string,
+        callback?: (error: Error, count: number) => void
+    ): Promise<number>;
 
-    sendTransaction(transaction: Transaction, callback?: (error: Error, hash: string) => void): PromiEvent<TransactionReceipt>;
+    sendTransaction(
+        transaction: Transaction,
+        callback?: (error: Error, hash: string) => void
+    ): PromiEvent<TransactionReceipt>;
 
-    sendSignedTransaction(signedTransactionData: string, callback?: (error: Error, gas: string) => void): PromiEvent<TransactionReceipt>
+    sendSignedTransaction(
+        signedTransactionData: string,
+        callback?: (error: Error, gas: string) => void
+    ): PromiEvent<TransactionReceipt>;
 
-    sign(dataToSign: string, address: string | number, callback?: (error: Error, signature: string) => void): Promise<string>;
+    sign(
+        dataToSign: string,
+        address: string | number,
+        callback?: (error: Error, signature: string) => void
+    ): Promise<string>;
 
-    signTransaction(transaction: Transaction, callback?: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
+    signTransaction(
+        transaction: Transaction,
+        callback?: (error: Error, signedTransaction: RLPEncodedTransaction) => void
+    ): Promise<RLPEncodedTransaction>;
     signTransaction(transaction: Transaction, address: string): Promise<RLPEncodedTransaction>;
-    signTransaction(transaction: Transaction, address: string, callback: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
+    signTransaction(
+        transaction: Transaction,
+        address: string,
+        callback: (error: Error, signedTransaction: RLPEncodedTransaction) => void
+    ): Promise<RLPEncodedTransaction>;
 
     call(transaction: Transaction): Promise<string>;
     call(transaction: Transaction, defaultBlock?: number | string): Promise<string>;
     call(transaction: Transaction, callback?: (error: Error, data: string) => void): Promise<string>;
-    call(transaction: Transaction, defaultBlock: number | string, callback: (error: Error, data: string) => void): Promise<string>;
+    call(
+        transaction: Transaction,
+        defaultBlock: number | string,
+        callback: (error: Error, data: string) => void
+    ): Promise<string>;
 
     estimateGas(transaction: Transaction, callback?: (error: Error, gas: number) => void): Promise<number>;
 
@@ -156,27 +234,27 @@ export interface Syncing {
 }
 
 export interface BlockHeader {
-    number: number
-    hash: string
-    parentHash: string
-    nonce: string
-    sha3Uncles: string
-    logsBloom: string
-    transactionRoot: string
-    stateRoot: string
-    receiptRoot: string
-    miner: string
-    extraData: string
-    gasLimit: number
-    gasUsed: number
-    timestamp: number
+    number: number;
+    hash: string;
+    parentHash: string;
+    nonce: string;
+    sha3Uncles: string;
+    logsBloom: string;
+    transactionRoot: string;
+    stateRoot: string;
+    receiptRoot: string;
+    miner: string;
+    extraData: string;
+    gasLimit: number;
+    gasUsed: number;
+    timestamp: number;
 }
 
 export interface Block extends BlockHeader {
     transactions: Transaction[];
-    size: number
-    difficulty: number
-    totalDifficulty: number
+    size: number;
+    difficulty: number;
+    totalDifficulty: number;
     uncles: string[];
 }
 
@@ -188,9 +266,9 @@ export interface PastLogsOptions {
 }
 
 export interface Logs {
-    fromBlock?: number
-    address?: string
-    topics?: Array<string | string[]>
+    fromBlock?: number;
+    address?: string;
+    topics?: Array<string | string[]>;
 }
 
 export interface Subscription<T> {
@@ -201,9 +279,9 @@ export interface Subscription<T> {
 
     unsubscribe(callback?: (error: Error, result: boolean) => void): Promise<undefined | boolean>;
 
-    on(type: 'data', handler: (data: T) => void): void
+    on(type: 'data', handler: (data: T) => void): void;
 
-    on(type: 'changed', handler: (data: T) => void): void
+    on(type: 'changed', handler: (data: T) => void): void;
 
-    on(type: 'error', handler: (data: Error) => void): void
+    on(type: 'error', handler: (data: Error) => void): void;
 }
