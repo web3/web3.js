@@ -51,7 +51,7 @@ ens.getPubkey('name', (error: Error, result: {[x: string]: string}) => {});
 // $ExpectType PromiEvent<any>
 ens.setPubkey('name', 'x', 'y', {});
 // $ExpectType PromiEvent<any>
-ens.setPubkey('name', 'x', 'y', (error: Error, result: any) => {});
+ens.setPubkey('name', 'x', 'y', {}, (error: Error, result: any) => {});
 
 // $ExpectType Promise<string>
 ens.getText('name', 'key');
@@ -61,7 +61,7 @@ ens.getText('name', 'key', (error: Error, ensName: string) => {});
 // $ExpectType PromiEvent<any>
 ens.setText('name', 'key', 'value', {});
 // $ExpectType PromiEvent<any>
-ens.setText('name', 'key', 'value', (error: Error, result: any) => {});
+ens.setText('name', 'key', 'value', {}, (error: Error, result: any) => {});
 
 // $ExpectType Promise<string>
 ens.getContent('name');
