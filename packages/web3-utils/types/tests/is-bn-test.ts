@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isBN, BN} from 'web3-utils';
+import BN = require('bn.js');
+import {isBN} from 'web3-utils';
 
 // $ExpectType boolean
 isBN(7);

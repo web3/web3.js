@@ -1,10 +1,6 @@
 import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import Websocket from '../../__mocks__/Websocket';
 import W3CWebsocket from '../../__mocks__/W3CWebsocket';
-import JsonRpcMapper from '../../../src/mappers/JsonRpcMapper';
-import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
-import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
-import AbstractMethod from '../../__mocks__/AbstractMethod';
 
 /**
  * WebsocketProvider test
@@ -336,99 +332,6 @@ describe('WebsocketProviderTest', () => {
         expect(websocketProvider.isConnecting()).toEqual(false);
     });
 
-    it('calls send and returns with a resolved promise', async () => {
-        JsonRpcMapper.toPayload = jest.fn();
-        JsonRpcMapper.toPayload.mockReturnValueOnce({id: '0x0'});
-
-        JsonRpcResponseValidator.validate = jest.fn();
-        JsonRpcResponseValidator.validate.mockReturnValueOnce(true);
-
-        socketMock.OPEN = 4;
-        socketMock.readyState = 4;
-        socketMock.CONNECTING = 0;
-        socketMock.send = jest.fn();
-        websocketProvider.timeout = false;
-
-        setTimeout(() => {
-            websocketProvider.emit('0x0', {result: true});
-        }, 1);
-
-        const response = await websocketProvider.send('rpc_method', []);
-
-        expect(response).toEqual(true);
-
-        expect(socketMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
-
-        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
-
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
-
-        expect(websocketProvider.listenerCount('0x0')).toEqual(0);
-    });
-
-    it('calls send and returns with a rejected promise because of an invalid JSON-RPC response', async () => {
-        JsonRpcMapper.toPayload = jest.fn();
-        JsonRpcMapper.toPayload.mockReturnValueOnce({id: '0x0'});
-
-        JsonRpcResponseValidator.validate = jest.fn();
-        JsonRpcResponseValidator.validate.mockReturnValueOnce(new Error('ERROR'));
-
-        socketMock.OPEN = 4;
-        socketMock.readyState = 4;
-        socketMock.CONNECTING = 0;
-        socketMock.send = jest.fn();
-        websocketProvider.timeout = false;
-
-        setTimeout(() => {
-            websocketProvider.emit('0x0', {result: true});
-        }, 1);
-
-        await expect(websocketProvider.send('rpc_method', [])).rejects.toThrow('ERROR');
-
-        expect(socketMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
-
-        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
-
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
-
-        expect(websocketProvider.listenerCount('0x0')).toEqual(0);
-    });
-
-    it('calls sendBatch and returns with a resolved promise', async () => {
-        const moduleInstanceMock = new AbstractWeb3Module();
-
-        const abstractMethodMock = new AbstractMethod();
-
-        abstractMethodMock.beforeExecution = jest.fn();
-        abstractMethodMock.rpcMethod = 'rpc_method';
-        abstractMethodMock.parameters = [];
-
-        JsonRpcMapper.toPayload = jest.fn();
-        JsonRpcMapper.toPayload.mockReturnValueOnce({id: '0x0'});
-
-        socketMock.OPEN = 4;
-        socketMock.readyState = 4;
-        socketMock.CONNECTING = 0;
-        socketMock.send = jest.fn();
-        websocketProvider.timeout = false;
-
-        setTimeout(() => {
-            websocketProvider.emit('0x0', {result: true});
-        }, 5);
-
-        const response = await websocketProvider.sendBatch([abstractMethodMock], moduleInstanceMock);
-
-        expect(response).toEqual({result: true});
-
-        expect(socketMock.send).toHaveBeenCalledWith('[{"id":"0x0"}]');
-
-        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
-
-        expect(websocketProvider.listenerCount('0x0')).toEqual(0);
-
-        expect(abstractMethodMock.beforeExecution).toHaveBeenCalled();
-    });
-
     it('calls sendPayload and returns with a rejected promise because the connection is not ready', async () => {
         socketMock.OPEN = 4;
         socketMock.readyState = 2;
@@ -450,12 +353,26 @@ describe('WebsocketProviderTest', () => {
         expect(socketMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
     });
 
+    it('calls sendPayload and returns with a rejected promise because of the connection.send() method', async () => {
+        socketMock.OPEN = 4;
+        socketMock.readyState = 4;
+        socketMock.CONNECTING = 0;
+        socketMock.send = jest.fn(() => {
+            throw new Error('Nope');
+        });
+        websocketProvider.timeout = 2;
+
+        await expect(websocketProvider.sendPayload({id: '0x0'})).rejects.toThrow('Nope');
+
+        expect(socketMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
+    });
+
     it('calls sendPayload with a timeout defined and returns with a resolved promise', async () => {
         socketMock.OPEN = 4;
         socketMock.readyState = 4;
         socketMock.CONNECTING = 0;
         socketMock.send = jest.fn();
-        websocketProvider.timeout = 2;
+        websocketProvider.timeout = 4;
 
         setTimeout(() => {
             websocketProvider.emit('0x0', {result: true});

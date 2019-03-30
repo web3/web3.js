@@ -51,6 +51,15 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
     }
 
     /**
+     * This type will be used in the AbstractMethodFactory.
+     *
+     * @returns {String}
+     */
+    static get Type() {
+        return 'eth-send-transaction-method';
+    }
+
+    /**
      * Checks if gasPrice is set, sends the request and returns a PromiEvent Object
      *
      * @method execute
@@ -63,13 +72,18 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
             this.parameters[0]['gas'] = this.moduleInstance.defaultGas;
         }
 
-        if (!this.parameters[0].gasPrice) {
+        if (!this.parameters[0].gasPrice && this.parameters[0].gasPrice !== 0) {
             if (!this.moduleInstance.defaultGasPrice) {
-                this.moduleInstance.currentProvider.send('eth_gasPrice', []).then((gasPrice) => {
-                    this.parameters[0].gasPrice = gasPrice;
+                this.moduleInstance.currentProvider
+                    .send('eth_gasPrice', [])
+                    .then((gasPrice) => {
+                        this.parameters[0].gasPrice = gasPrice;
 
-                    this.execute();
-                });
+                        this.execute();
+                    })
+                    .catch((error) => {
+                        this.handleError(error, false, 0);
+                    });
 
                 return this.promiEvent;
             }
@@ -81,13 +95,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
             if (this.moduleInstance.accounts.wallet[this.parameters[0].from]) {
                 this.sendRawTransaction(this.moduleInstance.accounts.wallet[this.parameters[0].from].privateKey).catch(
                     (error) => {
-                        if (this.callback) {
-                            this.callback(error, null);
-                        }
-
-                        this.promiEvent.reject(error);
-                        this.promiEvent.emit('error', error);
-                        this.promiEvent.removeAllListeners();
+                        this.handleError(error, false, 0);
                     }
                 );
 
@@ -97,13 +105,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
 
         if (this.hasCustomSigner()) {
             this.sendRawTransaction().catch((error) => {
-                if (this.callback) {
-                    this.callback(error, null);
-                }
-
-                this.promiEvent.reject(error);
-                this.promiEvent.emit('error', error);
-                this.promiEvent.removeAllListeners();
+                this.handleError(error, false, 0);
             });
 
             return this.promiEvent;
@@ -127,12 +129,19 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
-            this.getTransactionCountMethod.parameters = [this.parameters[0].from];
+            this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
 
             this.parameters[0].nonce = await this.getTransactionCountMethod.execute();
         }
 
-        const response = await this.moduleInstance.transactionSigner.sign(this.parameters[0], privateKey);
+        let transaction = this.formatters.inputCallFormatter(this.parameters[0], this.moduleInstance);
+        transaction.to = transaction.to || '0x';
+        transaction.data = transaction.data || '0x';
+        transaction.value = transaction.value || '0x';
+        transaction.chainId = this.utils.numberToHex(transaction.chainId);
+        delete transaction.from;
+
+        const response = await this.moduleInstance.transactionSigner.sign(transaction, privateKey);
 
         this.sendRawTransactionMethod.parameters = [response.rawTransaction];
         this.sendRawTransactionMethod.callback = this.callback;
@@ -149,7 +158,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Boolean}
      */
     isDefaultSigner() {
-        return this.moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
+        return this.moduleInstance.transactionSigner.type === 'TransactionSigner';
     }
 
     /**
@@ -160,7 +169,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Boolean}
      */
     hasAccounts() {
-        return this.moduleInstance.accounts && this.moduleInstance.accounts.accountsIndex > 0;
+        return this.moduleInstance.accounts && this.moduleInstance.accounts.wallet.accountsIndex > 0;
     }
 
     /**
@@ -171,6 +180,6 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Boolean}
      */
     hasCustomSigner() {
-        return this.moduleInstance.transactionSigner.constructor.name !== 'TransactionSigner';
+        return this.moduleInstance.transactionSigner.type !== 'TransactionSigner';
     }
 }

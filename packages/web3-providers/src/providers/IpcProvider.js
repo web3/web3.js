@@ -20,11 +20,8 @@
  * @date 2018
  */
 
-import oboe from 'oboe';
 import isArray from 'lodash/isArray';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
-import JsonRpcMapper from '../mappers/JsonRpcMapper';
-import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class IpcProvider extends AbstractSocketProvider {
     /**
@@ -38,6 +35,7 @@ export default class IpcProvider extends AbstractSocketProvider {
     constructor(connection, path) {
         super(connection, null);
         this.host = path;
+        this.lastChunk = '';
     }
 
     /**
@@ -73,7 +71,37 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @param {String|Buffer} message
      */
     onMessage(message) {
-        super.onMessage(message.toString());
+        let result = null;
+        let returnValues = [];
+        let dechunkedData = message
+            .toString()
+            .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
+            .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
+            .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
+            .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
+            .split('|--|');
+
+        dechunkedData.forEach((data) => {
+            result = null;
+            if (this.lastChunk) {
+                data = this.lastChunk + data;
+            }
+
+            try {
+                result = JSON.parse(data);
+            } catch (error) {
+                this.lastChunk = data;
+
+                return;
+            }
+
+            this.lastChunk = null;
+            returnValues.push(result);
+        });
+
+        returnValues.forEach((chunk) => {
+            super.onMessage(chunk);
+        });
     }
 
     /**
@@ -82,18 +110,12 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @method registerEventListeners
      */
     registerEventListeners() {
-        if (this.connection.constructor.name === 'Socket') {
-            oboe(this.connection).done(this.onMessage);
-        } else {
-            this.connection.addListener('data', this.onMessage.bind(this));
-        }
-
-        this.connection.addListener('connect', this.onConnect.bind(this));
-        this.connection.addListener('error', this.onError.bind(this));
-        this.connection.addListener('end', this.onError.bind(this));
-        this.connection.addListener('close', this.onClose.bind(this));
-        this.connection.addListener('timeout', this.onClose.bind(this));
-        this.connection.addListener('ready', this.onReady.bind(this));
+        this.connection.on('data', this.onMessage.bind(this));
+        this.connection.on('connect', this.onConnect.bind(this));
+        this.connection.on('error', this.onError.bind(this));
+        this.connection.on('close', this.onClose.bind(this));
+        this.connection.on('timeout', this.onClose.bind(this));
+        this.connection.on('ready', this.onReady.bind(this));
     }
 
     /**
@@ -106,66 +128,23 @@ export default class IpcProvider extends AbstractSocketProvider {
     removeAllListeners(event) {
         switch (event) {
             case this.SOCKET_MESSAGE:
-                this.connection.removeEventListener('data', this.onMessage);
+                this.connection.removeListener('data', this.onMessage);
                 break;
             case this.SOCKET_READY:
-                this.connection.removeEventListener('ready', this.onReady);
+                this.connection.removeListener('ready', this.onReady);
                 break;
             case this.SOCKET_CLOSE:
-                this.connection.removeEventListener('close', this.onClose);
+                this.connection.removeListener('close', this.onClose);
                 break;
             case this.SOCKET_ERROR:
-                this.connection.removeEventListener('error', this.onError);
+                this.connection.removeListener('error', this.onError);
                 break;
             case this.SOCKET_CONNECT:
-                this.connection.removeEventListener('connect', this.onConnect);
+                this.connection.removeListener('connect', this.onConnect);
                 break;
         }
 
         super.removeAllListeners(event);
-    }
-
-    /**
-     * Creates the JSON-RPC payload and sends it to the node.
-     *
-     * @method send
-     *
-     * @param {String} method
-     * @param {Array} parameters
-     *
-     * @returns {Promise<any>}
-     */
-    send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
-            const validationResult = JsonRpcResponseValidator.validate(response);
-
-            if (validationResult instanceof Error) {
-                throw validationResult;
-            }
-
-            return response.result;
-        });
-    }
-
-    /**
-     * Creates the JSON-RPC batch payload and sends it to the node.
-     *
-     * @method sendBatch
-     *
-     * @param {AbstractMethod[]} methods
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns Promise<Object|Error>
-     */
-    sendBatch(methods, moduleInstance) {
-        let payload = [];
-
-        methods.forEach((method) => {
-            method.beforeExecution(moduleInstance);
-            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
-        });
-
-        return this.sendPayload(payload);
     }
 
     /**
@@ -179,10 +158,6 @@ export default class IpcProvider extends AbstractSocketProvider {
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
-            if (this.connection.pending) {
-                return reject(new Error('Connection error: The socket is still trying to connect'));
-            }
-
             if (!this.connection.writable) {
                 this.connection.connect({path: this.path});
             }
@@ -196,11 +171,7 @@ export default class IpcProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
-                this.on(id, (response) => {
-                    resolve(response);
-
-                    this.removeAllListeners(id);
-                });
+                this.once(id, resolve);
 
                 return;
             }

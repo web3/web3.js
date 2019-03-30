@@ -23,6 +23,7 @@
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
+import {ProviderResolver} from 'web3-providers';
 import MethodFactory from './factories/MethodFactory';
 import PersonalModule from './Personal.js';
 
@@ -33,19 +34,20 @@ import PersonalModule from './Personal.js';
  *
  * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Net.Socket} net
- * @param {Accounts} accounts
  * @param {Object} options
  *
  * @returns {Personal}
  */
-export const Personal = (provider, net, accounts, options) => {
+export function Personal(provider, net = null, options = {}) {
+    const resolvedProvider = new ProviderResolver().resolve(provider, net);
+
     return new PersonalModule(
-        provider,
+        resolvedProvider,
         new MethodFactory(Utils, formatters),
-        new Network(provider, net, options),
+        new Network(resolvedProvider, null, options),
         Utils,
         formatters,
         options,
-        net
+        null
     );
-};
+}

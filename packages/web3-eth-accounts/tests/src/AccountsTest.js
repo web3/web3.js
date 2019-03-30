@@ -1,4 +1,4 @@
-import {hexToBytes, isHexStrict, randomHex} from 'web3-utils';
+import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
@@ -10,9 +10,8 @@ import Account from '../../src/models/Account';
 import {AbstractWeb3Module} from 'web3-core';
 
 // Mocks
-jest.mock('isHexStrict');
-jest.mock('hexToBytes');
 jest.mock('formatters');
+jest.mock('Utils');
 jest.mock('eth-lib/lib/rlp');
 jest.mock('eth-lib/lib/nat');
 jest.mock('eth-lib/lib/bytes');
@@ -41,7 +40,7 @@ describe('AccountsTest', () => {
 
         options = {transactionSigner: transactionSignerMock};
 
-        accounts = new Accounts(providerMock, formatters, methodFactoryMock, options, {});
+        accounts = new Accounts(providerMock, Utils, formatters, methodFactoryMock, options, {});
     });
 
     it('constructor check', () => {
@@ -92,6 +91,8 @@ describe('AccountsTest', () => {
             return Promise.resolve('signed-transaction');
         });
 
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
         const response = await accounts.signTransaction(transaction, 'pk', callback);
 
         expect(response).toEqual('signed-transaction');
@@ -99,6 +100,8 @@ describe('AccountsTest', () => {
         expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
 
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
+
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
 
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(transaction, account.privateKey);
     });
@@ -133,6 +136,8 @@ describe('AccountsTest', () => {
             return Promise.resolve(1);
         });
 
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
         await expect(accounts.signTransaction(transaction, 'pk', callback)).resolves.toEqual('signed-transaction');
 
         expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
@@ -140,6 +145,8 @@ describe('AccountsTest', () => {
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, account.privateKey);
+
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
 
         expect(accounts.getChainId).toHaveBeenCalled();
     });
@@ -174,6 +181,8 @@ describe('AccountsTest', () => {
             return Promise.resolve(1);
         });
 
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
         await expect(accounts.signTransaction(transaction, 'pk', callback)).resolves.toEqual('signed-transaction');
 
         expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
@@ -181,6 +190,8 @@ describe('AccountsTest', () => {
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, account.privateKey);
+
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
 
         expect(accounts.getGasPrice).toHaveBeenCalled();
     });
@@ -215,6 +226,8 @@ describe('AccountsTest', () => {
             return Promise.resolve(1);
         });
 
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
         await expect(accounts.signTransaction(transaction, 'pk', callback)).resolves.toEqual('signed-transaction');
 
         expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
@@ -223,12 +236,12 @@ describe('AccountsTest', () => {
 
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, account.privateKey);
 
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
+
         expect(accounts.getTransactionCount).toHaveBeenCalledWith('0x0');
     });
 
     it('calls signTransaction and rejects with a promise', async () => {
-        const callback = jest.fn();
-
         const transaction = {
             from: 0,
             gas: 1,
@@ -244,13 +257,46 @@ describe('AccountsTest', () => {
             return Promise.reject(new Error('ERROR'));
         });
 
-        await expect(accounts.signTransaction(transaction, 'pk', callback)).rejects.toThrow('ERROR');
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
+        await expect(accounts.signTransaction(transaction, 'pk')).rejects.toThrow('ERROR');
 
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
-        expect(callback).toHaveBeenCalledWith(new Error('ERROR'), null);
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
 
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(transaction, 'pk');
+    });
+
+    it('calls signTransaction and calls the callback with a error', (done) => {
+        const transaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        };
+
+        const account = {privateKey: 'pk', address: '0x0'};
+        Account.fromPrivateKey.mockReturnValueOnce(account);
+
+        transactionSignerMock.sign = jest.fn(() => {
+            return Promise.reject(new Error('ERROR'));
+        });
+
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
+        accounts.signTransaction(transaction, 'pk', (error, response) => {
+            expect(error).toEqual(new Error('ERROR'));
+
+            expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
+
+            expect(transactionSignerMock.sign).toHaveBeenCalledWith(transaction, 'pk');
+
+            expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
+
+            done();
+        });
     });
 
     it('calls recoverTransaction and returns the expected string', () => {
@@ -288,9 +334,9 @@ describe('AccountsTest', () => {
     it('calls sign with strict hex string and returns the expected value', () => {
         const sign = jest.fn();
 
-        isHexStrict.mockReturnValueOnce(true);
+        Utils.isHexStrict.mockReturnValueOnce(true);
 
-        hexToBytes.mockReturnValueOnce('data');
+        Utils.hexToBytes.mockReturnValueOnce('data');
 
         sign.mockReturnValueOnce(true);
 
@@ -300,9 +346,9 @@ describe('AccountsTest', () => {
 
         expect(sign).toHaveBeenCalledWith('data');
 
-        expect(isHexStrict).toHaveBeenCalledWith('data');
+        expect(Utils.isHexStrict).toHaveBeenCalledWith('data');
 
-        expect(hexToBytes).toHaveBeenCalledWith('data');
+        expect(Utils.hexToBytes).toHaveBeenCalledWith('data');
 
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
     });
@@ -310,7 +356,7 @@ describe('AccountsTest', () => {
     it('calls sign with non-strict hex string and returns the expected value', () => {
         const sign = jest.fn();
 
-        isHexStrict.mockReturnValueOnce(false);
+        Utils.isHexStrict.mockReturnValueOnce(false);
 
         sign.mockReturnValueOnce(true);
 
@@ -320,13 +366,13 @@ describe('AccountsTest', () => {
 
         expect(sign).toHaveBeenCalledWith('data');
 
-        expect(isHexStrict).toHaveBeenCalledWith('data');
+        expect(Utils.isHexStrict).toHaveBeenCalledWith('data');
 
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
     });
 
     it('calls recover with a string as message and returns the expected value', () => {
-        isHexStrict.mockReturnValueOnce(false);
+        Utils.isHexStrict.mockReturnValueOnce(false);
 
         Hash.keccak256s.mockReturnValueOnce('keccak');
 
@@ -334,7 +380,7 @@ describe('AccountsTest', () => {
 
         expect(accounts.recover('message', 'signature', false)).toEqual('recovered');
 
-        expect(isHexStrict).toHaveBeenCalledWith('message');
+        expect(Utils.isHexStrict).toHaveBeenCalledWith('message');
 
         expect(Hash.keccak256s).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')])
@@ -344,9 +390,9 @@ describe('AccountsTest', () => {
     });
 
     it('calls recover with a strict hex string as message and returns the expected value', () => {
-        isHexStrict.mockReturnValueOnce(true);
+        Utils.isHexStrict.mockReturnValueOnce(true);
 
-        hexToBytes.mockReturnValueOnce('message');
+        Utils.hexToBytes.mockReturnValueOnce('message');
 
         Hash.keccak256s.mockReturnValueOnce('keccak');
 
@@ -354,9 +400,9 @@ describe('AccountsTest', () => {
 
         expect(accounts.recover('message', 'signature', false)).toEqual('recovered');
 
-        expect(isHexStrict).toHaveBeenCalledWith('message');
+        expect(Utils.isHexStrict).toHaveBeenCalledWith('message');
 
-        expect(hexToBytes).toHaveBeenCalledWith('message');
+        expect(Utils.hexToBytes).toHaveBeenCalledWith('message');
 
         expect(Hash.keccak256s).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')])
@@ -420,143 +466,5 @@ describe('AccountsTest', () => {
         expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
 
         expect(toV3Keystore).toHaveBeenCalledWith('password', {});
-    });
-
-    it('calls wallet.create and returns the expected value', () => {
-        randomHex.mockReturnValueOnce('asdf');
-
-        Account.from.mockReturnValueOnce({address: '0x0', privateKey: '0x0'});
-
-        expect(accounts.wallet.create(1)).toEqual(accounts);
-
-        expect(randomHex).toHaveBeenCalledWith(32);
-
-        expect(Account.from).toHaveBeenCalledWith('asdf', accounts);
-
-        expect(accounts.accountsIndex).toEqual(1);
-    });
-
-    it('calls wallet.add with a Account object and returns the expected value', () => {
-        new Account();
-        const accountMock = Account.mock.instances[0];
-        accountMock.address = '0x0';
-
-        expect(accounts.wallet.add(accountMock)).toEqual(accountMock);
-
-        expect(accounts.accounts[accountMock.address]).toEqual(accountMock);
-
-        expect(accounts.accounts[0]).toEqual(accountMock);
-
-        expect(accounts.accounts[accountMock.address.toLowerCase()]).toEqual(accountMock);
-    });
-
-    it('calls wallet.add with an already existing account and returns the expected value', () => {
-        new Account();
-        const accountMock = Account.mock.instances[0];
-        accountMock.address = '0x0';
-        accounts.accounts[accountMock.address] = accountMock;
-
-        expect(accounts.wallet.add(accountMock)).toEqual(accountMock);
-
-        expect(accounts.accounts[accountMock.address]).toEqual(accountMock);
-    });
-
-    it('calls wallet.add with a privateKey and returns the expected value', () => {
-        new Account();
-        const accountMock = Account.mock.instances[0];
-        accountMock.address = '0x0';
-
-        Account.fromPrivateKey.mockReturnValueOnce(accountMock);
-
-        expect(accounts.wallet.add('0x0')).toEqual(accountMock);
-
-        expect(Account.fromPrivateKey).toHaveBeenCalledWith('0x0', accounts);
-
-        expect(accounts.accounts[accountMock.address]).toEqual(accountMock);
-
-        expect(accounts.accounts[0]).toEqual(accountMock);
-
-        expect(accounts.accounts[accountMock.address.toLowerCase()]).toEqual(accountMock);
-    });
-
-    it('calls wallet.remove and returns true', () => {
-        new Account();
-        const accountMock = Account.mock.instances[0];
-        accountMock.address = '0x0';
-
-        accounts.accounts = {'0x0': accountMock};
-        accounts.accountsIndex = 1;
-
-        expect(accounts.wallet.remove('0x0')).toEqual(true);
-
-        expect(accounts.accountsIndex).toEqual(0);
-    });
-
-    it('calls wallet.remove and returns false', () => {
-        new Account();
-        const accountMock = Account.mock.instances[0];
-        delete accountMock.address;
-
-        accounts.accounts = {};
-
-        expect(accounts.wallet.remove(0)).toEqual(false);
-
-        expect(accounts.accountsIndex).toEqual(0);
-    });
-
-    it('calls wallet.clear and returns the expect value', () => {
-        new Account();
-        const accountMock = Account.mock.instances[0];
-        accountMock.address = '0x0';
-
-        accounts.accounts = {0: accountMock};
-
-        expect(accounts.wallet.clear()).toEqual(accounts);
-
-        expect(accounts.accountsIndex).toEqual(0);
-    });
-
-    it('calls wallet.encrypt and returns the expect value', () => {
-        new Account();
-        const accountMock = Account.mock.instances[0];
-        accountMock.address = '0x0';
-
-        accountMock.encrypt.mockReturnValueOnce(true);
-
-        accounts.accounts = {0: accountMock};
-
-        expect(accounts.wallet.encrypt('pw', {})).toEqual([true]);
-
-        expect(accountMock.encrypt).toHaveBeenCalledWith('pw', {});
-
-        expect(accounts.accountsIndex).toEqual(0);
-    });
-
-    it('calls wallet.decrypt and returns the expected value', () => {
-        new Account();
-        const accountMock = Account.mock.instances[0];
-        accountMock.address = '0x0';
-
-        Account.fromV3Keystore.mockReturnValueOnce(accountMock);
-
-        expect(accounts.wallet.decrypt([true], 'pw')).toEqual(accounts);
-
-        expect(Account.fromV3Keystore).toHaveBeenCalledWith(true, 'pw', false, accounts);
-
-        expect(accounts.accounts[accountMock.address]).toEqual(accountMock);
-
-        expect(accounts.accounts[0]).toEqual(accountMock);
-
-        expect(accounts.accounts[accountMock.address.toLowerCase()]).toEqual(accountMock);
-    });
-
-    it('calls wallet.decrypt and throws an error', () => {
-        Account.fromV3Keystore.mockReturnValueOnce(false);
-
-        expect(() => {
-            accounts.wallet.decrypt([true], 'pw');
-        }).toThrow("Couldn't decrypt accounts. Password wrong?");
-
-        expect(Account.fromV3Keystore).toHaveBeenCalledWith(true, 'pw', false, accounts);
     });
 });

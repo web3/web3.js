@@ -33,9 +33,9 @@ export ProviderDetector from './detectors/ProviderDetector';
  *
  * @constructor
  */
-export const HttpProvider = (url, options) => {
+export function HttpProvider(url, options = {}) {
     return new ProvidersModuleFactory().createHttpProvider(url, options);
-};
+}
 
 /**
  * Creates the WebsocketProvider object
@@ -47,9 +47,9 @@ export const HttpProvider = (url, options) => {
  *
  * @constructor
  */
-export const WebsocketProvider = (url, options) => {
+export function WebsocketProvider(url, options = {}) {
     return new ProvidersModuleFactory().createWebsocketProvider(url, options);
-};
+}
 
 /**
  * Creates the IpcProvider object
@@ -61,9 +61,9 @@ export const WebsocketProvider = (url, options) => {
  *
  * @constructor
  */
-export const IpcProvider = (path, net) => {
+export function IpcProvider(path, net) {
     return new ProvidersModuleFactory().createIpcProvider(path, net);
-};
+}
 
 /**
  * Creates the BatchRequest object
@@ -76,9 +76,9 @@ export const IpcProvider = (path, net) => {
  *
  * @constructor
  */
-export const BatchRequest = (moduleInstance) => {
+export function BatchRequest(moduleInstance) {
     return new ProvidersModuleFactory().createBatchRequest(moduleInstance);
-};
+}
 
 /**
  * Creates the ProviderResolver object
@@ -89,9 +89,9 @@ export const BatchRequest = (moduleInstance) => {
  *
  * @constructor
  */
-export const ProviderResolver = () => {
+export function ProviderResolver() {
     return new ProvidersModuleFactory().createProviderResolver();
-};
+}
 
 // TODO: Do not expose the providers module factory this should only be used in this module
 export ProvidersModuleFactory from './factories/ProvidersModuleFactory';

@@ -31,7 +31,7 @@ export default class EcRecoverMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('personal_ecRecover', 3, utils, formatters, moduleInstance);
+        super('personal_ecRecover', 2, utils, formatters, moduleInstance);
     }
 
     /**

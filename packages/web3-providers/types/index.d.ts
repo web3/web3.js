@@ -29,7 +29,7 @@ export class BatchRequest {
 
     add(method: AbstractMethod): void;
 
-    execute(): Promise<{methods: AbstractMethod[], response: object[]}|Error[]>;
+    execute(): Promise<{methods: AbstractMethod[]; response: any[]} | Error[]>;
 }
 
 export class ProviderDetector {
@@ -56,9 +56,9 @@ export class HttpProvider {
     host: string;
     connected: boolean;
 
-    send(method: string, parameters: any[]): Promise<object>;
+    send(method: string, parameters: any[]): Promise<any>;
 
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<object[]>;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<any[]>;
 
     disconnect(): boolean;
 }
@@ -71,15 +71,15 @@ export class AbstractSocketProvider {
 
     registerEventListeners(): void;
 
-    send(method: string, parameters: any[]): Promise<object>;
+    send(method: string, parameters: any[]): Promise<any>;
 
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<object[]>;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<any[]>;
 
     subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: any[]): Promise<string>;
 
     unsubscribe(subscriptionId: string, unsubscribeMethod: string): Promise<boolean>;
 
-    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>
+    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>;
 
     on(type: string, callback: () => void): void;
 
@@ -89,7 +89,7 @@ export class AbstractSocketProvider {
 
     reset(): void;
 
-    reconnect(): void
+    reconnect(): void;
 
     disconnect(code: number, reason: string): void;
 }
@@ -110,15 +110,15 @@ export class EthereumProvider {
     host: string;
     registerEventListeners(): void;
 
-    send(method: string, parameters: any[]): Promise<object>;
+    send(method: string, parameters: any[]): Promise<any>;
 
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<object[]>;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<any[]>;
 
     subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: any[]): Promise<string>;
 
     unsubscribe(subscriptionId: string, unsubscribeMethod: string): Promise<boolean>;
 
-    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>
+    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>;
 
     on(type: string, callback: () => void): void;
 
@@ -152,10 +152,16 @@ export interface JsonRpcPayload {
     id?: string | number;
 }
 
+export interface HttpHeader {
+    name: string;
+    value: string;
+}
+
 export interface HttpProviderOptions {
     host?: string;
     timeout?: number;
-    headers?: {};
+    headers?: HttpHeader[];
+    withCredentials?: boolean;
 }
 
 export interface WebsocketProviderOptions {

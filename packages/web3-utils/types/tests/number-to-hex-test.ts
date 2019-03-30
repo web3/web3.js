@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, numberToHex} from 'web3-utils';
+import BN = require('bn.js');
+import {numberToHex} from 'web3-utils';
 
 // $ExpectType string
 numberToHex('232');

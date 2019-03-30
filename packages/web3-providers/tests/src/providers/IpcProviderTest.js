@@ -1,9 +1,5 @@
 import IpcProvider from '../../../src/providers/IpcProvider';
 import AbstractSocketProvider from '../../../lib/providers/AbstractSocketProvider';
-import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
-import JsonRpcMapper from '../../../src/mappers/JsonRpcMapper';
-import AbstractMethod from '../../__mocks__/AbstractMethod';
-import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
 
 // Mocks
 jest.mock('../../../src/validators/JsonRpcResponseValidator');
@@ -17,7 +13,8 @@ describe('IpcProviderTest', () => {
 
     beforeEach(() => {
         socketMock = {};
-        socketMock.addListener = jest.fn();
+        socketMock.on = jest.fn();
+        socketMock.removeListener = jest.fn();
 
         ipcProvider = new IpcProvider(socketMock, 'PATH');
     });
@@ -29,26 +26,23 @@ describe('IpcProviderTest', () => {
 
         expect(ipcProvider.host).toEqual('PATH');
 
-        expect(socketMock.addListener.mock.calls[0][0]).toEqual('data');
-        expect(socketMock.addListener.mock.calls[0][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[0][0]).toEqual('data');
+        expect(socketMock.on.mock.calls[0][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[1][0]).toEqual('connect');
-        expect(socketMock.addListener.mock.calls[1][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[1][0]).toEqual('connect');
+        expect(socketMock.on.mock.calls[1][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[2][0]).toEqual('error');
-        expect(socketMock.addListener.mock.calls[2][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[2][0]).toEqual('error');
+        expect(socketMock.on.mock.calls[2][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[3][0]).toEqual('end');
-        expect(socketMock.addListener.mock.calls[3][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[3][0]).toEqual('close');
+        expect(socketMock.on.mock.calls[3][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[4][0]).toEqual('close');
-        expect(socketMock.addListener.mock.calls[4][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[4][0]).toEqual('timeout');
+        expect(socketMock.on.mock.calls[4][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[5][0]).toEqual('timeout');
-        expect(socketMock.addListener.mock.calls[5][1]).toBeInstanceOf(Function);
-
-        expect(socketMock.addListener.mock.calls[6][0]).toEqual('ready');
-        expect(socketMock.addListener.mock.calls[6][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[5][0]).toEqual('ready');
+        expect(socketMock.on.mock.calls[5][1]).toBeInstanceOf(Function);
     });
 
     it('calls disconnect', () => {
@@ -72,209 +66,150 @@ describe('IpcProviderTest', () => {
         expect(socketMock.connect).toHaveBeenCalledWith({path: ipcProvider.path});
     });
 
-    it('calls onMessage', () => {
+    it('calls onMessage with one chunk', (done) => {
         const objWithToString = {
             toString: jest.fn(() => {
                 return '{"id":"0x0"}';
             })
         };
 
+        ipcProvider.on('0x0', (response) => {
+            expect(response).toEqual({id: '0x0'});
+
+            done();
+        });
+
         ipcProvider.onMessage(objWithToString);
 
-        expect(objWithToString.toString).toHaveBeenCalled();
+        expect(objWithToString.toString).toHaveBeenCalledWith();
+    });
+
+    it('calls onMessage with more than one chunk', (done) => {
+        let callCount = 0;
+        const firstChunk = {
+            toString: jest.fn(() => {
+                return '{"id":"0x0"}{"id":"0x0"}';
+            })
+        };
+        const secondChunk = {
+            toString: jest.fn(() => {
+                return '{"id":"0x0"}{"id":"0x';
+            })
+        };
+        const thirdChunk = {
+            toString: jest.fn(() => {
+                return '0"}';
+            })
+        };
+
+        ipcProvider.on('0x0', (response) => {
+            expect(response).toEqual({id: '0x0'});
+
+            if (callCount === 1) {
+                done();
+            }
+
+            callCount++;
+        });
+
+        ipcProvider.onMessage(firstChunk);
+        ipcProvider.onMessage(secondChunk);
+        ipcProvider.onMessage(thirdChunk);
+
+        expect(firstChunk.toString).toHaveBeenCalledWith();
+        expect(secondChunk.toString).toHaveBeenCalledWith();
+        expect(thirdChunk.toString).toHaveBeenCalledWith();
     });
 
     it('calls registEventListener with a Socket object as connection', () => {
         socketMock = function Socket() {};
-        socketMock.addListener = jest.fn();
+        socketMock.on = jest.fn();
 
         ipcProvider = new IpcProvider(socketMock, 'PATH');
 
         ipcProvider.registerEventListeners();
 
-        expect(socketMock.addListener.mock.calls[0][0]).toEqual('data');
-        expect(socketMock.addListener.mock.calls[0][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[0][0]).toEqual('data');
+        expect(socketMock.on.mock.calls[0][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[1][0]).toEqual('connect');
-        expect(socketMock.addListener.mock.calls[1][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[1][0]).toEqual('connect');
+        expect(socketMock.on.mock.calls[1][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[2][0]).toEqual('error');
-        expect(socketMock.addListener.mock.calls[2][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[2][0]).toEqual('error');
+        expect(socketMock.on.mock.calls[2][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[3][0]).toEqual('end');
-        expect(socketMock.addListener.mock.calls[3][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[3][0]).toEqual('close');
+        expect(socketMock.on.mock.calls[3][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[4][0]).toEqual('close');
-        expect(socketMock.addListener.mock.calls[4][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[4][0]).toEqual('timeout');
+        expect(socketMock.on.mock.calls[4][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[5][0]).toEqual('timeout');
-        expect(socketMock.addListener.mock.calls[5][1]).toBeInstanceOf(Function);
-
-        expect(socketMock.addListener.mock.calls[6][0]).toEqual('ready');
-        expect(socketMock.addListener.mock.calls[6][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[5][0]).toEqual('ready');
+        expect(socketMock.on.mock.calls[5][1]).toBeInstanceOf(Function);
     });
 
     it('calls registerEventListener', () => {
-        socketMock.addListener = jest.fn();
+        socketMock.on = jest.fn();
 
         ipcProvider.registerEventListeners();
 
-        expect(socketMock.addListener.mock.calls[0][0]).toEqual('data');
-        expect(socketMock.addListener.mock.calls[0][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[0][0]).toEqual('data');
+        expect(socketMock.on.mock.calls[0][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[1][0]).toEqual('connect');
-        expect(socketMock.addListener.mock.calls[1][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[1][0]).toEqual('connect');
+        expect(socketMock.on.mock.calls[1][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[2][0]).toEqual('error');
-        expect(socketMock.addListener.mock.calls[2][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[2][0]).toEqual('error');
+        expect(socketMock.on.mock.calls[2][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[3][0]).toEqual('end');
-        expect(socketMock.addListener.mock.calls[3][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[3][0]).toEqual('close');
+        expect(socketMock.on.mock.calls[3][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[4][0]).toEqual('close');
-        expect(socketMock.addListener.mock.calls[4][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[4][0]).toEqual('timeout');
+        expect(socketMock.on.mock.calls[4][1]).toBeInstanceOf(Function);
 
-        expect(socketMock.addListener.mock.calls[5][0]).toEqual('timeout');
-        expect(socketMock.addListener.mock.calls[5][1]).toBeInstanceOf(Function);
-
-        expect(socketMock.addListener.mock.calls[6][0]).toEqual('ready');
-        expect(socketMock.addListener.mock.calls[6][1]).toBeInstanceOf(Function);
+        expect(socketMock.on.mock.calls[5][0]).toEqual('ready');
+        expect(socketMock.on.mock.calls[5][1]).toBeInstanceOf(Function);
     });
 
     it('calls removeAllListeners with the "socket_message" event', () => {
-        socketMock.removeEventListener = jest.fn();
+        socketMock.removeListener = jest.fn();
 
         ipcProvider.removeAllListeners('socket_message');
 
-        expect(socketMock.removeEventListener).toHaveBeenCalledWith('data', ipcProvider.onMessage);
+        expect(socketMock.removeListener).toHaveBeenCalledWith('data', ipcProvider.onMessage);
     });
 
     it('calls removeAllListeners with the "socket_ready" event', () => {
-        socketMock.removeEventListener = jest.fn();
+        socketMock.removeListener = jest.fn();
 
         ipcProvider.removeAllListeners('socket_ready');
 
-        expect(socketMock.removeEventListener).toHaveBeenCalledWith('ready', ipcProvider.onReady);
+        expect(socketMock.removeListener).toHaveBeenCalledWith('ready', ipcProvider.onReady);
     });
 
     it('calls removeAllListeners with the "socket_close" event', () => {
-        socketMock.removeEventListener = jest.fn();
+        socketMock.removeListener = jest.fn();
 
         ipcProvider.removeAllListeners('socket_close');
 
-        expect(socketMock.removeEventListener).toHaveBeenCalledWith('close', ipcProvider.onClose);
+        expect(socketMock.removeListener).toHaveBeenCalledWith('close', ipcProvider.onClose);
     });
 
     it('calls removeAllListeners with the "socket_error" event', () => {
-        socketMock.removeEventListener = jest.fn();
+        socketMock.removeListener = jest.fn();
 
         ipcProvider.removeAllListeners('socket_error');
 
-        expect(socketMock.removeEventListener).toHaveBeenCalledWith('error', ipcProvider.onError);
+        expect(socketMock.removeListener).toHaveBeenCalledWith('error', ipcProvider.onError);
     });
 
     it('calls removeAllListeners with the "socket_connect" event', () => {
-        socketMock.removeEventListener = jest.fn();
+        socketMock.removeListener = jest.fn();
 
         ipcProvider.removeAllListeners('socket_connect');
 
-        expect(socketMock.removeEventListener).toHaveBeenCalledWith('connect', ipcProvider.onConnect);
-    });
-
-    it('calls send and returns a resolved promise', async () => {
-        JsonRpcMapper.toPayload = jest.fn();
-        JsonRpcMapper.toPayload.mockReturnValueOnce({id: '0x0'});
-
-        JsonRpcResponseValidator.validate = jest.fn();
-        JsonRpcResponseValidator.validate.mockReturnValueOnce(true);
-
-        socketMock.pending = false;
-        socketMock.writable = true;
-
-        socketMock.write = jest.fn((jsonString) => {
-            expect(jsonString).toEqual('{"id":"0x0"}');
-
-            return true;
-        });
-
-        setTimeout(() => {
-            ipcProvider.emit('0x0', {result: true});
-        }, 1);
-
-        const response = await ipcProvider.send('rpc_method', []);
-
-        expect(response).toEqual(true);
-
-        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
-
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
-
-        expect(ipcProvider.listenerCount('0x0')).toEqual(0);
-    });
-
-    it('calls send and returns a rejected promise because of an invalid rpc response', async () => {
-        JsonRpcMapper.toPayload = jest.fn();
-        JsonRpcMapper.toPayload.mockReturnValueOnce({id: '0x0'});
-
-        JsonRpcResponseValidator.validate = jest.fn();
-        JsonRpcResponseValidator.validate.mockReturnValueOnce(new Error('invalid'));
-
-        socketMock.pending = false;
-        socketMock.writable = true;
-
-        socketMock.write = jest.fn((jsonString) => {
-            expect(jsonString).toEqual('{"id":"0x0"}');
-
-            return true;
-        });
-
-        setTimeout(() => {
-            ipcProvider.emit('0x0', {result: true});
-        }, 1);
-
-        await expect(ipcProvider.send('rpc_method', [])).rejects.toThrow('invalid');
-
-        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
-
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
-
-        expect(ipcProvider.listenerCount('0x0')).toEqual(0);
-    });
-
-    it('calls sendBatch and returns a resolved promise', async () => {
-        const abstractMethodMock = new AbstractMethod();
-
-        const moduleInstanceMock = new AbstractWeb3Module();
-
-        abstractMethodMock.beforeExecution = jest.fn();
-        abstractMethodMock.rpcMethod = 'rpc_method';
-        abstractMethodMock.parameters = [];
-
-        JsonRpcMapper.toPayload = jest.fn();
-        JsonRpcMapper.toPayload.mockReturnValueOnce({id: '0x0'});
-
-        socketMock.pending = false;
-        socketMock.writable = true;
-
-        socketMock.write = jest.fn((jsonString) => {
-            expect(jsonString).toEqual('[{"id":"0x0"}]');
-
-            return true;
-        });
-
-        setTimeout(() => {
-            ipcProvider.emit('0x0', {result: true});
-        }, 1);
-
-        const response = await ipcProvider.sendBatch([abstractMethodMock], moduleInstanceMock);
-
-        expect(response).toEqual({result: true});
-
-        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
-
-        expect(ipcProvider.listenerCount('0x0')).toEqual(0);
-
-        expect(abstractMethodMock.beforeExecution).toHaveBeenCalled();
+        expect(socketMock.removeListener).toHaveBeenCalledWith('connect', ipcProvider.onConnect);
     });
 
     it('calls sendPayload and returns a resolved promise', async () => {

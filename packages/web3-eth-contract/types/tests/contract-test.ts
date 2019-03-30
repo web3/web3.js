@@ -24,7 +24,7 @@ const contract = new Contract('http://localhost:500', {type: 'constructor'});
 // $ExpectType Contract
 contract.clone();
 
-// $ExpectType DeployTransactionResponse
+// $ExpectType ContractSendMethod
 contract.deploy({
     data: '0x12345...',
     arguments: [123, 'My String']
@@ -48,6 +48,9 @@ contract.getPastEvents('MyEvent', {
     fromBlock: 0,
     toBlock: 'latest'
 });
+
+// $ExpectType Promise<EventData[]>
+contract.getPastEvents('MyEvent', {});
 
 // $ExpectType Promise<EventData[]>
 contract.getPastEvents('MyEvent', {

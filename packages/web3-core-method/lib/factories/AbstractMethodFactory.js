@@ -24,6 +24,9 @@ import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import GetBlockByNumberMethod from '../../src/methods/block/GetBlockByNumberMethod';
 import GetTransactionReceiptMethod from '../../src/methods/transaction/GetTransactionReceiptMethod';
 import TransactionObserver from '../../src/observers/TransactionObserver';
+import GetTransactionCountMethod from '../../src/methods/account/GetTransactionCountMethod';
+import SendRawTransactionMethod from '../../src/methods/transaction/SendRawTransactionMethod';
+import ChainIdMethod from '../../src/methods/network/ChainIdMethod';
 
 export default class AbstractMethodFactory {
     /**
@@ -89,30 +92,71 @@ export default class AbstractMethodFactory {
         const method = this.methods[name];
 
         if (method.Type === 'observed-transaction-method') {
-            let timeout = moduleInstance.transactionBlockTimeout;
-            const providerName = moduleInstance.currentProvider.constructor.name;
+            // eslint-disable-next-line new-cap
+            return new method(
+                this.utils,
+                this.formatters,
+                moduleInstance,
+                this.createTransactionObserver(moduleInstance)
+            );
+        }
 
-            if (providerName === 'HttpProvider' || providerName === 'CustomProvider') {
-                timeout = moduleInstance.transactionPollingTimeout;
-            }
+        // TODO: Move this later to the eth module
+        if (method.Type === 'eth-send-transaction-method') {
+            const transactionObserver = this.createTransactionObserver(moduleInstance);
 
             // eslint-disable-next-line new-cap
             return new method(
                 this.utils,
                 this.formatters,
                 moduleInstance,
-                new TransactionObserver(
-                    moduleInstance.currentProvider,
-                    timeout,
-                    moduleInstance.transactionConfirmationBlocks,
-                    new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
-                    new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance),
-                    new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
-                )
+                transactionObserver,
+                new ChainIdMethod(this.utils, this.formatters, moduleInstance),
+                new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance),
+                new SendRawTransactionMethod(this.utils, this.formatters, moduleInstance, transactionObserver)
             );
         }
 
         // eslint-disable-next-line new-cap
         return new method(this.utils, this.formatters, moduleInstance);
+    }
+
+    /**
+     * Returns the correct timeout value
+     *
+     * @method getTimeout
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Number}
+     */
+    getTimeout(moduleInstance) {
+        let timeout = moduleInstance.transactionBlockTimeout;
+
+        if (!moduleInstance.currentProvider.SOCKET_MESSAGE) {
+            timeout = moduleInstance.transactionPollingTimeout;
+        }
+
+        return timeout;
+    }
+
+    /**
+     * Returns a object of type TransactionObserver
+     *
+     * @method createTransactionObserver
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {TransactionObserver}
+     */
+    createTransactionObserver(moduleInstance) {
+        return new TransactionObserver(
+            moduleInstance.currentProvider,
+            this.getTimeout(moduleInstance),
+            moduleInstance.transactionConfirmationBlocks,
+            new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
+            new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance),
+            new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
+        );
     }
 }
