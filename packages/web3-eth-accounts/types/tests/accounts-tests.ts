@@ -112,6 +112,9 @@ accounts.decrypt(
 // $ExpectType Wallet
 accounts.wallet.create(2);
 
+// $ExpectType Account
+accounts.wallet[0];
+
 // $ExpectType Wallet
 accounts.wallet.create(2, '54674321§3456764321§345674321§3453647544±±±§±±±!!!43534534534534');
 
