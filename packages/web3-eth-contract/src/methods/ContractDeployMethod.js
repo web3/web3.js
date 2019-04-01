@@ -45,8 +45,10 @@ export default class ContractDeployMethod extends EthSendTransactionMethod {
      * @param {AbstractWeb3Module} moduleInstance - The module where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        super.beforeExecution(moduleInstance);
-        delete this.parameters[0].to;
+        if (this.rpcMethod !== 'eth_sendRawTransaction') {
+            super.beforeExecution(moduleInstance);
+            delete this.parameters[0].to;
+        }
     }
 
     /**
@@ -61,6 +63,11 @@ export default class ContractDeployMethod extends EthSendTransactionMethod {
     afterExecution(response) {
         const clonedContract = this.moduleInstance.clone();
         clonedContract.address = response.contractAddress;
+
+        if (this.promiEvent.listenerCount('receipt') > 0) {
+            this.promiEvent.emit('receipt', response);
+            this.promiEvent.removeAllListeners('receipt');
+        }
 
         return clonedContract;
     }

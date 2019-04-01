@@ -50,6 +50,19 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
     }
 
     /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The module where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        if (this.rpcMethod !== 'eth_sendRawTransaction') {
+            super.beforeExecution(moduleInstance);
+        }
+    }
+
+    /**
      * Checks if gasPrice is set, sends the request and returns a PromiEvent Object
      *
      * @method execute

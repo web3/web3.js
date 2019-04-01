@@ -32,7 +32,6 @@ export default class SendContractMethod extends EthSendTransactionMethod {
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {SendRawTransactionMethod} sendRawTransactionMethod
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
      *
