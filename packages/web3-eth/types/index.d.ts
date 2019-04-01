@@ -35,6 +35,7 @@ import {AbiCoder} from 'web3-eth-abi';
 import {Network} from 'web3-net';
 import {Personal} from 'web3-eth-personal';
 import {AbiItem} from 'web3-utils';
+import {Ens} from 'web3-eth-ens';
 import * as net from 'net';
 
 export class Eth extends AbstractWeb3Module {
@@ -48,7 +49,7 @@ export class Eth extends AbstractWeb3Module {
     Iban: new(iban: string) => Iban;
     personal: Personal;
     accounts: Accounts;
-    ens: any; // change once ens types as written
+    ens: Ens;
     abi: AbiCoder;
     net: Network;
 
