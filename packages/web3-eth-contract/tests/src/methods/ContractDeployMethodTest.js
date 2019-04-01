@@ -35,7 +35,7 @@ describe('ContractDeployMethodTest', () => {
     });
 
     it('calls beforeExecution and does nothing because it got signed locally', () => {
-        contractDeployMethod.rpcMethod = 'eth_sendRawTransaction'
+        contractDeployMethod.rpcMethod = 'eth_sendRawTransaction';
         contractDeployMethod.parameters = [{to: true}];
 
         contractDeployMethod.beforeExecution(contractMock);
