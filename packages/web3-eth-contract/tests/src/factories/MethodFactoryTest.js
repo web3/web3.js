@@ -1,4 +1,4 @@
-import {ChainIdMethod, EstimateGasMethod, GetTransactionCountMethod, SendRawTransactionMethod} from 'web3-core-method';
+import {ChainIdMethod, EstimateGasMethod, GetTransactionCountMethod} from 'web3-core-method';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';

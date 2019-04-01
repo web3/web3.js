@@ -271,15 +271,13 @@ describe('EthSendTransactionMethodTest', () => {
 
         Utils.numberToHex.mockReturnValueOnce(1);
 
-        formatters.inputCallFormatter.mockReturnValueOnce(
-            {
-                from: 0,
-                gas: 1,
-                gasPrice: 1,
-                nonce: 1,
-                chainId: 1
-            }
-        );
+        formatters.inputCallFormatter.mockReturnValueOnce({
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        });
 
         method.callback = (error, hash) => {
             expect(error).toEqual(false);
@@ -342,15 +340,13 @@ describe('EthSendTransactionMethodTest', () => {
 
         Utils.numberToHex.mockReturnValueOnce(1);
 
-        formatters.inputCallFormatter.mockReturnValueOnce(
-            {
-                from: 0,
-                gas: 1,
-                gasPrice: 1,
-                nonce: 1,
-                chainId: 1
-            }
-        );
+        formatters.inputCallFormatter.mockReturnValueOnce({
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        });
 
         method.callback = (error, hash) => {
             expect(error).toEqual(false);
@@ -402,7 +398,6 @@ describe('EthSendTransactionMethodTest', () => {
             chainId: 1
         };
 
-
         method.parameters = [transaction];
 
         const mappedTransaction = {
@@ -415,15 +410,13 @@ describe('EthSendTransactionMethodTest', () => {
 
         Utils.numberToHex.mockReturnValueOnce(1);
 
-        formatters.inputCallFormatter.mockReturnValueOnce(
-            {
-                from: 0,
-                gas: 1,
-                gasPrice: 1,
-                nonce: 1,
-                chainId: 1
-            }
-        );
+        formatters.inputCallFormatter.mockReturnValueOnce({
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        });
 
         method.callback = (error, hash) => {
             expect(error).toEqual(false);
@@ -483,15 +476,13 @@ describe('EthSendTransactionMethodTest', () => {
 
         Utils.numberToHex.mockReturnValueOnce(1);
 
-        formatters.inputCallFormatter.mockReturnValueOnce(
-            {
-                from: 0,
-                gas: 1,
-                gasPrice: 1,
-                nonce: 1,
-                chainId: 1
-            }
-        );
+        formatters.inputCallFormatter.mockReturnValueOnce({
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        });
 
         method.callback = (error, hash) => {
             expect(error).toEqual(false);
@@ -552,15 +543,13 @@ describe('EthSendTransactionMethodTest', () => {
 
         Utils.numberToHex.mockReturnValueOnce(1);
 
-        formatters.inputCallFormatter.mockReturnValueOnce(
-            {
-                from: 0,
-                gas: 1,
-                gasPrice: 1,
-                nonce: 1,
-                chainId: 1
-            }
-        );
+        formatters.inputCallFormatter.mockReturnValueOnce({
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 1,
+            chainId: 1
+        });
 
         method.callback = (error, hash) => {
             expect(error).toEqual(false);
