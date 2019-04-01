@@ -33,22 +33,8 @@ export default class ContractDeployMethod extends EthSendTransactionMethod {
      *
      * @constructor
      */
-    constructor(
-        utils,
-        formatters,
-        moduleInstance,
-        transactionObserver,
-        chainIdMethod,
-        getTransactionCountMethod
-    ) {
-        super(
-            utils,
-            formatters,
-            moduleInstance,
-            transactionObserver,
-            chainIdMethod,
-            getTransactionCountMethod
-        );
+    constructor(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod) {
+        super(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod);
     }
 
     /**

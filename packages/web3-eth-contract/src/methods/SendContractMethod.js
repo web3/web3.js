@@ -48,14 +48,7 @@ export default class SendContractMethod extends EthSendTransactionMethod {
         allEventsLogDecoder,
         abiModel
     ) {
-        super(
-            utils,
-            formatters,
-            moduleInstance,
-            transactionObserver,
-            chainIdMethod,
-            getTransactionCountMethod
-        );
+        super(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod);
 
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.abiModel = abiModel;

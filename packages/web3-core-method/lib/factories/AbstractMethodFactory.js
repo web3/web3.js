@@ -25,7 +25,6 @@ import GetBlockByNumberMethod from '../../src/methods/block/GetBlockByNumberMeth
 import GetTransactionReceiptMethod from '../../src/methods/transaction/GetTransactionReceiptMethod';
 import TransactionObserver from '../../src/observers/TransactionObserver';
 import GetTransactionCountMethod from '../../src/methods/account/GetTransactionCountMethod';
-import SendRawTransactionMethod from '../../src/methods/transaction/SendRawTransactionMethod';
 import ChainIdMethod from '../../src/methods/network/ChainIdMethod';
 
 export default class AbstractMethodFactory {
@@ -112,7 +111,7 @@ export default class AbstractMethodFactory {
                 moduleInstance,
                 transactionObserver,
                 new ChainIdMethod(this.utils, this.formatters, moduleInstance),
-                new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance),
+                new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance)
             );
         }
 

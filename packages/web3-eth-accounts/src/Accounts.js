@@ -75,8 +75,8 @@ export default class Accounts extends AbstractWeb3Module {
      * @param {TransactionSigner} transactionSigner
      */
     set transactionSigner(transactionSigner) {
-        if (transactionSigner.type  && transactionSigner.type === 'TransactionSigner') {
-            throw Error('Invalid TransactionSigner given!');
+        if (transactionSigner.type && transactionSigner.type === 'TransactionSigner') {
+            throw new Error('Invalid TransactionSigner given!');
         }
 
         this._transactionSigner = transactionSigner;

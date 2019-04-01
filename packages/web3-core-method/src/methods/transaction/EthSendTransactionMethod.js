@@ -33,14 +33,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      *
      * @constructor
      */
-    constructor(
-        utils,
-        formatters,
-        moduleInstance,
-        transactionObserver,
-        chainIdMethod,
-        getTransactionCountMethod
-    ) {
+    constructor(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod) {
         super(utils, formatters, moduleInstance, transactionObserver);
 
         this.chainIdMethod = chainIdMethod;
