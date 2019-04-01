@@ -17,7 +17,7 @@ describe('ContractDeployMethodTest', () => {
         new AbstractContract();
         contractMock = AbstractContract.mock.instances[0];
 
-        contractDeployMethod = new ContractDeployMethod({}, formatters, contractMock, {}, {}, {}, {});
+        contractDeployMethod = new ContractDeployMethod({}, formatters, contractMock, {}, {}, {});
     });
 
     it('constructor check', () => {
@@ -32,6 +32,15 @@ describe('ContractDeployMethodTest', () => {
         contractDeployMethod.beforeExecution(contractMock);
 
         expect(contractDeployMethod.parameters[0].to).toBeUndefined();
+    });
+
+    it('calls beforeExecution and does nothing because it got signed locally', () => {
+        contractDeployMethod.rpcMethod = 'eth_sendRawTransaction';
+        contractDeployMethod.parameters = [{to: true}];
+
+        contractDeployMethod.beforeExecution(contractMock);
+
+        expect(contractDeployMethod.parameters).toEqual([{to: true}]);
     });
 
     it('calls afterExecution and returns the cloned contract object', () => {

@@ -26,7 +26,6 @@ import {
     GetTransactionCountMethod,
     GetTransactionReceiptMethod,
     GetBlockByNumberMethod,
-    SendRawTransactionMethod,
     TransactionObserver
 } from 'web3-core-method';
 import {NewHeadsSubscription} from 'web3-core-subscriptions';
@@ -163,7 +162,6 @@ export default class MethodFactory {
             transactionObserver,
             new ChainIdMethod(this.utils, this.formatters, contract),
             new GetTransactionCountMethod(this.utils, this.formatters, contract),
-            new SendRawTransactionMethod(this.utils, this.formatters, contract, transactionObserver),
             this.contractModuleFactory.createAllEventsLogDecoder(),
             contract.abiModel
         );
@@ -187,8 +185,7 @@ export default class MethodFactory {
             contract,
             transactionObserver,
             new ChainIdMethod(this.utils, this.formatters, contract),
-            new GetTransactionCountMethod(this.utils, this.formatters, contract),
-            new SendRawTransactionMethod(this.utils, this.formatters, contract, transactionObserver)
+            new GetTransactionCountMethod(this.utils, this.formatters, contract)
         );
     }
 
@@ -204,7 +201,6 @@ export default class MethodFactory {
     createEstimateGasMethod(contract) {
         return new EstimateGasMethod(this.utils, this.formatters, contract);
     }
-
 
     /**
      * Returns the correct timeout value

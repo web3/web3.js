@@ -25,7 +25,6 @@ import GetBlockByNumberMethod from '../../src/methods/block/GetBlockByNumberMeth
 import GetTransactionReceiptMethod from '../../src/methods/transaction/GetTransactionReceiptMethod';
 import TransactionObserver from '../../src/observers/TransactionObserver';
 import GetTransactionCountMethod from '../../src/methods/account/GetTransactionCountMethod';
-import SendRawTransactionMethod from '../../src/methods/transaction/SendRawTransactionMethod';
 import ChainIdMethod from '../../src/methods/network/ChainIdMethod';
 
 export default class AbstractMethodFactory {
@@ -101,19 +100,16 @@ export default class AbstractMethodFactory {
             );
         }
 
-        // TODO: Move this later to the eth module
+        // TODO: Move this to the eth module later.
         if (method.Type === 'eth-send-transaction-method') {
-            const transactionObserver = this.createTransactionObserver(moduleInstance);
-
             // eslint-disable-next-line new-cap
             return new method(
                 this.utils,
                 this.formatters,
                 moduleInstance,
-                transactionObserver,
+                this.createTransactionObserver(moduleInstance),
                 new ChainIdMethod(this.utils, this.formatters, moduleInstance),
-                new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance),
-                new SendRawTransactionMethod(this.utils, this.formatters, moduleInstance, transactionObserver)
+                new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance)
             );
         }
 
