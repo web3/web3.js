@@ -34,6 +34,15 @@ describe('ContractDeployMethodTest', () => {
         expect(contractDeployMethod.parameters[0].to).toBeUndefined();
     });
 
+    it('calls beforeExecution and does nothing because it got signed locally', () => {
+        contractDeployMethod.rpcMethod = 'eth_sendRawTransaction'
+        contractDeployMethod.parameters = [{to: true}];
+
+        contractDeployMethod.beforeExecution(contractMock);
+
+        expect(contractDeployMethod.parameters).toEqual([{to: true}]);
+    });
+
     it('calls afterExecution and returns the cloned contract object', () => {
         contractMock.clone.mockReturnValueOnce({options: {address: ''}});
 

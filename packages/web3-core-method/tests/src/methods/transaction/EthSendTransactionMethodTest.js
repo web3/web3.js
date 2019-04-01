@@ -78,6 +78,18 @@ describe('EthSendTransactionMethodTest', () => {
         expect(EthSendTransactionMethod.Type).toEqual('eth-send-transaction-method');
     });
 
+    it('calls beforeExecution and checks the rpc method', () => {
+        method.parameters = ['tx'];
+
+        formatters.inputTransactionFormatter.mockReturnValueOnce('0x0');
+
+        method.beforeExecution(moduleInstanceMock);
+
+        expect(method.parameters[0]).toEqual('0x0');
+
+        expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith('tx', moduleInstanceMock);
+    });
+
     it('calls execute with wallets defined and returns with a resolved promise', (done) => {
         transactionSignerMock.sign = jest.fn(() => {
             return Promise.resolve({rawTransaction: '0x0'});
