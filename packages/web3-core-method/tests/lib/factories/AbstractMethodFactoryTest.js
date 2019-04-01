@@ -9,7 +9,6 @@ import GetBlockByNumberMethod from '../../../src/methods/block/GetBlockByNumberM
 import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import ChainIdMethod from '../../../src/methods/network/ChainIdMethod';
 import GetTransactionCountMethod from '../../../src/methods/account/GetTransactionCountMethod';
-import SendRawTransactionMethod from '../../../src/methods/transaction/SendRawTransactionMethod';
 
 // Mocks
 jest.mock('AbstractWeb3Module');
@@ -20,7 +19,6 @@ jest.mock('../../../src/methods/transaction/GetTransactionReceiptMethod');
 jest.mock('../../../src/observers/TransactionObserver');
 jest.mock('../../../src/methods/network/ChainIdMethod');
 jest.mock('../../../src/methods/account/GetTransactionCountMethod');
-jest.mock('../../../src/methods/transaction/SendRawTransactionMethod');
 
 /**
  * AbstractMethodFactory test
@@ -122,8 +120,6 @@ describe('AbstractMethodFactoryTest', () => {
         expect(ChainIdMethod).toHaveBeenCalledTimes(1);
 
         expect(GetTransactionCountMethod).toHaveBeenCalledTimes(1);
-
-        expect(SendRawTransactionMethod).toHaveBeenCalledTimes(1);
     });
 
     it('calls createMethod with a socket provider and returns a object of type AbstractObservedTransactionMethod', () => {

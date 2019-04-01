@@ -100,16 +100,14 @@ export default class AbstractMethodFactory {
             );
         }
 
-        // TODO: Move this later to the eth module
+        // TODO: Move this to the eth module later.
         if (method.Type === 'eth-send-transaction-method') {
-            const transactionObserver = this.createTransactionObserver(moduleInstance);
-
             // eslint-disable-next-line new-cap
             return new method(
                 this.utils,
                 this.formatters,
                 moduleInstance,
-                transactionObserver,
+                this.createTransactionObserver(moduleInstance),
                 new ChainIdMethod(this.utils, this.formatters, moduleInstance),
                 new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance)
             );
