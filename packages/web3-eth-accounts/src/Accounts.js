@@ -47,11 +47,39 @@ export default class Accounts extends AbstractWeb3Module {
 
         this.utils = utils;
         this.formatters = formatters;
-        this.transactionSigner = options.transactionSigner;
+        this._transactionSigner = options.transactionSigner;
         this.defaultKeyName = 'web3js_wallet';
         this.accounts = {};
         this.accountsIndex = 0;
         this.wallet = new Wallet(utils, this);
+    }
+
+    /**
+     * Getter for the transactionSigner property
+     *
+     * @property transactionSigner
+     *
+     * @returns {TransactionSigner}
+     */
+    get transactionSigner() {
+        return this._transactionSigner;
+    }
+
+    /**
+     * TODO: Remove setter
+     *
+     * Setter for the transactionSigner property
+     *
+     * @property transactionSigner
+     *
+     * @param {TransactionSigner} transactionSigner
+     */
+    set transactionSigner(transactionSigner) {
+        if (transactionSigner.type && transactionSigner.type === 'TransactionSigner') {
+            throw new Error('Invalid TransactionSigner given!');
+        }
+
+        this._transactionSigner = transactionSigner;
     }
 
     /**

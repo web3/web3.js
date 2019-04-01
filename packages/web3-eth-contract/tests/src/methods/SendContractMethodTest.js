@@ -21,7 +21,7 @@ describe('SendContractMethodTest', () => {
         new AllEventsLogDecoder();
         allEventsLogDecoderMock = AllEventsLogDecoder.mock.instances[0];
 
-        sendContractMethod = new SendContractMethod({}, {}, {}, {}, {}, {}, {}, allEventsLogDecoderMock, abiModelMock);
+        sendContractMethod = new SendContractMethod({}, {}, {}, {}, {}, {}, allEventsLogDecoderMock, abiModelMock);
     });
 
     it('constructor check', () => {

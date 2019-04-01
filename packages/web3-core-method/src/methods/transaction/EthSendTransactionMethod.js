@@ -30,24 +30,14 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {SendRawTransactionMethod} sendRawTransactionMethod
      *
      * @constructor
      */
-    constructor(
-        utils,
-        formatters,
-        moduleInstance,
-        transactionObserver,
-        chainIdMethod,
-        getTransactionCountMethod,
-        sendRawTransactionMethod
-    ) {
+    constructor(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod) {
         super(utils, formatters, moduleInstance, transactionObserver);
 
         this.chainIdMethod = chainIdMethod;
         this.getTransactionCountMethod = getTransactionCountMethod;
-        this.sendRawTransactionMethod = sendRawTransactionMethod;
     }
 
     /**
@@ -57,6 +47,19 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      */
     static get Type() {
         return 'eth-send-transaction-method';
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The module where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        if (this.rpcMethod !== 'eth_sendRawTransaction') {
+            super.beforeExecution(moduleInstance);
+        }
     }
 
     /**
@@ -129,7 +132,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
-            this.getTransactionCountMethod.parameters = [this.parameters[0].from];
+            this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
 
             this.parameters[0].nonce = await this.getTransactionCountMethod.execute();
         }
@@ -143,11 +146,10 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
 
         const response = await this.moduleInstance.transactionSigner.sign(transaction, privateKey);
 
-        this.sendRawTransactionMethod.parameters = [response.rawTransaction];
-        this.sendRawTransactionMethod.callback = this.callback;
-        this.sendRawTransactionMethod.promiEvent = this.promiEvent;
+        this.parameters = [response.rawTransaction];
+        this.rpcMethod = 'eth_sendRawTransaction';
 
-        return this.sendRawTransactionMethod.execute();
+        return super.execute();
     }
 
     /**
@@ -158,7 +160,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Boolean}
      */
     isDefaultSigner() {
-        return this.moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
+        return this.moduleInstance.transactionSigner.type === 'TransactionSigner';
     }
 
     /**
@@ -180,6 +182,6 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Boolean}
      */
     hasCustomSigner() {
-        return this.moduleInstance.transactionSigner.constructor.name !== 'TransactionSigner';
+        return this.moduleInstance.transactionSigner.type !== 'TransactionSigner';
     }
 }

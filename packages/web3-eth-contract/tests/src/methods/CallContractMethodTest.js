@@ -61,4 +61,12 @@ describe('CallContractMethodTest', () => {
 
         expect(abiCoderMock.decodeParameter).toHaveBeenCalledWith('bytes', '0x0');
     });
+
+    it('calls afterExecution and response is empty', () => {
+        expect(callContractMethod.afterExecution()).toEqual(null);
+    });
+
+    it('calls afterExecution and response has value "0x" is empty', () => {
+        expect(callContractMethod.afterExecution('0x')).toEqual(null);
+    });
 });

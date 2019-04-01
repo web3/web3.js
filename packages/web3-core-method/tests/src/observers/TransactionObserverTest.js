@@ -67,6 +67,8 @@ describe('TransactionObserverTest', () => {
     it('calls observe with a socket provider and returns a transaction receipt', (done) => {
         transactionObserver.blockConfirmations = 2;
 
+        providerMock.SOCKET_MESSAGE = true;
+
         const blockHeadOne = {
             number: 0
         };
@@ -111,6 +113,8 @@ describe('TransactionObserverTest', () => {
         transactionObserver.blockConfirmations = 2;
         transactionObserver.timeout = 1;
 
+        providerMock.SOCKET_MESSAGE = true;
+
         const blockHeadOne = {
             number: 0
         };
@@ -152,6 +156,8 @@ describe('TransactionObserverTest', () => {
     it('calls observe with a socket provider and the newHeads subscription returns a error', (done) => {
         transactionObserver.blockConfirmations = 2;
 
+        providerMock.SOCKET_MESSAGE = true;
+
         newHeadsSubscriptionMock.subscribe = jest.fn((callback) => {
             callback(true, false);
         });
@@ -174,8 +180,6 @@ describe('TransactionObserverTest', () => {
 
     it('calls observe with a http provider and returns a transaction receipt', (done) => {
         transactionObserver.blockConfirmations = 2;
-
-        providerMock.constructor.name = 'CustomProvider';
 
         const receipt = {blockNumber: '0xa'};
         const blockOne = {number: '0xa', hash: '0x0'};
@@ -219,8 +223,6 @@ describe('TransactionObserverTest', () => {
         transactionObserver.blockConfirmations = 2;
         transactionObserver.timeout = 1;
 
-        providerMock.constructor.name = 'CustomProvider';
-
         const receipt = {blockNumber: '0xa'};
         const blockOne = {number: '0xa', hash: '0x0'};
 
@@ -255,8 +257,6 @@ describe('TransactionObserverTest', () => {
     it('calls observe with a http provider and the getTransactionMethod throws an error', (done) => {
         transactionObserver.blockConfirmations = 2;
         transactionObserver.timeout = 1;
-
-        providerMock.constructor.name = 'CustomProvider';
 
         getTransactionReceiptMethodMock.execute = jest.fn(() => {
             return Promise.reject(new Error('ERROR'));

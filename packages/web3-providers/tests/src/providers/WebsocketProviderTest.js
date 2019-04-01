@@ -372,7 +372,7 @@ describe('WebsocketProviderTest', () => {
         socketMock.readyState = 4;
         socketMock.CONNECTING = 0;
         socketMock.send = jest.fn();
-        websocketProvider.timeout = 2;
+        websocketProvider.timeout = 4;
 
         setTimeout(() => {
             websocketProvider.emit('0x0', {result: true});

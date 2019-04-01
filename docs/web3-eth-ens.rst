@@ -54,9 +54,11 @@ Example
     web3.eth.ens.registry;
     > {
         ens: Ens,
-        contract: Contract,
-        owner: Function(name),
-        resolve: Function(name)
+        resolverContract: Contract | null,
+        setProvider(provider: provider, net?: net.Socket): boolean,
+        owner(name: string, callback?: (error: Error, address: string) => void): Promise<string>,
+        resolver(name: string): Promise<Contract>,
+        checkNetwork(): Promise<string>,
     }
 
 ------------------------------------------------------------------------------
@@ -94,7 +96,7 @@ supportsInterface
 
 .. code-block:: javascript
 
-    web3.eth.ens.supportsInterface(ENSName, interfaceId);
+    web3.eth.ens.supportsInterface(ENSName, interfaceId, [callback]);
 
 Checks if the current resolver does support the desired interface.
 
@@ -104,12 +106,13 @@ Parameters
 
 1. ``ENSName`` - ``String``: The Ens name to resolve.
 2. ``interfaceId`` - ``String``: A defined ENS interfaceId.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-``Boolean`` - Returns true if the given interfaceId is supported by the resolver.
+``Promise<boolean>`` - Returns true if the given interfaceId is supported by the resolver.
 
 -------
 Example
@@ -129,7 +132,7 @@ getAddress
 
 .. code-block:: javascript
 
-    web3.eth.ens.getAddress(ENSName);
+    web3.eth.ens.getAddress(ENSName, [callback]);
 
 Resolves an Ens name to an Ethereum address.
 
@@ -138,12 +141,13 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The Ens name to resolve.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-``String`` - The Ethereum address of the given name.
+``Promise<string>`` - The Ethereum address of the given name.
 
 -------
 Example
@@ -163,7 +167,7 @@ setAddress
 
 .. code-block:: javascript
 
-    web3.eth.ens.setAddress(ENSName, address, options);
+    web3.eth.ens.setAddress(ENSName, address, options, [callback]);
 
 Sets the address of an Ens name in his resolver.
 
@@ -177,6 +181,7 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 Emits an ``AddrChanged`` event.
 
@@ -242,7 +247,7 @@ getPubkey
 
 .. code-block:: javascript
 
-    web3.eth.ens.getPubkey(ENSName);
+    web3.eth.ens.getPubkey(ENSName, [callback]);
 
 Returns the X and Y coordinates of the curve point for the public key.
 
@@ -251,6 +256,7 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The Ens name.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -281,7 +287,7 @@ setPubkey
 
 .. code-block:: javascript
 
-    web3.eth.ens.setPubkey(ENSName, x, y, options);
+    web3.eth.ens.setPubkey(ENSName, x, y, options, [callback]);
 
 Sets the SECP256k1 public key associated with an Ens node
 
@@ -296,6 +302,7 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+5. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 Emits an ``PubkeyChanged`` event.
@@ -364,7 +371,7 @@ getText
 
 .. code-block:: javascript
 
-    web3.eth.ens.getText(ENSName, key);
+    web3.eth.ens.getText(ENSName, key, [callback]);
 
 Returns the text by the given key.
 
@@ -373,14 +380,14 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The Ens name.
-1. ``key`` - ``String``: The key of the array.
+2. ``key`` - ``String``: The key of the array.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-``String`` - The ENS name.
-``String`` - The key.
+``Promise<string>``
 
 -------
 Example
@@ -400,7 +407,7 @@ setText
 
 .. code-block:: javascript
 
-    web3.eth.ens.setText(ENSName, key, value, options);
+    web3.eth.ens.setText(ENSName, key, value, options, [callback]);
 
 Sets the content hash associated with an Ens node.
 
@@ -415,6 +422,7 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 Emits an ``TextChanged`` event.
@@ -483,7 +491,7 @@ getContent
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContent(ENSName);
+    web3.eth.ens.getContent(ENSName, [callback]);
 
 Returns the content hash associated with an Ens node.
 
@@ -492,12 +500,13 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The Ens name.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-``String`` - The content hash associated with an Ens node.
+``Promise<string>`` - The content hash associated with an Ens node.
 
 -------
 Example
@@ -517,7 +526,7 @@ setContent
 
 .. code-block:: javascript
 
-    web3.eth.ens.setContent(ENSName, hash, options);
+    web3.eth.ens.setContent(ENSName, hash, options, [callback]);
 
 Sets the content hash associated with an Ens node.
 
@@ -531,6 +540,7 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 Emits an ``ContentChanged`` event.
@@ -597,7 +607,7 @@ getMultihash
 
 .. code-block:: javascript
 
-    web3.eth.ens.getMultihash(ENSName);
+    web3.eth.ens.getMultihash(ENSName, [callback]);
 
 Returns the multihash associated with an Ens node.
 
@@ -606,12 +616,13 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The Ens name.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-``String`` - The associated multihash.
+``Promise<string>`` - The associated multihash.
 
 -------
 Example
@@ -631,7 +642,7 @@ setMultihash
 
 .. code-block:: javascript
 
-    web3.eth.ens.setMultihash(ENSName, hash, options);
+    web3.eth.ens.setMultihash(ENSName, hash, options, [callback]);
 
 Sets the multihash associated with an Ens node.
 
@@ -645,6 +656,7 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 Emits an ``MultihashChanged``event.
@@ -696,7 +708,7 @@ getContenthash
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContenthash(ENSName);
+    web3.eth.ens.getContenthash(ENSName, [callback]);
 
 Returns the contenthash associated with an Ens node.
 
@@ -705,12 +717,13 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The Ens name.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-``String`` - The associated contenthash.
+``Promise<string>`` - The associated contenthash.
 
 -------
 Example
@@ -730,7 +743,7 @@ setContenthash
 
 .. code-block:: javascript
 
-    web3.eth.ens.setContenthash(ENSName, hash, options);
+    web3.eth.ens.setContenthash(ENSName, hash, options, [callback]);
 
 Sets the contenthash associated with an Ens node.
 
@@ -744,6 +757,7 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 Emits an ``ContenthashChanged``event.
