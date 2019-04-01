@@ -43,24 +43,24 @@ export default class MethodProxy {
                         );
                     }
 
-                    const method = methodFactory.createMethod(name, target);
+                    const rpcMethod = methodFactory.createMethod(name, target);
 
                     /* eslint-disable no-inner-declarations */
-                    function anonymousFunction() {
-                        method.setArguments(arguments);
+                    function method() {
+                        rpcMethod.setArguments(arguments);
 
-                        return method.execute();
+                        return rpcMethod.execute();
                     }
                     /* eslint-enable no-inner-declarations */
 
-                    anonymousFunction.method = method;
-                    anonymousFunction.request = function() {
-                        method.setArguments(arguments);
+                    method.method = method;
+                    method.request = function() {
+                        rpcMethod.setArguments(arguments);
 
-                        return method;
+                        return rpcMethod;
                     };
 
-                    return anonymousFunction;
+                    return method;
                 }
 
                 return target[name];
