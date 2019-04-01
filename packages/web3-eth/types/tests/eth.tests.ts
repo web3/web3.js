@@ -34,7 +34,7 @@ eth.personal;
 // $ExpectType Accounts
 eth.accounts;
 
-// $ExpectType any
+// $ExpectType Ens
 eth.ens;
 
 // $ExpectType AbiCoder

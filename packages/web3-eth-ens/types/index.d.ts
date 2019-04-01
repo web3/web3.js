@@ -13,7 +13,7 @@
 */
 /**
  * @file index.d.ts
- * @author Samuel Furter <samuel@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>, Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
 
@@ -21,7 +21,7 @@ import {Accounts} from 'web3-eth-accounts';
 import {AbiCoder} from 'web3-eth-abi';
 import {Contract, ContractModuleFactory} from 'web3-eth-contract';
 import {provider} from 'web3-providers';
-import {AbstractWeb3Module, PromiEvent, Web3ModuleOptions} from 'web3-core';
+import {AbstractWeb3Module, PromiEvent, Web3ModuleOptions, TransactionConfig} from 'web3-core';
 import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
 import {Utils} from 'web3-utils';
@@ -39,31 +39,70 @@ export class Ens extends AbstractWeb3Module {
 
     resolver(name: string): Promise<Contract>;
 
-    supportsInterface(name: string, interfaceId: string, callback?: () => {}): Promise<boolean>;
+    supportsInterface(
+        name: string,
+        interfaceId: string,
+        callback?: (error: Error, supportsInterface: boolean) => void
+    ): Promise<boolean>;
 
-    getAddress(name: string, callback?: () => {}): Promise<string>;
+    getAddress(name: string, callback?: (error: Error, address: string) => void): Promise<string>;
 
-    setAddress(name: string, address: string, sendOptions: TxObject, callback?: () => {}): PromiEvent<any>;
+    setAddress(
+        name: string,
+        address: string,
+        sendOptions: TransactionConfig,
+        callback?: (error: Error, result: any) => void
+    ): PromiEvent<any>;
 
-    getPubkey(name: string, callback?: () => {}): Promise<string>;
+    getPubkey(
+        name: string,
+        callback?: (error: Error, result: {[x: string]: string}) => void
+    ): Promise<{[x: string]: string}>;
 
-    setPubkey(name: string, x: string, y: string, sendOptions: TxObject, callback?: () => {}): PromiEvent<any>;
+    setPubkey(
+        name: string,
+        x: string,
+        y: string,
+        sendOptions: TransactionConfig,
+        callback?: (error: Error, result: any) => void
+    ): PromiEvent<any>;
 
-    setText(name: string, key: string, value: string, sendOptions: TxObject, callback?: () => {}): PromiEvent<any>;
+    getText(name: string, key: string, callback?: (error: Error, ensName: string) => void): Promise<string>;
 
-    getText(name: string, key: string, callback?: () => {}): Promise<string>;
+    setText(
+        name: string,
+        key: string,
+        value: string,
+        sendOptions: TransactionConfig,
+        callback?: (error: Error, result: any) => void
+    ): PromiEvent<any>;
 
-    getContent(name: string, callback?: () => {}): Promise<string>;
+    getContent(name: string, callback?: (error: Error, contentHash: string) => void): Promise<string>;
 
-    setContent(name: string, hash: string, sendOptions: TxObject, callback?: () => {}): PromiEvent<any>;
+    setContent(
+        name: string,
+        hash: string,
+        sendOptions: TransactionConfig,
+        callback?: (error: Error, result: any) => void
+    ): PromiEvent<any>;
 
-    getMultihash(name: string, callback?: () => {}): Promise<string>;
+    getMultihash(name: string, callback?: (error: Error, multihash: string) => void): Promise<string>;
 
-    setMultihash(name: string, hash: string, sendOptions: TxObject, callback?: () => {}): PromiEvent<any>;
+    setMultihash(
+        name: string,
+        hash: string,
+        sendOptions: TransactionConfig,
+        callback?: (error: Error, result: any) => void
+    ): PromiEvent<any>;
 
-    getContenthash(name: string, callback?: () => {}): Promise<string>;
+    getContenthash(name: string, callback?: (error: Error, contenthash: string) => void): Promise<string>;
 
-    setContenthash(name: string, hash: string, sendOptions: TxObject, callback?: () => {}): PromiEvent<any>;
+    setContenthash(
+        name: string,
+        hash: string,
+        sendOptions: TransactionConfig,
+        callback?: (error: Error, result: any) => void
+    ): PromiEvent<any>;
 }
 
 export class Registry {
@@ -78,20 +117,15 @@ export class Registry {
         net: Network
     );
 
-    owner(name: string, callback?: () => {}): Promise<string>;
+    ens: Ens;
+
+    resolverContract: Contract | null;
+
+    setProvider(provider: provider, net?: net.Socket): boolean;
+
+    owner(name: string, callback?: (error: Error, address: string) => void): Promise<string>;
 
     resolver(name: string): Promise<Contract>;
 
     checkNetwork(): Promise<string>;
-}
-
-export interface TxObject {
-    from?: string | number;
-    to?: string;
-    gasPrice?: string;
-    gas?: number | string;
-    value?: number | string;
-    chainId?: number;
-    data?: string;
-    nonce?: number;
 }
