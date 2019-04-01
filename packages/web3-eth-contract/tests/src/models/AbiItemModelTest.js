@@ -22,18 +22,6 @@ describe('AbiItemModelTest', () => {
         expect(abiItemModel.abiItem).toEqual(abiItem);
     });
 
-    it('gets the requestType property of the AbiItemModel and it returns the value "send"', () => {
-        abiItem.constant = false;
-
-        expect(abiItemModel.requestType).toEqual('send');
-    });
-
-    it('gets the requestType property of the AbiItemModel and it returns the value "call"', () => {
-        abiItem.constant = true;
-
-        expect(abiItemModel.requestType).toEqual('call');
-    });
-
     it('calls getInputLength and returns "0" because inputs is not of type array', () => {
         expect(abiItemModel.getInputLength()).toEqual(0);
     });
