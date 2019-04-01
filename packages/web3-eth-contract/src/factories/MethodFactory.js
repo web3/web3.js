@@ -205,7 +205,6 @@ export default class MethodFactory {
         return new EstimateGasMethod(this.utils, this.formatters, contract);
     }
 
-
     /**
      * Returns the correct timeout value
      *

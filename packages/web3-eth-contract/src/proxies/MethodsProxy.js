@@ -57,7 +57,7 @@ export default class MethodsProxy {
 
                     // TODO: Find a better solution for the handling of the contractMethodParameters
                     /* eslint-disable no-inner-declarations */
-                    function method() {
+                    function ContractMethod() {
                         let methodArguments = [...arguments];
 
                         // Because of the possibility to overwrite the contract data if I call contract.deploy()
@@ -74,12 +74,12 @@ export default class MethodsProxy {
                                     abiItemModel.contractMethodParameters = methodArguments[0]['arguments'];
                                 }
 
-                                return method;
+                                return ContractMethod;
                             }
 
                             abiItemModel.contractMethodParameters = [];
 
-                            return method;
+                            return ContractMethod;
                         }
 
                         // If there exists more than one method with this name then find the correct abiItemModel
@@ -101,14 +101,14 @@ export default class MethodsProxy {
 
                         abiItemModel.contractMethodParameters = methodArguments;
 
-                        return method;
+                        return ContractMethod;
                     }
 
-                    method.call = function() {
+                    ContractMethod.call = function() {
                         return target.executeMethod(abiItemModel, arguments, 'call');
                     };
 
-                    method.send = function() {
+                    ContractMethod.send = function() {
                         if (abiItemModel.isOfType('constructor')) {
                             return target.executeMethod(abiItemModel, arguments, 'contract-deployment');
                         }
@@ -116,23 +116,23 @@ export default class MethodsProxy {
                         return target.executeMethod(abiItemModel, arguments, 'send');
                     };
 
-                    method.call.request = function() {
+                    ContractMethod.call.request = function() {
                         return target.createMethod(abiItemModel, arguments, 'call');
                     };
 
-                    method.send.request = function() {
+                    ContractMethod.send.request = function() {
                         return target.createMethod(abiItemModel, arguments, 'send');
                     };
 
-                    method.estimateGas = function() {
+                    ContractMethod.estimateGas = function() {
                         return target.executeMethod(abiItemModel, arguments, 'estimate');
                     };
 
-                    method.encodeABI = function() {
+                    ContractMethod.encodeABI = function() {
                         return target.methodEncoder.encode(abiItemModel, target.contract.data);
                     };
 
-                    return method;
+                    return ContractMethod;
                     /* eslint-enable no-inner-declarations */
                 }
 
