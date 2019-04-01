@@ -67,8 +67,6 @@ describe('MethodFactoryTest', () => {
         expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
 
         expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
-
-        expect(SendRawTransactionMethod).toHaveBeenCalled();
     });
 
     it('calls createMethodByRequestType with requestType send and a socketProvider', () => {
@@ -79,8 +77,6 @@ describe('MethodFactoryTest', () => {
         expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
 
         expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
-
-        expect(SendRawTransactionMethod).toHaveBeenCalled();
     });
 
     it('calls createMethodByRequestType with requestType estimate', () => {
@@ -99,8 +95,6 @@ describe('MethodFactoryTest', () => {
         expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
 
         expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
-
-        expect(SendRawTransactionMethod).toHaveBeenCalled();
     });
 
     it('calls createMethodByRequestType with unknown requestType', () => {
@@ -153,8 +147,6 @@ describe('MethodFactoryTest', () => {
         expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
 
         expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
-
-        expect(SendRawTransactionMethod).toHaveBeenCalled();
     });
 
     it('calls createContractDeployMethod and returns ContractDeployMethod object', () => {
@@ -165,8 +157,6 @@ describe('MethodFactoryTest', () => {
         expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
 
         expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
-
-        expect(SendRawTransactionMethod).toHaveBeenCalled();
     });
 
     it('calls createEstimateGasMethod and returns EstimateGasMethod object', () => {
@@ -187,7 +177,5 @@ describe('MethodFactoryTest', () => {
         expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
 
         expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
-
-        expect(SendRawTransactionMethod).toHaveBeenCalled();
     });
 });

@@ -17,7 +17,7 @@ describe('ContractDeployMethodTest', () => {
         new AbstractContract();
         contractMock = AbstractContract.mock.instances[0];
 
-        contractDeployMethod = new ContractDeployMethod({}, formatters, contractMock, {}, {}, {}, {});
+        contractDeployMethod = new ContractDeployMethod({}, formatters, contractMock, {}, {}, {});
     });
 
     it('constructor check', () => {
