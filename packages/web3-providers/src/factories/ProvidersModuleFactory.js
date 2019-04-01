@@ -126,16 +126,12 @@ export default class ProvidersModuleFactory {
         // runtime is of type node
         if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
             let authToken;
-
             let headers = options.headers || {};
-
             const urlObject = new URL(url);
 
-            if (urlObject.username && urlObject.password) {
+            if (!headers.authorization && urlObject.username && urlObject.password) {
                 authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`).toString('base64');
                 headers.authorization = `Basic ${authToken}`;
-            } else if (urlObject.auth) {
-                headers.authorization = Buffer.from(urlObject.auth, 'base64');
             }
 
             connection = new W3CWebsocket(url, options.protocol, null, headers, null, options.clientConfig);
