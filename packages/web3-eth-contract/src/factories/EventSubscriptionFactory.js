@@ -52,7 +52,7 @@ export default class EventSubscriptionFactory {
             this.utils,
             this.formatters,
             contract,
-            new GetPastLogsMethod(this.utils, this.formatters),
+            new GetPastLogsMethod(this.utils, this.formatters, contract),
             eventLogDecoder,
             abiItemModel
         );
@@ -73,7 +73,7 @@ export default class EventSubscriptionFactory {
             this.utils,
             this.formatters,
             contract,
-            new GetPastLogsMethod(this.utils, this.formatters),
+            new GetPastLogsMethod(this.utils, this.formatters, contract),
             allEventsLogDecoder,
             contract.abiModel
         );
