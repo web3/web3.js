@@ -125,12 +125,11 @@ export default class ProvidersModuleFactory {
 
         // runtime is of type node
         if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
-            let authToken;
             let headers = options.headers || {};
             const urlObject = new URL(url);
 
             if (!headers.authorization && urlObject.username && urlObject.password) {
-                authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`).toString('base64');
+                const authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`).toString('base64');
                 headers.authorization = `Basic ${authToken}`;
             }
 
