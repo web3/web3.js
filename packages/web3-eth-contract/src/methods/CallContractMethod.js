@@ -58,6 +58,6 @@ export default class CallContractMethod extends CallMethod {
             return this.abiCoder.decodeParameters(outputs, response);
         }
 
-        return this.abiCoder.decodeParameter(outputs[0].type, response);
+        return this.abiCoder.decodeParameter(outputs[0], response);
     }
 }
