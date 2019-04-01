@@ -131,7 +131,6 @@ describe('EthSendTransactionMethodTest', () => {
         method.parameters = [transaction];
 
         method.execute();
-
     });
 
     it('calls execute with wallets defined and returns with a rejected promise', async () => {
@@ -213,7 +212,6 @@ describe('EthSendTransactionMethodTest', () => {
         };
 
         method.execute();
-
     });
 
     it('calls execute with custom transaction signer defined and returns with a rejected promise', async () => {
