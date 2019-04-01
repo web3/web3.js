@@ -71,7 +71,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @param {CloseEvent} closeEvent
      */
     onClose(closeEvent) {
-        if (closeEvent.code !== 1000 || !closeEvent.wasClean) {
+        if (closeEvent.code !== 1000 || closeEvent.wasClean === false) {
             this.reconnect();
 
             return;
