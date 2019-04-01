@@ -46,21 +46,21 @@ export default class MethodProxy {
                     const method = methodFactory.createMethod(name, target);
 
                     /* eslint-disable no-inner-declarations */
-                    function anonymousFunction() {
+                    function RpcMethod() {
                         method.setArguments(arguments);
 
                         return method.execute();
                     }
                     /* eslint-enable no-inner-declarations */
 
-                    anonymousFunction.method = method;
-                    anonymousFunction.request = function() {
+                    RpcMethod.method = method;
+                    RpcMethod.request = function() {
                         method.setArguments(arguments);
 
                         return method;
                     };
 
-                    return anonymousFunction;
+                    return RpcMethod;
                 }
 
                 return target[name];

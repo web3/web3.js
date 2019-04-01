@@ -38,23 +38,6 @@ export default class AbiItemModel {
     }
 
     /**
-     * Getter for the requestType of this ABI item.
-     *
-     * @property requestType
-     *
-     * @returns {String}
-     */
-    get requestType() {
-        if (this.abiItem.type === 'function' || this.abiItem.type === 'constructor') {
-            if (this.abiItem.constant === true) {
-                return 'call';
-            }
-
-            return 'send';
-        }
-    }
-
-    /**
      * TODO: rename getInputLength to getInputsLength
      * Returns the input length of the abiItem
      *
