@@ -71,7 +71,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @param {CloseEvent} closeEvent
      */
     onClose(closeEvent) {
-        if (closeEvent.code !== 1000) {
+        if (closeEvent.code !== 1000 || closeEvent.wasClean === false) {
             this.reconnect();
 
             return;
@@ -101,8 +101,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     this.connection._client.config
                 );
             } else {
-                const protocol = this.connection.protocol || undefined;
-                connection = new this.connection.constructor(this.host, protocol);
+                connection = new this.connection.constructor(this.host, this.connection.protocol || undefined);
             }
 
             this.connection = connection;

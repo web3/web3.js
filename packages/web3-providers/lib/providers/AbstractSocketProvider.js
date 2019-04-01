@@ -13,7 +13,7 @@
 */
 /**
  * @file AbstractSocketProvider
- * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
@@ -192,7 +192,7 @@ export default class AbstractSocketProvider extends EventEmitter {
 
                 delete this.subscriptions[subscriptionId];
 
-                this.subscriptions[this.getSubscriptionEvent(this.subscriptions[key].id)].id = subscriptionId;
+                this.subscriptions[key].id = subscriptionId;
             }
         }
 
