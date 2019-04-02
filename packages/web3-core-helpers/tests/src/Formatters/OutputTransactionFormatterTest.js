@@ -8,7 +8,7 @@ describe('OutputTransactionFormatterTest', () => {
         const receipt = {
             blockNumber: undefined,
             transactionIndex: undefined,
-            gas: 256,
+            gas: 100,
             gasPrice: 100,
             nonce: 1,
             value: 100,
@@ -19,7 +19,7 @@ describe('OutputTransactionFormatterTest', () => {
         expect(outputTransactionFormatter(receipt)).toEqual({
             blockNumber: undefined,
             transactionIndex: undefined,
-            gas: 598,
+            gas: 256,
             gasPrice: '100',
             nonce: 1,
             value: '100',
@@ -32,7 +32,7 @@ describe('OutputTransactionFormatterTest', () => {
         const receipt = {
             blockNumber: 0,
             transactionIndex: 0,
-            gas: 256,
+            gas: 100,
             gasPrice: 100,
             nonce: 1,
             value: 100,
@@ -43,7 +43,7 @@ describe('OutputTransactionFormatterTest', () => {
         expect(outputTransactionFormatter(receipt)).toEqual({
             blockNumber: 0,
             transactionIndex: 0,
-            gas: 598,
+            gas: 256,
             gasPrice: '100',
             nonce: 1,
             value: '100',
@@ -56,7 +56,7 @@ describe('OutputTransactionFormatterTest', () => {
         const receipt = {
             blockNumber: 0,
             transactionIndex: 0,
-            gas: 256,
+            gas: 100,
             gasPrice: 100,
             nonce: 1,
             value: 100,
@@ -67,7 +67,7 @@ describe('OutputTransactionFormatterTest', () => {
         expect(outputTransactionFormatter(receipt)).toEqual({
             blockNumber: 0,
             transactionIndex: 0,
-            gas: 598,
+            gas: 256,
             gasPrice: '100',
             nonce: 1,
             value: '100',
