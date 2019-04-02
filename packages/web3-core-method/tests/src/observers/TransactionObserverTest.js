@@ -4,7 +4,7 @@ import GetBlockByNumberMethod from '../../../src/methods/block/GetBlockByNumberM
 import TransactionObserver from '../../../src/observers/TransactionObserver';
 
 // Mocks
-jest.mock('NewHeadsSubscription');
+jest.mock('web3-core-subscriptions');
 jest.mock('../../../src/methods/transaction/GetTransactionReceiptMethod');
 jest.mock('../../../src/methods/block/GetBlockByNumberMethod');
 

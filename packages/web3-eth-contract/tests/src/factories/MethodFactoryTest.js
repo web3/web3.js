@@ -12,14 +12,10 @@ import PastEventLogsMethod from '../../../src/methods/PastEventLogsMethod';
 import AllPastEventLogsMethod from '../../../src/methods/AllPastEventLogsMethod';
 
 // Mocks
-jest.mock('Accounts');
-jest.mock('Utils');
-jest.mock('formatters');
-jest.mock('AbiCoder');
-jest.mock('EstimateGasMethod');
-jest.mock('ChainIdMethod');
-jest.mock('GetTransactionCountMethod');
-jest.mock('SendRawTransactionMethod');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
+jest.mock('web3-eth-abi');
+jest.mock('web3-core-method');
 jest.mock('../../../src/factories/ContractModuleFactory');
 jest.mock('../../../src/methods/CallContractMethod');
 jest.mock('../../../src/methods/SendContractMethod');

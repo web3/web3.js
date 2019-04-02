@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetAccountsMethod.js
+ * @file EthGetAccountsMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -43,10 +43,10 @@ export default class EthGetAccountsMethod extends GetAccountsMethod {
      * @returns {Promise<Object|String>}
      */
     execute() {
-        if (this.moduleInstance.accounts.wallet.accountsIndex > 0) {
+        if (this.moduleInstance.accounts.wallet.accountsIndex) {
             let accounts = [];
-            for (let i = 0; i <= this.accountsIndex; i++) {
-                accounts.push(this.moduleInstance.accounts.wallet[i]);
+            for (let i = 0; i < this.moduleInstance.accounts.wallet.accountsIndex; i++) {
+                accounts.push(this.moduleInstance.accounts.wallet[i].address);
             }
 
             return Promise.resolve(accounts);

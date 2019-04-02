@@ -3,7 +3,7 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import GetCodeMethod from '../../../src/methods/GetCodeMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * GetCodeMethod test

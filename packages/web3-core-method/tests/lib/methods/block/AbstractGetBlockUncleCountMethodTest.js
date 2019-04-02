@@ -4,8 +4,8 @@ import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import AbstractGetBlockUncleCountMethod from '../../../../lib/methods/block/AbstractGetBlockUncleCountMethod';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 
 /**
  * AbstractGetBlockUncleCountMethod test

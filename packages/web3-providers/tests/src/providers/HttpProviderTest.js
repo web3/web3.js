@@ -13,7 +13,7 @@ import NetworkError from '../../__mocks__/NetworkError';
 jest.mock('../../../src/factories/ProvidersModuleFactory');
 jest.mock('http');
 jest.mock('https');
-jest.mock('XMLHttpRequest');
+jest.mock('xhr2-cookies');
 
 /**
  * HttpProvider test

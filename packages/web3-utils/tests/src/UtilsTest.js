@@ -219,8 +219,8 @@ describe('UtilsTest', () => {
         });
 
         it('should return sha3 with hex prefix', () => {
-            const test = (v, e, o) => {
-                expect(sha3(v, o)).toEqual(e);
+            const test = (value, expected) => {
+                expect(sha3(value)).toEqual(expected);
             };
 
             test('test123', '0xf81b517a242b218999ec8eec0ea6e2ddbef2a367a14e93f4a32a39e260f686ad');

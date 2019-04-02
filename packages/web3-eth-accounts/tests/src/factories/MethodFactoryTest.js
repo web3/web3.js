@@ -3,8 +3,8 @@ import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import MethodFactory from '../../../src/factories/MethodFactory';
 
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 
 /**
  * MethodFactory test

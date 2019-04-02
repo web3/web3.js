@@ -11,12 +11,10 @@ import Account from '../../../src/models/Account';
 // Mocks
 jest.mock('eth-lib/lib/account');
 jest.mock('eth-lib/lib/hash');
-jest.mock('isHexStrict');
-jest.mock('hexToBytes');
+jest.mock('web3-utils');
 jest.mock('uuid');
 jest.mock('crypto');
-jest.mock('scryptsy');
-jest.mock('EthAccount');
+jest.mock('scrypt.js');
 jest.mock('../../../src/Accounts');
 
 /**

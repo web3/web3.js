@@ -3,7 +3,7 @@ import SendTransactionMethod from '../../../../src/methods/transaction/SendTrans
 import {formatters} from 'web3-core-helpers';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * SendRawTransactionMethod test

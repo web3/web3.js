@@ -14,17 +14,17 @@ import SubscriptionsFactory from '../../src/factories/SubscriptionsFactory';
 import Eth from '../../src/Eth';
 
 // Mocks
-jest.mock('AbstractWeb3Module');
-jest.mock('AbstractSubscription');
-jest.mock('LogSubscription');
-jest.mock('AbiCoder');
-jest.mock('Accounts');
-jest.mock('Ens');
-jest.mock('Personal');
-jest.mock('Network');
-jest.mock('Utils');
-jest.mock('formatters');
-jest.mock('ContractModuleFactory');
+jest.mock('web3-core');
+jest.mock('web3-core-subscriptions');
+jest.mock('web3-eth-abi');
+jest.mock('web3-eth-accounts');
+jest.mock('web3-eth-ens');
+jest.mock('web3-eth-iban');
+jest.mock('web3-eth-personal');
+jest.mock('web3-net');
+jest.mock('web3-eth-contract');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 jest.mock('../../src/factories/MethodFactory');
 jest.mock('../../src/signers/TransactionSigner');
 jest.mock('../../src/factories/SubscriptionsFactory');

@@ -1,4 +1,3 @@
-// Module mocks
 import ProvidersModuleFactory from '../../../src/factories/ProvidersModuleFactory';
 import BatchRequest from '../../../src/batch-request/BatchRequest';
 import ProviderResolver from '../../../src/resolvers/ProviderResolver';
@@ -9,10 +8,9 @@ import Web3EthereumProvider from '../../../src/providers/Web3EthereumProvider';
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import {w3cwebsocket as W3CWebsocket} from 'websocket';
 
-jest.mock('xhr2-cookies');
-jest.mock('websocket');
-
 // Mocks
+jest.mock('websocket');
+jest.mock('xhr2-cookies');
 jest.mock('../../../src/batch-request/BatchRequest');
 jest.mock('../../../src/resolvers/ProviderResolver');
 jest.mock('../../../src/providers/HttpProvider');

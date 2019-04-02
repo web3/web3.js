@@ -4,7 +4,7 @@ import Account from '../../../src/models/Account';
 import Accounts from '../../../src/Accounts';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('web3-utils');
 jest.mock('../../../src/models/Account');
 jest.mock('../../../src/Accounts');
 

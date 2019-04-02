@@ -3,7 +3,7 @@ import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import VersionMethod from '../../../../src/methods/network/VersionMethod';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('web3-utils');
 
 /**
  * VersionMethod test

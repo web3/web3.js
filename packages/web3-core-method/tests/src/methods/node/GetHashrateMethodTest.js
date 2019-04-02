@@ -3,7 +3,7 @@ import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetHashrateMethod from '../../../../src/methods/node/GetHashrateMethod';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('web3-utils');
 
 /**
  * GetHashrateMethod test

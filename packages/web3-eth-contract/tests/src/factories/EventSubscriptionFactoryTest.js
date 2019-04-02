@@ -6,8 +6,8 @@ import EventLogSubscription from '../../../src/subscriptions/EventLogSubscriptio
 import AllEventsLogSubscription from '../../../src/subscriptions/AllEventsLogSubscription';
 
 // Mocks
-jest.mock('formatters');
-jest.mock('Utils');
+jest.mock('web3-core-helpers');
+jest.mock('web3-utils');
 jest.mock('../../../src/subscriptions/EventLogSubscription');
 jest.mock('../../../src/subscriptions/AllEventsLogSubscription');
 

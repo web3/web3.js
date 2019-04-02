@@ -10,16 +10,13 @@ import Account from '../../src/models/Account';
 import {AbstractWeb3Module} from 'web3-core';
 
 // Mocks
-jest.mock('formatters');
-jest.mock('Utils');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 jest.mock('eth-lib/lib/rlp');
 jest.mock('eth-lib/lib/nat');
 jest.mock('eth-lib/lib/bytes');
 jest.mock('eth-lib/lib/hash');
 jest.mock('eth-lib/lib/account');
-jest.mock('scryptsy');
-jest.mock('crypto');
-jest.mock('uuid');
 jest.mock('../../src/models/Account');
 
 /**

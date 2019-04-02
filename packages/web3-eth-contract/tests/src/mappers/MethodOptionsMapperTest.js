@@ -4,8 +4,8 @@ import {formatters} from 'web3-core-helpers';
 import MethodOptionsMapper from '../../../src/mappers/MethodOptionsMapper';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 
 /**
  * MethodOptionsMapper test

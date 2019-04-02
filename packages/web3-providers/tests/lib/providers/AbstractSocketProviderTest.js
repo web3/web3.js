@@ -7,7 +7,7 @@ import AbstractMethod from '../../__mocks__/AbstractMethod';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
 
 // Mocks
-jest.mock('w3cwebsocket');
+jest.mock('websocket');
 
 /**
  * AbstractSocketProvider test

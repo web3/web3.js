@@ -4,8 +4,8 @@ import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import AbstractGetBlockTransactionCountMethod from '../../../../lib/methods/block/AbstractGetBlockTransactionCountMethod';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 
 /**
  * AbstractGetBlockTransactionCountMethod test

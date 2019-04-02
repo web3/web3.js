@@ -3,7 +3,7 @@ import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
 import AbiCoder from '../src/AbiCoder';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('web3-utils');
 jest.mock('ethers/utils/abi-coder');
 
 /**

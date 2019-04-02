@@ -3,7 +3,7 @@ import {SignTransactionMethod} from 'web3-core-method';
 import EthSignTransactionMethod from '../../../src/methods/EthSignTransactionMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * EthSignTransactionMethod test
