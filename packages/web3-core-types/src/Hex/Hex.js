@@ -20,7 +20,7 @@
  * @date 2019
  */
 
-import {cloneDeep, isObject} from 'lodash';
+import {isNumber, isString} from 'lodash';
 import utf8 from 'utf8';
 
 export default class Hex {
@@ -30,37 +30,27 @@ export default class Hex {
      *
      * @constructor
      */
-    constructor(params, error /* from factory */, initParams /* from factory */) {
-        /* params are the values given to the contructor
-         * this.props are the params fed via the constructor
-         * after being filtered.
-         * this.props start assigned to undefined via initParams */
+    constructor(params) {
+        const requires = ['hex'];
 
-        /* Set the errors */
-        this.error = error;
+        this.props = {};
 
-        /* Set the inital values */
-        this.initParams = initParams;
-
-        /* Initialize the parameters */
-        this.props = cloneDeep(initParams);
-
-        /* Override constructor to only taking a string */
-        if (!isObject(params)) {
+        if (isString(params)) {
             params = {
                 hex: params
             };
         }
 
-        /* Check for type and format validity */
-        this.props.hex = Hex.isValid(params.hex) ? params.hex.toString() : undefined;
+        if (Hex.isValid(params.hex)) {
+            this.props.hex = params.hex.toString();
+        } else if (params.hex === 'empty') {
+            this.props.hex = '0x';
+        }
 
-        /* Check for default, auto, none, etc. key values */
-        if (params.hex === 'empty') this.props.hex = '0x';
-
-        /* Throw if any parameter is still undefined */
-        Object.keys(this.props).forEach((key) => {
-            typeof this.props[key] === 'undefined' && this._throw(this.error[key], params[key]);
+        requires.forEach((propName) => {
+            if (typeof this.props[propName] === 'undefined') {
+                this._throw(propName, this.props[propName]);
+            }
         });
 
         /* Make the props immutable */
@@ -68,6 +58,7 @@ export default class Hex {
     }
 
     /* Class functions */
+
     /**
      * Check if the supplied string is a valid hex value
      *
@@ -92,6 +83,168 @@ export default class Hex {
      */
     static isStrict(hex) {
         return /^(-0x|0x)[0-9a-fA-F]*$/.test(hex);
+    }
+
+    /**
+     * Build an object of Hex from a string
+     *
+     * @method fromString
+     *
+     * @param {String} value
+     *
+     * @returns {Hex}
+     *
+     */
+    static fromString(value) {
+        if (!isString(value)) throw new Error(`The given value ${value} is not string type.`);
+
+        value = value.replace(/(-)?(0x)?([0-9a-f]*)/i, '$10x$3');
+
+        const params = {
+            hex: value
+        };
+
+        return new Hex(params);
+    }
+
+    /**
+     * Build an object of Hex from a base 10 number
+     *
+     * @method fromNumber
+     *
+     * @param {Number} value
+     *
+     * @returns {Hex}
+     *
+     */
+    static fromNumber(value) {
+        if (!isNumber(value)) throw new Error(`The given value ${value} is not number type.`);
+
+        const params = {
+            hex: value.toString(16)
+        };
+
+        return new Hex(params);
+    }
+
+    /**
+     * Build an object of Hex from an ASCII string
+     *
+     * @method fromAscii
+     *
+     * @param {String} value
+     *
+     * @returns {Hex}
+     *
+     */
+    static fromAscii(value) {
+        if (!isString(value)) throw new Error(`The given value ${value} is not string type.`);
+
+        const hex = value.split('').reduce((acc, char) => {
+            const v = char.charCodeAt(0).toString(16);
+            if (v.length > 2) throw new Error(`Non ASCII char ${char} in string ${value}.`);
+            return acc + (v.length < 2 ? '0' + v : v);
+        }, '0x');
+
+        const params = {
+            hex: hex
+        };
+
+        return new Hex(params);
+    }
+
+    /**
+     * Build an object of Hex from a UTF-8-encoded string
+     *
+     * @method fromUtf8
+     *
+     * @param {String} value
+     *
+     * @returns {Hex}
+     *
+     */
+    static fromUtf8(value) {
+        if (!isString(value)) throw new Error(`The given value ${value} is not string type.`);
+
+        let hex = '';
+        value = utf8.encode(value);
+
+        /* eslint-disable no-control-regex */
+        // remove \u0000 padding from either side
+        value = value.replace(/^(?:\u0000)*/, '');
+        value = value
+            .split('')
+            .reverse()
+            .join('');
+        value = value.replace(/^(?:\u0000)*/, '');
+        value = value
+            .split('')
+            .reverse()
+            .join('');
+        /* eslint-enable no-control-regex */
+
+        for (let i = 0; i < value.length; i++) {
+            const code = value.charCodeAt(i);
+            const n = code.toString(16);
+            hex += n.length < 2 ? `0${n}` : n;
+        }
+
+        hex = `0x${hex}`;
+
+        const params = {
+            hex: hex
+        };
+
+        return new Hex(params);
+    }
+
+    /**
+     * Build an object of Hex from a byte array
+     *
+     * @method fromBytes
+     *
+     * @param {String} value
+     *
+     * @returns {Hex}
+     *
+     */
+    static fromBytes(value) {
+        let hex = '';
+
+        value.forEach((v) => {
+            const s = v.toString(16);
+            hex += s.length < 2 ? `0${s}` : s;
+        });
+
+        hex = `0x${hex}`;
+
+        const params = {
+            hex: hex
+        };
+
+        return new Hex(params);
+    }
+
+    /**
+     * Fallback for number or string parsing.
+     * Number parameters call fromNumber
+     * String parameters call fromString
+     *
+     * @method from
+     *
+     * @param {String|Number} value
+     *
+     * @returns {Hex}
+     *
+     */
+    static from(value) {
+        if (isNumber(value)) {
+            return Hex.fromNumber(value);
+        } else if (isString(value)) {
+            return Hex.fromString(value);
+        } else {
+            throw new Error(`The given value ${value} needs to be a hex-encoded string or a base 10 number.`);
+        }
     }
 
     /* Instance accessors */
@@ -220,7 +373,15 @@ export default class Hex {
      *
      * @method _throw
      */
-    _throw(message, value) {
-        throw new Error(message(value));
+    _throw(propName, value) {
+        let errorMsg;
+
+        if (propName === 'hex') {
+            errorMsg =
+                `The given "hex" parameter "${value}" needs to be a string composed of numbers, and characters between 'a' and 'f'.\n` +
+                "Use 'empty' to set a web3 empty hex object.";
+        }
+
+        throw new Error(errorMsg);
     }
 }

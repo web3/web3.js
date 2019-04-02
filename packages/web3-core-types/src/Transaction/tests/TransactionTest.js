@@ -16,7 +16,7 @@ describe('TransactionTest', () => {
         value: 1,
         gas: 21000,
         gasPrice: 0,
-        data: Types.Hex('empty'),
+        data: new Types.Hex('empty'),
         nonce: 0,
         chainId: 2
     };

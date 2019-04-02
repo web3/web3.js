@@ -77,9 +77,9 @@ export default class Transaction {
 
         /* Allow Hex object or valid hex string */
         if (params.data.isHex) {
-            this.props.data = Types.Hex(params.data.props);
+            this.props.data = new Types.Hex(params.data.props);
         } else if (Types.Hex.isValid(params.data)) {
-            this.props.data = Types.Hex(params.data);
+            this.props.data = new Types.Hex(params.data);
         }
 
         /* Transaction nonce */
@@ -96,7 +96,7 @@ export default class Transaction {
 
         if (params.gasPrice === 'auto') this.props.gasPrice = params.gasPrice; // this.props.gasPrice = omit(this.props, 'gasPrice');
 
-        if (params.data === 'none') this.props.data = Types.Hex('empty');
+        if (params.data === 'none') this.props.data = new Types.Hex('empty');
 
         if (params.nonce === 'auto') this.props.nonce = params.nonce; // this.props.nonce = omit(this.props, 'nonce');
 

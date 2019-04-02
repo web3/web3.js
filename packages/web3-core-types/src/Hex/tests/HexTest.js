@@ -4,43 +4,24 @@ import Hex from '../Hex';
  * Hex test
  */
 describe('HexTest', () => {
-    let hex;
-    const error = {
-        hex: () => 'err msg'
-    };
-    const initParams = {
-        hex: undefined
-    };
-
-    beforeEach(() => {});
-
     it('constructor check', () => {
-        hex = new Hex({hex: '0x0'}, error, initParams);
-
-        expect(hex).toHaveProperty('error');
-        expect(hex).toHaveProperty('props');
+        expect(new Hex({hex: '0x0'})).not.toThrow();
     });
 
     it('takes empty for empty hex', () => {
-        hex = new Hex('empty', error, initParams);
-
-        expect(hex).toHaveProperty('error');
-        expect(hex).toHaveProperty('props');
+        expect(new Hex('empty')).not.toThrow();
     });
 
     it('takes string for constructor override', () => {
-        hex = new Hex('0x12', error, initParams);
-
-        expect(hex).toHaveProperty('error');
-        expect(hex).toHaveProperty('props');
+        expect(new Hex('0x12')).not.toThrow();
     });
 
     it('checks for strict hex', () => {
-        const strict = new Hex('0x12', error, initParams).isStrict();
-        const notStrict = new Hex('12', error, initParams).isStrict();
+        const strict = new Hex('0x12').isStrict();
+        const notStrict = new Hex('12').isStrict();
 
-        expect(strict).toBe(true);
-        expect(notStrict).toBe(false);
+        expect(strict).toBeTruthy();
+        expect(notStrict).toBeFalsy();
     });
 
     it('convert to bytes', () => {
@@ -55,7 +36,7 @@ describe('HexTest', () => {
         ];
 
         tests.forEach((test) => {
-            const bytes = new Hex(test.value, error, initParams).toBytes();
+            const bytes = new Hex(test.value).toBytes();
 
             expect(bytes.reduce((v, acc) => acc + v, 0)).toBe(test.expected);
         });
@@ -77,7 +58,7 @@ describe('HexTest', () => {
         ];
 
         tests.forEach((test) => {
-            const utf8 = new Hex(test.value, error, initParams).toUtf8();
+            const utf8 = new Hex(test.value).toUtf8();
 
             expect(utf8).toBe(test.expected);
         });
@@ -96,7 +77,7 @@ describe('HexTest', () => {
         ];
 
         tests.forEach((test) => {
-            const ascii = new Hex(test.value, error, initParams).toAscii();
+            const ascii = new Hex(test.value).toAscii();
 
             expect(ascii).toEqual(test.expected);
         });
@@ -133,7 +114,7 @@ describe('HexTest', () => {
         ];
 
         tests.forEach((test) => {
-            expect(new Hex(test.value, error, initParams).toString()).toEqual(test.expected);
+            expect(new Hex(test.value).toString()).toEqual(test.expected);
         });
     });
 });

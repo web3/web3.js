@@ -18,9 +18,6 @@ describe('TypeModuleHexTest', () => {
 
         tests.forEach((test) => {
             obj = new test.method(test.value); // eslint-disable-line new-cap
-
-            expect(obj).toHaveProperty('error');
-            expect(obj).toHaveProperty('props');
         });
     });
 
