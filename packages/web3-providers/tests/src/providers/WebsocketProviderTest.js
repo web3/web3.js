@@ -144,6 +144,43 @@ describe('WebsocketProviderTest', () => {
     );
 
     it(
+        'calls onClose with wasClean false',
+        (done) => {
+            const event = {code: 1000, wasClean: false};
+
+            setTimeout(() => {
+                expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+                expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
+
+                expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+                expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
+
+                expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+                expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
+
+                expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+                expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
+
+                expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+                expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
+
+                expect(socketMock.host).toEqual('host');
+
+                expect(socketMock.protocol).toEqual('protocol');
+
+                expect(socketMock.removeEventListener).toHaveBeenCalled();
+
+                expect(websocketProvider.connection).toBeInstanceOf(Websocket);
+
+                done();
+            }, 5010);
+
+            websocketProvider.onClose(event);
+        },
+        5020
+    );
+
+    it(
         'calls reconnect with an WebSocket connection',
         (done) => {
             setTimeout(() => {

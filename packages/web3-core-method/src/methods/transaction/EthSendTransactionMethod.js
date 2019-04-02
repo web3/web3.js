@@ -127,6 +127,8 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {PromiEvent}
      */
     async sendRawTransaction(privateKey = null) {
+        this.beforeExecution(this.moduleInstance);
+
         if (!this.parameters[0].chainId) {
             this.parameters[0].chainId = await this.chainIdMethod.execute();
         }
@@ -137,7 +139,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
             this.parameters[0].nonce = await this.getTransactionCountMethod.execute();
         }
 
-        let transaction = this.formatters.inputCallFormatter(this.parameters[0], this.moduleInstance);
+        let transaction = this.parameters[0];
         transaction.to = transaction.to || '0x';
         transaction.data = transaction.data || '0x';
         transaction.value = transaction.value || '0x';
