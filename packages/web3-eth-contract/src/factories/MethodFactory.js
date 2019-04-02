@@ -214,7 +214,7 @@ export default class MethodFactory {
     getTimeout(contract) {
         let timeout = contract.transactionBlockTimeout;
 
-        if (!contract.currentProvider.SOCKET_MESSAGE) {
+        if (!contract.currentProvider.supportsSubscriptions()) {
             timeout = contract.transactionPollingTimeout;
         }
 

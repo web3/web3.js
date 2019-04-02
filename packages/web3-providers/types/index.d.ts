@@ -47,7 +47,7 @@ export class ProvidersModuleFactory {
 
     createIpcProvider(path: string, net: net.Server): IpcProvider;
 
-    createEthereumProvider(connection: object): EthereumProvider;
+    createWeb3EthereumProvider(connection: object): Web3EthereumProvider;
 }
 
 export class HttpProvider {
@@ -55,6 +55,8 @@ export class HttpProvider {
 
     host: string;
     connected: boolean;
+
+    supportsSubscriptions(): boolean;
 
     send(method: string, parameters: any[]): Promise<any>;
 
@@ -68,6 +70,8 @@ export class AbstractSocketProvider {
 
     host: string;
     connected: boolean;
+
+    supportsSubscriptions(): boolean;
 
     registerEventListeners(): void;
 
@@ -104,7 +108,7 @@ export class WebsocketProvider extends AbstractSocketProvider {
     isConnecting(): boolean;
 }
 
-export class EthereumProvider {
+export class Web3EthereumProvider {
     constructor();
 
     host: string;
@@ -143,7 +147,7 @@ export class JsonRpcResponseValidator {
     static isResponseItemValid(response: JsonRpcPayload): boolean;
 }
 
-export type provider = HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | string;
+export type provider = HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | string;
 
 export interface JsonRpcPayload {
     jsonrpc: string;
