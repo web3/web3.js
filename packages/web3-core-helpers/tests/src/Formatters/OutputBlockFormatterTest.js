@@ -40,7 +40,7 @@ describe('OutputBlockFormatterTest', () => {
                 {
                     blockNumber: 0,
                     transactionIndex: 0,
-                    gas: 256,
+                    gas: 0,
                     gasPrice: '100',
                     nonce: 1,
                     value: '100',
