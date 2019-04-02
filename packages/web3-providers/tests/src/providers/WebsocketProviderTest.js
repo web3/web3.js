@@ -144,6 +144,43 @@ describe('WebsocketProviderTest', () => {
     );
 
     it(
+        'calls onClose with wasClean false',
+        (done) => {
+            const event = {code: 1000, wasClean: false};
+
+            setTimeout(() => {
+                expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+                expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
+
+                expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+                expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
+
+                expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+                expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
+
+                expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+                expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
+
+                expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+                expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
+
+                expect(socketMock.host).toEqual('host');
+
+                expect(socketMock.protocol).toEqual('protocol');
+
+                expect(socketMock.removeEventListener).toHaveBeenCalled();
+
+                expect(websocketProvider.connection).toBeInstanceOf(Websocket);
+
+                done();
+            }, 5010);
+
+            websocketProvider.onClose(event);
+        },
+        5020
+    );
+
+    it(
         'calls reconnect with an WebSocket connection',
         (done) => {
             setTimeout(() => {
@@ -353,12 +390,26 @@ describe('WebsocketProviderTest', () => {
         expect(socketMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
     });
 
+    it('calls sendPayload and returns with a rejected promise because of the connection.send() method', async () => {
+        socketMock.OPEN = 4;
+        socketMock.readyState = 4;
+        socketMock.CONNECTING = 0;
+        socketMock.send = jest.fn(() => {
+            throw new Error('Nope');
+        });
+        websocketProvider.timeout = 2;
+
+        await expect(websocketProvider.sendPayload({id: '0x0'})).rejects.toThrow('Nope');
+
+        expect(socketMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
+    });
+
     it('calls sendPayload with a timeout defined and returns with a resolved promise', async () => {
         socketMock.OPEN = 4;
         socketMock.readyState = 4;
         socketMock.CONNECTING = 0;
         socketMock.send = jest.fn();
-        websocketProvider.timeout = 2;
+        websocketProvider.timeout = 4;
 
         setTimeout(() => {
             websocketProvider.emit('0x0', {result: true});

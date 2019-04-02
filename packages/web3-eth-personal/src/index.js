@@ -35,11 +35,10 @@ import PersonalModule from './Personal.js';
  * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Net.Socket} net
  * @param {Object} options
- * @param {Accounts} accounts
  *
  * @returns {Personal}
  */
-export function Personal(provider, net = null, options = {}, accounts = {}) {
+export function Personal(provider, net = null, options = {}) {
     const resolvedProvider = new ProviderResolver().resolve(provider, net);
 
     return new PersonalModule(

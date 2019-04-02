@@ -6,15 +6,11 @@ import {outputTransactionReceiptFormatter} from '../../../src/Formatters';
 describe('OutputTransactionReceiptFormatterTest', () => {
     it('call outputTransactionReceiptFormatter with a valid receipt', () => {
         const receipt = {
-            status: 0,
-            cumulativeGasUsed: 100,
-            gasUsed: 100,
-            blockNumber: 0,
-            transactionIndex: 0,
-            gas: 256,
-            gasPrice: 100,
-            nonce: 1,
-            value: 100,
+            status: '0x0',
+            cumulativeGasUsed: '0x100',
+            gasUsed: '0x100',
+            blockNumber: '0x100',
+            transactionIndex: '0xa',
             to: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
             from: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
             contractAddress: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
@@ -22,14 +18,10 @@ describe('OutputTransactionReceiptFormatterTest', () => {
 
         expect(outputTransactionReceiptFormatter(receipt)).toEqual({
             status: false,
-            cumulativeGasUsed: 100,
-            gasUsed: 100,
-            blockNumber: 0,
-            transactionIndex: 0,
-            gas: 256,
-            gasPrice: 100,
-            nonce: 1,
-            value: 100,
+            cumulativeGasUsed: 256,
+            gasUsed: 256,
+            blockNumber: 256,
+            transactionIndex: 10,
             to: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
             from: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
             contractAddress: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
@@ -38,15 +30,11 @@ describe('OutputTransactionReceiptFormatterTest', () => {
 
     it('call outputTransactionReceiptFormatter with a valid receipt and logs', () => {
         const receipt = {
-            status: 0,
-            cumulativeGasUsed: 100,
-            gasUsed: 100,
-            blockNumber: 0,
-            transactionIndex: 0,
-            gas: 256,
-            gasPrice: 100,
-            nonce: 1,
-            value: 100,
+            status: '0x0',
+            cumulativeGasUsed: '0x100',
+            gasUsed: '0x100',
+            blockNumber: '0x100',
+            transactionIndex: '0xa',
             to: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
             from: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
             contractAddress: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
@@ -55,14 +43,10 @@ describe('OutputTransactionReceiptFormatterTest', () => {
 
         expect(outputTransactionReceiptFormatter(receipt)).toEqual({
             status: false,
-            cumulativeGasUsed: 100,
-            gasUsed: 100,
-            blockNumber: 0,
-            transactionIndex: 0,
-            gas: 256,
-            gasPrice: 100,
-            nonce: 1,
-            value: 100,
+            cumulativeGasUsed: 256,
+            gasUsed: 256,
+            blockNumber: 256,
+            transactionIndex: 10,
             to: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
             from: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
             contractAddress: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078',

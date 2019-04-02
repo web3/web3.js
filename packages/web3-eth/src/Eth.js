@@ -131,6 +131,10 @@ export default class Eth extends AbstractWeb3Module {
      * @param {TransactionSigner} transactionSigner
      */
     set transactionSigner(transactionSigner) {
+        if (transactionSigner.type && transactionSigner.type === 'TransactionSigner') {
+            throw new Error('Invalid TransactionSigner given!');
+        }
+
         this._transactionSigner = transactionSigner;
         this.accounts.transactionSigner = transactionSigner;
         this.ens.transactionSigner = transactionSigner;

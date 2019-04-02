@@ -18,8 +18,9 @@ import {Ens} from 'web3-eth-ens';
 
 new Ens(
     'ws://localhost:8546',
-    accounts,
-    {}
+    null,
+    options,
+    accountsModule
 );
 ```
 
