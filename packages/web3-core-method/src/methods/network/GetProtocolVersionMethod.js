@@ -33,4 +33,17 @@ export default class GetProtocolVersionMethod extends AbstractMethod {
     constructor(utils, formatters, moduleInstance) {
         super('eth_protocolVersion', 0, utils, formatters, moduleInstance);
     }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {String} response
+     *
+     * @returns {Number}
+     */
+    afterExecution(response) {
+        return this.utils.hexToNumber(response);
+    }
 }
