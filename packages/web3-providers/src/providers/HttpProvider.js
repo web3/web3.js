@@ -55,6 +55,17 @@ export default class HttpProvider {
     }
 
     /**
+     * Method for checking subscriptions support of a internal provider
+     *
+     * @method supportsSubscriptions
+     *
+     * @returns {Boolean}
+     */
+    supportsSubscriptions() {
+        return false;
+    }
+
+    /**
      * Added this method to have a better error message if someone is trying to create a subscription with this provider.
      */
     subscribe() {
