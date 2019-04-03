@@ -8,7 +8,7 @@
     "main": "dist/web3-shh.cjs.js",
     "module": "dist/web3-shh.esm.js",
     "browser": "dist/web3-shh.umd.js",
-    "types": "types",
+    "types": "types/index.d.ts",
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",

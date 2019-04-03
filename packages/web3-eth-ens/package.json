@@ -7,7 +7,7 @@
     "main": "dist/web3-eth-ens.cjs.js",
     "module": "dist/web3-eth-ens.esm.js",
     "browser": "dist/web3-eth-ens.umd.js",
-    "types": "types",
+    "types": "types/index.d.ts",
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
