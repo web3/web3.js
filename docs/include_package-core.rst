@@ -165,8 +165,7 @@ transactionBlockTimeout
     web3.shh.transactionBlockTimeout
     ...
 
-This will be used in the transaction confirmation workflow if you are connected over a socket based provider.
-The ``transactionBlockTimeout`` does define the amount of new blocks it should wait until the first confirmation.
+The ``transactionBlockTimeout`` will be used over a socket based connection. This option does define the amount of new blocks it should wait until the first confirmation happens.
 This means the PromiEvent rejects with a timeout error when the timeout got exceeded.
 
 
@@ -191,7 +190,6 @@ transactionConfirmationBlocks
     ...
 
 This defines the number of blocks it requires until a transaction will be handled as confirmed.
-This means the PromiEvent will resolve with the desired receipt when enough confirmations happened.
 
 
 -------
@@ -215,8 +213,8 @@ transactionPollingTimeout
     web3.shh.transactionPollingTimeout
     ...
 
-The ``transactionPollingTimeout`` does define the amount polls (each second) it should wait until the first confirmation happened.
-The PromiEvent rejects with a timeout error when the timeout got exceeded. 
+The ``transactionPollingTimeout``  will be used over a HTTP connection.
+This option does define the amount of polls (each second) it should wait until the first confirmation happens.
 
 
 -------
