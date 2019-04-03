@@ -419,7 +419,7 @@ getAccounts
 
     web3.eth.getAccounts([callback])
 
-Will return a list of locally unlocked accounts or it will return the unlocked accounts from the currently connected node.
+Will return a list of the unlocked accounts in the Web3 wallet or it will return the accounts from the currently connected node.
 
 This means you can add accounts with :ref:`web3.eth.accounts.create() <accounts-create>` and you will get them returned here.
 
