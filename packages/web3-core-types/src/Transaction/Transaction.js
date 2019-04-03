@@ -46,15 +46,19 @@ export default class Transaction {
 
         /* Allow from an address string, Address object, or wallet index */
         if (params.from.isAddress) {
-            this.props.from = Types.Address(params.from.props);
-        } else if (isString(params.from) && Types.Address.isValid(params.from)) {
-            this.props.from = Types.Address(params.from);
-        } else if (isInteger(params.from)) {
+            this.props.from = new Types.Address(params.from.props);
+        }
+        
+        if (isString(params.from) && Types.Address.isValid(params.from)) {
+            this.props.from = new Types.Address(params.from);
+        }
+        
+        if (isInteger(params.from)) {
             this.props.from = params.from;
         }
 
         /* Recipient address */
-        this.props.to = params.to.isAddress ? Types.Address(params.to.props) : undefined;
+        this.props.to = params.to.isAddress ? new Types.Address(params.to.props) : undefined;
 
         // TODO Move this check to BigNumber as a constructor check
         this.props.value =

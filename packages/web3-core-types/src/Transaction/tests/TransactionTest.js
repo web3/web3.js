@@ -11,8 +11,8 @@ describe('TransactionTest', () => {
     let txParamsTest;
 
     const txParams = {
-        from: Types.Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
-        to: Types.Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
+        from: new Types.Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
+        to: new Types.Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
         value: 1,
         gas: 21000,
         gasPrice: 0,

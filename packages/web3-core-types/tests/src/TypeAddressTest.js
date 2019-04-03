@@ -32,6 +32,6 @@ describe('TypeModuleAddressTest', () => {
         Types.Address.toChecksum('0x4f38f4229924bfa28d58eeda496cc85e8016bccc');
 
         expect(Address.isValid).toHaveBeenCalled();
-        expect(Address).toHaveBeenCalled();
+        expect(Address.toChecksum).toHaveBeenCalled();
     });
 });

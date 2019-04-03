@@ -5,15 +5,6 @@ import Address from '../Address';
  */
 describe('AddressTest', () => {
     let address;
-    const error = {
-        address: () => 'err msg',
-        isChecksummed: () => 'err msg'
-    };
-
-    const initParams = {
-        address: undefined,
-        isChecksummed: undefined
-    };
 
     const data = {
         address: '0xE247A45c287191d435A8a5D72A7C8dc030451E9F',
@@ -21,12 +12,11 @@ describe('AddressTest', () => {
     };
 
     beforeEach(() => {
-        address = new Address(data, error, initParams);
+        address = new Address(data);
     });
 
     it('constructor check', () => {
-        expect(address).toHaveProperty('error');
-        expect(address).toHaveProperty('props');
+        expect(() => new Address(data)).not.toThrow();
     });
 
     it('parses to string', () => {
@@ -38,7 +28,7 @@ describe('AddressTest', () => {
         ];
 
         tests.forEach((test) => {
-            expect(new Address(test.value, error, initParams).toString()).toEqual(test.value);
+            expect(new Address(test.value).toString()).toEqual(test.value);
         });
     });
 
@@ -51,7 +41,7 @@ describe('AddressTest', () => {
         ];
 
         tests.forEach((test) => {
-            expect(new Address(test.value, error, initParams).toChecksum().toString()).toEqual(test.is);
+            expect(new Address(test.value).toChecksum().toString()).toEqual(test.is);
         });
     });
 

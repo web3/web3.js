@@ -5,15 +5,15 @@ import Hex from '../Hex';
  */
 describe('HexTest', () => {
     it('constructor check', () => {
-        expect(new Hex({hex: '0x0'})).not.toThrow();
+        expect(() => new Hex({hex: '0x0'})).not.toThrow();
     });
 
     it('takes empty for empty hex', () => {
-        expect(new Hex('empty')).not.toThrow();
+        expect(() => new Hex('empty')).not.toThrow();
     });
 
     it('takes string for constructor override', () => {
-        expect(new Hex('0x12')).not.toThrow();
+        expect(() => new Hex('0x12')).not.toThrow();
     });
 
     it('checks for strict hex', () => {

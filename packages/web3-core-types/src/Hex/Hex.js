@@ -51,7 +51,7 @@ export default class Hex {
 
         requires.forEach((propName) => {
             if (typeof this.props[propName] === 'undefined') {
-                this._throw(propName, this.props[propName]);
+                this._throw(propName, params[propName]);
             }
         });
 
