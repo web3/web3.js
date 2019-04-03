@@ -6,7 +6,7 @@
 web3.eth
 ========
 
-The ``web3-eth`` package allows you to interact with an Ethereum blockchain and Ethereum smart contracts.
+The ``web3-eth`` package allows you to interact with a Ethereum blockchain itself and the deployed smart contracts.
 
 
 .. code-block:: javascript
@@ -144,7 +144,7 @@ Property
 --------
 
 
-``String`` - 20 Bytes: Any Ethereum address. You should have the private key for that address in your node or keystore. (Default is ``undefined``)
+``String`` - 20 Bytes: Any Ethereum address. You need to have the private key for that address in your node or keystore. (Default is ``undefined``)
 
 
 -------
@@ -1163,8 +1163,8 @@ signTransaction
 
     web3.eth.signTransaction(transactionObject [, address,] [, callback])
 
-The method ``signTransaction`` signs a transaction with the private key of the given address.
-It will sign the transaction locally if a local unlocked account with the given address is existing.
+Signs a transaction with the private key of the given address.
+If the given address is a local unlocked account, the transaction will be signed locally.
 
 ----------
 Parameters
@@ -1480,5 +1480,61 @@ Example
 
     web3.eth.requestAccounts().then(console.log);
     > ['0aae0B295369a9FD31d5F28D9Ec85E40f4cb692BAf', 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe]
+
+------------------------------------------------------------------------------
+
+.. _eth-chainId:
+
+getChainId
+==========
+
+.. code-block:: javascript
+
+    web3.eth.getChainId([callback])
+
+Returns the chain ID of the current connected node as described in the `EIP-695 <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-695.md>`_.
+
+-------
+Returns
+-------
+
+``Promise<Number>`` - Returns chain ID.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.getChainId().then(console.log);
+    > 61
+
+------------------------------------------------------------------------------
+
+.. _eth-getNodeInfo:
+
+getNodeInfo
+==========
+
+.. code-block:: javascript
+
+    web3.eth.getNodeInfo([callback])
+
+-------
+Returns
+-------
+
+``Promise<String>`` - The current client version.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.getNodeInfo().then(console.log);
+    > "Mist/v0.9.3/darwin/go1.4.1"
 
 ------------------------------------------------------------------------------

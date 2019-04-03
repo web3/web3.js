@@ -6,7 +6,7 @@
 web3.eth.ens
 =========
 
-The ``web3.eth.ens`` functions let you interacting with Ens.
+The ``web3.eth.ens`` functions let you interacting with the Ens smart contracts.
 
 .. code-block:: javascript
 

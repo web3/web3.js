@@ -6,7 +6,7 @@
 web3.eth.Contract
 =================
 
-The ``web3.eth.Contract`` object makes it easy to interact with smart contracts on the ethereum blockchain.
+The ``web3.eth.Contract`` object makes it easy to interact with smart contracts on the Ethereum blockchain.
 When you create a new contract object you give it the json interface of the respective smart contract
 and web3 will auto convert all calls into low level ABI calls over RPC for you.
 
@@ -35,8 +35,8 @@ To use it standalone:
 ------------------------------------------------------------------------------
 
 
-new contract
-============
+web3.eth.Contract
+=================
 
 .. index:: JSON interface
 
@@ -53,10 +53,17 @@ Parameters
 1. ``jsonInterface`` - ``Array``: The json interface for the contract to instantiate
 2. ``address`` - ``String`` (optional): This address is necessary for transactions and call requests and can also be added later using ``myContract.options.address = '0x1234..'.``
 3. ``options`` - ``Object`` (optional): The options of the contract. Some are used as fallbacks for calls and transactions:
-    * ``from`` - ``String``: The address transactions should be made from.
-    * ``gasPrice`` - ``String``: The gas price in wei to use for transactions. It is the wei per unit of gas.
-    * ``gas`` - ``Number``: The maximum gas provided for a transaction (gas limit).
     * ``data`` - ``String``: The byte code of the contract. Used when the contract gets :ref:`deployed <contract-deploy>`.
+    * ``address`` - ``String``: The address where the contract is deployed. See :ref:`options.address <contract-address>`.
+    * ``jsonInterface`` - ``Array``: The json interface of the contract. See :ref:`options.jsonInterface <contract-json-interface>`.
+    * :ref:`defaultAccount <web3-module-defaultaccount>`
+    * :ref:`defaultBlock <web3-module-defaultblock>`
+    * :ref:`defaultGas <web3-module-defaultgas>`
+    * :ref:`defaultGasPrice <web3-module-defaultaccount>`
+    * :ref:`transactionBlockTimeout <web3-module-transactionblocktimeout>`
+    * :ref:`transactionConfirmationBlocks <web3-module-transactionconfirmationblocks>`
+    * :ref:`transactionPollingTimeout <web3-module-transactionpollingtimeout>`
+    * :ref:`transactionSigner <web3-module-transactionSigner>`
 
 -------
 Returns
@@ -72,8 +79,8 @@ Example
 .. code-block:: javascript
 
     const myContract = new web3.eth.Contract([...], '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', {
-        from: '0x1234567890123456789012345678901234567891', // default from address
-        gasPrice: '20000000000' // default gas price in wei, 20 gwei in this case
+        defaultAccount: '0x1234567890123456789012345678901234567891', // default from address
+        defaultGasPrice: '20000000000' // default gas price in wei, 20 gwei in this case
     });
 
 
@@ -83,62 +90,27 @@ Example
 = Properties =
 =========
 
-
-------------------------------------------------------------------------------
+.. _contract-options:
 
 options
-=========
+=======
 
-.. code-block:: javascript
+The contract options object contains the following properties:
 
-    myContract.options
-
-The options ``object`` for the contract instance. ``from``, ``gas`` and ``gasPrice`` are used as fallback values when sending transactions.
-
--------
-Properties
--------
-
-``Object`` - options:
-
-- ``address`` - ``String``: The address where the contract is deployed. See :ref:`options.address <contract-address>`.
-- ``jsonInterface`` - ``Array``: The json interface of the contract. See :ref:`options.jsonInterface <contract-json-interface>`.
-- ``data`` - ``String``: The byte code of the contract. Used when the contract gets :ref:`deployed <contract-deploy>`.
-- ``from`` - ``String``: The address transactions should be made from.
-- ``gasPrice`` - ``String``: The gas price in wei to use for transactions.It is the wei per unit of gas.
-- ``gas`` - ``Number``: The maximum gas provided for a transaction (gas limit).
-
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    myContract.options;
-    > {
-        address: '0x1234567890123456789012345678901234567891',
-        jsonInterface: [...],
-        from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
-        gasPrice: '10000000000000',
-        gas: 1000000
-    }
-
-    myContract.options.from = '0x1234567890123456789012345678901234567891'; // default from address
-    myContract.options.gasPrice = '20000000000000'; // default gas price in wei
-    myContract.options.gas = 5000000; // provide as fallback always 5M gas
+- ``data`` - ``String``: The contract bytecode.
+- ``address`` - ``String`` (deprecated use ``contract.address``): The address of the contract.
 
 
 ------------------------------------------------------------------------------
 
 .. _contract-address:
 
-options.address
+address
 =========
 
 .. code-block:: javascript
 
-    myContract.options.address
+    myContract.address
 
 The address used for this contract instance.
 All transactions generated by web3.js from this contract will contain this address as the "to".
@@ -159,23 +131,23 @@ Example
 
 .. code-block:: javascript
 
-    myContract.options.address;
+    myContract.address;
     > '0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'
 
     // set a new address
-    myContract.options.address = '0x1234FFDD...';
+    myContract.address = '0x1234FFDD...';
 
 
 ------------------------------------------------------------------------------
 
 .. _contract-json-interface:
 
-options.jsonInterface
+jsonInterface
 =========
 
 .. code-block:: javascript
 
-    myContract.options.jsonInterface
+    myContract.jsonInterface
 
 The :ref:`json interface <glossary-json-interface>` object derived from the `ABI <https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI>`_ of this contract.
 
@@ -184,8 +156,7 @@ The :ref:`json interface <glossary-json-interface>` object derived from the `ABI
 Property
 -------
 
-``jsonInterface`` - ``Array``: The :ref:`json interface <glossary-json-interface>` for this contract. Re-setting this will regenerate the methods and events of the contract instance.
-
+``jsonInterface`` - ``AbiModel``: The :ref:`json interface <glossary-json-interface>` for this contract. Re-setting this will regenerate the methods and events of the contract instance.
 
 -------
 Example
@@ -193,7 +164,7 @@ Example
 
 .. code-block:: javascript
 
-    myContract.options.jsonInterface;
+    myContract.jsonInterface;
     > [{
         "type":"function",
         "name":"foo",
@@ -206,7 +177,7 @@ Example
     }]
 
     // set a new interface
-    myContract.options.jsonInterface = [...];
+    myContract.jsonInterface = [...];
 
 
 ------------------------------------------------------------------------------
@@ -246,12 +217,12 @@ Example
 
 .. code-block:: javascript
 
-    const contract1 = new eth.Contract(abi, address, {gasPrice: '12345678', from: fromAddress});
+    const contract1 = new eth.Contract(abi, address, {gasPrice: '12345678', defaultAccount: fromAddress});
 
     const contract2 = contract1.clone();
-    contract2.options.address = address2;
+    contract2.address = address2;
 
-    (contract1.options.address !== contract2.options.address);
+    (contract1.address !== contract2.address);
     > true
 
 ------------------------------------------------------------------------------
