@@ -55,7 +55,7 @@
         "dtslint": "dtslint types --onlyTestTsNext",
         "postinstall": "node angular-patch.js"
     },
-    "types": "types",
+    "types": "types/index.d.ts",
     "dependencies": {
         "@babel/runtime": "^7.3.1",
         "@types/node": "^10.12.18",
