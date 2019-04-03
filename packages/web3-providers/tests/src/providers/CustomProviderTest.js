@@ -23,6 +23,10 @@ describe('CustomProviderTest', () => {
         expect(customProvider.connection).toEqual(connectionMock);
     });
 
+    it('calls supportsSubscriptions and returns false', () => {
+        expect(customProvider.supportsSubscriptions()).toEqual(false);
+    });
+
     it('calls subscribe and throws error', () => {
         expect(() => {
             customProvider.subscribe();

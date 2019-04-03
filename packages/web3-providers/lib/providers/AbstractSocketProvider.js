@@ -52,6 +52,17 @@ export default class AbstractSocketProvider extends EventEmitter {
     }
 
     /**
+     * Method for checking subscriptions support of a internal provider
+     *
+     * @method supportsSubscriptions
+     *
+     * @returns {Boolean}
+     */
+    supportsSubscriptions() {
+        return true;
+    }
+
+    /**
      * Registers all the required listeners.
      *
      * @method registerEventListeners
