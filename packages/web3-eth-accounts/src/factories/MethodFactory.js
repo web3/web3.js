@@ -17,7 +17,7 @@
  * @date 2019
  */
 
-import {ChainIdMethod, GasPriceMethod, GetTransactionCountMethod, AbstractMethodFactory} from 'web3-core-method';
+import {ChainIdMethod, GetGasPriceMethod, GetTransactionCountMethod, AbstractMethodFactory} from 'web3-core-method';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
@@ -31,7 +31,7 @@ export default class MethodFactory extends AbstractMethodFactory {
 
         this.methods = {
             getChainId: ChainIdMethod,
-            getGasPrice: GasPriceMethod,
+            getGasPrice: GetGasPriceMethod,
             getTransactionCount: GetTransactionCountMethod
         };
     }

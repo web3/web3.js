@@ -20,14 +20,16 @@
  * @date 2018
  */
 
-import * as net from "net";
+import * as net from 'net';
 import {AbstractWeb3Module} from 'web3-core';
 import {ProvidersModuleFactory} from 'web3-providers';
 
 const providersModuleFactory = new ProvidersModuleFactory();
 
 // $ExpectType BatchRequest
-providersModuleFactory.createBatchRequest(new AbstractWeb3Module('http://localhost:7545'));
+providersModuleFactory.createBatchRequest(
+    new AbstractWeb3Module('http://localhost:7545')
+);
 
 // $ExpectType ProviderResolver
 providersModuleFactory.createProviderResolver();
@@ -38,8 +40,8 @@ providersModuleFactory.createHttpProvider('http://localhost:8545');
 // $ExpectType WebsocketProvider
 providersModuleFactory.createWebsocketProvider('http://localhost:8545');
 
-// $ExpectType EthereumProvider
-providersModuleFactory.createEthereumProvider({});
+// $ExpectType Web3EthereumProvider
+providersModuleFactory.createWeb3EthereumProvider({});
 
 // $ExpectType IpcProvider
 providersModuleFactory.createIpcProvider('http://localhost:8545', new net.Server());

@@ -3,7 +3,7 @@ import SendContractMethod from '../../../src/methods/SendContractMethod';
 import MethodOptionsValidator from '../../../src/validators/MethodOptionsValidator';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('web3-utils');
 jest.mock('../../../src/methods/SendContractMethod');
 
 /**
@@ -84,5 +84,17 @@ describe('MethodOptionsValidatorTest', () => {
         expect(() => {
             methodOptionsValidator.validate(abiItemModelMock, sendContractMethodMock);
         }).toThrow('Can not send value to non-payable contract method or constructor');
+    });
+
+    it('calls validate returns true with payable true and value set to 0', () => {
+        abiItemModelMock.signature = 'constructor';
+        abiItemModelMock.payable = true;
+        abiItemModelMock.isOfType.mockReturnValueOnce(true);
+
+        sendContractMethodMock.parameters = [{value: 0, from: '0x0'}];
+
+        Utils.isAddress.mockReturnValueOnce(true);
+
+        expect(methodOptionsValidator.validate(abiItemModelMock, sendContractMethodMock)).toEqual(true);
     });
 });

@@ -3,7 +3,7 @@ import EventLogDecoder from '../../../src/decoders/EventLogDecoder';
 import AbiItemModel from '../../../src/models/AbiItemModel';
 
 // Mocks
-jest.mock('AbiCoder');
+jest.mock('web3-eth-abi');
 jest.mock('../../../src/models/AbiItemModel');
 
 /**
@@ -57,6 +57,43 @@ describe('EventLogDecoderTest', () => {
         expect(decodedLog.returnValues).toEqual(['0x0']);
 
         expect(abiCoderMock.decodeLog).toHaveBeenCalledWith([], '0x0', []);
+
+        expect(abiItemModel.getInputs).toHaveBeenCalled();
+    });
+
+    it('calls decode and returns the expected value when the data field is empty', () => {
+        new AbiItemModel({});
+        const abiItemModel = AbiItemModel.mock.instances[0];
+
+        const response = {
+            topics: ['0x0'],
+            data: '0x'
+        };
+
+        abiItemModel.name = 'Event';
+        abiItemModel.signature = 'Event()';
+
+        abiItemModel.getInputs.mockReturnValueOnce([]);
+
+        abiCoderMock.decodeLog.mockReturnValueOnce(['0x0']);
+
+        const decodedLog = eventLogDecoder.decode(abiItemModel, response);
+
+        expect(decodedLog.data).toEqual(undefined);
+
+        expect(decodedLog.topics).toEqual(undefined);
+
+        expect(decodedLog.raw.data).toEqual(null);
+
+        expect(decodedLog.raw.topics).toEqual(['0x0']);
+
+        expect(decodedLog.signature).toEqual(abiItemModel.signature);
+
+        expect(decodedLog.event).toEqual(abiItemModel.name);
+
+        expect(decodedLog.returnValues).toEqual(['0x0']);
+
+        expect(abiCoderMock.decodeLog).toHaveBeenCalledWith([], null, []);
 
         expect(abiItemModel.getInputs).toHaveBeenCalled();
     });

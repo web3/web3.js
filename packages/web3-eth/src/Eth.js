@@ -85,22 +85,22 @@ export default class Eth extends AbstractWeb3Module {
          * @constructor
          */
         this.Contract = (abi, address, options = {}) => {
-            options.transactionSigner = this.transactionSigner;
-
             const contract = this.contractModuleFactory.createContract(
                 this.currentProvider,
                 this.accounts,
                 abi,
                 address,
                 {
-                    defaultAccount: this.defaultAccount,
-                    defaultBlock: this.defaultBlock,
-                    defaultGas: this.defaultGas,
-                    defaultGasPrice: this.defaultGasPrice,
-                    transactionBlockTimeout: this.transactionBlockTimeout,
-                    transactionConfirmationBlocks: this.transactionConfirmationBlocks,
-                    transactionPollingTimeout: this.transactionPollingTimeout,
-                    transactionSigner: this.transactionSigner
+                    defaultAccount: options.from || options.defaultAccount || this.defaultAccount,
+                    defaultBlock: options.defaultBlock || this.defaultBlock,
+                    defaultGas: options.gas || options.defaultGas || this.defaultGas,
+                    defaultGasPrice: options.gasPrice || options.defaultGasPrice || this.defaultGasPrice,
+                    transactionBlockTimeout: options.transactionBlockTimeout || this.transactionBlockTimeout,
+                    transactionConfirmationBlocks:
+                        options.transactionConfirmationBlocks || this.transactionConfirmationBlocks,
+                    transactionPollingTimeout: options.transactionPollingTimeout || this.transactionPollingTimeout,
+                    transactionSigner: this.transactionSigner,
+                    data: options.data
                 }
             );
 
@@ -131,6 +131,10 @@ export default class Eth extends AbstractWeb3Module {
      * @param {TransactionSigner} transactionSigner
      */
     set transactionSigner(transactionSigner) {
+        if (transactionSigner.type && transactionSigner.type === 'TransactionSigner') {
+            throw new Error('Invalid TransactionSigner given!');
+        }
+
         this._transactionSigner = transactionSigner;
         this.accounts.transactionSigner = transactionSigner;
         this.ens.transactionSigner = transactionSigner;

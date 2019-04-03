@@ -62,8 +62,8 @@ export default class EthSignMethod extends SignMethod {
             this.beforeExecution(this.moduleInstance);
 
             let signedMessage = this.moduleInstance.accounts.sign(
-                this.parameters[0],
-                this.moduleInstance.accounts.wallet[this.parameters[1]].address
+                this.parameters[1],
+                this.moduleInstance.accounts.wallet[this.parameters[0]].privateKey
             );
 
             if (this.callback) {

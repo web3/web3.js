@@ -12,7 +12,7 @@ import EventSubscriptionsProxy from '../../src/proxies/EventSubscriptionsProxy';
 import AbstractContract from '../../src/AbstractContract';
 
 // Mocks
-jest.mock('AbiCoder');
+jest.mock('web3-eth-abi');
 jest.mock('../../src/models/AbiModel');
 jest.mock('../../src/mappers/AbiMapper');
 jest.mock('../../src/proxies/MethodsProxy');
@@ -59,7 +59,7 @@ describe('AbstractContractTest', () => {
         methodFactoryMock = MethodFactory.mock.instances[0];
 
         abi = [];
-        options = {transactionSigner: {}};
+        options = {transactionSigner: {}, data: ''};
 
         contractModuleFactoryMock.createAbiMapper.mockReturnValueOnce(abiMapperMock);
 
@@ -105,7 +105,7 @@ describe('AbstractContractTest', () => {
 
         expect(abstractContract.abiMapper).toEqual(abiMapperMock);
 
-        expect(abstractContract.options).toEqual({address: '0x0', transactionSigner: {}});
+        expect(abstractContract.options).toEqual({address: '0x0', transactionSigner: {}, data: ''});
 
         expect(abstractContract.accounts).toEqual({});
 
@@ -114,6 +114,8 @@ describe('AbstractContractTest', () => {
         expect(abstractContract.abiModel).toEqual(abiModelMock);
 
         expect(abstractContract.address).toEqual('0x0');
+
+        expect(abstractContract.data).toEqual('');
 
         expect(abstractContract.transactionSigner).toEqual({});
 
@@ -234,7 +236,17 @@ describe('AbstractContractTest', () => {
             abstractContract.accounts,
             [],
             '',
-            abstractContract.options
+            {
+                data: '',
+                defaultAccount: undefined,
+                defaultBlock: 'latest',
+                defaultGas: undefined,
+                defaultGasPrice: undefined,
+                transactionBlockTimeout: 50,
+                transactionConfirmationBlocks: 24,
+                transactionPollingTimeout: 750,
+                transactionSigner: {}
+            }
         );
     });
 

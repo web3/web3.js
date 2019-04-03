@@ -14,8 +14,11 @@ npm install web3-eth
 ## Usage
 
 ```js
+import {Eth} from 'web3-eth';
+
 const eth = new Eth(
     'http://127.0.0.1:4546',
+    null,
     options
 );
 ```

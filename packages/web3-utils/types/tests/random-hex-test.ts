@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, randomHex} from 'web3-utils';
+import BN = require('bn.js');
+import {randomHex} from 'web3-utils';
 
 // $ExpectType string
 randomHex(32);

@@ -57,7 +57,7 @@ export default class SubscriptionsFactory {
                     this.utils,
                     this.formatters,
                     moduleInstance,
-                    new GetPastLogsMethod(this.utils, this.formatters)
+                    new GetPastLogsMethod(this.utils, this.formatters, moduleInstance)
                 );
             case 'newBlockHeaders':
                 return new NewHeadsSubscription(this.utils, this.formatters, moduleInstance);

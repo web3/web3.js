@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, soliditySha3} from 'web3-utils';
+import BN = require('bn.js');
+import {soliditySha3} from 'web3-utils';
 
 // $ExpectType string
 soliditySha3('234564535', '0xfff23243', true, -10);

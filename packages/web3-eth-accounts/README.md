@@ -20,6 +20,7 @@ import {Accounts} from 'web3-eth-accounts';
 
 const accounts = new Accounts(
     'http://127.0.0.1:4546',
+    null,
     options
 );
 ```

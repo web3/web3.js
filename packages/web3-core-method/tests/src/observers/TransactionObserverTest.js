@@ -4,7 +4,7 @@ import GetBlockByNumberMethod from '../../../src/methods/block/GetBlockByNumberM
 import TransactionObserver from '../../../src/observers/TransactionObserver';
 
 // Mocks
-jest.mock('NewHeadsSubscription');
+jest.mock('web3-core-subscriptions');
 jest.mock('../../../src/methods/transaction/GetTransactionReceiptMethod');
 jest.mock('../../../src/methods/block/GetBlockByNumberMethod');
 
@@ -19,7 +19,7 @@ describe('TransactionObserverTest', () => {
         newHeadsSubscriptionMock;
 
     beforeEach(() => {
-        providerMock = {constructor: {name: 'socket'}};
+        providerMock = {supportsSubscriptions: jest.fn()};
 
         new GetTransactionReceiptMethod();
         getTransactionReceiptMethodMock = GetTransactionReceiptMethod.mock.instances[0];
@@ -67,6 +67,8 @@ describe('TransactionObserverTest', () => {
     it('calls observe with a socket provider and returns a transaction receipt', (done) => {
         transactionObserver.blockConfirmations = 2;
 
+        providerMock.supportsSubscriptions.mockReturnValueOnce(true);
+
         const blockHeadOne = {
             number: 0
         };
@@ -100,6 +102,8 @@ describe('TransactionObserverTest', () => {
             },
             () => {},
             () => {
+                expect(providerMock.supportsSubscriptions).toHaveBeenCalled();
+
                 expect(newHeadsSubscriptionMock.unsubscribe).toHaveBeenCalled();
 
                 done();
@@ -110,6 +114,8 @@ describe('TransactionObserverTest', () => {
     it('calls observe with a socket provider and throws an timeout error', (done) => {
         transactionObserver.blockConfirmations = 2;
         transactionObserver.timeout = 1;
+
+        providerMock.supportsSubscriptions.mockReturnValueOnce(true);
 
         const blockHeadOne = {
             number: 0
@@ -136,6 +142,8 @@ describe('TransactionObserverTest', () => {
                     )
                 );
 
+                expect(providerMock.supportsSubscriptions).toHaveBeenCalled();
+
                 expect(error.receipt).toEqual(receipt);
 
                 expect(error.confirmations).toEqual(1);
@@ -152,6 +160,8 @@ describe('TransactionObserverTest', () => {
     it('calls observe with a socket provider and the newHeads subscription returns a error', (done) => {
         transactionObserver.blockConfirmations = 2;
 
+        providerMock.supportsSubscriptions.mockReturnValueOnce(true);
+
         newHeadsSubscriptionMock.subscribe = jest.fn((callback) => {
             callback(true, false);
         });
@@ -160,6 +170,8 @@ describe('TransactionObserverTest', () => {
             () => {},
             (error) => {
                 expect(error.error).toEqual(true);
+
+                expect(providerMock.supportsSubscriptions).toHaveBeenCalled();
 
                 expect(error.receipt).toEqual(false);
 
@@ -175,7 +187,7 @@ describe('TransactionObserverTest', () => {
     it('calls observe with a http provider and returns a transaction receipt', (done) => {
         transactionObserver.blockConfirmations = 2;
 
-        providerMock.constructor.name = 'CustomProvider';
+        providerMock.supportsSubscriptions.mockReturnValueOnce(false);
 
         const receipt = {blockNumber: '0xa'};
         const blockOne = {number: '0xa', hash: '0x0'};
@@ -206,6 +218,8 @@ describe('TransactionObserverTest', () => {
             () => {
                 expect(getTransactionReceiptMethodMock.execute).toHaveBeenCalledTimes(2);
 
+                expect(providerMock.supportsSubscriptions).toHaveBeenCalled();
+
                 expect(getTransactionReceiptMethodMock.parameters).toEqual(['transactionHash']);
 
                 expect(getBlockByNumberMethodMock.parameters).toEqual(['0xb']);
@@ -219,7 +233,7 @@ describe('TransactionObserverTest', () => {
         transactionObserver.blockConfirmations = 2;
         transactionObserver.timeout = 1;
 
-        providerMock.constructor.name = 'CustomProvider';
+        providerMock.supportsSubscriptions.mockReturnValueOnce(false);
 
         const receipt = {blockNumber: '0xa'};
         const blockOne = {number: '0xa', hash: '0x0'};
@@ -243,6 +257,8 @@ describe('TransactionObserverTest', () => {
                 expect(error.confirmations).toEqual(1);
                 expect(error.confirmationChecks).toEqual(1);
 
+                expect(providerMock.supportsSubscriptions).toHaveBeenCalled();
+
                 expect(getTransactionReceiptMethodMock.execute).toHaveBeenCalledTimes(1);
 
                 expect(getTransactionReceiptMethodMock.parameters).toEqual(['transactionHash']);
@@ -256,7 +272,7 @@ describe('TransactionObserverTest', () => {
         transactionObserver.blockConfirmations = 2;
         transactionObserver.timeout = 1;
 
-        providerMock.constructor.name = 'CustomProvider';
+        providerMock.supportsSubscriptions.mockReturnValueOnce(false);
 
         getTransactionReceiptMethodMock.execute = jest.fn(() => {
             return Promise.reject(new Error('ERROR'));
@@ -269,6 +285,8 @@ describe('TransactionObserverTest', () => {
                 expect(error.receipt).toEqual(false);
                 expect(error.confirmations).toEqual(0);
                 expect(error.confirmationChecks).toEqual(0);
+
+                expect(providerMock.supportsSubscriptions).toHaveBeenCalled();
 
                 expect(getTransactionReceiptMethodMock.execute).toHaveBeenCalledTimes(1);
 

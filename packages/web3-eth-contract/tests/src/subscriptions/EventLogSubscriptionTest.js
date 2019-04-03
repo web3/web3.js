@@ -8,9 +8,9 @@ import AbiItemModel from '../../../src/models/AbiItemModel';
 import EventLogSubscription from '../../../src/subscriptions/EventLogSubscription';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
-jest.mock('GetPastLogsMethod');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
+jest.mock('web3-core-method');
 jest.mock('../../../src/AbstractContract');
 jest.mock('../../../src/decoders/EventLogDecoder');
 jest.mock('../../../src/models/AbiItemModel');

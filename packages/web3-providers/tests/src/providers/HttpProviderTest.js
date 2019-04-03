@@ -13,7 +13,7 @@ import NetworkError from '../../__mocks__/NetworkError';
 jest.mock('../../../src/factories/ProvidersModuleFactory');
 jest.mock('http');
 jest.mock('https');
-jest.mock('XMLHttpRequest');
+jest.mock('xhr2-cookies');
 
 /**
  * HttpProvider test
@@ -27,7 +27,7 @@ describe('HttpProviderTest', () => {
 
         httpProvider = new HttpProvider(
             'https',
-            {headers: [], timeout: 1, keepAlive: true},
+            {headers: [], timeout: 1, keepAlive: true, withCredentials: true},
             providersModuleFactoryMock
         );
     });
@@ -47,6 +47,28 @@ describe('HttpProviderTest', () => {
     });
 
     it('constructor check with http', () => {
+        httpProvider = new HttpProvider(
+            'http',
+            {headers: [], timeout: 1, keepAlive: true, withCredentials: true},
+            providersModuleFactoryMock
+        );
+
+        expect(httpProvider.host).toEqual('http');
+
+        expect(httpProvider.headers).toEqual([]);
+
+        expect(httpProvider.timeout).toEqual(1);
+
+        expect(httpProvider.connected).toEqual(true);
+
+        expect(httpProvider.withCredentials).toEqual(true);
+
+        expect(httpProvider.providersModuleFactory).toEqual(providersModuleFactoryMock);
+
+        expect(httpProvider.agent.httpAgent).toBeInstanceOf(http.Agent);
+    });
+
+    it('constructor check without the property withCredentials in the options', () => {
         httpProvider = new HttpProvider('http', {headers: [], timeout: 1}, providersModuleFactoryMock);
 
         expect(httpProvider.host).toEqual('http');
@@ -57,9 +79,15 @@ describe('HttpProviderTest', () => {
 
         expect(httpProvider.connected).toEqual(true);
 
+        expect(httpProvider.withCredentials).toEqual(false);
+
         expect(httpProvider.providersModuleFactory).toEqual(providersModuleFactoryMock);
 
         expect(httpProvider.agent.httpAgent).toBeInstanceOf(http.Agent);
+    });
+
+    it('calls supportsSubscriptions and returns false', () => {
+        expect(httpProvider.supportsSubscriptions()).toEqual(false);
     });
 
     it('calls subscribe and throws error', () => {
@@ -110,7 +138,8 @@ describe('HttpProviderTest', () => {
             httpProvider.host,
             httpProvider.timeout,
             httpProvider.headers,
-            httpProvider.agent
+            httpProvider.agent,
+            httpProvider.withCredentials
         );
 
         expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
@@ -148,7 +177,8 @@ describe('HttpProviderTest', () => {
             httpProvider.host,
             httpProvider.timeout,
             httpProvider.headers,
-            httpProvider.agent
+            httpProvider.agent,
+            httpProvider.withCredentials
         );
 
         expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
@@ -189,7 +219,8 @@ describe('HttpProviderTest', () => {
             httpProvider.host,
             httpProvider.timeout,
             httpProvider.headers,
-            httpProvider.agent
+            httpProvider.agent,
+            httpProvider.withCredentials
         );
 
         expect(xhrMock.send).toHaveBeenCalledWith('[{"id":"0x0"}]');
@@ -219,7 +250,8 @@ describe('HttpProviderTest', () => {
             httpProvider.host,
             httpProvider.timeout,
             httpProvider.headers,
-            httpProvider.agent
+            httpProvider.agent,
+            httpProvider.withCredentials
         );
 
         expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
@@ -247,7 +279,8 @@ describe('HttpProviderTest', () => {
             httpProvider.host,
             httpProvider.timeout,
             httpProvider.headers,
-            httpProvider.agent
+            httpProvider.agent,
+            httpProvider.withCredentials
         );
 
         expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
@@ -273,7 +306,8 @@ describe('HttpProviderTest', () => {
             httpProvider.host,
             httpProvider.timeout,
             httpProvider.headers,
-            httpProvider.agent
+            httpProvider.agent,
+            httpProvider.withCredentials
         );
 
         expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
@@ -297,7 +331,8 @@ describe('HttpProviderTest', () => {
             httpProvider.host,
             httpProvider.timeout,
             httpProvider.headers,
-            httpProvider.agent
+            httpProvider.agent,
+            httpProvider.withCredentials
         );
 
         expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');

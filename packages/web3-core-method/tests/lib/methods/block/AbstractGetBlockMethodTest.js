@@ -3,7 +3,7 @@ import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import AbstractGetBlockMethod from '../../../../lib/methods/block/AbstractGetBlockMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * AbstractGetBlockMethodTest test

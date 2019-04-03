@@ -3,7 +3,7 @@ import SignMethod from '../../../src/methods/SignMethod';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * SignMethod test
@@ -23,7 +23,7 @@ describe('SignMethodTest', () => {
         expect(method.rpcMethod).toEqual('eth_sign');
     });
 
-    it('beforeExecution should call the inputSignFormatter and inputAddressFormatter', () => {
+    it('beforeExecution should call the inputSignFormatter and inputAddressFormatter and swap order of parameters', () => {
         method.parameters = ['string', 'string'];
 
         formatters.inputSignFormatter.mockReturnValueOnce('string');
@@ -32,9 +32,9 @@ describe('SignMethodTest', () => {
 
         method.beforeExecution(moduleInstanceMock);
 
-        expect(method.parameters[0]).toEqual('string');
+        expect(method.parameters[1]).toEqual('string');
 
-        expect(method.parameters[1]).toEqual('0x0');
+        expect(method.parameters[0]).toEqual('0x0');
 
         expect(formatters.inputSignFormatter).toHaveBeenCalledWith('string');
 

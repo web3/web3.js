@@ -14,17 +14,17 @@ import SubscriptionsFactory from '../../src/factories/SubscriptionsFactory';
 import Eth from '../../src/Eth';
 
 // Mocks
-jest.mock('AbstractWeb3Module');
-jest.mock('AbstractSubscription');
-jest.mock('LogSubscription');
-jest.mock('AbiCoder');
-jest.mock('Accounts');
-jest.mock('Ens');
-jest.mock('Personal');
-jest.mock('Network');
-jest.mock('Utils');
-jest.mock('formatters');
-jest.mock('ContractModuleFactory');
+jest.mock('web3-core');
+jest.mock('web3-core-subscriptions');
+jest.mock('web3-eth-abi');
+jest.mock('web3-eth-accounts');
+jest.mock('web3-eth-ens');
+jest.mock('web3-eth-iban');
+jest.mock('web3-eth-personal');
+jest.mock('web3-net');
+jest.mock('web3-eth-contract');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 jest.mock('../../src/factories/MethodFactory');
 jest.mock('../../src/signers/TransactionSigner');
 jest.mock('../../src/factories/SubscriptionsFactory');
@@ -290,7 +290,28 @@ describe('EthTest', () => {
         expect(abstractSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
     });
 
-    it('calls the Contract factory method from the constructor', () => {
+    it('calls the Contract factory method with options from the constructor', () => {
+        contractModuleFactoryMock.createContract.mockReturnValueOnce({});
+
+        eth.currentProvider = providerMock;
+        expect(new eth.Contract([], '0x0', {data: '', from: '0x0', gas: '0x0', gasPrice: '0x0'})).toEqual({});
+
+        expect(eth.initiatedContracts).toHaveLength(1);
+
+        expect(contractModuleFactoryMock.createContract).toHaveBeenCalledWith(providerMock, eth.accounts, [], '0x0', {
+            defaultAccount: '0x0',
+            defaultBlock: eth.defaultBlock,
+            defaultGas: '0x0',
+            defaultGasPrice: '0x0',
+            transactionBlockTimeout: eth.transactionBlockTimeout,
+            transactionConfirmationBlocks: eth.transactionConfirmationBlocks,
+            transactionPollingTimeout: eth.transactionPollingTimeout,
+            transactionSigner: eth.transactionSigner,
+            data: ''
+        });
+    });
+
+    it('calls the Contract factory method without options from the constructor', () => {
         contractModuleFactoryMock.createContract.mockReturnValueOnce({});
 
         eth.currentProvider = providerMock;
@@ -306,7 +327,8 @@ describe('EthTest', () => {
             transactionBlockTimeout: eth.transactionBlockTimeout,
             transactionConfirmationBlocks: eth.transactionConfirmationBlocks,
             transactionPollingTimeout: eth.transactionPollingTimeout,
-            transactionSigner: eth.transactionSigner
+            transactionSigner: eth.transactionSigner,
+            data: undefined
         });
     });
 });

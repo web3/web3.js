@@ -7,10 +7,10 @@ import SubscriptionsFactory from '../../src/factories/SubscriptionsFactory';
 import Shh from '../../src/Shh';
 
 // Mocks
-jest.mock('AbstractSubscription');
-jest.mock('Network');
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-core-subscriptions');
+jest.mock('web3-net');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 jest.mock('../../src/factories/SubscriptionsFactory');
 jest.mock('../../src/factories/MethodFactory');
 

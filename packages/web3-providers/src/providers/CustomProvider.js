@@ -32,6 +32,17 @@ export default class CustomProvider {
     }
 
     /**
+     * Method for checking subscriptions support of a internal provider
+     *
+     * @method supportsSubscriptions
+     *
+     * @returns {Boolean}
+     */
+    supportsSubscriptions() {
+        return false;
+    }
+
+    /**
      * Checks if the given custom provider does have the required methods
      *
      * @method checkConnectionMethods
@@ -70,16 +81,15 @@ export default class CustomProvider {
      *
      * @returns {Promise<any>}
      */
-    send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
-            const validationResult = JsonRpcResponseValidator.validate(response);
+    async send(method, parameters) {
+        const response = await this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
+        const validationResult = JsonRpcResponseValidator.validate(response);
 
-            if (validationResult instanceof Error) {
-                throw validationResult;
-            }
+        if (validationResult instanceof Error) {
+            throw validationResult;
+        }
 
-            return response.result;
-        });
+        return response.result;
     }
 
     /**

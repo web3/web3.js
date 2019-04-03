@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, hexToUtf8} from 'web3-utils';
+import BN = require('bn.js');
+import {hexToUtf8} from 'web3-utils';
 
 // $ExpectType string
 hexToUtf8('0x49206861766520313030e282ac');

@@ -23,6 +23,7 @@
 import isArray from 'lodash/isArray';
 import {EthSendTransactionMethod} from 'web3-core-method';
 
+// TODO: Implement revert handling (AbstractContractMethod)
 export default class SendContractMethod extends EthSendTransactionMethod {
     /**
      * @param {Utils} utils
@@ -31,7 +32,6 @@ export default class SendContractMethod extends EthSendTransactionMethod {
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {SendRawTransactionMethod} sendRawTransactionMethod
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
      *
@@ -44,19 +44,10 @@ export default class SendContractMethod extends EthSendTransactionMethod {
         transactionObserver,
         chainIdMethod,
         getTransactionCountMethod,
-        sendRawTransactionMethod,
         allEventsLogDecoder,
         abiModel
     ) {
-        super(
-            utils,
-            formatters,
-            moduleInstance,
-            transactionObserver,
-            chainIdMethod,
-            getTransactionCountMethod,
-            sendRawTransactionMethod
-        );
+        super(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod);
 
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.abiModel = abiModel;

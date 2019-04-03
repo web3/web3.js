@@ -22,6 +22,7 @@
 
 import {CallMethod} from 'web3-core-method';
 
+// TODO: Implement revert handling (AbstractContractMethod)
 export default class CallContractMethod extends CallMethod {
     /**
      * @param {Utils} utils
@@ -48,7 +49,7 @@ export default class CallContractMethod extends CallMethod {
      * @returns {Array|String}
      */
     afterExecution(response) {
-        if (!response) {
+        if (!response || response === '0x') {
             return null;
         }
 
@@ -57,6 +58,6 @@ export default class CallContractMethod extends CallMethod {
             return this.abiCoder.decodeParameters(outputs, response);
         }
 
-        return this.abiCoder.decodeParameter(outputs[0].type, response);
+        return this.abiCoder.decodeParameter(outputs[0], response);
     }
 }

@@ -1,13 +1,13 @@
+import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbstractWeb3Module} from 'web3-core';
 import {SignMethod} from 'web3-core-method';
-import * as Utils from 'web3-utils';
 import EthSignMethod from '../../../src/methods/EthSignMethod';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
-jest.mock('AbstractWeb3Module');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
+jest.mock('web3-core');
 
 /**
  * EthSignMethod test
@@ -40,15 +40,15 @@ describe('EthSignMethodTest', () => {
     it('calls execute with wallets defined', async () => {
         accountsMock.sign.mockReturnValueOnce('0x00');
 
-        const response = await method.execute(moduleInstanceMock);
+        const response = await method.execute();
 
         expect(response).toEqual('0x00');
 
         expect(method.callback).toHaveBeenCalledWith(false, '0x00');
 
-        expect(method.parameters[0]).toEqual('string');
+        expect(method.parameters[0]).toEqual('0x0');
 
-        expect(method.parameters[1]).toEqual('0x0');
+        expect(method.parameters[1]).toEqual('string');
 
         expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
 
@@ -64,7 +64,7 @@ describe('EthSignMethodTest', () => {
         });
 
         try {
-            await method.execute(moduleInstanceMock);
+            await method.execute();
         } catch (error2) {
             expect(error2).toEqual(error);
 
@@ -79,7 +79,7 @@ describe('EthSignMethodTest', () => {
 
         moduleInstanceMock.currentProvider = {send: jest.fn()};
 
-        method.execute(moduleInstanceMock);
+        method.execute();
 
         expect(moduleInstanceMock.currentProvider.send).toHaveBeenCalledWith('eth_sign', method.parameters);
     });

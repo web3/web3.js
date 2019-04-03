@@ -34,7 +34,7 @@ eth.personal;
 // $ExpectType Accounts
 eth.accounts;
 
-// $ExpectType any
+// $ExpectType Ens
 eth.ens;
 
 // $ExpectType AbiCoder
@@ -53,10 +53,10 @@ eth.subscribe('logs', {});
 // $ExpectType Subscription<Log>
 eth.subscribe('logs', {}, (error: Error, log: Log) => {});
 
-// $ExpectType Subscription<any>
+// $ExpectType Subscription<Syncing>
 eth.subscribe('syncing');
-// $ExpectType Subscription<any>
-eth.subscribe('syncing', null, (error: Error, result: any) => {});
+// $ExpectType Subscription<Syncing>
+eth.subscribe('syncing', null, (error: Error, result: Syncing) => {});
 
 // $ExpectType Subscription<BlockHeader>
 eth.subscribe('newBlockHeaders');
@@ -71,7 +71,7 @@ eth.subscribe('pendingTransactions', null, (error: Error, transactionHash: strin
 // $ExpectType Providers
 Eth.providers;
 
-// $ExpectType object | null
+// $ExpectType any
 eth.givenProvider;
 
 // $ExpectType BatchRequest
@@ -83,7 +83,7 @@ eth.defaultAccount;
 // $ExpectType string | number
 eth.defaultBlock;
 
-// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
+// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
 eth.currentProvider;
 
 // $ExpectType Promise<string>

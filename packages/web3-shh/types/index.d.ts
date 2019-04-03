@@ -20,10 +20,12 @@
 import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
 import {provider} from 'web3-providers';
 import {Network} from 'web3-net';
+import * as net from 'net';
 
 export class Shh extends AbstractWeb3Module {
     constructor(
         provider: provider,
+        net?: net.Socket|null,
         options?: Web3ModuleOptions
     );
 

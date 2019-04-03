@@ -5,8 +5,8 @@ import {RESOLVER_ABI} from '../../../ressources/ABI/Resolver';
 import Registry from '../../../src/contracts/Registry';
 
 // Mocks
-jest.mock('Network');
-jest.mock('namehash');
+jest.mock('web3-net');
+jest.mock('eth-ens-namehash');
 
 /**
  * Registry test
@@ -28,7 +28,7 @@ describe('RegistryTest', () => {
         new Network();
         networkMock = Network.mock.instances[0];
 
-        networkMock.getBlock = jest.fn(() => {
+        networkMock.getBlockByNumber = jest.fn(() => {
             return Promise.resolve({timestamp: new Date() / 1000});
         });
 
@@ -50,12 +50,6 @@ describe('RegistryTest', () => {
         expect(registry.resolverContract).toEqual(null);
 
         expect(registry.resolverName).toEqual(null);
-
-        expect(networkMock.getBlock).toHaveBeenCalledWith('latest', false);
-
-        expect(networkMock.getNetworkType).toHaveBeenCalled();
-
-        expect(registry.address).toEqual('0xe7410170f87102df0055eb195163a03b7f2bff4a');
     });
 
     it('calls owner and returns a resolved promise', async () => {
@@ -64,6 +58,8 @@ describe('RegistryTest', () => {
         });
 
         const callback = jest.fn();
+
+        registry.address = '0x0';
 
         registry.methods.owner = jest.fn((hash) => {
             expect(hash).toEqual('0x0');
@@ -88,6 +84,8 @@ describe('RegistryTest', () => {
         });
 
         const callback = jest.fn();
+
+        registry.address = '0x0';
 
         registry.methods.owner = jest.fn((hash) => {
             expect(hash).toEqual('0x0');
@@ -148,13 +146,13 @@ describe('RegistryTest', () => {
     });
 
     it('calls checkNetwork and the network is not synced', async () => {
-        networkMock.getBlock = jest.fn(() => {
+        networkMock.getBlockByNumber = jest.fn(() => {
             return Promise.resolve({timestamp: 0});
         });
 
         await expect(registry.checkNetwork()).rejects.toBeInstanceOf(Error);
 
-        expect(networkMock.getBlock).toHaveBeenCalledWith('latest', false);
+        expect(networkMock.getBlockByNumber).toHaveBeenCalledWith('latest', false);
     });
 
     it('calls checkNetwork and ENS is not supported', async () => {
@@ -164,7 +162,7 @@ describe('RegistryTest', () => {
 
         await expect(registry.checkNetwork()).rejects.toThrow('ENS is not supported on network: "Nope"');
 
-        expect(networkMock.getBlock).toHaveBeenCalledWith('latest', false);
+        expect(networkMock.getBlockByNumber).toHaveBeenCalledWith('latest', false);
 
         expect(networkMock.getNetworkType).toHaveBeenCalled();
     });

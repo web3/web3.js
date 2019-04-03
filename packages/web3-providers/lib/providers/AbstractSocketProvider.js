@@ -13,13 +13,15 @@
 */
 /**
  * @file AbstractSocketProvider
- * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import EventEmitter from 'eventemitter3';
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
+import JsonRpcMapper from '../../src/mappers/JsonRpcMapper';
+import JsonRpcResponseValidator from '../../src/validators/JsonRpcResponseValidator';
 
 export default class AbstractSocketProvider extends EventEmitter {
     /**
@@ -47,6 +49,17 @@ export default class AbstractSocketProvider extends EventEmitter {
         this.SOCKET_CONNECT = 'socket_connect';
         this.SOCKET_NETWORK_CHANGED = 'socket_networkChanged';
         this.SOCKET_ACCOUNTS_CHANGED = 'socket_accountsChanged';
+    }
+
+    /**
+     * Method for checking subscriptions support of a internal provider
+     *
+     * @method supportsSubscriptions
+     *
+     * @returns {Boolean}
+     */
+    supportsSubscriptions() {
+        return true;
     }
 
     /**
@@ -96,9 +109,18 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {String} method
      * @param {Array} parameters
      *
-     * @returns {Promise<any>}
+     * @returns {Promise<Object>}
      */
-    send(method, parameters) {}
+    async send(method, parameters) {
+        const response = await this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
+        const validationResult = JsonRpcResponseValidator.validate(response);
+
+        if (validationResult instanceof Error) {
+            throw validationResult;
+        }
+
+        return response.result;
+    }
 
     /**
      * Creates the JSON-RPC batch payload and sends it to the node.
@@ -110,7 +132,16 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns Promise<Object|Error>
      */
-    sendBatch(methods, moduleInstance) {}
+    sendBatch(methods, moduleInstance) {
+        let payload = [];
+
+        methods.forEach((method) => {
+            method.beforeExecution(moduleInstance);
+            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
+        });
+
+        return this.sendPayload(payload);
+    }
 
     /**
      * Emits the ready event when the connection is established
@@ -172,10 +203,11 @@ export default class AbstractSocketProvider extends EventEmitter {
 
                 delete this.subscriptions[subscriptionId];
 
-                this.subscriptions[this.getSubscriptionEvent(this.subscriptions[key].id)].id = subscriptionId;
+                this.subscriptions[key].id = subscriptionId;
             }
         }
 
+        this.emit(this.SOCKET_CONNECT);
         this.emit(this.CONNECT);
     }
 

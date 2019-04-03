@@ -81,17 +81,25 @@ export default class ProvidersModuleFactory {
      * @param {Number} timeout
      * @param {Array} headers
      * @param {Object} agent
+     * @param {Boolean} withCredentials
      *
      * @returns {XMLHttpRequest}
      */
-    createXMLHttpRequest(host, timeout = 0, headers, agent) {
-        const request = new XHR();
-        request.nodejsSet(agent);
+    createXMLHttpRequest(host, timeout, headers, agent, withCredentials) {
+        let request;
+
+        // runtime is of type node
+        if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
+            request = new XHR();
+            request.nodejsSet(agent);
+        } else {
+            request = new XMLHttpRequest();
+        }
 
         request.open('POST', host, true);
         request.setRequestHeader('Content-Type', 'application/json');
         request.timeout = timeout;
-        request.withCredentials = true;
+        request.withCredentials = withCredentials;
 
         if (headers) {
             headers.forEach((header) => {
@@ -117,19 +125,12 @@ export default class ProvidersModuleFactory {
 
         // runtime is of type node
         if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
-            let authToken;
-
             let headers = options.headers || {};
-
             const urlObject = new URL(url);
 
-            if (urlObject.username && urlObject.password) {
-                authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`, 'base64');
+            if (!headers.authorization && urlObject.username && urlObject.password) {
+                const authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`).toString('base64');
                 headers.authorization = `Basic ${authToken}`;
-            }
-
-            if (urlObject.auth) {
-                headers.authorization = Buffer.from(urlObject.auth, 'base64');
             }
 
             connection = new W3CWebsocket(url, options.protocol, null, headers, null, options.clientConfig);
