@@ -71,7 +71,7 @@ eth.subscribe('pendingTransactions', null, (error: Error, transactionHash: strin
 // $ExpectType Providers
 Eth.providers;
 
-// $ExpectType object | null
+// $ExpectType any
 eth.givenProvider;
 
 // $ExpectType BatchRequest
@@ -83,7 +83,7 @@ eth.defaultAccount;
 // $ExpectType string | number
 eth.defaultBlock;
 
-// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
+// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
 eth.currentProvider;
 
 // $ExpectType Promise<string>

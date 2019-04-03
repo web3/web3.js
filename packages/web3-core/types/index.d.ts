@@ -22,12 +22,13 @@ import BN = require('bn.js');
 import {AbstractMethodFactory} from 'web3-core-method';
 import {
     BatchRequest,
-    EthereumProvider,
+    Web3EthereumProvider,
     HttpProvider,
     HttpProviderOptions,
     IpcProvider,
     provider,
     WebsocketProvider,
+    CustomProvider,
     WebsocketProviderOptions
 } from 'web3-providers';
 
@@ -48,8 +49,8 @@ export class AbstractWeb3Module {
     defaultGas: number;
     static readonly providers: Providers;
     defaultAccount: string | null;
-    readonly currentProvider: EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider;
-    readonly givenProvider: object | null;
+    readonly currentProvider: Web3EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider | CustomProvider;
+    readonly givenProvider: any;
 
     setProvider(provider: provider, net?: net.Socket): boolean;
 
