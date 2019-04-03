@@ -3,7 +3,6 @@ import {
     ChainIdMethod,
     EstimateGasMethod,
     EthSendTransactionMethod,
-    GetAccountsMethod,
     GetBalanceMethod,
     GetBlockNumberMethod,
     GetCodeMethod,
@@ -35,9 +34,10 @@ import GetBlockUncleCountMethod from '../../../src/methods/GetBlockUncleCountMet
 import GetTransactionFromBlockMethod from '../../../src/methods/GetTransactionFromBlockMethod';
 import EthSignTransactionMethod from '../../../src/methods/EthSignTransactionMethod';
 import EthSignMethod from '../../../src/methods/EthSignMethod';
+import EthGetAccountsMethod from '../../../src/methods/EthGetAccountsMethod';
 
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 
 /**
  * MethodFactory test
@@ -64,7 +64,7 @@ describe('MethodFactoryTest', () => {
             getHashrate: GetHashrateMethod,
             isSyncing: IsSyncingMethod,
             getGasPrice: GetGasPriceMethod,
-            getAccounts: GetAccountsMethod,
+            getAccounts: EthGetAccountsMethod,
             getBlockNumber: GetBlockNumberMethod,
             getBalance: GetBalanceMethod,
             getStorageAt: GetStorageAtMethod,

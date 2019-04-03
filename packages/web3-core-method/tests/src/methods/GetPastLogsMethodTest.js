@@ -3,7 +3,7 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import GetPastLogsMethod from '../../../src/methods/GetPastLogsMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * GetPastLogsMethod test

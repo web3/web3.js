@@ -3,7 +3,7 @@ import SendContractMethod from '../../../src/methods/SendContractMethod';
 import MethodOptionsValidator from '../../../src/validators/MethodOptionsValidator';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('web3-utils');
 jest.mock('../../../src/methods/SendContractMethod');
 
 /**

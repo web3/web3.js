@@ -15,8 +15,8 @@ import {
 import MethodFactory from '../../../src/factories/MethodFactory';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 
 /**
  * MethodFactory test

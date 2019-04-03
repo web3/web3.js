@@ -10,12 +10,9 @@ import {
 import SubscriptionsFactory from '../../../src/factories/SubscriptionsFactory';
 
 // Mocks
-jest.mock('LogSubscription');
-jest.mock('NewHeadsSubscription');
-jest.mock('NewPendingTransactionsSubscription');
-jest.mock('SyncingSubscription');
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
+jest.mock('web3-core-subscriptions');
 
 /**
  * SubscriptionsFactory test

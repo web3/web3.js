@@ -1,12 +1,11 @@
 import * as Utils from 'web3-utils';
 import {AbiCoder} from 'web3-eth-abi';
-
 import ContractModuleFactory from '../../../src/factories/ContractModuleFactory';
 import AbiMapper from '../../../src/mappers/AbiMapper';
 
 // Mocks
-jest.mock('AbiCoder');
-jest.mock('Utils');
+jest.mock('web3-eth-abi');
+jest.mock('web3-utils');
 jest.mock('../../../src/factories/ContractModuleFactory');
 
 /**

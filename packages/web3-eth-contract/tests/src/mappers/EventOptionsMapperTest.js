@@ -1,11 +1,10 @@
 import {formatters} from 'web3-core-helpers';
-
 import EventFilterEncoder from '../../../src/encoders/EventFilterEncoder';
 import EventOptionsMapper from '../../../src/mappers/EventOptionsMapper';
 
 // Mocks
 jest.mock('../../../src/encoders/EventFilterEncoder');
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * EventOptionsMapper test

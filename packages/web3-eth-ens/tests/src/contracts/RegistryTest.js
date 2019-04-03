@@ -5,8 +5,8 @@ import {RESOLVER_ABI} from '../../../ressources/ABI/Resolver';
 import Registry from '../../../src/contracts/Registry';
 
 // Mocks
-jest.mock('Network');
-jest.mock('namehash');
+jest.mock('web3-net');
+jest.mock('eth-ens-namehash');
 
 /**
  * Registry test

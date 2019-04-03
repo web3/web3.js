@@ -4,7 +4,7 @@ import AbstractContract from '../../../src/AbstractContract';
 import ContractDeployMethod from '../../../src/methods/ContractDeployMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 jest.mock('../../../src/AbstractContract');
 
 /**

@@ -3,7 +3,7 @@ import SignMethod from '../../../src/methods/SignMethod';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * SignMethod test

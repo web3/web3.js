@@ -3,7 +3,7 @@ import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import LockAccountMethod from '../../../../src/methods/personal/LockAccountMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * LockAccountMethod test
