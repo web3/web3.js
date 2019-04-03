@@ -129,7 +129,7 @@ export default class AbstractMethodFactory {
     getTimeout(moduleInstance) {
         let timeout = moduleInstance.transactionBlockTimeout;
 
-        if (!moduleInstance.currentProvider.SOCKET_MESSAGE) {
+        if (!moduleInstance.currentProvider.supportsSubscriptions()) {
             timeout = moduleInstance.transactionPollingTimeout;
         }
 

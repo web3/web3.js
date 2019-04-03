@@ -16,7 +16,7 @@
 */
 /**
  * @file index.d.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
@@ -47,7 +47,7 @@ export class ProvidersModuleFactory {
 
     createIpcProvider(path: string, net: net.Server): IpcProvider;
 
-    createEthereumProvider(connection: object): EthereumProvider;
+    createWeb3EthereumProvider(connection: object): Web3EthereumProvider;
 }
 
 export class HttpProvider {
@@ -56,6 +56,8 @@ export class HttpProvider {
     host: string;
     connected: boolean;
 
+    supportsSubscriptions(): boolean;
+
     send(method: string, parameters: any[]): Promise<any>;
 
     sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<any[]>;
@@ -63,11 +65,25 @@ export class HttpProvider {
     disconnect(): boolean;
 }
 
+export class CustomProvider {
+    constructor(injectedProvider: any);
+
+    host: string;
+
+    supportsSubscriptions(): boolean;
+
+    send(method: string, parameters: any[]): Promise<any>;
+
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<any[]>;
+}
+
 export class AbstractSocketProvider {
     constructor(connection: any, timeout?: number);
 
     host: string;
     connected: boolean;
+
+    supportsSubscriptions(): boolean;
 
     registerEventListeners(): void;
 
@@ -104,29 +120,8 @@ export class WebsocketProvider extends AbstractSocketProvider {
     isConnecting(): boolean;
 }
 
-export class EthereumProvider {
-    constructor();
-
-    host: string;
-    registerEventListeners(): void;
-
-    send(method: string, parameters: any[]): Promise<any>;
-
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<any[]>;
-
-    subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: any[]): Promise<string>;
-
-    unsubscribe(subscriptionId: string, unsubscribeMethod: string): Promise<boolean>;
-
-    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>;
-
-    on(type: string, callback: () => void): void;
-
-    removeListener(type: string, callback: () => void): void;
-
-    removeAllListeners(type: string): void;
-
-    reset(): void;
+export class Web3EthereumProvider extends AbstractSocketProvider {
+    constructor(ethereumProvider: any);
 }
 
 export class JsonRpcMapper {
@@ -143,7 +138,7 @@ export class JsonRpcResponseValidator {
     static isResponseItemValid(response: JsonRpcPayload): boolean;
 }
 
-export type provider = HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | string;
+export type provider = HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider | string;
 
 export interface JsonRpcPayload {
     jsonrpc: string;

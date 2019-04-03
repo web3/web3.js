@@ -60,6 +60,11 @@ describe('AbstractSocketProviderTest', () => {
         expect(abstractSocketProvider).toBeInstanceOf(EventEmitter);
     });
 
+    it('calls supportsSubscriptions and returns true', () => {
+        expect(abstractSocketProvider.supportsSubscriptions()).toEqual(true);
+    });
+
+
     it('calls removeAllListeners without event parameter', () => {
         abstractSocketProvider.on('test', () => {});
 

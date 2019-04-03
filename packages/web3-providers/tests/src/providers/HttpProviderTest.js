@@ -86,6 +86,10 @@ describe('HttpProviderTest', () => {
         expect(httpProvider.agent.httpAgent).toBeInstanceOf(http.Agent);
     });
 
+    it('calls supportsSubscriptions and returns false', () => {
+        expect(httpProvider.supportsSubscriptions()).toEqual(false);
+    });
+
     it('calls subscribe and throws error', () => {
         expect(() => {
             httpProvider.subscribe();

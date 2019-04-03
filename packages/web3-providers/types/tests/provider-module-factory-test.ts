@@ -40,8 +40,8 @@ providersModuleFactory.createHttpProvider('http://localhost:8545');
 // $ExpectType WebsocketProvider
 providersModuleFactory.createWebsocketProvider('http://localhost:8545');
 
-// $ExpectType EthereumProvider
-providersModuleFactory.createEthereumProvider({});
+// $ExpectType Web3EthereumProvider
+providersModuleFactory.createWeb3EthereumProvider({});
 
 // $ExpectType IpcProvider
 providersModuleFactory.createIpcProvider('http://localhost:8545', new net.Server());
