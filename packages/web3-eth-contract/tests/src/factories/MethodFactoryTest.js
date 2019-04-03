@@ -56,7 +56,7 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createMethodByRequestType with requestType send', () => {
-        contract.supportsSubscriptions.mockReturnValueOnce(false);
+        contract.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
 
         expect(methodFactory.createMethodByRequestType({}, contract, 'send')).toBeInstanceOf(SendContractMethod);
 
@@ -66,15 +66,15 @@ describe('MethodFactoryTest', () => {
 
         expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
 
-        expect(contract.supportsSubscriptions).toHaveBeenCalled();
+        expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
     });
 
     it('calls createMethodByRequestType with requestType send and a socket based provider', () => {
-        contract.supportsSubscriptions.mockReturnValueOnce(true);
+        contract.currentProvider.supportsSubscriptions.mockReturnValueOnce(true);
 
         expect(methodFactory.createMethodByRequestType({}, contract, 'send')).toBeInstanceOf(SendContractMethod);
 
-        expect(contract.supportsSubscriptions).toHaveBeenCalled();
+        expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(SendContractMethod).toHaveBeenCalled();
 
@@ -90,13 +90,13 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createMethodByRequestType with requestType contract-deployment', () => {
-        contract.supportsSubscriptions.mockReturnValueOnce(false);
+        contract.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
 
         expect(methodFactory.createMethodByRequestType({}, contract, 'contract-deployment')).toBeInstanceOf(
             ContractDeployMethod
         );
 
-        expect(contract.supportsSubscriptions).toHaveBeenCalled();
+        expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(ContractDeployMethod).toHaveBeenCalled();
 
@@ -146,11 +146,11 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createSendContractMethod and returns SendContractMethod object', () => {
-        contract.supportsSubscriptions.mockReturnValueOnce(false);
+        contract.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
 
         expect(methodFactory.createSendContractMethod(contract)).toBeInstanceOf(SendContractMethod);
 
-        expect(contract.supportsSubscriptions).toHaveBeenCalled();
+        expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(contractModuleFactoryMock.createAllEventsLogDecoder).toHaveBeenCalled();
 
@@ -162,11 +162,11 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createContractDeployMethod and returns ContractDeployMethod object', () => {
-        contract.supportsSubscriptions.mockReturnValueOnce(false);
+        contract.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
 
         expect(methodFactory.createContractDeployMethod(contract)).toBeInstanceOf(ContractDeployMethod);
 
-        expect(contract.supportsSubscriptions).toHaveBeenCalled();
+        expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(ContractDeployMethod).toHaveBeenCalled();
 
@@ -182,11 +182,11 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createSendContractMethod with a socket based provider and returns SendContractMethod object', () => {
-        contract.supportsSubscriptions.mockReturnValueOnce(true);
+        contract.currentProvider.supportsSubscriptions.mockReturnValueOnce(true);
 
         expect(methodFactory.createSendContractMethod(contract)).toBeInstanceOf(SendContractMethod);
 
-        expect(contract.supportsSubscriptions).toHaveBeenCalled();
+        expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(contractModuleFactoryMock.createAllEventsLogDecoder).toHaveBeenCalled();
 
