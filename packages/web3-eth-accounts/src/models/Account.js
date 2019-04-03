@@ -154,7 +154,14 @@ export default class Account {
             kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
             kdfparams.r = options.r || 8;
             kdfparams.p = options.p || 1;
-            derivedKey = scryptsy(Buffer.from(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+            
+            const scryptOptions = {
+                N : kdfparams.n,
+                blockSize: kdfparams.r,
+                parallelization: kdfparams.p
+            }
+            
+            derivedKey = crypto.scryptSync(Buffer.from(password), salt, kdfparams.dklen || 64, scryptOptions);
         } else {
             throw new Error('Unsupported kdf');
         }
