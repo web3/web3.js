@@ -18,7 +18,7 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
     import Web3 from 'web3';
     import {Bzz} from 'web3-bzz';
 
-    // will autodetect if an provider is present and will either connect to the local swarm node, or the swarm-gateways.net.
+    // will autodetect if a provider is present and will either connect to the local swarm node, or the swarm-gateways.net.
     // Optional you can give your own provider URL; If no provider URL is given it will use "http://swarm-gateways.net"
     const bzz = new Bzz(Web3.givenProvider || 'http://swarm-gateways.net');
 
