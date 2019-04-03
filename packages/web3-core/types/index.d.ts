@@ -78,7 +78,7 @@ export interface Web3ModuleOptions {
     transactionPollingTimeout?: number;
     defaultGasPrice?: string;
     defaultGas?: number;
-    transactionSigner: TransactionSigner;
+    transactionSigner?: TransactionSigner;
 }
 
 export interface Providers {
