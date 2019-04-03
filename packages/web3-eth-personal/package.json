@@ -14,7 +14,7 @@
         "test": "jest",
         "dtslint": "dtslint types --onlyTestTsNext"
     },
-    "types": "types",
+    "types": "types/index.d.ts",
     "dependencies": {
         "@babel/runtime": "^7.3.1",
         "web3-core": "1.0.0-beta.51",
