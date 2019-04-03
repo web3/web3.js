@@ -3,7 +3,7 @@ import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetProtocolVersionMethod from '../../../../src/methods/network/GetProtocolVersionMethod';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('web3-utils');
 
 /**
  * GetProtocolVersionMethod test

@@ -2,7 +2,7 @@ import {formatters} from 'web3-core-helpers';
 import SyncingSubscription from '../../../../src/subscriptions/eth/SyncingSubscription';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * SyncingSubscription test

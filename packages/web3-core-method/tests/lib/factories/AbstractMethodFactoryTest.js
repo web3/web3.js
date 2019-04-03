@@ -1,4 +1,5 @@
 import {AbstractWeb3Module} from 'web3-core';
+import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import AbstractMethodFactory from '../../../lib/factories/AbstractMethodFactory';
 import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
@@ -6,13 +7,12 @@ import EthSendTransactionMethod from '../../../src/methods/transaction/EthSendTr
 import TransactionObserver from '../../../src/observers/TransactionObserver';
 import GetTransactionReceiptMethod from '../../../src/methods/transaction/GetTransactionReceiptMethod';
 import GetBlockByNumberMethod from '../../../src/methods/block/GetBlockByNumberMethod';
-import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import ChainIdMethod from '../../../src/methods/network/ChainIdMethod';
 import GetTransactionCountMethod from '../../../src/methods/account/GetTransactionCountMethod';
 
 // Mocks
-jest.mock('AbstractWeb3Module');
-jest.mock('NewHeadsSubscription');
+jest.mock('web3-core');
+jest.mock('web3-core-subscriptions');
 jest.mock('../../../lib/methods/AbstractMethod');
 jest.mock('../../../src/methods/block/GetBlockByNumberMethod');
 jest.mock('../../../src/methods/transaction/GetTransactionReceiptMethod');

@@ -4,7 +4,7 @@ import AbiItemModel from '../../../src/models/AbiItemModel';
 import CallContractMethod from '../../../src/methods/CallContractMethod';
 
 // Mocks
-jest.mock('AbiCoder');
+jest.mock('web3-eth-abi');
 jest.mock('../../../src/models/AbiItemModel');
 
 /**

@@ -25,7 +25,6 @@ import {
     CallMethod,
     ChainIdMethod,
     EstimateGasMethod,
-    GetAccountsMethod,
     GetBalanceMethod,
     GetBlockNumberMethod,
     GetCodeMethod,
@@ -56,6 +55,7 @@ import GetBlockUncleCountMethod from '../methods/GetBlockUncleCountMethod';
 import GetTransactionFromBlockMethod from '../methods/GetTransactionFromBlockMethod';
 import EthSignTransactionMethod from '../methods/EthSignTransactionMethod';
 import EthSignMethod from '../methods/EthSignMethod';
+import EthGetAccountsMethod from '../methods/EthGetAccountsMethod';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
@@ -75,7 +75,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             getHashrate: GetHashrateMethod,
             isSyncing: IsSyncingMethod,
             getGasPrice: GetGasPriceMethod,
-            getAccounts: GetAccountsMethod,
+            getAccounts: EthGetAccountsMethod,
             getBlockNumber: GetBlockNumberMethod,
             getBalance: GetBalanceMethod,
             getStorageAt: GetStorageAtMethod,

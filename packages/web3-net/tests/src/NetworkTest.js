@@ -4,8 +4,8 @@ import {AbstractWeb3Module} from 'web3-core';
 import Network from '../../src/Network';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 
 /**
  * Network test

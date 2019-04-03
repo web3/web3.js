@@ -185,26 +185,26 @@ export const rightPad = (string, chars, sign) => {
  *
  * @returns {String} hex representation of input string
  */
-export const utf8ToHex = (str) => {
-    str = utf8.encode(str);
+export const utf8ToHex = (string) => {
+    string = utf8.encode(string);
     let hex = '';
 
     /* eslint-disable no-control-regex */
     // remove \u0000 padding from either side
-    str = str.replace(/^(?:\u0000)*/, '');
-    str = str
+    string = string.replace(/^(?:\u0000)*/, '');
+    string = string
         .split('')
         .reverse()
         .join('');
-    str = str.replace(/^(?:\u0000)*/, '');
-    str = str
+    string = string.replace(/^(?:\u0000)*/, '');
+    string = string
         .split('')
         .reverse()
         .join('');
     /* eslint-enable no-control-regex */
 
-    for (let i = 0; i < str.length; i++) {
-        const code = str.charCodeAt(i);
+    for (let i = 0; i < string.length; i++) {
+        const code = string.charCodeAt(i);
         // if (code !== 0) {
         const n = code.toString(16);
         hex += n.length < 2 ? `0${n}` : n;
@@ -226,7 +226,7 @@ export const utf8ToHex = (str) => {
 export const hexToUtf8 = (hex) => {
     if (!isHexStrict(hex)) throw new Error(`The parameter "${hex}" must be a valid HEX string.`);
 
-    let str = '';
+    let string = '';
     let code = 0;
     hex = hex.replace(/^0x/i, '');
 
@@ -247,11 +247,11 @@ export const hexToUtf8 = (hex) => {
     for (let i = 0; i < l; i += 2) {
         code = parseInt(hex.substr(i, 2), 16);
         // if (code !== 0) {
-        str += String.fromCharCode(code);
+        string += String.fromCharCode(code);
         // }
     }
 
-    return utf8.decode(str);
+    return utf8.decode(string);
 };
 
 /**

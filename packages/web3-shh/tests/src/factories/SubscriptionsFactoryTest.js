@@ -2,7 +2,7 @@ import {MessagesSubscription} from 'web3-core-subscriptions';
 import SubscriptionsFactory from '../../../src/factories/SubscriptionsFactory';
 
 // Mocks
-jest.mock('MessagesSubscription');
+jest.mock('web3-core-subscriptions');
 
 /**
  * SubscriptionsFactory test

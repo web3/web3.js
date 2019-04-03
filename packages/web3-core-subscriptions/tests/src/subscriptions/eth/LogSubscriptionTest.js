@@ -6,8 +6,8 @@ import GetPastLogsMethod from '../../../__mocks__/GetPastLogsMethod';
 import SocketProviderAdapter from '../../../__mocks__/SocketProviderAdapter';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 
 /**
  * LogSubscription test

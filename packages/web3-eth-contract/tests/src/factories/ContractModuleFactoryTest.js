@@ -22,9 +22,9 @@ import MethodFactory from '../../../src/factories/MethodFactory';
 import ContractModuleFactory from '../../../src/factories/ContractModuleFactory';
 
 // Mocks
-jest.mock('AbiCoder');
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-eth-abi');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 jest.mock('../../../src/validators/MethodOptionsValidator');
 jest.mock('../../../src/mappers/MethodOptionsMapper');
 jest.mock('../../../src/proxies/EventSubscriptionsProxy');

@@ -4,8 +4,8 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import EstimateGasMethod from '../../../src/methods/EstimateGasMethod';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 
 /**
  * EstimateGasMethod test
