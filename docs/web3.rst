@@ -69,11 +69,11 @@ Example
 
     Web3.modules
     > {
-        Eth(provider, options?, net?),
-        Net(provider, options?, net?),
-        Personal(provider, options?, net?),
-        Shh(provider, options?, net?),
-        Bzz(provider, options?, net?),
+        Eth(provider, net?, options?),
+        Net(provider, net?, options?),
+        Personal(provider, net?, options?),
+        Shh(provider, net?, options?),
+        Bzz(provider, net?, options?),
     }
 
 
