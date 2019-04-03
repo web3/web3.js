@@ -25,10 +25,13 @@ import {PromiEvent} from 'web3-core';
 export class Contract {
     constructor(
         provider: provider,
-        jsonInterface: AbiItem[] | AbiItem,
+        abi: any[],
         address?: string,
         options?: ContractOptions
     )
+
+    address: string;
+    jsonInterface: AbiModel;
 
     options: Options;
 
@@ -49,15 +52,12 @@ export class Contract {
     getPastEvents(event: string, callback: (error: Error, event: EventData) => void): Promise<EventData[]>;
 }
 
-export class ContractModuleFactory { } // TODO: Define methods
+export class ContractModuleFactory {
+} // TODO: Define methods
 
 export interface Options {
     address: string;
-    jsonInterface: AbiItem[];
     data: string;
-    from: string;
-    gasPrice: string;
-    gas: number;
 }
 
 export interface DeployOptions {
@@ -124,4 +124,20 @@ export interface EventData {
     blockHash: string;
     blockNumber: number;
     address: string;
+}
+
+export interface AbiModel {
+    getMethod(name: string): AbiItem | false;
+
+    getMethods(): AbiItem[];
+
+    hasMethod(name: string): boolean;
+
+    getEvent(name: string): AbiItem | false;
+
+    getEvents(): AbiItem[];
+
+    getEventBySignature(signature: string): AbiItem;
+
+    hasEvent(name: string): boolean;
 }

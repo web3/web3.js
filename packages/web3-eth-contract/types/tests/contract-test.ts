@@ -19,7 +19,19 @@
 
 import {Contract} from 'web3-eth-contract';
 
-const contract = new Contract('http://localhost:500', {type: 'constructor'});
+const contract = new Contract('http://localhost:500', []);
+
+// $ExpectType string
+contract.address;
+
+// $ExpectType string
+contract.options.address;
+
+// $ExpectType string
+contract.options.data;
+
+// $ExpectType AbiModel
+contract.jsonInterface;
 
 // $ExpectType Contract
 contract.clone();

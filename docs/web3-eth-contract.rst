@@ -55,7 +55,6 @@ Parameters
 3. ``options`` - ``Object`` (optional): The options of the contract. Some are used as fallbacks for calls and transactions:
     * ``data`` - ``String``: The byte code of the contract. Used when the contract gets :ref:`deployed <contract-deploy>`.
     * ``address`` - ``String``: The address where the contract is deployed. See :ref:`address <contract-address>`.
-    * ``jsonInterface`` - ``Array``: The json interface of the contract. See :ref:`jsonInterface <contract-json-interface>`.
     * :ref:`defaultAccount <web3-module-defaultaccount>`
     * :ref:`defaultBlock <web3-module-defaultblock>`
     * :ref:`defaultGas <web3-module-defaultgas>`
@@ -158,26 +157,23 @@ Property
 
 ``jsonInterface`` - ``AbiModel``: The :ref:`json interface <glossary-json-interface>` for this contract. Re-setting this will regenerate the methods and events of the contract instance.
 
--------
-Example
--------
+--------
+AbiModel
+--------
 
 .. code-block:: javascript
 
-    myContract.jsonInterface;
-    > [{
-        "type":"function",
-        "name":"foo",
-        "inputs": [{"name":"a","type":"uint256"}],
-        "outputs": [{"name":"b","type":"address"}]
-    },{
-        "type":"event",
-        "name":"Event",
-        "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}],
-    }]
+    export interface AbiModel {
+        getMethod(name: string): AbiItem | false;
+        getMethods(): AbiItem[];
+        hasMethod(name: string): boolean;
+        getEvent(name: string): AbiItem | false;
+        getEvents(): AbiItem[];
+        getEventBySignature(signature: string): AbiItem;
+        hasEvent(name: string): boolean;
+    }
 
-    // set a new interface
-    myContract.jsonInterface = [...];
+
 
 
 ------------------------------------------------------------------------------

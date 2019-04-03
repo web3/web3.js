@@ -24,7 +24,7 @@ First you need to get web3.js into your project. This can be done using the foll
 - npm: ``npm install web3``
 
 After that you need to create a web3 instance and set a provider.
-A Ethereum compatible browser will have a ``ethereum`` or ``web3.currentProvider`` available.
+A Ethereum compatible browser will have a ``window.ethereum`` or ``web3.currentProvider`` available.
 For  web3.js, check ``Web3.givenProvider``. If this property is ``null`` you should connect to your own local or remote node.
 
 .. code-block:: javascript
