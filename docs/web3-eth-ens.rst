@@ -17,7 +17,7 @@ The ``web3.eth.ens`` functions let you interacting with Ens.
     // "Web3.givenProvider" will be set if in an Ethereum supported browser.
     const eth = new Ens(
         Web3.givenProvider || 'ws://some.local-or-remote.node:8546',
-        net,
+        null,
         options
         new Accounts(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options)
     );
