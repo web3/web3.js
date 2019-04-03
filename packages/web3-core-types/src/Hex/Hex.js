@@ -43,7 +43,9 @@ export default class Hex {
 
         if (Hex.isValid(params.hex)) {
             this.props.hex = params.hex.toString();
-        } else if (params.hex === 'empty') {
+        }
+
+        if (params.hex === 'empty') {
             this.props.hex = '0x';
         }
 
@@ -56,8 +58,6 @@ export default class Hex {
         /* Make the props immutable */
         Object.freeze(this.props);
     }
-
-    /* Class functions */
 
     /**
      * Check if the supplied string is a valid hex value
@@ -93,7 +93,6 @@ export default class Hex {
      * @param {String} value
      *
      * @returns {Hex}
-     *
      */
     static fromString(value) {
         if (!isString(value)) throw new Error(`The given value ${value} is not string type.`);
@@ -115,7 +114,6 @@ export default class Hex {
      * @param {Number} value
      *
      * @returns {Hex}
-     *
      */
     static fromNumber(value) {
         if (!isNumber(value)) throw new Error(`The given value ${value} is not number type.`);
@@ -135,7 +133,6 @@ export default class Hex {
      * @param {String} value
      *
      * @returns {Hex}
-     *
      */
     static fromAscii(value) {
         if (!isString(value)) throw new Error(`The given value ${value} is not string type.`);
@@ -161,7 +158,6 @@ export default class Hex {
      * @param {String} value
      *
      * @returns {Hex}
-     *
      */
     static fromUtf8(value) {
         if (!isString(value)) throw new Error(`The given value ${value} is not string type.`);
@@ -206,7 +202,6 @@ export default class Hex {
      * @param {String} value
      *
      * @returns {Hex}
-     *
      */
     static fromBytes(value) {
         let hex = '';
@@ -240,11 +235,13 @@ export default class Hex {
     static from(value) {
         if (isNumber(value)) {
             return Hex.fromNumber(value);
-        } else if (isString(value)) {
-            return Hex.fromString(value);
-        } else {
-            throw new Error(`The given value ${value} needs to be a hex-encoded string or a base 10 number.`);
         }
+
+        if (isString(value)) {
+            return Hex.fromString(value);
+        }
+
+        throw new Error(`The given value ${value} needs to be a hex-encoded string or a base 10 number.`);
     }
 
     /* Instance accessors */
@@ -267,12 +264,6 @@ export default class Hex {
      * @return {String}
      */
     toString() {
-        /* match the sign, match the 0x, match either 1) 0 followed by 0s or 2) 0s followed by hex */
-        // const cleanup = this.props.hex.replace(/^(-)?(?:0x)?((0)0*|0*([0-9a-f]*))$/i, `$10x$3$4`);
-
-        /* pass the -0x0 = 0x0 case to a condition */
-        // return cleanup === "-0x0" ? "0x0" : cleanup;
-
         return this.props.hex.replace(/(-)?(0x)?([0-9a-fA-F]*)/, '$10x$3');
     }
 
@@ -308,7 +299,7 @@ export default class Hex {
      *
      * @method toUtf8
      *
-     * @return {string}
+     * @return {String}
      */
     toUtf8() {
         let str = '';
