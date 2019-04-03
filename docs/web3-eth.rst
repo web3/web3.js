@@ -6,7 +6,7 @@
 web3.eth
 ========
 
-The ``web3-eth`` package allows you to interact with a Ethereum blockchain itself and the deployed smart contracts.
+The ``web3-eth`` package allows you to interact with an Ethereum blockchain itself and the deployed smart contracts.
 
 
 .. code-block:: javascript

@@ -27,7 +27,7 @@ getNetworkType
 
 Guesses the chain the node is connected by comparing the genesis hashes.
 
-.. note:: It's recommended to use the :ref:`web3.eth.getChainId <eth-chainId>` method to detect the current connected chain.
+.. note:: It's recommended to use the :ref:`web3.eth.getChainId <eth-chainId>` method to detect the currently connected chain.
 
 -------
 Returns
