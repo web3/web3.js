@@ -26,8 +26,7 @@ To use it standalone:
         options
     );
 
-    contract.methods.somFunc().send({from: ....})
-    .on('receipt', () => {
+    contract.methods.somFunc().send({from: ....}).on('receipt', () => {
         ...
     });
 

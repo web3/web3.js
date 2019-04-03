@@ -120,96 +120,6 @@ For ``web3.eth.net`` see the :ref:`net reference documentation <eth-net>`
 
 .. include:: include_package-core.rst
 
-
-------------------------------------------------------------------------------
-
-.. _eth-defaultaccount:
-
-defaultAccount
-=====================
-
-.. code-block:: javascript
-
-    web3.eth.defaultAccount
-
-This default address is used as the default ``"from"`` property, if no ``"from"`` property is specified in for the following methods:
-
-- :ref:`web3.eth.sendTransaction() <eth-sendtransaction>`
-- :ref:`web3.eth.call() <eth-call>`
-- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().call() <contract-call>`
-- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().send() <contract-send>`
-
---------
-Property
---------
-
-
-``String`` - 20 Bytes: Any Ethereum address. You need to have the private key for that address in your node or keystore. (Default is ``undefined``)
-
-
--------
-Example
--------
-
-
-.. code-block:: javascript
-
-    web3.eth.defaultAccount;
-    > undefined
-
-    // set the default account
-    web3.eth.defaultAccount = '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe';
-
-
-------------------------------------------------------------------------------
-
-.. _eth-defaultblock:
-
-defaultBlock
-=====================
-
-.. code-block:: javascript
-
-    web3.eth.defaultBlock
-
-The default block is used for certain methods. You can override it by passing in the defaultBlock as last parameter.
-The default value is "latest".
-
-- :ref:`web3.eth.getBalance() <eth-getbalance>`
-- :ref:`web3.eth.getCode() <eth-getcode>`
-- :ref:`web3.eth.getTransactionCount() <eth-gettransactioncount>`
-- :ref:`web3.eth.getStorageAt() <eth-getstorageat>`
-- :ref:`web3.eth.call() <eth-call>`
-- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().call() <contract-call>`
-
-----------
-Property
-----------
-
-
-Default block parameters can be one of the following:
-
-- ``Number``: A block number
-- ``"genesis"`` - ``String``: The genesis block
-- ``"latest"`` - ``String``: The latest block (current head of the blockchain)
-- ``"pending"`` - ``String``: The currently mined block (including pending transactions)
-
-Default is ``"latest"``
-
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.eth.defaultBlock;
-    > "latest"
-
-    // set the default block
-    web3.eth.defaultBlock = 231;
-
-
 ------------------------------------------------------------------------------
 
 getProtocolVersion
@@ -234,8 +144,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getProtocolVersion()
-    .then(console.log);
+    web3.eth.getProtocolVersion().then(console.log);
     > "63"
 
 
@@ -290,7 +199,7 @@ getCoinbase
 
 .. code-block:: javascript
 
-    getCoinbase([callback])
+    web3.eth.getCoinbase([callback])
 
 Returns the coinbase address to which mining rewards will go.
 
@@ -307,8 +216,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getCoinbase()
-    .then(console.log);
+    web3.eth.getCoinbase().then(console.log);
     > "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe"
 
 
@@ -337,8 +245,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.isMining()
-    .then(console.log);
+    web3.eth.isMining().then(console.log);
     > true
 
 
@@ -366,8 +273,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getHashrate()
-    .then(console.log);
+    web3.eth.getHashrate().then(console.log);
     > 493736
 
 
@@ -403,8 +309,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getGasPrice()
-    .then(console.log);
+    web3.eth.getGasPrice().then(console.log);
     > "20000000000"
 
 
@@ -702,8 +607,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getBlockTransactionCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1")
-    .then(console.log);
+    web3.eth.getBlockTransactionCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1").then(console.log);
     > 1
 
 
@@ -743,8 +647,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getUncle(500, 0)
-    .then(console.log);
+    web3.eth.getUncle(500, 0).then(console.log);
     > // see web3.eth.getBlock
 
 ------------------------------------------------------------------------------
@@ -794,9 +697,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getTransaction('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b§234')
-    .then(console.log);
-
+    web3.eth.getTransaction('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b§234').then(console.log);
     > {
         "hash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
         "nonce": 2,
@@ -846,8 +747,7 @@ Example
 
 .. code-block:: javascript
 
-    const transaction = web3.eth.getTransactionFromBlock('0x4534534534', 2)
-    .then(console.log);
+    const transaction = web3.eth.getTransactionFromBlock('0x4534534534', 2).then(console.log);
     > // see web3.eth.getTransaction
 
 ------------------------------------------------------------------------------
@@ -900,8 +800,7 @@ Example
 .. code-block:: javascript
 
     const receipt = web3.eth.getTransactionReceipt('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b')
-    .then(console.log);
-
+                            .then(console.log);
     > {
       "status": true,
       "transactionHash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
@@ -952,8 +851,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getTransactionCount("0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe")
-    .then(console.log);
+    web3.eth.getTransactionCount("0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe").then(console.log);
     > 1
 
 ------------------------------------------------------------------------------
@@ -1252,8 +1150,7 @@ Example
     web3.eth.call({
         to: "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", // contract address
         data: "0xc6888fa10000000000000000000000000000000000000000000000000000000000000003"
-    })
-    .then(console.log);
+    }).then(console.log);
     > "0x000000000000000000000000000000000000000000000000000000000000000a"
 
 ------------------------------------------------------------------------------
@@ -1292,8 +1189,7 @@ Example
     web3.eth.estimateGas({
         to: "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
         data: "0xc6888fa10000000000000000000000000000000000000000000000000000000000000003"
-    })
-    .then(console.log);
+    }).then(console.log);
     > "0x0000000000000000000000000000000000000000000000000000000000000015"
 
 ------------------------------------------------------------------------------
@@ -1346,9 +1242,7 @@ Example
     web3.eth.getPastLogs({
         address: "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
         topics: ["0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234"]
-    })
-    .then(console.log);
-
+    }).then(console.log);
     > [{
         data: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
         topics: ['0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7', '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385']
@@ -1395,8 +1289,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getWork()
-    .then(console.log);
+    web3.eth.getWork().then(console.log);
     > [
       "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
       "0x5EED00000000000000000000000000005EED0000000000000000000000000000",

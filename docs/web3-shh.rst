@@ -117,8 +117,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.shh.getInfo()
-    .then(console.log);
+    web3.shh.getInfo().then(console.log);
     > {
         "minPow": 0.8,
         "maxMessageSize": 12345,
