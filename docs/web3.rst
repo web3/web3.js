@@ -42,13 +42,7 @@ Example
 Web3.modules
 =====================
 
-    Static property of the Web3 class
-
-.. code-block:: javascript
-
-    Web3.modules
-
-    Will return an object with the classes of all major sub modules, to be able to instantiate them manually.
+    This Static property will return an object with the classes of all major sub modules, to be able to instantiate them manually.
 
 -------
 Returns
