@@ -1,4 +1,3 @@
-
 .. include:: include_announcement.rst
 
 ===============
@@ -26,16 +25,29 @@ First you need to get web3.js into your project. This can be done using the foll
 
 - npm: ``npm install web3``
 - meteor: ``meteor add ethereum:web3``
-- pure js: link the ``dist/web3.min.js``
 
 After that you need to create a web3 instance and set a provider.
-Ethereum supported Browsers like Mist or MetaMask will have a ``ethereumProvider`` or ``web3.currentProvider`` available. For  web3.js, check ``Web3.givenProvider``.
-If this property is ``null`` you should connect to a remote/local node.
+Ethereum supported Browsers like Mist or MetaMask will have a ``ethereum`` or ``web3.currentProvider`` available.
+For  web3.js, check ``Web3.givenProvider``. If this property is ``null`` you should connect to a your own local or remote node.
 
 .. code-block:: javascript
 
     // in node.js use: const Web3 = require('web3');
 
-    const web3 = new Web3(Web3.givenProvider || "ws://localhost:8546");
+    // use the given Provider, e.g in Metamask, or instantiate a new websocket provider
+    const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8546', null, {});
+
+    // or
+    const web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://localhost:8546'), null, {});
+
+    // Using the IPC provider in node.js
+    const net = require('net');
+
+    const web3 = new Web3('/Users/myuser/Library/Ethereum/geth.ipc', net, {}); // mac os path
+    // or
+    const web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net, {})); // mac os path
+    // on windows the path is: '\\\\.\\pipe\\geth.ipc'
+    // on linux the path is: '/users/myuser/.ethereum/geth.ipc'
+
 
 That's it! now you can use the ``web3`` object.

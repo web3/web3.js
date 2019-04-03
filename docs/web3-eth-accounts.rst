@@ -19,7 +19,7 @@ To use this package standalone use:
 
     // Passing in the eth or web3 package is necessary to allow retrieving chainId, gasPrice and nonce automatically
     // for accounts.signTransaction().
-    const accounts = new Accounts('ws://localhost:8546', options);
+    const accounts = new Accounts('ws://localhost:8546', null, options);
 
 
 

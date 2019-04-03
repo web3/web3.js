@@ -371,7 +371,7 @@ Will return the given provider by the (browser) environment, otherwise ``null``.
 Returns
 -------
 
-``Object``: The given provider set or ``null``;
+``Object``: The given provider set or ``false``.
 
 -------
 Example
@@ -396,14 +396,14 @@ currentProvider
     web3.bzz.currentProvider
     ...
 
-Will return the current provider, otherwise ``null``.
+Will return the current provider.
 
 
 -------
 Returns
 -------
 
-``Object``: The current provider set or ``null``;
+``Object``: The current provider set.
 
 -------
 Example
@@ -411,7 +411,7 @@ Example
 
 .. code-block:: javascript
 
-    if(!web3.currentProvider) {
+    if (!web3.currentProvider) {
         web3.setProvider('http://localhost:8545');
     }
 
@@ -453,6 +453,6 @@ Example
     const contract = new web3.eth.Contract(abi, address);
 
     const batch = new web3.BatchRequest();
-    batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest', callback));
-    batch.add(contract.methods.balance(address).call.request({from: '0x0000000000000000000000000000000000000000'}, callback2));
-    batch.execute();
+    batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest'));
+    batch.add(contract.methods.balance(address).call.request({from: '0x0000000000000000000000000000000000000000'}));
+    batch.execute().then(...);

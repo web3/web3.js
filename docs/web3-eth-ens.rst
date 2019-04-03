@@ -17,14 +17,15 @@ The ``web3.eth.ens`` functions let you interacting with Ens.
     // "Web3.givenProvider" will be set if in an Ethereum supported browser.
     const eth = new Ens(
         Web3.givenProvider || 'ws://some.local-or-remote.node:8546',
-        new Accounts(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options),
+        net,
         options
+        new Accounts(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options)
     );
 
 
     // or using the web3 umbrella package
 
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
 
     // -> web3.eth.ens
 

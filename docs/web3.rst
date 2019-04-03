@@ -9,10 +9,27 @@ Web3
 
 .. code-block:: javascript
 
-    import {Web3} from 'web3';
+    new Web3(provider, net, options);
+
+----------
+Parameters
+----------
+
+1. ``provider`` - ``string|object``: A URL or one of the internally provided provider classes.
+2. ``net`` - ``net.Socket`` (optional): The net NodeJS package.
+3. ``options`` - ``object`` (optional)
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    import Web3 from 'web3';
 
     // "Web3.providers.givenProvider" will be set if in an Ethereum supported browser.
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', net, options);
 
     > web3.eth
     > web3.shh
@@ -52,11 +69,11 @@ Example
 
     Web3.modules
     > {
-        Eth: Eth function(provider, options?, net?),
-        Net: Net function(provider, options?, net?),
-        Personal: Personal function(provider, options?, net?),
-        Shh: Shh function(provider, options?, net?),
-        Bzz: Bzz function(provider, options?, net?),
+        Eth(provider, options?, net?),
+        Net(provider, options?, net?),
+        Personal(provider, options?, net?),
+        Shh(provider, options?, net?),
+        Bzz(provider, options?, net?),
     }
 
 
@@ -73,7 +90,6 @@ version
 
 .. code-block:: javascript
 
-    Web3.version
     web3.version
 
 Contains the version of the ``web3`` wrapper class.
