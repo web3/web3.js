@@ -62,7 +62,7 @@ defaultBlock
     ...
 
 The default block is used for all methods which have a block parameter.
-You can override it by passing in the defaultBlock as last parameter.
+You can override it by passing in the ``defaultBlock`` as last parameter.
 
 - :ref:`web3.eth.getBalance() <eth-getbalance>`
 - :ref:`web3.eth.getCode() <eth-getcode>`
@@ -75,7 +75,7 @@ You can override it by passing in the defaultBlock as last parameter.
 Returns
 -------
 
-Default block parameters can be one of the following:
+The ``defaultBlock`` property can return the following values:
 
 - ``Number``: A block number
 - ``"genesis"`` - ``String``: The genesis block
@@ -165,8 +165,9 @@ transactionBlockTimeout
     web3.shh.transactionBlockTimeout
     ...
 
-This can be used with a socket provider and defines the number of blocks until the PromiEvent
-rejects with a timeout error.
+This will be used in the transaction confirmation workflow if you are connected over a socket based provider.
+The ``transactionBlockTimeout`` does define the amount of new blocks it should wait until the first confirmation.
+This means the PromiEvent rejects with a timeout error when the timeout got exceeded.
 
 
 -------
@@ -190,7 +191,7 @@ transactionConfirmationBlocks
     ...
 
 This defines the number of blocks it requires until a transaction will be handled as confirmed.
-The PromiEvent will resolve with the desired receipt when enough confirmations happened.
+This means the PromiEvent will resolve with the desired receipt when enough confirmations happened.
 
 
 -------
@@ -214,8 +215,8 @@ transactionPollingTimeout
     web3.shh.transactionPollingTimeout
     ...
 
-This defines the polling cycles amount when you send a transaction with the HttpProvider.
-The PromiEvent rejects with a timeout error when the timeout got exceeded. (1 cycle == 1sec.).
+The ``transactionPollingTimeout`` does define the amount polls (each second) it should wait until the first confirmation happened.
+The PromiEvent rejects with a timeout error when the timeout got exceeded. 
 
 
 -------
