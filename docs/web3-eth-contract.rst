@@ -54,8 +54,8 @@ Parameters
 2. ``address`` - ``String`` (optional): This address is necessary for transactions and call requests and can also be added later using ``myContract.options.address = '0x1234..'.``
 3. ``options`` - ``Object`` (optional): The options of the contract. Some are used as fallbacks for calls and transactions:
     * ``data`` - ``String``: The byte code of the contract. Used when the contract gets :ref:`deployed <contract-deploy>`.
-    * ``address`` - ``String``: The address where the contract is deployed. See :ref:`options.address <contract-address>`.
-    * ``jsonInterface`` - ``Array``: The json interface of the contract. See :ref:`options.jsonInterface <contract-json-interface>`.
+    * ``address`` - ``String``: The address where the contract is deployed. See :ref:`address <contract-address>`.
+    * ``jsonInterface`` - ``Array``: The json interface of the contract. See :ref:`jsonInterface <contract-json-interface>`.
     * :ref:`defaultAccount <web3-module-defaultaccount>`
     * :ref:`defaultBlock <web3-module-defaultblock>`
     * :ref:`defaultGas <web3-module-defaultgas>`
