@@ -95,7 +95,7 @@ Example
 options
 =======
 
-The contract options object contains the following properties:
+The contract options object has the following properties:
 
 - ``data`` - ``String``: The contract bytecode.
 - ``address`` - ``String`` (deprecated use ``contract.address``): The address of the contract.
