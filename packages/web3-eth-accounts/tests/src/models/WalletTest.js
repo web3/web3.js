@@ -145,7 +145,7 @@ describe('WalletTest', () => {
 
         expect(accountMock.encrypt).toHaveBeenCalledWith('pw', {});
 
-        expect(wallet.accountsIndex).toEqual(0);
+        expect(wallet.accountsIndex).toEqual(1);
     });
 
     it('calls decrypt and returns the expected value', () => {
