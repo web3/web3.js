@@ -7,6 +7,10 @@ Web3
 
     The Web3 class is a wrapper to house all Ethereum related modules.
 
+
+Initiating of Web3
+=====================
+
 ----------
 Parameters
 ----------
