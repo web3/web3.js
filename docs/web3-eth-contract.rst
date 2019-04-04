@@ -172,6 +172,30 @@ AbiModel
         hasEvent(name: string): boolean;
     }
 
+    interface AbiItem {
+        anonymous?: boolean;
+        constant?: boolean;
+        inputs?: AbiInput[];
+        name?: string;
+        outputs?: AbiOutput[];
+        payable?: boolean;
+        stateMutability?: 'pure' | 'view' | 'nonpayable' | 'payable';
+        type: 'function' | 'constructor' | 'event' | 'fallback';
+    }
+
+    interface AbiInput {
+        name: string;
+        type: string;
+        indexed?: boolean;
+        components?: AbiInput[];
+    }
+
+    interface AbiOutput {
+        name: string;
+        type: string;
+        components?: AbiOutput[];
+    }
+
 
 
 
