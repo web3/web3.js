@@ -13,7 +13,7 @@ import NetworkError from '../../__mocks__/NetworkError';
 jest.mock('../../../src/factories/ProvidersModuleFactory');
 jest.mock('http');
 jest.mock('https');
-jest.mock('XMLHttpRequest');
+jest.mock('xhr2-cookies');
 
 /**
  * HttpProvider test
@@ -84,6 +84,10 @@ describe('HttpProviderTest', () => {
         expect(httpProvider.providersModuleFactory).toEqual(providersModuleFactoryMock);
 
         expect(httpProvider.agent.httpAgent).toBeInstanceOf(http.Agent);
+    });
+
+    it('calls supportsSubscriptions and returns false', () => {
+        expect(httpProvider.supportsSubscriptions()).toEqual(false);
     });
 
     it('calls subscribe and throws error', () => {

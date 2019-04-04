@@ -3,7 +3,7 @@ import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetTransactionReceiptMethod from '../../../../src/methods/transaction/GetTransactionReceiptMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * GetTransactionReceiptMethod test

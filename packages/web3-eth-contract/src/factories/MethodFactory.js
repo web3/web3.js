@@ -153,13 +153,11 @@ export default class MethodFactory {
      * @returns {SendContractMethod}
      */
     createSendContractMethod(contract) {
-        const transactionObserver = this.createTransactionObserver(contract);
-
         return new SendContractMethod(
             this.utils,
             this.formatters,
             contract,
-            transactionObserver,
+            this.createTransactionObserver(contract),
             new ChainIdMethod(this.utils, this.formatters, contract),
             new GetTransactionCountMethod(this.utils, this.formatters, contract),
             this.contractModuleFactory.createAllEventsLogDecoder(),
@@ -177,13 +175,11 @@ export default class MethodFactory {
      * @returns {ContractDeployMethod}
      */
     createContractDeployMethod(contract) {
-        const transactionObserver = this.createTransactionObserver(contract);
-
         return new ContractDeployMethod(
             this.utils,
             this.formatters,
             contract,
-            transactionObserver,
+            this.createTransactionObserver(contract),
             new ChainIdMethod(this.utils, this.formatters, contract),
             new GetTransactionCountMethod(this.utils, this.formatters, contract)
         );
@@ -214,7 +210,7 @@ export default class MethodFactory {
     getTimeout(contract) {
         let timeout = contract.transactionBlockTimeout;
 
-        if (!contract.currentProvider.SOCKET_MESSAGE) {
+        if (!contract.currentProvider.supportsSubscriptions()) {
             timeout = contract.transactionPollingTimeout;
         }
 

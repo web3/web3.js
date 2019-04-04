@@ -4,7 +4,7 @@ import AbiModel from '../../../src/models/AbiModel';
 import AbiItemModel from '../../../src/models/AbiItemModel';
 
 // Mocks
-jest.mock('AbiCoder');
+jest.mock('web3-eth-abi');
 jest.mock('../../../src/models/AbiModel');
 jest.mock('../../../src/models/AbiItemModel');
 

@@ -3,7 +3,7 @@ import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import NewAccountMethod from '../../../../src/methods/personal/NewAccountMethod';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('web3-utils');
 
 /**
  * NewAccountMethod test

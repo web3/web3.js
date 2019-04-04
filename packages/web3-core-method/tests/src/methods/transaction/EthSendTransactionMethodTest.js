@@ -10,10 +10,10 @@ import EthSendTransactionMethod from '../../../../src/methods/transaction/EthSen
 import AbstractObservedTransactionMethod from '../../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
 // Mocks
-jest.mock('formatters');
-jest.mock('Utils');
-jest.mock('WebsocketProvider');
-jest.mock('AbstractWeb3Module');
+jest.mock('web3-core-helpers');
+jest.mock('web3-utils');
+jest.mock('web3-providers');
+jest.mock('web3-core');
 jest.mock('../../../../src/methods/network/ChainIdMethod');
 jest.mock('../../../../src/observers/TransactionObserver');
 jest.mock('../../../../src/methods/account/GetTransactionCountMethod');

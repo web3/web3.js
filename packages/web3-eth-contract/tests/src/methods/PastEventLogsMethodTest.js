@@ -7,7 +7,7 @@ import AbstractContract from '../../../src/AbstractContract';
 import PastEventLogsMethod from '../../../src/methods/PastEventLogsMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 jest.mock('../../../src/decoders/EventLogDecoder');
 jest.mock('../../../src/models/AbiItemModel');
 jest.mock('../../../src/mappers/EventOptionsMapper');

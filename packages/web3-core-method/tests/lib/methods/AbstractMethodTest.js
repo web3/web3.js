@@ -4,9 +4,9 @@ import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
-jest.mock('WebsocketProvider');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
+jest.mock('web3-providers');
 
 /**
  * AbstractMethod test

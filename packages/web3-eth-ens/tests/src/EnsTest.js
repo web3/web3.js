@@ -8,13 +8,13 @@ import Ens from '../../src/Ens';
 import EnsModuleFactory from '../../src/factories/EnsModuleFactory';
 
 // Mocks
+jest.mock('web3-net');
+jest.mock('web3-utils');
+jest.mock('web3-eth-abi');
+jest.mock('web3-core-helpers');
+jest.mock('eth-ens-namehash');
 jest.mock('../../src/factories/EnsModuleFactory');
 jest.mock('../../src/contracts/Registry');
-jest.mock('Network');
-jest.mock('AbiCoder');
-jest.mock('Utils');
-jest.mock('formatters');
-jest.mock('namehash');
 
 /**
  * Ens test

@@ -1,4 +1,5 @@
 import {AbstractWeb3Module} from 'web3-core';
+import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import AbstractMethodFactory from '../../../lib/factories/AbstractMethodFactory';
 import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
@@ -6,13 +7,12 @@ import EthSendTransactionMethod from '../../../src/methods/transaction/EthSendTr
 import TransactionObserver from '../../../src/observers/TransactionObserver';
 import GetTransactionReceiptMethod from '../../../src/methods/transaction/GetTransactionReceiptMethod';
 import GetBlockByNumberMethod from '../../../src/methods/block/GetBlockByNumberMethod';
-import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import ChainIdMethod from '../../../src/methods/network/ChainIdMethod';
 import GetTransactionCountMethod from '../../../src/methods/account/GetTransactionCountMethod';
 
 // Mocks
-jest.mock('AbstractWeb3Module');
-jest.mock('NewHeadsSubscription');
+jest.mock('web3-core');
+jest.mock('web3-core-subscriptions');
 jest.mock('../../../lib/methods/AbstractMethod');
 jest.mock('../../../src/methods/block/GetBlockByNumberMethod');
 jest.mock('../../../src/methods/transaction/GetTransactionReceiptMethod');
@@ -79,13 +79,16 @@ describe('AbstractMethodFactoryTest', () => {
     it('calls createMethod and returns a object of type AbstractObservedTransactionMethod', () => {
         new AbstractWeb3Module();
         const moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
-        moduleInstanceMock.currentProvider = {constructor: {name: 'HttpProvider'}};
+        moduleInstanceMock.currentProvider = {supportsSubscriptions: jest.fn()};
+        moduleInstanceMock.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
 
         expect(abstractMethodFactory.hasMethod('sendObserved')).toEqual(true);
 
         const observedMethod = abstractMethodFactory.createMethod('sendObserved', moduleInstanceMock);
 
         expect(observedMethod).toBeInstanceOf(AbstractObservedTransactionMethod);
+
+        expect(moduleInstanceMock.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(GetTransactionReceiptMethod).toHaveBeenCalledTimes(1);
 
@@ -101,13 +104,16 @@ describe('AbstractMethodFactoryTest', () => {
     it('calls createMethod and returns a object of type EthSendTransactionMethod', () => {
         new AbstractWeb3Module();
         const moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
-        moduleInstanceMock.currentProvider = {constructor: {name: 'HttpProvider'}};
+        moduleInstanceMock.currentProvider = {supportsSubscriptions: jest.fn()};
+        moduleInstanceMock.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
 
         expect(abstractMethodFactory.hasMethod('sendEthObserved')).toEqual(true);
 
         const observedMethod = abstractMethodFactory.createMethod('sendEthObserved', moduleInstanceMock);
 
         expect(observedMethod).toBeInstanceOf(EthSendTransactionMethod);
+
+        expect(moduleInstanceMock.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(GetTransactionReceiptMethod).toHaveBeenCalledTimes(1);
 
@@ -125,13 +131,16 @@ describe('AbstractMethodFactoryTest', () => {
     it('calls createMethod with a socket provider and returns a object of type AbstractObservedTransactionMethod', () => {
         new AbstractWeb3Module();
         const moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
-        moduleInstanceMock.currentProvider = {constructor: {name: 'WebsocketProvider'}};
+        moduleInstanceMock.currentProvider = {supportsSubscriptions: jest.fn()};
+        moduleInstanceMock.currentProvider.supportsSubscriptions.mockReturnValueOnce(true);
 
         expect(abstractMethodFactory.hasMethod('sendObserved')).toEqual(true);
 
         const observedMethod = abstractMethodFactory.createMethod('sendObserved', moduleInstanceMock);
 
         expect(observedMethod).toBeInstanceOf(AbstractObservedTransactionMethod);
+
+        expect(moduleInstanceMock.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(GetTransactionReceiptMethod).toHaveBeenCalledTimes(1);
 

@@ -4,8 +4,6 @@ import AbstractMethod from '../../__mocks__/AbstractMethod';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
 import AbstractSocketProvider from '../../../lib/providers/AbstractSocketProvider';
 
-// Mocks
-
 /**
  * Web3EthereumProvider test
  */

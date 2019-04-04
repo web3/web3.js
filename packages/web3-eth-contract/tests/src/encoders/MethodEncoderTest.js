@@ -3,7 +3,7 @@ import AbiItemModel from '../../../src/models/AbiItemModel';
 import MethodEncoder from '../../../src/encoders/MethodEncoder';
 
 // Mocks
-jest.mock('AbiCoder');
+jest.mock('web3-eth-abi');
 jest.mock('../../../src/models/AbiItemModel');
 
 /**

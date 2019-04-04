@@ -278,7 +278,7 @@ export default class TransactionObserver {
      * @returns {Boolean}
      */
     isSocketBasedProvider() {
-        return !!this.provider.SOCKET_MESSAGE;
+        return !!this.provider.supportsSubscriptions();
     }
 
     /**

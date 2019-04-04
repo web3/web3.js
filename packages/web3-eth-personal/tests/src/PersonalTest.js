@@ -6,9 +6,9 @@ import MethodFactory from '../../src/factories/MethodFactory';
 import Personal from '../../src/Personal';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
-jest.mock('Network');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
+jest.mock('web3-net');
 
 /**
  * Personal test

@@ -12,14 +12,10 @@ import PastEventLogsMethod from '../../../src/methods/PastEventLogsMethod';
 import AllPastEventLogsMethod from '../../../src/methods/AllPastEventLogsMethod';
 
 // Mocks
-jest.mock('Accounts');
-jest.mock('Utils');
-jest.mock('formatters');
-jest.mock('AbiCoder');
-jest.mock('EstimateGasMethod');
-jest.mock('ChainIdMethod');
-jest.mock('GetTransactionCountMethod');
-jest.mock('SendRawTransactionMethod');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
+jest.mock('web3-eth-abi');
+jest.mock('web3-core-method');
 jest.mock('../../../src/factories/ContractModuleFactory');
 jest.mock('../../../src/methods/CallContractMethod');
 jest.mock('../../../src/methods/SendContractMethod');
@@ -34,7 +30,7 @@ describe('MethodFactoryTest', () => {
     let methodFactory, contractModuleFactoryMock, abiCoderMock, contract;
 
     beforeEach(() => {
-        contract = {currentProvider: {SOCKET_MESSAGE: false}};
+        contract = {currentProvider: {supportsSubscriptions: jest.fn()}};
 
         new ContractModuleFactory({}, {}, {});
         contractModuleFactoryMock = ContractModuleFactory.mock.instances[0];
@@ -60,6 +56,8 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createMethodByRequestType with requestType send', () => {
+        contract.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
+
         expect(methodFactory.createMethodByRequestType({}, contract, 'send')).toBeInstanceOf(SendContractMethod);
 
         expect(SendContractMethod).toHaveBeenCalled();
@@ -67,10 +65,16 @@ describe('MethodFactoryTest', () => {
         expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
 
         expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+
+        expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
     });
 
-    it('calls createMethodByRequestType with requestType send and a socketProvider', () => {
+    it('calls createMethodByRequestType with requestType send and a socket based provider', () => {
+        contract.currentProvider.supportsSubscriptions.mockReturnValueOnce(true);
+
         expect(methodFactory.createMethodByRequestType({}, contract, 'send')).toBeInstanceOf(SendContractMethod);
+
+        expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(SendContractMethod).toHaveBeenCalled();
 
@@ -86,9 +90,13 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createMethodByRequestType with requestType contract-deployment', () => {
+        contract.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
+
         expect(methodFactory.createMethodByRequestType({}, contract, 'contract-deployment')).toBeInstanceOf(
             ContractDeployMethod
         );
+
+        expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(ContractDeployMethod).toHaveBeenCalled();
 
@@ -138,7 +146,11 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createSendContractMethod and returns SendContractMethod object', () => {
+        contract.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
+
         expect(methodFactory.createSendContractMethod(contract)).toBeInstanceOf(SendContractMethod);
+
+        expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(contractModuleFactoryMock.createAllEventsLogDecoder).toHaveBeenCalled();
 
@@ -150,7 +162,11 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createContractDeployMethod and returns ContractDeployMethod object', () => {
+        contract.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
+
         expect(methodFactory.createContractDeployMethod(contract)).toBeInstanceOf(ContractDeployMethod);
+
+        expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(ContractDeployMethod).toHaveBeenCalled();
 
@@ -166,9 +182,11 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createSendContractMethod with a socket based provider and returns SendContractMethod object', () => {
-        const contract = {currentProvider: {SOCKET_MESSAGE: true}};
+        contract.currentProvider.supportsSubscriptions.mockReturnValueOnce(true);
 
         expect(methodFactory.createSendContractMethod(contract)).toBeInstanceOf(SendContractMethod);
+
+        expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 
         expect(contractModuleFactoryMock.createAllEventsLogDecoder).toHaveBeenCalled();
 

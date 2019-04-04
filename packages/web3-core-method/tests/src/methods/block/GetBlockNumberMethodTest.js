@@ -3,7 +3,7 @@ import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetBlockNumberMethod from '../../../../src/methods/block/GetBlockNumberMethod';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('web3-utils');
 
 /**
  * GetBlockNumberMethod test
