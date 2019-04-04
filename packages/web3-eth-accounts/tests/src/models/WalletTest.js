@@ -139,6 +139,7 @@ describe('WalletTest', () => {
         accountMock.encrypt.mockReturnValueOnce(true);
 
         wallet.accounts[0] = accountMock;
+        wallet.accountsIndex = 1;
 
         expect(wallet.encrypt('pw', {})).toEqual([true]);
 
