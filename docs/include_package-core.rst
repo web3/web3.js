@@ -62,7 +62,9 @@ defaultBlock
     ...
 
 The default block is used for all methods which have a block parameter.
-You can override it by passing in the ``defaultBlock`` as last parameter.
+You can override it by passing the block parameter if a block is required.
+
+Example:
 
 - :ref:`web3.eth.getBalance() <eth-getbalance>`
 - :ref:`web3.eth.getCode() <eth-getcode>`

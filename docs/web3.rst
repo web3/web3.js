@@ -15,7 +15,7 @@ Web3
 Parameters
 ----------
 
-1. ``provider`` - ``string|object``: A URL or one of the internally provided provider classes.
+1. ``provider`` - ``string|object``: A URL or one of the Web3 provider classes.
 2. ``net`` - ``net.Socket`` (optional): The net NodeJS package.
 3. ``options`` - ``object`` (optional) The Web3 :ref:`options <web3-module-options>`
 

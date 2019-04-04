@@ -12,7 +12,7 @@ The ``web3.eth.accounts`` contains functions to generate Ethereum accounts and s
 
 .. code-block:: javascript
 
-    import {Accounts} from 'web3-eth-accounts;
+    import {Accounts} from 'web3-eth-accounts';
 
     // Passing in the eth or web3 package is necessary to allow retrieving chainId, gasPrice and nonce automatically
     // for accounts.signTransaction().

@@ -162,7 +162,7 @@ AbiModel
 
 .. code-block:: javascript
 
-    export interface AbiModel {
+    interface AbiModel {
         getMethod(name: string): AbiItem | false;
         getMethods(): AbiItem[];
         hasMethod(name: string): boolean;
@@ -592,11 +592,12 @@ Example
 .. _contract-estimateGas:
 
 methods.myMethod.estimateGas
-=====================
+============================
 
 .. code-block:: javascript
 
     myContract.methods.myMethod([param1[, param2[, ...]]]).estimateGas(options[, callback])
+
 
 Will call estimate the gas a method execution will take when executed in the EVM without.
 The estimation can differ from the actual gas used when later sending a transaction, as the state of the smart contract can be different at that time.
@@ -645,7 +646,7 @@ Example
 .. _contract-encodeABI:
 
 methods.myMethod.encodeABI
-=====================
+==========================
 
 .. code-block:: javascript
 
@@ -749,7 +750,7 @@ Example
 .. _contract-events:
 
 events
-=====================
+======
 
 .. code-block:: javascript
 
@@ -837,7 +838,7 @@ Example
 ------------------------------------------------------------------------------
 
 events.allEvents
-=====================
+================
 
 .. code-block:: javascript
 
@@ -851,7 +852,7 @@ Optionally the filter property can filter those events.
 
 
 getPastEvents
-=====================
+=============
 
 .. code-block:: javascript
 
