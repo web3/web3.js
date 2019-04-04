@@ -148,7 +148,7 @@ export interface AbiItemModel {
     payable: boolean;
     anonymous: boolean;
 
-    getInputLength(): Number;
+    getInputLength(): number;
 
     getInputs(): AbiInput[];
 
