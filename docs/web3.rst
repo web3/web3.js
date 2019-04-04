@@ -1,9 +1,9 @@
 
 .. include:: include_announcement.rst
 
-====
+=====================
 Web3
-====
+=====================
 
     The Web3 class is a wrapper to house all Ethereum related modules.
 
@@ -74,7 +74,7 @@ Example
 ------------------------------------------------------------------------------
 
 version
-=======
+=====================
 
     Property of the Web3 class.
 
