@@ -163,24 +163,25 @@ AbiModel
 .. code-block:: javascript
 
     interface AbiModel {
-        getMethod(name: string): AbiItem | false;
-        getMethods(): AbiItem[];
+        getMethod(name: string): AbiItemModel | false;
+        getMethods(): AbiItemModel[];
         hasMethod(name: string): boolean;
-        getEvent(name: string): AbiItem | false;
-        getEvents(): AbiItem[];
-        getEventBySignature(signature: string): AbiItem;
+        getEvent(name: string): AbiItemModel | false;
+        getEvents(): AbiItemModel[];
+        getEventBySignature(signature: string): AbiItemModel;
         hasEvent(name: string): boolean;
     }
 
-    interface AbiItem {
-        anonymous?: boolean;
-        constant?: boolean;
-        inputs?: AbiInput[];
-        name?: string;
-        outputs?: AbiOutput[];
-        payable?: boolean;
-        stateMutability?: 'pure' | 'view' | 'nonpayable' | 'payable';
-        type: 'function' | 'constructor' | 'event' | 'fallback';
+    interface AbiItemModel {
+        name: string;
+        payable: string;
+        anonymous: string;
+        signature: string;
+        getInputLength(): Number;
+        getInputs(): AbiInput[];
+        getIndexedInputs(): AbiInput[];
+        getOutputs(): AbiOutput[];
+        isOfType(): boolean;
     }
 
     interface AbiInput {

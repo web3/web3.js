@@ -19,7 +19,7 @@
 
 import BN = require('bn.js');
 import {provider} from 'web3-providers';
-import {AbiItem} from 'web3-utils';
+import {AbiInput, AbiOutput} from 'web3-utils';
 import {PromiEvent} from 'web3-core';
 
 export class Contract {
@@ -127,17 +127,34 @@ export interface EventData {
 }
 
 export interface AbiModel {
-    getMethod(name: string): AbiItem | false;
+    getMethod(name: string): AbiItemModel | false;
 
-    getMethods(): AbiItem[];
+    getMethods(): AbiItemModel[];
 
     hasMethod(name: string): boolean;
 
-    getEvent(name: string): AbiItem | false;
+    getEvent(name: string): AbiItemModel | false;
 
-    getEvents(): AbiItem[];
+    getEvents(): AbiItemModel[];
 
-    getEventBySignature(signature: string): AbiItem;
+    getEventBySignature(signature: string): AbiItemModel;
 
     hasEvent(name: string): boolean;
+}
+
+export interface AbiItemModel {
+    signature: string;
+    name: string;
+    payable: boolean;
+    anonymous: boolean;
+
+    getInputLength(): Number;
+
+    getInputs(): AbiInput[];
+
+    getIndexedInputs(): AbiInput[];
+
+    getOutputs(): AbiOutput[];
+
+    isOfType(): boolean;
 }
