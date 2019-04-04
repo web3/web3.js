@@ -20,7 +20,7 @@
  * @date 2019
  */
 
-import {isNumber, isString} from 'lodash';
+import {isNumber, isString, isObject} from 'lodash';
 import utf8 from 'utf8';
 
 export default class Hex {
@@ -35,7 +35,7 @@ export default class Hex {
 
         this.props = {};
 
-        if (isString(params)) {
+        if (!isObject(params)) {
             params = {
                 hex: params
             };
@@ -95,15 +95,13 @@ export default class Hex {
      * @returns {Hex}
      */
     static fromString(value) {
-        if (!isString(value)) throw new Error(`The given value ${value} is not string type.`);
+        if (!isString(value)) { 
+            throw new Error(`The given value ${value} is not string type.`);
+        }
 
         value = value.replace(/(-)?(0x)?([0-9a-f]*)/i, '$10x$3');
 
-        const params = {
-            hex: value
-        };
-
-        return new Hex(params);
+        return new Hex({hex: value});
     }
 
     /**
@@ -116,13 +114,11 @@ export default class Hex {
      * @returns {Hex}
      */
     static fromNumber(value) {
-        if (!isNumber(value)) throw new Error(`The given value ${value} is not number type.`);
+        if (!isNumber(value)) { 
+            throw new Error(`The given value ${value} is not number type.`);
+        }
 
-        const params = {
-            hex: value.toString(16)
-        };
-
-        return new Hex(params);
+        return new Hex({hex: value.toString(16)});
     }
 
     /**
@@ -135,7 +131,9 @@ export default class Hex {
      * @returns {Hex}
      */
     static fromAscii(value) {
-        if (!isString(value)) throw new Error(`The given value ${value} is not string type.`);
+        if (!isString(value)) { 
+            throw new Error(`The given value ${value} is not string type.`);
+        }
 
         const hex = value.split('').reduce((acc, char) => {
             const v = char.charCodeAt(0).toString(16);
@@ -143,11 +141,7 @@ export default class Hex {
             return acc + (v.length < 2 ? '0' + v : v);
         }, '0x');
 
-        const params = {
-            hex: hex
-        };
-
-        return new Hex(params);
+        return new Hex({hex});
     }
 
     /**
@@ -160,7 +154,9 @@ export default class Hex {
      * @returns {Hex}
      */
     static fromUtf8(value) {
-        if (!isString(value)) throw new Error(`The given value ${value} is not string type.`);
+        if (!isString(value)) { 
+            throw new Error(`The given value ${value} is not string type.`);
+        }
 
         let hex = '';
         value = utf8.encode(value);
@@ -187,11 +183,7 @@ export default class Hex {
 
         hex = `0x${hex}`;
 
-        const params = {
-            hex: hex
-        };
-
-        return new Hex(params);
+        return new Hex({hex});
     }
 
     /**
@@ -213,11 +205,7 @@ export default class Hex {
 
         hex = `0x${hex}`;
 
-        const params = {
-            hex: hex
-        };
-
-        return new Hex(params);
+        return new Hex({hex});
     }
 
     /**
@@ -230,7 +218,6 @@ export default class Hex {
      * @param {String|Number} value
      *
      * @returns {Hex}
-     *
      */
     static from(value) {
         if (isNumber(value)) {
@@ -242,18 +229,6 @@ export default class Hex {
         }
 
         throw new Error(`The given value ${value} needs to be a hex-encoded string or a base 10 number.`);
-    }
-
-    /* Instance accessors */
-    /**
-     * Check if the supplied string is hex with 0x prefix
-     *
-     * @method isStrict
-     *
-     * @return {boolean}
-     */
-    isStrict() {
-        return Hex.isStrict(this.props.hex);
     }
 
     /**
