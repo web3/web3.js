@@ -63,7 +63,7 @@ export default class TransactionObserver {
      */
     observe(transactionHash) {
         return Observable.create((observer) => {
-            if (this.isSocketBasedProvider()) {
+            if (this.provider.supportsSubscriptions()) {
                 this.startSocketObserver(transactionHash, observer);
             } else {
                 this.startHttpObserver(transactionHash, observer);
@@ -268,17 +268,6 @@ export default class TransactionObserver {
      */
     isTimeoutTimeExceeded() {
         return this.confirmationChecks === this.timeout;
-    }
-
-    /**
-     * Checks if the given provider is a socket based provider.
-     *
-     * @method isSocketBasedProvider
-     *
-     * @returns {Boolean}
-     */
-    isSocketBasedProvider() {
-        return !!this.provider.supportsSubscriptions();
     }
 
     /**

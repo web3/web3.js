@@ -64,7 +64,6 @@ describe('AbstractSocketProviderTest', () => {
         expect(abstractSocketProvider.supportsSubscriptions()).toEqual(true);
     });
 
-
     it('calls removeAllListeners without event parameter', () => {
         abstractSocketProvider.on('test', () => {});
 

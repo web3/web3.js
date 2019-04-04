@@ -181,30 +181,30 @@ export const rightPad = (string, chars, sign) => {
  *
  * @method utf8ToHex
  *
- * @param {String} str
+ * @param {String} value
  *
  * @returns {String} hex representation of input string
  */
-export const utf8ToHex = (string) => {
-    string = utf8.encode(string);
+export const utf8ToHex = (value) => {
+    value = utf8.encode(value);
     let hex = '';
 
     /* eslint-disable no-control-regex */
     // remove \u0000 padding from either side
-    string = string.replace(/^(?:\u0000)*/, '');
-    string = string
+    value = value.replace(/^(?:\u0000)*/, '');
+    value = value
         .split('')
         .reverse()
         .join('');
-    string = string.replace(/^(?:\u0000)*/, '');
-    string = string
+    value = value.replace(/^(?:\u0000)*/, '');
+    value = value
         .split('')
         .reverse()
         .join('');
     /* eslint-enable no-control-regex */
 
-    for (let i = 0; i < string.length; i++) {
-        const code = string.charCodeAt(i);
+    for (let i = 0; i < value.length; i++) {
+        const code = value.charCodeAt(i);
         // if (code !== 0) {
         const n = code.toString(16);
         hex += n.length < 2 ? `0${n}` : n;

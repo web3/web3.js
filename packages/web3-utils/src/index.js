@@ -104,7 +104,7 @@ const _flattenTypes = (includeTuple, puts) => {
 export const hexToAscii = (hex) => {
     if (!utils.isHexStrict(hex)) throw new Error('The parameter must be a valid HEX string.');
 
-    let string = '';
+    let value = '';
 
     let i = 0;
     const l = hex.length;
@@ -114,10 +114,10 @@ export const hexToAscii = (hex) => {
     }
     for (; i < l; i += 2) {
         const code = parseInt(hex.substr(i, 2), 16);
-        string += String.fromCharCode(code);
+        value += String.fromCharCode(code);
     }
 
-    return string;
+    return value;
 };
 
 /**
@@ -125,16 +125,16 @@ export const hexToAscii = (hex) => {
  *
  * @method asciiToHex
  *
- * @param {String} str
+ * @param {String} value
  * @param {Number} length
  *
  * @returns {String} hex representation of input string
  */
-export const asciiToHex = (string, length = 32) => {
+export const asciiToHex = (value, length = 32) => {
     let hex = '';
 
-    for (let i = 0; i < string.length; i++) {
-        const code = string.charCodeAt(i);
+    for (let i = 0; i < value.length; i++) {
+        const code = value.charCodeAt(i);
         const n = code.toString(16);
         hex += n.length < 2 ? `0${n}` : n;
     }
