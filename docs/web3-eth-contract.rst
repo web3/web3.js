@@ -174,9 +174,9 @@ AbiModel
 
     interface AbiItemModel {
         name: string;
-        payable: string;
-        anonymous: string;
         signature: string;
+        payable: boolean;
+        anonymous: boolean;
         getInputLength(): Number;
         getInputs(): AbiInput[];
         getIndexedInputs(): AbiInput[];
