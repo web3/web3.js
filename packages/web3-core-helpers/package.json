@@ -8,7 +8,7 @@
     "main": "dist/web3-core-helpers.cjs.js",
     "module": "dist/web3-core-helpers.esm.js",
     "browser": "dist/web3-core-helpers.umd.js",
-    "types": "types",
+    "types": "types/index.d.ts",
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
