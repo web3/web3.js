@@ -139,12 +139,13 @@ describe('WalletTest', () => {
         accountMock.encrypt.mockReturnValueOnce(true);
 
         wallet.accounts[0] = accountMock;
+        wallet.accountsIndex = 1;
 
         expect(wallet.encrypt('pw', {})).toEqual([true]);
 
         expect(accountMock.encrypt).toHaveBeenCalledWith('pw', {});
 
-        expect(wallet.accountsIndex).toEqual(0);
+        expect(wallet.accountsIndex).toEqual(1);
     });
 
     it('calls decrypt and returns the expected value', () => {
