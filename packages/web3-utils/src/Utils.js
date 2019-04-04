@@ -186,7 +186,7 @@ export const rightPad = (string, chars, sign) => {
  * @returns {String} hex representation of input string
  */
 export const utf8ToHex = (value) => {
-    value = utf8.encode(string);
+    value = utf8.encode(value);
     let hex = '';
 
     /* eslint-disable no-control-regex */
