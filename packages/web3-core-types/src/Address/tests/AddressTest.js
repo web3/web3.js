@@ -13,6 +13,7 @@ describe('AddressTest', () => {
 
     beforeEach(() => {
         address = new Address(data);
+        console.log(address.props);
     });
 
     it('constructor check', () => {

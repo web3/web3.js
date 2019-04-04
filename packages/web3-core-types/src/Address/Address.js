@@ -21,7 +21,7 @@
  */
 
 import {sha3} from 'web3-utils';
-import {cloneDeep, isBoolean, isObject, isString} from 'lodash';
+import {isObject, isString} from 'lodash';
 import Iban from './Iban';
 
 export default class Address {
@@ -33,7 +33,7 @@ export default class Address {
      * @constructor
      */
     constructor(params) {
-        const requires = ['address','isChecksummed'];
+        const requires = ['address', 'isChecksummed'];
 
         this.props = {};
 
@@ -55,7 +55,7 @@ export default class Address {
         }
 
         requires.forEach((propName) => {
-            if(typeof this.props[propName] === 'undefined') {
+            if (typeof this.props[propName] === 'undefined') {
                 this._throw(propName, params[propName]);
             }
         });
@@ -78,7 +78,7 @@ export default class Address {
         if (!isString(_address)) {
             return false;
         }
-        
+
         const address = _address.replace('0x', '');
 
         const addressHash = sha3(address.toLowerCase())
@@ -125,12 +125,10 @@ export default class Address {
             })
             .join('');
 
-        return new Address(
-            {
-                address: `0x${checksummed}`,
-                isChecksummed: true
-            }
-        );
+        return new Address({
+            address: `0x${checksummed}`,
+            isChecksummed: true
+        });
     }
 
     /**
@@ -142,7 +140,7 @@ export default class Address {
      */
     static fromIban(iban) {
         return new Address(Iban.toAddress(iban));
-    };
+    }
 
     /**
      * Change an address to make it checksummed
@@ -201,7 +199,7 @@ export default class Address {
                 `The given "address" parameter "${value}" needs to be hex encoded (numbers and letters, a through f), supplied as a string.\n` +
                 'Addresses may be prefixed with 0x and are 40 hex characters long.';
         }
-        
+
         throw new Error(errorMsg);
     }
 }

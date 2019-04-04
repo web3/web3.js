@@ -95,7 +95,7 @@ export default class Hex {
      * @returns {Hex}
      */
     static fromString(value) {
-        if (!isString(value)) { 
+        if (!isString(value)) {
             throw new Error(`The given value ${value} is not string type.`);
         }
 
@@ -114,7 +114,7 @@ export default class Hex {
      * @returns {Hex}
      */
     static fromNumber(value) {
-        if (!isNumber(value)) { 
+        if (!isNumber(value)) {
             throw new Error(`The given value ${value} is not number type.`);
         }
 
@@ -131,7 +131,7 @@ export default class Hex {
      * @returns {Hex}
      */
     static fromAscii(value) {
-        if (!isString(value)) { 
+        if (!isString(value)) {
             throw new Error(`The given value ${value} is not string type.`);
         }
 
@@ -154,7 +154,7 @@ export default class Hex {
      * @returns {Hex}
      */
     static fromUtf8(value) {
-        if (!isString(value)) { 
+        if (!isString(value)) {
             throw new Error(`The given value ${value} is not string type.`);
         }
 
@@ -262,7 +262,7 @@ export default class Hex {
      */
     toAscii() {
         let ascii = '';
-        for (let i = this.isStrict() ? 2 : 0; i < this.props.hex.length; i += 2) {
+        for (let i = Hex.isStrict(this.toString()) ? 2 : 0; i < this.props.hex.length; i += 2) {
             ascii += String.fromCharCode(parseInt(this.props.hex.substr(i, 2), 16));
         }
 

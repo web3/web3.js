@@ -48,11 +48,11 @@ export default class Transaction {
         if (params.from.isAddress) {
             this.props.from = new Types.Address(params.from.props);
         }
-        
+
         if (isString(params.from) && Types.Address.isValid(params.from)) {
             this.props.from = new Types.Address(params.from);
         }
-        
+
         if (isInteger(params.from)) {
             this.props.from = params.from;
         }

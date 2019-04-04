@@ -17,8 +17,8 @@ describe('HexTest', () => {
     });
 
     it('checks for strict hex', () => {
-        const strict = new Hex('0x12').isStrict();
-        const notStrict = new Hex('12').isStrict();
+        const strict = Hex.isStrict('0x12');
+        const notStrict = Hex.isStrict('12');
 
         expect(strict).toBeTruthy();
         expect(notStrict).toBeFalsy();
