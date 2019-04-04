@@ -4,21 +4,15 @@ import Address from '../Address';
  * Address test
  */
 describe('AddressTest', () => {
-    let address;
-
     const data = {
         address: '0xE247A45c287191d435A8a5D72A7C8dc030451E9F',
         isChecksummed: false
     };
 
-    beforeEach(() => {
-        address = new Address(data);
-    });
-
     it('constructor check', () => {
         expect(() => new Address(data)).not.toThrow();
     });
-    
+
     it('has type property', () => {
         expect(new Address(data).isAddress).toBeTruthy();
     });
@@ -50,7 +44,7 @@ describe('AddressTest', () => {
         });
     });
 
-    it('checks the checksum of an address string', () => {
+    it('checks the checksum of itself', () => {
         const tests = [
             {value: '0xeaefacdf4402d8d6acf5a6c6249b9d4ba744c812', is: false},
             {value: '0x8b3ad493c077e894a034db7eb53e8285560298fd', is: false},
@@ -63,7 +57,7 @@ describe('AddressTest', () => {
             expect(new Address({address: test.value, isChecksummed: false}).isValid()).toEqual(test.is);
         });
     });
-    
+
     it('checks the checksum of an address string', () => {
         const tests = [
             {value: null, is: false},
@@ -79,8 +73,8 @@ describe('AddressTest', () => {
             expect(Address.isValid(test.value)).toEqual(test.is);
         });
     });
-    
+
     it('throws an error for prop name and value', () => {
-        expect(() => new Address(data)._throw('address',null)).toThrow();
+        expect(() => new Address(data)._throw('address', null)).toThrow();
     });
 });

@@ -4,7 +4,7 @@ import * as Types from '../../src';
  * Type Module Hex test
  */
 describe('TypeModuleHexTest', () => {
-    let obj;
+    let object;
 
     beforeEach(() => {});
 
@@ -17,7 +17,7 @@ describe('TypeModuleHexTest', () => {
         ];
 
         tests.forEach((test) => {
-            obj = new test.method(test.value); // eslint-disable-line new-cap
+            object = new test.method(test.value); // eslint-disable-line new-cap
         });
     });
 
@@ -32,9 +32,9 @@ describe('TypeModuleHexTest', () => {
         ];
 
         tests.forEach((test) => {
-            obj = new Types.Hex.fromNumber(test.value); // eslint-disable-line new-cap
+            object = new Types.Hex.fromNumber(test.value); // eslint-disable-line new-cap
 
-            expect(obj.toString()).toBe(test.expected);
+            expect(object.toString()).toBe(test.expected);
         });
     });
 
@@ -51,9 +51,9 @@ describe('TypeModuleHexTest', () => {
         ];
 
         tests.forEach((test) => {
-            obj = new Types.Hex.fromAscii(test.value); // eslint-disable-line new-cap
+            object = new Types.Hex.fromAscii(test.value); // eslint-disable-line new-cap
 
-            expect(obj.toString()).toBe(test.expected);
+            expect(object.toString()).toBe(test.expected);
         });
     });
 
@@ -79,9 +79,9 @@ describe('TypeModuleHexTest', () => {
         ];
 
         tests.forEach((test) => {
-            obj = new Types.Hex.fromUtf8(test.value); // eslint-disable-line new-cap
+            object = new Types.Hex.fromUtf8(test.value); // eslint-disable-line new-cap
 
-            expect(obj.toString()).toBe(test.expected);
+            expect(object.toString()).toBe(test.expected);
         });
     });
 
@@ -96,9 +96,9 @@ describe('TypeModuleHexTest', () => {
         ];
 
         tests.forEach((test) => {
-            obj = new Types.Hex.fromBytes(test.value); // eslint-disable-line new-cap
+            object = new Types.Hex.fromBytes(test.value); // eslint-disable-line new-cap
 
-            expect(obj.toString()).toBe(test.expected);
+            expect(object.toString()).toBe(test.expected);
         });
     });
 

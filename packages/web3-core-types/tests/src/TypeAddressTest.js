@@ -20,7 +20,7 @@ describe('TypeModuleAddressTest', () => {
         ];
 
         tests.forEach((test) => {
-            const obj = test.method(test.value); // eslint-disable-line new-cap, no-unused-vars
+            const object = test.method(test.value); // eslint-disable-line new-cap, no-unused-vars
 
             // All Address interface calls go through isValid
             expect(Address.isValid).toHaveBeenCalled();

@@ -72,7 +72,7 @@ const iso13616Prepare = (iban) => {
  * @param {String} iban
  * @returns {Number}
  */
-const mod9710 = (iban) => {
+const module9710 = (iban) => {
     let remainder = iban;
 
     let block;
@@ -169,7 +169,7 @@ export default class Iban {
     static fromBban(bban) {
         const countryCode = 'XE';
 
-        const remainder = mod9710(iso13616Prepare(`${countryCode}00${bban}`));
+        const remainder = module9710(iso13616Prepare(`${countryCode}00${bban}`));
         const checkDigit = `0${98 - remainder}`.slice(-2);
 
         return new Iban(countryCode + checkDigit + bban);
@@ -211,7 +211,8 @@ export default class Iban {
      */
     isValid() {
         return (
-            /^XE\d{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) && mod9710(iso13616Prepare(this._iban)) === 1
+            /^XE\d{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
+            module9710(iso13616Prepare(this._iban)) === 1
         );
     }
 

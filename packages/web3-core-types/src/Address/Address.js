@@ -54,9 +54,9 @@ export default class Address {
             this.props.isChecksummed = Address.isValid(params.address);
         }
 
-        requires.forEach((propName) => {
-            if (typeof this.props[propName] === 'undefined') {
-                this._throw(propName, params[propName]);
+        requires.forEach((propertyName) => {
+            if (typeof this.props[propertyName] === 'undefined') {
+                this._throw(propertyName, params[propertyName]);
             }
         });
 
@@ -191,15 +191,15 @@ export default class Address {
      *
      * @method _throw
      */
-    _throw(propName, value) {
-        let errorMsg;
+    _throw(propertyName, value) {
+        let errorMessage;
 
-        if (propName === 'address') {
-            errorMsg =
+        if (propertyName === 'address') {
+            errorMessage =
                 `The given "address" parameter "${value}" needs to be hex encoded (numbers and letters, a through f), supplied as a string.\n` +
                 'Addresses may be prefixed with 0x and are 40 hex characters long.';
         }
 
-        throw new Error(errorMsg);
+        throw new Error(errorMessage);
     }
 }

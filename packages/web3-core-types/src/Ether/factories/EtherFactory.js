@@ -47,7 +47,7 @@ export default class EtherFactory {
          * undefined. If by the end of the constructor execution
          * a parameter is still undefined/default value, throw the
          * corresponding error.
-        */
+         */
         const initParams = {
             amount: undefined,
             unit: undefined

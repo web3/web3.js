@@ -4,7 +4,7 @@ import * as Types from '../../src';
  * Type Module Ether test
  */
 describe('TypeModuleEtherTest', () => {
-    let obj;
+    let object;
 
     beforeEach(() => {});
 
@@ -17,10 +17,10 @@ describe('TypeModuleEtherTest', () => {
         ];
 
         tests.forEach((test) => {
-            obj = new test.method(test.value); // eslint-disable-line new-cap
+            object = new test.method(test.value); // eslint-disable-line new-cap
 
-            expect(obj).toHaveProperty('error');
-            expect(obj).toHaveProperty('props');
+            expect(object).toHaveProperty('error');
+            expect(object).toHaveProperty('props');
         });
     });
 });

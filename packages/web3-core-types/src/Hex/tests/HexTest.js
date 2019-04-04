@@ -7,7 +7,7 @@ describe('HexTest', () => {
     it('constructor check', () => {
         expect(() => new Hex({hex: '0x0'})).not.toThrow();
     });
-    
+
     it('has type property', () => {
         expect(new Hex(0).isHex).toBeTruthy();
     });
@@ -115,7 +115,7 @@ describe('HexTest', () => {
             expect(new Hex(test.value).toString()).toEqual(test.expected);
         });
     });
-    
+
     it('creates hex from a number', () => {
         const tests = [
             {value: 0, expected: '0x0'},
@@ -188,8 +188,8 @@ describe('HexTest', () => {
             expect(Hex.fromBytes(test.value).toString()).toBe(test.expected);
         });
     });
-    
+
     it('throws an error for prop name and value', () => {
-        expect(() => new Hex("0x0")._throw('hex',null)).toThrow();
+        expect(() => new Hex('0x0')._throw('hex', null)).toThrow();
     });
 });

@@ -85,7 +85,7 @@ export default class Ether {
 
         /* 5) Check for type and format validity */
         this.props.unit =
-            isString(params.unit) && Object.keys(unitMap).indexOf(params.unit.toLowerCase()) > -1
+            isString(params.unit) && Object.keys(unitMap).includes(params.unit.toLowerCase())
                 ? params.unit.toLowerCase()
                 : undefined;
 
@@ -121,8 +121,7 @@ export default class Ether {
      * @return {String}
      */
     toUnit(unit) {
-        if (Object.keys(unitMap).indexOf(this.props.unit) === -1)
-            throw new Error(`The given unit name ${unit} is unknown.`);
+        if (!Object.keys(unitMap).includes(this.props.unit)) throw new Error(`The given unit name ${unit} is unknown.`);
 
         const from = unitMap[this.props.unit];
         const to = unitMap[unit];

@@ -49,9 +49,9 @@ export default class Hex {
             this.props.hex = '0x';
         }
 
-        requires.forEach((propName) => {
-            if (typeof this.props[propName] === 'undefined') {
-                this._throw(propName, params[propName]);
+        requires.forEach((propertyName) => {
+            if (typeof this.props[propertyName] === 'undefined') {
+                this._throw(propertyName, params[propertyName]);
             }
         });
 
@@ -277,7 +277,7 @@ export default class Hex {
      * @return {String}
      */
     toUtf8() {
-        let str = '';
+        let string = '';
         let code = 0;
         let hex = this.props.hex.replace(/^0x/i, '');
 
@@ -297,10 +297,10 @@ export default class Hex {
 
         for (let i = 0; i < l; i += 2) {
             code = parseInt(hex.substr(i, 2), 16);
-            str += String.fromCharCode(code);
+            string += String.fromCharCode(code);
         }
 
-        return utf8.decode(str);
+        return utf8.decode(string);
     }
 
     /**
@@ -339,15 +339,15 @@ export default class Hex {
      *
      * @method _throw
      */
-    _throw(propName, value) {
-        let errorMsg;
+    _throw(propertyName, value) {
+        let errorMessage;
 
-        if (propName === 'hex') {
-            errorMsg =
+        if (propertyName === 'hex') {
+            errorMessage =
                 `The given "hex" parameter "${value}" needs to be a string composed of numbers, and characters between 'a' and 'f'.\n` +
                 "Use 'empty' to set a web3 empty hex object.";
         }
 
-        throw new Error(errorMsg);
+        throw new Error(errorMessage);
     }
 }

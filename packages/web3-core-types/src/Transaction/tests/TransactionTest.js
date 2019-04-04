@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-import {cloneDeep} from 'lodash';
 import * as Types from '../..';
 import Transaction from '../Transaction';
 
@@ -7,50 +6,24 @@ import Transaction from '../Transaction';
  * Transaction test
  */
 describe('TransactionTest', () => {
-    let transaction;
-    let txParamsTest;
-
-    const txParams = {
-        from: new Types.Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
-        to: new Types.Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
-        value: 1,
-        gas: 21000,
-        gasPrice: 0,
-        data: new Types.Hex('empty'),
-        nonce: 0,
-        chainId: 2
-    };
-
-    const error = {
-        from: () => 'err msg',
-        to: () => 'err msg',
-        value: () => 'err msg',
-        gas: () => 'err msg',
-        gasPrice: () => 'err msg',
-        data: () => 'err msg',
-        nonce: () => 'err msg',
-        chainId: () => 'err msg'
-    };
-
-    const initParams = {
-        from: undefined,
-        to: undefined,
-        value: undefined,
-        gas: undefined,
-        gasPrice: undefined,
-        data: undefined,
-        nonce: undefined,
-        chainId: undefined
-    };
+    let transaction, txParams;
 
     beforeEach(() => {
-        txParamsTest = cloneDeep(txParams);
+        txParams = {
+            from: new Types.Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
+            to: new Types.Address('0xE247A45c287191d435A8a5D72A7C8dc030451E9F'),
+            value: 1,
+            gas: 21000,
+            gasPrice: 0,
+            data: new Types.Hex('empty'),
+            nonce: 0,
+            chainId: 2
+        };
     });
 
     it('constructor check', () => {
-        transaction = new Transaction(txParamsTest, error, initParams);
+        transaction = new Transaction(txParams);
 
-        expect(transaction).toHaveProperty('error');
         expect(transaction).toHaveProperty('props');
     });
 
@@ -62,9 +35,9 @@ describe('TransactionTest', () => {
         ];
 
         tests.forEach((test) => {
-            txParamsTest.value = test.value;
+            txParams.value = test.value;
 
-            transaction = new Transaction(txParamsTest, error, initParams);
+            transaction = new Transaction(txParams);
 
             expect(transaction).toHaveProperty('props');
             expect(transaction.props.value).toEqual(test.is);
@@ -72,16 +45,16 @@ describe('TransactionTest', () => {
     });
 
     it('accepts address string', () => {
-        txParamsTest.from = '0x4F38f4229924bfa28D58eeda496Cc85e8016bCCC';
-        transaction = new Transaction(txParamsTest, error, initParams);
+        txParams.from = '0x4F38f4229924bfa28D58eeda496Cc85e8016bCCC';
+        transaction = new Transaction(txParams);
 
         expect(transaction).toHaveProperty('props');
         expect(transaction.props.from).toHaveProperty('isAddress');
     });
 
     it('accepts wallet index', () => {
-        txParamsTest.from = 0;
-        transaction = new Transaction(txParamsTest, error, initParams);
+        txParams.from = 0;
+        transaction = new Transaction(txParams);
 
         expect(transaction).toHaveProperty('props');
         expect(transaction.props.from).toBe(0);
@@ -91,45 +64,46 @@ describe('TransactionTest', () => {
         const tests = [{value: 0}, {value: 10}];
 
         tests.forEach((test) => {
-            txParamsTest.gas = test.value;
+            txParams.gas = test.value;
 
-            transaction = new Transaction(txParamsTest, error, initParams);
+            transaction = new Transaction(txParams);
 
             expect(transaction).toHaveProperty('props');
             expect(transaction.props.gas).toEqual(test.value);
         });
     });
 
-    it('removes "to" for code deployment', () => {
-        txParamsTest.to = 'deploy';
-        transaction = new Transaction(txParamsTest, error, initParams);
+    it('keeps "to" for code deployment', () => {
+        txParams.to = 'deploy';
+        transaction = new Transaction(txParams);
 
         expect(transaction).toHaveProperty('props');
-        expect(transaction.props).not.toHaveProperty('to');
+        expect(transaction.to).not.toBeDefined();
     });
 
     it('sets 0 value for "none"', () => {
-        txParamsTest.value = 'none';
-        transaction = new Transaction(txParamsTest, error, initParams);
+        txParams.value = 'none';
+        transaction = new Transaction(txParams);
 
         expect(transaction).toHaveProperty('props');
         expect(transaction.props.value).toMatchObject(BigNumber(0));
     });
 
     it('sets 0x data for "none"', () => {
-        txParamsTest.data = 'none';
-        transaction = new Transaction(txParamsTest, error, initParams);
+        txParams.data = 'none';
+        transaction = new Transaction(txParams);
 
         expect(transaction).toHaveProperty('props');
         expect(transaction.props.data).toHaveProperty('isHex');
     });
 
     it('gets properties', () => {
-        transaction = new Transaction(txParamsTest, error, initParams);
+        transaction = new Transaction(txParams);
 
-        Object.keys(txParamsTest).forEach((param) => {
+        Object.keys(txParams).forEach((param) => {
+            console.log(param, transaction[param]);
             const getter = transaction[param].toString();
-            expect(getter).toEqual(txParamsTest[param].toString());
+            expect(getter).toEqual(txParams[param].toString());
         });
     });
 });
