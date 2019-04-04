@@ -19,13 +19,13 @@
 
 import BN = require('bn.js');
 import {provider} from 'web3-providers';
-import {AbiInput, AbiOutput} from 'web3-utils';
+import {AbiInput, AbiOutput, AbiItem} from 'web3-utils';
 import {PromiEvent} from 'web3-core';
 
 export class Contract {
     constructor(
         provider: provider,
-        abi: any[],
+        abi: AbiItem[],
         address?: string,
         options?: ContractOptions
     )
