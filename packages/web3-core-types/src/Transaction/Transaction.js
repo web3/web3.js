@@ -42,18 +42,7 @@ export default class Transaction {
 
         this.props = {};
 
-        /* Allow from an address string, Address object, or wallet index */
-        if (params.from.isAddress) {
-            this.props.from = new Types.Address(params.from.props);
-        }
-
-        if (isString(params.from) && Types.Address.isValid(params.from)) {
-            this.props.from = new Types.Address(params.from);
-        }
-
-        if (isInteger(params.from)) {
-            this.props.from = params.from;
-        }
+        this.from = params.from;
 
         /* Recipient address */
         if (params.to.isAddress) {
@@ -171,6 +160,29 @@ export default class Transaction {
     get to() {
         return ((v) => (v && v !== 'deploy' ? v.toString() : undefined))(this.props.to);
     }
+    
+    /**
+     * Set the from property
+     *
+     * @property from
+     */
+    set from(param) {
+        let _from;
+
+        if (param.isAddress || isInteger(param)) {
+            _from = param;
+        }
+
+        if (isString(param) && Types.Address.isValid(param)) {
+            _from = new Types.Address(param);
+        }
+        
+        if(_from === undefined) {
+            throw new Error(`The given "from" parameter "${value}" needs to be an address string, an Address object, or a wallet index number.`);
+        } else {
+            this.props.from = _from;
+        }
+    }
 
     /**
      * Gets the from property
@@ -182,7 +194,7 @@ export default class Transaction {
     get from() {
         return ((v) => (v ? v.toString() : undefined))(this.props.from);
     }
-
+    
     /**
      * Gets the value property
      *
@@ -292,10 +304,6 @@ export default class Transaction {
      */
     _throw(propertyName, value) {
         let errorMessage;
-
-        if (propertyName === 'from') {
-            errorMessage = `The given "from" parameter "${value}" needs to be an address string, an Address object, or a wallet index number.\n`;
-        }
 
         if (propertyName === 'to') {
             errorMessage = `The given "to" parameter "${value}" needs to be an address or 'deploy' when deploying code.\n`;
