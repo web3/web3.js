@@ -49,12 +49,11 @@ export default class Address {
         }
 
         if (params.isChecksummed && !Address.isValid(params.address)) {
-            throw new Error(`The given address ${params.address} was declared as checksummed, but it isn't.`);
+            throw new Error(`The given address ${params.address} was declared as checksummed, but it isn't!`);
         } else {
             this.props.isChecksummed = Address.isValid(params.address);
         }
 
-        /* Throw if any parameter is still undefined */
         requires.forEach((propName) => {
             if(typeof this.props[propName] === 'undefined') {
                 this._throw(propName, params[propName]);
@@ -76,12 +75,12 @@ export default class Address {
      * @returns {boolean}
      */
     static isValid(_address) {
-        if (!isString(_address)) return false;
-
-        /* Remove the prefix in case it still has it */
+        if (!isString(_address)) {
+            return false;
+        }
+        
         const address = _address.replace('0x', '');
 
-        /* Hash the lowercased address, make it lowercase, and remove the prefix if present */
         const addressHash = sha3(address.toLowerCase())
             .toLowerCase()
             .replace('0x', '');
@@ -140,7 +139,6 @@ export default class Address {
      * @param {String} iban
      *
      * @returns {Address}
-     *
      */
     static fromIban(iban) {
         return new Address(Iban.toAddress(iban));
