@@ -4,6 +4,8 @@ options
 An Web3 module does provide several options for configuring the transaction confirmation worklfow or for defining default values.
 These are the currently available option properties on a Web3 module:
 
+.. _web3-module-options:
+
 --------------
 Module Options
 --------------
@@ -43,7 +45,7 @@ Example
         transactionSigner: new CustomTransactionSigner()
     }
 
-    const web3 = new Web3('http://localhost:8545', options);
+    const web3 = new Web3('http://localhost:8545', null, options);
 
 ------------------------------------------------------------------------------
 
@@ -59,13 +61,30 @@ defaultBlock
     web3.shh.defaultBlock
     ...
 
-The default block which will be used for a requests.
+The default block is used for all methods which have a block parameter.
+You can override it by passing the block parameter if a block is required.
+
+Example:
+
+- :ref:`web3.eth.getBalance() <eth-getbalance>`
+- :ref:`web3.eth.getCode() <eth-getcode>`
+- :ref:`web3.eth.getTransactionCount() <eth-gettransactioncount>`
+- :ref:`web3.eth.getStorageAt() <eth-getstorageat>`
+- :ref:`web3.eth.call() <eth-call>`
+- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().call() <contract-call>`
 
 -------
 Returns
 -------
 
-``string|number``: The current value of the defaultBlock property.
+The ``defaultBlock`` property can return the following values:
+
+- ``Number``: A block number
+- ``"genesis"`` - ``String``: The genesis block
+- ``"latest"`` - ``String``: The latest block (current head of the blockchain)
+- ``"pending"`` - ``String``: The currently mined block (including pending transactions)
+
+Default is ``"latest"``
 
 ------------------------------------------------------------------------------
 
@@ -81,13 +100,13 @@ defaultAccount
     web3.shh.defaultAccount
     ...
 
-The default account which will be used for a requests.
+This default address is used as the default ``"from"`` property, if no ``"from"`` property is specified.
 
 -------
 Returns
 -------
 
-``null|string``: The current value of the defaultAccount property.
+``String`` - 20 Bytes: Any Ethereum address. You need to have the private key for that address in your node or keystore. (Default is ``undefined``)
 
 ------------------------------------------------------------------------------
 
@@ -148,8 +167,8 @@ transactionBlockTimeout
     web3.shh.transactionBlockTimeout
     ...
 
-This can be used with a socket provider and defines the number of blocks until the PromiEvent
-rejects with a timeout error.
+The ``transactionBlockTimeout`` will be used over a socket based connection. This option does define the amount of new blocks it should wait until the first confirmation happens.
+This means the PromiEvent rejects with a timeout error when the timeout got exceeded.
 
 
 -------
@@ -173,7 +192,6 @@ transactionConfirmationBlocks
     ...
 
 This defines the number of blocks it requires until a transaction will be handled as confirmed.
-The PromiEvent will resolve with the desired receipt when enough confirmations happened.
 
 
 -------
@@ -197,8 +215,8 @@ transactionPollingTimeout
     web3.shh.transactionPollingTimeout
     ...
 
-This defines the polling cycles amount when you send a transaction with the HttpProvider.
-The PromiEvent rejects with a timeout error when the timeout got exceeded. (1 cycle == 1sec.).
+The ``transactionPollingTimeout``  will be used over a HTTP connection.
+This option does define the amount of polls (each second) it should wait until the first confirmation happens.
 
 
 -------
@@ -371,7 +389,7 @@ Will return the given provider by the (browser) environment, otherwise ``null``.
 Returns
 -------
 
-``Object``: The given provider set or ``null``;
+``Object``: The given provider set or ``false``.
 
 -------
 Example
@@ -396,14 +414,14 @@ currentProvider
     web3.bzz.currentProvider
     ...
 
-Will return the current provider, otherwise ``null``.
+Will return the current provider.
 
 
 -------
 Returns
 -------
 
-``Object``: The current provider set or ``null``;
+``Object``: The current provider set.
 
 -------
 Example
@@ -411,7 +429,7 @@ Example
 
 .. code-block:: javascript
 
-    if(!web3.currentProvider) {
+    if (!web3.currentProvider) {
         web3.setProvider('http://localhost:8545');
     }
 
@@ -453,6 +471,6 @@ Example
     const contract = new web3.eth.Contract(abi, address);
 
     const batch = new web3.BatchRequest();
-    batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest', callback));
-    batch.add(contract.methods.balance(address).call.request({from: '0x0000000000000000000000000000000000000000'}, callback2));
-    batch.execute();
+    batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest'));
+    batch.add(contract.methods.balance(address).call.request({from: '0x0000000000000000000000000000000000000000'}));
+    batch.execute().then(...);

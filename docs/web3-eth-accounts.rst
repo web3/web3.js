@@ -8,19 +8,15 @@ web3.eth.accounts
 
 The ``web3.eth.accounts`` contains functions to generate Ethereum accounts and sign transactions and data.
 
-.. note:: This package has NOT been audited and might potentially be unsafe. Take precautions to clear memory properly, store the private keys safely, and test transaction receiving and sending functionality properly before using in production!
-
-To use this package standalone use:
-
+.. note:: This package got NOT audited until now. Take precautions to clear memory properly, store the private keys safely, and test transaction receiving and sending functionality properly before using in production!
 
 .. code-block:: javascript
 
-    import {Accounts} from 'web3-eth-accounts;
+    import {Accounts} from 'web3-eth-accounts';
 
     // Passing in the eth or web3 package is necessary to allow retrieving chainId, gasPrice and nonce automatically
     // for accounts.signTransaction().
-    const accounts = new Accounts('ws://localhost:8546', options);
-
+    const accounts = new Accounts('ws://localhost:8546', null, options);
 
 
 ------------------------------------------------------------------------------

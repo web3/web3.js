@@ -7,7 +7,7 @@ web3.eth.abi
 =========
 
 The ``web3-eth-abi`` package allows you to de- and encode parameters from a ABI (Application Binary Interface).
-This will be used for function calls to the EVM (Ethereum Virtual Machine).
+This will be used for calling functions of a deployed smart-contract.
 
 .. code-block:: javascript
 
@@ -19,9 +19,9 @@ This will be used for function calls to the EVM (Ethereum Virtual Machine).
     // or using the web3 umbrella package
 
 
-    import {Web3} from 'web3';
+    import Web3 from 'web3';
 
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
     // -> web3.eth.abi
 
 

@@ -160,7 +160,7 @@ export default class Wallet {
     encrypt(password, options) {
         let encryptedAccounts = [];
 
-        for (let i = 0; i <= this.accountsIndex; i++) {
+        for (let i = 0; i < this.accountsIndex; i++) {
             encryptedAccounts.push(this.accounts[i].encrypt(password, options));
         }
 
@@ -249,9 +249,7 @@ export default class Wallet {
             keystore = localStorage.getItem(keyName || this.defaultKeyName);
 
             if (keystore) {
-                keystore = JSON.parse(keystore).map((item) => {
-                    Account.fromV3Keystore(item, password, false, this.accountsModule);
-                });
+                keystore = JSON.parse(keystore);
             }
         } catch (error) {
             // code 18 means trying to use local storage in a iframe

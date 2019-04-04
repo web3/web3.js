@@ -198,10 +198,10 @@ export default class AbstractMethod {
      *
      * @method setArguments
      *
-     * @param {IArguments} args
+     * @param {IArguments} methodArguments
      */
-    setArguments(arguments_) {
-        let parameters = cloneDeep([...arguments_]);
+    setArguments(methodArguments) {
+        let parameters = cloneDeep([...methodArguments]);
         let callback = null;
 
         if (parameters.length > this.parametersAmount) {

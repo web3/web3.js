@@ -16,8 +16,8 @@ The ``web3.eth.Iban`` function lets convert Ethereum addresses from and to IBAN 
 
     // or using the web3 umbrella package
 
-    import {Web3 } from 'web3';
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+    import Web3 from 'web3';
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
 
     // -> new web3.eth.Iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS')
 
