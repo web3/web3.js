@@ -6,7 +6,7 @@
 web3.eth
 ========
 
-The ``web3-eth`` package allows you to interact with an Ethereum blockchain and Ethereum smart contracts.
+The ``web3-eth`` package allows you to interact with an Ethereum blockchain itself and the deployed smart contracts.
 
 
 .. code-block:: javascript
@@ -15,12 +15,12 @@ The ``web3-eth`` package allows you to interact with an Ethereum blockchain and 
     import {Eth} from 'web3-eth';
 
     // "Web3.givenProvider" will be set if in an Ethereum supported browser.
-    const eth = new Eth(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+    const eth = new Eth(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
 
 
     // or using the web3 umbrella package
 
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
 
     // -> web3.eth
 
@@ -120,96 +120,6 @@ For ``web3.eth.net`` see the :ref:`net reference documentation <eth-net>`
 
 .. include:: include_package-core.rst
 
-
-------------------------------------------------------------------------------
-
-.. _eth-defaultaccount:
-
-defaultAccount
-=====================
-
-.. code-block:: javascript
-
-    web3.eth.defaultAccount
-
-This default address is used as the default ``"from"`` property, if no ``"from"`` property is specified in for the following methods:
-
-- :ref:`web3.eth.sendTransaction() <eth-sendtransaction>`
-- :ref:`web3.eth.call() <eth-call>`
-- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().call() <contract-call>`
-- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().send() <contract-send>`
-
---------
-Property
---------
-
-
-``String`` - 20 Bytes: Any ethereum address. You should have the private key for that address in your node or keystore. (Default is ``undefined``)
-
-
--------
-Example
--------
-
-
-.. code-block:: javascript
-
-    web3.eth.defaultAccount;
-    > undefined
-
-    // set the default account
-    web3.eth.defaultAccount = '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe';
-
-
-------------------------------------------------------------------------------
-
-.. _eth-defaultblock:
-
-defaultBlock
-=====================
-
-.. code-block:: javascript
-
-    web3.eth.defaultBlock
-
-The default block is used for certain methods. You can override it by passing in the defaultBlock as last parameter.
-The default value is "latest".
-
-- :ref:`web3.eth.getBalance() <eth-getbalance>`
-- :ref:`web3.eth.getCode() <eth-getcode>`
-- :ref:`web3.eth.getTransactionCount() <eth-gettransactioncount>`
-- :ref:`web3.eth.getStorageAt() <eth-getstorageat>`
-- :ref:`web3.eth.call() <eth-call>`
-- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().call() <contract-call>`
-
-----------
-Property
-----------
-
-
-Default block parameters can be one of the following:
-
-- ``Number``: A block number
-- ``"genesis"`` - ``String``: The genesis block
-- ``"latest"`` - ``String``: The latest block (current head of the blockchain)
-- ``"pending"`` - ``String``: The currently mined block (including pending transactions)
-
-Default is ``"latest"``
-
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.eth.defaultBlock;
-    > "latest"
-
-    // set the default block
-    web3.eth.defaultBlock = 231;
-
-
 ------------------------------------------------------------------------------
 
 getProtocolVersion
@@ -219,7 +129,7 @@ getProtocolVersion
 
     web3.eth.getProtocolVersion([callback])
 
-Returns the ethereum protocol version of the node.
+Returns the Ethereum protocol version of the node.
 
 -------
 Returns
@@ -234,8 +144,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getProtocolVersion()
-    .then(console.log);
+    web3.eth.getProtocolVersion().then(console.log);
     > "63"
 
 
@@ -290,7 +199,7 @@ getCoinbase
 
 .. code-block:: javascript
 
-    getCoinbase([callback])
+    web3.eth.getCoinbase([callback])
 
 Returns the coinbase address to which mining rewards will go.
 
@@ -307,8 +216,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getCoinbase()
-    .then(console.log);
+    web3.eth.getCoinbase().then(console.log);
     > "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe"
 
 
@@ -337,8 +245,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.isMining()
-    .then(console.log);
+    web3.eth.isMining().then(console.log);
     > true
 
 
@@ -366,8 +273,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getHashrate()
-    .then(console.log);
+    web3.eth.getHashrate().then(console.log);
     > 493736
 
 
@@ -403,8 +309,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getGasPrice()
-    .then(console.log);
+    web3.eth.getGasPrice().then(console.log);
     > "20000000000"
 
 
@@ -419,8 +324,8 @@ getAccounts
 
     web3.eth.getAccounts([callback])
 
-Returns a list of accounts the node controls by using the provider and calling the RPC method ``eth_accounts``.
-If there are unlocked local accounts then it will return them instead of sending a request to the node.
+Will return a list of the unlocked accounts in the Web3 wallet or it will return the accounts from the currently connected node.
+
 This means you can add accounts with :ref:`web3.eth.accounts.create() <accounts-create>` and you will get them returned here.
 
 -------
@@ -437,8 +342,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getAccounts()
-    .then(console.log);
+    web3.eth.getAccounts().then(console.log);
     > ["0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", "0xDCc6960376d6C6dEa93647383FfB245CfCed97Cf"]
 
 
@@ -466,8 +370,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getBlockNumber()
-    .then(console.log);
+    web3.eth.getBlockNumber().then(console.log);
     > 2744
 
 
@@ -508,8 +411,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getBalance("0x407d73d8a49eeb85d32cf465507dd71d507100c1")
-    .then(console.log);
+    web3.eth.getBalance("0x407d73d8a49eeb85d32cf465507dd71d507100c1").then(console.log);
     > "1000000000000"
 
 
@@ -549,8 +451,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getStorageAt("0x407d73d8a49eeb85d32cf465507dd71d507100c1", 0)
-    .then(console.log);
+    web3.eth.getStorageAt("0x407d73d8a49eeb85d32cf465507dd71d507100c1", 0).then(console.log);
     > "0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234"
 
 
@@ -589,8 +490,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getCode("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8")
-    .then(console.log);
+    web3.eth.getCode("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8").then(console.log);
     > "0x600160008035811a818181146012578301005b601b6001356025565b8060005260206000f25b600060078202905091905056"
 
 
@@ -648,9 +548,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getBlock(3150)
-    .then(console.log);
-
+    web3.eth.getBlock(3150).then(console.log);
     > {
         "number": 3,
         "hash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
@@ -709,8 +607,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getBlockTransactionCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1")
-    .then(console.log);
+    web3.eth.getBlockTransactionCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1").then(console.log);
     > 1
 
 
@@ -750,8 +647,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getUncle(500, 0)
-    .then(console.log);
+    web3.eth.getUncle(500, 0).then(console.log);
     > // see web3.eth.getBlock
 
 ------------------------------------------------------------------------------
@@ -801,9 +697,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getTransaction('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b§234')
-    .then(console.log);
-
+    web3.eth.getTransaction('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b§234').then(console.log);
     > {
         "hash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
         "nonce": 2,
@@ -853,8 +747,7 @@ Example
 
 .. code-block:: javascript
 
-    const transaction = web3.eth.getTransactionFromBlock('0x4534534534', 2)
-    .then(console.log);
+    const transaction = web3.eth.getTransactionFromBlock('0x4534534534', 2).then(console.log);
     > // see web3.eth.getTransaction
 
 ------------------------------------------------------------------------------
@@ -907,8 +800,7 @@ Example
 .. code-block:: javascript
 
     const receipt = web3.eth.getTransactionReceipt('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b')
-    .then(console.log);
-
+                            .then(console.log);
     > {
       "status": true,
       "transactionHash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
@@ -959,8 +851,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getTransactionCount("0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe")
-    .then(console.log);
+    web3.eth.getTransactionCount("0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe").then(console.log);
     > 1
 
 ------------------------------------------------------------------------------
@@ -1168,10 +1059,10 @@ signTransaction
 
 .. code-block:: javascript
 
-    web3.eth.signTransaction(transactionObject [, callback])
+    web3.eth.signTransaction(transactionObject [, address,] [, callback])
 
-The method ``signTransaction`` signs a transaction with the private key of the given address.
-This method does only work if you're connected to a Parity node.
+Signs a transaction with the private key of the given address.
+If the given address is a local unlocked account, the transaction will be signed locally.
 
 ----------
 Parameters
@@ -1179,6 +1070,7 @@ Parameters
 
 
 1. ``Object`` - The transaction data to sign :ref:`web3.eth.sendTransaction() <eth-sendtransaction>` for more.
+1. ``string`` - The address of the account.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -1258,8 +1150,7 @@ Example
     web3.eth.call({
         to: "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", // contract address
         data: "0xc6888fa10000000000000000000000000000000000000000000000000000000000000003"
-    })
-    .then(console.log);
+    }).then(console.log);
     > "0x000000000000000000000000000000000000000000000000000000000000000a"
 
 ------------------------------------------------------------------------------
@@ -1298,8 +1189,7 @@ Example
     web3.eth.estimateGas({
         to: "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
         data: "0xc6888fa10000000000000000000000000000000000000000000000000000000000000003"
-    })
-    .then(console.log);
+    }).then(console.log);
     > "0x0000000000000000000000000000000000000000000000000000000000000015"
 
 ------------------------------------------------------------------------------
@@ -1352,9 +1242,7 @@ Example
     web3.eth.getPastLogs({
         address: "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
         topics: ["0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234"]
-    })
-    .then(console.log);
-
+    }).then(console.log);
     > [{
         data: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
         topics: ['0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7', '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385']
@@ -1401,8 +1289,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getWork()
-    .then(console.log);
+    web3.eth.getWork().then(console.log);
     > [
       "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
       "0x5EED00000000000000000000000000005EED0000000000000000000000000000",
@@ -1486,5 +1373,61 @@ Example
 
     web3.eth.requestAccounts().then(console.log);
     > ['0aae0B295369a9FD31d5F28D9Ec85E40f4cb692BAf', 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe]
+
+------------------------------------------------------------------------------
+
+.. _eth-chainId:
+
+getChainId
+==========
+
+.. code-block:: javascript
+
+    web3.eth.getChainId([callback])
+
+Returns the chain ID of the current connected node as described in the `EIP-695 <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-695.md>`_.
+
+-------
+Returns
+-------
+
+``Promise<Number>`` - Returns chain ID.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.getChainId().then(console.log);
+    > 61
+
+------------------------------------------------------------------------------
+
+.. _eth-getNodeInfo:
+
+getNodeInfo
+==========
+
+.. code-block:: javascript
+
+    web3.eth.getNodeInfo([callback])
+
+-------
+Returns
+-------
+
+``Promise<String>`` - The current client version.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.getNodeInfo().then(console.log);
+    > "Mist/v0.9.3/darwin/go1.4.1"
 
 ------------------------------------------------------------------------------

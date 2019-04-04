@@ -17,11 +17,11 @@ For more see `Whisper  Overview <https://github.com/ethereum/go-ethereum/wiki/Wh
     import {Shh} import 'web3-shh';
 
     // "Web3.givenProvider" will be set if in an Ethereum supported browser.
-    const shh = new Shh(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+    const shh = new Shh(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
 
 
     // or using the web3 umbrella package
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options;
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options;
 
     // -> web3.shh
 
@@ -117,8 +117,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.shh.getInfo()
-    .then(console.log);
+    web3.shh.getInfo().then(console.log);
     > {
         "minPow": 0.8,
         "maxMessageSize": 12345,
