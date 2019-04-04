@@ -20,17 +20,18 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetTransactionReceiptMethod extends AbstractCallMethod {
+export default class GetTransactionReceiptMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_getTransactionReceipt', 1, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_getTransactionReceipt', 1, utils, formatters, moduleInstance);
     }
 
     /**
@@ -44,7 +45,7 @@ export default class GetTransactionReceiptMethod extends AbstractCallMethod {
      */
     afterExecution(response) {
         if (response !== null) {
-            return this.formatters.outputTransactionFormatter(response);
+            return this.formatters.outputTransactionReceiptFormatter(response);
         }
 
         return response;

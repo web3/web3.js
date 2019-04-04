@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, fromUtf8} from 'web3-utils';
+import BN = require('bn.js');
+import {fromUtf8} from 'web3-utils';
 
 // $ExpectType string
 fromUtf8('I have 100£');

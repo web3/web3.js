@@ -22,5 +22,5 @@
 
 import {ProviderDetector} from 'web3-providers';
 
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | undefined
-new ProviderDetector().detect();
+// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider | undefined
+ProviderDetector.detect();

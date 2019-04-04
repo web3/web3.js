@@ -20,20 +20,13 @@
  * @date 2018
  */
 
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
-import SubscriptionsModuleFactory from './factories/SubscriptionsModuleFactory';
-
-/**
- * Returns an object of type SubscriptionsFactory
- *
- * @method SubscriptionsFactory
- *
- * @returns {SubscriptionsFactory}
- */
-export const SubscriptionsFactory = () => {
-    return new SubscriptionsModuleFactory().createSubscriptionsFactory(Utils, formatters);
-};
-
-export LogSubscription from './subscriptions/eth/LogSubscription';
 export AbstractSubscription from '../lib/subscriptions/AbstractSubscription';
+
+// Eth
+export LogSubscription from './subscriptions/eth/LogSubscription';
+export NewHeadsSubscription from './subscriptions/eth/NewHeadsSubscription';
+export NewPendingTransactionsSubscription from './subscriptions/eth/NewPendingTransactionsSubscription';
+export SyncingSubscription from './subscriptions/eth/SyncingSubscription';
+
+// Shh
+export MessagesSubscription from './subscriptions/shh/MessagesSubscription';

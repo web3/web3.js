@@ -25,11 +25,9 @@ import {RESOLVER_ABI} from '../../ressources/ABI/Resolver';
 
 export default class Registry extends AbstractContract {
     /**
-     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|Web3EthereumProvider|String} provider
      * @param {ContractModuleFactory} contractModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
-     * @param {PromiEvent} promiEvent
+     * @param {Accounts} accounts
      * @param {AbiCoder} abiCoder
      * @param {Utils} utils
      * @param {Object} formatters
@@ -38,39 +36,11 @@ export default class Registry extends AbstractContract {
      *
      * @constructor
      */
-    constructor(
-        provider,
-        providersModuleFactory,
-        methodModuleFactory,
-        contractModuleFactory,
-        promiEvent,
-        abiCoder,
-        utils,
-        formatters,
-        options,
-        net
-    ) {
-        super(
-            provider,
-            providersModuleFactory,
-            methodModuleFactory,
-            contractModuleFactory,
-            promiEvent,
-            abiCoder,
-            utils,
-            formatters,
-            REGISTRY_ABI,
-            '',
-            options
-        );
-
+    constructor(provider, contractModuleFactory, accounts, abiCoder, utils, formatters, options, net) {
+        super(provider, contractModuleFactory, accounts, abiCoder, utils, formatters, REGISTRY_ABI, '', options);
         this.net = net;
         this.resolverContract = null;
         this.resolverName = null;
-
-        this.checkNetwork().then((address) => {
-            this.address = address;
-        });
     }
 
     /**
@@ -84,26 +54,26 @@ export default class Registry extends AbstractContract {
      * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    owner(name, callback = null) {
-        return new Promise((resolve, reject) => {
-            this.methods
-                .owner(namehash.hash(name))
-                .call()
-                .then((receipt) => {
-                    resolve(receipt);
+    async owner(name, callback) {
+        if (!this.address) {
+            this.address = await this.checkNetwork();
+        }
 
-                    if (isFunction(callback)) {
-                        callback(false, receipt);
-                    }
-                })
-                .catch((error) => {
-                    reject(error);
+        try {
+            const owner = await this.methods.owner(namehash.hash(name)).call();
 
-                    if (isFunction(callback)) {
-                        callback(error, null);
-                    }
-                });
-        });
+            if (isFunction(callback)) {
+                callback(false, owner);
+            }
+
+            return owner;
+        } catch (error) {
+            if (isFunction(callback)) {
+                callback(error, null);
+            }
+
+            throw error;
+        }
     }
 
     /**
@@ -112,14 +82,14 @@ export default class Registry extends AbstractContract {
      *
      * @method setProvider
      *
-     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|Web3EthereumProvider|String} provider
      * @param {Net} net
      *
      * @returns {Boolean}
      */
     setProvider(provider, net) {
         if (this.resolverContract) {
-            return !!(super.setProvider(provider, net) && this.resolverContract.setProvider(provider, net));
+            return this.resolverContract.setProvider(provider, net) && super.setProvider(provider, net);
         }
 
         return super.setProvider(provider, net);
@@ -139,8 +109,11 @@ export default class Registry extends AbstractContract {
             return this.resolverContract;
         }
 
-        const address = await this.methods.resolver(namehash.hash(name)).call();
+        if (!this.address) {
+            this.address = await this.checkNetwork();
+        }
 
+        const address = await this.methods.resolver(namehash.hash(name)).call();
         const clone = this.clone();
         clone.jsonInterface = RESOLVER_ABI;
         clone.address = address;
@@ -166,7 +139,7 @@ export default class Registry extends AbstractContract {
             rinkeby: '0xe7410170f87102df0055eb195163a03b7f2bff4a'
         };
 
-        const block = await this.net.getBlock('latest', false);
+        const block = await this.net.getBlockByNumber('latest', false);
         const headAge = new Date() / 1000 - block.timestamp;
 
         if (headAge > 3600) {

@@ -40,7 +40,7 @@ export randomHex from 'randomhex';
  * @returns {String} full function/event name
  */
 export const jsonInterfaceMethodToString = (json) => {
-    if (isObject(json) && json.name && json.name.indexOf('(') !== -1) {
+    if (isObject(json) && json.name && json.name.includes('(')) {
         return json.name;
     }
 
@@ -104,7 +104,7 @@ const _flattenTypes = (includeTuple, puts) => {
 export const hexToAscii = (hex) => {
     if (!utils.isHexStrict(hex)) throw new Error('The parameter must be a valid HEX string.');
 
-    let str = '';
+    let string = '';
 
     let i = 0;
     const l = hex.length;
@@ -114,10 +114,10 @@ export const hexToAscii = (hex) => {
     }
     for (; i < l; i += 2) {
         const code = parseInt(hex.substr(i, 2), 16);
-        str += String.fromCharCode(code);
+        string += String.fromCharCode(code);
     }
 
-    return str;
+    return string;
 };
 
 /**
@@ -130,11 +130,11 @@ export const hexToAscii = (hex) => {
  *
  * @returns {String} hex representation of input string
  */
-export const asciiToHex = (str, length = 32) => {
+export const asciiToHex = (string, length = 32) => {
     let hex = '';
 
-    for (let i = 0; i < str.length; i++) {
-        const code = str.charCodeAt(i);
+    for (let i = 0; i < string.length; i++) {
+        const code = string.charCodeAt(i);
         const n = code.toString(16);
         hex += n.length < 2 ? `0${n}` : n;
     }
@@ -272,6 +272,7 @@ export const toDecimal = utils.hexToNumber;
 export const hexToNumber = utils.hexToNumber;
 export const fromDecimal = utils.numberToHex;
 export const numberToHex = utils.numberToHex;
+export const hexToUtf8 = utils.hexToUtf8;
 export const hexToString = utils.hexToUtf8;
 export const toUtf8 = utils.hexToUtf8;
 export const stringToHex = utils.utf8ToHex;

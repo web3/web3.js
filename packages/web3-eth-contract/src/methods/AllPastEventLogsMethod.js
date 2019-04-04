@@ -26,14 +26,15 @@ export default class AllPastEventLogsMethod extends GetPastLogsMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AllEventsLogDecoder} eventLogDecoder
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
      * @param {AllEventsOptionsMapper} allEventsOptionsMapper
      *
      * @constructor
      */
-    constructor(utils, formatters, allEventsLogDecoder, abiModel, allEventsOptionsMapper) {
-        super(utils, formatters);
+    constructor(utils, formatters, moduleInstance, allEventsLogDecoder, abiModel, allEventsOptionsMapper) {
+        super(utils, formatters, moduleInstance);
         this.abiModel = abiModel;
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.allEventsOptionsMapper = allEventsOptionsMapper;
@@ -48,7 +49,6 @@ export default class AllPastEventLogsMethod extends GetPastLogsMethod {
      */
     beforeExecution(moduleInstance) {
         super.beforeExecution(moduleInstance);
-
         this.parameters[0] = this.allEventsOptionsMapper.map(this.abiModel, moduleInstance, this.parameters[0]);
     }
 

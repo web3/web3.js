@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, toAscii} from 'web3-utils';
+import BN = require('bn.js');
+import {toAscii} from 'web3-utils';
 
 // $ExpectType string
 toAscii('0x4920686176652031303021');

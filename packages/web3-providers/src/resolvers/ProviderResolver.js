@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file ProviderResolverTest.js
+ * @file ProviderResolver.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -23,14 +23,11 @@
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
 
-/* eslint-disable no-new-func */
-let global;
-try {
-    global = new Function('return this')();
-} catch (error) {
-    global = window;
-}
-/* eslint-enable */
+const global =
+    (function() {
+        return this || (typeof self === 'object' && self);
+        // eslint-disable-next-line no-new-func
+    })() || new Function('return this')();
 
 export default class ProviderResolver {
     /**
@@ -47,10 +44,10 @@ export default class ProviderResolver {
      *
      * @method resolve
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
      * @param {Net} net
      *
-     * @returns {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|Error}
+     * @returns {AbstractSocketProvider|HttpProvider|CustomProvider}
      */
     resolve(provider, net) {
         if (typeof provider === 'string') {
@@ -69,18 +66,35 @@ export default class ProviderResolver {
             }
         }
 
+        if (provider.sendPayload && provider.subscribe) {
+            return provider;
+        }
+
         if (typeof global.mist !== 'undefined' && provider.constructor.name === 'EthereumProvider') {
             return this.providersModuleFactory.createMistEthereumProvider(provider);
         }
 
-        if (provider.constructor.name === 'MetamaskInpageProvider') {
+        if (provider.isEIP1193) {
+            return this.providersModuleFactory.createWeb3EthereumProvider(provider);
+        }
+
+        if (this.isMetamaskInpageProvider(provider)) {
             return this.providersModuleFactory.createMetamaskProvider(provider);
         }
 
-        if (provider.isEIP1193) {
-            return this.providersModuleFactory.createEthereumProvider(provider);
-        }
+        return this.providersModuleFactory.createCustomProvider(provider);
+    }
 
-        return provider;
+    /**
+     * Checks if the given provider is the MetamaskInpageProvider
+     *
+     * @method isMetamaskInpageProvider
+     *
+     * @param {Object} provider
+     *
+     * @returns {Boolean}
+     */
+    isMetamaskInpageProvider(provider) {
+        return provider.constructor.name === 'MetamaskInpageProvider';
     }
 }

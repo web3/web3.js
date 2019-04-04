@@ -1,9 +1,9 @@
 import {formatters} from 'web3-core-helpers';
 import PersonalSendTransactionMethod from '../../../../src/methods/personal/PersonalSendTransactionMethod';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * PersonalSendTransactionMethod test
@@ -12,11 +12,11 @@ describe('PersonalSendTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new PersonalSendTransactionMethod(null, formatters);
+        method = new PersonalSendTransactionMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('personal_sendTransaction');
 

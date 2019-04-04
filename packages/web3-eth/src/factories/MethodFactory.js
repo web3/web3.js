@@ -15,55 +15,57 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file MethodFactory
+ * @file MethodFactory.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import {
     AbstractMethodFactory,
-    GetNodeInfoMethod,
-    GetProtocolVersionMethod,
-    GetCoinbaseMethod,
-    IsMiningMethod,
-    GetHashrateMethod,
-    IsSyncingMethod,
-    GetGasPriceMethod,
-    GetAccountsMethod,
-    GetBlockNumberMethod,
-    GetBalanceMethod,
-    GetStorageAtMethod,
-    GetCodeMethod,
-    GetBlockMethod,
-    GetUncleMethod,
-    GetBlockTransactionCountMethod,
-    GetBlockUncleCountMethod,
-    GetTransactionMethod,
-    GetTransactionFromBlockMethod,
-    GetTransactionReceipt,
-    GetTransactionCountMethod,
-    SendRawTransactionMethod,
-    SignTransactionMethod,
-    SendTransactionMethod,
-    SignMethod,
     CallMethod,
+    ChainIdMethod,
     EstimateGasMethod,
-    SubmitWorkMethod,
-    GetWorkMethod,
+    GetBalanceMethod,
+    GetBlockNumberMethod,
+    GetCodeMethod,
+    GetCoinbaseMethod,
+    GetGasPriceMethod,
+    GetHashrateMethod,
+    GetNodeInfoMethod,
     GetPastLogsMethod,
-    RequestAccountsMethod
+    GetProtocolVersionMethod,
+    GetStorageAtMethod,
+    GetTransactionCountMethod,
+    GetTransactionMethod,
+    GetTransactionReceiptMethod,
+    GetWorkMethod,
+    IsMiningMethod,
+    IsSyncingMethod,
+    RequestAccountsMethod,
+    SubmitWorkMethod,
+    VersionMethod,
+    SendRawTransactionMethod,
+    EthSendTransactionMethod
 } from 'web3-core-method';
+
+import GetBlockMethod from '../methods/GetBlockMethod';
+import GetUncleMethod from '../methods/GetUncleMethod';
+import GetBlockTransactionCountMethod from '../methods/GetBlockTransactionCountMethod';
+import GetBlockUncleCountMethod from '../methods/GetBlockUncleCountMethod';
+import GetTransactionFromBlockMethod from '../methods/GetTransactionFromBlockMethod';
+import EthSignTransactionMethod from '../methods/EthSignTransactionMethod';
+import EthSignMethod from '../methods/EthSignMethod';
+import EthGetAccountsMethod from '../methods/EthGetAccountsMethod';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(methodModuleFactory, utils, formatters) {
-        super(methodModuleFactory, utils, formatters);
+    constructor(utils, formatters) {
+        super(utils, formatters);
 
         this.methods = {
             getNodeInfo: GetNodeInfoMethod,
@@ -73,7 +75,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             getHashrate: GetHashrateMethod,
             isSyncing: IsSyncingMethod,
             getGasPrice: GetGasPriceMethod,
-            getAccounts: GetAccountsMethod,
+            getAccounts: EthGetAccountsMethod,
             getBlockNumber: GetBlockNumberMethod,
             getBalance: GetBalanceMethod,
             getStorageAt: GetStorageAtMethod,
@@ -84,18 +86,20 @@ export default class MethodFactory extends AbstractMethodFactory {
             getBlockUncleCount: GetBlockUncleCountMethod,
             getTransaction: GetTransactionMethod,
             getTransactionFromBlock: GetTransactionFromBlockMethod,
-            getTransactionReceipt: GetTransactionReceipt,
+            getTransactionReceipt: GetTransactionReceiptMethod,
             getTransactionCount: GetTransactionCountMethod,
             sendSignedTransaction: SendRawTransactionMethod,
-            signTransaction: SignTransactionMethod,
-            sendTransaction: SendTransactionMethod,
-            sign: SignMethod,
+            signTransaction: EthSignTransactionMethod,
+            sendTransaction: EthSendTransactionMethod,
+            sign: EthSignMethod,
             call: CallMethod,
             estimateGas: EstimateGasMethod,
             submitWork: SubmitWorkMethod,
             getWork: GetWorkMethod,
             getPastLogs: GetPastLogsMethod,
-            requestAccounts: RequestAccountsMethod
+            requestAccounts: RequestAccountsMethod,
+            getId: VersionMethod,
+            getChainId: ChainIdMethod
         };
     }
 }

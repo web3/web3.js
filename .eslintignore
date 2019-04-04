@@ -10,4 +10,5 @@ jest.preprocessor.js
 W3cWebsocket.js
 packages/**/rollup.config.js
 TypeDirTemplate
+packages/**/node_modules
 angular-patch.js

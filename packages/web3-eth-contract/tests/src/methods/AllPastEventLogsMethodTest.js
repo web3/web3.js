@@ -8,8 +8,8 @@ import AbstractContract from '../../../src/AbstractContract';
 import AllPastEventLogsMethod from '../../../src/methods/AllPastEventLogsMethod';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 jest.mock('../../../src/decoders/AllEventsLogDecoder');
 jest.mock('../../../src/models/AbiModel');
 jest.mock('../../../src/mappers/AllEventsOptionsMapper');
@@ -34,6 +34,7 @@ describe('AllPastEventLogsMethodTest', () => {
         allPastEventLogsMethod = new AllPastEventLogsMethod(
             Utils,
             formatters,
+            {},
             allEventsLogDecoderMock,
             abiModelMock,
             allEventsOptionsMapperMock
@@ -41,10 +42,6 @@ describe('AllPastEventLogsMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(allPastEventLogsMethod.utils).toEqual(Utils);
-
-        expect(allPastEventLogsMethod.formatters).toEqual(formatters);
-
         expect(allPastEventLogsMethod.allEventsLogDecoder).toEqual(allEventsLogDecoderMock);
 
         expect(allPastEventLogsMethod.abiModel).toEqual(abiModelMock);

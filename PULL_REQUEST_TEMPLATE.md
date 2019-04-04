@@ -13,7 +13,8 @@ Fixes #(issue)
 
 - [ ] Bug fix 
 - [ ] New feature 
-- [ ] Breaking change 
+- [ ] Breaking change
+- [ ] Enhancement
 
 ## Checklist:
 
@@ -27,4 +28,4 @@ Fixes #(issue)
 - [ ] I ran ```npm run test``` in the root folder with success and extended the tests if necessary.
 - [ ] I ran ```npm run build``` in the root folder and tested it in the browser and with node.
 - [ ] I ran ```npm run dtslint``` in the root folder and tested that all my types are correct
-- [ ] I have tested my code on the live network.
+- [ ] I have tested my code on an ethereum test network.

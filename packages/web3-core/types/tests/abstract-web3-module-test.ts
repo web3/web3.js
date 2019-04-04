@@ -17,7 +17,7 @@
  * @date 2018
  */
 import * as net from 'net';
-import {ProvidersModuleFactory, HttpProvider, IpcProvider, WebsocketProvider} from 'web3-providers';
+import {HttpProvider, IpcProvider, WebsocketProvider} from 'web3-providers';
 import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
 
 const options = {
@@ -31,20 +31,7 @@ const options = {
 };
 const httpProvider = new HttpProvider('http://localhost:8545', options);
 const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', new net.Server());
-const websocketProvider = new WebsocketProvider('ws://localhost:8546');
-
-const providersModuleFactory = new ProvidersModuleFactory();
-
-const abstractWeb3Module = new AbstractWeb3Module(
-    httpProvider,
-    providersModuleFactory,
-    {
-        HttpProvider: httpProvider,
-        WebsocketProvider: websocketProvider,
-        IpcProvider: ipcProvider
-    },
-    {}
-);
+const abstractWeb3Module = new AbstractWeb3Module(httpProvider);
 
 // $ExpectType BatchRequest
 new abstractWeb3Module.BatchRequest();
@@ -70,17 +57,14 @@ abstractWeb3Module.defaultGas;
 // $ExpectType Providers
 AbstractWeb3Module.providers;
 
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
+// $ExpectType any
 abstractWeb3Module.givenProvider;
 
 // $ExpectType string | null
 abstractWeb3Module.defaultAccount;
 
-// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
+// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
 abstractWeb3Module.currentProvider;
-
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
-abstractWeb3Module.givenProvider;
 
 // $ExpectType boolean
 abstractWeb3Module.setProvider(httpProvider);

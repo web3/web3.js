@@ -1,28 +1,66 @@
+<!---------------------------------------------------------------------------------------
 
-**All issues which aren't created with this template will get immediately closed.**
+Welcome to the Web3.js Issue Template!
 
+If you're new around here, reading this will make sure you're helped ASAP.
+The more details you include, the better the community will be able to help you!
 
-<!---
+---------------------------------------------------------------------------------------->
 
-Steps before creating an issue: 
+### Description <!-- In plain words, what happened -->
 
-1. I have read the documentation.
-2. I was looking for an solution on stackoverflow or somewhere else.
-3. I checked the issue list if an identical issue already exists.
-
--->
 
 #### Expected behavior
+<!---------------------------------------------------------------------
+    Example:
+    Calling `await web3.eth.getAccounts()` should return an array.
+----------------------------------------------------------------------->
+
 
 #### Actual behavior
+<!---------------------------------------------------------------------
+    Example:
+    Calling `await web3.eth.getAccounts()` returns "monkey".
+----------------------------------------------------------------------->
+
 
 #### Steps to reproduce the behavior
+<!---------------------------------------------------------------------
+    Example:
+    1. Import `web3`
+    2. Set the provider to `localhost`
+    3. Fetch latest block
 
-1. [First step]
-2. [Second step]
-3. [and so on...]
+    Please use the code blocks Markdown does provide:
 
-#### Error Logs
+    ```js
+      
+        console.log('Pretty syntax!');
+    
+    ```
+----------------------------------------------------------------------->
 
-#### Versions
-[NPM, Node, Web3.js, OS, device...]
+
+#### Error Logs 
+
+
+#### Gists
+<!---------------------------------------------------------------------
+    Including links to gists with:
+    * ABI JSON,
+    * working Solidity code, etc.
+
+    gist tutorial: https://help.github.com/en/articles/creating-gists
+----------------------------------------------------------------------->
+
+
+### Versions 
+* web3.js:
+* nodejs:
+* browser:
+* ethereum node:
+
+
+<!---------------------------------------------------------------------
+                    Thanks for your cooperation!
+----------------------------------------------------------------------->

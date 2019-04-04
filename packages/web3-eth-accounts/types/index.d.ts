@@ -13,33 +13,31 @@
 */
 /**
  * @file index.d.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {AbstractWeb3Module, Transaction, Web3ModuleOptions} from 'web3-core';
+import {AbstractWeb3Module, SignedTransaction, TransactionConfig, Web3ModuleOptions} from 'web3-core';
 import {provider} from 'web3-providers';
+import * as net from 'net';
 
 export class Accounts extends AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        options?: Web3ModuleOptions
-    );
+    constructor(provider: provider, net?: net.Socket | null, options?: Web3ModuleOptions);
 
     create(entropy?: string): Account;
 
     privateKeyToAccount(privateKey: string): Account;
 
-    signTransaction(tx: Transaction, privateKey: string, callback?: () => void): Promise<SignedTransaction>;
+    signTransaction(transactionConfig: TransactionConfig, privateKey: string, callback?: () => void): Promise<SignedTransaction>;
 
     recoverTransaction(signature: string): string;
 
     hashMessage(message: string): string;
 
-    sign(data: string, privateKey: string): string | Sign;
+    sign(data: string, privateKey: string): Sign;
 
-    recover(message: SignedTransaction): string;
-    recover(message: string | SignedTransaction, signature: string, preFixed?: boolean): string;
+    recover(signatureObject: SignatureObject): string;
+    recover(message: string, signature: string, preFixed?: boolean): string;
     recover(message: string, v: string, r: string, s: string, preFixed?: boolean): string;
 
     encrypt(privateKey: string, password: string): EncryptedKeystoreV3Json;
@@ -52,9 +50,15 @@ export class Accounts extends AbstractWeb3Module {
 export class Wallet {
     constructor(accounts: Accounts);
 
+    accountsIndex: number;
+    length: number;
+    defaultKeyName: string;
+
+    [key: number]: Account;
+
     create(numberOfAccounts: number, entropy?: string): Wallet;
 
-    add(account: string | Account): AddedAccount;
+    add(account: string | AddAccount): AddedAccount;
 
     remove(account: string | number): boolean;
 
@@ -69,12 +73,20 @@ export class Wallet {
     load(password: string, keyName?: string): Wallet;
 }
 
+export interface AddAccount {
+    address: string;
+    privateKey: string;
+}
+
 export interface Account {
     address: string;
     privateKey: string;
-    signTransaction?: (tx: Transaction) => {};
-    sign?: (data: string) => {};
-    encrypt?: (password: string) => {};
+    signTransaction: (
+        transactionConfig: TransactionConfig,
+        callback?: (signTransaction: SignedTransaction) => void
+    ) => Promise<SignedTransaction>;
+    sign: (data: string) => Sign;
+    encrypt: (password: string) => EncryptedKeystoreV3Json;
 }
 
 export interface AddedAccount extends Account {
@@ -83,32 +95,32 @@ export interface AddedAccount extends Account {
 
 export interface EncryptedKeystoreV3Json {
     version: number;
-    id: string,
-    address: string,
+    id: string;
+    address: string;
     crypto: {
-        ciphertext: string,
-        cipherparams: {iv: string},
-        cipher: string,
-        kdf: string,
+        ciphertext: string;
+        cipherparams: {iv: string};
+        cipher: string;
+        kdf: string;
         kdfparams: {
-            dklen: number,
-            salt: string,
-            n: number,
-            r: number,
-            p: number
-        },
+            dklen: number;
+            salt: string;
+            n: number;
+            r: number;
+            p: number;
+        };
         mac: string;
-    }
-}
-
-export interface SignedTransaction {
-    messageHash?: string;
-    r: string;
-    s: string;
-    v: string;
-    rawTransaction?: string;
+    };
 }
 
 export interface Sign extends SignedTransaction {
     message: string;
+    signature: string;
+}
+
+export interface SignatureObject {
+    messageHash: string;
+    r: string;
+    s: string;
+    v: string;
 }

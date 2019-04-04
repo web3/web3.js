@@ -17,8 +17,9 @@
  * @date 2018
  */
 
+import BN = require('bn.js');
 import {provider} from 'web3-providers';
-import {AbiItem, BN} from 'web3-utils';
+import {AbiItem} from 'web3-utils';
 import {PromiEvent} from 'web3-core';
 
 export class Contract {
@@ -33,7 +34,7 @@ export class Contract {
 
     clone(): Contract;
 
-    deploy(options: DeployOptions): DeployTransactionResponse;
+    deploy(options: DeployOptions): ContractSendMethod;
 
     methods: any;
 
@@ -64,9 +65,7 @@ export interface DeployOptions {
     arguments?: any[];
 }
 
-export interface DeployTransactionResponse {
-    array: any[];
-
+export interface ContractSendMethod {
     send(options: SendOptions, callback?: (err: Error, contracts: Contract) => void): PromiEvent<Contract>;
 
     estimateGas(options: EstimateGasOptions, callback?: (err: Error, gas: number) => void): Promise<number>;
@@ -103,14 +102,16 @@ export interface ContractOptions {
 }
 
 export interface EventOptions {
-    filter: {};
+    filter?: {};
     fromBlock?: number;
     toBlock?: string | number;
     topics?: any[];
 }
 
 export interface EventData {
-    returnValues: {},
+    returnValues: {
+        [key: string]: any;
+    },
     raw: {
         data: string;
         topics: string[];

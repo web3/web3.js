@@ -259,10 +259,6 @@ export const outputTransactionFormatter = (receipt) => {
  * @returns {Object}
  */
 export const outputTransactionReceiptFormatter = (receipt) => {
-    if (typeof receipt !== 'object') {
-        throw new TypeError(`Received receipt is invalid: ${receipt}`);
-    }
-
     if (receipt.blockNumber !== null) {
         receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
     }
@@ -282,8 +278,10 @@ export const outputTransactionReceiptFormatter = (receipt) => {
         receipt.contractAddress = Utils.toChecksumAddress(receipt.contractAddress);
     }
 
-    if (typeof receipt.status !== 'undefined') {
+    if (typeof receipt.status !== 'undefined' && receipt.status !== null) {
         receipt.status = Boolean(parseInt(receipt.status));
+    } else {
+        receipt.status = true;
     }
 
     return receipt;

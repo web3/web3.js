@@ -8,12 +8,12 @@ import * as Utils from 'web3-utils';
 import Web3 from '../../src/Web3';
 
 // Mocks
-jest.mock('Eth');
-jest.mock('Shh');
-jest.mock('Bzz');
-jest.mock('Network');
-jest.mock('Personal');
-jest.mock('Utils');
+jest.mock('web3-eth');
+jest.mock('web3-shh');
+jest.mock('web3-bzz');
+jest.mock('web3-net');
+jest.mock('web3-eth-personal');
+jest.mock('web3-utils');
 
 /**
  * Web3 test

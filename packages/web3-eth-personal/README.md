@@ -18,7 +18,7 @@ import {Personal} from 'web3-eth-personal';
 
 const personal = new Personal(
     'http://127.0.0.1:4546',
-    accounts,
+    null,
     options
 );
 ```

@@ -1,100 +1,32 @@
-import {
-    BatchRequest,
-    ProviderDetector,
-    ProviderResolver,
-    ProvidersModuleFactory,
-    WebsocketProvider,
-    HttpProvider,
-    IpcProvider
-} from 'web3-providers';
 import AbstractWeb3Module from '../../src/AbstractWeb3Module';
-import MethodProxy from '../__mocks__/MethodProxy';
-import MethodModuleFactory from '../__mocks__/MethodModuleFactory';
 import MethodFactory from '../__mocks__/MethodFactory';
-
-// Mocks
-jest.mock('BatchRequest');
-jest.mock('ProviderDetector');
-jest.mock('ProvidersModuleFactory');
-jest.mock('ProviderResolver');
-jest.mock('WebsocketProvider');
-jest.mock('HttpProvider');
-jest.mock('IpcProvider');
 
 /**
  * AbstractWeb3Module test
  */
 describe('AbstractWeb3ModuleTest', () => {
-    let abstractWeb3Module,
-        providerDetectorMock,
-        providerResolverMock,
-        providersModuleFactoryMock,
-        providerMock,
-        methodModuleFactoryMock,
-        methodFactoryMock;
+    let abstractWeb3Module, methodFactoryMock;
 
     beforeEach(() => {
         methodFactoryMock = new MethodFactory();
-        methodModuleFactoryMock = new MethodModuleFactory();
-
-        new WebsocketProvider('HOST', {});
-        providerMock = WebsocketProvider.mock.instances[0];
-        providerMock.host = 'HOST';
-
-        new ProvidersModuleFactory();
-        providersModuleFactoryMock = ProvidersModuleFactory.mock.instances[0];
-
-        new ProviderDetector();
-        providerDetectorMock = ProviderDetector.mock.instances[0];
-
-        new ProviderResolver();
-        providerResolverMock = ProviderResolver.mock.instances[0];
-
-        providerResolverMock.resolve = jest.fn(() => {
-            return providerMock;
-        });
-
-        providerDetectorMock.detect = jest.fn(() => {
-            return false;
-        });
-
-        providersModuleFactoryMock.createProviderResolver.mockReturnValueOnce(providerResolverMock);
-
-        providersModuleFactoryMock.createProviderDetector.mockReturnValueOnce(providerDetectorMock);
-
         methodFactoryMock.hasMethod = jest.fn(() => {
             return false;
         });
 
-        methodModuleFactoryMock.createMethodProxy = jest.fn((target, methodFactory) => {
-            return new MethodProxy(target);
-        });
-
         abstractWeb3Module = new AbstractWeb3Module(
-            'WS',
-            providersModuleFactoryMock,
-            methodModuleFactoryMock,
-            methodFactoryMock,
+            'http://localhost:8545',
             {
                 defaultAccount: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
                 defaultBlock: 'latest',
                 defaultGasPrice: 100,
                 defaultGas: 100
-            }
+            },
+            methodFactoryMock,
+            {}
         );
     });
 
-    it('constructor throws error on missing required parameters', () => {
-        expect(() => {
-            new AbstractWeb3Module();
-        }).toThrow('Missing parameter: provider');
-
-        expect(() => {
-            new AbstractWeb3Module('');
-        }).toThrow('Missing parameter: ProvidersModuleFactory');
-    });
-
-    it('constructor defines all properties', () => {
+    it('constructor check', () => {
         expect(abstractWeb3Module.defaultAccount).toEqual('0x03C9A938fF7f54090d0d99e2c6f80380510Ea078');
 
         expect(abstractWeb3Module.defaultBlock).toEqual('latest');
@@ -111,25 +43,15 @@ describe('AbstractWeb3ModuleTest', () => {
 
         expect(abstractWeb3Module.BatchRequest).toBeInstanceOf(Function);
 
-        expect(abstractWeb3Module.methodFactory).toEqual(methodFactoryMock);
-
-        expect(abstractWeb3Module.providerDetector).toEqual(providerDetectorMock);
-
-        expect(abstractWeb3Module.currentProvider).toEqual(providerMock);
-
-        expect(methodModuleFactoryMock.createMethodProxy).toHaveBeenCalledWith(abstractWeb3Module, methodFactoryMock);
-
-        expect(providerResolverMock.resolve).toHaveBeenCalledWith('WS');
+        expect(abstractWeb3Module.currentProvider.host).toEqual('http://localhost:8545');
     });
 
     it('gets the BatchRequest property and it is of type BatchRequest', () => {
-        const batchRequestMock = new BatchRequest();
+        const batchRequest = new abstractWeb3Module.BatchRequest();
 
-        providersModuleFactoryMock.createBatchRequest.mockReturnValueOnce(batchRequestMock);
+        expect(batchRequest.constructor.name).toEqual('BatchRequest');
 
-        expect(new abstractWeb3Module.BatchRequest()).toBeInstanceOf(BatchRequest);
-
-        expect(providersModuleFactoryMock.createBatchRequest).toHaveBeenCalledWith(abstractWeb3Module);
+        expect(batchRequest.add).toBeInstanceOf(Function);
     });
 
     it('sets the defaultAccount property validates the address and throws error', () => {
@@ -184,62 +106,23 @@ describe('AbstractWeb3ModuleTest', () => {
     });
 
     it('calls setProvider returns true and sets the provider as currentProvider', () => {
-        expect(abstractWeb3Module.setProvider('SOCKET_PROVIDER')).toEqual(true);
+        expect(abstractWeb3Module.setProvider('http://newhost')).toEqual(true);
 
-        expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(1, 'WS');
-
-        expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(2, 'SOCKET_PROVIDER', undefined);
-
-        expect(abstractWeb3Module.currentProvider).toEqual(providerMock);
-    });
-
-    it('calls setProvider returns true, sets the provider and clears the subscriptions', () => {
-        providerMock.subscriptions = [0, 1];
-        providerMock.clearSubscriptions = jest.fn();
-
-        expect(abstractWeb3Module.setProvider('SOCKET_PROVIDER')).toEqual(true);
-
-        expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(1, 'WS');
-
-        expect(providerResolverMock.resolve).toHaveBeenNthCalledWith(2, 'SOCKET_PROVIDER', undefined);
-
-        expect(providerMock.clearSubscriptions).toHaveBeenCalled();
-
-        expect(abstractWeb3Module.currentProvider).toEqual(providerMock);
+        expect(abstractWeb3Module.currentProvider.host).toEqual('http://newhost');
     });
 
     it('calls setProvider and throws an error because of the resolver', () => {
-        providerResolverMock.resolve = jest.fn(() => {
-            throw new Error('Invalid provider');
-        });
-
-        const provider = {
-            constructor: {
-                name: 'WebsocketProvider'
-            },
-            host: 'WS'
-        };
-
         expect(() => {
-            abstractWeb3Module.setProvider(provider);
+            abstractWeb3Module.setProvider({nope: true});
         }).toThrow('Invalid provider');
-
-        expect(providerResolverMock.resolve).toHaveBeenCalledWith(provider, undefined);
     });
 
     it('calls setProvider and returns false because of the equal host', () => {
-        expect(abstractWeb3Module.setProvider('HOST')).toEqual(false);
+        expect(abstractWeb3Module.setProvider('http://localhost:8545')).toEqual(false);
     });
 
-    it('calls setProvider and returns false because of the same constructor name', () => {
-        const provider = {
-            constructor: {
-                name: 'WebsocketProvider'
-            },
-            host: 'HOST'
-        };
-
-        expect(abstractWeb3Module.setProvider(provider)).toEqual(false);
+    it('calls setProvider and returns false because it is the same provider', () => {
+        expect(abstractWeb3Module.setProvider('http://localhost:8545')).toEqual(false);
     });
 
     it('calls isSameProvider and returns false', () => {
@@ -256,38 +139,23 @@ describe('AbstractWeb3ModuleTest', () => {
     it('calls isSameProvider and returns true', () => {
         const provider = {
             constructor: {
-                name: 'WebsocketProvider'
+                name: 'HttpProvider'
             },
-            host: 'HOST'
+            host: 'http://localhost:8545'
         };
 
         expect(abstractWeb3Module.isSameProvider(provider)).toEqual(true);
     });
 
     it('initiates a HttpProvider with the providers property of the module', () => {
-        const url = 'HOST';
-        const options = {};
-
-        const httpProvider = new AbstractWeb3Module.providers.HttpProvider(url, options);
-
-        expect(httpProvider).toBeInstanceOf(HttpProvider);
+        expect(new AbstractWeb3Module.providers.HttpProvider('http://localhost:7545', {}).host).toEqual(
+            'http://localhost:7545'
+        );
     });
 
-    it('initiates a WebsocketProvider with the providers property of the module', () => {
-        const url = 'HOST';
-        const options = {};
-
-        const websocketProvider = new AbstractWeb3Module.providers.WebsocketProvider(url, options);
-
-        expect(websocketProvider).toBeInstanceOf(WebsocketProvider);
-    });
-
-    it('initiates a IpcProvider with the providers property of the module', () => {
-        const path = 'HOST';
-        const net = {};
-
-        const ipcProvider = new AbstractWeb3Module.providers.IpcProvider(path, net);
-
-        expect(ipcProvider).toBeInstanceOf(IpcProvider);
+    it('checks if all providers exists on the static providers property', () => {
+        expect(AbstractWeb3Module.providers.HttpProvider).toBeInstanceOf(Function);
+        expect(AbstractWeb3Module.providers.WebsocketProvider).toBeInstanceOf(Function);
+        expect(AbstractWeb3Module.providers.IpcProvider).toBeInstanceOf(Function);
     });
 });

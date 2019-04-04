@@ -20,17 +20,18 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetAccountsMethod extends AbstractCallMethod {
+export default class GetAccountsMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_accounts', 0, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_accounts', 0, utils, formatters, moduleInstance);
     }
 
     /**

@@ -23,7 +23,6 @@
 import isFunction from 'lodash/isFunction';
 import isString from 'lodash/isString';
 import cloneDeep from 'lodash/cloneDeep';
-import {PromiEvent} from 'web3-core-promievent';
 
 export default class AbstractMethod {
     /**
@@ -31,13 +30,14 @@ export default class AbstractMethod {
      * @param {Number} parametersAmount
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(rpcMethod, parametersAmount, utils, formatters) {
+    constructor(rpcMethod, parametersAmount, utils, formatters, moduleInstance) {
         this.utils = utils;
         this.formatters = formatters;
-        this.promiEvent = new PromiEvent();
+        this.moduleInstance = moduleInstance;
         this._arguments = {
             parameters: []
         };
@@ -68,15 +68,42 @@ export default class AbstractMethod {
     }
 
     /**
-     * Checks which command should be executed
+     * Sends a JSON-RPC call request
      *
      * @method execute
      *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Promise<Object|String>|PromiEvent|String}
+     * @callback callback callback(error, result)
+     * @returns {Promise<Object|String>}
      */
-    execute(moduleInstance) {}
+    async execute() {
+        this.beforeExecution(this.moduleInstance);
+
+        if (this.parameters.length !== this.parametersAmount) {
+            throw new Error(
+                `Invalid Arguments length: expected: ${this.parametersAmount}, given: ${this.parameters.length}`
+            );
+        }
+
+        try {
+            let response = await this.moduleInstance.currentProvider.send(this.rpcMethod, this.parameters);
+
+            if (response) {
+                response = this.afterExecution(response);
+            }
+
+            if (this.callback) {
+                this.callback(false, response);
+            }
+
+            return response;
+        } catch (error) {
+            if (this.callback) {
+                this.callback(error, null);
+            }
+
+            throw error;
+        }
+    }
 
     /**
      * Setter for the rpcMethod property
@@ -169,12 +196,12 @@ export default class AbstractMethod {
     /**
      * Setter for the arguments property
      *
-     * @property arguments
+     * @method setArguments
      *
      * @param {IArguments} args
      */
-    set arguments(args) {
-        let parameters = cloneDeep([...args]);
+    setArguments(arguments_) {
+        let parameters = cloneDeep([...arguments_]);
         let callback = null;
 
         if (parameters.length > this.parametersAmount) {
@@ -194,11 +221,11 @@ export default class AbstractMethod {
     /**
      * Getter for the arguments property
      *
-     * @property arguments
+     * @property getArguments
      *
      * @returns {{callback: Function|null, parameters: Array}}
      */
-    get arguments() {
+    getArguments() {
         return this._arguments;
     }
 
@@ -212,17 +239,6 @@ export default class AbstractMethod {
      * @returns {Boolean}
      */
     isHash(parameter) {
-        return isString(parameter) && parameter.indexOf('0x') === 0;
-    }
-
-    /**
-     * Checks if accounts is defined and if wallet is not empty
-     *
-     * @method hasWallet
-     *
-     * @returns {Boolean}
-     */
-    hasWallets() {
-        return this.accounts && this.accounts.wallet.length > 0;
+        return isString(parameter) && parameter.startsWith('0x');
     }
 }

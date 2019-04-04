@@ -20,17 +20,18 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class EcRecoverMethod extends AbstractCallMethod {
+export default class EcRecoverMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('personal_ecRecover', 3, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('personal_ecRecover', 2, utils, formatters, moduleInstance);
     }
 
     /**
@@ -42,6 +43,5 @@ export default class EcRecoverMethod extends AbstractCallMethod {
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
-        this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
     }
 }

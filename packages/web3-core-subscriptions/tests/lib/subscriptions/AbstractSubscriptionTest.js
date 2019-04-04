@@ -4,8 +4,8 @@ import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscriptio
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 
 /**
  * AbstractSubscription test

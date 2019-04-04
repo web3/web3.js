@@ -22,18 +22,15 @@ import Web3 from 'web3';
 // $ExpectType Modules
 Web3.modules;
 
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
-Web3.givenProvider;
-
-const web3 = new Web3('https://localhost:5000/');
-
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider | null
+// $ExpectType any
 Web3.givenProvider;
 
 // $ExpectType Providers
 Web3.providers;
 
-// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
+const web3 = new Web3('https://localhost:5000/');
+
+// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
 web3.currentProvider;
 
 // $ExpectType Utils

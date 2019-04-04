@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, toDecimal} from 'web3-utils';
+import BN = require('bn.js');
+import {toDecimal} from 'web3-utils';
 
 // $ExpectType number
 toDecimal('232');

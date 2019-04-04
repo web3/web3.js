@@ -419,13 +419,9 @@ getAccounts
 
     web3.eth.getAccounts([callback])
 
-Returns a list of accounts the node controls by using the provider and calling
-the RPC method ``eth_accounts``. Using :ref:`web3.eth.accounts.create() <accounts-create>`
-will not add accounts into this list. For that use
-:ref:`web3.eth.personal.newAccount() <personal-newaccount>`.
-
-The results are the same as :ref:`web3.eth.personal.getAccounts() <personal-getaccounts>` except that calls
-the RPC method ``personal_listAccounts``.
+Returns a list of accounts the node controls by using the provider and calling the RPC method ``eth_accounts``.
+If there are unlocked local accounts then it will return them instead of sending a request to the node.
+This means you can add accounts with :ref:`web3.eth.accounts.create() <accounts-create>` and you will get them returned here.
 
 -------
 Returns
@@ -1026,7 +1022,7 @@ Example
     // using the callback
     web3.eth.sendTransaction({
         from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
-        data: code // deploying a contracrt
+        data: code // deploying a contract
     }, function(error, hash){
         ...
     });
@@ -1172,9 +1168,10 @@ signTransaction
 
 .. code-block:: javascript
 
-    web3.eth.signTransaction(transactionObject [, address] [, callback])
+    web3.eth.signTransaction(transactionObject [, callback])
 
-Signs a transaction. This account needs to be unlocked.
+The method ``signTransaction`` signs a transaction with the private key of the given address.
+This method does only work if you're connected to a Parity node.
 
 ----------
 Parameters
@@ -1182,7 +1179,6 @@ Parameters
 
 
 1. ``Object`` - The transaction data to sign :ref:`web3.eth.sendTransaction() <eth-sendtransaction>` for more.
-2. ``String`` - (optional) Address to sign transaction with.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
