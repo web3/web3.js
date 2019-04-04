@@ -7,10 +7,6 @@ Web3
 
     The Web3 class is a wrapper to house all Ethereum related modules.
 
-.. code-block:: javascript
-
-    new Web3(provider, net, options);
-
 ----------
 Parameters
 ----------
@@ -37,7 +33,9 @@ Example
     > web3.utils
     > web3.version
 
+
 ------------------------------------------------------------------------------
+
 
 Web3.modules
 =====================
@@ -70,8 +68,6 @@ Example
         Bzz(provider, net?, options?),
     }
 
-
-------------------------------------------------------------------------------
 
 .. include:: include_package-core.rst
 
