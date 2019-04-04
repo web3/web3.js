@@ -52,7 +52,8 @@ export default class AbstractMethod {
      *
      * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {}
+    beforeExecution(moduleInstance) {
+    }
 
     /**
      * This method will be executed after the RPC request.
@@ -200,13 +201,13 @@ export default class AbstractMethod {
      *
      * @param {IArguments} args
      */
-    setArguments(arguments_) {
-        let parameters = cloneDeep([...arguments_]);
+    setArguments(args) {
+        let parameters = cloneDeep([...args]);
         let callback = null;
 
         if (parameters.length > this.parametersAmount) {
             if (!isFunction(parameters[parameters.length - 1])) {
-                throw new TypeError("The latest parameter should be a function otherwise it can't be used as callback");
+                throw new TypeError('The latest parameter should be a function otherwise it can\'t be used as callback');
             }
 
             callback = parameters.pop();

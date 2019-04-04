@@ -81,7 +81,7 @@ describe('IpcProviderTest', () => {
 
         ipcProvider.onMessage(objectWithToString);
 
-        expect(objectWithToString.toString).toHaveBeenCalledWith();
+        expect(objectWithToString.toString).toHaveBeenCalled();
     });
 
     it('calls onMessage with more than one chunk', (done) => {
