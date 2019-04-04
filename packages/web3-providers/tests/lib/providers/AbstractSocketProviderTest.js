@@ -198,38 +198,6 @@ describe('AbstractSocketProviderTest', () => {
         expect(abstractSocketProvider.listenerCount('test')).toEqual(0);
     });
 
-    it('calls subscribe and returns a resolved promise with a subscription ID', async () => {
-        abstractSocketProvider.send = jest.fn((subscribeMethod, parameters) => {
-            expect(subscribeMethod).toEqual('shh_subscribe');
-
-            expect(parameters).toEqual(['messages']);
-
-            return Promise.resolve('0x1');
-        });
-
-        const response = await abstractSocketProvider.subscribe('shh_subscribe', 'messages', []);
-
-        expect(response).toEqual('0x1');
-
-        expect(abstractSocketProvider.subscriptions['0x1'].id).toEqual('0x1');
-
-        expect(abstractSocketProvider.send).toHaveBeenCalled();
-    });
-
-    it('calls subscribe and returns a rejected promise because of the provider', async () => {
-        abstractSocketProvider.send = jest.fn((subscribeMethod, parameters) => {
-            expect(subscribeMethod).toEqual('shh_subscribe');
-
-            expect(parameters).toEqual(['messages']);
-
-            return Promise.reject(new Error('NOPE'));
-        });
-
-        await expect(abstractSocketProvider.subscribe('shh_subscribe', 'messages', [])).rejects.toThrow('NOPE');
-
-        expect(abstractSocketProvider.send).toHaveBeenCalled();
-    });
-
     it('calls unsubscribe and subscription id does not exist', () => {
         expect(abstractSocketProvider.unsubscribe('no', 'eth_unsubscribe')).rejects.toThrow(
             'Provider error: Subscription with ID no does not exist.'

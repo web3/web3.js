@@ -42,11 +42,5 @@ web3.version;
 // $ExpectType Eth
 web3.eth;
 
-// $ExpectType Shh
-web3.shh;
-
-// $ExpectType Bzz
-web3.bzz;
-
 // $ExpectType BatchRequest
 new web3.BatchRequest();

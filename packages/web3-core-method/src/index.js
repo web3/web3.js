@@ -83,37 +83,3 @@ export CallMethod from './methods/CallMethod';
 export GetStorageAtMethod from './methods/GetStorageAtMethod';
 export EstimateGasMethod from './methods/EstimateGasMethod';
 export GetPastLogsMethod from './methods/GetPastLogsMethod';
-
-// Personal
-export EcRecoverMethod from './methods/personal/EcRecoverMethod';
-export ImportRawKeyMethod from './methods/personal/ImportRawKeyMethod';
-export ListAccountsMethod from './methods/personal/ListAccountsMethod';
-export LockAccountMethod from './methods/personal/LockAccountMethod';
-export NewAccountMethod from './methods/personal/NewAccountMethod';
-export PersonalSendTransactionMethod from './methods/personal/PersonalSendTransactionMethod';
-export PersonalSignMethod from './methods/personal/PersonalSignMethod';
-export PersonalSignTransactionMethod from './methods/personal/PersonalSignTransactionMethod';
-export UnlockAccountMethod from './methods/personal/UnlockAccountMethod';
-
-// SHH
-export AddPrivateKeyMethod from './methods/shh/AddPrivateKeyMethod';
-export AddSymKeyMethod from './methods/shh/AddSymKeyMethod';
-export DeleteKeyPairMethod from './methods/shh/DeleteKeyPairMethod';
-export DeleteMessageFilterMethod from './methods/shh/DeleteMessageFilterMethod';
-export DeleteSymKeyMethod from './methods/shh/DeleteSymKeyMethod';
-export GenerateSymKeyFromPasswordMethod from './methods/shh/GenerateSymKeyFromPasswordMethod';
-export GetFilterMessagesMethod from './methods/shh/GetFilterMessagesMethod';
-export GetInfoMethod from './methods/shh/GetInfoMethod';
-export GetPrivateKeyMethod from './methods/shh/GetPrivateKeyMethod';
-export GetPublicKeyMethod from './methods/shh/GetPublicKeyMethod';
-export GetSymKeyMethod from './methods/shh/GetSymKeyMethod';
-export HasKeyPairMethod from './methods/shh/HasKeyPairMethod';
-export HasSymKeyMethod from './methods/shh/HasSymKeyMethod';
-export MarkTrustedPeerMethod from './methods/shh/MarkTrustedPeerMethod';
-export NewKeyPairMethod from './methods/shh/NewKeyPairMethod';
-export NewMessageFilterMethod from './methods/shh/NewMessageFilterMethod';
-export NewSymKeyMethod from './methods/shh/NewSymKeyMethod';
-export PostMethod from './methods/shh/PostMethod';
-export SetMaxMessageSizeMethod from './methods/shh/SetMaxMessageSizeMethod';
-export SetMinPoWMethod from './methods/shh/SetMinPoWMethod';
-export ShhVersionMethod from './methods/shh/ShhVersionMethod';

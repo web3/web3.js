@@ -22,11 +22,8 @@
 
 import {formatters} from 'web3-core-helpers';
 import {Accounts} from 'web3-eth-accounts';
-import {Ens} from 'web3-eth-ens';
 import {ContractModuleFactory} from 'web3-eth-contract';
-import {Personal} from 'web3-eth-personal';
 import {AbiCoder} from 'web3-eth-abi';
-import {Iban} from 'web3-eth-iban';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import EthTransactionSigner from './signers/TransactionSigner';
@@ -71,10 +68,7 @@ export function Eth(provider, net = null, options = {}) {
         new MethodFactory(Utils, formatters),
         new Network(resolvedProvider, null, options),
         accounts,
-        new Personal(resolvedProvider, null, accounts, options),
-        Iban,
         abiCoder,
-        new Ens(resolvedProvider, null, accounts, options),
         Utils,
         formatters,
         new SubscriptionsFactory(Utils, formatters),

@@ -25,17 +25,8 @@ const eth = new Eth('http://localhost:8545');
 // $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => Contract
 eth.Contract;
 
-// $ExpectType new (iban: string) => Iban
-eth.Iban;
-
-// $ExpectType Personal
-eth.personal;
-
 // $ExpectType Accounts
 eth.accounts;
-
-// $ExpectType Ens
-eth.ens;
 
 // $ExpectType AbiCoder
 eth.abi;

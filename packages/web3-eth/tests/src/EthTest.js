@@ -3,9 +3,6 @@ import {formatters} from 'web3-core-helpers';
 import {AbstractSubscription, LogSubscription} from 'web3-core-subscriptions';
 import {AbiCoder} from 'web3-eth-abi';
 import {Accounts} from 'web3-eth-accounts';
-import {Ens} from 'web3-eth-ens';
-import {Iban} from 'web3-eth-iban';
-import {Personal} from 'web3-eth-personal';
 import {Network} from 'web3-net';
 import {ContractModuleFactory} from 'web3-eth-contract';
 import MethodFactory from '../../src/factories/MethodFactory';
@@ -18,9 +15,6 @@ jest.mock('web3-core');
 jest.mock('web3-core-subscriptions');
 jest.mock('web3-eth-abi');
 jest.mock('web3-eth-accounts');
-jest.mock('web3-eth-ens');
-jest.mock('web3-eth-iban');
-jest.mock('web3-eth-personal');
 jest.mock('web3-net');
 jest.mock('web3-eth-contract');
 jest.mock('web3-utils');
@@ -39,9 +33,7 @@ describe('EthTest', () => {
         contractModuleFactoryMock,
         networkMock,
         accountsMock,
-        personalMock,
         abiCoderMock,
-        ensMock,
         subscriptionsFactoryMock,
         transactionSignerMock;
 
@@ -60,14 +52,8 @@ describe('EthTest', () => {
         new Accounts();
         accountsMock = Accounts.mock.instances[0];
 
-        new Personal();
-        personalMock = Personal.mock.instances[0];
-
         new AbiCoder();
         abiCoderMock = AbiCoder.mock.instances[0];
-
-        new Ens();
-        ensMock = Ens.mock.instances[0];
 
         new SubscriptionsFactory();
         subscriptionsFactoryMock = SubscriptionsFactory.mock.instances[0];
@@ -80,10 +66,7 @@ describe('EthTest', () => {
             methodFactoryMock,
             networkMock,
             accountsMock,
-            personalMock,
-            Iban,
             abiCoderMock,
-            ensMock,
             Utils,
             formatters,
             subscriptionsFactoryMock,
@@ -100,13 +83,7 @@ describe('EthTest', () => {
 
         expect(eth.accounts).toEqual(accountsMock);
 
-        expect(eth.personal).toEqual(personalMock);
-
-        expect(eth.Iban).toEqual(Iban);
-
         expect(eth.abi).toEqual(abiCoderMock);
-
-        expect(eth.ens).toEqual(ensMock);
 
         expect(eth.utils).toEqual(Utils);
 
@@ -127,8 +104,6 @@ describe('EthTest', () => {
         expect(eth.defaultGasPrice).toEqual(10);
 
         expect(networkMock.defaultGasPrice).toEqual(10);
-
-        expect(personalMock.defaultGasPrice).toEqual(10);
     });
 
     it('sets the defaultGas property', () => {
@@ -140,8 +115,6 @@ describe('EthTest', () => {
         expect(eth.defaultGas).toEqual(10);
 
         expect(networkMock.defaultGas).toEqual(10);
-
-        expect(personalMock.defaultGas).toEqual(10);
     });
 
     it('sets the transactionBlockTimeout property', () => {
@@ -153,8 +126,6 @@ describe('EthTest', () => {
         expect(eth.transactionBlockTimeout).toEqual(10);
 
         expect(networkMock.transactionBlockTimeout).toEqual(10);
-
-        expect(personalMock.transactionBlockTimeout).toEqual(10);
     });
 
     it('sets the transactionConfirmationBlocks property', () => {
@@ -166,8 +137,6 @@ describe('EthTest', () => {
         expect(eth.transactionConfirmationBlocks).toEqual(10);
 
         expect(networkMock.transactionConfirmationBlocks).toEqual(10);
-
-        expect(personalMock.transactionConfirmationBlocks).toEqual(10);
     });
 
     it('sets the transactionPollingTimeout property', () => {
@@ -179,8 +148,6 @@ describe('EthTest', () => {
         expect(eth.transactionPollingTimeout).toEqual(10);
 
         expect(networkMock.transactionPollingTimeout).toEqual(10);
-
-        expect(personalMock.transactionPollingTimeout).toEqual(10);
     });
 
     it('sets the defaultAccount property', () => {
@@ -196,8 +163,6 @@ describe('EthTest', () => {
 
         expect(networkMock.defaultAccount).toEqual('0x1');
 
-        expect(personalMock.defaultAccount).toEqual('0x1');
-
         expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x1');
     });
 
@@ -210,8 +175,6 @@ describe('EthTest', () => {
         expect(eth.defaultBlock).toEqual(10);
 
         expect(networkMock.defaultBlock).toEqual(10);
-
-        expect(personalMock.defaultBlock).toEqual(10);
     });
 
     it('calls subscribe wih "logs" as type', () => {

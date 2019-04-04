@@ -28,10 +28,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {MethodFactory} methodFactory
      * @param {Network} net
      * @param {Accounts} accounts
-     * @param {Personal} personal
-     * @param {Iban} Iban
      * @param {AbiCoder} abiCoder
-     * @param {Ens} ens
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {SubscriptionsFactory} subscriptionsFactory
@@ -46,10 +43,7 @@ export default class Eth extends AbstractWeb3Module {
         methodFactory,
         net,
         accounts,
-        personal,
-        Iban,
         abiCoder,
-        ens,
         utils,
         formatters,
         subscriptionsFactory,
@@ -61,10 +55,7 @@ export default class Eth extends AbstractWeb3Module {
 
         this.net = net;
         this.accounts = accounts;
-        this.personal = personal;
-        this.Iban = Iban;
         this.abi = abiCoder;
-        this.ens = ens;
 
         this.utils = utils;
         this.formatters = formatters;
@@ -137,7 +128,6 @@ export default class Eth extends AbstractWeb3Module {
 
         this._transactionSigner = transactionSigner;
         this.accounts.transactionSigner = transactionSigner;
-        this.ens.transactionSigner = transactionSigner;
 
         this.initiatedContracts.forEach((contract) => {
             contract.transactionSigner = transactionSigner;
@@ -168,7 +158,6 @@ export default class Eth extends AbstractWeb3Module {
         });
 
         this.net.defaultGasPrice = value;
-        this.personal.defaultGasPrice = value;
 
         super.defaultGasPrice = value;
     }
@@ -197,7 +186,6 @@ export default class Eth extends AbstractWeb3Module {
         });
 
         this.net.defaultGas = value;
-        this.personal.defaultGas = value;
 
         super.defaultGas = value;
     }
@@ -226,7 +214,6 @@ export default class Eth extends AbstractWeb3Module {
         });
 
         this.net.transactionBlockTimeout = value;
-        this.personal.transactionBlockTimeout = value;
 
         super.transactionBlockTimeout = value;
     }
@@ -255,7 +242,6 @@ export default class Eth extends AbstractWeb3Module {
         });
 
         this.net.transactionConfirmationBlocks = value;
-        this.personal.transactionConfirmationBlocks = value;
 
         super.transactionConfirmationBlocks = value;
     }
@@ -284,7 +270,6 @@ export default class Eth extends AbstractWeb3Module {
         });
 
         this.net.transactionPollingTimeout = value;
-        this.personal.transactionPollingTimeout = value;
 
         super.transactionPollingTimeout = value;
     }
@@ -301,7 +286,7 @@ export default class Eth extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultAccount property on all contracts and on the personal module
+     * Sets the defaultAccount property on all contracts
      *
      * @property defaultAccount
      *
@@ -313,7 +298,6 @@ export default class Eth extends AbstractWeb3Module {
         });
 
         this.net.defaultAccount = value;
-        this.personal.defaultAccount = value;
 
         super.defaultAccount = value;
     }
@@ -342,7 +326,6 @@ export default class Eth extends AbstractWeb3Module {
         });
 
         this.net.defaultBlock = value;
-        this.personal.defaultBlock = value;
 
         super.defaultBlock = value;
     }
@@ -388,11 +371,6 @@ export default class Eth extends AbstractWeb3Module {
             return contract.setProvider(provider, net);
         });
 
-        return (
-            this.net.setProvider(provider, net) &&
-            this.personal.setProvider(provider, net) &&
-            super.setProvider(provider, net) &&
-            setContractProviders
-        );
+        return this.net.setProvider(provider, net) && super.setProvider(provider, net) && setContractProviders;
     }
 }

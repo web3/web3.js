@@ -29,13 +29,10 @@ import {
     Web3ModuleOptions
 } from 'web3-core';
 import {Contract, ContractOptions} from 'web3-eth-contract';
-import {Iban} from 'web3-eth-iban';
 import {Accounts} from 'web3-eth-accounts';
 import {AbiCoder} from 'web3-eth-abi';
 import {Network} from 'web3-net';
-import {Personal} from 'web3-eth-personal';
 import {AbiItem} from 'web3-utils';
-import {Ens} from 'web3-eth-ens';
 import * as net from 'net';
 
 export class Eth extends AbstractWeb3Module {
@@ -46,10 +43,7 @@ export class Eth extends AbstractWeb3Module {
     );
 
     Contract: new (jsonInterface: AbiItem[] | AbiItem, address?: string, options?: ContractOptions) => Contract;
-    Iban: new(iban: string) => Iban;
-    personal: Personal;
     accounts: Accounts;
-    ens: Ens;
     abi: AbiCoder;
     net: Network;
 

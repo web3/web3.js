@@ -1,35 +1,8 @@
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/**
- * @file index.js
- * @authors: Samuel Furter <samuel@ethereum.org>
- * @date 2018
- */
-// TODO: Export here a web3 namespace with context handling possibilities and not a object and remove the factory
-// TODO: objects and do them the functional way because of the tree shaking.
-// TODO: Move the folders back to simpler structure e.g.: "packages/core/<methods|subscriptions|providers>"
 import {AbstractWeb3Module} from 'web3-core';
 import {ProviderDetector, ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {Eth} from 'web3-eth';
-import {Shh} from 'web3-shh';
-import {Bzz} from 'web3-bzz';
 import {Network} from 'web3-net';
-import {Personal} from 'web3-eth-personal';
 import {version} from '../package.json';
 
 export default class Web3 extends AbstractWeb3Module {
@@ -44,14 +17,12 @@ export default class Web3 extends AbstractWeb3Module {
         super(provider, options, null, net);
 
         this.eth = new Eth(this.currentProvider, net, options);
-        this.shh = new Shh(this.currentProvider, net, options);
-        this.bzz = new Bzz(this.currentProvider);
         this.utils = Utils;
         this.version = version;
     }
 
     /**
-     * Sets the defaultGasPrice property on the eth module and also on the shh module
+     * Sets the defaultGasPrice property on the eth module
      *
      * @property defaultGasPrice
      *
@@ -60,7 +31,6 @@ export default class Web3 extends AbstractWeb3Module {
     set defaultGasPrice(value) {
         super.defaultGasPrice = value;
         this.eth.defaultGasPrice = value;
-        this.shh.defaultGasPrice = value;
     }
 
     /**
@@ -75,7 +45,7 @@ export default class Web3 extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultGas property on the eth module and also on the shh module
+     * Sets the defaultGas property on the eth module
      *
      * @property defaultGas
      *
@@ -84,7 +54,6 @@ export default class Web3 extends AbstractWeb3Module {
     set defaultGas(value) {
         super.defaultGas = value;
         this.eth.defaultGas = value;
-        this.shh.defaultGas = value;
     }
 
     /**
@@ -108,7 +77,6 @@ export default class Web3 extends AbstractWeb3Module {
     set transactionBlockTimeout(value) {
         super.transactionBlockTimeout = value;
         this.eth.transactionBlockTimeout = value;
-        this.shh.transactionBlockTimeout = value;
     }
 
     /**
@@ -132,7 +100,6 @@ export default class Web3 extends AbstractWeb3Module {
     set transactionConfirmationBlocks(value) {
         super.transactionConfirmationBlocks = value;
         this.eth.transactionConfirmationBlocks = value;
-        this.shh.transactionConfirmationBlocks = value;
     }
 
     /**
@@ -156,7 +123,6 @@ export default class Web3 extends AbstractWeb3Module {
     set transactionPollingTimeout(value) {
         super.transactionPollingTimeout = value;
         this.eth.transactionPollingTimeout = value;
-        this.shh.transactionPollingTimeout = value;
     }
 
     /**
@@ -171,7 +137,7 @@ export default class Web3 extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultAccount property on the eth module and also on the shh module
+     * Sets the defaultAccount property on the eth module
      *
      * @property defaultAccount
      *
@@ -180,7 +146,6 @@ export default class Web3 extends AbstractWeb3Module {
     set defaultAccount(value) {
         super.defaultAccount = value;
         this.eth.defaultAccount = value;
-        this.shh.defaultAccount = value;
     }
 
     /**
@@ -195,7 +160,7 @@ export default class Web3 extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultBlock property on the eth module and also on the shh module
+     * Sets the defaultBlock property on the eth module
      *
      * @property defaultBlock
      *
@@ -204,7 +169,6 @@ export default class Web3 extends AbstractWeb3Module {
     set defaultBlock(value) {
         super.defaultBlock = value;
         this.eth.defaultBlock = value;
-        this.shh.defaultBlock = value;
     }
 
     /**
@@ -229,12 +193,7 @@ export default class Web3 extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        return (
-            super.setProvider(provider, net) &&
-            this.eth.setProvider(provider, net) &&
-            this.shh.setProvider(provider, net) &&
-            this.bzz.setProvider(provider)
-        );
+        return super.setProvider(provider, net) && this.eth.setProvider(provider, net);
     }
 
     /**
@@ -260,15 +219,6 @@ export default class Web3 extends AbstractWeb3Module {
             },
             Net: (provider, options, net) => {
                 return new Network(providerResolver.resolve(provider, net), options);
-            },
-            Personal: (provider, options, net) => {
-                return new Personal(providerResolver.resolve(provider, net), options);
-            },
-            Shh: (provider, options, net) => {
-                return new Shh(providerResolver.resolve(provider, net), options);
-            },
-            Bzz: (provider) => {
-                return new Bzz(provider);
             }
         };
     }
