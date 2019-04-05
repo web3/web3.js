@@ -22,7 +22,7 @@
 
 import * as Types from '..';
 import BigNumber, {isBigNumber} from 'bignumber.js';
-import {isNaN, isInteger, isString, omit, cloneDeep} from 'lodash';
+import {isNaN, isInteger, isString, isNil, assign} from 'lodash';
 
 export default class Transaction {
     /**
@@ -42,125 +42,20 @@ export default class Transaction {
 
         this.props = {};
 
-        this.from = params.from;
+        assign(this, params);
 
-        /* Recipient address */
-        if (params.to.isAddress) {
-            this.props.to = new Types.Address(params.to.props);
-        }
-
-        // TODO Move this check to BigNumber as a constructor check
-        if (
-            (!isNaN(params.value) && Number.isInteger(params.value) && params.value >= 0) ||
-            isBigNumber(params.value) ||
-            (typeof params.value === 'string' && /(\d)+/gm.test(params.value) && BigNumber(params.value))
-        ) {
-            this.props.value = BigNumber(params.value.toString());
-        }
-
-        /* Transaction gas */
-        if (Number.isInteger(params.gas)) {
-            this.props.gas = params.gas;
-        }
-
-        // TODO Move this check to BigNumber as a constructor check
-        if (
-            (!isNaN(params.gasPrice) && Number.isInteger(params.gasPrice) && params.gasPrice >= 0) ||
-            isBigNumber(params.gasPrice) ||
-            (typeof params.gasPrice === 'string' && BigNumber(params.gasPrice))
-        ) {
-            this.props.gasPrice = BigNumber(params.gasPrice.toString());
-        }
-
-        if (params.data.isHex) {
-            this.props.data = params.data;
-        } else if (Types.Hex.isValid(params.data)) {
-            this.props.data = new Types.Hex(params.data);
-        }
-
-        /* Transaction nonce */
-        if (params.nonce === 0 || Number.isInteger(params.nonce)) {
-            this.props.nonce = params.nonce;
-        }
-
-        /* Chain ID */
-        // TODO The transaction might not check this parameter
         if (isInteger(params.chainId)) {
             this.props.chainId = params.chainId.toString();
-        }
-
-        /* Set the default values */
-        if (this.props.value === undefined) {
-            this.props.value = BigNumber(0);
-        }
-
-        if (this.props.gas === undefined) {
-            this.props.gas = 'auto';
-        }
-
-        if (this.props.gasPrice === undefined) {
-            this.props.gasPrice = 'auto';
-        }
-
-        if (this.props.data === undefined) {
-            this.props.data = new Types.Hex('empty');
-        }
-
-        if (this.props.nonce === undefined) {
-            this.props.nonce = 'auto';
         }
 
         if (/main/i.test(params.chainId)) {
             this.props.chainId = '1';
         }
 
-        if (params.to === 'deploy') {
-            this.props.to = params.to;
-        }
-
-        requires.forEach((propertyName) => {
-            if (typeof this.props[propertyName] === 'undefined') {
-                this._throw(propertyName, params[propertyName]);
-            }
-        });
-
         /* Make the props immutable */
         Object.freeze(this.props);
     }
 
-    /**
-     * Gets the gas property
-     *
-     * @property gas
-     *
-     * @returns {String} gas
-     */
-    get gas() {
-        return ((v) => (v && v !== 'auto' ? v.toString() : undefined))(this.props.gas);
-    }
-
-    /**
-     * Gets the gasPrice property
-     *
-     * @property gasPrice
-     *
-     * @returns {String} gasPrice
-     */
-    get gasPrice() {
-        return ((v) => (v && v !== 'auto' ? v.toString() : undefined))(this.props.gasPrice);
-    }
-
-    /**
-     * Gets the to property. Returns undefined for 'deploy'
-     *
-     * @property to
-     *
-     * @returns {String} to
-     */
-    get to() {
-        return ((v) => (v && v !== 'deploy' ? v.toString() : undefined))(this.props.to);
-    }
-    
     /**
      * Set the from property
      *
@@ -176,9 +71,9 @@ export default class Transaction {
         if (isString(param) && Types.Address.isValid(param)) {
             _from = new Types.Address(param);
         }
-        
+
         if(_from === undefined) {
-            throw new Error(`The given "from" parameter "${value}" needs to be an address string, an Address object, or a wallet index number.`);
+            throw new Error(`The given "from" parameter "${param}" needs to be an address string, an Address object, or a wallet index number.`);
         } else {
             this.props.from = _from;
         }
@@ -192,9 +87,71 @@ export default class Transaction {
      * @returns {String} from
      */
     get from() {
-        return ((v) => (v ? v.toString() : undefined))(this.props.from);
+        return ((v) => (!isNil(v) ? v.toString() : undefined))(this.props.from);
     }
-    
+
+    /**
+     * Set the to property
+     *
+     * @property to 
+     */
+    set to(param) {
+        let _to;
+
+        if (param.isAddress || param === 'deploy') {
+            _to = param;
+        }
+
+        if (isString(param) && Types.Address.isValid(param)) {
+            _to = new Types.Address(param);
+        }
+
+        if(_to === undefined) {
+            throw new Error(`The given "to" parameter "${param}" needs to be an address or 'deploy' when deploying code.\n`);
+        } else {
+            this.props.to = _to;
+        }
+    }
+
+    /**
+     * Gets the to property. Returns undefined for 'deploy'
+     *
+     * @property to
+     *
+     * @returns {String} to
+     */
+    get to() {
+        return ((v) => (!isNil(v) && v !== 'deploy' ? v.toString() : undefined))(this.props.to);
+    }
+
+    /**
+     * Set the value property
+     *
+     * @property value
+     */
+    set value(param) {
+        let _value;
+
+        if (
+            (!isNaN(param) && Number.isInteger(param) && param >= 0) ||
+            isBigNumber(param) ||
+            (typeof param === 'string' && /(\d)+/gm.test(param) && BigNumber(param))
+        ) {
+            _value = BigNumber(param.toString());
+        }
+        
+        if (param === undefined || param === 'none') {
+            _value = BigNumber(0);
+        }
+
+        if(_value === undefined) {
+            throw new Error(`The given "value" parameter "${param}" needs to be zero or positive, and in number, BigNumber or string format.\n` +
+                'Use "none" to add 0 ether to the transaction.');
+        } else {
+            this.props.value = _value;
+        }
+    }
+
     /**
      * Gets the value property
      *
@@ -203,7 +160,109 @@ export default class Transaction {
      * @returns {String} value
      */
     get value() {
-        return ((v) => (v && v !== 'auto' ? v.toString() : undefined))(this.props.value);
+        return ((v) => (!isNil(v) ? v.toString() : undefined))(this.props.value);
+    }
+    
+    /**
+     * Set the gas property
+     *
+     * @property gas
+     */
+    set gas(param) {
+        let _gas;
+
+        if (Number.isInteger(param)) {
+            _gas = param;
+        }
+        
+        if (param === undefined || param === 'auto') {
+            _gas = 'auto';
+        }
+
+        if(_gas === undefined) {
+            throw new Error(`The given "gas" parameter "${param}" needs to be an integer.\n` +
+                'Use "auto" to set the gas the node calculates.');
+        } else {
+            this.props.gas = _gas;
+        }
+    }
+
+    /**
+     * Gets the gas property
+     *
+     * @property gas
+     *
+     * @returns {String} gas
+     */
+    get gas() {
+        return ((v) => (!isNil(v) && v !== 'auto' ? v.toString() : undefined))(this.props.gas);
+    }
+    
+    /**
+     * Set the gasPrice property
+     *
+     * @property gasPrice
+     */
+    set gasPrice(param) {
+        let _gasPrice;
+
+        if (
+            (!isNaN(param) && Number.isInteger(param) && param >= 0) ||
+            isBigNumber(param) ||
+            (typeof param === 'string' && BigNumber(param))
+        ) {
+            _gasPrice = BigNumber(param.toString());
+        }
+        
+        if (param === undefined || param === 'auto') {
+            _gasPrice = 'auto';
+        }
+
+        if(_gasPrice === undefined) {
+            throw new Error(`The given "gasPrice" parameter "${param}" needs to be zero or positive, and in number, BigNumber or string format.\n` +
+                'Use "auto" to set the gas price the node calculates.');
+        } else {
+            this.props.gasPrice = _gasPrice;
+        }
+    }
+
+
+    /**
+     * Gets the gasPrice property
+     *
+     * @property gasPrice
+     *
+     * @returns {String} gasPrice
+     */
+    get gasPrice() {
+        return ((v) => (!isNil(v) && v !== 'auto' ? v.toString() : undefined))(this.props.gasPrice);
+    }
+
+    
+    /**
+     * Set the data property
+     *
+     * @property data 
+     */
+    set data(param) {
+        let _data;
+
+        if (param.isHex) {
+            _data = param;
+        } else if (Types.Hex.isValid(param)) {
+            _data = new Types.Hex(param);
+        }
+
+        if (param === undefined || param === 'none') {
+            _data = new Types.Hex('empty');
+        }
+
+        if(_data === undefined) {
+            throw new Error(`The given "data" parameter "${param}" needs to be hex encoded or class Hex.\n` +
+                "Use 'none' for no payload.");
+        } else {
+            this.props.data = _data;
+        }
     }
 
     /**
@@ -214,8 +273,33 @@ export default class Transaction {
      * @returns {String} data
      */
     get data() {
-        return ((v) => (v ? v.toString() : undefined))(this.props.data);
+        return ((v) => (!isNil(v) ? v.toString() : undefined))(this.props.data);
     }
+    
+    /**
+     * Set the nonce property
+     *
+     * @property nonce 
+     */
+    set nonce(param) {
+        let _nonce;
+        
+        if (param === 0 || Number.isInteger(param)) {
+            _nonce = param;
+        }
+        
+        if (param === undefined || param === 'auto') {
+            _nonce = 'auto';
+        }
+
+        if(_nonce === undefined) {
+            throw new Error(`The given "nonce" parameter "${param}" needs to be an integer.\n` +
+                "Use 'auto' to set the RPC-calculated nonce.");
+        } else {
+            this.props.nonce = _nonce;
+        }
+    }
+
 
     /**
      * Gets the nonce property
@@ -295,44 +379,5 @@ export default class Transaction {
      */
     isTransaction() {
         return true;
-    }
-
-    /**
-     * Wrap error throwing from the constructor for types
-     *
-     * @method _throw
-     */
-    _throw(propertyName, value) {
-        let errorMessage;
-
-        if (propertyName === 'to') {
-            errorMessage = `The given "to" parameter "${value}" needs to be an address or 'deploy' when deploying code.\n`;
-        }
-
-        if (propertyName === 'value') {
-            errorMessage =
-                `The given "value" parameter "${value}" needs to be zero or positive, and in number, BigNumber or string format.\n` +
-                'Use "none" to add 0 ether to the transaction.';
-        }
-
-        if (propertyName === 'data') {
-            errorMessage =
-                `The given "data" parameter "${value}" needs to be hex encoded or class Hex.\n` +
-                "Use 'none' for no payload.";
-        }
-
-        if (propertyName === 'nonce') {
-            errorMessage =
-                `The given "nonce" parameter "${value}" needs to be an integer.\n` +
-                "Use 'auto' to set the RPC-calculated nonce.";
-        }
-
-        if (propertyName === 'chainId') {
-            errorMessage =
-                `The given "chainId" parameter "${value}" needs to be an integer.\n` +
-                "Use 'main' to set the mainnet chain ID.";
-        }
-
-        throw new Error(errorMessage);
     }
 }

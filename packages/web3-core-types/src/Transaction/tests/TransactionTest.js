@@ -16,7 +16,7 @@ describe('TransactionTest', () => {
             gas: 21000,
             gasPrice: 0,
             data: new Types.Hex('empty'),
-            nonce: 0,
+            nonce: 7,
             chainId: 2
         };
     });
@@ -40,7 +40,7 @@ describe('TransactionTest', () => {
             transaction = new Transaction(txParams);
 
             expect(transaction).toHaveProperty('props');
-            expect(transaction.props.value).toEqual(test.is);
+            expect(transaction.value).toEqual(test.is.toString());
         });
     });
 
@@ -49,7 +49,7 @@ describe('TransactionTest', () => {
         transaction = new Transaction(txParams);
 
         expect(transaction).toHaveProperty('props');
-        expect(transaction.props.from).toHaveProperty('isAddress');
+        expect(transaction.from).toBe(txParams.from);
     });
 
     it('accepts wallet index', () => {
@@ -57,7 +57,7 @@ describe('TransactionTest', () => {
         transaction = new Transaction(txParams);
 
         expect(transaction).toHaveProperty('props');
-        expect(transaction.props.from).toBe(0);
+        expect(transaction.from).toBe("0");
     });
 
     it('accepts gas integer values', () => {
@@ -69,7 +69,7 @@ describe('TransactionTest', () => {
             transaction = new Transaction(txParams);
 
             expect(transaction).toHaveProperty('props');
-            expect(transaction.props.gas).toEqual(test.value);
+            expect(transaction.gas).toEqual(test.value.toString());
         });
     });
 
@@ -86,7 +86,7 @@ describe('TransactionTest', () => {
         transaction = new Transaction(txParams);
 
         expect(transaction).toHaveProperty('props');
-        expect(transaction.props.value).toMatchObject(BigNumber(0));
+        expect(transaction.value).toBe('0');
     });
 
     it('sets 0x data for "none"', () => {
@@ -94,14 +94,13 @@ describe('TransactionTest', () => {
         transaction = new Transaction(txParams);
 
         expect(transaction).toHaveProperty('props');
-        expect(transaction.props.data).toHaveProperty('isHex');
+        expect(transaction.data).toBe('0x');
     });
 
     it('gets properties', () => {
         transaction = new Transaction(txParams);
 
         Object.keys(txParams).forEach((param) => {
-            console.log(param, transaction[param]);
             const getter = transaction[param].toString();
             expect(getter).toEqual(txParams[param].toString());
         });
