@@ -1,15 +1,15 @@
 
 .. include:: include_announcement.rst
 
-====
+=====================
 Web3
-====
+=====================
 
     The Web3 class is a wrapper to house all Ethereum related modules.
 
-.. code-block:: javascript
 
-    new Web3(provider, net, options);
+Initiating of Web3
+=====================
 
 ----------
 Parameters
@@ -37,7 +37,9 @@ Example
     > web3.utils
     > web3.version
 
+
 ------------------------------------------------------------------------------
+
 
 Web3.modules
 =====================
@@ -71,14 +73,12 @@ Example
     }
 
 
-------------------------------------------------------------------------------
-
 .. include:: include_package-core.rst
 
 ------------------------------------------------------------------------------
 
 version
-=======
+=====================
 
     Property of the Web3 class.
 

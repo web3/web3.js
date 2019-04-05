@@ -67,7 +67,7 @@ You can override it by passing the block parameter if a block is required.
 Example:
 
 - :ref:`web3.eth.getBalance() <eth-getbalance>`
-- :ref:`web3.eth.getCode() <eth-getcode>`
+- :ref:`web3.eth.getCode() <eth-code>`
 - :ref:`web3.eth.getTransactionCount() <eth-gettransactioncount>`
 - :ref:`web3.eth.getStorageAt() <eth-getstorageat>`
 - :ref:`web3.eth.call() <eth-call>`
