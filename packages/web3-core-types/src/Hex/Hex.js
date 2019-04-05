@@ -20,7 +20,7 @@
  * @date 2019
  */
 
-import {isNumber, isString, isObject} from 'lodash';
+import {isNumber, isString, isObject, isNil, assign} from 'lodash';
 import utf8 from 'utf8';
 
 export default class Hex {
@@ -31,32 +31,50 @@ export default class Hex {
      * @constructor
      */
     constructor(params) {
-        const requires = ['hex'];
-
-        this.props = {};
-
         if (!isObject(params)) {
             params = {
                 hex: params
             };
         }
 
-        if (Hex.isValid(params.hex)) {
-            this.props.hex = params.hex.toString();
+        assign(this, params);
+    }
+
+    /**
+     * Gets the hex property
+     *
+     * @property hex
+     *
+     * @returns {String} hex
+     */
+    get hex() {
+        return ((v) => (!isNil(v) ? v.toString() : undefined))(this._hex);
+    }
+
+    /**
+     * Set the hex property
+     *
+     * @property hex
+     */
+    set hex(param) {
+        let _hex;
+
+        if (Hex.isValid(param)) {
+            _hex = param.toString();
         }
 
-        if (params.hex === 'empty') {
-            this.props.hex = '0x';
+        if (param === 'empty') {
+            _hex = '0x';
         }
 
-        requires.forEach((propertyName) => {
-            if (typeof this.props[propertyName] === 'undefined') {
-                this._throw(propertyName, params[propertyName]);
-            }
-        });
-
-        /* Make the props immutable */
-        Object.freeze(this.props);
+        if (_hex === undefined) {
+            throw new Error(
+                `The given "hex" parameter "${param}" needs to be a string composed of numbers, and characters between 'a' and 'f'.\n` +
+                "Use 'empty' to set a web3 empty hex object."
+            );
+        } else {
+            this._hex = _hex;
+        }
     }
 
     /**
@@ -239,7 +257,7 @@ export default class Hex {
      * @return {String}
      */
     toString() {
-        return this.props.hex.replace(/(-)?(0x)?([0-9a-fA-F]*)/, '$10x$3');
+        return this._hex.replace(/(-)?(0x)?([0-9a-fA-F]*)/, '$10x$3');
     }
 
     /**
@@ -250,7 +268,7 @@ export default class Hex {
      * @return {Number}
      */
     toNumber() {
-        return parseInt(this.props.hex, 16);
+        return parseInt(this._hex, 16);
     }
 
     /**
@@ -262,8 +280,8 @@ export default class Hex {
      */
     toAscii() {
         let ascii = '';
-        for (let i = Hex.isStrict(this.toString()) ? 2 : 0; i < this.props.hex.length; i += 2) {
-            ascii += String.fromCharCode(parseInt(this.props.hex.substr(i, 2), 16));
+        for (let i = Hex.isStrict(this.toString()) ? 2 : 0; i < this._hex.length; i += 2) {
+            ascii += String.fromCharCode(parseInt(this._hex.substr(i, 2), 16));
         }
 
         return ascii;
@@ -279,7 +297,7 @@ export default class Hex {
     toUtf8() {
         let string = '';
         let code = 0;
-        let hex = this.props.hex.replace(/^0x/i, '');
+        let hex = this._hex.replace(/^0x/i, '');
 
         // remove 00 padding from either side
         hex = hex.replace(/^(?:00)*/, '');
@@ -312,7 +330,7 @@ export default class Hex {
      * @return {Uint8Array}
      */
     toBytes() {
-        const hex = this.props.hex.replace(/^(-|-0x|0x)/i, '');
+        const hex = this._hex.replace(/^(-|-0x|0x)/i, '');
         const pad = hex.length % 2 === 0 ? hex : `0${hex}`;
         const bytes = new Uint8Array(pad.length / 2);
 
@@ -332,22 +350,5 @@ export default class Hex {
      */
     isHex() {
         return true;
-    }
-
-    /**
-     * Wrap error throwing from the constructor for types
-     *
-     * @method _throw
-     */
-    _throw(propertyName, value) {
-        let errorMessage;
-
-        if (propertyName === 'hex') {
-            errorMessage =
-                `The given "hex" parameter "${value}" needs to be a string composed of numbers, and characters between 'a' and 'f'.\n` +
-                "Use 'empty' to set a web3 empty hex object.";
-        }
-
-        throw new Error(errorMessage);
     }
 }

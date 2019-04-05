@@ -34,26 +34,12 @@ export default class Transaction {
      * @param {Number|BigNumber|String|"auto"} gasPrice
      * @param {String|"none"} data
      * @param {Number|"auto"} nonce
+     * @param {Number|"main"} chainId
      *
      * @constructor
      */
     constructor(params) {
-        const requires = ['from', 'to', 'value', 'gas', 'gasPrice', 'data', 'nonce'];
-
-        this.props = {};
-
         assign(this, params);
-
-        if (isInteger(params.chainId)) {
-            this.props.chainId = params.chainId.toString();
-        }
-
-        if (/main/i.test(params.chainId)) {
-            this.props.chainId = '1';
-        }
-
-        /* Make the props immutable */
-        Object.freeze(this.props);
     }
 
     /**
@@ -72,11 +58,13 @@ export default class Transaction {
             _from = new Types.Address(param);
         }
 
-        if(_from === undefined) {
-            throw new Error(`The given "from" parameter "${param}" needs to be an address string, an Address object, or a wallet index number.`);
-        } else {
-            this.props.from = _from;
+        if (_from === undefined) {
+            throw new Error(
+                `The given "from" parameter "${param}" needs to be an address string, an Address object, or a wallet index number.`
+            );
         }
+
+        this._from = _from;
     }
 
     /**
@@ -87,13 +75,13 @@ export default class Transaction {
      * @returns {String} from
      */
     get from() {
-        return ((v) => (!isNil(v) ? v.toString() : undefined))(this.props.from);
+        return ((v) => (!isNil(v) ? v.toString() : undefined))(this._from);
     }
 
     /**
      * Set the to property
      *
-     * @property to 
+     * @property to
      */
     set to(param) {
         let _to;
@@ -106,11 +94,13 @@ export default class Transaction {
             _to = new Types.Address(param);
         }
 
-        if(_to === undefined) {
-            throw new Error(`The given "to" parameter "${param}" needs to be an address or 'deploy' when deploying code.\n`);
-        } else {
-            this.props.to = _to;
+        if (_to === undefined) {
+            throw new Error(
+                `The given "to" parameter "${param}" needs to be an address or 'deploy' when deploying code.\n`
+            );
         }
+
+        this._to = _to;
     }
 
     /**
@@ -121,7 +111,7 @@ export default class Transaction {
      * @returns {String} to
      */
     get to() {
-        return ((v) => (!isNil(v) && v !== 'deploy' ? v.toString() : undefined))(this.props.to);
+        return ((v) => (!isNil(v) && v !== 'deploy' ? v.toString() : undefined))(this._to);
     }
 
     /**
@@ -139,17 +129,19 @@ export default class Transaction {
         ) {
             _value = BigNumber(param.toString());
         }
-        
+
         if (param === undefined || param === 'none') {
             _value = BigNumber(0);
         }
 
-        if(_value === undefined) {
-            throw new Error(`The given "value" parameter "${param}" needs to be zero or positive, and in number, BigNumber or string format.\n` +
-                'Use "none" to add 0 ether to the transaction.');
-        } else {
-            this.props.value = _value;
+        if (_value === undefined) {
+            throw new Error(
+                `The given "value" parameter "${param}" needs to be zero or positive, and in number, BigNumber or string format.\n` +
+                    'Use "none" to add 0 ether to the transaction.'
+            );
         }
+
+        this._value = _value;
     }
 
     /**
@@ -160,9 +152,9 @@ export default class Transaction {
      * @returns {String} value
      */
     get value() {
-        return ((v) => (!isNil(v) ? v.toString() : undefined))(this.props.value);
+        return ((v) => (!isNil(v) ? v.toString() : undefined))(this._value);
     }
-    
+
     /**
      * Set the gas property
      *
@@ -174,17 +166,19 @@ export default class Transaction {
         if (Number.isInteger(param)) {
             _gas = param;
         }
-        
+
         if (param === undefined || param === 'auto') {
             _gas = 'auto';
         }
 
-        if(_gas === undefined) {
-            throw new Error(`The given "gas" parameter "${param}" needs to be an integer.\n` +
-                'Use "auto" to set the gas the node calculates.');
-        } else {
-            this.props.gas = _gas;
+        if (_gas === undefined) {
+            throw new Error(
+                `The given "gas" parameter "${param}" needs to be an integer.\n` +
+                    'Use "auto" to set the gas the node calculates.'
+            );
         }
+
+        this._gas = _gas;
     }
 
     /**
@@ -195,9 +189,9 @@ export default class Transaction {
      * @returns {String} gas
      */
     get gas() {
-        return ((v) => (!isNil(v) && v !== 'auto' ? v.toString() : undefined))(this.props.gas);
+        return ((v) => (!isNil(v) && v !== 'auto' ? v.toString() : undefined))(this._gas);
     }
-    
+
     /**
      * Set the gasPrice property
      *
@@ -213,19 +207,20 @@ export default class Transaction {
         ) {
             _gasPrice = BigNumber(param.toString());
         }
-        
+
         if (param === undefined || param === 'auto') {
             _gasPrice = 'auto';
         }
 
-        if(_gasPrice === undefined) {
-            throw new Error(`The given "gasPrice" parameter "${param}" needs to be zero or positive, and in number, BigNumber or string format.\n` +
-                'Use "auto" to set the gas price the node calculates.');
-        } else {
-            this.props.gasPrice = _gasPrice;
+        if (_gasPrice === undefined) {
+            throw new Error(
+                `The given "gasPrice" parameter "${param}" needs to be zero or positive, and in number, BigNumber or string format.\n` +
+                    'Use "auto" to set the gas price the node calculates.'
+            );
         }
-    }
 
+        this._gasPrice = _gasPrice;
+    }
 
     /**
      * Gets the gasPrice property
@@ -235,14 +230,13 @@ export default class Transaction {
      * @returns {String} gasPrice
      */
     get gasPrice() {
-        return ((v) => (!isNil(v) && v !== 'auto' ? v.toString() : undefined))(this.props.gasPrice);
+        return ((v) => (!isNil(v) && v !== 'auto' ? v.toString() : undefined))(this._gasPrice);
     }
 
-    
     /**
      * Set the data property
      *
-     * @property data 
+     * @property data
      */
     set data(param) {
         let _data;
@@ -257,12 +251,14 @@ export default class Transaction {
             _data = new Types.Hex('empty');
         }
 
-        if(_data === undefined) {
-            throw new Error(`The given "data" parameter "${param}" needs to be hex encoded or class Hex.\n` +
-                "Use 'none' for no payload.");
-        } else {
-            this.props.data = _data;
+        if (_data === undefined) {
+            throw new Error(
+                `The given "data" parameter "${param}" needs to be hex encoded or class Hex.\n` +
+                    "Use 'none' for no payload."
+            );
         }
+
+        this._data = _data;
     }
 
     /**
@@ -273,33 +269,34 @@ export default class Transaction {
      * @returns {String} data
      */
     get data() {
-        return ((v) => (!isNil(v) ? v.toString() : undefined))(this.props.data);
+        return ((v) => (!isNil(v) ? v.toString() : undefined))(this._data);
     }
-    
+
     /**
      * Set the nonce property
      *
-     * @property nonce 
+     * @property nonce
      */
     set nonce(param) {
         let _nonce;
-        
+
         if (param === 0 || Number.isInteger(param)) {
             _nonce = param;
         }
-        
+
         if (param === undefined || param === 'auto') {
             _nonce = 'auto';
         }
 
-        if(_nonce === undefined) {
-            throw new Error(`The given "nonce" parameter "${param}" needs to be an integer.\n` +
-                "Use 'auto' to set the RPC-calculated nonce.");
-        } else {
-            this.props.nonce = _nonce;
+        if (_nonce === undefined) {
+            throw new Error(
+                `The given "nonce" parameter "${param}" needs to be an integer.\n` +
+                    "Use 'auto' to set the RPC-calculated nonce."
+            );
         }
-    }
 
+        this._nonce = _nonce;
+    }
 
     /**
      * Gets the nonce property
@@ -309,7 +306,33 @@ export default class Transaction {
      * @returns {Number} nonce
      */
     get nonce() {
-        return ((v) => (isInteger(v) ? parseInt(v) : undefined))(this.props.nonce);
+        return ((v) => (isInteger(v) ? parseInt(v) : undefined))(this._nonce);
+    }
+
+    /**
+     * Set the chianId property
+     *
+     * @property chainId
+     */
+    set chainId(param) {
+        let _chainId;
+
+        if (isInteger(param)) {
+            _chainId = param.toString();
+        }
+
+        if (/main/i.test(param)) {
+            _chainId = '1';
+        }
+
+        if (_chainId === undefined) {
+            throw new Error(
+                `The given "chainId" parameter "${param}" needs to be an integer.\n` +
+                    "Use 'main' to set the chain ID to mainnet."
+            );
+        }
+
+        this._chainId = _chainId;
     }
 
     /**
@@ -320,7 +343,7 @@ export default class Transaction {
      * @returns {String} chainId
      */
     get chainId() {
-        return ((v) => (v ? v.toString() : undefined))(this.props.chainId);
+        return ((v) => (v ? v.toString() : undefined))(this._chainId);
     }
 
     /**
@@ -334,32 +357,6 @@ export default class Transaction {
     isValid() {}
 
     /**
-     * Sign the transaction object.
-     *  TODO Patch the account parameter
-     *  with the web3-eth-personal module
-     *  skipping the inputTransactionFormatter
-     *  and passing the this or account reference.
-     *
-     * @method sign
-     *
-     * @param {Object}
-     *
-     * @return {SignedTransaction}
-     *
-     */
-    sign(account) {
-        const params = cloneDeep(this.props);
-        if (params.from.isAddress) params.from = params.from.toString();
-        if (params.to.isAddress) params.to = params.to.toString();
-
-        const unsignedTx = Object.keys(params).forEach(
-            (key) => (params[key] = params[key] === 'auto' ? undefined : params[key])
-        );
-
-        return account.sign(unsignedTx);
-    }
-
-    /**
      * Override toString to print the transaction object
      *
      * @method toString
@@ -367,7 +364,15 @@ export default class Transaction {
      * @return {String}
      */
     toString() {
-        return this.props.toString();
+        return ({
+            from: this._from,
+            to: this._to,
+            gas: this._gas,
+            gasPrice: this._gasPrice,
+            value: this._value,
+            data: this._data,
+            nonce: this._nonce
+        }).toString();
     }
 
     /**

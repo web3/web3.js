@@ -6,7 +6,6 @@ import Address from '../Address';
 describe('AddressTest', () => {
     const data = {
         address: '0xE247A45c287191d435A8a5D72A7C8dc030451E9F',
-        isChecksummed: false
     };
 
     it('constructor check', () => {
@@ -54,7 +53,7 @@ describe('AddressTest', () => {
         ];
 
         tests.forEach((test) => {
-            expect(new Address({address: test.value, isChecksummed: false}).isValid()).toEqual(test.is);
+            expect(new Address({address: test.value}).isValid()).toEqual(test.is);
         });
     });
 

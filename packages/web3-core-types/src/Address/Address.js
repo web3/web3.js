@@ -21,7 +21,7 @@
  */
 
 import {sha3} from 'web3-utils';
-import {isObject, isString} from 'lodash';
+import {isObject, isString, assign} from 'lodash';
 import Iban from './Iban';
 
 export default class Address {
@@ -33,35 +33,37 @@ export default class Address {
      * @constructor
      */
     constructor(params) {
-        const requires = ['address', 'isChecksummed'];
-
-        this.props = {};
-
         if (!isObject(params)) {
             params = {
                 address: params,
-                isChecksummed: false
             };
         }
 
-        if (isString(params.address) && /^(0x)?([0-9a-fA-F]{40})$/.test(params.address)) {
-            this.props.address = params.address.replace(/^(0x)([0-9a-fA-F]{40})$/, '0x$2');
-        }
-
-        if (params.isChecksummed && !Address.isValid(params.address)) {
-            throw new Error(`The given address ${params.address} was declared as checksummed, but it isn't!`);
-        } else {
-            this.props.isChecksummed = Address.isValid(params.address);
-        }
-
-        requires.forEach((propertyName) => {
-            if (typeof this.props[propertyName] === 'undefined') {
-                this._throw(propertyName, params[propertyName]);
-            }
-        });
-
         /* Make the props immutable */
-        Object.freeze(this.props);
+        assign(this, params);
+    }
+
+    /**
+     * Set the address property
+     *
+     * @property from
+     */
+    set address(param) {
+        let _address;
+        
+        if (isString(param) && /^(0x)?([0-9a-fA-F]{40})$/.test(param)) {
+            _address = param.replace(/^(0x)([0-9a-fA-F]{40})$/, '0x$2');
+        }
+
+        if (_address === undefined) {
+            throw new Error(
+                `The given "address" parameter "${param}" needs to be hex encoded (numbers and letters, a through f), supplied as a string.\n` +
+                'Addresses may be prefixed with 0x and are 40 hex characters long.'
+            );
+        }
+        
+        this._address = _address;
+        this._isChecksummed = Address.isValid(_address);
     }
 
     /**
@@ -127,7 +129,6 @@ export default class Address {
 
         return new Address({
             address: `0x${checksummed}`,
-            isChecksummed: true
         });
     }
 
@@ -150,7 +151,7 @@ export default class Address {
      * @returns {Address}
      */
     toChecksum() {
-        return Address.toChecksum(this.props.address);
+        return Address.toChecksum(this._address);
     }
 
     /**
@@ -161,7 +162,7 @@ export default class Address {
      * @returns {boolean}
      */
     isValid() {
-        return this.props.isChecksummed;
+        return this._isChecksummed;
     }
 
     /**
@@ -172,7 +173,7 @@ export default class Address {
      * @return {String}
      */
     toString() {
-        return this.props.address;
+        return this._address;
     }
 
     /**

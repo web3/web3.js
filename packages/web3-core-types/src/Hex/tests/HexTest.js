@@ -188,8 +188,4 @@ describe('HexTest', () => {
             expect(Hex.fromBytes(test.value).toString()).toBe(test.expected);
         });
     });
-
-    it('throws an error for prop name and value', () => {
-        expect(() => new Hex('0x0')._throw('hex', null)).toThrow();
-    });
 });

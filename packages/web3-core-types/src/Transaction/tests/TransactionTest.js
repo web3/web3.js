@@ -22,9 +22,7 @@ describe('TransactionTest', () => {
     });
 
     it('constructor check', () => {
-        transaction = new Transaction(txParams);
-
-        expect(transaction).toHaveProperty('props');
+        expect(() => new Transaction(txParams)).not.toThrow();
     });
 
     it('accepts value types and parses to BigNumber', () => {
@@ -39,7 +37,6 @@ describe('TransactionTest', () => {
 
             transaction = new Transaction(txParams);
 
-            expect(transaction).toHaveProperty('props');
             expect(transaction.value).toEqual(test.is.toString());
         });
     });
@@ -48,7 +45,6 @@ describe('TransactionTest', () => {
         txParams.from = '0x4F38f4229924bfa28D58eeda496Cc85e8016bCCC';
         transaction = new Transaction(txParams);
 
-        expect(transaction).toHaveProperty('props');
         expect(transaction.from).toBe(txParams.from);
     });
 
@@ -56,8 +52,7 @@ describe('TransactionTest', () => {
         txParams.from = 0;
         transaction = new Transaction(txParams);
 
-        expect(transaction).toHaveProperty('props');
-        expect(transaction.from).toBe("0");
+        expect(transaction.from).toBe('0');
     });
 
     it('accepts gas integer values', () => {
@@ -68,7 +63,6 @@ describe('TransactionTest', () => {
 
             transaction = new Transaction(txParams);
 
-            expect(transaction).toHaveProperty('props');
             expect(transaction.gas).toEqual(test.value.toString());
         });
     });
@@ -77,7 +71,6 @@ describe('TransactionTest', () => {
         txParams.to = 'deploy';
         transaction = new Transaction(txParams);
 
-        expect(transaction).toHaveProperty('props');
         expect(transaction.to).not.toBeDefined();
     });
 
@@ -85,7 +78,6 @@ describe('TransactionTest', () => {
         txParams.value = 'none';
         transaction = new Transaction(txParams);
 
-        expect(transaction).toHaveProperty('props');
         expect(transaction.value).toBe('0');
     });
 
@@ -93,7 +85,6 @@ describe('TransactionTest', () => {
         txParams.data = 'none';
         transaction = new Transaction(txParams);
 
-        expect(transaction).toHaveProperty('props');
         expect(transaction.data).toBe('0x');
     });
 
