@@ -16,7 +16,7 @@
 */
 /**
  * @file index.js
- * @author Samuel Furter <samuel@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>, Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
@@ -117,3 +117,14 @@ export PostMethod from './methods/shh/PostMethod';
 export SetMaxMessageSizeMethod from './methods/shh/SetMaxMessageSizeMethod';
 export SetMinPoWMethod from './methods/shh/SetMinPoWMethod';
 export ShhVersionMethod from './methods/shh/ShhVersionMethod';
+
+// Admin
+export AdminAddPeerMethod from './methods/admin/AdminAddPeerMethod';
+export GetAdminDataDirectoryMethod from './methods/admin/GetAdminDataDirectoryMethod';
+export GetAdminNodeInfoMethod from './methods/admin/GetAdminNodeInfoMethod';
+export GetAdminPeersMethod from './methods/admin/GetAdminPeersMethod';
+export SetAdminSolcMethod from './methods/admin/SetAdminSolcMethod';
+export AdminStartRpcMethod from './methods/admin/AdminStartRpcMethod';
+export AdminStartWsMethod from './methods/admin/AdminStartWsMethod';
+export AdminStopRpcMethod from './methods/admin/AdminStopRpcMethod';
+export AdminStopWsMethod from './methods/admin/AdminStopWsMethod';
