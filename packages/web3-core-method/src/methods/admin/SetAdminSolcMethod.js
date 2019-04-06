@@ -33,17 +33,4 @@ export default class SetAdminSolcMethod extends AbstractMethod {
     constructor(utils, formatters, moduleInstance) {
         super('admin_setSolc', 1, utils, formatters, moduleInstance);
     }
-
-    /**
-     * This method will be executed after the RPC request.
-     *
-     * @method afterExecution
-     *
-     * @param {Object} response
-     *
-     * @returns {Array}
-     */
-    afterExecution(response) {
-        return response;
-    }
 }

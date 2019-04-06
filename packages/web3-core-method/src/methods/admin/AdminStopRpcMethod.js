@@ -33,17 +33,4 @@ export default class AdminStopRpcMethod extends AbstractMethod {
     constructor(utils, formatters, moduleInstance) {
         super('admin_stopRPC', 0, utils, formatters, moduleInstance);
     }
-
-    /**
-     * This method will be executed after the RPC request.
-     *
-     * @method afterExecution
-     *
-     * @param {Object} response
-     *
-     * @returns {Array}
-     */
-    afterExecution(response) {
-        return response;
-    }
 }

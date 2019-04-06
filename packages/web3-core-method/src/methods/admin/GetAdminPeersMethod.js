@@ -33,17 +33,4 @@ export default class GetAdminPeersMethod extends AbstractMethod {
     constructor(utils, formatters, moduleInstance) {
         super('admin_peers', 0, utils, formatters, moduleInstance);
     }
-
-    /**
-     * This method will be executed after the RPC request.
-     *
-     * @method afterExecution
-     *
-     * @param {Object} response
-     *
-     * @returns {Array}
-     */
-    afterExecution(response) {
-        return response;
-    }
 }
