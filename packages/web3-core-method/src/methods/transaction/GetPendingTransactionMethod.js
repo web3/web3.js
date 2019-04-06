@@ -44,10 +44,6 @@ export default class GetPendingTransactionMethod extends AbstractMethod {
      * @returns {Object}
      */
     afterExecution(response) {
-        if (response.length === 0) {
-            return 'No Pending Transactions !!';
-        } else {
-            return response;
-        }
+        return response;
     }
 }
