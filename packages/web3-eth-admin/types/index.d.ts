@@ -23,12 +23,7 @@ import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
 import * as net from 'net';
 
 export class Admin extends AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        net?: net.Socket|null,
-        options?: Web3ModuleOptions, 
-        accounts?: Accounts|null
-    );
+    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions, accounts?: Accounts|null);
 
     addAdminPeer(
         url: string,
