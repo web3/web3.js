@@ -63,6 +63,12 @@ admin.setSolc(
 )
 
 // $ExpectType Promise<boolean>
+admin.startRPC();
+
+// $ExpectType Promise<boolean>
+admin.startRPC("127.0.0.1");
+
+// $ExpectType Promise<boolean>
 admin.startRPC("127.0.0.1", 8545);
 
 // $ExpectType Promise<boolean>
@@ -76,6 +82,12 @@ admin.startRPC(
     "127.0.0.1", 8545, "", "eth,net,web3",
     (error: Error, result: boolean) => {}
 );
+
+// $ExpectType Promise<boolean>
+admin.startWS();
+
+// $ExpectType Promise<boolean>
+admin.startWS("127.0.0.1");
 
 // $ExpectType Promise<boolean>
 admin.startWS("127.0.0.1", 8546);

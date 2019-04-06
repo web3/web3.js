@@ -48,16 +48,16 @@ export class Admin extends AbstractWeb3Module {
     ): Promise<string>;
 
     startRPC(
-        host: string,
-        port: number,
+        host?: string,
+        port?: number,
         cors?: string,
         apis?: string,
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
     startWS(
-        host: string,
-        port: number,
+        host?: string,
+        port?: number,
         cors?: string,
         apis?: string,
         callback?: (error: Error, result: boolean) => void
