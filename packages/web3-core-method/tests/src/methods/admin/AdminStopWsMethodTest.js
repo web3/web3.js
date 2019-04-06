@@ -20,7 +20,7 @@ describe('AdminStopWsMethodTest', () => {
 
         expect(method.rpcMethod).toEqual('admin_stopWS');
 
-        expect(method.parametersAmount).toEqual(4);
+        expect(method.parametersAmount).toEqual(0);
 
         expect(method.utils).toEqual(null);
 

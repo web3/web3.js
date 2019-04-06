@@ -20,7 +20,7 @@ describe('AdminStopRpcMethodTest', () => {
 
         expect(method.rpcMethod).toEqual('admin_stopRPC');
 
-        expect(method.parametersAmount).toEqual(4);
+        expect(method.parametersAmount).toEqual(0);
 
         expect(method.utils).toEqual(null);
 
