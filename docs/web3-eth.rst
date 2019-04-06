@@ -714,6 +714,81 @@ Example
 
 ------------------------------------------------------------------------------
 
+getPendingTransactions
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.getPendingTransactions([, callback])
+
+Returns a transaction matching the given transaction hash.
+
+----------
+Parameters
+----------
+
+1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+
+.. _eth-getpendingtransactions-return:
+
+-------
+Returns
+-------
+
+
+``Promise<object>`` - An Arrayy of pending transactions:
+
+  - ``hash`` 32 Bytes - ``String``: Hash of the transaction.
+  - ``nonce`` - ``Number``: The number of transactions made by the sender prior to this one.
+  - ``blockHash`` 32 Bytes - ``String``: Hash of the block where this transaction was in. ``null`` when its pending.
+  - ``blockNumber`` - ``Number``: Block number where this transaction was in. ``null`` when its pending.
+  - ``transactionIndex`` - ``Number``: Integer of the transactions index position in the block. ``null`` when its pending.
+  - ``from`` - ``String``: Address of the sender.
+  - ``to`` - ``String``: Address of the receiver. ``null`` when its a contract creation transaction.
+  - ``value`` - ``String``: Value transferred in :ref:`wei <what-is-wei>`.
+  - ``gasPrice`` - ``String``: The wei per unit of gas provided by the sender in :ref:`wei <what-is-wei>`.
+  - ``gas`` - ``Number``: Gas provided by the sender.
+  - ``input`` - ``String``: The data sent along with the transaction.
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.getPendingTransactions().then(console.log);
+    > [
+        {
+            "hash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
+            "nonce": 2,
+            "blockHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+            "blockNumber": 3,
+            "transactionIndex": 0,
+            "from": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b",
+            "to": "0x6295ee1b4f6dd65047762f924ecd367c17eabf8f",
+            "value": '123450000000000000',
+            "gas": 314159,
+            "gasPrice": '2000000000000',
+            "input": "0x57cb2fc4"
+        },{
+            "hash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
+            "nonce": 3,
+            "blockHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+            "blockNumber": null,
+            "transactionIndex": 0,
+            "from": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b",
+            "to": "0x6295ee1b4f6dd65047762f924ecd367c17eabf8f",
+            "value": '123450000000000000',
+            "gas": 314159,
+            "gasPrice": '2000000000000',
+            "input": "0x37a6bfc5"
+        }
+    ]
+
+------------------------------------------------------------------------------
+
 getTransactionFromBlock
 =============================
 
