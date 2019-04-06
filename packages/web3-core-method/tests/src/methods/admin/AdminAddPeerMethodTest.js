@@ -1,6 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import AdminAddPeerMethod from '../../../../src/methods/AdminAddPeerMethod';
+import AdminAddPeerMethod from '../../../../src/methods/admin/AdminAddPeerMethod';
 
 // Mocks
 jest.mock('web3-core-helpers');
