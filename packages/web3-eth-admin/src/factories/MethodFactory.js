@@ -21,6 +21,7 @@
  */
 
 import {
+    AbstractMethodFactory,
     AdminAddPeerMethod,
     GetAdminDataDirectoryMethod,
     GetAdminNodeInfoMethod,
