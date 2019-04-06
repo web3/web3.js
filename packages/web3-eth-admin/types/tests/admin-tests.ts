@@ -21,10 +21,10 @@ import {Admin} from 'web3-eth-admin';
 const admin = new Admin('http://localhost:8545');
 
 // $ExpectType Promise<boolean>
-admin.addAdminPeer('enode://486cbdc847079d423515a76add04f706f3b76c52120ec195b7dacbe3ad9164cf58bd389e3fc6075457b11a132d3627a625d8b14e0f0b73a86e5a3415fa4c6042@127.0.0.1:30303');
+admin.addPeer('enode://486cbdc847079d423515a76add04f706f3b76c52120ec195b7dacbe3ad9164cf58bd389e3fc6075457b11a132d3627a625d8b14e0f0b73a86e5a3415fa4c6042@127.0.0.1:30303');
 
 // $ExpectType Promise<boolean>
-admin.addAdminPeer(
+admin.addPeer(
     'enode://486cbdc847079d423515a76add04f706f3b76c52120ec195b7dacbe3ad9164cf58bd389e3fc6075457b11a132d3627a625d8b14e0f0b73a86e5a3415fa4c6042@127.0.0.1:30303',
     (error: Error, result: boolean) => {}
 );
@@ -38,26 +38,26 @@ admin.getadminDataDirectory(
 );
 
 // $ExpectType Promise<any>
-admin.getAdminNodeInfo();
+admin.getNodeInfo();
 
 // $ExpectType Promise<any>
-admin.getAdminNodeInfo(
+admin.getNodeInfo(
     (error: Error, result: ArrayBuffer) => {}
 );
 
 // $ExpectType Promise<any>
-admin.getAdminPeers();
+admin.getPeers();
 
 // $ExpectType Promise<any>
-admin.getAdminPeers(
+admin.getPeers(
     (error: Error, result: ArrayBuffer) => {}
 );
 
 // $ExpectType Promise<string>
-admin.setAdminSolc('/usr/bin/solc');
+admin.setSolc('/usr/bin/solc');
 
 // $ExpectType Promise<string>
-admin.setAdminSolc(
+admin.setSolc(
     '/usr/bin/solc',
     (error: Error, result: string) => {}
 )

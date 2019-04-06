@@ -25,7 +25,7 @@ import * as net from 'net';
 export class Admin extends AbstractWeb3Module {
     constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions, accounts?: Accounts|null);
 
-    addAdminPeer(
+    addPeer(
         url: string,
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
@@ -34,15 +34,15 @@ export class Admin extends AbstractWeb3Module {
         callback?: (error: Error, result: string) => void
     ): Promise<string>;
 
-    getAdminNodeInfo(
+    getNodeInfo(
         callback?: (error: Error, result: ArrayBuffer) => void
     ): Promise<any>;
 
-    getAdminPeers(
+    getPeers(
         callback?: (error: Error, result: ArrayBuffer) => void
     ): Promise<any>;
 
-    setAdminSolc(
+    setSolc(
         path: string,
         callback?: (error: Error, result: string) => void
     ): Promise<string>;

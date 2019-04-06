@@ -44,11 +44,11 @@ export default class MethodFactory extends AbstractMethodFactory {
         super(utils, formatters);
 
         this.methods = {
-            addAdminPeer: AdminAddPeerMethod,
-            getadminDataDirectory: GetAdminDataDirectoryMethod,
-            getAdminNodeInfo: GetAdminNodeInfoMethod,
-            getAdminPeers: GetAdminPeersMethod,
-            setAdminSolc: SetAdminSolcMethod,
+            addPeer: AdminAddPeerMethod,
+            getDataDirectory: GetAdminDataDirectoryMethod,
+            getNodeInfo: GetAdminNodeInfoMethod,
+            getPeers: GetAdminPeersMethod,
+            setSolc: SetAdminSolcMethod,
             startRPC: AdminStartRpcMethod,
             startWS: AdminStartWsMethod,
             stopRPC: AdminStopRpcMethod,
