@@ -36,7 +36,7 @@ export class Admin extends AbstractWeb3Module {
 
     getNodeInfo(
         callback?: (error: Error, result: NodeInfo) => void
-    ): Promise<any>;
+    ): Promise<NodeInfo>;
 
     getPeers(
         callback?: (error: Error, result: []) => void
