@@ -1,10 +1,6 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {
-    GetTxpoolContentMethod,
-    GetTxpoolInspectMethod,
-    GetTxpoolStatusMethod
-} from 'web3-core-method';
+import {GetTxpoolContentMethod, GetTxpoolInspectMethod, GetTxpoolStatusMethod} from 'web3-core-method';
 
 import MethodFactory from '../../../src/factories/MethodFactory';
 
@@ -30,9 +26,9 @@ describe('MethodFactoryTest', () => {
 
     it('JSON-RPC methods check', () => {
         expect(methodFactory.methods).toEqual({
-            GetTxpoolContentMethod,
-            GetTxpoolInspectMethod,
-            GetTxpoolStatusMethod
+            getContent: GetTxpoolContentMethod,
+            getInspect: GetTxpoolInspectMethod,
+            getStatus: GetTxpoolStatusMethod
         });
     });
 });

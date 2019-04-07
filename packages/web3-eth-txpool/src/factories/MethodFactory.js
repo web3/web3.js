@@ -38,9 +38,9 @@ export default class MethodFactory extends AbstractMethodFactory {
         super(utils, formatters);
 
         this.methods = {
-            GetTxpoolContentMethod,
-            GetTxpoolInspectMethod,
-            GetTxpoolStatusMethod
+            getContent: GetTxpoolContentMethod,
+            getInspect: GetTxpoolInspectMethod,
+            getStatus: GetTxpoolStatusMethod
         };
     }
 }
