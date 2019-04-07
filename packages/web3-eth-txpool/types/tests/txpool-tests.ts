@@ -14,12 +14,10 @@
 /**
  * @file txpool-tests.ts
  * @author Prince <sinhaprince013@gmail.com>
- * @date 2018
+ * @date 2019
  */
 
-import {RLPEncodedTransaction} from 'web3-core';
 import {Txpool} from 'web3-eth-txpool';
-import {Accounts} from 'web3-eth-accounts';
 
 const txpool = new Txpool('http://localhost:8545');
 

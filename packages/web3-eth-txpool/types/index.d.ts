@@ -38,6 +38,8 @@ export interface Content {
 }
 
 export interface Status {
-    pending: number;
-    queued: number;
+    pending: Hex;
+    queued: Hex;
 }
+
+export type Hex = string | number;
