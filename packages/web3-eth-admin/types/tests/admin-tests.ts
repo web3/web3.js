@@ -17,6 +17,7 @@
  * @date 2019
  */
 import {Admin} from 'web3-eth-admin';
+import {NodeInfo} from 'web3-core';
 
 const admin = new Admin('http://localhost:8545');
 
@@ -42,7 +43,7 @@ admin.getNodeInfo();
 
 // $ExpectType Promise<any>
 admin.getNodeInfo(
-    (error: Error, result: ArrayBuffer) => {}
+    (error: Error, result: NodeInfo) => {}
 );
 
 // $ExpectType Promise<any>
@@ -50,7 +51,7 @@ admin.getPeers();
 
 // $ExpectType Promise<any>
 admin.getPeers(
-    (error: Error, result: ArrayBuffer) => {}
+    (error: Error, result: Array<string>) => {}
 );
 
 // $ExpectType Promise<string>

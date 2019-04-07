@@ -19,7 +19,7 @@
 
 import {Accounts} from 'web3-eth-accounts';
 import {provider} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
+import {AbstractWeb3Module, Web3ModuleOptions, NodeInfo} from 'web3-core';
 import * as net from 'net';
 
 export class Admin extends AbstractWeb3Module {
@@ -35,12 +35,12 @@ export class Admin extends AbstractWeb3Module {
     ): Promise<string>;
 
     getNodeInfo(
-        callback?: (error: Error, result: ArrayBuffer) => void
-    ): Promise<any>;
+        callback?: (error: Error, result: NodeInfo) => void
+    ): Promise<NodeInfo>;
 
     getPeers(
-        callback?: (error: Error, result: ArrayBuffer) => void
-    ): Promise<any>;
+        callback?: (error: Error, result: Array<string>) => void
+    ): Promise<Array<string>>;
 
     setSolc(
         path: string,
@@ -49,7 +49,7 @@ export class Admin extends AbstractWeb3Module {
 
     startRPC(
         host?: string,
-        port?: number,
+        port?: Hex,
         cors?: string,
         apis?: string,
         callback?: (error: Error, result: boolean) => void
@@ -57,7 +57,7 @@ export class Admin extends AbstractWeb3Module {
 
     startWS(
         host?: string,
-        port?: number,
+        port?: Hex,
         cors?: string,
         apis?: string,
         callback?: (error: Error, result: boolean) => void
@@ -71,3 +71,5 @@ export class Admin extends AbstractWeb3Module {
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 }
+
+export type Hex = string | number;
