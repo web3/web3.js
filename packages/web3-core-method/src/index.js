@@ -117,3 +117,8 @@ export PostMethod from './methods/shh/PostMethod';
 export SetMaxMessageSizeMethod from './methods/shh/SetMaxMessageSizeMethod';
 export SetMinPoWMethod from './methods/shh/SetMinPoWMethod';
 export ShhVersionMethod from './methods/shh/ShhVersionMethod';
+
+// Txpool
+export GetTxpoolContentMethod from './methods/txpool/GetTxpoolContentMethod';
+export GetTxpoolInspectMethod from './methods/txpool/GetTxpoolInspectMethod';
+export GetTxpoolStatusMethod from './methods/txpool/GetTxpoolStatusMethod';
