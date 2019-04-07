@@ -117,3 +117,10 @@ export PostMethod from './methods/shh/PostMethod';
 export SetMaxMessageSizeMethod from './methods/shh/SetMaxMessageSizeMethod';
 export SetMinPoWMethod from './methods/shh/SetMinPoWMethod';
 export ShhVersionMethod from './methods/shh/ShhVersionMethod';
+
+// Miner
+export SetEtherBaseMethod from './methods/miner/SetEtherBaseMethod';
+export SetExtraMethod from './methods/miner/SetExtraMethod';
+export SetGasPriceMethod from './methods/miner/SetGasPriceMethod';
+export StartMinerMethod from './methods/miner/StartMinerMethod';
+export StopMinerMethod from './methods/miner/StopMinerMethod';
