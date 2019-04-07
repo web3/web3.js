@@ -38,10 +38,10 @@ admin.getadminDataDirectory(
     (error: Error, result: string) => {}
 );
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<NodeInfo>
 admin.getNodeInfo();
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<NodeInfo>
 admin.getNodeInfo(
     (error: Error, result: NodeInfo) => {}
 );
@@ -51,7 +51,7 @@ admin.getPeers();
 
 // $ExpectType Promise<any>
 admin.getPeers(
-    (error: Error, result: Array<string>) => {}
+    (error: Error, result: []) => {}
 );
 
 // $ExpectType Promise<string>

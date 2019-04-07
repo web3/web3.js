@@ -36,11 +36,11 @@ export class Admin extends AbstractWeb3Module {
 
     getNodeInfo(
         callback?: (error: Error, result: NodeInfo) => void
-    ): Promise<NodeInfo>;
+    ): Promise<any>;
 
     getPeers(
-        callback?: (error: Error, result: Array<string>) => void
-    ): Promise<Array<string>>;
+        callback?: (error: Error, result: []) => void
+    ): Promise<[]>;
 
     setSolc(
         path: string,
