@@ -1,6 +1,6 @@
 import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import GetTxpoolStatusMethod from '../../../../src/methods/txpool/GetTxpoolStatusMethod';
+import GetTxpoolContentMethod from '../../../../src/methods/txpool/GetTxpoolContentMethod';
 
 // Mocks
 jest.mock('web3-core-helpers');
@@ -8,11 +8,11 @@ jest.mock('web3-core-helpers');
 /**
  * GetTxpoolContentMethod test
  */
-describe('GetTxpoolStatusMethodTest', () => {
+describe('GetTxpoolContentMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetTxpoolStatusMethod(null, formatters, {});
+        method = new GetTxpoolContentMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
