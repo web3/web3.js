@@ -13,10 +13,10 @@ The ``web3-eth-txpool`` package gives you access to several non-standard RPC met
 .. code-block:: javascript
 
     import Web3 from 'web3';
-    import {TxPool} from 'web3-eth-txpool';
+    import {Txpool} from 'web3-eth-txpool';
 
     // "Web3.givenProvider" will be set if in an Ethereum supported browser.
-    const txpool = new TxPool(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
+    const txpool = new Txpool(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
 
 
     // or using the web3 umbrella package
@@ -238,7 +238,7 @@ Parameters
 ----------
 
 
-3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
