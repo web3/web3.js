@@ -1,18 +1,18 @@
 import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import GetPendingTransactionMethod from '../../../../src/methods/transaction/GetPendingTransactionMethod';
+import GetPendingTransactionsMethod from '../../../../src/methods/transaction/GetPendingTransactionsMethod';
 
 // Mocks
 jest.mock('web3-core-helpers');
 
 /**
- * GetPendingTransactionMethod test
+ * GetPendingTransactionsMethod test
  */
-describe('GetPendingTransactionMethodTest', () => {
+describe('GetPendingTransactionsMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetPendingTransactionMethod(null, formatters, {});
+        method = new GetPendingTransactionsMethod(null, formatters, {});
     });
 
     it('constructor check', () => {

@@ -141,6 +141,8 @@ export class Eth extends AbstractWeb3Module {
     getWork(callback?: (error: Error, result: string[]) => void): Promise<string[]>;
 
     submitWork(data: [string, string, string], callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+    
+    pendingTransactions(callback?: (error: Error, result: []) => void): Promise<[]>;
 }
 
 export interface Methods {

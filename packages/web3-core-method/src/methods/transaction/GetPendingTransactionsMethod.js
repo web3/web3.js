@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetPendingTransactionMethod.js
+ * @file GetPendingTransactionsMethod.js
  * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetPendingTransactionMethod extends AbstractMethod {
+export default class GetPendingTransactionsMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
