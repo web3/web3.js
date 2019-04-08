@@ -18,7 +18,7 @@
  */
 import * as net from 'net';
 import {HttpProvider, IpcProvider, WebsocketProvider} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
+import {AbstractWeb3Module, Web3ModuleOptions} from 'conflux-web-core';
 
 const options = {
     timeout: 20000,

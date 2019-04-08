@@ -1,13 +1,12 @@
 {
-    "name": "web3-core",
-    "namespace": "ethereum",
-    "version": "0.0.1",
-    "description": "Web3 core tools for sub packages. This is an internal package.",
-    "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core",
+    "name": "conflux-web-core",
+    "version": "0.0.2",
+    "description": "ConfluxWeb core tools for sub packages. This is an internal package.",
+    "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-core",
     "license": "LGPL-3.0",
-    "main": "dist/web3-core.cjs.js",
-    "module": "dist/web3-core.esm.js",
-    "browser": "dist/web3-core.umd.js",
+    "main": "dist/conflux-web-core.cjs.js",
+    "module": "dist/conflux-web-core.esm.js",
+    "browser": "dist/conflux-web-core.umd.js",
     "types": "types/index.d.ts",
     "scripts": {
         "build": "rollup -c",
@@ -20,14 +19,16 @@
         "@types/bn.js": "^4.11.4",
         "@types/node": "^10.12.18",
         "lodash": "^4.17.11",
-        "web3-utils": "0.0.1"
+        "conflux-web-utils": "*"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2",
-        "web3-core-method": "0.0.1",
-        "web3-eth-accounts": "0.0.1",
-        "web3-providers": "0.0.1"
+        "rxjs": "^6.4.0",
+        "web3-core-method": "1.0.0-beta.52",
+        "web3-eth-accounts": "1.0.0-beta.52",
+        "web3-providers": "1.0.0-beta.52",
+        "web3-core-subscriptions": "1.0.0-beta.52"
     },
     "files": [
         "dist",
