@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-core",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "ConfluxWeb core tools for sub packages. This is an internal package.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-core",
     "license": "LGPL-3.0",
