@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-========
+==============
 web3.eth.admin
-========
+==============
 
 
 The ``web3-eth-admin`` package allows you to interact with the Ethereum node's admin management.
