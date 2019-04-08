@@ -22,15 +22,15 @@
 
 import {
     AbstractMethodFactory,
-    AdminAddPeerMethod,
-    GetAdminDataDirectoryMethod,
-    GetAdminNodeInfoMethod,
+    AddPeerMethod,
+    AdminDataDirectoryMethod,
+    AdminNodeInfoMethod,
     GetAdminPeersMethod,
-    SetAdminSolcMethod,
-    AdminStartRpcMethod,
-    AdminStartWsMethod,
-    AdminStopRpcMethod,
-    AdminStopWsMethod
+    SetSolcMethod,
+    StartRpcMethod,
+    StartWsMethod,
+    StopRpcMethod,
+    StopWsMethod
 } from 'web3-core-method';
 
 export default class MethodFactory extends AbstractMethodFactory {
@@ -44,15 +44,15 @@ export default class MethodFactory extends AbstractMethodFactory {
         super(utils, formatters);
 
         this.methods = {
-            addPeer: AdminAddPeerMethod,
-            getDataDirectory: GetAdminDataDirectoryMethod,
-            getNodeInfo: GetAdminNodeInfoMethod,
+            addPeer: AddPeerMethod,
+            getDataDirectory: AdminDataDirectoryMethod,
+            getNodeInfo: AdminNodeInfoMethod,
             getPeers: GetAdminPeersMethod,
-            setSolc: SetAdminSolcMethod,
-            startRPC: AdminStartRpcMethod,
-            startWS: AdminStartWsMethod,
-            stopRPC: AdminStopRpcMethod,
-            stopWS: AdminStopWsMethod
+            setSolc: SetSolcMethod,
+            startRPC: StartRpcMethod,
+            startWS: StartWsMethod,
+            stopRPC: StopRpcMethod,
+            stopWS: StopWsMethod
         };
     }
 }

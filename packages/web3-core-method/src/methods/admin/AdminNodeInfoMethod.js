@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetAdminNodeInfoMethod.js
+ * @file AdminNodeInfoMethod.js
  * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2019
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetAdminNodeInfoMethod extends AbstractMethod {
+export default class AdminNodeInfoMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

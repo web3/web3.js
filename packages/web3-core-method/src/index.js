@@ -119,12 +119,12 @@ export SetMinPoWMethod from './methods/shh/SetMinPoWMethod';
 export ShhVersionMethod from './methods/shh/ShhVersionMethod';
 
 // Admin
-export AdminAddPeerMethod from './methods/admin/AdminAddPeerMethod';
-export GetAdminDataDirectoryMethod from './methods/admin/GetAdminDataDirectoryMethod';
-export GetAdminNodeInfoMethod from './methods/admin/GetAdminNodeInfoMethod';
+export AddPeerMethod from './methods/admin/AddPeerMethod';
+export AdminDataDirectoryMethod from './methods/admin/AdminDataDirectoryMethod';
+export AdminNodeInfoMethod from './methods/admin/AdminNodeInfoMethod';
 export GetAdminPeersMethod from './methods/admin/GetAdminPeersMethod';
-export SetAdminSolcMethod from './methods/admin/SetAdminSolcMethod';
-export AdminStartRpcMethod from './methods/admin/AdminStartRpcMethod';
-export AdminStartWsMethod from './methods/admin/AdminStartWsMethod';
-export AdminStopRpcMethod from './methods/admin/AdminStopRpcMethod';
-export AdminStopWsMethod from './methods/admin/AdminStopWsMethod';
+export SetSolcMethod from './methods/admin/SetSolcMethod';
+export StartRpcMethod from './methods/admin/StartRpcMethod';
+export StartWsMethod from './methods/admin/StartWsMethod';
+export StopRpcMethod from './methods/admin/StopRpcMethod';
+export StopWsMethod from './methods/admin/StopWsMethod';

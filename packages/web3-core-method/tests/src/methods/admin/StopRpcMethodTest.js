@@ -1,24 +1,24 @@
 import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import GetAdminDataDirectoryMethod from '../../../../src/methods/admin/GetAdminDataDirectoryMethod';
+import StopRpcMethod from '../../../../src/methods/admin/StopRpcMethod';
 
 // Mocks
 jest.mock('web3-core-helpers');
 
 /**
- * GetAdminDataDirectoryMethod test
+ * StopRpcMethod test
  */
-describe('GetAdminDataDirectoryMethodTest', () => {
+describe('StopRpcMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetAdminDataDirectoryMethod(null, formatters, {});
+        method = new StopRpcMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractMethod);
 
-        expect(method.rpcMethod).toEqual('admin_datadir');
+        expect(method.rpcMethod).toEqual('admin_stopRPC');
 
         expect(method.parametersAmount).toEqual(0);
 

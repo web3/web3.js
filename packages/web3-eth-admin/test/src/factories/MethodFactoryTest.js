@@ -1,13 +1,13 @@
 import {
-    AdminAddPeerMethod,
-    GetAdminDataDirectoryMethod,
-    GetAdminNodeInfoMethod,
+    AddPeerMethod,
+    AdminDataDirectoryMethod,
+    AdminNodeInfoMethod,
     GetAdminPeersMethod,
-    SetAdminSolcMethod,
-    AdminStartRpcMethod,
-    AdminStartWsMethod,
-    AdminStopRpcMethod,
-    AdminStopWsMethod
+    SetSolcMethod,
+    StartRpcMethod,
+    StartWsMethod,
+    StopRpcMethod,
+    StopWsMethod
 } from 'web3-core-method';
 
 import MethodFactory from '../../../src/factories/MethodFactory';
@@ -24,15 +24,15 @@ describe('MethodFactoryTest', () => {
 
     it('constructor check', () => {
         expect(methodFactory.methods).toEqual({
-            addPeer: AdminAddPeerMethod,
-            getDataDirectory: GetAdminDataDirectoryMethod,
-            getNodeInfo: GetAdminNodeInfoMethod,
+            addPeer: AddPeerMethod,
+            getDataDirectory: AdminDataDirectoryMethod,
+            getNodeInfo: AdminNodeInfoMethod,
             getPeers: GetAdminPeersMethod,
-            setSolc: SetAdminSolcMethod,
-            startRPC: AdminStartRpcMethod,
-            startWS: AdminStartWsMethod,
-            stopRPC: AdminStopRpcMethod,
-            stopWS: AdminStopWsMethod
+            setSolc: SetSolcMethod,
+            startRPC: StartRpcMethod,
+            startWS: StartWsMethod,
+            stopRPC: StopRpcMethod,
+            stopWS: StopWsMethod
         });
     });
 });

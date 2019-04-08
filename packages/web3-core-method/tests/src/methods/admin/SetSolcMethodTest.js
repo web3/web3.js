@@ -1,26 +1,26 @@
 import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import GetAdminNodeInfoMethod from '../../../../src/methods/admin/GetAdminNodeInfoMethod';
+import SetSolcMethod from '../../../../src/methods/admin/SetSolcMethod';
 
 // Mocks
 jest.mock('web3-core-helpers');
 
 /**
- * GetAdminNodeInfoMethod test
+ * SetSolcMethod test
  */
-describe('GetAdminNodeInfoMethodTest', () => {
+describe('SetSolcMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetAdminNodeInfoMethod(null, formatters, {});
+        method = new SetSolcMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractMethod);
 
-        expect(method.rpcMethod).toEqual('admin_nodeInfo');
+        expect(method.rpcMethod).toEqual('admin_setSolc');
 
-        expect(method.parametersAmount).toEqual(0);
+        expect(method.parametersAmount).toEqual(1);
 
         expect(method.utils).toEqual(null);
 

@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file AdminAddPeerMethod.js
+ * @file SetSolcMethod.js
  * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2019
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class AdminAddPeerMethod extends AbstractMethod {
+export default class SetSolcMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -31,6 +31,6 @@ export default class AdminAddPeerMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('admin_addPeer', 1, utils, formatters, moduleInstance);
+        super('admin_setSolc', 1, utils, formatters, moduleInstance);
     }
 }

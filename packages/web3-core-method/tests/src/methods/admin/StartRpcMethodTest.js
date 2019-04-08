@@ -1,18 +1,18 @@
 import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import AdminStartRpcMethod from '../../../../src/methods/admin/AdminStartRpcMethod';
+import StartRpcMethod from '../../../../src/methods/admin/StartRpcMethod';
 
 // Mocks
 jest.mock('web3-core-helpers');
 
 /**
- * AdminStartRpcMethod test
+ * StartRpcMethod test
  */
-describe('AdminStartRpcMethodTest', () => {
+describe('StartRpcMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new AdminStartRpcMethod(null, formatters, {});
+        method = new StartRpcMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
