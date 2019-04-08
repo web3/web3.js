@@ -11,7 +11,7 @@
         "allowSyntheticDefaultImports": false,
         "baseUrl": ".",
         "paths": {
-            "web3-core-helpers": ["."]
+            "conflux-web-core-helpers": ["."]
         }
     }
 }

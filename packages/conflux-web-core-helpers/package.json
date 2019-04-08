@@ -1,0 +1,35 @@
+{
+    "name": "conflux-web-core-helpers",
+    "version": "0.0.2",
+    "description": "ConfluxWeb core tools helper for sub packages. This is an internal package.",
+    "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-core-helpers",
+    "license": "LGPL-3.0",
+    "main": "dist/conflux-web-core-helpers.cjs.js",
+    "module": "dist/conflux-web-core-helpers.esm.js",
+    "browser": "dist/conflux-web-core-helpers.umd.js",
+    "types": "types/index.d.ts",
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w",
+        "test": "jest",
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
+    "dependencies": {
+        "@babel/runtime": "^7.3.1",
+        "lodash": "^4.17.11",
+        "conflux-web-utils": "*"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2",
+        "web3-core": "1.0.0-beta.52",
+        "web3-core-method": "1.0.0-beta.52",
+        "web3-core-helpers": "1.0.0-beta.52",
+        "web3-providers": "1.0.0-beta.52"
+    },
+    "files": [
+        "dist",
+        "types/index.d.ts"
+    ],
+    "gitHead": "1c89f503c90180598910d29892f6ebf92455cfe1"
+}

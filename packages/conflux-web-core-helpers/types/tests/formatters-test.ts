@@ -18,7 +18,7 @@
  */
 
 import {AbstractWeb3Module} from 'web3-core';
-import {formatters} from 'web3-core-helpers';
+import {formatters} from 'conflux-web-core-helpers';
 
 // $ExpectType number
 formatters.outputBigNumberFormatter(100);

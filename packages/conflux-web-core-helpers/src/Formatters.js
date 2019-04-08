@@ -25,7 +25,7 @@ import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
 import isNumber from 'lodash/isNumber';
-import * as Utils from 'web3-utils';
+import * as Utils from 'conflux-web-utils';
 
 /**
  * TODO: This method could be removed because it is just a wrapper for the toBN method of Utils
