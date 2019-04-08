@@ -69,6 +69,7 @@ export AbstractGetTransactionFromBlockMethod from '../lib/methods/transaction/Ab
 export AbstractObservedTransactionMethod from '../lib/methods/transaction/AbstractObservedTransactionMethod';
 export EthSendTransactionMethod from './methods/transaction/EthSendTransactionMethod';
 export GetTransactionMethod from './methods/transaction/GetTransactionMethod';
+export GetPendingTransactionsMethod from './methods/transaction/GetPendingTransactionsMethod';
 export GetTransactionByBlockHashAndIndexMethod from './methods/transaction/GetTransactionByBlockHashAndIndexMethod';
 export GetTransactionByBlockNumberAndIndexMethod from './methods/transaction/GetTransactionByBlockNumberAndIndexMethod';
 export GetTransactionReceiptMethod from './methods/transaction/GetTransactionReceiptMethod';
