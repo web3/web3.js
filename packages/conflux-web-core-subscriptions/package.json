@@ -1,13 +1,12 @@
 {
-    "name": "web3-core-subscriptions",
-    "namespace": "ethereum",
+    "name": "conflux-web-core-subscriptions",
     "version": "0.0.1",
-    "description": "Manages web3 subscriptions. This is an internal package.",
-    "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions",
+    "description": "Manages ConfluxWeb subscriptions. This is an internal package.",
+    "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-core-subscription",
     "license": "LGPL-3.0",
-    "main": "dist/web3-core-subscriptions.cjs.js",
-    "module": "dist/web3-core-subscriptions.esm.js",
-    "browser": "dist/web3-core-subscriptions.umd.js",
+    "main": "dist/conflux-web-core-subscriptions.cjs.js",
+    "module": "dist/conflux-web-core-subscriptions.esm.js",
+    "browser": "dist/conflux-web-core-subscriptions.umd.js",
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
@@ -22,8 +21,8 @@
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2",
-        "web3-core-helpers": "0.0.1",
-        "web3-utils": "0.0.1"
+        "web3-core-helpers": "1.0.0-beta.52",
+        "web3-utils": "1.0.0-beta.52"
     },
     "files": [
         "dist"

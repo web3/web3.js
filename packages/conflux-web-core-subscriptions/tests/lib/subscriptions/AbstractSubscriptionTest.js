@@ -1,5 +1,5 @@
 import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
+import {formatters} from '../../../../conflux-web-core-helpers';
 import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
 
