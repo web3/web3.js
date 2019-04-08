@@ -120,9 +120,9 @@ export ShhVersionMethod from './methods/shh/ShhVersionMethod';
 
 // Admin
 export AddPeerMethod from './methods/admin/AddPeerMethod';
-export AdminDataDirectoryMethod from './methods/admin/AdminDataDirectoryMethod';
-export AdminNodeInfoMethod from './methods/admin/AdminNodeInfoMethod';
-export GetAdminPeersMethod from './methods/admin/GetAdminPeersMethod';
+export DataDirectoryMethod from './methods/admin/DataDirectoryMethod';
+export NodeInfoMethod from './methods/admin/NodeInfoMethod';
+export PeersMethod from './methods/admin/PeersMethod';
 export SetSolcMethod from './methods/admin/SetSolcMethod';
 export StartRpcMethod from './methods/admin/StartRpcMethod';
 export StartWsMethod from './methods/admin/StartWsMethod';

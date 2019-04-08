@@ -1,18 +1,18 @@
 import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import AdminDataDirectoryMethod from '../../../../src/methods/admin/AdminDataDirectoryMethod';
+import DataDirectoryMethod from '../../../../src/methods/admin/DataDirectoryMethod';
 
 // Mocks
 jest.mock('web3-core-helpers');
 
 /**
- * AdminDataDirectoryMethod test
+ * DataDirectoryMethod test
  */
-describe('AdminDataDirectoryMethodTest', () => {
+describe('DataDirectoryMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new AdminDataDirectoryMethod(null, formatters, {});
+        method = new DataDirectoryMethod(null, formatters, {});
     });
 
     it('constructor check', () => {

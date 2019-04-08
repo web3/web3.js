@@ -1,8 +1,8 @@
 import {
     AddPeerMethod,
-    AdminDataDirectoryMethod,
-    AdminNodeInfoMethod,
-    GetAdminPeersMethod,
+    DataDirectoryMethod,
+    NodeInfoMethod,
+    PeersMethod,
     SetSolcMethod,
     StartRpcMethod,
     StartWsMethod,
@@ -25,9 +25,9 @@ describe('MethodFactoryTest', () => {
     it('constructor check', () => {
         expect(methodFactory.methods).toEqual({
             addPeer: AddPeerMethod,
-            getDataDirectory: AdminDataDirectoryMethod,
-            getNodeInfo: AdminNodeInfoMethod,
-            getPeers: GetAdminPeersMethod,
+            getDataDirectory: DataDirectoryMethod,
+            getNodeInfo: NodeInfoMethod,
+            getPeers: PeersMethod,
             setSolc: SetSolcMethod,
             startRPC: StartRpcMethod,
             startWS: StartWsMethod,

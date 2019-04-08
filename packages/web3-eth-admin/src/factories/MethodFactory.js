@@ -23,9 +23,9 @@
 import {
     AbstractMethodFactory,
     AddPeerMethod,
-    AdminDataDirectoryMethod,
-    AdminNodeInfoMethod,
-    GetAdminPeersMethod,
+    DataDirectoryMethod,
+    NodeInfoMethod,
+    PeersMethod,
     SetSolcMethod,
     StartRpcMethod,
     StartWsMethod,
@@ -45,9 +45,9 @@ export default class MethodFactory extends AbstractMethodFactory {
 
         this.methods = {
             addPeer: AddPeerMethod,
-            getDataDirectory: AdminDataDirectoryMethod,
-            getNodeInfo: AdminNodeInfoMethod,
-            getPeers: GetAdminPeersMethod,
+            getDataDirectory: DataDirectoryMethod,
+            getNodeInfo: NodeInfoMethod,
+            getPeers: PeersMethod,
             setSolc: SetSolcMethod,
             startRPC: StartRpcMethod,
             startWS: StartWsMethod,

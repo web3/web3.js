@@ -1,18 +1,18 @@
 import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import GetAdminPeersMethod from '../../../../src/methods/admin/GetAdminPeersMethod';
+import PeersMethod from '../../../../src/methods/admin/PeersMethod';
 
 // Mocks
 jest.mock('web3-core-helpers');
 
 /**
- * GetAdminPeersMethod test
+ * PeersMethod test
  */
-describe('GetAdminPeersMethodTest', () => {
+describe('PeersMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetAdminPeersMethod(null, formatters, {});
+        method = new PeersMethod(null, formatters, {});
     });
 
     it('constructor check', () => {

@@ -1,18 +1,18 @@
 import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import AdminNodeInfoMethod from '../../../../src/methods/admin/AdminNodeInfoMethod';
+import NodeInfoMethod from '../../../../src/methods/admin/NodeInfoMethod';
 
 // Mocks
 jest.mock('web3-core-helpers');
 
 /**
- * AdminNodeInfoMethod test
+ * NodeInfoMethod test
  */
-describe('AdminNodeInfoMethodTest', () => {
+describe('NodeInfoMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new AdminNodeInfoMethod(null, formatters, {});
+        method = new NodeInfoMethod(null, formatters, {});
     });
 
     it('constructor check', () => {

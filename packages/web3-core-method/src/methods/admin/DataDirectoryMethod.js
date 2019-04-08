@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetAdminPeersMethod.js
+ * @file DataDirectoryMethod.js
  * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2019
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetAdminPeersMethod extends AbstractMethod {
+export default class DataDirectoryMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -31,6 +31,6 @@ export default class GetAdminPeersMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('admin_peers', 0, utils, formatters, moduleInstance);
+        super('admin_datadir', 0, utils, formatters, moduleInstance);
     }
 }
