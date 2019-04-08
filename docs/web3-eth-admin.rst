@@ -289,7 +289,7 @@ Parameters
 ----------
 
 1. ``host`` - ``String`` - (optional) The network interface to open the listener socket on (defaults to "localhost").
-2. ``post`` - ``String`` - (optional) The network port to open the listener socket on (defaults to 8545).
+2. ``post`` - ``hex | number`` - (optional) The network port to open the listener socket on (defaults to 8545).
 3. ``cors`` - ``string`` - (optional) Cross-origin resource sharing header to use (defaults to "").
 4. ``apis`` - ``string`` -  (optional) API modules to offer over this interface (defaults to "eth,net,web3").
 5. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
@@ -329,7 +329,7 @@ Parameters
 ----------
 
 1. ``host`` - ``String`` - (optional) The network interface to open the listener socket on (defaults to "localhost").
-2. ``post`` - ``String`` - (optional) The network port to open the listener socket on (defaults to 8545).
+2. ``post`` - ``hex | number`` - (optional) The network port to open the listener socket on (defaults to 8545).
 3. ``cors`` - ``string`` - (optional) Cross-origin resource sharing header to use (defaults to "").
 4. ``apis`` - ``string`` -  (optional) API modules to offer over this interface (defaults to "eth,net,web3").
 5. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
