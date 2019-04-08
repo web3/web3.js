@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetTxpoolInspectMethod.js
+ * @file InspectMethod.js
  * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2019
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetTxpoolInspectMethod extends AbstractMethod {
+export default class InspectMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

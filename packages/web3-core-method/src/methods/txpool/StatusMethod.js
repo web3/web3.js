@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetTxpoolContentMethod.js
+ * @file StatusMethod.js
  * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2019
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetTxpoolContentMethod extends AbstractMethod {
+export default class StatusMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -31,6 +31,6 @@ export default class GetTxpoolContentMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('txpool_content', 0, utils, formatters, moduleInstance);
+        super('txpool_status', 0, utils, formatters, moduleInstance);
     }
 }

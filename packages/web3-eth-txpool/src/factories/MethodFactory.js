@@ -20,12 +20,7 @@
  * @date 2019
  */
 
-import {
-    AbstractMethodFactory,
-    GetTxpoolContentMethod,
-    GetTxpoolInspectMethod,
-    GetTxpoolStatusMethod
-} from 'web3-core-method';
+import {AbstractMethodFactory, ContentMethod, InspectMethod, StatusMethod} from 'web3-core-method';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
@@ -38,9 +33,9 @@ export default class MethodFactory extends AbstractMethodFactory {
         super(utils, formatters);
 
         this.methods = {
-            getContent: GetTxpoolContentMethod,
-            getInspect: GetTxpoolInspectMethod,
-            getStatus: GetTxpoolStatusMethod
+            getContent: ContentMethod,
+            getInspect: InspectMethod,
+            getStatus: StatusMethod
         };
     }
 }

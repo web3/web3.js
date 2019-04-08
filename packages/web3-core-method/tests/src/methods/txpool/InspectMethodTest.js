@@ -1,24 +1,24 @@
 import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import GetTxpoolContentMethod from '../../../../src/methods/txpool/GetTxpoolContentMethod';
+import InspectMethod from '../../../../src/methods/txpool/InspectMethod';
 
 // Mocks
 jest.mock('web3-core-helpers');
 
 /**
- * GetTxpoolContentMethod test
+ * InspectMethod test
  */
-describe('GetTxpoolContentMethodTest', () => {
+describe('InspectMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetTxpoolContentMethod(null, formatters, {});
+        method = new InspectMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractMethod);
 
-        expect(method.rpcMethod).toEqual('txpool_content');
+        expect(method.rpcMethod).toEqual('txpool_inspect');
 
         expect(method.parametersAmount).toEqual(0);
 
