@@ -451,3 +451,9 @@ eth.submitWork(
     ],
     (error: Error, result: boolean) => {}
 );
+
+// $ExpectType Promise<[]>
+eth.pendingTransactions();
+
+// $ExpectType Promise<[]>
+eth.pendingTransactions((error: Error, result: []) => {});
