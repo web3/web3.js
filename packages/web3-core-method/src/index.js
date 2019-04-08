@@ -119,6 +119,6 @@ export SetMinPoWMethod from './methods/shh/SetMinPoWMethod';
 export ShhVersionMethod from './methods/shh/ShhVersionMethod';
 
 // Txpool
-export GetTxpoolContentMethod from './methods/txpool/GetTxpoolContentMethod';
-export GetTxpoolInspectMethod from './methods/txpool/GetTxpoolInspectMethod';
-export GetTxpoolStatusMethod from './methods/txpool/GetTxpoolStatusMethod';
+export ContentMethod from './methods/txpool/ContentMethod';
+export InspectMethod from './methods/txpool/InspectMethod';
+export StatusMethod from './methods/txpool/StatusMethod';
