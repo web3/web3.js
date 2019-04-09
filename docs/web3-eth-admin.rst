@@ -51,7 +51,7 @@ Parameters
 ----------
 
 1. ``url`` - ``String``:  The enode URL of the remote peer.
-1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -136,6 +136,17 @@ Returns
 
 ``Promise<object>`` - The node information array.
 
+    - ``enode`` - ``string``: Enode address of the node.
+    - ``id`` - ``string``: Node Id.
+    - ``listenAddr`` - ``string``: lister host and port address.
+    - ``name`` - ``string``: Name of the node, including client type, version, OS, custom data
+    - ``discovery`` - ``number``: UDP listening port for discovery protocol
+    - ``listener`` - ``number``: TCP listening port for RLPx
+    - ``difficulty`` - ``number``:  Difficulty level applied during the nonce discovering of this block.
+    - ``genesis`` - ``string``: Very first block hash.
+    - ``head`` - ``string``: Current block hash.
+    - ``network`` - ``number``: currenty used Ethereum networks ids.
+
 
 -------
 Example
@@ -190,7 +201,16 @@ Returns
 -------
 
 
-``Promise<ArrayBuffer>`` - List of all connected peers.
+``Promise<Object>`` - List of all connected peers.
+
+    - ``caps`` - ``Array``: Protocols advertised by this peer.
+    - ``id`` - ``string``: Peer node Id.
+    - ``name`` - ``string``: Peer name of the node, including client type, version, OS, custom data
+    - ``localAddress`` - ``string``: Local endpoint of the TCP data connection.
+    - ``remoteAddress`` - ``string``: Remote endpoint of the TCP data connection.
+    - ``difficulty`` - ``number``:  Difficulty level applied during the nonce discovering of this block.
+    - ``head`` - ``string``: Peer's current block hash.
+    - ``version`` - ``number``: Version number of the protocol.
 
 
 -------
@@ -289,7 +309,7 @@ Parameters
 ----------
 
 1. ``host`` - ``String`` - (optional) The network interface to open the listener socket on (defaults to "localhost").
-2. ``post`` - ``hex | number`` - (optional) The network port to open the listener socket on (defaults to 8545).
+2. ``port`` - ``string | number`` - (optional) The network port to open the listener socket on (defaults to 8545).
 3. ``cors`` - ``string`` - (optional) Cross-origin resource sharing header to use (defaults to "").
 4. ``apis`` - ``string`` -  (optional) API modules to offer over this interface (defaults to "eth,net,web3").
 5. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
@@ -329,7 +349,7 @@ Parameters
 ----------
 
 1. ``host`` - ``String`` - (optional) The network interface to open the listener socket on (defaults to "localhost").
-2. ``post`` - ``hex | number`` - (optional) The network port to open the listener socket on (defaults to 8545).
+2. ``port`` - ``string | number`` - (optional) The network port to open the listener socket on (defaults to 8545).
 3. ``cors`` - ``string`` - (optional) Cross-origin resource sharing header to use (defaults to "").
 4. ``apis`` - ``string`` -  (optional) API modules to offer over this interface (defaults to "eth,net,web3").
 5. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
