@@ -19,7 +19,7 @@
 
 import * as net from 'net';
 import BN = require('bn.js');
-import {AbstractMethodFactory} from 'web3-core-method';
+import {AbstractMethodFactory} from 'conflux-web-core-method';
 import {
     BatchRequest,
     Web3EthereumProvider,
@@ -30,7 +30,7 @@ import {
     WebsocketProvider,
     CustomProvider,
     WebsocketProviderOptions
-} from 'web3-providers';
+} from 'conflux-web-providers';
 
 export class AbstractWeb3Module {
     constructor(

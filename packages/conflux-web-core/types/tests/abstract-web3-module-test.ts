@@ -17,7 +17,7 @@
  * @date 2018
  */
 import * as net from 'net';
-import {HttpProvider, IpcProvider, WebsocketProvider} from 'web3-providers';
+import {HttpProvider, IpcProvider, WebsocketProvider} from 'conflux-web-providers';
 import {AbstractWeb3Module, Web3ModuleOptions} from 'conflux-web-core';
 
 const options = {
