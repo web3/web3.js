@@ -27,12 +27,12 @@ import {
     TransactionConfig,
     TransactionReceipt,
     Web3ModuleOptions
-} from 'web3-core';
-import {Contract, ContractOptions} from 'web3-eth-contract';
-import {Accounts} from 'web3-eth-accounts';
-import {AbiCoder} from 'web3-eth-abi';
-import {Network} from 'web3-net';
-import {AbiItem} from 'web3-utils';
+} from 'conflux-web-core';
+import {Contract, ContractOptions} from 'conflux-web-cfx-contract';
+import {Accounts} from 'conflux-web-cfx-accounts';
+import {AbiCoder} from 'conflux-web-cfx-abi';
+import {Network} from 'conflux-web-net';
+import {AbiItem} from 'conflux-web-utils';
 import * as net from 'net';
 
 export class Eth extends AbstractWeb3Module {

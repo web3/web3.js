@@ -23,9 +23,9 @@ import {
     SendRawTransactionMethod,
     SubmitWorkMethod,
     VersionMethod
-} from 'web3-core-method';
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
+} from 'conflux-web-core-method';
+import * as Utils from 'conflux-web-utils';
+import {formatters} from 'conflux-web-core-helpers';
 import MethodFactory from '../../../src/factories/MethodFactory';
 import GetBlockMethod from '../../../src/methods/GetBlockMethod';
 import GetUncleMethod from '../../../src/methods/GetUncleMethod';
@@ -36,8 +36,8 @@ import EthSignTransactionMethod from '../../../src/methods/EthSignTransactionMet
 import EthSignMethod from '../../../src/methods/EthSignMethod';
 import EthGetAccountsMethod from '../../../src/methods/EthGetAccountsMethod';
 
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
+jest.mock('conflux-web-utils');
+jest.mock('conflux-web-core-helpers');
 
 /**
  * MethodFactory test

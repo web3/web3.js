@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {SignMethod} from 'web3-core-method';
+import {SignMethod} from 'conflux-web-core-method';
 
 export default class EthSignMethod extends SignMethod {
     /**

@@ -1,9 +1,9 @@
-import {formatters} from 'web3-core-helpers';
-import {SignTransactionMethod} from 'web3-core-method';
+import {formatters} from 'conflux-web-core-helpers';
+import {SignTransactionMethod} from 'conflux-web-core-method';
 import EthSignTransactionMethod from '../../../src/methods/EthSignTransactionMethod';
 
 // Mocks
-jest.mock('web3-core-helpers');
+jest.mock('conflux-web-core-helpers');
 
 /**
  * EthSignTransactionMethod test

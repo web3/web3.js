@@ -1,9 +1,9 @@
-import {AbstractWeb3Module} from 'web3-core';
-import {GetAccountsMethod} from 'web3-core-method';
+import {AbstractWeb3Module} from 'conflux-web-core';
+import {GetAccountsMethod} from 'conflux-web-core-method';
 import EthGetAccountsMethod from '../../../src/methods/EthGetAccountsMethod';
 
 // Mocks
-jest.mock('web3-core');
+jest.mock('conflux-web-core');
 
 /**
  * EthGetAccountsMethod test

@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {AbstractGetUncleMethod} from 'web3-core-method';
+import {AbstractGetUncleMethod} from 'conflux-web-core-method';
 
 export default class GetUncleMethod extends AbstractGetUncleMethod {
     /**

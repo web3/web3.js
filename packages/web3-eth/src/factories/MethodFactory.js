@@ -46,7 +46,7 @@ import {
     VersionMethod,
     SendRawTransactionMethod,
     EthSendTransactionMethod
-} from 'web3-core-method';
+} from 'conflux-web-core-method';
 
 import GetBlockMethod from '../methods/GetBlockMethod';
 import GetUncleMethod from '../methods/GetUncleMethod';

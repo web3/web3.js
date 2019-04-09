@@ -1,13 +1,13 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
-import {AbstractWeb3Module} from 'web3-core';
-import {SignMethod} from 'web3-core-method';
+import * as Utils from 'conflux-web-utils';
+import {formatters} from 'conflux-web-core-helpers';
+import {AbstractWeb3Module} from 'conflux-web-core';
+import {SignMethod} from 'conflux-web-core-method';
 import EthSignMethod from '../../../src/methods/EthSignMethod';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
-jest.mock('web3-core');
+jest.mock('conflux-web-utils');
+jest.mock('conflux-web-core-helpers');
+jest.mock('conflux-web-core');
 
 /**
  * EthSignMethod test

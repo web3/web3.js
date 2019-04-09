@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {AbstractGetBlockUncleCountMethod} from 'web3-core-method';
+import {AbstractGetBlockUncleCountMethod} from 'conflux-web-core-method';
 
 export default class GetBlockUncleCountMethod extends AbstractGetBlockUncleCountMethod {
     /**

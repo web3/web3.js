@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {AbstractGetBlockTransactionCountMethod} from 'web3-core-method';
+import {AbstractGetBlockTransactionCountMethod} from 'conflux-web-core-method';
 
 export default class GetBlockTransactionCountMethod extends AbstractGetBlockTransactionCountMethod {
     /**

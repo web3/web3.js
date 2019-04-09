@@ -1,4 +1,4 @@
-import {formatters} from 'web3-core-helpers';
+import {formatters} from 'conflux-web-core-helpers';
 import GetBlockMethod from '../../../src/methods/GetBlockMethod';
 
 /**

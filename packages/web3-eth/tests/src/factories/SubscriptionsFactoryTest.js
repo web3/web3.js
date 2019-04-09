@@ -1,18 +1,18 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
+import * as Utils from 'conflux-web-utils';
+import {formatters} from 'conflux-web-core-helpers';
 import {
     LogSubscription,
     NewHeadsSubscription,
     NewPendingTransactionsSubscription,
     SyncingSubscription
-} from 'web3-core-subscriptions';
+} from 'conflux-web-core-subscriptions';
 
 import SubscriptionsFactory from '../../../src/factories/SubscriptionsFactory';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
-jest.mock('web3-core-subscriptions');
+jest.mock('conflux-web-utils');
+jest.mock('conflux-web-core-helpers');
+jest.mock('conflux-web-core-subscriptions');
 
 /**
  * SubscriptionsFactory test

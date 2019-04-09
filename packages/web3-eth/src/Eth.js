@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'web3-core';
+import {AbstractWeb3Module} from 'conflux-web-core';
 
 export default class Eth extends AbstractWeb3Module {
     /**

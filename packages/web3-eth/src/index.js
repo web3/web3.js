@@ -20,12 +20,12 @@
  * @date 2018
  */
 
-import {formatters} from 'web3-core-helpers';
-import {Accounts} from 'web3-eth-accounts';
-import {ContractModuleFactory} from 'web3-eth-contract';
-import {AbiCoder} from 'web3-eth-abi';
-import {Network} from 'web3-net';
-import * as Utils from 'web3-utils';
+import {formatters} from 'conflux-web-core-helpers';
+import {Accounts} from 'conflux-web-cfx-accounts';
+import {ContractModuleFactory} from 'conflux-web-cfx-contract';
+import {AbiCoder} from 'conflux-web-cfx-abi';
+import {Network} from 'conflux-web-net';
+import * as Utils from 'conflux-web-utils';
 import EthTransactionSigner from './signers/TransactionSigner';
 import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';

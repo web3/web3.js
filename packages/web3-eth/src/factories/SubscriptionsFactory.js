@@ -22,9 +22,9 @@ import {
     NewHeadsSubscription,
     NewPendingTransactionsSubscription,
     SyncingSubscription
-} from 'web3-core-subscriptions';
+} from 'conflux-web-core-subscriptions';
 
-import {GetPastLogsMethod} from 'web3-core-method';
+import {GetPastLogsMethod} from 'conflux-web-core-method';
 
 export default class SubscriptionsFactory {
     /**
