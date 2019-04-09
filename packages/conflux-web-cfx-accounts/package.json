@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-cfx-accounts",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "ConfluxWeb module to generate Conflux accounts and sign data and transactions.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-cfx-accounts",
     "license": "LGPL-3.0",
