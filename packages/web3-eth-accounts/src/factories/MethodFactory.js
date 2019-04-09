@@ -17,7 +17,7 @@
  * @date 2019
  */
 
-import {ChainIdMethod, GetGasPriceMethod, GetTransactionCountMethod, AbstractMethodFactory} from 'web3-core-method';
+import {ChainIdMethod, GetGasPriceMethod, GetTransactionCountMethod, AbstractMethodFactory} from 'conflux-web-core-method';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**

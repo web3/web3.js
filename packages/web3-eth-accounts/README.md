@@ -1,22 +1,21 @@
-# web3-eth-accounts
+# conflux-web-cfx-accounts
 
-This is a sub package of [web3.js][repo]
+This is a sub package of [ConfluxWeb.js][repo]
 
-This is the accounts package to be used in the `web3-eth` package.
-Please read the [documentation][docs] for more.
+This is the accounts package to be used in the `conflux-web-cfx` package.
 
 ## Installation
 
 ### Node.js
 
 ```bash
-npm install web3-eth-accounts
+npm install conflux-web-cfx-accounts
 ```
 
 ## Usage
 
 ```js
-import {Accounts} from 'web3-eth-accounts';
+import {Accounts} from 'conflux-web-cfx-accounts';
 
 const accounts = new Accounts(
     'http://127.0.0.1:4546',
@@ -29,5 +28,4 @@ const accounts = new Accounts(
 
 All the typescript typings are placed in the types folder. 
 
-[docs]: http://web3js.readthedocs.io/en/1.0/
-[repo]: https://github.com/ethereum/web3.js
+[repo]: https://github.com/Conflux-Chain/ConfluxWeb

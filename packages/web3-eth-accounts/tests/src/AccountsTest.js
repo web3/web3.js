@@ -1,5 +1,5 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
+import * as Utils from 'conflux-web-utils';
+import {formatters} from 'conflux-web-core-helpers';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
@@ -7,11 +7,11 @@ import {encodeSignature, recover} from 'eth-lib/lib/account';
 import TransactionSigner from '../__mocks__/TransactionSigner';
 import Accounts from '../../src/Accounts';
 import Account from '../../src/models/Account';
-import {AbstractWeb3Module} from 'web3-core';
+import {AbstractWeb3Module} from 'conflux-web-core';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
+jest.mock('conflux-web-utils');
+jest.mock('conflux-web-core-helpers');
 jest.mock('eth-lib/lib/rlp');
 jest.mock('eth-lib/lib/nat');
 jest.mock('eth-lib/lib/bytes');

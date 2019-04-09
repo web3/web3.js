@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module, SignedTransaction, TransactionConfig, Web3ModuleOptions} from 'web3-core';
+import {AbstractWeb3Module, SignedTransaction, TransactionConfig, Web3ModuleOptions} from 'conflux-web-core';
 import {provider} from 'web3-providers';
 import * as net from 'net';
 

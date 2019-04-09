@@ -26,7 +26,7 @@ import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import {encodeSignature, recover} from 'eth-lib/lib/account'; // TODO: Remove this dependency
-import {AbstractWeb3Module} from 'web3-core';
+import {AbstractWeb3Module} from 'conflux-web-core';
 import Account from './models/Account';
 import Wallet from './models/Wallet';
 

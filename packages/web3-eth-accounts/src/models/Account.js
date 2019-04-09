@@ -23,7 +23,7 @@ import isObject from 'lodash/isObject';
 import * as EthLibAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
-import {isHexStrict, hexToBytes, randomHex, sha3} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
+import {isHexStrict, hexToBytes, randomHex, sha3} from 'conflux-web-utils'; // TODO: Use the VO's of a web3-types module.
 const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
 
 export default class Account {

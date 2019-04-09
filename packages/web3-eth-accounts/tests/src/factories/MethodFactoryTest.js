@@ -1,10 +1,10 @@
-import {ChainIdMethod, GetGasPriceMethod, GetTransactionCountMethod} from 'web3-core-method';
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
+import {ChainIdMethod, GetGasPriceMethod, GetTransactionCountMethod} from 'conflux-web-core-method';
+import * as Utils from 'conflux-web-utils';
+import {formatters} from 'conflux-web-core-helpers';
 import MethodFactory from '../../../src/factories/MethodFactory';
 
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
+jest.mock('conflux-web-utils');
+jest.mock('conflux-web-core-helpers');
 
 /**
  * MethodFactory test

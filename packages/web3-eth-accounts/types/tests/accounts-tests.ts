@@ -16,7 +16,7 @@
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
-import {Accounts} from 'web3-eth-accounts';
+import {Accounts} from 'conflux-web-cfx-accounts';
 
 const accounts = new Accounts('http://localhost:8545');
 

@@ -1,13 +1,12 @@
 {
-    "name": "web3-eth-accounts",
-    "namespace": "ethereum",
+    "name": "conflux-web-cfx-accounts",
     "version": "0.0.1",
-    "description": "Web3 module to generate Ethereum accounts and sign data and transactions.",
-    "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-eth-accounts",
+    "description": "ConfluxWeb module to generate Conflux accounts and sign data and transactions.",
+    "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-cfx-accounts",
     "license": "LGPL-3.0",
-    "main": "dist/web3-eth-accounts.cjs.js",
-    "module": "dist/web3-eth-accounts.esm.js",
-    "browser": "dist/web3-eth-accounts.umd.js",
+    "main": "dist/conflux-web-cfx-accounts.cjs.js",
+    "module": "dist/conflux-web-cfx-accounts.esm.js",
+    "browser": "dist/conflux-web-cfx-accounts.umd.js",
     "types": "types/index.d.ts",
     "scripts": {
         "build": "rollup -c",
@@ -22,14 +21,17 @@
         "lodash": "^4.17.11",
         "scrypt.js": "0.2.0",
         "uuid": "3.3.2",
-        "web3-core": "0.0.1",
-        "web3-core-helpers": "0.0.1",
-        "web3-core-method": "0.0.1",
-        "web3-providers": "0.0.1",
-        "web3-utils": "0.0.1"
+        "conflux-web-core": "*",
+        "conflux-web-core-helpers": "*",
+        "conflux-web-core-method": "*",
+        "web3-providers": "1.0.0-beta.52",
+        "conflux-web-utils": "*"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
+        "web3-core-method": "1.0.0-beta.52",
+        "web3-core": "1.0.0-beta.52",
+        "web3-core-helpers": "1.0.0-beta.52",
         "dtslint": "0.4.2"
     },
     "files": [

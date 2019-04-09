@@ -1,10 +1,10 @@
-import * as Utils from 'web3-utils';
+import * as Utils from 'conflux-web-utils';
 import Wallet from '../../../src/models/Wallet';
 import Account from '../../../src/models/Account';
 import Accounts from '../../../src/Accounts';
 
 // Mocks
-jest.mock('web3-utils');
+jest.mock('conflux-web-utils');
 jest.mock('../../../src/models/Account');
 jest.mock('../../../src/Accounts');
 
