@@ -1,10 +1,10 @@
-import {AbstractWeb3Module} from 'web3-core';
+import {AbstractWeb3Module} from 'conflux-web-core';
 import AbstractMethodFactory from '../../../lib/factories/AbstractMethodFactory';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import MethodProxy from '../../../src/proxy/MethodProxy';
 
 // Mocks
-jest.mock('web3-core');
+jest.mock('conflux-web-core');
 jest.mock('../../../lib/factories/AbstractMethodFactory');
 jest.mock('../../../lib/methods/AbstractMethod');
 

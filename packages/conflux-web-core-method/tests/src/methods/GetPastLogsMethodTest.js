@@ -1,9 +1,9 @@
-import {formatters} from 'web3-core-helpers';
+import {formatters} from 'conflux-web-core-helpers';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import GetPastLogsMethod from '../../../src/methods/GetPastLogsMethod';
 
 // Mocks
-jest.mock('web3-core-helpers');
+jest.mock('conflux-web-core-helpers');
 
 /**
  * GetPastLogsMethod test

@@ -1,10 +1,10 @@
-import {NewHeadsSubscription} from 'web3-core-subscriptions';
+import {NewHeadsSubscription} from 'conflux-web-core-subscriptions';
 import GetTransactionReceiptMethod from '../../../src/methods/transaction/GetTransactionReceiptMethod';
 import GetBlockByNumberMethod from '../../../src/methods/block/GetBlockByNumberMethod';
 import TransactionObserver from '../../../src/observers/TransactionObserver';
 
 // Mocks
-jest.mock('web3-core-subscriptions');
+jest.mock('conflux-web-core-subscriptions');
 jest.mock('../../../src/methods/transaction/GetTransactionReceiptMethod');
 jest.mock('../../../src/methods/block/GetBlockByNumberMethod');
 

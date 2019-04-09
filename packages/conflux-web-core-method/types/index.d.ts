@@ -17,9 +17,9 @@
  * @date 2018
  */
 
-import {Utils} from 'web3-utils';
-import {AbstractWeb3Module, PromiEvent} from 'web3-core';
-import {formatters} from 'web3-core-helpers';
+import {Utils} from 'conflux-web-utils';
+import {AbstractWeb3Module, PromiEvent} from 'conflux-web-core';
+import {formatters} from 'conflux-web-core-helpers';
 
 export class AbstractMethod {
     constructor(

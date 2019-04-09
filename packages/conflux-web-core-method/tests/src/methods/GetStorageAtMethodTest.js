@@ -1,11 +1,11 @@
-import {formatters} from 'web3-core-helpers';
-import * as Utils from 'web3-utils';
+import {formatters} from 'conflux-web-core-helpers';
+import * as Utils from 'conflux-web-utils';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import GetStorageAtMethod from '../../../src/methods/GetStorageAtMethod';
 
 // Mocks
-jest.mock('web3-core-helpers');
-jest.mock('web3-utils');
+jest.mock('conflux-web-core-helpers');
+jest.mock('conflux-web-utils');
 
 /**
  * GetStorageAtMethod test

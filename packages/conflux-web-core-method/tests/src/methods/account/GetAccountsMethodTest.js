@@ -1,9 +1,9 @@
-import * as Utils from 'web3-utils';
+import * as Utils from 'conflux-web-utils';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetAccountsMethod from '../../../../src/methods/account/GetAccountsMethod';
 
 // Mocks
-jest.mock('web3-utils');
+jest.mock('conflux-web-utils');
 
 /**
  * GetAccountsMethod test

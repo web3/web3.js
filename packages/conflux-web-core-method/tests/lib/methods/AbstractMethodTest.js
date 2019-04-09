@@ -1,12 +1,12 @@
-import * as Utils from 'web3-utils';
-import {WebsocketProvider} from 'web3-providers';
-import {formatters} from 'web3-core-helpers';
+import * as Utils from 'conflux-web-utils';
+import {WebsocketProvider} from 'conflux-web-providers';
+import {formatters} from 'conflux-web-core-helpers';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
-jest.mock('web3-providers');
+jest.mock('conflux-web-utils');
+jest.mock('conflux-web-core-helpers');
+jest.mock('conflux-web-providers');
 
 /**
  * AbstractMethod test

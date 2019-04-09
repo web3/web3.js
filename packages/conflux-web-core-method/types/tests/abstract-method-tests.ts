@@ -18,9 +18,9 @@
  */
 
 import {AbstractMethod} from 'conflux-web-core-method';
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
-import {AbstractWeb3Module} from 'web3-core';
+import * as Utils from 'conflux-web-utils';
+import {formatters} from 'conflux-web-core-helpers';
+import {AbstractWeb3Module} from 'conflux-web-core';
 
 const abstractWeb3Module = new AbstractWeb3Module('http://localhost:8545');
 const abstractMethod = new AbstractMethod('rpc_method', 1, Utils, formatters, abstractWeb3Module);

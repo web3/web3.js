@@ -1,9 +1,9 @@
-import {formatters} from 'web3-core-helpers';
+import {formatters} from 'conflux-web-core-helpers';
 import SignMethod from '../../../src/methods/SignMethod';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 // Mocks
-jest.mock('web3-core-helpers');
+jest.mock('conflux-web-core-helpers');
 
 /**
  * SignMethod test

@@ -1,7 +1,7 @@
-import {formatters} from 'web3-core-helpers';
-import {WebsocketProvider} from 'web3-providers';
-import {AbstractWeb3Module} from 'web3-core';
-import * as Utils from 'web3-utils';
+import {formatters} from 'conflux-web-core-helpers';
+import {WebsocketProvider} from 'conflux-web-providers';
+import {AbstractWeb3Module} from 'conflux-web-core';
+import * as Utils from 'conflux-web-utils';
 import TransactionSigner from '../../../__mocks__/TransactionSigner';
 import ChainIdMethod from '../../../../src/methods/network/ChainIdMethod';
 import TransactionObserver from '../../../../src/observers/TransactionObserver';
@@ -10,10 +10,10 @@ import EthSendTransactionMethod from '../../../../src/methods/transaction/EthSen
 import AbstractObservedTransactionMethod from '../../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
 // Mocks
-jest.mock('web3-core-helpers');
-jest.mock('web3-utils');
-jest.mock('web3-providers');
-jest.mock('web3-core');
+jest.mock('conflux-web-core-helpers');
+jest.mock('conflux-web-utils');
+jest.mock('conflux-web-providers');
+jest.mock('conflux-web-core');
 jest.mock('../../../../src/methods/network/ChainIdMethod');
 jest.mock('../../../../src/observers/TransactionObserver');
 jest.mock('../../../../src/methods/account/GetTransactionCountMethod');
