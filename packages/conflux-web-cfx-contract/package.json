@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-cfx-contract",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "ConfluxWeb module to interact with Conflux smart contracts.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-cfx-accounts",
     "license": "LGPL-3.0",
@@ -24,7 +24,7 @@
         "conflux-web-core-subscriptions": "*",
         "conflux-web-cfx-abi": "*",
         "conflux-web-cfx-accounts": "*",
-        "web3-providers": "1.0.0-beta.52",
+        "conflux-web-providers": "*",
         "conflux-web-utils": "*"
     },
     "devDependencies": {

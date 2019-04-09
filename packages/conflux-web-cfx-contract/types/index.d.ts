@@ -18,7 +18,7 @@
  */
 
 import BN = require('bn.js');
-import {provider} from 'web3-providers';
+import {provider} from 'conflux-web-providers';
 import {AbiInput, AbiOutput, AbiItem} from 'conflux-web-utils';
 import {PromiEvent} from 'conflux-web-core';
 
