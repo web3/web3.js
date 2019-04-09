@@ -29,10 +29,7 @@
         "conflux-web-core": "*",
         "conflux-web-core-helpers": "*",
         "conflux-web-core-method": "*",
-        "conflux-web-utils": "*",
-        "web3-core-method": "1.0.0-beta.52",
-        "web3-core": "1.0.0-beta.52",
-        "web3-core-helpers": "1.0.0-beta.52"
+        "conflux-web-utils": "*"
     },
     "files": [
         "dist",

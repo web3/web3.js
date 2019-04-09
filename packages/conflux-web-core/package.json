@@ -28,10 +28,7 @@
         "dtslint": "0.4.2",
         "rxjs": "^6.4.0",
         "conflux-web-cfx-accounts": "*",
-        "conflux-web-core-subscriptions": "*",
-        "web3-core-method": "1.0.0-beta.52",
-        "web3-eth-accounts": "1.0.0-beta.52",
-        "web3-core-subscriptions": "1.0.0-beta.52"
+        "conflux-web-core-subscriptions": "*"
     },
     "files": [
         "dist",

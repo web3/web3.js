@@ -26,11 +26,6 @@
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2",
-        "web3-core-method": "1.0.0-beta.52",
-        "web3-core": "1.0.0-beta.52",
-        "web3-core-helpers": "1.0.0-beta.52",
-        "web3-utils": "1.0.0-beta.52",
-        "web3-core-subscriptions": "1.0.0-beta.52",
         "rxjs": "^6.4.0"
     },
     "files": [

@@ -188,7 +188,9 @@ export const fromDrip = (number, unit) => {
         throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
     }
 
-    return utils.isBN(number) ? confluxjsUnit.fromDrip(number, unit) : confluxjsUnit.fromDrip(number, unit).toString(10);
+    return utils.isBN(number)
+        ? confluxjsUnit.fromDrip(number, unit)
+        : confluxjsUnit.fromDrip(number, unit).toString(10);
 };
 
 /**
