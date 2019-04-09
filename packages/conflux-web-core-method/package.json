@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-core-method",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Handles the JSON-RPC methods. This package is also internally used by ConfluxWeb.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-core-method",
     "license": "LGPL-3.0",
@@ -19,12 +19,12 @@
         "@babel/runtime": "^7.3.1",
         "eventemitter3": "3.1.0",
         "lodash": "^4.17.11",
+        "rxjs": "^6.4.0",
         "conflux-web-core-subscriptions": "*"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2",
-        "rxjs": "^6.4.0",
         "web3-core": "1.0.0-beta.52",
         "web3-core-method": "1.0.0-beta.52",
         "web3-core-helpers": "1.0.0-beta.52",
