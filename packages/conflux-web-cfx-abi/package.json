@@ -1,13 +1,12 @@
 {
-    "name": "web3-eth-abi",
-    "namespace": "ethereum",
+    "name": "conflux-web-cfx-abi",
     "version": "0.0.1",
-    "description": "Web3 module encode and decode EVM in/output.",
-    "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-eth-abi",
+    "description": "ConfluxWeb module encode and decode EVM in/output.",
+    "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-cfx-abi",
     "license": "LGPL-3.0",
-    "main": "dist/web3-eth-abi.cjs.js",
-    "module": "dist/web3-eth-abi.esm.js",
-    "browser": "dist/web3-eth-abi.umd.js",
+    "main": "dist/conflux-web-cfx-abi.cjs.js",
+    "module": "dist/conflux-web-cfx-abi.esm.js",
+    "browser": "dist/conflux-web-cfx-abi.umd.js",
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
@@ -19,7 +18,7 @@
         "@babel/runtime": "^7.3.1",
         "ethers": "^4.0.27",
         "lodash": "^4.17.11",
-        "web3-utils": "0.0.1"
+        "conflux-web-utils": "*"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",

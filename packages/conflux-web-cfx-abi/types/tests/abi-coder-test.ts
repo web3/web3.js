@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {AbiCoder} from 'web3-eth-abi';
+import {AbiCoder} from 'conflux-web-cfx-abi';
 
 const abiCoder = new AbiCoder();
 

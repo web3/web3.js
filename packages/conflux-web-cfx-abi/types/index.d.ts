@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {AbiInput, AbiItem} from 'web3-utils';
+import {AbiInput, AbiItem} from 'conflux-web-utils';
 
 export class AbiCoder {
     encodeFunctionSignature(functionName: string | AbiItem): string;

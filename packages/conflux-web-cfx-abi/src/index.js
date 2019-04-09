@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import * as Utils from 'web3-utils';
+import * as Utils from 'conflux-web-utils';
 import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
 import EthAbiCoder from './AbiCoder.js';
 

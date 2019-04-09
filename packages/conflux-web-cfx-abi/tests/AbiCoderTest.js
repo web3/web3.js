@@ -1,9 +1,9 @@
-import * as Utils from 'web3-utils';
+import * as Utils from 'conflux-web-utils';
 import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
 import AbiCoder from '../src/AbiCoder';
 
 // Mocks
-jest.mock('web3-utils');
+jest.mock('conflux-web-utils');
 jest.mock('ethers/utils/abi-coder');
 
 /**
