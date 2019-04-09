@@ -1,6 +1,6 @@
 {
     "name": "conflux-web",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Conflux JavaScript API",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web",
     "license": "LGPL-3.0",
@@ -35,7 +35,7 @@
         "conflux-web-core-method": "*",
         "conflux-web-cfx": "*",
         "conflux-web-net": "*",
-        "web3-providers": "1.0.0-beta.52",
+        "conflux-web-providers": "*",
         "conflux-web-utils": "*"
     },
     "devDependencies": {

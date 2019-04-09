@@ -20,7 +20,7 @@
 import {AbstractWeb3Module, Web3ModuleOptions} from 'conflux-web-core';
 import {Utils} from 'conflux-web-utils';
 import * as net from 'net';
-import {provider} from 'web3-providers';
+import {provider} from 'conflux-web-providers';
 import {Eth} from 'conflux-web-cfx';
 import {Network} from 'conflux-web-net';
 

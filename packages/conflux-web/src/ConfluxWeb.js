@@ -1,5 +1,5 @@
 import {AbstractWeb3Module} from 'conflux-web-core';
-import {ProviderDetector, ProvidersModuleFactory} from 'web3-providers';
+import {ProviderDetector, ProvidersModuleFactory} from 'conflux-web-providers';
 import * as Utils from 'conflux-web-utils';
 import {Eth} from 'conflux-web-cfx';
 import {Network} from 'conflux-web-net';
