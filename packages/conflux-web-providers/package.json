@@ -1,0 +1,42 @@
+{
+    "name": "conflux-web-providers",
+    "version": "0.0.1",
+    "description": "ConfluxWeb module to handle requests to external providers.",
+    "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-providers",
+    "license": "LGPL-3.0",
+    "main": "dist/conflux-web-providers.cjs.js",
+    "module": "dist/conflux-web-providers.esm.js",
+    "browser": "dist/conflux-web-providers.umd.js",
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w",
+        "test": "jest",
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
+    "types": "types/index.d.ts",
+    "dependencies": {
+        "@babel/runtime": "^7.3.1",
+        "@types/node": "^10.12.18",
+        "eventemitter3": "3.1.0",
+        "lodash": "^4.17.11",
+        "url-parse": "1.4.4",
+        "websocket": "^1.0.28",
+        "xhr2-cookies": "1.1.0"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2",
+        "conflux-web-core": "*",
+        "conflux-web-core-helpers": "*",
+        "conflux-web-core-method": "*",
+        "conflux-web-utils": "*",
+        "web3-core-method": "1.0.0-beta.52",
+        "web3-core": "1.0.0-beta.52",
+        "web3-core-helpers": "1.0.0-beta.52"
+    },
+    "files": [
+        "dist",
+        "types/index.d.ts"
+    ],
+    "gitHead": "1c89f503c90180598910d29892f6ebf92455cfe1"
+}
