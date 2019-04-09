@@ -18,7 +18,7 @@
  */
 
 import {AbstractWeb3Module, SignedTransaction, TransactionConfig, Web3ModuleOptions} from 'conflux-web-core';
-import {provider} from 'web3-providers';
+import {provider} from 'conflux-web-providers';
 import * as net from 'net';
 
 export class Accounts extends AbstractWeb3Module {

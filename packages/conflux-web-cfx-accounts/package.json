@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-cfx-accounts",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "ConfluxWeb module to generate Conflux accounts and sign data and transactions.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-cfx-accounts",
     "license": "LGPL-3.0",
@@ -24,7 +24,7 @@
         "conflux-web-core": "*",
         "conflux-web-core-helpers": "*",
         "conflux-web-core-method": "*",
-        "web3-providers": "1.0.0-beta.52",
+        "conflux-web-providers": "*",
         "conflux-web-utils": "*"
     },
     "devDependencies": {
