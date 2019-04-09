@@ -58,7 +58,7 @@ describe('AbstractWeb3ModuleTest', () => {
         try {
             abstractWeb3Module.defaultAccount = '0';
         } catch (error) {
-            expect(error.message).toEqual('Given address "0" is not a valid Ethereum address.');
+            expect(error.message).toEqual('Given address "0" is not a valid Conflux address.');
         }
     });
 

@@ -29,8 +29,8 @@ import {
     ProviderDetector,
     ProviderResolver
 } from 'web3-providers';
-import {MethodProxy} from 'web3-core-method';
-import {toChecksumAddress} from 'web3-utils';
+import {MethodProxy} from 'conflux-web-core-method';
+import {toChecksumAddress} from 'conflux-web-utils';
 
 export default class AbstractWeb3Module {
     /**
