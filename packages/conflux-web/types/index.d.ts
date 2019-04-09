@@ -21,7 +21,7 @@ import {AbstractWeb3Module, Web3ModuleOptions} from 'conflux-web-core';
 import {Utils} from 'conflux-web-utils';
 import * as net from 'net';
 import {provider} from 'conflux-web-providers';
-import {Eth} from 'conflux-web-cfx';
+import {Cfx} from 'conflux-web-cfx';
 import {Network} from 'conflux-web-net';
 
 export default class Web3 extends AbstractWeb3Module {
@@ -35,11 +35,11 @@ export default class Web3 extends AbstractWeb3Module {
     static readonly givenProvider: any;
 
     utils: Utils;
-    eth: Eth;
+    cfx: Cfx;
     version: string;
 }
 
 export interface Modules {
-    Eth: new (provider: provider, net: net.Socket) => Eth;
+    Cfx: new (provider: provider, net: net.Socket) => Cfx;
     Net: new (provider: provider, net: net.Socket) => Network;
 }

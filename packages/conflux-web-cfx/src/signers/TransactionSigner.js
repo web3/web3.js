@@ -11,9 +11,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+// TODO: to be ported to Conflux
 /**
  * @file TransactionSigner.js
  * @author Samuel Furter <samuel@ethereum.org>
+ * @author Yanpei Liu <ypliu@conflux-chain.org>
  * @date 2019
  */
 

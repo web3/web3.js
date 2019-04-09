@@ -8,7 +8,7 @@ import {ContractModuleFactory} from 'conflux-web-cfx-contract';
 import MethodFactory from '../../src/factories/MethodFactory';
 import TransactionSigner from '../../src/signers/TransactionSigner';
 import SubscriptionsFactory from '../../src/factories/SubscriptionsFactory';
-import Eth from '../../src/Eth';
+import Cfx from '../../src/Cfx';
 
 // Mocks
 jest.mock('conflux-web-core');
@@ -61,7 +61,7 @@ describe('EthTest', () => {
         new TransactionSigner();
         transactionSignerMock = TransactionSigner.mock.instances[0];
 
-        eth = new Eth(
+        eth = new Cfx(
             providerMock,
             methodFactoryMock,
             networkMock,

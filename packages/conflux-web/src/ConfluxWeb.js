@@ -1,7 +1,7 @@
 import {AbstractWeb3Module} from 'conflux-web-core';
 import {ProviderDetector, ProvidersModuleFactory} from 'conflux-web-providers';
 import * as Utils from 'conflux-web-utils';
-import {Eth} from 'conflux-web-cfx';
+import {Cfx} from 'conflux-web-cfx';
 import {Network} from 'conflux-web-net';
 import {version} from '../package.json';
 
@@ -16,13 +16,13 @@ export default class ConfluxWeb extends AbstractWeb3Module {
     constructor(provider, net, options = {}) {
         super(provider, options, null, net);
 
-        this.eth = new Eth(this.currentProvider, net, options);
+        this.cfx = new Cfx(this.currentProvider, net, options);
         this.utils = Utils;
         this.version = version;
     }
 
     /**
-     * Sets the defaultGasPrice property on the eth module
+     * Sets the defaultGasPrice property on the cfx module
      *
      * @property defaultGasPrice
      *
@@ -30,7 +30,7 @@ export default class ConfluxWeb extends AbstractWeb3Module {
      */
     set defaultGasPrice(value) {
         super.defaultGasPrice = value;
-        this.eth.defaultGasPrice = value;
+        this.cfx.defaultGasPrice = value;
     }
 
     /**
@@ -45,7 +45,7 @@ export default class ConfluxWeb extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultGas property on the eth module
+     * Sets the defaultGas property on the cfx module
      *
      * @property defaultGas
      *
@@ -53,7 +53,7 @@ export default class ConfluxWeb extends AbstractWeb3Module {
      */
     set defaultGas(value) {
         super.defaultGas = value;
-        this.eth.defaultGas = value;
+        this.cfx.defaultGas = value;
     }
 
     /**
@@ -76,7 +76,7 @@ export default class ConfluxWeb extends AbstractWeb3Module {
      */
     set transactionBlockTimeout(value) {
         super.transactionBlockTimeout = value;
-        this.eth.transactionBlockTimeout = value;
+        this.cfx.transactionBlockTimeout = value;
     }
 
     /**
@@ -99,7 +99,7 @@ export default class ConfluxWeb extends AbstractWeb3Module {
      */
     set transactionConfirmationBlocks(value) {
         super.transactionConfirmationBlocks = value;
-        this.eth.transactionConfirmationBlocks = value;
+        this.cfx.transactionConfirmationBlocks = value;
     }
 
     /**
@@ -122,7 +122,7 @@ export default class ConfluxWeb extends AbstractWeb3Module {
      */
     set transactionPollingTimeout(value) {
         super.transactionPollingTimeout = value;
-        this.eth.transactionPollingTimeout = value;
+        this.cfx.transactionPollingTimeout = value;
     }
 
     /**
@@ -137,7 +137,7 @@ export default class ConfluxWeb extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultAccount property on the eth module
+     * Sets the defaultAccount property on the cfx module
      *
      * @property defaultAccount
      *
@@ -145,7 +145,7 @@ export default class ConfluxWeb extends AbstractWeb3Module {
      */
     set defaultAccount(value) {
         super.defaultAccount = value;
-        this.eth.defaultAccount = value;
+        this.cfx.defaultAccount = value;
     }
 
     /**
@@ -160,7 +160,7 @@ export default class ConfluxWeb extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultBlock property on the eth module
+     * Sets the defaultBlock property on the cfx module
      *
      * @property defaultBlock
      *
@@ -168,7 +168,7 @@ export default class ConfluxWeb extends AbstractWeb3Module {
      */
     set defaultBlock(value) {
         super.defaultBlock = value;
-        this.eth.defaultBlock = value;
+        this.cfx.defaultBlock = value;
     }
 
     /**
@@ -193,7 +193,7 @@ export default class ConfluxWeb extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        return super.setProvider(provider, net) && this.eth.setProvider(provider, net);
+        return super.setProvider(provider, net) && this.cfx.setProvider(provider, net);
     }
 
     /**
@@ -214,8 +214,8 @@ export default class ConfluxWeb extends AbstractWeb3Module {
         const providerResolver = new ProvidersModuleFactory().createProviderResolver();
 
         return {
-            Eth: (provider, options, net) => {
-                return new Eth(providerResolver.resolve(provider, net), options);
+            Cfx: (provider, options, net) => {
+                return new Cfx(providerResolver.resolve(provider, net), options);
             },
             Net: (provider, options, net) => {
                 return new Network(providerResolver.resolve(provider, net), options);

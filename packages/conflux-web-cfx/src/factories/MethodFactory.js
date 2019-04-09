@@ -45,7 +45,8 @@ import {
     SubmitWorkMethod,
     VersionMethod,
     SendRawTransactionMethod,
-    EthSendTransactionMethod
+    EthSendTransactionMethod,
+    GetEpochNumberMethod
 } from 'conflux-web-core-method';
 
 import GetBlockMethod from '../methods/GetBlockMethod';
@@ -99,7 +100,8 @@ export default class MethodFactory extends AbstractMethodFactory {
             getPastLogs: GetPastLogsMethod,
             requestAccounts: RequestAccountsMethod,
             getId: VersionMethod,
-            getChainId: ChainIdMethod
+            getChainId: ChainIdMethod,
+            getEpochNumber: GetEpochNumberMethod
         };
     }
 }

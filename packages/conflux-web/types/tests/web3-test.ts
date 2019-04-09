@@ -39,8 +39,8 @@ web3.utils;
 // $ExpectType string
 web3.version;
 
-// $ExpectType Eth
-web3.eth;
+// $ExpectType Cfx
+web3.cfx;
 
 // $ExpectType BatchRequest
 new web3.BatchRequest();

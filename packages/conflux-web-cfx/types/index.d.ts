@@ -35,7 +35,7 @@ import {Network} from 'conflux-web-net';
 import {AbiItem} from 'conflux-web-utils';
 import * as net from 'net';
 
-export class Eth extends AbstractWeb3Module {
+export class Cfx extends AbstractWeb3Module {
     constructor(
         provider: provider,
         net?: net.Socket | null,

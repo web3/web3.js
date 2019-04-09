@@ -1,4 +1,4 @@
-import {Eth} from 'conflux-web-cfx';
+import {Cfx} from 'conflux-web-cfx';
 import {Network} from 'conflux-web-net';
 import {AbstractWeb3Module} from 'conflux-web-core';
 import * as Utils from 'conflux-web-utils';
@@ -20,7 +20,7 @@ describe('Web3Test', () => {
     });
 
     it('constructor check', () => {
-        expect(web3.eth).toBeInstanceOf(Eth);
+        expect(web3.cfx).toBeInstanceOf(Cfx);
 
         expect(web3).toBeInstanceOf(AbstractWeb3Module);
     });
@@ -30,7 +30,7 @@ describe('Web3Test', () => {
 
         expect(web3.defaultGasPrice).toEqual(10);
 
-        expect(Eth.mock.instances[0].defaultGasPrice).toEqual(10);
+        expect(Cfx.mock.instances[0].defaultGasPrice).toEqual(10);
     });
 
     it('sets the defaultGas property', () => {
@@ -38,7 +38,7 @@ describe('Web3Test', () => {
 
         expect(web3.defaultGas).toEqual(10);
 
-        expect(Eth.mock.instances[0].defaultGas).toEqual(10);
+        expect(Cfx.mock.instances[0].defaultGas).toEqual(10);
     });
 
     it('sets the transactionBlockTimeout property', () => {
@@ -46,7 +46,7 @@ describe('Web3Test', () => {
 
         expect(web3.transactionBlockTimeout).toEqual(10);
 
-        expect(Eth.mock.instances[0].transactionBlockTimeout).toEqual(10);
+        expect(Cfx.mock.instances[0].transactionBlockTimeout).toEqual(10);
     });
 
     it('sets the transactionConfirmationBlocks property', () => {
@@ -54,7 +54,7 @@ describe('Web3Test', () => {
 
         expect(web3.transactionConfirmationBlocks).toEqual(10);
 
-        expect(Eth.mock.instances[0].transactionConfirmationBlocks).toEqual(10);
+        expect(Cfx.mock.instances[0].transactionConfirmationBlocks).toEqual(10);
     });
 
     it('sets the transactionPollingTimeout property', () => {
@@ -62,7 +62,7 @@ describe('Web3Test', () => {
 
         expect(web3.transactionPollingTimeout).toEqual(10);
 
-        expect(Eth.mock.instances[0].transactionPollingTimeout).toEqual(10);
+        expect(Cfx.mock.instances[0].transactionPollingTimeout).toEqual(10);
     });
 
     it('sets the defaultAccount property', () => {
@@ -72,7 +72,7 @@ describe('Web3Test', () => {
 
         expect(web3.defaultAccount).toEqual('0x2');
 
-        expect(Eth.mock.instances[0].defaultAccount).toEqual('0x1');
+        expect(Cfx.mock.instances[0].defaultAccount).toEqual('0x1');
 
         expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x1');
     });
@@ -82,11 +82,11 @@ describe('Web3Test', () => {
 
         expect(web3.defaultBlock).toEqual(10);
 
-        expect(Eth.mock.instances[0].defaultBlock).toEqual(10);
+        expect(Cfx.mock.instances[0].defaultBlock).toEqual(10);
     });
 
     it('calls setProvider and returns true', () => {
-        const ethMock = Eth.mock.instances[0];
+        const ethMock = Cfx.mock.instances[0];
 
         ethMock.setProvider = jest.fn().mockReturnValueOnce(true);
 
@@ -100,11 +100,11 @@ describe('Web3Test', () => {
     it('calls the static modules property and gets the expected object', () => {
         const modules = ConfluxWeb.modules;
 
-        const eth = new modules.Eth('http://', 'net');
+        const cfx = new modules.Cfx('http://', 'net');
 
         const net = new modules.Net('http://', 'net');
 
-        expect(eth).toBeInstanceOf(Eth);
+        expect(cfx).toBeInstanceOf(Cfx);
 
         expect(net).toBeInstanceOf(Network);
     });

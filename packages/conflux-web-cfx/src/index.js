@@ -14,11 +14,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file index.js
- * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
- */
 
 import {formatters} from 'conflux-web-core-helpers';
 import {Accounts} from 'conflux-web-cfx-accounts';
@@ -26,11 +21,18 @@ import {ContractModuleFactory} from 'conflux-web-cfx-contract';
 import {AbiCoder} from 'conflux-web-cfx-abi';
 import {Network} from 'conflux-web-net';
 import * as Utils from 'conflux-web-utils';
-import EthTransactionSigner from './signers/TransactionSigner';
+import CfxTransactionSigner from './signers/TransactionSigner';
 import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';
 import {ProviderResolver} from 'conflux-web-providers';
-import EthModule from './Eth.js';
+import CfxModule from './Cfx.js';
+
+/**
+ * @file index.js
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @author Yanpei Liu <ypliu@conflux-chain.org>
+ * @date 2018
+ */
 
 /**
  * Creates the TransactionSigner class
@@ -39,22 +41,22 @@ import EthModule from './Eth.js';
  * @constructor
  */
 export function TransactionSigner() {
-    return new EthTransactionSigner(Utils, formatters);
+    return new CfxTransactionSigner(Utils, formatters);
 }
 
 /**
- * Creates the Eth object
+ * Creates the Cfx object
  *
- * @method Eth
+ * @method Cfx
  *
  * @param {AbstractSocketProvider|HttpProvider|CustomProvider|String} provider
  * @param {Net} net
  * @param {Object} options
  *
- * @returns {Eth}
+ * @returns {Cfx}
  * @constructor
  */
-export function Eth(provider, net = null, options = {}) {
+export function Cfx(provider, net = null, options = {}) {
     if (!options.transactionSigner || options.transactionSigner.type === 'TransactionSigner') {
         options.transactionSigner = new TransactionSigner();
     }
@@ -63,7 +65,7 @@ export function Eth(provider, net = null, options = {}) {
     const accounts = new Accounts(resolvedProvider, null, options);
     const abiCoder = new AbiCoder();
 
-    return new EthModule(
+    return new CfxModule(
         resolvedProvider,
         new MethodFactory(Utils, formatters),
         new Network(resolvedProvider, null, options),

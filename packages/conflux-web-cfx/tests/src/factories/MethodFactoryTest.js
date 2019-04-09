@@ -22,7 +22,8 @@ import {
     RequestAccountsMethod,
     SendRawTransactionMethod,
     SubmitWorkMethod,
-    VersionMethod
+    VersionMethod,
+    GetEpochNumberMethod
 } from 'conflux-web-core-method';
 import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
@@ -88,7 +89,8 @@ describe('MethodFactoryTest', () => {
             getPastLogs: GetPastLogsMethod,
             requestAccounts: RequestAccountsMethod,
             getChainId: ChainIdMethod,
-            getId: VersionMethod
+            getId: VersionMethod,
+            getEpochNumber: GetEpochNumberMethod
         });
     });
 });

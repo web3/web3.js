@@ -18,9 +18,9 @@
  */
 
 import {Log, Transaction, TransactionReceipt, RLPEncodedTransaction} from 'conflux-web-core';
-import {Eth, BlockHeader, Syncing, Block} from 'conflux-web-cfx';
+import {Cfx, BlockHeader, Syncing, Block} from 'conflux-web-cfx';
 
-const eth = new Eth('http://localhost:8545');
+const eth = new Cfx('http://localhost:8545');
 
 // $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => Contract
 eth.Contract;
@@ -60,7 +60,7 @@ eth.subscribe('pendingTransactions');
 eth.subscribe('pendingTransactions', null, (error: Error, transactionHash: string) => {});
 
 // $ExpectType Providers
-Eth.providers;
+Cfx.providers;
 
 // $ExpectType any
 eth.givenProvider;
