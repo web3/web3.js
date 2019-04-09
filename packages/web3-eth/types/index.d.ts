@@ -150,9 +150,9 @@ export class Eth extends AbstractWeb3Module {
     pendingTransactions(callback?: (error: Error, result: []) => void): Promise<[]>;
 
     content(callback?: (error: Error, result: Content) => void): Promise<Content>;
-    
-    inspect(callback?: (error: Error, result: Content) => void):  Promise<Content>;
-    
+       
+    inspect(callback?: (error: Error, result: Content) => void): Promise<Content>;
+
     status(callback?: (error: Error, result: Content) => void): Promise<Content>;
 }
 

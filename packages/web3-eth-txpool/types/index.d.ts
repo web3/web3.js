@@ -26,8 +26,8 @@ export class Txpool extends AbstractWeb3Module {
     constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions, accounts?: Accounts|null);
 
     content(callback?: (error: Error, result: Content) => void): Promise<Content>;
-
-    inspect(callback?: (error: Error, result: Content) => void):  Promise<Content>;
-
+    
+    inspect(callback?: (error: Error, result: Content) => void): Promise<Content>;
+    
     status(callback?: (error: Error, result: Content) => void): Promise<Content>;
 }
