@@ -20,8 +20,8 @@
  * @date 2018
  */
 
-import {formatters} from '../../conflux-web-core-helpers';
-import * as Utils from 'web3-utils';
+import {formatters} from 'conflux-web-core-helpers';
+import * as Utils from 'conflux-web-utils';
 import MethodFactory from './factories/MethodFactory';
 import NetworkModule from './Network.js';
 
