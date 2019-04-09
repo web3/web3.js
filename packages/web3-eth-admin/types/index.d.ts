@@ -30,7 +30,7 @@ export class Admin extends AbstractWeb3Module {
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
-    getadminDataDirectory(
+    getDataDirectory(
         callback?: (error: Error, result: string) => void
     ): Promise<string>;
 
@@ -39,8 +39,8 @@ export class Admin extends AbstractWeb3Module {
     ): Promise<NodeInfo>;
 
     getPeers(
-        callback?: (error: Error, result: []) => void
-    ): Promise<[]>;
+        callback?: (error: Error, result: any[]) => void
+    ): Promise<[any[]]>;
 
     setSolc(
         path: string,
@@ -49,15 +49,21 @@ export class Admin extends AbstractWeb3Module {
 
     startRPC(
         host?: string,
-        port?: Hex,
+        port?: number,
         cors?: string,
         apis?: string,
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
+    startRPC(host: string): Promise<boolean>
+    startRPC(port: number): Promise<boolean>
+    startRPC(cors: string): Promise<boolean>
+    startRPC(apis: string): Promise<boolean>
+    startRPC(host: string, port: string): Promise<boolean>
+
     startWS(
         host?: string,
-        port?: Hex,
+        port?: number,
         cors?: string,
         apis?: string,
         callback?: (error: Error, result: boolean) => void
@@ -71,5 +77,3 @@ export class Admin extends AbstractWeb3Module {
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 }
-
-export type Hex = string | number;

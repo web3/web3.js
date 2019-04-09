@@ -31,10 +31,10 @@ admin.addPeer(
 );
 
 // $ExpectType Promise<string>
-admin.getadminDataDirectory();
+admin.getDataDirectory();
 
 // $ExpectType Promise<string>
-admin.getadminDataDirectory(
+admin.getDataDirectory(
     (error: Error, result: string) => {}
 );
 
@@ -65,6 +65,9 @@ admin.setSolc(
 
 // $ExpectType Promise<boolean>
 admin.startRPC();
+
+// $ExpectType Promise<boolean>
+admin.startRPC((error: Error, result: boolean) => {});
 
 // $ExpectType Promise<boolean>
 admin.startRPC("127.0.0.1");
