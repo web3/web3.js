@@ -1,0 +1,54 @@
+{
+    "name": "conflux-web",
+    "version": "0.0.1",
+    "description": "Conflux JavaScript API",
+    "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web",
+    "license": "LGPL-3.0",
+    "main": "dist/conflux-web.cjs.js",
+    "module": "dist/conflux-web.esm.js",
+    "browser": "dist/conflux-web.umd.js",
+    "keywords": [
+        "Conflux",
+        "JavaScript",
+        "API"
+    ],
+    "author": "conflux-chain.org",
+    "authors": [
+        {
+            "name": "Yanpei Liu",
+            "email": "ypliu@conflux-chain.org"
+        }
+    ],
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w",
+        "test": "jest",
+        "dtslint": "dtslint types --onlyTestTsNext",
+        "postinstall": "node angular-patch.js"
+    },
+    "types": "types/index.d.ts",
+    "dependencies": {
+        "@babel/runtime": "^7.3.1",
+        "@types/node": "^10.12.18",
+        "conflux-web-core": "*",
+        "conflux-web-core-helpers": "*",
+        "conflux-web-core-method": "*",
+        "conflux-web-cfx": "*",
+        "conflux-web-net": "*",
+        "web3-providers": "1.0.0-beta.52",
+        "conflux-web-utils": "*"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "web3-core-method": "1.0.0-beta.52",
+        "web3-core": "1.0.0-beta.52",
+        "web3-core-helpers": "1.0.0-beta.52",
+        "dtslint": "0.4.2"
+    },
+    "files": [
+        "dist",
+        "types/index.d.ts",
+        "angular-patch.js"
+    ],
+    "gitHead": "1c89f503c90180598910d29892f6ebf92455cfe1"
+}
