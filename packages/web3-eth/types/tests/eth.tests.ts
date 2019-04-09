@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {Log, Transaction, TransactionReceipt, RLPEncodedTransaction} from 'web3-core';
+import {Log, Transaction, TransactionReceipt, RLPEncodedTransaction, Content} from 'web3-core';
 import {Eth, BlockHeader, Syncing, Block} from 'web3-eth';
 
 const eth = new Eth('http://localhost:8545');
@@ -451,3 +451,21 @@ eth.submitWork(
     ],
     (error: Error, result: boolean) => {}
 );
+
+// $ExpectType Promise<Content>
+eth.content();
+
+// $ExpectType Promise<Content>
+eth.content((error: Error, result: Content) => {});
+
+// $ExpectType Promise<Content>
+eth.inspect();
+
+// $ExpectType Promise<Content>
+eth.inspect((error: Error, result: Content) => {});
+
+// $ExpectType Promise<Content>
+eth.status();
+
+// $ExpectType Promise<Content>
+eth.status((error: Error, result: Content) => {});

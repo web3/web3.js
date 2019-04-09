@@ -18,14 +18,24 @@
  */
 
 import {Txpool} from 'web3-eth-txpool';
+import {Content} from 'web3-core';
 
 const txpool = new Txpool('http://localhost:8545');
 
-// $ExpectType Content
+// $ExpectType Promise<Content>
 txpool.content();
 
-// $ExpectType Content
+// $ExpectType Promise<Content>
+txpool.content((error: Error, result: Content) => {});
+
+// $ExpectType Promise<Content>
 txpool.inspect();
 
-// $ExpectType Status
+// $ExpectType Promise<Content>
+txpool.inspect((error: Error, result: Content) => {});
+
+// $ExpectType Promise<Content>
 txpool.status();
+
+// $ExpectType Promise<Content>
+txpool.status((error: Error, result: Content) => {});

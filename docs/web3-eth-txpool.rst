@@ -56,7 +56,22 @@ Parameters
 Returns
 -------
 
-``Object`` - The list of pending as well as queued transactions.
+``Promise<Object>`` - The list of pending as well as queued transactions.
+
+    - ``pending`` - ``string{}``: List of pending transactions with transaction details.
+    - ``queued`` - ``string{}``: List of queued transactions with transaction details.
+    
+        - ``hash`` 32 Bytes - ``String``: Hash of the transaction.
+        - ``nonce`` - ``Number``: The number of transactions made by the sender prior to this one.
+        - ``blockHash`` 32 Bytes - ``String``: Hash of the block where this transaction was in. ``null`` when its pending.
+        - ``blockNumber`` - ``Number``: Block number where this transaction was in. ``null`` when its pending.
+        - ``transactionIndex`` - ``Number``: Integer of the transactions index position in the block. ``null`` when its pending.
+        - ``from`` - ``String``: Address of the sender.
+        - ``to`` - ``String``: Address of the receiver. ``null`` when its a contract creation transaction.
+        - ``value`` - ``String``: Value transferred in :ref:`wei <what-is-wei>`.
+        - ``gasPrice`` - ``String``: The wei per unit of gas provided by the sender in :ref:`wei <what-is-wei>`.
+        - ``gas`` - ``Number``: Gas provided by the sender.
+        - ``input`` - ``String``: The data sent along with the transaction.
 
 -------
 Example
@@ -158,8 +173,10 @@ Returns
 -------
 
 
-``Object`` - The List of pending and queued transactions summary.
+``Promise<Object>`` - The List of pending and queued transactions summary.
 
+    - ``pending`` - ``string{}``: List of pending transactions with transaction details.
+    - ``queued`` - ``string{}``: List of queued transactions with transaction details.
 
 -------
 Example
@@ -246,8 +263,10 @@ Returns
 -------
 
 
-``Object`` - A list of number of pending and queued transactions.
+``Promise<Object>`` - A list of number of pending and queued transactions.
 
+    - ``pending`` - ``number``: Number of pending transactions.
+    - ``queued`` - ``number``: Number of queued transactions.
 
 -------
 Example

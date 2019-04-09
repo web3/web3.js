@@ -19,27 +19,15 @@
 
 import {Accounts} from 'web3-eth-accounts';
 import {provider} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
+import {AbstractWeb3Module, Web3ModuleOptions, Content} from 'web3-core';
 import * as net from 'net';
 
 export class Txpool extends AbstractWeb3Module {
     constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions, accounts?: Accounts|null);
 
-    content(): Content;
+    content(callback?: (error: Error, result: Content) => void): Promise<Content>;
 
-    inspect(): Content;
+    inspect(callback?: (error: Error, result: Content) => void):  Promise<Content>;
 
-    status(): Status;
+    status(callback?: (error: Error, result: Content) => void): Promise<Content>;
 }
-
-export interface Content {
-    pending: {};
-    queued: {};
-}
-
-export interface Status {
-    pending: Hex;
-    queued: Hex;
-}
-
-export type Hex = string | number;
