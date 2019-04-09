@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'web3-core';
+import {AbstractWeb3Module} from 'conflux-web-core';
 import {formatters} from 'conflux-web-core-helpers';
 
 // $ExpectType number

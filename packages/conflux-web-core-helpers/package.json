@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-core-helpers",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "ConfluxWeb core tools helper for sub packages. This is an internal package.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-core-helpers",
     "license": "LGPL-3.0",
@@ -22,10 +22,13 @@
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2",
-        "web3-core": "1.0.0-beta.52",
+        "conflux-web-core": "*",
+        "conflux-web-core-method": "*",
+        "conflux-web-core-helpers": "*",
+        "conflux-web-providers": "*",
         "web3-core-method": "1.0.0-beta.52",
-        "web3-core-helpers": "1.0.0-beta.52",
-        "web3-providers": "1.0.0-beta.52"
+        "web3-core": "1.0.0-beta.52",
+        "web3-core-helpers": "1.0.0-beta.52"
     },
     "files": [
         "dist",
