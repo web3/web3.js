@@ -19,7 +19,7 @@
 
 import {Accounts} from 'web3-eth-accounts';
 import {provider} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
+import {AbstractWeb3Module, Web3ModuleOptions, Hex} from 'web3-core';
 import * as net from 'net';
 
 export class Miner extends AbstractWeb3Module {
@@ -49,5 +49,3 @@ export class Miner extends AbstractWeb3Module {
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 }
-
-export type Hex = string | number;

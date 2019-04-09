@@ -197,3 +197,5 @@ export interface Log {
     blockHash: string;
     blockNumber: number;
 }
+
+export type Hex = string | number;

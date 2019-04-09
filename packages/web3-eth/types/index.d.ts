@@ -26,7 +26,8 @@ import {
     Transaction,
     TransactionConfig,
     TransactionReceipt,
-    Web3ModuleOptions
+    Web3ModuleOptions,
+    Hex
 } from 'web3-core';
 import {Contract, ContractOptions} from 'web3-eth-contract';
 import {Iban} from 'web3-eth-iban';
@@ -36,6 +37,7 @@ import {Network} from 'web3-net';
 import {Personal} from 'web3-eth-personal';
 import {AbiItem} from 'web3-utils';
 import {Ens} from 'web3-eth-ens';
+import {Miner} from 'web3-eth-miner';
 import * as net from 'net';
 
 export class Eth extends AbstractWeb3Module {
@@ -52,6 +54,7 @@ export class Eth extends AbstractWeb3Module {
     ens: Ens;
     abi: AbiCoder;
     net: Network;
+    miner: Miner;
 
     clearSubscriptions(): Promise<boolean>;
 
@@ -143,6 +146,30 @@ export class Eth extends AbstractWeb3Module {
     submitWork(data: [string, string, string], callback?: (error: Error, result: boolean) => void): Promise<boolean>;
 
     pendingTransactions(callback?: (error: Error, result: []) => void): Promise<[]>;
+
+    setEtherbase(
+        address: string,
+        callback?: (error: Error, result: boolean) => void
+    ): Promise<boolean>;
+
+    setExtra(
+        extraData: string,
+        callback?: (error: Error, result: boolean) => void
+    ): Promise<boolean>;
+
+    setGasPrice(
+        gasPrice: Hex,
+        callback?: (error: Error, result: boolean) => void
+    ): Promise<boolean>;
+
+    startMining(
+        miningThread: Hex,
+        callback?: (error: Error, result: boolean) => void
+    ): Promise<boolean>;
+
+    stopMining(
+        callback?: (error: Error, result: boolean) => void
+    ): Promise<boolean>;
 }
 
 export interface Methods {
