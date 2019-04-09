@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-core-subscriptions",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Manages ConfluxWeb subscriptions. This is an internal package.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-core-subscription",
     "license": "LGPL-3.0",
@@ -21,8 +21,8 @@
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2",
-        "web3-core-helpers": "1.0.0-beta.52",
-        "web3-utils": "1.0.0-beta.52"
+        "conflux-web-core-helpers": "*",
+        "conflux-web-utils": "*"
     },
     "files": [
         "dist"

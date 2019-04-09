@@ -1,13 +1,13 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
+import * as Utils from 'conflux-web-utils';
+import {formatters} from 'conflux-web-core-helpers';
 import LogSubscription from '../../../../src/subscriptions/eth/LogSubscription';
 import AbstractWeb3Module from '../../../__mocks__/AbstractWeb3Module';
 import GetPastLogsMethod from '../../../__mocks__/GetPastLogsMethod';
 import SocketProviderAdapter from '../../../__mocks__/SocketProviderAdapter';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
+jest.mock('conflux-web-utils');
+jest.mock('conflux-web-core-helpers');
 
 /**
  * LogSubscription test

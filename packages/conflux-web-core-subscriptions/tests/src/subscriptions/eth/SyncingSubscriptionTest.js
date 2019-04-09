@@ -1,8 +1,8 @@
-import {formatters} from 'web3-core-helpers';
+import {formatters} from 'conflux-web-core-helpers';
 import SyncingSubscription from '../../../../src/subscriptions/eth/SyncingSubscription';
 
 // Mocks
-jest.mock('web3-core-helpers');
+jest.mock('conflux-web-core-helpers');
 
 /**
  * SyncingSubscription test
