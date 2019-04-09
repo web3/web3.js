@@ -29,7 +29,7 @@ import * as Utils from 'conflux-web-utils';
 import EthTransactionSigner from './signers/TransactionSigner';
 import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';
-import {ProviderResolver} from 'web3-providers';
+import {ProviderResolver} from 'conflux-web-providers';
 import EthModule from './Eth.js';
 
 /**
