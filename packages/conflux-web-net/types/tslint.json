@@ -5,6 +5,7 @@
         "no-import-default-of-export-equals": false,
         "file-name-casing": [true, "kebab-case"],
         "whitespace": false,
-        "no-unnecessary-class": false
+        "no-unnecessary-class": false,
+        "no-null-undefined-union": false
     }
 }
