@@ -26,7 +26,7 @@ import {
     ListeningMethod,
     PeerCountMethod,
     VersionMethod
-} from 'web3-core-method';
+} from '../../../conflux-web-core-method';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**

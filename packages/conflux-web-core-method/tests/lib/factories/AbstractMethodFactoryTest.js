@@ -1,5 +1,5 @@
 import {AbstractWeb3Module} from 'web3-core';
-import {NewHeadsSubscription} from 'web3-core-subscriptions';
+import {NewHeadsSubscription} from 'conflux-web-core-subscriptions';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import AbstractMethodFactory from '../../../lib/factories/AbstractMethodFactory';
 import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
@@ -12,7 +12,7 @@ import GetTransactionCountMethod from '../../../src/methods/account/GetTransacti
 
 // Mocks
 jest.mock('web3-core');
-jest.mock('web3-core-subscriptions');
+jest.mock('conflux-web-core-subscriptions');
 jest.mock('../../../lib/methods/AbstractMethod');
 jest.mock('../../../src/methods/block/GetBlockByNumberMethod');
 jest.mock('../../../src/methods/transaction/GetTransactionReceiptMethod');

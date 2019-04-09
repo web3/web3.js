@@ -1,4 +1,4 @@
-import {GetBlockByNumberMethod, ListeningMethod, PeerCountMethod, VersionMethod} from 'web3-core-method';
+import {GetBlockByNumberMethod, ListeningMethod, PeerCountMethod, VersionMethod} from 'conflux-web-core-method';
 import MethodFactory from '../../../src/factories/MethodFactory';
 
 /**

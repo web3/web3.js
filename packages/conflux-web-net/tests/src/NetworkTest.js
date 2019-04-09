@@ -1,11 +1,11 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
-import {AbstractWeb3Module} from 'web3-core';
+import * as Utils from 'conflux-web-utils';
+import {formatters} from 'conflux-web-core-helpers';
+import {AbstractWeb3Module} from 'conflux-web-core';
 import Network from '../../src/Network';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
+jest.mock('conflux-web-utils');
+jest.mock('conflux-web-core-helpers');
 
 /**
  * Network test

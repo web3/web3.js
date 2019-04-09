@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {NewHeadsSubscription} from 'web3-core-subscriptions';
+import {NewHeadsSubscription} from 'conflux-web-core-subscriptions';
 import GetBlockByNumberMethod from '../../src/methods/block/GetBlockByNumberMethod';
 import GetTransactionReceiptMethod from '../../src/methods/transaction/GetTransactionReceiptMethod';
 import TransactionObserver from '../../src/observers/TransactionObserver';

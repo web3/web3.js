@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {Network} from 'web3-net';
+import {Network} from 'conflux-web-net';
 
 const network = new Network('http://localhost:5000');
 

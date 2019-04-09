@@ -1,13 +1,12 @@
 {
-    "name": "web3-net",
-    "namespace": "ethereum",
+    "name": "conflux-web-net",
     "version": "0.0.1",
-    "description": "Web3 module to interact with the Ethereum nodes networking properties.",
-    "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-net",
+    "description": "ConfluxWeb module to interact with the Conflux nodes networking properties.",
+    "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-net",
     "license": "LGPL-3.0",
-    "main": "dist/web3-net.cjs.js",
-    "module": "dist/web3-net.esm.js",
-    "browser": "dist/web3-net.umd.js",
+    "main": "dist/conflux-web-net.cjs.js",
+    "module": "dist/conflux-web-net.esm.js",
+    "browser": "dist/conflux-web-net.umd.js",
     "types": "types/index.d.ts",
     "scripts": {
         "build": "rollup -c",
@@ -18,11 +17,11 @@
     "dependencies": {
         "@babel/runtime": "^7.3.1",
         "lodash": "^4.17.11",
-        "web3-core": "0.0.1",
-        "web3-core-helpers": "0.0.1",
-        "web3-core-method": "0.0.1",
-        "web3-providers": "0.0.1",
-        "web3-utils": "0.0.1"
+        "conflux-web-core": "*",
+        "conflux-web-core-helpers": "*",
+        "conflux-web-core-method": "*",
+        "web3-providers": "1.0.0-beta.52",
+        "conflux-web-utils": "*"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",

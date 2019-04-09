@@ -18,7 +18,7 @@
  */
 
 import {provider} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
+import {AbstractWeb3Module, Web3ModuleOptions} from 'conflux-web-core';
 import * as net from 'net';
 
 export class Network extends AbstractWeb3Module {
