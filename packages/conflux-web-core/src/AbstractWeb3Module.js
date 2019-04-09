@@ -28,7 +28,7 @@ import {
     BatchRequest,
     ProviderDetector,
     ProviderResolver
-} from 'web3-providers';
+} from 'conflux-web-providers';
 import {MethodProxy} from 'conflux-web-core-method';
 import {toChecksumAddress} from 'conflux-web-utils';
 
