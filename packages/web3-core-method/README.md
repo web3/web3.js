@@ -1,18 +1,17 @@
-# web3-core-method
+# conflux-web-core-method
 
-This is a sub package of [web3.js][repo]
+This is a sub package of [ConfluxWeb.js][repo]
 
-The Method module abstracts the JSON-RPC method and is used within most [web3.js][repo] packages.
+The Method module abstracts the JSON-RPC method and is used within most [ConfluxWeb.js][repo] packages.
 
 ## Installation
 
 ```bash
-npm install web3-core-method
+npm install conflux-web-core-method
 ```
 
 ## Types 
 
 All the typescript typings are placed in the types folder. 
 
-[docs]: http://web3js.readthedocs.io/en/1.0/
-[repo]: https://github.com/ethereum/web3.js
+[repo]: https://github.com/Conflux-Chain/ConfluxWeb

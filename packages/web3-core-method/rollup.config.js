@@ -1,4 +1,4 @@
 import pkg from './package.json';
 import rollupConfig from '../../rollup.config';
 
-export default rollupConfig('Web3CoreMethod', pkg.name);
+export default rollupConfig('ConfluxWebCoreMethod', pkg.name);

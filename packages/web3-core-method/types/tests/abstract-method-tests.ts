@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {AbstractMethod} from 'web3-core-method';
+import {AbstractMethod} from 'conflux-web-core-method';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {AbstractWeb3Module} from 'web3-core';

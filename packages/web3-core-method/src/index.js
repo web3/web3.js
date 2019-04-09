@@ -83,3 +83,6 @@ export CallMethod from './methods/CallMethod';
 export GetStorageAtMethod from './methods/GetStorageAtMethod';
 export EstimateGasMethod from './methods/EstimateGasMethod';
 export GetPastLogsMethod from './methods/GetPastLogsMethod';
+
+// Epoch
+export GetEpochNumberMethod from './methods/epoch/GetEpochNumberMethod';
