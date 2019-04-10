@@ -27,7 +27,7 @@ export default class AbstractGetTransactionFromBlockMethod extends AbstractMetho
      * @param {String} rpcMethod
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @constructor
      */
@@ -40,7 +40,7 @@ export default class AbstractGetTransactionFromBlockMethod extends AbstractMetho
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);

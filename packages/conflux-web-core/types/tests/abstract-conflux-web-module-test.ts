@@ -18,7 +18,7 @@
  */
 import * as net from 'net';
 import {HttpProvider, IpcProvider, WebsocketProvider} from 'conflux-web-providers';
-import {AbstractWeb3Module, Web3ModuleOptions} from 'conflux-web-core';
+import {AbstractConfluxWebModule, ConfluxWebModuleOptions} from 'conflux-web-core';
 
 const options = {
     timeout: 20000,
@@ -31,7 +31,7 @@ const options = {
 };
 const httpProvider = new HttpProvider('http://localhost:8545', options);
 const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', new net.Server());
-const abstractWeb3Module = new AbstractWeb3Module(httpProvider);
+const abstractWeb3Module = new AbstractConfluxWebModule(httpProvider);
 
 // $ExpectType BatchRequest
 new abstractWeb3Module.BatchRequest();
@@ -55,7 +55,7 @@ abstractWeb3Module.defaultGasPrice;
 abstractWeb3Module.defaultGas;
 
 // $ExpectType Providers
-AbstractWeb3Module.providers;
+AbstractConfluxWebModule.providers;
 
 // $ExpectType any
 abstractWeb3Module.givenProvider;

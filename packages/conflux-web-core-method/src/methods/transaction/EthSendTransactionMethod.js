@@ -26,7 +26,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
@@ -54,7 +54,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance - The module where the method is called from for example Eth.
+     * @param {AbstractConfluxWebModule} moduleInstance - The module where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
         if (this.rpcMethod !== 'eth_sendRawTransaction') {

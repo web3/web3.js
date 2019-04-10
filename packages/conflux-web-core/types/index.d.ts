@@ -32,10 +32,10 @@ import {
     WebsocketProviderOptions
 } from 'conflux-web-providers';
 
-export class AbstractWeb3Module {
+export class AbstractConfluxWebModule {
     constructor(
         provider: provider,
-        options?: Web3ModuleOptions,
+        options?: ConfluxWebModuleOptions,
         methodFactory?: AbstractMethodFactory,
         net?: net.Socket | null
     );
@@ -71,7 +71,7 @@ export interface SignedTransaction {
     rawTransaction?: string;
 }
 
-export interface Web3ModuleOptions {
+export interface ConfluxWebModuleOptions {
     defaultAccount?: string;
     defaultBlock?: string | number;
     transactionBlockTimeout?: number;

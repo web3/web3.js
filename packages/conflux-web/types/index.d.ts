@@ -17,18 +17,18 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module, Web3ModuleOptions} from 'conflux-web-core';
+import {AbstractConfluxWebModule, ConfluxWebModuleOptions} from 'conflux-web-core';
 import {Utils} from 'conflux-web-utils';
 import * as net from 'net';
 import {provider} from 'conflux-web-providers';
 import {Cfx} from 'conflux-web-cfx';
 import {Network} from 'conflux-web-net';
 
-export default class Web3 extends AbstractWeb3Module {
+export default class ConfluxWeb extends AbstractConfluxWebModule {
     constructor(
         provider: provider,
         net?: net.Socket,
-        options?: Web3ModuleOptions
+        options?: ConfluxWebModuleOptions
     );
 
     static modules: Modules;

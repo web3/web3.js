@@ -17,13 +17,12 @@
 /**
  * @file Cfx.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @author Yanpei Liu <ypliu@conflux-chain.org>
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 
-export default class Cfx extends AbstractWeb3Module {
+export default class Cfx extends AbstractConfluxWebModule {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {MethodFactory} methodFactory
@@ -359,7 +358,7 @@ export default class Cfx extends AbstractWeb3Module {
     }
 
     /**
-     * Extends setProvider method from AbstractWeb3Module.
+     * Extends setProvider method from AbstractConfluxWebModule.
      * This is required for updating the provider also in the sub packages and objects related to Cfx.
      *
      * @param {Object|String} provider

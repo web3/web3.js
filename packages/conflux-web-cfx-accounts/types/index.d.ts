@@ -17,12 +17,12 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module, SignedTransaction, TransactionConfig, Web3ModuleOptions} from 'conflux-web-core';
+import {AbstractConfluxWebModule, SignedTransaction, TransactionConfig, ConfluxWebModuleOptions} from 'conflux-web-core';
 import {provider} from 'conflux-web-providers';
 import * as net from 'net';
 
-export class Accounts extends AbstractWeb3Module {
-    constructor(provider: provider, net?: net.Socket | null, options?: Web3ModuleOptions);
+export class Accounts extends AbstractConfluxWebModule {
+    constructor(provider: provider, net?: net.Socket | null, options?: ConfluxWebModuleOptions);
 
     create(entropy?: string): Account;
 

@@ -26,12 +26,12 @@ import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';
 import Bytes from 'eth-lib/lib/bytes';
 import {encodeSignature, recover} from 'eth-lib/lib/account'; // TODO: Remove this dependency
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import Account from './models/Account';
 import Wallet from './models/Wallet';
 
 // TODO: Rename Accounts module to Wallet and move the Wallet class to the eth module.
-export default class Accounts extends AbstractWeb3Module {
+export default class Accounts extends AbstractConfluxWebModule {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Object} formatters

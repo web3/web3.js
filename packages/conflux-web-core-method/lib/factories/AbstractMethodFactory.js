@@ -83,7 +83,7 @@ export default class AbstractMethodFactory {
      * Returns an MethodModel
      *
      * @param {String} name
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @returns {AbstractMethod}
      */
@@ -122,7 +122,7 @@ export default class AbstractMethodFactory {
      *
      * @method getTimeout
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @returns {Number}
      */
@@ -141,7 +141,7 @@ export default class AbstractMethodFactory {
      *
      * @method createTransactionObserver
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @returns {TransactionObserver}
      */

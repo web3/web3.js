@@ -72,7 +72,7 @@ export default class TransactionObserver {
     }
 
     /**
-     * Observes the transaction with the newHeads subscriptions which sends the eth_getTransactionReceipt method on each item
+     * Observes the transaction with the newHeads subscriptions which sends the cfx_getTransactionReceipt method on each item
      *
      * @method startSocketObserver
      *
@@ -128,7 +128,7 @@ export default class TransactionObserver {
     }
 
     /**
-     * Observes the transaction with sending eth_getTransactionReceipt and checking if there is really a new block
+     * Observes the transaction with sending cfx_getTransactionReceipt and checking if there is really a new block
      *
      * @method checkOverHttp
      *

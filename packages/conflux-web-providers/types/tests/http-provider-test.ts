@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import {HttpProvider} from 'conflux-web-providers';
 
 const httpProvider = new HttpProvider('http://localhost:8545', {
@@ -40,7 +40,7 @@ httpProvider.send('rpc_method', []);
 // $ExpectType Promise<any[]>
 httpProvider.sendBatch(
     [],
-    new AbstractWeb3Module('http://localhost:7545')
+    new AbstractConfluxWebModule('http://localhost:7545')
 );
 
 // $ExpectType boolean

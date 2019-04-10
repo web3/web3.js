@@ -12,35 +12,35 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file web3-test.ts
+ * @file conflux-web-test.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import Web3 from 'conflux-web';
+import ConfluxWeb from 'conflux-web';
 
 // $ExpectType Modules
-Web3.modules;
+ConfluxWeb.modules;
 
 // $ExpectType any
-Web3.givenProvider;
+ConfluxWeb.givenProvider;
 
 // $ExpectType Providers
-Web3.providers;
+ConfluxWeb.providers;
 
-const web3 = new Web3('https://localhost:5000/');
+const confluxWeb = new ConfluxWeb('https://localhost:5000/');
 
 // $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
-web3.currentProvider;
+confluxWeb.currentProvider;
 
 // $ExpectType Utils
-web3.utils;
+confluxWeb.utils;
 
 // $ExpectType string
-web3.version;
+confluxWeb.version;
 
 // $ExpectType Cfx
-web3.cfx;
+confluxWeb.cfx;
 
 // $ExpectType BatchRequest
-new web3.BatchRequest();
+new confluxWeb.BatchRequest();

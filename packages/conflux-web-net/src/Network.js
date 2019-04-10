@@ -20,10 +20,10 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import isFunction from 'lodash/isFunction';
 
-export default class Network extends AbstractWeb3Module {
+export default class Network extends AbstractConfluxWebModule {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {MethodFactory} methodFactory

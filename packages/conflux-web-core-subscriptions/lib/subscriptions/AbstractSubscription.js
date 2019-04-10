@@ -33,7 +33,7 @@ export default class AbstractSubscription extends EventEmitter {
      * @param {Object} options
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @constructor
      */
@@ -53,7 +53,7 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @method beforeSubscription
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      */
     beforeSubscription(moduleInstance) {}
 

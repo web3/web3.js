@@ -26,7 +26,7 @@ export default class GetBlockUncleCountMethod extends AbstractGetBlockUncleCount
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @constructor
      */
@@ -39,7 +39,7 @@ export default class GetBlockUncleCountMethod extends AbstractGetBlockUncleCount
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      */
     beforeExecution(moduleInstance) {
         if (this.isHash(this.parameters[0])) {

@@ -39,7 +39,7 @@ export default class ProvidersModuleFactory {
      *
      * @method createBatchRequest
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @returns {BatchRequest}
      */

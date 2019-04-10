@@ -26,7 +26,7 @@ export default class SyncingSubscription extends AbstractSubscription {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @constructor
      */

@@ -21,14 +21,14 @@
  */
 
 import * as net from 'net';
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import {ProvidersModuleFactory} from 'conflux-web-providers';
 
 const providersModuleFactory = new ProvidersModuleFactory();
 
 // $ExpectType BatchRequest
 providersModuleFactory.createBatchRequest(
-    new AbstractWeb3Module('http://localhost:7545')
+    new AbstractConfluxWebModule('http://localhost:7545')
 );
 
 // $ExpectType ProviderResolver

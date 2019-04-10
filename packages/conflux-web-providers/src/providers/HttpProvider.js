@@ -117,7 +117,7 @@ export default class HttpProvider {
      * @method sendBatch
      *
      * @param {AbstractMethod[]} methods
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @returns Promise<Object|Error>
      */

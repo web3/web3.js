@@ -1,4 +1,4 @@
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import {GetAccountsMethod} from 'conflux-web-core-method';
 import EthGetAccountsMethod from '../../../src/methods/EthGetAccountsMethod';
 
@@ -15,7 +15,7 @@ describe('EthGetAccountsMethodTest', () => {
         accountsMock = {};
         accountsMock.wallet = {0: {privateKey: '0x0', address: '0x0'}, accountsIndex: 1};
 
-        new AbstractWeb3Module({}, {}, {}, {});
+        new AbstractConfluxWebModule({}, {}, {}, {});
         moduleInstanceMock = {};
         moduleInstanceMock.accounts = accountsMock;
 

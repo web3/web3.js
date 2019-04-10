@@ -26,7 +26,7 @@ export default class SignTransactionMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @constructor
      */
@@ -39,7 +39,7 @@ export default class SignTransactionMethod extends AbstractMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from.
+     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from.
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);

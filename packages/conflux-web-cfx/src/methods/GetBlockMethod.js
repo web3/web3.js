@@ -26,7 +26,7 @@ export default class GetBlockMethod extends AbstractGetBlockMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @constructor
      */
@@ -39,7 +39,7 @@ export default class GetBlockMethod extends AbstractGetBlockMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      */
     beforeExecution(moduleInstance) {
         if (this.isHash(this.parameters[0])) {

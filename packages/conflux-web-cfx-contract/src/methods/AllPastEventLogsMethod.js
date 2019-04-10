@@ -26,7 +26,7 @@ export default class AllPastEventLogsMethod extends GetPastLogsMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
      * @param {AllEventsOptionsMapper} allEventsOptionsMapper
@@ -45,7 +45,7 @@ export default class AllPastEventLogsMethod extends GetPastLogsMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
         super.beforeExecution(moduleInstance);

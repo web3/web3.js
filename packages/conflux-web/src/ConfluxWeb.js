@@ -1,11 +1,11 @@
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import {ProviderDetector, ProvidersModuleFactory} from 'conflux-web-providers';
 import * as Utils from 'conflux-web-utils';
 import {Cfx} from 'conflux-web-cfx';
 import {Network} from 'conflux-web-net';
 import {version} from '../package.json';
 
-export default class ConfluxWeb extends AbstractWeb3Module {
+export default class ConfluxWeb extends AbstractConfluxWebModule {
     /**
      * @param {AbstractSocketProvider|HttpProvider|CustomProvider|String} provider
      * @param {Net} net
@@ -206,7 +206,7 @@ export default class ConfluxWeb extends AbstractWeb3Module {
     }
 
     /**
-     * Returns an object with all public web3 modules
+     * Returns an object with all public conflux-web modules
      *
      * @returns {Object}
      */

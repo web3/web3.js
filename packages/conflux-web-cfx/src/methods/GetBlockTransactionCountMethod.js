@@ -26,7 +26,7 @@ export default class GetBlockTransactionCountMethod extends AbstractGetBlockTran
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @constructor
      */
@@ -41,7 +41,7 @@ export default class GetBlockTransactionCountMethod extends AbstractGetBlockTran
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      */
     beforeExecution(moduleInstance) {
         if (this.isHash(this.parameters[0])) {

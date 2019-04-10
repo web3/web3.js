@@ -1,6 +1,6 @@
 import {formatters} from 'conflux-web-core-helpers';
 import {WebsocketProvider} from 'conflux-web-providers';
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import * as Utils from 'conflux-web-utils';
 import TransactionSigner from '../../../__mocks__/TransactionSigner';
 import ChainIdMethod from '../../../../src/methods/network/ChainIdMethod';
@@ -37,8 +37,8 @@ describe('EthSendTransactionMethodTest', () => {
             return Promise.resolve('0x0');
         });
 
-        new AbstractWeb3Module(providerMock, {}, {}, {});
-        moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        new AbstractConfluxWebModule(providerMock, {}, {}, {});
+        moduleInstanceMock = AbstractConfluxWebModule.mock.instances[0];
         moduleInstanceMock.currentProvider = providerMock;
 
         transactionSignerMock = new TransactionSigner();

@@ -30,7 +30,7 @@ export default class AbstractMethod {
      * @param {Number} parametersAmount
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @constructor
      */
@@ -50,7 +50,7 @@ export default class AbstractMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {}
 

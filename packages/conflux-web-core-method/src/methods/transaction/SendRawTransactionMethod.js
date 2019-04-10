@@ -26,7 +26,7 @@ export default class SendRawTransactionMethod extends AbstractObservedTransactio
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      * @param {TransactionObserver} transactionObserver
      *
      * @constructor

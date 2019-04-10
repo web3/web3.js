@@ -20,10 +20,10 @@
 import {AbstractMethod} from 'conflux-web-core-method';
 import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 
-const abstractWeb3Module = new AbstractWeb3Module('http://localhost:8545');
-const abstractMethod = new AbstractMethod('rpc_method', 1, Utils, formatters, abstractWeb3Module);
+const abstractConfluxWebModule = new AbstractConfluxWebModule('http://localhost:8545');
+const abstractMethod = new AbstractMethod('rpc_method', 1, Utils, formatters, abstractConfluxWebModule);
 
 // $ExpectType Utils
 abstractMethod.utils;
@@ -59,7 +59,7 @@ abstractMethod.hasWallets();
 abstractMethod.callback('error', 'response');
 
 // $ExpectType void
-abstractMethod.beforeExecution(abstractWeb3Module);
+abstractMethod.beforeExecution(abstractConfluxWebModule);
 
 // $ExpectType any
 abstractMethod.afterExecution('response');

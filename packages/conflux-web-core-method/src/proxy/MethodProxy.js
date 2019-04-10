@@ -22,7 +22,7 @@
 
 export default class MethodProxy {
     /**
-     * @param {AbstractWeb3Module} target
+     * @param {AbstractConfluxWebModule} target
      * @param {AbstractMethodFactory} methodFactory
      *
      * @constructor
@@ -30,7 +30,7 @@ export default class MethodProxy {
     constructor(target, methodFactory) {
         return new Proxy(target, {
             /**
-             * @param {AbstractWeb3Module} target
+             * @param {AbstractConfluxWebModule} target
              * @param {String|Symbol} name
              *
              * @returns {any}

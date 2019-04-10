@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 
 export class formatters {
     static outputBigNumberFormatter(number: number): number;
@@ -28,7 +28,7 @@ export class formatters {
 
     static isPredefinedBlockNumber(blockNumber: string): boolean;
 
-    static inputDefaultBlockNumberFormatter(blockNumber: string, moduleInstance: AbstractWeb3Module): string;
+    static inputDefaultBlockNumberFormatter(blockNumber: string, moduleInstance: AbstractConfluxWebModule): string;
 
     static inputBlockNumberFormatter(blockNumber: string | number): string | number;
 

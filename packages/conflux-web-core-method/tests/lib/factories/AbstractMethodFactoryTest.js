@@ -1,4 +1,4 @@
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import {NewHeadsSubscription} from 'conflux-web-core-subscriptions';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import AbstractMethodFactory from '../../../lib/factories/AbstractMethodFactory';
@@ -66,8 +66,8 @@ describe('AbstractMethodFactoryTest', () => {
     });
 
     it('calls createMethod and returns a object of type AbstractMethod', () => {
-        new AbstractWeb3Module();
-        const moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        new AbstractConfluxWebModule();
+        const moduleInstanceMock = AbstractConfluxWebModule.mock.instances[0];
 
         expect(abstractMethodFactory.hasMethod('send')).toEqual(true);
 
@@ -77,8 +77,8 @@ describe('AbstractMethodFactoryTest', () => {
     });
 
     it('calls createMethod and returns a object of type AbstractObservedTransactionMethod', () => {
-        new AbstractWeb3Module();
-        const moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        new AbstractConfluxWebModule();
+        const moduleInstanceMock = AbstractConfluxWebModule.mock.instances[0];
         moduleInstanceMock.currentProvider = {supportsSubscriptions: jest.fn()};
         moduleInstanceMock.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
 
@@ -102,8 +102,8 @@ describe('AbstractMethodFactoryTest', () => {
     });
 
     it('calls createMethod and returns a object of type EthSendTransactionMethod', () => {
-        new AbstractWeb3Module();
-        const moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        new AbstractConfluxWebModule();
+        const moduleInstanceMock = AbstractConfluxWebModule.mock.instances[0];
         moduleInstanceMock.currentProvider = {supportsSubscriptions: jest.fn()};
         moduleInstanceMock.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
 
@@ -129,8 +129,8 @@ describe('AbstractMethodFactoryTest', () => {
     });
 
     it('calls createMethod with a socket provider and returns a object of type AbstractObservedTransactionMethod', () => {
-        new AbstractWeb3Module();
-        const moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        new AbstractConfluxWebModule();
+        const moduleInstanceMock = AbstractConfluxWebModule.mock.instances[0];
         moduleInstanceMock.currentProvider = {supportsSubscriptions: jest.fn()};
         moduleInstanceMock.currentProvider.supportsSubscriptions.mockReturnValueOnce(true);
 

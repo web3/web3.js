@@ -26,7 +26,7 @@ export default class GetBlockUncleCountByBlockHashMethod extends AbstractGetBloc
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @constructor
      */

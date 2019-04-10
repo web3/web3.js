@@ -1,4 +1,4 @@
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import AbstractMethodFactory from '../../../lib/factories/AbstractMethodFactory';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import MethodProxy from '../../../src/proxy/MethodProxy';
@@ -18,8 +18,8 @@ describe('MethodProxyTest', () => {
         new AbstractMethodFactory({}, {});
         methodFactoryMock = AbstractMethodFactory.mock.instances[0];
 
-        new AbstractWeb3Module();
-        moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        new AbstractConfluxWebModule();
+        moduleInstanceMock = AbstractConfluxWebModule.mock.instances[0];
 
         new AbstractMethod('TEST', 0, {}, {}, {});
         methodMock = AbstractMethod.mock.instances[0];

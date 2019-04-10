@@ -1,6 +1,6 @@
 import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import {SignMethod} from 'conflux-web-core-method';
 import EthSignMethod from '../../../src/methods/EthSignMethod';
 
@@ -21,8 +21,8 @@ describe('EthSignMethodTest', () => {
         accountsMock.wallet = {'0x0': {privateKey: '0x0', address: '0x0'}};
         accountsMock.accountsIndex = 1;
 
-        new AbstractWeb3Module({}, {}, {}, {});
-        moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        new AbstractConfluxWebModule({}, {}, {}, {});
+        moduleInstanceMock = AbstractConfluxWebModule.mock.instances[0];
         moduleInstanceMock.accounts = accountsMock;
 
         formatters.inputAddressFormatter.mockReturnValue('0x0');

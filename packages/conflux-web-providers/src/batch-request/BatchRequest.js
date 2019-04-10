@@ -26,7 +26,7 @@ import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class BatchRequest {
     /**
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @constructor
      */

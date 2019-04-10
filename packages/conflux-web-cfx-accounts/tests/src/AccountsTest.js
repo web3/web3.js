@@ -7,7 +7,7 @@ import {encodeSignature, recover} from 'eth-lib/lib/account';
 import TransactionSigner from '../__mocks__/TransactionSigner';
 import Accounts from '../../src/Accounts';
 import Account from '../../src/models/Account';
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 
 // Mocks
 jest.mock('conflux-web-utils');
@@ -51,7 +51,7 @@ describe('AccountsTest', () => {
 
         expect(accounts.accountsIndex).toEqual(0);
 
-        expect(accounts).toBeInstanceOf(AbstractWeb3Module);
+        expect(accounts).toBeInstanceOf(AbstractConfluxWebModule);
     });
 
     it('calls create with the entropy parameter and returns the expected object', () => {

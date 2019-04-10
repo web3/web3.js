@@ -30,7 +30,6 @@ import CfxModule from './Cfx.js';
 /**
  * @file index.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @author Yanpei Liu <ypliu@conflux-chain.org>
  * @date 2018
  */
 

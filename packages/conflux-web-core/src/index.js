@@ -20,4 +20,4 @@
  * @date 2018
  */
 
-export AbstractWeb3Module from './AbstractWeb3Module.js';
+export AbstractConfluxWebModule from './AbstractConfluxWebModule.js';

@@ -43,7 +43,7 @@ export default class SubscriptionsFactory {
      *
      * @method getSubscription
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      * @param {String} type
      * @param {Object} options
      *

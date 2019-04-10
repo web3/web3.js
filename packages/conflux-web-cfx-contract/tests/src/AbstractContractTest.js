@@ -1,7 +1,7 @@
 import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
 import {AbiCoder} from 'conflux-web-cfx-abi';
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import AbiMapper from '../../src/mappers/AbiMapper';
 import AbiModel from '../../src/models/AbiModel';
 import MethodsProxy from '../../src/proxies/MethodsProxy';
@@ -123,7 +123,7 @@ describe('AbstractContractTest', () => {
 
         expect(abstractContract.events).toEqual(eventSubscriptionsProxyMock);
 
-        expect(abstractContract).toBeInstanceOf(AbstractWeb3Module);
+        expect(abstractContract).toBeInstanceOf(AbstractConfluxWebModule);
     });
 
     it('calls once and throws an error because no callback is defined', () => {

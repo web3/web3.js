@@ -18,14 +18,14 @@
  */
 
 import {provider} from 'conflux-web-providers';
-import {AbstractWeb3Module, Web3ModuleOptions} from 'conflux-web-core';
+import {AbstractConfluxWebModule, ConfluxWebModuleOptions} from 'conflux-web-core';
 import * as net from 'net';
 
-export class Network extends AbstractWeb3Module {
+export class Network extends AbstractConfluxWebModule {
     constructor(
         provider: provider,
         net?: net.Socket|null,
-        options?: Web3ModuleOptions
+        options?: ConfluxWebModuleOptions
     );
 
     getNetworkType(callback?: (error: Error, returnValue: string) => void): Promise<string>;

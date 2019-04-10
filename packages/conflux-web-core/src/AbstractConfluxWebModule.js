@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file AbstractWeb3Module.js
+ * @file AbstractConfluxWebModule.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -32,7 +32,7 @@ import {
 import {MethodProxy} from 'conflux-web-core-method';
 import {toChecksumAddress} from 'conflux-web-utils';
 
-export default class AbstractWeb3Module {
+export default class AbstractConfluxWebModule {
     /**
      * @param {AbstractSocketProvider|HttpProvider|String|EthereumProvider} provider
      * @param {Object} options
@@ -42,7 +42,7 @@ export default class AbstractWeb3Module {
      * @constructor
      */
     constructor(provider, options = {}, methodFactory = null, nodeNet = null) {
-        // ProviderDetector and ProviderResolver are created in the constructor for providing a simpler Web3 Module API.
+        // ProviderDetector and ProviderResolver are created in the constructor for providing a simpler ConfluxWeb Module API.
         this.providerResolver = new ProviderResolver();
         this.givenProvider = ProviderDetector.detect();
 
@@ -197,7 +197,7 @@ export default class AbstractWeb3Module {
     }
 
     /**
-     * Returns a object with factory methods for the Web3 providers.
+     * Returns a object with factory methods for the ConfluxWeb providers.
      *
      * @property providers
      *
@@ -224,7 +224,7 @@ export default class AbstractWeb3Module {
 
     /**
      * TODO: Add utils and formatters as dependency or create the core-types module and pass the factory to the
-     * TODO: AbstractWeb3Module (factory.createAddress())
+     * TODO: AbstractConfluxWebModule (factory.createAddress())
      *
      * Sets the defaultAccount of the current object
      *

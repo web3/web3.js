@@ -20,18 +20,18 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import {AbstractMethod} from 'conflux-web-core-method';
 import {BatchRequest} from 'conflux-web-providers';
 import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
 
 const batchRequest = new BatchRequest(
-    new AbstractWeb3Module('http://localhost:7545')
+    new AbstractConfluxWebModule('http://localhost:7545')
 );
 
 // $ExpectType void
-batchRequest.add(new AbstractMethod('eth_coinbase', 1, Utils, new formatters(), new AbstractWeb3Module('http://localhost:7545')));
+batchRequest.add(new AbstractMethod('eth_coinbase', 1, Utils, new formatters(), new AbstractConfluxWebModule('http://localhost:7545')));
 
 // $ExpectType Promise<{ methods: AbstractMethod[]; response: any[]; } | Error[]>
 batchRequest.execute();

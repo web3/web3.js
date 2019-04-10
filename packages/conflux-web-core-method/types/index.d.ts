@@ -18,7 +18,7 @@
  */
 
 import {Utils} from 'conflux-web-utils';
-import {AbstractWeb3Module, PromiEvent} from 'conflux-web-core';
+import {AbstractConfluxWebModule, PromiEvent} from 'conflux-web-core';
 import {formatters} from 'conflux-web-core-helpers';
 
 export class AbstractMethod {
@@ -27,7 +27,7 @@ export class AbstractMethod {
         parametersAmount: number,
         utils: Utils,
         formatters: formatters,
-        moduleInstance: AbstractWeb3Module
+        moduleInstance: AbstractConfluxWebModule
     );
 
     utils: Utils;
@@ -47,7 +47,7 @@ export class AbstractMethod {
 
     callback(error: string | Error, response: any): void;
 
-    beforeExecution(moduleInstance: AbstractWeb3Module): void;
+    beforeExecution(moduleInstance: AbstractConfluxWebModule): void;
 
     afterExecution(response: any): any;
 
@@ -62,5 +62,5 @@ export class AbstractMethodFactory {
     methods: null | object;
     hasMethod: boolean;
 
-    createMethod(name: string, moduleInstance: AbstractWeb3Module): AbstractMethod;
+    createMethod(name: string, moduleInstance: AbstractConfluxWebModule): AbstractMethod;
 }

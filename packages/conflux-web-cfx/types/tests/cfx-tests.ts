@@ -12,7 +12,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file eth-tests.ts
+ * @file cfx-tests.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
@@ -20,253 +20,253 @@
 import {Log, Transaction, TransactionReceipt, RLPEncodedTransaction} from 'conflux-web-core';
 import {Cfx, BlockHeader, Syncing, Block} from 'conflux-web-cfx';
 
-const eth = new Cfx('http://localhost:8545');
+const cfx = new Cfx('http://localhost:8545');
 
 // $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => Contract
-eth.Contract;
+cfx.Contract;
 
 // $ExpectType Accounts
-eth.accounts;
+cfx.accounts;
 
 // $ExpectType AbiCoder
-eth.abi;
+cfx.abi;
 
 // $ExpectType Network
-eth.net;
+cfx.net;
 
-eth.clearSubscriptions();
-
-// $ExpectType Subscription<Log>
-eth.subscribe('logs');
+cfx.clearSubscriptions();
 
 // $ExpectType Subscription<Log>
-eth.subscribe('logs', {});
+cfx.subscribe('logs');
+
 // $ExpectType Subscription<Log>
-eth.subscribe('logs', {}, (error: Error, log: Log) => {});
+cfx.subscribe('logs', {});
+// $ExpectType Subscription<Log>
+cfx.subscribe('logs', {}, (error: Error, log: Log) => {});
 
 // $ExpectType Subscription<Syncing>
-eth.subscribe('syncing');
+cfx.subscribe('syncing');
 // $ExpectType Subscription<Syncing>
-eth.subscribe('syncing', null, (error: Error, result: Syncing) => {});
+cfx.subscribe('syncing', null, (error: Error, result: Syncing) => {});
 
 // $ExpectType Subscription<BlockHeader>
-eth.subscribe('newBlockHeaders');
+cfx.subscribe('newBlockHeaders');
 // $ExpectType Subscription<BlockHeader>
-eth.subscribe('newBlockHeaders', null, (error: Error, blockHeader: BlockHeader) => {});
+cfx.subscribe('newBlockHeaders', null, (error: Error, blockHeader: BlockHeader) => {});
 
 // $ExpectType Subscription<string>
-eth.subscribe('pendingTransactions');
+cfx.subscribe('pendingTransactions');
 // $ExpectType Subscription<string>
-eth.subscribe('pendingTransactions', null, (error: Error, transactionHash: string) => {});
+cfx.subscribe('pendingTransactions', null, (error: Error, transactionHash: string) => {});
 
 // $ExpectType Providers
 Cfx.providers;
 
 // $ExpectType any
-eth.givenProvider;
+cfx.givenProvider;
 
 // $ExpectType BatchRequest
-new eth.BatchRequest();
+new cfx.BatchRequest();
 
 // $ExpectType string | null
-eth.defaultAccount;
+cfx.defaultAccount;
 
 // $ExpectType string | number
-eth.defaultBlock;
+cfx.defaultBlock;
 
 // $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
-eth.currentProvider;
+cfx.currentProvider;
 
 // $ExpectType Promise<string>
-eth.getProtocolVersion();
+cfx.getProtocolVersion();
 // $ExpectType Promise<string>
-eth.getProtocolVersion((error: Error, protocolVersion: string) => {});
+cfx.getProtocolVersion((error: Error, protocolVersion: string) => {});
 
 // $ExpectType Promise<boolean | Syncing>
-eth.isSyncing();
+cfx.isSyncing();
 // $ExpectType Promise<boolean | Syncing>
-eth.isSyncing((error: Error, syncing: Syncing) => {});
+cfx.isSyncing((error: Error, syncing: Syncing) => {});
 
 // $ExpectType Promise<string>
-eth.getCoinbase();
+cfx.getCoinbase();
 // $ExpectType Promise<string>
-eth.getCoinbase((error: Error, coinbaseAddress: string) => {});
+cfx.getCoinbase((error: Error, coinbaseAddress: string) => {});
 
 // $ExpectType Promise<boolean>
-eth.isMining();
+cfx.isMining();
 // $ExpectType Promise<boolean>
-eth.isMining((error: Error, mining: boolean) => {});
+cfx.isMining((error: Error, mining: boolean) => {});
 
 // $ExpectType Promise<number>
-eth.getHashrate();
+cfx.getHashrate();
 // $ExpectType Promise<number>
-eth.getHashrate((error: Error, hashes: number) => {});
+cfx.getHashrate((error: Error, hashes: number) => {});
 
 // $ExpectType Promise<string>
-eth.getGasPrice();
+cfx.getGasPrice();
 // $ExpectType Promise<string>
-eth.getGasPrice((error: Error, gasPrice: string) => {});
+cfx.getGasPrice((error: Error, gasPrice: string) => {});
 
 // $ExpectType Promise<string[]>
-eth.getAccounts();
+cfx.getAccounts();
 // $ExpectType Promise<string[]>
-eth.getAccounts((error: Error, accounts: string[]) => {});
+cfx.getAccounts((error: Error, accounts: string[]) => {});
 
 // $ExpectType Promise<number>
-eth.getBlockNumber();
+cfx.getBlockNumber();
 // $ExpectType Promise<number>
-eth.getBlockNumber((error: Error, blockNumber: number) => {});
+cfx.getBlockNumber((error: Error, blockNumber: number) => {});
 
 // $ExpectType Promise<string>
-eth.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
+cfx.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
 // $ExpectType Promise<string>
-eth.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000');
+cfx.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000');
 // $ExpectType Promise<string>
-eth.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000', (error: Error, balance: string) => {});
+cfx.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000', (error: Error, balance: string) => {});
 // $ExpectType Promise<string>
-eth.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000);
+cfx.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000);
 // $ExpectType Promise<string>
-eth.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000, (error: Error, balance: string) => {});
+cfx.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000, (error: Error, balance: string) => {});
 
 // $ExpectType Promise<string>
-eth.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2);
+cfx.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2);
 // $ExpectType Promise<string>
-eth.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2, '1000');
+cfx.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2, '1000');
 // $ExpectType Promise<string>
-eth.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2, '1000', (error: Error, balance: string) => {});
+cfx.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2, '1000', (error: Error, balance: string) => {});
 // $ExpectType Promise<string>
-eth.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2, 1000);
+cfx.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2, 1000);
 // $ExpectType Promise<string>
-eth.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2, 1000, (error: Error, balance: string) => {});
+cfx.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2, 1000, (error: Error, balance: string) => {});
 
 // $ExpectType Promise<string>
-eth.getCode('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
+cfx.getCode('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
 // $ExpectType Promise<string>
-eth.getCode('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000');
+cfx.getCode('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000');
 // $ExpectType Promise<string>
-eth.getCode('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000', (error: Error, balance: string) => {});
+cfx.getCode('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000', (error: Error, balance: string) => {});
 // $ExpectType Promise<string>
-eth.getCode('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000);
+cfx.getCode('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000);
 // $ExpectType Promise<string>
-eth.getCode('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000, (error: Error, balance: string) => {});
+cfx.getCode('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000, (error: Error, balance: string) => {});
 
 // $ExpectType Promise<Block>
-eth.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
+cfx.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
 // $ExpectType Promise<Block>
-eth.getBlock(345);
+cfx.getBlock(345);
 // $ExpectType Promise<Block>
-eth.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', true);
+cfx.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', true);
 // $ExpectType Promise<Block>
-eth.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', false);
+cfx.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', false);
 // $ExpectType Promise<Block>
-eth.getBlock(345);
+cfx.getBlock(345);
 // $ExpectType Promise<Block>
-eth.getBlock(345, true);
+cfx.getBlock(345, true);
 // $ExpectType Promise<Block>
-eth.getBlock(345, false);
+cfx.getBlock(345, false);
 // $ExpectType Promise<Block>
-eth.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', (error: Error, block: Block) => {});
+cfx.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', (error: Error, block: Block) => {});
 // $ExpectType Promise<Block>
-eth.getBlock(345, (error: Error, block: Block) => {});
+cfx.getBlock(345, (error: Error, block: Block) => {});
 // $ExpectType Promise<Block>
-eth.getBlock(345, true, (error: Error, block: Block) => {});
+cfx.getBlock(345, true, (error: Error, block: Block) => {});
 // $ExpectType Promise<Block>
-eth.getBlock(345, false, (error: Error, block: Block) => {});
+cfx.getBlock(345, false, (error: Error, block: Block) => {});
 // $ExpectType Promise<Block>
-eth.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', true, (error: Error, block: Block) => {});
+cfx.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', true, (error: Error, block: Block) => {});
 // $ExpectType Promise<Block>
-eth.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', false, (error: Error, block: Block) => {});
+cfx.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', false, (error: Error, block: Block) => {});
 
 // $ExpectType Promise<number>
-eth.getBlockTransactionCount(
+cfx.getBlockTransactionCount(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
     (error: Error, numberOfTransactions: number) => {}
 );
 // $ExpectType Promise<number>
-eth.getBlockTransactionCount(345);
+cfx.getBlockTransactionCount(345);
 // $ExpectType Promise<number>
-eth.getBlockTransactionCount(
+cfx.getBlockTransactionCount(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
     (error: Error, numberOfTransactions: number) => {}
 );
 // $ExpectType Promise<number>
-eth.getBlockTransactionCount(345);
+cfx.getBlockTransactionCount(345);
 
 // $ExpectType Promise<Block>
-eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4);
+cfx.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4);
 // $ExpectType Promise<Block>
-eth.getUncle(345, 4);
+cfx.getUncle(345, 4);
 // $ExpectType Promise<Block>
-eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, true);
+cfx.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, true);
 // $ExpectType Promise<Block>
-eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, false);
+cfx.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, false);
 // $ExpectType Promise<Block>
-eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, (error: Error, uncle: {}) => {});
+cfx.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, (error: Error, uncle: {}) => {});
 // $ExpectType Promise<Block>
-eth.getUncle(345, 4, (error: Error, uncle: {}) => {});
+cfx.getUncle(345, 4, (error: Error, uncle: {}) => {});
 // $ExpectType Promise<Block>
-eth.getUncle(345, 4, true);
+cfx.getUncle(345, 4, true);
 // $ExpectType Promise<Block>
-eth.getUncle(345, 4, false);
+cfx.getUncle(345, 4, false);
 // $ExpectType Promise<Block>
-eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, true, (error: Error, uncle: {}) => {});
+cfx.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, true, (error: Error, uncle: {}) => {});
 // $ExpectType Promise<Block>
-eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, false, (error: Error, uncle: {}) => {});
+cfx.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, false, (error: Error, uncle: {}) => {});
 // $ExpectType Promise<Block>
-eth.getUncle(345, 4, true, (error: Error, uncle: {}) => {});
+cfx.getUncle(345, 4, true, (error: Error, uncle: {}) => {});
 // $ExpectType Promise<Block>
-eth.getUncle(345, 4, false, (error: Error, uncle: {}) => {});
+cfx.getUncle(345, 4, false, (error: Error, uncle: {}) => {});
 
 // $ExpectType Promise<Transaction>
-eth.getTransaction('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
+cfx.getTransaction('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
 // $ExpectType Promise<Transaction>
-eth.getTransaction('0x407d73d8a49eeb85d32cf465507dd71d507100c1', (error: Error, transaction: Transaction) => {});
+cfx.getTransaction('0x407d73d8a49eeb85d32cf465507dd71d507100c1', (error: Error, transaction: Transaction) => {});
 
 // $ExpectType Promise<Transaction>
-eth.getTransactionFromBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2);
+cfx.getTransactionFromBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2);
 // $ExpectType Promise<Transaction>
-eth.getTransactionFromBlock(345, 2);
+cfx.getTransactionFromBlock(345, 2);
 // $ExpectType Promise<Transaction>
-eth.getTransactionFromBlock(
+cfx.getTransactionFromBlock(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
     2,
     (error: Error, transaction: Transaction) => {}
 );
 // $ExpectType Promise<Transaction>
-eth.getTransactionFromBlock(345, 2, (error: Error, transaction: Transaction) => {});
+cfx.getTransactionFromBlock(345, 2, (error: Error, transaction: Transaction) => {});
 
 // $ExpectType Promise<TransactionReceipt>
-eth.getTransactionReceipt('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
+cfx.getTransactionReceipt('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
 // $ExpectType Promise<TransactionReceipt>
-eth.getTransactionReceipt(
+cfx.getTransactionReceipt(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
     (error: Error, transactionReceipt: TransactionReceipt) => {}
 );
 
 // $ExpectType Promise<number>
-eth.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
+cfx.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
 // $ExpectType Promise<number>
-eth.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000);
+cfx.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000);
 // $ExpectType Promise<number>
-eth.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000');
+cfx.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000');
 // $ExpectType Promise<number>
-eth.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', (error: Error, count: number) => {});
+cfx.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', (error: Error, count: number) => {});
 // $ExpectType Promise<number>
-eth.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', (error: Error, count: number) => {});
+cfx.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', (error: Error, count: number) => {});
 // $ExpectType Promise<number>
-eth.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000, (error: Error, count: number) => {});
+cfx.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000, (error: Error, count: number) => {});
 // $ExpectType Promise<number>
-eth.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000', (error: Error, count: number) => {});
+cfx.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000', (error: Error, count: number) => {});
 
 const code = '603d80600c6000396000f3007c0';
 
 // $ExpectType PromiEvent<TransactionReceipt>
-eth.sendTransaction({
+cfx.sendTransaction({
     from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
     data: 'code'
 });
 // $ExpectType PromiEvent<TransactionReceipt>
-eth.sendTransaction(
+cfx.sendTransaction(
     {
         from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
         data: 'code'
@@ -275,21 +275,21 @@ eth.sendTransaction(
 );
 
 // $ExpectType PromiEvent<TransactionReceipt>
-eth.sendSignedTransaction('0xf889808609184e72a0008227109');
+cfx.sendSignedTransaction('0xf889808609184e72a0008227109');
 // $ExpectType PromiEvent<TransactionReceipt>
-eth.sendSignedTransaction('0xf889808609184e72a0008227109', (error: Error, gas: string) => {});
+cfx.sendSignedTransaction('0xf889808609184e72a0008227109', (error: Error, gas: string) => {});
 
 // $ExpectType Promise<string>
-eth.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe');
+cfx.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe');
 // $ExpectType Promise<string>
-eth.sign('Hello world', 3);
+cfx.sign('Hello world', 3);
 // $ExpectType Promise<string>
-eth.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', (error: Error, signature: string) => {});
+cfx.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', (error: Error, signature: string) => {});
 // $ExpectType Promise<string>
-eth.sign('Hello world', 3, (error: Error, signature: string) => {});
+cfx.sign('Hello world', 3, (error: Error, signature: string) => {});
 
 // $ExpectType Promise<RLPEncodedTransaction>
-eth.signTransaction({
+cfx.signTransaction({
     from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
     gasPrice: '20000000000',
     gas: '21000',
@@ -298,7 +298,7 @@ eth.signTransaction({
     data: ''
 });
 // $ExpectType Promise<RLPEncodedTransaction>
-eth.signTransaction(
+cfx.signTransaction(
     {
         from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
         gasPrice: '20000000000',
@@ -310,7 +310,7 @@ eth.signTransaction(
     '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0'
 );
 // $ExpectType Promise<RLPEncodedTransaction>
-eth.signTransaction(
+cfx.signTransaction(
     {
         from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
         gasPrice: '20000000000',
@@ -322,7 +322,7 @@ eth.signTransaction(
     (error: Error, signedTransaction: RLPEncodedTransaction) => {}
 );
 // $ExpectType Promise<RLPEncodedTransaction>
-eth.signTransaction(
+cfx.signTransaction(
     {
         from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
         gasPrice: '20000000000',
@@ -336,12 +336,12 @@ eth.signTransaction(
 );
 
 // $ExpectType Promise<string>
-eth.call({
+cfx.call({
     to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
     data: '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003'
 });
 // $ExpectType Promise<string>
-eth.call(
+cfx.call(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
         data: '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003'
@@ -349,7 +349,7 @@ eth.call(
     100
 );
 // $ExpectType Promise<string>
-eth.call(
+cfx.call(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
         data: '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003'
@@ -357,7 +357,7 @@ eth.call(
     '100'
 );
 // $ExpectType Promise<string>
-eth.call(
+cfx.call(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
         data: '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003'
@@ -365,7 +365,7 @@ eth.call(
     (error: Error, data: string) => {}
 );
 // $ExpectType Promise<string>
-eth.call(
+cfx.call(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
         data: '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003'
@@ -374,7 +374,7 @@ eth.call(
     (error: Error, data: string) => {}
 );
 // $ExpectType Promise<string>
-eth.call(
+cfx.call(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
         data: '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003'
@@ -384,7 +384,7 @@ eth.call(
 );
 
 // $ExpectType Promise<string>
-eth.call(
+cfx.call(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
         data: '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003'
@@ -394,12 +394,12 @@ eth.call(
 );
 
 // $ExpectType Promise<number>
-eth.estimateGas({
+cfx.estimateGas({
     to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
     data: '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003'
 });
 // $ExpectType Promise<number>
-eth.estimateGas(
+cfx.estimateGas(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
         data: '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003'
@@ -408,12 +408,12 @@ eth.estimateGas(
 );
 
 // $ExpectType Promise<Log[]>
-eth.getPastLogs({
+cfx.getPastLogs({
     address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
     topics: ['0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234']
 });
 // $ExpectType Promise<Log[]>
-eth.getPastLogs(
+cfx.getPastLogs(
     {
         address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
         topics: ['0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234']
@@ -422,19 +422,19 @@ eth.getPastLogs(
 );
 
 // $ExpectType Promise<string[]>
-eth.getWork();
+cfx.getWork();
 // $ExpectType Promise<string[]>
-eth.getWork((error: Error, result: string[]) => {});
+cfx.getWork((error: Error, result: string[]) => {});
 
 // $ExpectType Promise<boolean>
-eth.submitWork([
+cfx.submitWork([
     '0x0000000000000001',
     '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
     '0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000'
 ]);
 
 // $ExpectType Promise<boolean>
-eth.submitWork(
+cfx.submitWork(
     [
         '0x0000000000000001',
         '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',

@@ -1,6 +1,6 @@
 import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import Network from '../../src/Network';
 
 // Mocks
@@ -29,7 +29,7 @@ describe('NetworkTest', () => {
 
         expect(network.formatters).toEqual(formatters);
 
-        expect(network).toBeInstanceOf(AbstractWeb3Module);
+        expect(network).toBeInstanceOf(AbstractConfluxWebModule);
     });
 
     it('calls getNetworkType and resolves to the network name "private', async () => {

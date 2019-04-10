@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import {formatters} from 'conflux-web-core-helpers';
 
 // $ExpectType number
@@ -33,7 +33,7 @@ formatters.inputAddressFormatter('0x0');
 formatters.isPredefinedBlockNumber('latest');
 
 // $ExpectType string
-formatters.inputDefaultBlockNumberFormatter('0x0', new AbstractWeb3Module('http://localhost:8545'));
+formatters.inputDefaultBlockNumberFormatter('0x0', new AbstractConfluxWebModule('http://localhost:8545'));
 
 // $ExpectType string | number
 formatters.inputBlockNumberFormatter('0x0');

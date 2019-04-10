@@ -70,7 +70,7 @@ export function IpcProvider(path, net) {
  *
  * @method BatchRequest
  *
- * @param {AbstractWeb3Module} moduleInstance
+ * @param {AbstractConfluxWebModule} moduleInstance
  *
  * @returns {BatchRequest}
  *

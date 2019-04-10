@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 
-export default class AbstractContract extends AbstractWeb3Module {
+export default class AbstractContract extends AbstractConfluxWebModule {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ContractModuleFactory} contractModuleFactory

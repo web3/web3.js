@@ -27,7 +27,7 @@ export default class AbstractGetBlockUncleCountMethod extends AbstractMethod {
      * @param {String} rpcMethod
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      *
      * @constructor
      */
@@ -40,7 +40,7 @@ export default class AbstractGetBlockUncleCountMethod extends AbstractMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);

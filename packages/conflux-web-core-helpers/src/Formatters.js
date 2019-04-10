@@ -57,7 +57,7 @@ export const isPredefinedBlockNumber = (blockNumber) => {
  * Determines if it should use the default block by the given package or not.
  *
  * @param {String|Number} blockNumber
- * @param {AbstractWeb3Module} moduleInstance
+ * @param {AbstractConfluxWebModule} moduleInstance
  *
  * @returns {String}
  */
@@ -144,7 +144,7 @@ export const txInputFormatter = (txObject) => {
  * @method inputCallFormatter
  *
  * @param {Object} txObject
- * @param {AbstractWeb3Module} moduleInstance
+ * @param {AbstractConfluxWebModule} moduleInstance
  *
  * @returns {Object}
  */
@@ -169,7 +169,7 @@ export const inputCallFormatter = (txObject, moduleInstance) => {
  * @method inputTransactionFormatter
  *
  * @param {Object} txObject
- * @param {AbstractWeb3Module} moduleInstance
+ * @param {AbstractConfluxWebModule} moduleInstance
  *
  * @returns {Object}
  */

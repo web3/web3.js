@@ -21,11 +21,11 @@
  */
 
 import * as net from 'net';
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import {AbstractMethod} from 'conflux-web-core-method';
 
 export class BatchRequest {
-    constructor(moduleInstance: AbstractWeb3Module);
+    constructor(moduleInstance: AbstractConfluxWebModule);
 
     add(method: AbstractMethod): void;
 
@@ -37,7 +37,7 @@ export class ProviderDetector {
 }
 
 export class ProvidersModuleFactory {
-    createBatchRequest(moduleInstance: AbstractWeb3Module): BatchRequest;
+    createBatchRequest(moduleInstance: AbstractConfluxWebModule): BatchRequest;
 
     createProviderResolver(): ProviderResolver;
 
@@ -60,7 +60,7 @@ export class HttpProvider {
 
     send(method: string, parameters: any[]): Promise<any>;
 
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<any[]>;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractConfluxWebModule): Promise<any[]>;
 
     disconnect(): boolean;
 }
@@ -74,7 +74,7 @@ export class CustomProvider {
 
     send(method: string, parameters: any[]): Promise<any>;
 
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<any[]>;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractConfluxWebModule): Promise<any[]>;
 }
 
 export class AbstractSocketProvider {
@@ -89,7 +89,7 @@ export class AbstractSocketProvider {
 
     send(method: string, parameters: any[]): Promise<any>;
 
-    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<any[]>;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractConfluxWebModule): Promise<any[]>;
 
     subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: any[]): Promise<string>;
 

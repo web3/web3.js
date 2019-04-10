@@ -29,7 +29,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
      * @param {Number} parametersAmount
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractConfluxWebModule} moduleInstance
      * @param {TransactionObserver} transactionObserver
      *
      * @constructor

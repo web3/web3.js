@@ -19,14 +19,14 @@
 
 import {provider} from 'conflux-web-providers';
 import {
-    AbstractWeb3Module,
+    AbstractConfluxWebModule,
     Log,
     PromiEvent,
     RLPEncodedTransaction,
     Transaction,
     TransactionConfig,
     TransactionReceipt,
-    Web3ModuleOptions
+    ConfluxWebModuleOptions
 } from 'conflux-web-core';
 import {Contract, ContractOptions} from 'conflux-web-cfx-contract';
 import {Accounts} from 'conflux-web-cfx-accounts';
@@ -35,11 +35,11 @@ import {Network} from 'conflux-web-net';
 import {AbiItem} from 'conflux-web-utils';
 import * as net from 'net';
 
-export class Cfx extends AbstractWeb3Module {
+export class Cfx extends AbstractConfluxWebModule {
     constructor(
         provider: provider,
         net?: net.Socket | null,
-        options?: Web3ModuleOptions
+        options?: ConfluxWebModuleOptions
     );
 
     Contract: new (jsonInterface: AbiItem[] | AbiItem, address?: string, options?: ContractOptions) => Contract;
