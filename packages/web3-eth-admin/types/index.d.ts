@@ -56,7 +56,7 @@ export class Admin extends AbstractWeb3Module {
     startRPC(host: string, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
     startRPC(host: string, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
     startRPC(port: number, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(port: number, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+    startRPC(port: number, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
     startRPC(cors: number, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
     startRPC(host: string, port: number, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
     startRPC(host: string, port: number, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
@@ -73,7 +73,7 @@ export class Admin extends AbstractWeb3Module {
     startWS(host: string, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
     startWS(host: string, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
     startWS(port: number, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(port: number, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+    startWS(port: number, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
     startWS(cors: number, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
     startWS(host: string, port: number, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
     startWS(host: string, port: number, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
