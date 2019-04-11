@@ -36,11 +36,11 @@ describe('AllEventsOptionsMapperTest', () => {
             address: true
         };
 
-        formatters.inputBlockNumberFormatter.mockReturnValueOnce('block');
+        formatters.inputBlockAddressFormatter.mockReturnValueOnce('block');
 
         expect(allEventsOptionsMapper.map({}, {address: true}, options)).toEqual(mappedOptions);
 
-        expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
+        expect(formatters.inputBlockAddressFormatter).toHaveBeenCalledWith(0);
     });
 
     it('calls map with undefined fromBlock property and returns the expected result', () => {
@@ -50,7 +50,7 @@ describe('AllEventsOptionsMapperTest', () => {
             address: true
         };
 
-        expect(allEventsOptionsMapper.map({}, {defaultBlock: 'block', address: true}, {})).toEqual(mappedOptions);
+        expect(allEventsOptionsMapper.map({}, {defaultEpoch: 'block', address: true}, {})).toEqual(mappedOptions);
     });
 
     it('calls map with defined toBlock property and returns the expected result', () => {
@@ -66,11 +66,11 @@ describe('AllEventsOptionsMapperTest', () => {
             address: true
         };
 
-        formatters.inputBlockNumberFormatter.mockReturnValue('block');
+        formatters.inputBlockAddressFormatter.mockReturnValue('block');
 
         expect(allEventsOptionsMapper.map({}, {address: true}, options)).toEqual(mappedOptions);
 
-        expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
+        expect(formatters.inputBlockAddressFormatter).toHaveBeenCalledWith(0);
     });
 
     it('calls map with defined filter property and returns the expected result', () => {
@@ -86,7 +86,7 @@ describe('AllEventsOptionsMapperTest', () => {
 
         allEventsFilterEncoderMock.encode.mockReturnValueOnce([0]);
 
-        expect(allEventsOptionsMapper.map({}, {defaultBlock: 0, address: true}, options)).toEqual(mappedOptions);
+        expect(allEventsOptionsMapper.map({}, {defaultEpoch: 0, address: true}, options)).toEqual(mappedOptions);
 
         expect(allEventsFilterEncoderMock.encode).toHaveBeenCalledWith({}, []);
     });

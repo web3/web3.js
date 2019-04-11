@@ -27,7 +27,7 @@ describe('GetPastLogsMethodTest', () => {
         expect(method.formatters).toEqual(formatters);
     });
 
-    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {
+    it('beforeExecution should call the inputAddressFormatter and inputDefaultEpochNumberFormatter method', () => {
         method.parameters = [{}];
 
         formatters.inputLogFormatter.mockReturnValueOnce({empty: true});

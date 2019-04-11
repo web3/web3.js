@@ -30,14 +30,14 @@ describe('GetStorageAtMethodTest', () => {
     });
 
     it(
-        'beforeExecution should call the formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter ' +
+        'beforeExecution should call the formatters.inputAddressFormatter, formatters.inputDefaultEpochNumberFormatter ' +
             'and utils.numberToHex method',
         () => {
             method.parameters = ['string', 100, 100];
 
             formatters.inputAddressFormatter.mockReturnValue('0x0');
 
-            formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+            formatters.inputDefaultEpochNumberFormatter.mockReturnValueOnce('0x0');
 
             Utils.numberToHex.mockReturnValueOnce('0x0');
 
@@ -51,14 +51,14 @@ describe('GetStorageAtMethodTest', () => {
 
             expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
 
-            expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith(100, {});
+            expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith(100, {});
 
             expect(Utils.numberToHex).toHaveBeenCalledWith(100);
         }
     );
 
     it(
-        'calls beforeExecution without a callback instead of the optional parameter and should call the inputAddressFormatter, inputDefaultBlockNumberFormatter ' +
+        'calls beforeExecution without a callback instead of the optional parameter and should call the inputAddressFormatter, inputDefaultEpochNumberFormatter ' +
             'and numberToHex method',
         () => {
             const callback = jest.fn();
@@ -66,11 +66,11 @@ describe('GetStorageAtMethodTest', () => {
 
             formatters.inputAddressFormatter.mockReturnValue('0x0');
 
-            formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+            formatters.inputDefaultEpochNumberFormatter.mockReturnValueOnce('0x0');
 
             Utils.numberToHex.mockReturnValueOnce('0x0');
 
-            method.beforeExecution({defaultBlock: 'latest'});
+            method.beforeExecution({defaultEpoch: 'latest'});
 
             expect(method.callback).toEqual(callback);
 
@@ -82,8 +82,8 @@ describe('GetStorageAtMethodTest', () => {
 
             expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
 
-            expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {
-                defaultBlock: 'latest'
+            expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith('latest', {
+                defaultEpoch: 'latest'
             });
 
             expect(Utils.numberToHex).toHaveBeenCalledWith(100);

@@ -4,7 +4,6 @@ import {
     EstimateGasMethod,
     CfxSendTransactionMethod,
     GetBalanceMethod,
-    GetBlockNumberMethod,
     GetCodeMethod,
     GetCoinbaseMethod,
     GetGasPriceMethod,
@@ -29,9 +28,7 @@ import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
 import MethodFactory from '../../../src/factories/MethodFactory';
 import GetBlockMethod from '../../../src/methods/GetBlockMethod';
-import GetUncleMethod from '../../../src/methods/GetUncleMethod';
 import GetBlockTransactionCountMethod from '../../../src/methods/GetBlockTransactionCountMethod';
-import GetBlockUncleCountMethod from '../../../src/methods/GetBlockUncleCountMethod';
 import GetTransactionFromBlockMethod from '../../../src/methods/GetTransactionFromBlockMethod';
 import CfxSignTransactionMethod from '../../../src/methods/CfxSignTransactionMethod';
 import CfxSignMethod from '../../../src/methods/CfxSignMethod';
@@ -66,14 +63,11 @@ describe('MethodFactoryTest', () => {
             isSyncing: IsSyncingMethod,
             getGasPrice: GetGasPriceMethod,
             getAccounts: CfxGetAccountsMethod,
-            getBlockNumber: GetBlockNumberMethod,
             getBalance: GetBalanceMethod,
             getStorageAt: GetStorageAtMethod,
             getCode: GetCodeMethod,
             getBlock: GetBlockMethod,
-            getUncle: GetUncleMethod,
             getBlockTransactionCount: GetBlockTransactionCountMethod,
-            getBlockUncleCount: GetBlockUncleCountMethod,
             getTransaction: GetTransactionMethod,
             getTransactionFromBlock: GetTransactionFromBlockMethod,
             getTransactionReceipt: GetTransactionReceiptMethod,

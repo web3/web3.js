@@ -36,11 +36,11 @@ describe('EventOptionsMapperTest', () => {
             address: true
         };
 
-        formatters.inputBlockNumberFormatter.mockReturnValueOnce('block');
+        formatters.inputBlockAddressFormatter.mockReturnValueOnce('block');
 
         expect(eventOptionsMapper.map({anonymous: true}, {address: true}, options)).toEqual(mappedOptions);
 
-        expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
+        expect(formatters.inputBlockAddressFormatter).toHaveBeenCalledWith(0);
     });
 
     it('calls map with undefined fromBlock property and returns the expected result', () => {
@@ -50,7 +50,7 @@ describe('EventOptionsMapperTest', () => {
             address: true
         };
 
-        expect(eventOptionsMapper.map({anonymous: true}, {defaultBlock: 'block', address: true}, {})).toEqual(
+        expect(eventOptionsMapper.map({anonymous: true}, {defaultEpoch: 'block', address: true}, {})).toEqual(
             mappedOptions
         );
     });
@@ -66,11 +66,11 @@ describe('EventOptionsMapperTest', () => {
             address: true
         };
 
-        formatters.inputBlockNumberFormatter.mockReturnValue('block');
+        formatters.inputBlockAddressFormatter.mockReturnValue('block');
 
         expect(eventOptionsMapper.map({anonymous: true}, {address: true}, options)).toEqual(mappedOptions);
 
-        expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
+        expect(formatters.inputBlockAddressFormatter).toHaveBeenCalledWith(0);
     });
 
     it('calls map with defined filter property and returns the expected result', () => {
@@ -97,7 +97,7 @@ describe('EventOptionsMapperTest', () => {
             topics: []
         };
 
-        expect(eventOptionsMapper.map({anonymous: true}, {defaultBlock: 0, address: true}, {})).toEqual(mappedOptions);
+        expect(eventOptionsMapper.map({anonymous: true}, {defaultEpoch: 0, address: true}, {})).toEqual(mappedOptions);
     });
 
     it('calls map with anonymous property false and returns the expected result', () => {
@@ -118,7 +118,7 @@ describe('EventOptionsMapperTest', () => {
 
         eventFilterEncoderMock.encode.mockReturnValueOnce([0]);
 
-        expect(eventOptionsMapper.map(abiItemModel, {defaultBlock: 0, address: true}, options)).toEqual(mappedOptions);
+        expect(eventOptionsMapper.map(abiItemModel, {defaultEpoch: 0, address: true}, options)).toEqual(mappedOptions);
 
         expect(eventFilterEncoderMock.encode).toHaveBeenCalledWith(abiItemModel, []);
     });
@@ -130,6 +130,6 @@ describe('EventOptionsMapperTest', () => {
             topics: []
         };
 
-        expect(eventOptionsMapper.map({anonymous: true}, {defaultBlock: 0, address: true})).toEqual(mappedOptions);
+        expect(eventOptionsMapper.map({anonymous: true}, {defaultEpoch: 0, address: true})).toEqual(mappedOptions);
     });
 });

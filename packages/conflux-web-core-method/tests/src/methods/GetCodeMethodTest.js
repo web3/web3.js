@@ -27,12 +27,12 @@ describe('GetCodeMethodTest', () => {
         expect(method.formatters).toEqual(formatters);
     });
 
-    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {
+    it('beforeExecution should call the inputAddressFormatter and inputDefaultEpochNumberFormatter method', () => {
         method.parameters = ['string', 100];
 
         formatters.inputAddressFormatter.mockReturnValueOnce('0x0');
 
-        formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+        formatters.inputDefaultEpochNumberFormatter.mockReturnValueOnce('0x0');
 
         method.beforeExecution({});
 
@@ -42,7 +42,7 @@ describe('GetCodeMethodTest', () => {
 
         expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
 
-        expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith(100, {});
+        expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith(100, {});
     });
 
     it('calls beforeExecution without a callback instead of the optional parameter', () => {
@@ -51,9 +51,9 @@ describe('GetCodeMethodTest', () => {
 
         formatters.inputAddressFormatter.mockReturnValueOnce('0x0');
 
-        formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+        formatters.inputDefaultEpochNumberFormatter.mockReturnValueOnce('0x0');
 
-        method.beforeExecution({defaultBlock: 'latest'});
+        method.beforeExecution({defaultEpoch: 'latest'});
 
         expect(method.callback).toEqual(callback);
 
@@ -63,6 +63,6 @@ describe('GetCodeMethodTest', () => {
 
         expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
 
-        expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {defaultBlock: 'latest'});
+        expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith('latest', {defaultEpoch: 'latest'});
     });
 });

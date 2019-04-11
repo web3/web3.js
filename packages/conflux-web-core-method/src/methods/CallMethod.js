@@ -45,12 +45,12 @@ export default class CallMethod extends AbstractMethod {
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
 
-        // Optional second parameter 'defaultBlock' could also be the callback
+        // Optional second parameter 'defaultEpoch' could also be the callback
         if (isFunction(this.parameters[1])) {
             this.callback = this.parameters[1];
-            this.parameters[1] = moduleInstance.defaultBlock;
+            this.parameters[1] = moduleInstance.defaultEpoch;
         }
 
-        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
+        this.parameters[1] = this.formatters.inputDefaultEpochNumberFormatter(this.parameters[1], moduleInstance);
     }
 }

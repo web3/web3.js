@@ -31,7 +31,7 @@ export default class GetTransactionFromBlockMethod extends AbstractGetTransactio
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getTransactionByBlockNumberAndIndex', utils, formatters, moduleInstance);
+        super('cfx_getTransactionByBlockAddressAndIndex', utils, formatters, moduleInstance);
     }
 
     /**
@@ -43,7 +43,7 @@ export default class GetTransactionFromBlockMethod extends AbstractGetTransactio
      */
     beforeExecution(moduleInstance) {
         if (this.isHash(this.parameters[0])) {
-            this.rpcMethod = 'eth_getTransactionByBlockHashAndIndex';
+            this.rpcMethod = 'cfx_getTransactionByBlockHashAndIndex';
         }
 
         super.beforeExecution(moduleInstance);

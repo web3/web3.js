@@ -21,7 +21,7 @@ describe('SendRawTransactionMethodTest', () => {
         expect(method.rpcMethod).toEqual('cfx_sendTransaction');
     });
 
-    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
+    it('beforeExecution should call inputAddressFormatter and inputDefaultEpochNumberFormatter', () => {
         method.parameters = ['tx'];
 
         formatters.inputTransactionFormatter.mockReturnValueOnce('0x0');

@@ -43,7 +43,7 @@ export default class AbstractGetBlockTransactionCountMethod extends AbstractMeth
      * @param {AbstractConfluxWebModule} moduleInstance
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+        this.parameters[0] = this.formatters.inputBlockAddressFormatter(this.parameters[0]);
     }
 
     /**

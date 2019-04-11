@@ -17,7 +17,7 @@ describe('AbstractConfluxWebModuleTest', () => {
             'http://localhost:8545',
             {
                 defaultAccount: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
-                defaultBlock: 'latest',
+                defaultEpoch: 'latest',
                 defaultGasPrice: 100,
                 defaultGas: 100
             },
@@ -29,7 +29,7 @@ describe('AbstractConfluxWebModuleTest', () => {
     it('constructor check', () => {
         expect(abstractConfluxWebModule.defaultAccount).toEqual('0x03C9A938fF7f54090d0d99e2c6f80380510Ea078');
 
-        expect(abstractConfluxWebModule.defaultBlock).toEqual('latest');
+        expect(abstractConfluxWebModule.defaultEpoch).toEqual('latest');
 
         expect(abstractConfluxWebModule.transactionBlockTimeout).toEqual(50);
 
@@ -67,9 +67,9 @@ describe('AbstractConfluxWebModuleTest', () => {
         expect(abstractConfluxWebModule.defaultAccount).toEqual('0x03C9A938fF7f54090d0d99e2c6f80380510Ea078');
     });
 
-    it('sets the defaultBlock property', () => {
-        abstractConfluxWebModule.defaultBlock = 'latest';
-        expect(abstractConfluxWebModule.defaultBlock).toEqual('latest');
+    it('sets the defaultEpoch property', () => {
+        abstractConfluxWebModule.defaultEpoch = 'latest_state';
+        expect(abstractConfluxWebModule.defaultEpoch).toEqual('latest_state');
     });
 
     it('sets the transactionBlockTimeout property', () => {

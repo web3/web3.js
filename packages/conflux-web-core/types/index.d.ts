@@ -41,7 +41,7 @@ export class AbstractConfluxWebModule {
     );
 
     BatchRequest: new () => BatchRequest;
-    defaultBlock: string | number;
+    defaultEpoch: string | number;
     transactionBlockTimeout: number;
     transactionConfirmationBlocks: number;
     transactionPollingTimeout: number;
@@ -73,7 +73,7 @@ export interface SignedTransaction {
 
 export interface ConfluxWebModuleOptions {
     defaultAccount?: string;
-    defaultBlock?: string | number;
+    defaultEpoch?: string | number;
     transactionBlockTimeout?: number;
     transactionConfirmationBlocks?: number;
     transactionPollingTimeout?: number;

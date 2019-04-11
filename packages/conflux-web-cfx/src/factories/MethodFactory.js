@@ -26,7 +26,6 @@ import {
     ChainIdMethod,
     EstimateGasMethod,
     GetBalanceMethod,
-    GetBlockNumberMethod,
     GetCodeMethod,
     GetCoinbaseMethod,
     GetGasPriceMethod,
@@ -50,9 +49,7 @@ import {
 } from 'conflux-web-core-method';
 
 import GetBlockMethod from '../methods/GetBlockMethod';
-import GetUncleMethod from '../methods/GetUncleMethod';
 import GetBlockTransactionCountMethod from '../methods/GetBlockTransactionCountMethod';
-import GetBlockUncleCountMethod from '../methods/GetBlockUncleCountMethod';
 import GetTransactionFromBlockMethod from '../methods/GetTransactionFromBlockMethod';
 import CfxSignTransactionMethod from '../methods/CfxSignTransactionMethod';
 import CfxSignMethod from '../methods/CfxSignMethod';
@@ -77,14 +74,11 @@ export default class MethodFactory extends AbstractMethodFactory {
             isSyncing: IsSyncingMethod,
             getGasPrice: GetGasPriceMethod,
             getAccounts: CfxGetAccountsMethod,
-            getBlockNumber: GetBlockNumberMethod,
             getBalance: GetBalanceMethod,
             getStorageAt: GetStorageAtMethod,
             getCode: GetCodeMethod,
             getBlock: GetBlockMethod,
-            getUncle: GetUncleMethod,
             getBlockTransactionCount: GetBlockTransactionCountMethod,
-            getBlockUncleCount: GetBlockUncleCountMethod,
             getTransaction: GetTransactionMethod,
             getTransactionFromBlock: GetTransactionFromBlockMethod,
             getTransactionReceipt: GetTransactionReceiptMethod,

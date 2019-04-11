@@ -13,7 +13,7 @@ describe('GetTransactionFromBlockMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(getTransactionFromBlockMethod.rpcMethod).toEqual('eth_getTransactionByBlockNumberAndIndex');
+        expect(getTransactionFromBlockMethod.rpcMethod).toEqual('cfx_getTransactionByBlockAddressAndIndex');
     });
 
     it('calls execute with hash', () => {
@@ -21,7 +21,7 @@ describe('GetTransactionFromBlockMethodTest', () => {
 
         getTransactionFromBlockMethod.beforeExecution({});
 
-        expect(getTransactionFromBlockMethod.rpcMethod).toEqual('eth_getTransactionByBlockHashAndIndex');
+        expect(getTransactionFromBlockMethod.rpcMethod).toEqual('cfx_getTransactionByBlockHashAndIndex');
     });
 
     it('calls execute with number', () => {
@@ -29,6 +29,6 @@ describe('GetTransactionFromBlockMethodTest', () => {
 
         getTransactionFromBlockMethod.beforeExecution({});
 
-        expect(getTransactionFromBlockMethod.rpcMethod).toEqual('eth_getTransactionByBlockNumberAndIndex');
+        expect(getTransactionFromBlockMethod.rpcMethod).toEqual('cfx_getTransactionByBlockAddressAndIndex');
     });
 });

@@ -30,13 +30,13 @@ formatters.inputSignFormatter('0x0');
 formatters.inputAddressFormatter('0x0');
 
 // $ExpectType boolean
-formatters.isPredefinedBlockNumber('latest');
+formatters.isPredefinedEpochNumber('latest');
 
 // $ExpectType string
-formatters.inputDefaultBlockNumberFormatter('0x0', new AbstractConfluxWebModule('http://localhost:8545'));
+formatters.inputDefaultEpochNumberFormatter('0x0', new AbstractConfluxWebModule('http://localhost:8545'));
 
 // $ExpectType string | number
-formatters.inputBlockNumberFormatter('0x0');
+formatters.inputBlockAddressFormatter('0x0');
 
 // $ExpectType object
 formatters.outputBlockFormatter({});

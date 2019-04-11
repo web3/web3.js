@@ -44,7 +44,7 @@ export default class AbstractGetBlockMethod extends AbstractMethod {
      * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+        this.parameters[0] = this.formatters.inputBlockAddressFormatter(this.parameters[0]);
 
         // Optional second parameter 'returnTransactionObjects' could also be the callback
         if (isFunction(this.parameters[1])) {

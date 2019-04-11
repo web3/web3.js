@@ -37,7 +37,7 @@ const abstractWeb3Module = new AbstractConfluxWebModule(httpProvider);
 new abstractWeb3Module.BatchRequest();
 
 // $ExpectType string | number
-abstractWeb3Module.defaultBlock;
+abstractWeb3Module.defaultEpoch;
 
 // $ExpectType number
 abstractWeb3Module.transactionBlockTimeout;

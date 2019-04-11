@@ -6,7 +6,7 @@ import {outputTransactionFormatter} from '../../../src/Formatters';
 describe('OutputTransactionFormatterTest', () => {
     it('call outputTransactionFormatter with a receipt object', () => {
         const receipt = {
-            blockNumber: undefined,
+            blockHash: undefined,
             transactionIndex: undefined,
             gas: 100,
             gasPrice: 100,
@@ -17,7 +17,7 @@ describe('OutputTransactionFormatterTest', () => {
         };
 
         expect(outputTransactionFormatter(receipt)).toEqual({
-            blockNumber: undefined,
+            blockHash: undefined,
             transactionIndex: undefined,
             gas: 100,
             gasPrice: '100',

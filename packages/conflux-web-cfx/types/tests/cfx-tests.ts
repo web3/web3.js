@@ -72,7 +72,7 @@ new cfx.BatchRequest();
 cfx.defaultAccount;
 
 // $ExpectType string | number
-cfx.defaultBlock;
+cfx.defaultEpoch;
 
 // $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
 cfx.currentProvider;

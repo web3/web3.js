@@ -160,26 +160,26 @@ export default class ConfluxWeb extends AbstractConfluxWebModule {
     }
 
     /**
-     * Sets the defaultBlock property on the cfx module
+     * Sets the defaultEpoch property on the cfx module
      *
-     * @property defaultBlock
+     * @property defaultEpoch
      *
      * @param {Number|String} value
      */
-    set defaultBlock(value) {
-        super.defaultBlock = value;
-        this.cfx.defaultBlock = value;
+    set defaultEpoch(value) {
+        super.defaultEpoch = value;
+        this.cfx.defaultEpoch = value;
     }
 
     /**
-     * Gets the defaultBlock property
+     * Gets the defaultEpoch property
      *
-     * @property defaultBlock
+     * @property defaultEpoch
      *
      * @returns {String|Number} value
      */
-    get defaultBlock() {
-        return super.defaultBlock;
+    get defaultEpoch() {
+        return super.defaultEpoch;
     }
 
     /**

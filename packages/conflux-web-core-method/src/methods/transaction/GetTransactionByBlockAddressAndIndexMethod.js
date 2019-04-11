@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetBlockUncleCountByBlockHashMethod.js
+ * @file GetTransactionByBlockAddressAndIndexMethodd.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractGetBlockUncleCountMethod from '../../../lib/methods/block/AbstractGetBlockUncleCountMethod';
+import AbstractGetTransactionFromBlockMethod from '../../../lib/methods/transaction/AbstractGetTransactionFromBlockMethod';
 
-export default class GetBlockUncleCountByBlockHashMethod extends AbstractGetBlockUncleCountMethod {
+export default class GetTransactionByBlockAddressAndIndexMethod extends AbstractGetTransactionFromBlockMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -31,6 +31,6 @@ export default class GetBlockUncleCountByBlockHashMethod extends AbstractGetBloc
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getUncleCountByBlockHash', utils, formatters, moduleInstance);
+        super('cfx_getTransactionByBlockAddressAndIndex', utils, formatters, moduleInstance);
     }
 }

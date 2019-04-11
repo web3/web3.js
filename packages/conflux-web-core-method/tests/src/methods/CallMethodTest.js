@@ -27,12 +27,12 @@ describe('CallMethodTest', () => {
         expect(method.formatters).toEqual(formatters);
     });
 
-    it('beforeExecution should call inputCallFormatter and inputDefaultBlockNumberFormatter', () => {
+    it('beforeExecution should call inputCallFormatter and inputDefaultEpochNumberFormatter', () => {
         method.parameters = [{}, 100];
 
         formatters.inputCallFormatter.mockReturnValueOnce({empty: true});
 
-        formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce({empty: true});
+        formatters.inputDefaultEpochNumberFormatter.mockReturnValueOnce({empty: true});
 
         method.beforeExecution({});
 
@@ -40,20 +40,20 @@ describe('CallMethodTest', () => {
 
         expect(method.parameters[1]).toEqual({empty: true});
 
-        expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith(100, {});
+        expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith(100, {});
 
         expect(formatters.inputCallFormatter).toHaveBeenCalledWith({}, {});
     });
 
-    it('calls beforeExecution with a callback instead of the optional paramter and it calls the inputCallFormatter and inputDefaultBlockNumberFormatter', () => {
+    it('calls beforeExecution with a callback instead of the optional paramter and it calls the inputCallFormatter and inputDefaultEpochNumberFormatter', () => {
         const callback = jest.fn();
         method.parameters = [{}, callback];
 
         formatters.inputCallFormatter.mockReturnValueOnce({empty: true});
 
-        formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+        formatters.inputDefaultEpochNumberFormatter.mockReturnValueOnce('0x0');
 
-        method.beforeExecution({defaultBlock: 'latest'});
+        method.beforeExecution({defaultEpoch: 'latest'});
 
         expect(method.callback).toEqual(callback);
 
@@ -61,8 +61,8 @@ describe('CallMethodTest', () => {
 
         expect(method.parameters[1]).toEqual('0x0');
 
-        expect(formatters.inputCallFormatter).toHaveBeenCalledWith({}, {defaultBlock: 'latest'});
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith({}, {defaultEpoch: 'latest'});
 
-        expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {defaultBlock: 'latest'});
+        expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith('latest', {defaultEpoch: 'latest'});
     });
 });

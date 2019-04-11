@@ -29,10 +29,10 @@ describe('AbstractGetBlockMethodTest', () => {
         expect(method.moduleInstance).toEqual({});
     });
 
-    it('calls beforeExecution with block hash as parameter and it calls inputBlockNumberFormatter', () => {
+    it('calls beforeExecution with block hash as parameter and it calls inputBlockAddressFormatter', () => {
         method.parameters = ['0x0', true];
 
-        formatters.inputBlockNumberFormatter.mockReturnValueOnce('0x0');
+        formatters.inputBlockAddressFormatter.mockReturnValueOnce('0x0');
 
         method.beforeExecution({});
 
@@ -40,14 +40,14 @@ describe('AbstractGetBlockMethodTest', () => {
 
         expect(method.parameters[1]).toEqual(true);
 
-        expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith('0x0');
+        expect(formatters.inputBlockAddressFormatter).toHaveBeenCalledWith('0x0');
     });
 
-    it('calls beforeExecution with block hash and callback as parameter and it calls inputBlockNumberFormatter', () => {
+    it('calls beforeExecution with block hash and callback as parameter and it calls inputBlockAddressFormatter', () => {
         const callback = jest.fn();
         method.parameters = ['0x0', callback];
 
-        formatters.inputBlockNumberFormatter.mockReturnValueOnce('0x0');
+        formatters.inputBlockAddressFormatter.mockReturnValueOnce('0x0');
 
         method.beforeExecution({});
 
@@ -57,7 +57,7 @@ describe('AbstractGetBlockMethodTest', () => {
 
         expect(method.callback).toEqual(callback);
 
-        expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith('0x0');
+        expect(formatters.inputBlockAddressFormatter).toHaveBeenCalledWith('0x0');
     });
 
     it('afterExecution should map the response', () => {

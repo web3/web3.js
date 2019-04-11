@@ -52,13 +52,13 @@ export default class AllEventsOptionsMapper {
         }
 
         if (typeof options.fromBlock !== 'undefined') {
-            options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);
-        } else if (contract.defaultBlock !== null) {
-            options.fromBlock = contract.defaultBlock;
+            options.fromBlock = this.formatters.inputBlockAddressFormatter(options.fromBlock);
+        } else if (contract.defaultEpoch !== null) {
+            options.fromBlock = contract.defaultEpoch;
         }
 
         if (typeof options.toBlock !== 'undefined') {
-            options.toBlock = this.formatters.inputBlockNumberFormatter(options.toBlock);
+            options.toBlock = this.formatters.inputBlockAddressFormatter(options.toBlock);
         }
 
         if (typeof options.filter !== 'undefined') {

@@ -215,7 +215,7 @@ export default class AbstractContract extends AbstractConfluxWebModule {
     clone() {
         const clone = this.contractModuleFactory.createContract(this.currentProvider, this.accounts, [], '', {
             defaultAccount: this.defaultAccount,
-            defaultBlock: this.defaultBlock,
+            defaultEpoch: this.defaultEpoch,
             defaultGas: this.defaultGas,
             defaultGasPrice: this.defaultGasPrice,
             transactionBlockTimeout: this.transactionBlockTimeout,

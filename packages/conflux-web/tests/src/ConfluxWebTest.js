@@ -77,12 +77,12 @@ describe('ConfluxWebTest', () => {
         expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x1');
     });
 
-    it('sets the defaultBlock property', () => {
-        confluxWeb.defaultBlock = 10;
+    it('sets the defaultEpoch property', () => {
+        confluxWeb.defaultEpoch = 10;
 
-        expect(confluxWeb.defaultBlock).toEqual(10);
+        expect(confluxWeb.defaultEpoch).toEqual(10);
 
-        expect(Cfx.mock.instances[0].defaultBlock).toEqual(10);
+        expect(Cfx.mock.instances[0].defaultEpoch).toEqual(10);
     });
 
     it('calls setProvider and returns true', () => {

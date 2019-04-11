@@ -76,19 +76,19 @@ export class Cfx extends AbstractConfluxWebModule {
     getBlockNumber(callback?: (error: Error, blockNumber: number) => void): Promise<number>;
 
     getBalance(address: string): Promise<string>;
-    getBalance(address: string, defaultBlock: string | number): Promise<string>;
+    getBalance(address: string, defaultEpoch: string | number): Promise<string>;
     getBalance(address: string, callback?: (error: Error, balance: string) => void): Promise<string>;
-    getBalance(address: string, defaultBlock: string | number, callback?: (error: Error, balance: string) => void): Promise<string>;
+    getBalance(address: string, defaultEpoch: string | number, callback?: (error: Error, balance: string) => void): Promise<string>;
 
     getStorageAt(address: string, position: number): Promise<string>;
-    getStorageAt(address: string, position: number, defaultBlock: number | string): Promise<string>;
+    getStorageAt(address: string, position: number, defaultEpoch: number | string): Promise<string>;
     getStorageAt(address: string, position: number, callback?: (error: Error, storageAt: string) => void): Promise<string>;
-    getStorageAt(address: string, position: number, defaultBlock: number | string, callback?: (error: Error, storageAt: string) => void): Promise<string>;
+    getStorageAt(address: string, position: number, defaultEpoch: number | string, callback?: (error: Error, storageAt: string) => void): Promise<string>;
 
     getCode(address: string): Promise<string>;
-    getCode(address: string, defaultBlock: string | number): Promise<string>;
+    getCode(address: string, defaultEpoch: string | number): Promise<string>;
     getCode(address: string, callback?: (error: Error, code: string) => void): Promise<string>;
-    getCode(address: string, defaultBlock: string | number, callback?: (error: Error, code: string) => void): Promise<string>;
+    getCode(address: string, defaultEpoch: string | number, callback?: (error: Error, code: string) => void): Promise<string>;
 
     getBlock(blockHashOrBlockNumber: string | number): Promise<Block>;
     getBlock(blockHashOrBlockNumber: string | number, returnTransactionObjects: boolean): Promise<Block>;
@@ -109,9 +109,9 @@ export class Cfx extends AbstractConfluxWebModule {
     getTransactionReceipt(hash: string, callback?: (error: Error, transactionReceipt: TransactionReceipt) => void): Promise<TransactionReceipt>;
 
     getTransactionCount(address: string): Promise<number>;
-    getTransactionCount(address: string, defaultBlock: number | string): Promise<number>;
+    getTransactionCount(address: string, defaultEpoch: number | string): Promise<number>;
     getTransactionCount(address: string, callback?: (error: Error, count: number) => void): Promise<number>;
-    getTransactionCount(address: string, defaultBlock: number | string, callback?: (error: Error, count: number) => void): Promise<number>;
+    getTransactionCount(address: string, defaultEpoch: number | string, callback?: (error: Error, count: number) => void): Promise<number>;
 
     sendTransaction(transactionConfig: TransactionConfig, callback?: (error: Error, hash: string) => void): PromiEvent<TransactionReceipt>;
 
@@ -124,9 +124,9 @@ export class Cfx extends AbstractConfluxWebModule {
     signTransaction(transactionConfig: TransactionConfig, address: string, callback: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
 
     call(transactionConfig: TransactionConfig): Promise<string>;
-    call(transactionConfig: TransactionConfig, defaultBlock?: number | string): Promise<string>;
+    call(transactionConfig: TransactionConfig, defaultEpoch?: number | string): Promise<string>;
     call(transactionConfig: TransactionConfig, callback?: (error: Error, data: string) => void): Promise<string>;
-    call(transactionConfig: TransactionConfig, defaultBlock: number | string, callback: (error: Error, data: string) => void): Promise<string>;
+    call(transactionConfig: TransactionConfig, defaultEpoch: number | string, callback: (error: Error, data: string) => void): Promise<string>;
 
     estimateGas(transactionConfig: TransactionConfig, callback?: (error: Error, gas: number) => void): Promise<number>;
 

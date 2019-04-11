@@ -27,17 +27,17 @@ describe('AbstractGetTransactionFromBlockMethodTest', () => {
         expect(method.moduleInstance).toEqual({});
     });
 
-    it('calls beforeExecution and executes the inputBlockNumberFormatter and the numberToHex method', () => {
+    it('calls beforeExecution and executes the inputBlockAddressFormatter and the numberToHex method', () => {
         Utils.numberToHex.mockReturnValueOnce('0x0');
 
-        formatters.inputBlockNumberFormatter.mockReturnValueOnce('blockNumber');
+        formatters.inputBlockAddressFormatter.mockReturnValueOnce('blockNumber');
 
         method.beforeExecution({});
 
         expect(method.parameters[0]).toEqual('blockNumber');
         expect(method.parameters[1]).toEqual('0x0');
 
-        expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith({});
+        expect(formatters.inputBlockAddressFormatter).toHaveBeenCalledWith({});
 
         expect(Utils.numberToHex).toHaveBeenCalledWith(1);
     });

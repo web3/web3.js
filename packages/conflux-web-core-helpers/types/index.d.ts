@@ -26,11 +26,11 @@ export class formatters {
 
     static inputAddressFormatter(address: string): string;
 
-    static isPredefinedBlockNumber(blockNumber: string): boolean;
+    static isPredefinedEpochNumber(blockNumber: string): boolean;
 
-    static inputDefaultBlockNumberFormatter(blockNumber: string, moduleInstance: AbstractConfluxWebModule): string;
+    static inputDefaultEpochNumberFormatter(blockNumber: string, moduleInstance: AbstractConfluxWebModule): string;
 
-    static inputBlockNumberFormatter(blockNumber: string | number): string | number;
+    static inputBlockAddressFormatter(blockNumber: string | number): string | number;
 
     static outputBlockFormatter(block: object): object; // TODO: Create Block interface
 

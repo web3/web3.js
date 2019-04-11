@@ -14,6 +14,6 @@ describe('GetTransactionByBlockHashAndIndexMethodTest', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractGetTransactionFromBlockMethod);
 
-        expect(method.rpcMethod).toEqual('eth_getTransactionByBlockHashAndIndex');
+        expect(method.rpcMethod).toEqual('cfx_getTransactionByBlockHashAndIndex');
     });
 });

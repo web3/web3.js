@@ -9,7 +9,7 @@ describe('OutputLogFormatterTest', () => {
             blockHash: '0x0',
             transactionHash: '0x0',
             logIndex: '0x0',
-            blockNumber: '0x0',
+            epochNumber: '0x0',
             transactionIndex: '0x0',
             address: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
         };
@@ -19,7 +19,7 @@ describe('OutputLogFormatterTest', () => {
             blockHash: '0x0',
             transactionHash: '0x0',
             logIndex: 0,
-            blockNumber: 0,
+            epochNumber: 0,
             transactionIndex: 0,
             address: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
         });
@@ -30,7 +30,7 @@ describe('OutputLogFormatterTest', () => {
             blockHash: 0,
             transactionHash: '0x0',
             logIndex: '0x0',
-            blockNumber: '0x0',
+            epochNumber: '0x0',
             transactionIndex: '0x0',
             address: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
         };
@@ -40,7 +40,7 @@ describe('OutputLogFormatterTest', () => {
             blockHash: 0,
             transactionHash: '0x0',
             logIndex: 0,
-            blockNumber: 0,
+            epochNumber: 0,
             transactionIndex: 0,
             address: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
         });

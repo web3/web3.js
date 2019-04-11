@@ -51,18 +51,11 @@ export RequestAccountsMethod from './methods/account/RequestAccountsMethod';
 
 // Block
 export AbstractGetBlockMethod from '../lib/methods/block/AbstractGetBlockMethod';
-export AbstractGetUncleMethod from '../lib/methods/block/AbstractGetUncleMethod';
 export AbstractGetBlockTransactionCountMethod from '../lib/methods/block/AbstractGetBlockTransactionCountMethod';
-export AbstractGetBlockUncleCountMethod from '../lib/methods/block/AbstractGetBlockUncleCountMethod';
 export GetBlockByHashMethod from './methods/block/GetBlockByHashMethod';
 export GetBlockByNumberMethod from './methods/block/GetBlockByNumberMethod';
-export GetBlockNumberMethod from './methods/block/GetBlockNumberMethod';
 export GetBlockTransactionCountByHashMethod from './methods/block/GetBlockTransactionCountByHashMethod';
 export GetBlockTransactionCountByNumberMethod from './methods/block/GetBlockTransactionCountByNumberMethod';
-export GetBlockUncleCountByBlockHashMethod from './methods/block/GetBlockUncleCountByBlockHashMethod';
-export GetBlockUncleCountByBlockNumberMethod from './methods/block/GetBlockUncleCountByBlockNumberMethod';
-export GetUncleByBlockHashAndIndexMethod from './methods/block/GetUncleByBlockHashAndIndexMethod';
-export GetUncleByBlockNumberAndIndexMethod from './methods/block/GetUncleByBlockNumberAndIndexMethod';
 
 // Transaction
 export AbstractGetTransactionFromBlockMethod from '../lib/methods/transaction/AbstractGetTransactionFromBlockMethod';
@@ -70,7 +63,7 @@ export AbstractObservedTransactionMethod from '../lib/methods/transaction/Abstra
 export CfxSendTransactionMethod from './methods/transaction/CfxSendTransactionMethod';
 export GetTransactionMethod from './methods/transaction/GetTransactionMethod';
 export GetTransactionByBlockHashAndIndexMethod from './methods/transaction/GetTransactionByBlockHashAndIndexMethod';
-export GetTransactionByBlockNumberAndIndexMethod from './methods/transaction/GetTransactionByBlockNumberAndIndexMethod';
+export GetTransactionByBlockAddressAndIndexMethod from './methods/transaction/GetTransactionByBlockAddressAndIndexMethod';
 export GetTransactionReceiptMethod from './methods/transaction/GetTransactionReceiptMethod';
 export SendRawTransactionMethod from './methods/transaction/SendRawTransactionMethod';
 export SignTransactionMethod from './methods/transaction/SignTransactionMethod';

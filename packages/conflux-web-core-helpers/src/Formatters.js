@@ -28,7 +28,6 @@ import isNumber from 'lodash/isNumber';
 import * as Utils from 'conflux-web-utils';
 
 /**
- * TODO: This method could be removed because it is just a wrapper for the toBN method of Utils
  *
  * Should format the output to a object of type BigNumber
  *
@@ -43,53 +42,67 @@ export const outputBigNumberFormatter = (number) => {
 };
 
 /**
- * @method isPredefinedBlockNumber
+ * @method isPredefinedEpochNumber
  *
- * @param {String} blockNumber
+ * @param {String} epochNumber
  *
  * @returns {Boolean}
  */
-export const isPredefinedBlockNumber = (blockNumber) => {
-    return blockNumber === 'latest' || blockNumber === 'pending' || blockNumber === 'earliest';
+export const isPredefinedEpochNumber = (epochNumber) => {
+    return epochNumber === 'latest_state' || epochNumber === 'latest_mined' || epochNumber === 'earliest';
 };
 
 /**
- * Determines if it should use the default block by the given package or not.
+ * Determines if it should use the default epoch by the given package or not.
  *
- * @param {String|Number} blockNumber
+ * @param {String|Number} epochNumber
  * @param {AbstractConfluxWebModule} moduleInstance
  *
  * @returns {String}
  */
-export const inputDefaultBlockNumberFormatter = (blockNumber, moduleInstance) => {
-    if (blockNumber === undefined || blockNumber === null) {
-        return moduleInstance.defaultBlock;
+export const inputDefaultEpochNumberFormatter = (epochNumber, moduleInstance) => {
+    if (epochNumber === undefined || epochNumber === null) {
+        return moduleInstance.defaultEpoch;
     }
 
-    return inputBlockNumberFormatter(blockNumber);
+    return inputBlockAddressFormatter(epochNumber);
 };
 
 /**
- * @method inputBlockNumberFormatter
+ * @method inputEpochNumberFormatter
  *
- * @param {String|Number} blockNumber
+ * @param {String|Number} epochNumber
  *
  * @returns {String|Number}
  */
-export const inputBlockNumberFormatter = (blockNumber) => {
-    if (blockNumber === undefined || blockNumber === null || isPredefinedBlockNumber(blockNumber)) {
-        return blockNumber;
+export const inputEpochNumberFormatter = (epochNumber) => {
+    if (epochNumber === undefined || epochNumber === null || isPredefinedEpochNumber(epochNumber)) {
+        return epochNumber;
+    }
+    return Utils.numberToHex(epochNumber);
+};
+
+/**
+ * @method inputBlockAddressFormatter
+ *
+ * @param {String|Number} blockAddress
+ *
+ * @returns {String|Number}
+ */
+export const inputBlockAddressFormatter = (blockAddress) => {
+    if (blockAddress === undefined || blockAddress === null || isPredefinedEpochNumber(blockAddress)) {
+        return blockAddress;
     }
 
-    if (Utils.isHexStrict(blockNumber)) {
-        if (isString(blockNumber)) {
-            return blockNumber.toLowerCase();
+    if (Utils.isHexStrict(blockAddress)) {
+        if (isString(blockAddress)) {
+            return blockAddress.toLowerCase();
         }
 
-        return blockNumber;
+        return blockAddress;
     }
 
-    return Utils.numberToHex(blockNumber);
+    return Utils.numberToHex(blockAddress);
 };
 
 /**
@@ -192,7 +205,7 @@ export const inputTransactionFormatter = (txObject, moduleInstance) => {
 };
 
 /**
- * Hex encodes the data passed to eth_sign
+ * Hex encodes the data passed to cfx_sign
  *
  * @method inputSignFormatter
  *
@@ -215,10 +228,6 @@ export const inputSignFormatter = (data) => {
  * @returns {Object}
  */
 export const outputTransactionFormatter = (receipt) => {
-    if (receipt.blockNumber !== null) {
-        receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
-    }
-
     if (receipt.transactionIndex !== null) {
         receipt.transactionIndex = Utils.hexToNumber(receipt.transactionIndex);
     }
@@ -245,9 +254,12 @@ export const outputTransactionFormatter = (receipt) => {
         receipt.from = Utils.toChecksumAddress(receipt.from);
     }
 
+    receipt.v = Utils.hexToNumber(receipt.v);
+
     return receipt;
 };
 
+// TODO: port to Conflux Receipt
 /**
  * Formats the output of a transaction receipt to its proper values
  *
@@ -258,8 +270,8 @@ export const outputTransactionFormatter = (receipt) => {
  * @returns {Object}
  */
 export const outputTransactionReceiptFormatter = (receipt) => {
-    if (receipt.blockNumber !== null) {
-        receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
+    if (receipt.epochNumber !== null) {
+        receipt.epochNumber = Utils.hexToNumber(receipt.epochNumber);
     }
 
     if (receipt.transactionIndex !== null) {
@@ -297,20 +309,16 @@ export const outputTransactionReceiptFormatter = (receipt) => {
  */
 export const outputBlockFormatter = (block) => {
     block.gasLimit = Utils.hexToNumber(block.gasLimit);
-    block.gasUsed = Utils.hexToNumber(block.gasUsed);
     block.size = Utils.hexToNumber(block.size);
     block.timestamp = Utils.hexToNumber(block.timestamp);
 
-    if (block.number !== null) {
-        block.number = Utils.hexToNumber(block.number);
+    if (block.height !== null) {
+        block.height = Utils.hexToNumber(block.height);
     }
+    if (block.epochNumber !== null) block.epochNumber = Utils.hexToNumber(block.epochNumber);
 
     if (block.difficulty) {
         block.difficulty = outputBigNumberFormatter(block.difficulty);
-    }
-
-    if (block.totalDifficulty) {
-        block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
     }
 
     if (isArray(block.transactions)) {
@@ -351,11 +359,11 @@ export const inputLogFormatter = (options) => {
     };
 
     if (options.fromBlock) {
-        options.fromBlock = inputBlockNumberFormatter(options.fromBlock);
+        options.fromBlock = inputBlockAddressFormatter(options.fromBlock);
     }
 
     if (options.toBlock) {
-        options.toBlock = inputBlockNumberFormatter(options.toBlock);
+        options.toBlock = inputBlockAddressFormatter(options.toBlock);
     }
 
     // make sure topics, get converted to hex
@@ -406,8 +414,8 @@ export const outputLogFormatter = (log) => {
         log.id = null;
     }
 
-    if (log.blockNumber !== null) {
-        log.blockNumber = Utils.hexToNumber(log.blockNumber);
+    if (log.epochNumber !== null) {
+        log.epochNumber = Utils.hexToNumber(log.epochNumber);
     }
 
     if (log.transactionIndex !== null) {

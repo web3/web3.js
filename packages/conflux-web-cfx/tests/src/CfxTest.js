@@ -166,15 +166,15 @@ describe('CfxTest', () => {
         expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x1');
     });
 
-    it('sets the defaultBlock property', () => {
-        cfx.initiatedContracts = [{defaultBlock: 20}];
-        cfx.defaultBlock = 10;
+    it('sets the defaultEpoch property', () => {
+        cfx.initiatedContracts = [{defaultEpoch: 20}];
+        cfx.defaultEpoch = 10;
 
-        expect(cfx.initiatedContracts[0].defaultBlock).toEqual(10);
+        expect(cfx.initiatedContracts[0].defaultEpoch).toEqual(10);
 
-        expect(cfx.defaultBlock).toEqual(10);
+        expect(cfx.defaultEpoch).toEqual(10);
 
-        expect(networkMock.defaultBlock).toEqual(10);
+        expect(networkMock.defaultEpoch).toEqual(10);
     });
 
     it('calls subscribe wih "logs" as type', () => {
@@ -263,7 +263,7 @@ describe('CfxTest', () => {
 
         expect(contractModuleFactoryMock.createContract).toHaveBeenCalledWith(providerMock, cfx.accounts, [], '0x0', {
             defaultAccount: '0x0',
-            defaultBlock: cfx.defaultBlock,
+            defaultEpoch: cfx.defaultEpoch,
             defaultGas: '0x0',
             defaultGasPrice: '0x0',
             transactionBlockTimeout: cfx.transactionBlockTimeout,
@@ -284,7 +284,7 @@ describe('CfxTest', () => {
 
         expect(contractModuleFactoryMock.createContract).toHaveBeenCalledWith(providerMock, cfx.accounts, [], '0x0', {
             defaultAccount: cfx.defaultAccount,
-            defaultBlock: cfx.defaultBlock,
+            defaultEpoch: cfx.defaultEpoch,
             defaultGas: cfx.defaultGas,
             defaultGasPrice: cfx.defaultGasPrice,
             transactionBlockTimeout: cfx.transactionBlockTimeout,

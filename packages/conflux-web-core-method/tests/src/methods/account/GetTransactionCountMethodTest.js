@@ -29,12 +29,12 @@ describe('GetTransactionCountMethodTest', () => {
         expect(method.formatters).toEqual(formatters);
     });
 
-    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
+    it('beforeExecution should call inputAddressFormatter and inputDefaultEpochNumberFormatter', () => {
         method.parameters = ['string', 100];
 
         formatters.inputAddressFormatter.mockReturnValueOnce('0x0');
 
-        formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+        formatters.inputDefaultEpochNumberFormatter.mockReturnValueOnce('0x0');
 
         method.beforeExecution({});
 
@@ -44,18 +44,18 @@ describe('GetTransactionCountMethodTest', () => {
 
         expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
 
-        expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith(100, {});
+        expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith(100, {});
     });
 
-    it('calls beforeExecution with a callback instead of a optional parameter and calls the inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
+    it('calls beforeExecution with a callback instead of a optional parameter and calls the inputAddressFormatter and inputDefaultEpochNumberFormatter', () => {
         const callback = jest.fn();
         method.parameters = ['string', callback];
 
         formatters.inputAddressFormatter.mockReturnValueOnce('0x0');
 
-        formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+        formatters.inputDefaultEpochNumberFormatter.mockReturnValueOnce('0x0');
 
-        method.beforeExecution({defaultBlock: 'latest'});
+        method.beforeExecution({defaultEpoch: 'latest'});
 
         expect(method.callback).toEqual(callback);
 
@@ -65,7 +65,7 @@ describe('GetTransactionCountMethodTest', () => {
 
         expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
 
-        expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {defaultBlock: 'latest'});
+        expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith('latest', {defaultEpoch: 'latest'});
     });
 
     it('afterExecution should call hexToNumber on the response and return it', () => {

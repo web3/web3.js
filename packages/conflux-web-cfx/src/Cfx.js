@@ -83,7 +83,7 @@ export default class Cfx extends AbstractConfluxWebModule {
                 address,
                 {
                     defaultAccount: options.from || options.defaultAccount || this.defaultAccount,
-                    defaultBlock: options.defaultBlock || this.defaultBlock,
+                    defaultEpoch: options.defaultEpoch || this.defaultEpoch,
                     defaultGas: options.gas || options.defaultGas || this.defaultGas,
                     defaultGasPrice: options.gasPrice || options.defaultGasPrice || this.defaultGasPrice,
                     transactionBlockTimeout: options.transactionBlockTimeout || this.transactionBlockTimeout,
@@ -314,31 +314,31 @@ export default class Cfx extends AbstractConfluxWebModule {
     }
 
     /**
-     * Setter for the defaultBlock property
+     * Setter for the defaultEpoch property
      *
-     * @property defaultBlock
+     * @property defaultEpoch
      *
      * @param {String|Number}value
      */
-    set defaultBlock(value) {
+    set defaultEpoch(value) {
         this.initiatedContracts.forEach((contract) => {
-            contract.defaultBlock = value;
+            contract.defaultEpoch = value;
         });
 
-        this.net.defaultBlock = value;
+        this.net.defaultEpoch = value;
 
-        super.defaultBlock = value;
+        super.defaultEpoch = value;
     }
 
     /**
-     * Gets the defaultBlock property
+     * Gets the defaultEpoch property
      *
-     * @property defaultBlock
+     * @property defaultEpoch
      *
      * @returns {String|Number} value
      */
-    get defaultBlock() {
-        return super.defaultBlock;
+    get defaultEpoch() {
+        return super.defaultEpoch;
     }
 
     /**

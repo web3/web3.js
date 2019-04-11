@@ -43,7 +43,7 @@ export default class AbstractGetTransactionFromBlockMethod extends AbstractMetho
      * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+        this.parameters[0] = this.formatters.inputBlockAddressFormatter(this.parameters[0]);
         this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
     }
 

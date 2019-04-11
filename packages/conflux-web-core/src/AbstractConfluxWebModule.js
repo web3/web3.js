@@ -48,7 +48,7 @@ export default class AbstractConfluxWebModule {
 
         this._currentProvider = this.providerResolver.resolve(provider, nodeNet);
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
-        this._defaultBlock = options.defaultBlock || 'latest';
+        this._defaultEpoch = options.defaultEpoch || 'latest';
         this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
         this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
         this._transactionPollingTimeout = options.transactionPollingTimeout || 750;
@@ -65,25 +65,25 @@ export default class AbstractConfluxWebModule {
     }
 
     /**
-     * Getter for the defaultBlock property
+     * Getter for the defaultEpoch property
      *
-     * @property defaultBlock
+     * @property defaultEpoch
      *
      * @returns {String|Number}
      */
-    get defaultBlock() {
-        return this._defaultBlock;
+    get defaultEpoch() {
+        return this._defaultEpoch;
     }
 
     /**
      * Setter for the defaultAccount property
      *
-     * @property defaultBlock
+     * @property defaultEpoch
      *
      * @param {String|Number} value
      */
-    set defaultBlock(value) {
-        this._defaultBlock = value;
+    set defaultEpoch(value) {
+        this._defaultEpoch = value;
     }
 
     /**
