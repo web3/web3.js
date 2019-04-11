@@ -11,14 +11,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-// TODO: to be ported to Conflux with confluxjs-tx lib
 /**
  * @file TransactionSigner.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
 
-import EthereumTx from 'ethereumjs-tx';
+import ConfluxTx from 'confluxjs-transaction';
 
 export default class TransactionSigner {
     /**
@@ -60,23 +59,23 @@ export default class TransactionSigner {
             privateKey = privateKey.substring(2);
         }
 
-        const ethTx = new EthereumTx(transaction);
-        ethTx.sign(Buffer.from(privateKey, 'hex'));
+        const cfxTx = new ConfluxTx(transaction);
+        cfxTx.sign(Buffer.from(privateKey, 'hex'));
 
-        const validationResult = ethTx.validate(true);
+        const validationResult = cfxTx.validate(true);
 
         if (validationResult !== '') {
             throw new Error(`TransactionSigner Error: ${validationResult}`);
         }
 
-        const rlpEncoded = ethTx.serialize().toString('hex');
+        const rlpEncoded = cfxTx.serialize().toString('hex');
         const rawTransaction = '0x' + rlpEncoded;
 
         return {
-            messageHash: Buffer.from(ethTx.hash(false)).toString('hex'),
-            v: '0x' + Buffer.from(ethTx.v).toString('hex'),
-            r: '0x' + Buffer.from(ethTx.r).toString('hex'),
-            s: '0x' + Buffer.from(ethTx.s).toString('hex'),
+            messageHash: Buffer.from(cfxTx.hash(false)).toString('hex'),
+            v: '0x' + Buffer.from(cfxTx.v).toString('hex'),
+            r: '0x' + Buffer.from(cfxTx.r).toString('hex'),
+            s: '0x' + Buffer.from(cfxTx.s).toString('hex'),
             rawTransaction
         };
     }

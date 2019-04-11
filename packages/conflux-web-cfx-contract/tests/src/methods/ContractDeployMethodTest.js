@@ -1,5 +1,5 @@
 import {formatters} from 'conflux-web-core-helpers';
-import {EthSendTransactionMethod} from 'conflux-web-core-method';
+import {CfxSendTransactionMethod} from 'conflux-web-core-method';
 import AbstractContract from '../../../src/AbstractContract';
 import ContractDeployMethod from '../../../src/methods/ContractDeployMethod';
 
@@ -21,7 +21,7 @@ describe('ContractDeployMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(contractDeployMethod).toBeInstanceOf(EthSendTransactionMethod);
+        expect(contractDeployMethod).toBeInstanceOf(CfxSendTransactionMethod);
     });
 
     it('calls beforeExecution and removes the to property from the options', () => {
@@ -35,7 +35,7 @@ describe('ContractDeployMethodTest', () => {
     });
 
     it('calls beforeExecution and does nothing because it got signed locally', () => {
-        contractDeployMethod.rpcMethod = 'eth_sendRawTransaction';
+        contractDeployMethod.rpcMethod = 'cfx_sendRawTransaction';
         contractDeployMethod.parameters = [{to: true}];
 
         contractDeployMethod.beforeExecution(contractMock);

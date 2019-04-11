@@ -45,7 +45,7 @@ import {
     SubmitWorkMethod,
     VersionMethod,
     SendRawTransactionMethod,
-    EthSendTransactionMethod,
+    CfxSendTransactionMethod,
     GetEpochNumberMethod
 } from 'conflux-web-core-method';
 
@@ -91,7 +91,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             getTransactionCount: GetTransactionCountMethod,
             sendSignedTransaction: SendRawTransactionMethod,
             signTransaction: EthSignTransactionMethod,
-            sendTransaction: EthSendTransactionMethod,
+            sendTransaction: CfxSendTransactionMethod,
             sign: EthSignMethod,
             call: CallMethod,
             estimateGas: EstimateGasMethod,

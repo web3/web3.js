@@ -24,9 +24,9 @@ jest.mock('../../src/signers/TransactionSigner');
 jest.mock('../../src/factories/SubscriptionsFactory');
 
 /**
- * Eth test
+ * Cfx test
  */
-describe('EthTest', () => {
+describe('CfxTest', () => {
     let eth,
         providerMock,
         methodFactoryMock,

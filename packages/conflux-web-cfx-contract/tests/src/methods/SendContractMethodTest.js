@@ -1,4 +1,4 @@
-import {EthSendTransactionMethod} from 'conflux-web-core-method';
+import {CfxSendTransactionMethod} from 'conflux-web-core-method';
 import AbiModel from '../../../src/models/AbiModel';
 import AllEventsLogDecoder from '../../../src/decoders/AllEventsLogDecoder';
 import SendContractMethod from '../../../src/methods/SendContractMethod';
@@ -29,7 +29,7 @@ describe('SendContractMethodTest', () => {
 
         expect(sendContractMethod.abiModel).toEqual(abiModelMock);
 
-        expect(sendContractMethod).toBeInstanceOf(EthSendTransactionMethod);
+        expect(sendContractMethod).toBeInstanceOf(CfxSendTransactionMethod);
     });
 
     it('calls afterExecution and returns the expected result', () => {

@@ -21,10 +21,10 @@
  */
 
 import isArray from 'lodash/isArray';
-import {EthSendTransactionMethod} from 'conflux-web-core-method';
+import {CfxSendTransactionMethod} from 'conflux-web-core-method';
 
 // TODO: Implement revert handling (AbstractContractMethod)
-export default class SendContractMethod extends EthSendTransactionMethod {
+export default class SendContractMethod extends CfxSendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

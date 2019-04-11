@@ -100,8 +100,8 @@ export default class AbstractMethodFactory {
             );
         }
 
-        // TODO: Move this to the eth module later.
-        if (method.Type === 'eth-send-transaction-method') {
+        // TODO: Move this to the cfx module later.
+        if (method.Type === 'cfx-send-transaction-method') {
             // eslint-disable-next-line new-cap
             return new method(
                 this.utils,

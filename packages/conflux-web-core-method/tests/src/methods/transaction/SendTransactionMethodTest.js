@@ -18,7 +18,7 @@ describe('SendRawTransactionMethodTest', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractObservedTransactionMethod);
 
-        expect(method.rpcMethod).toEqual('eth_sendTransaction');
+        expect(method.rpcMethod).toEqual('cfx_sendTransaction');
     });
 
     it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {

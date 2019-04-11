@@ -67,7 +67,7 @@ export GetUncleByBlockNumberAndIndexMethod from './methods/block/GetUncleByBlock
 // Transaction
 export AbstractGetTransactionFromBlockMethod from '../lib/methods/transaction/AbstractGetTransactionFromBlockMethod';
 export AbstractObservedTransactionMethod from '../lib/methods/transaction/AbstractObservedTransactionMethod';
-export EthSendTransactionMethod from './methods/transaction/EthSendTransactionMethod';
+export CfxSendTransactionMethod from './methods/transaction/CfxSendTransactionMethod';
 export GetTransactionMethod from './methods/transaction/GetTransactionMethod';
 export GetTransactionByBlockHashAndIndexMethod from './methods/transaction/GetTransactionByBlockHashAndIndexMethod';
 export GetTransactionByBlockNumberAndIndexMethod from './methods/transaction/GetTransactionByBlockNumberAndIndexMethod';

@@ -6,7 +6,7 @@ import TransactionSigner from '../../../__mocks__/TransactionSigner';
 import ChainIdMethod from '../../../../src/methods/network/ChainIdMethod';
 import TransactionObserver from '../../../../src/observers/TransactionObserver';
 import GetTransactionCountMethod from '../../../../src/methods/account/GetTransactionCountMethod';
-import EthSendTransactionMethod from '../../../../src/methods/transaction/EthSendTransactionMethod';
+import CfxSendTransactionMethod from '../../../../src/methods/transaction/CfxSendTransactionMethod';
 import AbstractObservedTransactionMethod from '../../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
 // Mocks
@@ -19,9 +19,9 @@ jest.mock('../../../../src/observers/TransactionObserver');
 jest.mock('../../../../src/methods/account/GetTransactionCountMethod');
 
 /**
- * EthSendTransactionMethod test
+ * CfxSendTransactionMethod test
  */
-describe('EthSendTransactionMethodTest', () => {
+describe('CfxSendTransactionMethodTest', () => {
     let method,
         providerMock,
         moduleInstanceMock,
@@ -54,7 +54,7 @@ describe('EthSendTransactionMethodTest', () => {
         new TransactionObserver();
         transactionObserverMock = TransactionObserver.mock.instances[0];
 
-        method = new EthSendTransactionMethod(
+        method = new CfxSendTransactionMethod(
             Utils,
             formatters,
             moduleInstanceMock,
@@ -75,7 +75,7 @@ describe('EthSendTransactionMethodTest', () => {
     });
 
     it('calls the static property Type and it returns the expect value', () => {
-        expect(EthSendTransactionMethod.Type).toEqual('eth-send-transaction-method');
+        expect(CfxSendTransactionMethod.Type).toEqual('cfx-send-transaction-method');
     });
 
     it('calls beforeExecution and checks the rpc method', () => {
@@ -305,7 +305,7 @@ describe('EthSendTransactionMethodTest', () => {
 
             expect(chainIdMethodMock.execute).toHaveBeenCalled();
 
-            expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
+            expect(method.rpcMethod).toEqual('cfx_sendRawTransaction');
 
             expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
@@ -369,9 +369,9 @@ describe('EthSendTransactionMethodTest', () => {
 
             expect(getTransactionCountMethodMock.execute).toHaveBeenCalled();
 
-            expect(getTransactionCountMethodMock.parameters).toEqual([0, 'latest']);
+            expect(getTransactionCountMethodMock.parameters).toEqual([0, 'latest_state']);
 
-            expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
+            expect(method.rpcMethod).toEqual('cfx_sendRawTransaction');
 
             expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
@@ -431,7 +431,7 @@ describe('EthSendTransactionMethodTest', () => {
                 '0x0'
             );
 
-            expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
+            expect(method.rpcMethod).toEqual('cfx_sendRawTransaction');
 
             expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
@@ -491,7 +491,7 @@ describe('EthSendTransactionMethodTest', () => {
                 '0x0'
             );
 
-            expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
+            expect(method.rpcMethod).toEqual('cfx_sendRawTransaction');
 
             expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
@@ -503,7 +503,7 @@ describe('EthSendTransactionMethodTest', () => {
         method.execute();
     });
 
-    it('calls execute and the gasPrice will be defined with "eth_gasPrice" and returns with a resolved promise', (done) => {
+    it('calls execute and the gasPrice will be defined with "cfx_gasPrice" and returns with a resolved promise', (done) => {
         providerMock.send.mockReturnValueOnce(Promise.resolve(10));
 
         transactionSignerMock.sign = jest.fn(() => {
@@ -552,7 +552,7 @@ describe('EthSendTransactionMethodTest', () => {
                 '0x0'
             );
 
-            expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
+            expect(method.rpcMethod).toEqual('cfx_sendRawTransaction');
 
             expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
@@ -564,7 +564,7 @@ describe('EthSendTransactionMethodTest', () => {
         method.execute();
     });
 
-    it('calls execute and the gasPrice will be defined with "eth_gasPrice" and returns with a reject promise', async () => {
+    it('calls execute and the gasPrice will be defined with "cfx_gasPrice" and returns with a reject promise', async () => {
         providerMock.send = jest.fn(() => {
             return Promise.reject(new Error('Nope'));
         });
@@ -580,7 +580,7 @@ describe('EthSendTransactionMethodTest', () => {
 
         await expect(method.execute()).rejects.toThrow('Nope');
 
-        expect(providerMock.send).toHaveBeenNthCalledWith(1, 'eth_gasPrice', []);
+        expect(providerMock.send).toHaveBeenNthCalledWith(1, 'cfx_gasPrice', []);
     });
 
     it('calls execute and signs on the node', (done) => {
@@ -604,7 +604,7 @@ describe('EthSendTransactionMethodTest', () => {
 
             expect(hash).toEqual('0x0');
 
-            expect(providerMock.send).toHaveBeenCalledWith('eth_sendTransaction', parameters);
+            expect(providerMock.send).toHaveBeenCalledWith('cfx_sendTransaction', parameters);
 
             done();
         };

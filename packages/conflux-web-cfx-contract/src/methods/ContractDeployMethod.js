@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import {EthSendTransactionMethod} from 'conflux-web-core-method';
+import {CfxSendTransactionMethod} from 'conflux-web-core-method';
 
-export default class ContractDeployMethod extends EthSendTransactionMethod {
+export default class ContractDeployMethod extends CfxSendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -45,7 +45,7 @@ export default class ContractDeployMethod extends EthSendTransactionMethod {
      * @param {AbstractConfluxWebModule} moduleInstance - The module where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        if (this.rpcMethod !== 'eth_sendRawTransaction') {
+        if (this.rpcMethod !== 'cfx_sendRawTransaction') {
             super.beforeExecution(moduleInstance);
             delete this.parameters[0].to;
         }

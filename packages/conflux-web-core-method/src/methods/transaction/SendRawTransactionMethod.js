@@ -32,6 +32,6 @@ export default class SendRawTransactionMethod extends AbstractObservedTransactio
      * @constructor
      */
     constructor(utils, formatters, moduleInstance, transactionObserver) {
-        super('eth_sendRawTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
+        super('cfx_sendRawTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
     }
 }

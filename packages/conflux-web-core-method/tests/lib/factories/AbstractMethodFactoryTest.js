@@ -3,7 +3,7 @@ import {NewHeadsSubscription} from 'conflux-web-core-subscriptions';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import AbstractMethodFactory from '../../../lib/factories/AbstractMethodFactory';
 import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
-import EthSendTransactionMethod from '../../../src/methods/transaction/EthSendTransactionMethod';
+import CfxSendTransactionMethod from '../../../src/methods/transaction/CfxSendTransactionMethod';
 import TransactionObserver from '../../../src/observers/TransactionObserver';
 import GetTransactionReceiptMethod from '../../../src/methods/transaction/GetTransactionReceiptMethod';
 import GetBlockByNumberMethod from '../../../src/methods/block/GetBlockByNumberMethod';
@@ -32,7 +32,7 @@ describe('AbstractMethodFactoryTest', () => {
         abstractMethodFactory.methods = {
             send: AbstractMethod,
             sendObserved: AbstractObservedTransactionMethod,
-            sendEthObserved: EthSendTransactionMethod
+            sendCfxObserved: CfxSendTransactionMethod
         };
     });
 
@@ -107,11 +107,11 @@ describe('AbstractMethodFactoryTest', () => {
         moduleInstanceMock.currentProvider = {supportsSubscriptions: jest.fn()};
         moduleInstanceMock.currentProvider.supportsSubscriptions.mockReturnValueOnce(false);
 
-        expect(abstractMethodFactory.hasMethod('sendEthObserved')).toEqual(true);
+        expect(abstractMethodFactory.hasMethod('sendCfxObserved')).toEqual(true);
 
-        const observedMethod = abstractMethodFactory.createMethod('sendEthObserved', moduleInstanceMock);
+        const observedMethod = abstractMethodFactory.createMethod('sendCfxObserved', moduleInstanceMock);
 
-        expect(observedMethod).toBeInstanceOf(EthSendTransactionMethod);
+        expect(observedMethod).toBeInstanceOf(CfxSendTransactionMethod);
 
         expect(moduleInstanceMock.currentProvider.supportsSubscriptions).toHaveBeenCalled();
 

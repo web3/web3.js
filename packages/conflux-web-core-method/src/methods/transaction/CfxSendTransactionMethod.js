@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file EthSendTransactionMethod.js
+ * @file CfxSendTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import SendTransactionMethod from './SendTransactionMethod';
 
-export default class EthSendTransactionMethod extends SendTransactionMethod {
+export default class CfxSendTransactionMethod extends SendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -46,7 +46,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {String}
      */
     static get Type() {
-        return 'eth-send-transaction-method';
+        return 'cfx-send-transaction-method';
     }
 
     /**
@@ -54,10 +54,10 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractConfluxWebModule} moduleInstance - The module where the method is called from for example Eth.
+     * @param {AbstractConfluxWebModule} moduleInstance - The module where the method is called from for example Cfx.
      */
     beforeExecution(moduleInstance) {
-        if (this.rpcMethod !== 'eth_sendRawTransaction') {
+        if (this.rpcMethod !== 'cfx_sendRawTransaction') {
             super.beforeExecution(moduleInstance);
         }
     }
@@ -78,7 +78,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         if (!this.parameters[0].gasPrice && this.parameters[0].gasPrice !== 0) {
             if (!this.moduleInstance.defaultGasPrice) {
                 this.moduleInstance.currentProvider
-                    .send('eth_gasPrice', [])
+                    .send('cfx_gasPrice', [])
                     .then((gasPrice) => {
                         this.parameters[0].gasPrice = gasPrice;
 
@@ -134,7 +134,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
-            this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
+            this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest_state'];
 
             this.parameters[0].nonce = await this.getTransactionCountMethod.execute();
         }
@@ -149,7 +149,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         const response = await this.moduleInstance.transactionSigner.sign(transaction, privateKey);
 
         this.parameters = [response.rawTransaction];
-        this.rpcMethod = 'eth_sendRawTransaction';
+        this.rpcMethod = 'cfx_sendRawTransaction';
 
         return super.execute();
     }

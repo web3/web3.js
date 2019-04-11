@@ -24,7 +24,6 @@ describe('TransactionSignerTest', () => {
 
     it('calls sign and returns the expected resolved promise', async () => {
         const tx = {
-            chainId: '0x11',
             data: '0x',
             gas: '0x7530',
             gasPrice: '0x3b9aca00',
@@ -36,12 +35,12 @@ describe('TransactionSignerTest', () => {
         await expect(
             transactionSigner.sign(tx, '3a0ce9a362c73439adb38c595e739539be1e34d19c5e9f04962c101c86bd7616')
         ).resolves.toEqual({
-            messageHash: '91e0ad336c23d84f757aa4cde2d0bb557daf5e1ca0a0b850b6431f3277fc167b',
+            messageHash: 'd1cef8bdad2a90e92844383b9a4130b13ceac9a2e023523cefad0518bf133871',
             rawTransaction:
-                '0xf86303843b9aca0082753094b414031aa4838a69e27cb2ae31e709bcd674f0cb648045a01fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867a01415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
-            r: '0x1fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867',
-            s: '0x1415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
-            v: '0x45'
+                '0xf86303843b9aca0082753094b414031aa4838a69e27cb2ae31e709bcd674f0cb648080a069a7ddcdf61725dd27023102244a59e838564407d8467c99fcf70ac397c34fd4a0703df54635a6de4d4f0a66d1af3e5e09d05c3b8b2316201d1879913477346300',
+            r: '0x69a7ddcdf61725dd27023102244a59e838564407d8467c99fcf70ac397c34fd4',
+            s: '0x703df54635a6de4d4f0a66d1af3e5e09d05c3b8b2316201d1879913477346300',
+            v: '0x'
         });
     });
 
@@ -51,7 +50,6 @@ describe('TransactionSignerTest', () => {
 
     it('calls sign with a prefixed pk and returns the expected resolved promise', async () => {
         const tx = {
-            chainId: '0x11',
             data: '0x',
             gas: '0x7530',
             gasPrice: '0x3b9aca00',
@@ -63,12 +61,12 @@ describe('TransactionSignerTest', () => {
         await expect(
             transactionSigner.sign(tx, '0x3a0ce9a362c73439adb38c595e739539be1e34d19c5e9f04962c101c86bd7616')
         ).resolves.toEqual({
-            messageHash: '91e0ad336c23d84f757aa4cde2d0bb557daf5e1ca0a0b850b6431f3277fc167b',
+            messageHash: 'd1cef8bdad2a90e92844383b9a4130b13ceac9a2e023523cefad0518bf133871',
             rawTransaction:
-                '0xf86303843b9aca0082753094b414031aa4838a69e27cb2ae31e709bcd674f0cb648045a01fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867a01415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
-            r: '0x1fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867',
-            s: '0x1415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
-            v: '0x45'
+                '0xf86303843b9aca0082753094b414031aa4838a69e27cb2ae31e709bcd674f0cb648080a069a7ddcdf61725dd27023102244a59e838564407d8467c99fcf70ac397c34fd4a0703df54635a6de4d4f0a66d1af3e5e09d05c3b8b2316201d1879913477346300',
+            r: '0x69a7ddcdf61725dd27023102244a59e838564407d8467c99fcf70ac397c34fd4',
+            s: '0x703df54635a6de4d4f0a66d1af3e5e09d05c3b8b2316201d1879913477346300',
+            v: '0x'
         });
     });
 

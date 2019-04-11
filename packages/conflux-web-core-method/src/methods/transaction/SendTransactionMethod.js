@@ -32,7 +32,7 @@ export default class SendTransactionMethod extends AbstractObservedTransactionMe
      * @constructor
      */
     constructor(utils, formatters, moduleInstance, transactionObserver) {
-        super('eth_sendTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
+        super('cfx_sendTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
     }
 
     /**
@@ -40,7 +40,7 @@ export default class SendTransactionMethod extends AbstractObservedTransactionMe
      *
      * @method beforeExecution
      *
-     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Eth.
+     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Cfx.
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);

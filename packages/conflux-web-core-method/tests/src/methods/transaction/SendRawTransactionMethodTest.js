@@ -14,6 +14,6 @@ describe('SendRawTransactionMethodTest', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractObservedTransactionMethod);
 
-        expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
+        expect(method.rpcMethod).toEqual('cfx_sendRawTransaction');
     });
 });
