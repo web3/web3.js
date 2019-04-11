@@ -43,6 +43,5 @@ export default class SignTransactionMethod extends AbstractMethod {
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
-        console.log('level 2, parameter 0:', this.parameters[0]);
     }
 }
