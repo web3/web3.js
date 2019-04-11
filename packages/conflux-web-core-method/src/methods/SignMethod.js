@@ -31,7 +31,7 @@ export default class SignMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_sign', 2, utils, formatters, moduleInstance);
+        super('cfx_sign', 2, utils, formatters, moduleInstance);
     }
 
     /**
@@ -39,7 +39,7 @@ export default class SignMethod extends AbstractMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Eth.
+     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Cfx.
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);

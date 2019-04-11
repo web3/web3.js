@@ -31,7 +31,7 @@ export default class GetAccountsMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_accounts', 0, utils, formatters, moduleInstance);
+        super('cfx_accounts', 0, utils, formatters, moduleInstance);
     }
 
     /**

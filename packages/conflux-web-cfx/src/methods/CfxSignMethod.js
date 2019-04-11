@@ -15,15 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file SignTransactionMethod.js
+ * @file CfxSignMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import isString from 'lodash/isString';
-import {SignTransactionMethod} from 'conflux-web-core-method';
+import {SignMethod} from 'conflux-web-core-method';
 
-export default class EthSignTransactionMethod extends SignTransactionMethod {
+export default class CfxSignMethod extends SignMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -36,17 +35,6 @@ export default class EthSignTransactionMethod extends SignTransactionMethod {
     }
 
     /**
-     * This method will be executed before the RPC request.
-     *
-     * @method beforeExecution
-     *
-     * @param {AbstractConfluxWebModule} moduleInstance
-     */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
-    }
-
-    /**
      * Sends a JSON-RPC call request
      *
      * @method execute
@@ -55,13 +43,40 @@ export default class EthSignTransactionMethod extends SignTransactionMethod {
      * @returns {Promise<Object|String>}
      */
     execute() {
-        if (isString(this.parameters[1])) {
-            const account = this.moduleInstance.accounts.wallet[this.parameters[1]];
-            if (account) {
-                return this.moduleInstance.transactionSigner.sign(this.parameters[0], account.privateKey);
-            }
+        if (this.moduleInstance.accounts.wallet[this.parameters[1]]) {
+            return this.signLocally();
         }
 
         return super.execute();
+    }
+
+    /**
+     * Signs the message on the client.
+     *
+     * @method signLocally
+     *
+     * @returns {Promise<String>}
+     */
+    async signLocally() {
+        try {
+            this.beforeExecution(this.moduleInstance);
+
+            let signedMessage = this.moduleInstance.accounts.sign(
+                this.parameters[1],
+                this.moduleInstance.accounts.wallet[this.parameters[0]].privateKey
+            );
+
+            if (this.callback) {
+                this.callback(false, signedMessage);
+            }
+
+            return signedMessage;
+        } catch (error) {
+            if (this.callback) {
+                this.callback(error, null);
+            }
+
+            throw error;
+        }
     }
 }

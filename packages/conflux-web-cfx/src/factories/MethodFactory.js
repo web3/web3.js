@@ -54,9 +54,9 @@ import GetUncleMethod from '../methods/GetUncleMethod';
 import GetBlockTransactionCountMethod from '../methods/GetBlockTransactionCountMethod';
 import GetBlockUncleCountMethod from '../methods/GetBlockUncleCountMethod';
 import GetTransactionFromBlockMethod from '../methods/GetTransactionFromBlockMethod';
-import EthSignTransactionMethod from '../methods/EthSignTransactionMethod';
-import EthSignMethod from '../methods/EthSignMethod';
-import EthGetAccountsMethod from '../methods/EthGetAccountsMethod';
+import CfxSignTransactionMethod from '../methods/CfxSignTransactionMethod';
+import CfxSignMethod from '../methods/CfxSignMethod';
+import CfxGetAccountsMethod from '../methods/CfxGetAccountsMethod';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
@@ -76,7 +76,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             getHashrate: GetHashrateMethod,
             isSyncing: IsSyncingMethod,
             getGasPrice: GetGasPriceMethod,
-            getAccounts: EthGetAccountsMethod,
+            getAccounts: CfxGetAccountsMethod,
             getBlockNumber: GetBlockNumberMethod,
             getBalance: GetBalanceMethod,
             getStorageAt: GetStorageAtMethod,
@@ -90,9 +90,9 @@ export default class MethodFactory extends AbstractMethodFactory {
             getTransactionReceipt: GetTransactionReceiptMethod,
             getTransactionCount: GetTransactionCountMethod,
             sendSignedTransaction: SendRawTransactionMethod,
-            signTransaction: EthSignTransactionMethod,
+            signTransaction: CfxSignTransactionMethod,
             sendTransaction: CfxSendTransactionMethod,
-            sign: EthSignMethod,
+            sign: CfxSignMethod,
             call: CallMethod,
             estimateGas: EstimateGasMethod,
             submitWork: SubmitWorkMethod,

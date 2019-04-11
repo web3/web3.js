@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file EthGetAccountsMethod.js
+ * @file CfxGetAccountsMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import {GetAccountsMethod} from 'conflux-web-core-method';
 
-export default class EthGetAccountsMethod extends GetAccountsMethod {
+export default class CfxGetAccountsMethod extends GetAccountsMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

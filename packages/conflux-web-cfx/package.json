@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-cfx",
-    "version": "0.0.2",
+    "version": "0.1.0",
     "description": "ConfluxWeb module to interact with the Conflux blockchain and smart contracts.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-cfx",
     "license": "LGPL-3.0",
@@ -16,18 +16,18 @@
     "types": "types/index.d.ts",
     "dependencies": {
         "@babel/runtime": "^7.3.1",
+        "conflux-web-cfx-abi": "0.1.0",
+        "conflux-web-cfx-accounts": "0.1.0",
+        "conflux-web-cfx-contract": "0.1.0",
+        "conflux-web-core": "0.1.0",
+        "conflux-web-core-helpers": "0.1.0",
+        "conflux-web-core-method": "0.1.0",
+        "conflux-web-core-subscriptions": "0.1.0",
+        "conflux-web-net": "0.1.0",
+        "conflux-web-providers": "0.1.0",
+        "conflux-web-utils": "0.1.0",
         "ethereumjs-tx": "^1.3.7",
-        "rxjs": "^6.4.0",
-        "conflux-web-core": "*",
-        "conflux-web-core-helpers": "*",
-        "conflux-web-core-method": "*",
-        "conflux-web-core-subscriptions": "*",
-        "conflux-web-cfx-abi": "*",
-        "conflux-web-cfx-accounts": "*",
-        "conflux-web-cfx-contract": "*",
-        "conflux-web-net": "*",
-        "conflux-web-providers": "*",
-        "conflux-web-utils": "*"
+        "rxjs": "^6.4.0"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
@@ -37,5 +37,5 @@
         "dist",
         "types/index.d.ts"
     ],
-    "gitHead": "1c89f503c90180598910d29892f6ebf92455cfe1"
+    "gitHead": "27e18eb22d9779288e68e50462cf3aefe00d967f"
 }

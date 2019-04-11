@@ -2,7 +2,7 @@ import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
 import {AbstractConfluxWebModule} from 'conflux-web-core';
 import {SignMethod} from 'conflux-web-core-method';
-import EthSignMethod from '../../../src/methods/EthSignMethod';
+import CfxSignMethod from '../../../src/methods/CfxSignMethod';
 
 // Mocks
 jest.mock('conflux-web-utils');
@@ -10,9 +10,9 @@ jest.mock('conflux-web-core-helpers');
 jest.mock('conflux-web-core');
 
 /**
- * EthSignMethod test
+ * CfxSignMethod test
  */
-describe('EthSignMethodTest', () => {
+describe('CfxSignMethodTest', () => {
     let method, moduleInstanceMock, accountsMock;
 
     beforeEach(() => {
@@ -28,7 +28,7 @@ describe('EthSignMethodTest', () => {
         formatters.inputAddressFormatter.mockReturnValue('0x0');
         formatters.inputSignFormatter.mockReturnValue('string');
 
-        method = new EthSignMethod(Utils, formatters, moduleInstanceMock);
+        method = new CfxSignMethod(Utils, formatters, moduleInstanceMock);
         method.callback = jest.fn();
         method.parameters = ['nope', '0x0'];
     });
@@ -74,13 +74,13 @@ describe('EthSignMethodTest', () => {
         }
     });
 
-    it('calls execute and the account does not exist in the eth-accounts wallet', async () => {
+    it('calls execute and the account does not exist in the cfx-accounts wallet', async () => {
         accountsMock.wallet = {nope: {privateKey: '0x0'}};
 
         moduleInstanceMock.currentProvider = {send: jest.fn()};
 
         method.execute();
 
-        expect(moduleInstanceMock.currentProvider.send).toHaveBeenCalledWith('eth_sign', method.parameters);
+        expect(moduleInstanceMock.currentProvider.send).toHaveBeenCalledWith('cfx_sign', method.parameters);
     });
 });

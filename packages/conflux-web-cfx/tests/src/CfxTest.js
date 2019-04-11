@@ -27,7 +27,7 @@ jest.mock('../../src/factories/SubscriptionsFactory');
  * Cfx test
  */
 describe('CfxTest', () => {
-    let eth,
+    let cfx,
         providerMock,
         methodFactoryMock,
         contractModuleFactoryMock,
@@ -61,7 +61,7 @@ describe('CfxTest', () => {
         new TransactionSigner();
         transactionSignerMock = TransactionSigner.mock.instances[0];
 
-        eth = new Cfx(
+        cfx = new Cfx(
             providerMock,
             methodFactoryMock,
             networkMock,
@@ -77,89 +77,89 @@ describe('CfxTest', () => {
     });
 
     it('constructor check', () => {
-        expect(eth.contractModuleFactory).toEqual(contractModuleFactoryMock);
+        expect(cfx.contractModuleFactory).toEqual(contractModuleFactoryMock);
 
-        expect(eth.net).toEqual(networkMock);
+        expect(cfx.net).toEqual(networkMock);
 
-        expect(eth.accounts).toEqual(accountsMock);
+        expect(cfx.accounts).toEqual(accountsMock);
 
-        expect(eth.abi).toEqual(abiCoderMock);
+        expect(cfx.abi).toEqual(abiCoderMock);
 
-        expect(eth.utils).toEqual(Utils);
+        expect(cfx.utils).toEqual(Utils);
 
-        expect(eth.formatters).toEqual(formatters);
+        expect(cfx.formatters).toEqual(formatters);
 
-        expect(eth.initiatedContracts).toEqual([]);
+        expect(cfx.initiatedContracts).toEqual([]);
 
-        expect(eth.Contract).toBeInstanceOf(Function);
+        expect(cfx.Contract).toBeInstanceOf(Function);
     });
 
     it('sets the defaultGasPrice property', () => {
-        eth.initiatedContracts = [{defaultGasPrice: 20}];
+        cfx.initiatedContracts = [{defaultGasPrice: 20}];
 
-        eth.defaultGasPrice = 10;
+        cfx.defaultGasPrice = 10;
 
-        expect(eth.initiatedContracts[0].defaultGasPrice).toEqual(10);
+        expect(cfx.initiatedContracts[0].defaultGasPrice).toEqual(10);
 
-        expect(eth.defaultGasPrice).toEqual(10);
+        expect(cfx.defaultGasPrice).toEqual(10);
 
         expect(networkMock.defaultGasPrice).toEqual(10);
     });
 
     it('sets the defaultGas property', () => {
-        eth.initiatedContracts = [{defaultGas: 20}];
-        eth.defaultGas = 10;
+        cfx.initiatedContracts = [{defaultGas: 20}];
+        cfx.defaultGas = 10;
 
-        expect(eth.initiatedContracts[0].defaultGas).toEqual(10);
+        expect(cfx.initiatedContracts[0].defaultGas).toEqual(10);
 
-        expect(eth.defaultGas).toEqual(10);
+        expect(cfx.defaultGas).toEqual(10);
 
         expect(networkMock.defaultGas).toEqual(10);
     });
 
     it('sets the transactionBlockTimeout property', () => {
-        eth.initiatedContracts = [{transactionBlockTimeout: 20}];
-        eth.transactionBlockTimeout = 10;
+        cfx.initiatedContracts = [{transactionBlockTimeout: 20}];
+        cfx.transactionBlockTimeout = 10;
 
-        expect(eth.initiatedContracts[0].transactionBlockTimeout).toEqual(10);
+        expect(cfx.initiatedContracts[0].transactionBlockTimeout).toEqual(10);
 
-        expect(eth.transactionBlockTimeout).toEqual(10);
+        expect(cfx.transactionBlockTimeout).toEqual(10);
 
         expect(networkMock.transactionBlockTimeout).toEqual(10);
     });
 
     it('sets the transactionConfirmationBlocks property', () => {
-        eth.initiatedContracts = [{transactionConfirmationBlocks: 20}];
-        eth.transactionConfirmationBlocks = 10;
+        cfx.initiatedContracts = [{transactionConfirmationBlocks: 20}];
+        cfx.transactionConfirmationBlocks = 10;
 
-        expect(eth.initiatedContracts[0].transactionConfirmationBlocks).toEqual(10);
+        expect(cfx.initiatedContracts[0].transactionConfirmationBlocks).toEqual(10);
 
-        expect(eth.transactionConfirmationBlocks).toEqual(10);
+        expect(cfx.transactionConfirmationBlocks).toEqual(10);
 
         expect(networkMock.transactionConfirmationBlocks).toEqual(10);
     });
 
     it('sets the transactionPollingTimeout property', () => {
-        eth.initiatedContracts = [{transactionPollingTimeout: 20}];
-        eth.transactionPollingTimeout = 10;
+        cfx.initiatedContracts = [{transactionPollingTimeout: 20}];
+        cfx.transactionPollingTimeout = 10;
 
-        expect(eth.initiatedContracts[0].transactionPollingTimeout).toEqual(10);
+        expect(cfx.initiatedContracts[0].transactionPollingTimeout).toEqual(10);
 
-        expect(eth.transactionPollingTimeout).toEqual(10);
+        expect(cfx.transactionPollingTimeout).toEqual(10);
 
         expect(networkMock.transactionPollingTimeout).toEqual(10);
     });
 
     it('sets the defaultAccount property', () => {
-        eth.initiatedContracts = [{defaultAccount: '0x0'}];
+        cfx.initiatedContracts = [{defaultAccount: '0x0'}];
 
         Utils.toChecksumAddress.mockReturnValueOnce('0x1');
 
-        eth.defaultAccount = '0x1';
+        cfx.defaultAccount = '0x1';
 
-        expect(eth.initiatedContracts[0].defaultAccount).toEqual('0x1');
+        expect(cfx.initiatedContracts[0].defaultAccount).toEqual('0x1');
 
-        expect(eth.defaultAccount).toEqual('0x1');
+        expect(cfx.defaultAccount).toEqual('0x1');
 
         expect(networkMock.defaultAccount).toEqual('0x1');
 
@@ -167,12 +167,12 @@ describe('CfxTest', () => {
     });
 
     it('sets the defaultBlock property', () => {
-        eth.initiatedContracts = [{defaultBlock: 20}];
-        eth.defaultBlock = 10;
+        cfx.initiatedContracts = [{defaultBlock: 20}];
+        cfx.defaultBlock = 10;
 
-        expect(eth.initiatedContracts[0].defaultBlock).toEqual(10);
+        expect(cfx.initiatedContracts[0].defaultBlock).toEqual(10);
 
-        expect(eth.defaultBlock).toEqual(10);
+        expect(cfx.defaultBlock).toEqual(10);
 
         expect(networkMock.defaultBlock).toEqual(10);
     });
@@ -189,9 +189,9 @@ describe('CfxTest', () => {
 
         const callback = () => {};
 
-        expect(eth.subscribe('logs', {}, callback)).toBeInstanceOf(LogSubscription);
+        expect(cfx.subscribe('logs', {}, callback)).toBeInstanceOf(LogSubscription);
 
-        expect(subscriptionsFactoryMock.getSubscription).toHaveBeenCalledWith(eth, 'logs', {});
+        expect(subscriptionsFactoryMock.getSubscription).toHaveBeenCalledWith(cfx, 'logs', {});
 
         expect(logSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
     });
@@ -208,9 +208,9 @@ describe('CfxTest', () => {
 
         const callback = () => {};
 
-        expect(eth.subscribe('newBlockHeaders', {}, callback)).toBeInstanceOf(AbstractSubscription);
+        expect(cfx.subscribe('newBlockHeaders', {}, callback)).toBeInstanceOf(AbstractSubscription);
 
-        expect(subscriptionsFactoryMock.getSubscription).toHaveBeenCalledWith(eth, 'newBlockHeaders', {});
+        expect(subscriptionsFactoryMock.getSubscription).toHaveBeenCalledWith(cfx, 'newBlockHeaders', {});
 
         expect(abstractSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
     });
@@ -227,9 +227,9 @@ describe('CfxTest', () => {
 
         const callback = () => {};
 
-        expect(eth.subscribe('pendingTransactions', {}, callback)).toBeInstanceOf(AbstractSubscription);
+        expect(cfx.subscribe('pendingTransactions', {}, callback)).toBeInstanceOf(AbstractSubscription);
 
-        expect(subscriptionsFactoryMock.getSubscription).toHaveBeenCalledWith(eth, 'pendingTransactions', {});
+        expect(subscriptionsFactoryMock.getSubscription).toHaveBeenCalledWith(cfx, 'pendingTransactions', {});
 
         expect(abstractSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
     });
@@ -246,9 +246,9 @@ describe('CfxTest', () => {
 
         const callback = () => {};
 
-        expect(eth.subscribe('syncing', {}, callback)).toBeInstanceOf(AbstractSubscription);
+        expect(cfx.subscribe('syncing', {}, callback)).toBeInstanceOf(AbstractSubscription);
 
-        expect(subscriptionsFactoryMock.getSubscription).toHaveBeenCalledWith(eth, 'syncing', {});
+        expect(subscriptionsFactoryMock.getSubscription).toHaveBeenCalledWith(cfx, 'syncing', {});
 
         expect(abstractSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
     });
@@ -256,20 +256,20 @@ describe('CfxTest', () => {
     it('calls the Contract factory method with options from the constructor', () => {
         contractModuleFactoryMock.createContract.mockReturnValueOnce({});
 
-        eth.currentProvider = providerMock;
-        expect(new eth.Contract([], '0x0', {data: '', from: '0x0', gas: '0x0', gasPrice: '0x0'})).toEqual({});
+        cfx.currentProvider = providerMock;
+        expect(new cfx.Contract([], '0x0', {data: '', from: '0x0', gas: '0x0', gasPrice: '0x0'})).toEqual({});
 
-        expect(eth.initiatedContracts).toHaveLength(1);
+        expect(cfx.initiatedContracts).toHaveLength(1);
 
-        expect(contractModuleFactoryMock.createContract).toHaveBeenCalledWith(providerMock, eth.accounts, [], '0x0', {
+        expect(contractModuleFactoryMock.createContract).toHaveBeenCalledWith(providerMock, cfx.accounts, [], '0x0', {
             defaultAccount: '0x0',
-            defaultBlock: eth.defaultBlock,
+            defaultBlock: cfx.defaultBlock,
             defaultGas: '0x0',
             defaultGasPrice: '0x0',
-            transactionBlockTimeout: eth.transactionBlockTimeout,
-            transactionConfirmationBlocks: eth.transactionConfirmationBlocks,
-            transactionPollingTimeout: eth.transactionPollingTimeout,
-            transactionSigner: eth.transactionSigner,
+            transactionBlockTimeout: cfx.transactionBlockTimeout,
+            transactionConfirmationBlocks: cfx.transactionConfirmationBlocks,
+            transactionPollingTimeout: cfx.transactionPollingTimeout,
+            transactionSigner: cfx.transactionSigner,
             data: ''
         });
     });
@@ -277,20 +277,20 @@ describe('CfxTest', () => {
     it('calls the Contract factory method without options from the constructor', () => {
         contractModuleFactoryMock.createContract.mockReturnValueOnce({});
 
-        eth.currentProvider = providerMock;
-        expect(new eth.Contract([], '0x0', {})).toEqual({});
+        cfx.currentProvider = providerMock;
+        expect(new cfx.Contract([], '0x0', {})).toEqual({});
 
-        expect(eth.initiatedContracts).toHaveLength(1);
+        expect(cfx.initiatedContracts).toHaveLength(1);
 
-        expect(contractModuleFactoryMock.createContract).toHaveBeenCalledWith(providerMock, eth.accounts, [], '0x0', {
-            defaultAccount: eth.defaultAccount,
-            defaultBlock: eth.defaultBlock,
-            defaultGas: eth.defaultGas,
-            defaultGasPrice: eth.defaultGasPrice,
-            transactionBlockTimeout: eth.transactionBlockTimeout,
-            transactionConfirmationBlocks: eth.transactionConfirmationBlocks,
-            transactionPollingTimeout: eth.transactionPollingTimeout,
-            transactionSigner: eth.transactionSigner,
+        expect(contractModuleFactoryMock.createContract).toHaveBeenCalledWith(providerMock, cfx.accounts, [], '0x0', {
+            defaultAccount: cfx.defaultAccount,
+            defaultBlock: cfx.defaultBlock,
+            defaultGas: cfx.defaultGas,
+            defaultGasPrice: cfx.defaultGasPrice,
+            transactionBlockTimeout: cfx.transactionBlockTimeout,
+            transactionConfirmationBlocks: cfx.transactionConfirmationBlocks,
+            transactionPollingTimeout: cfx.transactionPollingTimeout,
+            transactionSigner: cfx.transactionSigner,
             data: undefined
         });
     });

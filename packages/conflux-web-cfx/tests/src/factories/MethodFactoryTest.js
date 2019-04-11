@@ -33,9 +33,9 @@ import GetUncleMethod from '../../../src/methods/GetUncleMethod';
 import GetBlockTransactionCountMethod from '../../../src/methods/GetBlockTransactionCountMethod';
 import GetBlockUncleCountMethod from '../../../src/methods/GetBlockUncleCountMethod';
 import GetTransactionFromBlockMethod from '../../../src/methods/GetTransactionFromBlockMethod';
-import EthSignTransactionMethod from '../../../src/methods/EthSignTransactionMethod';
-import EthSignMethod from '../../../src/methods/EthSignMethod';
-import EthGetAccountsMethod from '../../../src/methods/EthGetAccountsMethod';
+import CfxSignTransactionMethod from '../../../src/methods/CfxSignTransactionMethod';
+import CfxSignMethod from '../../../src/methods/CfxSignMethod';
+import CfxGetAccountsMethod from '../../../src/methods/CfxGetAccountsMethod';
 
 jest.mock('conflux-web-utils');
 jest.mock('conflux-web-core-helpers');
@@ -65,7 +65,7 @@ describe('MethodFactoryTest', () => {
             getHashrate: GetHashrateMethod,
             isSyncing: IsSyncingMethod,
             getGasPrice: GetGasPriceMethod,
-            getAccounts: EthGetAccountsMethod,
+            getAccounts: CfxGetAccountsMethod,
             getBlockNumber: GetBlockNumberMethod,
             getBalance: GetBalanceMethod,
             getStorageAt: GetStorageAtMethod,
@@ -79,9 +79,9 @@ describe('MethodFactoryTest', () => {
             getTransactionReceipt: GetTransactionReceiptMethod,
             getTransactionCount: GetTransactionCountMethod,
             sendSignedTransaction: SendRawTransactionMethod,
-            signTransaction: EthSignTransactionMethod,
+            signTransaction: CfxSignTransactionMethod,
             sendTransaction: CfxSendTransactionMethod,
-            sign: EthSignMethod,
+            sign: CfxSignMethod,
             call: CallMethod,
             estimateGas: EstimateGasMethod,
             submitWork: SubmitWorkMethod,

@@ -31,7 +31,7 @@ export default class SignTransactionMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_signTransaction', 1, utils, formatters, moduleInstance);
+        super('cfx_signTransaction', 1, utils, formatters, moduleInstance);
     }
 
     /**

@@ -1,14 +1,14 @@
 import {formatters} from 'conflux-web-core-helpers';
 import {SignTransactionMethod} from 'conflux-web-core-method';
-import EthSignTransactionMethod from '../../../src/methods/EthSignTransactionMethod';
+import CfxSignTransactionMethod from '../../../src/methods/CfxSignTransactionMethod';
 
 // Mocks
 jest.mock('conflux-web-core-helpers');
 
 /**
- * EthSignTransactionMethod test
+ * CfxSignTransactionMethod test
  */
-describe('EthSignTransactionMethodTest', () => {
+describe('CfxSignTransactionMethodTest', () => {
     let method, moduleInstanceMock;
 
     beforeEach(() => {
@@ -20,7 +20,7 @@ describe('EthSignTransactionMethodTest', () => {
             })
         };
 
-        method = new EthSignTransactionMethod(null, formatters, moduleInstanceMock);
+        method = new CfxSignTransactionMethod(null, formatters, moduleInstanceMock);
     });
 
     it('constructor check', () => {
@@ -56,6 +56,6 @@ describe('EthSignTransactionMethodTest', () => {
         method.parameters = [{}];
         method.execute();
 
-        expect(moduleInstanceMock.currentProvider.send).toHaveBeenCalledWith('eth_signTransaction', method.parameters);
+        expect(moduleInstanceMock.currentProvider.send).toHaveBeenCalledWith('cfx_signTransaction', method.parameters);
     });
 });

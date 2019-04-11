@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-utils",
-    "version": "0.0.2",
+    "version": "0.1.0",
     "description": "Collection of utility functions used in conflux-web.js.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-utils",
     "license": "LGPL-3.0",
@@ -19,8 +19,8 @@
         "@types/bn.js": "^4.11.4",
         "@types/node": "^10.12.18",
         "bn.js": "4.11.8",
-        "eth-lib": "0.2.8",
         "confluxjs-unit": "*",
+        "eth-lib": "0.2.8",
         "lodash": "^4.17.11",
         "number-to-bn": "1.7.0",
         "randomhex": "0.1.5",
@@ -35,5 +35,5 @@
         "dist",
         "types/index.d.ts"
     ],
-    "gitHead": "1c89f503c90180598910d29892f6ebf92455cfe1"
+    "gitHead": "27e18eb22d9779288e68e50462cf3aefe00d967f"
 }

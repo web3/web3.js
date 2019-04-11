@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-providers",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "ConfluxWeb module to handle requests to external providers.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-providers",
     "license": "LGPL-3.0",
@@ -24,16 +24,16 @@
         "xhr2-cookies": "1.1.0"
     },
     "devDependencies": {
+        "conflux-web-core": "0.1.0",
+        "conflux-web-core-helpers": "0.1.0",
+        "conflux-web-core-method": "0.1.0",
+        "conflux-web-utils": "0.1.0",
         "definitelytyped-header-parser": "^1.0.1",
-        "dtslint": "0.4.2",
-        "conflux-web-core": "*",
-        "conflux-web-core-helpers": "*",
-        "conflux-web-core-method": "*",
-        "conflux-web-utils": "*"
+        "dtslint": "0.4.2"
     },
     "files": [
         "dist",
         "types/index.d.ts"
     ],
-    "gitHead": "1c89f503c90180598910d29892f6ebf92455cfe1"
+    "gitHead": "27e18eb22d9779288e68e50462cf3aefe00d967f"
 }

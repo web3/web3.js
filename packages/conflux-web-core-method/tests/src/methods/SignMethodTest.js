@@ -20,7 +20,7 @@ describe('SignMethodTest', () => {
 
         expect(method.parametersAmount).toEqual(2);
 
-        expect(method.rpcMethod).toEqual('eth_sign');
+        expect(method.rpcMethod).toEqual('cfx_sign');
     });
 
     it('beforeExecution should call the inputSignFormatter and inputAddressFormatter and swap order of parameters', () => {

@@ -1,12 +1,12 @@
 import {AbstractConfluxWebModule} from 'conflux-web-core';
 import {GetAccountsMethod} from 'conflux-web-core-method';
-import EthGetAccountsMethod from '../../../src/methods/EthGetAccountsMethod';
+import CfxGetAccountsMethod from '../../../src/methods/CfxGetAccountsMethod';
 
 // Mocks
 jest.mock('conflux-web-core');
 
 /**
- * EthGetAccountsMethod test
+ * CfxGetAccountsMethod test
  */
 describe('EthGetAccountsMethodTest', () => {
     let method, moduleInstanceMock, accountsMock;
@@ -19,7 +19,7 @@ describe('EthGetAccountsMethodTest', () => {
         moduleInstanceMock = {};
         moduleInstanceMock.accounts = accountsMock;
 
-        method = new EthGetAccountsMethod({}, {}, moduleInstanceMock);
+        method = new CfxGetAccountsMethod({}, {}, moduleInstanceMock);
     });
 
     it('constructor check', () => {
