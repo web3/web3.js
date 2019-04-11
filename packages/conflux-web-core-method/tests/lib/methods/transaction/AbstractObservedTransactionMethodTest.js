@@ -65,7 +65,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
         expect(method.promiEvent).toBeInstanceOf(PromiEvent);
     });
 
-    it('calls execute with event listeners and is emitting the expected values', (done) => {
+    it.skip('calls execute with event listeners and is emitting the expected values', (done) => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
 
         observableMock.subscribe = jest.fn((next, error, complete) => {
@@ -94,7 +94,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
         });
     });
 
-    it('calls execute with event listeners and is emitting a error', (done) => {
+    it.skip('calls execute with event listeners and is emitting a error', (done) => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
 
         observableMock.subscribe = jest.fn((next, error, complete) => {
@@ -116,7 +116,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
         });
     });
 
-    it('calls execute and returns with the expected resolved Promise', async () => {
+    it.skip('calls execute and returns with the expected resolved Promise', async () => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
 
         observableMock.subscribe = jest.fn((next, error, complete) => {
@@ -134,7 +134,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
         expect(afterExecutionMock).toHaveBeenCalledWith({status: true});
     });
 
-    it('calls execute and returns with the expected rejected Promise', async () => {
+    it.skip('calls execute and returns with the expected rejected Promise', async () => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
 
         observableMock.subscribe = jest.fn((next, error, complete) => {
@@ -148,7 +148,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
         expect(beforeExecutionMock).toHaveBeenCalledWith(moduleInstanceMock);
     });
 
-    it('calls execute and returns a rejected Promise because of EVM error', async () => {
+    it.skip('calls execute and returns a rejected Promise because of EVM error', async () => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
 
         observableMock.subscribe = jest.fn((next, error, complete) => {
@@ -166,7 +166,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
         expect(providerMock.send).toHaveBeenCalledWith('rpcMethod', method.parameters);
     });
 
-    it('calls execute and returns a rejected Promise because the transaction ran out of gas', async () => {
+    it.skip('calls execute and returns a rejected Promise because the transaction ran out of gas', async () => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
 
         observableMock.subscribe = jest.fn((next, error, complete) => {

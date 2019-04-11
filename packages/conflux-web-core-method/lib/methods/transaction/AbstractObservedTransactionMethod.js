@@ -50,6 +50,29 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
         return 'observed-transaction-method';
     }
 
+    execute() {
+        this.beforeExecution(this.moduleInstance);
+
+        this.moduleInstance.currentProvider
+            .send(this.rpcMethod, this.parameters)
+            .then((transactionHash) => {
+                if (this.callback) {
+                    this.promiEvent.resolve(this.callback(false, transactionHash));
+                    return;
+                }
+                this.promiEvent.resolve(transactionHash);
+            })
+            .catch((error) => {
+                if (this.callback) {
+                    this.callback(error, null);
+                    return;
+                }
+                this.handleError(error, false, 0);
+            });
+
+        return this.promiEvent;
+    }
+
     /**
      * Sends the request and returns a PromiEvent Object
      *
@@ -59,88 +82,88 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    execute() {
-        this.beforeExecution(this.moduleInstance);
-
-        this.moduleInstance.currentProvider
-            .send(this.rpcMethod, this.parameters)
-            .then((transactionHash) => {
-                let confirmations, receipt;
-
-                if (this.callback) {
-                    this.callback(false, transactionHash);
-
-                    return;
-                }
-
-                this.promiEvent.emit('transactionHash', transactionHash);
-
-                const transactionConfirmationSubscription = this.transactionObserver.observe(transactionHash).subscribe(
-                    (transactionConfirmation) => {
-                        confirmations = transactionConfirmation.confirmations;
-                        receipt = transactionConfirmation.receipt;
-
-                        if (!receipt.status) {
-                            if (this.parameters[0].gas === receipt.gasUsed) {
-                                this.handleError(
-                                    new Error(
-                                        `Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(
-                                            receipt,
-                                            null,
-                                            2
-                                        )}`
-                                    ),
-                                    receipt,
-                                    confirmations
-                                );
-
-                                transactionConfirmationSubscription.unsubscribe();
-
-                                return;
-                            }
-
-                            this.handleError(
-                                new Error(
-                                    `Transaction has been reverted by the EVM:\n${JSON.stringify(receipt, null, 2)}`
-                                ),
-                                receipt,
-                                confirmations
-                            );
-
-                            transactionConfirmationSubscription.unsubscribe();
-
-                            return;
-                        }
-
-                        this.promiEvent.emit('confirmation', confirmations, this.afterExecution(receipt));
-                    },
-                    (error) => {
-                        this.handleError(error, receipt, confirmations);
-                    },
-                    () => {
-                        if (this.promiEvent.listenerCount('receipt') > 0) {
-                            this.promiEvent.emit('receipt', this.afterExecution(receipt));
-                            this.promiEvent.removeAllListeners();
-
-                            return;
-                        }
-
-                        this.promiEvent.resolve(this.afterExecution(receipt));
-                    }
-                );
-            })
-            .catch((error) => {
-                if (this.callback) {
-                    this.callback(error, null);
-
-                    return;
-                }
-
-                this.handleError(error, false, 0);
-            });
-
-        return this.promiEvent;
-    }
+    // executeOld() {
+    //     this.beforeExecution(this.moduleInstance);
+    //
+    //     this.moduleInstance.currentProvider
+    //         .send(this.rpcMethod, this.parameters)
+    //         .then((transactionHash) => {
+    //             let confirmations, receipt;
+    //
+    //             if (this.callback) {
+    //                 this.callback(false, transactionHash);
+    //
+    //                 return;
+    //             }
+    //
+    //             this.promiEvent.emit('transactionHash', transactionHash);
+    //
+    //             const transactionConfirmationSubscription = this.transactionObserver.observe(transactionHash).subscribe(
+    //                 (transactionConfirmation) => {
+    //                     confirmations = transactionConfirmation.confirmations;
+    //                     receipt = transactionConfirmation.receipt;
+    //
+    //                     if (!receipt.status) {
+    //                         if (this.parameters[0].gas === receipt.gasUsed) {
+    //                             this.handleError(
+    //                                 new Error(
+    //                                     `Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(
+    //                                         receipt,
+    //                                         null,
+    //                                         2
+    //                                     )}`
+    //                                 ),
+    //                                 receipt,
+    //                                 confirmations
+    //                             );
+    //
+    //                             transactionConfirmationSubscription.unsubscribe();
+    //
+    //                             return;
+    //                         }
+    //
+    //                         this.handleError(
+    //                             new Error(
+    //                                 `Transaction has been reverted by the EVM:\n${JSON.stringify(receipt, null, 2)}`
+    //                             ),
+    //                             receipt,
+    //                             confirmations
+    //                         );
+    //
+    //                         transactionConfirmationSubscription.unsubscribe();
+    //
+    //                         return;
+    //                     }
+    //
+    //                     this.promiEvent.emit('confirmation', confirmations, this.afterExecution(receipt));
+    //                 },
+    //                 (error) => {
+    //                     this.handleError(error, receipt, confirmations);
+    //                 },
+    //                 () => {
+    //                     if (this.promiEvent.listenerCount('receipt') > 0) {
+    //                         this.promiEvent.emit('receipt', this.afterExecution(receipt));
+    //                         this.promiEvent.removeAllListeners();
+    //
+    //                         return;
+    //                     }
+    //
+    //                     this.promiEvent.resolve(this.afterExecution(receipt));
+    //                 }
+    //             );
+    //         })
+    //         .catch((error) => {
+    //             if (this.callback) {
+    //                 this.callback(error, null);
+    //
+    //                 return;
+    //             }
+    //
+    //             this.handleError(error, false, 0);
+    //         });
+    //
+    //     return this.promiEvent;
+    // }
 
     /**
      * This methods calls the correct error methods of the PromiEvent object.

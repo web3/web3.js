@@ -21,6 +21,7 @@
  */
 
 import isString from 'lodash/isString';
+import isNumber from 'lodash/isNumber';
 import {SignTransactionMethod} from 'conflux-web-core-method';
 
 export default class CfxSignTransactionMethod extends SignTransactionMethod {
@@ -57,6 +58,12 @@ export default class CfxSignTransactionMethod extends SignTransactionMethod {
     execute() {
         if (isString(this.parameters[1])) {
             const account = this.moduleInstance.accounts.wallet[this.parameters[1]];
+            if (account) {
+                return this.moduleInstance.transactionSigner.sign(this.parameters[0], account.privateKey);
+            }
+        }
+        if (isNumber(this.parameters[0].from)) {
+            const account = this.moduleInstance.accounts.wallet[this.parameters[0].from];
             if (account) {
                 return this.moduleInstance.transactionSigner.sign(this.parameters[0], account.privateKey);
             }
