@@ -18,7 +18,7 @@ describe('CallMethodTest', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractMethod);
 
-        expect(method.rpcMethod).toEqual('eth_call');
+        expect(method.rpcMethod).toEqual('cfx_call');
 
         expect(method.parametersAmount).toEqual(2);
 

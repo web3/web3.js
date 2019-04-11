@@ -32,7 +32,7 @@ export default class CallMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_call', 2, utils, formatters, moduleInstance);
+        super('cfx_call', 2, utils, formatters, moduleInstance);
     }
 
     /**
