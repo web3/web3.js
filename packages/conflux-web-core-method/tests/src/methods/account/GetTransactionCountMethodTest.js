@@ -55,7 +55,7 @@ describe('GetTransactionCountMethodTest', () => {
 
         formatters.inputDefaultEpochNumberFormatter.mockReturnValueOnce('0x0');
 
-        method.beforeExecution({defaultEpoch: 'latest'});
+        method.beforeExecution({defaultEpoch: 'latest_state'});
 
         expect(method.callback).toEqual(callback);
 
@@ -65,7 +65,9 @@ describe('GetTransactionCountMethodTest', () => {
 
         expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
 
-        expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith('latest', {defaultEpoch: 'latest'});
+        expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith('latest_state', {
+            defaultEpoch: 'latest_state'
+        });
     });
 
     it('afterExecution should call hexToNumber on the response and return it', () => {

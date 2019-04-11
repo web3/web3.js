@@ -58,7 +58,7 @@ contract.getPastEvents('MyEvent');
 contract.getPastEvents('MyEvent', {
     filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'},
     fromBlock: 0,
-    toBlock: 'latest'
+    toBlock: 'latest_state'
 });
 
 // $ExpectType Promise<EventData[]>
@@ -68,7 +68,7 @@ contract.getPastEvents('MyEvent', {});
 contract.getPastEvents('MyEvent', {
     filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'},
     fromBlock: 0,
-    toBlock: 'latest'
+    toBlock: 'latest_state'
 }, (error, events) => { console.log(events); });
 
 // $ExpectType Promise<EventData[]>

@@ -53,7 +53,7 @@ describe('GetCodeMethodTest', () => {
 
         formatters.inputDefaultEpochNumberFormatter.mockReturnValueOnce('0x0');
 
-        method.beforeExecution({defaultEpoch: 'latest'});
+        method.beforeExecution({defaultEpoch: 'latest_mined'});
 
         expect(method.callback).toEqual(callback);
 
@@ -63,6 +63,8 @@ describe('GetCodeMethodTest', () => {
 
         expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
 
-        expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith('latest', {defaultEpoch: 'latest'});
+        expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith('latest_mined', {
+            defaultEpoch: 'latest_mined'
+        });
     });
 });

@@ -53,7 +53,7 @@ describe('CallMethodTest', () => {
 
         formatters.inputDefaultEpochNumberFormatter.mockReturnValueOnce('0x0');
 
-        method.beforeExecution({defaultEpoch: 'latest'});
+        method.beforeExecution({defaultEpoch: 'latest_state'});
 
         expect(method.callback).toEqual(callback);
 
@@ -61,8 +61,10 @@ describe('CallMethodTest', () => {
 
         expect(method.parameters[1]).toEqual('0x0');
 
-        expect(formatters.inputCallFormatter).toHaveBeenCalledWith({}, {defaultEpoch: 'latest'});
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith({}, {defaultEpoch: 'latest_state'});
 
-        expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith('latest', {defaultEpoch: 'latest'});
+        expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith('latest_state', {
+            defaultEpoch: 'latest_state'
+        });
     });
 });

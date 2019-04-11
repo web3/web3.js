@@ -239,7 +239,7 @@ describe('AbstractContractTest', () => {
             {
                 data: '',
                 defaultAccount: undefined,
-                defaultEpoch: 'latest',
+                defaultEpoch: 'latest_state',
                 defaultGas: undefined,
                 defaultGasPrice: undefined,
                 transactionBlockTimeout: 50,

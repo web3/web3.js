@@ -30,7 +30,7 @@ formatters.inputSignFormatter('0x0');
 formatters.inputAddressFormatter('0x0');
 
 // $ExpectType boolean
-formatters.isPredefinedEpochNumber('latest');
+formatters.isPredefinedEpochNumber('latest_state');
 
 // $ExpectType string
 formatters.inputDefaultEpochNumberFormatter('0x0', new AbstractConfluxWebModule('http://localhost:8545'));

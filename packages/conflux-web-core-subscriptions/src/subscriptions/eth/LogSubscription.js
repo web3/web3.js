@@ -23,6 +23,7 @@
 import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
 import isFunction from 'lodash/isFunction';
 
+// TODO: carefully go over this code when adding log
 // TODO: Move the past logs logic to the eth module
 export default class LogSubscription extends AbstractSubscription {
     /**

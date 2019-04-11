@@ -70,7 +70,7 @@ describe('GetStorageAtMethodTest', () => {
 
             Utils.numberToHex.mockReturnValueOnce('0x0');
 
-            method.beforeExecution({defaultEpoch: 'latest'});
+            method.beforeExecution({defaultEpoch: 'latest_state'});
 
             expect(method.callback).toEqual(callback);
 
@@ -82,8 +82,8 @@ describe('GetStorageAtMethodTest', () => {
 
             expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
 
-            expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith('latest', {
-                defaultEpoch: 'latest'
+            expect(formatters.inputDefaultEpochNumberFormatter).toHaveBeenCalledWith('latest_state', {
+                defaultEpoch: 'latest_state'
             });
 
             expect(Utils.numberToHex).toHaveBeenCalledWith(100);
