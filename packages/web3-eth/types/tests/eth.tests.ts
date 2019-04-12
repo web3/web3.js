@@ -457,21 +457,3 @@ eth.pendingTransactions();
 
 // $ExpectType Promise<[]>
 eth.pendingTransactions((error: Error, result: []) => {});
-
-// $ExpectType Promise<Content>
-eth.content();
-
-// $ExpectType Promise<Content>
-eth.content((error: Error, result: Content) => {});
-
-// $ExpectType Promise<Content>
-eth.inspect();
-
-// $ExpectType Promise<Content>
-eth.inspect((error: Error, result: Content) => {});
-
-// $ExpectType Promise<Content>
-eth.status();
-
-// $ExpectType Promise<Content>
-eth.status((error: Error, result: Content) => {});

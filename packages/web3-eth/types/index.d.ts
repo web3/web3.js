@@ -29,7 +29,6 @@ import {
     TransactionConfig,
     TransactionReceipt,
     Web3ModuleOptions,
-    Content
 } from 'web3-core';
 import {Contract, ContractOptions} from 'web3-eth-contract';
 import {Iban} from 'web3-eth-iban';
@@ -39,7 +38,6 @@ import {Network} from 'web3-net';
 import {Personal} from 'web3-eth-personal';
 import {AbiItem} from 'web3-utils';
 import {Ens} from 'web3-eth-ens';
-import {Txpool} from 'web3-eth-txpool'
 import * as net from 'net';
 
 export class Eth extends AbstractWeb3Module {
@@ -56,7 +54,6 @@ export class Eth extends AbstractWeb3Module {
     ens: Ens;
     abi: AbiCoder;
     net: Network;
-    txpool: Txpool;
 
     clearSubscriptions(): Promise<boolean>;
 
@@ -148,12 +145,6 @@ export class Eth extends AbstractWeb3Module {
     submitWork(data: [string, string, string], callback?: (error: Error, result: boolean) => void): Promise<boolean>;
 
     pendingTransactions(callback?: (error: Error, result: []) => void): Promise<[]>;
-
-    content(callback?: (error: Error, result: Content) => void): Promise<Content>;
-
-    inspect(callback?: (error: Error, result: Content) => void): Promise<Content>;
-
-    status(callback?: (error: Error, result: Content) => void): Promise<Content>;
 }
 
 export interface Methods {
