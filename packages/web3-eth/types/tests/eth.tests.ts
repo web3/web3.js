@@ -457,29 +457,3 @@ eth.pendingTransactions();
 
 // $ExpectType Promise<[]>
 eth.pendingTransactions((error: Error, result: []) => {});
-
-// $ExpectType Promise<boolean>
-eth.setEtherbase('0x3d80b31a78c30fc628f20b2c89d7ddbf6e53cedc');
-// $ExpectType Promise<boolean>
-eth.setEtherbase('0x3d80b31a78c30fc628f20b2c89d7ddbf6e53cedc', (error: Error, address: boolean) => {});
-
-// $ExpectType Promise<boolean>
-eth.setExtra('Hello world');
-// $ExpectType Promise<boolean>
-eth.setExtra('Hello world', (error: Error, result: boolean) => {});
-
-// $ExpectType Promise<boolean>
-eth.setGasPrice('0x4a817c800');
-// $ExpectType Promise<boolean>
-eth.setGasPrice('0x4a817c800', (error: Error, result: boolean) => {});
-
-// $ExpectType Promise<boolean>
-eth.startMining('0x1');
-// $ExpectType Promise<boolean>
-eth.startMining('0x1', (error: Error, result: boolean) => {});
-
-// $ExpectType Promise<boolean>
-eth.stopMining();
-
-// $ExpectType Promise<boolean>
-eth.stopMining((error: Error, result: boolean) => {});
