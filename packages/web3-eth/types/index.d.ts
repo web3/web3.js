@@ -121,7 +121,7 @@ export class Eth extends AbstractWeb3Module {
 
     sendTransaction(transactionConfig: TransactionConfig, callback?: (error: Error, hash: string) => void): PromiEvent<TransactionReceipt>;
 
-    sendSignedTransaction(signedTransactionData: string, callback?: (error: Error, gas: string) => void): PromiEvent<TransactionReceipt>
+    sendSignedTransaction(signedTransactionData: string, callback?: (error: Error, hash: string) => void): PromiEvent<TransactionReceipt>
 
     sign(dataToSign: string, address: string | number, callback?: (error: Error, signature: string) => void): Promise<string>;
 
