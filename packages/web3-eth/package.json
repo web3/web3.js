@@ -29,7 +29,6 @@
         "web3-eth-ens": "1.0.0-beta.52",
         "web3-eth-iban": "1.0.0-beta.52",
         "web3-eth-personal": "1.0.0-beta.52",
-        "web3-eth-txpool": "1.0.0-beta.52",
         "web3-net": "1.0.0-beta.52",
         "web3-providers": "1.0.0-beta.52",
         "web3-utils": "1.0.0-beta.52"
