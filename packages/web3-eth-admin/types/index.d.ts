@@ -47,39 +47,21 @@ export class Admin extends AbstractWeb3Module {
         callback?: (error: Error, result: string) => void
     ): Promise<string>;
 
-    startRPC(callback?: (error: Error, result: boolean) => void): Promise<boolean>
-    startRPC(host: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(port: number, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(host: string, port: number, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(host: string, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(host: string, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(port: number, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(port: number, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(cors: number, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(host: string, port: number, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(host: string, port: number, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(host: string, cors: string, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(port: number, cors: string, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startRPC(host: string, port: number, cors: string, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+    startRPC(
+        host?: string,
+        port?: number,
+        cors?: string,
+        apis?: string,
+        callback?: (error: Error, result: boolean) => void
+    ): Promise<boolean>;
 
-    startWS(callback?: (error: Error, result: boolean) => void): Promise<boolean>
-    startWS(host: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(port: number, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(host: string, port: number, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(host: string, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(host: string, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(port: number, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(port: number, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(cors: number, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(host: string, port: number, cors: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(host: string, port: number, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(host: string, cors: string, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(port: number, cors: string, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-    startWS(host: string, port: number, cors: string, apis: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+    startWS(
+        host?: string,
+        port?: number,
+        cors?: string,
+        apis?: string,
+        callback?: (error: Error, result: boolean) => void
+    ): Promise<boolean>;
 
     stopRPC(
         callback?: (error: Error, result: boolean) => void
