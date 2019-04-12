@@ -88,7 +88,7 @@ admin.startRPC(null, null, "");
 admin.startRPC(null, null, "", null, (error: Error, result: boolean) => {});
 
 // $ExpectType Promise<boolean>
-admin.startRPC("eth, net, web3");
+admin.startRPC(null, null, null, "eth, net, web3");
 
 // $ExpectType Promise<boolean>
 admin.startRPC(null, null, null, "eth, net, web3", (error: Error, result: boolean) => {});
@@ -187,7 +187,7 @@ admin.startWS(null, null, "");
 admin.startWS(null, null, "", null, (error: Error, result: boolean) => {});
 
 // $ExpectType Promise<boolean>
-admin.startWS("eth, net, web3");
+admin.startWS(null, null, "eth, net, web3");
 
 // $ExpectType Promise<boolean>
 admin.startWS(null, null, null, "eth, net, web3", (error: Error, result: boolean) => {});
