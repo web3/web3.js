@@ -46,10 +46,10 @@ admin.getNodeInfo(
     (error: Error, result: NodeInfo) => {}
 );
 
-// $ExpectType Promise<[]>
+// $ExpectType Promise<any[]>
 admin.getPeers();
 
-// $ExpectType Promise<[]>
+// $ExpectType Promise<any[]>
 admin.getPeers(
     (error: Error, result: any[]) => {}
 );

@@ -40,7 +40,7 @@ export class Admin extends AbstractWeb3Module {
 
     getPeers(
         callback?: (error: Error, result: any[]) => void
-    ): Promise<[any[]]>;
+    ): Promise<any[]>;
 
     setSolc(
         path: string,
