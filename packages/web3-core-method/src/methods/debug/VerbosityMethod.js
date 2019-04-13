@@ -31,6 +31,6 @@ export default class VerbosityMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('debug_vebosity', 1, utils, formatters, moduleInstance);
+        super('debug_verbosity', 1, utils, formatters, moduleInstance);
     }
 }
