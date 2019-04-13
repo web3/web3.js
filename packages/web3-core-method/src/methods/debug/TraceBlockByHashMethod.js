@@ -31,6 +31,6 @@ export default class TraceBlockByHashMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('debug_traceBlockByHash', 1, utils, formatters, moduleInstance);
+        super('debug_traceBlockByHash', 2, utils, formatters, moduleInstance);
     }
 }
