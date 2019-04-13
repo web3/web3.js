@@ -31,6 +31,6 @@ export default class GetBlockRlpMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('debug_gcBlockRlp', 1, utils, formatters, moduleInstance);
+        super('debug_getBlockRlp', 1, utils, formatters, moduleInstance);
     }
 }
