@@ -31,6 +31,6 @@ export default class TraceTransactionMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('debug_traceTransaction', 1, utils, formatters, moduleInstance);
+        super('debug_traceTransaction', 2, utils, formatters, moduleInstance);
     }
 }
