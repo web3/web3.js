@@ -1,0 +1,37 @@
+{
+    "name": "web3-eth-debug",
+    "namespace": "ethereum",
+    "version": "1.0.0-beta.52",
+    "description": "Web3 module to interact with the Ethereum blockchain accounts stored in the node.",
+    "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-eth-debug",
+    "license": "LGPL-3.0",
+    "main": "dist/web3-eth-debug.cjs.js",
+    "module": "dist/web3-eth-debug.esm.js",
+    "browser": "dist/web3-eth-debug.umd.js",
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w",
+        "test": "jest",
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
+    "types": "types/index.d.ts",
+    "dependencies": {
+        "@babel/runtime": "^7.3.1",
+        "web3-core": "1.0.0-beta.52",
+        "web3-core-helpers": "1.0.0-beta.52",
+        "web3-core-method": "1.0.0-beta.52",
+        "web3-net": "1.0.0-beta.52",
+        "web3-providers": "1.0.0-beta.52",
+        "web3-utils": "1.0.0-beta.52"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2",
+        "web3-eth-accounts": "1.0.0-beta.52"
+    },
+    "files": [
+        "dist",
+        "types/index.d.ts"
+    ],
+    "gitHead": "1c89f503c90180598910d29892f6ebf92455cfe1"
+}
