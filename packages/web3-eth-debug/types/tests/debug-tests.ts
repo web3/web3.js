@@ -17,8 +17,7 @@
  * @date 2019
  */
 
-import {Debug} from 'web3-eth-debug';
-import {Stats} from '../index';
+import {Debug, Stats} from 'web3-eth-debug';
 
 const debug = new Debug('http://localhost:8545');
 
