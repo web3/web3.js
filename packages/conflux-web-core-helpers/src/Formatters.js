@@ -163,14 +163,17 @@ export const txInputFormatter = (txObject) => {
  */
 export const inputCallFormatter = (txObject, moduleInstance) => {
     txObject = txInputFormatter(txObject);
-    let from = moduleInstance.defaultAccount;
-
-    if (txObject.from) {
-        from = txObject.from;
-    }
-
-    if (from) {
-        txObject.from = inputAddressFormatter(from);
+    // let from = moduleInstance.defaultAccount;
+    //
+    // if (txObject.from) {
+    //     from = txObject.from;
+    // }
+    //
+    // if (from) {
+    //     txObject.from = inputAddressFormatter(from);
+    // }
+    if (txObject.from === null || txObject.from === undefined) {
+        txObject.from = '0xdbbce03f896e80e1ee4edb84fcc6b4587d6a7923';
     }
     if (txObject.hash === null || txObject.hash === undefined) {
         txObject.hash = '0x3d5cb19882200c8e1801a088bc9603abdd549212fd0e0a904da4fa7fa4d8c5e3';
