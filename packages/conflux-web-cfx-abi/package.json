@@ -16,7 +16,7 @@
     "types": "types/index.d.ts",
     "dependencies": {
         "@babel/runtime": "^7.3.1",
-        "conflux-web-utils": "0.1.0",
+        "conflux-web-utils": "*",
         "ethers": "^4.0.27",
         "lodash": "^4.17.11"
     },

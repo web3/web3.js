@@ -17,17 +17,17 @@
     "types": "types/index.d.ts",
     "dependencies": {
         "@babel/runtime": "^7.3.1",
-        "conflux-web-core-subscriptions": "0.1.0",
+        "conflux-web-core-subscriptions": "*",
         "eventemitter3": "3.1.0",
         "lodash": "^4.17.11",
         "rxjs": "^6.4.0"
     },
     "devDependencies": {
-        "conflux-web-core": "0.1.0",
-        "conflux-web-core-helpers": "0.1.0",
+        "conflux-web-core": "*",
+        "conflux-web-core-helpers": "*",
         "conflux-web-core-subscriptions": "*",
-        "conflux-web-providers": "0.1.0",
-        "conflux-web-utils": "0.1.0",
+        "conflux-web-providers": "*",
+        "conflux-web-utils": "*",
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2"
     },

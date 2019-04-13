@@ -24,10 +24,10 @@
         "xhr2-cookies": "1.1.0"
     },
     "devDependencies": {
-        "conflux-web-core": "0.1.0",
-        "conflux-web-core-helpers": "0.1.0",
-        "conflux-web-core-method": "0.1.0",
-        "conflux-web-utils": "0.1.0",
+        "conflux-web-core": "*",
+        "conflux-web-core-helpers": "*",
+        "conflux-web-core-method": "*",
+        "conflux-web-utils": "*",
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2"
     },
