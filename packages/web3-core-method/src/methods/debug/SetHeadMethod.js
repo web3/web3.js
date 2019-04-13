@@ -31,6 +31,6 @@ export default class SetHeadMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('debug_SetHead', 1, utils, formatters, moduleInstance);
+        super('debug_setHead', 1, utils, formatters, moduleInstance);
     }
 }
