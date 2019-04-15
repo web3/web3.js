@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file index.js
+ * @file Debug.js
  * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2019
  */
