@@ -16,7 +16,8 @@
 */
 /**
  * @file index.js
- * @author Samuel Furter <samuel@ethereum.org>, Prince Sinha <sinhaprince013@gmail.com>
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
