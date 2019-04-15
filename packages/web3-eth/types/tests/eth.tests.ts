@@ -286,7 +286,7 @@ eth.sendTransaction(
 // $ExpectType PromiEvent<TransactionReceipt>
 eth.sendSignedTransaction('0xf889808609184e72a0008227109');
 // $ExpectType PromiEvent<TransactionReceipt>
-eth.sendSignedTransaction('0xf889808609184e72a0008227109', (error: Error, gas: string) => {});
+eth.sendSignedTransaction('0xf889808609184e72a0008227109', (error: Error, hash: string) => {});
 
 // $ExpectType Promise<string>
 eth.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe');
