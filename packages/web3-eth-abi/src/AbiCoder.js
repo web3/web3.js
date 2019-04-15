@@ -229,7 +229,7 @@ export default class AbiCoder {
             nonIndexedInputItems.push(input);
         });
 
-        if (data) {
+        if (data && data !== '0x' && data !== '0x0') {
             let values = this.decodeParameters(nonIndexedInputItems, data);
 
             let decodedValue;
