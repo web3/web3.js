@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-============
+=========
 web3.eth.abi
-============
+=========
 
 The ``web3-eth-abi`` package allows you to de- and encode parameters from a ABI (Application Binary Interface).
 This will be used for calling functions of a deployed smart-contract.

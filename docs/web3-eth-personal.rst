@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-=================
+========
 web3.eth.personal
-=================
+========
 
 
 The ``web3-eth-personal`` package allows you to interact with the Ethereum node's accounts.

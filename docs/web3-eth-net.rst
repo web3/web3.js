@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-============
+=========
 web3.eth.net
-============
+=========
 
 
 Functions to receive details about the current connected network.

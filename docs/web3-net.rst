@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-==========
+========
 web3.*.net
-==========
+========
 
 
 The ``web3-net`` package allows you to interact with the Ethereum nodes network properties.

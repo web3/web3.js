@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-==========
+========
 web3.utils
-==========
+========
 
 This package provides utility functions for Ethereum dapps and other web3.js packages.
 
