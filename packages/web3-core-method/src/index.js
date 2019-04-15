@@ -119,13 +119,6 @@ export SetMaxMessageSizeMethod from './methods/shh/SetMaxMessageSizeMethod';
 export SetMinPoWMethod from './methods/shh/SetMinPoWMethod';
 export ShhVersionMethod from './methods/shh/ShhVersionMethod';
 
-// Miner
-export SetEtherBaseMethod from './methods/miner/SetEtherBaseMethod';
-export SetExtraMethod from './methods/miner/SetExtraMethod';
-export SetGasPriceMethod from './methods/miner/SetGasPriceMethod';
-export StartMinerMethod from './methods/miner/StartMinerMethod';
-export StopMinerMethod from './methods/miner/StopMinerMethod';
-
 // Txpool
 export ContentMethod from './methods/txpool/ContentMethod';
 export InspectMethod from './methods/txpool/InspectMethod';
@@ -141,4 +134,11 @@ export StartRpcMethod from './methods/admin/StartRpcMethod';
 export StartWsMethod from './methods/admin/StartWsMethod';
 export StopRpcMethod from './methods/admin/StopRpcMethod';
 export StopWsMethod from './methods/admin/StopWsMethod';
+
+// Miner
+export SetEtherBaseMethod from './methods/miner/SetEtherBaseMethod';
+export SetExtraMethod from './methods/miner/SetExtraMethod';
+export SetGasPriceMethod from './methods/miner/SetGasPriceMethod';
+export StartMinerMethod from './methods/miner/StartMinerMethod';
+export StopMinerMethod from './methods/miner/StopMinerMethod';
 
