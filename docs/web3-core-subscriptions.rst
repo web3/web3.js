@@ -25,7 +25,7 @@ The ``AbstractSubscription`` extends from the ``EventEmitter`` object and does h
 
 The ``AbstractSubscription`` is the base subscription class of all subscriptions.
 
-**Don't overwrite the ``subscribe`` method of the ``AbstractSubscription`` class.**
+**Be careful with overwriting of the ``subscribe`` method of the ``AbstractSubscription`` class. It can lead to instability of your module**
 
 You're able to overwrite these methods:
 
@@ -171,84 +171,5 @@ Returns
 =======
 
 ``string``
-
-------------------------------------------------------------------------------------------------------------------------
-
-.. _web3-module-subscription-factory:
-
-SubscriptionFactory
-===================
-
-Source: `SubscriptionFactory <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions/src/factories/SubscriptionFactory.js>`_
-
-createLogSubscription
-=====================
-
-The ``createLogSubscription`` method does return a ``LogSubscription`` class of type :ref:`AbstractSubscription <_web3-module-abstract-subscription>`
-and can be executed with the method :ref:`subscribe <web3-module-abstract-subscription-subscribe>`.
-
-==========
-Parameters
-==========
-
-- ``options`` - The log subscription options as described in the eth.subscribe documentation.
-- ``moduleInstance`` - The current Web3 module instance.
-- ``getPastLogsMethod`` - This method will be used for getting past events.
-
-------------------------------------------------------------------------------------------------------------------------
-
-createNewHeadsSubscription
-==========================
-
-The ``createNewHeadsSubscription`` method does return a ``NewHeadsSubscription`` class of type :ref:`AbstractSubscription <_web3-module-abstract-subscription>`
-and can be executed with the method :ref:`subscribe <web3-module-abstract-subscription-subscribe>`.
-
-==========
-Parameters
-==========
-
-- ``moduleInstance`` - The current Web3 module instance.
-
-------------------------------------------------------------------------------------------------------------------------
-
-createNewPendingTransactionsSubscription
-========================================
-
-The ``createNewPendingTransactionsSubscription`` method does return a ``NewPendingTransactionsSubscription`` class of type :ref:`AbstractSubscription <_web3-module-abstract-subscription>`
-and can be executed with the method :ref:`subscribe <web3-module-abstract-subscription-subscribe>`.
-
-==========
-Parameters
-==========
-
-- ``moduleInstance`` - The current Web3 module instance.
-
-------------------------------------------------------------------------------------------------------------------------
-
-createSyncingSubscription
-=========================
-
-The ``createSyncingSubscription`` method does return a ``SyncingSubscription`` class of type :ref:`AbstractSubscription <_web3-module-abstract-subscription>`
-and can be executed with the method :ref:`subscribe <web3-module-abstract-subscription-subscribe>`.
-
-==========
-Parameters
-==========
-
-- ``moduleInstance`` - The current Web3 module instance.
-
-------------------------------------------------------------------------------------------------------------------------
-
-createShhMessagesSubscription
-=============================
-
-The ``createShhMessagesSubscription`` method does return a ``MessagesSubscription`` class of type :ref:`AbstractSubscription <_web3-module-abstract-subscription>`
-and can be executed with the method :ref:`subscribe <web3-module-abstract-subscription-subscribe>`.
-
-==========
-Parameters
-==========
-
-- ``moduleInstance`` - The current Web3 module instance.
 
 ------------------------------------------------------------------------------------------------------------------------

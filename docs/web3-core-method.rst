@@ -105,55 +105,27 @@ The ``AbstractMethod`` class does have the following methods and properties:
 
 ------------------------------------------------------------------------------------------------------------------------
 
-.. _web3-module-abstract-call-method:
-
-AbstractCallMethod
-==================
-
-Source: `AbstractCallMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractCallMethod.js>`_
-
-The ``AbstractCallMethod`` extends from the :ref:`AbstractMethod <web3-module-abstract-method` and
-does have the following constructor parameters:
-
-- ``rpcMethod`` - The JSON-RPC method name.
-- ``parametersAmount`` - The amount of parameters this JSON-RPC method has.
-- ``utils`` - The Utils object.
-- ``formatters`` - The formatters object.
-
-The ``AbstractCallMethod`` is the base method class for all methods expect the "send transaction" methods.
-
-**Don't overwrite the ``execute`` method of the ``AbstractCallMethod`` class.**
-
-You're able to overwrite these methods:
-
-- :ref:`afterExecution <web3-abstract-method-after-execution>`
-- :ref:`beforeExecution <web3-abstract-method-before-execution>`
-
-.. include:: include_web3-module-abstract-method-class-reference.rst
-
-------------------------------------------------------------------------------------------------------------------------
-
 .. _web3-module-abstract-send-method:
 
-AbstractSendMethod
-==================
+AbstractObservedTransactionMethod
+====================================
 
-Source: `AbstractSendMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractSendMethod.js>`_
+Source: `AbstractObservedTransactionMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/transaction/AbstractObservedTransactionMethod.js>`_
 
-The ``AbstractSendMethod`` extends from the :ref:`AbstractMethod <web3-module-abstract-method` and
+The ``AbstractObservedTransactionMethod`` extends from the :ref:`AbstractMethod <web3-module-abstract-method` and
 does have the following constructor parameters:
 
 - ``rpcMethod`` - The JSON-RPC method name.
 - ``parametersAmount`` - The amount of parameters this JSON-RPC method has.
 - ``utils`` - The Utils object.
 - ``formatters`` - The formatters object.
-- ``tranactionConfirmationWorkflow`` - The ``TransactionConfirmationWorkflow`` class which defines the confirmation process of the transaction.
+- ``transactionObserver`` - The ``TransactionObserver`` class which defines the confirmation process of the transaction.
 
-The ``AbstractSendMethod`` is the base method class for all "send transaction" methods.
+The ``AbstractObservedTransactionMethod`` is the base method class for all "send transaction" methods.
 
-**Don't overwrite the ``execute`` method of the ``AbstractSendMethod`` class.**
+**Be careful with overwriting of the ``execute`` method of the ``AbstractObservedTransactionMethod`` class. It can lead to instability of your module**
 
-You're able to overwrite these methods:
+Abstract methods:
 
 - :ref:`afterExecution <web3-abstract-method-after-execution>`
 - :ref:`beforeExecution <web3-abstract-method-before-execution>`
