@@ -142,9 +142,6 @@ export default class AbiCoder {
      */
     decodeParameters(outputs, bytes) {
         if (isArray(outputs) && outputs.length === 0) {
-            if (bytes !== '0x' || bytes !== '0x0') {
-                return [];
-            }
             throw new Error('Empty outputs array given!');
         }
 
@@ -232,7 +229,7 @@ export default class AbiCoder {
             nonIndexedInputItems.push(input);
         });
 
-        if (data) {
+        if (data && data !== '0x' && data !== '0x0') {
             let values = this.decodeParameters(nonIndexedInputItems, data);
 
             let decodedValue;
