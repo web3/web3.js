@@ -18,7 +18,7 @@ Returns
 beforeExecution
 ***************
 
-This method will be executed before the JSON-RPC happens. It provides the possibility to customize the given parameters
+This method will be executed before the JSON-RPC request happens. It provides the possibility to customize the given parameters
 or other properties of the current method.
 
 ==========
@@ -132,15 +132,35 @@ Returns
 
 ------------------------------------------------------------------------------------------------------------------------
 
-arguments
-*********
+setArguments
+************
 
-This property will be used to detect the callback function and for validating the parameters length.
+This method will be used to set the given method arguments.
 The ``arguments`` property will set the ``parameter`` and ``callback`` property.
 
-=======
+----------
+Parameters
+----------
+
+- ``arguments`` - ``Array``: The ``arguments`` of the function call.
+
+-------
 Returns
-=======
+-------
+
+``object``
+
+------------------------------------------------------------------------------------------------------------------------
+
+getArguments
+************
+
+This method will be used to get the method arguments.
+The ``arguments`` property will contain the ``parameter`` and ``callback`` property.
+
+-------
+Returns
+-------
 
 ``object``
 
@@ -157,18 +177,3 @@ Returns
 =======
 
 ``boolean``
-
-------------------------------------------------------------------------------------------------------------------------
-
-hasWallets
-**********
-
-This method will check if there are local unlocked accounts.
-
-=======
-Returns
-=======
-
-``boolean``
-
-------------------------------------------------------------------------------------------------------------------------
