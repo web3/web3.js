@@ -19,6 +19,7 @@
     "docs": "cd docs; make html;",
     "lint": "jshint *.js packages",
     "test": "mocha; jshint *.js packages",
+    "e2e": "mocha e2e",
     "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
   },
   "repository": {
