@@ -23,6 +23,7 @@ The ``AbstractMethodFactory`` does have the following constructor parameters:
 
 ------------------------------------------------------------------------------------------------------------------------
 
+=======
 Methods
 =======
 
@@ -58,8 +59,9 @@ You're able to overwrite these methods:
 - :ref:` ``setArguments(arguments: IArguments): void`` <web3-abstract-method-before-execution>`
 - :ref:` ``getArguments(arguments: IArguments): {parameters: any[], callback: Function}`` <web3-abstract-method-before-execution>`
 
-Usage Example
-*************
+-------
+Example
+-------
 
 This example will show the usage of the ``setArguments(arguments: IArguments)`` method.
 
@@ -74,7 +76,7 @@ of the method class.
         }
 
         sign() {
-            const method new AbstractMethod('eth_sign', 2, utils, formatters, this);
+            const method = new AbstractMethod('eth_sign', 2, utils, formatters, this);
             method.setArguments(arguments)
 
             return method.execute();
@@ -92,6 +94,9 @@ of the method class.
     };
     // > "response"
 
+
+
+------------------------------------------------------------------------------------------------------------------------
 
 
 The ``AbstractMethod`` class does have the following methods and properties:
