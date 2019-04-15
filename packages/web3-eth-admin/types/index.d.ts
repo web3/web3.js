@@ -17,13 +17,12 @@
  * @date 2019
  */
 
-import {Accounts} from 'web3-eth-accounts';
 import {provider} from 'web3-providers';
 import {AbstractWeb3Module, Web3ModuleOptions, NodeInfo} from 'web3-core';
 import * as net from 'net';
 
 export class Admin extends AbstractWeb3Module {
-    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions, accounts?: Accounts|null);
+    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions, accounts?: any);
 
     addPeer(
         url: string,
