@@ -16,8 +16,7 @@
 */
 /**
  * @file index.js
- * @author Samuel Furter <samuel@ethereum.org>
- * @author Prince Sinha <sinhaprince013@gmail.com>
+ * @author Samuel Furter <samuel@ethereum.org>, Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
@@ -146,3 +145,14 @@ export VerbosityMethod from './methods/debug/VerbosityMethod';
 export VmoduleMethod from './methods/debug/VmoduleMethod';
 export WriteBlockProfileMethod from './methods/debug/WriteBlockProfileMethod';
 export WriteMemProfileMethod from './methods/debug/WriteMemProfileMethod';
+
+// Admin
+export AddPeerMethod from './methods/admin/AddPeerMethod';
+export DataDirectoryMethod from './methods/admin/DataDirectoryMethod';
+export NodeInfoMethod from './methods/admin/NodeInfoMethod';
+export PeersMethod from './methods/admin/PeersMethod';
+export SetSolcMethod from './methods/admin/SetSolcMethod';
+export StartRpcMethod from './methods/admin/StartRpcMethod';
+export StartWsMethod from './methods/admin/StartWsMethod';
+export StopRpcMethod from './methods/admin/StopRpcMethod';
+export StopWsMethod from './methods/admin/StopWsMethod';

@@ -14,6 +14,7 @@
 /**
  * @file index.d.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
@@ -196,4 +197,23 @@ export interface Log {
     transactionHash: string;
     blockHash: string;
     blockNumber: number;
+}
+export interface NodeInfo {
+    enode: string;
+    id: string;
+    ip: string;
+    listenAddr: string;
+    name: string;
+    ports: {
+      discovery: string | number;
+      listener: string | number;
+    };
+    protocols: {
+      eth: {
+        difficulty: string | number;
+        genesis: string;
+        head: string;
+        network: string | number;
+      };
+    };
 }
