@@ -108,4 +108,4 @@ contract.deploy({
 contract.deploy({
     data: '0x12345...',
     arguments: [123, 'My String']
-}).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, (err: Error, contract: Contract) => { console.log(contract) });
+}).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, (err: Error, transactionHash: string) => { console.log(transactionHash) });

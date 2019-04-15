@@ -66,7 +66,7 @@ export interface DeployOptions {
 }
 
 export interface ContractSendMethod {
-    send(options: SendOptions, callback?: (err: Error, contracts: Contract) => void): PromiEvent<Contract>;
+    send(options: SendOptions, callback?: (err: Error, transactionHash: string) => void): PromiEvent<Contract>;
 
     estimateGas(options: EstimateGasOptions, callback?: (err: Error, gas: number) => void): Promise<number>;
 
