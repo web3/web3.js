@@ -26,8 +26,8 @@
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
-        "web3-core-accounts": "1.0.0-beta.52",
-        "dtslint": "0.4.2"
+        "dtslint": "0.4.2",
+        "web3-eth-accounts": "1.0.0-beta.52"
     },
     "files": [
         "dist",
