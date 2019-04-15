@@ -126,6 +126,11 @@ export SetGasPriceMethod from './methods/miner/SetGasPriceMethod';
 export StartMinerMethod from './methods/miner/StartMinerMethod';
 export StopMinerMethod from './methods/miner/StopMinerMethod';
 
+// Txpool
+export ContentMethod from './methods/txpool/ContentMethod';
+export InspectMethod from './methods/txpool/InspectMethod';
+export StatusMethod from './methods/txpool/StatusMethod';
+
 // Admin
 export AddPeerMethod from './methods/admin/AddPeerMethod';
 export DataDirectoryMethod from './methods/admin/DataDirectoryMethod';

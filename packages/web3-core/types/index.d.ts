@@ -199,6 +199,11 @@ export interface Log {
     blockNumber: number;
 }
 
+export interface Content {
+    pending: any;
+    queued: any;
+}
+
 export type Hex = string | number;
 
 export interface NodeInfo {
