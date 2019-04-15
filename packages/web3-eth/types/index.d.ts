@@ -13,7 +13,9 @@
 */
 /**
  * @file index.d.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
@@ -26,7 +28,7 @@ import {
     Transaction,
     TransactionConfig,
     TransactionReceipt,
-    Web3ModuleOptions
+    Web3ModuleOptions,
 } from 'web3-core';
 import {Contract, ContractOptions} from 'web3-eth-contract';
 import {Iban} from 'web3-eth-iban';
