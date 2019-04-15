@@ -199,7 +199,6 @@ export interface Log {
     blockNumber: number;
 }
 
-
 export interface Content {
     pending: any;
     queued: any;
