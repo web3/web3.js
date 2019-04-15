@@ -6,9 +6,43 @@
 Web3 Contract Module API
 ========================
 
-The Web3 eth-contract module does provide the ``AbstractContract`` for customizing the behavior and the ``Contract`` class
-for simply create ``Contract`` classes without using ``web3.eth.Contract``.
-Checkout the starter module for further information about "how to use the ``Contract`` object"
+The Web3 Contract Module API does provide to possibility to create project specific contracts with pre-injecting of the ABI
+or customizing of the default behaviour of a Web3 contract.
+
+.. _web3-module-contract:
+
+Contract
+========
+
+The exported class ``Contract`` is here to simply pre-inject a contract ABI.
+
+
+----------
+Parameters
+----------
+
+1. ``provider`` - ``Object|String``: A Web3.js provider.
+1. ``abi`` - ``Array``: Contract ABI
+1. ``accounts`` - `` :ref:`Accounts <eth-accounts>```
+1. ``options`` - ``Web3ModuleOptions``
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    import {MyABI, options} from '../folder/file.js';
+    import {Accounts} from 'web3-eth-accounts';
+
+    export class MyContract extends Contract {
+        constructor(provider) {
+            super(provider, MyAbi, new Accounts(...), '0x0', options);
+        }
+    }
+
+
 
 .. _web3-module-abstract-contract:
 
@@ -32,6 +66,19 @@ The ``AbstractContract`` class does extend from the ``AbstractWeb3Module`` and h
 - ``options`` - The default ``options`` for a contract.
 
 Further details about which methods and properties are available can be seen in the :ref:`web3-eth-contract <web3-eth-contract>` documentation.
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    export class MyContract extends AbstractContract {
+     ....
+    }
+
+
 
 ------------------------------------------------------------------------------------------------------------------------
 
