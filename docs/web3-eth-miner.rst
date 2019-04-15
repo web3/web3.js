@@ -12,17 +12,10 @@ The ``web3-eth-miner`` package allows you to remote control the node's mining op
 
 .. code-block:: javascript
 
-    import Web3 from 'web3';
     import {Miner} from 'web3-eth-miner';
 
     // "Web3.givenProvider" will be set if in an Ethereum supported browser.
     const miner = new Miner(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
-
-
-    // or using the web3 umbrella package
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
-
-    // -> web3.eth.miner
 
 
 ------------------------------------------------------------------------------

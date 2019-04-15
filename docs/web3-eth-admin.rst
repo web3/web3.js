@@ -19,12 +19,6 @@ The ``web3-eth-admin`` package allows you to interact with the Ethereum node's a
     const admin = new Admin(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
 
 
-    // or using the web3 umbrella package
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
-
-    // -> web3.eth.admin
-
-
 ------------------------------------------------------------------------------
 
 
