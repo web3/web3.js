@@ -136,10 +136,3 @@ export StartWsMethod from './methods/admin/StartWsMethod';
 export StopRpcMethod from './methods/admin/StopRpcMethod';
 export StopWsMethod from './methods/admin/StopWsMethod';
 
-// Miner
-export SetEtherBaseMethod from './methods/miner/SetEtherBaseMethod';
-export SetExtraMethod from './methods/miner/SetExtraMethod';
-export SetGasPriceMethod from './methods/miner/SetGasPriceMethod';
-export StartMinerMethod from './methods/miner/StartMinerMethod';
-export StopMinerMethod from './methods/miner/StopMinerMethod';
-
