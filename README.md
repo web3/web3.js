@@ -99,12 +99,12 @@ Documentation can be found at [read the docs][docs]
 
 ### Commands
 ```bash
-npm install // install all dependencies for npm run bootstrap
-npm run bootstrap // install all dependencies and symlinks the internal modules for all modules
-npm run build // runs rollup
-npm run test // runs all tests 
-npm run clean // removes all the node_modules folders in all modules
-npm run dev // runs rollup with a watcher
+npm install # install all dependencies for npm run bootstrap
+npm run bootstrap # install all dependencies and symlinks the internal modules for all modules
+npm run build # runs rollup
+npm run test # runs all tests 
+npm run clean # removes all the node_modules folders in all modules
+npm run dev # runs rollup with a watcher
 
 ```
 
