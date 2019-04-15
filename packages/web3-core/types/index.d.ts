@@ -220,4 +220,3 @@ export interface NodeInfo {
       };
     };
 }
-
