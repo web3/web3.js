@@ -30,5 +30,3 @@ ADD ./packages/web3/package.json ./packages/web3/package.json
 RUN npm install
 RUN npm run postinstall
 ADD . .
-
-ENTRYPOINT ["npm", "run", "e2e"]

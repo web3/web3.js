@@ -3,8 +3,8 @@ const { expect } = require('chai');
 module.exports = function TestSuite(protocol, host, rpcPort) {
     const url = protocol + '://' + host + ':' + rpcPort;
     before(function(done){
-        this.timeout(5000);
-        setTimeout(done, 3000);
+        this.timeout(10000);
+        setTimeout(done, 5000);
     });
     describe('Web3 integration tests for: ' + url, () => {
         let web3 = new Web3(url);

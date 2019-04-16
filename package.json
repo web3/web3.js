@@ -19,7 +19,8 @@
     "docs": "cd docs; make html;",
     "lint": "jshint *.js packages",
     "test": "mocha; jshint *.js packages",
-    "e2e": "mocha e2e",
+    "e2e": "docker-compose build && docker-compose run --entrypoint 'npm run e2e:mocha' test_runner",
+    "e2e:mocha": "mocha e2e --verbose",
     "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
   },
   "repository": {
