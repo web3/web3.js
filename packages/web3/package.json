@@ -54,7 +54,8 @@
         "test": "jest",
         "docker": "docker-compose run --workdir='/home/node/packages/web3' web3 npm run",
         "predocker": "docker-compose run web3 npm install --unsafe-perm",
-        "test:integration": "npm run docker test --testMatch='/**/*.Itest.js'",
+        "test:integration:script": "jest --testMatch='/**/*.Itest.js'",
+        "test:integration": "npm run docker test:integration:script",
         "dtslint": "dtslint types --onlyTestTsNext",
         "postinstall": "node angular-patch.js"
     },

@@ -30,9 +30,34 @@ services:
             - nm21:/home/node/packages/web3-providers-ipc/node_modules
             - nm22:/home/node/packages/web3-providers-ws/node_modules
             - nm23:/home/node/packages/web3-shh/node_modules
-            - nm24:/home/node/packages/web3-utils/node_modules
+            - nm24:/home/node/packages/web3-utils/
+            - dist0:/home/node/dist
+            - dist1:/home/node/packages/web3/dist
+            - dist2:/home/node/packages/web3-bzz/dist
+            - dist3:/home/node/packages/web3-core/dist
+            - dist4:/home/node/packages/web3-core-helpers/dist
+            - dist5:/home/node/packages/web3-core-method/dist
+            - dist6:/home/node/packages/web3-core-promievent/dist
+            - dist7:/home/node/packages/web3-core-requestmanager/dist
+            - dist8:/home/node/packages/web3-core-subscriptions/dist
+            - dist9:/home/node/packages/web3-eth/dist
+            - dist10:/home/node/packages/web3-eth-abi/dist
+            - dist11:/home/node/packages/web3-eth-accounts/dist
+            - dist12:/home/node/packages/web3-eth-admin/dist
+            - dist13:/home/node/packages/web3-eth-contract/dist
+            - dist14:/home/node/packages/web3-eth-ens/dist
+            - dist15:/home/node/packages/web3-eth-iban/dist
+            - dist16:/home/node/packages/web3-eth-personal/dist
+            - dist17:/home/node/packages/web3-eth-txpool/dist
+            - dist18:/home/node/packages/web3-net/dist
+            - dist19:/home/node/packages/web3-providers/dist
+            - dist20:/home/node/packages/web3-providers-http/dist
+            - dist21:/home/node/packages/web3-providers-ipc/dist
+            - dist22:/home/node/packages/web3-providers-ws/dist
+            - dist23:/home/node/packages/web3-shh/dist
+            - dist24:/home/node/packages/web3-utils/dist
             - yarn:/usr/local/share/.cache/yarn
-            - ./:/home/node 
+            - ./:/home/node
         depends_on:
             - ganache
 volumes:
@@ -63,4 +88,28 @@ volumes:
     nm22:
     nm23:
     nm24:
-    
+    dist0:
+    dist1:
+    dist2:
+    dist3:
+    dist4:
+    dist5:
+    dist6:
+    dist7:
+    dist8:
+    dist9:
+    dist10:
+    dist11:
+    dist12:
+    dist13:
+    dist14:
+    dist15:
+    dist16:
+    dist17:
+    dist18:
+    dist19:
+    dist20:
+    dist21:
+    dist22:
+    dist23:
+    dist24:
