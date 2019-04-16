@@ -198,6 +198,14 @@ export interface Log {
     blockHash: string;
     blockNumber: number;
 }
+
+export interface Content {
+    pending: any;
+    queued: any;
+}
+
+export type Hex = string | number;
+
 export interface NodeInfo {
     enode: string;
     id: string;
