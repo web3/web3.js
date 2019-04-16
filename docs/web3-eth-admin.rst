@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-==============
-web3.eth.admin
-==============
+=================
+Web3 Admin Module
+=================
 
 
 The ``web3-eth-admin`` package allows you to interact with the Ethereum node's admin management.
@@ -35,7 +35,7 @@ addPeer
 
 .. code-block:: javascript
 
-    web3.eth.admin.addPeer(url, [callback])
+    admin.addPeer(url, [callback])
 
 Add an admin peer on the node that Web3 is connected to with its provider.
 The RPC method used is ``admin_addPeer``.
@@ -59,7 +59,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.admin.addPeer("enode://a979fb575495b8d6db44f750317d0f4622bf4c2aa3365d6af7c284339968eef29b69ad0dce72a4d8db5ebb4968de0e3bec910127f134779fbcb0cb6d3331163c@52.16.188.185:30303")
+    admin.addPeer("enode://a979fb575495b8d6db44f750317d0f4622bf4c2aa3365d6af7c284339968eef29b69ad0dce72a4d8db5ebb4968de0e3bec910127f134779fbcb0cb6d3331163c@52.16.188.185:30303")
     .then(console.log);
     > true
 
@@ -71,7 +71,7 @@ getDataDirectory
 
 .. code-block:: javascript
 
-    web3.eth.admin.getDataDirectory([, callback])
+    admin.getDataDirectory([, callback])
 
 Provides absolute path of the running node, which is used by the node to store all its databases.
 
@@ -98,7 +98,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.admin.getDataDirectory()
+    admin.getDataDirectory()
     .then(console.log);
     > "/home/ubuntu/.ethereum"
 
@@ -111,7 +111,7 @@ getNodeInfo
 
 .. code-block:: javascript
 
-    web3.eth.personal.getNodeInfo([, callback])
+    admin.getNodeInfo([, callback])
 
 This property can be queried for all the information known about the running node at the networking granularity..
 
@@ -149,7 +149,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.admin.getNodeInfo().then(console.log);
+    admin.getNodeInfo().then(console.log);
     > {
         enode: "enode://44826a5d6a55f88a18298bca4773fca5749cdc3a5c9f308aa7d810e9b31123f3e7c5fba0b1d70aac5308426f47df2a128a6747040a3815cc7dd7167d03be320d@[::]:30303",
         id: "44826a5d6a55f88a18298bca4773fca5749cdc3a5c9f308aa7d810e9b31123f3e7c5fba0b1d70aac5308426f47df2a128a6747040a3815cc7dd7167d03be320d",
@@ -178,7 +178,7 @@ getPeers
 
 .. code-block:: javascript
 
-    web3.eth.admin.getPeers([, callback])
+    admin.getPeers([, callback])
 
 This will provide all the information known about the connected remote nodes at the networking granularity.
 
@@ -214,7 +214,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.admin.getPeers().then(console.log);
+    admin.getPeers().then(console.log);
     > [{
             caps: ["eth/61", "eth/62", "eth/63"],
             id: "08a6b39263470c78d3e4f58e3c997cd2e7af623afce64656cfc56480babcea7a9138f3d09d7b9879344c2d2e457679e3655d4b56eaff5fd4fd7f147bdb045124",
@@ -255,7 +255,7 @@ setSolc
 
 .. code-block:: javascript
 
-    web3.eth.admin.setSolc(string, [, callback])
+    admin.setSolc(string, [, callback])
 
 Sets the Solidity compiler path to be used by the node when invoking the eth_compileSolidity RPC method
 
@@ -283,7 +283,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.admin.setSolc("/usr/bin/solc").then(console.log);
+    admin.setSolc("/usr/bin/solc").then(console.log);
     > "solc, the solidity compiler commandline interface\nVersion: 0.3.2-0/Release-Linux/g++/Interpreter\n\npath: /usr/bin/solc"
 
 ------------------------------------------------------------------------------
@@ -294,7 +294,7 @@ startRPC
 
 .. code-block:: javascript
 
-    web3.eth.admin.startRPC(host, port, cors, apis [, callback])
+    admin.startRPC(host, port, cors, apis [, callback])
 
 It starts an HTTP based JSON RPC API webserver to handle client requests. All the parameters are optional.
 
@@ -322,7 +322,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.admin.startRPC("127.0.0.1", 8545)
+    admin.startRPC("127.0.0.1", 8545)
     .then(console.log('RPC Started!'));
     > "RPC Started!"
 
@@ -334,7 +334,7 @@ startWS
 
 .. code-block:: javascript
 
-    web3.eth.admin.startWS(host, port, cors, apis [, callback])
+    admin.startWS(host, port, cors, apis [, callback])
 
 It starts an WebSocket based JSON RPC API webserver to handle client requests. All the parameters are optional.
 
@@ -362,7 +362,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.admin.startRPC("127.0.0.1", 8546)
+    admin.startRPC("127.0.0.1", 8546)
     .then(console.log('WS Started!'));
     > "WS Started!"
 
@@ -373,7 +373,7 @@ stopRPC
 
 .. code-block:: javascript
 
-    web3.eth.admin.stopRPC([, callback])
+    admin.stopRPC([, callback])
 
 This method closes the currently open HTTP RPC endpoint. As the node can only have a single HTTP endpoint running, this method takes no parameters, returning a boolean whether the endpoint was closed or not.
 
@@ -397,7 +397,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.admin.stopRPC().then(console.log);
+    admin.stopRPC().then(console.log);
     > true
 
 ------------------------------------------------------------------------------
@@ -407,7 +407,7 @@ stopWS
 
 .. code-block:: javascript
 
-    web3.eth.admin.stopWS([, callback])
+    admin.stopWS([, callback])
 
 This method closes the currently open WebSocket RPC endpoint. As the node can only have a single WebSocket endpoint running, this method takes no parameters, returning a boolean whether the endpoint was closed or not.
 
@@ -431,7 +431,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.admin.stopWS().then(console.log);
+    admin.stopWS().then(console.log);
     > true
 
 ------------------------------------------------------------------------------
