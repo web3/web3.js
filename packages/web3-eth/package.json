@@ -31,7 +31,8 @@
         "web3-eth-personal": "1.0.0-beta.52",
         "web3-net": "1.0.0-beta.52",
         "web3-providers": "1.0.0-beta.52",
-        "web3-utils": "1.0.0-beta.52"
+        "web3-utils": "1.0.0-beta.52",
+        "eth-lib": "0.2.8"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
