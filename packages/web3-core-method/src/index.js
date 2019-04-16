@@ -16,7 +16,8 @@
 */
 /**
  * @file index.js
- * @author Samuel Furter <samuel@ethereum.org>, Prince Sinha <sinhaprince013@gmail.com>
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
@@ -134,4 +135,11 @@ export StartRpcMethod from './methods/admin/StartRpcMethod';
 export StartWsMethod from './methods/admin/StartWsMethod';
 export StopRpcMethod from './methods/admin/StopRpcMethod';
 export StopWsMethod from './methods/admin/StopWsMethod';
+
+// Miner
+export SetEtherBaseMethod from './methods/miner/SetEtherBaseMethod';
+export SetExtraMethod from './methods/miner/SetExtraMethod';
+export SetGasPriceMethod from './methods/miner/SetGasPriceMethod';
+export StartMinerMethod from './methods/miner/StartMinerMethod';
+export StopMinerMethod from './methods/miner/StopMinerMethod';
 
