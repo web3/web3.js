@@ -10,6 +10,6 @@ describe('Integration test for sending ether', () => {
                 from: sender,
                 to: recipient
             })
-        ).resolves;
+        ).resolves.toHaveProperty('status', true);;
     });
 });
