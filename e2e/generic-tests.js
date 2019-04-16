@@ -1,12 +1,15 @@
 const Web3 = require('..');
 const { expect } = require('chai');
+async function wait(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+}
 module.exports = function TestSuite(protocol, host, rpcPort) {
     const url = protocol + '://' + host + ':' + rpcPort;
-    before(function(done){
-        this.timeout(10000);
-        setTimeout(done, 5000);
-    });
-    describe('Web3 integration tests for: ' + url, () => {
+    return describe('Web3 integration tests for: ' + url, () => {
+        before(function(done) {
+            this.timeout(30000);
+            setTimeout(done, 2000);
+        });
         let web3 = new Web3(url);
         it('should be able to make a web3 instance', () => {
             expect(web3.utils).to.exist;

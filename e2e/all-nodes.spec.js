@@ -13,9 +13,11 @@ const nodes = [
         {protocol: 'ws', port: 8546}
     ]}
 ]
-for(const node of nodes) {
-    const {protocols, host} = node;
-    for(const {protocol, port} of protocols) {
-        TestSuite(protocol, host, port);
+describe('Web3 e2e tests', () => {
+    for(const node of nodes) {
+        const {protocols, host} = node;
+        for(const {protocol, port} of protocols) {
+            TestSuite(protocol, host, port);
+        }
     }
-}
+});
