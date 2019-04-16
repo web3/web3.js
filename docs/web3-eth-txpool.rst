@@ -18,13 +18,6 @@ The ``web3-eth-txpool`` package gives you access to several non-standard RPC met
     // "Web3.givenProvider" will be set if in an Ethereum supported browser.
     const txpool = new Txpool(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
 
-
-    // or using the web3 umbrella package
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
-
-    // -> web3.eth.txpool
-
-
 ------------------------------------------------------------------------------
 
 
@@ -41,7 +34,7 @@ content
 
 .. code-block:: javascript
 
-    web3.eth.txpool.content([callback])
+    txpool.content([callback])
 
 This API can be used to list the exact details of all the transactions currently pending for inclusion in the next block(s), as well as the ones that are being scheduled for future executions.
 The RPC method used is ``txpool_content``.
@@ -60,7 +53,7 @@ Returns
 
     - ``pending`` - ``string{}``: List of pending transactions with transaction details.
     - ``queued`` - ``string{}``: List of queued transactions with transaction details.
-    
+
         - ``hash`` 32 Bytes - ``String``: Hash of the transaction.
         - ``nonce`` - ``Number``: The number of transactions made by the sender prior to this one.
         - ``blockHash`` 32 Bytes - ``String``: Hash of the block where this transaction was in. ``null`` when its pending.
@@ -79,7 +72,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.txpool.content().then(console.log);
+    txpool.content().then(console.log);
     > {
         pending: {
             0x0216d5032f356960cd3749c31ab34eeff21b3395: {
@@ -155,7 +148,7 @@ inspect
 
 .. code-block:: javascript
 
-    web3.eth.txpool.inspect([, callback])
+    txpool.inspect([, callback])
 
 The property can be queried to list a textual summary of all the transactions currently pending for inclusion in the next block(s), as well as the ones that are being scheduled for future executions. 
 The RPC method used is ``txpool_inspect``.
@@ -185,7 +178,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.txpool.inspect().then(console.log);
+    txpool.inspect().then(console.log);
     > {
         pending: {
             0x26588a9301b0428d95e6fc3a5024fce8bec12d51: {
@@ -245,7 +238,7 @@ status
 
 .. code-block:: javascript
 
-    web3.eth.txpool.status([, callback])
+    txpool.status([, callback])
 
 This will provide the number of transactions currently pending for inclusion in the next block(s), as well as the ones that are being scheduled for future executions.
 The RPC method used is ``txpool_status``.
@@ -275,7 +268,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.txpool.status().then(console.log);
+    txpool.status().then(console.log);
     > {
         pending: 10,
         queued: 7

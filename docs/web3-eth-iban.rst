@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-=========
+=============
 web3.eth.Iban
-=========
+=============
 
 The ``web3.eth.Iban`` function lets convert Ethereum addresses from and to IBAN and BBAN.
 
