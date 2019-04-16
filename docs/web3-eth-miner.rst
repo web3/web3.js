@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-==============
-web3.eth.miner
-==============
+=================
+Web3 Miner Module
+=================
 
 
 The ``web3-eth-miner`` package allows you to remote control the node's mining operation and set various mining specific settings.
@@ -33,7 +33,7 @@ setExtra
 
 .. code-block:: javascript
 
-    web3.eth.miner.setExtra(extraData, [, callback])
+    miner.setExtra(extraData, [, callback])
 
 This method allows miner to set extra data during mining the block.
 
@@ -56,7 +56,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.miner.setExtra('Hello').then(console.log);
+    miner.setExtra('Hello').then(console.log);
     > true
 
 ------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ setGasPrice
 
 .. code-block:: javascript
 
-    web3.eth.miner.setGasPrice(gasPrice, [, callback])
+    miner.setGasPrice(gasPrice, [, callback])
 
 This method allows to set minimal accepted gas price during mining transactions. Any transactions that are below this limit will get excluded from the mining process.
 
@@ -95,10 +95,10 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.miner.setGasPrice("0x4a817c800").then(console.log);
+    miner.setGasPrice("0x4a817c800").then(console.log);
     > true
 
-    web3.eth.miner.setGasPrice(20000000000).then(console.log);
+    miner.setGasPrice(20000000000).then(console.log);
     > true
 
 
@@ -110,7 +110,7 @@ setEtherBase
 
 .. code-block:: javascript
 
-    web3.eth.miner.setEtherBase(address, [, callback])
+    miner.setEtherBase(address, [, callback])
 
 Sets etherbase, where mining reward will go.
 
@@ -138,7 +138,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.miner.setEtherBase("0x3d80b31a78c30fc628f20b2c89d7ddbf6e53cedc").then(console.log);
+    miner.setEtherBase("0x3d80b31a78c30fc628f20b2c89d7ddbf6e53cedc").then(console.log);
     > true
 
 ------------------------------------------------------------------------------
@@ -149,7 +149,7 @@ start
 
 .. code-block:: javascript
 
-    web3.eth.miner.start(miningThread, [, callback])
+    miner.start(miningThread, [, callback])
 
 Start the CPU mining process with the given number of threads.
 
@@ -177,10 +177,10 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.miner.start('0x1').then(console.log);
+    miner.start('0x1').then(console.log);
     > true
 
-    web3.eth.miner.start(1).then(console.log);
+    miner.start(1).then(console.log);
     > true
 
 ------------------------------------------------------------------------------
@@ -191,7 +191,7 @@ stop
 
 .. code-block:: javascript
 
-    web3.eth.miner.stop([callback])
+    miner.stop([callback])
 
 Stop the CPU mining process.
 
@@ -218,7 +218,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.miner.stop().then(console.log);
+    miner.stop().then(console.log);
     > true
 
 ------------------------------------------------------------------------------
