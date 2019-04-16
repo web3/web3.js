@@ -119,6 +119,11 @@ export SetMaxMessageSizeMethod from './methods/shh/SetMaxMessageSizeMethod';
 export SetMinPoWMethod from './methods/shh/SetMinPoWMethod';
 export ShhVersionMethod from './methods/shh/ShhVersionMethod';
 
+// Txpool
+export ContentMethod from './methods/txpool/ContentMethod';
+export InspectMethod from './methods/txpool/InspectMethod';
+export StatusMethod from './methods/txpool/StatusMethod';
+
 // Admin
 export AddPeerMethod from './methods/admin/AddPeerMethod';
 export DataDirectoryMethod from './methods/admin/DataDirectoryMethod';
@@ -129,3 +134,4 @@ export StartRpcMethod from './methods/admin/StartRpcMethod';
 export StartWsMethod from './methods/admin/StartWsMethod';
 export StopRpcMethod from './methods/admin/StopRpcMethod';
 export StopWsMethod from './methods/admin/StopWsMethod';
+
