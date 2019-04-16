@@ -52,6 +52,9 @@
         "build": "rollup -c",
         "dev": "rollup -c -w",
         "test": "jest",
+        "docker": "docker-compose run --workdir='/home/node/packages/web3' web3 npm run",
+        "predocker": "docker-compose run web3 npm install --unsafe-perm",
+        "test:integration": "npm run docker test --testMatch='/**/*.Itest.js'",
         "dtslint": "dtslint types --onlyTestTsNext",
         "postinstall": "node angular-patch.js"
     },
@@ -72,7 +75,8 @@
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
-        "dtslint": "0.4.2"
+        "dtslint": "0.4.2",
+        "jest": "^24.6.0"
     },
     "files": [
         "dist",

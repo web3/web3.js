@@ -24,8 +24,10 @@
         "docs": "cd docs; make html;",
         "lint": "eslint --cache --fix .",
         "format": "prettier --config ./.prettierrc --write ./packages/**/*.js",
-        "travis": "npm run lint && npm run build && npm run test:coverage && npm run dtslint",
-        "coveralls": "cat ./coverage/lcov.info | coveralls"
+        "travis": "npm run lint && npm run build && npm run test:coverage && npm run dtslint && npm run test:integration",
+        "coveralls": "cat ./coverage/lcov.info | coveralls",
+        "prepare": "npm run bootstrap && npm run build",
+        "test:integration": "lerna run test:integration"
     },
     "repository": {
         "type": "git",

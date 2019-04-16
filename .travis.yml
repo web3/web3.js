@@ -1,26 +1,24 @@
 language: node_js
 node_js:
-    - "8"
-    - "9"
-    - "10"
-    - "11"
+    - '8'
+    - '9'
+    - '10'
+    - '11'
 env:
     - CXX=g++-4.8
 addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - g++-4.8
 before_script:
     - npm i -g typescript@next
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
 install:
     - npm install
-    - npm run bootstrap
 script:
     - npm run travis
 after_script:
     - npm run coveralls
-

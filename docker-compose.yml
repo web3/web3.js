@@ -1,0 +1,65 @@
+version: '3.2'
+services:
+    ganache:
+        image: trufflesuite/ganache-cli:v6.4.1
+    web3:
+        image: node:10
+        working_dir: /home/node
+        volumes:
+            - nm0:/home/node/node_modules
+            - nm1:/home/node/packages/web3/node_modules
+            - nm2:/home/node/packages/web3-bzz/node_modules
+            - nm3:/home/node/packages/web3-core/node_modules
+            - nm4:/home/node/packages/web3-core-helpers/node_modules
+            - nm5:/home/node/packages/web3-core-method/node_modules
+            - nm6:/home/node/packages/web3-core-promievent/node_modules
+            - nm7:/home/node/packages/web3-core-requestmanager/node_modules
+            - nm8:/home/node/packages/web3-core-subscriptions/node_modules
+            - nm9:/home/node/packages/web3-eth/node_modules
+            - nm10:/home/node/packages/web3-eth-abi/node_modules
+            - nm11:/home/node/packages/web3-eth-accounts/node_modules
+            - nm12:/home/node/packages/web3-eth-admin/node_modules
+            - nm13:/home/node/packages/web3-eth-contract/node_modules
+            - nm14:/home/node/packages/web3-eth-ens/node_modules
+            - nm15:/home/node/packages/web3-eth-iban/node_modules
+            - nm16:/home/node/packages/web3-eth-personal/node_modules
+            - nm17:/home/node/packages/web3-eth-txpool/node_modules
+            - nm18:/home/node/packages/web3-net/node_modules
+            - nm19:/home/node/packages/web3-providers/node_modules
+            - nm20:/home/node/packages/web3-providers-http/node_modules
+            - nm21:/home/node/packages/web3-providers-ipc/node_modules
+            - nm22:/home/node/packages/web3-providers-ws/node_modules
+            - nm23:/home/node/packages/web3-shh/node_modules
+            - nm24:/home/node/packages/web3-utils/node_modules
+            - yarn:/usr/local/share/.cache/yarn
+            - ./:/home/node 
+        depends_on:
+            - ganache
+volumes:
+    yarn:
+    sc1:
+    nm0:
+    nm1:
+    nm2:
+    nm3:
+    nm4:
+    nm5:
+    nm6:
+    nm7:
+    nm8:
+    nm9:
+    nm10:
+    nm11:
+    nm12:
+    nm13:
+    nm14:
+    nm15:
+    nm16:
+    nm17:
+    nm18:
+    nm19:
+    nm20:
+    nm21:
+    nm22:
+    nm23:
+    nm24:
