@@ -17,56 +17,35 @@
  * @date 2019
  */
 
+import {Accounts} from 'web3-eth-accounts';
 import {provider} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions, NodeInfo} from 'web3-core';
+import {AbstractWeb3Module, Web3ModuleOptions, Hex} from 'web3-core';
 import * as net from 'net';
 
-export class Admin extends AbstractWeb3Module {
-    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions, accounts?: any);
+export class Miner extends AbstractWeb3Module {
+    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions, accounts?: Accounts|null);
 
-    addPeer(
-        url: string,
+    setEtherbase(
+        address: string,
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
-    getDataDirectory(
-        callback?: (error: Error, result: string) => void
-    ): Promise<string>;
-
-    getNodeInfo(
-        callback?: (error: Error, result: NodeInfo) => void
-    ): Promise<NodeInfo>;
-
-    getPeers(
-        callback?: (error: Error, result: any[]) => void
-    ): Promise<any[]>;
-
-    setSolc(
-        path: string,
-        callback?: (error: Error, result: string) => void
-    ): Promise<string>;
-
-    startRPC(
-        host?: string,
-        port?: number,
-        cors?: string,
-        apis?: string,
+    setExtra(
+        extraData: string,
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
-    startWS(
-        host?: string,
-        port?: number,
-        cors?: string,
-        apis?: string,
+    setGasPrice(
+        gasPrice: Hex,
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
-    stopRPC(
+    startMining(
+        miningThread: Hex,
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
-    stopWS(
+    stopMining(
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 }
