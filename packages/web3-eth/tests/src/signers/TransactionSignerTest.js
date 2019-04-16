@@ -42,7 +42,7 @@ describe('TransactionSignerTest', () => {
             r: '0x1fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867',
             s: '0x1415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
             v: '0x45',
-            txHash: '0x6a18d30b737db620210e8bc5f334eefc82d1769ea3c16576b25e1ec24ca014ba'
+            transactionHash: '0x6a18d30b737db620210e8bc5f334eefc82d1769ea3c16576b25e1ec24ca014ba'
         });
     });
 
@@ -70,7 +70,7 @@ describe('TransactionSignerTest', () => {
             r: '0x1fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867',
             s: '0x1415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
             v: '0x45',
-            txHash: '0x6a18d30b737db620210e8bc5f334eefc82d1769ea3c16576b25e1ec24ca014ba'
+            transactionHash: '0x6a18d30b737db620210e8bc5f334eefc82d1769ea3c16576b25e1ec24ca014ba'
         });
     });
 
