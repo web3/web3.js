@@ -79,7 +79,7 @@ export default class TransactionSigner {
             r: '0x' + Buffer.from(ethTx.r).toString('hex'),
             s: '0x' + Buffer.from(ethTx.s).toString('hex'),
             rawTransaction,
-            transactionHash,
+            transactionHash
         };
     }
 }
