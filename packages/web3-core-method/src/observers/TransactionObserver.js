@@ -150,7 +150,7 @@ export default class TransactionObserver {
 
                 if (receipt) {
                     if (this.lastBlock) {
-                        const block = await this.getBlockByNumber(this.increaseBlockNumber(this.lastBlock.number));
+                        const block = await this.getBlockByNumber(this.lastBlock.number + 1);
 
                         if (block && this.isValidConfirmation(block)) {
                             this.lastBlock = block;
@@ -164,8 +164,8 @@ export default class TransactionObserver {
                     }
 
                     if (this.isConfirmed()) {
-                        clearInterval(interval);
                         observer.complete();
+                        clearInterval(interval);
                     }
                 }
 
@@ -268,18 +268,5 @@ export default class TransactionObserver {
      */
     isTimeoutTimeExceeded() {
         return this.confirmationChecks === this.timeout;
-    }
-
-    /**
-     * Increases the blockNumber hash by one.
-     *
-     * @method increaseBlockNumber
-     *
-     * @param {String} blockNumber
-     *
-     * @returns {String}
-     */
-    increaseBlockNumber(blockNumber) {
-        return '0x' + (parseInt(blockNumber, 16) + 1).toString(16);
     }
 }

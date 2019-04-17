@@ -142,4 +142,3 @@ export SetExtraMethod from './methods/miner/SetExtraMethod';
 export SetGasPriceMethod from './methods/miner/SetGasPriceMethod';
 export StartMinerMethod from './methods/miner/StartMinerMethod';
 export StopMinerMethod from './methods/miner/StopMinerMethod';
-
