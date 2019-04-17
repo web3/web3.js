@@ -3,7 +3,7 @@ import {formatters} from 'web3-core-helpers';
 import TransactionSigner from '../../../src/signers/TransactionSigner';
 
 // Mocks
-jest.mock('web3-utils');
+// jest.mock('web3-utils');
 jest.mock('web3-core-helpers');
 
 /**
@@ -41,7 +41,8 @@ describe('TransactionSignerTest', () => {
                 '0xf86303843b9aca0082753094b414031aa4838a69e27cb2ae31e709bcd674f0cb648045a01fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867a01415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
             r: '0x1fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867',
             s: '0x1415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
-            v: '0x45'
+            v: '0x45',
+            transactionHash: '0x6a18d30b737db620210e8bc5f334eefc82d1769ea3c16576b25e1ec24ca014ba'
         });
     });
 
@@ -68,7 +69,8 @@ describe('TransactionSignerTest', () => {
                 '0xf86303843b9aca0082753094b414031aa4838a69e27cb2ae31e709bcd674f0cb648045a01fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867a01415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
             r: '0x1fff9fa845437523b0a7f334b7d2a0ab14364a3581f898cd1bba3b5909465867',
             s: '0x1415137f53eeddf0687e966f8d59984676d6d92ce88140765ed343db6936679e',
-            v: '0x45'
+            v: '0x45',
+            transactionHash: '0x6a18d30b737db620210e8bc5f334eefc82d1769ea3c16576b25e1ec24ca014ba'
         });
     });
 
