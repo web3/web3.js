@@ -164,8 +164,8 @@ export default class TransactionObserver {
                     }
 
                     if (this.isConfirmed()) {
-                        clearInterval(interval);
                         observer.complete();
+                        clearInterval(interval);
                     }
                 }
 
