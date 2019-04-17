@@ -195,7 +195,7 @@ export const fromWei = (number, unit) => {
     unit = getUnitValue(unit);
 
     if (!utils.isBN(number) && !isString(number)) {
-        throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+        throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
     return utils.isBN(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
@@ -229,7 +229,7 @@ export const toWei = (number, unit) => {
     unit = getUnitValue(unit);
 
     if (!utils.isBN(number) && !isString(number)) {
-        throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+        throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
     return utils.isBN(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);

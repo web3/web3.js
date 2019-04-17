@@ -461,7 +461,7 @@ describe('UtilsTest', () => {
 
         expect(() => {
             toWei(1, 'wei');
-        }).toThrow('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+        }).toThrow('Please pass numbers as strings or BN objects to avoid precision errors.');
     });
 
     it('calls utf8ToHex and returns the expected results', () => {
