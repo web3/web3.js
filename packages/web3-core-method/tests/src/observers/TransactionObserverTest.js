@@ -189,9 +189,9 @@ describe('TransactionObserverTest', () => {
 
         providerMock.supportsSubscriptions.mockReturnValueOnce(false);
 
-        const receipt = {blockNumber: '0xa'};
-        const blockOne = {number: '0xa', hash: '0x0'};
-        const blockTwo = {number: '0xc', parentHash: '0x0'};
+        const receipt = {blockNumber: 1};
+        const blockOne = {number: 1, hash: '0x0'};
+        const blockTwo = {number: 2, parentHash: '0x0'};
 
         getTransactionReceiptMethodMock.execute
             .mockReturnValueOnce(Promise.resolve(receipt))
@@ -222,7 +222,7 @@ describe('TransactionObserverTest', () => {
 
                 expect(getTransactionReceiptMethodMock.parameters).toEqual(['transactionHash']);
 
-                expect(getBlockByNumberMethodMock.parameters).toEqual(['0xb']);
+                expect(getBlockByNumberMethodMock.parameters).toEqual([2]);
 
                 done();
             }
@@ -235,8 +235,8 @@ describe('TransactionObserverTest', () => {
 
         providerMock.supportsSubscriptions.mockReturnValueOnce(false);
 
-        const receipt = {blockNumber: '0xa'};
-        const blockOne = {number: '0xa', hash: '0x0'};
+        const receipt = {blockNumber: 1};
+        const blockOne = {number: 1, hash: '0x0'};
 
         getTransactionReceiptMethodMock.execute.mockReturnValueOnce(Promise.resolve(receipt));
 
