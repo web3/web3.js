@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-===============
+==================
 Web3 Txpool Module
-===============
+==================
 
 
 The ``web3-eth-txpool`` package gives you access to several non-standard RPC methods to inspect the contents of the transaction pool containing all the currently pending transactions as well as the ones queued for future processing.
