@@ -65,7 +65,7 @@ export default class ContractDeployMethod extends EthSendTransactionMethod {
         clonedContract.address = response.contractAddress;
 
         if (this.promiEvent.listenerCount('receipt') > 0) {
-            this.promiEvent.emit('receipt', response);
+            this.promiEvent.emit('receipt', super.afterExecution(response));
             this.promiEvent.removeAllListeners('receipt');
         }
 

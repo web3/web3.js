@@ -1,3 +1,4 @@
+import {formatters} from 'web3-core-helpers';
 import {EthSendTransactionMethod} from 'web3-core-method';
 import AbiModel from '../../../src/models/AbiModel';
 import AllEventsLogDecoder from '../../../src/decoders/AllEventsLogDecoder';
@@ -7,6 +8,7 @@ import SendContractMethod from '../../../src/methods/SendContractMethod';
 jest.mock('../../../src/decoders/AllEventsLogDecoder');
 jest.mock('../../../src/models/AbiItemModel');
 jest.mock('../../../src/models/AbiModel');
+jest.mock('web3-core-helpers');
 
 /**
  * SendContractMethod test
@@ -21,7 +23,7 @@ describe('SendContractMethodTest', () => {
         new AllEventsLogDecoder();
         allEventsLogDecoderMock = AllEventsLogDecoder.mock.instances[0];
 
-        sendContractMethod = new SendContractMethod({}, {}, {}, {}, {}, {}, allEventsLogDecoderMock, abiModelMock);
+        sendContractMethod = new SendContractMethod({}, formatters, {}, {}, {}, {}, allEventsLogDecoderMock, abiModelMock);
     });
 
     it('constructor check', () => {
@@ -58,11 +60,28 @@ describe('SendContractMethodTest', () => {
 
         allEventsLogDecoderMock.decode.mockReturnValueOnce({event: 'MyEvent'});
 
+        formatters.outputTransactionFormatter.mockReturnValueOnce({
+            events: {
+                0: {event: true},
+                MyEvent: [
+                    {
+                        event: 'MyEvent'
+                    },
+                    {
+                        event: 'MyEvent'
+                    },
+                    {
+                        event: 'MyEvent'
+                    }
+                ]
+            }
+        });
+
         const mappedResponse = sendContractMethod.afterExecution(response);
 
         expect(mappedResponse).toEqual({
             events: {
-                0: {event: false},
+                0: {event: true},
                 MyEvent: [
                     {
                         event: 'MyEvent'
@@ -84,5 +103,22 @@ describe('SendContractMethodTest', () => {
         expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(3, abiModelMock, {event: 'MyEvent'});
 
         expect(allEventsLogDecoderMock.decode).toHaveBeenNthCalledWith(4, abiModelMock, {event: 'MyEvent'});
+
+        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({
+            events: {
+                0: {event: false},
+                MyEvent: [
+                    {
+                        event: 'MyEvent'
+                    },
+                    {
+                        event: 'MyEvent'
+                    },
+                    {
+                        event: 'MyEvent'
+                    }
+                ]
+            }
+        });
     });
 });

@@ -6,9 +6,9 @@ import {formatters} from 'web3-core-helpers';
 jest.mock('web3-core-helpers');
 
 /**
- * SendRawTransactionMethod test
+ * SendTransactionMethod test
  */
-describe('SendRawTransactionMethodTest', () => {
+describe('SendTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
@@ -31,5 +31,13 @@ describe('SendRawTransactionMethodTest', () => {
         expect(method.parameters[0]).toEqual('0x0');
 
         expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith('tx', {});
+    });
+
+    it('calls afterExecution and returns the expected value', () => {
+        formatters.outputTransactionFormatter.mockReturnValueOnce({status: true});
+
+        expect(method.afterExecution({status: false})).toEqual({status: true});
+
+        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({status: false});
     });
 });

@@ -70,6 +70,7 @@ export interface SignedTransaction {
     s: string;
     v: string;
     rawTransaction?: string;
+    transactionHash?: string;
 }
 
 export interface Web3ModuleOptions {
@@ -203,8 +204,6 @@ export interface Content {
     pending: any;
     queued: any;
 }
-
-export type Hex = string | number;
 
 export interface NodeInfo {
     enode: string;
