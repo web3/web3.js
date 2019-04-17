@@ -150,7 +150,7 @@ export default class TransactionObserver {
 
                 if (receipt) {
                     if (this.lastBlock) {
-                        const block = await this.getBlockByNumber((this.lastBlock.number + 1));
+                        const block = await this.getBlockByNumber(this.lastBlock.number + 1);
 
                         if (block && this.isValidConfirmation(block)) {
                             this.lastBlock = block;
