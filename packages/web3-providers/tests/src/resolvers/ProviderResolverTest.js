@@ -28,6 +28,10 @@ describe('ProviderResolverTest', () => {
         providerResolver = new ProviderResolver(providersModuleFactoryMock);
     });
 
+    it('calls resolve with null', () => {
+        expect(providerResolver.resolve(null)).toEqual(null);
+    });
+
     it('calls resolve with HTTP url', () => {
         new HttpProvider();
         const httpProviderMock = HttpProvider.mock.instances[0];

@@ -50,6 +50,10 @@ export default class ProviderResolver {
      * @returns {AbstractSocketProvider|HttpProvider|CustomProvider}
      */
     resolve(provider, net) {
+        if (!provider) {
+            return provider;
+        }
+
         if (typeof provider === 'string') {
             // HTTP
             if (/^http(s)?:\/\//i.test(provider)) {
