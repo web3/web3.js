@@ -27,6 +27,7 @@ import isArray from 'lodash/isArray';
 import * as utils from './Utils';
 import * as ethjsUnit from 'ethjs-unit';
 
+export BN from 'bn.js';
 export {soliditySha3} from './SoliditySha3';
 export randomHex from 'randomhex';
 
