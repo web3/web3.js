@@ -46,7 +46,7 @@ export ContractModuleFactory from './factories/ContractModuleFactory';
  * @constructor
  */
 export function Contract(provider, abi, accounts, address, options) {
-    return new ContractModuleFactory(Utils, formatters, new AbiCoder(), accounts).createContract(
+    return new ContractModuleFactory(Utils, formatters, new AbiCoder()).createContract(
         provider,
         accounts,
         abi,
