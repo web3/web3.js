@@ -96,33 +96,33 @@ export class Debug extends AbstractWeb3Module {
 
     traceBlock(
         blockRlp: string,
-        options?: {},
+        options?: any,
         callback?: (error: Error, result: any) => void
     ): Promise<any>;
 
     traceBlockByNumber(
         blockNumber: number,
-        options?: {},
+        options?: any,
         callback?: (error: Error, result: any) => void
     ): Promise<any>;
 
     traceBlockByHash(
         transactionHash: string,
-        options?: {},
+        options?: any,
         callback?: (error: Error, result: any) => void
     ): Promise<any>;
 
     traceBlockFromFile(
         fileName: string,
-        options?: {},
+        options?: any,
         callback?: (error: Error, result: any) => void
     ): Promise<any>;
 
     traceTransaction(
         transactionHash: string,
-        options?: {},
-        callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+        options?: any,
+        callback?: (error: Error, result: TraceTransaction) => void
+    ): Promise<TraceTransaction>;
 
     verbosity(
         level: number,
@@ -152,4 +152,11 @@ export interface Stats {
     PauseEnd: string[];
     PauseQuantiles: string;
     PauseTotal: number;
+}
+
+export interface TraceTransaction {
+    failed: boolean;
+    gas: number;
+    returnValue: string;
+    structLogs: any[];
 }
