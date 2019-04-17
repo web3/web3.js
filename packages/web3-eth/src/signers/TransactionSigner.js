@@ -18,7 +18,6 @@
  */
 
 import EthereumTx from 'ethereumjs-tx';
-import Hash from 'eth-lib/lib/hash';
 
 export default class TransactionSigner {
     /**
@@ -71,7 +70,7 @@ export default class TransactionSigner {
 
         const rlpEncoded = ethTx.serialize().toString('hex');
         const rawTransaction = '0x' + rlpEncoded;
-        const transactionHash = Hash.keccak256(rawTransaction)
+        const transactionHash = this.utils.sha3(rawTransaction);
 
         return {
             messageHash: Buffer.from(ethTx.hash(false)).toString('hex'),

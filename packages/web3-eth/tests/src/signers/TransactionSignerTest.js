@@ -3,7 +3,7 @@ import {formatters} from 'web3-core-helpers';
 import TransactionSigner from '../../../src/signers/TransactionSigner';
 
 // Mocks
-jest.mock('web3-utils');
+// jest.mock('web3-utils');
 jest.mock('web3-core-helpers');
 
 /**
