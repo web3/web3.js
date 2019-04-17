@@ -70,6 +70,7 @@ export interface SignedTransaction {
     s: string;
     v: string;
     rawTransaction?: string;
+    transactionHash?: string;
 }
 
 export interface Web3ModuleOptions {
