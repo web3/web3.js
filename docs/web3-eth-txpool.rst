@@ -3,7 +3,7 @@
 .. include:: include_announcement.rst
 
 ===============
-web3.eth.txpool
+Web3 Txpool Module
 ===============
 
 

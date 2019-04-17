@@ -204,8 +204,6 @@ export interface Content {
     queued: any;
 }
 
-export type Hex = string | number;
-
 export interface NodeInfo {
     enode: string;
     id: string;

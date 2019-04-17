@@ -36,6 +36,7 @@ setExtra
     miner.setExtra(extraData, [, callback])
 
 This method allows miner to set extra data during mining the block.
+The RPC method used is ``miner_setExtra``.
 
 ----------
 Parameters
@@ -70,7 +71,7 @@ setGasPrice
     miner.setGasPrice(gasPrice, [, callback])
 
 This method allows to set minimal accepted gas price during mining transactions. Any transactions that are below this limit will get excluded from the mining process.
-
+The RPC method used is ``miner_setGasPrice``.
 ----------
 Parameters
 ----------
@@ -113,6 +114,7 @@ setEtherBase
     miner.setEtherBase(address, [, callback])
 
 Sets etherbase, where mining reward will go.
+The RPC method used is ``miner_setEtherbase``.
 
 ----------
 Parameters
@@ -152,6 +154,7 @@ start
     miner.start(miningThread, [, callback])
 
 Start the CPU mining process with the given number of threads.
+The RPC method used is ``miner_start``.
 
 ----------
 Parameters
@@ -194,6 +197,7 @@ stop
     miner.stop([callback])
 
 Stop the CPU mining process.
+The RPC method used is ``miner_stop``.
 
 ----------
 Parameters
