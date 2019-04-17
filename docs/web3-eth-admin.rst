@@ -74,6 +74,7 @@ getDataDirectory
     admin.getDataDirectory([, callback])
 
 Provides absolute path of the running node, which is used by the node to store all its databases.
+The RPC method used is ``admin_datadir``.
 
 ----------
 Parameters
@@ -114,6 +115,7 @@ getNodeInfo
     admin.getNodeInfo([, callback])
 
 This property can be queried for all the information known about the running node at the networking granularity..
+The RPC method used is ``admin_nodeInfo``.
 
 ----------
 Parameters
@@ -181,6 +183,7 @@ getPeers
     admin.getPeers([, callback])
 
 This will provide all the information known about the connected remote nodes at the networking granularity.
+The RPC method used is ``admin_peers``.
 
 ----------
 Parameters
@@ -258,6 +261,7 @@ setSolc
     admin.setSolc(string, [, callback])
 
 Sets the Solidity compiler path to be used by the node when invoking the eth_compileSolidity RPC method
+The RPC method used is ``admin_setSolc``.
 
 ----------
 Parameters
@@ -297,13 +301,14 @@ startRPC
     admin.startRPC(host, port, cors, apis [, callback])
 
 It starts an HTTP based JSON RPC API webserver to handle client requests. All the parameters are optional.
+The RPC method used is ``admin_startRPC``.
 
 ----------
 Parameters
 ----------
 
 1. ``host`` - ``String`` - (optional) The network interface to open the listener socket on (defaults to "localhost").
-2. ``port`` - ``string | number`` - (optional) The network port to open the listener socket on (defaults to 8545).
+2. ``port`` - ``number`` - (optional) The network port to open the listener socket on (defaults to 8545).
 3. ``cors`` - ``string`` - (optional) Cross-origin resource sharing header to use (defaults to "").
 4. ``apis`` - ``string`` -  (optional) API modules to offer over this interface (defaults to "eth,net,web3").
 5. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
@@ -337,13 +342,14 @@ startWS
     admin.startWS(host, port, cors, apis [, callback])
 
 It starts an WebSocket based JSON RPC API webserver to handle client requests. All the parameters are optional.
+The RPC method used is ``admin_startWS``.
 
 ----------
 Parameters
 ----------
 
 1. ``host`` - ``String`` - (optional) The network interface to open the listener socket on (defaults to "localhost").
-2. ``port`` - ``string | number`` - (optional) The network port to open the listener socket on (defaults to 8545).
+2. ``port`` - ``number`` - (optional) The network port to open the listener socket on (defaults to 8545).
 3. ``cors`` - ``string`` - (optional) Cross-origin resource sharing header to use (defaults to "").
 4. ``apis`` - ``string`` -  (optional) API modules to offer over this interface (defaults to "eth,net,web3").
 5. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
@@ -376,6 +382,7 @@ stopRPC
     admin.stopRPC([, callback])
 
 This method closes the currently open HTTP RPC endpoint. As the node can only have a single HTTP endpoint running, this method takes no parameters, returning a boolean whether the endpoint was closed or not.
+The RPC method used is ``admin_stopRPC``.
 
 ----------
 Parameters
@@ -410,6 +417,7 @@ stopWS
     admin.stopWS([, callback])
 
 This method closes the currently open WebSocket RPC endpoint. As the node can only have a single WebSocket endpoint running, this method takes no parameters, returning a boolean whether the endpoint was closed or not.
+The RPC method used is ``admin_stopWS``.
 
 ----------
 Parameters
