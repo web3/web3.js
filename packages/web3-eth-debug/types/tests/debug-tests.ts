@@ -17,7 +17,7 @@
  * @date 2019
  */
 
-import {Debug, Stats} from 'web3-eth-debug';
+import {Debug, Stats, TraceTransaction} from 'web3-eth-debug';
 
 const debug = new Debug('http://localhost:8545');
 
@@ -153,17 +153,17 @@ debug.traceBlockFromFile("", (error: Error, result: any) => {});
 // $ExpectType Promise<any>
 debug.traceBlockFromFile("", {disableStack: true, disableMemory: true, disableStorage: true}, (error: Error, result: any) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<TraceTransaction>
 debug.traceTransaction("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f");
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<TraceTransaction>
 debug.traceTransaction("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f", {disableStack: true, disableMemory: true, disableStorage: true});
 
-// $ExpectType Promise<any>
-debug.traceTransaction("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f", (error: Error, result: any) => {});
+// $ExpectType Promise<TraceTransaction>
+debug.traceTransaction("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f", (error: Error, result: TraceTransaction) => {});
 
-// $ExpectType Promise<any>
-debug.traceTransaction("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f", {disableStack: true, disableMemory: true, disableStorage: true}, (error: Error, result: any) => {});
+// $ExpectType Promise<TraceTransaction>
+debug.traceTransaction("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f", {disableStack: true, disableMemory: true, disableStorage: true}, (error: Error, result: TraceTransaction) => {});
 
 // $ExpectType Promise<any>
 debug.verbosity(5);
