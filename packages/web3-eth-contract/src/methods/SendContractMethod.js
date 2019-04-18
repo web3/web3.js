@@ -93,6 +93,6 @@ export default class SendContractMethod extends EthSendTransactionMethod {
             delete response.logs;
         }
 
-        return response;
+        return super.afterExecution(response);
     }
 }
