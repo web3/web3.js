@@ -158,5 +158,5 @@ export interface TraceTransaction {
     failed: boolean;
     gas: number;
     returnValue: string;
-    structLogs: [];
+    structLogs: any[];
 }

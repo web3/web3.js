@@ -121,13 +121,23 @@ debug.traceBlock("", {disableStack: true, disableMemory: true, disableStorage: t
 debug.traceBlockByHash("0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06");
 
 // $ExpectType Promise<any>
-debug.traceBlockByHash("0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06", {disableStack: true, disableMemory: true, disableStorage: true});
+debug.traceBlockByHash(
+    "0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06",
+    {disableStack: true, disableMemory: true, disableStorage: true}
+);
 
 // $ExpectType Promise<any>
-debug.traceBlockByHash("0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06", (error: Error, result: any) => {});
+debug.traceBlockByHash(
+    "0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06",
+    (error: Error, result: any) => {}
+);
 
 // $ExpectType Promise<any>
-debug.traceBlockByHash("0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06", {disableStack: true, disableMemory: true, disableStorage: true}, (error: Error, result: any) => {});
+debug.traceBlockByHash(
+    "0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06",
+    {disableStack: true, disableMemory: true, disableStorage: true},
+    (error: Error, result: any) => {}
+);
 
 // $ExpectType Promise<any>
 debug.traceBlockByNumber(10);
@@ -157,13 +167,23 @@ debug.traceBlockFromFile("", {disableStack: true, disableMemory: true, disableSt
 debug.traceTransaction("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f");
 
 // $ExpectType Promise<TraceTransaction>
-debug.traceTransaction("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f", {disableStack: true, disableMemory: true, disableStorage: true});
+debug.traceTransaction(
+    "0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f",
+    {disableStack: true, disableMemory: true, disableStorage: true}
+);
 
 // $ExpectType Promise<TraceTransaction>
-debug.traceTransaction("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f", (error: Error, result: TraceTransaction) => {});
+debug.traceTransaction(
+    "0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f",
+    (error: Error, result: TraceTransaction) => {}
+);
 
 // $ExpectType Promise<TraceTransaction>
-debug.traceTransaction("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f", {disableStack: true, disableMemory: true, disableStorage: true}, (error: Error, result: TraceTransaction) => {});
+debug.traceTransaction(
+    "0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f",
+    {disableStack: true, disableMemory: true, disableStorage: true},
+    (error: Error, result: TraceTransaction) => {}
+);
 
 // $ExpectType Promise<any>
 debug.verbosity(5);
