@@ -17,6 +17,7 @@
 /**
  * @file Utils.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2017
  */
 
@@ -122,7 +123,7 @@ export const isAddress = (address) => {
 export const checkAddressChecksum = (address) => {
     // Check each case
     address = address.replace(/^0x/i, '');
-    const addressHash = sha3(address.toLowerCase()).replace(/^0x/i, '');
+    const addressHash = keccak256(address.toLowerCase()).replace(/^0x/i, '');
 
     for (let i = 0; i < 40; i++) {
         // the nth letter should be uppercase if the nth digit of casemap is 1
@@ -466,30 +467,30 @@ export const isTopic = (topic) => {
 };
 
 /**
- * Hashes values to a sha3 hash using keccak 256
+ * Hashes values to a keccak256 hash using keccak 256
  *
  * To hash a HEX string the hex must have 0x in front.
  *
- * @method sha3
- * @return {String} the sha3 string
+ * @method keccak256
+ * @return {String} the keccak256 string
  */
-const SHA3_NULL_S = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
+const KECCAK256_NULL_S = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
-export const sha3 = (value) => {
+export const keccak256 = (value) => {
     if (isHexStrict(value) && /^0x/i.test(value.toString())) {
         value = hexToBytes(value);
     }
 
     const returnValue = Hash.keccak256(value); // jshint ignore:line
 
-    if (returnValue === SHA3_NULL_S) {
+    if (returnValue === KECCAK256_NULL_S) {
         return null;
     } else {
         return returnValue;
     }
 };
 // expose the under the hood keccak256
-sha3._Hash = Hash;
+keccak256._Hash = Hash;
 
 /**
  * Gets the r,s,v values from a signature

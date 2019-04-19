@@ -15,30 +15,31 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file sha3-tests.ts
+ * @file keccak256-tests.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
 import BN = require('bn.js');
-import {sha3} from 'web3-utils';
+import {keccak256} from 'web3-utils';
 
 // $ExpectType string
-sha3('234');
+keccak256('234');
 // $ExpectType string
-sha3(new BN(3));
+keccak256(new BN(3));
 
 // $ExpectError
-sha3(['string']);
+keccak256(['string']);
 // $ExpectError
-sha3(234);
+keccak256(234);
 // $ExpectError
-sha3([4]);
+keccak256([4]);
 // $ExpectError
-sha3({});
+keccak256({});
 // $ExpectError
-sha3(true);
+keccak256(true);
 // $ExpectError
-sha3(null);
+keccak256(null);
 // $ExpectError
-sha3(undefined);
+keccak256(undefined);

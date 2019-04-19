@@ -267,8 +267,8 @@ export const toChecksumAddress = (address) => {
 };
 
 // aliases
-export const keccak256 = utils.sha3;
-export const sha3 = utils.sha3;
+export const keccak256 = utils.keccak256;
+export const sha3 = utils.keccak256;
 export const toDecimal = utils.hexToNumber;
 export const hexToNumber = utils.hexToNumber;
 export const fromDecimal = utils.numberToHex;

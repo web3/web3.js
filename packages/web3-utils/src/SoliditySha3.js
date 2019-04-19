@@ -243,5 +243,5 @@ export const soliditySha3 = function() {
 
     const hexArguments = map(arguments_, _processSoliditySha3Arguments);
 
-    return utils.sha3(`0x${hexArguments.join('')}`);
+    return utils.keccak256(`0x${hexArguments.join('')}`);
 };
