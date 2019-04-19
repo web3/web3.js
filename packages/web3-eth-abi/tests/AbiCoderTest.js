@@ -99,8 +99,6 @@ describe('AbiCoderTest', () => {
         expect(abiCoder.encodeFunctionCall({inputs: [{components: true}]}, [])).toEqual('0x000000000');
 
         expect(ethersAbiCoderMock.encode).toHaveBeenCalledWith([{components: true}], []);
-
-        expect(Utils.keccak256).toHaveBeenCalledWith('functionName');
     });
 
     it('calls decodeParameters and returns the expected object', () => {
