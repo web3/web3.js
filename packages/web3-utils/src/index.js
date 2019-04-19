@@ -251,7 +251,7 @@ export const toChecksumAddress = (address) => {
         throw new Error(`Given address "${address}" is not a valid Ethereum address.`);
 
     address = address.toLowerCase().replace(/^0x/i, '');
-    const addressHash = utils.sha3(address).replace(/^0x/i, '');
+    const addressHash = utils.keccak256(address).replace(/^0x/i, '');
     let checksumAddress = '0x';
 
     for (let i = 0; i < address.length; i++) {
