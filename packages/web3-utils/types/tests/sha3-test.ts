@@ -17,7 +17,6 @@
 /**
  * @file sha3-tests.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
- * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
