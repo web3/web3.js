@@ -30,14 +30,9 @@ describe('AbiCoderTest', () => {
             return '0x000000000';
         });
 
-        Utils.sha3 = jest.fn(() => {
-            return '0x000000000';
-        });
-
         expect(abiCoder.encodeFunctionSignature('functionName')).toEqual('0x00000000');
 
         expect(Utils.keccak256).toHaveBeenCalledWith('functionName');
-        expect(Utils.sha3).toHaveBeenCalledWith('functionName');
     });
 
     it('calls encodeFunctionSignature with a object as parameter', () => {
@@ -47,16 +42,11 @@ describe('AbiCoderTest', () => {
             return '0x000000000';
         });
 
-        Utils.sha3 = jest.fn(() => {
-            return '0x000000000';
-        });
-
         expect(abiCoder.encodeFunctionSignature({})).toEqual('0x00000000');
 
         expect(Utils.jsonInterfaceMethodToString).toHaveBeenCalledWith({});
 
         expect(Utils.keccak256).toHaveBeenCalledWith('0x000000000');
-        expect(Utils.sha3).toHaveBeenCalledWith('0x000000000');
     });
 
     it('calls encodeEventSignature with a object as parameter', () => {
@@ -66,16 +56,11 @@ describe('AbiCoderTest', () => {
             return '0x000000000';
         });
 
-        Utils.sha3 = jest.fn(() => {
-            return '0x000000000';
-        });
-
         expect(abiCoder.encodeEventSignature({})).toEqual('0x000000000');
 
         expect(Utils.jsonInterfaceMethodToString).toHaveBeenCalledWith({});
 
         expect(Utils.keccak256).toHaveBeenCalledWith('0x000000000');
-        expect(Utils.sha3).toHaveBeenCalledWith('0x000000000');
     });
 
     it('calls encodeEventSignature with a string as parameter', () => {
@@ -83,14 +68,9 @@ describe('AbiCoderTest', () => {
             return '0x000000000';
         });
 
-        Utils.sha3 = jest.fn(() => {
-            return '0x000000000';
-        });
-
         expect(abiCoder.encodeEventSignature('functionName')).toEqual('0x000000000');
 
         expect(Utils.keccak256).toHaveBeenCalledWith('functionName');
-        expect(Utils.sha3).toHaveBeenCalledWith('functionName');
     });
 
     it('calls encodeParameters', () => {
@@ -114,10 +94,6 @@ describe('AbiCoderTest', () => {
             return '0x000000000';
         });
 
-        Utils.sha3 = jest.fn(() => {
-            return '0x000000000';
-        });
-
         ethersAbiCoderMock.encode.mockReturnValueOnce('0x0');
 
         expect(abiCoder.encodeFunctionCall({inputs: [{components: true}]}, [])).toEqual('0x000000000');
@@ -125,7 +101,6 @@ describe('AbiCoderTest', () => {
         expect(ethersAbiCoderMock.encode).toHaveBeenCalledWith([{components: true}], []);
 
         expect(Utils.keccak256).toHaveBeenCalledWith('functionName');
-        expect(Utils.sha3).toHaveBeenCalledWith('functionName');
     });
 
     it('calls decodeParameters and returns the expected object', () => {
