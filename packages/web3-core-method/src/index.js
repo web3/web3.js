@@ -43,6 +43,7 @@ export IsSyncingMethod from './methods/node/IsSyncingMethod';
 export GetGasPriceMethod from './methods/node/GetGasPriceMethod';
 export SubmitWorkMethod from './methods/node/SubmitWorkMethod';
 export GetWorkMethod from './methods/node/GetWorkMethod';
+export GetProofMethod from './methods/node/GetProofMethod';
 
 // Account
 export GetAccountsMethod from './methods/account/GetAccountsMethod';
