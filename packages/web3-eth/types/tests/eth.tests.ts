@@ -488,4 +488,3 @@ eth.getProof(
     10,
     (error: Error, result: GetProof) => {}
 );
-
