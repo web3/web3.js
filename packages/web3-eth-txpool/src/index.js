@@ -25,23 +25,23 @@ import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {ProviderResolver} from 'web3-providers';
 import MethodFactory from './factories/MethodFactory';
-import TxpoolModule from './Txpool.js';
+import TxPoolModule from './TxPool.js';
 
 /**
- * Returns the Txpool object
+ * Returns the TxPool object
  *
- * @method Txpool
+ * @method TxPool
  *
  * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Net.Socket} net
  * @param {Object} options
  *
- * @returns {Txpool}
+ * @returns {TxPool}
  */
-export function Txpool(provider, net = null, options = {}) {
+export function TxPool(provider, net = null, options = {}) {
     const resolvedProvider = new ProviderResolver().resolve(provider, net);
 
-    return new TxpoolModule(
+    return new TxPoolModule(
         resolvedProvider,
         new MethodFactory(Utils, formatters),
         new Network(resolvedProvider, null, options),

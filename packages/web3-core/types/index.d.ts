@@ -201,8 +201,30 @@ export interface Log {
 }
 
 export interface Content {
-    pending: any;
-    queued: any;
+    pending: TxPoolContent;
+    queued: TxPoolContent;
+}
+
+export interface TxPoolContent {
+    [address: string]: {
+        [nonce: number]: Array<Transaction>
+    }
+}
+
+export interface Inspect {
+    pending: TxPoolInspect;
+    queued: TxPoolInspect;
+}
+
+export interface TxPoolInspect {
+    [address: string]: {
+        [nonce: number]: Array<string>;
+    };
+}
+
+export interface TxPoolStatus {
+    pending: number;
+    queued: number;
 }
 
 export interface NodeInfo {
