@@ -237,12 +237,16 @@ export interface NodeInfo {
       discovery: string | number;
       listener: string | number;
     };
-    protocols: {
-      eth: {
-        difficulty: string | number;
-        genesis: string;
-        head: string;
-        network: string | number;
-      };
+    protocols: any // Any because it's not documented what each protocol (eth, shh etc.) is defining here
+}
+
+export interface PeerInfo {
+    caps: Array<string>;
+    id: string;
+    name: string;
+    network: {
+        localAddress: string;
+        remoteAddress: string;
     };
+    protocols: any; // Any because it's not documented what each protocol (eth, shh etc.) is defining here
 }

@@ -22,8 +22,7 @@
         "web3-core-method": "1.0.0-beta.52",
         "web3-net": "1.0.0-beta.52",
         "web3-providers": "1.0.0-beta.52",
-        "web3-utils": "1.0.0-beta.52",
-        "web3-eth-accounts": "1.0.0-beta.52"
+        "web3-utils": "1.0.0-beta.52"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",

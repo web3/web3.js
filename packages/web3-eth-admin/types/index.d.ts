@@ -18,12 +18,11 @@
  */
 
 import {provider} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions, NodeInfo} from 'web3-core';
-import {Accounts} from 'web3-eth-accounts';
+import {AbstractWeb3Module, Web3ModuleOptions, NodeInfo, PeerInfo} from 'web3-core';
 import * as net from 'net';
 
 export class Admin extends AbstractWeb3Module {
-    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions, accounts?: Accounts|null);
+    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions);
 
     addPeer(
         url: string,
@@ -40,7 +39,7 @@ export class Admin extends AbstractWeb3Module {
 
     getPeers(
         callback?: (error: Error, result: any[]) => void
-    ): Promise<any[]>;
+    ): Promise<PeerInfo[]>;
 
     setSolc(
         path: string,
