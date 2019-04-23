@@ -30,7 +30,7 @@ The ``web3-eth-txpool`` package gives you access to several non-standard RPC met
 
 .. _txpool-content:
 
-content
+getContent
 =========
 
 .. code-block:: javascript
@@ -144,12 +144,12 @@ Example
 ------------------------------------------------------------------------------
 
 
-inspect
+getInspection
 =====================
 
 .. code-block:: javascript
 
-    txPool.getInspect([, callback])
+    txPool.getInspection([, callback])
 
 The property can be queried to list a textual summary of all the transactions currently pending for inclusion in the next block(s), as well as the ones that are being scheduled for future executions. 
 The RPC method used is ``txpool_inspect``.
@@ -179,7 +179,7 @@ Example
 
 .. code-block:: javascript
 
-    txPool.getInspect().then(console.log);
+    txPool.getInspection().then(console.log);
     > {
         pending: {
             0x26588a9301b0428d95e6fc3a5024fce8bec12d51: {
@@ -234,7 +234,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-status
+getStatus
 =====================
 
 .. code-block:: javascript

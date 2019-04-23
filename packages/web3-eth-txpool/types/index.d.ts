@@ -26,7 +26,7 @@ export class Txpool extends AbstractWeb3Module {
 
     getContent(callback?: (error: Error, result: TxPoolContent) => void): Promise<TxPoolContent>;
 
-    getInspect(callback?: (error: Error, result: TxPoolInspect) => void): Promise<TxPoolInspect>;
+    getInspection(callback?: (error: Error, result: TxPoolInspect) => void): Promise<TxPoolInspect>;
 
     getStatus(callback?: (error: Error, result: TxPoolStatus) => void): Promise<TxPoolStatus>;
 }

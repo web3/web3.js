@@ -235,7 +235,7 @@ export interface NodeInfo {
 }
 
 export interface PeerInfo {
-    caps: Array<string>;
+    caps: string[];
     id: string;
     name: string;
     network: {

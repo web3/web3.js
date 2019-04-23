@@ -60,18 +60,18 @@ export default class MethodFactory extends AbstractMethodFactory {
         super(utils, formatters);
 
         this.methods = {
-            backTraceAt: BackTraceAtMethod,
+            setBackTraceAt: BackTraceAtMethod,
             blockProfile: BlockProfileMethod,
             cpuProfile: CpuProfileMethod,
             dumpBlock: DumpBlockMethod,
-            gcStats: GcStatsMethod,
+            getGCStats: GcStatsMethod,
             getBlockRlp: GetBlockRlpMethod,
             goTrace: GoTraceMethod,
-            memStats: MemStatsMethod,
-            seedHash: SeedHashMethod,
+            getMemStats: MemStatsMethod,
+            getSeedHash: SeedHashMethod,
             setBlockProfileRate: SetBlockProfileRateMethod,
             setHead: SetHeadMethod,
-            stacks: StacksMethod,
+            getStacks: StacksMethod,
             startCPUProfile: StartCpuProfileMethod,
             startGoTrace: StartGoTraceMethod,
             stopCPUProfile: StopCpuProfileMethod,
@@ -81,8 +81,8 @@ export default class MethodFactory extends AbstractMethodFactory {
             traceBlockFromFile: TraceBlockFromFileMethod,
             traceBlock: TraceBlockMethod,
             traceTransaction: TraceTransactionMethod,
-            verbosity: VerbosityMethod,
-            vmodule: VmoduleMethod,
+            setVerbosity: VerbosityMethod,
+            setVerbosityPattern: VmoduleMethod,
             writeBlockProfile: WriteBlockProfileMethod,
             writeMemProfile: WriteMemProfileMethod
         };

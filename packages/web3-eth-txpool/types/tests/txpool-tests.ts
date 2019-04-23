@@ -23,19 +23,19 @@ import {Content} from 'web3-core';
 const txpool = new Txpool('http://localhost:8545');
 
 // $ExpectType Promise<Content>
-txpool.content();
+txpool.getContent();
 
 // $ExpectType Promise<Content>
-txpool.content((error: Error, result: Content) => {});
+txpool.getContent((error: Error, result: Content) => {});
 
 // $ExpectType Promise<Content>
-txpool.inspect();
+txpool.getInspection();
 
 // $ExpectType Promise<Content>
-txpool.inspect((error: Error, result: Content) => {});
+txpool.getInspection((error: Error, result: Content) => {});
 
 // $ExpectType Promise<Content>
-txpool.status();
+txpool.getStatus();
 
 // $ExpectType Promise<Content>
-txpool.status((error: Error, result: Content) => {});
+txpool.getStatus((error: Error, result: Content) => {});

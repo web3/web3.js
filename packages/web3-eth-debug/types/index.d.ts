@@ -24,7 +24,7 @@ import * as net from 'net';
 export class Debug extends AbstractWeb3Module {
     constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions);
 
-    backTraceAt(
+    setBackTraceAt(
         filename: string,
         callback?: (error: Error, result: any) => void
     ): Promise<any>;
@@ -46,7 +46,7 @@ export class Debug extends AbstractWeb3Module {
         callback?: (error: Error, result: any) => void
     ): Promise<any>;
 
-    gcStats(
+    getGCStats(
         callback?: (error: Error, result: Stats) => void
     ): Promise<Stats>;
 
@@ -61,20 +61,20 @@ export class Debug extends AbstractWeb3Module {
         callback?: (error: Error, result: any) => void
     ): Promise<any>;
 
-    memStats(callback?: (error: Error, result: any) => void): Promise<any>;
+    getMemStats(callback?: (error: Error, result: any) => void): Promise<any>;
 
-    seedHash(
+    getSeedHash(
         blockNumber: number,
         callback?: (error: Error, result: string) => void
     ): Promise<string>;
 
-    setHead(
-        blockNumber: number,
+    setBlockProfileRate(
+        rate: number,
         callback?: (error: Error, result: any) => void
     ): Promise<any>;
 
-    setBlockProfileRate(
-        rate: number,
+    setHead(
+        blockNumber: number,
         callback?: (error: Error, result: any) => void
     ): Promise<any>;
 
@@ -124,12 +124,12 @@ export class Debug extends AbstractWeb3Module {
         callback?: (error: Error, result: TraceTransaction) => void
     ): Promise<TraceTransaction>;
 
-    verbosity(
+    setVerbosity(
         level: number,
         callback?: (error: Error, result: any) => void
     ): Promise<any>;
 
-    vmodule(
+    setVerbosityPattern(
         input: string,
         callback?: (error: Error, result: any) => void
     ): Promise<any>;

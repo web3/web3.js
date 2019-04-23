@@ -22,10 +22,10 @@ import {Debug, Stats, TraceTransaction} from 'web3-eth-debug';
 const debug = new Debug('http://localhost:8545');
 
 // $ExpectType Promise<any>
-debug.backTraceAt("server.go:443");
+debug.setBackTraceAt("server.go:443");
 
 // $ExpectType Promise<any>
-debug.backTraceAt("server.go:443", (error: Error, result: any) => {});
+debug.setBackTraceAt("server.go:443", (error: Error, result: any) => {});
 
 // $ExpectType Promise<any>
 debug.blockProfile("", 600);
@@ -46,10 +46,10 @@ debug.dumpBlock(10);
 debug.dumpBlock(10, (error: Error, result: string) => {});
 
 // $ExpectType Promise<Stats>
-debug.gcStats();
+debug.getGCStats();
 
 // $ExpectType Promise<Stats>
-debug.gcStats((error: Error, result: Stats) => {});
+debug.getGCStats((error: Error, result: Stats) => {});
 
 // $ExpectType Promise<string>
 debug.getBlockRlp(10);
@@ -64,16 +64,16 @@ debug.goTrace("", 600);
 debug.goTrace("", 600, (error: Error, result: any) => {});
 
 // $ExpectType Promise<any>
-debug.memStats();
+debug.getMemStats();
 
 // $ExpectType Promise<any>
-debug.memStats((error: Error, result: any) => {});
+debug.getMemStats((error: Error, result: any) => {});
 
 // $ExpectType Promise<string>
-debug.seedHash(1);
+debug.getSeedHash(1);
 
 // $ExpectType Promise<string>
-debug.seedHash(1, (error: Error, result: string) => {});
+debug.getSeedHash(1, (error: Error, result: string) => {});
 
 // $ExpectType Promise<any>
 debug.setHead(1);
@@ -186,16 +186,16 @@ debug.traceTransaction(
 );
 
 // $ExpectType Promise<any>
-debug.verbosity(5);
+debug.setVerbosity(5);
 
 // $ExpectType Promise<any>
-debug.verbosity(5, (error: Error, result: any) => {});
+debug.setVerbosity(5, (error: Error, result: any) => {});
 
 // $ExpectType Promise<any>
-debug.vmodule("eth/*=6");
+debug.setVerbosityPattern("eth/*=6");
 
 // $ExpectType Promise<any>
-debug.vmodule("eth/*=6", (error: Error, result: any) => {});
+debug.setVerbosityPattern("eth/*=6", (error: Error, result: any) => {});
 
 // $ExpectType Promise<any>
 debug.writeBlockProfile("");
