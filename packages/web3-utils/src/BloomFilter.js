@@ -58,7 +58,7 @@ function codePointToInt(codePoint) {
  * @returns {Boolean}
  */
 function testBytes(bloom, bytes) {
-    const hash = utils.sha3(bytes).replace('0x', '');
+    const hash = utils.keccak256(bytes).replace('0x', '');
 
     for (let i = 0; i < 12; i += 4) {
         // calculate bit position in bloom filter that must be active
