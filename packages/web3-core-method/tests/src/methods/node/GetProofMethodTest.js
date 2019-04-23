@@ -61,20 +61,16 @@ describe('GetProofMethodTest', () => {
         expect(actualResponse.result.balance).toEqual(5);
 
         for (let i = 0; i < response.result.storageProof.length; i++) {
-            it('should call BN', () => {
-                var actual = actualResponse.result.storageProof[i].value;
+            var actual = actualResponse.result.storageProof[i].value;
 
-                expect(actual).toBe(0);
+            expect(actual).toBe(0);
 
-                expect(Utils.toBN).toHaveBeenCalledWith(response.result.storageProof[i].value);
-            });
+            expect(Utils.toBN).toHaveBeenCalledWith(response.result.storageProof[i].value);
         }
 
         expect(Utils.hexToNumber).toHaveBeenCalledWith(response.result.nonce);
         expect(Utils.hexToNumber).toHaveBeenCalledWith(response.result.balance);
-    });
 
-    it('afterExecution should directly return the response', () => {
         expect(method.afterExecution(false)).toEqual(false);
     });
 });
