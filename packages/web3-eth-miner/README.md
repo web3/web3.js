@@ -1,8 +1,8 @@
 # web3-eth-miner
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-This is the miner package. This is an independent package. If you want to use this package, you need to import this in your project.
+This is the miner module. This is an independent module. If you want to use this module, you need to import this in your project.
 Please read the [documentation][docs] for more.
 
 ## Installation

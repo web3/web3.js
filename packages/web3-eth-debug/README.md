@@ -1,8 +1,8 @@
 # web3-eth-debug
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-This is the debug package to be used in the `web3-eth` package.
+This is the debug module and can be used as a standalone module.
 Please read the [documentation][docs] for more.
 
 ## Installation
