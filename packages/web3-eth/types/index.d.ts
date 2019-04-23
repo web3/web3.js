@@ -239,6 +239,6 @@ export interface GetProof {
 
 export interface StorageProof {
     key: string;
-    proof: string[];
     value: string;
+    proof: string[];
 }

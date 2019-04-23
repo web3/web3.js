@@ -33,4 +33,24 @@ export default class GetProofMethod extends AbstractMethod {
     constructor(utils, formatters, moduleInstance) {
         super('eth_getProof', 3, utils, formatters, moduleInstance);
     }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Number}
+     */
+    afterExecution(response) {
+        response.nonce = this.utils.hexToNumber(response.nonce);
+        response.gas = this.utils.hexToNumber(response.gas);
+
+        for (let i = 0; i < response.storageProof.length; i++) {
+            response.storageProof[i].value = this.utils.toBN(response.storageProof[i].value).toString(10);
+        }
+
+        return response;
+    }
 }
