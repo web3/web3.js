@@ -803,7 +803,7 @@ Returns
 
 - ``"data"`` returns ``Object``: Fires on each incoming event with the event object as argument.
 - ``"changed"`` returns ``Object``: Fires on each event which was removed from the blockchain. The event will have the additional property ``"removed: true"``.
-- ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
+- ``"error"`` returns ``Object``: Fires when an error in the subscription occurs.
 
 
 The structure of the returned event ``Object`` looks as follows:
