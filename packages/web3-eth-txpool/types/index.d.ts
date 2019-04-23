@@ -18,15 +18,15 @@
  */
 
 import {provider} from 'web3-providers';
-import {AbstractWeb3Module, Content, Inspect, Web3ModuleOptions} from 'web3-core';
+import {AbstractWeb3Module, TxPoolContent, TxPoolInspect, TxPoolStatus, Web3ModuleOptions} from 'web3-core';
 import * as net from 'net';
 
 export class Txpool extends AbstractWeb3Module {
     constructor(provider: provider, net?: net.Socket | null, options?: Web3ModuleOptions);
 
-    getContent(callback?: (error: Error, result: Content) => void): Promise<Content>;
+    getContent(callback?: (error: Error, result: TxPoolContent) => void): Promise<TxPoolContent>;
 
-    getInspect(callback?: (error: Error, result: Inspect) => void): Promise<Content>;
+    getInspect(callback?: (error: Error, result: TxPoolInspect) => void): Promise<TxPoolInspect>;
 
-    getStatus(callback?: (error: Error, result: Content) => void): Promise<Content>;
+    getStatus(callback?: (error: Error, result: TxPoolStatus) => void): Promise<TxPoolStatus>;
 }

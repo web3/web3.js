@@ -200,25 +200,19 @@ export interface Log {
     blockNumber: number;
 }
 
-export interface Content {
-    pending: TxPoolContent;
-    queued: TxPoolContent;
-}
-
 export interface TxPoolContent {
-    [address: string]: {
-        [nonce: number]: Array<Transaction>
-    }
-}
-
-export interface Inspect {
-    pending: TxPoolInspect;
-    queued: TxPoolInspect;
+    pending: TxPool;
+    queued: TxPool;
 }
 
 export interface TxPoolInspect {
+    pending: TxPool;
+    queued: TxPool;
+}
+
+export interface TxPool {
     [address: string]: {
-        [nonce: number]: Array<string>;
+        [nonce: number]: string[] | Transaction[];
     };
 }
 
