@@ -218,7 +218,7 @@ encodeFunctionCall
 
     web3.eth.abi.encodeFunctionCall(jsonInterface, parameters);
 
-Encodes a function call using its :ref:`JSON interface <glossary-json-interface>` object and given paramaters.
+Encodes a function call using its :ref:`JSON interface <glossary-json-interface>` object and given parameters.
 
 ----------
 Parameters
