@@ -23,7 +23,7 @@ import isObject from 'lodash/isObject';
 import * as EthLibAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
-import {isHexStrict, hexToBytes, randomHex, sha3} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
+import {isHexStrict, hexToBytes, randomHex, keccak256} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
 
 export default class Account {
@@ -169,7 +169,7 @@ export default class Account {
             cipher.final()
         ]);
 
-        const mac = sha3(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')])).replace('0x', '');
+        const mac = keccak256(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')])).replace('0x', '');
 
         return {
             version: 3,
@@ -249,7 +249,7 @@ export default class Account {
 
         const ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
 
-        const mac = sha3(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
+        const mac = keccak256(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
         if (mac !== json.crypto.mac) {
             throw new Error('Key derivation failed - possibly wrong password');
         }

@@ -141,7 +141,7 @@ Returns
     - ``difficulty`` - ``number``:  Difficulty level applied during the nonce discovering of this block.
     - ``genesis`` - ``string``: Very first block hash.
     - ``head`` - ``string``: Current block hash.
-    - ``network`` - ``number``: currenty used Ethereum networks ids.
+    - ``network`` - ``number``: currently used Ethereum networks ids.
 
 
 -------
