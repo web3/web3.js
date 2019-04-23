@@ -55,13 +55,14 @@ describe('GetProofMethodTest', () => {
             }
         };
 
-        expect(method.afterExecution(response).result.nonce).toEqual(1);
-        expect(method.afterExecution(response).result.balance).toEqual(5);
+        const actualResponse = method.afterExecution(response);
+
+        expect(actualResponse.result.nonce).toEqual(1);
+        expect(actualResponse.result.balance).toEqual(5);
 
         for (let i = 0; i < response.result.storageProof.length; i++) {
             it('should call BN', () => {
-                var afterExecution = method.afterExecution(response);
-                var actual = afterExecution.result.storageProof[i].value;
+                var actual = actualResponse.result.storageProof[i].value;
 
                 expect(actual).toBe(0);
 
