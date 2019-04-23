@@ -233,10 +233,12 @@ export interface GetProof {
       codeHash: string;
       nonce: string;
       storageHash: string;
-      storageProof: {
-        key: string;
-        proof: string[];
-        value: string;
-      }[];
+      storageProof: StorageProof[];
     };
+}
+
+export interface StorageProof {
+    key: string;
+    proof: string[];
+    value: string;
 }
