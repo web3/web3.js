@@ -25,7 +25,7 @@ export class Debug extends AbstractWeb3Module {
     constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions);
 
     setBackTraceAt(
-        filename: string,
+        location: string,
         callback?: (error: Error, result: any) => void
     ): Promise<any>;
 
@@ -59,7 +59,7 @@ export class Debug extends AbstractWeb3Module {
         file: string,
         seconds: number,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<boolean>;
 
     getMemStats(callback?: (error: Error, result: any) => void): Promise<any>;
 
@@ -71,78 +71,78 @@ export class Debug extends AbstractWeb3Module {
     setBlockProfileRate(
         rate: number,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<boolean>;
 
     setHead(
         blockNumber: number,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<boolean>;
 
-    stacks(callback?: (error: Error, result: any) => void): Promise<any>;
+    getStacks(callback?: (error: Error, result: any) => void): Promise<string>;
 
     startCPUProfile(
         file: string,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<boolean>;
 
     startGoTrace(
         file: string,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<boolean>;
 
-    stopCPUProfile(callback?: (error: Error, result: any) => void): Promise<any>;
+    stopCPUProfile(callback?: (error: Error, result: any) => void): Promise<boolean>;
 
-    stopGoTrace(callback?: (error: Error, result: any) => void): Promise<any>;
+    stopGoTrace(callback?: (error: Error, result: any) => void): Promise<boolean>;
 
     traceBlock(
         blockRlp: string,
         options?: any,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<BlockTraceResult>;
 
     traceBlockByNumber(
         blockNumber: number,
         options?: any,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<BlockTraceResult>;
 
     traceBlockByHash(
         transactionHash: string,
         options?: any,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<BlockTraceResult>;
 
     traceBlockFromFile(
         fileName: string,
         options?: any,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<BlockTraceResult>;
 
     traceTransaction(
         transactionHash: string,
         options?: any,
-        callback?: (error: Error, result: TraceTransaction) => void
-    ): Promise<TraceTransaction>;
+        callback?: (error: Error, result: ExecutionResurt) => void
+    ): Promise<ExecutionResurt>;
 
     setVerbosity(
         level: number,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<boolean>;
 
     setVerbosityPattern(
         input: string,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<boolean>;
 
     writeBlockProfile(
         file: string,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<boolean>;
 
     writeMemProfile(
         file: string,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<boolean>;
 }
 
 export interface Stats {
@@ -154,7 +154,7 @@ export interface Stats {
     PauseTotal: number;
 }
 
-export interface TraceTransaction {
+export interface ExecutionResurt {
     failed: boolean;
     gas: number;
     returnValue: string;
