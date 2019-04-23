@@ -19,7 +19,7 @@ describe('GetProofMethodTest', () => {
 
         expect(method.parametersAmount).toEqual(3);
 
-        expect(method.utils).toEqual(null);
+        expect(method.utils).toEqual(Utils);
 
         expect(method.formatters).toEqual(null);
     });
@@ -43,7 +43,7 @@ describe('GetProofMethodTest', () => {
             });
         }
 
-        expect(Utils.hexToNumber).toHaveBeenCalledWith('0x0');
+        expect(Utils.hexToNumber).toHaveBeenCalledWith('0x1');
     });
 
     it('afterExecution should directly return the response', () => {
