@@ -55,6 +55,9 @@ describe('GetProofMethodTest', () => {
             }
         };
 
+        Utils.hexToNumber.mockReturnValueOnce(100);
+        Utils.toBN.mockReturnValueOnce('0');
+
         const actualResponse = method.afterExecution(response);
 
         expect(actualResponse.result.nonce).toEqual(1);
