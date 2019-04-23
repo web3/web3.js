@@ -65,11 +65,12 @@ describe('GetProofMethodTest', () => {
 
                 expect(actual).toBe(0);
 
-                expect(Utils.toBN).toHaveBeenCalledWith('0x0');
+                expect(Utils.toBN).toHaveBeenCalledWith(response.result.storageProof[i].value);
             });
         }
 
-        expect(Utils.hexToNumber).toHaveBeenCalledWith('0x1');
+        expect(Utils.hexToNumber).toHaveBeenCalledWith(response.result.nonce);
+        expect(Utils.hexToNumber).toHaveBeenCalledWith(response.result.balance);
     });
 
     it('afterExecution should directly return the response', () => {

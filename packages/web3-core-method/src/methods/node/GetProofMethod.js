@@ -47,10 +47,10 @@ export default class GetProofMethod extends AbstractMethod {
         response.result.nonce = this.utils.hexToNumber(response.result.nonce);
         response.result.balance = this.utils.hexToNumber(response.result.balance);
 
-        for (let i = 0; i < response.result.storageProof.length; i++) {
+        for (let i = 0; i < response.storageProof.length; i++) {
             response.result.storageProof[i].value = this.utils.toBN(response.result.storageProof[i].value).toString(10);
         }
 
         return response;
-    
+    }
 }
