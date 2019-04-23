@@ -146,7 +146,7 @@ export class Eth extends AbstractWeb3Module {
 
     pendingTransactions(callback?: (error: Error, result: []) => void): Promise<[]>;
 
-    getProof(address: string, storageKey: string[], blockNumber: number | string, callback?: (error: Error, result: GetProof) => void): Promise<GetProof>;
+    getProof(address: string, storageKey: string[], blockNumber: number | string | "latest" | "earliest", callback?: (error: Error, result: GetProof) => void): Promise<GetProof>;
 }
 
 export interface Methods {
@@ -229,10 +229,14 @@ export interface GetProof {
     result: {
       address: string;
       accountProof: string[];
-      balance: number | string;
+      balance: string;
       codeHash: string;
-      nonce: number | string;
+      nonce: string;
       storageHash: string;
-      storageProof: [];
+      storageProof: {
+        key: string;
+        proof: string[];
+        value: string;
+      }[];
     };
 }

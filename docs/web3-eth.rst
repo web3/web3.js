@@ -1530,7 +1530,7 @@ Parameters
 
 1. ``String`` 20 Bytes:  The Address of the account or contract.
 2. ``Array`` 32 Bytes: Array of storage-keys which should be proofed and included. See :ref:`web3.eth.getStorageAt <eth-getStorageAt>`.
-3. ``Number | String``: Integer block number, or the string "latest" or "earliest".
+3. ``Number | String | "latest" | "earliest"``: Integer block number, or the string "latest" or "earliest".
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
