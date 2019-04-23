@@ -2,7 +2,7 @@
 
 This is a sub package of [web3.js][repo]
 
-This contains useful utility functions for Dapp developers.   
+This contains useful utility functions for Dapp developers.
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -20,7 +20,7 @@ import * as Utils from 'web3-utils';
 
 console.log(Utils);
 > {
-    sha3: Function,
+    keccak256: Function,
     soliditySha3: Function,
     isAddress: Function,
     ...
@@ -36,7 +36,7 @@ console.log(asciiToHex('I have 100!'));
 > "0x49206861766520313030e282ac"
 ```
 
-## Types 
+## Types
 
 All the typescript typings are placed in the types folder.
 
