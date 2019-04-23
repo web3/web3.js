@@ -63,7 +63,7 @@ describe('GetProofMethodTest', () => {
         for (let i = 0; i < response.result.storageProof.length; i++) {
             var actual = actualResponse.result.storageProof[i].value;
 
-            expect(actual).toBe(0);
+            expect(actual).toBe('0');
 
             expect(Utils.toBN).toHaveBeenCalledWith(response.result.storageProof[i].value);
         }
