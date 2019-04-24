@@ -632,12 +632,12 @@ Example
 
 ------------------------------------------------------------------------------
 
-traceBlock
-===========
+getBlockTrace
+=============
 
 .. code-block:: javascript
 
-    debug.traceBlock(blockRlp, options, [, callback])
+    debug.getBlockTrace(blockRlp, options, [, callback])
 
 The traceBlock method will return a full stack trace of all invoked opcodes of all transaction that were included included in this block.
 Note, the parent of this block must be present or it will fail.
@@ -666,17 +666,17 @@ Example
 
 .. code-block:: javascript
 
-    debug.traceBlock().then(console.log);
+    debug.getBlockTrace('0x0', {}).then(console.log);
     > Object
 
 ------------------------------------------------------------------------------
 
-traceBlockByNumber
-================
+getBlockTraceByNumber
+=====================
 
 .. code-block:: javascript
 
-    debug.traceBlockByNumber(number, options, [, callback])
+    debug.getBlockTraceByNumber(number, options, [, callback])
 
 The traceBlockByNumber method accepts a block number and will replay the block that is already present in the database.
 
@@ -704,17 +704,19 @@ Example
 
 .. code-block:: javascript
 
-    debug.traceBlockByNumber().then(console.log);
+    debug.getBlockTraceByNumber(100, {}).then(console.log);
     > Object
+
 
 ------------------------------------------------------------------------------
 
-traceBlockByHash
-================
+
+getBlockTraceByHash
+===================
 
 .. code-block:: javascript
 
-    debug.traceBlockByHash(hash, options, [, callback])
+    debug.getBlockTraceByHash(hash, options, [, callback])
 
 The traceBlockByHash accepts a block hash and will replay the block that is already present in the database.
 
@@ -742,17 +744,17 @@ Example
 
 .. code-block:: javascript
 
-    debug.traceBlockByHash().then(console.log);
+    debug.getBlockTraceByHash('0x0', {}).then(console.log);
     > Object
 
 ------------------------------------------------------------------------------
 
-traceBlockFromFile
-==================
+getBlockTraceFromFile
+=====================
 
 .. code-block:: javascript
 
-    debug.traceBlockFromFile(fileName, options, [, callback])
+    debug.getBlockTraceFromFile(fileName, options, [, callback])
 
 The traceBlockFromFile accepts a file containing the RLP of the block.
 
@@ -780,17 +782,17 @@ Example
 
 .. code-block:: javascript
 
-    debug.traceBlockFromFile().then(console.log);
+    debug.getBlockTraceFromFile('filename', {}).then(console.log);
     > Object
 
 ------------------------------------------------------------------------------
 
-traceTransaction
-==================
+getTransactionTrace
+===================
 
 .. code-block:: javascript
 
-    debug.traceTransaction(txHash, options, [, callback])
+    debug.getTransactionTrace(txHash, options, [, callback])
 
 The traceTransaction debugging method will attempt to run the transaction in the exact same manner as it was executed on
 the network. It will replay any transaction that may have been executed prior to this one before it will finally attempt
@@ -833,7 +835,7 @@ Example
 
 .. code-block:: javascript
 
-    debug.traceTransaction('0x0', {}).then(console.log);
+    debug.getTransactionTrace('0x0', {}).then(console.log);
     > Object
 
 ------------------------------------------------------------------------------
@@ -871,7 +873,7 @@ Example
 
 .. code-block:: javascript
 
-    debug.setVerbosity().then(console.log);
+    debug.setVerbosity(1).then(console.log);
     > true
 
 ------------------------------------------------------------------------------
