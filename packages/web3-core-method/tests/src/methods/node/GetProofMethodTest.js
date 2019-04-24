@@ -2,9 +2,6 @@ import * as Utils from 'web3-utils';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetProofMethod from '../../../../src/methods/node/GetProofMethod';
 
-// Mocks
-jest.mock('web3-utils');
-
 /**
  * GetProofMethod test
  */
@@ -67,10 +64,6 @@ describe('GetProofMethodTest', () => {
             var actual = actualResponse.result.storageProof[i].value;
 
             expect(actual).toBe('0');
-
-            expect(Utils.toBN).toHaveBeenCalled();
         }
-
-        expect(Utils.hexToNumber).toHaveBeenCalled();
     });
 });
