@@ -106,88 +106,88 @@ debug.stopGoTrace();
 debug.stopGoTrace((error: Error, result: boolean) => {});
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlock("");
+debug.getBlockTrace("");
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlock("", {disableStack: true, disableMemory: true, disableStorage: true});
+debug.getBlockTrace("", {disableStack: true, disableMemory: true, disableStorage: true});
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlock("", (error: Error, result: BlockTraceResult) => {});
+debug.getBlockTrace("", (error: Error, result: BlockTraceResult) => {});
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlock("", {disableStack: true, disableMemory: true, disableStorage: true}, (error: Error, result: BlockTraceResult) => {});
+debug.getBlockTrace("", {disableStack: true, disableMemory: true, disableStorage: true}, (error: Error, result: BlockTraceResult) => {});
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlockByHash("0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06");
+debug.getBlockTraceByHash("0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06");
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlockByHash(
+debug.getBlockTraceByHash(
     "0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06",
     {disableStack: true, disableMemory: true, disableStorage: true}
 );
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlockByHash(
+debug.getBlockTraceByHash(
     "0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06",
     (error: Error, result: BlockTraceResult) => {}
 );
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlockByHash(
+debug.getBlockTraceByHash(
     "0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06",
     {disableStack: true, disableMemory: true, disableStorage: true},
     (error: Error, result: BlockTraceResult) => {}
 );
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlockByNumber(10);
+debug.getBlockTraceByHash(10);
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlockByNumber(10, {disableStack: true, disableMemory: true, disableStorage: true});
+debug.getBlockTraceByNumber(10, {disableStack: true, disableMemory: true, disableStorage: true});
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlockByNumber(10, (error: Error, result: BlockTraceResult) => {});
+debug.getBlockTraceByNumber(10, (error: Error, result: BlockTraceResult) => {});
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlockByNumber(
+debug.getBlockTraceByNumber(
     10,
     {disableStack: true, disableMemory: true, disableStorage: true},
     (error: Error, result: BlockTraceResult) => {}
 );
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlockFromFile("");
+debug.getBlockTraceFromFile("");
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlockFromFile("", {disableStack: true, disableMemory: true, disableStorage: true});
+debug.getBlockTraceFromFile("", {disableStack: true, disableMemory: true, disableStorage: true});
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlockFromFile("", (error: Error, result: BlockTraceResult) => {});
+debug.getBlockTraceFromFile("", (error: Error, result: BlockTraceResult) => {});
 
 // $ExpectType Promise<BlockTraceResult>
-debug.traceBlockFromFile(
+debug.getBlockTraceFromFile(
     "",
     {disableStack: true, disableMemory: true, disableStorage: true},
     (error: Error, result: BlockTraceResult) => {}
 );
 
 // $ExpectType Promise<TransactionTrace>
-debug.traceTransaction("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f");
+debug.getTransactionTrace("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f");
 
 // $ExpectType Promise<TransactionTrace>
-debug.traceTransaction(
+debug.getTransactionTrace(
     "0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f",
     {disableStack: true, disableMemory: true, disableStorage: true}
 );
 
 // $ExpectType Promise<TransactionTrace>
-debug.traceTransaction(
+debug.getTransactionTrace(
     "0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f",
     (error: Error, result: TransactionTrace) => {}
 );
 
 // $ExpectType Promise<TransactionTrace>
-debug.traceTransaction(
+debug.getTransactionTrace(
     "0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f",
     {disableStack: true, disableMemory: true, disableStorage: true},
     (error: Error, result: TransactionTrace) => {}

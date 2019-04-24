@@ -94,31 +94,31 @@ export class Debug extends AbstractWeb3Module {
 
     stopGoTrace(callback?: (error: Error, result: boolean) => void): Promise<boolean>;
 
-    traceBlock(
+    getBlockTrace(
         blockRlp: string,
         options?: any,
         callback?: (error: Error, result: BlockTraceResult) => void
     ): Promise<BlockTraceResult>;
 
-    traceBlockByNumber(
+    getBlockTraceByNumber(
         blockNumber: number,
         options?: any,
         callback?: (error: Error, result: BlockTraceResult) => void
     ): Promise<BlockTraceResult>;
 
-    traceBlockByHash(
+    getBlockTraceByHash(
         transactionHash: string,
         options?: any,
         callback?: (error: Error, result: BlockTraceResult) => void
     ): Promise<BlockTraceResult>;
 
-    traceBlockFromFile(
+    getBlockTraceFromFile(
         fileName: string,
         options?: any,
         callback?: (error: Error, result: BlockTraceResult) => void
     ): Promise<BlockTraceResult>;
 
-    traceTransaction(
+    getTransactionTrace(
         transactionHash: string,
         options?: any,
         callback?: (error: Error, result: TransactionTrace) => void
