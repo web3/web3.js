@@ -64,11 +64,7 @@ describe('GetProofMethodTest', () => {
             var actual = actualResponse.result.storageProof[i].value;
 
             expect(actual).toBe('0');
-
-            expect(Utils.toBN).toHaveBeenCalled();
         }
-
-        expect(Utils.hexToNumber).toHaveBeenCalled();
 
         expect(method.afterExecution(false)).toEqual(false);
     });
