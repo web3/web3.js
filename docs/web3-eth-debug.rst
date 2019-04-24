@@ -56,7 +56,7 @@ Example
 
 .. code-block:: javascript
 
-    admin.setBackTraceAt("filename.go:200").then(console.log);
+    admin.setBackTraceAt('filename.go:200').then(console.log);
 
 
 ------------------------------------------------------------------------------

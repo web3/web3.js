@@ -17,33 +17,33 @@
  * @date 2019
  */
 
-import {Debug, Stats, TraceTransaction} from 'web3-eth-debug';
+import {Debug, Stats, TransactionTrace, WorldState, MemStats, BlockTraceResult} from 'web3-eth-debug';
 
 const debug = new Debug('http://localhost:8545');
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.setBackTraceAt("server.go:443");
 
-// $ExpectType Promise<any>
-debug.setBackTraceAt("server.go:443", (error: Error, result: any) => {});
+// $ExpectType Promise<boolean>
+debug.setBackTraceAt("server.go:443", (error: Error, result: boolean) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.blockProfile("", 600);
 
-// $ExpectType Promise<any>
-debug.blockProfile("", 600, (error: Error, result: any) => {});
+// $ExpectType Promise<boolean>
+debug.blockProfile("", 600, (error: Error, result: boolean) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.cpuProfile("", 600);
 
-// $ExpectType Promise<any>
-debug.cpuProfile("", 600, (error: Error, address: any) => {});
+// $ExpectType Promise<boolean>
+debug.cpuProfile("", 600, (error: Error, address: boolean) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<WorldState>
 debug.dumpBlock(10);
 
-// $ExpectType Promise<any>
-debug.dumpBlock(10, (error: Error, result: string) => {});
+// $ExpectType Promise<WorldState>
+debug.dumpBlock(10, (error: Error, result: WorldState) => {});
 
 // $ExpectType Promise<Stats>
 debug.getGCStats();
@@ -57,17 +57,17 @@ debug.getBlockRlp(10);
 // $ExpectType Promise<string>
 debug.getBlockRlp(10, (error: Error, result: string) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.goTrace("", 600);
 
-// $ExpectType Promise<any>
-debug.goTrace("", 600, (error: Error, result: any) => {});
+// $ExpectType Promise<boolean>
+debug.goTrace("", 600, (error: Error, result: boolean) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<MemStats>
 debug.getMemStats();
 
-// $ExpectType Promise<any>
-debug.getMemStats((error: Error, result: any) => {});
+// $ExpectType Promise<MemStats>
+debug.getMemStats((error: Error, result: MemStats) => {});
 
 // $ExpectType Promise<string>
 debug.getSeedHash(1);
@@ -75,136 +75,144 @@ debug.getSeedHash(1);
 // $ExpectType Promise<string>
 debug.getSeedHash(1, (error: Error, result: string) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.setHead(1);
 
-// $ExpectType Promise<any>
-debug.setHead(1, (error: Error, result: any) => {});
+// $ExpectType Promise<boolean>
+debug.setHead(1, (error: Error, result: boolean) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.startCPUProfile("prince");
 
-// $ExpectType Promise<any>
-debug.startCPUProfile("prince", (error: Error, result: any) => {});
+// $ExpectType Promise<boolean>
+debug.startCPUProfile("prince", (error: Error, result: boolean) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.startGoTrace("prince");
 
-// $ExpectType Promise<any>
-debug.startGoTrace("prince", (error: Error, result: any) => {});
+// $ExpectType Promise<boolean>
+debug.startGoTrace("prince", (error: Error, result: boolean) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.stopCPUProfile();
 
-// $ExpectType Promise<any>
-debug.stopCPUProfile((error: Error, result: any) => {});
+// $ExpectType Promise<boolean>
+debug.stopCPUProfile((error: Error, result: boolean) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.stopGoTrace();
 
-// $ExpectType Promise<any>
-debug.stopGoTrace((error: Error, result: any) => {});
+// $ExpectType Promise<boolean>
+debug.stopGoTrace((error: Error, result: boolean) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<BlockTraceResult>
 debug.traceBlock("");
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<BlockTraceResult>
 debug.traceBlock("", {disableStack: true, disableMemory: true, disableStorage: true});
 
-// $ExpectType Promise<any>
-debug.traceBlock("", (error: Error, result: any) => {});
+// $ExpectType Promise<BlockTraceResult>
+debug.traceBlock("", (error: Error, result: BlockTraceResult) => {});
 
-// $ExpectType Promise<any>
-debug.traceBlock("", {disableStack: true, disableMemory: true, disableStorage: true}, (error: Error, result: any) => {});
+// $ExpectType Promise<BlockTraceResult>
+debug.traceBlock("", {disableStack: true, disableMemory: true, disableStorage: true}, (error: Error, result: BlockTraceResult) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<BlockTraceResult>
 debug.traceBlockByHash("0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06");
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<BlockTraceResult>
 debug.traceBlockByHash(
     "0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06",
     {disableStack: true, disableMemory: true, disableStorage: true}
 );
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<BlockTraceResult>
 debug.traceBlockByHash(
     "0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06",
-    (error: Error, result: any) => {}
+    (error: Error, result: BlockTraceResult) => {}
 );
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<BlockTraceResult>
 debug.traceBlockByHash(
     "0x07801257594649d586712d84357b6626d81f33465519ba7994de585f3adf7f06",
     {disableStack: true, disableMemory: true, disableStorage: true},
-    (error: Error, result: any) => {}
+    (error: Error, result: BlockTraceResult) => {}
 );
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<BlockTraceResult>
 debug.traceBlockByNumber(10);
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<BlockTraceResult>
 debug.traceBlockByNumber(10, {disableStack: true, disableMemory: true, disableStorage: true});
 
-// $ExpectType Promise<any>
-debug.traceBlockByNumber(10, (error: Error, result: any) => {});
+// $ExpectType Promise<BlockTraceResult>
+debug.traceBlockByNumber(10, (error: Error, result: BlockTraceResult) => {});
 
-// $ExpectType Promise<any>
-debug.traceBlockByNumber(10, {disableStack: true, disableMemory: true, disableStorage: true}, (error: Error, result: any) => {});
+// $ExpectType Promise<BlockTraceResult>
+debug.traceBlockByNumber(
+    10,
+    {disableStack: true, disableMemory: true, disableStorage: true},
+    (error: Error, result: BlockTraceResult) => {}
+);
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<BlockTraceResult>
 debug.traceBlockFromFile("");
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<BlockTraceResult>
 debug.traceBlockFromFile("", {disableStack: true, disableMemory: true, disableStorage: true});
 
-// $ExpectType Promise<any>
-debug.traceBlockFromFile("", (error: Error, result: any) => {});
+// $ExpectType Promise<BlockTraceResult>
+debug.traceBlockFromFile("", (error: Error, result: BlockTraceResult) => {});
 
-// $ExpectType Promise<any>
-debug.traceBlockFromFile("", {disableStack: true, disableMemory: true, disableStorage: true}, (error: Error, result: any) => {});
+// $ExpectType Promise<BlockTraceResult>
+debug.traceBlockFromFile(
+    "",
+    {disableStack: true, disableMemory: true, disableStorage: true},
+    (error: Error, result: BlockTraceResult) => {}
+);
 
-// $ExpectType Promise<TraceTransaction>
+// $ExpectType Promise<TransactionTrace>
 debug.traceTransaction("0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f");
 
-// $ExpectType Promise<TraceTransaction>
+// $ExpectType Promise<TransactionTrace>
 debug.traceTransaction(
     "0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f",
     {disableStack: true, disableMemory: true, disableStorage: true}
 );
 
-// $ExpectType Promise<TraceTransaction>
+// $ExpectType Promise<TransactionTrace>
 debug.traceTransaction(
     "0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f",
-    (error: Error, result: TraceTransaction) => {}
+    (error: Error, result: TransactionTrace) => {}
 );
 
-// $ExpectType Promise<TraceTransaction>
+// $ExpectType Promise<TransactionTrace>
 debug.traceTransaction(
     "0xfc9359e49278b7ba99f59edac0e3de49956e46e530a53c15aa71226b7aa92c6f",
     {disableStack: true, disableMemory: true, disableStorage: true},
-    (error: Error, result: TraceTransaction) => {}
+    (error: Error, result: TransactionTrace) => {}
 );
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.setVerbosity(5);
 
-// $ExpectType Promise<any>
-debug.setVerbosity(5, (error: Error, result: any) => {});
+// $ExpectType Promise<boolean>
+debug.setVerbosity(5, (error: Error, result: boolean) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.setVerbosityPattern("eth/*=6");
 
-// $ExpectType Promise<any>
-debug.setVerbosityPattern("eth/*=6", (error: Error, result: any) => {});
+// $ExpectType Promise<boolean>
+debug.setVerbosityPattern("eth/*=6", (error: Error, result: boolean) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.writeBlockProfile("");
 
-// $ExpectType Promise<any>
-debug.writeBlockProfile("", (error: Error, result: any) => {});
+// $ExpectType Promise<boolean>
+debug.writeBlockProfile("", (error: Error, result: boolean) => {});
 
-// $ExpectType Promise<any>
+// $ExpectType Promise<boolean>
 debug.writeMemProfile("");
 
-// $ExpectType Promise<any>
-debug.writeMemProfile("", (error: Error, result: any) => {});
+// $ExpectType Promise<boolean>
+debug.writeMemProfile("", (error: Error, result: boolean) => {});

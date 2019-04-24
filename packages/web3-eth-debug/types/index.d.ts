@@ -26,24 +26,24 @@ export class Debug extends AbstractWeb3Module {
 
     setBackTraceAt(
         location: string,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
     blockProfile(
         file: string,
         seconds: number,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
     cpuProfile(
         file: string,
         seconds: number,
-        callback?: (error: Error, resukt: string) => void
+        callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
     dumpBlock(
         blockNumber: number,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: WorldState) => void
     ): Promise<WorldState>;
 
     getGCStats(
@@ -58,10 +58,10 @@ export class Debug extends AbstractWeb3Module {
     goTrace(
         file: string,
         seconds: number,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
-    getMemStats(callback?: (error: Error, result: any) => void): Promise<MemStats>;
+    getMemStats(callback?: (error: Error, result: MemStats) => void): Promise<MemStats>;
 
     getSeedHash(
         blockNumber: number,
@@ -70,78 +70,78 @@ export class Debug extends AbstractWeb3Module {
 
     setBlockProfileRate(
         rate: number,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
     setHead(
         blockNumber: number,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
-    getStacks(callback?: (error: Error, result: any) => void): Promise<string>;
+    getStacks(callback?: (error: Error, result: boolean) => void): Promise<string>;
 
     startCPUProfile(
         file: string,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
     startGoTrace(
         file: string,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
-    stopCPUProfile(callback?: (error: Error, result: any) => void): Promise<boolean>;
+    stopCPUProfile(callback?: (error: Error, result: boolean) => void): Promise<boolean>;
 
-    stopGoTrace(callback?: (error: Error, result: any) => void): Promise<boolean>;
+    stopGoTrace(callback?: (error: Error, result: boolean) => void): Promise<boolean>;
 
     traceBlock(
         blockRlp: string,
         options?: any,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: BlockTraceResult) => void
     ): Promise<BlockTraceResult>;
 
     traceBlockByNumber(
         blockNumber: number,
         options?: any,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: BlockTraceResult) => void
     ): Promise<BlockTraceResult>;
 
     traceBlockByHash(
         transactionHash: string,
         options?: any,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: BlockTraceResult) => void
     ): Promise<BlockTraceResult>;
 
     traceBlockFromFile(
         fileName: string,
         options?: any,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: BlockTraceResult) => void
     ): Promise<BlockTraceResult>;
 
     traceTransaction(
         transactionHash: string,
         options?: any,
-        callback?: (error: Error, result: TraceResult) => void
-    ): Promise<TraceResult>;
+        callback?: (error: Error, result: TransactionTrace) => void
+    ): Promise<TransactionTrace>;
 
     setVerbosity(
         level: number,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
     setVerbosityPattern(
         input: string,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
     writeBlockProfile(
         file: string,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 
     writeMemProfile(
         file: string,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
 }
 
@@ -154,7 +154,7 @@ export interface Stats {
     PauseTotal: number;
 }
 
-export interface TraceResult {
+export interface TransactionTrace {
     gas: number;
     returnValue: string;
     structLogs: StructuredLog[];
@@ -191,7 +191,7 @@ export interface WorldState {
 export interface BlockTraceResult {
     number: number;
     hash: string;
-    traces: TraceResult[]
+    traces: TransactionTrace[]
 }
 
 export interface MemStats {
