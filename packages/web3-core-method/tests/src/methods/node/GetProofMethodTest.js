@@ -53,7 +53,7 @@ describe('GetProofMethodTest', () => {
 
         const actualResponse = method.afterExecution(response);
 
-        expect(actualResponse.nonce).toEqual(1);
+        expect(actualResponse.nonce).toEqual('1');
         expect(actualResponse.balance).toEqual('23000000000000000000');
 
         for (let i = 0; i < response.storageProof.length; i++) {

@@ -44,7 +44,7 @@ export default class GetProofMethod extends AbstractMethod {
      * @returns {Object}
      */
     afterExecution(response) {
-        response.nonce = this.utils.hexToNumber(response.nonce);
+        response.nonce = this.utils.toBN(response.nonce).toString(10);
         response.balance = this.utils.toBN(response.balance).toString(10);
 
         for (let i = 0; i < response.storageProof.length; i++) {
