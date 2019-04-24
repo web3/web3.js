@@ -87,7 +87,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` - The path.
+``Promise<boolean>``
 
 
 -------
@@ -128,7 +128,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` - The path.
+``Promise<boolean>``
 
 
 -------
@@ -167,7 +167,7 @@ Returns
 -------
 
 
-``Promise<Object>`` - TBD
+``Promise<Object>``
 
 
 -------
@@ -205,7 +205,7 @@ Returns
 -------
 
 
-``Promise<Object>`` - The path.
+``Promise<Object>``
 
 
 -------
@@ -245,7 +245,7 @@ Returns
 -------
 
 
-``Promise<string>`` - The path.
+``Promise<string>``
 
 
 -------
@@ -285,7 +285,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` - The path.
+``Promise<boolean>``
 
 
 -------
@@ -321,7 +321,7 @@ Returns
 -------
 
 
-``Promise<Object>`` - The path.
+``Promise<Object>``
 
 
 -------
@@ -358,7 +358,7 @@ Returns
 -------
 
 
-``Promise<string>`` -
+``Promise<string>``
 
 
 -------
@@ -396,7 +396,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` -
+``Promise<boolean>``
 
 
 -------
@@ -434,7 +434,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` -
+``Promise<boolean>``
 
 
 -------
@@ -470,7 +470,7 @@ Returns
 -------
 
 
-``Promise<string>`` -
+``Promise<string>``
 
 
 -------
@@ -507,7 +507,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` -
+``Promise<boolean>``
 
 
 -------
@@ -544,7 +544,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` -
+``Promise<boolean>``
 
 
 -------
@@ -581,7 +581,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` -
+``Promise<boolean>``
 
 
 -------
@@ -617,7 +617,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` -
+``Promise<boolean>``
 
 
 -------
@@ -823,7 +823,7 @@ Returns
 -------
 
 
-``Promise<Object>`` -
+``Promise<Object>``
 
 
 -------
@@ -898,7 +898,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` -
+``Promise<boolean>``
 
 
 -------
