@@ -255,15 +255,15 @@ export const toChecksumAddress = (address, chainId = null) => {
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address))
         throw new Error(`Given address "${address}" is not a valid Ethereum address.`);
 
-    const strip_address = stripHexPrefix(address).toLowerCase();
+    const stripAddress = stripHexPrefix(address).toLowerCase();
     const prefix = chainId != null ? (chainId.toString() + '0x') : '';
-    const keccak_hash = Hash.keccak256(prefix + strip_address).toString('hex').replace(/^0x/i, '');
+    const keccakHash = Hash.keccak256(prefix + stripAddress).toString('hex').replace(/^0x/i, '');
     let checksumAddress = '0x';
 
-    for (let i = 0; i < strip_address.length; i++)
-        checksumAddress += parseInt(keccak_hash[i], 16) >= 8 ?
-            strip_address[i].toUpperCase() :
-            strip_address[i];
+    for (let i = 0; i < stripAddress.length; i++)
+        checksumAddress += parseInt(keccakHash[i], 16) >= 8 ?
+            stripAddress[i].toUpperCase() :
+            stripAddress[i];
 
     return checksumAddress;
 }

@@ -136,14 +136,14 @@ export const stripHexPrefix = (str) => {
  * @returns {Boolean}
  */
 export const checkAddressChecksum = (address, chainId = null) => {
-    const strip_address = stripHexPrefix(address).toLowerCase()
+    const stripAddress = stripHexPrefix(address).toLowerCase()
     const prefix = chainId != null ? (chainId.toString() + '0x') : ''
-    const keccak_hash = Hash.keccak256(prefix + strip_address).toString('hex').replace(/^0x/i, '');
+    const keccakHash = Hash.keccak256(prefix + stripAddress).toString('hex').replace(/^0x/i, '');
 
-    for (let i = 0; i < strip_address.length; i++) {
-        let output = parseInt(keccak_hash[i], 16) >= 8 ?
-            strip_address[i].toUpperCase() :
-            strip_address[i];
+    for (let i = 0; i < stripAddress.length; i++) {
+        let output = parseInt(keccakHash[i], 16) >= 8 ?
+            stripAddress[i].toUpperCase() :
+            stripAddress[i];
         if (stripHexPrefix(address)[i] !== output) {
             return false;
         }
