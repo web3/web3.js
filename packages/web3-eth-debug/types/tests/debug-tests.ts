@@ -140,7 +140,7 @@ debug.getBlockTraceByHash(
 );
 
 // $ExpectType Promise<BlockTraceResult>
-debug.getBlockTraceByHash(10);
+debug.getBlockTraceByNumber(10);
 
 // $ExpectType Promise<BlockTraceResult>
 debug.getBlockTraceByNumber(10, {disableStack: true, disableMemory: true, disableStorage: true});
