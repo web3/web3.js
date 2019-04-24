@@ -22,29 +22,29 @@ import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
 import * as net from 'net';
 
 export class Debug extends AbstractWeb3Module {
-    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions);
+    constructor(provider: provider, net?: net.Socket | null, options?: Web3ModuleOptions);
 
     setBackTraceAt(
         location: string,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<boolean>;
 
     blockProfile(
         file: string,
         seconds: number,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<boolean>;
 
     cpuProfile(
         file: string,
         seconds: number,
         callback?: (error: Error, resukt: string) => void
-    ): Promise<any>;
+    ): Promise<boolean>;
 
     dumpBlock(
         blockNumber: number,
         callback?: (error: Error, result: any) => void
-    ): Promise<any>;
+    ): Promise<WorldState>;
 
     getGCStats(
         callback?: (error: Error, result: Stats) => void
@@ -61,7 +61,7 @@ export class Debug extends AbstractWeb3Module {
         callback?: (error: Error, result: any) => void
     ): Promise<boolean>;
 
-    getMemStats(callback?: (error: Error, result: any) => void): Promise<any>;
+    getMemStats(callback?: (error: Error, result: any) => void): Promise<MemStats>;
 
     getSeedHash(
         blockNumber: number,
@@ -121,8 +121,8 @@ export class Debug extends AbstractWeb3Module {
     traceTransaction(
         transactionHash: string,
         options?: any,
-        callback?: (error: Error, result: ExecutionResurt) => void
-    ): Promise<ExecutionResurt>;
+        callback?: (error: Error, result: TraceResult) => void
+    ): Promise<TraceResult>;
 
     setVerbosity(
         level: number,
@@ -154,9 +154,81 @@ export interface Stats {
     PauseTotal: number;
 }
 
-export interface ExecutionResurt {
-    failed: boolean;
+export interface TraceResult {
     gas: number;
     returnValue: string;
-    structLogs: any[];
+    structLogs: StructuredLog[];
+}
+
+export interface StructuredLog {
+    depth: number;
+    error: string;
+    gas: number;
+    gasCost: number;
+    memory: string[];
+    op: string;
+    pc: number;
+    stack: string[];
+    storage: {
+        [account: string]: string
+    }
+}
+
+export interface WorldState {
+    root: string;
+    accounts: {
+        [address: string]: {
+            balance: string;
+            code: string;
+            codeHash: string;
+            nonce: number;
+            root: string;
+            storage: any;
+        }
+    };
+}
+
+export interface BlockTraceResult {
+    number: number;
+    hash: string;
+    traces: TraceResult[]
+}
+
+export interface MemStats {
+    alloc: number;
+    totalAlloc: number;
+    sys: number;
+    loopups: number;
+    mallocs: number;
+    frees: number;
+    heapAlloc: number;
+    heapSys: number;
+    heapIdle: number;
+    heapInUse: number;
+    heapReleased: number;
+    heapObjects: number;
+    stackInUse: number;
+    stackSys: number;
+    mSpanInUse: number;
+    mSpanSys: number;
+    mCacheInUse: number;
+    mCacheSys: number;
+    buckHashSys: number;
+    gcSys: number;
+    otherSys: number;
+    nextGC: number;
+    lastGC: number;
+    pauseTotalNs: number;
+    pauseNs: number;
+    pauseEnd: number;
+    numGC: number;
+    numForcedGC: number;
+    gcCPUFraction: number;
+    enableGC: boolean;
+    debugGC: boolean;
+    bySize: {
+        size: number;
+        mallocs: number;
+        frees: number;
+    };
 }

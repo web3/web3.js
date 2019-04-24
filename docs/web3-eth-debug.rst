@@ -149,7 +149,7 @@ dumpBlock
 
 .. code-block:: javascript
 
-    debug.dumpBlock(file, seconds, [, callback])
+    debug.dumpBlock(blockNumber, [, callback])
 
 Retrieves the state that corresponds to the block number and returns a list of accounts (including storage and code).
 
@@ -158,8 +158,7 @@ Parameters
 ----------
 
 
-1. ``file`` - ``String``
-1. ``seconds`` - ``Number``
+1. ``blockNumber`` - ``Number``
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -237,7 +236,7 @@ Parameters
 ----------
 
 
-1. ``Number`` - The block number
+1. ``number`` - ``Number`` The block number
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -350,7 +349,7 @@ Fetches and retrieves the seed hash of the block by number
 Parameters
 ----------
 
-1. ``Number`` - The block number.
+1. ``number`` - ``Number`` The block number.
 1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -388,7 +387,7 @@ Collected profile data can be written using ``debug.writeBlockProfile``.
 Parameters
 ----------
 
-1. ``Number`` - The block profile rate.
+1. ``number`` - ``Number`` The block profile rate.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -426,7 +425,7 @@ Use with extreme caution.
 Parameters
 ----------
 
-1. ``number`` - The block number
+1. ``number`` - ``Number`` The block number
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -499,7 +498,7 @@ Turns on CPU profiling indefinitely, writing to the given file.
 Parameters
 ----------
 
-1. ``String`` -
+1. ``file`` - ``String``
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -573,7 +572,7 @@ Turns on CPU profiling indefinitely, writing to the given file.
 Parameters
 ----------
 
-1. ``String``
+1. ``file`` - ``String``
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -640,15 +639,16 @@ traceBlock
 
     debug.traceBlock(blockRlp, options, [, callback])
 
-Stops writing the Go runtime trace.
+The traceBlock method will return a full stack trace of all invoked opcodes of all transaction that were included included in this block.
+Note, the parent of this block must be present or it will fail.
 
 ----------
 Parameters
 ----------
 
-1. ``String`` - RLP encoded block
-1. ``Object`` - TBD
-1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``blockRlp`` - ``String`` RLP encoded block
+2. ``options`` - ``Object``The block trace object
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
@@ -656,7 +656,7 @@ Returns
 -------
 
 
-``Promise<Object>`` -
+``Promise<Object>``
 
 
 -------
@@ -678,15 +678,15 @@ traceBlockByNumber
 
     debug.traceBlockByNumber(number, options, [, callback])
 
-Stops writing the Go runtime trace.
+The traceBlockByNumber method accepts a block number and will replay the block that is already present in the database.
 
 ----------
 Parameters
 ----------
 
-1. ``Number|String`` - The block number as ``hex`` or ``number``
-1. ``Object`` - TBD
-1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``number`` - ``Number`` The block number
+2. ``options`` - ``Object`` The block trace object
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
@@ -694,7 +694,7 @@ Returns
 -------
 
 
-``Promise<Object>`` -
+``Promise<Object>``
 
 
 -------
@@ -716,15 +716,15 @@ traceBlockByHash
 
     debug.traceBlockByHash(hash, options, [, callback])
 
-Stops writing the Go runtime trace.
+The traceBlockByHash accepts a block hash and will replay the block that is already present in the database.
 
 ----------
 Parameters
 ----------
 
-1. ``String`` - The block hash
-1. ``Object`` - TBD
-1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``hash`` - ``String`` The block hash
+2. ``options`` - ``Object`` The block trace object
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
@@ -732,7 +732,7 @@ Returns
 -------
 
 
-``Promise<Object>`` -
+``Promise<Object>``
 
 
 -------
@@ -754,15 +754,15 @@ traceBlockFromFile
 
     debug.traceBlockFromFile(fileName, options, [, callback])
 
-Stops writing the Go runtime trace.
+The traceBlockFromFile accepts a file containing the RLP of the block.
 
 ----------
 Parameters
 ----------
 
-1. ``String``
-1. ``Object`` - TBD
-1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``fileName`` - ``String`` The file name
+2. ``options`` - ``Object`` The block trace object
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
@@ -770,7 +770,7 @@ Returns
 -------
 
 
-``Promise<Object>`` -
+``Promise<Object>``
 
 
 -------
@@ -792,15 +792,30 @@ traceTransaction
 
     debug.traceTransaction(txHash, options, [, callback])
 
-Stops writing the Go runtime trace.
+The traceTransaction debugging method will attempt to run the transaction in the exact same manner as it was executed on
+the network. It will replay any transaction that may have been executed prior to this one before it will finally attempt
+to execute the transaction that corresponds to the given hash.
+
+In addition to the hash of the transaction you may give it a secondary optional argument, which specifies the options for this specific call.
+
+The possible options are:
+
+1. ``disableStorage`` - ``boolean`` Setting this to true will disable storage capture (default = false).
+1. ``disableMemory`` - ``boolean`` Setting this to true will disable memory capture (default = false).
+1. ``disableStack`` - ``boolean`` Setting this to true will disable stack capture (default = false).
+1. ``tracer`` - ``string`` Setting this will enable JavaScript-based transaction tracing, described below. If set, the previous four arguments will be ignored.
+1. ``timeout`` - ``string`` Overrides the default timeout of 5 seconds for JavaScript-based tracing calls
+
+
+JSON-RPC specification for `debug_traceTransaction <https://github.com/ethereum/wiki/wiki/JavaScript-API>`_
 
 ----------
 Parameters
 ----------
 
-1. ``String`` - The transaction hash
-1. ``Object`` - TBD
-1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``txHash`` - ``String`` The transaction hash
+2. ``options`` - ``Object`` The block trace object
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
@@ -830,13 +845,14 @@ setVerbosity
 
     debug.setVerbosity(level, [, callback])
 
-Stops writing the Go runtime trace.
+Sets the logging verbosity ceiling. Log messages with level up to and including the given level will be printed.
+The verbosity of individual packages and source files can be raised using ``debug.setVerbosityPattern``.
 
 ----------
 Parameters
 ----------
 
-1. ``Number`` - The verbosity level
+1. ``level`` - ``Number`` The verbosity level
 1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -845,7 +861,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` -
+``Promise<boolean>``
 
 
 -------
@@ -867,13 +883,13 @@ setVerbosityPattern
 
     debug.setVerbosityPattern(pattern, [, callback])
 
-Stops writing the Go runtime trace.
+Sets the logging verbosity pattern.
 
 ----------
 Parameters
 ----------
 
-1. ``String`` - The verbosity pattern
+1. ``pattern`` - ``String`` The verbosity pattern
 1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -892,10 +908,26 @@ Example
 
 .. code-block:: javascript
 
-    debug.setVerbosityPattern().then(console.log);
+    // If you want to see messages from a particular Go package (directory) and all subdirectories, use:
+    debug.setVerbosityPattern('eth/*=6').then(console.log);
     > true
 
+    // If you want to restrict messages to a particular package (e.g. p2p) but exclude subdirectories, use:
+    debug.setVerbosityPattern('p2p=6').then(console.log);
+    > true
+
+    // If you want to see log messages from a particular source file, use:
+    debug.setVerbosityPattern('server.go=6').then(console.log);
+    > true
+
+    // You can compose these basic patterns. If you want to see all output from peer.go in a package below eth
+    // (eth/peer.go, eth/downloader/peer.go) as well as output from package p2p at level <= 5, use:
+    debug.setVerbosityPattern('eth/*/peer.go=6,p2p=5').then(console.log);
+    > true
+
+
 ------------------------------------------------------------------------------
+
 
 writeBlockProfile
 =================
@@ -904,13 +936,13 @@ writeBlockProfile
 
     debug.writeBlockProfile(file, [, callback])
 
-Stops writing the Go runtime trace.
+Writes a goroutine blocking profile to the given file.
 
 ----------
 Parameters
 ----------
 
-1. ``String`` - The file
+1. ``file`` - ``String`` The file
 1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -919,7 +951,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` -
+``Promise<boolean>``
 
 
 -------
@@ -929,7 +961,7 @@ Example
 
 .. code-block:: javascript
 
-    debug.writeBlockProfile().then(console.log);
+    debug.writeBlockProfile('file').then(console.log);
     > true
 
 ------------------------------------------------------------------------------
@@ -941,13 +973,13 @@ writeMemProfile
 
     debug.writeMemProfile(file, [, callback])
 
-Stops writing the Go runtime trace.
+Writes an allocation profile to the given file.
 
 ----------
 Parameters
 ----------
 
-1. ``String`` - The file
+1. ``file`` - ``String`` The file
 1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -956,7 +988,7 @@ Returns
 -------
 
 
-``Promise<boolean>`` -
+``Promise<boolean>``
 
 
 -------
@@ -966,5 +998,5 @@ Example
 
 .. code-block:: javascript
 
-    debug.writeBlockProfile().then(console.log);
+    debug.writeBlockProfile('file').then(console.log);
     > true
