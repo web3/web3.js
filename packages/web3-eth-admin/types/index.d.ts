@@ -38,7 +38,7 @@ export class Admin extends AbstractWeb3Module {
     ): Promise<NodeInfo>;
 
     getPeers(
-        callback?: (error: Error, result: any[]) => void
+        callback?: (error: Error, result: PeerInfo[]) => void
     ): Promise<PeerInfo[]>;
 
     setSolc(
