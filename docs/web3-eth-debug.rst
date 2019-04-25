@@ -98,7 +98,7 @@ Example
 .. code-block:: javascript
 
     debug.blockProfile('file', 100).then(console.log);
-    > true
+    > null
 
 
 ------------------------------------------------------------------------------
@@ -139,7 +139,7 @@ Example
 .. code-block:: javascript
 
     debug.cpuProfile('file', 100).then(console.log);
-    > true
+    > null
 
 ------------------------------------------------------------------------------
 
@@ -237,7 +237,7 @@ Example
 .. code-block:: javascript
 
     debug.getGCStats().then(console.log);
-    > true
+    > null
 
 
 ------------------------------------------------------------------------------
@@ -317,7 +317,7 @@ Example
 .. code-block:: javascript
 
     debug.goTrace('file', 100).then(console.log);
-    > true
+    > null
 
 ------------------------------------------------------------------------------
 
@@ -353,7 +353,7 @@ Example
 .. code-block:: javascript
 
     debug.getMemStats().then(console.log);
-    > Object
+    > MemStats // MemStats object from Go
 
 ------------------------------------------------------------------------------
 
@@ -428,7 +428,7 @@ Example
 .. code-block:: javascript
 
     debug.setBlockProfileRate().then(console.log);
-    > true
+    > null
 
 ------------------------------------------------------------------------------
 
@@ -466,7 +466,7 @@ Example
 .. code-block:: javascript
 
     debug.setHead(100).then(console.log);
-    > true
+    > null
 
 ------------------------------------------------------------------------------
 
@@ -502,7 +502,7 @@ Example
 .. code-block:: javascript
 
     debug.getStacks().then(console.log);
-    > true
+    > null
 
 ------------------------------------------------------------------------------
 
@@ -539,7 +539,7 @@ Example
 .. code-block:: javascript
 
     debug.startCPUProfile().then(console.log);
-    > true
+    > null
 
 
 ------------------------------------------------------------------------------
@@ -576,7 +576,7 @@ Example
 .. code-block:: javascript
 
     debug.stopCPUProfile().then(console.log);
-    > true
+    > null
 
 ------------------------------------------------------------------------------
 
@@ -613,7 +613,7 @@ Example
 .. code-block:: javascript
 
     debug.startGoTrace('file').then(console.log);
-    > true
+    > null
 
 ------------------------------------------------------------------------------
 
@@ -649,7 +649,7 @@ Example
 .. code-block:: javascript
 
     debug.stopGoTrace().then(console.log);
-    > true
+    > null
 
 ------------------------------------------------------------------------------
 
@@ -872,7 +872,11 @@ Example
 .. code-block:: javascript
 
     debug.getTransactionTrace('0x0', {}).then(console.log);
-    > Object
+    > {
+        gas: 85301,
+        returnValue: "",
+        structLogs: [{...}]
+    }
 
 ------------------------------------------------------------------------------
 
@@ -910,7 +914,7 @@ Example
 .. code-block:: javascript
 
     debug.setVerbosity(1).then(console.log);
-    > true
+    > null
 
 ------------------------------------------------------------------------------
 
@@ -948,20 +952,20 @@ Example
 
     // If you want to see messages from a particular Go package (directory) and all subdirectories, use:
     debug.setVerbosityPattern('eth/*=6').then(console.log);
-    > true
+    > null
 
     // If you want to restrict messages to a particular package (e.g. p2p) but exclude subdirectories, use:
     debug.setVerbosityPattern('p2p=6').then(console.log);
-    > true
+    > null
 
     // If you want to see log messages from a particular source file, use:
     debug.setVerbosityPattern('server.go=6').then(console.log);
-    > true
+    > null
 
     // You can compose these basic patterns. If you want to see all output from peer.go in a package below eth
     // (eth/peer.go, eth/downloader/peer.go) as well as output from package p2p at level <= 5, use:
     debug.setVerbosityPattern('eth/*/peer.go=6,p2p=5').then(console.log);
-    > true
+    > null
 
 
 ------------------------------------------------------------------------------
@@ -1000,7 +1004,7 @@ Example
 .. code-block:: javascript
 
     debug.writeBlockProfile('file').then(console.log);
-    > true
+    > null
 
 ------------------------------------------------------------------------------
 
@@ -1037,4 +1041,4 @@ Example
 .. code-block:: javascript
 
     debug.writeBlockProfile('file').then(console.log);
-    > true
+    > null
