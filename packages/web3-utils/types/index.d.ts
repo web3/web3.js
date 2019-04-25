@@ -81,7 +81,7 @@ export function hexToAscii(string: string): string;
 export function toAscii(string: string): string;
 export function bytesToHex(bytes: number[]): string;
 export function numberToHex(value: number | string | BN): string;
-export function checkAddressChecksum(address: string): boolean;
+export function checkAddressChecksum(address: string, chainId?: number): boolean;
 export function fromAscii(string: string): string;
 export function fromDecimal(value: string | number): string;
 export function fromUtf8(string: string): string;
@@ -123,7 +123,7 @@ export interface Utils {
     isBigNumber(value: BN): boolean;
     toBN(value: number | string): BN;
     toTwosComplement(value: number | string | BN): string;
-    isAddress(address: string, chainId?: null): boolean;
+    isAddress(address: string, chainId?: number): boolean;
     isHex(hex: Hex): boolean;
     isHexStrict(hex: Hex): boolean;
     asciiToHex(string: string, length?: number): string;
