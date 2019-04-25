@@ -45,4 +45,52 @@ describe('OutputLogFormatterTest', () => {
             address: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
         });
     });
+
+    it('call outputLogFormatter with a valid log and logIndex should not be null', () => {
+        const log = {
+            blockNumber: null,
+            id: null,
+            logIndex: '0x0',
+            transactionIndex: null
+        };
+
+        expect(outputLogFormatter(log)).toEqual({
+            blockNumber: null,
+            id: null,
+            logIndex: 0,
+            transactionIndex: null
+        });
+    });
+
+    it('call outputLogFormatter with a valid log and blockNumber should not be null', () => {
+        const log = {
+            blockNumber: '0x0',
+            id: null,
+            logIndex: null,
+            transactionIndex: null
+        };
+
+        expect(outputLogFormatter(log)).toEqual({
+            blockNumber: 0,
+            id: null,
+            logIndex: null,
+            transactionIndex: null
+        });
+    });
+
+    it('call outputLogFormatter with a valid log and transactionIndex should not be null', () => {
+        const log = {
+            blockNumber: null,
+            id: null,
+            logIndex: null,
+            transactionIndex: '0x0'
+        };
+
+        expect(outputLogFormatter(log)).toEqual({
+            blockNumber: null,
+            id: null,
+            logIndex: null,
+            transactionIndex: 0
+        });
+    });
 });

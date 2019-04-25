@@ -19,6 +19,10 @@ describe('InputBlockNumberFormatterTest', () => {
         expect(inputBlockNumberFormatter('0X0')).toEqual('0x0');
     });
 
+    it('inputDefaultBlockNumberFormatter returns blockNumber if numeric', () => {
+        expect(inputBlockNumberFormatter('0x0')).toEqual('0x0');
+    });
+
     it('inputDefaultBlockNumberFormatter returns hex string when hex is given as number', () => {
         expect(inputBlockNumberFormatter(0x0)).toEqual('0x0');
     });

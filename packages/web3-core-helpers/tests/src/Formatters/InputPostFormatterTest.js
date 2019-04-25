@@ -20,6 +20,52 @@ describe('InputPostFormatterTest', () => {
         });
     });
 
+    it('call inputPostFormatter with ttl is present', () => {
+        const post = {
+            ttl: 100,
+            topics: '0x0'
+        };
+
+        expect(inputPostFormatter(post)).toEqual({
+            ttl: '0x64',
+            topics: ['0x0']
+        });
+    });
+
+    it('call inputPostFormatter with workToProve is present', () => {
+        const post = {
+            workToProve: 100,
+            topics: '0x0'
+        };
+
+        expect(inputPostFormatter(post)).toEqual({
+            workToProve: '0x64',
+            topics: ['0x0']
+        });
+    });
+
+    it('call inputPostFormatter with priority is present', () => {
+        const post = {
+            priority: 100,
+            topics: '0x0'
+        };
+
+        expect(inputPostFormatter(post)).toEqual({
+            priority: '0x64',
+            topics: ['0x0']
+        });
+    });
+
+    it('call inputPostFormatter with topic is present', () => {
+        const post = {
+            topics: '0x0'
+        };
+
+        expect(inputPostFormatter(post)).toEqual({
+            topics: ['0x0']
+        });
+    });
+
     it('call inputPostFormatter with an topics property of type array and a item of type hex string', () => {
         const post = {
             ttl: 100,
