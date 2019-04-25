@@ -145,6 +145,8 @@ export class Eth extends AbstractWeb3Module {
     submitWork(data: [string, string, string], callback?: (error: Error, result: boolean) => void): Promise<boolean>;
 
     pendingTransactions(callback?: (error: Error, result: []) => void): Promise<[]>;
+
+    getProof(address: string, storageKey: string[], blockNumber: number | string | "latest" | "earliest", callback?: (error: Error, result: GetProof) => void): Promise<GetProof>;
 }
 
 export interface Methods {
@@ -219,4 +221,24 @@ export interface Subscription<T> {
     on(type: 'changed', handler: (data: T) => void): void
 
     on(type: 'error', handler: (data: Error) => void): void
+}
+
+export interface GetProof {
+    jsonrpc: string;
+    id: number;
+    result: {
+      address: string;
+      accountProof: string[];
+      balance: string;
+      codeHash: string;
+      nonce: string;
+      storageHash: string;
+      storageProof: StorageProof[];
+    };
+}
+
+export interface StorageProof {
+    key: string;
+    value: string;
+    proof: string[];
 }
