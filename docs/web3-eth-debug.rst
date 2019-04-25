@@ -2,12 +2,12 @@
 
 .. include:: include_announcement.rst
 
-=================
-Web3 Debug Module
-=================
+============
+Debug Module
+============
 
 
-The ``web3-eth-debug`` package allows you to interact with the Ethereum node's debug methods.
+The ``web3-eth-debug`` module allows you to interact with the Ethereum node's debug methods.
 
 
 .. code-block:: javascript

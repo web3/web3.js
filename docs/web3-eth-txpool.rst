@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-==================
-Web3 TxPool Module
-==================
+=============
+TxPool Module
+=============
 
 
 The ``web3-eth-txpool`` package gives you access to several non-standard RPC methods to inspect the contents of the transaction pool containing all the currently pending transactions as well as the ones queued for future processing.
@@ -31,7 +31,7 @@ The ``web3-eth-txpool`` package gives you access to several non-standard RPC met
 .. _txpool-content:
 
 getContent
-=========
+==========
 
 .. code-block:: javascript
 
@@ -145,7 +145,7 @@ Example
 
 
 getInspection
-=====================
+=============
 
 .. code-block:: javascript
 
@@ -235,7 +235,7 @@ Example
 
 
 getStatus
-=====================
+=========
 
 .. code-block:: javascript
 
