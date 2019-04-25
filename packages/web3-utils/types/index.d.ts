@@ -73,7 +73,7 @@ export function isBN(value: string | number): boolean;
 export function isBigNumber(value: BN): boolean;
 export function toBN(value: number | string): BN;
 export function toTwosComplement(value: number | string | BN): string;
-export function isAddress(address: string): boolean;
+export function isAddress(address: string, chainId?: number): boolean;
 export function isHex(hex: Hex): boolean;
 export function isHexStrict(hex: Hex): boolean;
 export function asciiToHex(string: string, length?: number): string;
@@ -115,6 +115,7 @@ export function unitMap(): Units;
 export function testAddress(bloom: string, address: string): boolean;
 export function testTopic(bloom: string, topic: string): boolean;
 export function getSignatureParameters(signature: string): {r: string; s: string; v: number};
+export function stripHexPrefix(str: string): string;
 
 // interfaces
 export interface Utils {
@@ -122,7 +123,7 @@ export interface Utils {
     isBigNumber(value: BN): boolean;
     toBN(value: number | string): BN;
     toTwosComplement(value: number | string | BN): string;
-    isAddress(address: string): boolean;
+    isAddress(address: string, chainId?: null): boolean;
     isHex(hex: Hex): boolean;
     isHexStrict(hex: Hex): boolean;
     asciiToHex(string: string, length?: number): string;
@@ -130,7 +131,7 @@ export interface Utils {
     toAscii(string: string): string;
     bytesToHex(bytes: number[]): string;
     numberToHex(value: number | string | BN): string;
-    checkAddressChecksum(address: string): boolean;
+    checkAddressChecksum(address: string, chainId?: number): boolean;
     fromAscii(string: string): string;
     fromDecimal(value: string | number): string;
     fromUtf8(string: string): string;
@@ -164,6 +165,7 @@ export interface Utils {
     testAddress(bloom: string, address: string): boolean;
     testTopic(bloom: string, topic: string): boolean;
     getSignatureParameters(signature: string): {r: string; s: string; v: number};
+    stripHexPrefix(str: string): string;
 }
 
 export interface Units {

@@ -133,6 +133,8 @@ export const stripHexPrefix = (str) => {
  *
  * @param {String} address the given HEX address
  *
+ * @param {number} chain where checksummed address should be valid.
+ *
  * @returns {Boolean}
  */
 export const checkAddressChecksum = (address, chainId = null) => {

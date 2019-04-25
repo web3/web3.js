@@ -408,7 +408,7 @@ isAddress
 
 .. code-block:: javascript
 
-    web3.utils.isAddress(address)
+    web3.utils.isAddress(address [, chainId])
 
 Checks if a given string is a valid Ethereum address.
 It will also check the checksum, if the address has upper and lowercase letters.
@@ -418,6 +418,7 @@ Parameters
 ----------
 
 1. ``address`` - ``String``: An address string.
+2. ``chainId`` - ``number`` (optional): Chain id where checksummed address should be valid, defaults to ``null``.
 
 -------
 Returns
@@ -446,6 +447,9 @@ Example
     web3.utils.isAddress('0xC1912fEE45d61C87Cc5EA59DaE31190FFFFf232d');
     > false // wrong checksum
 
+    web3.utils.isAddress('0x5aaEB6053f3e94c9b9a09f33669435E7ef1bEAeD', 30);
+    > true
+
 ------------------------------------------------------------------------------
 
 
@@ -454,7 +458,7 @@ toChecksumAddress
 
 .. code-block:: javascript
 
-    web3.utils.toChecksumAddress(address)
+    web3.utils.toChecksumAddress(address [, chainId])
 
 Will convert an upper or lowercase Ethereum address to a checksum address.
 
@@ -463,6 +467,7 @@ Parameters
 ----------
 
 1. ``address`` - ``String``: An address string.
+2. ``chainId`` - ``number`` (optional): Chain id where checksummed address should be valid, defaults to ``null``.
 
 -------
 Returns
@@ -482,6 +487,42 @@ Example
     web3.utils.toChecksumAddress('0XC1912FEE45D61C87CC5EA59DAE31190FFFFF232D');
     > "0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d" // same as above
 
+    web3.utils.toChecksumAddress('0x5aaeb6053f3e94c9b9a09f33669435e7ef1beaed', 30);
+    > "0x5aaEB6053f3e94c9b9a09f33669435E7ef1bEAeD"
+
+------------------------------------------------------------------------------
+
+
+stripHexPrefix
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.stripHexPrefix(address)
+
+Removes prefix from address if exists.
+
+----------
+Parameters
+----------
+
+1. ``address`` - ``String``: An address string.
+
+-------
+Returns
+-------
+
+``String``: address without prefix.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.stripHexPrefix('0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d');
+    > "c1912fEE45d61C87Cc5EA59DaE31190FFFFf232d"
+
 
 ------------------------------------------------------------------------------
 
@@ -491,7 +532,7 @@ checkAddressChecksum
 
 .. code-block:: javascript
 
-    web3.utils.checkAddressChecksum(address)
+    web3.utils.checkAddressChecksum(address [, chainId])
 
 Checks the checksum of a given address. Will also return false on non-checksum addresses.
 
@@ -500,6 +541,7 @@ Parameters
 ----------
 
 1. ``address`` - ``String``: An address string.
+2. ``chainId`` - ``number`` (optional): Chain id where checksummed address should be valid, defaults to ``null``.
 
 -------
 Returns
@@ -514,6 +556,9 @@ Example
 .. code-block:: javascript
 
     web3.utils.checkAddressChecksum('0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d');
+    > true
+
+    web3.utils.checkAddressChecksum('0x5aAeb6053F3e94c9b9A09F33669435E7EF1BEaEd', 31);
     > true
 
 
