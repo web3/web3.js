@@ -70,13 +70,15 @@ export default class TransactionSigner {
 
         const rlpEncoded = ethTx.serialize().toString('hex');
         const rawTransaction = '0x' + rlpEncoded;
+        const transactionHash = this.utils.keccak256(rawTransaction);
 
         return {
             messageHash: Buffer.from(ethTx.hash(false)).toString('hex'),
             v: '0x' + Buffer.from(ethTx.v).toString('hex'),
             r: '0x' + Buffer.from(ethTx.r).toString('hex'),
             s: '0x' + Buffer.from(ethTx.s).toString('hex'),
-            rawTransaction
+            rawTransaction,
+            transactionHash
         };
     }
 }

@@ -396,7 +396,7 @@ export const outputLogFormatter = (log) => {
         typeof log.transactionHash === 'string' &&
         typeof log.logIndex === 'string'
     ) {
-        const shaId = Utils.sha3(
+        const shaId = Utils.keccak256(
             log.blockHash.replace('0x', '') + log.transactionHash.replace('0x', '') + log.logIndex.replace('0x', '')
         );
 

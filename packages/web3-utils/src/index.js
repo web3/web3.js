@@ -27,6 +27,7 @@ import isArray from 'lodash/isArray';
 import * as utils from './Utils';
 import * as ethjsUnit from 'ethjs-unit';
 
+export BN from 'bn.js';
 export {soliditySha3} from './SoliditySha3';
 export randomHex from 'randomhex';
 
@@ -194,7 +195,7 @@ export const fromWei = (number, unit) => {
     unit = getUnitValue(unit);
 
     if (!utils.isBN(number) && !isString(number)) {
-        throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+        throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
     return utils.isBN(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
@@ -228,7 +229,7 @@ export const toWei = (number, unit) => {
     unit = getUnitValue(unit);
 
     if (!utils.isBN(number) && !isString(number)) {
-        throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+        throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
     return utils.isBN(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
@@ -250,7 +251,7 @@ export const toChecksumAddress = (address) => {
         throw new Error(`Given address "${address}" is not a valid Ethereum address.`);
 
     address = address.toLowerCase().replace(/^0x/i, '');
-    const addressHash = utils.sha3(address).replace(/^0x/i, '');
+    const addressHash = utils.keccak256(address).replace(/^0x/i, '');
     let checksumAddress = '0x';
 
     for (let i = 0; i < address.length; i++) {
@@ -266,8 +267,8 @@ export const toChecksumAddress = (address) => {
 };
 
 // aliases
-export const keccak256 = utils.sha3;
-export const sha3 = utils.sha3;
+export const keccak256 = utils.keccak256;
+export const sha3 = utils.keccak256;
 export const toDecimal = utils.hexToNumber;
 export const hexToNumber = utils.hexToNumber;
 export const fromDecimal = utils.numberToHex;

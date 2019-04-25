@@ -16,7 +16,8 @@
 */
 /**
  * @file index.js
- * @author Samuel Furter <samuel@ethereum.org>, Prince Sinha <sinhaprince013@gmail.com>
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
@@ -42,6 +43,7 @@ export IsSyncingMethod from './methods/node/IsSyncingMethod';
 export GetGasPriceMethod from './methods/node/GetGasPriceMethod';
 export SubmitWorkMethod from './methods/node/SubmitWorkMethod';
 export GetWorkMethod from './methods/node/GetWorkMethod';
+export GetProofMethod from './methods/node/GetProofMethod';
 
 // Account
 export GetAccountsMethod from './methods/account/GetAccountsMethod';
@@ -119,6 +121,33 @@ export SetMaxMessageSizeMethod from './methods/shh/SetMaxMessageSizeMethod';
 export SetMinPoWMethod from './methods/shh/SetMinPoWMethod';
 export ShhVersionMethod from './methods/shh/ShhVersionMethod';
 
+// Debug
+export BackTraceAtMethod from './methods/debug/BackTraceAtMethod';
+export BlockProfileMethod from './methods/debug/BlockProfileMethod';
+export CpuProfileMethod from './methods/debug/CpuProfileMethod';
+export DumpBlockMethod from './methods/debug/DumpBlockMethod';
+export GcStatsMethod from './methods/debug/GcStatsMethod';
+export GetBlockRlpMethod from './methods/debug/GetBlockRlpMethod';
+export GoTraceMethod from './methods/debug/GoTraceMethod';
+export MemStatsMethod from './methods/debug/MemStatsMethod';
+export SeedHashMethod from './methods/debug/SeedHashMethod';
+export SetBlockProfileRateMethod from './methods/debug/SetBlockProfileRateMethod';
+export SetHeadMethod from './methods/debug/SetHeadMethod';
+export StacksMethod from './methods/debug/StacksMethod';
+export StartCpuProfileMethod from './methods/debug/StartCpuProfileMethod';
+export StartGoTraceMethod from './methods/debug/StartGoTraceMethod';
+export StopCpuProfileMethod from './methods/debug/StopCpuProfileMethod';
+export StopGoTraceMethod from './methods/debug/StopGoTraceMethod';
+export TraceBlockByHashMethod from './methods/debug/TraceBlockByHashMethod';
+export TraceBlockByNumberMethod from './methods/debug/TraceBlockByNumberMethod';
+export TraceBlockFromFileMethod from './methods/debug/TraceBlockFromFileMethod';
+export TraceBlockMethod from './methods/debug/TraceBlockMethod';
+export TraceTransactionMethod from './methods/debug/TraceTransactionMethod';
+export VerbosityMethod from './methods/debug/VerbosityMethod';
+export VmoduleMethod from './methods/debug/VmoduleMethod';
+export WriteBlockProfileMethod from './methods/debug/WriteBlockProfileMethod';
+export WriteMemProfileMethod from './methods/debug/WriteMemProfileMethod';
+
 // Txpool
 export ContentMethod from './methods/txpool/ContentMethod';
 export InspectMethod from './methods/txpool/InspectMethod';
@@ -134,3 +163,10 @@ export StartRpcMethod from './methods/admin/StartRpcMethod';
 export StartWsMethod from './methods/admin/StartWsMethod';
 export StopRpcMethod from './methods/admin/StopRpcMethod';
 export StopWsMethod from './methods/admin/StopWsMethod';
+
+// Miner
+export SetEtherBaseMethod from './methods/miner/SetEtherBaseMethod';
+export SetExtraMethod from './methods/miner/SetExtraMethod';
+export SetGasPriceMethod from './methods/miner/SetGasPriceMethod';
+export StartMinerMethod from './methods/miner/StartMinerMethod';
+export StopMinerMethod from './methods/miner/StopMinerMethod';

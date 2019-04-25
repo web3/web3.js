@@ -17,9 +17,9 @@
  * @date 2019
  */
 
-import {Accounts} from 'web3-eth-accounts';
 import {provider} from 'web3-providers';
 import {AbstractWeb3Module, Web3ModuleOptions, NodeInfo} from 'web3-core';
+import {Accounts} from 'web3-eth-accounts';
 import * as net from 'net';
 
 export class Admin extends AbstractWeb3Module {

@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-========
+==========
 web3.utils
-========
+==========
 
 This package provides utility functions for Ethereum dapps and other web3.js packages.
 
@@ -177,17 +177,17 @@ Example
 
 ------------------------------------------------------------------------------
 
-sha3
+keccak256
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.sha3(string)
-    web3.utils.keccak256(string) // ALIAS
+    web3.utils.keccak256(string)
+    web3.utils.sha3(string) // ALIAS
 
-Will calculate the sha3 of the input.
+Will calculate the keccak256 of the input.
 
-.. note::  To mimic the sha3 behaviour of solidity use :ref:`soliditySha3 <utils-soliditysha3>`
+.. note::  To mimic the keccak256 behaviour of solidity use :ref:`soliditySha3 <utils-soliditysha3>`
 
 ----------
 Parameters
@@ -207,19 +207,19 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.sha3('234'); // taken as string
+    web3.utils.keccak256('234'); // taken as string
     > "0xc1912fee45d61c87cc5ea59dae311904cd86b84fee17cc96966216f811ce6a79"
 
-    web3.utils.sha3(new BN('234'));
+    web3.utils.keccak256(new BN('234'));
     > "0xbc36789e7a1e281436464229828f817d6612f7b477d66591ff96a9e064bcc98a"
 
-    web3.utils.sha3(234);
+    web3.utils.keccak256(234);
     > null // can't calculate the hash of a number
 
-    web3.utils.sha3(0xea); // same as above, just the HEX representation of the number
+    web3.utils.keccak256(0xea); // same as above, just the HEX representation of the number
     > null
 
-    web3.utils.sha3('0xea'); // will be converted to a byte array first, and then hashed
+    web3.utils.keccak256('0xea'); // will be converted to a byte array first, and then hashed
     > "0x2f20677459120677484f7104c76deb6846a2c071f9b3152c103bb12cd54d1a4a"
 
 

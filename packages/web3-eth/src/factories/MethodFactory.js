@@ -46,7 +46,8 @@ import {
     SubmitWorkMethod,
     VersionMethod,
     SendRawTransactionMethod,
-    EthSendTransactionMethod
+    EthSendTransactionMethod,
+    GetProofMethod
 } from 'web3-core-method';
 
 import GetBlockMethod from '../methods/GetBlockMethod';
@@ -101,7 +102,8 @@ export default class MethodFactory extends AbstractMethodFactory {
             getPastLogs: GetPastLogsMethod,
             requestAccounts: RequestAccountsMethod,
             getId: VersionMethod,
-            getChainId: ChainIdMethod
+            getChainId: ChainIdMethod,
+            getProof: GetProofMethod
         };
     }
 }

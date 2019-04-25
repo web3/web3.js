@@ -23,7 +23,8 @@ import {
     RequestAccountsMethod,
     SendRawTransactionMethod,
     SubmitWorkMethod,
-    VersionMethod
+    VersionMethod,
+    GetProofMethod
 } from 'web3-core-method';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
@@ -90,7 +91,8 @@ describe('MethodFactoryTest', () => {
             getPastLogs: GetPastLogsMethod,
             requestAccounts: RequestAccountsMethod,
             getChainId: ChainIdMethod,
-            getId: VersionMethod
+            getId: VersionMethod,
+            getProof: GetProofMethod
         });
     });
 });

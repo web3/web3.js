@@ -14,11 +14,12 @@
 /**
  * @file eth-tests.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
 import {Log, Transaction, TransactionReceipt, RLPEncodedTransaction} from 'web3-core';
-import {Eth, BlockHeader, Syncing, Block} from 'web3-eth';
+import {Eth, BlockHeader, Syncing, Block, GetProof} from 'web3-eth';
 
 const eth = new Eth('http://localhost:8545');
 
@@ -457,3 +458,33 @@ eth.pendingTransactions();
 
 // $ExpectType Promise<[]>
 eth.pendingTransactions((error: Error, result: []) => {});
+
+// $ExpectType Promise<GetProof>
+eth.getProof(
+    "0x1234567890123456789012345678901234567890",
+    ["0x0000000000000000000000000000000000000000000000000000000000000000","0x0000000000000000000000000000000000000000000000000000000000000001"],
+    "latest"
+);
+
+// $ExpectType Promise<GetProof>
+eth.getProof(
+    "0x1234567890123456789012345678901234567890",
+    ["0x0000000000000000000000000000000000000000000000000000000000000000","0x0000000000000000000000000000000000000000000000000000000000000001"],
+    "latest",
+    (error: Error, result: GetProof) => {}
+);
+
+// $ExpectType Promise<GetProof>
+eth.getProof(
+    "0x1234567890123456789012345678901234567890",
+    ["0x0000000000000000000000000000000000000000000000000000000000000000","0x0000000000000000000000000000000000000000000000000000000000000001"],
+    10
+);
+
+// $ExpectType Promise<GetProof>
+eth.getProof(
+    "0x1234567890123456789012345678901234567890",
+    ["0x0000000000000000000000000000000000000000000000000000000000000000","0x0000000000000000000000000000000000000000000000000000000000000001"],
+    10,
+    (error: Error, result: GetProof) => {}
+);
