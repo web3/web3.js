@@ -155,7 +155,7 @@ export default class Accounts extends AbstractWeb3Module {
                 tx.gasPrice = await this.getGasPrice();
             }
 
-            if (!tx.nonce) {
+            if (tx.nonce == undefined) {
                 tx.nonce = await this.getTransactionCount(account.address);
             }
 
