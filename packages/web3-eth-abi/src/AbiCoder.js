@@ -38,7 +38,7 @@ export default class AbiCoder {
     }
 
     /**
-     * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
+     * Encodes the function name to its ABI representation, which are the first 4 bytes of the keccak256 of the function name including  types.
      *
      * @method encodeFunctionSignature
      *
@@ -51,11 +51,11 @@ export default class AbiCoder {
             functionName = this.utils.jsonInterfaceMethodToString(functionName);
         }
 
-        return this.utils.sha3(functionName).slice(0, 10);
+        return this.utils.keccak256(functionName).slice(0, 10);
     }
 
     /**
-     * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
+     * Encodes the function name to its ABI representation, which are the first 4 bytes of the keccak256 of the function name including  types.
      *
      * @method encodeEventSignature
      *
@@ -68,7 +68,7 @@ export default class AbiCoder {
             functionName = this.utils.jsonInterfaceMethodToString(functionName);
         }
 
-        return this.utils.sha3(functionName);
+        return this.utils.keccak256(functionName);
     }
 
     /**
