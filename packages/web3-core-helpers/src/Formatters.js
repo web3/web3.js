@@ -83,7 +83,7 @@ export const inputBlockNumberFormatter = (blockNumber) => {
     }
 
     if (Utils.isHexStrict(blockNumber)) {
-        if (isString(blockNumber)) {
+        if (blockNumber === blockNumber.toUpperCase()) {
             return blockNumber.toLowerCase();
         }
 
