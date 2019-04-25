@@ -18,7 +18,8 @@ import {
     toWei,
     utf8ToHex,
     getSignatureParameters,
-    toChecksumAddress
+    toChecksumAddress,
+    stripHexPrefix
 } from '../../src';
 
 /**
@@ -238,6 +239,18 @@ describe('UtilsTest', () => {
 
         tests.forEach((test) => {
             expect(toChecksumAddress(test.value)).toEqual(test.is);
+        });
+    });
+
+    it('calls stripHexPrefix and returns the expected results', () => {
+        const tests = [
+            {value: '0x5aaeb6053f3e94c9b9a09f33669435e7ef1beaed', is: '5aaeb6053f3e94c9b9a09f33669435e7ef1beaed'},
+            {value: '0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359', is: 'fb6916095ca1df60bb79ce92ce3ea74c37c5d359'},
+            {value: 'dbf03b407c01e7cd3cbea99509d93f8dddc8c6fb', is: 'dbf03b407c01e7cd3cbea99509d93f8dddc8c6fb'}
+        ];
+
+        tests.forEach((test) => {
+            expect(stripHexPrefix(test.value)).toEqual(test.is);
         });
     });
 

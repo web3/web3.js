@@ -418,7 +418,7 @@ Parameters
 ----------
 
 1. ``address`` - ``String``: An address string.
-2. ``chainId`` - ``number`` (optional): Chain id where checksummed address should be valid, defaults to ``null``.
+2. ``chainId`` - ``number`` (optional): Chain id where checksummed address should be valid, defaults to ``null``. RSKIP-60 <https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md> for details.
 
 -------
 Returns
@@ -467,7 +467,7 @@ Parameters
 ----------
 
 1. ``address`` - ``String``: An address string.
-2. ``chainId`` - ``number`` (optional): Chain id where checksummed address should be valid, defaults to ``null``.
+2. ``chainId`` - ``number`` (optional): Chain id where checksummed address should be valid, defaults to ``null``. RSKIP-60 <https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md> for details.
 
 -------
 Returns
@@ -541,7 +541,7 @@ Parameters
 ----------
 
 1. ``address`` - ``String``: An address string.
-2. ``chainId`` - ``number`` (optional): Chain id where checksummed address should be valid, defaults to ``null``.
+2. ``chainId`` - ``number`` (optional): Chain id where checksummed address should be valid, defaults to ``null``. RSKIP-60 <https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md> for details.
 
 -------
 Returns
