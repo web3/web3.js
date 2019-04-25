@@ -178,7 +178,28 @@ Example
 .. code-block:: javascript
 
     debug.dumpBlock('file', 100).then(console.log);
-    > Object
+    {
+        root: "19f4ed94e188dd9c7eb04226bd240fa6b449401a6c656d6d2816a87ccaf206f1",
+        accounts: {
+            fff7ac99c8e4feb60c9750054bdc14ce1857f181: {
+                balance: "49358640978154672",
+                code: "",
+                codeHash: "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+                nonce: 2,
+                root: "56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+                storage: {}
+            },
+            fffbca3a38c3c5fcb3adbb8e63c04c3e629aafce: {
+                balance: "3460945928",
+                code: "",
+                codeHash: "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+                nonce: 657,
+                root: "56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+                storage: {}
+            }
+        },
+    }
+
 
 ------------------------------------------------------------------------------
 
@@ -667,7 +688,11 @@ Example
 .. code-block:: javascript
 
     debug.getBlockTrace('0x0', {}).then(console.log);
-    > Object
+    > {
+        gas: 85301,
+        returnValue: "",
+        structLogs: [{...}]
+    }
 
 ------------------------------------------------------------------------------
 
@@ -705,8 +730,11 @@ Example
 .. code-block:: javascript
 
     debug.getBlockTraceByNumber(100, {}).then(console.log);
-    > Object
-
+    > {
+        gas: 85301,
+        returnValue: "",
+        structLogs: [{...}]
+    }
 
 ------------------------------------------------------------------------------
 
@@ -745,7 +773,11 @@ Example
 .. code-block:: javascript
 
     debug.getBlockTraceByHash('0x0', {}).then(console.log);
-    > Object
+    > {
+        gas: 85301,
+        returnValue: "",
+        structLogs: [{...}]
+    }
 
 ------------------------------------------------------------------------------
 
@@ -783,7 +815,11 @@ Example
 .. code-block:: javascript
 
     debug.getBlockTraceFromFile('filename', {}).then(console.log);
-    > Object
+    > {
+        gas: 85301,
+        returnValue: "",
+        structLogs: [{...}]
+    }
 
 ------------------------------------------------------------------------------
 

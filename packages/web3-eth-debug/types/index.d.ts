@@ -14,6 +14,7 @@
 /**
  * @file index.d.ts
  * @author Prince Sinha <sinhaprince013@gmail.com>
+ * @author Samuel Furter <sinhaprince013@gmail.com>
  * @date 2019
  */
 
@@ -195,38 +196,38 @@ export interface BlockTraceResult {
 }
 
 export interface MemStats {
-    alloc: number;
-    totalAlloc: number;
-    sys: number;
-    loopups: number;
-    mallocs: number;
-    frees: number;
-    heapAlloc: number;
-    heapSys: number;
-    heapIdle: number;
-    heapInUse: number;
-    heapReleased: number;
-    heapObjects: number;
-    stackInUse: number;
-    stackSys: number;
-    mSpanInUse: number;
-    mSpanSys: number;
-    mCacheInUse: number;
-    mCacheSys: number;
-    buckHashSys: number;
-    gcSys: number;
-    otherSys: number;
-    nextGC: number;
-    lastGC: number;
-    pauseTotalNs: number;
-    pauseNs: number;
-    pauseEnd: number;
-    numGC: number;
-    numForcedGC: number;
-    gcCPUFraction: number;
-    enableGC: boolean;
-    debugGC: boolean;
-    bySize: {
+    Alloc: number;
+    TotalAlloc: number;
+    Sys: number;
+    Loopups: number;
+    Mallocs: number;
+    Frees: number;
+    HeapAlloc: number;
+    HeapSys: number;
+    HeapIdle: number;
+    HeapInuse: number;
+    HeapReleased: number;
+    HeapObjects: number;
+    StackInuse: number;
+    StackSys: number;
+    MSpanInuse: number;
+    MSpanSys: number;
+    MCacheInuse: number;
+    MCacheSys: number;
+    BuckHashSys: number;
+    GcSys: number;
+    OtherSys: number;
+    NextGC: number;
+    LastGC: number;
+    PauseTotalNs: number;
+    PauseNs: number;
+    PauseEnd: number;
+    NumGC: number;
+    NumForcedGC: number;
+    GcCPUFraction: number;
+    EnableGC: boolean;
+    DebugGC: boolean;
+    BySize: {
         size: number;
         mallocs: number;
         frees: number;
