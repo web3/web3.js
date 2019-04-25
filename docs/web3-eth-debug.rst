@@ -1,4 +1,4 @@
-.. _eth-admin:
+.. _eth-debug:
 
 .. include:: include_announcement.rst
 
