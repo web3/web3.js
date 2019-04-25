@@ -33,4 +33,15 @@ export default class CpuProfileMethod extends AbstractMethod {
     constructor(utils, formatters, moduleInstance) {
         super('debug_cpuProfile', 2, utils, formatters, moduleInstance);
     }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+    }
 }

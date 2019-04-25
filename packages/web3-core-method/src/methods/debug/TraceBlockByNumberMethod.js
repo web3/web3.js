@@ -33,4 +33,15 @@ export default class TraceBlockByNumberMethod extends AbstractMethod {
     constructor(utils, formatters, moduleInstance) {
         super('debug_traceBlockByNumber', 2, utils, formatters, moduleInstance);
     }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.utils.numberToHex(this.parameters[0]);
+    }
 }

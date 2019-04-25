@@ -31,18 +31,18 @@ export class Debug extends AbstractWeb3Module {
 
     blockProfile(
         file: string,
-        seconds: number,
+        seconds: number | string,
         callback?: (error: Error, result: null) => void
     ): Promise<null>;
 
     cpuProfile(
         file: string,
-        seconds: number,
+        seconds: number | string,
         callback?: (error: Error, result: null) => void
     ): Promise<null>;
 
     dumpBlock(
-        blockNumber: number,
+        blockNumber: number | string,
         callback?: (error: Error, result: WorldState) => void
     ): Promise<WorldState>;
 
@@ -51,30 +51,30 @@ export class Debug extends AbstractWeb3Module {
     ): Promise<Stats>;
 
     getBlockRlp(
-        blockNumber: number,
+        blockNumber: number | string,
         callback?: (error: Error, result: string) => void
     ): Promise<string>;
 
     goTrace(
         file: string,
-        seconds: number,
+        seconds: number | string,
         callback?: (error: Error, result: null) => void
     ): Promise<null>;
 
     getMemStats(callback?: (error: Error, result: MemStats) => void): Promise<MemStats>;
 
     getSeedHash(
-        blockNumber: number,
+        blockNumber: number | string,
         callback?: (error: Error, result: string) => void
     ): Promise<string>;
 
     setBlockProfileRate(
-        rate: number,
+        rate: number | string,
         callback?: (error: Error, result: null) => void
     ): Promise<null>;
 
     setHead(
-        blockNumber: number,
+        blockNumber: number | string,
         callback?: (error: Error, result: null) => void
     ): Promise<null>;
 
@@ -101,7 +101,7 @@ export class Debug extends AbstractWeb3Module {
     ): Promise<BlockTraceResult>;
 
     getBlockTraceByNumber(
-        blockNumber: number,
+        blockNumber: number | string,
         options?: any,
         callback?: (error: Error, result: BlockTraceResult) => void
     ): Promise<BlockTraceResult>;
@@ -125,7 +125,7 @@ export class Debug extends AbstractWeb3Module {
     ): Promise<TransactionTrace>;
 
     setVerbosity(
-        level: number,
+        level: number | string,
         callback?: (error: Error, result: null) => void
     ): Promise<null>;
 
