@@ -16,7 +16,7 @@ The ``web3-eth-debug`` module allows you to interact with the Ethereum node's de
     import {Debug} from 'web3-eth-debug';
 
     // "Web3.givenProvider" will be set if in an Ethereum supported browser.
-    const admin = new Debug(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
+    const debug = new Debug(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
 
 
 ------------------------------------------------------------------------------
