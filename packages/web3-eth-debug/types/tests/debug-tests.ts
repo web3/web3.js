@@ -21,23 +21,23 @@ import {Debug, Stats, TransactionTrace, WorldState, MemStats, BlockTraceResult} 
 
 const debug = new Debug('http://localhost:8545');
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.setBackTraceAt("server.go:443");
 
-// $ExpectType Promise<boolean>
-debug.setBackTraceAt("server.go:443", (error: Error, result: boolean) => {});
+// $ExpectType Promise<null>
+debug.setBackTraceAt("server.go:443", (error: Error, result: null) => {});
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.blockProfile("", 600);
 
-// $ExpectType Promise<boolean>
-debug.blockProfile("", 600, (error: Error, result: boolean) => {});
+// $ExpectType Promise<null>
+debug.blockProfile("", 600, (error: Error, result: null) => {});
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.cpuProfile("", 600);
 
-// $ExpectType Promise<boolean>
-debug.cpuProfile("", 600, (error: Error, address: boolean) => {});
+// $ExpectType Promise<null>
+debug.cpuProfile("", 600, (error: Error, address: null) => {});
 
 // $ExpectType Promise<WorldState>
 debug.dumpBlock(10);
@@ -57,11 +57,11 @@ debug.getBlockRlp(10);
 // $ExpectType Promise<string>
 debug.getBlockRlp(10, (error: Error, result: string) => {});
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.goTrace("", 600);
 
-// $ExpectType Promise<boolean>
-debug.goTrace("", 600, (error: Error, result: boolean) => {});
+// $ExpectType Promise<null>
+debug.goTrace("", 600, (error: Error, result: null) => {});
 
 // $ExpectType Promise<MemStats>
 debug.getMemStats();
@@ -75,35 +75,35 @@ debug.getSeedHash(1);
 // $ExpectType Promise<string>
 debug.getSeedHash(1, (error: Error, result: string) => {});
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.setHead(1);
 
-// $ExpectType Promise<boolean>
-debug.setHead(1, (error: Error, result: boolean) => {});
+// $ExpectType Promise<null>
+debug.setHead(1, (error: Error, result: null) => {});
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.startCPUProfile("prince");
 
-// $ExpectType Promise<boolean>
-debug.startCPUProfile("prince", (error: Error, result: boolean) => {});
+// $ExpectType Promise<null>
+debug.startCPUProfile("prince", (error: Error, result: null) => {});
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.startGoTrace("prince");
 
-// $ExpectType Promise<boolean>
-debug.startGoTrace("prince", (error: Error, result: boolean) => {});
+// $ExpectType Promise<null>
+debug.startGoTrace("prince", (error: Error, result: null) => {});
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.stopCPUProfile();
 
-// $ExpectType Promise<boolean>
-debug.stopCPUProfile((error: Error, result: boolean) => {});
+// $ExpectType Promise<null>
+debug.stopCPUProfile((error: Error, result: null) => {});
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.stopGoTrace();
 
-// $ExpectType Promise<boolean>
-debug.stopGoTrace((error: Error, result: boolean) => {});
+// $ExpectType Promise<null>
+debug.stopGoTrace((error: Error, result: null) => {});
 
 // $ExpectType Promise<BlockTraceResult>
 debug.getBlockTrace("");
@@ -193,26 +193,26 @@ debug.getTransactionTrace(
     (error: Error, result: TransactionTrace) => {}
 );
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.setVerbosity(5);
 
-// $ExpectType Promise<boolean>
-debug.setVerbosity(5, (error: Error, result: boolean) => {});
+// $ExpectType Promise<null>
+debug.setVerbosity(5, (error: Error, result: null) => {});
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.setVerbosityPattern("eth/*=6");
 
-// $ExpectType Promise<boolean>
-debug.setVerbosityPattern("eth/*=6", (error: Error, result: boolean) => {});
+// $ExpectType Promise<null>
+debug.setVerbosityPattern("eth/*=6", (error: Error, result: null) => {});
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.writeBlockProfile("");
 
-// $ExpectType Promise<boolean>
-debug.writeBlockProfile("", (error: Error, result: boolean) => {});
+// $ExpectType Promise<null>
+debug.writeBlockProfile("", (error: Error, result: null) => {});
 
-// $ExpectType Promise<boolean>
+// $ExpectType Promise<null>
 debug.writeMemProfile("");
 
-// $ExpectType Promise<boolean>
-debug.writeMemProfile("", (error: Error, result: boolean) => {});
+// $ExpectType Promise<null>
+debug.writeMemProfile("", (error: Error, result: null) => {});

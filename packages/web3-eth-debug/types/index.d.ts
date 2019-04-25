@@ -26,20 +26,20 @@ export class Debug extends AbstractWeb3Module {
 
     setBackTraceAt(
         location: string,
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<boolean>;
+        callback?: (error: Error, result: null) => void
+    ): Promise<null>;
 
     blockProfile(
         file: string,
         seconds: number,
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<boolean>;
+        callback?: (error: Error, result: null) => void
+    ): Promise<null>;
 
     cpuProfile(
         file: string,
         seconds: number,
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<boolean>;
+        callback?: (error: Error, result: null) => void
+    ): Promise<null>;
 
     dumpBlock(
         blockNumber: number,
@@ -58,8 +58,8 @@ export class Debug extends AbstractWeb3Module {
     goTrace(
         file: string,
         seconds: number,
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<boolean>;
+        callback?: (error: Error, result: null) => void
+    ): Promise<null>;
 
     getMemStats(callback?: (error: Error, result: MemStats) => void): Promise<MemStats>;
 
@@ -70,29 +70,29 @@ export class Debug extends AbstractWeb3Module {
 
     setBlockProfileRate(
         rate: number,
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<boolean>;
+        callback?: (error: Error, result: null) => void
+    ): Promise<null>;
 
     setHead(
         blockNumber: number,
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<boolean>;
+        callback?: (error: Error, result: null) => void
+    ): Promise<null>;
 
-    getStacks(callback?: (error: Error, result: boolean) => void): Promise<string>;
+    getStacks(callback?: (error: Error, result: string) => void): Promise<string>;
 
     startCPUProfile(
         file: string,
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<boolean>;
+        callback?: (error: Error, result: null) => void
+    ): Promise<null>;
 
     startGoTrace(
         file: string,
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<boolean>;
+        callback?: (error: Error, result: null) => void
+    ): Promise<null>;
 
-    stopCPUProfile(callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+    stopCPUProfile(callback?: (error: Error, result: null) => void): Promise<null>;
 
-    stopGoTrace(callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+    stopGoTrace(callback?: (error: Error, result: null) => void): Promise<null>;
 
     getBlockTrace(
         blockRlp: string,
@@ -126,23 +126,23 @@ export class Debug extends AbstractWeb3Module {
 
     setVerbosity(
         level: number,
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<boolean>;
+        callback?: (error: Error, result: null) => void
+    ): Promise<null>;
 
     setVerbosityPattern(
         input: string,
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<boolean>;
+        callback?: (error: Error, result: null) => void
+    ): Promise<null>;
 
     writeBlockProfile(
         file: string,
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<boolean>;
+        callback?: (error: Error, result: null) => void
+    ): Promise<null>;
 
     writeMemProfile(
         file: string,
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<boolean>;
+        callback?: (error: Error, result: null) => void
+    ): Promise<null>;
 }
 
 export interface Stats {
