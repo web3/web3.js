@@ -1,9 +1,5 @@
-import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import SetGasPriceMethod from '../../../../src/methods/miner/SetGasPriceMethod';
-
-// Mocks
-jest.mock('web3-core-helpers');
 
 /**
  * SetGasPriceMethod test
@@ -12,7 +8,7 @@ describe('SetGasPriceMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SetGasPriceMethod(null, formatters, {});
+        method = new SetGasPriceMethod({}, {}, {});
     });
 
     it('constructor check', () => {
@@ -21,9 +17,5 @@ describe('SetGasPriceMethodTest', () => {
         expect(method.rpcMethod).toEqual('miner_setGasPrice');
 
         expect(method.parametersAmount).toEqual(1);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(formatters);
     });
 });

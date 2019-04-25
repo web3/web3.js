@@ -1,4 +1,3 @@
-import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import MemStatsMethod from '../../../../src/methods/debug/MemStatsMethod';
 
@@ -12,7 +11,7 @@ describe('MemStatsMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new MemStatsMethod(null, formatters, {});
+        method = new MemStatsMethod(null, {}, {});
     });
 
     it('constructor check', () => {
@@ -21,9 +20,5 @@ describe('MemStatsMethodTest', () => {
         expect(method.rpcMethod).toEqual('debug_memStats');
 
         expect(method.parametersAmount).toEqual(0);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(formatters);
     });
 });

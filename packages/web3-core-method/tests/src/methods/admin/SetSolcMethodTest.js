@@ -1,9 +1,5 @@
-import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import SetSolcMethod from '../../../../src/methods/admin/SetSolcMethod';
-
-// Mocks
-jest.mock('web3-core-helpers');
 
 /**
  * SetSolcMethod test
@@ -12,7 +8,7 @@ describe('SetSolcMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SetSolcMethod(null, formatters, {});
+        method = new SetSolcMethod({}, {}, {});
     });
 
     it('constructor check', () => {
@@ -21,9 +17,5 @@ describe('SetSolcMethodTest', () => {
         expect(method.rpcMethod).toEqual('admin_setSolc');
 
         expect(method.parametersAmount).toEqual(1);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(formatters);
     });
 });

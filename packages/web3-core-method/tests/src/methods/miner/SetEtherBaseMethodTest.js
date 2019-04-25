@@ -21,10 +21,6 @@ describe('SetEtherBaseMethodTest', () => {
         expect(method.rpcMethod).toEqual('miner_setEtherbase');
 
         expect(method.parametersAmount).toEqual(1);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(formatters);
     });
 
     it('calls beforeExecution and formats the given address', () => {
