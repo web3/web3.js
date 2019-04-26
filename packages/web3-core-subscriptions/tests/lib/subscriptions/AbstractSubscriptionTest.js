@@ -2,10 +2,12 @@ import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
+import SocketProvider from '../../__mocks__/SocketProvider';
 
 // Mocks
 jest.mock('web3-utils');
 jest.mock('web3-core-helpers');
+jest.mock('../../__mocks__/SocketProvider');
 
 /**
  * AbstractSubscription test
@@ -15,7 +17,7 @@ describe('AbstractSubscriptionTest', () => {
 
     beforeEach(() => {
         moduleInstanceMock = new AbstractWeb3Module();
-        moduleInstanceMock.currentProvider.once = jest.fn();
+        moduleInstanceMock.currentProvider = new SocketProvider();
         moduleInstanceMock.currentProvider.subscribe = jest.fn((type, method, parameters) => {
             expect(type).toEqual(abstractSubscription.type);
 
@@ -63,8 +65,6 @@ describe('AbstractSubscriptionTest', () => {
     });
 
     it('calls subscribe and emits a error from the provider error listener', (done) => {
-        moduleInstanceMock.currentProvider.removeAllListeners = jest.fn();
-        moduleInstanceMock.currentProvider.on = jest.fn();
         moduleInstanceMock.currentProvider.once = jest.fn((event, callback) => {
             expect(event).toEqual('error');
 
@@ -83,7 +83,6 @@ describe('AbstractSubscriptionTest', () => {
     });
 
     it('calls subscribe and emits a error because of the provider subscribe method', (done) => {
-        moduleInstanceMock.currentProvider.removeAllListeners = jest.fn();
         moduleInstanceMock.currentProvider.subscribe = jest.fn(() => {
             return Promise.reject(new Error('ERROR'));
         });
@@ -98,7 +97,6 @@ describe('AbstractSubscriptionTest', () => {
     });
 
     it('calls subscribe and returns a error because of the provider subscribe method', (done) => {
-        moduleInstanceMock.currentProvider.removeAllListeners = jest.fn();
         moduleInstanceMock.currentProvider.subscribe = jest.fn(() => {
             return Promise.reject(new Error('ERROR'));
         });
@@ -111,8 +109,6 @@ describe('AbstractSubscriptionTest', () => {
     });
 
     it('calls subscribe and returns a error from the provider error listener', (done) => {
-        moduleInstanceMock.currentProvider.removeAllListeners = jest.fn();
-        moduleInstanceMock.currentProvider.on = jest.fn();
         moduleInstanceMock.currentProvider.once = jest.fn((event, callback) => {
             expect(event).toEqual('error');
 

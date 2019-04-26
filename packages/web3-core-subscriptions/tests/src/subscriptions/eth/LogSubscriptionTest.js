@@ -3,7 +3,7 @@ import {formatters} from 'web3-core-helpers';
 import LogSubscription from '../../../../src/subscriptions/eth/LogSubscription';
 import AbstractWeb3Module from '../../../__mocks__/AbstractWeb3Module';
 import GetPastLogsMethod from '../../../__mocks__/GetPastLogsMethod';
-import SocketProviderAdapter from '../../../__mocks__/SocketProviderAdapter';
+import SocketProvider from '../../../__mocks__/SocketProvider';
 
 // Mocks
 jest.mock('web3-utils');
@@ -13,11 +13,11 @@ jest.mock('web3-core-helpers');
  * LogSubscription test
  */
 describe('LogSubscriptionTest', () => {
-    let logSubscription, moduleInstanceMock, getPastLogsMethodMock, socketProviderAdapterMock;
+    let logSubscription, moduleInstanceMock, getPastLogsMethodMock, socketProviderMock;
 
     beforeEach(() => {
         moduleInstanceMock = new AbstractWeb3Module();
-        socketProviderAdapterMock = new SocketProviderAdapter();
+        socketProviderMock = new SocketProvider();
         getPastLogsMethodMock = new GetPastLogsMethod();
         getPastLogsMethodMock.execute = jest.fn();
 
@@ -45,7 +45,7 @@ describe('LogSubscriptionTest', () => {
 
         getPastLogsMethodMock.execute.mockReturnValueOnce(Promise.resolve([0]));
 
-        socketProviderAdapterMock.subscribe = jest.fn((type, method, parameters) => {
+        socketProviderMock.subscribe = jest.fn((type, method, parameters) => {
             expect(type).toEqual('eth_subscribe');
 
             expect(method).toEqual('logs');
@@ -55,13 +55,13 @@ describe('LogSubscriptionTest', () => {
             return Promise.resolve('MY_ID');
         });
 
-        socketProviderAdapterMock.on = jest.fn((subscriptionId, callback) => {
+        socketProviderMock.on = jest.fn((subscriptionId, callback) => {
             expect(subscriptionId).toEqual('MY_ID');
 
             callback(false, 'SUBSCRIPTION_ITEM');
         });
 
-        moduleInstanceMock.currentProvider = socketProviderAdapterMock;
+        moduleInstanceMock.currentProvider = socketProviderMock;
 
         let second = false;
         logSubscription.options.fromBlock = 0;
@@ -124,7 +124,7 @@ describe('LogSubscriptionTest', () => {
     it('calls subscribe and calls the callback once', (done) => {
         formatters.outputLogFormatter.mockReturnValueOnce('ITEM');
 
-        socketProviderAdapterMock.subscribe = jest.fn((type, method, parameters) => {
+        socketProviderMock.subscribe = jest.fn((type, method, parameters) => {
             expect(type).toEqual('eth_subscribe');
 
             expect(method).toEqual('logs');
@@ -134,13 +134,13 @@ describe('LogSubscriptionTest', () => {
             return Promise.resolve('MY_ID');
         });
 
-        socketProviderAdapterMock.on = jest.fn((subscriptionId, callback) => {
+        socketProviderMock.on = jest.fn((subscriptionId, callback) => {
             expect(subscriptionId).toEqual('MY_ID');
 
             callback(false, 'SUBSCRIPTION_ITEM');
         });
 
-        moduleInstanceMock.currentProvider = socketProviderAdapterMock;
+        moduleInstanceMock.currentProvider = socketProviderMock;
 
         const subscription = logSubscription.subscribe((error, response) => {
             expect(error).toEqual(false);
@@ -158,11 +158,11 @@ describe('LogSubscriptionTest', () => {
     it('calls subscribe and it returns with an Subscription object that calls the callback with an error', (done) => {
         formatters.inputLogFormatter.mockReturnValueOnce({});
 
-        socketProviderAdapterMock.subscribe = jest.fn(() => {
+        socketProviderMock.subscribe = jest.fn(() => {
             return Promise.reject(new Error('ERROR'));
         });
 
-        moduleInstanceMock.currentProvider = socketProviderAdapterMock;
+        moduleInstanceMock.currentProvider = socketProviderMock;
 
         expect(
             logSubscription.subscribe((error, response) => {
