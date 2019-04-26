@@ -37,11 +37,11 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @constructor
      */
-    constructor(type, method, options, utils, formatters, moduleInstance) {
+    constructor(type, method, options = null, utils, formatters, moduleInstance) {
         super();
         this.type = type;
         this.method = method;
-        this.options = options || null;
+        this.options = options;
         this.utils = utils;
         this.formatters = formatters;
         this.moduleInstance = moduleInstance;
