@@ -10,6 +10,7 @@ import SendContractMethod from '../../../src/methods/SendContractMethod';
 import ContractDeployMethod from '../../../src/methods/ContractDeployMethod';
 import PastEventLogsMethod from '../../../src/methods/PastEventLogsMethod';
 import AllPastEventLogsMethod from '../../../src/methods/AllPastEventLogsMethod';
+import ContractEstimateGasMethod from '../../../src/methods/ContractEstimateGasMethod';
 
 // Mocks
 jest.mock('web3-utils');
@@ -22,6 +23,7 @@ jest.mock('../../../src/methods/SendContractMethod');
 jest.mock('../../../src/methods/ContractDeployMethod');
 jest.mock('../../../src/methods/PastEventLogsMethod');
 jest.mock('../../../src/methods/AllPastEventLogsMethod');
+jest.mock('../../../src/methods/ContractEstimateGasMethod');
 
 /**
  * MethodFactory test
@@ -84,9 +86,9 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createMethodByRequestType with requestType estimate', () => {
-        expect(methodFactory.createMethodByRequestType({}, contract, 'estimate')).toBeInstanceOf(EstimateGasMethod);
+        expect(methodFactory.createMethodByRequestType({}, contract, 'estimate')).toBeInstanceOf(ContractEstimateGasMethod);
 
-        expect(EstimateGasMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(ContractEstimateGasMethod).toHaveBeenCalledWith(Utils, formatters, contract);
     });
 
     it('calls createMethodByRequestType with requestType contract-deployment', () => {
@@ -176,9 +178,9 @@ describe('MethodFactoryTest', () => {
     });
 
     it('calls createEstimateGasMethod and returns EstimateGasMethod object', () => {
-        expect(methodFactory.createEstimateGasMethod(contract)).toBeInstanceOf(EstimateGasMethod);
+        expect(methodFactory.createContractEstimateGasMethod(contract)).toBeInstanceOf(ContractEstimateGasMethod);
 
-        expect(EstimateGasMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(ContractEstimateGasMethod).toHaveBeenCalledWith(Utils, formatters, contract);
     });
 
     it('calls createSendContractMethod with a socket based provider and returns SendContractMethod object', () => {

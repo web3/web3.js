@@ -12,11 +12,12 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file ContractEstimateGasMethod.js
+ * @file ContractEstimateGasMethodTest.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
 
+import isFunction from 'lodash/isFunction';
 import {EstimateGasMethod} from 'web3-core-method';
 
 export default class ContractEstimateGasMethod extends EstimateGasMethod {
