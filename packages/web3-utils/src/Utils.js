@@ -122,9 +122,9 @@ export const isAddress = (address, chainId = null) => {
  *
  * @returns {string} address without prefix
  */
-export const stripHexPrefix = (str) => {
-    return str.slice(0, 2) === '0x' ? str.slice(2) : str
-}
+export const stripHexPrefix = (string) => {
+    return string.slice(0, 2) === '0x' ? string.slice(2) : string;
+};
 
 /**
  * Checks if the given string is a checksummed address
@@ -138,14 +138,14 @@ export const stripHexPrefix = (str) => {
  * @returns {Boolean}
  */
 export const checkAddressChecksum = (address, chainId = null) => {
-    const stripAddress = stripHexPrefix(address).toLowerCase()
-    const prefix = chainId != null ? (chainId.toString() + '0x') : ''
-    const keccakHash = Hash.keccak256(prefix + stripAddress).toString('hex').replace(/^0x/i, '');
+    const stripAddress = stripHexPrefix(address).toLowerCase();
+    const prefix = chainId != null ? chainId.toString() + '0x' : '';
+    const keccakHash = Hash.keccak256(prefix + stripAddress)
+        .toString('hex')
+        .replace(/^0x/i, '');
 
     for (let i = 0; i < stripAddress.length; i++) {
-        let output = parseInt(keccakHash[i], 16) >= 8 ?
-            stripAddress[i].toUpperCase() :
-            stripAddress[i];
+        let output = parseInt(keccakHash[i], 16) >= 8 ? stripAddress[i].toUpperCase() : stripAddress[i];
         if (stripHexPrefix(address)[i] !== output) {
             return false;
         }

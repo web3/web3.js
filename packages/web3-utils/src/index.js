@@ -256,17 +256,17 @@ export const toChecksumAddress = (address, chainId = null) => {
         throw new Error(`Given address "${address}" is not a valid Ethereum address.`);
 
     const stripAddress = stripHexPrefix(address).toLowerCase();
-    const prefix = chainId != null ? (chainId.toString() + '0x') : '';
-    const keccakHash = Hash.keccak256(prefix + stripAddress).toString('hex').replace(/^0x/i, '');
+    const prefix = chainId != null ? chainId.toString() + '0x' : '';
+    const keccakHash = Hash.keccak256(prefix + stripAddress)
+        .toString('hex')
+        .replace(/^0x/i, '');
     let checksumAddress = '0x';
 
     for (let i = 0; i < stripAddress.length; i++)
-        checksumAddress += parseInt(keccakHash[i], 16) >= 8 ?
-            stripAddress[i].toUpperCase() :
-            stripAddress[i];
+        checksumAddress += parseInt(keccakHash[i], 16) >= 8 ? stripAddress[i].toUpperCase() : stripAddress[i];
 
     return checksumAddress;
-}
+};
 
 // aliases
 export const keccak256 = utils.keccak256;
