@@ -58,7 +58,7 @@ describe('LogSubscriptionTest', () => {
         socketProviderMock.on = jest.fn((subscriptionId, callback) => {
             expect(subscriptionId).toEqual('MY_ID');
 
-            callback(false, 'SUBSCRIPTION_ITEM');
+            callback('SUBSCRIPTION_ITEM');
         });
 
         moduleInstanceMock.currentProvider = socketProviderMock;
@@ -121,6 +121,32 @@ describe('LogSubscriptionTest', () => {
         ).toBeInstanceOf(LogSubscription);
     });
 
+    it('calls subscribe executes GetPastLogsMethod and emits the error event', (done) => {
+        formatters.inputLogFormatter.mockReturnValueOnce({});
+
+        getPastLogsMethodMock.execute = jest.fn(() => {
+            return Promise.reject(new Error('ERROR'));
+        });
+
+        logSubscription.options.fromBlock = 0;
+
+        const subscription = logSubscription.subscribe();
+
+        subscription.on('error', (error) => {
+            expect(error).toEqual(new Error('ERROR'));
+
+            expect(formatters.inputLogFormatter).toHaveBeenCalledWith(logSubscription.options);
+
+            expect(getPastLogsMethodMock.parameters).toEqual([{}]);
+
+            expect(getPastLogsMethodMock.execute).toHaveBeenCalled();
+
+            expect(subscription).toBeInstanceOf(LogSubscription);
+
+            done();
+        });
+    });
+
     it('calls subscribe and calls the callback once', (done) => {
         formatters.outputLogFormatter.mockReturnValueOnce('ITEM');
 
@@ -137,7 +163,7 @@ describe('LogSubscriptionTest', () => {
         socketProviderMock.on = jest.fn((subscriptionId, callback) => {
             expect(subscriptionId).toEqual('MY_ID');
 
-            callback(false, 'SUBSCRIPTION_ITEM');
+            callback('SUBSCRIPTION_ITEM');
         });
 
         moduleInstanceMock.currentProvider = socketProviderMock;
