@@ -93,7 +93,10 @@ export default class AbstractSubscription extends EventEmitter {
             .then((subscriptionId) => {
                 this.id = subscriptionId;
 
-                this.moduleInstance.currentProvider.on('error', (error) => {
+                this.moduleInstance.currentProvider.once('error', (error) => {
+                    this.removeAllListeners(this.id);
+                    this.moduleInstance.currentProvider.removeAllListeners(this.id);
+
                     if (isFunction(callback)) {
                         callback(error, false);
 
