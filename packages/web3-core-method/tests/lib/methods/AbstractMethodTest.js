@@ -73,8 +73,7 @@ describe('AbstractMethodTest', () => {
 
     it('set arguments with callback', () => {
         abstractMethod.parametersAmount = 1;
-        abstractMethod.setArguments([true, () => {
-        }]);
+        abstractMethod.setArguments([true, () => {}]);
 
         expect(abstractMethod.parameters).toEqual([true]);
 
@@ -101,8 +100,7 @@ describe('AbstractMethodTest', () => {
     });
 
     it('set callback', () => {
-        abstractMethod.callback = () => {
-        };
+        abstractMethod.callback = () => {};
 
         expect(abstractMethod.callback).toBeInstanceOf(Function);
     });
