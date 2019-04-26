@@ -15,6 +15,7 @@ describe('AbstractSubscriptionTest', () => {
 
     beforeEach(() => {
         moduleInstanceMock = new AbstractWeb3Module();
+        moduleInstanceMock.currentProvider.once = jest.fn();
         moduleInstanceMock.currentProvider.subscribe = jest.fn((type, method, parameters) => {
             expect(type).toEqual(abstractSubscription.type);
 
@@ -61,31 +62,73 @@ describe('AbstractSubscriptionTest', () => {
         expect(abstractSubscription.onNewSubscriptionItem('string')).toEqual('string');
     });
 
-    it('calls subscribe and returns a Subscription object', (done) => {
-        moduleInstanceMock.currentProvider.on = jest.fn((id, callback) => {
-            expect(id).toEqual('MY_ID');
+    it('calls subscribe and emits a error from the provider error listener', (done) => {
+        moduleInstanceMock.currentProvider.removeAllListeners = jest.fn();
+        moduleInstanceMock.currentProvider.on = jest.fn();
+        moduleInstanceMock.currentProvider.once = jest.fn((event, callback) => {
+            expect(event).toEqual('error');
 
-            callback({result: 'SUBSCRIPTION_ITEM'});
+            callback(new Error('ERROR'));
         });
 
-        const callback = jest.fn((error, response) => {
-            expect(abstractSubscription.id).toEqual('MY_ID');
+        const subscription = abstractSubscription.subscribe();
 
-            expect(error).toEqual(false);
+        subscription.on('error', (error) => {
+            expect(error).toEqual(new Error('ERROR'));
 
-            expect(response).toEqual('SUBSCRIPTION_ITEM');
+            expect(moduleInstanceMock.currentProvider.removeAllListeners).toHaveBeenCalledWith('MY_ID');
 
             done();
         });
+    });
 
-        const subscription = abstractSubscription.subscribe(callback);
+    it('calls subscribe and emits a error because of the provider subscribe method', (done) => {
+        moduleInstanceMock.currentProvider.removeAllListeners = jest.fn();
+        moduleInstanceMock.currentProvider.subscribe = jest.fn(() => {
+            return Promise.reject(new Error('ERROR'));
+        });
 
-        subscription.on('data', (data) => {
-            expect(data).toEqual('SUBSCRIPTION_ITEM');
+        const subscription = abstractSubscription.subscribe();
+
+        subscription.on('error', (error) => {
+            expect(error).toEqual(new Error('ERROR'));
+
+            done();
         });
     });
 
-    it('calls subscribe with options set to null and returns a Subscription object', (done) => {
+    it('calls subscribe and returns a error because of the provider subscribe method', (done) => {
+        moduleInstanceMock.currentProvider.removeAllListeners = jest.fn();
+        moduleInstanceMock.currentProvider.subscribe = jest.fn(() => {
+            return Promise.reject(new Error('ERROR'));
+        });
+
+       abstractSubscription.subscribe((error) => {
+            expect(error).toEqual(new Error('ERROR'));
+
+            done();
+        });
+    });
+
+    it('calls subscribe and returns a error from the provider error listener', (done) => {
+        moduleInstanceMock.currentProvider.removeAllListeners = jest.fn();
+        moduleInstanceMock.currentProvider.on = jest.fn();
+        moduleInstanceMock.currentProvider.once = jest.fn((event, callback) => {
+            expect(event).toEqual('error');
+
+            callback(new Error('ERROR'));
+        });
+
+        abstractSubscription.subscribe((error) => {
+            expect(error).toEqual(new Error('ERROR'));
+
+            expect(moduleInstanceMock.currentProvider.removeAllListeners).toHaveBeenCalledWith('MY_ID');
+
+            done();
+        });
+    });
+
+    it('calls subscribe with a callback and it returns the expected value', (done) => {
         moduleInstanceMock.currentProvider.on = jest.fn((id, callback) => {
             expect(id).toEqual('MY_ID');
 
@@ -98,16 +141,32 @@ describe('AbstractSubscriptionTest', () => {
             expect(error).toEqual(false);
 
             expect(response).toEqual('SUBSCRIPTION_ITEM');
+
+            expect(moduleInstanceMock.currentProvider.once).toHaveBeenCalled();
 
             done();
         });
 
         abstractSubscription.options = null;
+        abstractSubscription.subscribe(callback);
+    });
 
-        const subscription = abstractSubscription.subscribe(callback);
+    it('calls subscribe and emits the data event', (done) => {
+        moduleInstanceMock.currentProvider.on = jest.fn((id, callback) => {
+            expect(id).toEqual('MY_ID');
+
+            callback({result: 'SUBSCRIPTION_ITEM'});
+        });
+
+        abstractSubscription.options = null;
+        const subscription = abstractSubscription.subscribe();
 
         subscription.on('data', (data) => {
             expect(data).toEqual('SUBSCRIPTION_ITEM');
+
+            expect(moduleInstanceMock.currentProvider.once).toHaveBeenCalled();
+
+            done();
         });
     });
 
