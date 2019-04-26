@@ -79,9 +79,17 @@ export default class AbstractMethod {
         this.beforeExecution(this.moduleInstance);
 
         if (this.parameters.length !== this.parametersAmount) {
-            throw new Error(
+            const error = new Error(
                 `Invalid Arguments length: expected: ${this.parametersAmount}, given: ${this.parameters.length}`
             );
+
+            if (this.callback) {
+                this.callback(error, null);
+
+                return;
+            }
+
+            throw error;
         }
 
         try {
