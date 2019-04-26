@@ -17,5 +17,7 @@ describe('ContractEstimateGasMethodTest', () => {
         method.beforeExecution({});
 
         expect(method.callback).toBeInstanceOf(Function);
+        
+        expect(method.parameters[0]).toBeUndefined();
     })
 });
