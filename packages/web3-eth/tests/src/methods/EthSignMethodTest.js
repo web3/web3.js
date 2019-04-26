@@ -75,7 +75,7 @@ describe('EthSignMethodTest', () => {
             done();
         });
 
-        const response = method.execute();
+        method.execute();
     });
 
     it('calls execute with wallets defined but accounts.sign returns a rejected Promise', async () => {
