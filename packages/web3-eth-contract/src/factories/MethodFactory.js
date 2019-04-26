@@ -21,7 +21,6 @@
  */
 
 import {
-    EstimateGasMethod,
     ChainIdMethod,
     GetTransactionCountMethod,
     GetTransactionReceiptMethod,
@@ -30,10 +29,11 @@ import {
 } from 'web3-core-method';
 import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import CallContractMethod from '../methods/CallContractMethod';
-import ContractDeployMethod from '../methods/ContractDeployMethod';
-import PastEventLogsMethod from '../methods/PastEventLogsMethod';
-import AllPastEventLogsMethod from '../methods/AllPastEventLogsMethod';
 import SendContractMethod from '../methods/SendContractMethod';
+import PastEventLogsMethod from '../methods/PastEventLogsMethod';
+import ContractDeployMethod from '../methods/ContractDeployMethod';
+import AllPastEventLogsMethod from '../methods/AllPastEventLogsMethod';
+import ContractEstimateGasMethod from '../methods/ContractEstimateGasMethod';
 
 export default class MethodFactory {
     /**
@@ -73,7 +73,7 @@ export default class MethodFactory {
                 rpcMethod = this.createSendContractMethod(contract);
                 break;
             case 'estimate':
-                rpcMethod = this.createEstimateGasMethod(contract);
+                rpcMethod = this.createContractEstimateGasMethod(contract);
                 break;
             case 'contract-deployment':
                 rpcMethod = this.createContractDeployMethod(contract);
@@ -186,16 +186,16 @@ export default class MethodFactory {
     }
 
     /**
-     * Returns an object of type EstimateGasMethod
+     * Returns an object of type ContractEstimateGasMethod
      *
-     * @method createEstimateGasMethod
+     * @method createContractEstimateGasMethod
      *
      * @param {AbstractContract} contract
      *
-     * @returns {EstimateGasMethod}
+     * @returns {ContractEstimateGasMethod}
      */
-    createEstimateGasMethod(contract) {
-        return new EstimateGasMethod(this.utils, this.formatters, contract);
+    createContractEstimateGasMethod(contract) {
+        return new ContractEstimateGasMethod(this.utils, this.formatters, contract);
     }
 
     /**
