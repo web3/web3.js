@@ -190,6 +190,11 @@ export default class MethodsProxy {
         const method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
         method.setArguments(methodArguments);
 
+        // Checks if a callback instead of a options object is given
+        if (requestType === 'estimate') {
+            method.beforeExecution();
+        }
+
         // If no parameters are given for the eth_call or eth_send* methods then it will set a empty options object.
         if (typeof method.parameters[0] === 'undefined') {
             method.parameters[0] = {};

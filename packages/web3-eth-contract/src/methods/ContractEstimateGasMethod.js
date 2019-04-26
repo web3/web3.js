@@ -40,6 +40,7 @@ export default class ContractEstimateGasMethod extends EstimateGasMethod {
     beforeExecution(moduleInstance) {
         if (isFunction(this.parameters[0])) {
             this.callback = this.parameters[0];
+            this.parameters[0] = undefined;
 
             return;
         }
