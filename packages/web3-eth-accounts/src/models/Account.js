@@ -169,7 +169,10 @@ export default class Account {
             cipher.final()
         ]);
 
-        const mac = keccak256(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')])).replace('0x', '');
+        const mac = keccak256(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')])).replace(
+            '0x',
+            ''
+        );
 
         return {
             version: 3,
