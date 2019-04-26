@@ -101,7 +101,7 @@ describe('AbstractSubscriptionTest', () => {
             return Promise.reject(new Error('ERROR'));
         });
 
-       abstractSubscription.subscribe((error) => {
+        abstractSubscription.subscribe((error) => {
             expect(error).toEqual(new Error('ERROR'));
 
             done();
