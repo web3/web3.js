@@ -67,4 +67,62 @@ describe('InputLogFormatterTest', () => {
             address: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
         });
     });
+
+    it('call inputLogFormatter with an topic is of type string', () => {
+        const log = {
+            fromBlock: 'earliest',
+            toBlock: 'latest',
+            topics: '',
+            address: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
+        };
+
+        expect(inputLogFormatter(log)).toEqual({
+            fromBlock: 'earliest',
+            toBlock: 'latest',
+            topics: [],
+            address: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
+        });
+    });
+
+    it('call inputLogFormatter when fromBlock is undefined', () => {
+        const log = {
+            toBlock: 'latest',
+            topics: ['00'],
+            address: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
+        };
+
+        expect(inputLogFormatter(log)).toEqual({
+            toBlock: 'latest',
+            topics: ['0x3030'],
+            address: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
+        });
+    });
+
+    it('call inputLogFormatter when toBlock is undefined', () => {
+        const log = {
+            fromBlock: 'earliest',
+            topics: '',
+            address: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
+        };
+
+        expect(inputLogFormatter(log)).toEqual({
+            fromBlock: 'earliest',
+            topics: [],
+            address: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
+        });
+    });
+
+    it('call inputLogFormatter when address is undefined', () => {
+        const log = {
+            fromBlock: 'earliest',
+            toBlock: 'latest',
+            topics: ['00']
+        };
+
+        expect(inputLogFormatter(log)).toEqual({
+            fromBlock: 'earliest',
+            toBlock: 'latest',
+            topics: ['0x3030']
+        });
+    });
 });

@@ -202,10 +202,6 @@ export default class AbiCoder {
         let nonIndexedInputKeys = [];
         let nonIndexedInputItems = [];
 
-        if (!isArray(topics)) {
-            topics = [topics];
-        }
-
         inputs.forEach((input, i) => {
             if (input.indexed) {
                 if (input.type === 'string') {
@@ -262,7 +258,7 @@ export default class AbiCoder {
             return false;
         }
 
-        if (type.indexOf('[') && type.slice(type.indexOf('[')).length === 2) {
+        if (type.slice(type.indexOf('[')).length === 2) {
             return false;
         }
 

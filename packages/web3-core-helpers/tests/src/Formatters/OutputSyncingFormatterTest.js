@@ -21,4 +21,18 @@ describe('OutputSyncingFormatterTest', () => {
             pulledStates: 0
         });
     });
+
+    it('call outputSyncingFormatter if knownStates is present', () => {
+        const response = {
+            startingBlock: '0x0',
+            currentBlock: '0x0',
+            highestBlock: '0x0'
+        };
+
+        expect(outputSyncingFormatter(response)).toEqual({
+            startingBlock: 0,
+            currentBlock: 0,
+            highestBlock: 0
+        });
+    });
 });

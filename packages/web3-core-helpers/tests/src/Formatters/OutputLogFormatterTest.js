@@ -93,4 +93,21 @@ describe('OutputLogFormatterTest', () => {
             transactionIndex: 0
         });
     });
+
+    it('call outputLogFormatter  a valid log and transactionIndex should not be null', () => {
+        const log = {
+            blockHash: 0,
+            transactionHash: 0,
+            logIndex: 0
+        };
+
+        expect(outputLogFormatter(log)).toEqual({
+            blockHash: 0,
+            blockNumber: undefined,
+            id: null,
+            logIndex: 0,
+            transactionHash: 0,
+            transactionIndex: undefined
+        });
+    });
 });

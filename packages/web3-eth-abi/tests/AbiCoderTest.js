@@ -186,4 +186,12 @@ describe('AbiCoderTest', () => {
 
         expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(3, [inputs[2], inputs[3]], '0x0');
     });
+
+    it('calls isStaticType and returns the expected object', () => {
+        expect(abiCoder.isStaticType('bytes')).toEqual(false);
+
+        expect(abiCoder.isStaticType('string')).toEqual(false);
+
+        expect(abiCoder.isStaticType('[]')).toEqual(false);
+    });
 });

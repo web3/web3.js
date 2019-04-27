@@ -96,6 +96,64 @@ describe('LogSubscriptionTest', () => {
         expect(subscription).toBeInstanceOf(LogSubscription);
     });
 
+    it('calls subscribe if fromBlock is not 0', (done) => {
+        formatters.inputLogFormatter.mockReturnValueOnce({});
+
+        formatters.outputLogFormatter.mockReturnValueOnce(0).mockReturnValueOnce('ITEM');
+
+        getPastLogsMethodMock.execute.mockReturnValueOnce(Promise.resolve([0]));
+
+        socketProviderAdapterMock.subscribe = jest.fn((type, method, parameters) => {
+            expect(type).toEqual('eth_subscribe');
+
+            expect(method).toEqual('logs');
+
+            expect(parameters).toEqual([{}]);
+
+            return Promise.resolve('MY_ID');
+        });
+
+        socketProviderAdapterMock.on = jest.fn((subscriptionId, callback) => {
+            expect(subscriptionId).toEqual('MY_ID');
+
+            callback(false, 'SUBSCRIPTION_ITEM');
+        });
+
+        moduleInstanceMock.currentProvider = socketProviderAdapterMock;
+
+        let second = false;
+        logSubscription.options.fromBlock = 1;
+        const subscription = logSubscription.subscribe((error, response) => {
+            let expectedResponse = 0;
+            let expectedId = null;
+
+            if (second) {
+                expectedResponse = 'ITEM';
+                expectedId = 'MY_ID';
+            }
+
+            expect(error).toEqual(false);
+
+            expect(response).toEqual(expectedResponse);
+
+            expect(formatters.inputLogFormatter).toHaveBeenCalledWith(logSubscription.options);
+
+            expect(getPastLogsMethodMock.parameters).toEqual([{}]);
+
+            expect(getPastLogsMethodMock.execute).toHaveBeenCalled();
+
+            expect(logSubscription.id).toEqual(expectedId);
+
+            if (second) {
+                done();
+            }
+
+            second = true;
+        });
+
+        expect(subscription).toBeInstanceOf(LogSubscription);
+    });
+
     it('calls subscribe executes GetPastLogsMethod and the method throws an error', (done) => {
         formatters.inputLogFormatter.mockReturnValueOnce({});
 

@@ -30,5 +30,13 @@ describe('EthGetAccountsMethodTest', () => {
         const response = await method.execute();
 
         expect(response).toEqual(['0x0']);
+
+        method.execute();
+    });
+
+    it('calls execute if account is not unlocked', async () => {
+        accountsMock.wallet = {0: {privateKey: '0x0', address: '0x0'}};
+
+        method.execute();
     });
 });

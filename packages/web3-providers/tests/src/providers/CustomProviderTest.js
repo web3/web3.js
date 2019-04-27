@@ -27,6 +27,15 @@ describe('CustomProviderTest', () => {
         expect(customProvider.supportsSubscriptions()).toEqual(false);
     });
 
+    it('calls checkConnectionMethods and throws error', () => {
+        connectionMock.sendAsync = false;
+        connectionMock.send = false;
+
+        expect(() => {
+            customProvider.checkConnectionMethods();
+        }).toThrow('Invalid provider injected!');
+    });
+
     it('calls subscribe and throws error', () => {
         expect(() => {
             customProvider.subscribe();

@@ -97,4 +97,20 @@ describe('InputPostFormatterTest', () => {
             topics: ['0x61736466']
         });
     });
+
+    it('call inputPostFormatter with an topics property of type array', () => {
+        const post = {
+            ttl: 100,
+            workToProve: 100,
+            priority: 100,
+            topics: ''
+        };
+
+        expect(inputPostFormatter(post)).toEqual({
+            ttl: '0x64',
+            workToProve: '0x64',
+            priority: '0x64',
+            topics: []
+        });
+    });
 });

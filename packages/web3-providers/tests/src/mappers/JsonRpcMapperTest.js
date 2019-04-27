@@ -12,10 +12,19 @@ describe('JsonRpcMapperTest', () => {
         }
     });
 
-    it('calls toPayload and returns expected payload', () => {
+    it('calls toPayload and returns expected payload when param is in array', () => {
         expect(JsonRpcMapper.toPayload('rpc_method', [])).toEqual({
             jsonrpc: '2.0',
             id: 0,
+            method: 'rpc_method',
+            params: []
+        });
+    });
+
+    it('calls toPayload and returns expected payload when param is not in array', () => {
+        expect(JsonRpcMapper.toPayload('rpc_method', '')).toEqual({
+            jsonrpc: '2.0',
+            id: 1,
             method: 'rpc_method',
             params: []
         });

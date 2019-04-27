@@ -91,6 +91,26 @@ describe('MetamaskProviderTest', () => {
         );
     });
 
+    it('calls onNetworkChanged and emits the "networkChanged" event', (done) => {
+        metamaskProvider.on('networkChanged', (networkId) => {
+            expect(networkId).toEqual('ID');
+
+            done();
+        });
+
+        metamaskProvider.onNetworkChanged('ID');
+    });
+
+    it('calls onAccountsChanged and emits the "accountsChanged" event', (done) => {
+        metamaskProvider.on('accountsChanged', (accounts) => {
+            expect(accounts).toEqual([]);
+
+            done();
+        });
+
+        metamaskProvider.onAccountsChanged([]);
+    });
+
     it('calls sendPayload and returns with an resolved promise', async () => {
         inpageProvider.send = jest.fn((payload, callback) => {
             expect(callback).toBeInstanceOf(Function);
