@@ -68,12 +68,16 @@ export default class EthSignMethod extends SignMethod {
 
             if (this.callback) {
                 this.callback(false, signedMessage);
+
+                return;
             }
 
             return signedMessage;
         } catch (error) {
             if (this.callback) {
                 this.callback(error, null);
+
+                return;
             }
 
             throw error;
