@@ -148,7 +148,7 @@ export VmoduleMethod from './methods/debug/VmoduleMethod';
 export WriteBlockProfileMethod from './methods/debug/WriteBlockProfileMethod';
 export WriteMemProfileMethod from './methods/debug/WriteMemProfileMethod';
 
-// Txpool
+// TxPool
 export ContentMethod from './methods/txpool/ContentMethod';
 export InspectMethod from './methods/txpool/InspectMethod';
 export StatusMethod from './methods/txpool/StatusMethod';

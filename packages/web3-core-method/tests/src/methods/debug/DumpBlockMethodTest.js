@@ -1,9 +1,9 @@
-import {formatters} from 'web3-core-helpers';
+import * as Utils from 'web3-utils';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import DumpBlockMethod from '../../../../src/methods/debug/DumpBlockMethod';
 
 // Mocks
-jest.mock('web3-core-helpers');
+jest.mock('web3-utils');
 
 /**
  * DumpBlockMethod test
@@ -12,7 +12,7 @@ describe('DumpBlockMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new DumpBlockMethod(null, formatters, {});
+        method = new DumpBlockMethod(Utils, {}, {});
     });
 
     it('constructor check', () => {
@@ -21,9 +21,17 @@ describe('DumpBlockMethodTest', () => {
         expect(method.rpcMethod).toEqual('debug_dumpBlock');
 
         expect(method.parametersAmount).toEqual(1);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(formatters);
     });
+
+    it('calls beforeExecution and maps the given number to a hex string', () => {
+        Utils.numberToHex.mockReturnValueOnce('0x1');
+
+        method.parameters = [1];
+
+        method.beforeExecution();
+
+        expect(method.parameters[0]).toEqual('0x1');
+
+        expect(Utils.numberToHex).toHaveBeenCalledWith(1);
+    })
 });

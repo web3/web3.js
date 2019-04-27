@@ -200,9 +200,25 @@ export interface Log {
     blockNumber: number;
 }
 
-export interface Content {
-    pending: any;
-    queued: any;
+export interface TxPoolContent {
+    pending: TxPool;
+    queued: TxPool;
+}
+
+export interface TxPoolInspect {
+    pending: TxPool;
+    queued: TxPool;
+}
+
+export interface TxPool {
+    [address: string]: {
+        [nonce: number]: string[] | Transaction[];
+    };
+}
+
+export interface TxPoolStatus {
+    pending: number;
+    queued: number;
 }
 
 export interface NodeInfo {
@@ -215,12 +231,16 @@ export interface NodeInfo {
       discovery: string | number;
       listener: string | number;
     };
-    protocols: {
-      eth: {
-        difficulty: string | number;
-        genesis: string;
-        head: string;
-        network: string | number;
-      };
+    protocols: any // Any because it's not documented what each protocol (eth, shh etc.) is defining here
+}
+
+export interface PeerInfo {
+    caps: string[];
+    id: string;
+    name: string;
+    network: {
+        localAddress: string;
+        remoteAddress: string;
     };
+    protocols: any; // Any because it's not documented what each protocol (eth, shh etc.) is defining here
 }

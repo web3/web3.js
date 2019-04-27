@@ -1,8 +1,8 @@
 # web3-core-method
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-The Method module abstracts the JSON-RPC method and is used within most [web3.js][repo] packages.
+The Method module abstracts the JSON-RPC method and is used within most [web3.js][repo] modules.
 
 ## Installation
 

@@ -33,4 +33,15 @@ export default class SetEtherBaseMethod extends AbstractMethod {
     constructor(utils, formatters, moduleInstance) {
         super('miner_setEtherbase', 1, utils, formatters, moduleInstance);
     }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+    }
 }

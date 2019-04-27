@@ -1,9 +1,5 @@
-import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import TraceBlockByHashMethod from '../../../../src/methods/debug/TraceBlockByHashMethod';
-
-// Mocks
-jest.mock('web3-core-helpers');
 
 /**
  * TraceBlockByHashMethod test
@@ -12,7 +8,7 @@ describe('TraceBlockByHashMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new TraceBlockByHashMethod(null, formatters, {});
+        method = new TraceBlockByHashMethod({}, {}, {});
     });
 
     it('constructor check', () => {
@@ -21,9 +17,5 @@ describe('TraceBlockByHashMethodTest', () => {
         expect(method.rpcMethod).toEqual('debug_traceBlockByHash');
 
         expect(method.parametersAmount).toEqual(2);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(formatters);
     });
 });

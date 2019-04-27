@@ -1,8 +1,8 @@
 # web3-core-helpers
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-The Helper functions are used in all [web3.js][repo] packages.
+The Helper functions are used in all [web3.js][repo] modules.
 Please read the [documentation][docs] for more.
 
 ## Installation

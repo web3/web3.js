@@ -1,9 +1,5 @@
-import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import SetExtraMethod from '../../../../src/methods/miner/SetExtraMethod';
-
-// Mocks
-jest.mock('web3-core-helpers');
 
 /**
  * SetExtraMethod test
@@ -12,7 +8,7 @@ describe('SetExtraMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SetExtraMethod(null, formatters, {});
+        method = new SetExtraMethod({}, {}, {});
     });
 
     it('constructor check', () => {
@@ -21,9 +17,5 @@ describe('SetExtraMethodTest', () => {
         expect(method.rpcMethod).toEqual('miner_setExtra');
 
         expect(method.parametersAmount).toEqual(1);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(formatters);
     });
 });
