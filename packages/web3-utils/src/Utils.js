@@ -96,9 +96,11 @@ export const toTwosComplement = (number) => {
  *
  * @param {String} address the given HEX address
  *
+ * @param {Number} chainId to define checksum behavior
+ *
  * @returns {Boolean}
  */
-export const isAddress = (address) => {
+export const isAddress = (address, chainId = null) => {
     // check if it has the basic requirements of an address
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
         return false;
@@ -107,8 +109,21 @@ export const isAddress = (address) => {
         return true;
         // Otherwise check each case
     } else {
-        return checkAddressChecksum(address);
+        return checkAddressChecksum(address, chainId);
     }
+};
+
+/**
+ * Removes prefix from address if exists.
+ *
+ * @method stripHexPrefix
+ *
+ * @param {string} address
+ *
+ * @returns {string} address without prefix
+ */
+export const stripHexPrefix = (string) => {
+    return string.slice(0, 2) === '0x' ? string.slice(2) : string;
 };
 
 /**
@@ -118,19 +133,20 @@ export const isAddress = (address) => {
  *
  * @param {String} address the given HEX address
  *
+ * @param {number} chain where checksummed address should be valid.
+ *
  * @returns {Boolean}
  */
-export const checkAddressChecksum = (address) => {
-    // Check each case
-    address = address.replace(/^0x/i, '');
-    const addressHash = keccak256(address.toLowerCase()).replace(/^0x/i, '');
+export const checkAddressChecksum = (address, chainId = null) => {
+    const stripAddress = stripHexPrefix(address).toLowerCase();
+    const prefix = chainId != null ? chainId.toString() + '0x' : '';
+    const keccakHash = Hash.keccak256(prefix + stripAddress)
+        .toString('hex')
+        .replace(/^0x/i, '');
 
-    for (let i = 0; i < 40; i++) {
-        // the nth letter should be uppercase if the nth digit of casemap is 1
-        if (
-            (parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) ||
-            (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])
-        ) {
+    for (let i = 0; i < stripAddress.length; i++) {
+        let output = parseInt(keccakHash[i], 16) >= 8 ? stripAddress[i].toUpperCase() : stripAddress[i];
+        if (stripHexPrefix(address)[i] !== output) {
             return false;
         }
     }

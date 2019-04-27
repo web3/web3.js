@@ -2,7 +2,7 @@
 
 This is a sub package of [web3.js][repo]
 
-This is the txpool package. This is an independent package. If you want to use this package, you need to import this in your project.
+This is the TxPool module. This is an independent module. If you want to use this module, you need to import it in your project.
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -16,7 +16,7 @@ npm install web3-eth-txpool
 ```js
 import {TxPool} from 'web3-eth-txpool';
 
-const txpool = new TxPool(
+const txPool = new TxPool(
     'http://127.0.0.1:8546',
     null,
     options

@@ -193,7 +193,7 @@ describe('AccountsTest', () => {
         expect(accounts.getGasPrice).toHaveBeenCalled();
     });
 
-    it('calls signTransaction without the nonce property and resolves with a promise', async () => {
+    it('calls signTransaction with the nonce set to 0 and resolves with a promise', async () => {
         const callback = jest.fn();
 
         const transaction = {
@@ -201,6 +201,45 @@ describe('AccountsTest', () => {
             gas: 1,
             gasPrice: 1,
             nonce: 0,
+            chainId: 1
+        };
+
+        const mappedTransaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: 0,
+            chainId: 1
+        };
+
+        transactionSignerMock.sign = jest.fn(() => {
+            return Promise.resolve('signed-transaction');
+        });
+
+        const account = {privateKey: 'pk', address: '0x0'};
+        Account.fromPrivateKey.mockReturnValueOnce(account);
+
+        formatters.inputCallFormatter.mockReturnValueOnce(transaction);
+
+        await expect(accounts.signTransaction(transaction, 'pk', callback)).resolves.toEqual('signed-transaction');
+
+        expect(callback).toHaveBeenCalledWith(false, 'signed-transaction');
+
+        expect(Account.fromPrivateKey).toHaveBeenCalledWith('pk', accounts);
+
+        expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, account.privateKey);
+
+        expect(formatters.inputCallFormatter).toHaveBeenCalledWith(transaction, accounts);
+    });
+
+    it('calls signTransaction with the nonce set to undefined and resolves with a promise', async () => {
+        const callback = jest.fn();
+
+        const transaction = {
+            from: 0,
+            gas: 1,
+            gasPrice: 1,
+            nonce: undefined,
             chainId: 1
         };
 

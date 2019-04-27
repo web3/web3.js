@@ -34,7 +34,7 @@ export default class MethodFactory extends AbstractMethodFactory {
 
         this.methods = {
             getContent: ContentMethod,
-            getInspect: InspectMethod,
+            getInspection: InspectMethod,
             getStatus: StatusMethod
         };
     }

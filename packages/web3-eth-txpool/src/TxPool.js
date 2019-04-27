@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file Txpool.js
+ * @file TxPool.js
  * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2019
  */
 
 import {AbstractWeb3Module} from 'web3-core';
 
-export default class Txpool extends AbstractWeb3Module {
+export default class TxPool extends AbstractWeb3Module {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {MethodFactory} methodFactory

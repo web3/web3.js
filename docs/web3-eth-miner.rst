@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-=================
-Web3 Miner Module
-=================
+============
+Miner Module
+============
 
 
 The ``web3-eth-miner`` package allows you to remote control the node's mining operation and set various mining specific settings.
