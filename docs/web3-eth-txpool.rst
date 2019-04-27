@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-==================
-Web3 Txpool Module
-==================
+=============
+TxPool Module
+=============
 
 
 The ``web3-eth-txpool`` package gives you access to several non-standard RPC methods to inspect the contents of the transaction pool containing all the currently pending transactions as well as the ones queued for future processing.
@@ -13,10 +13,11 @@ The ``web3-eth-txpool`` package gives you access to several non-standard RPC met
 .. code-block:: javascript
 
     import Web3 from 'web3';
-    import {Txpool} from 'web3-eth-txpool';
+    import {TxPool} from 'web3-eth-txpool';
 
     // "Web3.givenProvider" will be set if in an Ethereum supported browser.
-    const txpool = new Txpool(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
+    const txPool = new TxPool(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
+
 
 ------------------------------------------------------------------------------
 
@@ -29,12 +30,12 @@ The ``web3-eth-txpool`` package gives you access to several non-standard RPC met
 
 .. _txpool-content:
 
-content
-=========
+getContent
+==========
 
 .. code-block:: javascript
 
-    txpool.content([callback])
+    txPool.getContent([callback])
 
 This API can be used to list the exact details of all the transactions currently pending for inclusion in the next block(s), as well as the ones that are being scheduled for future executions.
 The RPC method used is ``txpool_content``.
@@ -51,8 +52,8 @@ Returns
 
 ``Promise<Object>`` - The list of pending as well as queued transactions.
 
-    - ``pending`` - ``string{}``: List of pending transactions with transaction details.
-    - ``queued`` - ``string{}``: List of queued transactions with transaction details.
+    - ``pending`` - ``Object``: List of pending transactions with transaction details.
+    - ``queued`` - ``Object``: List of queued transactions with transaction details.
 
         - ``hash`` 32 Bytes - ``String``: Hash of the transaction.
         - ``nonce`` - ``Number``: The number of transactions made by the sender prior to this one.
@@ -72,7 +73,7 @@ Example
 
 .. code-block:: javascript
 
-    txpool.content().then(console.log);
+    txPool.getContent().then(console.log);
     > {
         pending: {
             0x0216d5032f356960cd3749c31ab34eeff21b3395: {
@@ -143,12 +144,12 @@ Example
 ------------------------------------------------------------------------------
 
 
-inspect
-=====================
+getInspection
+=============
 
 .. code-block:: javascript
 
-    txpool.inspect([, callback])
+    txPool.getInspection([, callback])
 
 The property can be queried to list a textual summary of all the transactions currently pending for inclusion in the next block(s), as well as the ones that are being scheduled for future executions. 
 The RPC method used is ``txpool_inspect``.
@@ -168,8 +169,8 @@ Returns
 
 ``Promise<Object>`` - The List of pending and queued transactions summary.
 
-    - ``pending`` - ``string{}``: List of pending transactions with transaction details.
-    - ``queued`` - ``string{}``: List of queued transactions with transaction details.
+    - ``pending`` - ``Object``: List of pending transactions with transaction details.
+    - ``queued`` - ``Object``: List of queued transactions with transaction details.
 
 -------
 Example
@@ -178,7 +179,7 @@ Example
 
 .. code-block:: javascript
 
-    txpool.inspect().then(console.log);
+    txPool.getInspection().then(console.log);
     > {
         pending: {
             0x26588a9301b0428d95e6fc3a5024fce8bec12d51: {
@@ -233,12 +234,12 @@ Example
 ------------------------------------------------------------------------------
 
 
-status
-=====================
+getStatus
+=========
 
 .. code-block:: javascript
 
-    txpool.status([, callback])
+    txPool.getStatus([, callback])
 
 This will provide the number of transactions currently pending for inclusion in the next block(s), as well as the ones that are being scheduled for future executions.
 The RPC method used is ``txpool_status``.
@@ -268,7 +269,7 @@ Example
 
 .. code-block:: javascript
 
-    txpool.status().then(console.log);
+    txPool.getStatus().then(console.log);
     > {
         pending: 10,
         queued: 7

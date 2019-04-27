@@ -19,11 +19,10 @@
 
 import {provider} from 'web3-providers';
 import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
-import {Accounts} from 'web3-eth-accounts';
 import * as net from 'net';
 
 export class Miner extends AbstractWeb3Module {
-    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions, accounts?: Accounts|null);
+    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions);
 
     setEtherbase(
         address: string,

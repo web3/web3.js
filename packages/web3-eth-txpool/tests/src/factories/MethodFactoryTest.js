@@ -27,7 +27,7 @@ describe('MethodFactoryTest', () => {
     it('JSON-RPC methods check', () => {
         expect(methodFactory.methods).toEqual({
             getContent: ContentMethod,
-            getInspect: InspectMethod,
+            getInspection: InspectMethod,
             getStatus: StatusMethod
         });
     });

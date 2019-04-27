@@ -1,8 +1,8 @@
 # web3-eth
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-This is the Eth package to be used [web3.js][repo].
+This is the Eth module to be used [web3.js][repo].
 Please read the [documentation][docs] for more.
 
 ## Installation

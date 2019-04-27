@@ -1,8 +1,8 @@
 # web3-eth-iban
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-This is the IBAN package to be used in the `web3-eth` package.
+This is the IBAN module to be used in the `web3-eth` module.
 Please read the [documentation][docs] for more.
 
 ## Installation

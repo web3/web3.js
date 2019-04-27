@@ -3,7 +3,7 @@ import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
 import {AbstractWeb3Module} from 'web3-core';
 import MethodFactory from '../../src/factories/MethodFactory';
-import Txpool from '../../src/Txpool';
+import TxPool from '../../src/TxPool';
 
 // Mocks
 jest.mock('web3-utils');
@@ -11,7 +11,7 @@ jest.mock('web3-core-helpers');
 jest.mock('web3-net');
 
 /**
- * Txpool test
+ * TxPool test
  */
 describe('TxpoolTest', () => {
     let txpool, providerMock, methodFactory, networkMock;
@@ -23,7 +23,7 @@ describe('TxpoolTest', () => {
         new Network();
         networkMock = Network.mock.instances[0];
 
-        txpool = new Txpool(providerMock, methodFactory, networkMock, Utils, formatters, {}, {});
+        txpool = new TxPool(providerMock, methodFactory, networkMock, Utils, formatters, {}, {});
     });
 
     it('constructor check', () => {
