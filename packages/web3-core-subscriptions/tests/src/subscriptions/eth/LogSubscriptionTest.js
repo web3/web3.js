@@ -96,14 +96,14 @@ describe('LogSubscriptionTest', () => {
         expect(subscription).toBeInstanceOf(LogSubscription);
     });
 
-    it('calls subscribe if fromBlock is not 0', (done) => {
+    it('calls subscribe executes GetPastLogsMethod if fromBlock is other than 0', (done) => {
         formatters.inputLogFormatter.mockReturnValueOnce({});
 
         formatters.outputLogFormatter.mockReturnValueOnce(0).mockReturnValueOnce('ITEM');
 
         getPastLogsMethodMock.execute.mockReturnValueOnce(Promise.resolve([0]));
 
-        socketProviderAdapterMock.subscribe = jest.fn((type, method, parameters) => {
+        socketProviderMock.subscribe = jest.fn((type, method, parameters) => {
             expect(type).toEqual('eth_subscribe');
 
             expect(method).toEqual('logs');
@@ -113,13 +113,13 @@ describe('LogSubscriptionTest', () => {
             return Promise.resolve('MY_ID');
         });
 
-        socketProviderAdapterMock.on = jest.fn((subscriptionId, callback) => {
+        socketProviderMock.on = jest.fn((subscriptionId, callback) => {
             expect(subscriptionId).toEqual('MY_ID');
 
-            callback(false, 'SUBSCRIPTION_ITEM');
+            callback('SUBSCRIPTION_ITEM');
         });
 
-        moduleInstanceMock.currentProvider = socketProviderAdapterMock;
+        moduleInstanceMock.currentProvider = socketProviderMock;
 
         let second = false;
         logSubscription.options.fromBlock = 1;
