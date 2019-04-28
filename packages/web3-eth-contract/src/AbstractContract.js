@@ -43,9 +43,9 @@ export default class AbstractContract extends AbstractWeb3Module {
         abiCoder,
         utils,
         formatters,
-        abi = [],
-        address = '',
-        options = {}
+        abi,
+        address,
+        options
     ) {
         super(provider, options, null, null);
 

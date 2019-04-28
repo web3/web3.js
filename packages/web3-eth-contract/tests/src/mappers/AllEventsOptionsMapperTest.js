@@ -43,6 +43,56 @@ describe('AllEventsOptionsMapperTest', () => {
         expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
     });
 
+    it('calls map with topic already in form of array and returns the expected result', () => {
+        const options = {
+            fromBlock: 0,
+            topics: []
+        };
+
+        const mappedOptions = {
+            fromBlock: 'block',
+            topics: [],
+            address: true
+        };
+
+        formatters.inputBlockNumberFormatter.mockReturnValueOnce('block');
+
+        expect(allEventsOptionsMapper.map({}, {address: true}, options)).toEqual(mappedOptions);
+
+        expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
+    });
+
+    it('calls map with address already defined returns the expected result', () => {
+        const options = {
+            fromBlock: 0,
+            address: '0x0'
+        };
+
+        const mappedOptions = {
+            fromBlock: 'block',
+            topics: [],
+            address: '0x0'
+        };
+
+        formatters.inputBlockNumberFormatter.mockReturnValueOnce('block');
+
+        expect(allEventsOptionsMapper.map({}, {address: true}, options)).toEqual(mappedOptions);
+
+        expect(formatters.inputBlockNumberFormatter).toHaveBeenCalledWith(0);
+    });
+
+    it('calls map with undefined options property and returns the expected result', () => {
+        const mappedOptions = {
+            fromBlock: undefined,
+            topics: [],
+            address: true
+        };
+
+        formatters.inputBlockNumberFormatter.mockReturnValueOnce('block');
+
+        expect(allEventsOptionsMapper.map({}, {address: true})).toEqual(mappedOptions);
+    });
+
     it('calls map with undefined fromBlock property and returns the expected result', () => {
         const mappedOptions = {
             fromBlock: 'block',
@@ -51,6 +101,15 @@ describe('AllEventsOptionsMapperTest', () => {
         };
 
         expect(allEventsOptionsMapper.map({}, {defaultBlock: 'block', address: true}, {})).toEqual(mappedOptions);
+    });
+
+    it('calls map with  undefined fromBlock property and returns the expected result', () => {
+        const mappedOptions = {
+            topics: [],
+            address: true
+        };
+
+        expect(allEventsOptionsMapper.map({}, {defaultBlock: null, address: true}, {})).toEqual(mappedOptions);
     });
 
     it('calls map with defined toBlock property and returns the expected result', () => {

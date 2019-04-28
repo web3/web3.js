@@ -56,4 +56,26 @@ describe('EventFilterEncoderTest', () => {
 
         expect(abiCoderMock.encodeParameter).toHaveBeenNthCalledWith(3, 'uint256[]', filter.arrayItem[1]);
     });
+
+    it('calls encode and returns the expected value ads null', () => {
+        const filter = {
+            myName: 'theValue',
+            arrayItem: [100, 200]
+        };
+
+        abiItemModelMock.getIndexedInputs.mockReturnValueOnce([
+            {
+                type: 'bytes32'
+            },
+            {
+                type: 'uint256[]'
+            }
+        ]);
+
+        abiCoderMock.encodeParameter.mockReturnValue('0x0');
+
+        const topics = eventFilterEncoder.encode(abiItemModelMock, filter);
+
+        expect(topics).toEqual([null, null]);
+    });
 });

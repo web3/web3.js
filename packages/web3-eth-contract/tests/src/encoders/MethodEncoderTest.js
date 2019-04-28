@@ -49,6 +49,26 @@ describe('MethodEncoderTest', () => {
         expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('function');
     });
 
+    it('calls encode and returns the expected value if encodedParameters not starts with "0x"', () => {
+        abiCoderMock.encodeParameters.mockReturnValueOnce('0');
+
+        abiItemModelMock.getInputs.mockReturnValueOnce([]);
+
+        abiItemModelMock.isOfType.mockReturnValueOnce(false);
+
+        abiItemModelMock.isOfType.mockReturnValueOnce(false);
+
+        const result = methodEncoder.encode(abiItemModelMock);
+
+        expect(result).toEqual('0');
+
+        expect(abiCoderMock.encodeParameters).toHaveBeenCalledWith([], []);
+
+        expect(abiItemModelMock.getInputs).toHaveBeenCalled();
+
+        expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('function');
+    });
+
     it('calls encode with "constructor" as type and a error is thrown because of the missing data argument', () => {
         abiCoderMock.encodeParameters.mockReturnValueOnce('0x0');
 

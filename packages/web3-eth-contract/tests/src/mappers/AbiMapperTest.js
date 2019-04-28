@@ -97,6 +97,43 @@ describe('AbiMapperTest', () => {
         });
     });
 
+    it('calls map with ABI items without name of type function and returns the expected result', () => {
+        const abi = [
+            {
+                type: 'function',
+                constant: true,
+                payable: true
+            },
+            {
+                type: 'function',
+                constant: true,
+                payable: true
+            },
+            {
+                type: 'function',
+                constant: true,
+                payable: true
+            },
+            {
+                type: 'constructor',
+                constant: true,
+                payable: true
+            }
+        ];
+
+        abiCoderMock.encodeFunctionSignature.mockReturnValue('funcSignature');
+
+        contractModuleFactoryMock.createAbiItemModel.mockReturnValue(true);
+
+        contractModuleFactoryMock.createAbiModel.mockReturnValue(true);
+
+        const response = abiMapper.map(abi);
+
+        expect(response).toEqual(true);
+
+        expect(abiCoderMock.encodeFunctionSignature).toHaveBeenCalledTimes(3);
+    });
+
     it('calls map with ABI items of type event and returns the expected result', () => {
         const abi = [
             {

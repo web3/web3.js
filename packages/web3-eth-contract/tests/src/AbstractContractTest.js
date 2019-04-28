@@ -265,4 +265,10 @@ describe('AbstractContractTest', () => {
 
         expect(abstractContract.events.abiModel).toEqual(abiModelMock);
     });
+
+    it('sets the address property', () => {
+        abstractContract.data = '';
+
+        expect(abstractContract.data).toEqual('');
+    });
 });

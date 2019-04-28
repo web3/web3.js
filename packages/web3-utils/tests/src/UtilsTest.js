@@ -580,4 +580,27 @@ describe('UtilsTest', () => {
                 expect(getSignatureParameters(test.value).v).toEqual(test.v);
         });
     });
+
+    it('calls getSignatureParameters and returns the error', () => {
+        const tests = [
+            {
+                value: 1,
+                r: 2,
+                s: 3,
+                v: 27
+            }
+        ];
+
+        expect(() => {
+            getSignatureParameters(tests[0].value);
+        }).toThrow('Given value "1" is not a valid hex string.');
+
+        expect(() => {
+            getSignatureParameters(tests[0].r);
+        }).toThrow('Given value "2" is not a valid hex string.');
+
+        expect(() => {
+            getSignatureParameters(tests[0].s);
+        }).toThrow('Given value "3" is not a valid hex string.');
+    });
 });

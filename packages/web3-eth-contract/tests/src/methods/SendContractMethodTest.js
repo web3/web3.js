@@ -130,4 +130,12 @@ describe('SendContractMethodTest', () => {
             }
         });
     });
+
+    it('calls afterExecution if logs is not in form of array', () => {
+        const response = {
+            logs: ''
+        };
+
+        expect(sendContractMethod.afterExecution(response)).toEqual();
+    });
 });

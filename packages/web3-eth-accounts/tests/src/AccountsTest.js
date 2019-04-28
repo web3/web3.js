@@ -62,6 +62,11 @@ describe('AccountsTest', () => {
         expect(Account.from).toHaveBeenCalledWith('entropy', accounts);
     });
 
+    it('calls transactionSigner and assign the result', () => {
+        accounts.transactionSigner = {};
+        expect(accounts.transactionSigner).toEqual(transactionSignerMock);
+    });
+
     it('calls privateKeyToAccount with the privateKey parameter and returns the expected object', () => {
         Account.fromPrivateKey.mockReturnValueOnce(true);
 

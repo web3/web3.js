@@ -57,7 +57,14 @@ describe('AbiModelTest', () => {
         expect(abiModel.getEventBySignature('true')).toEqual({signature: 'true'});
     });
 
+    it('calls getEventBySignature if signature is not defined and returns the expected object', () => {
+        abiModel.abi.events['my_event'] = {signature: 'false'};
+
+        expect(abiModel.getEventBySignature('true')).toEqual();
+    });
+
     it('calls hasMethod and returns false', () => {
+        abiModel.abi.events['my_event'] = {signature: 'false'};
         expect(abiModel.hasMethod('name')).toEqual(false);
     });
 

@@ -164,6 +164,128 @@ describe('MethodsProxyTest', () => {
         expect(methodOptionsValidatorMock.validate).toHaveBeenCalledWith(abiItemModelMock, sendMethodMock);
     });
 
+    it('calls the constructor method over the proxy if methodArgument does not contains data', async () => {
+        abiModelMock.hasMethod.mockReturnValueOnce(true);
+
+        abiModelMock.getMethod.mockReturnValueOnce(abiItemModelMock);
+
+        abiItemModelMock.isOfType.mockReturnValue(true);
+
+        const sendMethodMock = {};
+        sendMethodMock.parameters = [{}];
+        sendMethodMock.setArguments = jest.fn();
+        sendMethodMock.execute = jest.fn(() => {
+            return Promise.resolve(true);
+        });
+
+        methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(sendMethodMock);
+
+        methodEncoderMock.encode.mockReturnValueOnce('0x0');
+
+        methodOptionsMapperMock.map.mockReturnValueOnce({options: true});
+
+        await expect(methodsProxy.contractConstructor({arguments: [true]}).send({options: false})).resolves.toEqual(
+            true
+        );
+
+        expect(abiModelMock.hasMethod).toHaveBeenCalledWith('contractConstructor');
+
+        expect(abiModelMock.getMethod).toHaveBeenCalledWith('contractConstructor');
+
+        expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('constructor');
+
+        expect(abiItemModelMock.contractMethodParameters).toEqual([true]);
+
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
+            abiItemModelMock,
+            contractMock,
+            'contract-deployment'
+        );
+
+        expect(sendMethodMock.parameters[0]).toEqual({options: true});
+
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.data);
+
+        expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
+
+        expect(methodOptionsValidatorMock.validate).toHaveBeenCalledWith(abiItemModelMock, sendMethodMock);
+    });
+
+    it('calls the constructor method over the proxy if arguments is undefined', async () => {
+        abiModelMock.hasMethod.mockReturnValueOnce(true);
+
+        abiModelMock.getMethod.mockReturnValueOnce(abiItemModelMock);
+
+        abiItemModelMock.isOfType.mockReturnValue(true);
+
+        const sendMethodMock = {};
+        sendMethodMock.parameters = [{}];
+        sendMethodMock.setArguments = jest.fn();
+        sendMethodMock.execute = jest.fn(() => {
+            return Promise.resolve(true);
+        });
+
+        methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(sendMethodMock);
+
+        methodEncoderMock.encode.mockReturnValueOnce('0x0');
+
+        methodOptionsMapperMock.map.mockReturnValueOnce({options: true});
+
+        await expect(methodsProxy.contractConstructor({data: '0x0'}).send({options: false})).resolves.toEqual(true);
+
+        expect(abiModelMock.hasMethod).toHaveBeenCalledWith('contractConstructor');
+
+        expect(abiModelMock.getMethod).toHaveBeenCalledWith('contractConstructor');
+
+        expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('constructor');
+
+        expect(methodsProxy.contract.data).toEqual('0x0');
+
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
+            abiItemModelMock,
+            contractMock,
+            'contract-deployment'
+        );
+
+        expect(sendMethodMock.parameters[0]).toEqual({options: true});
+
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.data);
+
+        expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
+
+        expect(methodOptionsValidatorMock.validate).toHaveBeenCalledWith(abiItemModelMock, sendMethodMock);
+    });
+    it('calls the constructor method over the proxy if methodArguments are not defined', async () => {
+        abiModelMock.hasMethod.mockReturnValueOnce(true);
+
+        abiModelMock.getMethod.mockReturnValueOnce(abiItemModelMock);
+
+        abiItemModelMock.isOfType.mockReturnValue(true);
+
+        const sendMethodMock = {};
+        sendMethodMock.parameters = [{}];
+        sendMethodMock.setArguments = jest.fn();
+        sendMethodMock.execute = jest.fn(() => {
+            return Promise.resolve(true);
+        });
+
+        methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(sendMethodMock);
+
+        methodEncoderMock.encode.mockReturnValueOnce('0x0');
+
+        methodOptionsMapperMock.map.mockReturnValueOnce({options: true});
+
+        await expect(methodsProxy.contractConstructor().send({options: false})).resolves.toEqual(true);
+
+        expect(abiModelMock.hasMethod).toHaveBeenCalledWith('contractConstructor');
+
+        expect(abiModelMock.getMethod).toHaveBeenCalledWith('contractConstructor');
+
+        expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('constructor');
+
+        expect(abiItemModelMock.contractMethodParameters).toEqual([]);
+    });
+
     it('calls a method that exists with different arguments over the proxy', async () => {
         abiItemModelMock.getInputLength.mockReturnValueOnce(1);
 
