@@ -116,6 +116,16 @@ describe('NetworkTest', () => {
         expect(network.getId).toHaveBeenCalled();
     });
 
+    it('calls getNetworkType and directly resolves to the network name "kovan', async () => {
+        network.getId = jest.fn(() => {
+            return Promise.resolve(42);
+        });
+
+        await expect(network.getNetworkType(null, 'kovan')).resolves.toEqual('kovan');
+
+        expect(network.getId).toHaveBeenCalled();
+    });
+
     it('calls getNetworkType and rejects the promise', async () => {
         const callback = jest.fn();
 
@@ -126,6 +136,16 @@ describe('NetworkTest', () => {
         await expect(network.getNetworkType(callback)).rejects.toEqual(new Error('ERROR'));
 
         expect(callback).toHaveBeenCalledWith(new Error('ERROR'), null);
+
+        expect(network.getId).toHaveBeenCalled();
+    });
+
+    it('calls getNetworkType and directly call rejects the promise', async () => {
+        network.getId = jest.fn(() => {
+            return Promise.reject(new Error('ERROR'));
+        });
+
+        await expect(network.getNetworkType(new Error('ERROR'), null)).rejects.toEqual(new Error('ERROR'), null);
 
         expect(network.getId).toHaveBeenCalled();
     });
