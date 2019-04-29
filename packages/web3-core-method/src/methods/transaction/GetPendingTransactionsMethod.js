@@ -45,7 +45,7 @@ export default class GetPendingTransactionsMethod extends AbstractMethod {
      */
     afterExecution(response) {
         if (response) {
-            return response.map(item => {
+            return response.map((item) => {
                 return this.formatters.outputTransactionFormatter(item);
             });
         }
