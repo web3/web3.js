@@ -125,7 +125,7 @@ export interface Transaction {
     blockNumber: number | null;
     transactionIndex: number | null;
     from: string;
-    to?: string;
+    to: string | null;
     value: string;
     gasPrice: string;
     gas: number;
