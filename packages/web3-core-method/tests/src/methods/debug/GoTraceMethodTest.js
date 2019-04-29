@@ -33,5 +33,5 @@ describe('GoTraceMethodTest', () => {
         expect(method.parameters[1]).toEqual('0x1');
 
         expect(Utils.numberToHex).toHaveBeenCalledWith(1);
-    })
+    });
 });
