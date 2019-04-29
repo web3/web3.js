@@ -33,4 +33,22 @@ export default class StatusMethod extends AbstractMethod {
     constructor(utils, formatters, moduleInstance) {
         super('txpool_status', 0, utils, formatters, moduleInstance);
     }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    afterExecution(response) {
+        if (response) {
+            response.pending = this.utils.hexToNumber(response.pending);
+            response.queued = this.utils.hexToNumber(response.queued);
+        }
+
+        return response;
+    }
 }

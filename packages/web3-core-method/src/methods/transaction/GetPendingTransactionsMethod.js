@@ -33,4 +33,23 @@ export default class GetPendingTransactionsMethod extends AbstractMethod {
     constructor(utils, formatters, moduleInstance) {
         super('eth_pendingTransactions', 0, utils, formatters, moduleInstance);
     }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    afterExecution(response) {
+        if (response) {
+            return response.map(item => {
+                return this.formatters.outputTransactionFormatter(item);
+            });
+        }
+
+        return response;
+    }
 }

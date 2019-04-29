@@ -452,9 +452,8 @@ Example
 
 ------------------------------------------------------------------------------
 
-
 toChecksumAddress
-=====================
+=================
 
 .. code-block:: javascript
 
@@ -493,9 +492,39 @@ Example
 
 ------------------------------------------------------------------------------
 
+stripHexPrefix
+==============
+
+ .. code-block:: javascript
+     web3.utils.stripHexPrefix(address)
+
+ Removes the prefix ``0x`` from a given hex if it exists.
+
+----------
+Parameters
+----------
+
+ 1. ``hex`` - ``String``: Hex
+
+-------
+Returns
+-------
+
+ ``String``: Hex without prefix.
+
+-------
+Example
+-------
+
+ .. code-block:: javascript
+     web3.utils.stripHexPrefix('0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d');
+    > "c1912fEE45d61C87Cc5EA59DaE31190FFFFf232d"
+
+
+------------------------------------------------------------------------------
 
 checkAddressChecksum
-=====================
+====================
 
 .. code-block:: javascript
 

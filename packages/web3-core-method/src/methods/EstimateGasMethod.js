@@ -50,7 +50,7 @@ export default class EstimateGasMethod extends AbstractMethod {
      *
      * @method afterExecution
      *
-     * @param {Object} response
+     * @param {string} response
      *
      * @returns {Number}
      */

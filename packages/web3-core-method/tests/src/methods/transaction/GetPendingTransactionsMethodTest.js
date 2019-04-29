@@ -26,4 +26,20 @@ describe('GetPendingTransactionsMethodTest', () => {
 
         expect(method.formatters).toEqual(formatters);
     });
+
+    it('calls afterExecution and returns the expected value', () => {
+        formatters.outputTransactionFormatter.mockReturnValueOnce({status: true});
+
+        expect(method.afterExecution([{status: false}])).toEqual([{status: true}]);
+
+        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({status: false});
+    });
+
+    it('calls afterExecution with an empty array and returns the expected value', () => {
+        expect(method.afterExecution([])).toEqual([]);
+    });
+
+    it('calls afterExecution with null and returns the expected value', () => {
+        expect(method.afterExecution(null)).toEqual(null);
+    });
 });
