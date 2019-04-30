@@ -212,6 +212,77 @@ describe('EnsTest', () => {
         expect(namehash.hash).toHaveBeenCalledWith('name');
     });
 
+    it('calls setAddress and returns a resolved PromiEvent, if promiEvent does not contains callback function', async () => {
+        const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
+        let promiEventOnCounter = 0;
+
+        const send = jest.fn((sendOptions) => {
+            expect(sendOptions).toEqual({});
+
+            const promiEvent = {
+                on: jest.fn((event, callback) => {
+                    expect(event).toEqual(promiEventEvents[promiEventOnCounter]);
+
+                    switch (promiEventOnCounter) {
+                        case 0:
+                            setTimeout(() => {
+                                callback('hash');
+                            }, 1);
+                            break;
+                        case 1:
+                            setTimeout(() => {
+                                callback(0, {});
+                            }, 1);
+                            break;
+                        case 2:
+                            setTimeout(() => {
+                                callback({});
+                            }, 1);
+                            break;
+                    }
+
+                    promiEventOnCounter++;
+
+                    return promiEvent;
+                })
+            };
+
+            return promiEvent;
+        });
+
+        const resolver = {
+            methods: {
+                setAddr: jest.fn((address) => {
+                    expect(address).toEqual('0x0');
+
+                    return {send: send};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        const promiEvent = ens.setAddress('name', '0x0', {});
+
+        promiEvent.on('transactionHash', (transactionHash) => {
+            expect(transactionHash).toEqual('hash');
+        });
+
+        promiEvent.on('confirmation', (confirmationNumber, receipt) => {
+            expect(confirmationNumber).toEqual(0);
+
+            expect(receipt).toEqual({});
+        });
+
+        promiEvent.on('receipt', (receipt) => {
+            expect(receipt).toEqual({});
+        });
+
+        await expect(promiEvent).resolves.toEqual({});
+
+        expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
     it('calls setAddress and returns a rejected PromiEvent', async () => {
         const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
         let promiEventOnCounter = 0;
@@ -285,6 +356,77 @@ describe('EnsTest', () => {
         await expect(promiEvent).rejects.toEqual(false);
 
         expect(callback).toHaveBeenCalled();
+
+        expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
+    it('calls setAddress and returns a rejected PromiEvent, if promiEvent does not contains callback function', async () => {
+        const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
+        let promiEventOnCounter = 0;
+
+        const send = jest.fn((sendOptions) => {
+            expect(sendOptions).toEqual({});
+
+            const promiEvent = {
+                on: jest.fn((event, callback) => {
+                    expect(event).toEqual(promiEventEvents[promiEventOnCounter]);
+
+                    switch (promiEventOnCounter) {
+                        case 0:
+                            setTimeout(() => {
+                                callback('hash');
+                            }, 1);
+                            break;
+                        case 1:
+                            setTimeout(() => {
+                                callback(0, {});
+                            }, 1);
+                            break;
+                        case 3:
+                            setTimeout(() => {
+                                callback(false);
+                            }, 1);
+                            break;
+                    }
+
+                    promiEventOnCounter++;
+
+                    return promiEvent;
+                })
+            };
+
+            return promiEvent;
+        });
+
+        const resolver = {
+            methods: {
+                setAddr: jest.fn((address) => {
+                    expect(address).toEqual('0x0');
+
+                    return {send: send};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        const promiEvent = ens.setAddress('name', '0x0', {});
+
+        promiEvent.on('transactionHash', (transactionHash) => {
+            expect(transactionHash).toEqual('hash');
+        });
+
+        promiEvent.on('confirmation', (confirmationNumber, receipt) => {
+            expect(confirmationNumber).toEqual(0);
+
+            expect(receipt).toEqual({});
+        });
+
+        promiEvent.on('error', (error) => {
+            expect(error).toEqual(false);
+        });
+
+        await expect(promiEvent).rejects.toEqual(false);
 
         expect(namehash.hash).toHaveBeenCalledWith('name');
     });
@@ -394,6 +536,81 @@ describe('EnsTest', () => {
         expect(namehash.hash).toHaveBeenCalledWith('name');
     });
 
+    it('calls setPubkey and returns a resolved PromiEvent, if promiEvent does not contains callback function', async () => {
+        const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
+        let promiEventOnCounter = 0;
+
+        const send = jest.fn((sendOptions) => {
+            expect(sendOptions).toEqual({});
+
+            const promiEvent = {
+                on: jest.fn((event, callback) => {
+                    expect(event).toEqual(promiEventEvents[promiEventOnCounter]);
+
+                    switch (promiEventOnCounter) {
+                        case 0:
+                            setTimeout(() => {
+                                callback('hash');
+                            }, 1);
+                            break;
+                        case 1:
+                            setTimeout(() => {
+                                callback(0, {});
+                            }, 1);
+                            break;
+                        case 2:
+                            setTimeout(() => {
+                                callback({});
+                            }, 1);
+                            break;
+                    }
+
+                    promiEventOnCounter++;
+
+                    return promiEvent;
+                })
+            };
+
+            return promiEvent;
+        });
+
+        const resolver = {
+            methods: {
+                setPubkey: jest.fn((node, x, y) => {
+                    expect(node).toEqual('0x0');
+
+                    expect(x).toEqual('x');
+
+                    expect(y).toEqual('y');
+
+                    return {send: send};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        const promiEvent = ens.setPubkey('name', 'x', 'y', {});
+
+        promiEvent.on('transactionHash', (transactionHash) => {
+            expect(transactionHash).toEqual('hash');
+        });
+
+        promiEvent.on('confirmation', (confirmationNumber, receipt) => {
+            expect(confirmationNumber).toEqual(0);
+
+            expect(receipt).toEqual({});
+        });
+
+        promiEvent.on('receipt', (receipt) => {
+            expect(receipt).toEqual({});
+        });
+
+        await expect(promiEvent).resolves.toEqual({});
+
+        expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
     it('calls setPubkey and returns a rejected PromiEvent', async () => {
         const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
         let promiEventOnCounter = 0;
@@ -471,6 +688,81 @@ describe('EnsTest', () => {
         await expect(promiEvent).rejects.toEqual(false);
 
         expect(callback).toHaveBeenCalled();
+
+        expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
+    it('calls setPubkey and returns a rejected PromiEvent, if promiEvent does not contains callback function', async () => {
+        const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
+        let promiEventOnCounter = 0;
+
+        const send = jest.fn((sendOptions) => {
+            expect(sendOptions).toEqual({});
+
+            const promiEvent = {
+                on: jest.fn((event, callback) => {
+                    expect(event).toEqual(promiEventEvents[promiEventOnCounter]);
+
+                    switch (promiEventOnCounter) {
+                        case 0:
+                            setTimeout(() => {
+                                callback('hash');
+                            }, 1);
+                            break;
+                        case 1:
+                            setTimeout(() => {
+                                callback(0, {});
+                            }, 1);
+                            break;
+                        case 3:
+                            setTimeout(() => {
+                                callback(false);
+                            }, 1);
+                            break;
+                    }
+
+                    promiEventOnCounter++;
+
+                    return promiEvent;
+                })
+            };
+
+            return promiEvent;
+        });
+
+        const resolver = {
+            methods: {
+                setPubkey: jest.fn((node, x, y) => {
+                    expect(node).toEqual('0x0');
+
+                    expect(x).toEqual('x');
+
+                    expect(y).toEqual('y');
+
+                    return {send: send};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        const promiEvent = ens.setPubkey('name', 'x', 'y', {});
+
+        promiEvent.on('transactionHash', (transactionHash) => {
+            expect(transactionHash).toEqual('hash');
+        });
+
+        promiEvent.on('confirmation', (confirmationNumber, receipt) => {
+            expect(confirmationNumber).toEqual(0);
+
+            expect(receipt).toEqual({});
+        });
+
+        promiEvent.on('error', (error) => {
+            expect(error).toEqual(false);
+        });
+
+        await expect(promiEvent).rejects.toEqual(false);
 
         expect(namehash.hash).toHaveBeenCalledWith('name');
     });
@@ -580,6 +872,81 @@ describe('EnsTest', () => {
         expect(namehash.hash).toHaveBeenCalledWith('name');
     });
 
+    it('calls setText and returns a resolved PromiEvent, if promiEvent does not contains callback function', async () => {
+        const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
+        let promiEventOnCounter = 0;
+
+        const send = jest.fn((sendOptions) => {
+            expect(sendOptions).toEqual({});
+
+            const promiEvent = {
+                on: jest.fn((event, callback) => {
+                    expect(event).toEqual(promiEventEvents[promiEventOnCounter]);
+
+                    switch (promiEventOnCounter) {
+                        case 0:
+                            setTimeout(() => {
+                                callback('hash');
+                            }, 1);
+                            break;
+                        case 1:
+                            setTimeout(() => {
+                                callback(0, {});
+                            }, 1);
+                            break;
+                        case 2:
+                            setTimeout(() => {
+                                callback({});
+                            }, 1);
+                            break;
+                    }
+
+                    promiEventOnCounter++;
+
+                    return promiEvent;
+                })
+            };
+
+            return promiEvent;
+        });
+
+        const resolver = {
+            methods: {
+                setText: jest.fn((node, x, y) => {
+                    expect(node).toEqual('0x0');
+
+                    expect(x).toEqual('key');
+
+                    expect(y).toEqual('value');
+
+                    return {send: send};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        const promiEvent = ens.setText('name', 'key', 'value', {});
+
+        promiEvent.on('transactionHash', (transactionHash) => {
+            expect(transactionHash).toEqual('hash');
+        });
+
+        promiEvent.on('confirmation', (confirmationNumber, receipt) => {
+            expect(confirmationNumber).toEqual(0);
+
+            expect(receipt).toEqual({});
+        });
+
+        promiEvent.on('receipt', (receipt) => {
+            expect(receipt).toEqual({});
+        });
+
+        await expect(promiEvent).resolves.toEqual({});
+
+        expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
     it('calls setText and returns a rejected PromiEvent', async () => {
         const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
         let promiEventOnCounter = 0;
@@ -657,6 +1024,81 @@ describe('EnsTest', () => {
         await expect(promiEvent).rejects.toEqual(false);
 
         expect(callback).toHaveBeenCalled();
+
+        expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
+    it('calls setText and returns a rejected PromiEvent, if promiEvent does not contains callback function', async () => {
+        const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
+        let promiEventOnCounter = 0;
+
+        const send = jest.fn((sendOptions) => {
+            expect(sendOptions).toEqual({});
+
+            const promiEvent = {
+                on: jest.fn((event, callback) => {
+                    expect(event).toEqual(promiEventEvents[promiEventOnCounter]);
+
+                    switch (promiEventOnCounter) {
+                        case 0:
+                            setTimeout(() => {
+                                callback('hash');
+                            }, 1);
+                            break;
+                        case 1:
+                            setTimeout(() => {
+                                callback(0, {});
+                            }, 1);
+                            break;
+                        case 3:
+                            setTimeout(() => {
+                                callback(false);
+                            }, 1);
+                            break;
+                    }
+
+                    promiEventOnCounter++;
+
+                    return promiEvent;
+                })
+            };
+
+            return promiEvent;
+        });
+
+        const resolver = {
+            methods: {
+                setText: jest.fn((node, x, y) => {
+                    expect(node).toEqual('0x0');
+
+                    expect(x).toEqual('key');
+
+                    expect(y).toEqual('value');
+
+                    return {send: send};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        const promiEvent = ens.setText('name', 'key', 'value', {});
+
+        promiEvent.on('transactionHash', (transactionHash) => {
+            expect(transactionHash).toEqual('hash');
+        });
+
+        promiEvent.on('confirmation', (confirmationNumber, receipt) => {
+            expect(confirmationNumber).toEqual(0);
+
+            expect(receipt).toEqual({});
+        });
+
+        promiEvent.on('error', (error) => {
+            expect(error).toEqual(false);
+        });
+
+        await expect(promiEvent).rejects.toEqual(false);
 
         expect(namehash.hash).toHaveBeenCalledWith('name');
     });
@@ -764,6 +1206,79 @@ describe('EnsTest', () => {
         expect(namehash.hash).toHaveBeenCalledWith('name');
     });
 
+    it('calls setContent and returns a resolved PromiEvent, if promiEvent does not contains callback function', async () => {
+        const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
+        let promiEventOnCounter = 0;
+
+        const send = jest.fn((sendOptions) => {
+            expect(sendOptions).toEqual({});
+
+            const promiEvent = {
+                on: jest.fn((event, callback) => {
+                    expect(event).toEqual(promiEventEvents[promiEventOnCounter]);
+
+                    switch (promiEventOnCounter) {
+                        case 0:
+                            setTimeout(() => {
+                                callback('hash');
+                            }, 1);
+                            break;
+                        case 1:
+                            setTimeout(() => {
+                                callback(0, {});
+                            }, 1);
+                            break;
+                        case 2:
+                            setTimeout(() => {
+                                callback({});
+                            }, 1);
+                            break;
+                    }
+
+                    promiEventOnCounter++;
+
+                    return promiEvent;
+                })
+            };
+
+            return promiEvent;
+        });
+
+        const resolver = {
+            methods: {
+                setContent: jest.fn((node, hash) => {
+                    expect(node).toEqual('0x0');
+
+                    expect(hash).toEqual('hash');
+
+                    return {send: send};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        const promiEvent = ens.setContent('name', 'hash', {});
+
+        promiEvent.on('transactionHash', (transactionHash) => {
+            expect(transactionHash).toEqual('hash');
+        });
+
+        promiEvent.on('confirmation', (confirmationNumber, receipt) => {
+            expect(confirmationNumber).toEqual(0);
+
+            expect(receipt).toEqual({});
+        });
+
+        promiEvent.on('receipt', (receipt) => {
+            expect(receipt).toEqual({});
+        });
+
+        await expect(promiEvent).resolves.toEqual({});
+
+        expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
     it('calls setContent and returns a rejected PromiEvent', async () => {
         const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
         let promiEventOnCounter = 0;
@@ -839,6 +1354,79 @@ describe('EnsTest', () => {
         await expect(promiEvent).rejects.toEqual(false);
 
         expect(callback).toHaveBeenCalled();
+
+        expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
+    it('calls setContent and returns a rejected PromiEvent, if promiEvent does not contains callback function', async () => {
+        const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
+        let promiEventOnCounter = 0;
+
+        const send = jest.fn((sendOptions) => {
+            expect(sendOptions).toEqual({});
+
+            const promiEvent = {
+                on: jest.fn((event, callback) => {
+                    expect(event).toEqual(promiEventEvents[promiEventOnCounter]);
+
+                    switch (promiEventOnCounter) {
+                        case 0:
+                            setTimeout(() => {
+                                callback('hash');
+                            }, 1);
+                            break;
+                        case 1:
+                            setTimeout(() => {
+                                callback(0, {});
+                            }, 1);
+                            break;
+                        case 3:
+                            setTimeout(() => {
+                                callback(false);
+                            }, 1);
+                            break;
+                    }
+
+                    promiEventOnCounter++;
+
+                    return promiEvent;
+                })
+            };
+
+            return promiEvent;
+        });
+
+        const resolver = {
+            methods: {
+                setContent: jest.fn((node, hash) => {
+                    expect(node).toEqual('0x0');
+
+                    expect(hash).toEqual('hash');
+
+                    return {send: send};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        const promiEvent = ens.setContent('name', 'hash', {});
+
+        promiEvent.on('transactionHash', (transactionHash) => {
+            expect(transactionHash).toEqual('hash');
+        });
+
+        promiEvent.on('confirmation', (confirmationNumber, receipt) => {
+            expect(confirmationNumber).toEqual(0);
+
+            expect(receipt).toEqual({});
+        });
+
+        promiEvent.on('error', (error) => {
+            expect(error).toEqual(false);
+        });
+
+        await expect(promiEvent).rejects.toEqual(false);
 
         expect(namehash.hash).toHaveBeenCalledWith('name');
     });
@@ -946,6 +1534,79 @@ describe('EnsTest', () => {
         expect(namehash.hash).toHaveBeenCalledWith('name');
     });
 
+    it('calls setMultihash and returns a resolved PromiEvent, if promiEvent does not contains callback function', async () => {
+        const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
+        let promiEventOnCounter = 0;
+
+        const send = jest.fn((sendOptions) => {
+            expect(sendOptions).toEqual({});
+
+            const promiEvent = {
+                on: jest.fn((event, callback) => {
+                    expect(event).toEqual(promiEventEvents[promiEventOnCounter]);
+
+                    switch (promiEventOnCounter) {
+                        case 0:
+                            setTimeout(() => {
+                                callback('hash');
+                            }, 1);
+                            break;
+                        case 1:
+                            setTimeout(() => {
+                                callback(0, {});
+                            }, 1);
+                            break;
+                        case 2:
+                            setTimeout(() => {
+                                callback({});
+                            }, 1);
+                            break;
+                    }
+
+                    promiEventOnCounter++;
+
+                    return promiEvent;
+                })
+            };
+
+            return promiEvent;
+        });
+
+        const resolver = {
+            methods: {
+                setMultihash: jest.fn((node, hash) => {
+                    expect(node).toEqual('0x0');
+
+                    expect(hash).toEqual('hash');
+
+                    return {send: send};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        const promiEvent = ens.setMultihash('name', 'hash', {});
+
+        promiEvent.on('transactionHash', (transactionHash) => {
+            expect(transactionHash).toEqual('hash');
+        });
+
+        promiEvent.on('confirmation', (confirmationNumber, receipt) => {
+            expect(confirmationNumber).toEqual(0);
+
+            expect(receipt).toEqual({});
+        });
+
+        promiEvent.on('receipt', (receipt) => {
+            expect(receipt).toEqual({});
+        });
+
+        await expect(promiEvent).resolves.toEqual({});
+
+        expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
     it('calls setMultihash and returns a rejected PromiEvent', async () => {
         const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
         let promiEventOnCounter = 0;
@@ -1021,6 +1682,79 @@ describe('EnsTest', () => {
         await expect(promiEvent).rejects.toEqual(false);
 
         expect(callback).toHaveBeenCalled();
+
+        expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
+    it('calls setMultihash and returns a rejected PromiEvent, if promiEvent does not contains callback function', async () => {
+        const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
+        let promiEventOnCounter = 0;
+
+        const send = jest.fn((sendOptions) => {
+            expect(sendOptions).toEqual({});
+
+            const promiEvent = {
+                on: jest.fn((event, callback) => {
+                    expect(event).toEqual(promiEventEvents[promiEventOnCounter]);
+
+                    switch (promiEventOnCounter) {
+                        case 0:
+                            setTimeout(() => {
+                                callback('hash');
+                            }, 1);
+                            break;
+                        case 1:
+                            setTimeout(() => {
+                                callback(0, {});
+                            }, 1);
+                            break;
+                        case 3:
+                            setTimeout(() => {
+                                callback(false);
+                            }, 1);
+                            break;
+                    }
+
+                    promiEventOnCounter++;
+
+                    return promiEvent;
+                })
+            };
+
+            return promiEvent;
+        });
+
+        const resolver = {
+            methods: {
+                setMultihash: jest.fn((node, hash) => {
+                    expect(node).toEqual('0x0');
+
+                    expect(hash).toEqual('hash');
+
+                    return {send: send};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        const promiEvent = ens.setMultihash('name', 'hash', {});
+
+        promiEvent.on('transactionHash', (transactionHash) => {
+            expect(transactionHash).toEqual('hash');
+        });
+
+        promiEvent.on('confirmation', (confirmationNumber, receipt) => {
+            expect(confirmationNumber).toEqual(0);
+
+            expect(receipt).toEqual({});
+        });
+
+        promiEvent.on('error', (error) => {
+            expect(error).toEqual(false);
+        });
+
+        await expect(promiEvent).rejects.toEqual(false);
 
         expect(namehash.hash).toHaveBeenCalledWith('name');
     });
@@ -1128,6 +1862,79 @@ describe('EnsTest', () => {
         expect(namehash.hash).toHaveBeenCalledWith('name');
     });
 
+    it('calls setContenthash and returns a resolved PromiEvent, if promiEvent does not contain callback function', async () => {
+        const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
+        let promiEventOnCounter = 0;
+
+        const send = jest.fn((sendOptions) => {
+            expect(sendOptions).toEqual({});
+
+            const promiEvent = {
+                on: jest.fn((event, callback) => {
+                    expect(event).toEqual(promiEventEvents[promiEventOnCounter]);
+
+                    switch (promiEventOnCounter) {
+                        case 0:
+                            setTimeout(() => {
+                                callback('hash');
+                            }, 1);
+                            break;
+                        case 1:
+                            setTimeout(() => {
+                                callback(0, {});
+                            }, 1);
+                            break;
+                        case 2:
+                            setTimeout(() => {
+                                callback({});
+                            }, 1);
+                            break;
+                    }
+
+                    promiEventOnCounter++;
+
+                    return promiEvent;
+                })
+            };
+
+            return promiEvent;
+        });
+
+        const resolver = {
+            methods: {
+                setContenthash: jest.fn((node, hash) => {
+                    expect(node).toEqual('0x0');
+
+                    expect(hash).toEqual('hash');
+
+                    return {send: send};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        const promiEvent = ens.setContenthash('name', 'hash', {});
+
+        promiEvent.on('transactionHash', (transactionHash) => {
+            expect(transactionHash).toEqual('hash');
+        });
+
+        promiEvent.on('confirmation', (confirmationNumber, receipt) => {
+            expect(confirmationNumber).toEqual(0);
+
+            expect(receipt).toEqual({});
+        });
+
+        promiEvent.on('receipt', (receipt) => {
+            expect(receipt).toEqual({});
+        });
+
+        await expect(promiEvent).resolves.toEqual({});
+
+        expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
     it('calls setContenthash and returns a rejected PromiEvent', async () => {
         const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
         let promiEventOnCounter = 0;
@@ -1203,6 +2010,79 @@ describe('EnsTest', () => {
         await expect(promiEvent).rejects.toEqual(false);
 
         expect(callback).toHaveBeenCalled();
+
+        expect(namehash.hash).toHaveBeenCalledWith('name');
+    });
+
+    it('calls setContenthash and returns a rejected PromiEvent, if promiEvent does not contains callback function', async () => {
+        const promiEventEvents = ['transactionHash', 'confirmation', 'receipt', 'error'];
+        let promiEventOnCounter = 0;
+
+        const send = jest.fn((sendOptions) => {
+            expect(sendOptions).toEqual({});
+
+            const promiEvent = {
+                on: jest.fn((event, callback) => {
+                    expect(event).toEqual(promiEventEvents[promiEventOnCounter]);
+
+                    switch (promiEventOnCounter) {
+                        case 0:
+                            setTimeout(() => {
+                                callback('hash');
+                            }, 1);
+                            break;
+                        case 1:
+                            setTimeout(() => {
+                                callback(0, {});
+                            }, 1);
+                            break;
+                        case 3:
+                            setTimeout(() => {
+                                callback(false);
+                            }, 1);
+                            break;
+                    }
+
+                    promiEventOnCounter++;
+
+                    return promiEvent;
+                })
+            };
+
+            return promiEvent;
+        });
+
+        const resolver = {
+            methods: {
+                setContenthash: jest.fn((node, hash) => {
+                    expect(node).toEqual('0x0');
+
+                    expect(hash).toEqual('hash');
+
+                    return {send: send};
+                })
+            }
+        };
+
+        registryMock.resolver.mockReturnValueOnce(Promise.resolve(resolver));
+
+        const promiEvent = ens.setContenthash('name', 'hash', {});
+
+        promiEvent.on('transactionHash', (transactionHash) => {
+            expect(transactionHash).toEqual('hash');
+        });
+
+        promiEvent.on('confirmation', (confirmationNumber, receipt) => {
+            expect(confirmationNumber).toEqual(0);
+
+            expect(receipt).toEqual({});
+        });
+
+        promiEvent.on('error', (error) => {
+            expect(error).toEqual(false);
+        });
+
+        await expect(promiEvent).rejects.toEqual(false);
 
         expect(namehash.hash).toHaveBeenCalledWith('name');
     });

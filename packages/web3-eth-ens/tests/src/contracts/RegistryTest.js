@@ -78,6 +78,30 @@ describe('RegistryTest', () => {
         expect(callback).toHaveBeenCalledWith(false, true);
     });
 
+    it('calls owner and returns promise if address is undefined', async () => {
+        const call = jest.fn(() => {
+            return Promise.resolve(true);
+        });
+
+        const callback = jest.fn();
+
+        registry.methods.owner = jest.fn((hash) => {
+            expect(hash).toEqual('0x0');
+
+            return call;
+        });
+
+        namehash.hash = jest.fn((name) => {
+            expect(name).toEqual('name');
+
+            return '0x0';
+        });
+
+        await expect(registry.owner('name', callback)).resolves.toEqual(true);
+
+        expect(callback).toHaveBeenCalledWith(false, true);
+    });
+
     it('calls owner and returns a rejected promise', async () => {
         const call = jest.fn(() => {
             return Promise.reject(new Error('ERROR'));
@@ -108,6 +132,42 @@ describe('RegistryTest', () => {
         const call = jest.fn(() => {
             return Promise.resolve('address');
         });
+
+        registry.methods.resolver = jest.fn((hash) => {
+            expect(hash).toEqual('0x0');
+
+            return call;
+        });
+
+        namehash.hash = jest.fn((name) => {
+            expect(name).toEqual('name');
+
+            return '0x0';
+        });
+
+        registry.clone = jest.fn(() => {
+            return {jsonInterface: '', address: ''};
+        });
+
+        const resolver = await registry.resolver('name');
+
+        expect(resolver.jsonInterface).toEqual(RESOLVER_ABI);
+
+        expect(resolver.address).toEqual('address');
+
+        expect(registry.resolverName).toEqual('name');
+
+        expect(registry.resolverContract).toEqual(resolver);
+
+        expect(registry.clone).toHaveBeenCalled();
+    });
+
+    it('calls resolver and returns with a resolved promise if address is present', async () => {
+        const call = jest.fn(() => {
+            return Promise.resolve('address');
+        });
+
+        registry.address = '0x0';
 
         registry.methods.resolver = jest.fn((hash) => {
             expect(hash).toEqual('0x0');
