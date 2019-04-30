@@ -714,6 +714,8 @@ Example
 
 ------------------------------------------------------------------------------
 
+.. _eth-getpendingtransactions:
+
 getPendingTransactions
 ======================
 
