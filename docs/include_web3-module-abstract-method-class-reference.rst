@@ -9,8 +9,7 @@ Type
     Method.Type
 
 
-The static ``readonly`` property ``Type`` will be used in the ``AbstractMethodFactory`` class to determine
-how the class should get initiated.
+The static ``readonly`` property ``Type`` will be used in the ``AbstractMethodFactory`` class to determine how the class should get initiated.
 
 =======
 Returns

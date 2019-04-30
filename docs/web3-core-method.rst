@@ -160,8 +160,6 @@ does have the following constructor parameters:
 
 The ``AbstractObservedTransactionMethod`` is the base method class for all "send transaction" methods.
 
-**Be careful with overwriting of the ``execute`` method of the ``AbstractObservedTransactionMethod`` class. It can lead to instability of your module**
-
 Abstract methods:
 
 - :ref:`afterExecution <web3-abstract-method-after-execution>`
