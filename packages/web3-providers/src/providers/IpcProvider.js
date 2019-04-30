@@ -158,6 +158,8 @@ export default class IpcProvider extends AbstractSocketProvider {
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
+            his.once('error', reject);
+            
             if (!this.connection.writable) {
                 this.connection.connect({path: this.path});
             }
@@ -171,7 +173,6 @@ export default class IpcProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
-                this.once('error', reject);
                 this.once(id, resolve);
 
                 return;

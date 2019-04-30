@@ -198,6 +198,8 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
+            this.once('error', reject);
+
             if (!this.isConnecting()) {
                 let timeout, id;
 
@@ -223,7 +225,6 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
-                this.once('error', reject);
                 this.once(id, (response) => {
                     if (timeout) {
                         clearTimeout(timeout);
