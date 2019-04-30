@@ -59,16 +59,16 @@
     "dependencies": {
         "@babel/runtime": "^7.3.1",
         "@types/node": "^10.12.18",
-        "web3-bzz": "1.0.0-beta.52",
-        "web3-core": "1.0.0-beta.52",
-        "web3-core-helpers": "1.0.0-beta.52",
-        "web3-core-method": "1.0.0-beta.52",
-        "web3-eth": "1.0.0-beta.52",
-        "web3-eth-personal": "1.0.0-beta.52",
-        "web3-net": "1.0.0-beta.52",
-        "web3-providers": "1.0.0-beta.52",
-        "web3-shh": "1.0.0-beta.52",
-        "web3-utils": "1.0.0-beta.52"
+        "web3-bzz": "1.0.0-beta.53",
+        "web3-core": "1.0.0-beta.53",
+        "web3-core-helpers": "1.0.0-beta.53",
+        "web3-core-method": "1.0.0-beta.53",
+        "web3-eth": "1.0.0-beta.53",
+        "web3-eth-personal": "1.0.0-beta.53",
+        "web3-net": "1.0.0-beta.53",
+        "web3-providers": "1.0.0-beta.53",
+        "web3-shh": "1.0.0-beta.53",
+        "web3-utils": "1.0.0-beta.53"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
@@ -79,5 +79,5 @@
         "types/index.d.ts",
         "angular-patch.js"
     ],
-    "gitHead": "1c89f503c90180598910d29892f6ebf92455cfe1"
+    "gitHead": "d955a98a5fc8819ff866254ff7141a10b503b5cd"
 }
