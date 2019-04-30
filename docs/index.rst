@@ -20,7 +20,6 @@ Contents:
    :caption: User Documentation
 
    getting-started
-   web3-module
    callbacks-promises-events
    glossary
 
@@ -43,6 +42,7 @@ Contents:
     web3-bzz
     web3-shh
     web3-utils
+    web3-module
     web3-eth-admin
     web3-eth-debug
     web3-eth-miner
