@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-================
-Web3 Core Module
-================
+===========
+Core Module
+===========
 
 The Web3 Core Module does provide the ``AbstractWeb3Module`` which will be used for creating a Web3 compatible module.
 
@@ -19,14 +19,11 @@ The ``AbstractWeb3Module`` does have the following constructor parameters:
 
 - ``provider`` - The provider class or string.
 - ``options`` - These are the default ``options`` of a Web3 module. (optional)
-- ``methodFactory`` - The ``MethodFactory`` is only required if you extend the module with methods. (optional)
+- ``methodFactory`` - The :ref:`MethodFactory <web3-abstract-method-factory>` will be used in the module proxy for the JSON-RPC method calls. (optional)
 - ``net`` - The ``net.Socket`` object of the NodeJS net module. (optional)
 
 
-If you would like to support the latest features of Web3.js and also provide the same API for your module then please pass
-the ``methodFactory`` class for extending the module with your methods.
-
-These are the available methods and properties the AbstractWeb3Module does provide:
+Interface of the ``AbstractWeb3Module`` class:
 
 .. include:: include_package-core.rst
 

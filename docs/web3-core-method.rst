@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-=======================
-Web3 Core Method Module
-=======================
+==================
+Core Method Module
+==================
 
 The Web3 Core Method Module does provide all method classes and the abstract method factory which will be used in the ``AbstractWeb3Module``.
 
@@ -21,7 +21,42 @@ The ``AbstractMethodFactory`` does have the following constructor parameters:
 - ``utils`` - The Utils object from the web3-utils module.
 - ``formatters`` - The formatters object from the web3-core-helpers module.
 
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    import {
+        AbstractMethodFactory,
+        GetBlockByNumberMethod,
+        ListeningMethod,
+        PeerCountMethod,
+        VersionMethod
+    } from 'web3-core-method';
+
+    class MethodFactory extends AbstractMethodFactory {
+        /**
+         * @param {Utils} utils
+         * @param {Object} formatters
+         *
+         * @constructor
+         */
+        constructor(utils, formatters) {
+            super(utils, formatters);
+
+            this.methods = {
+                getId: VersionMethod,
+                getBlockByNumber: GetBlockByNumberMethod,
+                isListening: ListeningMethod,
+                getPeerCount: PeerCountMethod
+            };
+        }
+    }
+
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 =======
 Methods
@@ -95,7 +130,6 @@ of the method class.
     // > "response"
 
 
-
 ------------------------------------------------------------------------------------------------------------------------
 
 
@@ -103,9 +137,12 @@ The ``AbstractMethod`` class does have the following methods and properties:
 
 .. include:: include_web3-module-abstract-method-class-reference.rst
 
+
 ------------------------------------------------------------------------------------------------------------------------
 
+
 .. _web3-module-abstract-send-method:
+
 
 AbstractObservedTransactionMethod
 ====================================

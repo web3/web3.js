@@ -39,12 +39,12 @@ Contents:
     web3-eth-iban
     web3-eth-net
     web3-eth-abi
-    web3-eth-admin
-    web3-eth-debug
-    web3-eth-miner
-    web3-eth-txpool
     web3-net
     web3-bzz
     web3-shh
     web3-utils
+    web3-eth-admin
+    web3-eth-debug
+    web3-eth-miner
+    web3-eth-txpool
 

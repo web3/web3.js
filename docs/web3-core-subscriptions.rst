@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-==============================
-Web3 Core Subscriptions Module
-==============================
+=========================
+Core Subscriptions Module
+=========================
 
 The Web3 Core Subscriptions Module does provide all the subscriptions classes for extending from them and the ``SubscriptionsFactory`` class for simply executing them.
 

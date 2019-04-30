@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-===============
-Web3 Module API
-===============
+==========
+Module API
+==========
 
 The Web3 Module API gives you the possibility to create your own custom Web3 Module with JSON-RPC methods, subscriptions
 or contracts. The provided modules from the Web3 library are also written with the Web3 Module API the core does provide.
