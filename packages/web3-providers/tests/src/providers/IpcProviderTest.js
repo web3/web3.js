@@ -282,6 +282,21 @@ describe('IpcProviderTest', () => {
         );
     });
 
+    it('calls sendPayload and returns a rejected promise because the underlying IPC socket connection emits an error', async () => {
+        socketMock.pending = false;
+        socketMock.writable = true;
+
+        socketMock.write = jest.fn((jsonString) => {
+            ipcProvider.emit('error', {error: true});
+
+            expect(jsonString).toEqual('{"id":"0x0"}');
+
+            return true;
+        });
+
+        await expect(ipcProvider.sendPayload({id: '0x0'})).rejects.toEqual({error: true});
+    });
+
     it('calls sendPayload with a batch payload and returns a resolved promise', async () => {
         socketMock.pending = false;
         socketMock.writable = true;
