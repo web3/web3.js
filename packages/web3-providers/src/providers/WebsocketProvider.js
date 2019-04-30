@@ -223,6 +223,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
+                this.once('error', reject);
                 this.once(id, (response) => {
                     if (timeout) {
                         clearTimeout(timeout);

@@ -171,6 +171,7 @@ export default class IpcProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
+                this.once('error', reject);
                 this.once(id, resolve);
 
                 return;
