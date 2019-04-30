@@ -11,7 +11,7 @@ how the class should get initiated.
 Returns
 =======
 
-``string`` - Returns ``SEND`` or ``CALL``
+``string`` - Example: ``observed-transaction-method``
 
 ------------------------------------------------------------------------------------------------------------------------
 
