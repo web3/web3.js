@@ -1,6 +1,10 @@
 import * as Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetProofMethod from '../../../../src/methods/node/GetProofMethod';
+
+// Mocks
+jest.mock('web3-core-helpers');
 
 /**
  * GetProofMethod test
@@ -9,7 +13,7 @@ describe('GetProofMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetProofMethod(Utils, null, {});
+        method = new GetProofMethod(Utils, formatters, {});
     });
 
     it('constructor check', () => {
@@ -18,10 +22,21 @@ describe('GetProofMethodTest', () => {
         expect(method.rpcMethod).toEqual('eth_getProof');
 
         expect(method.parametersAmount).toEqual(3);
+    });
 
-        expect(method.utils).toEqual(Utils);
+    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
+        method.parameters = ['address', '', 'latest'];
 
-        expect(method.formatters).toEqual(null);
+        formatters.inputAddressFormatter.mockReturnValueOnce('0x0');
+        formatters.inputDefaultBlockNumberFormatter.mockReturnValueOnce('0x0');
+
+        method.beforeExecution({});
+
+        expect(method.parameters[0]).toEqual('0x0');
+        expect(method.parameters[2]).toEqual('0x0');
+
+        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('address');
+        expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {});
     });
 
     it('afterExecution should map the response', () => {
