@@ -21,7 +21,7 @@ describe('SendTransactionMethodTest', () => {
         expect(method.rpcMethod).toEqual('eth_sendTransaction');
     });
 
-    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
+    it('beforeExecution should call the inputTransactionFormatter', () => {
         method.parameters = ['tx'];
 
         formatters.inputTransactionFormatter.mockReturnValueOnce('0x0');

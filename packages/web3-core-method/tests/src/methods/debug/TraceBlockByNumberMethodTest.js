@@ -33,5 +33,5 @@ describe('TraceBlockByNumberMethodTest', () => {
         expect(method.parameters[0]).toEqual('0x1');
 
         expect(Utils.numberToHex).toHaveBeenCalledWith(1);
-    })
+    });
 });
