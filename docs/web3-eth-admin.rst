@@ -114,7 +114,7 @@ getNodeInfo
 
     admin.getNodeInfo([, callback])
 
-This property can be queried for all the information known about the running node at the networking granularity..
+This property can be queried for all the information known about the running node at the networking granularity.
 The RPC method used is ``admin_nodeInfo``.
 
 ----------

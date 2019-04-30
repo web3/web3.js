@@ -77,7 +77,7 @@ Parameters
 ----------
 
 
-1. ``number | hex`` - Gas price.
+1. ``Number | String`` - Gas price.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -161,7 +161,7 @@ Parameters
 ----------
 
 
-1. ``hex | number`` - Mining threads.
+1. ``Number | String`` - Mining threads.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
