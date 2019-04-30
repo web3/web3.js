@@ -287,11 +287,9 @@ describe('IpcProviderTest', () => {
         socketMock.writable = true;
 
         socketMock.write = jest.fn((jsonString) => {
-            ipcProvider.emit('error', {error: true});
-
             expect(jsonString).toEqual('{"id":"0x0"}');
 
-            return true;
+            ipcProvider.emit('error', {error: true});
         });
 
         await expect(ipcProvider.sendPayload({id: '0x0'})).rejects.toEqual({error: true});
