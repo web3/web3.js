@@ -177,7 +177,7 @@ setArguments
 
 
 This method will be used to set the given method arguments.
-The ``setArguments`` method will set the ``parameter`` and ``callback`` property.
+The ``setArguments`` method will set the ``parameters`` and ``callback`` property.
 
 ----------
 Parameters
@@ -204,7 +204,7 @@ getArguments
 
 
 This method will be used to get the method arguments.
-The ``getArguments`` method will contain the ``parameter`` and ``callback`` property.
+The ``getArguments`` method will return a object with the properties ``parameters`` and ``callback``.
 
 -------
 Returns
