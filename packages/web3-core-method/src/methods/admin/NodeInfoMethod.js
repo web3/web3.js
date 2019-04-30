@@ -33,4 +33,22 @@ export default class NodeInfoMethod extends AbstractMethod {
     constructor(utils, formatters, moduleInstance) {
         super('admin_nodeInfo', 0, utils, formatters, moduleInstance);
     }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    afterExecution(response) {
+        if (response) {
+            response.ports.discovery = this.utils.hexToNumber(response.ports.discovery);
+            response.ports.listener = this.utils.hexToNumber(response.ports.listener);
+        }
+
+        return response;
+    }
 }

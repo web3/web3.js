@@ -48,7 +48,7 @@ Parameters
 Returns
 -------
 
-``Promise<boolean>``
+``Promise<null>``
 
 -------
 Example
@@ -78,7 +78,7 @@ Parameters
 
 
 1. ``file`` - ``String``
-1. ``seconds`` - ``Number``
+1. ``seconds`` - ``Number|String`` The seconds as Hex string or number.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -87,7 +87,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
@@ -119,7 +119,7 @@ Parameters
 
 
 1. ``file`` - ``String``
-1. ``seconds`` - ``Number``
+1. ``seconds`` - ``Number | String`` The seconds as Hex string or number.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -128,7 +128,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
@@ -158,7 +158,7 @@ Parameters
 ----------
 
 
-1. ``blockNumber`` - ``Number``
+1. ``blockNumber`` - ``Number | String`` The block number as Hex string or number.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -211,7 +211,8 @@ getGCStats
 
     debug.getGCStats([, callback])
 
-Retrieves the state that corresponds to the block number and returns a list of accounts (including storage and code).
+Returns GC statistics.
+See https://golang.org/pkg/runtime/debug/#GCStats for information about the fields of the returned object.
 
 ----------
 Parameters
@@ -237,8 +238,6 @@ Example
 .. code-block:: javascript
 
     debug.getGCStats().then(console.log);
-    > null
-
 
 ------------------------------------------------------------------------------
 
@@ -257,7 +256,7 @@ Parameters
 ----------
 
 
-1. ``number`` - ``Number`` The block number
+1. ``number`` - ``Number | String`` The block number as hex string or number.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -297,7 +296,7 @@ Parameters
 ----------
 
 1. ``file`` - ``String``
-1. ``seconds`` - ``Number``
+1. ``seconds`` - ``Number | String`` The seconds as Hex string or number.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -306,7 +305,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
@@ -370,7 +369,7 @@ Fetches and retrieves the seed hash of the block by number
 Parameters
 ----------
 
-1. ``number`` - ``Number`` The block number.
+1. ``number`` - ``Number | String`` The block number as Hex string or number.
 1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -408,7 +407,7 @@ Collected profile data can be written using ``debug.writeBlockProfile``.
 Parameters
 ----------
 
-1. ``number`` - ``Number`` The block profile rate.
+1. ``number`` - ``Number | String`` The block profile rate as number or Hex string.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -417,7 +416,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
@@ -446,7 +445,7 @@ Use with extreme caution.
 Parameters
 ----------
 
-1. ``number`` - ``Number`` The block number
+1. ``number`` - ``Number | String`` The block number as Hex string or number.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -455,7 +454,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
@@ -502,7 +501,6 @@ Example
 .. code-block:: javascript
 
     debug.getStacks().then(console.log);
-    > null
 
 ------------------------------------------------------------------------------
 
@@ -528,7 +526,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
@@ -565,7 +563,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
@@ -602,7 +600,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
@@ -638,7 +636,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
@@ -668,7 +666,7 @@ Parameters
 ----------
 
 1. ``blockRlp`` - ``String`` RLP encoded block
-2. ``options`` - ``Object``The block trace object
+2. ``options`` - ``Object`` The block trace object
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -709,7 +707,7 @@ The traceBlockByNumber method accepts a block number and will replay the block t
 Parameters
 ----------
 
-1. ``number`` - ``Number`` The block number
+1. ``number`` - ``Number | String`` The block number as Hex string or number.
 2. ``options`` - ``Object`` The block trace object
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
@@ -894,7 +892,7 @@ The verbosity of individual packages and source files can be raised using ``debu
 Parameters
 ----------
 
-1. ``level`` - ``Number`` The verbosity level
+1. ``level`` - ``Number | String`` The verbosity level as Hex string or number.
 1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -903,7 +901,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
@@ -940,7 +938,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
@@ -993,7 +991,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
@@ -1030,7 +1028,7 @@ Returns
 -------
 
 
-``Promise<boolean>``
+``Promise<null>``
 
 
 -------
