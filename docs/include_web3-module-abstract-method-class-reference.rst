@@ -134,8 +134,8 @@ parameters
 
 This property does contain the given ``parameters``.
 
-If you would like to let Web3.js automaticly detect if a callback is given then please use the ``arguments`` property for setting the parameters.
-The ``arguments`` property will be used for validating the given parameters length and for the detection of the callback method.
+If you would like to let Web3.js automaticly detect if a callback is given then please use the ``setArguments()`` method for setting the parameters.
+The ``setArguments()`` method will be used for validating the given parameters length and for the detection of the callback method.
 
 =======
 Returns
@@ -155,8 +155,8 @@ callback
 
 This property does contain the given ``callback``.
 
-If you would like to let Web3.js automaticly detect if a callback is given then please use the ``arguments`` property for setting the parameters.
-The ``arguments`` property will be used for validating the given parameters length and for the detection of the callback method.
+If you would like to let Web3.js automaticly detect if a callback is given then please use the ``setArguments()`` method for setting the parameters.
+The ``setArguments()`` method will be used for validating the given parameters length and for the detection of the callback method.
 
 =======
 Returns
@@ -177,7 +177,7 @@ setArguments
 
 
 This method will be used to set the given method arguments.
-The ``arguments`` property will set the ``parameter`` and ``callback`` property.
+The ``setArguments`` method will set the ``parameter`` and ``callback`` property.
 
 ----------
 Parameters
@@ -204,7 +204,7 @@ getArguments
 
 
 This method will be used to get the method arguments.
-The ``arguments`` property will contain the ``parameter`` and ``callback`` property.
+The ``getArguments`` method will contain the ``parameter`` and ``callback`` property.
 
 -------
 Returns
