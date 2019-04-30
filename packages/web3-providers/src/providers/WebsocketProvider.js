@@ -71,7 +71,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @param {CloseEvent} closeEvent
      */
     onClose(closeEvent) {
-        if (closeEvent.code !== 1000) {
+        if (closeEvent.code !== 1000 || closeEvent.wasClean === false) {
             this.reconnect();
 
             return;
@@ -101,8 +101,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     this.connection._client.config
                 );
             } else {
-                const protocol = this.connection.protocol || undefined;
-                connection = new this.connection.constructor(this.host, protocol);
+                connection = new this.connection.constructor(this.host, this.connection.protocol || undefined);
             }
 
             this.connection = connection;
@@ -206,7 +205,11 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     return reject(new Error('Connection error: Connection is not open on send()'));
                 }
 
-                this.connection.send(JSON.stringify(payload));
+                try {
+                    this.connection.send(JSON.stringify(payload));
+                } catch (error) {
+                    reject(error);
+                }
 
                 if (this.timeout) {
                     timeout = setTimeout(() => {
@@ -231,12 +234,10 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 return;
             }
 
-            this.on('connect', () => {
+            this.once('connect', () => {
                 this.sendPayload(payload)
                     .then(resolve)
                     .catch(reject);
-
-                this.removeAllListeners('connect');
             });
         });
     }

@@ -1,6 +1,6 @@
 // TODO: Improve tests and add the branch property to the coverageThreshold config.
 const config = {
-    notifyMode: 'success-change',
+    // notifyMode: 'success-change',
     collectCoverage: true,
     coverageDirectory: './coverage/',
     coverageThreshold: {
@@ -10,7 +10,7 @@ const config = {
             statements: 80
         }
     },
-    notify: true,
+    // notify: true,
     clearMocks: true,
     resetMocks: true,
     resetModules: true,
@@ -18,7 +18,11 @@ const config = {
     transform: {
         '^.+\\.js$': '<rootDir>/../../jest.preprocessor.js'
     },
-    bail: true
+    bail: true,
+    coveragePathIgnorePatterns: [
+        'node_modules',
+        'dist',
+    ]
 };
 
 /**

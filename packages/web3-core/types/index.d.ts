@@ -14,22 +14,24 @@
 /**
  * @file index.d.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
 import * as net from 'net';
+import BN = require('bn.js');
 import {AbstractMethodFactory} from 'web3-core-method';
 import {
     BatchRequest,
-    EthereumProvider,
+    Web3EthereumProvider,
     HttpProvider,
     HttpProviderOptions,
     IpcProvider,
     provider,
     WebsocketProvider,
+    CustomProvider,
     WebsocketProviderOptions
 } from 'web3-providers';
-import {BN} from 'web3-utils';
 
 export class AbstractWeb3Module {
     constructor(
@@ -48,8 +50,8 @@ export class AbstractWeb3Module {
     defaultGas: number;
     static readonly providers: Providers;
     defaultAccount: string | null;
-    readonly currentProvider: EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider;
-    readonly givenProvider: object | null;
+    readonly currentProvider: Web3EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider | CustomProvider;
+    readonly givenProvider: any;
 
     setProvider(provider: provider, net?: net.Socket): boolean;
 
@@ -68,6 +70,7 @@ export interface SignedTransaction {
     s: string;
     v: string;
     rawTransaction?: string;
+    transactionHash?: string;
 }
 
 export interface Web3ModuleOptions {
@@ -78,7 +81,7 @@ export interface Web3ModuleOptions {
     transactionPollingTimeout?: number;
     defaultGasPrice?: string;
     defaultGas?: number;
-    transactionSigner: TransactionSigner;
+    transactionSigner?: TransactionSigner;
 }
 
 export interface Providers {
@@ -122,7 +125,7 @@ export interface Transaction {
     blockNumber: number | null;
     transactionIndex: number | null;
     from: string;
-    to: string;
+    to: string | null;
     value: string;
     gasPrice: string;
     gas: number;
@@ -195,4 +198,49 @@ export interface Log {
     transactionHash: string;
     blockHash: string;
     blockNumber: number;
+}
+
+export interface TxPoolContent {
+    pending: TxPool;
+    queued: TxPool;
+}
+
+export interface TxPoolInspect {
+    pending: TxPool;
+    queued: TxPool;
+}
+
+export interface TxPool {
+    [address: string]: {
+        [nonce: number]: string[] | Transaction[];
+    };
+}
+
+export interface TxPoolStatus {
+    pending: number;
+    queued: number;
+}
+
+export interface NodeInfo {
+    enode: string;
+    id: string;
+    ip: string;
+    listenAddr: string;
+    name: string;
+    ports: {
+      discovery: string | number;
+      listener: string | number;
+    };
+    protocols: any // Any because it's not documented what each protocol (eth, shh etc.) is defining here
+}
+
+export interface PeerInfo {
+    caps: string[];
+    id: string;
+    name: string;
+    network: {
+        localAddress: string;
+        remoteAddress: string;
+    };
+    protocols: any; // Any because it's not documented what each protocol (eth, shh etc.) is defining here
 }

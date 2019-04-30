@@ -1,4 +1,3 @@
-// Module mocks
 import ProvidersModuleFactory from '../../../src/factories/ProvidersModuleFactory';
 import BatchRequest from '../../../src/batch-request/BatchRequest';
 import ProviderResolver from '../../../src/resolvers/ProviderResolver';
@@ -9,10 +8,9 @@ import Web3EthereumProvider from '../../../src/providers/Web3EthereumProvider';
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import {w3cwebsocket as W3CWebsocket} from 'websocket';
 
-jest.mock('xhr2-cookies');
-jest.mock('websocket');
-
 // Mocks
+jest.mock('websocket');
+jest.mock('xhr2-cookies');
 jest.mock('../../../src/batch-request/BatchRequest');
 jest.mock('../../../src/resolvers/ProviderResolver');
 jest.mock('../../../src/providers/HttpProvider');
@@ -43,9 +41,9 @@ describe('ProvidersModuleFactoryTest', () => {
     });
 
     it('createXMLHttpRequest returns instance of XMLHttpRequest', () => {
-        expect(providersModuleFactory.createXMLHttpRequest('', 0, [{name: 'name', value: 'value'}], {})).toBeInstanceOf(
-            XHR
-        );
+        expect(
+            providersModuleFactory.createXMLHttpRequest('', 0, [{name: 'name', value: 'value'}], {}, true)
+        ).toBeInstanceOf(XHR);
 
         expect(XHR).toHaveBeenCalledTimes(1);
 
@@ -76,7 +74,7 @@ describe('ProvidersModuleFactoryTest', () => {
             'ws://username:password@hallo:5544',
             'string',
             null,
-            {authorization: Buffer.from([186, 199, 171, 157, 169, 158, 165, 171, 44, 194, 138, 221])},
+            {authorization: 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='},
             null,
             'string'
         );

@@ -1,8 +1,10 @@
+import {formatters} from 'web3-core-helpers';
 import PromiEvent from '../../../../lib/PromiEvent';
 import TransactionObserver from '../../../../src/observers/TransactionObserver';
 import AbstractObservedTransactionMethod from '../../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
 // Mocks
+jest.mock('web3-core-helpers');
 jest.mock('../../../../src/observers/TransactionObserver');
 
 /**
@@ -43,7 +45,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
             'rpcMethod',
             5,
             {},
-            {},
+            formatters,
             moduleInstanceMock,
             transactionObserverMock
         );
@@ -68,8 +70,10 @@ describe('AbstractObservedTransactionMethodTest', () => {
     it('calls execute with event listeners and is emitting the expected values', (done) => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
 
+        formatters.outputTransactionFormatter.mockReturnValue({status: false});
+
         observableMock.subscribe = jest.fn((next, error, complete) => {
-            next({confirmations: 0, receipt: {status: '0x1'}});
+            next({confirmations: 0, receipt: {status: true}});
 
             complete();
         });
@@ -78,17 +82,21 @@ describe('AbstractObservedTransactionMethodTest', () => {
         promiEvent.on('transactionHash', transactionHashCallback);
         promiEvent.on('confirmation', confirmationCallback);
         promiEvent.on('receipt', (receipt) => {
-            expect(receipt).toEqual({status: '0x1'});
+            expect(receipt).toEqual({status: true});
 
             expect(providerMock.send).toHaveBeenCalledWith('rpcMethod', []);
 
             expect(beforeExecutionMock).toHaveBeenCalledWith(moduleInstanceMock);
 
-            expect(afterExecutionMock).toHaveBeenCalledWith({status: '0x1'});
+            expect(afterExecutionMock).toHaveBeenCalledWith({status: true});
 
             expect(transactionHashCallback).toHaveBeenCalledWith('transactionHash');
 
-            expect(confirmationCallback).toHaveBeenCalledWith(0, {status: '0x1'});
+            expect(confirmationCallback).toHaveBeenCalledWith(0, {status: false});
+
+            expect(formatters.outputTransactionFormatter).toHaveBeenNthCalledWith(1, {status: true});
+
+            expect(formatters.outputTransactionFormatter).toHaveBeenCalledTimes(1);
 
             done();
         });
@@ -120,18 +128,18 @@ describe('AbstractObservedTransactionMethodTest', () => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
 
         observableMock.subscribe = jest.fn((next, error, complete) => {
-            next({count: 0, receipt: {status: '0x1'}});
+            next({count: 0, receipt: {status: true}});
 
             complete();
         });
 
-        await expect(method.execute()).resolves.toEqual({status: '0x1'});
+        await expect(method.execute()).resolves.toEqual({status: true});
 
         expect(providerMock.send).toHaveBeenCalledWith('rpcMethod', []);
 
         expect(beforeExecutionMock).toHaveBeenCalledWith(moduleInstanceMock);
 
-        expect(afterExecutionMock).toHaveBeenCalledWith({status: '0x1'});
+        expect(afterExecutionMock).toHaveBeenCalledWith({status: true});
     });
 
     it('calls execute and returns with the expected rejected Promise', async () => {
@@ -152,7 +160,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
 
         observableMock.subscribe = jest.fn((next, error, complete) => {
-            next({count: 0, receipt: {status: '0x0', gasUsed: 1}});
+            next({count: 0, receipt: {status: false, gasUsed: 1}});
 
             complete();
         });
@@ -160,7 +168,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
         method.parameters = [{gas: 0}];
 
         await expect(method.execute()).rejects.toThrow(
-            `Transaction has been reverted by the EVM:\n${JSON.stringify({status: '0x0', gasUsed: 1}, null, 2)}`
+            `Transaction has been reverted by the EVM:\n${JSON.stringify({status: false, gasUsed: 1}, null, 2)}`
         );
 
         expect(providerMock.send).toHaveBeenCalledWith('rpcMethod', method.parameters);
@@ -170,7 +178,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
 
         observableMock.subscribe = jest.fn((next, error, complete) => {
-            next({count: 0, receipt: {status: '0x0', gasUsed: 1}});
+            next({count: 0, receipt: {status: false, gasUsed: 1}});
 
             complete();
         });
@@ -179,7 +187,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
 
         await expect(method.execute()).rejects.toThrow(
             `Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(
-                {status: '0x0', gasUsed: 1},
+                {status: false, gasUsed: 1},
                 null,
                 2
             )}`

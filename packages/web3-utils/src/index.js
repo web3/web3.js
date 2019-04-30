@@ -26,7 +26,9 @@ import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
 import * as utils from './Utils';
 import * as ethjsUnit from 'ethjs-unit';
+import Hash from 'eth-lib/lib/hash';
 
+export BN from 'bn.js';
 export {soliditySha3} from './SoliditySha3';
 export randomHex from 'randomhex';
 
@@ -40,7 +42,7 @@ export randomHex from 'randomhex';
  * @returns {String} full function/event name
  */
 export const jsonInterfaceMethodToString = (json) => {
-    if (isObject(json) && json.name && json.name.indexOf('(') !== -1) {
+    if (isObject(json) && json.name && json.name.includes('(')) {
         return json.name;
     }
 
@@ -104,7 +106,7 @@ const _flattenTypes = (includeTuple, puts) => {
 export const hexToAscii = (hex) => {
     if (!utils.isHexStrict(hex)) throw new Error('The parameter must be a valid HEX string.');
 
-    let str = '';
+    let value = '';
 
     let i = 0;
     const l = hex.length;
@@ -114,10 +116,10 @@ export const hexToAscii = (hex) => {
     }
     for (; i < l; i += 2) {
         const code = parseInt(hex.substr(i, 2), 16);
-        str += String.fromCharCode(code);
+        value += String.fromCharCode(code);
     }
 
-    return str;
+    return value;
 };
 
 /**
@@ -125,16 +127,16 @@ export const hexToAscii = (hex) => {
  *
  * @method asciiToHex
  *
- * @param {String} str
+ * @param {String} value
  * @param {Number} length
  *
  * @returns {String} hex representation of input string
  */
-export const asciiToHex = (str, length = 32) => {
+export const asciiToHex = (value, length = 32) => {
     let hex = '';
 
-    for (let i = 0; i < str.length; i++) {
-        const code = str.charCodeAt(i);
+    for (let i = 0; i < value.length; i++) {
+        const code = value.charCodeAt(i);
         const n = code.toString(16);
         hex += n.length < 2 ? `0${n}` : n;
     }
@@ -194,7 +196,7 @@ export const fromWei = (number, unit) => {
     unit = getUnitValue(unit);
 
     if (!utils.isBN(number) && !isString(number)) {
-        throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+        throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
     return utils.isBN(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
@@ -228,7 +230,7 @@ export const toWei = (number, unit) => {
     unit = getUnitValue(unit);
 
     if (!utils.isBN(number) && !isString(number)) {
-        throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+        throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
     return utils.isBN(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
@@ -239,35 +241,36 @@ export const toWei = (number, unit) => {
  *
  * @method toChecksumAddress
  *
- * @param {String} address the given HEX address
+ * @param {string} address the given HEX address
  *
- * @returns {String}
+ * @param {number} chain where checksummed address should be valid.
+ *
+ * @returns {string} address with checksum applied.
  */
-export const toChecksumAddress = (address) => {
-    if (typeof address === 'undefined') return '';
+export const toChecksumAddress = (address, chainId = null) => {
+    if (typeof address !== 'string') {
+        return '';
+    }
 
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address))
         throw new Error(`Given address "${address}" is not a valid Ethereum address.`);
 
-    address = address.toLowerCase().replace(/^0x/i, '');
-    const addressHash = utils.sha3(address).replace(/^0x/i, '');
+    const stripAddress = stripHexPrefix(address).toLowerCase();
+    const prefix = chainId != null ? chainId.toString() + '0x' : '';
+    const keccakHash = Hash.keccak256(prefix + stripAddress)
+        .toString('hex')
+        .replace(/^0x/i, '');
     let checksumAddress = '0x';
 
-    for (let i = 0; i < address.length; i++) {
-        // If ith character is 9 to f then make it uppercase
-        if (parseInt(addressHash[i], 16) > 7) {
-            checksumAddress += address[i].toUpperCase();
-        } else {
-            checksumAddress += address[i];
-        }
-    }
+    for (let i = 0; i < stripAddress.length; i++)
+        checksumAddress += parseInt(keccakHash[i], 16) >= 8 ? stripAddress[i].toUpperCase() : stripAddress[i];
 
     return checksumAddress;
 };
 
 // aliases
-export const keccak256 = utils.sha3;
-export const sha3 = utils.sha3;
+export const keccak256 = utils.keccak256;
+export const sha3 = utils.keccak256;
 export const toDecimal = utils.hexToNumber;
 export const hexToNumber = utils.hexToNumber;
 export const fromDecimal = utils.numberToHex;
@@ -296,3 +299,4 @@ export const isBloom = utils.isBloom;
 export const isTopic = utils.isTopic;
 export const bytesToHex = utils.bytesToHex;
 export const hexToBytes = utils.hexToBytes;
+export const stripHexPrefix = utils.stripHexPrefix;

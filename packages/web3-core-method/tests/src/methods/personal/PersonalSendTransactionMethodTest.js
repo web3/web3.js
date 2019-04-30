@@ -3,7 +3,7 @@ import PersonalSendTransactionMethod from '../../../../src/methods/personal/Pers
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * PersonalSendTransactionMethod test

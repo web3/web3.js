@@ -30,24 +30,36 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @param {TransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
-     * @param {SendRawTransactionMethod} sendRawTransactionMethod
      *
      * @constructor
      */
-    constructor(
-        utils,
-        formatters,
-        moduleInstance,
-        transactionObserver,
-        chainIdMethod,
-        getTransactionCountMethod,
-        sendRawTransactionMethod
-    ) {
+    constructor(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod) {
         super(utils, formatters, moduleInstance, transactionObserver);
 
         this.chainIdMethod = chainIdMethod;
         this.getTransactionCountMethod = getTransactionCountMethod;
-        this.sendRawTransactionMethod = sendRawTransactionMethod;
+    }
+
+    /**
+     * This type will be used in the AbstractMethodFactory.
+     *
+     * @returns {String}
+     */
+    static get Type() {
+        return 'eth-send-transaction-method';
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The module where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        if (this.rpcMethod !== 'eth_sendRawTransaction') {
+            super.beforeExecution(moduleInstance);
+        }
     }
 
     /**
@@ -63,7 +75,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
             this.parameters[0]['gas'] = this.moduleInstance.defaultGas;
         }
 
-        if (!this.parameters[0].gasPrice) {
+        if (!this.parameters[0].gasPrice && this.parameters[0].gasPrice !== 0) {
             if (!this.moduleInstance.defaultGasPrice) {
                 this.moduleInstance.currentProvider
                     .send('eth_gasPrice', [])
@@ -115,23 +127,31 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {PromiEvent}
      */
     async sendRawTransaction(privateKey = null) {
+        this.beforeExecution(this.moduleInstance);
+
         if (!this.parameters[0].chainId) {
             this.parameters[0].chainId = await this.chainIdMethod.execute();
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
-            this.getTransactionCountMethod.parameters = [this.parameters[0].from];
+            this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
 
             this.parameters[0].nonce = await this.getTransactionCountMethod.execute();
         }
 
-        const response = await this.moduleInstance.transactionSigner.sign(this.parameters[0], privateKey);
+        let transaction = this.parameters[0];
+        transaction.to = transaction.to || '0x';
+        transaction.data = transaction.data || '0x';
+        transaction.value = transaction.value || '0x';
+        transaction.chainId = this.utils.numberToHex(transaction.chainId);
+        delete transaction.from;
 
-        this.sendRawTransactionMethod.parameters = [response.rawTransaction];
-        this.sendRawTransactionMethod.callback = this.callback;
-        this.sendRawTransactionMethod.promiEvent = this.promiEvent;
+        const response = await this.moduleInstance.transactionSigner.sign(transaction, privateKey);
 
-        return this.sendRawTransactionMethod.execute();
+        this.parameters = [response.rawTransaction];
+        this.rpcMethod = 'eth_sendRawTransaction';
+
+        return super.execute();
     }
 
     /**
@@ -142,7 +162,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Boolean}
      */
     isDefaultSigner() {
-        return this.moduleInstance.transactionSigner.constructor.name === 'TransactionSigner';
+        return this.moduleInstance.transactionSigner.type === 'TransactionSigner';
     }
 
     /**
@@ -153,7 +173,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Boolean}
      */
     hasAccounts() {
-        return this.moduleInstance.accounts && this.moduleInstance.accounts.accountsIndex > 0;
+        return this.moduleInstance.accounts && this.moduleInstance.accounts.wallet.accountsIndex > 0;
     }
 
     /**
@@ -164,6 +184,6 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Boolean}
      */
     hasCustomSigner() {
-        return this.moduleInstance.transactionSigner.constructor.name !== 'TransactionSigner';
+        return this.moduleInstance.transactionSigner.type !== 'TransactionSigner';
     }
 }

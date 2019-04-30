@@ -1,8 +1,8 @@
 # web3-bzz
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-This is the swarm package of web3.js for further information please read the [documentation][docs].
+This is the swarm module of web3.js for further information please read the [documentation][docs].
 
 ## Installation
 

@@ -4,7 +4,7 @@ import Account from '../../../src/models/Account';
 import Accounts from '../../../src/Accounts';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('web3-utils');
 jest.mock('../../../src/models/Account');
 jest.mock('../../../src/Accounts');
 
@@ -33,7 +33,13 @@ describe('WalletTest', () => {
         expect(wallet.defaultKeyName).toEqual('web3js_wallet');
     });
 
-    it('calls wallet.create and returns the expected value', () => {
+    it('calls the length property and returns the accountsIndex', () => {
+        wallet.accountsIndex = 99;
+
+        expect(wallet).toHaveLength(99);
+    });
+
+    it('calls create and returns the expected value', () => {
         Utils.randomHex.mockReturnValueOnce('asdf');
 
         Account.from.mockReturnValueOnce({address: '0x0', privateKey: '0x0'});
@@ -133,12 +139,13 @@ describe('WalletTest', () => {
         accountMock.encrypt.mockReturnValueOnce(true);
 
         wallet.accounts[0] = accountMock;
+        wallet.accountsIndex = 1;
 
         expect(wallet.encrypt('pw', {})).toEqual([true]);
 
         expect(accountMock.encrypt).toHaveBeenCalledWith('pw', {});
 
-        expect(wallet.accountsIndex).toEqual(0);
+        expect(wallet.accountsIndex).toEqual(1);
     });
 
     it('calls decrypt and returns the expected value', () => {

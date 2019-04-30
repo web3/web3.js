@@ -7,12 +7,29 @@ Web3
 
     The Web3 class is a wrapper to house all Ethereum related modules.
 
+
+Initiating of Web3
+=====================
+
+----------
+Parameters
+----------
+
+1. ``provider`` - ``string|object``: A URL or one of the Web3 provider classes.
+2. ``net`` - ``net.Socket`` (optional): The net NodeJS package.
+3. ``options`` - ``object`` (optional) The Web3 :ref:`options <web3-module-options>`
+
+
+-------
+Example
+-------
+
 .. code-block:: javascript
 
-    import {Web3} from 'web3';
+    import Web3 from 'web3';
 
-    // "Web3.providers.givenProvider" will be set if in an Ethereum supported browser.
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+    // "Web3.givenProvider" will be set in a Ethereum supported browser.
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', net, options);
 
     > web3.eth
     > web3.shh
@@ -20,18 +37,14 @@ Web3
     > web3.utils
     > web3.version
 
+
 ------------------------------------------------------------------------------
+
 
 Web3.modules
 =====================
 
-    Static property of the Web3 class
-
-.. code-block:: javascript
-
-    Web3.modules
-
-    Will return an object with the classes of all major sub modules, to be able to instantiate them manually.
+    This Static property will return an object with the classes of all major sub modules, to be able to instantiate them manually.
 
 -------
 Returns
@@ -52,28 +65,25 @@ Example
 
     Web3.modules
     > {
-        Eth: Eth function(provider, options?, net?),
-        Net: Net function(provider, options?, net?),
-        Personal: Personal function(provider, options?, net?),
-        Shh: Shh function(provider, options?, net?),
-        Bzz: Bzz function(provider, options?, net?),
+        Eth(provider, net?, options?),
+        Net(provider, net?, options?),
+        Personal(provider, net?, options?),
+        Shh(provider, net?, options?),
+        Bzz(provider, net?, options?),
     }
 
-
-------------------------------------------------------------------------------
 
 .. include:: include_package-core.rst
 
 ------------------------------------------------------------------------------
 
 version
-=======
+=====================
 
     Property of the Web3 class.
 
 .. code-block:: javascript
 
-    Web3.version
     web3.version
 
 Contains the version of the ``web3`` wrapper class.

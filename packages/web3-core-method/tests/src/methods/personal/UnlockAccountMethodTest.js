@@ -3,7 +3,7 @@ import UnlockAccountMethod from '../../../../src/methods/personal/UnlockAccountM
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * UnlockAccountMethod test

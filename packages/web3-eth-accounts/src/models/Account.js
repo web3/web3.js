@@ -20,10 +20,10 @@
 import scryptsy from 'scrypt.js';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
-import {fromPrivate, create, sign, decodeSignature} from 'eth-lib/lib/account'; // TODO: Remove this dependency
+import * as EthLibAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
-import {isHexStrict, hexToBytes, randomHex, sha3} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
+import {isHexStrict, hexToBytes, randomHex, keccak256} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
 
 export default class Account {
@@ -37,12 +37,6 @@ export default class Account {
         this.address = options.address;
         this.privateKey = options.privateKey;
         this.accounts = accounts;
-
-        return new Proxy(this, {
-            get: (target, name) => {
-                return target[name];
-            }
-        });
     }
 
     /**
@@ -80,8 +74,8 @@ export default class Account {
         const preambleBuffer = Buffer.from(preamble);
         const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
         const hash = Hash.keccak256s(ethMessage);
-        const signature = sign(hash, this.privateKey);
-        const vrs = decodeSignature(signature);
+        const signature = EthLibAccount.sign(hash, this.privateKey);
+        const vrs = EthLibAccount.decodeSignature(signature);
 
         return {
             message: data,
@@ -102,7 +96,7 @@ export default class Account {
      * @returns {EncryptedKeystoreV3Json | {version, id, address, crypto}}
      */
     encrypt(password, options) {
-        return Account.fromPrivateKey(this.privateKey, this.accounts.transactionSigner).toV3Keystore(password, options);
+        return Account.fromPrivateKey(this.privateKey, this.accounts).toV3Keystore(password, options);
     }
 
     /**
@@ -114,7 +108,7 @@ export default class Account {
      * @returns {Account}
      */
     static from(entropy, accounts = {}) {
-        return new Account(create(entropy || randomHex(32)), accounts.transactionSigner);
+        return new Account(EthLibAccount.create(entropy || randomHex(32)), accounts);
     }
 
     /**
@@ -126,7 +120,7 @@ export default class Account {
      * @returns {Account}
      */
     static fromPrivateKey(privateKey, accounts = {}) {
-        return new Account(fromPrivate(privateKey), accounts.transactionSigner);
+        return new Account(EthLibAccount.fromPrivate(privateKey), accounts);
     }
 
     /**
@@ -175,7 +169,10 @@ export default class Account {
             cipher.final()
         ]);
 
-        const mac = sha3(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')])).replace('0x', '');
+        const mac = keccak256(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')])).replace(
+            '0x',
+            ''
+        );
 
         return {
             version: 3,
@@ -255,7 +252,7 @@ export default class Account {
 
         const ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
 
-        const mac = sha3(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
+        const mac = keccak256(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
         if (mac !== json.crypto.mac) {
             throw new Error('Key derivation failed - possibly wrong password');
         }
@@ -267,6 +264,6 @@ export default class Account {
         );
         const seed = `0x${Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex')}`;
 
-        return this.fromPrivateKey(seed, accounts);
+        return Account.fromPrivateKey(seed, accounts);
     }
 }

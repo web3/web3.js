@@ -30,7 +30,8 @@ const httpProvider = new HttpProvider('http://localhost:8545', {
             name: 'Access-Control-Allow-Origin',
             value: '*'
         }
-    ]
+    ],
+    withCredentials: false
 });
 
 // $ExpectType Promise<any>

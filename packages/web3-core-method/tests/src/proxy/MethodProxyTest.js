@@ -4,7 +4,7 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import MethodProxy from '../../../src/proxy/MethodProxy';
 
 // Mocks
-jest.mock('AbstractWeb3Module');
+jest.mock('web3-core');
 jest.mock('../../../lib/factories/AbstractMethodFactory');
 jest.mock('../../../lib/methods/AbstractMethod');
 

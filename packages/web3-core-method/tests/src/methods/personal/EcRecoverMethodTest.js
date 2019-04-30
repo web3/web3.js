@@ -3,7 +3,7 @@ import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import EcRecoverMethod from '../../../../src/methods/personal/EcRecoverMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * EcRecoverMethod test
@@ -20,7 +20,7 @@ describe('EcRecoverMethodTest', () => {
 
         expect(method.rpcMethod).toEqual('personal_ecRecover');
 
-        expect(method.parametersAmount).toEqual(3);
+        expect(method.parametersAmount).toEqual(2);
 
         expect(method.utils).toEqual(null);
 

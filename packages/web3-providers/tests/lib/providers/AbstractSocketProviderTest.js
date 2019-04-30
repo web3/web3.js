@@ -7,7 +7,7 @@ import AbstractMethod from '../../__mocks__/AbstractMethod';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
 
 // Mocks
-jest.mock('w3cwebsocket');
+jest.mock('websocket');
 
 /**
  * AbstractSocketProvider test
@@ -58,6 +58,10 @@ describe('AbstractSocketProviderTest', () => {
         expect(abstractSocketProvider.registerEventListeners).toBeInstanceOf(Function);
 
         expect(abstractSocketProvider).toBeInstanceOf(EventEmitter);
+    });
+
+    it('calls supportsSubscriptions and returns true', () => {
+        expect(abstractSocketProvider.supportsSubscriptions()).toEqual(true);
     });
 
     it('calls removeAllListeners without event parameter', () => {

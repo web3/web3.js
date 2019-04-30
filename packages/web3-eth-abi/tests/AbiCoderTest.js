@@ -3,7 +3,7 @@ import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
 import AbiCoder from '../src/AbiCoder';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('web3-utils');
 jest.mock('ethers/utils/abi-coder');
 
 /**
@@ -26,19 +26,19 @@ describe('AbiCoderTest', () => {
     });
 
     it('calls encodeFunctionSignature with a string as parameter', () => {
-        Utils.sha3 = jest.fn(() => {
+        Utils.keccak256 = jest.fn(() => {
             return '0x000000000';
         });
 
         expect(abiCoder.encodeFunctionSignature('functionName')).toEqual('0x00000000');
 
-        expect(Utils.sha3).toHaveBeenCalledWith('functionName');
+        expect(Utils.keccak256).toHaveBeenCalledWith('functionName');
     });
 
     it('calls encodeFunctionSignature with a object as parameter', () => {
         Utils.jsonInterfaceMethodToString.mockReturnValueOnce('0x000000000');
 
-        Utils.sha3 = jest.fn(() => {
+        Utils.keccak256 = jest.fn(() => {
             return '0x000000000';
         });
 
@@ -46,13 +46,13 @@ describe('AbiCoderTest', () => {
 
         expect(Utils.jsonInterfaceMethodToString).toHaveBeenCalledWith({});
 
-        expect(Utils.sha3).toHaveBeenCalledWith('0x000000000');
+        expect(Utils.keccak256).toHaveBeenCalledWith('0x000000000');
     });
 
     it('calls encodeEventSignature with a object as parameter', () => {
         Utils.jsonInterfaceMethodToString.mockReturnValueOnce('0x000000000');
 
-        Utils.sha3 = jest.fn(() => {
+        Utils.keccak256 = jest.fn(() => {
             return '0x000000000';
         });
 
@@ -60,17 +60,17 @@ describe('AbiCoderTest', () => {
 
         expect(Utils.jsonInterfaceMethodToString).toHaveBeenCalledWith({});
 
-        expect(Utils.sha3).toHaveBeenCalledWith('0x000000000');
+        expect(Utils.keccak256).toHaveBeenCalledWith('0x000000000');
     });
 
     it('calls encodeEventSignature with a string as parameter', () => {
-        Utils.sha3 = jest.fn(() => {
+        Utils.keccak256 = jest.fn(() => {
             return '0x000000000';
         });
 
         expect(abiCoder.encodeEventSignature('functionName')).toEqual('0x000000000');
 
-        expect(Utils.sha3).toHaveBeenCalledWith('functionName');
+        expect(Utils.keccak256).toHaveBeenCalledWith('functionName');
     });
 
     it('calls encodeParameters', () => {
@@ -90,7 +90,7 @@ describe('AbiCoderTest', () => {
     });
 
     it('calls encodeFunctionCall and returns the expected string', () => {
-        Utils.sha3 = jest.fn(() => {
+        Utils.keccak256 = jest.fn(() => {
             return '0x000000000';
         });
 

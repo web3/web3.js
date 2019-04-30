@@ -63,42 +63,38 @@ describe('WebsocketProviderTest', () => {
         websocketProvider.onError(event);
     });
 
-    it(
-        'calls onError with the event code "ECONNREFUSED"',
-        (done) => {
-            const event = {code: 'ECONNREFUSED'};
+    it('calls onError with the event code "ECONNREFUSED"', (done) => {
+        const event = {code: 'ECONNREFUSED'};
 
-            setTimeout(() => {
-                expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
-                expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
+        setTimeout(() => {
+            expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+            expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
-                expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
+            expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+            expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
-                expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
+            expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+            expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
-                expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
+            expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+            expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
-                expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
+            expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+            expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.host).toEqual('host');
+            expect(socketMock.host).toEqual('host');
 
-                expect(socketMock.protocol).toEqual('protocol');
+            expect(socketMock.protocol).toEqual('protocol');
 
-                expect(socketMock.removeEventListener).toHaveBeenCalled();
+            expect(socketMock.removeEventListener).toHaveBeenCalled();
 
-                expect(websocketProvider.connection).toBeInstanceOf(Websocket);
+            expect(websocketProvider.connection).toBeInstanceOf(Websocket);
 
-                done();
-            }, 5010);
+            done();
+        }, 5010);
 
-            websocketProvider.onError(event);
-        },
-        5020
-    );
+        websocketProvider.onError(event);
+    }, 5020);
 
     it('calls onClose with an Event object', (done) => {
         const event = {code: 1000};
@@ -106,146 +102,167 @@ describe('WebsocketProviderTest', () => {
         websocketProvider.onClose(event);
     });
 
-    it(
-        'calls onClose with the event code "1001"',
-        (done) => {
-            const event = {code: 1001};
+    it('calls onClose with the event code "1001"', (done) => {
+        const event = {code: 1001};
 
-            setTimeout(() => {
-                expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
-                expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
+        setTimeout(() => {
+            expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+            expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
-                expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
+            expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+            expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
-                expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
+            expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+            expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
-                expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
+            expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+            expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
-                expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
+            expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+            expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.host).toEqual('host');
+            expect(socketMock.host).toEqual('host');
 
-                expect(socketMock.protocol).toEqual('protocol');
+            expect(socketMock.protocol).toEqual('protocol');
 
-                expect(socketMock.removeEventListener).toHaveBeenCalled();
+            expect(socketMock.removeEventListener).toHaveBeenCalled();
 
-                expect(websocketProvider.connection).toBeInstanceOf(Websocket);
+            expect(websocketProvider.connection).toBeInstanceOf(Websocket);
 
-                done();
-            }, 5010);
+            done();
+        }, 5010);
 
-            websocketProvider.onClose(event);
-        },
-        5020
-    );
+        websocketProvider.onClose(event);
+    }, 5020);
 
-    it(
-        'calls reconnect with an WebSocket connection',
-        (done) => {
-            setTimeout(() => {
-                expect(socketMock.host).toEqual('host');
+    it('calls onClose with wasClean false', (done) => {
+        const event = {code: 1000, wasClean: false};
 
-                expect(socketMock.protocol).toEqual('protocol');
+        setTimeout(() => {
+            expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+            expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-                expect(websocketProvider.connection).toBeInstanceOf(Websocket);
+            expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+            expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
-                expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
+            expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+            expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
-                expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
+            expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+            expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
-                expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
+            expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+            expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
-                expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
+            expect(socketMock.host).toEqual('host');
 
-                expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
-                expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
+            expect(socketMock.protocol).toEqual('protocol');
 
-                expect(socketMock.removeEventListener).toHaveBeenCalledWith('message', websocketProvider.onMessage);
+            expect(socketMock.removeEventListener).toHaveBeenCalled();
 
-                expect(socketMock.removeEventListener).toHaveBeenCalledWith('open', websocketProvider.onReady);
+            expect(websocketProvider.connection).toBeInstanceOf(Websocket);
 
-                expect(socketMock.removeEventListener).toHaveBeenCalledWith('close', websocketProvider.onClose);
+            done();
+        }, 5010);
 
-                expect(socketMock.removeEventListener).toHaveBeenCalledWith('error', websocketProvider.onError);
+        websocketProvider.onClose(event);
+    }, 5020);
 
-                expect(socketMock.removeEventListener).toHaveBeenCalledWith('connect', websocketProvider.onConnect);
+    it('calls reconnect with an WebSocket connection', (done) => {
+        setTimeout(() => {
+            expect(socketMock.host).toEqual('host');
 
-                done();
-            }, 5010);
+            expect(socketMock.protocol).toEqual('protocol');
 
-            websocketProvider.reconnect();
-        },
-        5020
-    );
+            expect(websocketProvider.connection).toBeInstanceOf(Websocket);
 
-    it(
-        'calls reconnect with an W3CWebsocket connection',
-        (done) => {
-            socketMock = new W3CWebsocket('host', 'protocol', null, 'headers', 'requestOptions', 'config');
-            socketMock.addEventListener = jest.fn();
-            socketMock.removeEventListener = jest.fn();
+            expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+            expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-            websocketProvider = new WebsocketProvider(socketMock, 1);
+            expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+            expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-            setTimeout(() => {
-                expect(socketMock.host).toEqual('host');
+            expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+            expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.protocol).toEqual('protocol');
+            expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+            expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-                expect(websocketProvider.connection).toBeInstanceOf(W3CWebsocket);
+            expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+            expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
 
-                expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
-                expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
+            expect(socketMock.removeEventListener).toHaveBeenCalledWith('message', websocketProvider.onMessage);
 
-                expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
-                expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
+            expect(socketMock.removeEventListener).toHaveBeenCalledWith('open', websocketProvider.onReady);
 
-                expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
-                expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
+            expect(socketMock.removeEventListener).toHaveBeenCalledWith('close', websocketProvider.onClose);
 
-                expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
-                expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
+            expect(socketMock.removeEventListener).toHaveBeenCalledWith('error', websocketProvider.onError);
 
-                expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
-                expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
+            expect(socketMock.removeEventListener).toHaveBeenCalledWith('connect', websocketProvider.onConnect);
 
-                expect(socketMock.removeEventListener).toHaveBeenCalledWith('message', websocketProvider.onMessage);
+            done();
+        }, 5010);
 
-                expect(socketMock.removeEventListener).toHaveBeenCalledWith('open', websocketProvider.onReady);
+        websocketProvider.reconnect();
+    }, 5020);
 
-                expect(socketMock.removeEventListener).toHaveBeenCalledWith('close', websocketProvider.onClose);
+    it('calls reconnect with an W3CWebsocket connection', (done) => {
+        socketMock = new W3CWebsocket('host', 'protocol', null, 'headers', 'requestOptions', 'config');
+        socketMock.addEventListener = jest.fn();
+        socketMock.removeEventListener = jest.fn();
 
-                expect(socketMock.removeEventListener).toHaveBeenCalledWith('error', websocketProvider.onError);
+        websocketProvider = new WebsocketProvider(socketMock, 1);
 
-                expect(socketMock.removeEventListener).toHaveBeenCalledWith('connect', websocketProvider.onConnect);
+        setTimeout(() => {
+            expect(socketMock.host).toEqual('host');
 
-                expect(socketMock.host).toEqual('host');
+            expect(socketMock.protocol).toEqual('protocol');
 
-                expect(socketMock.protocol).toEqual('protocol');
+            expect(websocketProvider.connection).toBeInstanceOf(W3CWebsocket);
 
-                expect(socketMock.origin).toEqual(null);
+            expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
+            expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
 
-                expect(socketMock._client.headers).toEqual('headers');
+            expect(socketMock.addEventListener.mock.calls[1][0]).toEqual('open');
+            expect(socketMock.addEventListener.mock.calls[1][1]).toBeInstanceOf(Function);
 
-                expect(socketMock._client.requestOptions).toEqual('requestOptions');
+            expect(socketMock.addEventListener.mock.calls[2][0]).toEqual('open');
+            expect(socketMock.addEventListener.mock.calls[2][1]).toBeInstanceOf(Function);
 
-                expect(socketMock._client.config).toEqual('config');
+            expect(socketMock.addEventListener.mock.calls[3][0]).toEqual('close');
+            expect(socketMock.addEventListener.mock.calls[3][1]).toBeInstanceOf(Function);
 
-                done();
-            }, 5010);
+            expect(socketMock.addEventListener.mock.calls[4][0]).toEqual('error');
+            expect(socketMock.addEventListener.mock.calls[4][1]).toBeInstanceOf(Function);
 
-            websocketProvider.reconnect();
-        },
-        5020
-    );
+            expect(socketMock.removeEventListener).toHaveBeenCalledWith('message', websocketProvider.onMessage);
+
+            expect(socketMock.removeEventListener).toHaveBeenCalledWith('open', websocketProvider.onReady);
+
+            expect(socketMock.removeEventListener).toHaveBeenCalledWith('close', websocketProvider.onClose);
+
+            expect(socketMock.removeEventListener).toHaveBeenCalledWith('error', websocketProvider.onError);
+
+            expect(socketMock.removeEventListener).toHaveBeenCalledWith('connect', websocketProvider.onConnect);
+
+            expect(socketMock.host).toEqual('host');
+
+            expect(socketMock.protocol).toEqual('protocol');
+
+            expect(socketMock.origin).toEqual(null);
+
+            expect(socketMock._client.headers).toEqual('headers');
+
+            expect(socketMock._client.requestOptions).toEqual('requestOptions');
+
+            expect(socketMock._client.config).toEqual('config');
+
+            done();
+        }, 5010);
+
+        websocketProvider.reconnect();
+    }, 5020);
 
     it('calls disconnect', () => {
         socketMock.close = jest.fn();
@@ -353,12 +370,26 @@ describe('WebsocketProviderTest', () => {
         expect(socketMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
     });
 
+    it('calls sendPayload and returns with a rejected promise because of the connection.send() method', async () => {
+        socketMock.OPEN = 4;
+        socketMock.readyState = 4;
+        socketMock.CONNECTING = 0;
+        socketMock.send = jest.fn(() => {
+            throw new Error('Nope');
+        });
+        websocketProvider.timeout = 2;
+
+        await expect(websocketProvider.sendPayload({id: '0x0'})).rejects.toThrow('Nope');
+
+        expect(socketMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
+    });
+
     it('calls sendPayload with a timeout defined and returns with a resolved promise', async () => {
         socketMock.OPEN = 4;
         socketMock.readyState = 4;
         socketMock.CONNECTING = 0;
         socketMock.send = jest.fn();
-        websocketProvider.timeout = 2;
+        websocketProvider.timeout = 4;
 
         setTimeout(() => {
             websocketProvider.emit('0x0', {result: true});

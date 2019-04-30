@@ -63,7 +63,7 @@ export default class TransactionObserver {
      */
     observe(transactionHash) {
         return Observable.create((observer) => {
-            if (this.isSocketBasedProvider()) {
+            if (this.provider.supportsSubscriptions()) {
                 this.startSocketObserver(transactionHash, observer);
             } else {
                 this.startHttpObserver(transactionHash, observer);
@@ -150,7 +150,7 @@ export default class TransactionObserver {
 
                 if (receipt) {
                     if (this.lastBlock) {
-                        const block = await this.getBlockByNumber(this.increaseBlockNumber(this.lastBlock.number));
+                        const block = await this.getBlockByNumber(this.lastBlock.number + 1);
 
                         if (block && this.isValidConfirmation(block)) {
                             this.lastBlock = block;
@@ -164,8 +164,8 @@ export default class TransactionObserver {
                     }
 
                     if (this.isConfirmed()) {
-                        clearInterval(interval);
                         observer.complete();
+                        clearInterval(interval);
                     }
                 }
 
@@ -220,16 +220,16 @@ export default class TransactionObserver {
     }
 
     /**
-     * Returns a block by the given blockHash
+     * Returns a block by the given blockNumber
      *
-     * @method getBlockByHash
+     * @method getBlockByNumber
      *
-     * @param {String} blockHash
+     * @param {String} blockNumber
      *
      * @returns {Promise<Object>}
      */
-    getBlockByNumber(blockHash) {
-        this.getBlockByNumberMethod.parameters = [blockHash];
+    getBlockByNumber(blockNumber) {
+        this.getBlockByNumberMethod.parameters = [blockNumber];
 
         return this.getBlockByNumberMethod.execute();
     }
@@ -268,35 +268,5 @@ export default class TransactionObserver {
      */
     isTimeoutTimeExceeded() {
         return this.confirmationChecks === this.timeout;
-    }
-
-    /**
-     * Checks if the given provider is a socket based provider.
-     *
-     * @method isSocketBasedProvider
-     *
-     * @returns {Boolean}
-     */
-    isSocketBasedProvider() {
-        switch (this.provider.constructor.name) {
-            case 'CustomProvider':
-            case 'HttpProvider':
-                return false;
-            default:
-                return true;
-        }
-    }
-
-    /**
-     * Increases the blockNumber hash by one.
-     *
-     * @method increaseBlockNumber
-     *
-     * @param {String} blockNumber
-     *
-     * @returns {String}
-     */
-    increaseBlockNumber(blockNumber) {
-        return '0x' + (parseInt(blockNumber, 16) + 1).toString(16);
     }
 }

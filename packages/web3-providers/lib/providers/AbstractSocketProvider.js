@@ -13,7 +13,7 @@
 */
 /**
  * @file AbstractSocketProvider
- * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
@@ -49,6 +49,17 @@ export default class AbstractSocketProvider extends EventEmitter {
         this.SOCKET_CONNECT = 'socket_connect';
         this.SOCKET_NETWORK_CHANGED = 'socket_networkChanged';
         this.SOCKET_ACCOUNTS_CHANGED = 'socket_accountsChanged';
+    }
+
+    /**
+     * Method for checking subscriptions support of a internal provider
+     *
+     * @method supportsSubscriptions
+     *
+     * @returns {Boolean}
+     */
+    supportsSubscriptions() {
+        return true;
     }
 
     /**
@@ -192,7 +203,7 @@ export default class AbstractSocketProvider extends EventEmitter {
 
                 delete this.subscriptions[subscriptionId];
 
-                this.subscriptions[this.getSubscriptionEvent(this.subscriptions[key].id)].id = subscriptionId;
+                this.subscriptions[key].id = subscriptionId;
             }
         }
 

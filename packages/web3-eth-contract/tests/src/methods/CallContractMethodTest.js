@@ -4,7 +4,7 @@ import AbiItemModel from '../../../src/models/AbiItemModel';
 import CallContractMethod from '../../../src/methods/CallContractMethod';
 
 // Mocks
-jest.mock('AbiCoder');
+jest.mock('web3-eth-abi');
 jest.mock('../../../src/models/AbiItemModel');
 
 /**
@@ -59,6 +59,14 @@ describe('CallContractMethodTest', () => {
 
         expect(callContractMethod.afterExecution('0x0')).toEqual('0x0');
 
-        expect(abiCoderMock.decodeParameter).toHaveBeenCalledWith('bytes', '0x0');
+        expect(abiCoderMock.decodeParameter).toHaveBeenCalledWith({name: 'result', type: 'bytes'}, '0x0');
+    });
+
+    it('calls afterExecution and response is empty', () => {
+        expect(callContractMethod.afterExecution()).toEqual(null);
+    });
+
+    it('calls afterExecution and response has value "0x" is empty', () => {
+        expect(callContractMethod.afterExecution('0x')).toEqual(null);
     });
 });

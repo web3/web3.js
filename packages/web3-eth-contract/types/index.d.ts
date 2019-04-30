@@ -17,23 +17,27 @@
  * @date 2018
  */
 
+import BN = require('bn.js');
 import {provider} from 'web3-providers';
-import {AbiItem, BN} from 'web3-utils';
+import {AbiInput, AbiOutput, AbiItem} from 'web3-utils';
 import {PromiEvent} from 'web3-core';
 
 export class Contract {
     constructor(
         provider: provider,
-        jsonInterface: AbiItem[] | AbiItem,
+        abi: AbiItem[],
         address?: string,
         options?: ContractOptions
     )
+
+    address: string;
+    jsonInterface: AbiModel;
 
     options: Options;
 
     clone(): Contract;
 
-    deploy(options: DeployOptions): DeployTransactionResponse;
+    deploy(options: DeployOptions): ContractSendMethod;
 
     methods: any;
 
@@ -48,15 +52,12 @@ export class Contract {
     getPastEvents(event: string, callback: (error: Error, event: EventData) => void): Promise<EventData[]>;
 }
 
-export class ContractModuleFactory { } // TODO: Define methods
+export class ContractModuleFactory {
+} // TODO: Define methods
 
 export interface Options {
     address: string;
-    jsonInterface: AbiItem[];
     data: string;
-    from: string;
-    gasPrice: string;
-    gas: number;
 }
 
 export interface DeployOptions {
@@ -64,10 +65,8 @@ export interface DeployOptions {
     arguments?: any[];
 }
 
-export interface DeployTransactionResponse {
-    array: any[];
-
-    send(options: SendOptions, callback?: (err: Error, contracts: Contract) => void): PromiEvent<Contract>;
+export interface ContractSendMethod {
+    send(options: SendOptions, callback?: (err: Error, transactionHash: string) => void): PromiEvent<Contract>;
 
     estimateGas(options: EstimateGasOptions, callback?: (err: Error, gas: number) => void): Promise<number>;
 
@@ -103,7 +102,7 @@ export interface ContractOptions {
 }
 
 export interface EventOptions {
-    filter: {};
+    filter?: {};
     fromBlock?: number;
     toBlock?: string | number;
     topics?: any[];
@@ -125,4 +124,37 @@ export interface EventData {
     blockHash: string;
     blockNumber: number;
     address: string;
+}
+
+export interface AbiModel {
+    getMethod(name: string): AbiItemModel | false;
+
+    getMethods(): AbiItemModel[];
+
+    hasMethod(name: string): boolean;
+
+    getEvent(name: string): AbiItemModel | false;
+
+    getEvents(): AbiItemModel[];
+
+    getEventBySignature(signature: string): AbiItemModel;
+
+    hasEvent(name: string): boolean;
+}
+
+export interface AbiItemModel {
+    signature: string;
+    name: string;
+    payable: boolean;
+    anonymous: boolean;
+
+    getInputLength(): number;
+
+    getInputs(): AbiInput[];
+
+    getIndexedInputs(): AbiInput[];
+
+    getOutputs(): AbiOutput[];
+
+    isOfType(): boolean;
 }

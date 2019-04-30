@@ -67,7 +67,7 @@ describe('IpcProviderTest', () => {
     });
 
     it('calls onMessage with one chunk', (done) => {
-        const objWithToString = {
+        const objectWithToString = {
             toString: jest.fn(() => {
                 return '{"id":"0x0"}';
             })
@@ -79,9 +79,9 @@ describe('IpcProviderTest', () => {
             done();
         });
 
-        ipcProvider.onMessage(objWithToString);
+        ipcProvider.onMessage(objectWithToString);
 
-        expect(objWithToString.toString).toHaveBeenCalledWith();
+        expect(objectWithToString.toString).toHaveBeenCalled();
     });
 
     it('calls onMessage with more than one chunk', (done) => {

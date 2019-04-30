@@ -13,7 +13,9 @@
 */
 /**
  * @file index.d.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
@@ -26,7 +28,7 @@ import {
     Transaction,
     TransactionConfig,
     TransactionReceipt,
-    Web3ModuleOptions
+    Web3ModuleOptions,
 } from 'web3-core';
 import {Contract, ContractOptions} from 'web3-eth-contract';
 import {Iban} from 'web3-eth-iban';
@@ -35,12 +37,13 @@ import {AbiCoder} from 'web3-eth-abi';
 import {Network} from 'web3-net';
 import {Personal} from 'web3-eth-personal';
 import {AbiItem} from 'web3-utils';
+import {Ens} from 'web3-eth-ens';
 import * as net from 'net';
 
 export class Eth extends AbstractWeb3Module {
     constructor(
         provider: provider,
-        net?: net.Socket|null,
+        net?: net.Socket | null,
         options?: Web3ModuleOptions
     );
 
@@ -48,16 +51,21 @@ export class Eth extends AbstractWeb3Module {
     Iban: new(iban: string) => Iban;
     personal: Personal;
     accounts: Accounts;
-    ens: any; // change once ens types as written
+    ens: Ens;
     abi: AbiCoder;
     net: Network;
 
     clearSubscriptions(): Promise<boolean>;
 
-    subscribe(type: 'logs', options?: Logs, callback?: (error: Error, log: Log) => void): Subscription<Log>;
-    subscribe(type: 'syncing', options?: null, callback?: (error: Error, result: any) => void): Subscription<any>;
+    subscribe(type: 'logs', options?: LogsOptions, callback?: (error: Error, log: Log) => void): Subscription<Log>;
+    subscribe(type: 'syncing', options?: null, callback?: (error: Error, result: Syncing) => void): Subscription<Syncing>;
     subscribe(type: 'newBlockHeaders', options?: null, callback?: (error: Error, blockHeader: BlockHeader) => void): Subscription<BlockHeader>;
     subscribe(type: 'pendingTransactions', options?: null, callback?: (error: Error, transactionHash: string) => void): Subscription<string>;
+    subscribe(
+        type: 'pendingTransactions' | 'logs' | 'syncing' | 'newBlockHeaders',
+        options?: null | LogsOptions,
+        callback?: (error: Error, item: Log | Syncing | BlockHeader | string) => void
+    ): Subscription<Log | BlockHeader | Syncing | string>;
 
     getProtocolVersion(callback?: (error: Error, protocolVersion: string) => void): Promise<string>;
 
@@ -115,7 +123,7 @@ export class Eth extends AbstractWeb3Module {
 
     sendTransaction(transactionConfig: TransactionConfig, callback?: (error: Error, hash: string) => void): PromiEvent<TransactionReceipt>;
 
-    sendSignedTransaction(signedTransactionData: string, callback?: (error: Error, gas: string) => void): PromiEvent<TransactionReceipt>
+    sendSignedTransaction(signedTransactionData: string, callback?: (error: Error, hash: string) => void): PromiEvent<TransactionReceipt>
 
     sign(dataToSign: string, address: string | number, callback?: (error: Error, signature: string) => void): Promise<string>;
 
@@ -135,6 +143,10 @@ export class Eth extends AbstractWeb3Module {
     getWork(callback?: (error: Error, result: string[]) => void): Promise<string[]>;
 
     submitWork(data: [string, string, string], callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+
+    pendingTransactions(callback?: (error: Error, result: []) => void): Promise<[]>;
+
+    getProof(address: string, storageKey: string[], blockNumber: number | string | "latest" | "earliest", callback?: (error: Error, result: GetProof) => void): Promise<GetProof>;
 }
 
 export interface Methods {
@@ -186,13 +198,13 @@ export interface Block extends BlockHeader {
 export interface PastLogsOptions {
     fromBlock?: number | string;
     toBlock?: number | string;
-    address: string | string[];
+    address?: string | string[];
     topics?: Array<string | string[]>;
 }
 
-export interface Logs {
-    fromBlock?: number
-    address?: string
+export interface LogsOptions {
+    fromBlock?: number | string;
+    address?: string | string[];
     topics?: Array<string | string[]>
 }
 
@@ -209,4 +221,24 @@ export interface Subscription<T> {
     on(type: 'changed', handler: (data: T) => void): void
 
     on(type: 'error', handler: (data: Error) => void): void
+}
+
+export interface GetProof {
+    jsonrpc: string;
+    id: number;
+    result: {
+      address: string;
+      accountProof: string[];
+      balance: string;
+      codeHash: string;
+      nonce: string;
+      storageHash: string;
+      storageProof: StorageProof[];
+    };
+}
+
+export interface StorageProof {
+    key: string;
+    value: string;
+    proof: string[];
 }

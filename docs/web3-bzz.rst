@@ -18,7 +18,7 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
     import Web3 from 'web3';
     import {Bzz} from 'web3-bzz';
 
-    // will autodetect if the "ethereum" object is present and will either connect to the local swarm node, or the swarm-gateways.net.
+    // will autodetect if a provider is present and will either connect to the local swarm node, or the swarm-gateways.net.
     // Optional you can give your own provider URL; If no provider URL is given it will use "http://swarm-gateways.net"
     const bzz = new Bzz(Web3.givenProvider || 'http://swarm-gateways.net');
 
@@ -26,7 +26,7 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
     // or using the web3 umbrella package
     const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
 
-    // -> web3.bzz.currentProvider // if Web3.givenProvider was an ethereum provider it will set: "http://localhost:8500" otherwise it will set: "http://swarm-gateways.net"
+    // -> web3.bzz.currentProvider // if Web3.givenProvider was an Ethereum provider it will set: "http://localhost:8500" otherwise it will set: "http://swarm-gateways.net"
 
 
 ------------------------------------------------------------------------------

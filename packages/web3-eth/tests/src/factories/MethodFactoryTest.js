@@ -3,7 +3,6 @@ import {
     ChainIdMethod,
     EstimateGasMethod,
     EthSendTransactionMethod,
-    GetAccountsMethod,
     GetBalanceMethod,
     GetBlockNumberMethod,
     GetCodeMethod,
@@ -16,6 +15,7 @@ import {
     GetStorageAtMethod,
     GetTransactionCountMethod,
     GetTransactionMethod,
+    GetPendingTransactionsMethod,
     GetTransactionReceiptMethod,
     GetWorkMethod,
     IsMiningMethod,
@@ -23,7 +23,8 @@ import {
     RequestAccountsMethod,
     SendRawTransactionMethod,
     SubmitWorkMethod,
-    VersionMethod
+    VersionMethod,
+    GetProofMethod
 } from 'web3-core-method';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
@@ -35,9 +36,10 @@ import GetBlockUncleCountMethod from '../../../src/methods/GetBlockUncleCountMet
 import GetTransactionFromBlockMethod from '../../../src/methods/GetTransactionFromBlockMethod';
 import EthSignTransactionMethod from '../../../src/methods/EthSignTransactionMethod';
 import EthSignMethod from '../../../src/methods/EthSignMethod';
+import EthGetAccountsMethod from '../../../src/methods/EthGetAccountsMethod';
 
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 
 /**
  * MethodFactory test
@@ -64,7 +66,7 @@ describe('MethodFactoryTest', () => {
             getHashrate: GetHashrateMethod,
             isSyncing: IsSyncingMethod,
             getGasPrice: GetGasPriceMethod,
-            getAccounts: GetAccountsMethod,
+            getAccounts: EthGetAccountsMethod,
             getBlockNumber: GetBlockNumberMethod,
             getBalance: GetBalanceMethod,
             getStorageAt: GetStorageAtMethod,
@@ -74,6 +76,7 @@ describe('MethodFactoryTest', () => {
             getBlockTransactionCount: GetBlockTransactionCountMethod,
             getBlockUncleCount: GetBlockUncleCountMethod,
             getTransaction: GetTransactionMethod,
+            getPendingTransactions: GetPendingTransactionsMethod,
             getTransactionFromBlock: GetTransactionFromBlockMethod,
             getTransactionReceipt: GetTransactionReceiptMethod,
             getTransactionCount: GetTransactionCountMethod,
@@ -88,7 +91,8 @@ describe('MethodFactoryTest', () => {
             getPastLogs: GetPastLogsMethod,
             requestAccounts: RequestAccountsMethod,
             getChainId: ChainIdMethod,
-            getId: VersionMethod
+            getId: VersionMethod,
+            getProof: GetProofMethod
         });
     });
 });

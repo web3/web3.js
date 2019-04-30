@@ -14,11 +14,12 @@
 /**
  * @file eth-tests.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
 import {Log, Transaction, TransactionReceipt, RLPEncodedTransaction} from 'web3-core';
-import {Eth, BlockHeader, Syncing, Block} from 'web3-eth';
+import {Eth, BlockHeader, Syncing, Block, GetProof} from 'web3-eth';
 
 const eth = new Eth('http://localhost:8545');
 
@@ -34,7 +35,7 @@ eth.personal;
 // $ExpectType Accounts
 eth.accounts;
 
-// $ExpectType any
+// $ExpectType Ens
 eth.ens;
 
 // $ExpectType AbiCoder
@@ -53,10 +54,10 @@ eth.subscribe('logs', {});
 // $ExpectType Subscription<Log>
 eth.subscribe('logs', {}, (error: Error, log: Log) => {});
 
-// $ExpectType Subscription<any>
+// $ExpectType Subscription<Syncing>
 eth.subscribe('syncing');
-// $ExpectType Subscription<any>
-eth.subscribe('syncing', null, (error: Error, result: any) => {});
+// $ExpectType Subscription<Syncing>
+eth.subscribe('syncing', null, (error: Error, result: Syncing) => {});
 
 // $ExpectType Subscription<BlockHeader>
 eth.subscribe('newBlockHeaders');
@@ -71,7 +72,7 @@ eth.subscribe('pendingTransactions', null, (error: Error, transactionHash: strin
 // $ExpectType Providers
 Eth.providers;
 
-// $ExpectType object | null
+// $ExpectType any
 eth.givenProvider;
 
 // $ExpectType BatchRequest
@@ -83,7 +84,7 @@ eth.defaultAccount;
 // $ExpectType string | number
 eth.defaultBlock;
 
-// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | EthereumProvider
+// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
 eth.currentProvider;
 
 // $ExpectType Promise<string>
@@ -286,7 +287,7 @@ eth.sendTransaction(
 // $ExpectType PromiEvent<TransactionReceipt>
 eth.sendSignedTransaction('0xf889808609184e72a0008227109');
 // $ExpectType PromiEvent<TransactionReceipt>
-eth.sendSignedTransaction('0xf889808609184e72a0008227109', (error: Error, gas: string) => {});
+eth.sendSignedTransaction('0xf889808609184e72a0008227109', (error: Error, hash: string) => {});
 
 // $ExpectType Promise<string>
 eth.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe');
@@ -450,4 +451,40 @@ eth.submitWork(
         '0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000'
     ],
     (error: Error, result: boolean) => {}
+);
+
+// $ExpectType Promise<[]>
+eth.pendingTransactions();
+
+// $ExpectType Promise<[]>
+eth.pendingTransactions((error: Error, result: []) => {});
+
+// $ExpectType Promise<GetProof>
+eth.getProof(
+    "0x1234567890123456789012345678901234567890",
+    ["0x0000000000000000000000000000000000000000000000000000000000000000","0x0000000000000000000000000000000000000000000000000000000000000001"],
+    "latest"
+);
+
+// $ExpectType Promise<GetProof>
+eth.getProof(
+    "0x1234567890123456789012345678901234567890",
+    ["0x0000000000000000000000000000000000000000000000000000000000000000","0x0000000000000000000000000000000000000000000000000000000000000001"],
+    "latest",
+    (error: Error, result: GetProof) => {}
+);
+
+// $ExpectType Promise<GetProof>
+eth.getProof(
+    "0x1234567890123456789012345678901234567890",
+    ["0x0000000000000000000000000000000000000000000000000000000000000000","0x0000000000000000000000000000000000000000000000000000000000000001"],
+    10
+);
+
+// $ExpectType Promise<GetProof>
+eth.getProof(
+    "0x1234567890123456789012345678901234567890",
+    ["0x0000000000000000000000000000000000000000000000000000000000000000","0x0000000000000000000000000000000000000000000000000000000000000001"],
+    10,
+    (error: Error, result: GetProof) => {}
 );

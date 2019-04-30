@@ -9,7 +9,7 @@ import {
     isAddress,
     isBN,
     numberToHex,
-    sha3,
+    keccak256,
     toAscii,
     toBN,
     toHex,
@@ -17,7 +17,9 @@ import {
     toUtf8,
     toWei,
     utf8ToHex,
-    getSignatureParameters
+    getSignatureParameters,
+    toChecksumAddress,
+    stripHexPrefix
 } from '../../src';
 
 /**
@@ -140,6 +142,22 @@ describe('UtilsTest', () => {
         });
     });
 
+    it('calls isAddress with chainId 30 and returns the expected results', () => {
+        const tests = [
+            {value: '0x5aaEB6053f3e94c9b9a09f33669435E7ef1bEAeD', is: true},
+            {value: '0xFb6916095cA1Df60bb79ce92cE3EA74c37c5d359', is: true},
+            {value: '0xDBF03B407c01E7CD3cBea99509D93F8Dddc8C6FB', is: true},
+            {value: '0xE247a45c287191d435A8a5D72A7C8dc030451E9F', is: false},
+            {value: '0xD1220A0Cf47c7B9BE7a2e6ba89F429762E7B9adB', is: true},
+            {value: '0xe247a45c287191d435a8a5d72a7c8dc030451e9f', is: true},
+            {value: '0xE247A45C287191D435A8A5D72A7C8DC030451E9F', is: true}
+        ];
+
+        tests.forEach((test) => {
+            expect(isAddress(test.value, 30)).toEqual(test.is);
+        });
+    });
+
     it('calls isBN and returns the expected results', () => {
         const tests = [
             {
@@ -181,17 +199,72 @@ describe('UtilsTest', () => {
         });
     });
 
+    it('calls checkAddressChecksum with chainId 31 and returns the expected results', () => {
+        const tests = [
+            {value: '0x5aAeb6053F3e94c9b9A09F33669435E7EF1BEaEd', is: true},
+            {value: '0xFb6916095CA1dF60bb79CE92ce3Ea74C37c5D359', is: true},
+            {value: '0xdbF03B407C01E7cd3cbEa99509D93f8dDDc8C6fB', is: true},
+            {value: '0xd1220a0CF47c7B9Be7A2E6Ba89f429762E7b9adB', is: true},
+            {value: '0XD1220A0CF47C7B9BE7A2E6BA89F429762E7B9ADB', is: false},
+            {value: '0xd1220a0cf47c7b9be7a2e6ba89f429762e7b9adb', is: false},
+            {value: '0xdbF03B407c01E7cD3CBea99509d93f8DDDC8C6FB', is: false},
+            {value: '0xD1220A0cf47c7B9Be7A2E6BA89F429762e7b9aDb', is: false}
+        ];
+
+        tests.forEach((test) => {
+            expect(checkAddressChecksum(test.value, 31)).toEqual(test.is);
+        });
+    });
+
+    it('calls toChecksumAddress with chainId 30 and returns the expected results', () => {
+        const tests = [
+            {value: '0x5aaeb6053f3e94c9b9a09f33669435e7ef1beaed', is: '0x5aaEB6053f3e94c9b9a09f33669435E7ef1bEAeD'},
+            {value: '0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359', is: '0xFb6916095cA1Df60bb79ce92cE3EA74c37c5d359'},
+            {value: '0xdbf03b407c01e7cd3cbea99509d93f8dddc8c6fb', is: '0xDBF03B407c01E7CD3cBea99509D93F8Dddc8C6FB'},
+            {value: '0xd1220a0cf47c7b9be7a2e6ba89f429762e7b9adb', is: '0xD1220A0Cf47c7B9BE7a2e6ba89F429762E7B9adB'}
+        ];
+
+        tests.forEach((test) => {
+            expect(toChecksumAddress(test.value, 30)).toEqual(test.is);
+        });
+    });
+
+    it('calls toChecksumAddress and returns the expected results', () => {
+        const tests = [
+            {value: '0x5aaeb6053f3e94c9b9a09f33669435e7ef1beaed', is: '0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed'},
+            {value: '0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359', is: '0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359'},
+            {value: '0xdbf03b407c01e7cd3cbea99509d93f8dddc8c6fb', is: '0xdbF03B407c01E7cD3CBea99509d93f8DDDC8C6FB'},
+            {value: '0xd1220a0cf47c7b9be7a2e6ba89f429762e7b9adb', is: '0xD1220A0cf47c7B9Be7A2E6BA89F429762e7b9aDb'}
+        ];
+
+        tests.forEach((test) => {
+            expect(toChecksumAddress(test.value)).toEqual(test.is);
+        });
+    });
+
+    it('calls stripHexPrefix and returns the expected results', () => {
+        const tests = [
+            {value: '0x5aaeb6053f3e94c9b9a09f33669435e7ef1beaed', is: '5aaeb6053f3e94c9b9a09f33669435e7ef1beaed'},
+            {value: '0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359', is: 'fb6916095ca1df60bb79ce92ce3ea74c37c5d359'},
+            {value: 'dbf03b407c01e7cd3cbea99509d93f8dddc8c6fb', is: 'dbf03b407c01e7cd3cbea99509d93f8dddc8c6fb'}
+        ];
+
+        tests.forEach((test) => {
+            expect(stripHexPrefix(test.value)).toEqual(test.is);
+        });
+    });
+
     /* eslint-disable jest/no-identical-title */
-    describe('calls sha3', () => {
-        it('should return sha3 with hex prefix', () => {
-            expect(sha3('test123')).toEqual(
+    describe('calls keccak256', () => {
+        it('should return keccak256 with hex prefix', () => {
+            expect(keccak256('test123')).toEqual(
                 '0x' +
                     cjsSha3('test123', {
                         outputLength: 256
                     }).toString()
             );
 
-            expect(sha3('test(int)')).toEqual(
+            expect(keccak256('test(int)')).toEqual(
                 '0x' +
                     cjsSha3('test(int)', {
                         outputLength: 256
@@ -199,8 +272,8 @@ describe('UtilsTest', () => {
             );
         });
 
-        it('should return sha3 with hex prefix when hex input', () => {
-            const sha3Hex = (value) => {
+        it('should return keccak256 with hex prefix when hex input', () => {
+            const keccak256Hex = (value) => {
                 if (value.length > 2 && value.substr(0, 2) === '0x') {
                     value = value.substr(2);
                 }
@@ -211,16 +284,16 @@ describe('UtilsTest', () => {
                 }).toString();
             };
 
-            expect(sha3('0x80')).toEqual('0x' + sha3Hex('0x80'));
+            expect(keccak256('0x80')).toEqual('0x' + keccak256Hex('0x80'));
 
-            expect(sha3('0x3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1')).toEqual(
-                '0x' + sha3Hex('0x3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1')
+            expect(keccak256('0x3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1')).toEqual(
+                '0x' + keccak256Hex('0x3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1')
             );
         });
 
-        it('should return sha3 with hex prefix', () => {
-            const test = (v, e, o) => {
-                expect(sha3(v, o)).toEqual(e);
+        it('should return keccak256 with hex prefix', () => {
+            const test = (value, expected) => {
+                expect(keccak256(value)).toEqual(expected);
             };
 
             test('test123', '0xf81b517a242b218999ec8eec0ea6e2ddbef2a367a14e93f4a32a39e260f686ad');
@@ -461,7 +534,7 @@ describe('UtilsTest', () => {
 
         expect(() => {
             toWei(1, 'wei');
-        }).toThrow('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+        }).toThrow('Please pass numbers as strings or BN objects to avoid precision errors.');
     });
 
     it('calls utf8ToHex and returns the expected results', () => {

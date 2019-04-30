@@ -3,7 +3,7 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import CallMethod from '../../../src/methods/CallMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * CallMethod test

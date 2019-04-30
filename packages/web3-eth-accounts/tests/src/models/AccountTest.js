@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
 import {fromPrivate, sign, decodeSignature} from 'eth-lib/lib/account';
-import {hexToBytes, isHexStrict, sha3} from 'web3-utils';
+import {hexToBytes, isHexStrict, keccak256} from 'web3-utils';
 import TransactionSigner from '../../__mocks__/TransactionSigner';
 import Accounts from '../../../src/Accounts';
 import Account from '../../../src/models/Account';
@@ -11,12 +11,10 @@ import Account from '../../../src/models/Account';
 // Mocks
 jest.mock('eth-lib/lib/account');
 jest.mock('eth-lib/lib/hash');
-jest.mock('isHexStrict');
-jest.mock('hexToBytes');
+jest.mock('web3-utils');
 jest.mock('uuid');
 jest.mock('crypto');
-jest.mock('scryptsy');
-jest.mock('EthAccount');
+jest.mock('scrypt.js');
 jest.mock('../../../src/Accounts');
 
 /**
@@ -143,7 +141,7 @@ describe('AccountTest', () => {
 
         scryptsy.mockReturnValueOnce(Buffer.from('00000000000000000000000000000000'));
 
-        sha3.mockReturnValueOnce('0xmac');
+        keccak256.mockReturnValueOnce('0xmac');
 
         const decipher = {
             update: jest.fn(),
@@ -179,7 +177,7 @@ describe('AccountTest', () => {
             'dklen'
         );
 
-        expect(sha3).toHaveBeenCalledWith(
+        expect(keccak256).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
         );
 
@@ -215,7 +213,7 @@ describe('AccountTest', () => {
             privateKey: '0x0'
         });
 
-        sha3.mockReturnValueOnce('0xmac');
+        keccak256.mockReturnValueOnce('0xmac');
 
         const decipher = {
             update: jest.fn(),
@@ -258,7 +256,7 @@ describe('AccountTest', () => {
 
         expect(crypto.pbkdf2Sync).toHaveBeenCalled();
 
-        expect(sha3).toHaveBeenCalledWith(
+        expect(keccak256).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
         );
 
@@ -313,7 +311,7 @@ describe('AccountTest', () => {
             }
         };
 
-        sha3.mockReturnValueOnce('0xmac');
+        keccak256.mockReturnValueOnce('0xmac');
 
         crypto.pbkdf2Sync = jest.fn((password, salt, c, dklen, sha256) => {
             expect(password).toEqual(Buffer.from(password));
@@ -335,7 +333,7 @@ describe('AccountTest', () => {
 
         expect(crypto.pbkdf2Sync).toHaveBeenCalled();
 
-        expect(sha3).toHaveBeenCalledWith(
+        expect(keccak256).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
         );
     });
@@ -363,7 +361,7 @@ describe('AccountTest', () => {
 
         scryptsy.mockReturnValueOnce(Buffer.from('0000000000000000'));
 
-        sha3.mockReturnValueOnce('0xmac');
+        keccak256.mockReturnValueOnce('0xmac');
 
         uuid.v4.mockReturnValueOnce(0);
 
@@ -407,7 +405,7 @@ describe('AccountTest', () => {
 
         expect(cipher.final).toHaveBeenCalled();
 
-        expect(sha3).toHaveBeenCalledWith(
+        expect(keccak256).toHaveBeenCalledWith(
             Buffer.concat([
                 Buffer.from('0000000000000000').slice(16, 32),
                 Buffer.from(Buffer.concat([Buffer.from('0'), Buffer.from('0')]), 'hex')
@@ -442,7 +440,7 @@ describe('AccountTest', () => {
             return Buffer.from('0000000000000000');
         });
 
-        sha3.mockReturnValueOnce('0xmac');
+        keccak256.mockReturnValueOnce('0xmac');
 
         uuid.v4.mockReturnValueOnce(0);
 
@@ -491,7 +489,7 @@ describe('AccountTest', () => {
 
         expect(cipher.final).toHaveBeenCalled();
 
-        expect(sha3).toHaveBeenCalledWith(
+        expect(keccak256).toHaveBeenCalledWith(
             Buffer.concat([
                 Buffer.from('0000000000000000').slice(16, 32),
                 Buffer.from(Buffer.concat([Buffer.from('0'), Buffer.from('0')]), 'hex')
@@ -536,7 +534,7 @@ describe('AccountTest', () => {
             return Buffer.from('0000000000000000');
         });
 
-        sha3.mockReturnValueOnce('0xmac');
+        keccak256.mockReturnValueOnce('0xmac');
 
         expect(() => {
             Account.fromPrivateKey('pk').toV3Keystore('password', options);

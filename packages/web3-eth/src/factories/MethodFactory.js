@@ -25,7 +25,6 @@ import {
     CallMethod,
     ChainIdMethod,
     EstimateGasMethod,
-    GetAccountsMethod,
     GetBalanceMethod,
     GetBlockNumberMethod,
     GetCodeMethod,
@@ -38,6 +37,7 @@ import {
     GetStorageAtMethod,
     GetTransactionCountMethod,
     GetTransactionMethod,
+    GetPendingTransactionsMethod,
     GetTransactionReceiptMethod,
     GetWorkMethod,
     IsMiningMethod,
@@ -46,7 +46,8 @@ import {
     SubmitWorkMethod,
     VersionMethod,
     SendRawTransactionMethod,
-    EthSendTransactionMethod
+    EthSendTransactionMethod,
+    GetProofMethod
 } from 'web3-core-method';
 
 import GetBlockMethod from '../methods/GetBlockMethod';
@@ -56,6 +57,7 @@ import GetBlockUncleCountMethod from '../methods/GetBlockUncleCountMethod';
 import GetTransactionFromBlockMethod from '../methods/GetTransactionFromBlockMethod';
 import EthSignTransactionMethod from '../methods/EthSignTransactionMethod';
 import EthSignMethod from '../methods/EthSignMethod';
+import EthGetAccountsMethod from '../methods/EthGetAccountsMethod';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
@@ -75,7 +77,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             getHashrate: GetHashrateMethod,
             isSyncing: IsSyncingMethod,
             getGasPrice: GetGasPriceMethod,
-            getAccounts: GetAccountsMethod,
+            getAccounts: EthGetAccountsMethod,
             getBlockNumber: GetBlockNumberMethod,
             getBalance: GetBalanceMethod,
             getStorageAt: GetStorageAtMethod,
@@ -85,6 +87,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             getBlockTransactionCount: GetBlockTransactionCountMethod,
             getBlockUncleCount: GetBlockUncleCountMethod,
             getTransaction: GetTransactionMethod,
+            getPendingTransactions: GetPendingTransactionsMethod,
             getTransactionFromBlock: GetTransactionFromBlockMethod,
             getTransactionReceipt: GetTransactionReceiptMethod,
             getTransactionCount: GetTransactionCountMethod,
@@ -99,7 +102,8 @@ export default class MethodFactory extends AbstractMethodFactory {
             getPastLogs: GetPastLogsMethod,
             requestAccounts: RequestAccountsMethod,
             getId: VersionMethod,
-            getChainId: ChainIdMethod
+            getChainId: ChainIdMethod,
+            getProof: GetProofMethod
         };
     }
 }

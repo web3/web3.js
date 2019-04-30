@@ -17,6 +17,7 @@
 /**
  * @file Utils.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2017
  */
 
@@ -95,9 +96,11 @@ export const toTwosComplement = (number) => {
  *
  * @param {String} address the given HEX address
  *
+ * @param {Number} chainId to define checksum behavior
+ *
  * @returns {Boolean}
  */
-export const isAddress = (address) => {
+export const isAddress = (address, chainId = null) => {
     // check if it has the basic requirements of an address
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
         return false;
@@ -106,8 +109,21 @@ export const isAddress = (address) => {
         return true;
         // Otherwise check each case
     } else {
-        return checkAddressChecksum(address);
+        return checkAddressChecksum(address, chainId);
     }
+};
+
+/**
+ * Removes prefix from address if exists.
+ *
+ * @method stripHexPrefix
+ *
+ * @param {string} address
+ *
+ * @returns {string} address without prefix
+ */
+export const stripHexPrefix = (string) => {
+    return string.slice(0, 2) === '0x' ? string.slice(2) : string;
 };
 
 /**
@@ -117,19 +133,20 @@ export const isAddress = (address) => {
  *
  * @param {String} address the given HEX address
  *
+ * @param {number} chain where checksummed address should be valid.
+ *
  * @returns {Boolean}
  */
-export const checkAddressChecksum = (address) => {
-    // Check each case
-    address = address.replace(/^0x/i, '');
-    const addressHash = sha3(address.toLowerCase()).replace(/^0x/i, '');
+export const checkAddressChecksum = (address, chainId = null) => {
+    const stripAddress = stripHexPrefix(address).toLowerCase();
+    const prefix = chainId != null ? chainId.toString() + '0x' : '';
+    const keccakHash = Hash.keccak256(prefix + stripAddress)
+        .toString('hex')
+        .replace(/^0x/i, '');
 
-    for (let i = 0; i < 40; i++) {
-        // the nth letter should be uppercase if the nth digit of casemap is 1
-        if (
-            (parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) ||
-            (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])
-        ) {
+    for (let i = 0; i < stripAddress.length; i++) {
+        let output = parseInt(keccakHash[i], 16) >= 8 ? stripAddress[i].toUpperCase() : stripAddress[i];
+        if (stripHexPrefix(address)[i] !== output) {
             return false;
         }
     }
@@ -181,30 +198,30 @@ export const rightPad = (string, chars, sign) => {
  *
  * @method utf8ToHex
  *
- * @param {String} str
+ * @param {String} value
  *
  * @returns {String} hex representation of input string
  */
-export const utf8ToHex = (str) => {
-    str = utf8.encode(str);
+export const utf8ToHex = (value) => {
+    value = utf8.encode(value);
     let hex = '';
 
     /* eslint-disable no-control-regex */
     // remove \u0000 padding from either side
-    str = str.replace(/^(?:\u0000)*/, '');
-    str = str
+    value = value.replace(/^(?:\u0000)*/, '');
+    value = value
         .split('')
         .reverse()
         .join('');
-    str = str.replace(/^(?:\u0000)*/, '');
-    str = str
+    value = value.replace(/^(?:\u0000)*/, '');
+    value = value
         .split('')
         .reverse()
         .join('');
     /* eslint-enable no-control-regex */
 
-    for (let i = 0; i < str.length; i++) {
-        const code = str.charCodeAt(i);
+    for (let i = 0; i < value.length; i++) {
+        const code = value.charCodeAt(i);
         // if (code !== 0) {
         const n = code.toString(16);
         hex += n.length < 2 ? `0${n}` : n;
@@ -226,7 +243,7 @@ export const utf8ToHex = (str) => {
 export const hexToUtf8 = (hex) => {
     if (!isHexStrict(hex)) throw new Error(`The parameter "${hex}" must be a valid HEX string.`);
 
-    let str = '';
+    let string = '';
     let code = 0;
     hex = hex.replace(/^0x/i, '');
 
@@ -247,11 +264,11 @@ export const hexToUtf8 = (hex) => {
     for (let i = 0; i < l; i += 2) {
         code = parseInt(hex.substr(i, 2), 16);
         // if (code !== 0) {
-        str += String.fromCharCode(code);
+        string += String.fromCharCode(code);
         // }
     }
 
-    return utf8.decode(str);
+    return utf8.decode(string);
 };
 
 /**
@@ -466,30 +483,30 @@ export const isTopic = (topic) => {
 };
 
 /**
- * Hashes values to a sha3 hash using keccak 256
+ * Hashes values to a keccak256 hash using keccak 256
  *
  * To hash a HEX string the hex must have 0x in front.
  *
- * @method sha3
- * @return {String} the sha3 string
+ * @method keccak256
+ * @return {String} the keccak256 string
  */
-const SHA3_NULL_S = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
+const KECCAK256_NULL_S = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
-export const sha3 = (value) => {
+export const keccak256 = (value) => {
     if (isHexStrict(value) && /^0x/i.test(value.toString())) {
         value = hexToBytes(value);
     }
 
     const returnValue = Hash.keccak256(value); // jshint ignore:line
 
-    if (returnValue === SHA3_NULL_S) {
+    if (returnValue === KECCAK256_NULL_S) {
         return null;
     } else {
         return returnValue;
     }
 };
 // expose the under the hood keccak256
-sha3._Hash = Hash;
+keccak256._Hash = Hash;
 
 /**
  * Gets the r,s,v values from a signature

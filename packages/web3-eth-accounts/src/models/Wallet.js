@@ -33,6 +33,20 @@ export default class Wallet {
         this.defaultKeyName = 'web3js_wallet';
         this.accounts = {};
         this.accountsIndex = 0;
+
+        return new Proxy(this, {
+            get: (target, name) => {
+                if (target.accounts[name]) {
+                    return target.accounts[name];
+                }
+
+                if (name === 'length') {
+                    return target.accountsIndex;
+                }
+
+                return target[name];
+            }
+        });
     }
 
     /**
@@ -73,7 +87,7 @@ export default class Wallet {
      *
      * @param {Account|String} account
      *
-     * @returns {Object}
+     * @returns {Account}
      */
     add(account) {
         if (isString(account)) {
@@ -146,7 +160,7 @@ export default class Wallet {
     encrypt(password, options) {
         let encryptedAccounts = [];
 
-        for (let i = 0; i <= this.accountsIndex; i++) {
+        for (let i = 0; i < this.accountsIndex; i++) {
             encryptedAccounts.push(this.accounts[i].encrypt(password, options));
         }
 
@@ -235,9 +249,7 @@ export default class Wallet {
             keystore = localStorage.getItem(keyName || this.defaultKeyName);
 
             if (keystore) {
-                keystore = JSON.parse(keystore).map((item) => {
-                    Account.fromV3Keystore(item, password, false, this.accountsModule);
-                });
+                keystore = JSON.parse(keystore);
             }
         } catch (error) {
             // code 18 means trying to use local storage in a iframe

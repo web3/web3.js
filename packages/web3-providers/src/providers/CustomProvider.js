@@ -32,6 +32,17 @@ export default class CustomProvider {
     }
 
     /**
+     * Method for checking subscriptions support of a internal provider
+     *
+     * @method supportsSubscriptions
+     *
+     * @returns {Boolean}
+     */
+    supportsSubscriptions() {
+        return false;
+    }
+
+    /**
      * Checks if the given custom provider does have the required methods
      *
      * @method checkConnectionMethods

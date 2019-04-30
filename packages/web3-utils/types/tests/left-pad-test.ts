@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, leftPad} from 'web3-utils';
+import BN = require('bn.js');
+import {leftPad} from 'web3-utils';
 
 const bigNumber = new BN(3);
 // $ExpectType string

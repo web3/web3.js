@@ -1,8 +1,8 @@
 # web3-eth
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-This is the Eth package to be used [web3.js][repo].
+This is the Eth module to be used [web3.js][repo].
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -14,8 +14,11 @@ npm install web3-eth
 ## Usage
 
 ```js
+import {Eth} from 'web3-eth';
+
 const eth = new Eth(
     'http://127.0.0.1:4546',
+    null,
     options
 );
 ```

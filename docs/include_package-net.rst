@@ -30,8 +30,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.net.getId()
-    .then(console.log);
+    web3.eth.net.getId().then(console.log);
     > 1
 
 ------------------------------------------------------------------------------
@@ -65,8 +64,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.isListening()
-    .then(console.log);
+    web3.eth.isListening().then(console.log);
     > true
 
 ------------------------------------------------------------------------------
@@ -100,6 +98,5 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getPeerCount()
-    .then(console.log);
+    web3.eth.getPeerCount().then(console.log);
     > 25

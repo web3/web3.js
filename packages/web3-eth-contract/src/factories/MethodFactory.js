@@ -26,7 +26,6 @@ import {
     GetTransactionCountMethod,
     GetTransactionReceiptMethod,
     GetBlockByNumberMethod,
-    SendRawTransactionMethod,
     TransactionObserver
 } from 'web3-core-method';
 import {NewHeadsSubscription} from 'web3-core-subscriptions';
@@ -154,23 +153,13 @@ export default class MethodFactory {
      * @returns {SendContractMethod}
      */
     createSendContractMethod(contract) {
-        const transactionObserver = new TransactionObserver(
-            contract.currentProvider,
-            this.getTransactionObserverTimeout(contract),
-            contract.transactionConfirmationBlocks,
-            new GetTransactionReceiptMethod(this.utils, this.formatters, contract),
-            new GetBlockByNumberMethod(this.utils, this.formatters, contract),
-            new NewHeadsSubscription(this.utils, this.formatters, contract)
-        );
-
         return new SendContractMethod(
             this.utils,
             this.formatters,
             contract,
-            transactionObserver,
+            this.createTransactionObserver(contract),
             new ChainIdMethod(this.utils, this.formatters, contract),
             new GetTransactionCountMethod(this.utils, this.formatters, contract),
-            new SendRawTransactionMethod(this.utils, this.formatters, contract, transactionObserver),
             this.contractModuleFactory.createAllEventsLogDecoder(),
             contract.abiModel
         );
@@ -190,17 +179,9 @@ export default class MethodFactory {
             this.utils,
             this.formatters,
             contract,
-            new TransactionObserver(
-                contract.currentProvider,
-                this.getTransactionObserverTimeout(contract),
-                contract.transactionConfirmationBlocks,
-                new GetTransactionReceiptMethod(this.utils, this.formatters, contract),
-                new GetBlockByNumberMethod(this.utils, this.formatters, contract),
-                new NewHeadsSubscription(this.utils, this.formatters, contract)
-            ),
+            this.createTransactionObserver(contract),
             new ChainIdMethod(this.utils, this.formatters, contract),
-            new GetTransactionCountMethod(this.utils, this.formatters, contract),
-            new SendRawTransactionMethod(this.utils, this.formatters, contract)
+            new GetTransactionCountMethod(this.utils, this.formatters, contract)
         );
     }
 
@@ -218,22 +199,41 @@ export default class MethodFactory {
     }
 
     /**
-     * Returns the correct timeout value based on the provider type
+     * Returns the correct timeout value
      *
-     * @method getTransactionObserverTimeout
+     * @method getTimeout
      *
      * @param {AbstractContract} contract
      *
      * @returns {Number}
      */
-    getTransactionObserverTimeout(contract) {
+    getTimeout(contract) {
         let timeout = contract.transactionBlockTimeout;
-        const providerName = contract.currentProvider.constructor.name;
 
-        if (providerName === 'HttpProvider' || providerName === 'CustomProvider') {
+        if (!contract.currentProvider.supportsSubscriptions()) {
             timeout = contract.transactionPollingTimeout;
         }
 
         return timeout;
+    }
+
+    /**
+     * Returns a object of type TransactionObserver
+     *
+     * @method createTransactionObserver
+     *
+     * @param {AbstractContract} contract
+     *
+     * @returns {TransactionObserver}
+     */
+    createTransactionObserver(contract) {
+        return new TransactionObserver(
+            contract.currentProvider,
+            this.getTimeout(contract),
+            contract.transactionConfirmationBlocks,
+            new GetTransactionReceiptMethod(this.utils, this.formatters, contract),
+            new GetBlockByNumberMethod(this.utils, this.formatters, contract),
+            new NewHeadsSubscription(this.utils, this.formatters, contract)
+        );
     }
 }

@@ -37,6 +37,7 @@ export default class HttpProvider {
         this.host = host;
         this.timeout = options.timeout || 0;
         this.headers = options.headers;
+        this.withCredentials = options.withCredentials || false;
         this.connected = true;
         this.providersModuleFactory = providersModuleFactory;
         this.agent = {};
@@ -51,6 +52,17 @@ export default class HttpProvider {
         } else {
             this.agent['httpAgent'] = new http.Agent({keepAlive});
         }
+    }
+
+    /**
+     * Method for checking subscriptions support of a internal provider
+     *
+     * @method supportsSubscriptions
+     *
+     * @returns {Boolean}
+     */
+    supportsSubscriptions() {
+        return false;
     }
 
     /**
@@ -135,7 +147,8 @@ export default class HttpProvider {
                 this.host,
                 this.timeout,
                 this.headers,
-                this.agent
+                this.agent,
+                this.withCredentials
             );
 
             request.onreadystatechange = () => {
