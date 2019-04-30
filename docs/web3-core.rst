@@ -13,7 +13,7 @@ The Core Module does provide the ``AbstractWeb3Module`` which will be used for c
 AbstractWeb3Module
 ==================
 
-Source: `AbstractWeb3Module <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractWeb3Module.js>`_
+Source: `AbstractWeb3Module <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core/src/AbstractWeb3Module.js>`_
 
 The ``AbstractWeb3Module`` does have the following constructor parameters:
 
