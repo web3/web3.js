@@ -6,7 +6,7 @@
 Core Method Module
 ==================
 
-The Web3 Core Method Module does provide all method classes and the abstract method factory which will be used in the ``AbstractWeb3Module``.
+The Core Method Module does provide all method classes and the abstract method factory which will be used in the ``AbstractWeb3Module``.
 
 .. _web3-abstract-method-factory:
 

@@ -6,7 +6,7 @@
 Core Subscriptions Module
 =========================
 
-The Web3 Core Subscriptions Module does provide all the subscriptions classes for extending from them and the ``SubscriptionsFactory`` class for simply executing them.
+The Core Subscriptions Module does provide all the subscriptions classes for extending from them and the ``SubscriptionsFactory`` class for simply executing them.
 
 .. _web3-module-abstract-subscription:
 

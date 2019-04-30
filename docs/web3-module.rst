@@ -6,7 +6,7 @@
 Module API
 ==========
 
-The Web3 Module API gives you the possibility to create your own custom Web3 Module with JSON-RPC methods, subscriptions
+The Module API gives you the possibility to create your own custom Web3 Module with JSON-RPC methods, subscriptions
 or contracts. The provided modules from the Web3 library are also written with the Web3 Module API the core does provide.
 
 The goal of the Web3 Module API is to provide the possibility to extend and customize the JSON-RPC methods, contracts and subscriptions

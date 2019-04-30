@@ -6,7 +6,7 @@
 Core Module
 ===========
 
-The Web3 Core Module does provide the ``AbstractWeb3Module`` which will be used for creating a Web3 compatible module.
+The Core Module does provide the ``AbstractWeb3Module`` which will be used for creating a Web3 compatible module.
 
 .. _web3-module-abstract-module:
 
