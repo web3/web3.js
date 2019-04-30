@@ -2,7 +2,7 @@
 .. _web3-abstract-method-before-execution:
 
 Type
-****
+====
 
 .. code-block:: javascript
 
@@ -21,7 +21,7 @@ Returns
 ------------------------------------------------------------------------------------------------------------------------
 
 beforeExecution
-***************
+===============
 
 .. code-block:: javascript
 
@@ -42,7 +42,7 @@ Parameters
 .. _web3-abstract-method-after-execution:
 
 afterExecution
-**************
+==============
 
 .. code-block:: javascript
 
@@ -69,7 +69,7 @@ Returns
 .. _web3-abstract-method-execute:
 
 execute
-*******
+=======
 
 .. code-block:: javascript
 
@@ -87,7 +87,7 @@ Returns
 ------------------------------------------------------------------------------------------------------------------------
 
 rpcMethod
-*********
+=========
 
 .. code-block:: javascript
 
@@ -106,7 +106,7 @@ Returns
 ------------------------------------------------------------------------------------------------------------------------
 
 parametersAmount
-****************
+================
 
 .. code-block:: javascript
 
@@ -125,7 +125,7 @@ Returns
 ------------------------------------------------------------------------------------------------------------------------
 
 parameters
-**********
+==========
 
 .. code-block:: javascript
 
@@ -146,7 +146,7 @@ Returns
 ------------------------------------------------------------------------------------------------------------------------
 
 callback
-********
+========
 
 .. code-block:: javascript
 
@@ -169,7 +169,7 @@ Returns
 .. _web3-abstract-method-set-arguments:
 
 setArguments
-************
+============
 
 .. code-block:: javascript
 
@@ -196,7 +196,7 @@ Returns
 .. _web3-abstract-method-get-arguments:
 
 getArguments
-************
+============
 
 .. code-block:: javascript
 
@@ -215,7 +215,7 @@ Returns
 ------------------------------------------------------------------------------------------------------------------------
 
 isHash
-******
+======
 
 .. code-block:: javascript
 
