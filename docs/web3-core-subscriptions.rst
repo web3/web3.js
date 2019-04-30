@@ -39,6 +39,11 @@ You're able to overwrite these methods:
 subscribe
 =========
 
+.. code-block:: javascript
+
+    subscription.subscribe(callback)
+
+
 This method will start the subscription.
 
 ==========
@@ -59,6 +64,11 @@ Returns
 
 unsubscribe
 ===========
+
+.. code-block:: javascript
+
+    subscription.unsubscribe(callback)
+
 
 This method will end the subscription.
 
@@ -81,6 +91,11 @@ Returns
 beforeSubscription
 ==================
 
+.. code-block:: javascript
+
+    subscription.beforeSubscription(moduleInstance)
+
+
 This method will be executed before the subscription happens.
 The ``beforeSubscription`` method gives you the possibility to customize the subscription class before the request will be sent.
 
@@ -88,7 +103,7 @@ The ``beforeSubscription`` method gives you the possibility to customize the sub
 Parameters
 ==========
 
-- ``moduleInstance: AbstractWeb3Module`` - The current ``AbstractWeb3Module``.
+- ``moduleInstance`` - ``AbstractWeb3Module`` The current ``AbstractWeb3Module``.
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -97,6 +112,11 @@ Parameters
 onNewSubscriptionItem
 =====================
 
+.. code-block:: javascript
+
+    subscription.onNewSubscriptionItem(moduleInstance)
+
+
 This method will be executed on each subscription item.
 The ``onNewSubscriptionItem`` method gives you the possibility to map the response.
 
@@ -104,7 +124,7 @@ The ``onNewSubscriptionItem`` method gives you the possibility to map the respon
 Parameters
 ==========
 
-- ``moduleInstance: AbstractWeb3Module`` - The current ``AbstractWeb3Module``.
+- ``item`` - ``any``
 
 =======
 Returns
@@ -118,6 +138,11 @@ Returns
 
 type
 ====
+
+.. code-block:: javascript
+
+    subscription.type
+
 
 The property ``type`` does contain the subscription type.
 
@@ -134,6 +159,11 @@ Returns
 method
 ======
 
+.. code-block:: javascript
+
+    subscription.method
+
+
 The property ``method`` does contain the subscription method.
 
 =======
@@ -149,6 +179,11 @@ Returns
 options
 =======
 
+.. code-block:: javascript
+
+    subscription.options
+
+
 The property ``options`` does contain the subscription options.
 
 =======
@@ -163,6 +198,11 @@ Returns
 
 id
 ====
+
+.. code-block:: javascript
+
+    subscription.id
+
 
 The property ``id`` does contain the subscription id when the subscription is running.
 

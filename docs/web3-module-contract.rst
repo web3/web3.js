@@ -9,7 +9,6 @@ Contract Module API
 The Contract Module API does provide to possibility to create project specific contracts with pre-injecting of the ABI
 or customizing of the default behaviour of a Web3 contract.
 
-.. _web3-module-contract:
 
 Contract
 ========
