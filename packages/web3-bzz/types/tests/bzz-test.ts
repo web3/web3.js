@@ -27,7 +27,7 @@ bzz.setProvider('test.com');
 // $ExpectType boolean
 bzz.setProvider({});
 
-// $ExpectType string | {} | null
+// $ExpectType string | object | null
 bzz.givenProvider;
 
 // $ExpectType string | null
@@ -50,9 +50,9 @@ bzz.upload({
     defaultFile: '/index.html'
 });
 
-// $ExpectType Promise<string | {} | Buffer>
+// $ExpectType Promise<string | object | Buffer>
 bzz.download('a5c10851ef054c268a2438f10a21f6efe3dc3dcdcc2ea0e6a1a7a38bf8c91e23');
-// $ExpectType Promise<string | {} | Buffer>
+// $ExpectType Promise<string | object | Buffer>
 bzz.download('a5c1', '/target/dir');
 
 // $ExpectType Promise<any>
