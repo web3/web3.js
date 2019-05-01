@@ -107,8 +107,8 @@ export class Eth extends AbstractWeb3Module {
 
     getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number): Promise<Block>
     getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, returnTransactionObjects: boolean): Promise<Block>
-    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, callback?: (error: Error, uncle: {}) => void): Promise<Block>
-    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, returnTransactionObjects: boolean, callback?: (error: Error, uncle: {}) => void): Promise<Block>
+    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, callback?: (error: Error, uncle: Block) => void): Promise<Block>
+    getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, returnTransactionObjects: boolean, callback?: (error: Error, uncle: Block) => void): Promise<Block>
 
     getTransaction(transactionHash: string, callback?: (error: Error, transaction: Transaction) => void): Promise<Transaction>;
 
@@ -144,7 +144,7 @@ export class Eth extends AbstractWeb3Module {
 
     submitWork(data: [string, string, string], callback?: (error: Error, result: boolean) => void): Promise<boolean>;
 
-    pendingTransactions(callback?: (error: Error, result: []) => void): Promise<[]>;
+    pendingTransactions(callback?: (error: Error, result: PendingTransactions[]) => void): Promise<PendingTransactions[]>;
 
     getProof(address: string, storageKey: string[], blockNumber: number | string | "latest" | "earliest", callback?: (error: Error, result: GetProof) => void): Promise<GetProof>;
 }
@@ -241,4 +241,10 @@ export interface StorageProof {
     key: string;
     value: string;
     proof: string[];
+}
+
+export interface PendingTransactions extends Transaction {
+    v: string;
+    r: string;
+    s: string;
 }

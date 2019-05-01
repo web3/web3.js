@@ -19,7 +19,7 @@
  */
 
 import {Log, Transaction, TransactionReceipt, RLPEncodedTransaction} from 'web3-core';
-import {Eth, BlockHeader, Syncing, Block, GetProof} from 'web3-eth';
+import {Eth, BlockHeader, Syncing, Block, GetProof, PendingTransactions} from 'web3-eth';
 
 const eth = new Eth('http://localhost:8545');
 
@@ -211,21 +211,21 @@ eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, true);
 // $ExpectType Promise<Block>
 eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, false);
 // $ExpectType Promise<Block>
-eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, (error: Error, uncle: {}) => {});
+eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, (error: Error, uncle: Block) => {});
 // $ExpectType Promise<Block>
-eth.getUncle(345, 4, (error: Error, uncle: {}) => {});
+eth.getUncle(345, 4, (error: Error, uncle: Block) => {});
 // $ExpectType Promise<Block>
 eth.getUncle(345, 4, true);
 // $ExpectType Promise<Block>
 eth.getUncle(345, 4, false);
 // $ExpectType Promise<Block>
-eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, true, (error: Error, uncle: {}) => {});
+eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, true, (error: Error, uncle: Block) => {});
 // $ExpectType Promise<Block>
-eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, false, (error: Error, uncle: {}) => {});
+eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, false, (error: Error, uncle: Block) => {});
 // $ExpectType Promise<Block>
-eth.getUncle(345, 4, true, (error: Error, uncle: {}) => {});
+eth.getUncle(345, 4, true, (error: Error, uncle: Block) => {});
 // $ExpectType Promise<Block>
-eth.getUncle(345, 4, false, (error: Error, uncle: {}) => {});
+eth.getUncle(345, 4, false, (error: Error, uncle: Block) => {});
 
 // $ExpectType Promise<Transaction>
 eth.getTransaction('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
@@ -453,11 +453,11 @@ eth.submitWork(
     (error: Error, result: boolean) => {}
 );
 
-// $ExpectType Promise<[]>
+// $ExpectType Promise<PendingTransactions[]>
 eth.pendingTransactions();
 
-// $ExpectType Promise<[]>
-eth.pendingTransactions((error: Error, result: []) => {});
+// $ExpectType Promise<PendingTransactions[]>
+eth.pendingTransactions((error: Error, result: PendingTransactions[]) => {});
 
 // $ExpectType Promise<GetProof>
 eth.getProof(
