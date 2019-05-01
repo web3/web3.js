@@ -210,7 +210,7 @@ export interface LogsOptions {
 
 export interface Subscription<T> {
     id: string;
-    options: {};
+    options: object;
 
     subscribe(callback?: (error: Error, result: T) => void): Subscription<T>;
 

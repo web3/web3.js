@@ -20,16 +20,16 @@
 import {Buffer} from 'buffer';
 
 export class Bzz {
-    constructor(provider: string | {});
+    constructor(provider: string | object);
 
-    setProvider(provider: string | {}): boolean;
+    setProvider(provider: string | object): boolean;
 
-    givenProvider: {} | string | null;
+    givenProvider: object | string | null;
     currentProvider: string | null;
 
-    upload(data: string | Buffer | Uint8Array | {}): Promise<string>;
+    upload(data: string | Buffer | Uint8Array | object): Promise<string>;
 
-    download(bzzHash: string, localPath?: string): Promise<Buffer | {} | string>;
+    download(bzzHash: string, localPath?: string): Promise<Buffer | object | string>;
 
     pick: Pick;
     BatchRequest: new () => any;

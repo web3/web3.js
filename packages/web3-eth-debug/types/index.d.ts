@@ -14,7 +14,7 @@
 /**
  * @file index.d.ts
  * @author Prince Sinha <sinhaprince013@gmail.com>
- * @author Samuel Furter <sinhaprince013@gmail.com>
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
 
