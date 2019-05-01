@@ -34,4 +34,10 @@ describe('StartWsMethodTest', () => {
 
         expect(Utils.numberToHex).toHaveBeenCalledWith(1);
     });
+
+    it('calls beforeExecution, if parameter[1] is not present', () => {
+        method.parameters = [0];
+
+        method.beforeExecution();
+    });
 });

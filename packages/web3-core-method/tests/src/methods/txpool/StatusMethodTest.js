@@ -31,4 +31,8 @@ describe('StatusMethodTest', () => {
         expect(Utils.hexToNumber).toHaveBeenNthCalledWith(1, '0x1');
         expect(Utils.hexToNumber).toHaveBeenNthCalledWith(2, '0x1');
     });
+
+    it('calls afterExecution and returns null, if no response', () => {
+        expect(method.afterExecution(null)).toEqual(null);
+    });
 });
