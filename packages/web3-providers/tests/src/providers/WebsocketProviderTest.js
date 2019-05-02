@@ -396,9 +396,7 @@ describe('WebsocketProviderTest', () => {
             websocketProvider.emit('error', new Error('Error!'));
         });
 
-        await expect(websocketProvider.sendPayload({id: '0x0'})).rejects.toThrow(
-            "Error!"
-        );
+        await expect(websocketProvider.sendPayload({id: '0x0'})).rejects.toThrow('Error!');
     });
 
     it('calls sendPayload with a timeout defined and returns with a resolved promise', async () => {
