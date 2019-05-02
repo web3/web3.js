@@ -80,7 +80,7 @@ execute
     method.execute()
 
 
-The method will execute the current method.
+This method will execute the current method.
 
 =======
 Returns
