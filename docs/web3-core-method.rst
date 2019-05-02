@@ -11,9 +11,6 @@ The ``Core Method Module`` does provide all method classes and the abstract meth
 .. _web3-abstract-method-factory:
 
 
-------------------------------------------------------------------------------------------------------------------------
-
-
 AbstractMethodFactory
 =====================
 
@@ -63,10 +60,7 @@ Example
 
 .. _web3-module-abstract-method:
 
-
-=======
-Methods
-=======
+**Methods**
 
 Source: `Methods <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/src/methods/>`_
 

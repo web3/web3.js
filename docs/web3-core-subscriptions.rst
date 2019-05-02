@@ -10,8 +10,10 @@ The ``Core Subscriptions Module`` does provide all the subscriptions classes to 
 
 .. _web3-module-abstract-subscription:
 
+
 AbstractSubscription
 ====================
+
 
 Source: `AbstractSubscription <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions/lib/subscriptions/AbstractSubscription.js>`_
 
