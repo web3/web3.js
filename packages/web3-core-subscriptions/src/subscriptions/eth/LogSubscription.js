@@ -94,6 +94,12 @@ export default class LogSubscription extends AbstractSubscription {
      * @returns {Object}
      */
     onNewSubscriptionItem(subscriptionItem) {
-        return this.formatters.outputLogFormatter(subscriptionItem);
+        const log = this.formatters.outputLogFormatter(subscriptionItem);
+
+        if (log.removed) {
+            this.emit('changed', log);
+        }
+
+        return log;
     }
 }
