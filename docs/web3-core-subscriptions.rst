@@ -48,15 +48,15 @@ subscribe
 
 This method will start the subscription.
 
-==========
+----------
 Parameters
-==========
+----------
 
 - ``callback`` - ``Function``
 
-=======
+-------
 Returns
-=======
+-------
 
 ``AbstractSubscription``
 
@@ -76,15 +76,15 @@ unsubscribe
 
 This method will end the subscription.
 
-==========
+----------
 Parameters
-==========
+----------
 
 - ``callback`` - ``Function``
 
-=======
+-------
 Returns
-=======
+-------
 
 ``Promise<boolean|Error>``
 
@@ -105,9 +105,9 @@ beforeSubscription
 This method will be executed before the subscription happens.
 The ``beforeSubscription`` method gives you the possibility to customize the subscription class before the request will be sent.
 
-==========
+----------
 Parameters
-==========
+----------
 
 - ``moduleInstance`` - ``AbstractWeb3Module`` The current ``AbstractWeb3Module``.
 
@@ -128,15 +128,15 @@ onNewSubscriptionItem
 This method will be executed on each subscription item.
 The ``onNewSubscriptionItem`` method gives you the possibility to map the response.
 
-==========
+----------
 Parameters
-==========
+----------
 
 - ``item`` - ``any``
 
-=======
+-------
 Returns
-=======
+-------
 
 ``any``
 
@@ -156,9 +156,9 @@ type
 
 The property ``type`` does contain the subscription type.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``String`` - ``eth_subscribe`` or ``shh_subscribe``
 
@@ -178,9 +178,9 @@ method
 
 The property ``method`` does contain the subscription method.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``String``
 
@@ -200,9 +200,9 @@ options
 
 The property ``options`` does contain the subscription options.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``Object``
 
@@ -222,9 +222,9 @@ id
 
 The property ``id`` does contain the subscription id when the subscription is running.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``String``
 

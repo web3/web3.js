@@ -65,7 +65,7 @@ AbstractMethod
 
 Source: `AbstractMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractMethod.js>`_
 
-Because we are always adding new JSON-RPC method do we just link the methods folder as resource.
+Because we are always adding new JSON-RPC methods do we just link the methods folder as resource.
 
 Source: `Methods <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/src/methods/>`_
 
