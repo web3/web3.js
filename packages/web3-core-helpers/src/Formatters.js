@@ -303,10 +303,10 @@ export const outputBlockFormatter = (block) => {
 
     // Support Quorum 2.2.0 - timestamp is not present in the Quorum getBlock response
     if (block.timestamp !== null) {
-      try {
+      if (block.timestamp.length < 16) {
         block.timestamp = Utils.hexToNumber(block.timestamp);
       }
-      catch (err) {
+      else {
         // WARNING this implementation assumes RAFT timestamp (precision is nanoseconds)
         // You should not simply assume RAFT if it is not successful rather take a consensus specific 
         // action
