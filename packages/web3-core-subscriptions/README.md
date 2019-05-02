@@ -1,7 +1,7 @@
 # web3-core-subscriptions
 
-This is a sub package of [web3.js][repo].
-The subscriptions package is used within some [web3.js][repo] packages.
+This is a sub module of [web3.js][repo].
+The subscriptions module is used within some [web3.js][repo] modules.
 
 If you would like to know all supported subscriptions please have a look in the ```src/subscriptions``` folder.
 

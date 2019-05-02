@@ -45,4 +45,17 @@ export default class SendTransactionMethod extends AbstractObservedTransactionMe
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
     }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    afterExecution(response) {
+        return this.formatters.outputTransactionFormatter(response);
+    }
 }

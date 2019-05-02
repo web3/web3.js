@@ -384,6 +384,23 @@ describe('WebsocketProviderTest', () => {
         expect(socketMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
     });
 
+    it('calls sendPayload and returns a rejected promise because the underlying WebSocket connection emits an error', async () => {
+        socketMock.OPEN = 4;
+        socketMock.readyState = 4;
+        socketMock.CONNECTING = 0;
+        websocketProvider.timeout = 4;
+
+        socketMock.send = jest.fn((jsonString) => {
+            expect(jsonString).toEqual('{"id":"0x0"}');
+
+            websocketProvider.emit('error', new Error('Error!'));
+        });
+
+        await expect(websocketProvider.sendPayload({id: '0x0'})).rejects.toThrow(
+            "Error!"
+        );
+    });
+
     it('calls sendPayload with a timeout defined and returns with a resolved promise', async () => {
         socketMock.OPEN = 4;
         socketMock.readyState = 4;

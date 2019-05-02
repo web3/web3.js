@@ -1,8 +1,8 @@
 # web3-eth-abi
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-This is the abi package will be used in the `web3-eth` package.
+This is the ABI module will be used in the `web3-eth` package.
 Please read the [documentation][docs] for more.
 
 ## Installation

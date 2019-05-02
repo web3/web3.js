@@ -34,4 +34,17 @@ export default class SendRawTransactionMethod extends AbstractObservedTransactio
     constructor(utils, formatters, moduleInstance, transactionObserver) {
         super('eth_sendRawTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
     }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    afterExecution(response) {
+        return this.formatters.outputTransactionFormatter(response);
+    }
 }

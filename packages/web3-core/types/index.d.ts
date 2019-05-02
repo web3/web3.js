@@ -14,6 +14,7 @@
 /**
  * @file index.d.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
@@ -69,6 +70,7 @@ export interface SignedTransaction {
     s: string;
     v: string;
     rawTransaction?: string;
+    transactionHash?: string;
 }
 
 export interface Web3ModuleOptions {
@@ -123,7 +125,7 @@ export interface Transaction {
     blockNumber: number | null;
     transactionIndex: number | null;
     from: string;
-    to: string;
+    to: string | null;
     value: string;
     gasPrice: string;
     gas: number;
@@ -196,4 +198,49 @@ export interface Log {
     transactionHash: string;
     blockHash: string;
     blockNumber: number;
+}
+
+export interface TxPoolContent {
+    pending: TxPool;
+    queued: TxPool;
+}
+
+export interface TxPoolInspect {
+    pending: TxPool;
+    queued: TxPool;
+}
+
+export interface TxPool {
+    [address: string]: {
+        [nonce: number]: string[] | Transaction[];
+    };
+}
+
+export interface TxPoolStatus {
+    pending: number;
+    queued: number;
+}
+
+export interface NodeInfo {
+    enode: string;
+    id: string;
+    ip: string;
+    listenAddr: string;
+    name: string;
+    ports: {
+      discovery: string | number;
+      listener: string | number;
+    };
+    protocols: any // Any because it's not documented what each protocol (eth, shh etc.) is defining here
+}
+
+export interface PeerInfo {
+    caps: string[];
+    id: string;
+    name: string;
+    network: {
+        localAddress: string;
+        remoteAddress: string;
+    };
+    protocols: any; // Any because it's not documented what each protocol (eth, shh etc.) is defining here
 }

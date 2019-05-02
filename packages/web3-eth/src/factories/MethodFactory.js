@@ -37,6 +37,7 @@ import {
     GetStorageAtMethod,
     GetTransactionCountMethod,
     GetTransactionMethod,
+    GetPendingTransactionsMethod,
     GetTransactionReceiptMethod,
     GetWorkMethod,
     IsMiningMethod,
@@ -45,7 +46,8 @@ import {
     SubmitWorkMethod,
     VersionMethod,
     SendRawTransactionMethod,
-    EthSendTransactionMethod
+    EthSendTransactionMethod,
+    GetProofMethod
 } from 'web3-core-method';
 
 import GetBlockMethod from '../methods/GetBlockMethod';
@@ -85,6 +87,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             getBlockTransactionCount: GetBlockTransactionCountMethod,
             getBlockUncleCount: GetBlockUncleCountMethod,
             getTransaction: GetTransactionMethod,
+            getPendingTransactions: GetPendingTransactionsMethod,
             getTransactionFromBlock: GetTransactionFromBlockMethod,
             getTransactionReceipt: GetTransactionReceiptMethod,
             getTransactionCount: GetTransactionCountMethod,
@@ -99,7 +102,8 @@ export default class MethodFactory extends AbstractMethodFactory {
             getPastLogs: GetPastLogsMethod,
             requestAccounts: RequestAccountsMethod,
             getId: VersionMethod,
-            getChainId: ChainIdMethod
+            getChainId: ChainIdMethod,
+            getProof: GetProofMethod
         };
     }
 }

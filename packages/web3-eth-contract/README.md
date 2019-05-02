@@ -1,8 +1,8 @@
 # web3-eth-contract
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-This is the contract package to be used in the `web3-eth` package.
+This is the contract module to be used in the `web3-eth` module.
 Please read the [documentation][docs] for more.
 
 ## Installation

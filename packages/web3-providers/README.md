@@ -1,6 +1,6 @@
 # web3-providers
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
 ## Installation
 
