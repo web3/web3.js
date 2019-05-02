@@ -200,4 +200,26 @@ describe('LogSubscriptionTest', () => {
             })
         ).toBeInstanceOf(LogSubscription);
     });
+
+    it('calls onNewSubscriptionItem with removed set to true', (done) => {
+        formatters.outputLogFormatter.mockReturnValueOnce({removed: true});
+
+        logSubscription.on('changed', (response) => {
+            expect(response).toEqual({removed: true});
+
+            expect(formatters.outputLogFormatter).toHaveBeenCalledWith({removed: false});
+
+            done();
+        });
+
+        expect(logSubscription.onNewSubscriptionItem({removed: false})).toEqual({removed: true});
+    });
+
+    it('calls onNewSubscriptionItem with removed set to false', () => {
+        formatters.outputLogFormatter.mockReturnValueOnce({removed: true});
+
+        expect(logSubscription.onNewSubscriptionItem({removed: false})).toEqual({removed: true});
+
+        expect(formatters.outputLogFormatter).toHaveBeenCalledWith({removed: false});
+    });
 });

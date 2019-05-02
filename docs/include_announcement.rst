@@ -1,2 +1,1 @@
-
-.. note:: This documentation is work in progress and web3.js 1.0 stable is not yet released! You can find the current documentation for web3 0.x.x at `github.com/ethereum/wiki/wiki/JavaScript-API <https://github.com/ethereum/wiki/wiki/JavaScript-API>`_.
+.. note:: This documentation is under construction and the web3.js 1.0 stable version isn't released. If your using a version v0.x.x of web3.js then please have a look at `github.com/ethereum/wiki/wiki/JavaScript-API <https://github.com/ethereum/wiki/wiki/JavaScript-API>`_.
