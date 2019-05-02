@@ -57,22 +57,19 @@ Example
 
 ------------------------------------------------------------------------------------------------------------------------
 
-
 .. _web3-module-abstract-method:
-
-**Methods**
-
-Source: `Methods <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/src/methods/>`_
-
-Because we are always adding new JSON-RPC method do we just link the methods folder as resource.
-
-The provided method classes do have the following interface:
 
 
 AbstractMethod
 ==============
 
 Source: `AbstractMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractMethod.js>`_
+
+Because we are always adding new JSON-RPC method do we just link the methods folder as resource.
+
+Source: `Methods <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/src/methods/>`_
+
+The provided method classes do have the following interface:
 
 The ``AbstractMethod`` class does have the following constructor parameters:
 
