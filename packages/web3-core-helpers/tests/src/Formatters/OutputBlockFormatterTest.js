@@ -141,4 +141,5 @@ describe('OutputBlockFormatterTest', () => {
             ],
             miner: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
         });
+    });
 });
