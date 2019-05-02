@@ -58,7 +58,9 @@ Returns
 
 ``AbstractSubscription``
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 .. _web3-module-abstract-subscription-unsubscribe:
 
@@ -84,7 +86,9 @@ Returns
 
 ``Promise<boolean|Error>``
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 .. _web3-module-abstract-subscription-before-subscription:
 
@@ -105,7 +109,9 @@ Parameters
 
 - ``moduleInstance`` - ``AbstractWeb3Module`` The current ``AbstractWeb3Module``.
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 .. _web3-module-abstract-subscription-on-new-subscription-item:
 
@@ -132,7 +138,9 @@ Returns
 
 ``any``
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 .. _web3-module-abstract-subscription-type:
 
@@ -150,9 +158,11 @@ The property ``type`` does contain the subscription type.
 Returns
 =======
 
-``string`` - Returns ``eth_subscribe`` or ``shh_subscribe``
+``String`` - ``eth_subscribe`` or ``shh_subscribe``
+
 
 ------------------------------------------------------------------------------------------------------------------------
+
 
 .. _web3-module-abstract-subscription-method:
 
@@ -170,9 +180,11 @@ The property ``method`` does contain the subscription method.
 Returns
 =======
 
-``string``
+``String``
+
 
 ------------------------------------------------------------------------------------------------------------------------
+
 
 .. _web3-module-abstract-subscription-options:
 
@@ -190,9 +202,11 @@ The property ``options`` does contain the subscription options.
 Returns
 =======
 
-``object``
+``Object``
+
 
 ------------------------------------------------------------------------------------------------------------------------
+
 
 .. _web3-module-abstract-subscription-id:
 
@@ -210,6 +224,6 @@ The property ``id`` does contain the subscription id when the subscription is ru
 Returns
 =======
 
-``string``
+``String``
 
 ------------------------------------------------------------------------------------------------------------------------

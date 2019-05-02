@@ -11,6 +11,9 @@ The ``Core Method Module`` does provide all method classes and the abstract meth
 .. _web3-abstract-method-factory:
 
 
+------------------------------------------------------------------------------------------------------------------------
+
+
 AbstractMethodFactory
 =====================
 
@@ -18,8 +21,8 @@ Source: `AbstractMethodFactory <https://github.com/ethereum/web3.js/tree/1.0/pac
 
 The ``AbstractMethodFactory`` does have the following constructor parameters:
 
-- ``utils`` - The Utils object from the ``web3-utils`` module.
-- ``formatters`` - The formatters object from the ``web3-core-helpers`` module.
+- ``utils`` - ``Utils`` The ``Utils`` object from the ``web3-utils`` module.
+- ``formatters`` - ``Object`` The formatters object from the ``web3-core-helpers`` module.
 
 -------
 Example
@@ -58,6 +61,9 @@ Example
 ------------------------------------------------------------------------------------------------------------------------
 
 
+.. _web3-module-abstract-method:
+
+
 =======
 Methods
 =======
@@ -68,7 +74,6 @@ Because we are always adding new JSON-RPC method do we just link the methods fol
 
 The provided method classes do have the following interface:
 
-.. _web3-module-abstract-method:
 
 AbstractMethod
 ==============
@@ -77,11 +82,11 @@ Source: `AbstractMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/w
 
 The ``AbstractMethod`` class does have the following constructor parameters:
 
-- ``rpcMethod`` - The JSON-RPC method name.
-- ``parametersAmount`` - The amount of parameters this JSON-RPC method has.
-- ``utils`` - The Utils object.
-- ``formatters`` - The formatters object.
-- ``moduleInstance`` - The ``AbstractWeb3Module`` class.
+- ``rpcMethod`` - ``String`` The JSON-RPC method name.
+- ``parametersAmount`` - ``Number`` The amount of parameters this JSON-RPC method has.
+- ``utils`` - ``Utils``
+- ``formatters`` - ``Object`` The formatters object.
+- ``moduleInstance`` - ``AbstractWeb3Module``
 
 The ``AbstractMethod`` class is the base JSON-RPC method class and does provide the basic methods and properties for creating a
 Web3.js compatible JSON-RPC method.
