@@ -132,6 +132,10 @@ Example
 
 The ``AbstractMethod`` class interface:
 
+
+------------------------------------------------------------------------------------------------------------------------
+
+
 .. include:: include_web3-module-abstract-method-class-reference.rst
 
 
