@@ -33,6 +33,7 @@ Example
 
     import {MyABI, options} from '../folder/file.js';
     import {Accounts} from 'web3-eth-accounts';
+    import {Contract} from 'web3-eth-contract';
 
     export class MyContract extends Contract {
         constructor(provider) {
