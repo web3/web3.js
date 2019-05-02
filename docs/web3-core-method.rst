@@ -18,8 +18,8 @@ Source: `AbstractMethodFactory <https://github.com/ethereum/web3.js/tree/1.0/pac
 
 The ``AbstractMethodFactory`` does have the following constructor parameters:
 
-- ``utils`` - The Utils object from the web3-utils module.
-- ``formatters`` - The formatters object from the web3-core-helpers module.
+- ``utils`` - The Utils object from the ``web3-utils`` module.
+- ``formatters`` - The formatters object from the ``web3-core-helpers`` module.
 
 -------
 Example

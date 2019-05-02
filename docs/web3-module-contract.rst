@@ -21,7 +21,7 @@ Parameters
 
 1. ``provider`` - ``AbstractSocketProvider | HttpProvider | CustomProvider | String``: A Web3.js provider.
 1. ``abi`` - ``Array``: Contract ABI
-1. ``accounts`` - `` :ref:`Accounts <eth-accounts>```
+1. ``accounts`` - `` :ref:`Accounts <eth-accounts>` ``
 1. ``options`` - ``Web3ModuleOptions``
 
 

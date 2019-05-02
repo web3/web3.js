@@ -19,7 +19,7 @@ The ``AbstractWeb3Module`` does have the following constructor parameters:
 
 - ``provider`` - ``AbstractSocketProvider | HttpProvider | CustomProvider | String`` The provider class or string.
 - ``options`` - ``Web3ModuleOptions`` These are the default ``options`` of a Web3 module. (optional)
-- ``methodFactory`` - ``AbstractMethodFactory`` The :ref:`MethodFactory <web3-abstract-method-factory>` will be used in the module proxy for the JSON-RPC method calls. (optional)
+- ``methodFactory`` - ``AbstractMethodFactory`` The :ref:`AbstractMethodFactory <web3-abstract-method-factory>` will be used in the module proxy for the JSON-RPC method calls. (optional)
 - ``net`` - ``net.Socket`` The ``net.Socket`` object of the NodeJS net module. (optional)
 
 
