@@ -11,6 +11,11 @@ Type
 
 The static ``readonly`` property ``Type`` will be used in the ``AbstractMethodFactory`` class to determine how the class should get initiated.
 
+Reserved types:
+
+ - ``observed-transaction-method`` - ``AbstractObservedTransactionMethod``
+ - ``eth-send-transaction-method`` - ``EthSendTransactionMethod``
+
 =======
 Returns
 =======
@@ -27,8 +32,8 @@ beforeExecution
     method.beforeExecution(moduleInstance)
 
 
-This method will be executed before the JSON-RPC request happens. It provides the possibility to customize the given parameters
-or other properties of the current method.
+This method will be executed before the JSON-RPC request.
+It provides the possibility to customize the given parameters or other properties of the current method.
 
 ==========
 Parameters
@@ -49,7 +54,7 @@ afterExecution
 
 
 This method will get executed when the provider returns with the response.
-This provides the possibility to map the response of the current method.
+The ``afterExecution`` method does provide us the possibility to map the response to the desired value.
 
 ==========
 Parameters
@@ -75,7 +80,7 @@ execute
     method.execute()
 
 
-This method will execute the current method.
+The method will execute the current method.
 
 =======
 Returns
@@ -94,7 +99,7 @@ rpcMethod
 
 
 This property will return the ``rpcMethod`` string.
-It will be used for the creation of the JSON-RPC payload Object.
+It will be used for the creation of the JSON-RPC payload object.
 
 =======
 Returns
@@ -133,8 +138,7 @@ parameters
 
 This property does contain the given ``parameters``.
 
-If you would like to let Web3.js automaticly detect if a callback is given then please use the ``setArguments()`` method for setting the parameters.
-The ``setArguments()`` method will be used for validating the given parameters length and for the detection of the callback method.
+Use the ``setArguments()`` method for setting the parameters and the callback method with the given ``IArguments`` object.
 
 =======
 Returns
@@ -154,8 +158,7 @@ callback
 
 This property does contain the given ``callback``.
 
-If you would like to let Web3.js automaticly detect if a callback is given then please use the ``setArguments()`` method for setting the parameters.
-The ``setArguments()`` method will be used for validating the given parameters length and for the detection of the callback method.
+Use the ``setArguments()`` method for setting the parameters and the callback method with the given ``IArguments`` object.
 
 =======
 Returns

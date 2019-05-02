@@ -6,7 +6,7 @@
 Core Method Module
 ==================
 
-The Core Method Module does provide all method classes and the abstract method factory which will be used in the ``AbstractWeb3Module``.
+The ``Core Method Module`` does provide all method classes and the abstract method factory which will be used in the ``AbstractWeb3Module``.
 
 .. _web3-abstract-method-factory:
 
@@ -75,7 +75,7 @@ AbstractMethod
 
 Source: `AbstractMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractMethod.js>`_
 
-The ``AbstractMethod`` does have the following constructor parameters:
+The ``AbstractMethod`` class does have the following constructor parameters:
 
 - ``rpcMethod`` - The JSON-RPC method name.
 - ``parametersAmount`` - The amount of parameters this JSON-RPC method has.
@@ -83,7 +83,7 @@ The ``AbstractMethod`` does have the following constructor parameters:
 - ``formatters`` - The formatters object.
 - ``moduleInstance`` - The ``AbstractWeb3Module`` class.
 
-The ``AbstractMethod`` is the base method class and does provide the basic methods and properties for creating a
+The ``AbstractMethod`` class is the base JSON-RPC method class and does provide the basic methods and properties for creating a
 Web3.js compatible JSON-RPC method.
 
 You're able to overwrite these methods:
@@ -152,11 +152,11 @@ Source: `AbstractObservedTransactionMethod <https://github.com/ethereum/web3.js/
 The ``AbstractObservedTransactionMethod`` extends from the :ref:`AbstractMethod <web3-module-abstract-method` and
 does have the following constructor parameters:
 
-- ``rpcMethod`` - The JSON-RPC method name.
-- ``parametersAmount`` - The amount of parameters this JSON-RPC method has.
-- ``utils`` - The Utils object.
-- ``formatters`` - The formatters object.
-- ``transactionObserver`` - The ``TransactionObserver`` class which defines the confirmation process of the transaction.
+- ``rpcMethod`` - ``String`` The JSON-RPC method name.
+- ``parametersAmount`` - ``Number`` The amount of parameters this JSON-RPC method has.
+- ``utils`` - ``Object`` The Utils object.
+- ``formatters`` - ``Object`` The formatters object.
+- ``transactionObserver`` - ``TransactionObserver`` The ``TransactionObserver`` class which defines the confirmation process of the transaction.
 
 The ``AbstractObservedTransactionMethod`` is the base method class for all "send transaction" methods.
 

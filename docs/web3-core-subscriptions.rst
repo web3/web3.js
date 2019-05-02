@@ -6,7 +6,7 @@
 Core Subscriptions Module
 =========================
 
-The Core Subscriptions Module does provide all the subscriptions classes for extending from them and the ``SubscriptionsFactory`` class for simply executing them.
+The ``Core Subscriptions Module`` does provide all the subscriptions classes to extend and execute them.
 
 .. _web3-module-abstract-subscription:
 
@@ -15,15 +15,15 @@ AbstractSubscription
 
 Source: `AbstractSubscription <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions/lib/subscriptions/AbstractSubscription.js>`_
 
-The ``AbstractSubscription`` extends from the ``EventEmitter`` object and does have the following constructor parameters:
+The ``AbstractSubscription`` class extends from the ``EventEmitter`` object and does have the following constructor parameters:
 
-- :ref:`type <web3-module-abstract-subscription-subscribe>` - The subscriptions type ``eth_subscribe`` or ``shh_subscribe``.
-- :ref:`method <web3-module-abstract-subscription-subscribe>` - The subscription method which is the first parameter in the JSON-RPC payload object.
-- :ref:`options <web3-module-abstract-subscription-subscribe>` - The options object of the subscription.
-- :ref:`formatters <web3-module-abstract-subscription-subscribe>` - The formatters object.
-- :ref:`moduleInstance <web3-module-abstract-subscription-subscribe>` - An ``AbstractWeb3Module`` instance.
+- :ref:`type <web3-module-abstract-subscription-subscribe>` - ``String`` The subscriptions type ``eth_subscribe`` or ``shh_subscribe``.
+- :ref:`method <web3-module-abstract-subscription-subscribe>` - ``String`` The subscription method which is the first parameter in the JSON-RPC payload object.
+- :ref:`options <web3-module-abstract-subscription-subscribe>` - ``Object`` The options object of the subscription.
+- :ref:`formatters <web3-module-abstract-subscription-subscribe>` - ``Object`` The formatters object.
+- :ref:`moduleInstance <web3-module-abstract-subscription-subscribe>` - ``AbstractWeb3Module`` An ``AbstractWeb3Module`` instance.
 
-The ``AbstractSubscription`` is the base subscription class of all subscriptions.
+The ``AbstractSubscription`` class is the base subscription class of all subscriptions.
 
 **Be careful with overwriting of the ``subscribe`` method of the ``AbstractSubscription`` class. It can lead to instability of your module**
 
@@ -50,7 +50,7 @@ This method will start the subscription.
 Parameters
 ==========
 
-- ``callback: Function`` - The callback function which will be called with the arguments ``error: Error`` and ``response: any``.
+- ``callback`` - ``Function``
 
 =======
 Returns
@@ -76,7 +76,7 @@ This method will end the subscription.
 Parameters
 ==========
 
-- ``callback: Function`` - The callback function which will be called with the arguments ``error: Error`` and ``response: any``.
+- ``callback`` - ``Function``
 
 =======
 Returns
