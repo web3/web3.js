@@ -27,8 +27,6 @@ The ``AbstractSubscription`` class extends from the ``EventEmitter`` object and 
 
 The ``AbstractSubscription`` class is the base subscription class of all subscriptions.
 
-**Be careful with overwriting of the ``subscribe`` method of the ``AbstractSubscription`` class. It can lead to instability of your module**
-
 You're able to overwrite these methods:
 
 - :ref:`subscribe <web3-module-abstract-subscription-subscribe>`
