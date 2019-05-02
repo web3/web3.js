@@ -300,7 +300,11 @@ export const outputBlockFormatter = (block) => {
     block.gasLimit = Utils.hexToNumber(block.gasLimit);
     block.gasUsed = Utils.hexToNumber(block.gasUsed);
     block.size = Utils.hexToNumber(block.size);
-    block.timestamp = Utils.hexToNumber(block.timestamp);
+
+    // Support Quorum 2.2.0 - timestamp is not present in the Quorum getBlock response
+    if (block.timestamp !== null) {
+        block.timestamp = Utils.hexToNumber(block.timestamp);
+    }
 
     if (block.number !== null) {
         block.number = Utils.hexToNumber(block.number);

@@ -289,7 +289,7 @@ export default class AbstractWeb3Module {
      */
     isSameProvider(provider) {
         if (isObject(provider)) {
-            if (this.currentProvider.constructor.name === provider.constructor.name) {
+            if (this.currentProvider && this.currentProvider.constructor.name === provider.constructor.name) {
                 return this.currentProvider.host === provider.host;
             }
 

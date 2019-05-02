@@ -125,6 +125,18 @@ describe('AbstractWeb3ModuleTest', () => {
         expect(abstractWeb3Module.setProvider('http://localhost:8545')).toEqual(false);
     });
 
+    it('calls isSameProvider without a currentProvider set and returns false', () => {
+        const provider = {
+            constructor: {
+                name: 'HttpProvider'
+            },
+            host: 'HOST1'
+        };
+
+        abstractWeb3Module.setProvider(false);
+        expect(abstractWeb3Module.isSameProvider(provider)).toEqual(false);
+    });
+
     it('calls isSameProvider and returns false', () => {
         const provider = {
             constructor: {
