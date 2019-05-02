@@ -302,7 +302,7 @@ export const outputBlockFormatter = (block) => {
     block.size = Utils.hexToNumber(block.size);
 
     // Support Quorum 2.2.0 - timestamp is not present in the Quorum getBlock response
-    if (block.timestamp !== null) {
+    if (block.timestamp) {
       if (block.timestamp.length < 16) {
         block.timestamp = Utils.hexToNumber(block.timestamp);
       }
