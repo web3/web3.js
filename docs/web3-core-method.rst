@@ -113,7 +113,7 @@ Example
 
     class Example extends AbstractWeb3Module {
         constructor(...) {
-            ...
+            // ...
         }
 
         sign() {
