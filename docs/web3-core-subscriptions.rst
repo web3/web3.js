@@ -31,8 +31,8 @@ You're able to overwrite these methods:
 
 - :ref:`subscribe <web3-module-abstract-subscription-subscribe>`
 - :ref:`unsubscribe <web3-module-abstract-subscription-unsubscribe>`
-- :ref:`beforeSubscription <web3-module-abstract-subscription-before-execution>`
-- :ref:`onNewSubscriptionItem <web3-module-abstract-subscription-after-execution>`
+- :ref:`beforeSubscription <web3-module-abstract-subscription-beforeSubscription>`
+- :ref:`onNewSubscriptionItem <web3-module-abstract-subscription-onNewSubscriptionItem>`
 
 .. _web3-module-abstract-subscription-subscribe:
 
