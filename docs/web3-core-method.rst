@@ -99,14 +99,15 @@ You're able to overwrite these methods:
 - :ref:` ``setArguments(arguments: IArguments): void`` <web3-abstract-method-set-arguments>`
 - :ref:` ``getArguments(arguments: IArguments): {parameters: any[], callback: Function}`` <web3-abstract-method-get-arguments>`
 
--------
-Example
--------
 
 This example will show the usage of the ``setArguments(arguments: IArguments)`` method.
 
 It's also possible to set the parameters and callback method directly over the ``parameters`` and ``callback`` property
 of the method class.
+
+-------
+Example
+-------
 
 .. code-block:: javascript
 
@@ -138,7 +139,7 @@ of the method class.
 ------------------------------------------------------------------------------------------------------------------------
 
 
-The ``AbstractMethod`` class does have the following methods and properties:
+The ``AbstractMethod`` class interface:
 
 .. include:: include_web3-module-abstract-method-class-reference.rst
 
@@ -150,7 +151,7 @@ The ``AbstractMethod`` class does have the following methods and properties:
 
 
 AbstractObservedTransactionMethod
-====================================
+=================================
 
 Source: `AbstractObservedTransactionMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/transaction/AbstractObservedTransactionMethod.js>`_
 

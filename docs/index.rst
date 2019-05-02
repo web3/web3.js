@@ -43,6 +43,10 @@ Contents:
     web3-shh
     web3-utils
     web3-module
+    web3-module-contract
+    web3-core
+    web3-core-method
+    web3-core-subscriptions
     web3-eth-admin
     web3-eth-debug
     web3-eth-miner
