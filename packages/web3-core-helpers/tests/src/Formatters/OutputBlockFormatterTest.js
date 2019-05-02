@@ -123,7 +123,8 @@ describe('OutputBlockFormatterTest', () => {
         expect(outputBlockFormatter(block)).toEqual({
             gasLimit: 0x0,
             gasUsed: 0x0,
-            size: '0x16a78739bb3',
+            size: 0x0,
+            timestamp: '0x16a78739bb3',
             number: 0x0,
             difficulty: '100', // Strange some numbers will be handled as string and some as number (gas & nonce)
             totalDifficulty: '100',
