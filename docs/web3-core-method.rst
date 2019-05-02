@@ -87,11 +87,11 @@ Web3.js compatible JSON-RPC method.
 
 You're able to overwrite these methods:
 
-- :ref:` ``execute(): PromiEvent`` <web3-abstract-method-execute>`
-- :ref:` ``afterExecution(response: any): void`` <web3-abstract-method-after-execution>`
-- :ref:` ``beforeExecution(moduleInstance: AbstractWeb3Module): void`` <web3-abstract-method-before-execution>`
-- :ref:` ``setArguments(arguments: IArguments): void`` <web3-abstract-method-set-arguments>`
-- :ref:` ``getArguments(arguments: IArguments): {parameters: any[], callback: Function}`` <web3-abstract-method-get-arguments>`
+- :ref:`execute(): PromiEvent <web3-abstract-method-execute>`
+- :ref:`afterExecution(response: any): void <web3-abstract-method-after-execution>`
+- :ref:`beforeExecution(moduleInstance: AbstractWeb3Module): void <web3-abstract-method-before-execution>`
+- :ref:`setArguments(arguments: IArguments): void <web3-abstract-method-set-arguments>`
+- :ref:`getArguments(arguments: IArguments): {parameters: any[], callback: Function} <web3-abstract-method-get-arguments>`
 
 
 This example will show the usage of the ``setArguments(arguments: IArguments)`` method.
