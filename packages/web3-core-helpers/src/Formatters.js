@@ -302,11 +302,9 @@ export const outputBlockFormatter = (block) => {
     block.size = Utils.hexToNumber(block.size);
 
     // Support Quorum 2.2.0 - timestamp is not present in the Quorum getBlock response
-    if (block.timestamp) {
-      if (block.timestamp.length < 16) {
+    if (block.timestamp && block.timestamp.length < 16) {
         block.timestamp = Utils.hexToNumber(block.timestamp);
-      }
-      else {
+    } else {
         // WARNING this implementation assumes RAFT timestamp (precision is nanoseconds)
         // You should not simply assume RAFT if it is not successful rather take a consensus specific 
         // action
@@ -314,7 +312,6 @@ export const outputBlockFormatter = (block) => {
          // we are being extra cautious here and converting it back to the same format it was in after dropping
         // the nanoseconds (i.e. a hex string prefixed with 0x)
         block.timestamp = '0x' + Math.floor(block.timestamp / 1e6).toString(16);
-      }
     }
 
     if (block.number !== null) {
