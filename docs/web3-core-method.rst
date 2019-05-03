@@ -11,9 +11,6 @@ The ``Core Method Module`` does provide all method classes and the abstract meth
 .. _web3-abstract-method-factory:
 
 
-------------------------------------------------------------------------------------------------------------------------
-
-
 AbstractMethodFactory
 =====================
 
@@ -60,25 +57,19 @@ Example
 
 ------------------------------------------------------------------------------------------------------------------------
 
-
 .. _web3-module-abstract-method:
-
-
-=======
-Methods
-=======
-
-Source: `Methods <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/src/methods/>`_
-
-Because we are always adding new JSON-RPC method do we just link the methods folder as resource.
-
-The provided method classes do have the following interface:
 
 
 AbstractMethod
 ==============
 
 Source: `AbstractMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/AbstractMethod.js>`_
+
+Because we are always adding new JSON-RPC methods do we just link the methods folder as resource.
+
+Source: `Methods <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/src/methods/>`_
+
+The provided method classes do have the following interface:
 
 The ``AbstractMethod`` class does have the following constructor parameters:
 
@@ -93,26 +84,27 @@ Web3.js compatible JSON-RPC method.
 
 You're able to overwrite these methods:
 
-- :ref:` ``execute(): PromiEvent`` <web3-abstract-method-execute>`
-- :ref:` ``afterExecution(response: any): void`` <web3-abstract-method-after-execution>`
-- :ref:` ``beforeExecution(moduleInstance: AbstractWeb3Module): void`` <web3-abstract-method-before-execution>`
-- :ref:` ``setArguments(arguments: IArguments): void`` <web3-abstract-method-set-arguments>`
-- :ref:` ``getArguments(arguments: IArguments): {parameters: any[], callback: Function}`` <web3-abstract-method-get-arguments>`
+- :ref:`execute(): PromiEvent <web3-abstract-method-execute>`
+- :ref:`afterExecution(response: any): void <web3-abstract-method-after-execution>`
+- :ref:`beforeExecution(moduleInstance: AbstractWeb3Module): void <web3-abstract-method-before-execution>`
+- :ref:`setArguments(arguments: IArguments): void <web3-abstract-method-set-arguments>`
+- :ref:`getArguments(arguments: IArguments): {parameters: any[], callback: Function} <web3-abstract-method-get-arguments>`
 
--------
-Example
--------
 
 This example will show the usage of the ``setArguments(arguments: IArguments)`` method.
 
 It's also possible to set the parameters and callback method directly over the ``parameters`` and ``callback`` property
 of the method class.
 
+-------
+Example
+-------
+
 .. code-block:: javascript
 
     class Example extends AbstractWeb3Module {
         constructor(...) {
-            ...
+            // ...
         }
 
         sign() {
@@ -138,7 +130,11 @@ of the method class.
 ------------------------------------------------------------------------------------------------------------------------
 
 
-The ``AbstractMethod`` class does have the following methods and properties:
+The ``AbstractMethod`` class interface:
+
+
+------------------------------------------------------------------------------------------------------------------------
+
 
 .. include:: include_web3-module-abstract-method-class-reference.rst
 
@@ -150,7 +146,7 @@ The ``AbstractMethod`` class does have the following methods and properties:
 
 
 AbstractObservedTransactionMethod
-====================================
+=================================
 
 Source: `AbstractObservedTransactionMethod <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method/lib/methods/transaction/AbstractObservedTransactionMethod.js>`_
 
