@@ -24,7 +24,7 @@ import * as EthLibAccount from 'eth-lib/lib/account'; // TODO: Remove this depen
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
 import {isHexStrict, hexToBytes, randomHex, keccak256} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
-const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
+import crypto from 'crypto';
 
 export default class Account {
     /**
