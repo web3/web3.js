@@ -203,7 +203,9 @@ export default class AbstractSocketProvider extends EventEmitter {
 
                 delete this.subscriptions[subscriptionId];
 
-                this.subscriptions[key].id = subscriptionId;
+                if(this.subscriptions[key].hasOwnProperty("id")){
+                    this.subscriptions[key].id = subscriptionId;
+                }
             }
         }
 
