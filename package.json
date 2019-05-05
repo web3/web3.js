@@ -1,12 +1,78 @@
 {
+<<<<<<< .merge_file_jE4Wsd
     "name": "web3",
     "namespace": "ethereum",
-    "version": "1.0.0-beta.53",
+    "version": "1.0.0-beta.54",
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
     "main": "./packages/web3/src/index.js",
     "directories": {
         "doc": "./doc"
+=======
+  "name": "web3",
+  "namespace": "ethereum",
+  "version": "0.20.7",
+  "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
+  "main": "./index.js",
+  "directories": {
+    "lib": "./lib"
+  },
+  "dependencies": {
+    "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git",
+    "crypto-js": "^3.1.4",
+    "utf8": "^2.1.1",
+    "xhr2-cookies": "^1.1.0",
+    "xmlhttprequest": "*"
+  },
+  "browser": {
+    "xmlhttprequest": "./lib/utils/browser-xhr.js"
+  },
+  "devDependencies": {
+    "bower": ">=1.4.1",
+    "browserify": ">=10.0",
+    "chai": "^3.0.0",
+    "coveralls": "^2.11.2",
+    "del": ">=2.0.2",
+    "exorcist": "^0.4.0",
+    "gulp": ">=3.9.0",
+    "gulp-jshint": ">=1.5.0",
+    "gulp-rename": ">=1.2.0",
+    "gulp-replace": "^0.5.3",
+    "gulp-streamify": "0.0.5",
+    "gulp-uglify": ">=1.2.0",
+    "istanbul": "^0.4.4",
+    "jshint": ">=2.5.0",
+    "mocha": ">=2.3.3",
+    "sandboxed-module": "^2.0.2",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "scripts": {
+    "build": "gulp",
+    "watch": "gulp watch",
+    "lint": "jshint *.js lib",
+    "test": "mocha; jshint *.js lib",
+    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ethereum/web3.js.git"
+  },
+  "homepage": "https://github.com/ethereum/web3.js",
+  "bugs": {
+    "url": "https://github.com/ethereum/web3.js/issues"
+  },
+  "keywords": [
+    "ethereum",
+    "javascript",
+    "API"
+  ],
+  "author": "ethdev.com",
+  "authors": [
+    {
+      "name": "Marek Kotewicz",
+      "email": "marek@ethdev.com",
+      "url": "https://github.com/debris"
+>>>>>>> .merge_file_4Uddgd
     },
     "scripts": {
         "clean": "lerna clean",
@@ -109,4 +175,9 @@
         "rollup-plugin-json": "^4.0.0",
         "typescript": "^3.4.1"
     }
+<<<<<<< .merge_file_jE4Wsd
+=======
+  ],
+  "license": "LGPL-3.0"
+>>>>>>> .merge_file_4Uddgd
 }
