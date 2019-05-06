@@ -303,7 +303,7 @@ export const outputBlockFormatter = (block) => {
 
     // Support Quorum 2.2.0 - timestamp is not present in the Quorum getBlock response
     if (block.timestamp) {
-        if (block.timestamp.length > 10) {
+        if (Utils.toBN(block.timestamp).length > 2) {
             // WARNING this implementation assumes RAFT timestamp (precision is nanoseconds)
             // You should not simply assume RAFT if it is not successful rather take a consensus specific
             // action
