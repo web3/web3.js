@@ -1,6 +1,5 @@
 language: node_js
 node_js:
-<<<<<<< .merge_file_fwWNiY
     - "8"
     - "9"
     - "10"
@@ -13,14 +12,6 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.8
-=======
-  - "4.1"
-  - "4.0"
-  - "5"
-  - "6"
-  - "7"
-  - "8"
->>>>>>> .merge_file_hLS0JD
 before_script:
     - npm i -g typescript@next
     - export DISPLAY=:99.0
@@ -32,4 +23,3 @@ script:
     - npm run travis
 after_script:
     - npm run coveralls
-
