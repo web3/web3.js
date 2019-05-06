@@ -23,8 +23,10 @@ import isObject from 'lodash/isObject';
 import * as EthLibAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
+import randomBytes from 'randombytes';
+import {pbkdf2Sync} from 'pbkdf2';
+import {createCipheriv, createDecipheriv} from 'browserify-cipher';
 import {isHexStrict, hexToBytes, randomHex, keccak256} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
-import crypto from 'crypto';
 
 export default class Account {
     /**
@@ -135,8 +137,8 @@ export default class Account {
      */
     toV3Keystore(password, options) {
         options = options || {};
-        const salt = options.salt || crypto.randomBytes(32);
-        const iv = options.iv || crypto.randomBytes(16);
+        const salt = options.salt || randomBytes(32);
+        const iv = options.iv || randomBytes(16);
 
         let derivedKey;
         const kdf = options.kdf || 'scrypt';
@@ -148,7 +150,7 @@ export default class Account {
         if (kdf === 'pbkdf2') {
             kdfparams.c = options.c || 262144;
             kdfparams.prf = 'hmac-sha256';
-            derivedKey = crypto.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+            derivedKey = pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
         } else if (kdf === 'scrypt') {
             // FIXME: support progress reporting callback
             kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
@@ -159,7 +161,7 @@ export default class Account {
             throw new Error('Unsupported kdf');
         }
 
-        const cipher = crypto.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
+        const cipher = createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
         if (!cipher) {
             throw new Error('Unsupported cipher');
         }
@@ -176,7 +178,7 @@ export default class Account {
 
         return {
             version: 3,
-            id: uuid.v4({random: options.uuid || crypto.randomBytes(16)}),
+            id: uuid.v4({random: options.uuid || randomBytes(16)}),
             address: this.address.toLowerCase().replace('0x', ''),
             crypto: {
                 ciphertext: ciphertext.toString('hex'),
@@ -239,7 +241,7 @@ export default class Account {
                 throw new Error('Unsupported parameters to PBKDF2');
             }
 
-            derivedKey = crypto.pbkdf2Sync(
+            derivedKey = pbkdf2Sync(
                 Buffer.from(password),
                 Buffer.from(kdfparams.salt, 'hex'),
                 kdfparams.c,
@@ -257,7 +259,7 @@ export default class Account {
             throw new Error('Key derivation failed - possibly wrong password');
         }
 
-        const decipher = crypto.createDecipheriv(
+        const decipher = createDecipheriv(
             json.crypto.cipher,
             derivedKey.slice(0, 16),
             Buffer.from(json.crypto.cipherparams.iv, 'hex')

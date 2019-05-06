@@ -17,6 +17,9 @@
     },
     "dependencies": {
         "@babel/runtime": "^7.3.1",
+        "randombytes": "^2.1.0",
+        "browserify-cipher": "^1.0.1",
+        "pbkdf2": "^3.0.17",
         "eth-lib": "0.2.8",
         "lodash": "^4.17.11",
         "scrypt.js": "0.3.0",
