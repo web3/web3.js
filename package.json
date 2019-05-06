@@ -1,112 +1,112 @@
 {
-"name": "web3",
-"namespace": "ethereum",
-"version": "1.0.0-beta.54",
-"description": "Ethereum JavaScript API wrapper repository",
-"license": "LGPL-3.0",
-"main": "./packages/web3/src/index.js",
-"directories": {
-"doc": "./doc"
-},
-"scripts": {
-"clean": "lerna clean",
-"link": "lerna link",
-"bootstrap": "lerna bootstrap",
-"install:all": "lerna add",
-"remove:all": "lerna exec npm uninstall",
-"install:dev:all": "lerna exec npm install --save-dev",
-"publish": "npm run clean && npm run bootstrap && npm run travis && lerna publish --skip-git",
-"build": "lerna run build",
-"test": "lerna run test",
-"test:coverage": "lerna run test -- --coverage && npm run istanbulCombine",
-"istanbulCombine": "istanbul-combine -d coverage -r lcov -r html ./packages/**/coverage-final.json",
-"dtslint": "lerna run dtslint",
-"docs": "cd docs; make html;",
-"lint": "eslint --cache --fix .",
-"format": "prettier --config ./.prettierrc --write ./packages/**/*.js",
-"travis": "npm run lint && npm run build && npm run test:coverage && npm run dtslint",
-"coveralls": "cat ./coverage/lcov.info | coveralls"
-},
-"repository": {
-"type": "git",
-"url": "https://github.com/ethereum/web3.js.git"
-},
-"homepage": "https://github.com/ethereum/web3.js",
-"bugs": {
-"url": "https://github.com/ethereum/web3.js/issues"
-},
-"keywords": [
-"Ethereum",
-"JavaScript",
-"API"
-],
-"author": "Ethereum Foundation",
-"authors": [
-{
-"name": "Samuel Furter",
-"email": "samuel@ethereum.org",
-"homepage": "https://github.com/nivida"
-},
-{
-"name": "Fabian Vogelsteller",
-"email": "fabian@ethereum.org",
-"homepage": "https://github.com/frozeman"
-},
-{
-"name": "Marek Kotewicz",
-"email": "marek@parity.io",
-"url": "https://github.com/debris"
-},
-{
-"name": "Marian Oancea",
-"url": "https://github.com/cubedro"
-},
-{
-"name": "Gav Wood",
-"email": "g@parity.io",
-"homepage": "http://gavwood.com"
-},
-{
-"name": "Jeffery Wilcke",
-"email": "jeffrey.wilcke@ethereum.org",
-"url": "https://github.com/obscuren"
-}
-],
-"devDependencies": {
-"@babel/core": "^7.4.4",
-"@babel/plugin-proposal-export-default-from": "^7.2.0",
-"@babel/plugin-proposal-export-namespace-from": "^7.2.0",
-"@babel/plugin-transform-runtime": "^7.4.0",
-"@babel/polyfill": "^7.4.0",
-"@babel/preset-env": "^7.4.4",
-"@babel/runtime": "^7.4.2",
-"@types/bn.js": "^4.11.5",
-"@types/node": "^11.13.0",
-"babel-core": "^7.0.0-bridge.0",
-"babel-eslint": "^10.0.1",
-"babel-jest": "^24.7.1",
-"babel-plugin-istanbul": "^5.1.1",
-"coveralls": "^3.0.3",
-"eslint": "^5.16.0",
-"eslint-config-prettier": "^4.1.0",
-"eslint-config-standard": "^12.0.0",
-"eslint-plugin-import": "^2.16.0",
-"eslint-plugin-jest": "^22.4.1",
-"eslint-plugin-node": "^8.0.1",
-"eslint-plugin-prettier": "^3.0.1",
-"eslint-plugin-promise": "^4.1.1",
-"eslint-plugin-standard": "^4.0.0",
-"eslint-plugin-unicorn": "^8.0.1",
-"istanbul-combine": "^0.3.0",
-"jest": "^24.7.1",
-"lerna": "^3.13.4",
-"prettier": "^1.16.4",
-"regenerator-runtime": "^0.13.2",
-"rollup": "^1.8.0",
-"rollup-plugin-auto-external": "^2.0.0",
-"rollup-plugin-babel": "^4.3.2",
-"rollup-plugin-cleanup": "^3.1.1",
-"rollup-plugin-json": "^4.0.0",
-"typescript": "^3.4.1"
-}
+    "name": "web3",
+    "namespace": "ethereum",
+    "version": "1.0.0-beta.54",
+    "description": "Ethereum JavaScript API wrapper repository",
+    "license": "LGPL-3.0",
+    "main": "./packages/web3/src/index.js",
+    "directories": {
+        "doc": "./doc"
+    },
+    "scripts": {
+        "clean": "lerna clean",
+        "link": "lerna link",
+        "bootstrap": "lerna bootstrap",
+        "install:all": "lerna add",
+        "remove:all": "lerna exec npm uninstall",
+        "install:dev:all": "lerna exec npm install --save-dev",
+        "publish": "npm run clean && npm run bootstrap && npm run travis && lerna publish --skip-git",
+        "build": "lerna run build",
+        "test": "lerna run test",
+        "test:coverage": "lerna run test -- --coverage && npm run istanbulCombine",
+        "istanbulCombine": "istanbul-combine -d coverage -r lcov -r html ./packages/**/coverage-final.json",
+        "dtslint": "lerna run dtslint",
+        "docs": "cd docs; make html;",
+        "lint": "eslint --cache --fix .",
+        "format": "prettier --config ./.prettierrc --write ./packages/**/*.js",
+        "travis": "npm run lint && npm run build && npm run test:coverage && npm run dtslint",
+        "coveralls": "cat ./coverage/lcov.info | coveralls"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ethereum/web3.js.git"
+    },
+    "homepage": "https://github.com/ethereum/web3.js",
+    "bugs": {
+        "url": "https://github.com/ethereum/web3.js/issues"
+    },
+    "keywords": [
+        "Ethereum",
+        "JavaScript",
+        "API"
+    ],
+    "author": "Ethereum Foundation",
+    "authors": [
+        {
+            "name": "Samuel Furter",
+            "email": "samuel@ethereum.org",
+            "homepage": "https://github.com/nivida"
+        },
+        {
+            "name": "Fabian Vogelsteller",
+            "email": "fabian@ethereum.org",
+            "homepage": "https://github.com/frozeman"
+        },
+        {
+            "name": "Marek Kotewicz",
+            "email": "marek@parity.io",
+            "url": "https://github.com/debris"
+        },
+        {
+            "name": "Marian Oancea",
+            "url": "https://github.com/cubedro"
+        },
+        {
+            "name": "Gav Wood",
+            "email": "g@parity.io",
+            "homepage": "http://gavwood.com"
+        },
+        {
+            "name": "Jeffery Wilcke",
+            "email": "jeffrey.wilcke@ethereum.org",
+            "url": "https://github.com/obscuren"
+        }
+    ],
+    "devDependencies": {
+        "@babel/core": "^7.4.4",
+        "@babel/plugin-proposal-export-default-from": "^7.2.0",
+        "@babel/plugin-proposal-export-namespace-from": "^7.2.0",
+        "@babel/plugin-transform-runtime": "^7.4.0",
+        "@babel/polyfill": "^7.4.0",
+        "@babel/preset-env": "^7.4.4",
+        "@babel/runtime": "^7.4.2",
+        "@types/bn.js": "^4.11.5",
+        "@types/node": "^11.13.0",
+        "babel-core": "^7.0.0-bridge.0",
+        "babel-eslint": "^10.0.1",
+        "babel-jest": "^24.7.1",
+        "babel-plugin-istanbul": "^5.1.1",
+        "coveralls": "^3.0.3",
+        "eslint": "^5.16.0",
+        "eslint-config-prettier": "^4.1.0",
+        "eslint-config-standard": "^12.0.0",
+        "eslint-plugin-import": "^2.16.0",
+        "eslint-plugin-jest": "^22.4.1",
+        "eslint-plugin-node": "^8.0.1",
+        "eslint-plugin-prettier": "^3.0.1",
+        "eslint-plugin-promise": "^4.1.1",
+        "eslint-plugin-standard": "^4.0.0",
+        "eslint-plugin-unicorn": "^8.0.1",
+        "istanbul-combine": "^0.3.0",
+        "jest": "^24.7.1",
+        "lerna": "^3.13.4",
+        "prettier": "^1.16.4",
+        "regenerator-runtime": "^0.13.2",
+        "rollup": "^1.8.0",
+        "rollup-plugin-auto-external": "^2.0.0",
+        "rollup-plugin-babel": "^4.3.2",
+        "rollup-plugin-cleanup": "^3.1.1",
+        "rollup-plugin-json": "^4.0.0",
+        "typescript": "^3.4.1"
+    }
 }
