@@ -33,19 +33,7 @@ yarn add web3
 meteor npm install --save web3@1.x
 ```
 
-<<<<<<< .merge_file_p54qgh
 ## Usage
-=======
-### As Browser module
-
-CDN
-
-```html
-<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
-```
-
-Bower
->>>>>>> .merge_file_RanHMf
 
 ```js
 import Web3 from 'web3';
@@ -130,30 +118,18 @@ npm run dev # runs rollup with a watcher
  - [Forum](https://forum.ethereum.org/categories/ethereum-js)
 
 
-<<<<<<< .merge_file_p54qgh
 ### Similar libraries in other languages
  - Python [Web3.py](https://github.com/pipermerriam/web3.py)
-=======
-### Other implementations
- - Python [Web3.py](https://github.com/ethereum/web3.py)
->>>>>>> .merge_file_RanHMf
  - Haskell [hs-web3](https://github.com/airalab/hs-web3)
  - Java [web3j](https://github.com/web3j/web3j)
  - Scala [web3j-scala](https://github.com/mslinn/web3j-scala)
  - Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
  - PHP [web3.php](https://github.com/sc0Vu/web3.php)
-<<<<<<< .merge_file_p54qgh
 
 
 [repo]: https://github.com/ethereum/web3.js
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [npm-image]: https://badge.fury.io/js/web3.png
-=======
- - PHP [ethereum-php](https://github.com/digitaldonkey/ethereum-php)
-
-
-[npm-image]: https://badge.fury.io/js/web3.svg
->>>>>>> .merge_file_RanHMf
 [npm-url]: https://npmjs.org/package/web3
 [travis-image]: https://travis-ci.org/ethereum/web3.js.svg
 [travis-url]: https://travis-ci.org/ethereum/web3.js
