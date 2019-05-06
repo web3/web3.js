@@ -301,17 +301,20 @@ export const outputBlockFormatter = (block) => {
     block.gasUsed = Utils.hexToNumber(block.gasUsed);
     block.size = Utils.hexToNumber(block.size);
 
+    // console.log(block.timestamp);
     // Support Quorum 2.2.0 - timestamp is not present in the Quorum getBlock response
-    if (block.timestamp && block.timestamp.length < 16) {
-        block.timestamp = Utils.hexToNumber(block.timestamp);
-    } else {
-        // WARNING this implementation assumes RAFT timestamp (precision is nanoseconds)
-        // You should not simply assume RAFT if it is not successful rather take a consensus specific 
-        // action
+    if (block.timestamp) {
+        if (block.timestamp.length > 10) {
+            // WARNING this implementation assumes RAFT timestamp (precision is nanoseconds)
+            // You should not simply assume RAFT if it is not successful rather take a consensus specific
+            // action
 
-         // we are being extra cautious here and converting it back to the same format it was in after dropping
-        // the nanoseconds (i.e. a hex string prefixed with 0x)
-        block.timestamp = '0x' + Math.floor(block.timestamp / 1e6).toString(16);
+            // we are being extra cautious here and converting it back to the same format it was in after dropping
+            // the nanoseconds (i.e. a hex string prefixed with 0x)
+            block.timestamp = '0x' + Math.floor(block.timestamp / 1e6).toString(16);
+        } else {
+            block.timestamp = Utils.hexToNumber(block.timestamp);
+        }
     }
 
     if (block.number !== null) {
