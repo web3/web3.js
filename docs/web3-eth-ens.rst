@@ -761,7 +761,7 @@ Parameters
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
-Emits an ``ContenthashChanged``event.
+Emits an ``ContenthashChanged`` event.
 
 -------
 Example
@@ -816,11 +816,11 @@ Known resolver events
 
 1. ``AddrChanged`` - AddrChanged(node bytes32, a address)
 2. ``ContentChanged`` - ContentChanged(node bytes32, hash bytes32)
-4. ``NameChanged`` - NameChanged(node bytes32, name string)
-5. ``ABIChanged`` - ABIChanged(node bytes32, contentType uint256)
-6. ``PubkeyChanged`` - PubkeyChanged(node bytes32, x bytes32, y bytes32)
+3. ``NameChanged`` - NameChanged(node bytes32, name string)
+4. ``ABIChanged`` - ABIChanged(node bytes32, contentType uint256)
+5. ``PubkeyChanged`` - PubkeyChanged(node bytes32, x bytes32, y bytes32)
 6. ``TextChanged`` - TextChanged(bytes32 indexed node, string indexedKey, string key)
-6. ``ContenthashChanged`` - ContenthashChanged(bytes32 indexed node, bytes hash)
+7. ``ContenthashChanged`` - ContenthashChanged(bytes32 indexed node, bytes hash)
 
 -------
 Example
