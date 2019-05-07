@@ -784,9 +784,9 @@ Example
 
     web3.eth.ens.setContenthash(
         'ethereum.eth',
-        'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK',
+        '0xe301017012208cd82588c4e08268fa0b824caa93847ac843410076eeedc41d65fb52eccbb9e6',
         {
-            from: '0xe301017012208cd82588c4e08268fa0b824caa93847ac843410076eeedc41d65fb52eccbb9e6'
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
     )
     .on('transactionHash', (hash) => {
