@@ -301,15 +301,12 @@ export const outputBlockFormatter = (block) => {
     block.gasUsed = Utils.hexToNumber(block.gasUsed);
     block.size = Utils.hexToNumber(block.size);
 
-    // Support Quorum 2.2.0 - timestamp is not present in the Quorum getBlock response
-    if (block.timestamp !== null) {
-        const timestamp = Utils.toBN(block.timestamp);
+    const timestamp = Utils.toBN(block.timestamp);
 
-        if (timestamp.bitLength() <= 53) {
-            block.timestamp = Utils.hexToNumber(block.timestamp);
-        } else {
-            block.timestamp = timestamp.toString(10);
-        }
+    if (timestamp.bitLength() <= 53) {
+        block.timestamp = Utils.hexToNumber(block.timestamp);
+    } else {
+        block.timestamp = timestamp.toString(10);
     }
 
     if (block.number !== null) {
