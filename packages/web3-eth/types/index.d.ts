@@ -144,7 +144,7 @@ export class Eth extends AbstractWeb3Module {
 
     submitWork(data: [string, string, string], callback?: (error: Error, result: boolean) => void): Promise<boolean>;
 
-    pendingTransactions(callback?: (error: Error, result: PendingTransactions[]) => void): Promise<PendingTransactions[]>;
+    pendingTransactions(callback?: (error: Error, result: PendingTransaction[]) => void): Promise<PendingTransaction[]>;
 
     getProof(address: string, storageKey: string[], blockNumber: number | string | "latest" | "earliest", callback?: (error: Error, result: GetProof) => void): Promise<GetProof>;
 }
@@ -243,7 +243,7 @@ export interface StorageProof {
     proof: string[];
 }
 
-export interface PendingTransactions extends Transaction {
+export interface PendingTransaction extends Transaction {
     v: string;
     r: string;
     s: string;

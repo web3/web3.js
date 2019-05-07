@@ -19,7 +19,7 @@
  */
 
 import {Log, Transaction, TransactionReceipt, RLPEncodedTransaction} from 'web3-core';
-import {Eth, BlockHeader, Syncing, Block, GetProof, PendingTransactions} from 'web3-eth';
+import {Eth, BlockHeader, Syncing, Block, GetProof, PendingTransaction} from 'web3-eth';
 
 const eth = new Eth('http://localhost:8545');
 
@@ -453,11 +453,11 @@ eth.submitWork(
     (error: Error, result: boolean) => {}
 );
 
-// $ExpectType Promise<PendingTransactions[]>
+// $ExpectType Promise<PendingTransaction[]>
 eth.pendingTransactions();
 
-// $ExpectType Promise<PendingTransactions[]>
-eth.pendingTransactions((error: Error, result: PendingTransactions[]) => {});
+// $ExpectType Promise<PendingTransaction[]>
+eth.pendingTransactions((error: Error, result: PendingTransaction[]) => {});
 
 // $ExpectType Promise<GetProof>
 eth.getProof(
