@@ -22,15 +22,15 @@
         "lodash": "^4.17.11",
         "url-parse": "1.4.4",
         "websocket": "^1.0.28",
+        "web3-core": "1.0.0-beta.54",
+        "web3-core-method": "1.0.0-beta.54",
+        "web3-core-helpers": "1.0.0-beta.54",
+        "web3-utils": "1.0.0-beta.54",
         "xhr2-cookies": "1.1.0"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
-        "dtslint": "0.4.2",
-        "web3-core": "1.0.0-beta.54",
-        "web3-core-helpers": "1.0.0-beta.54",
-        "web3-core-method": "1.0.0-beta.54",
-        "web3-utils": "1.0.0-beta.54"
+        "dtslint": "0.4.2"
     },
     "files": [
         "dist",
