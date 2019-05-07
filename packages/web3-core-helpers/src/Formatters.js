@@ -304,7 +304,7 @@ export const outputBlockFormatter = (block) => {
     const timestamp = Utils.toBN(block.timestamp);
 
     if (timestamp.bitLength() <= 53) {
-        block.timestamp = Utils.hexToNumber(block.timestamp);
+        block.timestamp = timestamp.toNumber();
     } else {
         block.timestamp = timestamp.toString(10);
     }

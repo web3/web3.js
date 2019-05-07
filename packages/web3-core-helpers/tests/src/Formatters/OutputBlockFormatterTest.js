@@ -32,7 +32,7 @@ describe('OutputBlockFormatterTest', () => {
             gasLimit: 0x0,
             gasUsed: 0x0,
             size: 0x0,
-            timestamp: 0x0,
+            timestamp: 0,
             number: 0x0,
             difficulty: '100', // Strange some numbers will be handled as string and some as number (gas & nonce)
             totalDifficulty: '100',
@@ -54,7 +54,7 @@ describe('OutputBlockFormatterTest', () => {
 
     it('[Quorum] call outputBlockFormatter with a valid block without a timestamp who has nano seconds', () => {
         const block = {
-            timestamp: Number.MAX_SAFE_INTEGER + 1,
+            timestamp: '0x20000000000000',
             gasLimit: 0x0,
             gasUsed: 0x0,
             size: 0x0,
