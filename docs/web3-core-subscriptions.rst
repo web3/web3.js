@@ -10,8 +10,10 @@ The ``Core Subscriptions Module`` does provide all the subscriptions classes to 
 
 .. _web3-module-abstract-subscription:
 
+
 AbstractSubscription
 ====================
+
 
 Source: `AbstractSubscription <https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-subscriptions/lib/subscriptions/AbstractSubscription.js>`_
 
@@ -25,14 +27,12 @@ The ``AbstractSubscription`` class extends from the ``EventEmitter`` object and 
 
 The ``AbstractSubscription`` class is the base subscription class of all subscriptions.
 
-**Be careful with overwriting of the ``subscribe`` method of the ``AbstractSubscription`` class. It can lead to instability of your module**
-
 You're able to overwrite these methods:
 
 - :ref:`subscribe <web3-module-abstract-subscription-subscribe>`
 - :ref:`unsubscribe <web3-module-abstract-subscription-unsubscribe>`
-- :ref:`beforeSubscription <web3-module-abstract-subscription-before-execution>`
-- :ref:`onNewSubscriptionItem <web3-module-abstract-subscription-after-execution>`
+- :ref:`beforeSubscription <web3-module-abstract-subscription-beforeSubscription>`
+- :ref:`onNewSubscriptionItem <web3-module-abstract-subscription-onNewSubscriptionItem>`
 
 .. _web3-module-abstract-subscription-subscribe:
 
@@ -46,15 +46,15 @@ subscribe
 
 This method will start the subscription.
 
-==========
+----------
 Parameters
-==========
+----------
 
 - ``callback`` - ``Function``
 
-=======
+-------
 Returns
-=======
+-------
 
 ``AbstractSubscription``
 
@@ -74,15 +74,15 @@ unsubscribe
 
 This method will end the subscription.
 
-==========
+----------
 Parameters
-==========
+----------
 
 - ``callback`` - ``Function``
 
-=======
+-------
 Returns
-=======
+-------
 
 ``Promise<boolean|Error>``
 
@@ -103,9 +103,9 @@ beforeSubscription
 This method will be executed before the subscription happens.
 The ``beforeSubscription`` method gives you the possibility to customize the subscription class before the request will be sent.
 
-==========
+----------
 Parameters
-==========
+----------
 
 - ``moduleInstance`` - ``AbstractWeb3Module`` The current ``AbstractWeb3Module``.
 
@@ -126,15 +126,15 @@ onNewSubscriptionItem
 This method will be executed on each subscription item.
 The ``onNewSubscriptionItem`` method gives you the possibility to map the response.
 
-==========
+----------
 Parameters
-==========
+----------
 
 - ``item`` - ``any``
 
-=======
+-------
 Returns
-=======
+-------
 
 ``any``
 
@@ -154,9 +154,9 @@ type
 
 The property ``type`` does contain the subscription type.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``String`` - ``eth_subscribe`` or ``shh_subscribe``
 
@@ -176,9 +176,9 @@ method
 
 The property ``method`` does contain the subscription method.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``String``
 
@@ -198,9 +198,9 @@ options
 
 The property ``options`` does contain the subscription options.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``Object``
 
@@ -220,9 +220,9 @@ id
 
 The property ``id`` does contain the subscription id when the subscription is running.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``String``
 

@@ -4,11 +4,6 @@
 Type
 ====
 
-.. code-block:: javascript
-
-    Method.Type
-
-
 The static ``readonly`` property ``Type`` will be used in the ``AbstractMethodFactory`` class to determine how the class should get initiated.
 
 Reserved types:
@@ -16,13 +11,16 @@ Reserved types:
  - ``observed-transaction-method`` - ``AbstractObservedTransactionMethod``
  - ``eth-send-transaction-method`` - ``EthSendTransactionMethod``
 
-=======
+
+-------
 Returns
-=======
+-------
 
 ``string`` - Example: ``observed-transaction-method``
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 beforeExecution
 ===============
@@ -35,13 +33,15 @@ beforeExecution
 This method will be executed before the JSON-RPC request.
 It provides the possibility to customize the given parameters or other properties of the current method.
 
-==========
+----------
 Parameters
-==========
+----------
 
 - ``moduleInstance`` - ``AbstractWeb3Module`` The current ``AbstractWeb3Module``.
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 .. _web3-abstract-method-after-execution:
 
@@ -56,19 +56,21 @@ afterExecution
 This method will get executed when the provider returns with the response.
 The ``afterExecution`` method does provide us the possibility to map the response to the desired value.
 
-==========
+----------
 Parameters
-==========
+----------
 
 - ``response`` - ``any`` The response from the provider.
 
-=======
+----------
 Returns
-=======
+----------
 
 ``any``
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 .. _web3-abstract-method-execute:
 
@@ -80,15 +82,17 @@ execute
     method.execute()
 
 
-The method will execute the current method.
+This method will execute the current method.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``Promise<Object|string>|PromiEvent|string``
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 rpcMethod
 =========
@@ -101,13 +105,15 @@ rpcMethod
 This property will return the ``rpcMethod`` string.
 It will be used for the creation of the JSON-RPC payload object.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``string``
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 parametersAmount
 ================
@@ -120,13 +126,15 @@ parametersAmount
 This property will return the ``parametersAmount``.
 It will be used for validating the given parameters length and for the detection of the callback method.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``number``
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 parameters
 ==========
@@ -140,13 +148,15 @@ This property does contain the given ``parameters``.
 
 Use the ``setArguments()`` method for setting the parameters and the callback method with the given ``IArguments`` object.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``any[]``
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 callback
 ========
@@ -160,13 +170,15 @@ This property does contain the given ``callback``.
 
 Use the ``setArguments()`` method for setting the parameters and the callback method with the given ``IArguments`` object.
 
-=======
+-------
 Returns
-=======
+-------
 
 ``undefined``
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 .. _web3-abstract-method-set-arguments:
 
@@ -193,7 +205,9 @@ Returns
 
 ``Object``
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 .. _web3-abstract-method-get-arguments:
 
@@ -214,7 +228,9 @@ Returns
 
 ``Object``
 
+
 ------------------------------------------------------------------------------------------------------------------------
+
 
 isHash
 ======
@@ -234,8 +250,8 @@ Parameters
 - ``value`` - ``string``
 
 
-=======
+-------
 Returns
-=======
+-------
 
 ``boolean``

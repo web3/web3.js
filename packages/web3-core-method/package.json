@@ -1,7 +1,7 @@
 {
     "name": "web3-core-method",
     "namespace": "ethereum",
-    "version": "1.0.0-beta.53",
+    "version": "1.0.0-beta.54",
     "description": "Handles the JSON-RPC methods. This package is also internally used by web3.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-core-method",
     "license": "LGPL-3.0",
@@ -25,15 +25,15 @@
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2",
         "rxjs": "^6.4.0",
-        "web3-core": "1.0.0-beta.53",
-        "web3-core-helpers": "1.0.0-beta.53",
-        "web3-core-subscriptions": "1.0.0-beta.53",
-        "web3-providers": "1.0.0-beta.53",
-        "web3-utils": "1.0.0-beta.53"
+        "web3-core": "1.0.0-beta.54",
+        "web3-core-helpers": "1.0.0-beta.54",
+        "web3-core-subscriptions": "1.0.0-beta.54",
+        "web3-providers": "1.0.0-beta.54",
+        "web3-utils": "1.0.0-beta.54"
     },
     "files": [
         "dist",
         "types/index.d.ts"
     ],
-    "gitHead": "d955a98a5fc8819ff866254ff7141a10b503b5cd"
+    "gitHead": "b3f8427438e5bfe1daca7a63f4eb7cd8e9e4d6c0"
 }

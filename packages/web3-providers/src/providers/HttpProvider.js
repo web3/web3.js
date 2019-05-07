@@ -168,6 +168,10 @@ export default class HttpProvider {
                     if (this.isInvalidHttpEndpoint(request)) {
                         reject(new Error(`Connection refused or URL couldn't be resolved: ${this.host}`));
                     }
+
+                    if (request.status >= 400 && request.status <= 499) {
+                        reject(new Error(`HttpProvider ERROR: ${request.responseText} (code: ${request.status})`));
+                    }
                 }
             };
 
