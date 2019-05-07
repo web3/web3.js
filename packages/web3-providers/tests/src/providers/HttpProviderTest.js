@@ -313,6 +313,33 @@ describe('HttpProviderTest', () => {
         expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
     });
 
+    it('calls sendPayload and returns with a rejected promise because the request status is between 400 and 499', async () => {
+        new XHR();
+        const xhrMock = XHR.mock.instances[0];
+
+        xhrMock.readyState = 4;
+        xhrMock.status = 450;
+        xhrMock.responseText = 'NOPE';
+
+        providersModuleFactoryMock.createXMLHttpRequest.mockReturnValueOnce(xhrMock);
+
+        setTimeout(() => {
+            xhrMock.onreadystatechange();
+        }, 1);
+
+        await expect(httpProvider.sendPayload({id: '0x0'})).rejects.toThrow('HttpProvider ERROR: NOPE (code: 450)');
+
+        expect(providersModuleFactoryMock.createXMLHttpRequest).toHaveBeenCalledWith(
+            httpProvider.host,
+            httpProvider.timeout,
+            httpProvider.headers,
+            httpProvider.agent,
+            httpProvider.withCredentials
+        );
+
+        expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
+    });
+
     it('calls sendPayload and returns with a rejected promise because the request.send() method throws an error', async () => {
         new XHR();
         const xhrMock = XHR.mock.instances[0];
