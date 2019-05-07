@@ -538,7 +538,7 @@ Returns
   - ``size`` - ``Number``: Integer the size of this block in bytes.
   - ``gasLimit`` - ``Number``: The maximum gas allowed in this block.
   - ``gasUsed`` - ``Number``: The total used gas by all transactions in this block.
-  - ``timestamp`` - ``Number``: The unix timestamp for when the block was collated.
+  - ``timestamp`` - ``Number | String`: The unix timestamp for when the block was collated (returns a string if a overflow got detected).
   - ``transactions`` - ``Array``: Array of transaction objects, or 32 Bytes transaction hashes depending on the ``returnTransactionObjects`` parameter.
   - ``uncles`` - ``Array``: Array of uncle hashes.
 
