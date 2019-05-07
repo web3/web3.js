@@ -303,7 +303,13 @@ export const outputBlockFormatter = (block) => {
 
     // Support Quorum 2.2.0 - timestamp is not present in the Quorum getBlock response
     if (block.timestamp !== null) {
-        block.timestamp = Utils.hexToNumber(block.timestamp);
+        const timestamp = Utils.toBN(block.timestamp);
+
+        if (timestamp.bitLength() <= 53) {
+            block.timestamp = Utils.hexToNumber(block.timestamp);
+        } else {
+            block.timestamp = timestamp.toString(10);
+        }
     }
 
     if (block.number !== null) {
