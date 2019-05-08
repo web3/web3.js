@@ -137,7 +137,11 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
             let nonce;
 
             if (account && account.nonce) {
-               nonce = account.nonce;
+                nonce = account.nonce;
+
+                this.once('confirmation', () => {
+                    account.nonce++;
+                });
             }
 
             if (!nonce) {
@@ -159,12 +163,6 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
 
         this.parameters = [response.rawTransaction];
         this.rpcMethod = 'eth_sendRawTransaction';
-
-        if (account) {
-            this.once('confirmation', () => {
-               account.nonce++;
-            });
-        }
 
         return super.execute();
     }
