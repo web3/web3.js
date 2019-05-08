@@ -23,6 +23,7 @@
 import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
+import JsonRpcMapper from '../mappers/JsonRpcMapper';
 
 export default class BatchRequest {
     /**
@@ -58,7 +59,7 @@ export default class BatchRequest {
      * @returns Promise<{methods: AbstractMethod[], response: Object[]}|Error[]>
      */
     execute() {
-        return this.moduleInstance.currentProvider.sendBatch(this.methods, this.moduleInstance).then((response) => {
+        return this.moduleInstance.currentProvider.sendPayload(this.toPayload()).then((response) => {
             let errors = [];
             this.methods.forEach((method, index) => {
                 if (!isArray(response)) {
@@ -103,5 +104,16 @@ export default class BatchRequest {
                 response
             };
         });
+    }
+
+    toPayload() {
+        let payload = [];
+
+        this.methods.forEach((method) => {
+            method.beforeExecution(moduleInstance);
+            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
+        });
+
+        return payload;
     }
 }
