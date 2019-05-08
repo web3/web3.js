@@ -28,7 +28,6 @@ Example
 
 .. code-block:: javascript
     import {AbstractWeb3Module} from 'web3-core';
-    import MyMethodFactory from '../factory/MyMethodFactory';
 
     class Example extends AbstractWeb3Module {
         constructor(provider, net, methodFactory, options) {
