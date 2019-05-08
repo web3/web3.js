@@ -27,7 +27,6 @@ import {ProviderDetector, ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {Eth} from 'web3-eth';
 import {Shh} from 'web3-shh';
-import {Bzz} from 'web3-bzz';
 import {Network} from 'web3-net';
 import {Personal} from 'web3-eth-personal';
 import {version} from '../package.json';
@@ -45,7 +44,6 @@ export default class Web3 extends AbstractWeb3Module {
 
         this.eth = new Eth(this.currentProvider, net, options);
         this.shh = new Shh(this.currentProvider, net, options);
-        this.bzz = new Bzz(this.currentProvider);
         this.utils = Utils;
         this.version = version;
     }
@@ -232,8 +230,7 @@ export default class Web3 extends AbstractWeb3Module {
         return (
             super.setProvider(provider, net) &&
             this.eth.setProvider(provider, net) &&
-            this.shh.setProvider(provider, net) &&
-            this.bzz.setProvider(provider)
+            this.shh.setProvider(provider, net)
         );
     }
 
@@ -266,9 +263,6 @@ export default class Web3 extends AbstractWeb3Module {
             },
             Shh: (provider, options, net) => {
                 return new Shh(providerResolver.resolve(provider, net), options);
-            },
-            Bzz: (provider) => {
-                return new Bzz(provider);
             }
         };
     }
