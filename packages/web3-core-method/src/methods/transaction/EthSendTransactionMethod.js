@@ -96,7 +96,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
 
         if (this.hasAccounts() && this.isDefaultSigner()) {
             if (this.moduleInstance.accounts.wallet[this.parameters[0].from]) {
-                this.sendRawTransaction(this.moduleInstance.accounts.wallet[this.parameters[0].from].privateKey).catch(
+                this.sendRawTransaction(this.moduleInstance.accounts.wallet[this.parameters[0].from]).catch(
                     (error) => {
                         this.handleError(error, false, 0);
                     }
@@ -122,11 +122,11 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      *
      * @method sendRawTransaction
      *
-     * @param {String} privateKey
+     * @param {Account} account
      *
      * @returns {PromiEvent}
      */
-    async sendRawTransaction(privateKey = null) {
+    async sendRawTransaction(account = null) {
         this.beforeExecution(this.moduleInstance);
 
         if (!this.parameters[0].chainId) {
@@ -135,8 +135,15 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
             this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
+            const nonce = await this.getTransactionCountMethod.execute();
 
-            this.parameters[0].nonce = await this.getTransactionCountMethod.execute();
+            if (account.nonce < nonce) {
+                account.nonce = nonce;
+            }
+
+            this.parameters[0].nonce = account.nonce;
+
+            account.nonce++;
         }
 
         let transaction = this.parameters[0];
@@ -146,7 +153,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         transaction.chainId = this.utils.numberToHex(transaction.chainId);
         delete transaction.from;
 
-        const response = await this.moduleInstance.transactionSigner.sign(transaction, privateKey);
+        const response = await this.moduleInstance.transactionSigner.sign(transaction, account.privateKey);
 
         this.parameters = [response.rawTransaction];
         this.rpcMethod = 'eth_sendRawTransaction';
