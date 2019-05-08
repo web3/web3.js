@@ -122,6 +122,7 @@ export default class BatchRequest {
 
             if (this.moduleInstance.accounts && method.Type === 'eth-send-transaction-method' && method.hasAccounts()) {
                 const account = this.moduleInstance.accounts.wallet[this.parameters[0].from];
+
                 if (account) {
                     const response = await method.signTransaction();
                     this.parameters = [response.rawTransaction];
@@ -130,6 +131,7 @@ export default class BatchRequest {
             }
 
             method.beforeExecution(this.moduleInstance);
+
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         }
 
