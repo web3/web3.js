@@ -41,11 +41,22 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
     }
 
     /**
+     * TODO: Instead of using the static type property should every method has a static factory method
      * This type will be used in the AbstractMethodFactory.
      *
      * @returns {String}
      */
     static get Type() {
+        return 'eth-send-transaction-method';
+    }
+
+    /**
+     * TODO: Find a better way to have a mangle save method type detection (ES7 decorator?)
+     * The non-static property will be used in the BatchRequest object
+     *
+     * @returns {String}
+     */
+    get Type() {
         return 'eth-send-transaction-method';
     }
 
@@ -95,8 +106,10 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         }
 
         if (this.hasAccounts() && this.isDefaultSigner()) {
-            if (this.moduleInstance.accounts.wallet[this.parameters[0].from]) {
-                this.sendRawTransaction(this.moduleInstance.accounts.wallet[this.parameters[0].from]).catch(
+            const account = this.moduleInstance.accounts.wallet[this.parameters[0].from];
+
+            if (account) {
+                this.sendRawTransaction(account).catch(
                     (error) => {
                         this.handleError(error, false, 0);
                     }
@@ -127,6 +140,21 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {PromiEvent}
      */
     async sendRawTransaction(account = null) {
+        const response = await this.signTransaction(account);
+
+        this.parameters = [response.rawTransaction];
+        this.rpcMethod = 'eth_sendRawTransaction';
+
+        return super.execute();
+    }
+
+    /**
+     * Signs the transaction locally
+     *
+     * @param account
+     * @returns {Promise<void>}
+     */
+    async signTransaction(account) {
         this.beforeExecution(this.moduleInstance);
 
         if (!this.parameters[0].chainId) {
@@ -159,12 +187,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         transaction.chainId = this.utils.numberToHex(transaction.chainId);
         delete transaction.from;
 
-        const response = await this.moduleInstance.transactionSigner.sign(transaction, account.privateKey);
-
-        this.parameters = [response.rawTransaction];
-        this.rpcMethod = 'eth_sendRawTransaction';
-
-        return super.execute();
+        return this.moduleInstance.transactionSigner.sign(transaction, account.privateKey);
     }
 
     /**

@@ -123,6 +123,27 @@ export default class AbstractSocketProvider extends EventEmitter {
     }
 
     /**
+     * Creates the JSON-RPC batch payload and sends it to the node.
+     *
+     * @method sendBatch
+     *
+     * @param {AbstractMethod[]} methods
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns Promise<Object|Error>
+     */
+    sendBatch(methods, moduleInstance) {
+        let payload = [];
+
+        methods.forEach((method) => {
+            method.beforeExecution(moduleInstance);
+            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
+        });
+
+        return this.sendPayload(payload);
+    }
+
+    /**
      * Emits the ready event when the connection is established
      *
      * @method onReady

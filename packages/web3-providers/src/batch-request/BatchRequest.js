@@ -58,61 +58,73 @@ export default class BatchRequest {
      *
      * @returns Promise<{methods: AbstractMethod[], response: Object[]}|Error[]>
      */
-    execute() {
-        return this.moduleInstance.currentProvider.sendPayload(this.toPayload()).then((response) => {
-            let errors = [];
-            this.methods.forEach((method, index) => {
-                if (!isArray(response)) {
-                    method.callback(
-                        new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`),
-                        null
-                    );
+    async execute() {
+        const payload = await this.toPayload();
+        const response = await this.moduleInstance.currentProvider.sendPayload(payload);
+        let errors = [];
+        
+        this.methods.forEach((method, index) => {
+            if (!isArray(response)) {
+                method.callback(
+                    new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`),
+                    null
+                );
 
-                    errors.push(`Response should be of type Array but is: ${typeof response}`);
+                errors.push(`Response should be of type Array but is: ${typeof response}`);
 
-                    return;
-                }
-
-                const responseItem = response[index] || null;
-
-                const validationResult = JsonRpcResponseValidator.validate(responseItem);
-
-                if (validationResult) {
-                    try {
-                        const mappedResult = method.afterExecution(responseItem.result);
-
-                        response[index] = mappedResult;
-                        method.callback(false, mappedResult);
-                    } catch (error) {
-                        errors.push(error);
-                        method.callback(error, null);
-                    }
-
-                    return;
-                }
-
-                errors.push(validationResult);
-                method.callback(validationResult, null);
-            });
-
-            if (errors.length > 0) {
-                throw new Error(`BatchRequest error: ${JSON.stringify(errors)}`);
+                return;
             }
 
-            return {
-                methods: this.methods,
-                response
-            };
+            const responseItem = response[index] || null;
+
+            const validationResult = JsonRpcResponseValidator.validate(responseItem);
+
+            if (validationResult) {
+                try {
+                    const mappedResult = method.afterExecution(responseItem.result);
+
+                    response[index] = mappedResult;
+                    method.callback(false, mappedResult);
+                } catch (error) {
+                    errors.push(error);
+                    method.callback(error, null);
+                }
+
+                return;
+            }
+
+            errors.push(validationResult);
+            method.callback(validationResult, null);
         });
+
+        if (errors.length > 0) {
+            throw new Error(`BatchRequest error: ${JSON.stringify(errors)}`);
+        }
+
+        return {
+            methods: this.methods,
+            response
+        };
     }
 
-    toPayload() {
+    async toPayload() {
         let payload = [];
 
-        this.methods.forEach((method) => {
-            method.beforeExecution(moduleInstance);
+        for (const key of Object.keys(this.methods)) {
+            const method = this.methods[key];
+
+            if (this.moduleInstance.accounts && method.Type === 'eth-send-transaction-method' && method.hasAccounts()) {
+                const account = this.moduleInstance.accounts.wallet[this.parameters[0].from];
+                if (account) {
+                    const response = await method.signTransaction();
+                    this.parameters = [response.rawTransaction];
+                    this.rpcMethod = 'eth_sendRawTransaction';
+                }
+            }
+
+            method.beforeExecution(this.moduleInstance);
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
-        });
+        }
 
         return payload;
     }
