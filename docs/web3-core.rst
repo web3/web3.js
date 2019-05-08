@@ -22,6 +22,20 @@ The ``AbstractWeb3Module`` does have the following constructor parameters:
 - ``methodFactory`` - ``AbstractMethodFactory`` The :ref:`AbstractMethodFactory <web3-abstract-method-factory>` will be used in the module proxy for the JSON-RPC method calls. (optional)
 - ``net`` - ``net.Socket`` The ``net.Socket`` object of the NodeJS net module. (optional)
 
+-------
+Example
+-------
+
+.. code-block:: javascript
+    import {AbstractWeb3Module} from 'web3-core';
+    import MyMethodFactory from '../factory/MyMethodFactory';
+
+    class Example extends AbstractWeb3Module {
+        constructor(provider, net, methodFactory, options) {
+            super(provider, net, methodFactory, options;
+        }
+    }
+
 
 Interface of the ``AbstractWeb3Module`` class:
 
