@@ -134,16 +134,14 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
-            this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
-            const nonce = await this.getTransactionCountMethod.execute();
+            let nonce = account.nonce;
 
-            if (account.nonce < nonce) {
-                account.nonce = nonce;
+            if (nonce) {
+                this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
+                nonce = await this.getTransactionCountMethod.execute();
             }
 
-            this.parameters[0].nonce = account.nonce;
-
-            account.nonce++;
+            this.parameters[0].nonce = nonce;
         }
 
         let transaction = this.parameters[0];
@@ -157,6 +155,10 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
 
         this.parameters = [response.rawTransaction];
         this.rpcMethod = 'eth_sendRawTransaction';
+
+        this.once('confirmation', () => {
+           account.nonce++;
+        });
 
         return super.execute();
     }
