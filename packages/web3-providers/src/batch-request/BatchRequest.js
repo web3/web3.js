@@ -62,7 +62,7 @@ export default class BatchRequest {
         const payload = await this.toPayload();
         const response = await this.moduleInstance.currentProvider.sendPayload(payload);
         let errors = [];
-        
+
         this.methods.forEach((method, index) => {
             if (!isArray(response)) {
                 method.callback(
@@ -107,10 +107,17 @@ export default class BatchRequest {
         };
     }
 
+    /**
+     *  Creates a payload and signs the transactions locally if required.
+     *
+     * @method toPayload
+     *
+     * @returns {Promise<Array>}
+     */
     async toPayload() {
         let payload = [];
 
-        for (const key of Object.keys(this.methods)) {
+        for (const key of this.methods) {
             const method = this.methods[key];
 
             if (this.moduleInstance.accounts && method.Type === 'eth-send-transaction-method' && method.hasAccounts()) {
