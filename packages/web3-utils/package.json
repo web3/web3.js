@@ -24,7 +24,7 @@
         "ethjs-unit": "^0.1.6",
         "lodash": "^4.17.11",
         "number-to-bn": "1.7.0",
-        "randomhex": "0.1.5",
+        "randombytes": "^2.1.0",
         "utf8": "2.1.1"
     },
     "devDependencies": {
