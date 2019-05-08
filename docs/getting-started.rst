@@ -8,7 +8,6 @@ The web3.js library is a collection of modules which contain specific functional
 
 - The ``web3-eth`` is for the Ethereum blockchain and smart contracts
 - The ``web3-shh`` is for the whisper protocol to communicate p2p and broadcast
-- The ``web3-bzz`` is for the swarm protocol, the decentralized file storage
 - The ``web3-utils`` contains useful helper functions for DApp developers.
 
 
