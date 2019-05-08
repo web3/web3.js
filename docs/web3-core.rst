@@ -27,9 +27,18 @@ Example
 -------
 
 .. code-block:: javascript
+
     import {AbstractWeb3Module} from 'web3-core';
 
     class Example extends AbstractWeb3Module {
+        /**
+         * @param {AbstractSocketProvider|HttpProvider|CustomProvider|String} provider
+         * @param {AbstractMethodFactory} methodFactory
+         * @param {Web3ModuleOptions} options
+         * @param {Net.Socket} nodeNet
+         *
+         * @constructor
+         */
         constructor(provider, net, methodFactory, options) {
             super(provider, net, methodFactory, options;
         }
