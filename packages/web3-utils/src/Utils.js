@@ -41,7 +41,7 @@ import BN from 'bn.js';
  * @returns {Boolean}
  */
 export const isBN = (object) => {
-    return object instanceof BN || (object && object.constructor && object.constructor.name === 'BN');
+    return BN.isBN(object);
 };
 
 /**

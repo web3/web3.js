@@ -24,7 +24,6 @@ import {provider} from 'web3-providers';
 import {Eth} from 'web3-eth';
 import {Network} from 'web3-net';
 import {Shh} from 'web3-shh';
-import {Bzz} from 'web3-bzz';
 import {Personal} from 'web3-eth-personal';
 
 export default class Web3 extends AbstractWeb3Module {
@@ -40,7 +39,6 @@ export default class Web3 extends AbstractWeb3Module {
     utils: Utils;
     eth: Eth;
     shh: Shh;
-    bzz: Bzz;
     version: string;
 }
 
@@ -49,5 +47,4 @@ export interface Modules {
     Net: new (provider: provider, net: net.Socket) => Network;
     Personal: new (provider: provider, net: net.Socket) => Personal;
     Shh: new (provider: provider, net: net.Socket) => Shh;
-    Bzz: new (provider: provider) => Bzz;
 }
