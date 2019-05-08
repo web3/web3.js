@@ -33,7 +33,6 @@ Example
 
     > web3.eth
     > web3.shh
-    > web3.bzz
     > web3.utils
     > web3.version
 
@@ -55,7 +54,6 @@ Returns
     - ``Net`` - ``Function``: the Net module for interacting with network properties see :ref:`web3.eth.net <eth-net>` for more.
     - ``Personal`` - ``Function``: the Personal module for interacting with the Ethereum accounts see :ref:`web3.eth.personal <eth-personal>` for more.
     - ``Shh`` - ``Function``: the Shh module for interacting with the whisper protocol see :ref:`web3.shh <shh>` for more.
-    - ``Bzz`` - ``Function``: the Bzz module for interacting with the swarm network see :ref:`web3.bzz <bzz>` for more.
 
 -------
 Example
@@ -69,7 +67,6 @@ Example
         Net(provider, net?, options?),
         Personal(provider, net?, options?),
         Shh(provider, net?, options?),
-        Bzz(provider, net?, options?),
     }
 
 
