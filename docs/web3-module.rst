@@ -25,6 +25,7 @@ Example
 -------
 
 .. code-block:: javascript
+
     import * as Utils from 'web3-utils';
     import {formatters} from 'web3-core-formatters';
     import {AbstractWeb3Module} from 'web3-core';
@@ -48,7 +49,7 @@ Example
 
     class Example extends AbstractWeb3Module {
         /**
-         * @param {AbstractSocketProvider|HttpProvider|String|EthereumProvider} provider
+         * @param {AbstractSocketProvider|HttpProvider|CustomProvider|String} provider
          * @param {Web3ModuleOptions} options
          * @param {Net.Socket} nodeNet
          *
@@ -64,6 +65,10 @@ Example
 
             return method.execute();
         }
+
+        logs(options) {
+            return new LogSubscription(options, Utils, formatters, this, new GetPastLogsMethod(Utils, formatters, this));
+        }
     }
 
     const example = new Example(provider, net, options);
@@ -78,4 +83,7 @@ Example
 
     const block = example.getBlockByNumber(1).then(console.log);
     // > {}
+
+    example.logs(options).subscribe(console.log);
+    > {}
 
