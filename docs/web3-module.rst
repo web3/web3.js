@@ -20,3 +20,76 @@ These are the core modules which are providing all the classes for the Web3 Modu
 - :ref:`web3-core-subscriptions <web3-core-subscriptions>`
 - :ref:`Contract <web3-module-contract>`
 
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    import * as Utils from 'web3-utils';
+    import {formatters} from 'web3-core-formatters';
+    import {AbstractWeb3Module} from 'web3-core';
+    import {AbstractMethodFactory, GetBlockByNumberMethod, AbstractMethod} from 'web3-core-method';
+
+    class MethodFactory extends AbstractMethodFactory {
+        /**
+         * @param {Utils} utils
+         * @param {Object} formatters
+         *
+         * @constructor
+         */
+        constructor(utils, formatters) {
+            super(utils, formatters);
+
+            this.methods = {
+                getBlockByNumber: GetBlockByNumberMethod
+            };
+        }
+    }
+
+    class Example extends AbstractWeb3Module {
+        /**
+         * @param {AbstractSocketProvider|HttpProvider|CustomProvider|String} provider
+         * @param {Web3ModuleOptions} options
+         * @param {Net.Socket} nodeNet
+         *
+         * @constructor
+         */
+        constructor(provider, net, options) {
+            super(provider, net, new MethodFactory(Utils, formatters), options;
+        }
+
+        sign() {
+            const method = new AbstractMethod('eth_sign', 2, utils, formatters, this);
+            method.setArguments(arguments)
+
+            return method.execute();
+        }
+
+        logs(options) {
+            return new LogSubscription(
+              options,
+              Utils,
+              formatters,
+              this,
+              new GetPastLogsMethod(Utils, formatters, this)
+            );
+        }
+    }
+
+    const example = new Example(provider, net, options);
+
+    example.sign('0x0', 'message').then(console.log);
+    // > "response"
+
+    example.sign('0x0', 'message', (error, response) => {
+        console.log(response);
+    };
+    // > "response"
+
+    const block = example.getBlockByNumber(1).then(console.log);
+    // > {}
+
+    example.logs(options).subscribe(console.log);
+    > {}
+
