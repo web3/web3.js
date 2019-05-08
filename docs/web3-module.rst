@@ -67,7 +67,13 @@ Example
         }
 
         logs(options) {
-            return new LogSubscription(options, Utils, formatters, this, new GetPastLogsMethod(Utils, formatters, this));
+            return new LogSubscription(
+              options,
+              Utils,
+              formatters,
+              this,
+              new GetPastLogsMethod(Utils, formatters, this)
+            );
         }
     }
 
