@@ -64,84 +64,84 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
 
         this.moduleInstance.currentProvider
             .send(this.rpcMethod, this.parameters)
-            .then((transactionHash) => {
-                let confirmations, receipt;
+            .then(this.observeTransaction)
+            .catch(this.handleError);
 
-                if (this.callback) {
-                    this.callback(false, transactionHash);
+        return this.promiEvent;
+    }
 
-                    return;
-                }
+    /**
+     *
+     * @param transactionHash
+     */
+    observeTransaction(transactionHash) {
+        let confirmations, receipt;
 
-                this.promiEvent.emit('transactionHash', transactionHash);
+        if (this.callback) {
+            this.callback(false, transactionHash);
 
-                const transactionConfirmationSubscription = this.transactionObserver.observe(transactionHash).subscribe(
-                    (transactionConfirmation) => {
-                        confirmations = transactionConfirmation.confirmations;
-                        receipt = transactionConfirmation.receipt;
+            return;
+        }
 
-                        if (!receipt.status) {
-                            if (this.parameters[0].gas === receipt.gasUsed) {
-                                this.handleError(
-                                    new Error(
-                                        `Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(
-                                            receipt,
-                                            null,
-                                            2
-                                        )}`
-                                    ),
+        this.promiEvent.emit('transactionHash', transactionHash);
+
+        const transactionConfirmationSubscription = this.transactionObserver.observe(transactionHash).subscribe(
+            (transactionConfirmation) => {
+                confirmations = transactionConfirmation.confirmations;
+                receipt = transactionConfirmation.receipt;
+
+                if (!receipt.status) {
+                    if (this.parameters[0].gas === receipt.gasUsed) {
+                        this.handleError(
+                            new Error(
+                                `Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(
                                     receipt,
-                                    confirmations
-                                );
-
-                                transactionConfirmationSubscription.unsubscribe();
-
-                                return;
-                            }
-
-                            this.handleError(
-                                new Error(
-                                    `Transaction has been reverted by the EVM:\n${JSON.stringify(receipt, null, 2)}`
-                                ),
-                                receipt,
-                                confirmations
-                            );
-
-                            transactionConfirmationSubscription.unsubscribe();
-
-                            return;
-                        }
-
-                        this.promiEvent.emit(
-                            'confirmation',
-                            confirmations,
-                            this.formatters.outputTransactionFormatter(receipt)
+                                    null,
+                                    2
+                                )}`
+                            ),
+                            receipt,
+                            confirmations
                         );
-                    },
-                    (error) => {
-                        this.handleError(error, receipt, confirmations);
-                    },
-                    () => {
-                        if (this.promiEvent.listenerCount('receipt') > 0) {
-                            this.promiEvent.emit('receipt', this.afterExecution(receipt));
-                            this.promiEvent.removeAllListeners();
 
-                            return;
-                        }
+                        transactionConfirmationSubscription.unsubscribe();
 
-                        this.promiEvent.resolve(this.afterExecution(receipt));
+                        return;
                     }
-                );
-            })
-            .catch((error) => {
-                if (this.callback) {
-                    this.callback(error, null);
+
+                    this.handleError(
+                        new Error(
+                            `Transaction has been reverted by the EVM:\n${JSON.stringify(receipt, null, 2)}`
+                        ),
+                        receipt,
+                        confirmations
+                    );
+
+                    transactionConfirmationSubscription.unsubscribe();
 
                     return;
                 }
 
-                this.handleError(error, false, 0);
-            });
+                this.promiEvent.emit(
+                    'confirmation',
+                    confirmations,
+                    this.formatters.outputTransactionFormatter(receipt)
+                );
+            },
+            (error) => {
+                this.handleError(error, receipt, confirmations);
+            },
+            () => {
+                if (this.promiEvent.listenerCount('receipt') > 0) {
+                    this.promiEvent.emit('receipt', this.afterExecution(receipt));
+                    this.promiEvent.removeAllListeners();
+
+                    return;
+                }
+
+                this.promiEvent.resolve(this.afterExecution(receipt));
+            }
+        );
 
         return this.promiEvent;
     }
@@ -155,7 +155,13 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
      * @param {Object} receipt
      * @param {Number} confirmations
      */
-    handleError(error, receipt, confirmations) {
+    handleError(error, receipt = false, confirmations = 0) {
+        if (this.callback) {
+            this.callback(error, null);
+
+            return;
+        }
+
         if (this.promiEvent.listenerCount('error') > 0) {
             this.promiEvent.emit('error', error, receipt, confirmations);
             this.promiEvent.removeAllListeners();

@@ -63,12 +63,17 @@ export default class BatchRequest {
         const response = await this.moduleInstance.currentProvider.sendPayload(payload);
         let errors = [];
 
-        this.methods.forEach((method, index) => {
+        let index = 0;
+        for (const method of this.methods) {
             if (!isArray(response)) {
-                method.callback(
-                    new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`),
-                    null
-                );
+                if (method.callback) {
+                    method.callback(
+                        new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`),
+                        null
+                    );
+
+                    return;
+                }
 
                 errors.push(`Response should be of type Array but is: ${typeof response}`);
 
@@ -81,7 +86,15 @@ export default class BatchRequest {
 
             if (validationResult) {
                 try {
-                    const mappedResult = method.afterExecution(responseItem.result);
+                    let mappedResult;
+
+                    // TODO: Find a better handling for custom behaviours in a batch request (afterBatchRequest?)
+                    if (method.Type === 'eth-send-transaction-method') {
+                        mappedResult = await method.observeTransaction(responseItem.result);
+                    } else {
+                        mappedResult = method.afterExecution(responseItem.result);
+                    }
+
 
                     response[index] = mappedResult;
                     method.callback(false, mappedResult);
@@ -94,11 +107,16 @@ export default class BatchRequest {
             }
 
             errors.push(validationResult);
-            method.callback(validationResult, null);
-        });
+
+            if (method.callback) {
+                method.callback(validationResult, null);
+            }
+
+            i++;
+        }
 
         if (errors.length > 0) {
-            throw new Error(`BatchRequest error: ${JSON.stringify(errors)}`);
+            throw new Error(`BatchRequest error: ${errors}`);
         }
 
         return {
@@ -117,20 +135,18 @@ export default class BatchRequest {
     async toPayload() {
         let payload = [];
 
-        for (const key of this.methods) {
-            const method = this.methods[key];
+        for (const method of this.methods) {
+            method.beforeExecution(this.moduleInstance);
 
             if (this.moduleInstance.accounts && method.Type === 'eth-send-transaction-method' && method.hasAccounts()) {
-                const account = this.moduleInstance.accounts.wallet[this.parameters[0].from];
+                const account = this.moduleInstance.accounts.wallet[method.parameters[0].from];
 
                 if (account) {
-                    const response = await method.signTransaction();
-                    this.parameters = [response.rawTransaction];
-                    this.rpcMethod = 'eth_sendRawTransaction';
+                    const response = await method.signTransaction(account);
+                    method.parameters = [response.rawTransaction];
+                    method.rpcMethod = 'eth_sendRawTransaction';
                 }
             }
-
-            method.beforeExecution(this.moduleInstance);
 
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         }
