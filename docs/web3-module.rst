@@ -51,7 +51,7 @@ Example
         /**
          * @param {AbstractSocketProvider|HttpProvider|CustomProvider|String} provider
          * @param {Web3ModuleOptions} options
-         * @param {Net.Socket} nodeNet
+         * @param {Net.Socket} net
          *
          * @constructor
          */
@@ -59,13 +59,27 @@ Example
             super(provider, net, new MethodFactory(Utils, formatters), options;
         }
 
+        /**
+         * Executes the eth_sign JSON-RPC method
+         *
+         * @method sign
+         *
+         * @returns {Promise}
+         */
         sign() {
-            const method = new AbstractMethod('eth_sign', 2, utils, formatters, this);
+            const method = new AbstractMethod('eth_sign', 2, Utils, formatters, this);
             method.setArguments(arguments)
 
             return method.execute();
         }
 
+        /**
+         * Executes the eth_subscribe JSON-RPC method with the subscription type logs
+         *
+         * @method logs
+         *
+         * @returns {LogSubscription}
+         */
         logs(options) {
             return new LogSubscription(
               options,
