@@ -27,7 +27,7 @@ Example
 .. code-block:: javascript
 
     import * as Utils from 'web3-utils';
-    import {formatters} from 'web3-core-formatters';
+    import {formatters} from 'web3-core-helpers';
     import {AbstractWeb3Module} from 'web3-core';
     import {AbstractMethodFactory, GetBlockByNumberMethod, AbstractMethod} from 'web3-core-method';
 
