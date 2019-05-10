@@ -135,7 +135,7 @@ abiCoder.encodeParameters(
             ParentStruct: {
                 propertyOne: 'uint256',
                 propertyTwo: 'uint256',
-                ChildStruct: {
+                childStruct: {
                     propertyOne: 'uint256',
                     propertyTwo: 'uint256'
                 }
