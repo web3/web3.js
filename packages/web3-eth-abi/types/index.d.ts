@@ -24,15 +24,15 @@ export class AbiCoder {
 
     encodeEventSignature(functionName: string | AbiItem): string;
 
-    encodeParameter(type: string | AbiItem, parameter: any): string;
+    encodeParameter(type: string | any, parameter: any): string;
 
-    encodeParameters(types: Array<string | AbiItem>, paramaters: any[]): string;
+    encodeParameters(types: Array<string | any>, paramaters: any[]): string;
 
     encodeFunctionCall(abiItem: AbiItem, params: string[]): string;
 
-    decodeParameter(type: string | AbiItem, hex: string): {[key: string]: any;};
+    decodeParameter(type: string | any, hex: string): {[key: string]: any;};
 
-    decodeParameters(types: Array<string | AbiItem>, hex: string): {[key: string]: any;};
+    decodeParameters(types: Array<string | any>, hex: string): {[key: string]: any;};
 
     decodeLog(inputs: AbiInput[], hex: string, topics: string[]): {[key: string]: string;};
 }

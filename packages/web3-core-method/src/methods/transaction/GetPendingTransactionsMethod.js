@@ -17,7 +17,7 @@
 /**
  * @file GetPendingTransactionsMethod.js
  * @author Prince Sinha <sinhaprince013@gmail.com>
- * @date 2018
+ * @date 2019
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
