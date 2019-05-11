@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import EventEmitter from 'events';
+import EventEmitter from 'eventemitter3';
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
 import JsonRpcMapper from '../../src/mappers/JsonRpcMapper';
