@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-beta.54",
+  "version": "1.0.0-beta.55",
   "lerna": "2.0.0",
   "command": {
     "init": {

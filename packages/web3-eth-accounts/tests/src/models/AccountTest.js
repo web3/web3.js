@@ -177,7 +177,11 @@ describe('AccountTest', () => {
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
         );
 
-        expect(createDecipheriv).toHaveBeenCalledWith('cipher', Buffer.from('0000000000000000'), Buffer.from(['0x0'], 'hex'));
+        expect(createDecipheriv).toHaveBeenCalledWith(
+            'cipher',
+            Buffer.from('0000000000000000'),
+            Buffer.from(['0x0'], 'hex')
+        );
 
         expect(decipher.update).toHaveBeenCalledWith(Buffer.from(json.crypto.ciphertext, 'hex'));
 
@@ -230,13 +234,23 @@ describe('AccountTest', () => {
             `0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`
         );
 
-        expect(pbkdf2Sync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('salt', 'hex'), 1, 'dklen', 'sha256');
+        expect(pbkdf2Sync).toHaveBeenCalledWith(
+            Buffer.from('password'),
+            Buffer.from('salt', 'hex'),
+            1,
+            'dklen',
+            'sha256'
+        );
 
         expect(keccak256).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
         );
 
-        expect(createDecipheriv).toHaveBeenCalledWith('cipher', Buffer.from('0000000000000000'), Buffer.from(['0x0'], 'hex'));
+        expect(createDecipheriv).toHaveBeenCalledWith(
+            'cipher',
+            Buffer.from('0000000000000000'),
+            Buffer.from(['0x0'], 'hex')
+        );
 
         expect(decipher.update).toHaveBeenCalledWith(Buffer.from(json.crypto.ciphertext, 'hex'));
 
@@ -295,7 +309,13 @@ describe('AccountTest', () => {
             Account.fromV3Keystore(json, 'password', false);
         }).toThrow('Key derivation failed - possibly wrong password');
 
-        expect(pbkdf2Sync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('salt', 'hex'), 1, 'dklen', 'sha256');
+        expect(pbkdf2Sync).toHaveBeenCalledWith(
+            Buffer.from('password'),
+            Buffer.from('salt', 'hex'),
+            1,
+            'dklen',
+            'sha256'
+        );
 
         expect(keccak256).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
@@ -433,13 +453,7 @@ describe('AccountTest', () => {
 
         expect(randomBytes).toHaveBeenNthCalledWith(3, 16);
 
-        expect(pbkdf2Sync).toHaveBeenCalledWith(
-            Buffer.from('password'),
-            Buffer.from('random'),
-            262144,
-            32,
-            'sha256'
-        );
+        expect(pbkdf2Sync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 262144, 32, 'sha256');
 
         expect(createCipheriv).toHaveBeenCalledWith(
             'aes-128-ctr',
@@ -506,13 +520,7 @@ describe('AccountTest', () => {
 
         expect(randomBytes).toHaveBeenNthCalledWith(2, 16);
 
-        expect(pbkdf2Sync).toHaveBeenCalledWith(
-            Buffer.from('password'),
-            Buffer.from('random'),
-            262144,
-            32,
-            'sha256'
-        );
+        expect(pbkdf2Sync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 262144, 32, 'sha256');
 
         expect(createCipheriv).toHaveBeenCalledWith(
             'aes-128-ctr',
