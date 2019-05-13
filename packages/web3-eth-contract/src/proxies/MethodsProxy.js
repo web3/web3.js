@@ -191,7 +191,7 @@ export default class MethodsProxy {
         method.setArguments(methodArguments);
 
         // If no parameters are given for the eth_call or eth_send* methods then it will set a empty options object.
-        if (typeof method.parameters[0] === 'undefined') {
+        if (!method.parameters[0]) {
             method.parameters[0] = {};
         }
 
