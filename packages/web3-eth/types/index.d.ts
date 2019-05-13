@@ -184,7 +184,7 @@ export interface BlockHeader {
     extraData: string
     gasLimit: number
     gasUsed: number
-    timestamp: number
+    timestamp: number | string
 }
 
 export interface Block extends BlockHeader {

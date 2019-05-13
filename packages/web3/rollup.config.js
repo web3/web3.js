@@ -8,6 +8,5 @@ export default rollupConfig('Web3', pkg.name, {
     'web3-eth': 'web3-eth',
     'web3-eth-personal': 'web3-eth-personal',
     'web3-shh': 'web3-shh',
-    'web3-bzz': 'web3-bzz',
     'web3-net': 'web3-net'
 });
