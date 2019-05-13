@@ -711,7 +711,7 @@ getContenthash
 
     web3.eth.ens.getContenthash(ENSName, [callback]);
 
-Returns the contenthash associated with an Ens node.
+Returns the contenthash associated with an Ens node. `contenthash` encoding is defined in [EIP1577](http://eips.ethereum.org/EIPS/eip-1577)
 
 ----------
 Parameters
@@ -732,10 +732,10 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContenthash('ethereum.eth').then((result) => {
+    web3.eth.ens.getContenthash('pac-txt.eth').then((result) => {
         console.log(result);
     });
-    > 'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK'
+    > '0xe30101701220e08ea2458249e8f26aee72b95b39c33849a992a3eff40bd06d26c12197adef16'
 
 ------------------------------------------------------------------------------
 
@@ -771,7 +771,7 @@ Example
 
     web3.eth.ens.setContenthash(
         'ethereum.eth',
-        'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK',
+        '0xe301017012208cd82588c4e08268fa0b824caa93847ac843410076eeedc41d65fb52eccbb9e6',
         {
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
@@ -784,7 +784,7 @@ Example
 
     web3.eth.ens.setContenthash(
         'ethereum.eth',
-        'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK',
+        '0xe301017012208cd82588c4e08268fa0b824caa93847ac843410076eeedc41d65fb52eccbb9e6',
         {
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }

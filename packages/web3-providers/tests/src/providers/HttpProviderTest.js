@@ -327,9 +327,7 @@ describe('HttpProviderTest', () => {
             xhrMock.onreadystatechange();
         }, 1);
 
-        await expect(httpProvider.sendPayload({id: '0x0'})).rejects.toThrow(
-            `HttpProvider ERROR: NOPE (code: 450)`
-        );
+        await expect(httpProvider.sendPayload({id: '0x0'})).rejects.toThrow('HttpProvider ERROR: NOPE (code: 450)');
 
         expect(providersModuleFactoryMock.createXMLHttpRequest).toHaveBeenCalledWith(
             httpProvider.host,

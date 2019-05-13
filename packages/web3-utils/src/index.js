@@ -27,10 +27,21 @@ import isArray from 'lodash/isArray';
 import * as utils from './Utils';
 import * as ethjsUnit from 'ethjs-unit';
 import Hash from 'eth-lib/lib/hash';
+import randombytes from 'randombytes';
 
 export BN from 'bn.js';
 export {soliditySha3} from './SoliditySha3';
-export randomHex from 'randomhex';
+
+/**
+ * Returns a random hex string by the given bytes size
+ *
+ * @param {Number} size
+ *
+ * @returns {string}
+ */
+export const randomHex = (size) => {
+    return '0x' + randombytes(size).toString('hex');
+};
 
 /**
  * Should be used to create full function/event name from json abi

@@ -1,5 +1,7 @@
 import scryptsy from 'scrypt.js';
-import crypto from 'crypto';
+import randomBytes from 'randombytes';
+import {pbkdf2Sync} from 'pbkdf2';
+import {createCipheriv, createDecipheriv} from 'browserify-cipher';
 import uuid from 'uuid';
 import Hash from 'eth-lib/lib/hash';
 import {fromPrivate, sign, decodeSignature} from 'eth-lib/lib/account';
@@ -13,7 +15,9 @@ jest.mock('eth-lib/lib/account');
 jest.mock('eth-lib/lib/hash');
 jest.mock('web3-utils');
 jest.mock('uuid');
-jest.mock('crypto');
+jest.mock('randombytes');
+jest.mock('pbkdf2');
+jest.mock('browserify-cipher');
 jest.mock('scrypt.js');
 jest.mock('../../../src/Accounts');
 
@@ -152,15 +156,7 @@ describe('AccountTest', () => {
 
         decipher.final.mockReturnValueOnce(Buffer.from('0'));
 
-        crypto.createDecipheriv = jest.fn((cipher, derivedKey, buffer) => {
-            expect(cipher).toEqual('cipher');
-
-            expect(derivedKey).toEqual(Buffer.from('0000000000000000'));
-
-            expect(buffer).toEqual(Buffer.from(['0x0'], 'hex'));
-
-            return decipher;
-        });
+        createDecipheriv.mockReturnValueOnce(decipher);
 
         expect(Account.fromV3Keystore(json, 'password', false)).toBeInstanceOf(Account);
 
@@ -181,7 +177,11 @@ describe('AccountTest', () => {
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
         );
 
-        expect(crypto.createDecipheriv).toHaveBeenCalled();
+        expect(createDecipheriv).toHaveBeenCalledWith(
+            'cipher',
+            Buffer.from('0000000000000000'),
+            Buffer.from(['0x0'], 'hex')
+        );
 
         expect(decipher.update).toHaveBeenCalledWith(Buffer.from(json.crypto.ciphertext, 'hex'));
 
@@ -224,29 +224,9 @@ describe('AccountTest', () => {
 
         decipher.final.mockReturnValueOnce(Buffer.from('0'));
 
-        crypto.createDecipheriv = jest.fn((cipher, derivedKey, buffer) => {
-            expect(cipher).toEqual('cipher');
+        createDecipheriv.mockReturnValueOnce(decipher);
 
-            expect(derivedKey).toEqual(Buffer.from('0000000000000000'));
-
-            expect(buffer).toEqual(Buffer.from(['0x0'], 'hex'));
-
-            return decipher;
-        });
-
-        crypto.pbkdf2Sync = jest.fn((password, salt, c, dklen, sha256) => {
-            expect(password).toEqual(Buffer.from(password));
-
-            expect(salt).toEqual(Buffer.from('salt', 'hex'));
-
-            expect(c).toEqual(1);
-
-            expect(dklen).toEqual('dklen');
-
-            expect(sha256).toEqual('sha256');
-
-            return Buffer.from('00000000000000000000000000000000');
-        });
+        pbkdf2Sync.mockReturnValueOnce(Buffer.from('00000000000000000000000000000000'));
 
         expect(Account.fromV3Keystore(json, 'password', false)).toBeInstanceOf(Account);
 
@@ -254,13 +234,23 @@ describe('AccountTest', () => {
             `0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`
         );
 
-        expect(crypto.pbkdf2Sync).toHaveBeenCalled();
+        expect(pbkdf2Sync).toHaveBeenCalledWith(
+            Buffer.from('password'),
+            Buffer.from('salt', 'hex'),
+            1,
+            'dklen',
+            'sha256'
+        );
 
         expect(keccak256).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
         );
 
-        expect(crypto.createDecipheriv).toHaveBeenCalled();
+        expect(createDecipheriv).toHaveBeenCalledWith(
+            'cipher',
+            Buffer.from('0000000000000000'),
+            Buffer.from(['0x0'], 'hex')
+        );
 
         expect(decipher.update).toHaveBeenCalledWith(Buffer.from(json.crypto.ciphertext, 'hex'));
 
@@ -313,25 +303,19 @@ describe('AccountTest', () => {
 
         keccak256.mockReturnValueOnce('0xmac');
 
-        crypto.pbkdf2Sync = jest.fn((password, salt, c, dklen, sha256) => {
-            expect(password).toEqual(Buffer.from(password));
-
-            expect(salt).toEqual(Buffer.from('salt', 'hex'));
-
-            expect(c).toEqual(1);
-
-            expect(dklen).toEqual('dklen');
-
-            expect(sha256).toEqual('sha256');
-
-            return Buffer.from('00000000000000000000000000000000');
-        });
+        pbkdf2Sync.mockReturnValueOnce(Buffer.from('00000000000000000000000000000000'));
 
         expect(() => {
             Account.fromV3Keystore(json, 'password', false);
         }).toThrow('Key derivation failed - possibly wrong password');
 
-        expect(crypto.pbkdf2Sync).toHaveBeenCalled();
+        expect(pbkdf2Sync).toHaveBeenCalledWith(
+            Buffer.from('password'),
+            Buffer.from('salt', 'hex'),
+            1,
+            'dklen',
+            'sha256'
+        );
 
         expect(keccak256).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
@@ -346,7 +330,7 @@ describe('AccountTest', () => {
             address: '0xA'
         });
 
-        crypto.randomBytes.mockReturnValue(Buffer.from('random'));
+        randomBytes.mockReturnValue(Buffer.from('random'));
 
         const cipher = {
             update: jest.fn(),
@@ -357,7 +341,7 @@ describe('AccountTest', () => {
 
         cipher.final.mockReturnValueOnce(Buffer.from('0'));
 
-        crypto.createCipheriv.mockReturnValue(cipher);
+        createCipheriv.mockReturnValue(cipher);
 
         scryptsy.mockReturnValueOnce(Buffer.from('0000000000000000'));
 
@@ -387,15 +371,15 @@ describe('AccountTest', () => {
 
         expect(fromPrivate).toHaveBeenCalledWith('pk');
 
-        expect(crypto.randomBytes).toHaveBeenNthCalledWith(1, 32);
+        expect(randomBytes).toHaveBeenNthCalledWith(1, 32);
 
-        expect(crypto.randomBytes).toHaveBeenNthCalledWith(2, 16);
+        expect(randomBytes).toHaveBeenNthCalledWith(2, 16);
 
-        expect(crypto.randomBytes).toHaveBeenNthCalledWith(3, 16);
+        expect(randomBytes).toHaveBeenNthCalledWith(3, 16);
 
         expect(scryptsy).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 8192, 8, 1, 32);
 
-        expect(crypto.createCipheriv).toHaveBeenCalledWith(
+        expect(createCipheriv).toHaveBeenCalledWith(
             'aes-128-ctr',
             Buffer.from('0000000000000000').slice(0, 16),
             Buffer.from('random')
@@ -423,7 +407,7 @@ describe('AccountTest', () => {
             address: '0xA'
         });
 
-        crypto.randomBytes.mockReturnValue(Buffer.from('random'));
+        randomBytes.mockReturnValue(Buffer.from('random'));
 
         const cipher = {
             update: jest.fn(),
@@ -434,11 +418,9 @@ describe('AccountTest', () => {
 
         cipher.final.mockReturnValueOnce(Buffer.from('0'));
 
-        crypto.createCipheriv.mockReturnValue(cipher);
+        createCipheriv.mockReturnValue(cipher);
 
-        crypto.pbkdf2Sync = jest.fn(() => {
-            return Buffer.from('0000000000000000');
-        });
+        pbkdf2Sync.mockReturnValueOnce(Buffer.from('0000000000000000'));
 
         keccak256.mockReturnValueOnce('0xmac');
 
@@ -465,21 +447,15 @@ describe('AccountTest', () => {
 
         expect(fromPrivate).toHaveBeenCalledWith('pk');
 
-        expect(crypto.randomBytes).toHaveBeenNthCalledWith(1, 32);
+        expect(randomBytes).toHaveBeenNthCalledWith(1, 32);
 
-        expect(crypto.randomBytes).toHaveBeenNthCalledWith(2, 16);
+        expect(randomBytes).toHaveBeenNthCalledWith(2, 16);
 
-        expect(crypto.randomBytes).toHaveBeenNthCalledWith(3, 16);
+        expect(randomBytes).toHaveBeenNthCalledWith(3, 16);
 
-        expect(crypto.pbkdf2Sync).toHaveBeenCalledWith(
-            Buffer.from('password'),
-            Buffer.from('random'),
-            262144,
-            32,
-            'sha256'
-        );
+        expect(pbkdf2Sync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 262144, 32, 'sha256');
 
-        expect(crypto.createCipheriv).toHaveBeenCalledWith(
+        expect(createCipheriv).toHaveBeenCalledWith(
             'aes-128-ctr',
             Buffer.from('0000000000000000').slice(0, 16),
             Buffer.from('random')
@@ -505,7 +481,7 @@ describe('AccountTest', () => {
             address: '0xA'
         });
 
-        crypto.randomBytes.mockReturnValue(Buffer.from('random'));
+        randomBytes.mockReturnValue(Buffer.from('random'));
 
         expect(() => {
             Account.fromPrivateKey('pk').toV3Keystore('password', {kdf: 'nope'});
@@ -513,9 +489,9 @@ describe('AccountTest', () => {
 
         expect(fromPrivate).toHaveBeenCalledWith('pk');
 
-        expect(crypto.randomBytes).toHaveBeenNthCalledWith(1, 32);
+        expect(randomBytes).toHaveBeenNthCalledWith(1, 32);
 
-        expect(crypto.randomBytes).toHaveBeenNthCalledWith(2, 16);
+        expect(randomBytes).toHaveBeenNthCalledWith(2, 16);
     });
 
     it('calls encrypt with a unsupported cipher', () => {
@@ -526,13 +502,11 @@ describe('AccountTest', () => {
             address: '0xA'
         });
 
-        crypto.randomBytes.mockReturnValue(Buffer.from('random'));
+        randomBytes.mockReturnValue(Buffer.from('random'));
 
-        crypto.createCipheriv.mockReturnValue(false);
+        createCipheriv.mockReturnValue(false);
 
-        crypto.pbkdf2Sync = jest.fn(() => {
-            return Buffer.from('0000000000000000');
-        });
+        pbkdf2Sync.mockReturnValueOnce(Buffer.from('0000000000000000'));
 
         keccak256.mockReturnValueOnce('0xmac');
 
@@ -542,19 +516,13 @@ describe('AccountTest', () => {
 
         expect(fromPrivate).toHaveBeenCalledWith('pk');
 
-        expect(crypto.randomBytes).toHaveBeenNthCalledWith(1, 32);
+        expect(randomBytes).toHaveBeenNthCalledWith(1, 32);
 
-        expect(crypto.randomBytes).toHaveBeenNthCalledWith(2, 16);
+        expect(randomBytes).toHaveBeenNthCalledWith(2, 16);
 
-        expect(crypto.pbkdf2Sync).toHaveBeenCalledWith(
-            Buffer.from('password'),
-            Buffer.from('random'),
-            262144,
-            32,
-            'sha256'
-        );
+        expect(pbkdf2Sync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 262144, 32, 'sha256');
 
-        expect(crypto.createCipheriv).toHaveBeenCalledWith(
+        expect(createCipheriv).toHaveBeenCalledWith(
             'aes-128-ctr',
             Buffer.from('0000000000000000').slice(0, 16),
             Buffer.from('random')
