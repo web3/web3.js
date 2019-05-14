@@ -63,8 +63,7 @@ export default class BatchRequest {
         const response = await this.moduleInstance.currentProvider.sendPayload(payload);
         let errors = [];
 
-        let index = 0;
-        for (const method of this.methods) {
+        this.methods.forEach((method, index) => {
             if (!isArray(response)) {
                 if (method.callback) {
                     method.callback(
@@ -81,26 +80,29 @@ export default class BatchRequest {
             }
 
             const responseItem = response[index] || null;
-
             const validationResult = JsonRpcResponseValidator.validate(responseItem);
-
             if (validationResult) {
                 try {
                     let mappedResult;
 
                     // TODO: Find a better handling for custom behaviours in a batch request (afterBatchRequest?)
                     if (method.Type === 'eth-send-transaction-method') {
-                        mappedResult = await method.observeTransaction(responseItem.result);
+                        mappedResult = responseItem.result;
                     } else {
                         mappedResult = method.afterExecution(responseItem.result);
                     }
 
-
                     response[index] = mappedResult;
-                    method.callback(false, mappedResult);
+
+                    if (method.callback) {
+                        method.callback(false, mappedResult);
+                    }
                 } catch (error) {
                     errors.push(error);
-                    method.callback(error, null);
+
+                    if (method.callback) {
+                        method.callback(error, null);
+                    }
                 }
 
                 return;
@@ -111,9 +113,7 @@ export default class BatchRequest {
             if (method.callback) {
                 method.callback(validationResult, null);
             }
-
-            i++;
-        }
+        });
 
         if (errors.length > 0) {
             throw new Error(`BatchRequest error: ${errors}`);
