@@ -3,9 +3,12 @@ import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseVal
 import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import AbstractMethod from '../../__mocks__/AbstractMethod';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
+import JsonRpcMapper from '../../../src/mappers/JsonRpcMapper';
 
 // Mocks
 jest.mock('../../../src/providers/WebsocketProvider');
+jest.mock('../../../src/mappers/JsonRpcMapper');
+jest.mock('../../../src/validators/JsonRpcResponseValidator');
 
 /**
  * BatchRequest test
@@ -24,7 +27,8 @@ describe('BatchRequestTest', () => {
         abstractMethodMock.rpcMethod = 'rpc_method';
         abstractMethodMock.parameters = [true];
         abstractMethodMock.afterExecution = jest.fn();
-        abstractMethodMock.callback = jest.fn();
+        abstractMethodMock.beforeExecution = jest.fn();
+        abstractMethodMock.callback = false;
 
         batchRequest = new BatchRequest(moduleInstanceMock);
     });
@@ -37,18 +41,17 @@ describe('BatchRequestTest', () => {
 
     it('calls add with a valid parameter', () => {
         batchRequest.add(abstractMethodMock);
+
         expect(batchRequest.methods).toEqual([abstractMethodMock]);
     });
 
     it('calls execute and returns a resolved promise and the callback got called with the expected results', async () => {
-        JsonRpcResponseValidator.validate = jest.fn(() => {
-            return true;
-        });
+        JsonRpcMapper.toPayload.mockReturnValueOnce({});
 
-        providerMock.sendBatch = jest.fn((methods, moduleInstance) => {
-            expect(methods).toEqual([abstractMethodMock]);
+        JsonRpcResponseValidator.validate.mockReturnValueOnce(true);
 
-            expect(moduleInstance).toEqual(moduleInstanceMock);
+        providerMock.sendPayload = jest.fn((payload) => {
+            expect(payload).toEqual([{}]);
 
             return Promise.resolve([{result: true}]);
         });
@@ -65,87 +68,95 @@ describe('BatchRequestTest', () => {
 
         expect(abstractMethodMock.afterExecution).toHaveBeenCalledWith(true);
 
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalled();
+        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', [true]);
 
-        expect(abstractMethodMock.callback).toHaveBeenCalledWith(false, 'RESULT');
+        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
     });
 
     it('calls execute and returns a rejected promise because of the provider', async () => {
-        providerMock.sendBatch = jest.fn((methods, moduleInstance) => {
-            expect(methods).toEqual([abstractMethodMock]);
+        JsonRpcMapper.toPayload.mockReturnValueOnce({});
 
-            expect(moduleInstance).toEqual(moduleInstanceMock);
+        providerMock.sendPayload = jest.fn((payload) => {
+            expect(payload).toEqual([{}]);
 
             return Promise.reject(new Error('error'));
         });
 
         batchRequest.add(abstractMethodMock);
-        await expect(batchRequest.execute()).rejects.toEqual(new Error('error'));
+
+        await expect(batchRequest.execute()).rejects.toThrow(new Error('error'));
+
+        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', [true]);
     });
 
     it('calls execute and returns a rejected promise because the response is not of type Array', async () => {
-        providerMock.sendBatch = jest.fn((methods, moduleInstance) => {
-            expect(methods).toEqual([abstractMethodMock]);
+        JsonRpcMapper.toPayload.mockReturnValueOnce({});
 
-            expect(moduleInstance).toEqual(moduleInstanceMock);
+        providerMock.sendPayload = jest.fn((payload) => {
+            expect(payload).toEqual([{}]);
 
             return Promise.resolve(false);
         });
 
         batchRequest.add(abstractMethodMock);
-        await expect(batchRequest.execute()).rejects.toEqual(
-            new Error('BatchRequest error: ["Response should be of type Array but is: boolean"]')
+
+        await expect(batchRequest.execute()).rejects.toThrow(
+            new Error('BatchRequest error: Response should be of type Array but is: boolean')
         );
 
-        expect(abstractMethodMock.callback).toHaveBeenCalledWith(
-            new Error('BatchRequest error: Response should be of type Array but is: boolean'),
-            null
-        );
+        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', [true]);
     });
 
-    it('calls execute and returns a rejected promise because of an node error', async () => {
-        providerMock.sendBatch = jest.fn((methods, moduleInstance) => {
-            expect(methods).toEqual([abstractMethodMock]);
+    it('calls execute and the callback gets called', (done) => {
+        JsonRpcMapper.toPayload.mockReturnValueOnce({});
 
-            expect(moduleInstance).toEqual(moduleInstanceMock);
+        providerMock.sendPayload = jest.fn((payload) => {
+            expect(payload).toEqual([{}]);
 
-            return Promise.reject(new Error());
+            return Promise.resolve(false);
+        });
+
+        abstractMethodMock.callback = jest.fn((error, response) => {
+            expect(error).toEqual(new Error('BatchRequest error: Response should be of type Array but is: boolean'));
+
+            expect(response).toEqual(null);
+
+            expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', [true]);
+
+            done();
         });
 
         batchRequest.add(abstractMethodMock);
-        await expect(batchRequest.execute()).rejects.toBeInstanceOf(Error);
+        batchRequest.execute();
     });
 
     it('calls execute and returns a rejected promise because of an invalid JSON-RPC response', async () => {
-        JsonRpcResponseValidator.validate = jest.fn(() => {
-            return false;
-        });
+        JsonRpcResponseValidator.validate.mockReturnValueOnce(new Error('false'));
 
-        providerMock.sendBatch = jest.fn((methods, moduleInstance) => {
-            expect(methods).toEqual([abstractMethodMock]);
+        JsonRpcMapper.toPayload.mockReturnValueOnce({});
 
-            expect(moduleInstance).toEqual(moduleInstanceMock);
+        providerMock.sendPayload = jest.fn((payload) => {
+            expect(payload).toEqual([{}]);
 
             return Promise.resolve(['NOPE']);
         });
 
         batchRequest.add(abstractMethodMock);
-        await expect(batchRequest.execute()).rejects.toEqual(new Error('BatchRequest error: [false]'));
+
+        await expect(batchRequest.execute()).rejects.toThrow(new Error('Error: false'));
 
         expect(JsonRpcResponseValidator.validate).toHaveBeenCalled();
 
-        expect(abstractMethodMock.callback).toHaveBeenCalledWith(false, null);
+        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', [true]);
     });
 
     it('calls execute and returns a rejected promise because of the afterExecution method', async () => {
-        JsonRpcResponseValidator.validate = jest.fn(() => {
-            return true;
-        });
+        JsonRpcResponseValidator.validate.mockReturnValueOnce(true);
 
-        providerMock.sendBatch = jest.fn((methods, moduleInstance) => {
-            expect(methods).toEqual([abstractMethodMock]);
+        JsonRpcMapper.toPayload.mockReturnValueOnce({});
 
-            expect(moduleInstance).toEqual(moduleInstanceMock);
+        providerMock.sendPayload = jest.fn((payload) => {
+            expect(payload).toEqual([{}]);
 
             return Promise.resolve([{result: true}]);
         });
@@ -155,33 +166,12 @@ describe('BatchRequestTest', () => {
         });
 
         batchRequest.add(abstractMethodMock);
-        await expect(batchRequest.execute()).rejects.toEqual(new Error('BatchRequest error: [{}]'));
+        await expect(batchRequest.execute()).rejects.toEqual(new Error('Error: ERROR'));
 
         expect(abstractMethodMock.afterExecution).toHaveBeenCalledWith(true);
 
         expect(JsonRpcResponseValidator.validate).toHaveBeenCalled();
 
-        expect(abstractMethodMock.callback).toHaveBeenCalledWith(new Error('ERROR'), null);
-    });
-
-    it('calls execute and returns a rejected promise because of an empty response array', async () => {
-        JsonRpcResponseValidator.validate = jest.fn(() => {
-            return false;
-        });
-
-        providerMock.sendBatch = jest.fn((methods, moduleInstance) => {
-            expect(methods).toEqual([abstractMethodMock]);
-
-            expect(moduleInstance).toEqual(moduleInstanceMock);
-
-            return Promise.resolve([]);
-        });
-
-        batchRequest.add(abstractMethodMock);
-        await expect(batchRequest.execute()).rejects.toEqual(new Error('BatchRequest error: [false]'));
-
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalled();
-
-        expect(abstractMethodMock.callback).toHaveBeenCalledWith(false, null);
+        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', [true]);
     });
 });

@@ -74,13 +74,13 @@ export default class BatchRequest {
                     return;
                 }
 
-                throw new Error(`Response should be of type Array but is: ${typeof response}`);
+                throw new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`);
             }
 
             const responseItem = response[index] || null;
             const validationResult = JsonRpcResponseValidator.validate(responseItem);
 
-            if (validationResult) {
+            if (validationResult === true) {
                 try {
                     let mappedResult;
 
@@ -115,7 +115,7 @@ export default class BatchRequest {
         });
 
         if (errors.length > 0) {
-            throw new Error(`BatchRequest error: ${errors.join()}`);
+            throw new Error(errors.join(', '));
         }
 
         return {
@@ -137,6 +137,7 @@ export default class BatchRequest {
         for (const method of this.methods) {
             method.beforeExecution(this.moduleInstance);
 
+            // TODO: The method type specific handling shouldn't be done here.
             if (this.moduleInstance.accounts && method.Type === 'eth-send-transaction-method' && method.hasAccounts()) {
                 const account = this.moduleInstance.accounts.wallet[method.parameters[0].from];
 
