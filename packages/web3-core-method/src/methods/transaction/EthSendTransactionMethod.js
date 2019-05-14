@@ -139,7 +139,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      *
      * @returns {PromiEvent}
      */
-    async sendRawTransaction(account = null) {
+    async sendRawTransaction(account = {}) {
         const response = await this.signTransaction(account);
 
         this.parameters = [response.rawTransaction];
@@ -151,10 +151,13 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
     /**
      * Signs the transaction locally
      *
-     * @param account
+     * @method signTransaction
+     *
+     * @param {Account} account
+     *
      * @returns {Promise<void>}
      */
-    async signTransaction(account) {
+    async signTransaction(account = {}) {
         this.beforeExecution(this.moduleInstance);
 
         if (!this.parameters[0].chainId) {
@@ -164,7 +167,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
             let nonce;
 
-            if (account && account.nonce) {
+            if (account.nonce) {
                 nonce = account.nonce;
 
                 this.once('confirmation', () => {
