@@ -61,26 +61,25 @@ export default class BatchRequest {
     async execute() {
         const payload = await this.toPayload();
         const response = await this.moduleInstance.currentProvider.sendPayload(payload);
-        let errors = [];
 
-        this.methods.forEach((method, index) => {
-            if (!isArray(response)) {
-                if (method.callback) {
-                    method.callback(
-                        new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`),
-                        null
-                    );
-
-                    return;
-                }
-
-                errors.push(`Response should be of type Array but is: ${typeof response}`);
+        if (!isArray(response)) {
+            if (method.callback) {
+                method.callback(
+                    new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`),
+                    null
+                );
 
                 return;
             }
 
+            throw new Error(`Response should be of type Array but is: ${typeof response}`);
+        }
+
+        let errors = [];
+        this.methods.forEach((method, index) => {
             const responseItem = response[index] || null;
             const validationResult = JsonRpcResponseValidator.validate(responseItem);
+
             if (validationResult) {
                 try {
                     let mappedResult;
@@ -116,7 +115,7 @@ export default class BatchRequest {
         });
 
         if (errors.length > 0) {
-            throw new Error(`BatchRequest error: ${errors}`);
+            throw new Error(`BatchRequest error: ${errors.join}`);
         }
 
         return {
