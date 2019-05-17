@@ -42,6 +42,7 @@ export default class UnlockAccountMethod extends AbstractMethod {
      * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0],
+            moduleInstance != null ? moduleInstance.defaultChainId || undefined : undefined);
     }
 }

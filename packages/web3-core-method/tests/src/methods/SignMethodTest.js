@@ -38,7 +38,7 @@ describe('SignMethodTest', () => {
 
         expect(formatters.inputSignFormatter).toHaveBeenCalledWith('string');
 
-        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
+        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string', undefined);
     });
 
     it('afterExecution should just return the response', () => {

@@ -57,6 +57,6 @@ export default class AbstractGetTransactionFromBlockMethod extends AbstractMetho
      * @returns {Object}
      */
     afterExecution(response) {
-        return this.formatters.outputTransactionFormatter(response);
+        return this.formatters.outputTransactionFormatter(response, this.moduleInstance.defaultChainId);
     }
 }

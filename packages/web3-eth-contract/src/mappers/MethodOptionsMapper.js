@@ -44,7 +44,10 @@ export default class MethodOptionsMapper {
         let from = null;
 
         if (options.from) {
-            from = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(options.from));
+            from = this.utils.toChecksumAddress(
+                    this.formatters.inputAddressFormatter(options.from, options.defaultChainId),
+                    options.defaultChainId
+                );
         }
 
         options.to = contract.address;
@@ -52,6 +55,7 @@ export default class MethodOptionsMapper {
         options.gasPrice = options.gasPrice || contract.defaultGasPrice;
         options.gas = options.gas || options.gasLimit || contract.defaultGas;
         delete options.gasLimit;
+        options.defaultChainId = options.defaultChainId;
 
         return options;
     }

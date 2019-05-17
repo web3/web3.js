@@ -26,6 +26,6 @@ describe('SendRawTransactionMethodTest', () => {
 
         expect(method.afterExecution({status: false})).toEqual({status: true});
 
-        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({status: false});
+        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({status: false}, undefined);
     });
 });

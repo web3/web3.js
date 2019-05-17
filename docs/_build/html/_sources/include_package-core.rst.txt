@@ -38,7 +38,8 @@ Example
         defaultGasPrice: 0,
         transactionBlockTimeout: 50,
         transactionConfirmationBlocks: 24,
-        transactionPollingTimeout: 480
+        transactionPollingTimeout: 480,
+        dafaultChainId: 30
     }
 
     const web3 = new Web3('http://localhost:8545', options);
@@ -204,6 +205,30 @@ Returns
 -------
 
 ``number``: The current value of transactionPollingTimeout
+
+------------------------------------------------------------------------------
+
+
+.. _web3-module-defaultChainId:
+
+defaultChainId
+=====================
+
+.. code-block:: javascript
+
+    web3.defaultChainId
+    web3.eth.defaultChainId
+    web3.shh.defaultChainId
+    ...
+
+This defines the chainId that will be used to checksum addresses and to apply to input/output address formatters.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of defaultChainId
 
 ------------------------------------------------------------------------------
 

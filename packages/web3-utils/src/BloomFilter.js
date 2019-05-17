@@ -87,11 +87,11 @@ function testBytes(bloom, bytes) {
  *
  * @returns {Boolean} topic is (probably) part of the block
  */
-export const testAddress = (bloom, address) => {
+export const testAddress = (bloom, address, chainId = null) => {
     if (!utils.isBloom(bloom)) {
         throw new Error('Invalid bloom given');
     }
-    if (!utils.isAddress(address)) {
+    if (!utils.isAddress(address, chainId)) {
         throw new Error(`Invalid address given: "${address}"`);
     }
 

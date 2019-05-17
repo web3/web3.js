@@ -51,4 +51,52 @@ describe('OutputBlockFormatterTest', () => {
             miner: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
         });
     });
+
+    it('call outputBlockFormatter with a valid block and chainId', () => {
+        const block = {
+            gasLimit: 0x0,
+            gasUsed: 0x0,
+            size: 0x0,
+            timestamp: 0x0,
+            number: 0x0,
+            difficulty: 100,
+            totalDifficulty: 100,
+            transactions: [
+                {
+                    blockNumber: 0,
+                    transactionIndex: 0,
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1,
+                    value: 100,
+                    to: '0xdbf03b407c01e7cd3cbea99509d93f8dddc8c6fb',
+                    from: '0xdbf03b407c01e7cd3cbea99509d93f8dddc8c6fb'
+                }
+            ],
+            miner: '0xdbf03b407c01e7cd3cbea99509d93f8dddc8c6fb'
+        };
+
+        expect(outputBlockFormatter(block, 30)).toEqual({
+            gasLimit: 0x0,
+            gasUsed: 0x0,
+            size: 0x0,
+            timestamp: 0x0,
+            number: 0x0,
+            difficulty: '100', // Strange some numbers will be handled as string and some as number (gas & nonce)
+            totalDifficulty: '100',
+            transactions: [
+                {
+                    blockNumber: 0,
+                    transactionIndex: 0,
+                    gas: 100,
+                    gasPrice: '100',
+                    nonce: 1,
+                    value: '100',
+                    to: '0xDBF03B407c01E7CD3cBea99509D93F8Dddc8C6FB',
+                    from: '0xDBF03B407c01E7CD3cBea99509D93F8Dddc8C6FB'
+                }
+            ],
+            miner: '0xDBF03B407c01E7CD3cBea99509D93F8Dddc8C6FB'
+        });
+    });
 });

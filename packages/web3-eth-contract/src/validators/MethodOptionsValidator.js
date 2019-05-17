@@ -26,10 +26,13 @@ export default class MethodOptionsValidator {
     /**
      * @param {Utils} utils
      *
+     * @param {Options} options
+     *
      * @constructor
      */
-    constructor(utils) {
+    constructor(utils, options) {
         this.utils = utils;
+        this.options = options || {};
     }
 
     /**
@@ -73,7 +76,7 @@ export default class MethodOptionsValidator {
             return true;
         }
 
-        return this.utils.isAddress(method.parameters[0].to);
+        return this.utils.isAddress(method.parameters[0].to, this.options.defaultChainId);
     }
 
     /**
@@ -86,7 +89,7 @@ export default class MethodOptionsValidator {
      * @returns {Boolean}
      */
     isFromSet(method) {
-        return this.utils.isAddress(method.parameters[0].from);
+        return this.utils.isAddress(method.parameters[0].from, this.options.defaultChainId);
     }
 
     /**

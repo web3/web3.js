@@ -81,6 +81,9 @@ new eth.BatchRequest();
 // $ExpectType string | null
 eth.defaultAccount;
 
+// $ExpectType number
+eth.defaultChainId;
+
 // $ExpectType string | number
 eth.defaultBlock;
 

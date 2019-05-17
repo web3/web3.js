@@ -109,6 +109,16 @@ describe('Web3Test', () => {
         expect(Shh.mock.instances[0].defaultBlock).toEqual(10);
     });
 
+    it('sets the defaultChainId property', () => {
+        web3.defaultChainId = 30;
+
+        expect(web3.defaultChainId).toEqual(30);
+
+        expect(Eth.mock.instances[0].defaultChainId).toEqual(30);
+
+        expect(Shh.mock.instances[0].defaultChainId).toEqual(30);
+    });
+
     it('calls setProvider and returns true', () => {
         const ethMock = Eth.mock.instances[0];
 
@@ -157,5 +167,22 @@ describe('Web3Test', () => {
 
     it('calls the static givenProvider property and gets the result', () => {
         expect(Web3.givenProvider).toEqual(null);
+    });
+
+    it('sets the defaultChainId property in options', () => {
+        const options = {
+            defaultAccount: '0x1234',
+            defaultBlock: 'latest',
+            defaultGas: 1000,
+            defaultGasPrice: 0,
+            transactionBlockTimeout: 50,
+            transactionConfirmationBlocks: 253,
+            transactionPollingTimeout: 480,
+            defaultChainId: 30
+        }
+
+        web3 = new Web3('http://', null, options);
+
+        expect(web3.defaultChainId).toEqual(30);
     });
 });

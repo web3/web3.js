@@ -115,7 +115,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                         this.promiEvent.emit(
                             'confirmation',
                             confirmations,
-                            this.formatters.outputTransactionFormatter(receipt)
+                            this.formatters.outputTransactionFormatter(receipt, this.moduleInstance.defaultChainId)
                         );
                     },
                     (error) => {

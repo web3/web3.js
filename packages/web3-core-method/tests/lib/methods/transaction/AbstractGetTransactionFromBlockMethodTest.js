@@ -49,6 +49,6 @@ describe('AbstractGetTransactionFromBlockMethodTest', () => {
 
         expect(method.afterExecution({})).toEqual(true);
 
-        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({});
+        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({}, undefined);
     });
 });

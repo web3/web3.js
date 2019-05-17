@@ -100,7 +100,8 @@ export default class Eth extends AbstractWeb3Module {
                         options.transactionConfirmationBlocks || this.transactionConfirmationBlocks,
                     transactionPollingTimeout: options.transactionPollingTimeout || this.transactionPollingTimeout,
                     transactionSigner: this.transactionSigner,
-                    data: options.data
+                    data: options.data,
+                    defaultChainId: options.defaultChainId || this.defaultChainId
                 }
             );
 
@@ -356,6 +357,35 @@ export default class Eth extends AbstractWeb3Module {
      */
     get defaultBlock() {
         return super.defaultBlock;
+    }
+
+    /**
+     * Sets the defaultChainId property on all contracts and on all sub-modules
+     *
+     * @property defaultChainId
+     *
+     * @param {Number} value
+     */
+    set defaultChainId(value) {
+        this.initiatedContracts.forEach((contract) => {
+            contract.defaultChainId = value;
+        });
+
+        this.net.defaultChainId = value;
+        this.personal.defaultChainId = value;
+
+        super.defaultChainId = value;
+    }
+
+    /**
+     * Gets the defaultChainId property
+     *
+     * @property defaultChainId
+     *
+     * @returns {Number} value
+     */
+    get defaultChainId() {
+        return super.defaultChainId;
     }
 
     /**

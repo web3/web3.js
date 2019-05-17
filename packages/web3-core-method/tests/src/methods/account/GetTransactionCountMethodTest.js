@@ -42,7 +42,7 @@ describe('GetTransactionCountMethodTest', () => {
 
         expect(method.parameters[1]).toEqual('0x0');
 
-        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
+        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string', undefined);
 
         expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith(100, {});
     });
@@ -63,7 +63,7 @@ describe('GetTransactionCountMethodTest', () => {
 
         expect(method.parameters[1]).toEqual('0x0');
 
-        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string');
+        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('string', undefined);
 
         expect(formatters.inputDefaultBlockNumberFormatter).toHaveBeenCalledWith('latest', {defaultBlock: 'latest'});
     });

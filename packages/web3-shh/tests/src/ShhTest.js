@@ -113,6 +113,12 @@ describe('ShhTest', () => {
         expect(shh.defaultBlock).toEqual(10);
     });
 
+    it('sets the defaultChainId property', () => {
+        shh.defaultChainId = 30;
+
+        expect(shh.defaultChainId).toEqual(30);
+    });
+
     it('calls clearSubscriptions with a non-socket based provider and returns true', async () => {
         await expect(shh.clearSubscriptions()).resolves.toEqual(true);
     });

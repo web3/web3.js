@@ -43,7 +43,8 @@ export default class GetStorageAtMethod extends AbstractMethod {
      * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0],
+            moduleInstance.defaultChainId || undefined);
         this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
 
         // Optional second parameter 'defaultBlock' could also be the callback

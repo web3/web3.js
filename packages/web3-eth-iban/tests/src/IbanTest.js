@@ -110,7 +110,7 @@ describe('IbanTest', () => {
 
         expect(Iban.toIban('0x0').toString()).toEqual('XE50000000000000000000000000000000');
 
-        expect(Utils.isAddress).toHaveBeenCalledWith('0x0');
+        expect(Utils.isAddress).toHaveBeenCalledWith('0x0', null);
     });
 
     it('calls fromAddress and throws an error', () => {

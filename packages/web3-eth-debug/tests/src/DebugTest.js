@@ -104,4 +104,12 @@ describe('DebugTest', () => {
 
         expect(networkMock.defaultBlock).toEqual(1);
     });
+
+    it('sets the defaultChainId property', () => {
+        debug.defaultChainId = 1;
+
+        expect(debug.defaultChainId).toEqual(1);
+
+        expect(networkMock.defaultChainId).toEqual(1);
+    });
 });

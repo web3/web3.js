@@ -38,6 +38,16 @@ describe('SendTransactionMethodTest', () => {
 
         expect(method.afterExecution({status: false})).toEqual({status: true});
 
-        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({status: false});
+        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({status: false}, undefined);
+    });
+
+    it('calls afterExecution and returns the expected value considering defaultChainId', () => {
+        method = new SendTransactionMethod(null, formatters, {defaultChainId: 30}, {});
+
+        formatters.outputTransactionFormatter.mockReturnValueOnce({status: true});
+
+        expect(method.afterExecution({status: false})).toEqual({status: true});
+
+        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({status: false}, 30);
     });
 });

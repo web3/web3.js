@@ -24,7 +24,7 @@ export class formatters {
 
     static inputSignFormatter(data: string): string;
 
-    static inputAddressFormatter(address: string): string;
+    static inputAddressFormatter(address: string, chainId?: number): string;
 
     static isPredefinedBlockNumber(blockNumber: string): boolean;
 
@@ -32,21 +32,21 @@ export class formatters {
 
     static inputBlockNumberFormatter(blockNumber: string | number): string | number;
 
-    static outputBlockFormatter(block: object): object; // TODO: Create Block interface
+    static outputBlockFormatter(block: object, chainId?: number): object; // TODO: Create Block interface
 
-    static txInputFormatter(txObject: object): object;
+    static txInputFormatter(txObject: object, chainId?: number): object;
 
     static inputCallFormatter(txObject: object): object;
 
     static inputTransactionFormatter(txObject: object): object;
 
-    static outputTransactionFormatter(receipt: object): object;
+    static outputTransactionFormatter(receipt: object, chainId?: number): object;
 
     static outputTransactionReceiptFormatter(receipt: object): object;
 
-    static inputLogFormatter(log: object): object;
+    static inputLogFormatter(log: object, chainId?: number): object;
 
-    static outputLogFormatter(log: object): object;
+    static outputLogFormatter(log: object, chainId?: number): object;
 
     static inputPostFormatter(post: object): object; // TODO: Create Post interface
 

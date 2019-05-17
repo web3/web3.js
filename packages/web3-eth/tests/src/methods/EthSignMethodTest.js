@@ -50,7 +50,7 @@ describe('EthSignMethodTest', () => {
 
         expect(method.parameters[1]).toEqual('string');
 
-        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
+        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0', undefined);
 
         expect(formatters.inputSignFormatter).toHaveBeenCalledWith('nope');
 

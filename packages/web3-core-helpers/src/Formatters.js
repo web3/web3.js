@@ -100,12 +100,14 @@ export const inputBlockNumberFormatter = (blockNumber) => {
  *
  * @param {Object} txObject
  *
+ * @param {Number} chainId
+ *
  * @returns {Object}
  */
-export const txInputFormatter = (txObject) => {
+export const txInputFormatter = (txObject, chainId = null) => {
     if (txObject.to) {
         // it might be contract creation
-        txObject.to = inputAddressFormatter(txObject.to);
+        txObject.to = inputAddressFormatter(txObject.to, chainId);
     }
 
     if (txObject.data && txObject.input) {
@@ -150,7 +152,7 @@ export const txInputFormatter = (txObject) => {
  * @returns {Object}
  */
 export const inputCallFormatter = (txObject, moduleInstance) => {
-    txObject = txInputFormatter(txObject);
+    txObject = txInputFormatter(txObject, moduleInstance.defaultChainId);
     let from = moduleInstance.defaultAccount;
 
     if (txObject.from) {
@@ -158,7 +160,7 @@ export const inputCallFormatter = (txObject, moduleInstance) => {
     }
 
     if (from) {
-        txObject.from = inputAddressFormatter(from);
+        txObject.from = inputAddressFormatter(from, moduleInstance.defaultChainId);
     }
 
     return txObject;
@@ -175,7 +177,7 @@ export const inputCallFormatter = (txObject, moduleInstance) => {
  * @returns {Object}
  */
 export const inputTransactionFormatter = (txObject, moduleInstance) => {
-    txObject = txInputFormatter(txObject);
+    txObject = txInputFormatter(txObject, moduleInstance.defaultChainId);
 
     if (!isNumber(txObject.from) && !isObject(txObject.from)) {
         if (!txObject.from) {
@@ -186,7 +188,7 @@ export const inputTransactionFormatter = (txObject, moduleInstance) => {
             throw new Error('The send transactions "from" field must be defined!');
         }
 
-        txObject.from = inputAddressFormatter(txObject.from);
+        txObject.from = inputAddressFormatter(txObject.from, moduleInstance.defaultChainId);
     }
 
     return txObject;
@@ -215,7 +217,7 @@ export const inputSignFormatter = (data) => {
  *
  * @returns {Object}
  */
-export const outputTransactionFormatter = (receipt) => {
+export const outputTransactionFormatter = (receipt, chainId = null) => {
     if (receipt.blockNumber !== null) {
         receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
     }
@@ -235,15 +237,15 @@ export const outputTransactionFormatter = (receipt) => {
     receipt.nonce = Utils.hexToNumber(receipt.nonce);
     receipt.gas = Utils.hexToNumber(receipt.gas);
 
-    if (receipt.to && Utils.isAddress(receipt.to)) {
+    if (receipt.to && Utils.isAddress(receipt.to, chainId)) {
         // tx.to could be `0x0` or `null` while contract creation
-        receipt.to = Utils.toChecksumAddress(receipt.to);
+        receipt.to = Utils.toChecksumAddress(receipt.to, chainId);
     } else {
         receipt.to = null; // set to `null` if invalid address
     }
 
     if (receipt.from) {
-        receipt.from = Utils.toChecksumAddress(receipt.from);
+        receipt.from = Utils.toChecksumAddress(receipt.from, chainId);
     }
 
     return receipt;
@@ -256,9 +258,11 @@ export const outputTransactionFormatter = (receipt) => {
  *
  * @param {Object} receipt
  *
+ * @param {Number} chainId
+ *
  * @returns {Object}
  */
-export const outputTransactionReceiptFormatter = (receipt) => {
+export const outputTransactionReceiptFormatter = (receipt, chainId = null) => {
     if (receipt.blockNumber !== null) {
         receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
     }
@@ -275,7 +279,7 @@ export const outputTransactionReceiptFormatter = (receipt) => {
     }
 
     if (receipt.contractAddress) {
-        receipt.contractAddress = Utils.toChecksumAddress(receipt.contractAddress);
+        receipt.contractAddress = Utils.toChecksumAddress(receipt.contractAddress, chainId);
     }
 
     if (typeof receipt.status !== 'undefined' && receipt.status !== null) {
@@ -294,9 +298,11 @@ export const outputTransactionReceiptFormatter = (receipt) => {
  *
  * @param {Object} block
  *
+ * @param {Number} chainId
+ *
  * @returns {Object}
  */
-export const outputBlockFormatter = (block) => {
+export const outputBlockFormatter = (block, chainId = null) => {
     block.gasLimit = Utils.hexToNumber(block.gasLimit);
     block.gasUsed = Utils.hexToNumber(block.gasUsed);
     block.size = Utils.hexToNumber(block.size);
@@ -316,12 +322,12 @@ export const outputBlockFormatter = (block) => {
 
     if (isArray(block.transactions)) {
         block.transactions.forEach((item) => {
-            if (!isString(item)) return outputTransactionFormatter(item);
+            if (!isString(item)) return outputTransactionFormatter(item, chainId);
         });
     }
 
     if (block.miner) {
-        block.miner = Utils.toChecksumAddress(block.miner);
+        block.miner = Utils.toChecksumAddress(block.miner, chainId);
     }
 
     return block;
@@ -334,9 +340,11 @@ export const outputBlockFormatter = (block) => {
  *
  * @param {Object} options
  *
+ * @param {Number} chainId
+ *
  * @returns {Object} log
  */
-export const inputLogFormatter = (options) => {
+export const inputLogFormatter = (options, chainId = null) => {
     let toTopic = (value) => {
         if (value === null || typeof value === 'undefined') {
             return null;
@@ -370,10 +378,10 @@ export const inputLogFormatter = (options) => {
     if (options.address) {
         if (isArray(options.address)) {
             options.address = options.address.map((addr) => {
-                return inputAddressFormatter(addr);
+                return inputAddressFormatter(addr, chainId);
             });
         } else {
-            options.address = inputAddressFormatter(options.address);
+            options.address = inputAddressFormatter(options.address, chainId);
         }
     }
 
@@ -387,9 +395,11 @@ export const inputLogFormatter = (options) => {
  *
  * @param {Object} log object
  *
+ * @param {Number} chainId for checksum
+ *
  * @returns {Object} log
  */
-export const outputLogFormatter = (log) => {
+export const outputLogFormatter = (log, chainId = null) => {
     // generate a custom log id
     if (
         typeof log.blockHash === 'string' &&
@@ -420,7 +430,7 @@ export const outputLogFormatter = (log) => {
     }
 
     if (log.address) {
-        log.address = Utils.toChecksumAddress(log.address);
+        log.address = Utils.toChecksumAddress(log.address, chainId);
     }
 
     return log;
@@ -500,17 +510,19 @@ export const outputPostFormatter = (post) => {
  *
  * @param address
  *
+ * @param chainId
+ *
  * @returns {String}
  * @throws {Error}
  */
-export const inputAddressFormatter = (address) => {
+export const inputAddressFormatter = (address, chainId = null) => {
     const iban = new Iban(address);
 
     if (iban.isValid() && iban.isDirect()) {
         return iban.toAddress().toLowerCase();
     }
 
-    if (Utils.isAddress(address)) {
+    if (Utils.isAddress(address, chainId)) {
         return `0x${address.toLowerCase().replace('0x', '')}`;
     }
 

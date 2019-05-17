@@ -104,4 +104,12 @@ describe('AdminTest', () => {
 
         expect(networkMock.defaultBlock).toEqual(1);
     });
+
+    it('sets the defaultChainId property', () => {
+        admin.defaultChainId = 31;
+
+        expect(admin.defaultChainId).toEqual(31);
+
+        expect(networkMock.defaultChainId).toEqual(31);
+    });
 });

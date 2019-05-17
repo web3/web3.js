@@ -10,6 +10,12 @@ describe('InputAddressFormatterTest', () => {
         );
     });
 
+    it('inputAddressFormatter with chainId returns formatted address', () => {
+        expect(inputAddressFormatter('0x5aaEB6053f3e94c9b9a09f33669435E7ef1bEAeD', 30)).toEqual(
+            '0x5aaeb6053f3e94c9b9a09f33669435e7ef1beaed'
+        );
+    });
+
     it('inputAddressFormatter throws error because of invalid address', () => {
         expect(() => {
             inputAddressFormatter('ADDRESS');

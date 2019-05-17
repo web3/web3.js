@@ -208,6 +208,30 @@ export default class Web3 extends AbstractWeb3Module {
     }
 
     /**
+     * Gets the defaultChainId property
+     *
+     * @property defaultChainId
+     *
+     * @returns {Number} value
+     */
+    get defaultChainId() {
+        return super.defaultChainId;
+    }
+
+    /**
+     * Sets the defaultChainId property on the eth module and also on the shh module
+     *
+     * @property defaultChainId
+     *
+     * @param {Number} value
+     */
+    set defaultChainId(value) {
+        super.defaultChainId = value;
+        this.eth.defaultChainId = value;
+        this.shh.defaultChainId = value;
+    }
+
+    /**
      * Gets the defaultBlock property
      *
      * @property defaultBlock

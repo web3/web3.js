@@ -47,13 +47,16 @@ export default class AbstractWeb3Module {
         this.givenProvider = ProviderDetector.detect();
 
         this._currentProvider = this.providerResolver.resolve(provider, nodeNet);
-        this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
+        this._defaultAccount = options.defaultAccount
+            ? toChecksumAddress(options.defaultAccount, options.defaultChainId || undefined)
+            : undefined;
         this._defaultBlock = options.defaultBlock || 'latest';
         this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
         this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
         this._transactionPollingTimeout = options.transactionPollingTimeout || 750;
         this._defaultGasPrice = options.defaultGasPrice;
         this._defaultGas = options.defaultGas;
+        this._defaultChainId = options.defaultChainId || undefined;
 
         this.BatchRequest = () => {
             return new BatchRequest(this);
@@ -194,6 +197,28 @@ export default class AbstractWeb3Module {
      */
     set defaultGas(value) {
         this._defaultGas = value;
+    }
+
+    /**
+     * Getter for the defaultChainId property
+     *
+     * @property defaultChainId
+     *
+     * @returns {Number}
+     */
+    get defaultChainId() {
+        return this._defaultChainId;
+    }
+
+    /**
+     * Setter for the defaultChainId property
+     *
+     * @property defaultChainId
+     *
+     * @param {Number} value
+     */
+    set defaultChainId(value) {
+        this._defaultChainId = value;
     }
 
     /**

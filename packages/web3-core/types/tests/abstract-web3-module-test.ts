@@ -63,6 +63,9 @@ abstractWeb3Module.givenProvider;
 // $ExpectType string | null
 abstractWeb3Module.defaultAccount;
 
+// $ExpectType number
+abstractWeb3Module.defaultChainId;
+
 // $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
 abstractWeb3Module.currentProvider;
 

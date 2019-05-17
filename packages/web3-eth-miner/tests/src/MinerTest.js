@@ -104,4 +104,12 @@ describe('MinerTest', () => {
 
         expect(networkMock.defaultBlock).toEqual(1);
     });
+
+    it('sets the defaultChainId property', () => {
+        miner.defaultChainId = 31;
+
+        expect(miner.defaultChainId).toEqual(31);
+
+        expect(networkMock.defaultChainId).toEqual(31);
+    });
 });

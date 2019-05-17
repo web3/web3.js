@@ -43,13 +43,15 @@ export default class ContractModuleFactory {
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbiCoder} abiCoder
+     * @param {Options} options
      *
      * @constructor
      */
-    constructor(utils, formatters, abiCoder) {
+    constructor(utils, formatters, abiCoder, options) {
         this.utils = utils;
         this.formatters = formatters;
         this.abiCoder = abiCoder;
+        this.options = options;
     }
 
     /**
@@ -179,7 +181,7 @@ export default class ContractModuleFactory {
      * @returns {MethodOptionsValidator}
      */
     createMethodOptionsValidator() {
-        return new MethodOptionsValidator(this.utils);
+        return new MethodOptionsValidator(this.utils, this.options);
     }
 
     /**

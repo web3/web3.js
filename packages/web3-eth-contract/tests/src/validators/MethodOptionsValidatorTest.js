@@ -36,7 +36,7 @@ describe('MethodOptionsValidatorTest', () => {
 
         expect(methodOptionsValidator.validate(abiItemModelMock, sendContractMethodMock)).toEqual(true);
 
-        expect(Utils.isAddress).toHaveBeenCalledWith('0x0');
+        expect(Utils.isAddress).toHaveBeenCalledWith('0x0', undefined);
 
         expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('constructor');
     });
@@ -52,7 +52,7 @@ describe('MethodOptionsValidatorTest', () => {
             methodOptionsValidator.validate(abiItemModelMock, sendContractMethodMock);
         }).toThrow("This contract object doesn't have address set yet, please set an address first.");
 
-        expect(Utils.isAddress).toHaveBeenCalledWith('0x0');
+        expect(Utils.isAddress).toHaveBeenCalledWith('0x0', undefined);
 
         expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('constructor');
     });
@@ -69,7 +69,7 @@ describe('MethodOptionsValidatorTest', () => {
             methodOptionsValidator.validate(abiItemModelMock, sendContractMethodMock);
         }).toThrow('No valid "from" address specified in neither the given options, nor the default options.');
 
-        expect(Utils.isAddress).toHaveBeenCalledWith('asdf');
+        expect(Utils.isAddress).toHaveBeenCalledWith('asdf', undefined);
     });
 
     it('calls validate and throws isValueValid error', () => {

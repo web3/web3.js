@@ -134,10 +134,12 @@ export default class Iban {
      *
      * @param {String} address
      *
+     * @param {Number} chainId
+     *
      * @returns {Iban} the IBAN object
      */
-    static fromAddress(address) {
-        if (!Utils.isAddress(address)) {
+    static fromAddress(address, chainId = null) {
+        if (!Utils.isAddress(address, chainId)) {
             throw new Error(`Provided address is not a valid address: ${address}`);
         }
 

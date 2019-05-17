@@ -32,6 +32,6 @@ describe('GetTransactionMethodTest', () => {
 
         expect(method.afterExecution({})).toHaveProperty('empty', false);
 
-        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({});
+        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({}, undefined);
     });
 });

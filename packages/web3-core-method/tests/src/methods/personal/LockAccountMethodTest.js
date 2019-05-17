@@ -34,7 +34,7 @@ describe('LockAccountMethodTest', () => {
 
         method.beforeExecution();
 
-        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
+        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0', undefined);
 
         expect(method.parameters[0]).toEqual('0x0');
     });

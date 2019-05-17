@@ -42,7 +42,7 @@ describe('PersonalSignMethodTest', () => {
 
         expect(formatters.inputSignFormatter).toHaveBeenCalledWith('sign');
 
-        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
+        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0', undefined);
     });
 
     it('calls beforeExecution with a callback instead of the optional paramter and it calls the inputSignFormatter and inputAddressFormatter', () => {
@@ -65,6 +65,6 @@ describe('PersonalSignMethodTest', () => {
 
         expect(formatters.inputSignFormatter).toHaveBeenCalledWith('sign');
 
-        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
+        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0', undefined);
     });
 });

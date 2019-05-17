@@ -62,7 +62,7 @@ describe('PastEventLogsMethodTest', () => {
 
         expect(eventOptionsMapperMock.map).toHaveBeenCalledWith(abiItemModelMock, contractMock, {options: true});
 
-        expect(formatters.inputLogFormatter).toHaveBeenCalledWith({});
+        expect(formatters.inputLogFormatter).toHaveBeenCalledWith({}, undefined);
     });
 
     it('calls afterExecution and returns the expected result', () => {

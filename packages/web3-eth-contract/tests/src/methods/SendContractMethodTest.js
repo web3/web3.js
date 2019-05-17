@@ -128,6 +128,6 @@ describe('SendContractMethodTest', () => {
                     }
                 ]
             }
-        });
+        }, undefined);
     });
 });

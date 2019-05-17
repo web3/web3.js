@@ -29,6 +29,12 @@ formatters.inputSignFormatter('0x0');
 // $ExpectType string
 formatters.inputAddressFormatter('0x0');
 
+// $ExpectType string
+formatters.inputAddressFormatter('0x0', 30);
+
+// $ExpectType string
+formatters.inputAddressFormatter('0x0', undefined);
+
 // $ExpectType boolean
 formatters.isPredefinedBlockNumber('latest');
 
@@ -42,7 +48,16 @@ formatters.inputBlockNumberFormatter('0x0');
 formatters.outputBlockFormatter({});
 
 // $ExpectType object
+formatters.outputBlockFormatter({}, 30);
+
+// $ExpectType object
+formatters.outputBlockFormatter({}, undefined);
+
+// $ExpectType object
 formatters.txInputFormatter({});
+
+// $ExpectType object
+formatters.txInputFormatter({}, 30);
 
 // $ExpectType object
 formatters.inputCallFormatter({});
@@ -54,13 +69,31 @@ formatters.inputTransactionFormatter({});
 formatters.outputTransactionFormatter({});
 
 // $ExpectType object
+formatters.outputTransactionFormatter({}, 30);
+
+// $ExpectType object
+formatters.outputTransactionFormatter({}, undefined);
+
+// $ExpectType object
 formatters.outputTransactionReceiptFormatter({});
 
 // $ExpectType object
 formatters.inputLogFormatter({});
 
 // $ExpectType object
+formatters.inputLogFormatter({}, 30);
+
+// $ExpectType object
+formatters.inputLogFormatter({}, undefined);
+
+// $ExpectType object
 formatters.outputLogFormatter({});
+
+// $ExpectType object
+formatters.outputLogFormatter({}, 31);
+
+// $ExpectType object
+formatters.outputLogFormatter({}, undefined);
 
 // $ExpectType object
 formatters.inputPostFormatter({});

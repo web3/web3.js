@@ -183,6 +183,19 @@ describe('EthTest', () => {
         expect(personalMock.transactionPollingTimeout).toEqual(10);
     });
 
+    it('sets the defaultChainId property', () => {
+        eth.initiatedContracts = [{defaultChainId: 30}];
+        eth.defaultChainId = 30;
+
+        expect(eth.initiatedContracts[0].defaultChainId).toEqual(30);
+
+        expect(eth.defaultChainId).toEqual(30);
+
+        expect(networkMock.defaultChainId).toEqual(30);
+
+        expect(personalMock.defaultChainId).toEqual(30);
+    });
+
     it('sets the defaultAccount property', () => {
         eth.initiatedContracts = [{defaultAccount: '0x0'}];
 

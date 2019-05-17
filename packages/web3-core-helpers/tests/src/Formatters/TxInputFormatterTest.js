@@ -133,4 +133,27 @@ describe('TxInputFormatterTest', () => {
             value: '0x64'
         });
     });
+
+    it('call txInputFormatter with to and input instead of data as tx object property and chainId', () => {
+        const tx = {
+            to: '0x5aaEB6053f3e94c9b9a09f33669435E7ef1bEAeD',
+            input: '0x0',
+            data: undefined,
+            gas: undefined,
+            gasLimit: 100,
+            gasPrice: 100,
+            nonce: 1,
+            value: 100
+        };
+
+        expect(txInputFormatter(tx, 30)).toEqual({
+            to: '0x5aaeb6053f3e94c9b9a09f33669435e7ef1beaed',
+            data: '0x0',
+            gas: '0x64',
+            gasLimit: 100,
+            gasPrice: '0x64',
+            nonce: '0x1',
+            value: '0x64'
+        });
+    });
 });

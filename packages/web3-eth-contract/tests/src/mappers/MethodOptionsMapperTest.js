@@ -25,7 +25,8 @@ describe('MethodOptionsMapperTest', () => {
 
     it('calls map with a from property and returns the expected result', () => {
         const options = {
-            from: '0x0'
+            from: '0x0',
+            defaultChainId: 30
         };
 
         const contract = {
@@ -44,12 +45,13 @@ describe('MethodOptionsMapperTest', () => {
             to: '0x0',
             from: '0x0',
             gasPrice: 100,
-            gas: 100
+            gas: 100,
+            defaultChainId: 30
         });
 
-        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
+        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0', 30);
 
-        expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x0');
+        expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x0', 30);
     });
 
     it('calls map with a gasPrice property and returns the expected result', () => {

@@ -104,4 +104,12 @@ describe('PersonalTest', () => {
 
         expect(networkMock.defaultBlock).toEqual(1);
     });
+
+    it('sets the defaultChainId property', () => {
+        personal.defaultChainId = 30;
+
+        expect(personal.defaultChainId).toEqual(30);
+
+        expect(networkMock.defaultChainId).toEqual(30);
+    });
 });

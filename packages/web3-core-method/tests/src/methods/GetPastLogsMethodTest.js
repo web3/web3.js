@@ -36,7 +36,7 @@ describe('GetPastLogsMethodTest', () => {
 
         expect(method.parameters[0]).toHaveProperty('empty', true);
 
-        expect(formatters.inputLogFormatter).toHaveBeenCalledWith({});
+        expect(formatters.inputLogFormatter).toHaveBeenCalledWith({}, undefined);
     });
 
     it('afterExecution should call the outputLogFormatter and return the response', () => {
@@ -44,6 +44,20 @@ describe('GetPastLogsMethodTest', () => {
 
         expect(method.afterExecution([{}])[0]).toHaveProperty('formatted', true);
 
-        expect(formatters.outputLogFormatter).toHaveBeenCalledWith({});
+        expect(formatters.outputLogFormatter).toHaveBeenCalledWith({}, undefined);
+    });
+
+    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method with defaultChainId', () => {
+        method = new GetPastLogsMethod(null, formatters, { defaultChainId: 30 });
+
+        method.parameters = [{}];
+
+        formatters.inputLogFormatter.mockReturnValueOnce({empty: true});
+
+        method.beforeExecution({});
+
+        expect(method.parameters[0]).toHaveProperty('empty', true);
+
+        expect(formatters.inputLogFormatter).toHaveBeenCalledWith({}, 30);
     });
 });

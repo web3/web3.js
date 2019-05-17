@@ -104,4 +104,12 @@ describe('TxpoolTest', () => {
 
         expect(networkMock.defaultBlock).toEqual(1);
     });
+
+    it('sets the defaultChainId property', () => {
+        txpool.defaultChainId = 1;
+
+        expect(txpool.defaultChainId).toEqual(1);
+
+        expect(networkMock.defaultChainId).toEqual(1);
+    });
 });

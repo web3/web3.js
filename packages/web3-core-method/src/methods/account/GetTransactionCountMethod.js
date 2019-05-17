@@ -43,7 +43,8 @@ export default class GetTransactionCountMethod extends AbstractMethod {
      * @param {AbstractWeb3Module} moduleInstance
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0],
+            moduleInstance.defaultChainId || undefined);
 
         // Optional second parameter 'defaultBlock' could also be the callback
         if (isFunction(this.parameters[1])) {

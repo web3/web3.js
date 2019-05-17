@@ -56,6 +56,7 @@ export default class SendTransactionMethod extends AbstractObservedTransactionMe
      * @returns {Object}
      */
     afterExecution(response) {
-        return this.formatters.outputTransactionFormatter(response);
+        return this.formatters.outputTransactionFormatter(response,
+            this.moduleInstance != null ? this.moduleInstance.defaultChainId || undefined : undefined);
     }
 }

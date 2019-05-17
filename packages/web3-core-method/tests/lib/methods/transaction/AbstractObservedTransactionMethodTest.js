@@ -94,7 +94,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
 
             expect(confirmationCallback).toHaveBeenCalledWith(0, {status: false});
 
-            expect(formatters.outputTransactionFormatter).toHaveBeenNthCalledWith(1, {status: true});
+            expect(formatters.outputTransactionFormatter).toHaveBeenNthCalledWith(1, {status: true}, undefined);
 
             expect(formatters.outputTransactionFormatter).toHaveBeenCalledTimes(1);
 

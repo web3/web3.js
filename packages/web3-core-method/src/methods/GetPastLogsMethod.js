@@ -42,7 +42,8 @@ export default class GetPastLogsMethod extends AbstractMethod {
      * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputLogFormatter(this.parameters[0]);
+        this.parameters[0] = this.formatters.inputLogFormatter(this.parameters[0],
+            this.moduleInstance != null ? this.moduleInstance.defaultChainId || undefined : undefined);
     }
 
     /**
@@ -56,7 +57,8 @@ export default class GetPastLogsMethod extends AbstractMethod {
      */
     afterExecution(response) {
         return response.map((responseItem) => {
-            return this.formatters.outputLogFormatter(responseItem);
+            return this.formatters.outputLogFormatter(responseItem,
+                this.moduleInstance != null ? this.moduleInstance.defaultChainId || undefined : undefined);
         });
     }
 }

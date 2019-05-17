@@ -217,4 +217,27 @@ export default class Miner extends AbstractWeb3Module {
     get defaultBlock() {
         return super.defaultBlock;
     }
+
+    /**
+     * Sets the defaultChainId property on the current object and the network module
+     *
+     * @property defaultChainId
+     *
+     * @param {Number} value
+     */
+    set defaultChainId(value) {
+        super.defaultChainId = value;
+        this.net.defaultChainId = value;
+    }
+
+    /**
+     * Gets the defaultChainId property
+     *
+     * @property defaultChainId
+     *
+     * @returns {Number} value
+     */
+    get defaultChainId() {
+        return super.defaultChainId;
+    }
 }

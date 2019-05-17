@@ -222,7 +222,8 @@ export default class AbstractContract extends AbstractWeb3Module {
             transactionConfirmationBlocks: this.transactionConfirmationBlocks,
             transactionPollingTimeout: this.transactionPollingTimeout,
             transactionSigner: this.transactionSigner,
-            data: this.options.data
+            data: this.options.data,
+            defaultChainId: this.options.defaultChainId
         });
 
         clone.abiModel = this.abiModel;

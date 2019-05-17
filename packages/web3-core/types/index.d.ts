@@ -48,6 +48,7 @@ export class AbstractWeb3Module {
     transactionPollingTimeout: number;
     defaultGasPrice: string;
     defaultGas: number;
+    defaultChainId: number;
     static readonly providers: Providers;
     defaultAccount: string | null;
     readonly currentProvider: Web3EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider | CustomProvider;
@@ -82,6 +83,7 @@ export interface Web3ModuleOptions {
     defaultGasPrice?: string;
     defaultGas?: number;
     transactionSigner?: TransactionSigner;
+    defaultChainId?: number;
 }
 
 export interface Providers {
