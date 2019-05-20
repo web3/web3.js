@@ -306,7 +306,14 @@ export const outputBlockFormatter = (block, chainId = null) => {
     block.gasLimit = Utils.hexToNumber(block.gasLimit);
     block.gasUsed = Utils.hexToNumber(block.gasUsed);
     block.size = Utils.hexToNumber(block.size);
-    block.timestamp = Utils.hexToNumber(block.timestamp);
+
+    const timestamp = Utils.toBN(block.timestamp);
+
+    if (timestamp.bitLength() <= 53) {
+        block.timestamp = timestamp.toNumber();
+    } else {
+        block.timestamp = timestamp.toString(10);
+    }
 
     if (block.number !== null) {
         block.number = Utils.hexToNumber(block.number);
