@@ -42,6 +42,7 @@ Example
         transactionBlockTimeout: 50,
         transactionConfirmationBlocks: 24,
         transactionPollingTimeout: 480,
+        defaultChainId: 30,
         transactionSigner: new CustomTransactionSigner()
     }
 
@@ -228,6 +229,30 @@ Returns
 ------------------------------------------------------------------------------
 
 
+.. _web3-module-defaultChainId:
+
+defaultChainId
+=====================
+
+.. code-block:: javascript
+
+    web3.defaultChainId
+    web3.eth.defaultChainId
+    web3.shh.defaultChainId
+    ...
+
+This defines the chainId that will be used to checksum addresses and to apply to input/output address formatters.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of defaultChainId
+
+------------------------------------------------------------------------------
+
+
 .. _web3-module-transactionSigner:
 
 transactionSigner
@@ -277,12 +302,11 @@ setProvider
     web3.setProvider(myProvider)
     web3.eth.setProvider(myProvider)
     web3.shh.setProvider(myProvider)
-    web3.bzz.setProvider(myProvider)
     ...
 
 Will change the provider for its module.
 
-.. note:: When called on the umbrella package ``web3`` it will also set the provider for all sub modules ``web3.eth``, ``web3.shh``, etc EXCEPT ``web3.bzz`` which needs a separate provider at all times.
+.. note:: When called on the umbrella package ``web3`` it will also set the provider for all sub modules ``web3.eth``, ``web3.shh``, etc.
 
 ----------
 Parameters
@@ -378,7 +402,6 @@ givenProvider
     Web3.givenProvider
     web3.eth.givenProvider
     web3.shh.givenProvider
-    web3.bzz.givenProvider
     ...
 
 When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser.
@@ -411,7 +434,6 @@ currentProvider
     web3.currentProvider
     web3.eth.currentProvider
     web3.shh.currentProvider
-    web3.bzz.currentProvider
     ...
 
 Will return the current provider.
