@@ -45,7 +45,7 @@ export default class SyncingSubscription extends AbstractSubscription {
      * @returns {Object}
      */
     onNewSubscriptionItem(subscriptionItem) {
-        const isSyncing = subscriptionItem.result.syncing;
+        const isSyncing = subscriptionItem.syncing;
 
         if (this.isSyncing === null) {
             this.isSyncing = isSyncing;
