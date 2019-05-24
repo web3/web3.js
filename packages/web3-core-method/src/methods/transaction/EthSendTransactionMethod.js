@@ -176,7 +176,6 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
                 this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
                 nonce = await this.getTransactionCountMethod.execute();
                 account.nonce = nonce;
-                console.log('detected nonce', nonce);
             }
 
             this.parameters[0].nonce = nonce;

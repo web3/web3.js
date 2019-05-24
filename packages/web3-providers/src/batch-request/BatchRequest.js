@@ -110,8 +110,8 @@ export default class BatchRequest {
 
             errors[index] = {method, error: validationResult};
 
-            if (this.accounts[index]) {
-                this.accounts[index].nonce = null;
+            if (this.accounts[index] && this.accounts[index].nonce) {
+                this.accounts[index].nonce = this.accounts[index].nonce - 1;
             }
 
             if (method.callback) {
