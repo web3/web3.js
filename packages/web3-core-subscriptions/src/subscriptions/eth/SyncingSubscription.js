@@ -63,6 +63,7 @@ export default class SyncingSubscription extends AbstractSubscription {
             return this.formatters.outputSyncingFormatter(subscriptionItem);
         }
 
+        this.isSyncing = subscriptionItem;
         this.emit('changed', subscriptionItem);
     }
 }
