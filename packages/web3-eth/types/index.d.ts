@@ -163,11 +163,11 @@ export interface Method {
 }
 
 export interface Syncing {
-    startingBlock: number;
-    currentBlock: number;
-    highestBlock: number;
-    knownStates: number;
-    pulledStates: number;
+    StartingBlock: number;
+    CurrentBlock: number;
+    HighestBlock: number;
+    KnownStates: number;
+    PulledStates: number;
 }
 
 export interface BlockHeader {
