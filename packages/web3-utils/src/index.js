@@ -311,3 +311,4 @@ export const isTopic = utils.isTopic;
 export const bytesToHex = utils.bytesToHex;
 export const hexToBytes = utils.hexToBytes;
 export const stripHexPrefix = utils.stripHexPrefix;
+export const isBigNumber = utils.isBigNumber;
