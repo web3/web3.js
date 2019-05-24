@@ -168,16 +168,15 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
             let nonce;
 
             if (account.nonce) {
+                account.nonce = account.nonce + 1;
                 nonce = account.nonce;
-
-                this.once('confirmation', () => {
-                    account.nonce++;
-                });
             }
 
             if (!nonce) {
                 this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
                 nonce = await this.getTransactionCountMethod.execute();
+                account.nonce = nonce;
+                console.log('detected nonce', nonce);
             }
 
             this.parameters[0].nonce = nonce;

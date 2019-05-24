@@ -34,6 +34,7 @@ export default class BatchRequest {
     constructor(moduleInstance) {
         this.moduleInstance = moduleInstance;
         this.methods = [];
+        this.accounts = [];
     }
 
     /**
@@ -109,6 +110,10 @@ export default class BatchRequest {
 
             errors.push(validationResult);
 
+            if (this.accounts[index]) {
+                this.accounts[index].nonce = null;
+            }
+
             if (method.callback) {
                 method.callback(validationResult, null);
             }
@@ -134,7 +139,8 @@ export default class BatchRequest {
     async toPayload() {
         let payload = [];
 
-        for (const method of this.methods) {
+        for (let i = 0; i < this.methods.length; i++) {
+            const method = this.methods[i];
             method.beforeExecution(this.moduleInstance);
 
             // TODO: The method type specific handling shouldn't be done here.
@@ -145,6 +151,8 @@ export default class BatchRequest {
                     const response = await method.signTransaction(account);
                     method.parameters = [response.rawTransaction];
                     method.rpcMethod = 'eth_sendRawTransaction';
+
+                    this.accounts[i] = account;
                 }
             }
 
