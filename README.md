@@ -111,7 +111,7 @@ npm run dev # runs rollup with a watcher
 ### Support
 
 ![browsers](https://img.shields.io/badge/browsers-latest%202%20versions-brightgreen.svg)
-![node](https://img.shields.io/badge/node->=6-green.svg)
+![node](https://img.shields.io/badge/node->=8-green.svg)
 
 ### Community
  - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
