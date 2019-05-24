@@ -52,7 +52,7 @@ export default class SyncingSubscription extends AbstractSubscription {
                 this.isSyncing = isSyncing;
                 this.emit('changed', this.isSyncing);
 
-                return this.formatters.outputSyncingFormatter(subscriptionItem);
+                return subscriptionItem.status;
             }
 
             if (this.isSyncing !== isSyncing) {
@@ -60,10 +60,12 @@ export default class SyncingSubscription extends AbstractSubscription {
                 this.emit('changed', this.isSyncing);
             }
 
-            return this.formatters.outputSyncingFormatter(subscriptionItem);
+            return subscriptionItem.status;
         }
 
         this.isSyncing = subscriptionItem;
         this.emit('changed', subscriptionItem);
+
+        return subscriptionItem;
     }
 }
