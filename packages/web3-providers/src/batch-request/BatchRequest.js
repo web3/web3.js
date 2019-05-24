@@ -98,7 +98,7 @@ export default class BatchRequest {
                         method.callback(false, mappedResult);
                     }
                 } catch (error) {
-                    errors.push(error);
+                    errors[index] = {method, error};
 
                     if (method.callback) {
                         method.callback(error, null);
@@ -108,7 +108,7 @@ export default class BatchRequest {
                 return;
             }
 
-            errors.push(validationResult);
+            errors[index] = {method, error: validationResult};
 
             if (this.accounts[index]) {
                 this.accounts[index].nonce = null;
@@ -120,7 +120,7 @@ export default class BatchRequest {
         });
 
         if (errors.length > 0) {
-            throw new Error(errors.join(', '));
+            throw errors;
         }
 
         return {
