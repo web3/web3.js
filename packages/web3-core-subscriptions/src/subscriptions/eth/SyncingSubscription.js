@@ -45,23 +45,27 @@ export default class SyncingSubscription extends AbstractSubscription {
      * @returns {Object}
      */
     onNewSubscriptionItem(subscriptionItem) {
-        const isSyncing = subscriptionItem.result.syncing;
+        if (typeof subscriptionItem !== 'boolean') {
+            const isSyncing = subscriptionItem.syncing;
 
-        if (this.isSyncing === null) {
-            this.isSyncing = isSyncing;
-            this.emit('changed', this.isSyncing);
+            if (this.isSyncing === null) {
+                this.isSyncing = isSyncing;
+                this.emit('changed', this.isSyncing);
+
+                return subscriptionItem.status;
+            }
+
+            if (this.isSyncing !== isSyncing) {
+                this.isSyncing = isSyncing;
+                this.emit('changed', this.isSyncing);
+            }
+
+            return subscriptionItem.status;
         }
 
-        if (this.isSyncing === true && isSyncing === false) {
-            this.isSyncing = isSyncing;
-            this.emit('changed', this.isSyncing);
-        }
+        this.isSyncing = subscriptionItem;
+        this.emit('changed', subscriptionItem);
 
-        if (this.isSyncing === false && isSyncing === true) {
-            this.isSyncing = isSyncing;
-            this.emit('changed', this.isSyncing);
-        }
-
-        return this.formatters.outputSyncingFormatter(subscriptionItem);
+        return subscriptionItem;
     }
 }

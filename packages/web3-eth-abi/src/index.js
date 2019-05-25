@@ -21,7 +21,8 @@
  */
 
 import * as Utils from 'web3-utils';
-import AbiModuleFactory from './factories/AbiModuleFactory';
+import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
+import EthAbiCoder from './AbiCoder.js';
 
 /**
  * Returns an object of AbiCoder
@@ -30,6 +31,6 @@ import AbiModuleFactory from './factories/AbiModuleFactory';
  *
  * @constructor
  */
-export const AbiCoder = () => {
-    return new AbiModuleFactory().createAbiCoder(Utils);
-};
+export function AbiCoder() {
+    return new EthAbiCoder(Utils, new EthersAbiCoder());
+}

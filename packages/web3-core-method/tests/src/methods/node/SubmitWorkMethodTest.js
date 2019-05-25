@@ -1,4 +1,4 @@
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import SubmitWorkMethod from '../../../../src/methods/node/SubmitWorkMethod';
 
 /**
@@ -8,11 +8,11 @@ describe('SubmitWorkMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SubmitWorkMethod(null, null);
+        method = new SubmitWorkMethod(null, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_submitWork');
 

@@ -1,8 +1,8 @@
 # web3-eth-personal
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-This is the personal package to be used in the `web3-eth` package.
+This is the personal module to be used in the `web3-eth` module.
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -18,7 +18,7 @@ import {Personal} from 'web3-eth-personal';
 
 const personal = new Personal(
     'http://127.0.0.1:4546',
-    accounts,
+    null,
     options
 );
 ```

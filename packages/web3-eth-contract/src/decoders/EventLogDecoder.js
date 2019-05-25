@@ -41,13 +41,17 @@ export default class EventLogDecoder {
      * @returns {Object}
      */
     decode(abiItemModel, response) {
-        let argTopics = response.topics;
+        let argumentTopics = response.topics;
 
-        if (abiItemModel.anonymous) {
-            argTopics = response.topics.slice(1);
+        if (!abiItemModel.anonymous) {
+            argumentTopics = response.topics.slice(1);
         }
 
-        response.returnValues = this.abiCoder.decodeLog(abiItemModel.getInputs(), response.data, argTopics);
+        if (response.data === '0x') {
+            response.data = null;
+        }
+
+        response.returnValues = this.abiCoder.decodeLog(abiItemModel.getInputs(), response.data, argumentTopics);
         response.event = abiItemModel.name;
         response.signature = abiItemModel.signature;
         response.raw = {

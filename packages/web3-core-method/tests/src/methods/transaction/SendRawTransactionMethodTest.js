@@ -1,5 +1,9 @@
-import AbstractSendMethod from '../../../../lib/methods/AbstractSendMethod';
+import AbstractObservedTransactionMethod from '../../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 import SendRawTransactionMethod from '../../../../src/methods/transaction/SendRawTransactionMethod';
+import {formatters} from 'web3-core-helpers';
+
+// Mocks
+jest.mock('web3-core-helpers');
 
 /**
  * SendRawTransactionMethod test
@@ -8,20 +12,20 @@ describe('SendRawTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SendRawTransactionMethod(null, null, null);
+        method = new SendRawTransactionMethod(null, formatters, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractSendMethod);
+        expect(method).toBeInstanceOf(AbstractObservedTransactionMethod);
 
         expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
+    });
 
-        expect(method.parametersAmount).toEqual(1);
+    it('calls afterExecution and returns the expected value', () => {
+        formatters.outputTransactionFormatter.mockReturnValueOnce({status: true});
 
-        expect(method.utils).toEqual(null);
+        expect(method.afterExecution({status: false})).toEqual({status: true});
 
-        expect(method.formatters).toEqual(null);
-
-        expect(method.transactionConfirmationWorkflow).toEqual(null);
+        expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith({status: false});
     });
 });

@@ -20,14 +20,11 @@
  * @date 2018
  */
 
-import {PromiEvent} from 'web3-core-promievent';
 import {AbstractWeb3Module} from 'web3-core';
 
 export default class Eth extends AbstractWeb3Module {
     /**
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {MethodFactory} methodFactory
      * @param {Network} net
      * @param {Accounts} accounts
@@ -40,13 +37,12 @@ export default class Eth extends AbstractWeb3Module {
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {Object} options
+     * @param {Net} nodeNet
      *
      * @constructor
      */
     constructor(
         provider,
-        providersModuleFactory,
-        methodModuleFactory,
         methodFactory,
         net,
         accounts,
@@ -58,9 +54,10 @@ export default class Eth extends AbstractWeb3Module {
         formatters,
         subscriptionsFactory,
         contractModuleFactory,
-        options
+        options,
+        nodeNet
     ) {
-        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
+        super(provider, options, methodFactory, nodeNet);
 
         this.net = net;
         this.accounts = accounts;
@@ -68,11 +65,13 @@ export default class Eth extends AbstractWeb3Module {
         this.Iban = Iban;
         this.abi = abiCoder;
         this.ens = ens;
+
         this.utils = utils;
         this.formatters = formatters;
         this.subscriptionsFactory = subscriptionsFactory;
         this.contractModuleFactory = contractModuleFactory;
         this.initiatedContracts = [];
+        this._transactionSigner = options.transactionSigner;
 
         /**
          * This wrapper function is required for the "new web3.eth.Contract(...)" call.
@@ -85,20 +84,64 @@ export default class Eth extends AbstractWeb3Module {
          *
          * @constructor
          */
-        this.Contract = (abi, address, options) => {
+        this.Contract = (abi, address, options = {}) => {
             const contract = this.contractModuleFactory.createContract(
                 this.currentProvider,
-                this.providersModuleFactory,
-                PromiEvent,
+                this.accounts,
                 abi,
                 address,
-                options
+                {
+                    defaultAccount: options.from || options.defaultAccount || this.defaultAccount,
+                    defaultBlock: options.defaultBlock || this.defaultBlock,
+                    defaultGas: options.gas || options.defaultGas || this.defaultGas,
+                    defaultGasPrice: options.gasPrice || options.defaultGasPrice || this.defaultGasPrice,
+                    transactionBlockTimeout: options.transactionBlockTimeout || this.transactionBlockTimeout,
+                    transactionConfirmationBlocks:
+                        options.transactionConfirmationBlocks || this.transactionConfirmationBlocks,
+                    transactionPollingTimeout: options.transactionPollingTimeout || this.transactionPollingTimeout,
+                    transactionSigner: this.transactionSigner,
+                    data: options.data
+                }
             );
 
             this.initiatedContracts.push(contract);
 
             return contract;
         };
+    }
+
+    /**
+     * Getter for the transactionSigner property
+     *
+     * @property transactionSigner
+     *
+     * @returns {TransactionSigner}
+     */
+    get transactionSigner() {
+        return this._transactionSigner;
+    }
+
+    /**
+     * TODO: Remove setter
+     *
+     * Setter for the transactionSigner property
+     *
+     * @property transactionSigner
+     *
+     * @param {TransactionSigner} transactionSigner
+     */
+    set transactionSigner(transactionSigner) {
+        if (transactionSigner.type && transactionSigner.type === 'TransactionSigner') {
+            throw new Error('Invalid TransactionSigner given!');
+        }
+
+        this._transactionSigner = transactionSigner;
+        this.accounts.transactionSigner = transactionSigner;
+        this.ens.transactionSigner = transactionSigner;
+
+        this.initiatedContracts.forEach((contract) => {
+            contract.transactionSigner = transactionSigner;
+        });
     }
 
     /**
@@ -328,24 +371,7 @@ export default class Eth extends AbstractWeb3Module {
      * @returns {Subscription}
      */
     subscribe(type, options, callback) {
-        switch (type) {
-            case 'logs':
-                return this.subscriptionsFactory
-                    .createLogSubscription(options, this, this.methodFactory.createMethod('getPastLogs'))
-                    .subscribe(callback);
-
-            case 'newBlockHeaders':
-                return this.subscriptionsFactory.createNewHeadsSubscription(this).subscribe(callback);
-
-            case 'pendingTransactions':
-                return this.subscriptionsFactory.createNewPendingTransactionsSubscription(this).subscribe(callback);
-
-            case 'syncing':
-                return this.subscriptionsFactory.createSyncingSubscription(this).subscribe(callback);
-
-            default:
-                throw new Error(`Unknown subscription: ${type}`);
-        }
+        return this.subscriptionsFactory.getSubscription(this, type, options).subscribe(callback);
     }
 
     /**
@@ -365,7 +391,6 @@ export default class Eth extends AbstractWeb3Module {
         return (
             this.net.setProvider(provider, net) &&
             this.personal.setProvider(provider, net) &&
-            this.accounts.setProvider(provider, net) &&
             super.setProvider(provider, net) &&
             setContractProviders
         );

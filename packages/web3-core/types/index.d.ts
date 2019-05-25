@@ -14,27 +14,31 @@
 /**
  * @file index.d.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2018
  */
 
 import * as net from 'net';
+import BN = require('bn.js');
+import {AbstractMethodFactory} from 'web3-core-method';
 import {
-    EthereumProvider,
+    BatchRequest,
+    Web3EthereumProvider,
     HttpProvider,
+    HttpProviderOptions,
     IpcProvider,
     provider,
-    ProvidersModuleFactory,
     WebsocketProvider,
-    BatchRequest
+    CustomProvider,
+    WebsocketProviderOptions
 } from 'web3-providers';
 
 export class AbstractWeb3Module {
     constructor(
         provider: provider,
-        providersModuleFactory: ProvidersModuleFactory,
-        methodModuleFactory: any,
-        methodFactory?: any,
-        options?: Web3ModuleOptions
+        options?: Web3ModuleOptions,
+        methodFactory?: AbstractMethodFactory,
+        net?: net.Socket | null
     );
 
     BatchRequest: new () => BatchRequest;
@@ -44,16 +48,29 @@ export class AbstractWeb3Module {
     transactionPollingTimeout: number;
     defaultGasPrice: string;
     defaultGas: number;
-    readonly providers: Providers;
+    static readonly providers: Providers;
     defaultAccount: string | null;
-    readonly currentProvider: EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider;
-    readonly givenProvider: provider | null;
+    readonly currentProvider: Web3EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider | CustomProvider;
+    readonly givenProvider: any;
 
     setProvider(provider: provider, net?: net.Socket): boolean;
 
     isSameProvider(provider: provider): boolean;
 
     clearSubscriptions(subscriptionType: string): Promise<boolean>;
+}
+
+export interface TransactionSigner {
+    sign(transactionConfig: TransactionConfig): Promise<SignedTransaction>;
+}
+
+export interface SignedTransaction {
+    messageHash?: string;
+    r: string;
+    s: string;
+    v: string;
+    rawTransaction?: string;
+    transactionHash?: string;
 }
 
 export interface Web3ModuleOptions {
@@ -64,82 +81,112 @@ export interface Web3ModuleOptions {
     transactionPollingTimeout?: number;
     defaultGasPrice?: string;
     defaultGas?: number;
+    transactionSigner?: TransactionSigner;
 }
 
 export interface Providers {
-    HttpProvider: HttpProvider;
-    WebsocketProvider: WebsocketProvider;
-    IpcProvider: IpcProvider;
+    HttpProvider: new (host: string, options?: HttpProviderOptions) => HttpProvider;
+    WebsocketProvider: new (host: string, options?: WebsocketProviderOptions) => WebsocketProvider;
+    IpcProvider: new (path: string, net: any) => IpcProvider;
 }
 
 export interface PromiEvent<T> extends Promise<T> {
-    once(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
+    once(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>;
 
-    once(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
+    once(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>;
 
-    once(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
+    once(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>;
 
-    once(type: 'error', handler: (error: Error) => void): PromiEvent<T>
+    once(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
 
-    once(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
+    once(
+        type: 'error' | 'confirmation' | 'receipt' | 'transactionHash',
+        handler: (error: Error | TransactionReceipt | string) => void
+    ): PromiEvent<T>;
 
-    on(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
+    on(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>;
 
-    on(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
+    on(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>;
 
-    on(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
+    on(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>;
 
-    on(type: 'error', handler: (error: Error) => void): PromiEvent<T>
+    on(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
 
-    on(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
+    on(
+        type: 'error' | 'confirmation' | 'receipt' | 'transactionHash',
+        handler: (error: Error | TransactionReceipt | string) => void
+    ): PromiEvent<T>;
 }
 
 export interface Transaction {
+    hash: string;
+    nonce: number;
+    blockHash: string | null;
+    blockNumber: number | null;
+    transactionIndex: number | null;
+    from: string;
+    to: string | null;
+    value: string;
+    gasPrice: string;
+    gas: number;
+    input: string;
+}
+
+export interface TransactionConfig {
     from?: string | number;
     to?: string;
-    gasPrice?: string;
+    value?: number | string | BN;
     gas?: number | string;
-    value?: number | string;
-    chainId?: number;
+    gasPrice?: number | string | BN;
     data?: string;
     nonce?: number;
-    v?: string;
-    r?: string;
-    s?: string;
-    hash?: string;
+    chainId?: number;
 }
 
 export interface RLPEncodedTransaction {
-    raw: string,
-    tx: Transaction
-}
-
-export interface TransactionReceipt {
-    transactionHash: string
-    transactionIndex: number
-    blockHash: string
-    blockNumber: number
-    from: string
-    to: string
-    contractAddress: string
-    cumulativeGasUsed: number
-    gasUsed: number
-    logs?: Log[]
-    events?: {
-        [eventName: string]: EventLog
+    raw: string;
+    tx: {
+        nonce: string;
+        gasPrice: string;
+        gas: string;
+        to: string;
+        value: string;
+        input: string;
+        r: string;
+        s: string;
+        v: string;
+        hash: string;
     }
 }
 
+export interface TransactionReceipt {
+    status: boolean;
+    transactionHash: string;
+    transactionIndex: number;
+    blockHash: string;
+    blockNumber: number;
+    from: string;
+    to: string;
+    contractAddress?: string;
+    cumulativeGasUsed: number;
+    gasUsed: number;
+    logs: Log[];
+    logsBloom: string;
+    events?: {
+        [eventName: string]: EventLog;
+    };
+}
+
 export interface EventLog {
-    event: string
-    address: string
-    returnValues: object
-    logIndex: number
-    transactionIndex: number
-    transactionHash: string
-    blockHash: string
-    blockNumber: number
-    raw?: {data: string, topics: any[]}
+    event: string;
+    address: string;
+    returnValues: any;
+    logIndex: number;
+    transactionIndex: number;
+    transactionHash: string;
+    blockHash: string;
+    blockNumber: number;
+    raw?: {data: string; topics: any[]};
 }
 
 export interface Log {
@@ -151,4 +198,49 @@ export interface Log {
     transactionHash: string;
     blockHash: string;
     blockNumber: number;
+}
+
+export interface TxPoolContent {
+    pending: TxPool;
+    queued: TxPool;
+}
+
+export interface TxPoolInspect {
+    pending: TxPool;
+    queued: TxPool;
+}
+
+export interface TxPool {
+    [address: string]: {
+        [nonce: number]: string[] | Transaction[];
+    };
+}
+
+export interface TxPoolStatus {
+    pending: number;
+    queued: number;
+}
+
+export interface NodeInfo {
+    enode: string;
+    id: string;
+    ip: string;
+    listenAddr: string;
+    name: string;
+    ports: {
+      discovery: string | number;
+      listener: string | number;
+    };
+    protocols: any // Any because it's not documented what each protocol (eth, shh etc.) is defining here
+}
+
+export interface PeerInfo {
+    caps: string[];
+    id: string;
+    name: string;
+    network: {
+        localAddress: string;
+        remoteAddress: string;
+    };
+    protocols: any; // Any because it's not documented what each protocol (eth, shh etc.) is defining here
 }

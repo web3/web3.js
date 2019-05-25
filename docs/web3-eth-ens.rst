@@ -2,29 +2,30 @@
 
 .. include:: include_announcement.rst
 
-=========
+============
 web3.eth.ens
-=========
+============
 
-The ``web3.eth.ens`` functions let you interacting with Ens.
+The ``web3.eth.ens`` functions let you interacting with the Ens smart contracts.
 
 .. code-block:: javascript
 
+    import Web3 from 'web3';
     import {Ens} from 'web3-eth-ens';
-    import {Accounts} from 'web3-eth-accounts;
+    import {Accounts} from 'web3-eth-accounts';
 
-    // "Ens.providers.givenProvider" will be set if in an Ethereum supported browser.
+    // "Web3.givenProvider" will be set if in an Ethereum supported browser.
     const eth = new Ens(
-        Ens.givenProvider || 'ws://some.local-or-remote.node:8546',
-        new Accounts(Ens.givenProvider || 'ws://some.local-or-remote.node:8546', options),
+        Web3.givenProvider || 'ws://some.local-or-remote.node:8546',
+        null,
         options
+        new Accounts(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options)
     );
 
 
     // or using the web3 umbrella package
 
-    import {Web3 } from 'web3';
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
 
     // -> web3.eth.ens
 
@@ -54,9 +55,11 @@ Example
     web3.eth.ens.registry;
     > {
         ens: Ens,
-        contract: Contract,
-        owner: Function(name),
-        resolve: Function(name)
+        resolverContract: Contract | null,
+        setProvider(provider: provider, net?: net.Socket): boolean,
+        owner(name: string, callback?: (error: Error, address: string) => void): Promise<string>,
+        resolver(name: string): Promise<Contract>,
+        checkNetwork(): Promise<string>,
     }
 
 ------------------------------------------------------------------------------
@@ -94,7 +97,7 @@ supportsInterface
 
 .. code-block:: javascript
 
-    web3.eth.ens.supportsInterface(ENSName, interfaceId);
+    web3.eth.ens.supportsInterface(ENSName, interfaceId, [callback]);
 
 Checks if the current resolver does support the desired interface.
 
@@ -104,12 +107,13 @@ Parameters
 
 1. ``ENSName`` - ``String``: The Ens name to resolve.
 2. ``interfaceId`` - ``String``: A defined ENS interfaceId.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-``Boolean`` - Returns true if the given interfaceId is supported by the resolver.
+``Promise<boolean>`` - Returns true if the given interfaceId is supported by the resolver.
 
 -------
 Example
@@ -129,7 +133,7 @@ getAddress
 
 .. code-block:: javascript
 
-    web3.eth.ens.getAddress(ENSName);
+    web3.eth.ens.getAddress(ENSName, [callback]);
 
 Resolves an Ens name to an Ethereum address.
 
@@ -138,12 +142,13 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The Ens name to resolve.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-``String`` - The Ethereum address of the given name.
+``Promise<string>`` - The Ethereum address of the given name.
 
 -------
 Example
@@ -163,7 +168,7 @@ setAddress
 
 .. code-block:: javascript
 
-    web3.eth.ens.setAddress(ENSName, address, options);
+    web3.eth.ens.setAddress(ENSName, address, options, [callback]);
 
 Sets the address of an Ens name in his resolver.
 
@@ -177,6 +182,7 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 Emits an ``AddrChanged`` event.
 
@@ -242,7 +248,7 @@ getPubkey
 
 .. code-block:: javascript
 
-    web3.eth.ens.getPubkey(ENSName);
+    web3.eth.ens.getPubkey(ENSName, [callback]);
 
 Returns the X and Y coordinates of the curve point for the public key.
 
@@ -251,6 +257,7 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The Ens name.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -281,7 +288,7 @@ setPubkey
 
 .. code-block:: javascript
 
-    web3.eth.ens.setPubkey(ENSName, x, y, options);
+    web3.eth.ens.setPubkey(ENSName, x, y, options, [callback]);
 
 Sets the SECP256k1 public key associated with an Ens node
 
@@ -296,6 +303,7 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+5. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 Emits an ``PubkeyChanged`` event.
@@ -364,7 +372,7 @@ getText
 
 .. code-block:: javascript
 
-    web3.eth.ens.getText(ENSName, key);
+    web3.eth.ens.getText(ENSName, key, [callback]);
 
 Returns the text by the given key.
 
@@ -373,14 +381,14 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The Ens name.
-1. ``key`` - ``String``: The key of the array.
+2. ``key`` - ``String``: The key of the array.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-``String`` - The ENS name.
-``String`` - The key.
+``Promise<string>``
 
 -------
 Example
@@ -388,7 +396,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getText('ethereum.eth', 'key).then((result) => {
+    web3.eth.ens.getText('ethereum.eth', 'key').then((result) => {
         console.log(result);
     });
     > "0000000000000000000000000000000000000000000000000000000000000000"
@@ -400,7 +408,7 @@ setText
 
 .. code-block:: javascript
 
-    web3.eth.ens.setText(ENSName, key, value, options);
+    web3.eth.ens.setText(ENSName, key, value, options, [callback]);
 
 Sets the content hash associated with an Ens node.
 
@@ -415,6 +423,7 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 Emits an ``TextChanged`` event.
@@ -483,7 +492,7 @@ getContent
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContent(ENSName);
+    web3.eth.ens.getContent(ENSName, [callback]);
 
 Returns the content hash associated with an Ens node.
 
@@ -492,12 +501,13 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The Ens name.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-``String`` - The content hash associated with an Ens node.
+``Promise<string>`` - The content hash associated with an Ens node.
 
 -------
 Example
@@ -517,7 +527,7 @@ setContent
 
 .. code-block:: javascript
 
-    web3.eth.ens.setContent(ENSName, hash, options);
+    web3.eth.ens.setContent(ENSName, hash, options, [callback]);
 
 Sets the content hash associated with an Ens node.
 
@@ -531,6 +541,7 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 Emits an ``ContentChanged`` event.
@@ -597,7 +608,7 @@ getMultihash
 
 .. code-block:: javascript
 
-    web3.eth.ens.getMultihash(ENSName);
+    web3.eth.ens.getMultihash(ENSName, [callback]);
 
 Returns the multihash associated with an Ens node.
 
@@ -606,12 +617,13 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The Ens name.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-``String`` - The associated multihash.
+``Promise<string>`` - The associated multihash.
 
 -------
 Example
@@ -631,7 +643,7 @@ setMultihash
 
 .. code-block:: javascript
 
-    web3.eth.ens.setMultihash(ENSName, hash, options);
+    web3.eth.ens.setMultihash(ENSName, hash, options, [callback]);
 
 Sets the multihash associated with an Ens node.
 
@@ -645,6 +657,7 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 Emits an ``MultihashChanged``event.
@@ -696,21 +709,22 @@ getContenthash
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContenthash(ENSName);
+    web3.eth.ens.getContenthash(ENSName, [callback]);
 
-Returns the contenthash associated with an Ens node.
+Returns the contenthash associated with an Ens node. `contenthash` encoding is defined in [EIP1577](http://eips.ethereum.org/EIPS/eip-1577)
 
 ----------
 Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The Ens name.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-``String`` - The associated contenthash.
+``Promise<string>`` - The associated contenthash.
 
 -------
 Example
@@ -718,10 +732,10 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContenthash('ethereum.eth').then((result) => {
+    web3.eth.ens.getContenthash('pac-txt.eth').then((result) => {
         console.log(result);
     });
-    > 'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK'
+    > '0xe30101701220e08ea2458249e8f26aee72b95b39c33849a992a3eff40bd06d26c12197adef16'
 
 ------------------------------------------------------------------------------
 
@@ -730,7 +744,7 @@ setContenthash
 
 .. code-block:: javascript
 
-    web3.eth.ens.setContenthash(ENSName, hash, options);
+    web3.eth.ens.setContenthash(ENSName, hash, options, [callback]);
 
 Sets the contenthash associated with an Ens node.
 
@@ -744,9 +758,10 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
-Emits an ``ContenthashChanged``event.
+Emits an ``ContenthashChanged`` event.
 
 -------
 Example
@@ -756,7 +771,7 @@ Example
 
     web3.eth.ens.setContenthash(
         'ethereum.eth',
-        'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK',
+        '0xe301017012208cd82588c4e08268fa0b824caa93847ac843410076eeedc41d65fb52eccbb9e6',
         {
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
@@ -769,7 +784,7 @@ Example
 
     web3.eth.ens.setContenthash(
         'ethereum.eth',
-        'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK',
+        '0xe301017012208cd82588c4e08268fa0b824caa93847ac843410076eeedc41d65fb52eccbb9e6',
         {
             from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
         }
@@ -801,11 +816,11 @@ Known resolver events
 
 1. ``AddrChanged`` - AddrChanged(node bytes32, a address)
 2. ``ContentChanged`` - ContentChanged(node bytes32, hash bytes32)
-4. ``NameChanged`` - NameChanged(node bytes32, name string)
-5. ``ABIChanged`` - ABIChanged(node bytes32, contentType uint256)
-6. ``PubkeyChanged`` - PubkeyChanged(node bytes32, x bytes32, y bytes32)
+3. ``NameChanged`` - NameChanged(node bytes32, name string)
+4. ``ABIChanged`` - ABIChanged(node bytes32, contentType uint256)
+5. ``PubkeyChanged`` - PubkeyChanged(node bytes32, x bytes32, y bytes32)
 6. ``TextChanged`` - TextChanged(bytes32 indexed node, string indexedKey, string key)
-6. ``ContenthashChanged`` - ContenthashChanged(bytes32 indexed node, bytes hash)
+7. ``ContenthashChanged`` - ContenthashChanged(bytes32 indexed node, bytes hash)
 
 -------
 Example

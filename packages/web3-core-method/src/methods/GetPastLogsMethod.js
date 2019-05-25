@@ -20,17 +20,18 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../lib/methods/AbstractMethod';
 
-export default class GetPastLogsMethod extends AbstractCallMethod {
+export default class GetPastLogsMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_getLogs', 1, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_getLogs', 1, utils, formatters, moduleInstance);
     }
 
     /**

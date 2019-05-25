@@ -25,6 +25,12 @@ describe('AbiModelTest', () => {
         expect(abiModel.getMethod('my_method')).toEqual(true);
     });
 
+    it('calls getMethods and returns the expected object', () => {
+        abiModel.abi.methods['my_method'] = true;
+
+        expect(abiModel.getMethods()).toHaveProperty('my_method', true);
+    });
+
     it('calls getMethod and returns false', () => {
         expect(abiModel.getMethod('my_method')).toEqual(false);
     });
@@ -42,7 +48,7 @@ describe('AbiModelTest', () => {
     it('calls getEvents and returns the expected object', () => {
         abiModel.abi.events['my_event'] = true;
 
-        expect(abiModel.getEvents('my_event')).toHaveProperty('my_event', true);
+        expect(abiModel.getEvents()).toHaveProperty('my_event', true);
     });
 
     it('calls getEventBySignature and returns the expected object', () => {

@@ -17,11 +17,9 @@
  * @date 2018
  */
 
-import {PromiEvent} from 'web3-core-promievent';
-import {ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {MethodModuleFactory} from 'web3-core-method';
+import {ProviderResolver} from 'web3-providers';
 import {ContractModuleFactory} from 'web3-eth-contract';
 import {AbiCoder} from 'web3-eth-abi';
 import {Network} from 'web3-net';
@@ -32,28 +30,27 @@ import EnsModuleFactory from './factories/EnsModuleFactory';
  *
  * @method Ens
  *
- * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
- * @param {Accounts} accounts
+ * @param {HttpProvider|WebsocketProvider|IpcProvider|Web3EthereumProvider|String} provider
+ * @param {Net.Socket} net
  * @param {Object} options
+ * @param {Accounts} accounts
  *
+ * @constructor
  * @returns {Ens}
  */
-export const Ens = (provider, accounts, options) => {
+export function Ens(provider, net = null, options = {}, accounts = {}) {
     const abiCoder = new AbiCoder();
-
-    const methodModuleFactory = new MethodModuleFactory();
+    const resolvedProvider = new ProviderResolver().resolve(provider, net);
 
     return new EnsModuleFactory().createENS(
-        provider,
-        new ProvidersModuleFactory(),
-        new MethodModuleFactory(accounts),
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
-        PromiEvent,
+        resolvedProvider,
+        new ContractModuleFactory(Utils, formatters, abiCoder),
+        accounts,
         abiCoder,
         Utils,
         formatters,
-        new Network(provider),
-        {},
-        options
+        new Network(resolvedProvider, null, options),
+        options,
+        null
     );
-};
+}

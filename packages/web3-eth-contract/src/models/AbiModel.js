@@ -48,6 +48,17 @@ export default class AbiModel {
     }
 
     /**
+     * Returns all methods from this AbiModel
+     *
+     * @method getMethods
+     *
+     * @returns {Object}
+     */
+    getMethods() {
+        return this.abi.methods;
+    }
+
+    /**
      * Checks if the event exists and returns it otherwise it will return false
      *
      * @method getEvent

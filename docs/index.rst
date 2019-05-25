@@ -5,8 +5,8 @@
 web3.js - Ethereum JavaScript API
 =================================
 
-web3.js is a collection of libraries which allow you to interact with a local or remote ethereum node,
-using a HTTP or IPC connection.
+web3.js is a collection of libraries which allow you to interact with a local or remote Ethereum node,
+using an HTTP, WebSocket or IPC connection.
 
 The following documentation will guide you through :ref:`installing and running web3.js <adding-web3>`,
 as well as providing a :ref:`API reference documentation <#id1>` with examples.
@@ -42,4 +42,13 @@ Contents:
     web3-bzz
     web3-shh
     web3-utils
+    web3-module
+    web3-module-contract
+    web3-core
+    web3-core-method
+    web3-core-subscriptions
+    web3-eth-admin
+    web3-eth-debug
+    web3-eth-miner
+    web3-eth-txpool
 

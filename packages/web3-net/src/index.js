@@ -20,27 +20,22 @@
  * @date 2018
  */
 
-import {ProvidersModuleFactory} from 'web3-providers';
-import {MethodModuleFactory} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
-import NetworkModuleFactory from './factories/NetworkModuleFactory';
+import MethodFactory from './factories/MethodFactory';
+import NetworkModule from './Network.js';
 
 /**
  * Creates the Network Object
  *
  * @method Network
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Net.Socket} net
  * @param {Object} options
  *
  * @returns {Network}
  */
-export const Network = (provider, options) => {
-    return new NetworkModuleFactory(Utils, formatters).createNetworkModule(
-        provider,
-        new ProvidersModuleFactory(),
-        new MethodModuleFactory(),
-        options
-    );
-};
+export function Network(provider, net = null, options = {}) {
+    return new NetworkModule(provider, new MethodFactory(Utils, formatters), Utils, formatters, options, null);
+}

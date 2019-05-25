@@ -1,3 +1,3 @@
 const jestConfig = require('../../jest.config');
 
-module.exports = jestConfig({});
+module.exports = jestConfig();

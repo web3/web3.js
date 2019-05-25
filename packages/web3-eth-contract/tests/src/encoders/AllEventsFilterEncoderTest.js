@@ -4,7 +4,7 @@ import AbiItemModel from '../../../src/models/AbiItemModel';
 import AllEventsFilterEncoder from '../../../src/encoders/AllEventsFilterEncoder';
 
 // Mocks
-jest.mock('AbiCoder');
+jest.mock('web3-eth-abi');
 jest.mock('../../../src/models/AbiModel');
 jest.mock('../../../src/models/AbiItemModel');
 

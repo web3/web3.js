@@ -1,9 +1,9 @@
 import * as Utils from 'web3-utils';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import NewAccountMethod from '../../../../src/methods/personal/NewAccountMethod';
 
 // Mocks
-jest.mock('Utils');
+jest.mock('web3-utils');
 
 /**
  * NewAccountMethod test
@@ -12,15 +12,15 @@ describe('NewAccountMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new NewAccountMethod(Utils, null);
+        method = new NewAccountMethod(Utils, null, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('personal_newAccount');
 
-        expect(method.parametersAmount).toEqual(0);
+        expect(method.parametersAmount).toEqual(1);
 
         expect(method.utils).toEqual(Utils);
 

@@ -27,6 +27,12 @@ npm install web3
 yarn add web3
 ```
 
+### Meteor
+
+```bash
+meteor npm install --save web3@1.x
+```
+
 ## Usage
 
 ```js
@@ -59,13 +65,22 @@ web3.eth.getAccounts()
 
 ### Usage with TypeScript
 
-We do support types within the repo itself. Please open an issue here if you find any wrong types.
+We support types within the repo itself. Please open an issue here if you find any wrong types.
 
 You can use `web3.js` as follows:
 
 ```typescript
 import Web3 from 'web3';
 const web3 = new Web3("ws://localhost:8546");
+```
+
+If you are using the types in a `commonjs` module like for example a node app you just have to enable `esModuleInterop` in your `tsconfig` compile option, also enable `allowSyntheticDefaultImports` for typesystem compatibility:
+
+```js
+"compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    ....
 ```
 
 ## Documentation
@@ -84,18 +99,19 @@ Documentation can be found at [read the docs][docs]
 
 ### Commands
 ```bash
-npm run clean // removes all the node_modules folders in all modules
-npm run bootstrap // install all dependencies and symlinks the internal modules for all modules
-npm run test // runs all tests 
-npm run build // runs rollup
-npm run dev // runs rollup with a watcher
+npm install # install all dependencies for npm run bootstrap
+npm run bootstrap # install all dependencies and symlinks the internal modules for all modules
+npm run build # runs rollup
+npm run test # runs all tests 
+npm run clean # removes all the node_modules folders in all modules
+npm run dev # runs rollup with a watcher
 
 ```
 
 ### Support
 
 ![browsers](https://img.shields.io/badge/browsers-latest%202%20versions-brightgreen.svg)
-![node](https://img.shields.io/badge/node->=6-green.svg)
+![node](https://img.shields.io/badge/node->=8-green.svg)
 
 ### Community
  - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)

@@ -32,25 +32,9 @@ export default class AbiItemModel {
         this.abiItem = abiItem;
         this.signature = this.abiItem.signature;
         this.name = this.abiItem.name;
+        this.payable = this.abiItem.payable;
         this.anonymous = this.abiItem.anonymous;
         this.contractMethodParameters = [];
-    }
-
-    /**
-     * Getter for the requestType of this ABI item.
-     *
-     * @property requestType
-     *
-     * @returns {String}
-     */
-    get requestType() {
-        if (this.abiItem.type === 'function' || this.abiItem.type === 'constructor') {
-            if (this.abiItem.constant === true) {
-                return 'call';
-            }
-
-            return 'send';
-        }
     }
 
     /**
@@ -99,25 +83,6 @@ export default class AbiItemModel {
         }
 
         return [];
-    }
-
-    /**
-     * Checks if the given parameter array length matches the abiItem inputs length
-     *
-     * @method givenParametersLengthIsValid
-     *
-     * @returns {Error|Boolean}
-     */
-    givenParametersLengthIsValid() {
-        const inputLength = this.getInputLength();
-
-        if (this.contractMethodParameters.length === inputLength) {
-            return true;
-        }
-
-        throw new Error(
-            `The number of arguments is not matching the methods required number. You need to pass ${inputLength} arguments.`
-        );
     }
 
     /**

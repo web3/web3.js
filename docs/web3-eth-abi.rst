@@ -2,12 +2,12 @@
 
 .. include:: include_announcement.rst
 
-=========
+============
 web3.eth.abi
-=========
+============
 
 The ``web3-eth-abi`` package allows you to de- and encode parameters from a ABI (Application Binary Interface).
-This will be used for function calls to the EVM (Ethereum Virtual Machine).
+This will be used for calling functions of a deployed smart-contract.
 
 .. code-block:: javascript
 
@@ -19,9 +19,9 @@ This will be used for function calls to the EVM (Ethereum Virtual Machine).
     // or using the web3 umbrella package
 
 
-    import {Web3} from 'web3';
+    import Web3 from 'web3';
 
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
     // -> web3.eth.abi
 
 
@@ -170,27 +170,8 @@ Example
     web3.eth.abi.encodeParameter('bytes32[]', ['0xdf3234', '0xfdfd']);
     > "00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002df32340000000000000000000000000000000000000000000000000000000000fdfd000000000000000000000000000000000000000000000000000000000000"
 
-    web3.eth.abi.encodeParameter(
-        {
-            "ParentStruct": {
-                "propertyOne": 'uint256',
-                "propertyTwo": 'uint256',
-                "childStruct": {
-                    "propertyOne": 'uint256',
-                    "propertyTwo": 'uint256'
-                }
-            }
-        },
-        {
-            "propertyOne": 42,
-            "propertyTwo": 56,
-            "childStruct": {
-                "propertyOne": 45,
-                "propertyTwo": 78
-            }
-        }
-    );
-    > "0x000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000038000000000000000000000000000000000000000000000000000000000000002d000000000000000000000000000000000000000000000000000000000000004e"
+
+
 ------------------------------------------------------------------------------
 
 encodeParameters
@@ -225,35 +206,8 @@ Example
     > "0x000000000000000000000000000000000000000000000000000000008bd02b7b0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000748656c6c6f212500000000000000000000000000000000000000000000000000"
 
     web3.eth.abi.encodeParameters(['uint8[]','bytes32'], [['34','434'], '0x324567fff']);
-    > "0x0
+    > "0x0"
 
-    web3.eth.abi.encodeParameters(
-        [
-            'uint8[]',
-            {
-                "ParentStruct": {
-                    "propertyOne": 'uint256',
-                    "propertyTwo": 'uint256',
-                    "ChildStruct": {
-                        "propertyOne": 'uint256',
-                        "propertyTwo": 'uint256'
-                    }
-                }
-            }
-        ],
-        [
-            ['34','434'],
-            {
-                "propertyOne": '42',
-                "propertyTwo": '56',
-                "ChildStruct": {
-                    "propertyOne": '45',
-                    "propertyTwo": '78'
-                }
-            }
-        ]
-    );
-    > "0x00000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000038000000000000000000000000000000000000000000000000000000000000002d000000000000000000000000000000000000000000000000000000000000004e0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000018"
 
 ------------------------------------------------------------------------------
 
@@ -264,7 +218,7 @@ encodeFunctionCall
 
     web3.eth.abi.encodeFunctionCall(jsonInterface, parameters);
 
-Encodes a function call using its :ref:`JSON interface <glossary-json-interface>` object and given paramaters.
+Encodes a function call using its :ref:`JSON interface <glossary-json-interface>` object and given parameters.
 
 ----------
 Parameters
@@ -337,57 +291,6 @@ Example
     web3.eth.abi.decodeParameter('string', '0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000848656c6c6f212521000000000000000000000000000000000000000000000000');
     > "Hello!%!"
 
-    web3.eth.abi.decodeParameter(
-        {
-            "ParentStruct": {
-              "propertyOne": 'uint256',
-              "propertyTwo": 'uint256',
-              "childStruct": {
-                "propertyOne": 'uint256',
-                "propertyTwo": 'uint256'
-              }
-            }
-        },
-
-    , '0x000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000038000000000000000000000000000000000000000000000000000000000000002d000000000000000000000000000000000000000000000000000000000000004e');
-    > {
-        '0': {
-            '0': '42',
-            '1': '56',
-            '2': {
-                '0': '45',
-                '1': '78',
-                'propertyOne': '45',
-                'propertyTwo': '78'
-            },
-            'childStruct': {
-                '0': '45',
-                '1': '78',
-                'propertyOne': '45',
-                'propertyTwo': '78'
-            },
-            'propertyOne': '42',
-            'propertyTwo': '56'
-        },
-        'ParentStruct': {
-            '0': '42',
-            '1': '56',
-            '2': {
-                '0': '45',
-                '1': '78',
-                'propertyOne': '45',
-                'propertyTwo': '78'
-            },
-            'childStruct': {
-                '0': '45',
-                '1': '78',
-                'propertyOne': '45',
-                'propertyTwo': '78'
-            },
-            'propertyOne': '42',
-            'propertyTwo': '56'
-        }
-    }
 
 ------------------------------------------------------------------------------
 
@@ -436,42 +339,6 @@ Example
         myNumber: '234'
     }
 
-    web3.eth.abi.decodeParameters([
-      'uint8[]',
-      {
-        "ParentStruct": {
-          "propertyOne": 'uint256',
-          "propertyTwo": 'uint256',
-          "childStruct": {
-            "propertyOne": 'uint256',
-            "propertyTwo": 'uint256'
-          }
-        }
-      }
-    ], '0x00000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000038000000000000000000000000000000000000000000000000000000000000002d000000000000000000000000000000000000000000000000000000000000004e0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000018');
-    > Result {
-        '0': ['42', '24'],
-        '1': {
-            '0': '42',
-            '1': '56',
-            '2':
-                {
-                    '0': '45',
-                    '1': '78',
-                    'propertyOne': '45',
-                    'propertyTwo': '78'
-                },
-            'childStruct':
-                {
-                    '0': '45',
-                    '1': '78',
-                    'propertyOne': '45',
-                    'propertyTwo': '78'
-                },
-            'propertyOne': '42',
-            'propertyTwo': '56'
-        }
-    }
 
 ------------------------------------------------------------------------------
 
@@ -489,7 +356,7 @@ Decodes ABI encoded log data and indexed topic data.
 Parameters
 ----------
 
-1. ``inputs`` - ``Object``: A :ref:`JSON interface <glossary-json-interface>` inputs array. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
+1. ``inputs`` - ``Array``: A :ref:`JSON interface <glossary-json-interface>` inputs array. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
 2. ``hexString`` - ``String``: The ABI byte code in the ``data`` field of a log.
 3. ``topics`` - ``Array``: An array with the index parameter topics of the log, without the topic[0] if its a non-anonymous event, otherwise with topic[0].
 

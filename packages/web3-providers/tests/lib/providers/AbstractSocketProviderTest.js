@@ -1,9 +1,13 @@
 import AbstractSocketProvider from '../../../lib/providers/AbstractSocketProvider';
 import {w3cwebsocket as W3CWebsocket} from 'websocket';
 import EventEmitter from 'eventemitter3';
+import JsonRpcMapper from '../../../src/mappers/JsonRpcMapper';
+import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
+import AbstractMethod from '../../__mocks__/AbstractMethod';
+import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
 
 // Mocks
-jest.mock('w3cwebsocket');
+jest.mock('websocket');
 
 /**
  * AbstractSocketProvider test
@@ -54,6 +58,10 @@ describe('AbstractSocketProviderTest', () => {
         expect(abstractSocketProvider.registerEventListeners).toBeInstanceOf(Function);
 
         expect(abstractSocketProvider).toBeInstanceOf(EventEmitter);
+    });
+
+    it('calls supportsSubscriptions and returns true', () => {
+        expect(abstractSocketProvider.supportsSubscriptions()).toEqual(true);
     });
 
     it('calls removeAllListeners without event parameter', () => {
@@ -293,5 +301,71 @@ describe('AbstractSocketProviderTest', () => {
         abstractSocketProvider.subscriptions['ID'] = {id: '0x0'};
 
         expect(abstractSocketProvider.getSubscriptionEvent('0x0')).toEqual('ID');
+    });
+
+    it('calls send and returns a resolved promise', async () => {
+        JsonRpcMapper.toPayload = jest.fn();
+        JsonRpcMapper.toPayload.mockReturnValueOnce({id: '0x0'});
+
+        JsonRpcResponseValidator.validate = jest.fn();
+        JsonRpcResponseValidator.validate.mockReturnValueOnce(true);
+
+        abstractSocketProvider.sendPayload = jest.fn();
+        abstractSocketProvider.sendPayload.mockReturnValueOnce(Promise.resolve({result: true}));
+
+        const response = await abstractSocketProvider.send('rpc_method', []);
+
+        expect(response).toEqual(true);
+
+        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
+
+        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
+
+        expect(abstractSocketProvider.sendPayload).toHaveBeenCalledWith({id: '0x0'});
+    });
+
+    it('calls send and returns a rejected promise because of an invalid rpc response', async () => {
+        JsonRpcMapper.toPayload = jest.fn();
+        JsonRpcMapper.toPayload.mockReturnValueOnce({id: '0x0'});
+
+        JsonRpcResponseValidator.validate = jest.fn();
+        JsonRpcResponseValidator.validate.mockReturnValueOnce(new Error('invalid'));
+
+        abstractSocketProvider.sendPayload = jest.fn();
+        abstractSocketProvider.sendPayload.mockReturnValueOnce(Promise.resolve({result: true}));
+
+        await expect(abstractSocketProvider.send('rpc_method', [])).rejects.toThrow('invalid');
+
+        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
+
+        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
+
+        expect(abstractSocketProvider.sendPayload).toHaveBeenCalledWith({id: '0x0'});
+    });
+
+    it('calls sendBatch and returns a resolved promise', async () => {
+        const abstractMethodMock = new AbstractMethod();
+
+        const moduleInstanceMock = new AbstractWeb3Module();
+
+        abstractMethodMock.beforeExecution = jest.fn();
+        abstractMethodMock.rpcMethod = 'rpc_method';
+        abstractMethodMock.parameters = [];
+
+        JsonRpcMapper.toPayload = jest.fn();
+        JsonRpcMapper.toPayload.mockReturnValueOnce({id: '0x0'});
+
+        abstractSocketProvider.sendPayload = jest.fn();
+        abstractSocketProvider.sendPayload.mockReturnValueOnce(Promise.resolve({result: true}));
+
+        const response = await abstractSocketProvider.sendBatch([abstractMethodMock], moduleInstanceMock);
+
+        expect(response).toEqual({result: true});
+
+        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', []);
+
+        expect(abstractMethodMock.beforeExecution).toHaveBeenCalled();
+
+        expect(abstractSocketProvider.sendPayload).toHaveBeenCalledWith([{id: '0x0'}]);
     });
 });

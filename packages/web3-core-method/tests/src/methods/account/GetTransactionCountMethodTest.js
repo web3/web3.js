@@ -1,11 +1,11 @@
 import {formatters} from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetTransactionCountMethod from '../../../../src/methods/account/GetTransactionCountMethod';
 
 // Mocks
-jest.mock('formatters');
-jest.mock('Utils');
+jest.mock('web3-core-helpers');
+jest.mock('web3-utils');
 
 /**
  * GetTransactionCountMethod test
@@ -18,7 +18,7 @@ describe('GetTransactionCountMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_getTransactionCount');
 

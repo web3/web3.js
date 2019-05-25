@@ -4,7 +4,7 @@ import AbiModel from '../../../src/models/AbiModel';
 import AbiItemModel from '../../../src/models/AbiItemModel';
 
 // Mocks
-jest.mock('AbiCoder');
+jest.mock('web3-eth-abi');
 jest.mock('../../../src/models/AbiModel');
 jest.mock('../../../src/models/AbiItemModel');
 
@@ -62,8 +62,25 @@ describe('AllEventsLogDecoderTest', () => {
 
         expect(abiModelMock.getEventBySignature).toHaveBeenCalledWith('0x0');
 
-        expect(abiCoderMock.decodeLog).toHaveBeenCalledWith([], '0x0', ['0x0']);
+        expect(abiCoderMock.decodeLog).toHaveBeenCalledWith([], '0x0', []);
 
         expect(abiItemModel.getInputs).toHaveBeenCalled();
+    });
+
+    it('calls decode and returns the response without decoding it because there is no event with this name in the ABI', () => {
+        const response = {
+            topics: ['0x0'],
+            data: '0x0'
+        };
+
+        abiModelMock.getEventBySignature.mockReturnValueOnce(false);
+
+        const decodedLog = allEventsLogDecoder.decode(abiModelMock, response);
+
+        expect(decodedLog.raw.data).toEqual('0x0');
+
+        expect(decodedLog.raw.topics).toEqual(['0x0']);
+
+        expect(abiModelMock.getEventBySignature).toHaveBeenCalledWith('0x0');
     });
 });

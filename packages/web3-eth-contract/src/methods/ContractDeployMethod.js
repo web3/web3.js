@@ -20,22 +20,21 @@
  * @date 2018
  */
 
-import {SendTransactionMethod} from 'web3-core-method';
+import {EthSendTransactionMethod} from 'web3-core-method';
 
-export default class ContractDeployMethod extends SendTransactionMethod {
+export default class ContractDeployMethod extends EthSendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
-     * @param {Accounts} accounts
-     * @param {TransactionSigner} transactionSigner
-     * @param {AbstractContract} contract
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {TransactionObserver} transactionObserver
+     * @param {ChainIdMethod} chainIdMethod
+     * @param {GetTransactionCountMethod} getTransactionCountMethod
      *
      * @constructor
      */
-    constructor(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner, contract) {
-        super(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner);
-        this.contract = contract;
+    constructor(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod) {
+        super(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod);
     }
 
     /**
@@ -46,8 +45,10 @@ export default class ContractDeployMethod extends SendTransactionMethod {
      * @param {AbstractWeb3Module} moduleInstance - The module where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        super.beforeExecution(moduleInstance);
-        delete this.parameters[0].to;
+        if (this.rpcMethod !== 'eth_sendRawTransaction') {
+            super.beforeExecution(moduleInstance);
+            delete this.parameters[0].to;
+        }
     }
 
     /**
@@ -60,8 +61,13 @@ export default class ContractDeployMethod extends SendTransactionMethod {
      * @returns {AbstractContract}
      */
     afterExecution(response) {
-        const clonedContract = this.contract.clone();
-        clonedContract.options.address = response.contractAddress;
+        const clonedContract = this.moduleInstance.clone();
+        clonedContract.address = response.contractAddress;
+
+        if (this.promiEvent.listenerCount('receipt') > 0) {
+            this.promiEvent.emit('receipt', super.afterExecution(response));
+            this.promiEvent.removeAllListeners('receipt');
+        }
 
         return clonedContract;
     }
