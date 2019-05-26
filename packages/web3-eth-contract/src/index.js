@@ -21,35 +21,36 @@
  */
 
 import * as Utils from 'web3-utils';
-import {ProvidersModuleFactory} from 'web3-providers';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
-import {MethodModuleFactory} from 'web3-core-method';
-import {PromiEvent} from 'web3-core-promievent';
 import ContractModuleFactory from './factories/ContractModuleFactory';
 
 export AbstractContract from './AbstractContract';
 export ContractModuleFactory from './factories/ContractModuleFactory';
 
 /**
+ * TODO: Improve this factory method for the TransactionSigner handling.
+ *
  * Returns an object of type Contract
  *
  * @method Contract
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Array} abi
  * @param {Accounts} accounts
- * @param {Object} abi
  * @param {String} address
  * @param {Object} options
  *
  * @returns {AbstractContract}
+ *
+ * @constructor
  */
-export const Contract = (provider, accounts, abi, address, options) => {
-    return new ContractModuleFactory(
-        Utils,
-        formatters,
-        new AbiCoder(),
+export function Contract(provider, abi, accounts, address, options) {
+    return new ContractModuleFactory(Utils, formatters, new AbiCoder()).createContract(
+        provider,
         accounts,
-        new MethodModuleFactory(accounts)
-    ).createContract(provider, new ProvidersModuleFactory(), PromiEvent, abi, address, options);
-};
+        abi,
+        address,
+        options
+    );
+}

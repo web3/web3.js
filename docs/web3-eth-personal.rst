@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-========
+=================
 web3.eth.personal
-========
+=================
 
 
 The ``web3-eth-personal`` package allows you to interact with the Ethereum node's accounts.
@@ -14,16 +14,15 @@ The ``web3-eth-personal`` package allows you to interact with the Ethereum node'
 
 .. code-block:: javascript
 
+    import Web3 from 'web3';
     import {Personal} from 'web3-eth-personal';
 
-    // "Personal.givenProvider" will be set if in an Ethereum supported browser.
-    const personal = new Personal(Personal.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+    // "Web3.givenProvider" will be set if in an Ethereum supported browser.
+    const personal = new Personal(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
 
 
     // or using the web3 umbrella package
-
-    import {Web3} from 'web3';
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', options);
+    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546', null, options);
 
     // -> web3.eth.personal
 
@@ -85,7 +84,9 @@ sign
 
     web3.eth.personal.sign(dataToSign, address, password [, callback])
 
-Signs data using a specific account.
+Signs data using a specific account. This data is before UTF-8 HEX decoded and enveloped as follows: ``"\x19Ethereum Signed Message:\n" + message.length + message``.
+
+
 
 .. note:: Sending your account password over an unsecured HTTP RPC connection is highly unsecure.
 

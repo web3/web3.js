@@ -20,38 +20,26 @@
  * @date 2018
  */
 
+import {PromiEvent} from 'web3-core-method';
 import isArray from 'lodash/isArray';
 import isFunction from 'lodash/isFunction';
-import cloneDeep from 'lodash/cloneDeep';
 
 export default class MethodsProxy {
     /**
      * @param {AbstractContract} contract
-     * @param {AbiModel} abiModel
      * @param {MethodFactory} methodFactory
      * @param {MethodEncoder} methodEncoder
      * @param {MethodOptionsValidator} methodOptionsValidator
      * @param {MethodOptionsMapper} methodOptionsMapper
-     * @param {PromiEvent} PromiEvent
      *
      * @constructor
      */
-    constructor(
-        contract,
-        abiModel,
-        methodFactory,
-        methodEncoder,
-        methodOptionsValidator,
-        methodOptionsMapper,
-        PromiEvent
-    ) {
+    constructor(contract, methodFactory, methodEncoder, methodOptionsValidator, methodOptionsMapper) {
         this.contract = contract;
-        this.abiModel = abiModel;
         this.methodFactory = methodFactory;
         this.methodEncoder = methodEncoder;
         this.methodOptionsValidator = methodOptionsValidator;
         this.methodOptionsMapper = methodOptionsMapper;
-        this.PromiEvent = PromiEvent;
 
         return new Proxy(this, {
             /**
@@ -64,85 +52,87 @@ export default class MethodsProxy {
              * @returns {Function|Error}
              */
             get: (target, name) => {
-                if (this.abiModel.hasMethod(name)) {
-                    let abiItemModel = this.abiModel.getMethod(name);
-
-                    let requestType = abiItemModel.requestType;
-
-                    // TODO: Improve the requestType detection and defining of the call/send method.
-                    if (isArray(abiItemModel)) {
-                        requestType = abiItemModel[0].requestType;
-                    }
+                if (this.contract.abiModel.hasMethod(name)) {
+                    let abiItemModel = this.contract.abiModel.getMethod(name);
 
                     // TODO: Find a better solution for the handling of the contractMethodParameters
                     /* eslint-disable no-inner-declarations */
-                    function anonymousFunction() {
-                        let methodArguments = cloneDeep([...arguments]);
+                    function ContractMethod() {
+                        let methodArguments = [...arguments];
 
                         // Because of the possibility to overwrite the contract data if I call contract.deploy()
                         // have I to check here if it is a contract deployment. If this call is a contract deployment
                         // then I have to set the right contract data and to map the arguments.
                         // TODO: Change API or improve this
-                        if (!isArray(abiItemModel) && abiItemModel.isOfType('constructor')) {
-                            if (methodArguments[0]['data']) {
-                                target.contract.options.data = methodArguments[0]['data'];
+                        if (name === 'contractConstructor') {
+                            if (methodArguments[0]) {
+                                if (methodArguments[0]['data']) {
+                                    target.contract.data = methodArguments[0]['data'];
+                                }
+
+                                if (methodArguments[0]['arguments']) {
+                                    abiItemModel.contractMethodParameters = methodArguments[0]['arguments'];
+                                }
+
+                                return ContractMethod;
                             }
 
-                            if (methodArguments[0]['arguments']) {
-                                abiItemModel.contractMethodParameters = methodArguments[0]['arguments'];
-                            }
+                            abiItemModel.contractMethodParameters = [];
 
-                            return anonymousFunction;
+                            return ContractMethod;
                         }
 
                         // If there exists more than one method with this name then find the correct abiItemModel
                         if (isArray(abiItemModel)) {
                             const abiItemModelFound = abiItemModel.some((model) => {
-                                model.contractMethodParameters = methodArguments;
+                                if (model.getInputLength() === methodArguments.length) {
+                                    abiItemModel = model;
 
-                                try {
-                                    model.givenParametersLengthIsValid();
-                                } catch (error) {
-                                    return false;
+                                    return true;
                                 }
 
-                                abiItemModel = model;
-                                return true;
+                                return false;
                             });
 
                             if (!abiItemModelFound) {
                                 throw new Error(`Methods with name "${name}" found but the given parameters are wrong`);
                             }
-
-                            return anonymousFunction;
                         }
 
                         abiItemModel.contractMethodParameters = methodArguments;
 
-                        return anonymousFunction;
+                        return ContractMethod;
                     }
 
-                    anonymousFunction[requestType] = function() {
+                    ContractMethod.call = function() {
+                        return target.executeMethod(abiItemModel, arguments, 'call');
+                    };
+
+                    ContractMethod.send = function() {
                         if (abiItemModel.isOfType('constructor')) {
-                            return target.executeMethod(abiItemModel, cloneDeep(arguments), 'contract-deployment');
+                            return target.executeMethod(abiItemModel, arguments, 'contract-deployment');
                         }
 
-                        return target.executeMethod(abiItemModel, cloneDeep(arguments), requestType);
+                        return target.executeMethod(abiItemModel, arguments, 'send');
                     };
 
-                    anonymousFunction[requestType].request = function() {
-                        return target.createMethod(abiItemModel, cloneDeep(arguments), requestType);
+                    ContractMethod.call.request = function() {
+                        return target.createMethod(abiItemModel, arguments, 'call');
                     };
 
-                    anonymousFunction.estimateGas = function() {
-                        return target.executeMethod(abiItemModel, cloneDeep(arguments), 'estimate');
+                    ContractMethod.send.request = function() {
+                        return target.createMethod(abiItemModel, arguments, 'send');
                     };
 
-                    anonymousFunction.encodeABI = function() {
-                        return target.methodEncoder.encode(abiItemModel, target.contract.options.data);
+                    ContractMethod.estimateGas = function() {
+                        return target.executeMethod(abiItemModel, arguments, 'estimate');
                     };
 
-                    return anonymousFunction;
+                    ContractMethod.encodeABI = function() {
+                        return target.methodEncoder.encode(abiItemModel, target.contract.data);
+                    };
+
+                    return ContractMethod;
                     /* eslint-enable no-inner-declarations */
                 }
 
@@ -160,7 +150,7 @@ export default class MethodsProxy {
      * @param {IArguments} methodArguments
      * @param {String} requestType
      *
-     * @returns {Promise|PromiEvent|String|Boolean}
+     * @returns {Promise|PromiEvent}
      */
     executeMethod(abiItemModel, methodArguments, requestType) {
         let method;
@@ -168,28 +158,22 @@ export default class MethodsProxy {
         try {
             method = this.createMethod(abiItemModel, methodArguments, requestType);
         } catch (error) {
-            const promiEvent = new this.PromiEvent();
+            const promiEvent = new PromiEvent();
 
             method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
-            method.arguments = methodArguments;
-
-            promiEvent.reject(error);
-            promiEvent.emit('error', error);
+            method.setArguments(methodArguments);
 
             if (isFunction(method.callback)) {
                 method.callback(error, null);
             }
 
+            promiEvent.reject(error);
+            promiEvent.emit('error', error);
+
             return promiEvent;
         }
 
-        if (requestType === 'call' || requestType === 'estimate') {
-            return method.execute(this.contract);
-        }
-
-        // TODO: The promiEvent will just be used for send methods I could move this logic directly to the AbstractSendMethod
-        // TODO: Because of this I could remove the promievent module because it's just used in the SendTransaction- & SendRawTransaction method.
-        return method.execute(this.contract, new this.PromiEvent());
+        return method.execute();
     }
 
     /**
@@ -202,24 +186,22 @@ export default class MethodsProxy {
      * @returns {AbstractMethod}
      */
     createMethod(abiItemModel, methodArguments, requestType) {
-        abiItemModel.givenParametersLengthIsValid();
-
-        // Get correct rpc method model
+        // Get correct method class
         const method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
-        method.arguments = methodArguments;
+        method.setArguments(methodArguments);
 
         // If no parameters are given for the eth_call or eth_send* methods then it will set a empty options object.
-        if (typeof method.parameters[0] === 'undefined') {
+        if (!method.parameters[0]) {
             method.parameters[0] = {};
         }
 
         // Encode contract method
-        method.parameters[0]['data'] = this.methodEncoder.encode(abiItemModel, this.contract.options.data);
+        method.parameters[0]['data'] = this.methodEncoder.encode(abiItemModel, this.contract.data);
 
-        // Set default options in the TxObject if required
+        // Set default options in the transaction object if required
         method.parameters[0] = this.methodOptionsMapper.map(this.contract, method.parameters[0]);
 
-        // Validate TxObject
+        // Validate transaction object
         this.methodOptionsValidator.validate(abiItemModel, method);
 
         return method;

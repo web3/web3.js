@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, isHexStrict} from 'web3-utils';
+import BN = require('bn.js');
+import {isHexStrict} from 'web3-utils';
 
 // $ExpectType boolean
 isHexStrict('0xc1912');

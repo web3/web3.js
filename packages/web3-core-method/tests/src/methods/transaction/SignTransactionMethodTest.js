@@ -1,9 +1,9 @@
 import {formatters} from 'web3-core-helpers';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import SignTransactionMethod from '../../../../src/methods/transaction/SignTransactionMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * SignTransactionMethod test
@@ -12,11 +12,11 @@ describe('SignTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SignTransactionMethod(null, formatters);
+        method = new SignTransactionMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_signTransaction');
 

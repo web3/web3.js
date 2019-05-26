@@ -24,14 +24,14 @@ import {w3cwebsocket as W3CWebsocket} from 'websocket';
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import URL from 'url-parse';
 import ProviderResolver from '../resolvers/ProviderResolver';
-import ProviderDetector from '../detectors/ProviderDetector';
 import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
 import BatchRequest from '../batch-request/BatchRequest';
-import EthereumProvider from '../providers/EthereumProvider';
-import MetamaskInpageProvider from '../providers/MetamaskInpageProvider';
+import Web3EthereumProvider from '../providers/Web3EthereumProvider';
+import MetamaskProvider from '../providers/MetamaskProvider';
 import MistEthereumProvider from '../providers/MistEthereumProvider';
+import CustomProvider from '../providers/CustomProvider';
 
 export default class ProvidersModuleFactory {
     /**
@@ -59,17 +59,6 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an ProviderDetector object
-     *
-     * @method createProviderDetector
-     *
-     * @returns {ProviderDetector}
-     */
-    createProviderDetector() {
-        return new ProviderDetector();
-    }
-
-    /**
      * Returns an HttpProvider object
      *
      * @method createHttpProvider
@@ -92,17 +81,25 @@ export default class ProvidersModuleFactory {
      * @param {Number} timeout
      * @param {Array} headers
      * @param {Object} agent
+     * @param {Boolean} withCredentials
      *
      * @returns {XMLHttpRequest}
      */
-    createXMLHttpRequest(host, timeout = 0, headers, agent) {
-        const request = new XHR();
-        request.nodejsSet(agent);
+    createXMLHttpRequest(host, timeout, headers, agent, withCredentials) {
+        let request;
+
+        // runtime is of type node
+        if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
+            request = new XHR();
+            request.nodejsSet(agent);
+        } else {
+            request = new XMLHttpRequest();
+        }
 
         request.open('POST', host, true);
         request.setRequestHeader('Content-Type', 'application/json');
         request.timeout = timeout;
-        request.withCredentials = true;
+        request.withCredentials = withCredentials;
 
         if (headers) {
             headers.forEach((header) => {
@@ -128,19 +125,12 @@ export default class ProvidersModuleFactory {
 
         // runtime is of type node
         if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
-            let authToken;
-
             let headers = options.headers || {};
-
             const urlObject = new URL(url);
 
-            if (urlObject.username && urlObject.password) {
-                authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`, 'base64');
+            if (!headers.authorization && urlObject.username && urlObject.password) {
+                const authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`).toString('base64');
                 headers.authorization = `Basic ${authToken}`;
-            }
-
-            if (urlObject.auth) {
-                headers.authorization = Buffer.from(urlObject.auth, 'base64');
             }
 
             connection = new W3CWebsocket(url, options.protocol, null, headers, null, options.clientConfig);
@@ -166,29 +156,29 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an EthereumProvider object
+     * Returns an Web3EthereumProvider object
      *
-     * @method createEthereumProvider
+     * @method createWeb3EthereumProvider
      *
      * @param {EthereumProvider} connection
      *
-     * @returns {EthereumProvider}
+     * @returns {Web3EthereumProvider}
      */
-    createEthereumProvider(connection) {
-        return new EthereumProvider(connection);
+    createWeb3EthereumProvider(connection) {
+        return new Web3EthereumProvider(connection);
     }
 
     /**
-     * Returns an MetamaskInpageProvider object
+     * Returns an MetamaskProvider object
      *
      * @method createMetamaskInpageProvider
      *
      * @param {MetamaskInpageProvider} inpageProvider
      *
-     * @returns {MetamaskInpageProvider}
+     * @returns {MetamaskProvider}
      */
-    createMetamaskInpageProvider(inpageProvider) {
-        return new MetamaskInpageProvider(inpageProvider);
+    createMetamaskProvider(inpageProvider) {
+        return new MetamaskProvider(inpageProvider);
     }
 
     /**
@@ -202,5 +192,18 @@ export default class ProvidersModuleFactory {
      */
     createMistEthereumProvider(mistEthereumProvider) {
         return new MistEthereumProvider(mistEthereumProvider);
+    }
+
+    /**
+     * Returns an CustomProvider object
+     *
+     * @method createCustomProvider
+     *
+     * @param {Object} connection
+     *
+     * @returns {CustomProvider}
+     */
+    createCustomProvider(connection) {
+        return new CustomProvider(connection);
     }
 }

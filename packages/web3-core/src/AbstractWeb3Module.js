@@ -21,47 +21,46 @@
  */
 
 import isObject from 'lodash/isObject';
-import {toChecksumAddress} from 'web3-utils'; // TODO: This could be removed with a web3-core-types module
+import {
+    HttpProvider,
+    WebsocketProvider,
+    IpcProvider,
+    BatchRequest,
+    ProviderDetector,
+    ProviderResolver
+} from 'web3-providers';
+import {MethodProxy} from 'web3-core-method';
+import {toChecksumAddress} from 'web3-utils';
 
 export default class AbstractWeb3Module {
     /**
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
-     * @param {AbstractMethodFactory} methodFactory
+     * @param {AbstractSocketProvider|HttpProvider|String|EthereumProvider} provider
      * @param {Object} options
+     * @param {MethodFactory} methodFactory
+     * @param {Net.Socket} nodeNet
      *
      * @constructor
      */
-    constructor(
-        provider = AbstractWeb3Module.throwIfMissing('provider'),
-        providersModuleFactory = AbstractWeb3Module.throwIfMissing('ProvidersModuleFactory'),
-        methodModuleFactory = null,
-        methodFactory = null,
-        options = {}
-    ) {
-        this.providersModuleFactory = providersModuleFactory;
-        this.providerDetector = providersModuleFactory.createProviderDetector(); // TODO: detection of an provider and setting of givenProvider could be removed.
-        this.providerResolver = providersModuleFactory.createProviderResolver();
-        this.givenProvider = this.providerDetector.detect();
-        this._currentProvider = this.providerResolver.resolve(provider);
+    constructor(provider, options = {}, methodFactory = null, nodeNet = null) {
+        // ProviderDetector and ProviderResolver are created in the constructor for providing a simpler Web3 Module API.
+        this.providerResolver = new ProviderResolver();
+        this.givenProvider = ProviderDetector.detect();
 
+        this._currentProvider = this.providerResolver.resolve(provider, nodeNet);
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
         this._defaultBlock = options.defaultBlock || 'latest';
         this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
         this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
-        this._transactionPollingTimeout = options.transactionPollingTimeout || 15;
+        this._transactionPollingTimeout = options.transactionPollingTimeout || 750;
         this._defaultGasPrice = options.defaultGasPrice;
         this._defaultGas = options.defaultGas;
 
         this.BatchRequest = () => {
-            return this.providersModuleFactory.createBatchRequest(this);
+            return new BatchRequest(this);
         };
 
-        if (methodFactory !== null && methodModuleFactory !== null) {
-            this.methodFactory = methodFactory;
-
-            return methodModuleFactory.createMethodProxy(this, this.methodFactory);
+        if (methodFactory) {
+            return new MethodProxy(this, methodFactory);
         }
     }
 
@@ -70,7 +69,7 @@ export default class AbstractWeb3Module {
      *
      * @property defaultBlock
      *
-     * @returns {null|String}
+     * @returns {String|Number}
      */
     get defaultBlock() {
         return this._defaultBlock;
@@ -204,17 +203,11 @@ export default class AbstractWeb3Module {
      *
      * @returns {Object}
      */
-    get providers() {
+    static get providers() {
         return {
-            HttpProvider: (url, options) => {
-                return this.providersModuleFactory.createHttpProvider(url, options);
-            },
-            WebsocketProvider: (url, options) => {
-                return this.providersModuleFactory.createWebsocketProvider(url, options);
-            },
-            IpcProvider: (path, net) => {
-                return this.providersModuleFactory.createIpcProvider(path, net);
-            }
+            HttpProvider,
+            WebsocketProvider,
+            IpcProvider
         };
     }
 
@@ -248,7 +241,7 @@ export default class AbstractWeb3Module {
      *
      * @property currentProvider
      *
-     * @returns {AbstractProviderAdapter}
+     * @returns {AbstractSocketProvider|HttpProvider|CustomProvider}
      */
     get currentProvider() {
         return this._currentProvider;
@@ -268,7 +261,7 @@ export default class AbstractWeb3Module {
      *
      * @method setProvider
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Net} net
      *
      * @returns {Boolean|Error}
@@ -290,13 +283,13 @@ export default class AbstractWeb3Module {
      *
      * @method isSameProvider
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      *
      * @returns {Boolean}
      */
     isSameProvider(provider) {
         if (isObject(provider)) {
-            if (this.currentProvider.constructor.name === provider.constructor.name) {
+            if (this.currentProvider && this.currentProvider.constructor.name === provider.constructor.name) {
                 return this.currentProvider.host === provider.host;
             }
 
@@ -324,14 +317,5 @@ export default class AbstractWeb3Module {
         }
 
         return Promise.resolve(true);
-    }
-
-    /**
-     * Throws an error if the parameter is missing
-     *
-     * @param {String} name
-     */
-    static throwIfMissing(name) {
-        throw new Error(`Missing parameter: ${name}`);
     }
 }

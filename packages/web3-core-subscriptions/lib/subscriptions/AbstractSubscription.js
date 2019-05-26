@@ -37,11 +37,11 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @constructor
      */
-    constructor(type, method, options, utils, formatters, moduleInstance) {
+    constructor(type, method, options = null, utils, formatters, moduleInstance) {
         super();
         this.type = type;
         this.method = method;
-        this.options = options || {};
+        this.options = options;
         this.utils = utils;
         this.formatters = formatters;
         this.moduleInstance = moduleInstance;
@@ -78,31 +78,55 @@ export default class AbstractSubscription extends EventEmitter {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {Subscription} Subscription
+     * @returns {AbstractSubscription}
      */
     subscribe(callback) {
         this.beforeSubscription(this.moduleInstance);
+        let subscriptionParameters = [];
+
+        if (this.options !== null) {
+            subscriptionParameters = [this.options];
+        }
 
         this.moduleInstance.currentProvider
-            .subscribe(this.type, this.method, [this.options])
+            .subscribe(this.type, this.method, subscriptionParameters)
             .then((subscriptionId) => {
                 this.id = subscriptionId;
 
+                this.moduleInstance.currentProvider.once('error', (error) => {
+                    this.moduleInstance.currentProvider.removeAllListeners(this.id);
+
+                    if (isFunction(callback)) {
+                        callback(error, false);
+
+                        return;
+                    }
+
+                    this.emit('error', error);
+                    this.removeAllListeners();
+                });
+
                 this.moduleInstance.currentProvider.on(this.id, (response) => {
                     const formattedOutput = this.onNewSubscriptionItem(response.result);
-                    this.emit('data', formattedOutput);
 
                     if (isFunction(callback)) {
                         callback(false, formattedOutput);
+
+                        return;
                     }
+
+                    this.emit('data', formattedOutput);
                 });
             })
             .catch((error) => {
-                this.emit('error', error);
-
                 if (isFunction(callback)) {
                     callback(error, null);
+
+                    return;
                 }
+
+                this.emit('error', error);
+                this.removeAllListeners();
             });
 
         return this;

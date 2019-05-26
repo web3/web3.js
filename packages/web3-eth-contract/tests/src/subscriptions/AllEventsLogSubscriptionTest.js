@@ -8,9 +8,9 @@ import AllEventsLogDecoder from '../../../src/decoders/AllEventsLogDecoder';
 import AbiModel from '../../../src/models/AbiModel';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
-jest.mock('GetPastLogsMethod');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
+jest.mock('web3-core-method');
 jest.mock('../../../src/AbstractContract');
 jest.mock('../../../src/decoders/AllEventsLogDecoder');
 jest.mock('../../../src/models/AbiModel');

@@ -74,27 +74,27 @@ const _parseTypeNArray = (type) => {
     return arraySize ? parseInt(arraySize[1], 10) : null;
 };
 
-const _parseNumber = (arg) => {
-    const type = typeof arg;
+const _parseNumber = (argument) => {
+    const type = typeof argument;
     if (type === 'string') {
-        if (utils.isHexStrict(arg)) {
-            return new BN(arg.replace(/0x/i, ''), 16);
+        if (utils.isHexStrict(argument)) {
+            return new BN(argument.replace(/0x/i, ''), 16);
         } else {
-            return new BN(arg, 10);
+            return new BN(argument, 10);
         }
     } else if (type === 'number') {
-        return new BN(arg);
-    } else if (utils.isBigNumber(arg)) {
-        return new BN(arg.toString(10));
-    } else if (utils.isBN(arg)) {
-        return arg;
+        return new BN(argument);
+    } else if (utils.isBigNumber(argument)) {
+        return new BN(argument.toString(10));
+    } else if (utils.isBN(argument)) {
+        return argument;
     } else {
-        throw new Error(`${arg} is not a number`);
+        throw new Error(`${argument} is not a number`);
     }
 };
 
 const _solidityPack = (type, value, arraySize) => {
-    let size, num;
+    let size, number;
     type = _elementaryName(type);
 
     if (type === 'bytes') {
@@ -143,30 +143,30 @@ const _solidityPack = (type, value, arraySize) => {
             throw new Error(`Invalid uint${size} size`);
         }
 
-        num = _parseNumber(value);
-        if (num.bitLength() > size) {
-            throw new Error(`Supplied uint exceeds width: ${size} vs ${num.bitLength()}`);
+        number = _parseNumber(value);
+        if (number.bitLength() > size) {
+            throw new Error(`Supplied uint exceeds width: ${size} vs ${number.bitLength()}`);
         }
 
-        if (num.lt(new BN(0))) {
-            throw new Error(`Supplied uint ${num.toString()} is negative`);
+        if (number.lt(new BN(0))) {
+            throw new Error(`Supplied uint ${number.toString()} is negative`);
         }
 
-        return size ? utils.leftPad(num.toString('hex'), (size / 8) * 2) : num;
+        return size ? utils.leftPad(number.toString('hex'), (size / 8) * 2) : number;
     } else if (type.startsWith('int')) {
         if (size % 8 || size < 8 || size > 256) {
             throw new Error(`Invalid int${size} size`);
         }
 
-        num = _parseNumber(value);
-        if (num.bitLength() > size) {
-            throw new Error(`Supplied int exceeds width: ${size} vs ${num.bitLength()}`);
+        number = _parseNumber(value);
+        if (number.bitLength() > size) {
+            throw new Error(`Supplied int exceeds width: ${size} vs ${number.bitLength()}`);
         }
 
-        if (num.lt(new BN(0))) {
-            return num.toTwos(size).toString('hex');
+        if (number.lt(new BN(0))) {
+            return number.toTwos(size).toString('hex');
         } else {
-            return size ? utils.leftPad(num.toString('hex'), (size / 8) * 2) : num;
+            return size ? utils.leftPad(number.toString('hex'), (size / 8) * 2) : number;
         }
     } else {
         // FIXME: support all other types
@@ -174,31 +174,31 @@ const _solidityPack = (type, value, arraySize) => {
     }
 };
 
-const _processSoliditySha3Args = (arg) => {
-    if (isArray(arg)) {
+const _processSoliditySha3Arguments = (argument) => {
+    if (isArray(argument)) {
         throw new Error('Autodetection of array types is not supported.');
     }
 
     let type;
 
     let value = '';
-    let hexArg, arraySize;
+    let hexArgument, arraySize;
 
     // if type is given
     if (
-        isObject(arg) &&
-        (arg.hasOwnProperty('v') ||
-            arg.hasOwnProperty('t') ||
-            arg.hasOwnProperty('value') ||
-            arg.hasOwnProperty('type'))
+        isObject(argument) &&
+        (argument.hasOwnProperty('v') ||
+            argument.hasOwnProperty('t') ||
+            argument.hasOwnProperty('value') ||
+            argument.hasOwnProperty('type'))
     ) {
-        type = arg.hasOwnProperty('t') ? arg.t : arg.type;
-        value = arg.hasOwnProperty('v') ? arg.v : arg.value;
+        type = argument.hasOwnProperty('t') ? argument.t : argument.type;
+        value = argument.hasOwnProperty('v') ? argument.v : argument.value;
 
         // otherwise try to guess the type
     } else {
-        type = utils.toHex(arg, true);
-        value = utils.toHex(arg);
+        type = utils.toHex(argument, true);
+        value = utils.toHex(argument);
 
         if (!type.startsWith('int') && !type.startsWith('uint')) {
             type = 'bytes';
@@ -220,15 +220,15 @@ const _processSoliditySha3Args = (arg) => {
     }
 
     if (isArray(value)) {
-        hexArg = value.map((val) => {
-            return _solidityPack(type, val, arraySize)
+        hexArgument = value.map((value_) => {
+            return _solidityPack(type, value_, arraySize)
                 .toString('hex')
                 .replace('0x', '');
         });
-        return hexArg.join('');
+        return hexArgument.join('');
     } else {
-        hexArg = _solidityPack(type, value, arraySize);
-        return hexArg.toString('hex').replace('0x', '');
+        hexArgument = _solidityPack(type, value, arraySize);
+        return hexArgument.toString('hex').replace('0x', '');
     }
 };
 
@@ -239,9 +239,9 @@ const _processSoliditySha3Args = (arg) => {
  * @return {Object} the sha3
  */
 export const soliditySha3 = function() {
-    const args = Array.prototype.slice.call(arguments);
+    const arguments_ = Array.prototype.slice.call(arguments);
 
-    const hexArgs = map(args, _processSoliditySha3Args);
+    const hexArguments = map(arguments_, _processSoliditySha3Arguments);
 
-    return utils.sha3(`0x${hexArgs.join('')}`);
+    return utils.keccak256(`0x${hexArguments.join('')}`);
 };

@@ -259,10 +259,6 @@ export const outputTransactionFormatter = (receipt) => {
  * @returns {Object}
  */
 export const outputTransactionReceiptFormatter = (receipt) => {
-    if (typeof receipt !== 'object') {
-        throw new TypeError(`Received receipt is invalid: ${receipt}`);
-    }
-
     if (receipt.blockNumber !== null) {
         receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
     }
@@ -282,8 +278,10 @@ export const outputTransactionReceiptFormatter = (receipt) => {
         receipt.contractAddress = Utils.toChecksumAddress(receipt.contractAddress);
     }
 
-    if (typeof receipt.status !== 'undefined') {
+    if (typeof receipt.status !== 'undefined' && receipt.status !== null) {
         receipt.status = Boolean(parseInt(receipt.status));
+    } else {
+        receipt.status = true;
     }
 
     return receipt;
@@ -302,7 +300,14 @@ export const outputBlockFormatter = (block) => {
     block.gasLimit = Utils.hexToNumber(block.gasLimit);
     block.gasUsed = Utils.hexToNumber(block.gasUsed);
     block.size = Utils.hexToNumber(block.size);
-    block.timestamp = Utils.hexToNumber(block.timestamp);
+
+    const timestamp = Utils.toBN(block.timestamp);
+
+    if (timestamp.bitLength() <= 53) {
+        block.timestamp = timestamp.toNumber();
+    } else {
+        block.timestamp = timestamp.toString(10);
+    }
 
     if (block.number !== null) {
         block.number = Utils.hexToNumber(block.number);
@@ -398,7 +403,7 @@ export const outputLogFormatter = (log) => {
         typeof log.transactionHash === 'string' &&
         typeof log.logIndex === 'string'
     ) {
-        const shaId = Utils.sha3(
+        const shaId = Utils.keccak256(
             log.blockHash.replace('0x', '') + log.transactionHash.replace('0x', '') + log.logIndex.replace('0x', '')
         );
 

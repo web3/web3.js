@@ -20,9 +20,7 @@
  * @date 2018
  */
 
-import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
-import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 import isArray from 'lodash/isArray';
 
 export default class WebsocketProvider extends AbstractSocketProvider {
@@ -73,7 +71,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @param {CloseEvent} closeEvent
      */
     onClose(closeEvent) {
-        if (closeEvent.code !== 1000) {
+        if (closeEvent.code !== 1000 || closeEvent.wasClean === false) {
             this.reconnect();
 
             return;
@@ -103,8 +101,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     this.connection._client.config
                 );
             } else {
-                const protocol = this.connection.protocol || undefined;
-                connection = new this.connection.constructor(this.host, protocol);
+                connection = new this.connection.constructor(this.host, this.connection.protocol || undefined);
             }
 
             this.connection = connection;
@@ -191,49 +188,6 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     }
 
     /**
-     * Creates the JSON-RPC payload and sends it to the node.
-     *
-     * @method send
-     *
-     * @param {String} method
-     * @param {Array} parameters
-     *
-     * @returns {Promise<Object>}
-     */
-    send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters)).then((response) => {
-            const validationResult = JsonRpcResponseValidator.validate(response);
-
-            if (validationResult instanceof Error) {
-                throw validationResult;
-            }
-
-            return response.result;
-        });
-    }
-
-    /**
-     * Creates the JSON-RPC batch payload and sends it to the node.
-     *
-     * @method sendBatch
-     *
-     * @param {AbstractMethod[]} methods
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns Promise<Object[]>
-     */
-    sendBatch(methods, moduleInstance) {
-        let payload = [];
-
-        methods.forEach((method) => {
-            method.beforeExecution(moduleInstance);
-            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
-        });
-
-        return this.sendPayload(payload);
-    }
-
-    /**
      * Sends the JSON-RPC payload to the node.
      *
      * @method sendPayload
@@ -244,6 +198,8 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
+            this.once('error', reject);
+
             if (!this.isConnecting()) {
                 let timeout, id;
 
@@ -251,7 +207,11 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     return reject(new Error('Connection error: Connection is not open on send()'));
                 }
 
-                this.connection.send(JSON.stringify(payload));
+                try {
+                    this.connection.send(JSON.stringify(payload));
+                } catch (error) {
+                    reject(error);
+                }
 
                 if (this.timeout) {
                     timeout = setTimeout(() => {
@@ -276,12 +236,10 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 return;
             }
 
-            this.on('connect', () => {
+            this.once('connect', () => {
                 this.sendPayload(payload)
                     .then(resolve)
                     .catch(reject);
-
-                this.removeAllListeners('connect');
             });
         });
     }

@@ -20,27 +20,21 @@
  * @date 2018
  */
 
-import {MethodModuleFactory} from 'web3-core-method';
-import {ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import AccountsModuleFactory from './factories/AccountsModuleFactory';
+import MethodFactory from './factories/MethodFactory';
+import AccountsModule from './Accounts';
 
 /**
  * Returns the Accounts object
  *
- * @method Accounts
- *
- * @params {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
- * @params {Object} options
+ * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Object} options
+ * @param {Net.Socket} net
  *
  * @returns {Accounts}
+ * @constructor
  */
-export const Accounts = (provider, options) => {
-    return new AccountsModuleFactory(Utils, formatters).createAccounts(
-        provider,
-        new ProvidersModuleFactory(),
-        new MethodModuleFactory(),
-        options
-    );
-};
+export function Accounts(provider, net = null, options = {}) {
+    return new AccountsModule(provider, Utils, formatters, new MethodFactory(Utils, formatters), options, net);
+}

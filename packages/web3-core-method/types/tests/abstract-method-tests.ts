@@ -20,16 +20,10 @@
 import {AbstractMethod} from 'web3-core-method';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {ProvidersModuleFactory} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
 
-const abstractWeb3Module = new AbstractWeb3Module(
-    'http://localhost:8545',
-    new ProvidersModuleFactory(),
-    {},
-    {}
-);
-const abstractMethod = new AbstractMethod('rpc_method', 1, Utils, formatters);
+const abstractWeb3Module = new AbstractWeb3Module('http://localhost:8545');
+const abstractMethod = new AbstractMethod('rpc_method', 1, Utils, formatters, abstractWeb3Module);
 
 // $ExpectType Utils
 abstractMethod.utils;
@@ -49,11 +43,14 @@ abstractMethod.parametersAmount;
 // $ExpectType any[]
 abstractMethod.parameters;
 
-// $ExpectType object
-abstractMethod.arguments;
+// $ExpectType any
+abstractMethod.getArguments();
 
 // $ExpectType boolean
 abstractMethod.isHash('string');
+
+// $ExpectType void
+abstractMethod.setArguments([]);
 
 // $ExpectType boolean
 abstractMethod.hasWallets();
@@ -67,8 +64,8 @@ abstractMethod.beforeExecution(abstractWeb3Module);
 // $ExpectType any
 abstractMethod.afterExecution('response');
 
-// $ExpectType string | PromiEvent<any> | Promise<string | object>
-abstractMethod.execute(abstractWeb3Module);
+// $ExpectType string | PromiEvent<any> | Promise<any>
+abstractMethod.execute();
 
 // $ExpectType Promise<boolean | Error>
 abstractMethod.clearSubscriptions('eth_unsubscribe');

@@ -1,8 +1,8 @@
 # web3-shh
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-This is the whisper v5 package.   
+This is the whisper v5 module.   
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -18,6 +18,7 @@ import {Shh} from 'web3-shh';
 
 const shh = new Shh(
     'http://127.0.0.1:4546',
+    null,
     options
 );
 ```

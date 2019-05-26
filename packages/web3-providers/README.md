@@ -1,6 +1,6 @@
 # web3-providers
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
 ## Installation
 
@@ -59,12 +59,9 @@ The BatchRequest provides the possibility to send JSON-RPC requests as batch.
 Please read the [documentation][docs] for more.
 
 ```js 
-import {ProvidersModuleFactory, BatchRequest} 'web3-providers;
+import {ProviderResolver, BatchRequest} 'web3-providers';
 
-const provider = new ProvidersModuleFactory()
-                        .createProviderResolver
-                        .resolve('ws://localhost:8546');
-
+const provider = new ProviderResolver().resolve('ws://localhost:8546');
 const batchRequest = new BatchRequest(provider);
 
 batchRequest.add(web3.eth.getBalance.request(
@@ -80,10 +77,9 @@ await batchRequest.execute();
 Checks if an provider is given from the environment (Mist, MetaMask) and returns the provider.
 
 ```js
-import {ProvidersModuleFactory} from 'web3-providers';
+import {ProviderDetector} from 'web3-providers';
 
-const providerDetector = new ProvidersModuleFactory.createProviderDetector();
-const givenProvider = providerDetector.detect();
+const givenProvider = ProviderDetector.detect();
 ```
 
 #### ProviderResolver
@@ -91,11 +87,9 @@ The ProviderResolver resolves an url or an given provider object to the correct 
 Because of the resolves does web3 has internally just one provider interface and we have no direct dependency to third party providers.
 
 ```js 
-import {ProvidersModuleFactory} 'web3-providers;
+import {ProviderResolver} 'web3-providers';
 
-const socketProviderAdapter = new ProvidersModuleFactory()
-                        .createProviderResolver
-                        .resolve('ws://localhost:8546');
+const socketProviderAdapter = new ProviderResolver().resolve('ws://localhost:8546');
 ```
 
 ## Types 

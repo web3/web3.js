@@ -20,15 +20,13 @@
  * @date 2018
  */
 
-/* eslint-disable no-new-func */
-let global;
-try {
-    global = new Function('return this')();
-} catch (error) {
-    global = window;
-}
-/* eslint-enable */
+const global =
+    (function() {
+        return this || (typeof self === 'object' && self);
+        // eslint-disable-next-line no-new-func
+    })() || new Function('return this')();
 
+// TODO: Remove the detector because of window/global.ethereum
 export default class ProviderDetector {
     /**
      * Detects which provider is given in the current environment
@@ -37,7 +35,7 @@ export default class ProviderDetector {
      *
      * @returns {Object|null} provider
      */
-    detect() {
+    static detect() {
         if (
             typeof global.ethereumProvider !== 'undefined' &&
             global.ethereumProvider.constructor.name === 'EthereumProvider'

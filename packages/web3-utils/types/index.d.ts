@@ -20,10 +20,11 @@
  * @date 2018
  */
 
-import BigNumber from 'bn.js';
+import BN = require('bn.js');
+import {Buffer} from 'buffer';
 
 export type Unit =
-    'noether'
+    | 'noether'
     | 'wei'
     | 'kwei'
     | 'Kwei'
@@ -52,52 +53,39 @@ export type Unit =
     | 'tether';
 
 export type Mixed =
-    string
+    | string
     | number
     | BN
     | {
-        type: string;
-        value: string;
-    }
+          type: string;
+          value: string;
+      }
     | {
-        t: string;
-        v: string | BN | number;
-    }
+          t: string;
+          v: string | BN | number;
+      }
     | boolean;
 
 export type Hex = string | number;
-
-export class BN extends BigNumber {
-    constructor(
-        number: number | string | number[] | Buffer | BN,
-        base?: number | 'hex',
-        endian?: 'le' | 'be'
-    )
-    super(
-        number: number | string | number[] | Buffer | BN,
-        base?: number | 'hex',
-        endian?: 'le' | 'be'
-    ): BigNumber;
-}
 
 // utils types
 export function isBN(value: string | number): boolean;
 export function isBigNumber(value: BN): boolean;
 export function toBN(value: number | string): BN;
 export function toTwosComplement(value: number | string | BN): string;
-export function isAddress(address: string): boolean;
+export function isAddress(address: string, chainId?: number): boolean;
 export function isHex(hex: Hex): boolean;
 export function isHexStrict(hex: Hex): boolean;
-export function asciiToHex(string: string): string;
+export function asciiToHex(string: string, length?: number): string;
 export function hexToAscii(string: string): string;
 export function toAscii(string: string): string;
 export function bytesToHex(bytes: number[]): string;
 export function numberToHex(value: number | string | BN): string;
-export function checkAddressChecksum(address: string): boolean;
+export function checkAddressChecksum(address: string, chainId?: number): boolean;
 export function fromAscii(string: string): string;
 export function fromDecimal(value: string | number): string;
 export function fromUtf8(string: string): string;
-export function fromWei(value: BN, unit?: Unit): BN | string;
+export function fromWei(value: string | BN, unit?: Unit): string;
 export function hexToBytes(hex: Hex): number[];
 export function hexToNumber(hex: Hex): number;
 export function hexToNumberString(hex: Hex): string;
@@ -112,11 +100,12 @@ export function sha3(value: string | BN): string;
 export function randomHex(bytesSize: number): string;
 export function utf8ToHex(string: string): string;
 export function stringToHex(string: string): string;
-export function toChecksumAddress(address: string): string;
+export function toChecksumAddress(address: string, chainId?: number): string;
 export function toDecimal(hex: Hex): number;
 export function toHex(value: number | string | BN): string;
 export function toUtf8(string: string): string;
-export function toWei(value: number | string | BN, unit?: Unit): string | BN;
+export function toWei(val: BN, unit?: Unit): BN;
+export function toWei(val: string, unit?: Unit): string;
 export function isBloom(bloom: string): boolean;
 export function isTopic(topic: string): boolean;
 export function jsonInterfaceMethodToString(abiItem: AbiItem): string;
@@ -125,28 +114,28 @@ export function getUnitValue(unit: Unit): string;
 export function unitMap(): Units;
 export function testAddress(bloom: string, address: string): boolean;
 export function testTopic(bloom: string, topic: string): boolean;
-export function getSignatureParameters(signature: string): object;
+export function getSignatureParameters(signature: string): {r: string; s: string; v: number};
+export function stripHexPrefix(str: string): string;
 
 // interfaces
-
 export interface Utils {
     isBN(value: string | number): boolean;
     isBigNumber(value: BN): boolean;
     toBN(value: number | string): BN;
     toTwosComplement(value: number | string | BN): string;
-    isAddress(address: string): boolean;
+    isAddress(address: string, chainId?: number): boolean;
     isHex(hex: Hex): boolean;
     isHexStrict(hex: Hex): boolean;
-    asciiToHex(string: string): string;
+    asciiToHex(string: string, length?: number): string;
     hexToAscii(string: string): string;
     toAscii(string: string): string;
     bytesToHex(bytes: number[]): string;
     numberToHex(value: number | string | BN): string;
-    checkAddressChecksum(address: string): boolean;
+    checkAddressChecksum(address: string, chainId?: number): boolean;
     fromAscii(string: string): string;
     fromDecimal(value: string | number): string;
     fromUtf8(string: string): string;
-    fromWei(value: BN, unit?: Unit): BN | string;
+    fromWei(value: string | BN, unit?: Unit): string;
     hexToBytes(hex: Hex): number[];
     hexToNumber(hex: Hex): number;
     hexToNumberString(hex: Hex): string;
@@ -161,11 +150,12 @@ export interface Utils {
     randomHex(bytesSize: number): string;
     utf8ToHex(string: string): string;
     stringToHex(string: string): string;
-    toChecksumAddress(address: string): string;
+    toChecksumAddress(address: string, chainId?: number): string;
     toDecimal(hex: Hex): number;
     toHex(value: number | string | BN): string;
     toUtf8(string: string): string;
-    toWei(value: number | string | BN, unit?: Unit): string | BN;
+    toWei(val: BN, unit?: Unit): BN;
+    toWei(val: string, unit?: Unit): string;
     isBloom(bloom: string): boolean;
     isTopic(topic: string): boolean;
     jsonInterfaceMethodToString(abiItem: AbiItem): string;
@@ -174,7 +164,8 @@ export interface Utils {
     unitMap(): Units;
     testAddress(bloom: string, address: string): boolean;
     testTopic(bloom: string, topic: string): boolean;
-    getSignatureParameters(signature: string): object;
+    getSignatureParameters(signature: string): {r: string; s: string; v: number};
+    stripHexPrefix(str: string): string;
 }
 
 export interface Units {
@@ -211,10 +202,11 @@ export type AbiType = 'function' | 'constructor' | 'event' | 'fallback';
 export type StateMutabilityType = 'pure' | 'view' | 'nonpayable' | 'payable';
 
 export interface AbiItem {
+    anonymous?: boolean;
     constant?: boolean;
     inputs?: AbiInput[];
     name?: string;
-    outputs?: AbiOuput[];
+    outputs?: AbiOutput[];
     payable?: boolean;
     stateMutability?: StateMutabilityType;
     type: AbiType;
@@ -224,9 +216,11 @@ export interface AbiInput {
     name: string;
     type: string;
     indexed?: boolean;
+	components?: AbiInput[];
 }
 
-export interface AbiOuput {
+export interface AbiOutput {
     name: string;
     type: string;
+	components?: AbiOutput[];
 }

@@ -12,11 +12,11 @@ we provide multiple ways to act on asynchronous functions.
 Most web3.js objects allow a callback as the last parameter, as well as returning promises to chain functions.
 
 Ethereum as a blockchain has different levels of finality and therefore needs to return multiple "stages" of an action.
-To cope with requirement we return a "promiEvent" for functions like ``web3.eth.sendTransaction`` or contract methods.
-This "promiEvent" is a promise combined with an event emitter to allow acting on different stages of action on the blockchain, like a transaction.
+To cope with requirement we return a "PromiEvent" for functions like :ref:`web3.eth.sendTransaction <eth-sendtransaction-return>` or contract methods.
+These stages are encapsulated into a "PromiEvent", which combines a promise with an event emitter.
+The event emitter fires an event for each of the finality stages.
 
-PromiEvents work like a normal promises with added ``on``, ``once`` and ``off`` functions.
-This way developers can watch for additional events like on "receipt" or "transactionHash".
+An example of a function that benefits from a PromiEvent is the :ref:`web3.eth.sendTransaction <eth-sendtransaction-return>` method.
 
 .. code-block:: javascript
 

@@ -20,54 +20,66 @@
  * @date 2018
  */
 
-import {MethodModuleFactory} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
-import {PromiEvent} from 'web3-core-promievent';
-import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Accounts} from 'web3-eth-accounts';
 import {Ens} from 'web3-eth-ens';
 import {ContractModuleFactory} from 'web3-eth-contract';
 import {Personal} from 'web3-eth-personal';
 import {AbiCoder} from 'web3-eth-abi';
 import {Iban} from 'web3-eth-iban';
-import {ProvidersModuleFactory} from 'web3-providers';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
-import EthModuleFactory from './factories/EthModuleFactory';
+import EthTransactionSigner from './signers/TransactionSigner';
+import MethodFactory from './factories/MethodFactory';
+import SubscriptionsFactory from './factories/SubscriptionsFactory';
+import {ProviderResolver} from 'web3-providers';
+import EthModule from './Eth.js';
+
+/**
+ * Creates the TransactionSigner class
+ *
+ * @returns {TransactionSigner}
+ * @constructor
+ */
+export function TransactionSigner() {
+    return new EthTransactionSigner(Utils, formatters);
+}
 
 /**
  * Creates the Eth object
  *
  * @method Eth
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {AbstractSocketProvider|HttpProvider|CustomProvider|String} provider
+ * @param {Net} net
  * @param {Object} options
  *
  * @returns {Eth}
+ * @constructor
  */
-export const Eth = (provider, options) => {
-    const accounts = new Accounts(provider, options);
+export function Eth(provider, net = null, options = {}) {
+    if (!options.transactionSigner || options.transactionSigner.type === 'TransactionSigner') {
+        options.transactionSigner = new TransactionSigner();
+    }
 
+    const resolvedProvider = new ProviderResolver().resolve(provider, net);
+    const accounts = new Accounts(resolvedProvider, null, options);
     const abiCoder = new AbiCoder();
 
-    const methodModuleFactory = new MethodModuleFactory(accounts);
-
-    return new EthModuleFactory(
-        provider,
-        new ProvidersModuleFactory(),
-        methodModuleFactory,
+    return new EthModule(
+        resolvedProvider,
+        new MethodFactory(Utils, formatters),
+        new Network(resolvedProvider, null, options),
         accounts,
-        PromiEvent,
+        new Personal(resolvedProvider, null, accounts, options),
+        Iban,
+        abiCoder,
+        new Ens(resolvedProvider, null, accounts, options),
         Utils,
         formatters,
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts, methodModuleFactory),
-        abiCoder
-    ).createEthModule(
-        new Network(provider, options),
-        new Personal(provider, accounts, options),
-        Iban,
-        new Ens(provider, accounts),
-        new SubscriptionsFactory(),
-        options
+        new SubscriptionsFactory(Utils, formatters),
+        new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
+        options,
+        net
     );
-};
+}

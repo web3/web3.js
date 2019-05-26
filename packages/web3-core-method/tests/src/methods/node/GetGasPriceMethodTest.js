@@ -1,9 +1,9 @@
 import {formatters} from 'web3-core-helpers';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetGasPriceMethod from '../../../../src/methods/node/GetGasPriceMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * GetGasPriceMethod test
@@ -12,11 +12,11 @@ describe('GetGasPriceMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetGasPriceMethod(null, formatters);
+        method = new GetGasPriceMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_gasPrice');
 

@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, hexToBytes} from 'web3-utils';
+import BN = require('bn.js');
+import {hexToBytes} from 'web3-utils';
 
 // $ExpectType number[]
 hexToBytes('0x000000ea');

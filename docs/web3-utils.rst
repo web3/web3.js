@@ -2,9 +2,9 @@
 
 .. include:: include_announcement.rst
 
-========
+==========
 web3.utils
-========
+==========
 
 This package provides utility functions for Ethereum dapps and other web3.js packages.
 
@@ -177,17 +177,17 @@ Example
 
 ------------------------------------------------------------------------------
 
-sha3
+keccak256
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.sha3(string)
-    web3.utils.keccak256(string) // ALIAS
+    web3.utils.keccak256(string)
+    web3.utils.sha3(string) // ALIAS
 
-Will calculate the sha3 of the input.
+Will calculate the keccak256 of the input.
 
-.. note::  To mimic the sha3 behaviour of solidity use :ref:`soliditySha3 <utils-soliditysha3>`
+.. note::  To mimic the keccak256 behaviour of solidity use :ref:`soliditySha3 <utils-soliditysha3>`
 
 ----------
 Parameters
@@ -207,19 +207,19 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.sha3('234'); // taken as string
+    web3.utils.keccak256('234'); // taken as string
     > "0xc1912fee45d61c87cc5ea59dae311904cd86b84fee17cc96966216f811ce6a79"
 
-    web3.utils.sha3(new BN('234'));
+    web3.utils.keccak256(new BN('234'));
     > "0xbc36789e7a1e281436464229828f817d6612f7b477d66591ff96a9e064bcc98a"
 
-    web3.utils.sha3(234);
-    > null // can't calculate the has of a number
+    web3.utils.keccak256(234);
+    > null // can't calculate the hash of a number
 
-    web3.utils.sha3(0xea); // same as above, just the HEX representation of the number
+    web3.utils.keccak256(0xea); // same as above, just the HEX representation of the number
     > null
 
-    web3.utils.sha3('0xea'); // will be converted to a byte array first, and then hashed
+    web3.utils.keccak256('0xea'); // will be converted to a byte array first, and then hashed
     > "0x2f20677459120677484f7104c76deb6846a2c071f9b3152c103bb12cd54d1a4a"
 
 
@@ -408,7 +408,7 @@ isAddress
 
 .. code-block:: javascript
 
-    web3.utils.isAddress(address)
+    web3.utils.isAddress(address,  [, chainId])
 
 Checks if a given string is a valid Ethereum address.
 It will also check the checksum, if the address has upper and lowercase letters.
@@ -418,6 +418,7 @@ Parameters
 ----------
 
 1. ``address`` - ``String``: An address string.
+2. ``chainId`` - ``number`` (optional): Chain id where checksummed address should be valid, defaults to ``null``. RSKIP-60 <https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md> for details.
 
 -------
 Returns
@@ -446,15 +447,17 @@ Example
     web3.utils.isAddress('0xC1912fEE45d61C87Cc5EA59DaE31190FFFFf232d');
     > false // wrong checksum
 
+    web3.utils.isAddress('0x5aaEB6053f3e94c9b9a09f33669435E7ef1bEAeD', 30);
+    > true
+
 ------------------------------------------------------------------------------
 
-
 toChecksumAddress
-=====================
+=================
 
 .. code-block:: javascript
 
-    web3.utils.toChecksumAddress(address)
+    web3.utils.toChecksumAddress(address[, chainId])
 
 Will convert an upper or lowercase Ethereum address to a checksum address.
 
@@ -463,6 +466,7 @@ Parameters
 ----------
 
 1. ``address`` - ``String``: An address string.
+2. ``chainId`` - ``number`` (optional): Chain id where checksummed address should be valid, defaults to ``null``. RSKIP-60 <https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md> for details.
 
 -------
 Returns
@@ -476,22 +480,55 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.toChecksumAddress('0xc1912fee45d61c87cc5ea59dae31190fffff2323');
+    web3.utils.toChecksumAddress('0xc1912fee45d61c87cc5ea59dae31190fffff232d');
     > "0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d"
 
     web3.utils.toChecksumAddress('0XC1912FEE45D61C87CC5EA59DAE31190FFFFF232D');
     > "0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d" // same as above
 
+    web3.utils.toChecksumAddress('0x5aaeb6053f3e94c9b9a09f33669435e7ef1beaed', 30);
+    > "0x5aaEB6053f3e94c9b9a09f33669435E7ef1bEAeD"
+
 
 ------------------------------------------------------------------------------
 
+stripHexPrefix
+==============
+
+ .. code-block:: javascript
+     web3.utils.stripHexPrefix(address)
+
+ Removes the prefix ``0x`` from a given hex if it exists.
+
+----------
+Parameters
+----------
+
+ 1. ``hex`` - ``String``: Hex
+
+-------
+Returns
+-------
+
+ ``String``: Hex without prefix.
+
+-------
+Example
+-------
+
+ .. code-block:: javascript
+     web3.utils.stripHexPrefix('0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d');
+    > "c1912fEE45d61C87Cc5EA59DaE31190FFFFf232d"
+
+
+------------------------------------------------------------------------------
 
 checkAddressChecksum
-=====================
+====================
 
 .. code-block:: javascript
 
-    web3.utils.checkAddressChecksum(address)
+    web3.utils.checkAddressChecksum(address [, chainId])
 
 Checks the checksum of a given address. Will also return false on non-checksum addresses.
 
@@ -500,6 +537,7 @@ Parameters
 ----------
 
 1. ``address`` - ``String``: An address string.
+2. ``chainId`` - ``number`` (optional): Chain id where checksummed address should be valid, defaults to ``null``. RSKIP-60 <https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md> for details.
 
 -------
 Returns
@@ -514,6 +552,9 @@ Example
 .. code-block:: javascript
 
     web3.utils.checkAddressChecksum('0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d');
+    > true
+
+    web3.utils.checkAddressChecksum('0x5aAeb6053F3e94c9b9A09F33669435E7EF1BEaEd', 31);
     > true
 
 
@@ -833,7 +874,8 @@ asciiToHex
     web3.utils.fromAscii(string) // ALIAS, deprecated
 
 
-Returns the HEX representation of a given ASCII string.
+Returns the HEX representation of a given ASCII string. If you would like to transform an ASCII string into a valid
+``bytes4``, ``bytes8`` etc. value then please pass the correct length as the second parameter.
 
 
 ----------
@@ -841,6 +883,7 @@ Parameters
 ----------
 
 1. ``string`` - ``String``: A ASCII string to convert to a HEX string.
+2. ``length`` - ``Number``: The length of the returned hex string. The default size is ``32`` e.g.: ``bytes32``.
 
 -------
 Returns
@@ -855,8 +898,15 @@ Example
 .. code-block:: javascript
 
     web3.utils.asciiToHex('I have 100!');
-    > "0x4920686176652031303021"
+    > "0x4920686176652031303021000000000000000000000000000000000000000000"
 
+    // transforming to a bytes4 value:
+    web3.utils.asciiToHex('yes', 4);
+
+    // transforming to a bytes8 value:
+    web3.utils.asciiToHex('yes', 8);
+
+    //etc.
 
 ------------------------------------------------------------------------------
 
