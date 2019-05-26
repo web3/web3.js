@@ -188,7 +188,7 @@ export interface BlockHeader {
 }
 
 export interface Block extends BlockHeader {
-    transactions: Transaction[] | string[];
+    transactions: Transaction[];
     size: number
     difficulty: number
     totalDifficulty: number
