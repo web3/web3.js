@@ -15,3 +15,4 @@ node_modules
 coverage/
 lerna-debug.log
 .eslintcache
+docs/_build

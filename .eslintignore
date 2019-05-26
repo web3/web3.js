@@ -9,3 +9,5 @@ jest.config.js
 jest.preprocessor.js
 W3cWebsocket.js
 packages/**/rollup.config.js
+packages/**/node_modules
+angular-patch.js

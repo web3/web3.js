@@ -20,23 +20,19 @@
  * @date 2018
  */
 
-import isObject from 'lodash/isObject';
-import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
+import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
-export default class SendTransactionMethod extends AbstractSendMethod {
+export default class SendTransactionMethod extends AbstractObservedTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
-     * @param {Accounts} accounts
-     * @param {TransactionSigner} transactionSigner
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {TransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner) {
-        super('eth_sendTransaction', 1, utils, formatters, transactionConfirmationWorkflow);
-        this.accounts = accounts;
-        this.transactionSigner = transactionSigner;
+    constructor(utils, formatters, moduleInstance, transactionObserver) {
+        super('eth_sendTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
     }
 
     /**
@@ -51,108 +47,15 @@ export default class SendTransactionMethod extends AbstractSendMethod {
     }
 
     /**
-     * Checks if gasPrice is set, sends the request and returns a PromiEvent Object
+     * This method will be executed after the RPC request.
      *
-     * @method execute
+     * @method afterExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance
-     * @param {PromiEvent} promiEvent
+     * @param {Object} response
      *
-     * @callback callback callback(error, result)
-     * @returns {PromiEvent}
+     * @returns {Object}
      */
-    execute(moduleInstance, promiEvent) {
-        if (!this.isGasLimitDefined()) {
-            if (this.hasDefaultGasLimit(moduleInstance)) {
-                this.parameters[0]['gas'] = moduleInstance.defaultGas;
-            }
-        }
-
-        if (!this.isGasPriceDefined() && this.hasDefaultGasPrice(moduleInstance)) {
-            this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
-        }
-
-        if (!this.isGasPriceDefined() && !this.hasDefaultGasPrice(moduleInstance)) {
-            moduleInstance.currentProvider.send('eth_gasPrice', []).then((gasPrice) => {
-                this.parameters[0]['gasPrice'] = gasPrice;
-                this.execute(moduleInstance, promiEvent);
-            });
-
-            return promiEvent;
-        }
-
-        if (this.hasWallets()) {
-            this.rpcMethod = 'eth_sendRawTransaction';
-
-            this.transactionSigner
-                .sign(this.parameters[0])
-                .then((response) => {
-                    this.parameters = [response.rawTransaction];
-                    super.execute(moduleInstance, promiEvent);
-                })
-                .catch((error) => {
-                    if (this.callback) {
-                        this.callback(error, null);
-                    }
-
-                    promiEvent.reject(error);
-                    promiEvent.emit('error', error);
-                    promiEvent.removeAllListeners();
-                });
-
-            return promiEvent;
-        }
-
-        super.execute(moduleInstance, promiEvent);
-
-        return promiEvent;
-    }
-
-    /**
-     * Checks if the given Web3Module has an default gasPrice defined
-     *
-     * @method hasDefaultGasPrice
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Boolean}
-     */
-    hasDefaultGasPrice(moduleInstance) {
-        return moduleInstance.defaultGasPrice !== null && typeof moduleInstance.defaultGasPrice !== 'undefined';
-    }
-
-    /**
-     * Checks if gasPrice is defined in the method options
-     *
-     * @method isGasPriceDefined
-     *
-     * @returns {Boolean}
-     */
-    isGasPriceDefined() {
-        return isObject(this.parameters[0]) && typeof this.parameters[0].gasPrice !== 'undefined';
-    }
-
-    /**
-     * Checks if the given Web3Module has an default gas limit defined
-     *
-     * @method hasDefaultGasLimit
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Boolean}
-     */
-    hasDefaultGasLimit(moduleInstance) {
-        return moduleInstance.defaultGas !== null && typeof moduleInstance.defaultGas !== 'undefined';
-    }
-
-    /**
-     * Checks if a gas limit is defined
-     *
-     * @method isGasLimitDefined
-     *
-     * @returns {Boolean}
-     */
-    isGasLimitDefined() {
-        return isObject(this.parameters[0]) && typeof this.parameters[0].gas !== 'undefined';
+    afterExecution(response) {
+        return this.formatters.outputTransactionFormatter(response);
     }
 }

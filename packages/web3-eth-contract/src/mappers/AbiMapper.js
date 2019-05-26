@@ -34,6 +34,7 @@ export default class AbiMapper {
         this.utils = utils;
         this.abiCoder = abiCoder;
         this.contractModuleFactory = contractModuleFactory;
+        this.hasConstructor = false;
     }
 
     /**
@@ -98,8 +99,19 @@ export default class AbiMapper {
             if (abiItem.type === 'constructor') {
                 abiItem.signature = abiItem.type;
                 mappedAbiItems.methods['contractConstructor'] = this.contractModuleFactory.createAbiItemModel(abiItem);
+
+                this.hasConstructor = true;
             }
         });
+
+        if (!this.hasConstructor) {
+            mappedAbiItems.methods['contractConstructor'] = this.contractModuleFactory.createAbiItemModel({
+                inputs: [],
+                payable: false,
+                constant: false,
+                type: 'constructor'
+            });
+        }
 
         return this.contractModuleFactory.createAbiModel(mappedAbiItems);
     }

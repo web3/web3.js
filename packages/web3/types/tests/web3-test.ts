@@ -22,7 +22,16 @@ import Web3 from 'web3';
 // $ExpectType Modules
 Web3.modules;
 
+// $ExpectType any
+Web3.givenProvider;
+
+// $ExpectType Providers
+Web3.providers;
+
 const web3 = new Web3('https://localhost:5000/');
+
+// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
+web3.currentProvider;
 
 // $ExpectType Utils
 web3.utils;
@@ -36,5 +45,5 @@ web3.eth;
 // $ExpectType Shh
 web3.shh;
 
-// $ExpectType Bzz
-web3.bzz;
+// $ExpectType BatchRequest
+new web3.BatchRequest();

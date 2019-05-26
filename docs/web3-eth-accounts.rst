@@ -2,25 +2,21 @@
 
 .. include:: include_announcement.rst
 
-=========
+=================
 web3.eth.accounts
-=========
+=================
 
 The ``web3.eth.accounts`` contains functions to generate Ethereum accounts and sign transactions and data.
 
-.. note:: This package has NOT been audited and might potentially be unsafe. Take precautions to clear memory properly, store the private keys safely, and test transaction receiving and sending functionality properly before using in production!
-
-To use this package standalone use:
-
+.. note:: This package got NOT audited until now. Take precautions to clear memory properly, store the private keys safely, and test transaction receiving and sending functionality properly before using in production!
 
 .. code-block:: javascript
 
-    import {Accounts} from 'web3-eth-accounts;
+    import {Accounts} from 'web3-eth-accounts';
 
     // Passing in the eth or web3 package is necessary to allow retrieving chainId, gasPrice and nonce automatically
     // for accounts.signTransaction().
-    const accounts = new Accounts('ws://localhost:8546', options);
-
+    const accounts = new Accounts('ws://localhost:8546', null, options);
 
 
 ------------------------------------------------------------------------------
@@ -28,7 +24,7 @@ To use this package standalone use:
 .. _accounts-create:
 
 create
-=====================
+======
 
 .. code-block:: javascript
 
@@ -92,9 +88,8 @@ Example
 
 ------------------------------------------------------------------------------
 
-
 privateKeyToAccount
-=====================
+===================
 
 .. code-block:: javascript
 
@@ -134,7 +129,7 @@ Example
 .. _eth-accounts-signtransaction:
 
 signTransaction
-=====================
+===============
 
 .. code-block:: javascript
 
@@ -149,7 +144,7 @@ Parameters
 1. ``tx`` - ``Object``: The transaction's properties object as follows:
     - ``nonce`` - ``String``: (optional) The nonce to use when signing this transaction. Default will use :ref:`web3.eth.getTransactionCount() <eth-gettransactioncount>`.
     - ``chainId`` - ``String``: (optional) The chain id to use when signing this transaction. Default will use :ref:`web3.eth.net.getId() <net-getid>`.
-    - ``to`` - ``String``: (optional) The recevier of the transaction, can be empty when deploying a contract.
+    - ``to`` - ``String``: (optional) The receiver of the transaction, can be empty when deploying a contract.
     - ``data`` - ``String``: (optional) The call data of the transaction, can be empty for simple value transfers.
     - ``value`` - ``String``: (optional) The value of the transaction in wei.
     - ``gasPrice`` - ``String``: (optional) The gas price set by this transaction, if empty, it will use :ref:`web3.eth.gasPrice() <eth-gasprice>`
@@ -168,7 +163,7 @@ Returns
     - ``s`` - ``String``: Next 32 bytes of the signature
     - ``v`` - ``String``: Recovery value + 27
     - ``rawTransaction`` - ``String``: The RLP encoded transaction, ready to be send using :ref:`web3.eth.sendSignedTransaction <eth-sendsignedtransaction>`.
-
+    - ``transactionHash`` - ``String``: The transaction hash for the RLP encoded transaction.
 
 -------
 Example
@@ -187,7 +182,8 @@ Example
         v: '0x25',
         r: '0xc9cf86333bcb065d140032ecaab5d9281bde80f21b9687b3e94161de42d51895',
         s: '0x727a108a0b8d101465414033c3f705a9c7b826e596766046ee1183dbc8aeaa68',
-        rawTransaction: '0xf869808504e3b29200831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a0c9cf86333bcb065d140032ecaab5d9281bde80f21b9687b3e94161de42d51895a0727a108a0b8d101465414033c3f705a9c7b826e596766046ee1183dbc8aeaa68'
+        rawTransaction: '0xf869808504e3b29200831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a0c9cf86333bcb065d140032ecaab5d9281bde80f21b9687b3e94161de42d51895a0727a108a0b8d101465414033c3f705a9c7b826e596766046ee1183dbc8aeaa68',
+        transactionHash: '0xde8db924885b0803d2edc335f745b2b8750c8848744905684c20b987443a9593'
     }
 
     web3.eth.accounts.signTransaction({
@@ -204,16 +200,16 @@ Example
         r: '0x9ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9c',
         s: '0x440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428',
         v: '0x25',
-        rawTransaction: '0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428'
+        rawTransaction: '0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428',
+        transactionHash: '0xd8f64a42b57be0d565f385378db2f6bf324ce14a594afc05de90436e9ce01f60'
     }
 
 
 
 ------------------------------------------------------------------------------
 
-
 recoverTransaction
-=====================
+==================
 
 .. code-block:: javascript
 
@@ -244,11 +240,10 @@ Example
     > "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55"
 
 
-
 ------------------------------------------------------------------------------
 
 hashMessage
-=====================
+===========
 
 .. code-block:: javascript
 
@@ -289,7 +284,7 @@ Example
 .. _eth-accounts-sign:
 
 sign
-=====================
+====
 
 .. code-block:: javascript
 
@@ -309,7 +304,7 @@ Parameters
 Returns
 -------
 
-``String|Object``: The signed data RLP encoded signature, or if ``returnSignature`` is ``true`` the signature values as follows:
+``Object``: The signed data RLP encoded signature, or if ``returnSignature`` is ``true`` the signature values as follows:
     - ``message`` - ``String``: The the given message.
     - ``messageHash`` - ``String``: The hash of the given message.
     - ``r`` - ``String``: First 32 bytes of the signature
@@ -339,7 +334,7 @@ Example
 .. _accounts-recover:
 
 recover
-=====================
+=======
 
 .. code-block:: javascript
 
@@ -396,7 +391,7 @@ Example
 
 
 encrypt
-=====================
+=======
 
 .. code-block:: javascript
 
@@ -450,7 +445,7 @@ Example
 ------------------------------------------------------------------------------
 
 decrypt
-=====================
+=======
 
 .. code-block:: javascript
 
@@ -511,7 +506,7 @@ Example
 .. _eth_accounts_wallet:
 
 wallet
-=====================
+======
 
 .. code-block:: javascript
 
@@ -548,7 +543,7 @@ Example
 ------------------------------------------------------------------------------
 
 wallet.create
-=====================
+=============
 
 .. code-block:: javascript
 
@@ -589,7 +584,7 @@ Example
 ------------------------------------------------------------------------------
 
 wallet.add
-=====================
+==========
 
 .. code-block:: javascript
 
@@ -644,7 +639,7 @@ Example
 ------------------------------------------------------------------------------
 
 wallet.remove
-=====================
+=============
 
 .. code-block:: javascript
 
@@ -692,7 +687,7 @@ Example
 
 
 wallet.clear
-=====================
+============
 
 .. code-block:: javascript
 
@@ -733,7 +728,7 @@ Example
 ------------------------------------------------------------------------------
 
 wallet.encrypt
-=====================
+==============
 
 .. code-block:: javascript
 
@@ -787,7 +782,7 @@ Example
 
 
 wallet.decrypt
-=====================
+==============
 
 .. code-block:: javascript
 
@@ -860,7 +855,7 @@ Example
 ------------------------------------------------------------------------------
 
 wallet.save
-=====================
+===========
 
 .. code-block:: javascript
 
@@ -897,7 +892,7 @@ Example
 ------------------------------------------------------------------------------
 
 wallet.load
-=====================
+===========
 
 .. code-block:: javascript
 

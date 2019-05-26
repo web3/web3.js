@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, fromAscii} from 'web3-utils';
+import BN = require('bn.js');
+import {fromAscii} from 'web3-utils';
 
 // $ExpectType string
 fromAscii('I have 100!');

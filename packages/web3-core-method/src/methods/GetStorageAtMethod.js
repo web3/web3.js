@@ -21,17 +21,18 @@
  */
 
 import isFunction from 'lodash/isFunction';
-import AbstractCallMethod from '../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../lib/methods/AbstractMethod';
 
-export default class GetStorageAtMethod extends AbstractCallMethod {
+export default class GetStorageAtMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_getStorageAt', 3, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_getStorageAt', 3, utils, formatters, moduleInstance);
     }
 
     /**

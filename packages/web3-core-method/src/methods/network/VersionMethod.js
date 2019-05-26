@@ -20,17 +20,18 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class VersionMethod extends AbstractCallMethod {
+export default class VersionMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_protocolVersion', 0, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('net_version', 0, utils, formatters, moduleInstance);
     }
 
     /**

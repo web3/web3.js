@@ -94,7 +94,7 @@ const tests = [
     {
         method: NewKeyPairMethod,
         rpcMethod: 'shh_newKeyPair',
-        parametersAmount: 1
+        parametersAmount: 0
     },
     {
         method: NewMessageFilterMethod,
@@ -133,9 +133,7 @@ describe('GenericShhMethodsTest', () => {
         let method;
         tests.forEach((test) => {
             // eslint-disable-next-line new-cap
-            method = new test.method(null, null);
-
-            expect(test.method.Type).toEqual('CALL');
+            method = new test.method(null, null, {});
 
             expect(method.rpcMethod).toEqual(test.rpcMethod);
 

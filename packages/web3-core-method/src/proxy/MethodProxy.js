@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-import {PromiEvent} from 'web3-core-promievent';
-
 export default class MethodProxy {
     /**
      * @param {AbstractWeb3Module} target
@@ -45,28 +43,24 @@ export default class MethodProxy {
                         );
                     }
 
-                    const method = methodFactory.createMethod(name);
+                    const method = methodFactory.createMethod(name, target);
 
                     /* eslint-disable no-inner-declarations */
-                    function anonymousFunction() {
-                        method.arguments = arguments;
+                    function RpcMethod() {
+                        method.setArguments(arguments);
 
-                        if (method.Type === 'CALL') {
-                            return method.execute(target);
-                        }
-
-                        return method.execute(target, new PromiEvent());
+                        return method.execute();
                     }
                     /* eslint-enable no-inner-declarations */
 
-                    anonymousFunction.method = method;
-                    anonymousFunction.request = function() {
-                        method.arguments = arguments;
+                    RpcMethod.method = method;
+                    RpcMethod.request = function() {
+                        method.setArguments(arguments);
 
                         return method;
                     };
 
-                    return anonymousFunction;
+                    return RpcMethod;
                 }
 
                 return target[name];

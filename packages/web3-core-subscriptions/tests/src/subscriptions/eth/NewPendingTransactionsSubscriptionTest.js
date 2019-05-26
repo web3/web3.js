@@ -15,7 +15,7 @@ describe('NewPendingTransactionsSubscriptionTest', () => {
 
         expect(newPendingTransactionsSubscription.type).toEqual('eth_subscribe');
 
-        expect(newPendingTransactionsSubscription.options).toEqual({});
+        expect(newPendingTransactionsSubscription.options).toEqual(null);
 
         expect(newPendingTransactionsSubscription.utils).toEqual({});
 

@@ -21,15 +21,17 @@
  */
 
 import isArray from 'lodash/isArray';
-import {SendTransactionMethod} from 'web3-core-method';
+import {EthSendTransactionMethod} from 'web3-core-method';
 
-export default class SendContractMethod extends SendTransactionMethod {
+// TODO: Implement revert handling (AbstractContractMethod)
+export default class SendContractMethod extends EthSendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
-     * @param {Accounts} accounts
-     * @param {TransactionSigner} transactionSigner
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {TransactionObserver} transactionObserver
+     * @param {ChainIdMethod} chainIdMethod
+     * @param {GetTransactionCountMethod} getTransactionCountMethod
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
      *
@@ -38,13 +40,15 @@ export default class SendContractMethod extends SendTransactionMethod {
     constructor(
         utils,
         formatters,
-        transactionConfirmationWorkflow,
-        accounts,
-        transactionSigner,
+        moduleInstance,
+        transactionObserver,
+        chainIdMethod,
+        getTransactionCountMethod,
         allEventsLogDecoder,
         abiModel
     ) {
-        super(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner);
+        super(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod);
+
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.abiModel = abiModel;
     }
@@ -89,6 +93,6 @@ export default class SendContractMethod extends SendTransactionMethod {
             delete response.logs;
         }
 
-        return response;
+        return super.afterExecution(response);
     }
 }

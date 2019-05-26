@@ -3,8 +3,8 @@ import {formatters} from 'web3-core-helpers';
 import NewHeadsSubscription from '../../../../src/subscriptions/eth/NewHeadsSubscription';
 
 // Mocks
-jest.mock('Utils');
-jest.mock('formatters');
+jest.mock('web3-utils');
+jest.mock('web3-core-helpers');
 
 /**
  * NewHeadsSubscription test
@@ -21,7 +21,7 @@ describe('NewHeadsSubscriptionTest', () => {
 
         expect(newHeadsSubscription.type).toEqual('eth_subscribe');
 
-        expect(newHeadsSubscription.options).toEqual({});
+        expect(newHeadsSubscription.options).toEqual(null);
 
         expect(newHeadsSubscription.utils).toEqual(Utils);
 

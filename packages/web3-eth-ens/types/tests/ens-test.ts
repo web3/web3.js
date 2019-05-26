@@ -13,14 +13,14 @@
 */
 /**
  * @file ens-test.ts
- * @author Samuel Furter <samuel@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>, Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
 
 import {Accounts} from 'web3-eth-accounts';
 import {Ens} from 'web3-eth-ens';
 
-const ens = new Ens('http://localhost:7545', new Accounts('http://localhost:7545'), {});
+const ens = new Ens('http://localhost:7545', null, new Accounts('http://localhost:7545'));
 
 // $ExpectType Registry
 ens.registry;
@@ -30,39 +30,65 @@ ens.resolver('name');
 
 // $ExpectType Promise<boolean>
 ens.supportsInterface('name', 'interfaceId');
+// $ExpectType Promise<boolean>
+ens.supportsInterface('name', 'interfaceId', (error: Error, supportsInterface: boolean) => {});
 
 // $ExpectType Promise<string>
 ens.getAddress('name');
+// $ExpectType Promise<string>
+ens.getAddress('name', (error: Error, address: string) => {});
 
 // $ExpectType PromiEvent<any>
 ens.setAddress('name', 'address', {});
+// $ExpectType PromiEvent<any>
+ens.setAddress('name', 'address', {}, (error: Error, result: any) => {});
 
-// $ExpectType Promise<string>
+// $ExpectType Promise<{ [x: string]: string; }>
 ens.getPubkey('name');
+// $ExpectType Promise<{ [x: string]: string; }>
+ens.getPubkey('name', (error: Error, result: {[x: string]: string}) => {});
 
 // $ExpectType PromiEvent<any>
 ens.setPubkey('name', 'x', 'y', {});
+// $ExpectType PromiEvent<any>
+ens.setPubkey('name', 'x', 'y', {}, (error: Error, result: any) => {});
 
 // $ExpectType Promise<string>
 ens.getText('name', 'key');
+// $ExpectType Promise<string>
+ens.getText('name', 'key', (error: Error, ensName: string) => {});
 
 // $ExpectType PromiEvent<any>
 ens.setText('name', 'key', 'value', {});
+// $ExpectType PromiEvent<any>
+ens.setText('name', 'key', 'value', {}, (error: Error, result: any) => {});
 
 // $ExpectType Promise<string>
 ens.getContent('name');
+// $ExpectType Promise<string>
+ens.getContent('name', (error: Error, contentHash: string) => {});
 
 // $ExpectType PromiEvent<any>
 ens.setContent('name', 'hash', {});
+// $ExpectType PromiEvent<any>
+ens.setContent('name', 'hash', {}, (error: Error, result: any) => {});
 
 // $ExpectType Promise<string>
 ens.getMultihash('name');
+// $ExpectType Promise<string>
+ens.getMultihash('name', (error: Error, multihash: string) => {});
 
 // $ExpectType PromiEvent<any>
 ens.setMultihash('name', 'hash', {});
+// $ExpectType PromiEvent<any>
+ens.setMultihash('name', 'hash', {}, (error: Error, result: any) => {});
 
 // $ExpectType Promise<string>
 ens.getContenthash('name');
+// $ExpectType Promise<string>
+ens.getContenthash('name', (error: Error, contenthash: string) => {});
 
 // $ExpectType PromiEvent<any>
 ens.setContenthash('name', 'hash', {});
+// $ExpectType PromiEvent<any>
+ens.setContenthash('name', 'hash', {}, (error: Error, result: any) => {});

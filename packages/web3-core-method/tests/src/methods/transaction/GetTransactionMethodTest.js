@@ -1,9 +1,9 @@
 import {formatters} from 'web3-core-helpers';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetTransactionMethod from '../../../../src/methods/transaction/GetTransactionMethod';
-import AbstractCallMethod from '../../../../lib/methods/AbstractCallMethod';
 
 // Mocks
-jest.mock('formatters');
+jest.mock('web3-core-helpers');
 
 /**
  * GetTransactionMethod test
@@ -12,11 +12,11 @@ describe('GetTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetTransactionMethod(null, formatters);
+        method = new GetTransactionMethod(null, formatters, {});
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractCallMethod);
+        expect(method).toBeInstanceOf(AbstractMethod);
 
         expect(method.rpcMethod).toEqual('eth_getTransactionByHash');
 

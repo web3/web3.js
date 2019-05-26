@@ -20,30 +20,34 @@
  * @date 2018
  */
 
-import {ProvidersModuleFactory} from 'web3-providers';
-import {MethodModuleFactory} from 'web3-core-method';
-import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import ShhModuleFactory from './factories/ShhModuleFactory';
+import {ProviderResolver} from 'web3-providers';
+import MethodFactory from './factories/MethodFactory';
+import SubscriptionsFactory from './factories/SubscriptionsFactory';
+import ShhModule from './Shh.js';
 
 /**
  * Returns the Shh object.
  *
  * @method Shh
  *
- * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {Net} net
  * @param {Object} options
  *
  * @returns {Shh}
  */
-export const Shh = (provider, options) => {
-    return new ShhModuleFactory(Utils, formatters, new MethodModuleFactory()).createShhModule(
-        provider,
-        new ProvidersModuleFactory(),
-        new SubscriptionsFactory(),
-        new Network(provider, options),
-        options
+export function Shh(provider, net = null, options = {}) {
+    const resolvedProvider = new ProviderResolver().resolve(provider, net);
+
+    return new ShhModule(
+        resolvedProvider,
+        new MethodFactory(Utils, formatters),
+        new SubscriptionsFactory(Utils, formatters),
+        new Network(resolvedProvider, null, options),
+        options,
+        null
     );
-};
+}

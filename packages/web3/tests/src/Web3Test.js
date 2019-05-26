@@ -1,5 +1,4 @@
 import {Eth} from 'web3-eth';
-import {Bzz} from 'web3-bzz';
 import {Shh} from 'web3-shh';
 import {Network} from 'web3-net';
 import {Personal} from 'web3-eth-personal';
@@ -8,12 +7,11 @@ import * as Utils from 'web3-utils';
 import Web3 from '../../src/Web3';
 
 // Mocks
-jest.mock('Eth');
-jest.mock('Shh');
-jest.mock('Bzz');
-jest.mock('Network');
-jest.mock('Personal');
-jest.mock('Utils');
+jest.mock('web3-eth');
+jest.mock('web3-shh');
+jest.mock('web3-net');
+jest.mock('web3-eth-personal');
+jest.mock('web3-utils');
 
 /**
  * Web3 test
@@ -29,8 +27,6 @@ describe('Web3Test', () => {
         expect(web3.eth).toBeInstanceOf(Eth);
 
         expect(web3.shh).toBeInstanceOf(Shh);
-
-        expect(web3.bzz).toBeInstanceOf(Bzz);
 
         expect(web3).toBeInstanceOf(AbstractWeb3Module);
     });
@@ -114,11 +110,8 @@ describe('Web3Test', () => {
 
         const shhMock = Shh.mock.instances[0];
 
-        const bzzMock = Bzz.mock.instances[0];
-
         ethMock.setProvider = jest.fn().mockReturnValueOnce(true);
         shhMock.setProvider = jest.fn().mockReturnValueOnce(true);
-        bzzMock.setProvider = jest.fn().mockReturnValueOnce(true);
 
         expect(web3.setProvider('http://localhost', 'net')).toEqual(true);
 
@@ -127,8 +120,6 @@ describe('Web3Test', () => {
         expect(ethMock.setProvider).toHaveBeenCalledWith('http://localhost', 'net');
 
         expect(shhMock.setProvider).toHaveBeenCalledWith('http://localhost', 'net');
-
-        expect(bzzMock.setProvider).toHaveBeenCalledWith('http://localhost');
     });
 
     it('calls the static modules property and gets the expected object', () => {
@@ -142,8 +133,6 @@ describe('Web3Test', () => {
 
         const shh = new modules.Shh('http://', 'net');
 
-        const bzz = new modules.Bzz('http://');
-
         expect(eth).toBeInstanceOf(Eth);
 
         expect(net).toBeInstanceOf(Network);
@@ -151,17 +140,9 @@ describe('Web3Test', () => {
         expect(personal).toBeInstanceOf(Personal);
 
         expect(shh).toBeInstanceOf(Shh);
-
-        expect(bzz).toBeInstanceOf(Bzz);
     });
 
-    it('calls the static providers property and gets the expected object', () => {
-        const providers = Web3.providers;
-
-        expect(providers.HttpProvider).toBeInstanceOf(Function);
-
-        expect(providers.WebsocketProvider).toBeInstanceOf(Function);
-
-        expect(providers.IpcProvider).toBeInstanceOf(Function);
+    it('calls the static givenProvider property and gets the result', () => {
+        expect(Web3.givenProvider).toEqual(null);
     });
 });

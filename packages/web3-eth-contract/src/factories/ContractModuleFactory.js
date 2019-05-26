@@ -43,17 +43,13 @@ export default class ContractModuleFactory {
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbiCoder} abiCoder
-     * @param {Accounts} accounts
-     * @param {MethodModuleFactory} methodModuleFactory
      *
      * @constructor
      */
-    constructor(utils, formatters, abiCoder, accounts, methodModuleFactory) {
+    constructor(utils, formatters, abiCoder) {
         this.utils = utils;
         this.formatters = formatters;
         this.abiCoder = abiCoder;
-        this.accounts = accounts;
-        this.methodModuleFactory = methodModuleFactory;
     }
 
     /**
@@ -61,22 +57,19 @@ export default class ContractModuleFactory {
      *
      * @method createContract
      *
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {PromiEvent} PromiEvent
-     * @param {Object} abi
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {Accounts} accounts
+     * @param {Array} abi
      * @param {String} address
      * @param {Object} options
      *
      * @returns {AbstractContract}
      */
-    createContract(provider, providersModuleFactory, PromiEvent, abi, address, options) {
+    createContract(provider, accounts, abi, address, options) {
         return new AbstractContract(
             provider,
-            providersModuleFactory,
-            this.methodModuleFactory,
             this,
-            PromiEvent,
+            accounts,
             this.abiCoder,
             this.utils,
             this.formatters,
@@ -230,14 +223,7 @@ export default class ContractModuleFactory {
      * @returns {MethodFactory}
      */
     createMethodFactory() {
-        return new MethodFactory(
-            this.accounts,
-            this.utils,
-            this.formatters,
-            this,
-            this.methodModuleFactory,
-            this.abiCoder
-        );
+        return new MethodFactory(this.utils, this.formatters, this, this.abiCoder);
     }
 
     /**
@@ -245,21 +231,17 @@ export default class ContractModuleFactory {
      *
      * @method createMethodsProxy
      *
-     * @param {AbstractContract} target
-     * @param {AbiModel} abiModel
-     * @param {PromiEvent} PromiEvent
+     * @param {AbstractContract} contract
      *
      * @returns {MethodsProxy}
      */
-    createMethodsProxy(target, abiModel, PromiEvent) {
+    createMethodsProxy(contract) {
         return new MethodsProxy(
-            target,
-            abiModel,
+            contract,
             this.createMethodFactory(),
             this.createMethodEncoder(),
             this.createMethodOptionsValidator(),
-            this.createMethodOptionsMapper(),
-            PromiEvent
+            this.createMethodOptionsMapper()
         );
     }
 
@@ -268,22 +250,18 @@ export default class ContractModuleFactory {
      *
      * @method createEventSubscriptionsProxy
      *
-     * @param {Contract} contract
-     * @param {AbiModel} abiModel
-     * @param {PromiEvent} PromiEvent
+     * @param {AbstractContract} contract
      *
      * @returns {EventSubscriptionsProxy}
      */
-    createEventSubscriptionsProxy(contract, abiModel, PromiEvent) {
+    createEventSubscriptionsProxy(contract) {
         return new EventSubscriptionsProxy(
             contract,
-            abiModel,
             this.createEventSubscriptionFactory(),
             this.createEventOptionsMapper(),
             this.createEventLogDecoder(),
             this.createAllEventsLogDecoder(),
-            this.createAllEventsOptionsMapper(),
-            PromiEvent
+            this.createAllEventsOptionsMapper()
         );
     }
 

@@ -20,17 +20,18 @@
  * @date 2018
  */
 
-import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class ListAccountsMethod extends AbstractCallMethod {
+export default class ListAccountsMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('personal_listAccounts', 0, utils, formatters);
+    constructor(utils, formatters, moduleInstance) {
+        super('personal_listAccounts', 0, utils, formatters, moduleInstance);
     }
 
     /**

@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {BN, padLeft} from 'web3-utils';
+import BN = require('bn.js');
+import {padLeft} from 'web3-utils';
 
 const bigNumber = new BN(3);
 

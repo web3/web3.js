@@ -26,19 +26,18 @@ import {AbstractWeb3Module} from 'web3-core';
 export default class Personal extends AbstractWeb3Module {
     /**
      * TODO: Add missing documentation for getAccounts, lockAccount and sendTransaction!
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {MethodFactory} methodFactory
      * @param {Network} net
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {Object} options
+     * @param {Net.Socket} nodeNet
      *
      * @constructor
      */
-    constructor(provider, providersModuleFactory, methodModuleFactory, methodFactory, net, utils, formatters, options) {
-        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
+    constructor(provider, methodFactory, net, utils, formatters, options, nodeNet) {
+        super(provider, options, methodFactory, nodeNet);
 
         this.utils = utils;
         this.formatters = formatters;

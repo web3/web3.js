@@ -26,45 +26,30 @@ export default class EnsModuleFactory {
      *
      * @method createENS
      *
-     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|Web3EthereumProvider|String} provider
      * @param {ContractModuleFactory} contractModuleFactory
-     * @param {PromiEvent} promiEvent
+     * @param {Accounts} accounts
      * @param {AbiCoder} abiCoder
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {Network} net
-     * @param {Object} registryOptions
      * @param {Object} ensModuleOptions
+     * @param {Net.Socket} nodeNet
      *
      * @returns {Ens}
      */
-    createENS(
-        provider,
-        providersModuleFactory,
-        methodModuleFactory,
-        contractModuleFactory,
-        promiEvent,
-        abiCoder,
-        utils,
-        formatters,
-        net,
-        registryOptions,
-        ensModuleOptions
-    ) {
+    createENS(provider, contractModuleFactory, accounts, abiCoder, utils, formatters, net, ensModuleOptions, nodeNet) {
         return new Ens(
             provider,
-            providersModuleFactory,
-            methodModuleFactory,
             ensModuleOptions,
             this,
-            promiEvent,
+            contractModuleFactory,
+            accounts,
             abiCoder,
             utils,
             formatters,
-            registryOptions,
-            net
+            net,
+            nodeNet
         );
     }
 
@@ -73,11 +58,9 @@ export default class EnsModuleFactory {
      *
      * @method createRegistry
      *
-     * @param {HttpProvider|WebsocketProvider|IpcProvider|EthereumProvider|String} provider
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {HttpProvider|WebsocketProvider|IpcProvider|Web3EthereumProvider|String} provider
      * @param {ContractModuleFactory} contractModuleFactory
-     * @param {PromiEvent} promiEvent
+     * @param {Accounts} accounts
      * @param {AbiCoder} abiCoder
      * @param {Utils} utils
      * @param {Object} formatters
@@ -86,29 +69,7 @@ export default class EnsModuleFactory {
      *
      * @returns {Registry}
      */
-    createRegistry(
-        provider,
-        providersModuleFactory,
-        methodModuleFactory,
-        contractModuleFactory,
-        promiEvent,
-        abiCoder,
-        utils,
-        formatters,
-        options,
-        net
-    ) {
-        return new Registry(
-            provider,
-            providersModuleFactory,
-            methodModuleFactory,
-            contractModuleFactory,
-            promiEvent,
-            abiCoder,
-            utils,
-            formatters,
-            options,
-            net
-        );
+    createRegistry(provider, contractModuleFactory, accounts, abiCoder, utils, formatters, options, net) {
+        return new Registry(provider, contractModuleFactory, accounts, abiCoder, utils, formatters, options, net);
     }
 }
