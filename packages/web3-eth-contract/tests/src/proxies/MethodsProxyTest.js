@@ -115,6 +115,47 @@ describe('MethodsProxyTest', () => {
         expect(methodOptionsValidatorMock.validate).toHaveBeenCalledWith(abiItemModelMock, callMethodMock);
     });
 
+    it('calls a call method over the proxy should allow null parameters', async () => {
+        abiModelMock.hasMethod.mockReturnValueOnce(true);
+
+        abiModelMock.getMethod.mockReturnValueOnce(abiItemModelMock);
+
+        const callMethodMock = {};
+        callMethodMock.parameters = [null];
+        callMethodMock.setArguments = jest.fn();
+        callMethodMock.execute = jest.fn(() => {
+            return Promise.resolve(true);
+        });
+
+        methodFactoryMock.createMethodByRequestType.mockReturnValueOnce(callMethodMock);
+
+        methodEncoderMock.encode.mockReturnValueOnce('0x0');
+
+        methodOptionsMapperMock.map.mockReturnValueOnce({options: true});
+
+        await expect(methodsProxy.myMethod(true).call({options: false})).resolves.toEqual(true);
+
+        expect(abiModelMock.hasMethod).toHaveBeenCalledWith('myMethod');
+
+        expect(abiModelMock.getMethod).toHaveBeenCalledWith('myMethod');
+
+        expect(abiItemModelMock.contractMethodParameters[0]).toEqual(true);
+
+        expect(methodFactoryMock.createMethodByRequestType).toHaveBeenCalledWith(
+            abiItemModelMock,
+            contractMock,
+            'call'
+        );
+
+        expect(callMethodMock.parameters[0]).toEqual({options: true});
+
+        expect(methodEncoderMock.encode).toHaveBeenCalledWith(abiItemModelMock, contractMock.data);
+
+        expect(methodOptionsMapperMock.map).toHaveBeenCalledWith(contractMock, {data: '0x0'});
+
+        expect(methodOptionsValidatorMock.validate).toHaveBeenCalledWith(abiItemModelMock, callMethodMock);
+    });
+
     it('calls the constructor method over the proxy', async () => {
         abiModelMock.hasMethod.mockReturnValueOnce(true);
 
