@@ -167,7 +167,7 @@ export default class TransactionObserver {
                             this.lastBlock = await this.getBlockByNumber(receipt.blockNumber);
                             this.confirmations++;
                         }
-
+                      
                         this.emitNext(receipt, observer);
                     }
 
