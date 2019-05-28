@@ -29,7 +29,12 @@ export class BatchRequest {
 
     add(method: AbstractMethod): void;
 
-    execute(): Promise<{methods: AbstractMethod[]; response: any[]} | Error[]>;
+    execute(): Promise<BatchResponse[]>;
+}
+
+export interface BatchResponse {
+    error: Error;
+    method: AbstractMethod;
 }
 
 export class ProviderDetector {
