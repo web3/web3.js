@@ -109,11 +109,9 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
             const account = this.moduleInstance.accounts.wallet[this.parameters[0].from];
 
             if (account) {
-                this.sendRawTransaction(account).catch(
-                    (error) => {
-                        this.handleError(error, false, 0);
-                    }
-                );
+                this.sendRawTransaction(account).catch((error) => {
+                    this.handleError(error, false, 0);
+                });
 
                 return this.promiEvent;
             }

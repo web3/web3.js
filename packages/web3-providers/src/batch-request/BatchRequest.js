@@ -120,10 +120,11 @@ export default class BatchRequest {
         });
 
         if (errors.length > 0) {
+            // eslint-disable-next-line no-throw-literal
             throw {
                 errors,
                 response
-            }
+            };
         }
 
         return {

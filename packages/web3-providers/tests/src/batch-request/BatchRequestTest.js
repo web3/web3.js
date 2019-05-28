@@ -126,10 +126,12 @@ describe('BatchRequestTest', () => {
         batchRequest.add(abstractMethodMock);
 
         await expect(batchRequest.execute()).rejects.toEqual({
-            errors: [{
-                error: new Error('ERROR'),
-                method: abstractMethodMock
-            }],
+            errors: [
+                {
+                    error: new Error('ERROR'),
+                    method: abstractMethodMock
+                }
+            ],
             response: [{result: true}]
         });
 
@@ -236,10 +238,12 @@ describe('BatchRequestTest', () => {
         batchRequest.add(abstractMethodMock);
 
         await expect(batchRequest.execute()).rejects.toEqual({
-            errors: [{
-                error: new Error('false'),
-                method: abstractMethodMock
-            }],
+            errors: [
+                {
+                    error: new Error('false'),
+                    method: abstractMethodMock
+                }
+            ],
             response: ['NOPE']
         });
 
@@ -265,10 +269,12 @@ describe('BatchRequestTest', () => {
 
         batchRequest.add(abstractMethodMock);
         await expect(batchRequest.execute()).rejects.toEqual({
-            errors: [{
-                error: new Error('ERROR'),
-                method: abstractMethodMock
-            }],
+            errors: [
+                {
+                    error: new Error('ERROR'),
+                    method: abstractMethodMock
+                }
+            ],
             response: [{result: true}]
         });
 
@@ -328,10 +334,12 @@ describe('BatchRequestTest', () => {
         batchRequest.moduleInstance.accounts = {wallet: [{nonce: 1}]};
 
         await expect(batchRequest.execute()).rejects.toEqual({
-            errors: [{
-                error: false,
-                method: abstractMethodMock
-            }],
+            errors: [
+                {
+                    error: false,
+                    method: abstractMethodMock
+                }
+            ],
             response: [{result: true}]
         });
 
