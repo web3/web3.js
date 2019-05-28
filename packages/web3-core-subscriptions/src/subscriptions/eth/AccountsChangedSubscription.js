@@ -29,7 +29,7 @@ export default class AccountsChangedSubscription extends AbstractSubscription {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('', 'newHeads', null, utils, formatters, moduleInstance);
+        super('', 'accountsChanged', null, utils, formatters, moduleInstance);
 
         this.callback = null;
     }
