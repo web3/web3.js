@@ -38,6 +38,7 @@ export default class Account {
     constructor(options, accounts = null) {
         this.address = options.address;
         this.privateKey = options.privateKey;
+        this.nonce = options.nonce;
         this.accounts = accounts;
     }
 

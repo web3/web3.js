@@ -41,11 +41,22 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
     }
 
     /**
+     * TODO: Instead of using the static type property should every method has a static factory method
      * This type will be used in the AbstractMethodFactory.
      *
      * @returns {String}
      */
     static get Type() {
+        return 'eth-send-transaction-method';
+    }
+
+    /**
+     * TODO: Find a better way to have a mangle save method type detection (ES7 decorator?)
+     * The non-static property will be used in the BatchRequest object
+     *
+     * @returns {String}
+     */
+    get Type() {
         return 'eth-send-transaction-method';
     }
 
@@ -95,12 +106,12 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         }
 
         if (this.hasAccounts() && this.isDefaultSigner()) {
-            if (this.moduleInstance.accounts.wallet[this.parameters[0].from]) {
-                this.sendRawTransaction(this.moduleInstance.accounts.wallet[this.parameters[0].from].privateKey).catch(
-                    (error) => {
-                        this.handleError(error, false, 0);
-                    }
-                );
+            const account = this.moduleInstance.accounts.wallet[this.parameters[0].from];
+
+            if (account) {
+                this.sendRawTransaction(account).catch((error) => {
+                    this.handleError(error, false, 0);
+                });
 
                 return this.promiEvent;
             }
@@ -122,11 +133,29 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      *
      * @method sendRawTransaction
      *
-     * @param {String} privateKey
+     * @param {Account} account
      *
      * @returns {PromiEvent}
      */
-    async sendRawTransaction(privateKey = null) {
+    async sendRawTransaction(account = {}) {
+        const response = await this.signTransaction(account);
+
+        this.parameters = [response.rawTransaction];
+        this.rpcMethod = 'eth_sendRawTransaction';
+
+        return super.execute();
+    }
+
+    /**
+     * Signs the transaction locally
+     *
+     * @method signTransaction
+     *
+     * @param {Account} account
+     *
+     * @returns {Promise<void>}
+     */
+    async signTransaction(account = {}) {
         this.beforeExecution(this.moduleInstance);
 
         if (!this.parameters[0].chainId) {
@@ -134,9 +163,20 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
-            this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
+            let nonce;
 
-            this.parameters[0].nonce = await this.getTransactionCountMethod.execute();
+            if (account.nonce) {
+                account.nonce = account.nonce + 1;
+                nonce = account.nonce;
+            }
+
+            if (!nonce) {
+                this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest'];
+                nonce = await this.getTransactionCountMethod.execute();
+                account.nonce = nonce;
+            }
+
+            this.parameters[0].nonce = nonce;
         }
 
         let transaction = this.parameters[0];
@@ -144,14 +184,10 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         transaction.data = transaction.data || '0x';
         transaction.value = transaction.value || '0x';
         transaction.chainId = this.utils.numberToHex(transaction.chainId);
+
         delete transaction.from;
 
-        const response = await this.moduleInstance.transactionSigner.sign(transaction, privateKey);
-
-        this.parameters = [response.rawTransaction];
-        this.rpcMethod = 'eth_sendRawTransaction';
-
-        return super.execute();
+        return this.moduleInstance.transactionSigner.sign(transaction, account.privateKey);
     }
 
     /**
