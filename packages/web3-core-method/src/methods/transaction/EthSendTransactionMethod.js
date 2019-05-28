@@ -186,6 +186,8 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         transaction.data = transaction.data || '0x';
         transaction.value = transaction.value || '0x';
         transaction.chainId = this.utils.numberToHex(transaction.chainId);
+        transaction.nonce = this.utils.numberToHex(transaction.nonce);
+
         delete transaction.from;
 
         return this.moduleInstance.transactionSigner.sign(transaction, account.privateKey);
