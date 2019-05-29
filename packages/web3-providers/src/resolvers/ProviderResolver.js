@@ -22,6 +22,7 @@
 
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
+import Web3EthereumProvider from '../providers/Web3EthereumProvider';
 
 const global =
     (function() {
@@ -71,6 +72,10 @@ export default class ProviderResolver {
         }
 
         if (provider.sendPayload && provider.subscribe) {
+            return provider;
+        }
+
+        if (provider instanceof Web3EthereumProvider) {
             return provider;
         }
 
