@@ -98,7 +98,7 @@
         "eslint-plugin-standard": "^4.0.0",
         "eslint-plugin-unicorn": "^8.0.1",
         "istanbul-combine": "^0.3.0",
-        "jest": "^24.7.1",
+        "jest": "^24.8.0",
         "lerna": "^3.13.4",
         "prettier": "^1.16.4",
         "regenerator-runtime": "^0.13.2",
