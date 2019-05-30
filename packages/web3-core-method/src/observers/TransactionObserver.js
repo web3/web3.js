@@ -148,8 +148,10 @@ export default class TransactionObserver {
                 this.getTransactionReceiptMethod.parameters = [transactionHash];
 
                 const receipt = await this.getTransactionReceiptMethod.execute();
-
-                if (receipt) {
+                
+                // on parity nodes you can get the receipt without it being mined
+                // so the receipt may not have a block number at this point
+                if (receipt && receipt.blockNumber) {
                     if (this.lastBlock) {
                         const block = await this.getBlockByNumber(this.lastBlock.number + 1);
 
@@ -159,15 +161,9 @@ export default class TransactionObserver {
                             this.emitNext(receipt, observer);
                         }
                     } else {
-                        // on parity nodes you can get the receipt without it being mined
-                        // so the receipt may not have a block number at this point.
-                        // we should check that the blockNumber is defined before we do this call
-                        // geth nodes only return the receipt once mined as the spec states.
-                        if (receipt.blockNumber) {
-                            this.lastBlock = await this.getBlockByNumber(receipt.blockNumber);
-                            this.confirmations++;
-                        }
-                      
+                        this.lastBlock = await this.getBlockByNumber(receipt.blockNumber);
+                        this.confirmations++;
+                        
                         this.emitNext(receipt, observer);
                     }
 
