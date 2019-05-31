@@ -197,7 +197,11 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     sendPayload(payload) {
+        let promiseReject;
+
         return new Promise((resolve, reject) => {
+            promiseReject = reject;
+
             this.once('error', reject);
 
             if (!this.isConnecting()) {
@@ -242,11 +246,11 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     .catch(reject);
             });
         }).then((response) => {
-            this.removeListener('error', reject);
+            this.removeListener('error', promiseReject);
 
             return response;
         }).catch((error) => {
-            this.removeListener('error', reject);
+            this.removeListener('error', promiseReject);
 
             throw error;
         });

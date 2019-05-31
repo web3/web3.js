@@ -100,8 +100,6 @@ describe('AbstractSocketProviderTest', () => {
         abstractSocketProvider.removeAllListeners = jest.fn();
 
         abstractSocketProvider.onError('not ready!');
-
-        expect(abstractSocketProvider.removeAllListeners).toHaveBeenCalled();
     });
 
     it('calls onClose and close event will be emitted', (done) => {
