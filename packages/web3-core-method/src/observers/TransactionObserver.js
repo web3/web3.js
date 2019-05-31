@@ -148,7 +148,7 @@ export default class TransactionObserver {
                 this.getTransactionReceiptMethod.parameters = [transactionHash];
 
                 const receipt = await this.getTransactionReceiptMethod.execute();
-                
+
                 // on parity nodes you can get the receipt without it being mined
                 // so the receipt may not have a block number at this point
                 if (receipt && receipt.blockNumber) {
