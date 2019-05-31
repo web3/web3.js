@@ -214,7 +214,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 } catch (error) {
                     this.removeListener('error', reject);
 
-                    reject(error);
+                    return reject(error);
                 }
 
                 if (this.timeout) {
@@ -236,7 +236,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
                     this.removeListener('error', reject);
 
-                    resolve(response);
+                    return resolve(response);
                 });
 
                 return;
@@ -247,12 +247,12 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     .then((response) => {
                         this.removeListener('error', reject);
 
-                        resolve(response);
+                        return resolve(response);
                     })
                     .catch((error) => {
                         this.removeListener('error', reject);
 
-                        reject(error);
+                        return reject(error);
                     });
             });
         });

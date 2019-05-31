@@ -96,6 +96,8 @@ export default class AbstractSubscription extends EventEmitter {
 
                 this.moduleInstance.currentProvider.on('error', this.errorListener.bind(this));
                 this.moduleInstance.currentProvider.on(this.id, this.subscriptionListener.bind(this));
+
+                return;
             })
             .catch((error) => {
                 if (this.callback) {
@@ -106,6 +108,8 @@ export default class AbstractSubscription extends EventEmitter {
 
                 this.emit('error', error);
                 this.removeAllListeners();
+
+                return;
             });
 
         return this;
