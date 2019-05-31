@@ -241,6 +241,14 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     .then(resolve)
                     .catch(reject);
             });
+        }).then((response) => {
+            this.removeListener('error', reject);
+
+            return response;
+        }).catch((error) => {
+            this.removeListener('error', reject);
+
+            throw error;
         });
     }
 }
