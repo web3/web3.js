@@ -197,23 +197,23 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     sendPayload(payload) {
-        let promiseReject;
-
         return new Promise((resolve, reject) => {
-            promiseReject = reject;
-
             this.once('error', reject);
 
             if (!this.isConnecting()) {
                 let timeout, id;
 
                 if (this.connection.readyState !== this.connection.OPEN) {
+                    this.removeListener('error', reject);
+
                     return reject(new Error('Connection error: Connection is not open on send()'));
                 }
 
                 try {
                     this.connection.send(JSON.stringify(payload));
                 } catch (error) {
+                    this.removeListener('error', reject);
+
                     reject(error);
                 }
 
@@ -234,7 +234,9 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                         clearTimeout(timeout);
                     }
 
-                    return resolve(response);
+                    this.removeListener('error', reject);
+
+                    resolve(response);
                 });
 
                 return;
@@ -242,17 +244,17 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
             this.once('connect', () => {
                 this.sendPayload(payload)
-                    .then(resolve)
-                    .catch(reject);
+                    .then((response) => {
+                        this.removeListener('error', reject);
+
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        this.removeListener('error', reject);
+
+                        reject(error);
+                    });
             });
-        }).then((response) => {
-            this.removeListener('error', promiseReject);
-
-            return response;
-        }).catch((error) => {
-            this.removeListener('error', promiseReject);
-
-            throw error;
         });
     }
 }

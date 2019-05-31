@@ -157,11 +157,7 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     sendPayload(payload) {
-        let promiseReject;
-
         return new Promise((resolve, reject) => {
-            promiseReject = reject;
-            
             this.once('error', reject);
 
             if (!this.connection.writable) {
@@ -177,20 +173,18 @@ export default class IpcProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
-                this.once(id, resolve);
+                this.once(id, (response) => {
+                    resolve(response);
+
+                    this.removeListener('error', reject);
+                });
 
                 return;
             }
 
+            this.removeListener('error', reject);
+
             return reject(new Error("Connection error: Couldn't write on the socket with Socket.write(payload)"));
-        }).then((response) => {
-            this.removeListener('error', promiseReject);
-
-            return response;
-        }).catch((error) => {
-            this.removeListener('error', promiseReject);
-
-            throw error;
         });
     }
 }
