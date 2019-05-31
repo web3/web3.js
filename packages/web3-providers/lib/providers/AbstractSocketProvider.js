@@ -165,8 +165,6 @@ export default class AbstractSocketProvider extends EventEmitter {
     onError(error) {
         this.emit(this.ERROR, error);
         this.emit(this.SOCKET_ERROR, error);
-        this.removeAllSocketListeners();
-        this.removeAllListeners();
     }
 
     /**

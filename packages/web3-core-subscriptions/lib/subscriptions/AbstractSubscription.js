@@ -54,8 +54,7 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @param {AbstractWeb3Module} moduleInstance
      */
-    beforeSubscription(moduleInstance) {
-    }
+    beforeSubscription(moduleInstance) { }
 
     /**
      * This method will be executed on each new subscription item.
@@ -164,7 +163,7 @@ export default class AbstractSubscription extends EventEmitter {
             .then((response) => {
                 if (!response) {
                     const error = new Error('Error on unsubscribe!');
-                    if (isFunction(callback)) {
+                    if (callback) {
                         callback(error, null);
                     }
 
@@ -177,7 +176,7 @@ export default class AbstractSubscription extends EventEmitter {
                 this.id = null;
                 this.removeAllListeners();
 
-                if (isFunction(callback)) {
+                if (callback) {
                     callback(false, true);
                 }
 
