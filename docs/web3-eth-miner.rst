@@ -146,12 +146,12 @@ Example
 ------------------------------------------------------------------------------
 
 
-start
+startMining
 =====
 
 .. code-block:: javascript
 
-    miner.start(miningThread, [, callback])
+    miner.startMining(miningThread, [, callback])
 
 Start the CPU mining process with the given number of threads.
 The RPC method used is ``miner_start``.
@@ -180,21 +180,21 @@ Example
 
 .. code-block:: javascript
 
-    miner.start('0x1').then(console.log);
+    miner.startMining('0x1').then(console.log);
     > true
 
-    miner.start(1).then(console.log);
+    miner.startMining(1).then(console.log);
     > true
 
 ------------------------------------------------------------------------------
 
 
-stop
+stopMining
 ====
 
 .. code-block:: javascript
 
-    miner.stop([callback])
+    miner.stopMining([callback])
 
 Stop the CPU mining process.
 The RPC method used is ``miner_stop``.
@@ -222,7 +222,7 @@ Example
 
 .. code-block:: javascript
 
-    miner.stop().then(console.log);
+    miner.stopMining().then(console.log);
     > true
 
 ------------------------------------------------------------------------------

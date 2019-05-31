@@ -36,10 +36,11 @@ Instead of setting a authorization header you could also define the credentials 
 
 ```js 
 import {WebsocketProvider} from 'web3-providers';
+const credentials = Buffer.from('username:password').toString('base64')
 const options = { 
     timeout: 30000, 
     headers: {
-        authorization: 'Basic username:password'
+        authorization: `Basic ${credentials}`
     }
 };
  
