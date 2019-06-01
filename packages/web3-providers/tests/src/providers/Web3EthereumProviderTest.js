@@ -174,7 +174,7 @@ describe('Web3EthereumProviderTest', () => {
         ethereumProvider.onMessage({subscription: '0x0'});
     });
 
-    it('calls send and returns a resolved promise with the response', async () => {
+    it('calls send and returns a resolved promise with the response result', async () => {
         JsonRpcResponseValidator.validate = jest.fn(() => {
             return true;
         });
@@ -184,7 +184,7 @@ describe('Web3EthereumProviderTest', () => {
 
             expect(parameters).toEqual([]);
 
-            return Promise.resolve(true);
+            return Promise.resolve({result: true});
         });
 
         const response = await ethereumProvider.send('method', []);

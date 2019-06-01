@@ -136,7 +136,7 @@ export default class Web3EthereumProvider extends AbstractSocketProvider {
             throw validationResult;
         }
 
-        return response;
+        return response.result;
     }
 
     /**
