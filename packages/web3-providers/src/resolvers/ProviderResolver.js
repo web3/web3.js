@@ -75,7 +75,7 @@ export default class ProviderResolver {
             return provider;
         }
 
-        if (provider instanceof Web3EthereumProvider) {
+        if (provider.host === 'Web3EthereumProvider') {
             return provider;
         }
 
