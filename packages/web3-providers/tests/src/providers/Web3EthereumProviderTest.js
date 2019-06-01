@@ -175,41 +175,41 @@ describe('Web3EthereumProviderTest', () => {
     });
 
     it('calls send and returns a resolved promise with the response result', async () => {
-        JsonRpcResponseValidator.validate = jest.fn(() => {
-            return true;
-        });
-
         socketMock.send = jest.fn((method, parameters) => {
             expect(method).toEqual('method');
 
             expect(parameters).toEqual([]);
 
-            return Promise.resolve({result: true});
+            return Promise.resolve(true);
         });
 
         const response = await ethereumProvider.send('method', []);
 
         expect(response).toEqual(true);
-
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalled();
     });
 
-    it('calls send and returns a rejected promise because of a invalid response', async () => {
-        JsonRpcResponseValidator.validate = jest.fn(() => {
-            return new Error('invalid');
-        });
-
+    it ('callse send and returns a rejected promise becase of an undefined response result', async () => {
         socketMock.send = jest.fn((method, parameters) => {
             expect(method).toEqual('method');
 
             expect(parameters).toEqual([]);
 
-            return Promise.resolve(false);
+            return Promise.resolve();
         });
 
-        await expect(ethereumProvider.send('method', [])).rejects.toThrow('invalid');
+        await expect(ethereumProvider.send('method', [])).rejects.toThrow('Validation error: Undefined JSON-RPC result');
+    });
 
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalled();
+    it('calls send and returns a rejected promise because of an error response', async () => {
+        socketMock.send = jest.fn((method, parameters) => {
+            expect(method).toEqual('method');
+
+            expect(parameters).toEqual([]);
+
+            return Promise.reject(new Error('invalid'));
+        });
+
+        await expect(ethereumProvider.send('method', [])).rejects.toThrow('Node error: invalid');
     });
 
     it('calls sendBatch and returns a resolved promise with the response', async () => {
