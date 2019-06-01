@@ -17,7 +17,6 @@
  * @date 2018
  */
 
-import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 
 export default class Web3EthereumProvider extends AbstractSocketProvider {
@@ -137,7 +136,7 @@ export default class Web3EthereumProvider extends AbstractSocketProvider {
         }
 
         if (result === undefined) {
-            throw new Error(`Validation error: Undefined JSON-RPC result`);
+            throw new Error('Validation error: Undefined JSON-RPC result');
         }
 
         return result;

@@ -1,5 +1,4 @@
 import Web3EthereumProvider from '../../../src/providers/Web3EthereumProvider';
-import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
 import AbstractMethod from '../../__mocks__/AbstractMethod';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
 import AbstractSocketProvider from '../../../lib/providers/AbstractSocketProvider';
@@ -188,7 +187,7 @@ describe('Web3EthereumProviderTest', () => {
         expect(response).toEqual(true);
     });
 
-    it ('callse send and returns a rejected promise becase of an undefined response result', async () => {
+    it('callse send and returns a rejected promise becase of an undefined response result', async () => {
         socketMock.send = jest.fn((method, parameters) => {
             expect(method).toEqual('method');
 
@@ -197,7 +196,9 @@ describe('Web3EthereumProviderTest', () => {
             return Promise.resolve();
         });
 
-        await expect(ethereumProvider.send('method', [])).rejects.toThrow('Validation error: Undefined JSON-RPC result');
+        await expect(ethereumProvider.send('method', [])).rejects.toThrow(
+            'Validation error: Undefined JSON-RPC result'
+        );
     });
 
     it('calls send and returns a rejected promise because of an error response', async () => {
