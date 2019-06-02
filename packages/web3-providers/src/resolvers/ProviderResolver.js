@@ -74,6 +74,10 @@ export default class ProviderResolver {
             return provider;
         }
 
+        if (provider.host === 'Web3EthereumProvider') {
+            return provider;
+        }
+
         if (typeof global.mist !== 'undefined' && provider.constructor.name === 'EthereumProvider') {
             return this.providersModuleFactory.createMistEthereumProvider(provider);
         }
