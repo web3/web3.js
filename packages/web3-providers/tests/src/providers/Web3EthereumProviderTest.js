@@ -187,20 +187,6 @@ describe('Web3EthereumProviderTest', () => {
         expect(response).toEqual(true);
     });
 
-    it('callse send and returns a rejected promise becase of an undefined response result', async () => {
-        socketMock.send = jest.fn((method, parameters) => {
-            expect(method).toEqual('method');
-
-            expect(parameters).toEqual([]);
-
-            return Promise.resolve();
-        });
-
-        await expect(ethereumProvider.send('method', [])).rejects.toThrow(
-            'Validation error: Undefined JSON-RPC result'
-        );
-    });
-
     it('calls send and returns a rejected promise because of an error response', async () => {
         socketMock.send = jest.fn((method, parameters) => {
             expect(method).toEqual('method');
