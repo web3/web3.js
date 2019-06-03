@@ -173,7 +173,7 @@ describe('Web3EthereumProviderTest', () => {
         ethereumProvider.onMessage({subscription: '0x0'});
     });
 
-    it('calls send and returns a resolved promise with the response result', async () => {
+    it('calls send and returns a resolved promise with the response', async () => {
         socketMock.send = jest.fn((method, parameters) => {
             expect(method).toEqual('method');
 
