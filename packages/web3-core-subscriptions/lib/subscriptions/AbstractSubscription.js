@@ -94,6 +94,7 @@ export default class AbstractSubscription extends EventEmitter {
             .then((subscriptionId) => {
                 this.id = subscriptionId;
 
+                // TODO: Improve listener handling for subscriptions
                 this.moduleInstance.currentProvider.on('error', this.errorListener.bind(this));
                 this.moduleInstance.currentProvider.on(this.id, this.subscriptionListener.bind(this));
 

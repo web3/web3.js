@@ -65,10 +65,10 @@ describe('AbstractSubscriptionTest', () => {
     });
 
     it('calls subscribe and emits a error from the provider error listener', (done) => {
-        moduleInstanceMock.currentProvider.once = jest.fn((event, callback) => {
-            expect(event).toEqual('error');
-
-            callback(new Error('ERROR'));
+        moduleInstanceMock.currentProvider.on = jest.fn((event, callback) => {
+            if (event === 'error') {
+                callback(new Error('ERROR'));
+            }
         });
 
         const subscription = abstractSubscription.subscribe();
@@ -76,7 +76,7 @@ describe('AbstractSubscriptionTest', () => {
         subscription.on('error', (error) => {
             expect(error).toEqual(new Error('ERROR'));
 
-            expect(moduleInstanceMock.currentProvider.removeAllListeners).toHaveBeenCalledWith('MY_ID');
+            expect(moduleInstanceMock.currentProvider.on).toHaveBeenCalledTimes(1);
 
             done();
         });
@@ -108,27 +108,11 @@ describe('AbstractSubscriptionTest', () => {
         });
     });
 
-    it('calls subscribe and returns a error from the provider error listener', (done) => {
-        moduleInstanceMock.currentProvider.once = jest.fn((event, callback) => {
-            expect(event).toEqual('error');
-
-            callback(new Error('ERROR'));
-        });
-
-        abstractSubscription.subscribe((error) => {
-            expect(error).toEqual(new Error('ERROR'));
-
-            expect(moduleInstanceMock.currentProvider.removeAllListeners).toHaveBeenCalledWith('MY_ID');
-
-            done();
-        });
-    });
-
     it('calls subscribe with a callback and it returns the expected value', (done) => {
         moduleInstanceMock.currentProvider.on = jest.fn((id, callback) => {
-            expect(id).toEqual('MY_ID');
-
-            callback({result: 'SUBSCRIPTION_ITEM'});
+            if (id === 'MY_ID') {
+                callback({result: 'SUBSCRIPTION_ITEM'});
+            }
         });
 
         const callback = jest.fn((error, response) => {
@@ -138,7 +122,7 @@ describe('AbstractSubscriptionTest', () => {
 
             expect(response).toEqual('SUBSCRIPTION_ITEM');
 
-            expect(moduleInstanceMock.currentProvider.once).toHaveBeenCalled();
+            expect(moduleInstanceMock.currentProvider.on).toHaveBeenCalledTimes(2);
 
             done();
         });
@@ -149,9 +133,9 @@ describe('AbstractSubscriptionTest', () => {
 
     it('calls subscribe and emits the data event', (done) => {
         moduleInstanceMock.currentProvider.on = jest.fn((id, callback) => {
-            expect(id).toEqual('MY_ID');
-
-            callback({result: 'SUBSCRIPTION_ITEM'});
+            if (id === 'MY_ID') {
+                callback({result: 'SUBSCRIPTION_ITEM'});
+            }
         });
 
         abstractSubscription.options = null;
@@ -160,13 +144,14 @@ describe('AbstractSubscriptionTest', () => {
         subscription.on('data', (data) => {
             expect(data).toEqual('SUBSCRIPTION_ITEM');
 
-            expect(moduleInstanceMock.currentProvider.once).toHaveBeenCalled();
+            expect(moduleInstanceMock.currentProvider.on).toHaveBeenCalledTimes(2);
 
             done();
         });
     });
 
     it('calls unsubscribe and returns with a resolved promise', async () => {
+        moduleInstanceMock.currentProvider.removeListener = jest.fn();
         moduleInstanceMock.currentProvider.unsubscribe = jest.fn((id, type) => {
             expect(id).toEqual('ID');
 
@@ -187,6 +172,12 @@ describe('AbstractSubscriptionTest', () => {
         expect(callback).toHaveBeenCalledWith(false, true);
 
         expect(abstractSubscription.listenerCount('data')).toEqual(0);
+
+        expect(moduleInstanceMock.currentProvider.removeListener)
+            .toHaveBeenNthCalledWith(1, 'error', abstractSubscription.errorListener);
+
+        expect(moduleInstanceMock.currentProvider.removeListener)
+            .toHaveBeenNthCalledWith(2, 'ID', abstractSubscription.subscriptionListener);
 
         expect(abstractSubscription.id).toEqual(null);
     });
