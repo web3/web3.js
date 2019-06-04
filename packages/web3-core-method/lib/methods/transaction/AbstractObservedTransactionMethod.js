@@ -42,11 +42,20 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
     }
 
     /**
-     * This type will be used in the AbstractMethodFactory.
+     * This type will be used in the AbstractMethodFactory.and BatchRequest class
      *
      * @returns {String}
      */
     static get Type() {
+        return 'observed-transaction-method';
+    }
+
+    /**
+     * This type will be used in the AbstractMethodFactory and BatchRequest class
+     *
+     * @returns {String}
+     */
+    get Type() {
         return 'observed-transaction-method';
     }
 

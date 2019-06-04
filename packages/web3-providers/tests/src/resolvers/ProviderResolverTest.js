@@ -3,6 +3,7 @@ import ProvidersModuleFactory from '../../../src/factories/ProvidersModuleFactor
 import HttpProvider from '../../../src/providers/HttpProvider';
 import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import IpcProvider from '../../../src/providers/IpcProvider';
+import Web3EthereumProvider from '../../../src/providers/Web3EthereumProvider';
 import MetamaskProvider from '../../../src/providers/MetamaskProvider';
 import CustomProvider from '../../../src/providers/CustomProvider';
 
@@ -11,7 +12,6 @@ jest.mock('../../../src/factories/ProvidersModuleFactory');
 jest.mock('../../../src/providers/HttpProvider');
 jest.mock('../../../src/providers/WebsocketProvider');
 jest.mock('../../../src/providers/IpcProvider');
-jest.mock('../../../src/providers/Web3EthereumProvider');
 jest.mock('../../../src/providers/MetamaskProvider');
 jest.mock('../../../src/providers/CustomProvider');
 
@@ -83,6 +83,16 @@ describe('ProviderResolverTest', () => {
         expect(providerResolver.resolve(ethereumProviderMock)).toEqual(ethereumProviderMock);
 
         expect(providersModuleFactoryMock.createWeb3EthereumProvider).toHaveBeenCalledWith(ethereumProviderMock);
+    });
+
+    it('calls resolve with the Web3EthereumProvider', () => {
+        const ethereumProviderMock = {
+            isEIP1193: true,
+            on: () => {}
+        };
+        const web3EthereumProvider = new Web3EthereumProvider(ethereumProviderMock);
+
+        expect(providerResolver.resolve(web3EthereumProvider)).toBeInstanceOf(Web3EthereumProvider);
     });
 
     it('calls resolve with the WebsocketProvider', () => {

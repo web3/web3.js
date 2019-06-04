@@ -309,6 +309,30 @@ describe('BatchRequestTest', () => {
         expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', [true]);
     });
 
+    it('calls execute with the SendRawTransactionMethod and returns a resolved promise', async () => {
+        JsonRpcResponseValidator.validate.mockReturnValueOnce(true);
+
+        JsonRpcMapper.toPayload.mockReturnValueOnce({});
+
+        providerMock.sendPayload = jest.fn((payload) => {
+            expect(payload).toEqual([{}]);
+
+            return Promise.resolve([{result: true}]);
+        });
+
+        abstractMethodMock.Type = 'observed-transaction-method';
+        batchRequest.add(abstractMethodMock);
+
+        await expect(batchRequest.execute()).resolves.toEqual({
+            methods: [abstractMethodMock],
+            response: [true]
+        });
+
+        expect(JsonRpcResponseValidator.validate).toHaveBeenCalled();
+
+        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', [true]);
+    });
+
     it('calls execute with accounts defined and returns a resolved promise', async () => {
         JsonRpcResponseValidator.validate.mockReturnValueOnce(false);
 

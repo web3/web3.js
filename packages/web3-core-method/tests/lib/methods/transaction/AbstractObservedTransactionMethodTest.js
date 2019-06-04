@@ -65,6 +65,8 @@ describe('AbstractObservedTransactionMethodTest', () => {
         expect(method.transactionObserver).toEqual(transactionObserverMock);
 
         expect(method.promiEvent).toBeInstanceOf(PromiEvent);
+
+        expect(method.Type).toEqual('observed-transaction-method');
     });
 
     it('calls execute with event listeners and is emitting the expected values', (done) => {
