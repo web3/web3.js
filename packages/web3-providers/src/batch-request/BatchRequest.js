@@ -86,7 +86,10 @@ export default class BatchRequest {
                     let mappedResult;
 
                     // TODO: Find a better handling for custom behaviours in a batch request (afterBatchRequest?)
-                    if (method.Type === 'eth-send-transaction-method' || method.Type === 'observed-transaction-method') {
+                    if (
+                        method.Type === 'eth-send-transaction-method' ||
+                        method.Type === 'observed-transaction-method'
+                    ) {
                         mappedResult = responseItem.result;
                     } else {
                         mappedResult = method.afterExecution(responseItem.result);

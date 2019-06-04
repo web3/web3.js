@@ -173,11 +173,17 @@ describe('AbstractSubscriptionTest', () => {
 
         expect(abstractSubscription.listenerCount('data')).toEqual(0);
 
-        expect(moduleInstanceMock.currentProvider.removeListener)
-            .toHaveBeenNthCalledWith(1, 'error', abstractSubscription.errorListener);
+        expect(moduleInstanceMock.currentProvider.removeListener).toHaveBeenNthCalledWith(
+            1,
+            'error',
+            abstractSubscription.errorListener
+        );
 
-        expect(moduleInstanceMock.currentProvider.removeListener)
-            .toHaveBeenNthCalledWith(2, 'ID', abstractSubscription.subscriptionListener);
+        expect(moduleInstanceMock.currentProvider.removeListener).toHaveBeenNthCalledWith(
+            2,
+            'ID',
+            abstractSubscription.subscriptionListener
+        );
 
         expect(abstractSubscription.id).toEqual(null);
     });
