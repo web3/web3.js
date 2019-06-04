@@ -173,10 +173,16 @@ export default class IpcProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
-                this.once(id, resolve);
+                this.once(id, (response) => {
+                    resolve(response);
+
+                    this.removeListener('error', reject);
+                });
 
                 return;
             }
+
+            this.removeListener('error', reject);
 
             return reject(new Error("Connection error: Couldn't write on the socket with Socket.write(payload)"));
         });

@@ -166,7 +166,6 @@ export default class AbstractSocketProvider extends EventEmitter {
         this.emit(this.ERROR, error);
         this.emit(this.SOCKET_ERROR, error);
         this.removeAllSocketListeners();
-        this.removeAllListeners();
     }
 
     /**
@@ -201,7 +200,9 @@ export default class AbstractSocketProvider extends EventEmitter {
                     this.subscriptions[key].parameters.slice(1)
                 );
 
-                delete this.subscriptions[subscriptionId];
+                if (key !== subscriptionId) {
+                    delete this.subscriptions[subscriptionId];
+                }
 
                 this.subscriptions[key].id = subscriptionId;
             }

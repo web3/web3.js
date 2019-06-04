@@ -204,13 +204,17 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 let timeout, id;
 
                 if (this.connection.readyState !== this.connection.OPEN) {
+                    this.removeListener('error', reject);
+
                     return reject(new Error('Connection error: Connection is not open on send()'));
                 }
 
                 try {
                     this.connection.send(JSON.stringify(payload));
                 } catch (error) {
-                    reject(error);
+                    this.removeListener('error', reject);
+
+                    return reject(error);
                 }
 
                 if (this.timeout) {
@@ -230,6 +234,8 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                         clearTimeout(timeout);
                     }
 
+                    this.removeListener('error', reject);
+
                     return resolve(response);
                 });
 
@@ -238,8 +244,16 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
             this.once('connect', () => {
                 this.sendPayload(payload)
-                    .then(resolve)
-                    .catch(reject);
+                    .then((response) => {
+                        this.removeListener('error', reject);
+
+                        return resolve(response);
+                    })
+                    .catch((error) => {
+                        this.removeListener('error', reject);
+
+                        return reject(error);
+                    });
             });
         });
     }

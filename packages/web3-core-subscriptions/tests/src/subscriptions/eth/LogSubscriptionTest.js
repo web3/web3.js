@@ -56,9 +56,9 @@ describe('LogSubscriptionTest', () => {
         });
 
         socketProviderMock.on = jest.fn((subscriptionId, callback) => {
-            expect(subscriptionId).toEqual('MY_ID');
-
-            callback('SUBSCRIPTION_ITEM');
+            if (subscriptionId === 'MY_ID') {
+                callback('SUBSCRIPTION_ITEM');
+            }
         });
 
         moduleInstanceMock.currentProvider = socketProviderMock;
@@ -161,9 +161,9 @@ describe('LogSubscriptionTest', () => {
         });
 
         socketProviderMock.on = jest.fn((subscriptionId, callback) => {
-            expect(subscriptionId).toEqual('MY_ID');
-
-            callback('SUBSCRIPTION_ITEM');
+            if (subscriptionId === 'MY_ID') {
+                callback('SUBSCRIPTION_ITEM');
+            }
         });
 
         moduleInstanceMock.currentProvider = socketProviderMock;
@@ -174,6 +174,8 @@ describe('LogSubscriptionTest', () => {
             expect(response).toEqual('ITEM');
 
             expect(logSubscription.id).toEqual('MY_ID');
+
+            expect(socketProviderMock.on).toHaveBeenCalledTimes(2);
 
             done();
         });
