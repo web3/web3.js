@@ -444,7 +444,10 @@ describe('UtilsTest', () => {
         // allow compatiblity
         expect(hexToNumberString(100000)).toEqual('100000');
 
-        expect(hexToNumberString('100000')).toEqual('100000');
+        // throw error if the hex string doesn't contain '0x' prefix
+        expect(() => {
+            hexToNumberString('100000');
+        }).toThrow('Given value "100000" is not a valid hex string.');
     });
 
     it('calls toTwosComplement and returns the expected results', () => {
