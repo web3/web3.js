@@ -11,7 +11,10 @@
 
 ### Compare View
 
-[beta.54 -> beta.55](https://github.com/ethereum/web3.js/compare/LAST_RELEASE_COMMIT_HASH..LATEST_COMMIT_HASH)
+<!--- Replace LAST_TAG with the last released version -->
+<!--- Replace NEW_TAG with the new version number -->
+
+[LAST_TAG -> NEW_TAG](https://github.com/ethereum/web3.js/compare/LAST_TAG..HEAD)
 
 
 ## Type of change
