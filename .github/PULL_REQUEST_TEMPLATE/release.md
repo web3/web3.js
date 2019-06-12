@@ -14,7 +14,7 @@
 <!--- Replace LAST_TAG with the last released version -->
 <!--- Replace NEW_TAG with the new version -->
 
-[LAST_TAG -> NEW_TAG](https://github.com/ethereum/web3.js/compare/LAST_TAG..HEAD)
+[LAST_TAG -> NEW_TAG](https://github.com/ethereum/web3.js/compare/LAST_TAG...HEAD)
 
 
 ## Type of change
