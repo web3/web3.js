@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.0.0-alpha.0]
+## [1.0.0]
 ### Added
 
 ### Changed
@@ -14,5 +14,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 
-[Unreleased]: https://github.com/ethereum/web3.js/compare/v1.0.0-beta.55...HEAD
+[Unreleased]: https://github.com/ethereum/web3.js/compare/v1.0.0-beta.37...COMMIT_HASH
 
