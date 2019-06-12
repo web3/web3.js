@@ -21,13 +21,13 @@ Please read the [documentation][docs] for more.
 ### Node
 
 ```bash
-npm install web3
+npm install web3@1.0.0-beta.37
 ```
 
 ### Yarn
 
 ```bash
-yarn add web3
+yarn add web3@1.0.0-beta.37
 ```
 
 ### Meteor
