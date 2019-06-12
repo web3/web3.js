@@ -1,4 +1,4 @@
-<!--- Don't forget to assing @nivida and to add the correct labels -->
+<!--- Don't forget to assing @nivida and to add the corresponding labels (version, "in progress", "release") -->
 
 ## Description
 
@@ -12,7 +12,7 @@
 ### Compare View
 
 <!--- Replace LAST_TAG with the last released version -->
-<!--- Replace NEW_TAG with the new version number -->
+<!--- Replace NEW_TAG with the new version -->
 
 [LAST_TAG -> NEW_TAG](https://github.com/ethereum/web3.js/compare/LAST_TAG..HEAD)
 
