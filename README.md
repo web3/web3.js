@@ -1,4 +1,4 @@
-**PREVIEW RELEASE** This is a beta preview release with breaking changes! The current stable version is 0.20.0 
+**PREVIEW RELEASE** This is a beta preview release (beta.37) with breaking changes!
 
 <img src="https://github.com/ethereum/web3.js/raw/1.0/web3js.jpg" width=200 />
 
@@ -21,13 +21,13 @@ Please read the [documentation][docs] for more.
 ### Node
 
 ```bash
-npm install web3
+npm install web3@1.0.0-beta.37
 ```
 
 ### Yarn
 
 ```bash
-yarn add web3
+yarn add web3@1.0.0-beta.37
 ```
 
 ### Meteor
