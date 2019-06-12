@@ -4,15 +4,13 @@
 
 <!--- Add a description if there are new features or behaviors to explain -->
 
-### Fixed Issues
-
-<!--- List all the fixed issues -->
-
 
 ### Compare View
 
-<!--- Replace LAST_TAG with the last released version -->
-<!--- Replace NEW_TAG with the new version -->
+<!--- 
+    Replace LAST_TAG with the last released version
+    Replace NEW_TAG with the new version
+ -->
 
 [LAST_TAG -> NEW_TAG](https://github.com/ethereum/web3.js/compare/LAST_TAG...HEAD)
 

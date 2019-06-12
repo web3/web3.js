@@ -7,12 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [2.0.0-alpha.0]
-### Added
-
-### Changed
-
-### Removed
-
 
 [Unreleased]: https://github.com/ethereum/web3.js/compare/v1.0.0-beta.55...HEAD
 
+<!-- EXAMPLE
+
+## [2.0.0-alpha.0]
+
+### Added
+
+- I've added feature XY (#1000)
+
+### Changed
+
+- I've cleaned up XY (#1000)
+
+### Deprecated
+
+- I've deprecated XY (#1000)
+
+### Removed
+
+- I've removed XY (#1000)
+
+### Fixed
+
+- I've fixed XY (#1000)
+
+### Security
+
+- I've improved the security in XY (#1000)
+
+-->
