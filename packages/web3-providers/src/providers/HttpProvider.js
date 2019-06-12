@@ -180,7 +180,11 @@ export default class HttpProvider {
 
                 reject(new Error(`Connection error: Timeout exceeded after ${this.timeout}ms`));
             };
-
+            
+            request.onerror = () => {
+                this.connected = false;
+                reject(new Error(`Network error`))
+            }
             try {
                 request.send(JSON.stringify(payload));
             } catch (error) {
