@@ -1,3 +1,8 @@
+---
+name: Default
+about: Default Web3 issue template.
+---
+
 <!---------------------------------------------------------------------------------------
 
 Welcome to the Web3.js Issue Template!
