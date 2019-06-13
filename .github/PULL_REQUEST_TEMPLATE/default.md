@@ -1,3 +1,8 @@
+---
+name: Default
+about: Default template for a Web3 PR.
+---
+
 ## Description
 
 Please include a summary of the change.
