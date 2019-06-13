@@ -1,6 +1,6 @@
 ---
 name: Default
-about: Default template for a Web3 PR
+about: Default template for a Web3 PR.
 ---
 
 ## Description

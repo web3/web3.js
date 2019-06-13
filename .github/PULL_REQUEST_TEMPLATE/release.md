@@ -1,6 +1,6 @@
 ---
 name: Release
-about: Release PR template
+about: Release PR template.
 ---
 
 <!--- Don't forget to assing @nivida and to add the corresponding labels (version, "in progress", "release") -->
