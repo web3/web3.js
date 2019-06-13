@@ -36,7 +36,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.0.0-alpha.0]
-
-[Unreleased]: https://github.com/ethereum/web3.js/compare/v1.0.0-beta.55...HEAD
-
+## [2.0.0-alpha]
