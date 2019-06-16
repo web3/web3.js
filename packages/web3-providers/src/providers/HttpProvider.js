@@ -184,7 +184,7 @@ export default class HttpProvider {
             request.onerror = () => {
                 this.connected = false;
                 
-                reject(new Error(`Network error`));
+                reject(new Error(`Network error ${JSON.stringify(payload)}`))
             }
             try {
                 request.send(JSON.stringify(payload));
