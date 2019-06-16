@@ -1,3 +1,8 @@
+---
+name: Default
+about: Default template for a Web3 PR.
+---
+
 ## Description
 
 Please include a summary of the change.
@@ -25,7 +30,8 @@ Fixes #(issue)
 - [ ] My changes generate no warnings.
 - [ ] I have updated or added types for all modules I've changed
 - [ ] Any dependent changes have been merged and published in downstream modules.
-- [ ] I ran ```npm run test``` in the root folder with success and extended the tests if necessary.
+- [ ] I ran ```npm run lint``` in the root folder with success and pushed the changes.
+- [ ] I ran ```npm run test``` in the root folder with success and extended the tests to cover my changes.
 - [ ] I ran ```npm run build``` in the root folder and tested it in the browser and with node.
 - [ ] I ran ```npm run dtslint``` in the root folder and tested that all my types are correct
 - [ ] I have tested my code on an ethereum test network.
