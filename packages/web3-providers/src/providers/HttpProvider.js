@@ -183,6 +183,7 @@ export default class HttpProvider {
             
             request.onerror = () => {
                 this.connected = false;
+                
                 reject(new Error(`Network error`));
             }
             try {
