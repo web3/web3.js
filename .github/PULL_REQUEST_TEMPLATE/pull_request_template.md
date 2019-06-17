@@ -3,11 +3,26 @@ name: Default
 about: Default template for a Web3 PR.
 ---
 
+<!-- 
+
+Release PR: 
+
+1. Create the desired compare view 
+   (e.g.: https://github.com/ethereum/web3.js/compare/2.x...1.x)
+
+2. Add the template query to the URL "?template=release.md" 
+   (e.g.: https://github.com/ethereum/web3.js/compare/2.x...1.x?template=release.md)
+   
+3. Press "Create pull request"
+
+-->
+
 ## Description
 
 Please include a summary of the change.
 
 <!--- 
+
 Optional if an issue is fixed:
 Fixes #(issue)
 -->
