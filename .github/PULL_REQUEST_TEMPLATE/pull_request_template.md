@@ -1,8 +1,3 @@
----
-name: Default
-about: Default template for a Web3 PR.
----
-
 <!-- 
 
 Release PR: 
