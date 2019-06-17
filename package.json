@@ -1,7 +1,7 @@
 {
     "name": "web3",
     "namespace": "ethereum",
-    "version": "1.0.0-beta.55",
+    "version": "2.0.0-alpha",
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
     "main": "./packages/web3/src/index.js",
