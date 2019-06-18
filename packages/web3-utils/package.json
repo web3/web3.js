@@ -7,12 +7,12 @@
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
-        "bn.js": "4.11.6",
-        "eth-lib": "0.1.27",
+        "bn.js": "4.11.8",
+        "eth-lib": "0.2.8",
         "ethjs-unit": "0.1.6",
         "number-to-bn": "1.7.0",
         "randomhex": "0.1.5",
-        "underscore": "1.8.3",
-        "utf8": "2.1.1"
+        "underscore": "1.9.1",
+        "utf8": "3.0.0"
     }
 }
