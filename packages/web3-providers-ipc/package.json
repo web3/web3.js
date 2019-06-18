@@ -7,8 +7,8 @@
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
-        "oboe": "2.1.3",
-        "underscore": "1.8.3",
+        "oboe": "2.1.4",
+        "underscore": "1.9.1",
         "web3-core-helpers": "1.0.0-beta.37"
     }
 }
