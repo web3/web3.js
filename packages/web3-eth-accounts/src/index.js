@@ -307,7 +307,7 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
         kdfparams = json.crypto.kdfparams;
 
         // FIXME: support progress reporting callback
-        derivedKey = scryptsy(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        derivedKey = scryptsy(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
     } else if (json.crypto.kdf === 'pbkdf2') {
         kdfparams = json.crypto.kdfparams;
 
@@ -315,19 +315,19 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
             throw new Error('Unsupported parameters to PBKDF2');
         }
 
-        derivedKey = cryp.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+        derivedKey = cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
     } else {
         throw new Error('Unsupported key derivation scheme');
     }
 
-    var ciphertext = new Buffer(json.crypto.ciphertext, 'hex');
+    var ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
 
     var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), ciphertext ])).replace('0x','');
     if (mac !== json.crypto.mac) {
         throw new Error('Key derivation failed - possibly wrong password');
     }
 
-    var decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
+    var decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, 'hex'));
     var seed = '0x'+ Buffer.concat([ decipher.update(ciphertext), decipher.final() ]).toString('hex');
 
     return this.privateKeyToAccount(seed);
@@ -351,13 +351,13 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
     if (kdf === 'pbkdf2') {
         kdfparams.c = options.c || 262144;
         kdfparams.prf = 'hmac-sha256';
-        derivedKey = cryp.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+        derivedKey = cryp.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
     } else if (kdf === 'scrypt') {
         // FIXME: support progress reporting callback
         kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
         kdfparams.r = options.r || 8;
         kdfparams.p = options.p || 1;
-        derivedKey = scryptsy(new Buffer(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        derivedKey = scryptsy(Buffer.from(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
     } else {
         throw new Error('Unsupported kdf');
     }
@@ -367,9 +367,9 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
         throw new Error('Unsupported cipher');
     }
 
-    var ciphertext = Buffer.concat([ cipher.update(new Buffer(account.privateKey.replace('0x',''), 'hex')), cipher.final() ]);
+    var ciphertext = Buffer.concat([ cipher.update(Buffer.from(account.privateKey.replace('0x',''), 'hex')), cipher.final() ]);
 
-    var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex') ])).replace('0x','');
+    var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex') ])).replace('0x','');
 
     return {
         version: 3,
