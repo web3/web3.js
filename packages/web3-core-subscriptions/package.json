@@ -7,8 +7,8 @@
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
-        "eventemitter3": "1.1.1",
-        "underscore": "1.8.3",
+        "eventemitter3": "3.1.2",
+        "underscore": "1.9.1",
         "web3-core-helpers": "1.0.0-beta.37"
     }
 }
