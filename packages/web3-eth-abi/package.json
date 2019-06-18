@@ -7,7 +7,7 @@
   "license": "LGPL-3.0",
   "main": "src/index.js",
   "dependencies": {
-    "ethers": "4.0.30",
+    "ethers": "4.0.0-beta.3",
     "underscore": "1.9.1",
     "web3-utils": "1.0.0-beta.37"
   }
