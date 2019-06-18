@@ -34,14 +34,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
-## [Unreleased]
-
 ## [2.0.0-alpha]
 
 ### Added
 
-- Locally signed transaction as ``BatchRequest`` (#2708)
-- Increasing of the nonce for locally signed transactions (#2796)
+- Sending of locally signed transactions as ``BatchRequest`` (#2708)
+- Automatic increason of the nonce for locally signed transactions (#2796)
 
 ### Changed
 
@@ -60,3 +58,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Transaction confirmation workflow fixed for parity (#2847)
 - ``WebsocketProvider`` event handling fixed (#2711)
 - ``WebsocketProvider`` memory leak fixed (#2851)
+
+## [Unreleased]
+
+## [2.0.0-alpha.1]
+
+
+
