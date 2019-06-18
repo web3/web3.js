@@ -78,7 +78,7 @@
     "ethjs-signer": "^0.1.1",
     "exorcist": "^1.0.1",
     "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
+    "gulp-babel": "^6.1.3",
     "gulp-jshint": "^2.1.0",
     "gulp-rename": "^1.4.0",
     "gulp-replace": "^1.0.0",
@@ -90,7 +90,6 @@
     "mocha": "^6.1.4",
     "sandboxed-module": "^2.0.3",
     "underscore": "^1.9.1",
-    "vinyl-source-stream": "^2.0.0",
-    "@babel/core": "^7.4.5"
+    "vinyl-source-stream": "^2.0.0"
   }
 }
