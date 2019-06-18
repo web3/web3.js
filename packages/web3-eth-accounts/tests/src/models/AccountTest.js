@@ -1,4 +1,4 @@
-import scryptsy from 'scrypt.js';
+import scryptSync from '../../../src/models/Scrypt';
 import randomBytes from 'randombytes';
 import {pbkdf2Sync} from 'pbkdf2';
 import {createCipheriv, createDecipheriv} from 'browserify-cipher';
@@ -18,7 +18,7 @@ jest.mock('uuid');
 jest.mock('randombytes');
 jest.mock('pbkdf2');
 jest.mock('browserify-cipher');
-jest.mock('scrypt.js');
+jest.mock('../../../src/models/Scrypt');
 jest.mock('../../../src/Accounts');
 
 /**
@@ -143,7 +143,7 @@ describe('AccountTest', () => {
             privateKey: '0x0'
         });
 
-        scryptsy.mockReturnValueOnce(Buffer.from('00000000000000000000000000000000'));
+        scryptSync.mockReturnValueOnce(Buffer.from('00000000000000000000000000000000'));
 
         keccak256.mockReturnValueOnce('0xmac');
 
@@ -164,14 +164,11 @@ describe('AccountTest', () => {
             `0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`
         );
 
-        expect(scryptsy).toHaveBeenCalledWith(
-            Buffer.from('password'),
-            Buffer.from('salt', 'hex'),
-            'n',
-            'r',
-            'p',
-            'dklen'
-        );
+        expect(scryptSync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('salt', 'hex'), 'dklen', {
+            N: 'n',
+            r: 'r',
+            p: 'p'
+        });
 
         expect(keccak256).toHaveBeenCalledWith(
             Buffer.concat([Buffer.from('0000000000000000'), Buffer.from(json.crypto.ciphertext, 'hex')])
@@ -343,7 +340,7 @@ describe('AccountTest', () => {
 
         createCipheriv.mockReturnValue(cipher);
 
-        scryptsy.mockReturnValueOnce(Buffer.from('0000000000000000'));
+        scryptSync.mockReturnValueOnce(Buffer.from('0000000000000000'));
 
         keccak256.mockReturnValueOnce('0xmac');
 
@@ -377,7 +374,11 @@ describe('AccountTest', () => {
 
         expect(randomBytes).toHaveBeenNthCalledWith(3, 16);
 
-        expect(scryptsy).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 8192, 8, 1, 32);
+        expect(scryptSync).toHaveBeenCalledWith(Buffer.from('password'), Buffer.from('random'), 32, {
+            N: 8192,
+            r: 8,
+            p: 1
+        });
 
         expect(createCipheriv).toHaveBeenCalledWith(
             'aes-128-ctr',
