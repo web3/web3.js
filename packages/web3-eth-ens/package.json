@@ -2,7 +2,7 @@
     "name": "web3-eth-ens",
     "version": "1.0.0-beta.37",
     "description": "ENS support for web3.",
-    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-eth-ens",
+    "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth-ens",
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {

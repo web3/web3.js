@@ -3,7 +3,7 @@
     "namespace": "ethereum",
     "version": "1.0.0-beta.37",
     "description": "Web3 module to interact with the Ethereum nodes networking properties.",
-    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-net",
+    "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-net",
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
