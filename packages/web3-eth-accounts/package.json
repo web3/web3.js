@@ -3,7 +3,7 @@
   "namespace": "ethereum",
   "version": "1.0.0-beta.37",
   "description": "Web3 module to generate Ethereum accounts and sign data and transactions.",
-  "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-eth-accounts",
+  "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth-accounts",
   "license": "LGPL-3.0",
   "main": "src/index.js",
   "dependencies": {
