@@ -10,7 +10,7 @@
     "any-promise": "1.3.0",
     "crypto-browserify": "3.12.0",
     "eth-lib": "0.2.7",
-    "scrypt.js": "0.3.0",
+    "scrypt.js": "^0.3.0",
     "underscore": "1.9.1",
     "uuid": "3.3.2",
     "web3-core": "1.0.0-beta.37",
