@@ -35,11 +35,10 @@ export default class Address {
     constructor(params) {
         if (!isObject(params)) {
             params = {
-                address: params,
+                address: params
             };
         }
 
-        /* Make the props immutable */
         assign(this, params);
     }
 
@@ -48,22 +47,18 @@ export default class Address {
      *
      * @property from
      */
-    set address(param) {
-        let _address;
-        
-        if (isString(param) && /^(0x)?([0-9a-fA-F]{40})$/.test(param)) {
-            _address = param.replace(/^(0x)([0-9a-fA-F]{40})$/, '0x$2');
+    set address(value) {
+        if (isString(value) && /^(0x)?([0-9a-fA-F]{40})$/.test(value)) {
+            this._address = value.replace(/^(0x)([0-9a-fA-F]{40})$/, '0x$2');
+            this._isChecksummed = Address.isValid(this._address);
+
+            return;
         }
 
-        if (_address === undefined) {
-            throw new Error(
-                `The given "address" parameter "${param}" needs to be hex encoded (numbers and letters, a through f), supplied as a string.\n` +
+        throw new Error(
+            `The given "address" parameter "${value}" needs to be hex encoded (numbers and letters, a through f), supplied as a string.\n` +
                 'Addresses may be prefixed with 0x and are 40 hex characters long.'
-            );
-        }
-        
-        this._address = _address;
-        this._isChecksummed = Address.isValid(_address);
+        );
     }
 
     /**
@@ -76,12 +71,12 @@ export default class Address {
      *
      * @returns {boolean}
      */
-    static isValid(_address) {
-        if (!isString(_address)) {
+    static isValid(value) {
+        if (!isString(value)) {
             return false;
         }
 
-        const address = _address.replace('0x', '');
+        const address = value.replace('0x', '');
 
         const addressHash = sha3(address.toLowerCase())
             .toLowerCase()
@@ -92,7 +87,6 @@ export default class Address {
          *  the corresponding index of the hash
          *  i.e. if the hex value is between 8 and f. (1___) */
         const isChecksummed = address.split('').every((v, i) => {
-            /* test for digit ? test for 8 or higher || test for uppercase hex : true */
             return !/^\d$/.test(v) ? !/^[8-9a-f]$/.test(addressHash[i]) || /^[A-F]$/.test(v) : true;
         });
 
@@ -108,8 +102,8 @@ export default class Address {
      *
      * @returns {Address}
      */
-    static toChecksum(_address) {
-        const address = _address.replace('0x', '');
+    static toChecksum(value) {
+        const address = value.replace('0x', '');
 
         const addressHash = sha3(address.toLowerCase())
             .toLowerCase()
@@ -122,14 +116,11 @@ export default class Address {
         const checksummed = address
             .split('')
             .map((v, i) => {
-                /* (test for digit && test for 8 or higher) ? to uppercase : to lowercase */
                 return !/^\d$/.test(v) && /^[8-9a-f]$/.test(addressHash[i]) ? v.toUpperCase() : v.toLowerCase();
             })
             .join('');
 
-        return new Address({
-            address: `0x${checksummed}`,
-        });
+        return new Address(`0x${checksummed}`);
     }
 
     /**
@@ -185,22 +176,5 @@ export default class Address {
      */
     isAddress() {
         return true;
-    }
-
-    /**
-     * Wrap error throwing from the constructor for types
-     *
-     * @method _throw
-     */
-    _throw(propertyName, value) {
-        let errorMessage;
-
-        if (propertyName === 'address') {
-            errorMessage =
-                `The given "address" parameter "${value}" needs to be hex encoded (numbers and letters, a through f), supplied as a string.\n` +
-                'Addresses may be prefixed with 0x and are 40 hex characters long.';
-        }
-
-        throw new Error(errorMessage);
     }
 }

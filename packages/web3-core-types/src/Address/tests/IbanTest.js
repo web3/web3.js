@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prevent-abbreviations */
 import BigNumber from 'bn.js';
 import * as Types from '../..';
 import Iban from '../Iban';

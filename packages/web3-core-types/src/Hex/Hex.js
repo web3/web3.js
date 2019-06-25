@@ -48,7 +48,7 @@ export default class Hex {
      * @returns {String} hex
      */
     get hex() {
-        if (!_.isNil(this._hex)) {
+        if (!isNil(this._hex)) {
             return this._hex.toString();
         }
     }
@@ -58,25 +58,21 @@ export default class Hex {
      *
      * @property hex
      */
-    set hex(param) {
-        let _hex;
-
-        if (Hex.isValid(param)) {
-            _hex = param.toString();
+    set hex(value) {
+        if (Hex.isValid(value)) {
+            this._hex = value.toString();
+            return;
         }
 
-        if (param === 'empty') {
-            _hex = '0x';
+        if (value === 'empty') {
+            this._hex = '0x';
+            return;
         }
 
-        if (_hex === undefined) {
-            throw new Error(
-                `The given "hex" parameter "${param}" needs to be a string composed of numbers, and characters between 'a' and 'f'.\n` +
+        throw new Error(
+            `The given "hex" parameter "${value}" needs to be a string composed of numbers, and characters between 'a' and 'f'.\n` +
                 "Use 'empty' to set a web3 empty hex object."
-            );
-        } else {
-            this._hex = _hex;
-        }
+        );
     }
 
     /**
@@ -84,7 +80,7 @@ export default class Hex {
      *
      * @method isValid
      *
-     * @param {string} parameter
+     * @param {string} hex
      *
      * @return {boolean}
      */
@@ -119,9 +115,7 @@ export default class Hex {
             throw new Error(`The given value ${value} is not string type.`);
         }
 
-        value = value.replace(/(-)?(0x)?([0-9a-f]*)/i, '$10x$3');
-
-        return new Hex({hex: value});
+        return new Hex(value.replace(/(-)?(0x)?([0-9a-f]*)/i, '$10x$3'));
     }
 
     /**
@@ -138,7 +132,7 @@ export default class Hex {
             throw new Error(`The given value ${value} is not number type.`);
         }
 
-        return new Hex({hex: value.toString(16)});
+        return new Hex(value.toString(16));
     }
 
     /**
@@ -157,11 +151,15 @@ export default class Hex {
 
         const hex = value.split('').reduce((acc, char) => {
             const v = char.charCodeAt(0).toString(16);
-            if (v.length > 2) throw new Error(`Non ASCII char ${char} in string ${value}.`);
+
+            if (v.length > 2) {
+                throw new Error(`Non ASCII char ${char} in string ${value}.`);
+            }
+
             return acc + (v.length < 2 ? '0' + v : v);
         }, '0x');
 
-        return new Hex({hex});
+        return new Hex(hex);
     }
 
     /**
@@ -203,7 +201,7 @@ export default class Hex {
 
         hex = `0x${hex}`;
 
-        return new Hex({hex});
+        return new Hex(hex);
     }
 
     /**
@@ -225,7 +223,7 @@ export default class Hex {
 
         hex = `0x${hex}`;
 
-        return new Hex({hex});
+        return new Hex(hex);
     }
 
     /**

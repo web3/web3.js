@@ -5,7 +5,7 @@ import Address from '../Address';
  */
 describe('AddressTest', () => {
     const data = {
-        address: '0xE247A45c287191d435A8a5D72A7C8dc030451E9F',
+        address: '0xE247A45c287191d435A8a5D72A7C8dc030451E9F'
     };
 
     it('constructor check', () => {
