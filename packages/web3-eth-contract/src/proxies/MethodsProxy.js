@@ -136,9 +136,7 @@ export default class MethodsProxy {
                     /* eslint-enable no-inner-declarations */
                 }
 
-                if (target[name]) {
-                    return target[name];
-                }
+                return Reflect.get(target, name);
             }
         });
     }
