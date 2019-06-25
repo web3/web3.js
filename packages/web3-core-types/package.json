@@ -1,0 +1,32 @@
+{
+    "name": "web3-core-types",
+    "namespace": "ethereum",
+    "version": "1.0.0-beta.55",
+    "description": "Web3 module to interact with the known types of an Ethereum-based DApp.",
+    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-core-types",
+    "license": "LGPL-3.0",
+    "main": "dist/web3-core-types.cjs.js",
+    "module": "dist/web3-core-types.esm.js",
+    "browser": "dist/web3-core-types.umd.js",
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w",
+        "test": "jest",
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
+    "types": "types/index.d.ts",
+    "dependencies": {
+        "bignumber.js": "^8.0.2",
+        "ethers": "4.0.21",
+        "lodash": "^4.17.11",
+        "utf8": "^3.0.0",
+        "web3-utils": "1.0.0-beta.55"
+    },
+    "devDependencies": {
+        "dtslint": "^0.4.2"
+    },
+    "files": [
+        "dist",
+        "types/index.d.ts"
+    ]
+}
