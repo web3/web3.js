@@ -39,7 +39,7 @@ if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
 } else {
     Ws = require('websocket').w3cwebsocket;
     _btoa = function(str) {
-      return Buffer(str).toString('base64');
+      return Buffer.from(str).toString('base64');
     };
     var url = require('url');
     if (url.URL) {
