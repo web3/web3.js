@@ -82,7 +82,7 @@ export default class ProviderResolver {
             return this.providersModuleFactory.createMistEthereumProvider(provider);
         }
 
-        if (provider.isEIP1193) {
+        if (typeof provider.send === 'function' && typeof provider.on === 'function') {
             return this.providersModuleFactory.createWeb3EthereumProvider(provider);
         }
 

@@ -75,19 +75,20 @@ describe('ProviderResolverTest', () => {
     });
 
     it('calls resolve with the EthereumProvider', () => {
-        const ethereumProviderMock = {};
-        ethereumProviderMock.isEIP1193 = true;
+        const ethereumProviderMock = {
+            send: () => {},
+            on: () => {}
+        };
+        const web3EthereumProvider = new Web3EthereumProvider(ethereumProviderMock);
 
-        providersModuleFactoryMock.createWeb3EthereumProvider.mockReturnValueOnce(ethereumProviderMock);
+        providersModuleFactoryMock.createWeb3EthereumProvider.mockReturnValueOnce(web3EthereumProvider);
 
-        expect(providerResolver.resolve(ethereumProviderMock)).toEqual(ethereumProviderMock);
-
-        expect(providersModuleFactoryMock.createWeb3EthereumProvider).toHaveBeenCalledWith(ethereumProviderMock);
+        expect(providerResolver.resolve(ethereumProviderMock)).toBeInstanceOf(Web3EthereumProvider);
     });
 
     it('calls resolve with the Web3EthereumProvider', () => {
         const ethereumProviderMock = {
-            isEIP1193: true,
+            send: () => {},
             on: () => {}
         };
         const web3EthereumProvider = new Web3EthereumProvider(ethereumProviderMock);
