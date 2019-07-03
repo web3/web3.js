@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file StopMinerMethod.js
+ * @file StartMiningMethod.js
  * @author Prince Sinha <sinhaprince013@gmail.com>
  * @date 2019
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class StopMinerMethod extends AbstractMethod {
+export default class StartMiningMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -31,6 +31,17 @@ export default class StopMinerMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('miner_stop', 0, utils, formatters, moduleInstance);
+        super('miner_start', 1, utils, formatters, moduleInstance);
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.utils.numberToHex(this.parameters[0]);
     }
 }
