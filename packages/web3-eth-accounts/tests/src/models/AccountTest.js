@@ -55,6 +55,23 @@ describe('AccountTest', () => {
         expect(accountsMock.signTransaction).toHaveBeenCalledWith({}, 'pk', callback);
     });
 
+    it('calls fromPrivateKey with incorrect private key length and throws error', () => {
+        const callback = jest.fn();
+
+        expect(() => {
+            Account.fromPrivateKey('asdfasdf')
+        }).toThrow('Private key must strictly be 32 bytes');
+    });
+
+    it('calls fromPrivateKey with incorrect private key prefix and throws error', () => {
+        const callback = jest.fn();
+        const mockKey = '0z0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+
+        expect(() => {
+            Account.fromPrivateKey(mockKey)
+        }).toThrow('Private key must strictly be 32 bytes');
+    });
+
     it('calls sign with non-strict hex and returns the expected string', () => {
         isHexStrict.mockReturnValue(false);
 
@@ -324,6 +341,7 @@ describe('AccountTest', () => {
 
     it('calls toV3Keystore and returns the expected object', () => {
         const options = {};
+        const mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
         fromPrivate.mockReturnValueOnce({
             privateKey: '0xxx',
@@ -349,7 +367,7 @@ describe('AccountTest', () => {
 
         uuid.v4.mockReturnValueOnce(0);
 
-        expect(Account.fromPrivateKey('pk').toV3Keystore('password', options)).toEqual({
+        expect(Account.fromPrivateKey(mockKey).toV3Keystore('password', options)).toEqual({
             version: 3,
             id: 0,
             address: 'a',
@@ -369,7 +387,7 @@ describe('AccountTest', () => {
             }
         });
 
-        expect(fromPrivate).toHaveBeenCalledWith('pk');
+        expect(fromPrivate).toHaveBeenCalledWith(mockKey);
 
         expect(randomBytes).toHaveBeenNthCalledWith(1, 32);
 
@@ -401,6 +419,7 @@ describe('AccountTest', () => {
 
     it('calls toV3Keystore with the pbkdf2 sheme and returns the expected object', () => {
         const options = {kdf: 'pbkdf2'};
+        const mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
         fromPrivate.mockReturnValueOnce({
             privateKey: '0xxx',
@@ -426,7 +445,7 @@ describe('AccountTest', () => {
 
         uuid.v4.mockReturnValueOnce(0);
 
-        expect(Account.fromPrivateKey('pk').toV3Keystore('password', options)).toEqual({
+        expect(Account.fromPrivateKey(mockKey).toV3Keystore('password', options)).toEqual({
             version: 3,
             id: 0,
             address: 'a',
@@ -445,7 +464,7 @@ describe('AccountTest', () => {
             }
         });
 
-        expect(fromPrivate).toHaveBeenCalledWith('pk');
+        expect(fromPrivate).toHaveBeenCalledWith(mockKey);
 
         expect(randomBytes).toHaveBeenNthCalledWith(1, 32);
 
@@ -476,6 +495,8 @@ describe('AccountTest', () => {
     });
 
     it('calls encrypt with a unsupported sheme', () => {
+        const mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+
         fromPrivate.mockReturnValueOnce({
             privateKey: '0xxx',
             address: '0xA'
@@ -484,10 +505,10 @@ describe('AccountTest', () => {
         randomBytes.mockReturnValue(Buffer.from('random'));
 
         expect(() => {
-            Account.fromPrivateKey('pk').toV3Keystore('password', {kdf: 'nope'});
+            Account.fromPrivateKey(mockKey).toV3Keystore('password', {kdf: 'nope'});
         }).toThrow('Unsupported kdf');
 
-        expect(fromPrivate).toHaveBeenCalledWith('pk');
+        expect(fromPrivate).toHaveBeenCalledWith(mockKey);
 
         expect(randomBytes).toHaveBeenNthCalledWith(1, 32);
 
@@ -496,6 +517,7 @@ describe('AccountTest', () => {
 
     it('calls encrypt with a unsupported cipher', () => {
         const options = {kdf: 'pbkdf2'};
+        const mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
         fromPrivate.mockReturnValueOnce({
             privateKey: '0xxx',
@@ -511,10 +533,10 @@ describe('AccountTest', () => {
         keccak256.mockReturnValueOnce('0xmac');
 
         expect(() => {
-            Account.fromPrivateKey('pk').toV3Keystore('password', options);
+            Account.fromPrivateKey(mockKey).toV3Keystore('password', options);
         }).toThrow('Unsupported cipher');
 
-        expect(fromPrivate).toHaveBeenCalledWith('pk');
+        expect(fromPrivate).toHaveBeenCalledWith(mockKey);
 
         expect(randomBytes).toHaveBeenNthCalledWith(1, 32);
 
