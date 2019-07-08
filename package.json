@@ -1,7 +1,6 @@
 {
     "name": "web3",
     "private": true,
-    "namespace": "ethereum",
     "version": "1.0.0-beta.37",
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
