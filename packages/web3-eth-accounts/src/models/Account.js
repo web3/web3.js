@@ -123,10 +123,14 @@ export default class Account {
      * @returns {Account}
      */
     static fromPrivateKey(privateKey, accounts = {}) {
-        const formatPrivKey = privateKey.startsWith('0x') ? formatPrivKey : '0x' + privateKey;
+        if (!privateKey.startsWith('0x')) {
+            privateKey = '0x' + privateKey;
+        }
 
-        if (formatPrivKey && formatPrivKey.length != 66) // 64 hex characters + 0 and x
-            throw new Error("Private key must strictly be 32 bytes");
+        // 64 hex characters + hex-prefix
+        if (privateKey.length != 66) {
+            throw new Error("Private key must be 32 bytes long");
+        }
 
         return new Account(EthLibAccount.fromPrivate(privateKey), accounts);
     }
