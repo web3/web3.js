@@ -268,8 +268,6 @@ describe("eth", function () {
             });
 
             it("encrypt then decrypt wallet", function() {
-                this.timeout(6000); // TODO: Remove timeout after the scrypt.js fix got released.
-
                 var ethAccounts = new Accounts();
                 var password = "qwerty";
 
