@@ -1,7 +1,7 @@
 {
     "name": "web3",
     "private": true,
-    "version": "1.0.0-beta.37",
+    "version": "1.0.0",
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
     "main": "./packages/web3/src/index.js",
@@ -69,7 +69,7 @@
         "bluebird": "3.3.1",
         "bn.js": "^4.11.8",
         "bower": "1.8.8",
-        "browserify": "^16.2.3",
+        "browserify": "^16.3.0",
         "chai": "^4.2.0",
         "coveralls": "^3.0.4",
         "crypto-js": "^3.1.9-1",
