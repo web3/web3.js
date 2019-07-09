@@ -32,7 +32,7 @@ export default class GetBalanceMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getBalance', 2, utils, formatters, moduleInstance);
+        super('cfx_getBalance', 2, utils, formatters, moduleInstance);
     }
 
     /**
