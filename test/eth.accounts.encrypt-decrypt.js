@@ -190,7 +190,7 @@ describe("eth", function () {
         staticTests.forEach(function (test, i) {
             it("decrypt staticTests and compare to private key", function() {
                 // increase the test timeout
-                this.timeout(4000);
+                this.timeout(25000);// TODO: Decrease timeout after the scrypt.js fix got released
 
                 var ethAccounts = new Accounts();
 
