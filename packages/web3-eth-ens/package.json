@@ -4,6 +4,9 @@
     "description": "ENS support for web3.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth-ens",
     "license": "LGPL-3.0",
+    "engines": {
+        "node": ">=8.0.0 <=11.15.0"
+    },
     "main": "src/index.js",
     "dependencies": {
         "eth-ens-namehash": "2.0.8",
