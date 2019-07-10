@@ -82,12 +82,12 @@ export default class ProviderResolver {
             return this.providersModuleFactory.createMistEthereumProvider(provider);
         }
 
-        if (typeof provider.send === 'function' && typeof provider.on === 'function') {
-            return this.providersModuleFactory.createWeb3EthereumProvider(provider);
-        }
-
         if (this.isMetamaskInpageProvider(provider)) {
             return this.providersModuleFactory.createMetamaskProvider(provider);
+        }
+
+        if (typeof provider.send === 'function' && typeof provider.on === 'function') {
+            return this.providersModuleFactory.createWeb3EthereumProvider(provider);
         }
 
         return this.providersModuleFactory.createCustomProvider(provider);
