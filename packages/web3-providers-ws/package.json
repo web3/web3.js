@@ -4,6 +4,9 @@
     "description": "Module to handle web3 RPC connections over WebSockets.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-providers-ws",
     "license": "LGPL-3.0",
+    "engines": {
+        "node": ">=8.0.0 <=11.15.0"
+    },
     "main": "src/index.js",
     "scripts": {
         "preinstall": "rm -rf node_modules/websocket/.git"
