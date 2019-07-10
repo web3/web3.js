@@ -4,6 +4,9 @@
     "description": "Web3 module encode and decode EVM in/output.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth-abi",
     "license": "LGPL-3.0",
+    "engines": {
+        "node": ">=8.0.0 <=11.15.0"
+    },
     "main": "src/index.js",
     "dependencies": {
         "ethers": "4.0.0-beta.3",

@@ -4,6 +4,9 @@
     "version": "1.0.0",
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
+    "engines": {
+        "node": ">=8.0.0 <=11.15.0"
+    },
     "main": "./packages/web3/src/index.js",
     "directories": {
         "doc": "./doc",
