@@ -1,7 +1,5 @@
 .. _eth-personal:
 
-.. include:: include_announcement.rst
-
 ========
 web3.eth.personal
 ========
