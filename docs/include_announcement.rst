@@ -1,1 +1,1 @@
-.. note:: This documentation is under construction and the web3.js 1.0 stable version isn't released. If you're using a version v0.x.x of web3.js then please have a look at `github.com/ethereum/wiki/wiki/JavaScript-API <https://github.com/ethereum/wiki/wiki/JavaScript-API>`_.
+.. note:: This documentation is under construction and documents the 2.x alpha versions of web3.js. The current stable version of web3.js is 1.0 and should get preferred for production use cases.
