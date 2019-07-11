@@ -1,6 +1,4 @@
 
-.. include:: include_announcement.rst
-
 ====
 Web3
 ====
