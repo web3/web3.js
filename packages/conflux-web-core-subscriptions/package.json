@@ -19,7 +19,7 @@
         "lodash": "^4.17.11"
     },
     "devDependencies": {
-        "conflux-web-core-helpers": "0.1.1",
+        "conflux-web-core-helpers": "0.1.4",
         "conflux-web-utils": "0.1.4",
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2"

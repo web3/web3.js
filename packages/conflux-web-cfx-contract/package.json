@@ -20,7 +20,7 @@
         "conflux-web-cfx-abi": "0.1.4",
         "conflux-web-cfx-accounts": "0.1.4",
         "conflux-web-core": "0.1.4",
-        "conflux-web-core-helpers": "0.1.1",
+        "conflux-web-core-helpers": "0.1.4",
         "conflux-web-core-method": "0.1.4",
         "conflux-web-core-subscriptions": "0.1.4",
         "conflux-web-providers": "0.1.4",

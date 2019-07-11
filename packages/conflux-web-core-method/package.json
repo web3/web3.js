@@ -24,7 +24,7 @@
     },
     "devDependencies": {
         "conflux-web-core": "0.1.4",
-        "conflux-web-core-helpers": "0.1.1",
+        "conflux-web-core-helpers": "0.1.4",
         "conflux-web-core-subscriptions": "*",
         "conflux-web-providers": "0.1.4",
         "conflux-web-utils": "0.1.4",
