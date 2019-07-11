@@ -31,7 +31,8 @@ const config = [
                             targets: {
                                 node: '6',
                                 browsers: 'last 2 versions'
-                            }
+                            },
+                            forceAllTransforms: true,
                         }
                     ]
                 ],
