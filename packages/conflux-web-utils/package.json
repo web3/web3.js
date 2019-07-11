@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-utils",
-    "version": "0.1.1",
+    "version": "0.1.4",
     "description": "Collection of utility functions used in conflux-web.js.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-utils",
     "license": "LGPL-3.0",

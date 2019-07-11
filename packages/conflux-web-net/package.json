@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-net",
-    "version": "0.1.1",
+    "version": "0.1.4",
     "description": "ConfluxWeb module to interact with the Conflux nodes networking properties.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-net",
     "license": "LGPL-3.0",
@@ -19,8 +19,8 @@
         "conflux-web-core": "0.1.1",
         "conflux-web-core-helpers": "0.1.1",
         "conflux-web-core-method": "0.1.1",
-        "conflux-web-providers": "0.1.1",
-        "conflux-web-utils": "0.1.1",
+        "conflux-web-providers": "0.1.4",
+        "conflux-web-utils": "0.1.4",
         "lodash": "^4.17.11"
     },
     "devDependencies": {
