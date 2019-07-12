@@ -95,10 +95,16 @@ export interface EstimateGasOptions {
 }
 
 export interface ContractOptions {
-    from: string;
-    gasPrice: string;
-    gas: number;
-    data: string;
+    // Sender to use for contract calls
+    from?: string;
+    // Gas price to use for contract calls
+    gasPrice?: string;
+    // Gas to use for contract calls
+    gas?: number;
+    // Contract code
+    data?: string;
+    // Number of blocks until a contract call transaction is considered confirmed
+    transactionConfirmationBlocks?: number
 }
 
 export interface EventOptions {
