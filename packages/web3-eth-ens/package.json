@@ -1,6 +1,6 @@
 {
     "name": "web3-eth-ens",
-    "version": "1.0.0-beta.37",
+    "version": "1.0.0",
     "description": "ENS support for web3.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth-ens",
     "license": "LGPL-3.0",
@@ -11,11 +11,11 @@
     "dependencies": {
         "eth-ens-namehash": "2.0.8",
         "underscore": "1.9.1",
-        "web3-core": "1.0.0-beta.37",
-        "web3-core-helpers": "1.0.0-beta.37",
-        "web3-core-promievent": "1.0.0-beta.37",
-        "web3-eth-abi": "1.0.0-beta.37",
-        "web3-eth-contract": "1.0.0-beta.37",
-        "web3-utils": "1.0.0-beta.37"
+        "web3-core": "1.0.0",
+        "web3-core-helpers": "1.0.0",
+        "web3-core-promievent": "1.0.0",
+        "web3-eth-abi": "1.0.0",
+        "web3-eth-contract": "1.0.0",
+        "web3-utils": "1.0.0"
     }
 }
