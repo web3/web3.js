@@ -10,19 +10,19 @@ if (isNode) {
 
     if (useNodeBuiltin) {
         const crypto = require('crypto');
-        scrypt = function (key, salt, N, r, p, dkLen) {
-            return crypto.scryptSync(key, salt, dkLen, {N, r, p});
+        scrypt = function(key, salt, N, r, p, dkLength) {
+            return crypto.scryptSync(key, salt, dkLength, {N, r, p});
         };
     } else {
-        let scryptPkg;
+        let scryptPackage;
         try {
-            scryptPkg = require('scrypt');
-            scrypt = function (key, salt, N, r, p, dkLen) {
-                return scryptPkg.hashSync(key, {N, r, p}, dkLen, salt);
+            scryptPackage = require('scrypt');
+            scrypt = function(key, salt, N, r, p, dkLength) {
+                return scryptPackage.hashSync(key, {N, r, p}, dkLength, salt);
             };
-        } catch (e) {
+        } catch (error) {
             console.warn(
-                '\x1b[33m%s\x1b[0m',
+                '\u001B[33m%s\u001B[0m',
                 `You can improve web3's peformance when running Node.js versions older than ${NODE_MIN_VER_WITH_BUILTIN_SCRYPT} by installing the (deprecated) scrypt package in your project`
             );
         }
