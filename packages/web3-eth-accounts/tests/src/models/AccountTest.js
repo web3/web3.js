@@ -168,9 +168,9 @@ describe('AccountTest', () => {
             final: jest.fn()
         };
 
-        decipher.update.mockReturnValueOnce(Buffer.from('0'));
+        decipher.update.mockReturnValueOnce(Buffer.from(mockKey.slice(2,34), 'hex'));
 
-        decipher.final.mockReturnValueOnce(Buffer.from('0'));
+        decipher.final.mockReturnValueOnce(Buffer.from(mockKey.slice(34,66), 'hex'));
 
         createDecipheriv.mockReturnValueOnce(decipher);
 
@@ -236,9 +236,9 @@ describe('AccountTest', () => {
             final: jest.fn()
         };
 
-        decipher.update.mockReturnValueOnce(Buffer.from('0'));
+        decipher.update.mockReturnValueOnce(Buffer.from(mockKey.slice(2,34), 'hex'));
 
-        decipher.final.mockReturnValueOnce(Buffer.from('0'));
+        decipher.final.mockReturnValueOnce(Buffer.from(mockKey.slice(34,66), 'hex'));
 
         createDecipheriv.mockReturnValueOnce(decipher);
 
