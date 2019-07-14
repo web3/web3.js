@@ -128,7 +128,7 @@ export default class Account {
         }
 
         // 64 hex characters + hex-prefix
-        if (privateKey.length != 66) {
+        if (privateKey.length !== 66) {
             throw new Error("Private key must be 32 bytes long");
         }
 

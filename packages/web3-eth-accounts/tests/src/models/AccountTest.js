@@ -56,15 +56,12 @@ describe('AccountTest', () => {
     });
 
     it('calls fromPrivateKey with incorrect private key length and throws error', () => {
-        const callback = jest.fn();
-
         expect(() => {
             Account.fromPrivateKey('asdfasdf')
         }).toThrow('Private key must strictly be 32 bytes');
     });
 
     it('calls fromPrivateKey with incorrect private key prefix and throws error', () => {
-        const callback = jest.fn();
         const mockKey = '0z0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
         expect(() => {
