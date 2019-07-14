@@ -58,7 +58,7 @@ describe('AccountTest', () => {
     it('calls fromPrivateKey with incorrect private key length and throws error', () => {
         expect(() => {
             Account.fromPrivateKey('asdfasdf')
-        }).toThrow('Private key must strictly be 32 bytes');
+        }).toThrow('Private key must be 32 bytes long');
     });
 
     it('calls fromPrivateKey with incorrect private key prefix and throws error', () => {
@@ -66,7 +66,7 @@ describe('AccountTest', () => {
 
         expect(() => {
             Account.fromPrivateKey(mockKey)
-        }).toThrow('Private key must strictly be 32 bytes');
+        }).toThrow('Private key must be 32 bytes long');
     });
 
     it('calls sign with non-strict hex and returns the expected string', () => {
@@ -152,6 +152,8 @@ describe('AccountTest', () => {
             }
         };
 
+        const mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+
         fromPrivate.mockReturnValueOnce({
             address: '0x0',
             privateKey: '0x0'
@@ -174,9 +176,7 @@ describe('AccountTest', () => {
 
         expect(Account.fromV3Keystore(json, 'password', false)).toBeInstanceOf(Account);
 
-        expect(fromPrivate).toHaveBeenLastCalledWith(
-            `0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`
-        );
+        expect(fromPrivate).toHaveBeenLastCalledWith(mockKey);
 
         expect(scryptsy).toHaveBeenCalledWith(
             Buffer.from('password'),
@@ -222,6 +222,8 @@ describe('AccountTest', () => {
             }
         };
 
+        const mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+
         fromPrivate.mockReturnValueOnce({
             address: '0x0',
             privateKey: '0x0'
@@ -244,9 +246,7 @@ describe('AccountTest', () => {
 
         expect(Account.fromV3Keystore(json, 'password', false)).toBeInstanceOf(Account);
 
-        expect(fromPrivate).toHaveBeenCalledWith(
-            `0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`
-        );
+        expect(fromPrivate).toHaveBeenCalledWith(mockKey);
 
         expect(pbkdf2Sync).toHaveBeenCalledWith(
             Buffer.from('password'),
