@@ -25,9 +25,10 @@ jest.mock('../../../src/Accounts');
  * AccountTest test
  */
 describe('AccountTest', () => {
-    let account, accountsMock, transactionSignerMock;
+    let account, accountsMock, transactionSignerMock, mockKey;
 
     beforeEach(() => {
+        mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
         transactionSignerMock = new TransactionSigner();
 
         new Accounts();
@@ -62,7 +63,7 @@ describe('AccountTest', () => {
     });
 
     it('calls fromPrivateKey with incorrect private key prefix and throws error', () => {
-        const mockKey = '0z0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+        mockKey = '0z0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
         expect(() => {
             Account.fromPrivateKey(mockKey)
@@ -152,8 +153,6 @@ describe('AccountTest', () => {
             }
         };
 
-        const mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-
         fromPrivate.mockReturnValueOnce({
             address: '0x0',
             privateKey: '0x0'
@@ -221,8 +220,6 @@ describe('AccountTest', () => {
                 }
             }
         };
-
-        const mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
         fromPrivate.mockReturnValueOnce({
             address: '0x0',
@@ -338,7 +335,6 @@ describe('AccountTest', () => {
 
     it('calls toV3Keystore and returns the expected object', () => {
         const options = {};
-        const mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
         fromPrivate.mockReturnValueOnce({
             privateKey: '0xxx',
@@ -416,7 +412,6 @@ describe('AccountTest', () => {
 
     it('calls toV3Keystore with the pbkdf2 sheme and returns the expected object', () => {
         const options = {kdf: 'pbkdf2'};
-        const mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
         fromPrivate.mockReturnValueOnce({
             privateKey: '0xxx',
@@ -492,8 +487,6 @@ describe('AccountTest', () => {
     });
 
     it('calls encrypt with a unsupported sheme', () => {
-        const mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-
         fromPrivate.mockReturnValueOnce({
             privateKey: '0xxx',
             address: '0xA'
@@ -514,7 +507,6 @@ describe('AccountTest', () => {
 
     it('calls encrypt with a unsupported cipher', () => {
         const options = {kdf: 'pbkdf2'};
-        const mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
         fromPrivate.mockReturnValueOnce({
             privateKey: '0xxx',
