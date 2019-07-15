@@ -20,7 +20,7 @@
 import BN = require('bn.js');
 import {provider} from 'web3-providers';
 import {AbiInput, AbiOutput, AbiItem} from 'web3-utils';
-import {PromiEvent} from 'web3-core';
+import {PromiEvent, Web3ModuleOptions} from 'web3-core';
 
 export class Contract {
     constructor(
@@ -94,7 +94,7 @@ export interface EstimateGasOptions {
     value?: number | string | BN;
 }
 
-export interface ContractOptions {
+export interface ContractOptions extends Web3ModuleOptions {
     // Sender to use for contract calls
     from?: string;
     // Gas price to use for contract calls
@@ -103,8 +103,6 @@ export interface ContractOptions {
     gas?: number;
     // Contract code
     data?: string;
-    // Number of blocks until a contract call transaction is considered confirmed
-    transactionConfirmationBlocks?: number
 }
 
 export interface EventOptions {
