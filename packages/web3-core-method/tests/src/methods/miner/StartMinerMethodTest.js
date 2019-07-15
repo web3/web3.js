@@ -1,18 +1,18 @@
 import * as Utils from 'web3-utils';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import StartMinerMethod from '../../../../src/methods/miner/StartMinerMethod';
+import StartMiningMethod from '../../../../src/methods/miner/StartMiningMethod';
 
 // Mocks
 jest.mock('web3-utils');
 
 /**
- * StartMinerMethod test
+ * StartMiningMethod test
  */
-describe('StartMinerMethodTest', () => {
+describe('StartMiningMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new StartMinerMethod(Utils, {}, {});
+        method = new StartMiningMethod(Utils, {}, {});
     });
 
     it('constructor check', () => {
