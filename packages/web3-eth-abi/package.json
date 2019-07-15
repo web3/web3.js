@@ -1,10 +1,13 @@
 {
     "name": "web3-eth-abi",
     "namespace": "ethereum",
-    "version": "1.0.0-beta.55",
+    "version": "2.0.0-alpha",
     "description": "Web3 module encode and decode EVM in/output.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-eth-abi",
     "license": "LGPL-3.0",
+    "engines": {
+        "node": ">=8.0.0"
+    },
     "main": "dist/web3-eth-abi.cjs.js",
     "module": "dist/web3-eth-abi.esm.js",
     "browser": "dist/web3-eth-abi.umd.js",
@@ -19,7 +22,7 @@
         "@babel/runtime": "^7.3.1",
         "ethers": "^4.0.27",
         "lodash": "^4.17.11",
-        "web3-utils": "1.0.0-beta.55"
+        "web3-utils": "2.0.0-alpha"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
@@ -29,5 +32,5 @@
         "dist",
         "types/index.d.ts"
     ],
-    "gitHead": "37347fd46344f45d1c57104920bdda0779f0d51c"
+    "gitHead": "a09d2cc84c1f08aa673028cc7c517d40a1f72972"
 }

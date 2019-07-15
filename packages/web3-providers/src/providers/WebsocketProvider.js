@@ -64,7 +64,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     }
 
     /**
-     * This ist the listener for the 'close' event of the current socket connection.
+     * This is the listener for the 'close' event of the current socket connection.
      *
      * @method onClose
      *
