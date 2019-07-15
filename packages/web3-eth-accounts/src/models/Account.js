@@ -17,7 +17,7 @@
  * @date 2019
  */
 
-import scryptsy from 'scrypt.js';
+import scrypt from '../crypto/Scrypt';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
 import * as EthLibAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
@@ -157,7 +157,7 @@ export default class Account {
             kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
             kdfparams.r = options.r || 8;
             kdfparams.p = options.p || 1;
-            derivedKey = scryptsy(Buffer.from(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+            derivedKey = scrypt(Buffer.from(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
         } else {
             throw new Error('Unsupported kdf');
         }
@@ -227,7 +227,7 @@ export default class Account {
             kdfparams = json.crypto.kdfparams;
 
             // FIXME: support progress reporting callback
-            derivedKey = scryptsy(
+            derivedKey = scrypt(
                 Buffer.from(password),
                 Buffer.from(kdfparams.salt, 'hex'),
                 kdfparams.n,
