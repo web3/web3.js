@@ -64,6 +64,19 @@ const config = [
                 plugins: [
                     '@babel/plugin-proposal-export-default-from',
                     '@babel/plugin-proposal-export-namespace-from'
+                ],
+                presets: [
+                    [
+                        '@babel/env',
+                        {
+                            modules: false,
+                            targets: {
+                                node: '6',
+                                browsers: 'last 2 versions'
+                            },
+                            forceAllTransforms: true,
+                        }
+                    ]
                 ]
             }),
             json(),
