@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-core",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "description": "ConfluxWeb core tools for sub packages. This is an internal package.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-core",
     "license": "LGPL-3.0",
@@ -18,14 +18,14 @@
         "@babel/runtime": "^7.3.1",
         "@types/bn.js": "^4.11.4",
         "@types/node": "^10.12.18",
-        "conflux-web-core-method": "0.1.6",
-        "conflux-web-providers": "0.1.6",
-        "conflux-web-utils": "0.1.6",
+        "conflux-web-core-method": "0.1.7",
+        "conflux-web-providers": "0.1.7",
+        "conflux-web-utils": "0.1.7",
         "lodash": "^4.17.11"
     },
     "devDependencies": {
-        "conflux-web-cfx-accounts": "0.1.6",
-        "conflux-web-core-subscriptions": "0.1.6",
+        "conflux-web-cfx-accounts": "0.1.7",
+        "conflux-web-core-subscriptions": "0.1.7",
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2",
         "rxjs": "^6.4.0"
