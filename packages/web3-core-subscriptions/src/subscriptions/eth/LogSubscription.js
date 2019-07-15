@@ -66,6 +66,7 @@ export default class LogSubscription extends AbstractSubscription {
                     });
 
                     delete this.options.fromBlock;
+                    delete this.options.toBlock;
                     super.subscribe(callback);
                 })
                 .catch((error) => {
