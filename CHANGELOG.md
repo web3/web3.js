@@ -63,5 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0-alpha.1]
 
+### Fixed
 
+- miner.startMining fixed (#2877)
+- Subscription type definitions fixed (#2919)
 
