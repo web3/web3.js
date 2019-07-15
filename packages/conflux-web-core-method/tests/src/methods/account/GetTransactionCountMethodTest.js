@@ -20,7 +20,7 @@ describe('GetTransactionCountMethodTest', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractMethod);
 
-        expect(method.rpcMethod).toEqual('eth_getTransactionCount');
+        expect(method.rpcMethod).toEqual('cfx_getTransactionCount');
 
         expect(method.parametersAmount).toEqual(2);
 

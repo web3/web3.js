@@ -32,7 +32,7 @@ export default class GetTransactionCountMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getTransactionCount', 2, utils, formatters, moduleInstance);
+        super('cfx_getTransactionCount', 2, utils, formatters, moduleInstance);
     }
 
     /**
