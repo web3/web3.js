@@ -25,9 +25,10 @@ jest.mock('../../../src/Accounts');
  * AccountTest test
  */
 describe('AccountTest', () => {
-    let account, accountsMock, transactionSignerMock;
+    let account, accountsMock, transactionSignerMock, mockKey;
 
     beforeEach(() => {
+        mockKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
         transactionSignerMock = new TransactionSigner();
 
         new Accounts();
@@ -53,6 +54,20 @@ describe('AccountTest', () => {
         expect(account.signTransaction({}, callback)).toEqual(true);
 
         expect(accountsMock.signTransaction).toHaveBeenCalledWith({}, 'pk', callback);
+    });
+
+    it('calls fromPrivateKey with incorrect private key length and throws error', () => {
+        expect(() => {
+            Account.fromPrivateKey('asdfasdf')
+        }).toThrow('Private key must be 32 bytes long');
+    });
+
+    it('calls fromPrivateKey with incorrect private key prefix and throws error', () => {
+        mockKey = '0z0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+
+        expect(() => {
+            Account.fromPrivateKey(mockKey)
+        }).toThrow('Private key must be 32 bytes long');
     });
 
     it('calls sign with non-strict hex and returns the expected string', () => {
@@ -152,17 +167,15 @@ describe('AccountTest', () => {
             final: jest.fn()
         };
 
-        decipher.update.mockReturnValueOnce(Buffer.from('0'));
+        decipher.update.mockReturnValueOnce(Buffer.from(mockKey.slice(2,34), 'hex'));
 
-        decipher.final.mockReturnValueOnce(Buffer.from('0'));
+        decipher.final.mockReturnValueOnce(Buffer.from(mockKey.slice(34,66), 'hex'));
 
         createDecipheriv.mockReturnValueOnce(decipher);
 
         expect(Account.fromV3Keystore(json, 'password', false)).toBeInstanceOf(Account);
 
-        expect(fromPrivate).toHaveBeenLastCalledWith(
-            `0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`
-        );
+        expect(fromPrivate).toHaveBeenLastCalledWith(mockKey);
 
         expect(scrypt).toHaveBeenCalledWith(
             Buffer.from('password'),
@@ -220,9 +233,9 @@ describe('AccountTest', () => {
             final: jest.fn()
         };
 
-        decipher.update.mockReturnValueOnce(Buffer.from('0'));
+        decipher.update.mockReturnValueOnce(Buffer.from(mockKey.slice(2,34), 'hex'));
 
-        decipher.final.mockReturnValueOnce(Buffer.from('0'));
+        decipher.final.mockReturnValueOnce(Buffer.from(mockKey.slice(34,66), 'hex'));
 
         createDecipheriv.mockReturnValueOnce(decipher);
 
@@ -230,9 +243,7 @@ describe('AccountTest', () => {
 
         expect(Account.fromV3Keystore(json, 'password', false)).toBeInstanceOf(Account);
 
-        expect(fromPrivate).toHaveBeenCalledWith(
-            `0x${Buffer.concat([Buffer.from('0'), Buffer.from('0')]).toString('hex')}`
-        );
+        expect(fromPrivate).toHaveBeenCalledWith(mockKey);
 
         expect(pbkdf2Sync).toHaveBeenCalledWith(
             Buffer.from('password'),
@@ -349,7 +360,7 @@ describe('AccountTest', () => {
 
         uuid.v4.mockReturnValueOnce(0);
 
-        expect(Account.fromPrivateKey('pk').toV3Keystore('password', options)).toEqual({
+        expect(Account.fromPrivateKey(mockKey).toV3Keystore('password', options)).toEqual({
             version: 3,
             id: 0,
             address: 'a',
@@ -369,7 +380,7 @@ describe('AccountTest', () => {
             }
         });
 
-        expect(fromPrivate).toHaveBeenCalledWith('pk');
+        expect(fromPrivate).toHaveBeenCalledWith(mockKey);
 
         expect(randomBytes).toHaveBeenNthCalledWith(1, 32);
 
@@ -426,7 +437,7 @@ describe('AccountTest', () => {
 
         uuid.v4.mockReturnValueOnce(0);
 
-        expect(Account.fromPrivateKey('pk').toV3Keystore('password', options)).toEqual({
+        expect(Account.fromPrivateKey(mockKey).toV3Keystore('password', options)).toEqual({
             version: 3,
             id: 0,
             address: 'a',
@@ -445,7 +456,7 @@ describe('AccountTest', () => {
             }
         });
 
-        expect(fromPrivate).toHaveBeenCalledWith('pk');
+        expect(fromPrivate).toHaveBeenCalledWith(mockKey);
 
         expect(randomBytes).toHaveBeenNthCalledWith(1, 32);
 
@@ -484,10 +495,10 @@ describe('AccountTest', () => {
         randomBytes.mockReturnValue(Buffer.from('random'));
 
         expect(() => {
-            Account.fromPrivateKey('pk').toV3Keystore('password', {kdf: 'nope'});
+            Account.fromPrivateKey(mockKey).toV3Keystore('password', {kdf: 'nope'});
         }).toThrow('Unsupported kdf');
 
-        expect(fromPrivate).toHaveBeenCalledWith('pk');
+        expect(fromPrivate).toHaveBeenCalledWith(mockKey);
 
         expect(randomBytes).toHaveBeenNthCalledWith(1, 32);
 
@@ -511,10 +522,10 @@ describe('AccountTest', () => {
         keccak256.mockReturnValueOnce('0xmac');
 
         expect(() => {
-            Account.fromPrivateKey('pk').toV3Keystore('password', options);
+            Account.fromPrivateKey(mockKey).toV3Keystore('password', options);
         }).toThrow('Unsupported cipher');
 
-        expect(fromPrivate).toHaveBeenCalledWith('pk');
+        expect(fromPrivate).toHaveBeenCalledWith(mockKey);
 
         expect(randomBytes).toHaveBeenNthCalledWith(1, 32);
 
