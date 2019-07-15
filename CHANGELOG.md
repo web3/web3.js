@@ -34,6 +34,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [2.0.0-alpha]
+
+### Added
+
+- Sending of locally signed transactions as ``BatchRequest`` (#2708)
+- Automatic increason of the nonce for locally signed transactions (#2796)
+
+### Changed
+
+- Pull request & issue templates updated
+- Supported node versions changed (#2820)
+
+### Fixed
+
+- ``hexToNumberString`` prefix validation (#2184)
+- Draft implementation of the EIP-1193 improved (#2856, #2862, #2854)
+- Documentation typo (#2806)
+- Contract method parameter handling fixed (#2815)
+- ``isBigNumber`` export fixed (#2835)
+- ``SyncingSubscription`` fixed (#2833)
+- ``getBlock`` types fixed (#2819)
+- Transaction confirmation workflow fixed for parity (#2847)
+- ``WebsocketProvider`` event handling fixed (#2711)
+- ``WebsocketProvider`` memory leak fixed (#2851)
+
 ## [Unreleased]
 
-## [2.0.0-alpha]
+## [2.0.0-alpha.1]
+
+
+
