@@ -65,6 +65,8 @@ describe('LogSubscriptionTest', () => {
 
         let second = false;
         logSubscription.options.fromBlock = 0;
+        logSubscription.options.toBlock = 0;
+
         const subscription = logSubscription.subscribe((error, response) => {
             let expectedResponse = 0;
             let expectedId = null;
@@ -72,6 +74,10 @@ describe('LogSubscriptionTest', () => {
             if (second) {
                 expectedResponse = 'ITEM';
                 expectedId = 'MY_ID';
+
+                expect(logSubscription.options.toBlock).toBeUndefined();
+
+                expect(logSubscription.options.fromBlock).toBeUndefined();
             }
 
             expect(error).toEqual(false);
