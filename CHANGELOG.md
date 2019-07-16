@@ -72,4 +72,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - miner.startMining fixed (#2877)
 - Subscription type definitions fixed (#2919)
 - ``LogSubscription`` sent parameters fixed (#2947)
-
+- ``ContractOptions`` type definitions corrected (#2939)
