@@ -63,6 +63,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0-alpha.1]
 
+### Added
+
+- Length check of the PK added to the ``fromPrivateKey`` method of the ``Account`` model (#2928)
+
 ### Fixed
 
 - miner.startMining fixed (#2877)
