@@ -45,7 +45,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Pull request & issue templates updated
 - Supported node versions changed (#2820)
-- fsevents bumbed to v1.2.9 (#2951)
 
 ### Fixed
 
@@ -67,6 +66,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Length check of the PK added to the ``fromPrivateKey`` method of the ``Account`` model (#2928)
+
+### Changed
+
+- fsevents bumbed to v1.2.9 (#2951)
 
 ### Fixed
 
