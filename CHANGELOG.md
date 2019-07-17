@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Pull request & issue templates updated
 - Supported node versions changed (#2820)
+- fsevents bumbed to v1.2.9 (#2951)
 
 ### Fixed
 
@@ -72,4 +73,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - miner.startMining fixed (#2877)
 - Subscription type definitions fixed (#2919)
 - ``ContractOptions`` type definitions corrected (#2939)
+- Scrypt compatibility with older and newer nodejs versions fixed (#2952)
+- Encryption of the V3Keystore fixed (#2950)
 
