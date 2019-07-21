@@ -23,6 +23,7 @@ describe('AbstractMethodTest', () => {
 
         abstractMethod = new AbstractMethod('RPC_TEST', 0, Utils, formatters, moduleInstanceMock);
         abstractMethod.callback = false;
+        abstractMethod.context = false;
         abstractMethod.beforeExecution = jest.fn();
     });
 
@@ -40,6 +41,8 @@ describe('AbstractMethodTest', () => {
         expect(abstractMethod.parameters).toEqual([]);
 
         expect(abstractMethod.callback).toEqual(false);
+        
+        expect(abstractMethod.context).toEqual(false);
     });
 
     it('setArguments throws error on missing arguments', () => {
@@ -60,6 +63,12 @@ describe('AbstractMethodTest', () => {
         } catch (error) {
             expect(error).toBeInstanceOf(Error);
         }
+        
+        try {
+            abstractMethod.setArguments([true, true, true]);
+        } catch (error) {
+            expect(error).toBeInstanceOf(Error);
+        }
     });
 
     it('set arguments without callback', () => {
@@ -69,6 +78,8 @@ describe('AbstractMethodTest', () => {
         expect(abstractMethod.parameters).toEqual([true]);
 
         expect(abstractMethod.callback).toEqual(null);
+        
+        expect(abstractMethod.context).toEqual(null);
     });
 
     it('set arguments with callback', () => {
@@ -78,13 +89,26 @@ describe('AbstractMethodTest', () => {
         expect(abstractMethod.parameters).toEqual([true]);
 
         expect(abstractMethod.callback).toBeInstanceOf(Function);
+        
+        expect(abstractMethod.context).toEqual(null);
+    });
+
+    it('set arguments with callback and context', () => {
+        abstractMethod.parametersAmount = 1;
+        abstractMethod.setArguments([true, () => {}, {}]);
+
+        expect(abstractMethod.parameters).toEqual([true]);
+
+        expect(abstractMethod.callback).toBeInstanceOf(Function);
+        
+        expect(abstractMethod.context).toEqual({});
     });
 
     it('get arguments', () => {
         abstractMethod.parametersAmount = 1;
         abstractMethod.setArguments([true]);
 
-        expect(abstractMethod.getArguments()).toEqual({callback: null, parameters: [true]});
+        expect(abstractMethod.getArguments()).toEqual({context: null, callback: null, parameters: [true]});
     });
 
     it('set rpcMethod', () => {
@@ -103,6 +127,12 @@ describe('AbstractMethodTest', () => {
         abstractMethod.callback = () => {};
 
         expect(abstractMethod.callback).toBeInstanceOf(Function);
+    });
+
+    it('set context', () => {
+        abstractMethod.context = {};
+
+        expect(abstractMethod.context).toEqual({});
     });
 
     it('check if execute method exists', () => {
