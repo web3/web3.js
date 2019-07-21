@@ -84,7 +84,7 @@ export default class AbstractMethod {
             );
 
             if (this.callback) {
-                this.callback(error, null);
+                this.callback(error, null, this.context);
 
                 return;
             }
@@ -100,7 +100,7 @@ export default class AbstractMethod {
             }
 
             if (this.callback) {
-                this.callback(false, response);
+                this.callback(false, response, this.context);
 
                 return;
             }
@@ -108,7 +108,7 @@ export default class AbstractMethod {
             return response;
         } catch (error) {
             if (this.callback) {
-                this.callback(error, null);
+                this.callback(error, null, this.context);
 
                 return;
             }
@@ -206,6 +206,28 @@ export default class AbstractMethod {
     }
 
     /**
+     * Getter for the context property
+     *
+     * @property context 
+     *
+     * @returns {any}
+     */
+    get context() {
+        return this._arguments.context;
+    }
+
+    /**
+     * Setter for the context property
+     *
+     * @property context 
+     *
+     * @param {context} value
+     */
+    set context(value) {
+        this._arguments.context = value;
+    }
+
+    /**
      * Setter for the arguments property
      *
      * @method setArguments
@@ -215,16 +237,21 @@ export default class AbstractMethod {
     setArguments(methodArguments) {
         let parameters = cloneDeep([...methodArguments]);
         let callback = null;
+        let context = null;
 
         if (parameters.length > this.parametersAmount) {
-            if (!isFunction(parameters[parameters.length - 1])) {
-                throw new TypeError("The latest parameter should be a function otherwise it can't be used as callback");
+            if (isFunction(parameters[parameters.length - 2])) {
+                context = parameters.pop();
+                callback = parameters.pop();
+            } else if (isFunction(parameters[parameters.length - 1])) {
+                callback = parameters.pop();
+            } else {
+                throw new TypeError("The last parameter should be a function otherwise it can't be used as callback."); // TODO
             }
-
-            callback = parameters.pop();
         }
 
         this._arguments = {
+            context,
             callback,
             parameters
         };
