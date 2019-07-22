@@ -78,4 +78,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ``ContractOptions`` type definitions corrected (#2939)
 - Scrypt compatibility with older and newer nodejs versions fixed (#2952)
 - Encryption of the V3Keystore fixed (#2950)
+- Provider timeout fixed and Maps are used now to handle subscriptions (#2955)
 
