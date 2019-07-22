@@ -66,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Length check of the PK added to the ``fromPrivateKey`` method of the ``Account`` model (#2928)
+- Changed event added to the ``Contract`` events (#2960)
 
 ### Changed
 
@@ -78,4 +79,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ``ContractOptions`` type definitions corrected (#2939)
 - Scrypt compatibility with older and newer nodejs versions fixed (#2952)
 - Encryption of the V3Keystore fixed (#2950)
-
