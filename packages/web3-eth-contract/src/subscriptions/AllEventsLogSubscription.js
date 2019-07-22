@@ -51,6 +51,12 @@ export default class AllEventsLogSubscription extends LogSubscription {
      * @returns {Object}
      */
     onNewSubscriptionItem(subscriptionItem) {
-        return this.allEventsLogDecoder.decode(this.abiModel, this.formatters.outputLogFormatter(subscriptionItem));
+        const log = this.formatters.outputLogFormatter(subscriptionItem);
+
+        if (log.removed) {
+            this.emit('changed', log);
+        }
+
+        return this.allEventsLogDecoder.decode(this.abiModel, log);
     }
 }

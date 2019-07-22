@@ -53,7 +53,7 @@ describe('AllEventsLogSubscriptionTest', () => {
         expect(allEventsLogSubscription).toBeInstanceOf(LogSubscription);
     });
 
-    it('calls onNewSubscriptionItem returns decoded item', () => {
+    it('calls onNewSubscriptionItem returns the decoded items', () => {
         allEventsLogDecoderMock.decode.mockReturnValueOnce(true);
 
         formatters.outputLogFormatter.mockReturnValueOnce({item: false});
@@ -63,5 +63,21 @@ describe('AllEventsLogSubscriptionTest', () => {
         expect(allEventsLogDecoderMock.decode).toHaveBeenCalledWith(abiModelMock, {item: false});
 
         expect(formatters.outputLogFormatter).toHaveBeenCalledWith({item: true});
+    });
+
+    it('calls onNewSubscriptionItem returns the decoded items and triggers the changed event', (done) => {
+        allEventsLogDecoderMock.decode.mockReturnValueOnce(true);
+
+        formatters.outputLogFormatter.mockReturnValueOnce({item: false, removed: true});
+
+        allEventsLogSubscription.on('changed', () => {
+            done();
+        });
+
+        allEventsLogSubscription.onNewSubscriptionItem({item: true, removed: true});
+
+        expect(allEventsLogDecoderMock.decode).toHaveBeenCalledWith(abiModelMock, {item: false, removed: true});
+
+        expect(formatters.outputLogFormatter).toHaveBeenCalledWith({item: true, removed: true});
     });
 });
