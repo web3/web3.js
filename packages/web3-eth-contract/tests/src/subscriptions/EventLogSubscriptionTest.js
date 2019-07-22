@@ -58,7 +58,7 @@ describe('EventLogSubscriptionTest', () => {
 
         formatters.outputLogFormatter.mockReturnValueOnce({item: false});
 
-        eventLogSubscription.onNewSubscriptionItem({item: true});
+        expect(eventLogSubscription.onNewSubscriptionItem({item: true})).toEqual(true);
 
         expect(eventLogDecoderMock.decode).toHaveBeenCalledWith(abiItemModelMock, {item: false});
 
@@ -70,11 +70,13 @@ describe('EventLogSubscriptionTest', () => {
 
         formatters.outputLogFormatter.mockReturnValueOnce({item: false, removed: 1});
 
-        eventLogSubscription.on('changed', () => {
+        eventLogSubscription.on('changed', (decodedLog) => {
+            expect(decodedLog).toEqual(true);
+
             done();
         });
 
-        eventLogSubscription.onNewSubscriptionItem({item: true, removed: 1});
+        expect(eventLogSubscription.onNewSubscriptionItem({item: true, removed: 1})).toEqual(true);
 
         expect(eventLogDecoderMock.decode).toHaveBeenCalledWith(abiItemModelMock, {item: false, removed: 1});
 

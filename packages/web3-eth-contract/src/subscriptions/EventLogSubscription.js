@@ -51,10 +51,14 @@ export default class EventLogSubscription extends LogSubscription {
      * @returns {Object}
      */
     onNewSubscriptionItem(subscriptionItem) {
-        const log = this.formatters.outputLogFormatter(subscriptionItem);
+        let log = this.formatters.outputLogFormatter(subscriptionItem);
 
         if (log.removed) {
-            this.emit('changed', 'asdf');
+            log = this.eventLogDecoder.decode(this.abiItemModel, log);
+
+            this.emit('changed', log);
+
+            return log;
         }
 
         return this.eventLogDecoder.decode(this.abiItemModel, log);
