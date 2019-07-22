@@ -67,8 +67,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @method registerEventListeners
      */
-    registerEventListeners() {
-    }
+    registerEventListeners() {}
 
     /**
      * Removes all socket listeners
@@ -91,8 +90,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {Number} code
      * @param {String} reason
      */
-    disconnect(code, reason) {
-    }
+    disconnect(code, reason) {}
 
     /**
      * Returns true if the socket is connected
@@ -101,8 +99,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Boolean}
      */
-    get connected() {
-    }
+    get connected() {}
 
     /**
      * Creates the JSON-RPC payload and sends it to the node.
@@ -192,21 +189,23 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     async onConnect() {
         if (this.subscriptions.size > 0) {
-            let subscriptionId;
+            let subscriptionId, value;
 
-            this.subscriptions.forEach((value, key) =>  {
+            for (let item of this.subscriptions) {
+                value = item[1];
+
                 subscriptionId = await this.subscribe(
                     value.subscribeMethod,
                     value.parameters[0],
                     value.parameters.slice(1)
                 );
 
-                if (key !== subscriptionId) {
+                if (item[0] !== subscriptionId) {
                     this.subscriptions.delete(subscriptionId);
                 }
 
                 value.id = subscriptionId;
-            })
+            }
         }
 
         this.emit(this.SOCKET_CONNECT);
@@ -266,14 +265,11 @@ export default class AbstractSocketProvider extends EventEmitter {
 
         return this.send(subscribeMethod, parameters)
             .then((subscriptionId) => {
-                this.subscriptions.set(
-                    subscriptionId,
-                    {
-                        id: subscriptionId,
-                        subscribeMethod: subscribeMethod,
-                        parameters: parameters
-                    }
-                );
+                this.subscriptions.set(subscriptionId, {
+                    id: subscriptionId,
+                    subscribeMethod: subscribeMethod,
+                    parameters: parameters
+                });
 
                 return subscriptionId;
             })
