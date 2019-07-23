@@ -1,7 +1,5 @@
 .. _eth-ens:
 
-.. include:: include_announcement.rst
-
 =========
 web3.eth.ens
 =========

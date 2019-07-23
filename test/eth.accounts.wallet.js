@@ -291,7 +291,6 @@ describe("eth", function () {
 
                 var addressFromKeystore = ethAccounts.wallet[0].address;
                 assert.equal(addressFromKeystore, addressFromWallet);
-
             });
         });
     });

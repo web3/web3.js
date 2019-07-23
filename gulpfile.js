@@ -194,7 +194,6 @@ packages.forEach(function (pckg, i) {
     }));
 });
 
-
 gulp.task('publishTag', function () {
     exec("git commit -am \"add tag v"+ lernaJSON.version +"\"; git tag v"+ lernaJSON.version +"; git push origin v"+ lernaJSON.version +";");
 });
@@ -206,4 +205,3 @@ gulp.task('watch', function () {
 gulp.task('all', gulp.series('version', 'lint', 'clean', packages[packages.length - 1].fileName));
 
 gulp.task('default', gulp.series('version', 'lint', 'clean', packages[0].fileName));
-
