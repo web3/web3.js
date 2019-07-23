@@ -1,53 +1,55 @@
 {
-  "name": "web3",
-  "namespace": "ethereum",
-  "version": "1.0.0-beta.37",
-  "description": "Ethereum JavaScript API",
-  "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3",
-  "license": "LGPL-3.0",
-  "main": "src/index.js",
-  "bugs": {
-    "url": "https://github.com/ethereum/web3.js/issues"
-  },
-  "keywords": [
-    "Ethereum",
-    "JavaScript",
-    "API"
-  ],
-  "author": "ethereum.org",
-  "authors": [
-    {
-      "name": "Fabian Vogelsteller",
-      "email": "fabian@ethereum.org",
-      "homepage": "http://frozeman.de"
+    "name": "web3",
+    "version": "1.2.0",
+    "description": "Ethereum JavaScript API",
+    "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3",
+    "license": "LGPL-3.0",
+    "engines": {
+        "node": ">=8.0.0 <=11.15.0"
     },
-    {
-      "name": "Marek Kotewicz",
-      "email": "marek@parity.io",
-      "url": "https://github.com/debris"
+    "main": "src/index.js",
+    "bugs": {
+        "url": "https://github.com/ethereum/web3.js/issues"
     },
-    {
-      "name": "Marian Oancea",
-      "url": "https://github.com/cubedro"
-    },
-    {
-      "name": "Gav Wood",
-      "email": "g@parity.io",
-      "homepage": "http://gavwood.com"
-    },
-    {
-      "name": "Jeffery Wilcke",
-      "email": "jeffrey.wilcke@ethereum.org",
-      "url": "https://github.com/obscuren"
+    "keywords": [
+        "Ethereum",
+        "JavaScript",
+        "API"
+    ],
+    "author": "ethereum.org",
+    "authors": [
+        {
+            "name": "Fabian Vogelsteller",
+            "email": "fabian@ethereum.org",
+            "homepage": "http://frozeman.de"
+        },
+        {
+            "name": "Marek Kotewicz",
+            "email": "marek@parity.io",
+            "url": "https://github.com/debris"
+        },
+        {
+            "name": "Marian Oancea",
+            "url": "https://github.com/cubedro"
+        },
+        {
+            "name": "Gav Wood",
+            "email": "g@parity.io",
+            "homepage": "http://gavwood.com"
+        },
+        {
+            "name": "Jeffery Wilcke",
+            "email": "jeffrey.wilcke@ethereum.org",
+            "url": "https://github.com/obscuren"
+        }
+    ],
+    "dependencies": {
+        "web3-bzz": "1.2.0",
+        "web3-core": "1.2.0",
+        "web3-eth": "1.2.0",
+        "web3-eth-personal": "1.2.0",
+        "web3-net": "1.2.0",
+        "web3-shh": "1.2.0",
+        "web3-utils": "1.2.0"
     }
-  ],
-  "dependencies": {
-    "web3-bzz": "1.0.0-beta.37",
-    "web3-core": "1.0.0-beta.37",
-    "web3-eth": "1.0.0-beta.37",
-    "web3-eth-personal": "1.0.0-beta.37",
-    "web3-net": "1.0.0-beta.37",
-    "web3-shh": "1.0.0-beta.37",
-    "web3-utils": "1.0.0-beta.37"
-  }
 }

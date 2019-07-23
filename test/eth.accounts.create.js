@@ -22,7 +22,7 @@ describe("eth", function () {
                 var acc = ethAccounts.create();
 
                 // create ethereumjs-wallet account
-                var ethWall = ethereumWallet.fromPrivateKey(new Buffer(acc.privateKey.replace('0x',''),'hex'));
+                var ethWall = ethereumWallet.fromPrivateKey(Buffer.from(acc.privateKey.replace('0x',''),'hex'));
 
                 // compare addresses
                 assert.equal(acc.address, ethWall.getChecksumAddressString());

@@ -1,7 +1,5 @@
 .. _eth-iban:
 
-.. include:: include_announcement.rst
-
 =========
 web3.eth.Iban
 =========
