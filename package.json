@@ -1,7 +1,7 @@
 {
     "name": "web3",
     "private": true,
-    "version": "1.0.0",
+    "version": "1.2.0",
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
     "engines": {
@@ -16,7 +16,7 @@
         "postinstall": "lerna bootstrap",
         "build": "gulp",
         "build-all": "gulp all",
-        "release": "lerna bootstrap; lerna publish; gulp version; gulp; gulp publishTag; git push --tags",
+        "release": "lerna bootstrap; lerna publish",
         "bootstrap": "lerna bootstrap",
         "watch": "gulp watch",
         "docs": "cd docs; make html;",
