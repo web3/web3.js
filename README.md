@@ -114,6 +114,7 @@ npm run dev # runs rollup with a watcher
 ![node](https://img.shields.io/badge/node->=8-green.svg)
 
 ### Community
+ - [Ethereum Javascript Community (EJC) Discord](https://discord.gg/NR42fy)
  - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
  - [Forum](https://forum.ethereum.org/categories/ethereum-js)
 
