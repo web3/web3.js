@@ -5,7 +5,7 @@
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-providers-ipc",
     "license": "LGPL-3.0",
     "engines": {
-        "node": ">=8.0.0 <=11.15.0"
+        "node": ">=8.0.0"
     },
     "main": "src/index.js",
     "dependencies": {
