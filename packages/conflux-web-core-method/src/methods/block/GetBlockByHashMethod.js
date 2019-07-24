@@ -31,6 +31,6 @@ export default class GetBlockByHashMethod extends AbstractGetBlockMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getBlockByHash', utils, formatters, moduleInstance);
+        super('cfx_getBlockByHash', utils, formatters, moduleInstance);
     }
 }

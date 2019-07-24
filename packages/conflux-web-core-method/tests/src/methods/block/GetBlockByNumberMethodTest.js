@@ -14,6 +14,6 @@ describe('GetBlockByNumberMethodTest', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractGetBlockMethod);
 
-        expect(method.rpcMethod).toEqual('eth_getBlockByNumber');
+        expect(method.rpcMethod).toEqual('cfx_getBlockByEpochNumber');
     });
 });

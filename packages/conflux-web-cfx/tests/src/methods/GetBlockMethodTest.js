@@ -12,7 +12,7 @@ describe('GetBlockMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(getBlockMethod.rpcMethod).toEqual('eth_getBlockByNumber');
+        expect(getBlockMethod.rpcMethod).toEqual('cfx_getBlockByEpochNumber');
     });
 
     it('calls execute with hash', () => {
@@ -20,7 +20,7 @@ describe('GetBlockMethodTest', () => {
 
         getBlockMethod.beforeExecution({});
 
-        expect(getBlockMethod.rpcMethod).toEqual('eth_getBlockByHash');
+        expect(getBlockMethod.rpcMethod).toEqual('cfx_getBlockByHash');
     });
 
     it('calls execute with number', () => {
@@ -28,6 +28,6 @@ describe('GetBlockMethodTest', () => {
 
         getBlockMethod.beforeExecution({});
 
-        expect(getBlockMethod.rpcMethod).toEqual('eth_getBlockByNumber');
+        expect(getBlockMethod.rpcMethod).toEqual('cfx_getBlockByEpochNumber');
     });
 });

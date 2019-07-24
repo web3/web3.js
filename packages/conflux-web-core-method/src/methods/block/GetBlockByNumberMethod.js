@@ -31,6 +31,6 @@ export default class GetBlockByNumberMethod extends AbstractGetBlockMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getBlockByNumber', utils, formatters, moduleInstance);
+        super('cfx_getBlockByEpochNumber', utils, formatters, moduleInstance);
     }
 }

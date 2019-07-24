@@ -11,6 +11,6 @@ describe('GetBlockByHashMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(method.rpcMethod).toEqual('eth_getBlockByHash');
+        expect(method.rpcMethod).toEqual('cfx_getBlockByHash');
     });
 });
