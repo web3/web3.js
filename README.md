@@ -129,7 +129,7 @@ npm run dev # runs rollup with a watcher
 
 
 [repo]: https://github.com/ethereum/web3.js
-[docs]: http://web3js.readthedocs.io/en/1.0/
+[docs]: https://web3js.readthedocs.io/en/v1.2.0/
 [npm-image]: https://badge.fury.io/js/web3.png
 [npm-url]: https://npmjs.org/package/web3
 [travis-image]: https://travis-ci.org/ethereum/web3.js.svg
