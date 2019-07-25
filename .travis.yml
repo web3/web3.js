@@ -22,4 +22,3 @@ script:
     - npm run-script test-coveralls
 after_script:
     - cd test/node && npm install && node app.js
-
