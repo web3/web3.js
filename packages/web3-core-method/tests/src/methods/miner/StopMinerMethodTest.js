@@ -1,14 +1,14 @@
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
-import StopMinerMethod from '../../../../src/methods/miner/StopMinerMethod';
+import StopMiningMethod from '../../../../src/methods/miner/StopMiningMethod';
 
 /**
- * StopMinerMethod test
+ * StopMiningMethod test
  */
-describe('StopMinerMethodTest', () => {
+describe('StopMiningMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new StopMinerMethod({}, {}, {});
+        method = new StopMiningMethod({}, {}, {});
     });
 
     it('constructor check', () => {
