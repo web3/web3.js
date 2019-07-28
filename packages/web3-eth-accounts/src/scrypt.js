@@ -12,7 +12,7 @@ if (isNode) {
     var tryScryptPkg = (function() {
         var scryptPkg;
         return function() {
-            if (scryptPkg !== undefined) { return scryptPkg; };
+            if (scryptPkg !== undefined) { return scryptPkg; }
             try {
                 scryptPkg = (function(m) { return require(m); })('scrypt');
             } catch (e) {

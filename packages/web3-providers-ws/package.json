@@ -8,12 +8,9 @@
         "node": ">=8.0.0"
     },
     "main": "src/index.js",
-    "scripts": {
-        "preinstall": "rm -rf node_modules/websocket/.git"
-    },
     "dependencies": {
         "underscore": "1.9.1",
         "web3-core-helpers": "1.2.0",
-        "websocket": "github:frozeman/WebSocket-Node#browserifyCompatible"
+        "websocket": "github:michaelsbradleyjr/WebSocket-Node#polyfill/globalThis"
     }
 }
