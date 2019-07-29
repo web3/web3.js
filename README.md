@@ -160,7 +160,7 @@ npm test
 
 
 [repo]: https://github.com/ethereum/web3.js
-[docs]: http://web3js.readthedocs.io/en/1.0/
+[docs]: http://web3js.readthedocs.io/
 [npm-image]: https://badge.fury.io/js/web3.png
 [npm-url]: https://npmjs.org/package/web3
 [travis-image]: https://travis-ci.org/ethereum/web3.js.svg
@@ -170,6 +170,6 @@ npm test
 [dep-dev-image]: https://david-dm.org/ethereum/web3.js/dev-status.svg
 [dep-dev-url]: https://david-dm.org/ethereum/web3.js#info=devDependencies
 [coveralls-image]: https://coveralls.io/repos/ethereum/web3.js/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=master
+[coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=1.x
 [waffle-image]: https://badge.waffle.io/ethereum/web3.js.svg?label=ready&title=Ready
 [waffle-url]: https://waffle.io/ethereum/web3.js
