@@ -46,6 +46,7 @@ var HttpProvider = function HttpProvider(host, options) {
     }
     this.timeout = options.timeout || 0;
     this.headers = options.headers;
+    this.agent = options.agent || this.agent;
     this.connected = false;
 };
 
