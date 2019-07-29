@@ -81,13 +81,17 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
 
     // Allow a custom client configuration
     var clientConfig = options.clientConfig || undefined;
+    
+    // Allow a custom request options
+    // https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketClient.md#connectrequesturl-requestedprotocols-origin-headers-requestoptions
+    var requestOptions = options.requestOptions || undefined;
 
     // When all node core implementations that do not have the
     // WHATWG compatible URL parser go out of service this line can be removed.
     if (parsedURL.auth) {
         headers.authorization = 'Basic ' + _btoa(parsedURL.auth);
     }
-    this.connection = new Ws(url, protocol, undefined, headers, undefined, clientConfig);
+    this.connection = new Ws(url, protocol, undefined, headers, requestOptions, clientConfig);
 
     this.addDefaultEvents();
 
