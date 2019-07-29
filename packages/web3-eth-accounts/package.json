@@ -5,14 +5,15 @@
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth-accounts",
     "license": "LGPL-3.0",
     "engines": {
-        "node": ">=8.0.0 <=11.15.0"
+        "node": ">=8.0.0"
     },
     "main": "src/index.js",
     "dependencies": {
         "any-promise": "1.3.0",
         "crypto-browserify": "3.12.0",
         "eth-lib": "0.2.7",
-        "scrypt.js": "^0.3.0",
+        "semver": "6.2.0",
+        "scryptsy": "2.1.0",
         "underscore": "1.9.1",
         "uuid": "3.3.2",
         "web3-core": "1.2.0",
