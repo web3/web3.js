@@ -5,7 +5,7 @@
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
     "engines": {
-        "node": ">=8.0.0 <=11.15.0"
+        "node": ">=8.0.0"
     },
     "main": "./packages/web3/src/index.js",
     "directories": {
@@ -77,7 +77,7 @@
         "coveralls": "^3.0.4",
         "crypto-js": "^3.1.9-1",
         "del": "^4.1.1",
-        "ethereumjs-wallet": "^0.6.3",
+        "ethers": "4.0.33",
         "ethjs-signer": "^0.1.1",
         "exorcist": "^1.0.1",
         "gulp": "^4.0.2",
