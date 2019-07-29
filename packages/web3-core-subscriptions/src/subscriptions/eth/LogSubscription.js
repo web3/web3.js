@@ -59,7 +59,7 @@ export default class LogSubscription extends AbstractSubscription {
         if (isObject(options)) {
             let rejectedOptions = reject(Object.keys(options), option => {
                 return this.logSubscriptionOptions.some(
-                    parameter => parameter == option
+                    parameter => parameter === option
                 )
             })
 
@@ -119,7 +119,7 @@ export default class LogSubscription extends AbstractSubscription {
                 )
             }
 
-            if (filters.fromBlock == 'latest' && filters.toBlock == 'latest') {
+            if (filters.fromBlock === 'latest' && filters.toBlock === 'latest') {
                 return new Error(
                     'Validation error: fromBlock and toBlock are set to latest, consider to remove filters'
                 )
@@ -139,7 +139,7 @@ export default class LogSubscription extends AbstractSubscription {
      */
     rejectInvalidLogSubscriptions(options) {
         return pickBy(options, (_, option) =>
-            this.logSubscriptionOptions.some(logOption => logOption == option)
+            this.logSubscriptionOptions.some(logOption => logOption === option)
         )
     }
 
