@@ -126,6 +126,7 @@ export default class ProvidersModuleFactory {
         // runtime is of type node
         if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
             let headers = options.headers || {};
+            const requestOptions = options.requestOptions || null;
             const urlObject = new URL(url);
 
             if (!headers.authorization && urlObject.username && urlObject.password) {
@@ -133,7 +134,7 @@ export default class ProvidersModuleFactory {
                 headers.authorization = `Basic ${authToken}`;
             }
 
-            connection = new W3CWebsocket(url, options.protocol, null, headers, null, options.clientConfig);
+            connection = new W3CWebsocket(url, options.protocol, null, headers, requestOptions, options.clientConfig);
         } else {
             connection = new window.WebSocket(url, options.protocol);
         }
