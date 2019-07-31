@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-cfx-abi",
-    "version": "0.1.10-alpha.0",
+    "version": "0.1.11-alpha.0",
     "description": "ConfluxWeb module encode and decode EVM in/output.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-cfx-abi",
     "license": "LGPL-3.0",
