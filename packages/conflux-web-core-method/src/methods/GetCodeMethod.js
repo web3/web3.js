@@ -32,7 +32,7 @@ export default class GetCodeMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getCode', 2, utils, formatters, moduleInstance);
+        super('cfx_getCode', 2, utils, formatters, moduleInstance);
     }
 
     /**

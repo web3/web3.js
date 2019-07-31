@@ -18,7 +18,7 @@ describe('GetCodeMethodTest', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractMethod);
 
-        expect(method.rpcMethod).toEqual('eth_getCode');
+        expect(method.rpcMethod).toEqual('cfx_getCode');
 
         expect(method.parametersAmount).toEqual(2);
 
