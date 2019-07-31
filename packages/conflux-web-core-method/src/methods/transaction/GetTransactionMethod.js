@@ -31,7 +31,7 @@ export default class GetTransactionMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getTransactionByHash', 1, utils, formatters, moduleInstance);
+        super('cfx_getTransactionByHash', 1, utils, formatters, moduleInstance);
     }
 
     /**

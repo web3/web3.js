@@ -18,7 +18,7 @@ describe('GetGasPriceMethodTest', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractMethod);
 
-        expect(method.rpcMethod).toEqual('eth_gasPrice');
+        expect(method.rpcMethod).toEqual('cfx_gasPrice');
 
         expect(method.parametersAmount).toEqual(0);
 

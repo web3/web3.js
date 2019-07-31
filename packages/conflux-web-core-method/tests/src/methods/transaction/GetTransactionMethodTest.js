@@ -18,7 +18,7 @@ describe('GetTransactionMethodTest', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractMethod);
 
-        expect(method.rpcMethod).toEqual('eth_getTransactionByHash');
+        expect(method.rpcMethod).toEqual('cfx_getTransactionByHash');
 
         expect(method.parametersAmount).toEqual(1);
 

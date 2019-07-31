@@ -31,7 +31,7 @@ export default class EstimateGasMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_estimateGas', 1, utils, formatters, moduleInstance);
+        super('cfx_estimateGas', 1, utils, formatters, moduleInstance);
     }
 
     /**

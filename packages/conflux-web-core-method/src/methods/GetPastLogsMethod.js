@@ -31,7 +31,7 @@ export default class GetPastLogsMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getLogs', 1, utils, formatters, moduleInstance);
+        super('cfx_getLogs', 1, utils, formatters, moduleInstance);
     }
 
     /**

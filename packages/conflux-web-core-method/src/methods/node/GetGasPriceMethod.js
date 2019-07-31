@@ -31,7 +31,7 @@ export default class GetGasPriceMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_gasPrice', 0, utils, formatters, moduleInstance);
+        super('cfx_gasPrice', 0, utils, formatters, moduleInstance);
     }
 
     /**
