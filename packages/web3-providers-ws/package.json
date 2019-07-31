@@ -11,6 +11,6 @@
     "dependencies": {
         "underscore": "1.9.1",
         "web3-core-helpers": "1.2.0",
-        "websocket": "github:michaelsbradleyjr/WebSocket-Node#polyfill/globalThis"
+        "websocket": "github:web3-js/WebSocket-Node#polyfill/globalThis"
     }
 }
