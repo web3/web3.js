@@ -50,6 +50,8 @@ import {
 
 import GetBlockMethod from '../methods/GetBlockMethod';
 import GetBlocksByEpochMethod from '../methods/GetBlocksByEpochMethod';
+import GetBestBlockHashMethod from '../methods/GetBestBlockHashMethod';
+import GetBlockByHashWithPivotAssumptionMethod from '../methods/GetBlockByHashWithPivotAssumptionMethod';
 import GetBlockTransactionCountMethod from '../methods/GetBlockTransactionCountMethod';
 import GetTransactionFromBlockMethod from '../methods/GetTransactionFromBlockMethod';
 import CfxSignTransactionMethod from '../methods/CfxSignTransactionMethod';
@@ -97,7 +99,9 @@ export default class MethodFactory extends AbstractMethodFactory {
             getId: VersionMethod,
             getChainId: ChainIdMethod,
             getEpochNumber: GetEpochNumberMethod,
-            getBlocksByEpoch: GetBlocksByEpochMethod
+            getBlocksByEpoch: GetBlocksByEpochMethod,
+            getBlockByHashWithPivotAssumption: GetBlockByHashWithPivotAssumptionMethod,
+            getBestBlockHash: GetBestBlockHashMethod
         };
     }
 }

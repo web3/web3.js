@@ -1,4 +1,4 @@
-import GetBlocksByEpochMethod from '../../../src/methods/GetBlocksByEpochMethod'
+import GetBlocksByEpochMethod from '../../../src/methods/GetBlocksByEpochMethod';
 
 /**
  * GetBlocksByEpochMethod test

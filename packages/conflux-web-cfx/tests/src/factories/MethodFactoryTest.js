@@ -29,6 +29,8 @@ import {formatters} from 'conflux-web-core-helpers';
 import MethodFactory from '../../../src/factories/MethodFactory';
 import GetBlockMethod from '../../../src/methods/GetBlockMethod';
 import GetBlocksByEpochMethod from '../../../src/methods/GetBlocksByEpochMethod';
+import GetBestBlockHashMethod from '../../../src/methods/GetBestBlockHashMethod';
+import GetBlockByHashWithPivotAssumptionMethod from '../../../src/methods/GetBlockByHashWithPivotAssumptionMethod';
 import GetBlockTransactionCountMethod from '../../../src/methods/GetBlockTransactionCountMethod';
 import GetTransactionFromBlockMethod from '../../../src/methods/GetTransactionFromBlockMethod';
 import CfxSignTransactionMethod from '../../../src/methods/CfxSignTransactionMethod';
@@ -86,7 +88,10 @@ describe('MethodFactoryTest', () => {
             getChainId: ChainIdMethod,
             getId: VersionMethod,
             getEpochNumber: GetEpochNumberMethod,
-            getBlocksByEpoch: GetBlocksByEpochMethod
+            getBlocksByEpoch: GetBlocksByEpochMethod,
+            getBlockByHashWithPivotAssumption: GetBlockByHashWithPivotAssumptionMethod,
+            getBestBlockHash: GetBestBlockHashMethod
+
         });
     });
 });

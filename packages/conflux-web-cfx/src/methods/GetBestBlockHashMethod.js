@@ -23,7 +23,7 @@
 // import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import {AbstractMethod} from 'conflux-web-core-method';
 
-export default class GetBlocksByEpochMethod extends AbstractMethod {
+export default class GetBestBlockHashMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -32,6 +32,6 @@ export default class GetBlocksByEpochMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('cfx_getBlocksByEpoch', 1, utils, formatters, moduleInstance);
+        super('cfx_getBestBlockHash', 0, utils, formatters, moduleInstance);
     }
 }
