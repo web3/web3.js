@@ -16,12 +16,12 @@
 */
 /**
  * @file GetBlocksByEpochMethod.js
- * @author ping.li 
+ * @author ping.li
  * @date 2019
  */
 
-//import AbstractMethod from '../../../lib/methods/AbstractMethod';
-import AbstractGetBlockMethod from '../../../lib/methods/block/AbstractGetBlockMethod';
+// import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import {AbstractGetBlockMethod} from 'conflux-web-core-method';
 
 export default class GetBlocksByEpochMethod extends AbstractGetBlockMethod {
     /**
@@ -34,5 +34,4 @@ export default class GetBlocksByEpochMethod extends AbstractGetBlockMethod {
     constructor(utils, formatters, moduleInstance) {
         super('cfx_getBlocksByEpoch', utils, formatters, moduleInstance);
     }
-
 }

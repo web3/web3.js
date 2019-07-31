@@ -45,11 +45,11 @@ import {
     VersionMethod,
     SendRawTransactionMethod,
     CfxSendTransactionMethod,
-    GetEpochNumberMethod,
-    GetBlocksByEpochMethod
+    GetEpochNumberMethod
 } from 'conflux-web-core-method';
 
 import GetBlockMethod from '../methods/GetBlockMethod';
+import GetBlocksByEpochMethod from '../methods/GetBlocksByEpochMethod';
 import GetBlockTransactionCountMethod from '../methods/GetBlockTransactionCountMethod';
 import GetTransactionFromBlockMethod from '../methods/GetTransactionFromBlockMethod';
 import CfxSignTransactionMethod from '../methods/CfxSignTransactionMethod';
@@ -97,7 +97,7 @@ export default class MethodFactory extends AbstractMethodFactory {
             getId: VersionMethod,
             getChainId: ChainIdMethod,
             getEpochNumber: GetEpochNumberMethod,
-            getBlocksByEpoch :GetBlocksByEpochMethod
+            getBlocksByEpoch: GetBlocksByEpochMethod
         };
     }
 }

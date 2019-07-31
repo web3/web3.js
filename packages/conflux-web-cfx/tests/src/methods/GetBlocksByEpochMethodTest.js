@@ -1,5 +1,4 @@
-import AbstractGetBlockMethod from '../../../../lib/methods/block/AbstractGetBlockMethod';
-import GetBlocksByEpochMethod from '../../../../src/methods/epoch/GetBlocksByEpochMethod';
+import GetBlocksByEpochMethod from '../../../src/methods/GetBlocksByEpochMethod'
 
 /**
  * GetBlocksByEpochMethod test
@@ -12,7 +11,6 @@ describe('GetBlocksByEpochMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(method).toBeInstanceOf(AbstractGetBlockMethod);
         expect(method.rpcMethod).toEqual('cfx_getBlocksByEpoch');
     });
 });
