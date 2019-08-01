@@ -91,7 +91,6 @@ describe('MethodFactoryTest', () => {
             getBlocksByEpoch: GetBlocksByEpochMethod,
             getBlockByHashWithPivotAssumption: GetBlockByHashWithPivotAssumptionMethod,
             getBestBlockHash: GetBestBlockHashMethod
-
         });
     });
 });

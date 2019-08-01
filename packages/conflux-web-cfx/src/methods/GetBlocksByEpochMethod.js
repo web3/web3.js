@@ -34,4 +34,29 @@ export default class GetBlocksByEpochMethod extends AbstractMethod {
     constructor(utils, formatters, moduleInstance) {
         super('cfx_getBlocksByEpoch', 1, utils, formatters, moduleInstance);
     }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputBlockAddressFormatter(this.parameters[0]);
+        // Optional second parameter 'returnTransactionObjects' could also be the callback
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    afterExecution(response) {
+        return this.formatters.outputBlockFormatter(response);
+    }
 }
