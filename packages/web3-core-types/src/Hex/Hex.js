@@ -20,37 +20,17 @@
  * @date 2019
  */
 
-import {isNumber, isString, isObject, isNil, assign} from 'lodash';
+import {isNumber, isString} from 'lodash';
 import utf8 from 'utf8';
 
 export default class Hex {
     /**
-     * @dev Wrap as object
      * @param {String} hex
      *
      * @constructor
      */
-    constructor(params) {
-        if (!isObject(params)) {
-            params = {
-                hex: params
-            };
-        }
-
-        assign(this, params);
-    }
-
-    /**
-     * Gets the hex property
-     *
-     * @property hex
-     *
-     * @returns {String} hex
-     */
-    get hex() {
-        if (!isNil(this._hex)) {
-            return this._hex.toString();
-        }
+    constructor(hex) {
+        this.value = hex;
     }
 
     /**
@@ -58,20 +38,20 @@ export default class Hex {
      *
      * @property hex
      */
-    set hex(value) {
-        if (Hex.isValid(value)) {
-            this._hex = value.toString();
+    set value(hex) {
+        if (Hex.isValid(hex)) {
+            this._value = hex.toString();
             return;
         }
 
-        if (value === 'empty') {
-            this._hex = '0x';
+        if (hex === 'empty') {
+            this._value = '0x';
             return;
         }
 
         throw new Error(
-            `The given "hex" parameter "${value}" needs to be a string composed of numbers, and characters between 'a' and 'f'.\n` +
-                "Use 'empty' to set a web3 empty hex object."
+            `The hex value "${hex}" needs to be a string composed of numbers, and characters between 'a' and 'f'.\n` +
+                "Use 'empty' to set an empty hex object."
         );
     }
 
@@ -257,7 +237,7 @@ export default class Hex {
      * @return {String}
      */
     toString() {
-        return this._hex.replace(/(-)?(0x)?([0-9a-fA-F]*)/, '$10x$3');
+        return this._value.replace(/(-)?(0x)?([0-9a-fA-F]*)/, '$10x$3');
     }
 
     /**
@@ -268,7 +248,7 @@ export default class Hex {
      * @return {Number}
      */
     toNumber() {
-        return parseInt(this._hex, 16);
+        return parseInt(this._value, 16);
     }
 
     /**
@@ -280,8 +260,8 @@ export default class Hex {
      */
     toAscii() {
         let ascii = '';
-        for (let i = Hex.isStrict(this.toString()) ? 2 : 0; i < this._hex.length; i += 2) {
-            ascii += String.fromCharCode(parseInt(this._hex.substr(i, 2), 16));
+        for (let i = Hex.isStrict(this.toString()) ? 2 : 0; i < this._value.length; i += 2) {
+            ascii += String.fromCharCode(parseInt(this._value.substr(i, 2), 16));
         }
 
         return ascii;
@@ -297,7 +277,7 @@ export default class Hex {
     toUtf8() {
         let string = '';
         let code = 0;
-        let hex = this._hex.replace(/^0x/i, '');
+        let hex = this._value.replace(/^0x/i, '');
 
         // remove 00 padding from either side
         hex = hex.replace(/^(?:00)*/, '');
@@ -330,7 +310,7 @@ export default class Hex {
      * @return {Uint8Array}
      */
     toBytes() {
-        const hex = this._hex.replace(/^(-|-0x|0x)/i, '');
+        const hex = this._value.replace(/^(-|-0x|0x)/i, '');
         const pad = hex.length % 2 === 0 ? hex : `0${hex}`;
         const bytes = new Uint8Array(pad.length / 2);
 

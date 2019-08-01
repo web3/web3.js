@@ -30,4 +30,3 @@
 
 export * from './Address/index.js';
 export * from './Hex/index.js';
-export * from './Ether/index.js';

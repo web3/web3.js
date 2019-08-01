@@ -5,7 +5,7 @@ import Hex from '../Hex';
  */
 describe('HexTest', () => {
     it('constructor check', () => {
-        expect(() => new Hex({hex: '0x0'})).not.toThrow();
+        expect(() => new Hex('0x0')).not.toThrow();
     });
 
     it('has type property', () => {
