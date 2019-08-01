@@ -21,49 +21,51 @@
  */
 
 import {sha3} from 'web3-utils';
-import {isObject, isString, assign} from 'lodash';
+import isString from 'lodash/isString';
 import Iban from './Iban';
 
 export default class Address {
     /**
-     * @dev Wrap as object
      * @param {String} address
-     * @param {boolean} isChecksummed
      *
      * @constructor
      */
-    constructor(params) {
-        if (!isObject(params)) {
-            params = {
-                address: params
-            };
-        }
-
-        assign(this, params);
+    constructor(address) {
+        this.value = address;
     }
 
     /**
      * Set the address property
      *
-     * @property from
+     * @property value
      */
-    set address(value) {
-        if (isString(value) && /^(0x)?([0-9a-fA-F]{40})$/.test(value)) {
-            this._address = value.replace(/^(0x)([0-9a-fA-F]{40})$/, '0x$2');
-            this._isChecksummed = Address.isValid(this._address);
-
-            return;
+    set value(address) {
+        if (!Address.isValid(address)) {
+            throw new Error(
+                `The given address ${address} needs to be prefixed with 0x and hex encoded (numbers and letters, a through f), supplied as a string.`
+            );
         }
 
-        throw new Error(
-            `The given "address" parameter "${value}" needs to be hex encoded (numbers and letters, a through f), supplied as a string.\n` +
-                'Addresses may be prefixed with 0x and are 40 hex characters long.'
-        );
+        this._value = address;
     }
 
     /**
-     * Check for a valid checksum if the address is supposed to be
-     * checksummed
+     * Get the hashed value of an address
+     *
+     * @method hashAddress
+     *
+     * @param {String} address
+     *
+     * @returns {String}
+     */
+    static hashAddress(address) {
+        return sha3(address.replace('0x', '').toLowerCase())
+            .toLowerCase()
+            .replace('0x', '');
+    }
+
+    /**
+     * Check for a valid checksum
      *
      * @method isValid
      *
@@ -71,24 +73,24 @@ export default class Address {
      *
      * @returns {boolean}
      */
-    static isValid(value) {
-        if (!isString(value)) {
+    static isValid(address) {
+        if (!isString(address)) {
             return false;
         }
 
-        const address = value.replace('0x', '');
-
-        const addressHash = sha3(address.toLowerCase())
-            .toLowerCase()
-            .replace('0x', '');
+        const addressHash = Address.hashAddress(address);
 
         /* If the hex digit is not a number, it must be uppercase if
          *  the first bit of the binary value of
          *  the corresponding index of the hash
          *  i.e. if the hex value is between 8 and f. (1___) */
-        const isChecksummed = address.split('').every((v, i) => {
-            return !/^\d$/.test(v) ? !/^[8-9a-f]$/.test(addressHash[i]) || /^[A-F]$/.test(v) : true;
-        });
+        const isChecksummed = address
+            .replace('0x', '')
+            .split('')
+            .every((v, i) => {
+                /* test for digit ? test for 8 or higher || test for uppercase hex : true */
+                return !/^\d$/.test(v) ? !/^[8-9a-f]$/.test(addressHash[i]) || /^[A-F]$/.test(v) : true;
+            });
 
         return isChecksummed;
     }
@@ -102,20 +104,18 @@ export default class Address {
      *
      * @returns {Address}
      */
-    static toChecksum(value) {
-        const address = value.replace('0x', '');
-
-        const addressHash = sha3(address.toLowerCase())
-            .toLowerCase()
-            .replace('0x', '');
+    static toChecksum(address) {
+        const addressHash = Address.hashAddress(address);
 
         /* If the hex digit is not a number, it must be uppercase if
          *  the first bit of the binary value of
          *  the corresponding index of the hash
          *  i.e. if the hex value is between 8 and f. (1___) */
         const checksummed = address
+            .replace('0x', '')
             .split('')
             .map((v, i) => {
+                /* (test for digit && test for 8 or higher) ? to uppercase : to lowercase */
                 return !/^\d$/.test(v) && /^[8-9a-f]$/.test(addressHash[i]) ? v.toUpperCase() : v.toLowerCase();
             })
             .join('');
@@ -135,17 +135,6 @@ export default class Address {
     }
 
     /**
-     * Change an address to make it checksummed
-     *
-     * @method toChecksum
-     *
-     * @returns {Address}
-     */
-    toChecksum() {
-        return Address.toChecksum(this._address);
-    }
-
-    /**
      * Check for a valid checksum of the caller
      *
      * @method isValid
@@ -153,7 +142,7 @@ export default class Address {
      * @returns {boolean}
      */
     isValid() {
-        return this._isChecksummed;
+        return Address.isValid(this._value);
     }
 
     /**
@@ -164,7 +153,7 @@ export default class Address {
      * @return {String}
      */
     toString() {
-        return this._address;
+        return this._value.toString();
     }
 
     /**
