@@ -57,6 +57,6 @@ export default class GetBlocksByEpochMethod extends AbstractMethod {
      * @returns {Object}
      */
     afterExecution(response) {
-        return this.formatters.outputBlockFormatter(response);
+        //return this.formatters.outputBlockFormatter(response);
     }
 }
