@@ -126,7 +126,6 @@ export default class ProvidersModuleFactory {
         // runtime is of type node
         if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
             let headers = options.headers || {};
-            const requestOptions = options.requestOptions || null;
             const urlObject = new URL(url);
 
             if (!headers.authorization && urlObject.username && urlObject.password) {
