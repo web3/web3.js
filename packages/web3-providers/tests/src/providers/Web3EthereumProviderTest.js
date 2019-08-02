@@ -134,11 +134,16 @@ describe('Web3EthereumProviderTest', () => {
     });
 
     it('calls removeAllSocketListeners', () => {
-        socketMock.removeAllListeners = jest.fn();
+        socketMock.removeListener = jest.fn();
 
         ethereumProvider.removeAllSocketListeners();
 
-        expect(socketMock.removeAllListeners).toHaveBeenCalled();
+        expect(socketMock.removeListener).toHaveBeenNthCalledWith(
+            1, 'accountsChanged', ethereumProvider.onAccountsChanged
+        );
+        expect(socketMock.removeListener).toHaveBeenNthCalledWith(
+            2, 'networkChanged', ethereumProvider.onNetworkChanged
+        );
     });
 
     it('calls onNetworkChanged and emits the "networkChanged" event', (done) => {
