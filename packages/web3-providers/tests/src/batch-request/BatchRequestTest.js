@@ -104,7 +104,7 @@ describe('BatchRequestTest', () => {
         expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
     });
 
-    it('calls execute and calls the callback with the error thrown from the afterExecution method', async () => {
+    it('calls execute and calls the callback with the error thrown from the afterExecution method', (done) => {
         JsonRpcMapper.toPayload.mockReturnValueOnce({});
 
         JsonRpcResponseValidator.validate.mockReturnValueOnce(true);
@@ -121,25 +121,22 @@ describe('BatchRequestTest', () => {
             throw new Error('ERROR');
         });
 
-        abstractMethodMock.callback = jest.fn();
+        abstractMethodMock.callback = jest.fn((error, response) => {
+            expect(error).toEqual(new Error('ERROR'));
+
+            expect(response).toEqual(null);
+
+            expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', [true]);
+
+            expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
+
+            done();
+        });
 
         batchRequest.add(abstractMethodMock);
 
-        await expect(batchRequest.execute()).rejects.toEqual({
-            errors: [
-                {
-                    error: new Error('ERROR'),
-                    method: abstractMethodMock
-                }
-            ],
-            response: [{result: true}]
-        });
+        batchRequest.execute();
 
-        expect(abstractMethodMock.callback).toHaveBeenCalledWith(new Error('ERROR'), null);
-
-        expect(JsonRpcMapper.toPayload).toHaveBeenCalledWith('rpc_method', [true]);
-
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalledWith({result: true});
     });
 
     it('calls execute and returns a rejected promise because of the provider', async () => {
