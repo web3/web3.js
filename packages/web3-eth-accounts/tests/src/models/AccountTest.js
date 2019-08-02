@@ -58,7 +58,7 @@ describe('AccountTest', () => {
 
     it('calls fromPrivateKey with incorrect private key length and throws error', () => {
         expect(() => {
-            Account.fromPrivateKey('asdfasdf')
+            Account.fromPrivateKey('asdfasdf');
         }).toThrow('Private key must be 32 bytes long');
     });
 
@@ -66,7 +66,7 @@ describe('AccountTest', () => {
         mockKey = '0z0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
         expect(() => {
-            Account.fromPrivateKey(mockKey)
+            Account.fromPrivateKey(mockKey);
         }).toThrow('Private key must be 32 bytes long');
     });
 
@@ -167,9 +167,9 @@ describe('AccountTest', () => {
             final: jest.fn()
         };
 
-        decipher.update.mockReturnValueOnce(Buffer.from(mockKey.slice(2,34), 'hex'));
+        decipher.update.mockReturnValueOnce(Buffer.from(mockKey.slice(2, 34), 'hex'));
 
-        decipher.final.mockReturnValueOnce(Buffer.from(mockKey.slice(34,66), 'hex'));
+        decipher.final.mockReturnValueOnce(Buffer.from(mockKey.slice(34, 66), 'hex'));
 
         createDecipheriv.mockReturnValueOnce(decipher);
 
@@ -233,9 +233,9 @@ describe('AccountTest', () => {
             final: jest.fn()
         };
 
-        decipher.update.mockReturnValueOnce(Buffer.from(mockKey.slice(2,34), 'hex'));
+        decipher.update.mockReturnValueOnce(Buffer.from(mockKey.slice(2, 34), 'hex'));
 
-        decipher.final.mockReturnValueOnce(Buffer.from(mockKey.slice(34,66), 'hex'));
+        decipher.final.mockReturnValueOnce(Buffer.from(mockKey.slice(34, 66), 'hex'));
 
         createDecipheriv.mockReturnValueOnce(decipher);
 

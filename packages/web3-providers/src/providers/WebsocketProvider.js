@@ -217,16 +217,19 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     return reject(error);
                 }
 
-                if (this.timeout) {
-                    timeout = setTimeout(() => {
-                        reject(new Error('Connection error: Timeout exceeded'));
-                    }, this.timeout);
-                }
-
                 if (isArray(payload)) {
                     id = payload[0].id;
                 } else {
                     id = payload.id;
+                }
+
+                if (this.timeout) {
+                    timeout = setTimeout(() => {
+                        this.removeListener('error', reject);
+                        this.removeAllListeners(id);
+
+                        reject(new Error('Connection error: Timeout exceeded'));
+                    }, this.timeout);
                 }
 
                 this.once(id, (response) => {
