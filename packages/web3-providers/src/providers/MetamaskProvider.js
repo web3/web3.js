@@ -83,8 +83,8 @@ export default class MetamaskProvider extends AbstractSocketProvider {
      * @method removeAllSocketListeners
      */
     removeAllSocketListeners() {
-        this.connection.removeListener(this.SOCKET_NETWORK_CHANGED, this.onNetworkChanged);
-        this.connection.removeListener(this.SOCKET_ACCOUNTS_CHANGED, this.onAccountsChanged);
+        this.removeAllListeners(this.SOCKET_ACCOUNTS_CHANGED);
+        this.removeAllListeners(this.SOCKET_NETWORK_CHANGED);
 
         super.removeAllSocketListeners();
     }
@@ -141,8 +141,6 @@ export default class MetamaskProvider extends AbstractSocketProvider {
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
             this.connection.send(payload, (error, response) => {
-                this.removeAllListeners(payload.id);
-
                 if (!error) {
                     return resolve(response);
                 }

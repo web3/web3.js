@@ -27,7 +27,7 @@ describe('AbstractSocketProviderTest', () => {
 
         expect(abstractSocketProvider.timeout).toEqual(0);
 
-        expect(abstractSocketProvider.subscriptions).toEqual({});
+        expect(abstractSocketProvider.subscriptions).toEqual(new Map());
 
         expect(abstractSocketProvider.connection).toEqual(socketMock);
 
@@ -120,11 +120,11 @@ describe('AbstractSocketProviderTest', () => {
         const callback = jest.fn();
         abstractSocketProvider.on('connect', callback);
 
-        abstractSocketProvider.subscriptions['0x0'] = {
+        abstractSocketProvider.subscriptions.set('0x0', {
             id: '0x0',
             subscribeMethod: 'eth_subscribe',
             parameters: ['logs', {}]
-        };
+        });
 
         abstractSocketProvider.send = jest.fn((subscribeMethod, parameters) => {
             expect(subscribeMethod).toEqual('eth_subscribe');
@@ -138,7 +138,7 @@ describe('AbstractSocketProviderTest', () => {
 
         expect(callback).toHaveBeenCalled();
 
-        expect(abstractSocketProvider.subscriptions['0x0'].id).toEqual('0x1');
+        expect(abstractSocketProvider.subscriptions.get('0x0').id).toEqual('0x1');
 
         expect(abstractSocketProvider.send).toHaveBeenCalled();
     });
@@ -164,7 +164,7 @@ describe('AbstractSocketProviderTest', () => {
     });
 
     it('calls onMessage and the subscription id will be used as event name', (done) => {
-        abstractSocketProvider.subscriptions['0x0'] = {subscription: '0x0'};
+        abstractSocketProvider.subscriptions.set('0x0', {subscription: '0x0'});
 
         abstractSocketProvider.on('0x0', (response) => {
             expect(response).toEqual({subscription: '0x0'});
@@ -209,7 +209,7 @@ describe('AbstractSocketProviderTest', () => {
 
         expect(response).toEqual('0x1');
 
-        expect(abstractSocketProvider.subscriptions['0x1'].id).toEqual('0x1');
+        expect(abstractSocketProvider.subscriptions.get('0x1').id).toEqual('0x1');
 
         expect(abstractSocketProvider.send).toHaveBeenCalled();
     });
@@ -234,8 +234,8 @@ describe('AbstractSocketProviderTest', () => {
         );
     });
 
-    it('calls unsubscribe and resolves to a promise', async () => {
-        abstractSocketProvider.subscriptions['0x0'] = true;
+    it('calls unsubscribe and resolves the returned Promise object', async () => {
+        abstractSocketProvider.subscriptions.set('0x0', true);
         abstractSocketProvider.removeAllListeners = jest.fn();
 
         abstractSocketProvider.send = jest.fn((subscribeMethod, parameters) => {
@@ -252,11 +252,11 @@ describe('AbstractSocketProviderTest', () => {
 
         expect(abstractSocketProvider.removeAllListeners).toHaveBeenCalledWith('0x0');
 
-        expect(abstractSocketProvider.subscriptions['0x0']).toBeUndefined();
+        expect(abstractSocketProvider.subscriptions.get('0x0')).toBeUndefined();
     });
 
     it('calls clearSubscriptions and one unsubscribe call returns false', async () => {
-        abstractSocketProvider.subscriptions['0x0'] = {id: '0x0'};
+        abstractSocketProvider.subscriptions.set('0x0', {id: '0x0'});
         abstractSocketProvider.removeAllListeners = jest.fn();
 
         abstractSocketProvider.send = jest.fn((subscribeMethod, parameters) => {
@@ -275,7 +275,7 @@ describe('AbstractSocketProviderTest', () => {
     });
 
     it('calls clearSubscriptions and all unsubscribe calls are returning true', async () => {
-        abstractSocketProvider.subscriptions['0x0'] = {id: '0x0'};
+        abstractSocketProvider.subscriptions.set('0x0', {id: '0x0'});
         abstractSocketProvider.removeAllListeners = jest.fn();
 
         abstractSocketProvider.send = jest.fn((subscribeMethod, parameters) => {
@@ -292,11 +292,11 @@ describe('AbstractSocketProviderTest', () => {
 
         expect(abstractSocketProvider.removeAllListeners).toHaveBeenCalledWith('0x0');
 
-        expect(abstractSocketProvider.subscriptions).toEqual({});
+        expect(abstractSocketProvider.subscriptions).toEqual(new Map());
     });
 
     it('calls getSubscriptionEvent and has to iterate over all items', () => {
-        abstractSocketProvider.subscriptions['ID'] = {id: '0x0'};
+        abstractSocketProvider.subscriptions.set('ID', {id: '0x0'});
 
         expect(abstractSocketProvider.getSubscriptionEvent('0x0')).toEqual('ID');
     });
