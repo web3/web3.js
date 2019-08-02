@@ -33,6 +33,22 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     constructor(connection, timeout) {
         super(connection, timeout);
         this.host = this.connection.url;
+        this.reconnecting = false;
+    }
+
+    /**
+     * Emits the connect event and checks if there are subscriptions defined that should be resubscribed.
+     *
+     * @method onConnect
+     */
+    async onConnect() {
+        if (this.reconnecting) {
+            this.emit('recconected', true);
+        }
+
+        await super.onConnect()
+
+        this.reconnecting = false;
     }
 
     /**
@@ -86,6 +102,8 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @method reconnect
      */
     reconnect() {
+        this.reconnecting = true;
+
         setTimeout(() => {
             this.removeAllSocketListeners();
 
