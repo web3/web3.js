@@ -121,31 +121,28 @@ export default class ProvidersModuleFactory {
      * @returns {WebsocketProvider}
      */
     createWebsocketProvider(url, options = {}) {
-        let authToken;
-        let headers = options.headers || {};
-        const urlObject = new URL(url);
-
         // runtime is of type node
-        if (!headers.authorization && urlObject.username && urlObject.password) {
-            if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
-                authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`).toString('base64');
-            } else {
-                authToken = btoa(`${urlObject.username}:${urlObject.password}`);
-            }
+        if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
+            let headers = options.headers || {};
+            const urlObject = new URL(url);
 
-            headers.authorization = `Basic ${authToken}`;
+            if (!headers.authorization && urlObject.username && urlObject.password) {
+                const authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`).toString('base64');
+                headers.authorization = `Basic ${authToken}`;
+            }
         }
 
         return new WebsocketProvider(
             new W3CWebsocket(
                 url,
                 options.protocol,
-                null,
+                options.origin,
                 headers,
                 options.requestOptions,
                 options.clientConfig
             ),
-            options.timeout
+            options.timeout,
+            options.reconnectionTimeout
         );
     }
 
