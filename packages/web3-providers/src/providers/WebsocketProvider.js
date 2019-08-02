@@ -64,7 +64,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     }
 
     /**
-     * This ist the listener for the 'close' event of the current socket connection.
+     * This is the listener for the 'close' event of the current socket connection.
      *
      * @method onClose
      *
@@ -91,7 +91,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
             let connection = [];
 
-            if (this.connection.constructor.name === 'W3CWebsocket') {
+            if (this.connection.constructor.name === 'W3CWebSocket') {
                 connection = new this.connection.constructor(
                     this.host,
                     this.connection._client.protocol,
