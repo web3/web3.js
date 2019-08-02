@@ -624,7 +624,7 @@ methods.myMethod.estimateGas
     myContract.methods.myMethod([param1[, param2[, ...]]]).estimateGas(options[, callback])
 
 
-Will call estimate the gas a method execution will take when executed in the EVM without.
+Will call estimate the gas a method execution will take when executed in the EVM without sending a transaction.
 The estimation can differ from the actual gas used when later sending a transaction, as the state of the smart contract can be different at that time.
 
 ----------

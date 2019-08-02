@@ -72,7 +72,7 @@ export default class EventSubscriptionsProxy {
                     };
                 }
 
-                return target[name];
+                return Reflect.get(target, name);
             }
         });
     }
