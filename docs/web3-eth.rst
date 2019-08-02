@@ -1064,8 +1064,8 @@ Example
 
 .. code-block:: javascript
 
-    const Tx = require('ethereumjs-tx');
-    const privateKey = new Buffer('e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109', 'hex')
+    const Tx = require('ethereumjs-tx').Transaction;
+    const privateKey = Buffer.from('e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109', 'hex')
 
     const rawTx = {
       nonce: '0x00',
@@ -1076,7 +1076,7 @@ Example
       data: '0x7f7465737432000000000000000000000000000000000000000000000000000000600057'
     }
 
-    const tx = new Tx(rawTx);
+    const tx = new Tx(rawTx, {'chain':'ropsten'});
     tx.sign(privateKey);
 
     const serializedTx = tx.serialize();
@@ -1088,6 +1088,8 @@ Example
     .on('receipt', console.log);
 
     > // see eth.getTransactionReceipt() for details
+
+.. note:: When use the package `ethereumjs-tx` at the version of `2.x`, if we don't specify the parameter `chain`, it will use `mainnet`, so if you wan to use at the other network, you should add this parameter `chain` to specify.
 
 ------------------------------------------------------------------------------
 
