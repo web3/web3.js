@@ -66,7 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Length check of the PK added to the ``fromPrivateKey`` method of the ``Account`` model (#2928)
-- Changed event added to the ``Contract`` events (#2960)
+- WebsocketProvider options extended with ``requestOptions`` (#2938)
+- ``changed`` listener added to Contract event subscriptions (#2960)
 
 ### Changed
 
