@@ -63,5 +63,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0-alpha.1]
 
+### Added
 
+- Length check of the PK added to the ``fromPrivateKey`` method of the ``Account`` model (#2928)
+
+### Changed
+
+- fsevents bumbed to v1.2.9 (#2951)
+
+### Fixed
+
+- miner.startMining fixed (#2877)
+- Subscription type definitions fixed (#2919)
+- ``ContractOptions`` type definitions corrected (#2939)
+- Scrypt compatibility with older and newer nodejs versions fixed (#2952)
+- Encryption of the V3Keystore fixed (#2950)
 
