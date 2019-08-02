@@ -134,7 +134,7 @@ export default class ProvidersModuleFactory {
                 headers.authorization = `Basic ${authToken}`;
             }
 
-            connection = new W3CWebsocket(url, options.protocol, null, headers, requestOptions, options.clientConfig);
+            connection = new W3CWebsocket(url, options.protocol, null, headers, options.requestOptions, options.clientConfig);
         } else {
             connection = new window.WebSocket(url, options.protocol);
         }
