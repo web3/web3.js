@@ -167,7 +167,7 @@ describe('Web3EthereumProviderTest', () => {
     });
 
     it('calls onMessage and emits the correct event', (done) => {
-        ethereumProvider.subscriptions['0x0'] = true;
+        ethereumProvider.subscriptions.set('0x0', true);
 
         ethereumProvider.on('0x0', (accounts) => {
             expect(accounts).toEqual({subscription: '0x0'});

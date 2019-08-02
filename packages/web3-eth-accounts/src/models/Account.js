@@ -129,7 +129,7 @@ export default class Account {
 
         // 64 hex characters + hex-prefix
         if (privateKey.length !== 66) {
-            throw new Error("Private key must be 32 bytes long");
+            throw new Error('Private key must be 32 bytes long');
         }
 
         return new Account(EthLibAccount.fromPrivate(privateKey), accounts);
@@ -160,13 +160,26 @@ export default class Account {
         if (kdf === 'pbkdf2') {
             kdfparams.c = options.c || 262144;
             kdfparams.prf = 'hmac-sha256';
-            derivedKey = pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+            derivedKey = pbkdf2Sync(
+                Buffer.from(password),
+                Buffer.from(kdfparams.salt, 'hex'),
+                kdfparams.c,
+                kdfparams.dklen,
+                'sha256'
+            );
         } else if (kdf === 'scrypt') {
             // FIXME: support progress reporting callback
             kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
             kdfparams.r = options.r || 8;
             kdfparams.p = options.p || 1;
-            derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+            derivedKey = scrypt(
+                Buffer.from(password),
+                Buffer.from(kdfparams.salt, 'hex'),
+                kdfparams.n,
+                kdfparams.r,
+                kdfparams.p,
+                kdfparams.dklen
+            );
         } else {
             throw new Error('Unsupported kdf');
         }
