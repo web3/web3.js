@@ -31,7 +31,7 @@ export default class GetTransactionReceiptMethod extends AbstractMethod {
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getTransactionReceipt', 1, utils, formatters, moduleInstance);
+        super('cfx_getTransactionReceipt', 1, utils, formatters, moduleInstance);
     }
 
     /**
