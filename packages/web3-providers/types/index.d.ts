@@ -180,4 +180,5 @@ export interface WebsocketProviderOptions {
     headers?: {};
     protocol?: string;
     clientConfig?: string;
+    requestOptions?: object
 }
