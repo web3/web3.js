@@ -29,6 +29,7 @@ For  web3.js, check ``Web3.givenProvider``. If this property is ``null`` you sho
 .. code-block:: javascript
 
     // in node.js use: const Web3 = require('web3');
+    // for a frontend app, you must be using webpack, otherwise you need to bundle the modules externally.
 
     // use the given Provider, e.g in the browser with Metamask, or instantiate a new websocket provider
     const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8546', null, {});
