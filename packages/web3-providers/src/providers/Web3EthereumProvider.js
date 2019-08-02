@@ -88,7 +88,7 @@ export default class Web3EthereumProvider extends AbstractSocketProvider {
         this.removeAllListeners(this.SOCKET_ACCOUNTS_CHANGED);
         this.removeAllListeners(this.SOCKET_NETWORK_CHANGED);
 
-        super.removeAllSocketListeners()
+        super.removeAllSocketListeners();
     }
 
     /**

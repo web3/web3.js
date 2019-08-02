@@ -22,7 +22,7 @@ describe('WebsocketProviderTest', () => {
         expect(websocketProvider.connection).toEqual(socketMock);
 
         expect(websocketProvider.timeout).toEqual(1);
-        
+
         expect(websocketProvider.reconnectionTimeout).toEqual(1);
 
         expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
@@ -450,7 +450,6 @@ describe('WebsocketProviderTest', () => {
 
     it('calls onConnect after the connection got lost', (done) => {
         websocketProvider.on('reconnected', () => {
-
             done();
         });
 

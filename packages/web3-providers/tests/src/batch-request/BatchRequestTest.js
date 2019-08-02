@@ -136,7 +136,6 @@ describe('BatchRequestTest', () => {
         batchRequest.add(abstractMethodMock);
 
         batchRequest.execute();
-
     });
 
     it('calls execute and returns a rejected promise because of the provider', async () => {

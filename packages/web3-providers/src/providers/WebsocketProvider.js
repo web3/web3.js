@@ -48,7 +48,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
             this.emit('reconnected');
         }
 
-        await super.onConnect()
+        await super.onConnect();
 
         this.reconnecting = false;
     }

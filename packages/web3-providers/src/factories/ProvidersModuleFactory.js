@@ -121,9 +121,10 @@ export default class ProvidersModuleFactory {
      * @returns {WebsocketProvider}
      */
     createWebsocketProvider(url, options = {}) {
+        let headers = options.headers || {};
+
         // runtime is of type node
         if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
-            let headers = options.headers || {};
             const urlObject = new URL(url);
 
             if (!headers.authorization && urlObject.username && urlObject.password) {
