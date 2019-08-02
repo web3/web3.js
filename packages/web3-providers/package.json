@@ -28,7 +28,7 @@
         "web3-core-helpers": "2.0.0-alpha",
         "web3-core-method": "2.0.0-alpha",
         "web3-utils": "2.0.0-alpha",
-        "websocket": "^1.0.28",
+        "websocket": "github:web3-js/WebSocket-Node#polyfill/globalThis",
         "xhr2-cookies": "1.1.0"
     },
     "devDependencies": {

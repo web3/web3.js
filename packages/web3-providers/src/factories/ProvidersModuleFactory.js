@@ -121,24 +121,32 @@ export default class ProvidersModuleFactory {
      * @returns {WebsocketProvider}
      */
     createWebsocketProvider(url, options = {}) {
-        let connection = '';
+        let authToken;
+        let headers = options.headers || {};
+        const urlObject = new URL(url);
 
         // runtime is of type node
-        if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
-            let headers = options.headers || {};
-            const urlObject = new URL(url);
-
-            if (!headers.authorization && urlObject.username && urlObject.password) {
-                const authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`).toString('base64');
-                headers.authorization = `Basic ${authToken}`;
+        if (!headers.authorization && urlObject.username && urlObject.password) {
+            if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
+                authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`).toString('base64');
+            } else {
+                authToken = btoa(`${urlObject.username}:${urlObject.password}`);
             }
 
-            connection = new W3CWebsocket(url, options.protocol, null, headers, options.requestOptions, options.clientConfig);
-        } else {
-            connection = new window.WebSocket(url, options.protocol);
+            headers.authorization = `Basic ${authToken}`;
         }
 
-        return new WebsocketProvider(connection, options.timeout);
+        return new WebsocketProvider(
+            new W3CWebsocket(
+                url,
+                options.protocol,
+                null,
+                headers,
+                options.requestOptions,
+                options.clientConfig
+            ),
+            options.timeout
+        );
     }
 
     /**
