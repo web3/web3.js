@@ -42,3 +42,8 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.2.1]
 
+### Fixed
+
+- ``websocket`` dependency fixed (#2971, #2976)
+- ``requestOptions`` added to ``WebsocketProvider`` (#2979) 
+- Node >= v8.0.0 support (#2938)

@@ -1,5 +1,5 @@
 
-<img src="https://github.com/ethereum/web3.js/raw/1.0/web3js.jpg" width=200 />
+<img src="https://github.com/ethereum/web3.js/raw/1.x/web3js.jpg" width=200 />
 
 # web3.js - Ethereum JavaScript API
 
@@ -152,15 +152,15 @@ npm test
 
 ### Similar libraries in other languages
  - Python [Web3.py](https://github.com/pipermerriam/web3.py)
- - Haskell [hs-web3](https://github.com/airalab/hs-web3)		   - Haskell [hs-web3](https://github.com/airalab/hs-web3)
- - Java [web3j](https://github.com/web3j/web3j)		   - Java [web3j](https://github.com/web3j/web3j)
+ - Haskell [hs-web3](https://github.com/airalab/hs-web3)		   
+ - Java [web3j](https://github.com/web3j/web3j)		   
  - Scala [web3j-scala](https://github.com/mslinn/web3j-scala)
  - Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
  - PHP [web3.php](https://github.com/sc0Vu/web3.php)
 
 
 [repo]: https://github.com/ethereum/web3.js
-[docs]: http://web3js.readthedocs.io/en/1.0/
+[docs]: http://web3js.readthedocs.io/
 [npm-image]: https://badge.fury.io/js/web3.png
 [npm-url]: https://npmjs.org/package/web3
 [travis-image]: https://travis-ci.org/ethereum/web3.js.svg
@@ -170,6 +170,6 @@ npm test
 [dep-dev-image]: https://david-dm.org/ethereum/web3.js/dev-status.svg
 [dep-dev-url]: https://david-dm.org/ethereum/web3.js#info=devDependencies
 [coveralls-image]: https://coveralls.io/repos/ethereum/web3.js/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=master
+[coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=1.x
 [waffle-image]: https://badge.waffle.io/ethereum/web3.js.svg?label=ready&title=Ready
 [waffle-url]: https://waffle.io/ethereum/web3.js
