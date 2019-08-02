@@ -138,7 +138,7 @@ export default class ProvidersModuleFactory {
             connection = new window.WebSocket(url, options.protocol);
         }
 
-        return new WebsocketProvider(connection, options.timeout);
+        return new WebsocketProvider(connection, options.timeout, options.reconnectionTimeout);
     }
 
     /**

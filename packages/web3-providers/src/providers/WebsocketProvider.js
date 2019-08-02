@@ -26,13 +26,15 @@ import isArray from 'lodash/isArray';
 export default class WebsocketProvider extends AbstractSocketProvider {
     /**
      * @param {WebSocket} connection
-     * @param {Number} timeout
+     * @param {Number} responseTimeout
+     * @param {Number} reconnectionTimeout
      *
      * @constructor
      */
-    constructor(connection, timeout) {
-        super(connection, timeout);
+    constructor(connection, responseTimeout, reconnectionTimeout = 5000) {
+        super(connection, responseTimeout);
         this.host = this.connection.url;
+        this.reconnectionTimeout = reconnectionTimeout;
         this.reconnecting = false;
     }
 
@@ -43,7 +45,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      */
     async onConnect() {
         if (this.reconnecting) {
-            this.emit('recconected', true);
+            this.emit('reconnected');
         }
 
         await super.onConnect()
@@ -124,7 +126,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
             this.connection = connection;
             this.registerEventListeners();
-        }, 5000);
+        }, this.reconnectionTimeout);
     }
 
     /**
