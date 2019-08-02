@@ -85,12 +85,10 @@ export default class Web3EthereumProvider extends AbstractSocketProvider {
      * @method removeAllSocketListeners
      */
     removeAllSocketListeners() {
-        this.connection.removeListener('notification', this.onMessage);
-        this.connection.removeListener('connect', this.onConnect);
-        this.connection.removeListener('connect', this.onReady);
-        this.connection.removeListener('close', this.onClose);
-        this.connection.removeListener('networkChanged', this.onNetworkChanged);
-        this.connection.removeListener('accountsChanged', this.onAccountsChanged);
+        this.removeAllListeners(this.SOCKET_ACCOUNTS_CHANGED);
+        this.removeAllListeners(this.SOCKET_NETWORK_CHANGED);
+
+        super.removeAllSocketListeners()
     }
 
     /**

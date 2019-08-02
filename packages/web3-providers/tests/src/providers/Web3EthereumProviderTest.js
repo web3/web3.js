@@ -139,22 +139,10 @@ describe('Web3EthereumProviderTest', () => {
         ethereumProvider.removeAllSocketListeners();
 
         expect(socketMock.removeListener).toHaveBeenNthCalledWith(
-            1, 'notification', ethereumProvider.onMessage
+            1, 'accountsChanged', ethereumProvider.onAccountsChanged
         );
         expect(socketMock.removeListener).toHaveBeenNthCalledWith(
-            2, 'connect', ethereumProvider.onConnect
-        );
-        expect(socketMock.removeListener).toHaveBeenNthCalledWith(
-            3, 'connect', ethereumProvider.onReady
-        );
-        expect(socketMock.removeListener).toHaveBeenNthCalledWith(
-            4, 'close', ethereumProvider.onClose
-        );
-        expect(socketMock.removeListener).toHaveBeenNthCalledWith(
-            5, 'networkChanged', ethereumProvider.onNetworkChanged
-        );
-        expect(socketMock.removeListener).toHaveBeenNthCalledWith(
-            6, 'accountsChanged', ethereumProvider.onAccountsChanged
+            2, 'networkChanged', ethereumProvider.onNetworkChanged
         );
     });
 
