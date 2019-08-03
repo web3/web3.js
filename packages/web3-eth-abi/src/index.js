@@ -260,6 +260,8 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
     topics = _.isArray(topics) ? topics : [topics];
 
     data = data || '';
+    if(data == '0x')
+        data = '';
 
     var notIndexedInputs = [];
     var indexedParams = [];
