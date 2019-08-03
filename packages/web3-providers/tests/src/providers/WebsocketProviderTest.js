@@ -23,7 +23,7 @@ describe('WebsocketProviderTest', () => {
 
         expect(websocketProvider.timeout).toEqual(1);
 
-        expect(websocketProvider.reconnectionTimeout).toEqual(1);
+        expect(websocketProvider.reconnectDelay).toEqual(1);
 
         expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
         expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);

@@ -177,7 +177,7 @@ export interface HttpProviderOptions {
 export interface WebsocketProviderOptions {
     host?: string;
     timeout?: number;
-    reconnectionTimeout?: number;
+    reconnectDelay?: number;
     headers?: {};
     protocol?: string;
     clientConfig?: string;

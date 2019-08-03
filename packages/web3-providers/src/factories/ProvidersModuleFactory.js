@@ -143,7 +143,7 @@ export default class ProvidersModuleFactory {
                 options.clientConfig
             ),
             options.timeout,
-            options.reconnectionTimeout
+            options.reconnectDelay
         );
     }
 
