@@ -313,6 +313,33 @@ describe('HttpProviderTest', () => {
         expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
     });
 
+    it('calls sendPayload and returns with a rejected promise because of the http error listener', async () => {
+        new XHR();
+        const xhrMock = XHR.mock.instances[0];
+
+        providersModuleFactoryMock.createXMLHttpRequest.mockReturnValueOnce(xhrMock);
+
+        setTimeout(() => {
+            xhrMock.onerror();
+        }, 1);
+
+        await expect(httpProvider.sendPayload({id: '0x0'})).rejects.toThrow(
+            `Network error ${JSON.stringify({id: '0x0'})}`
+        );
+
+        expect(httpProvider.connected).toEqual(false);
+
+        expect(providersModuleFactoryMock.createXMLHttpRequest).toHaveBeenCalledWith(
+            httpProvider.host,
+            httpProvider.timeout,
+            httpProvider.headers,
+            httpProvider.agent,
+            httpProvider.withCredentials
+        );
+
+        expect(xhrMock.send).toHaveBeenCalledWith('{"id":"0x0"}');
+    });
+
     it('calls sendPayload and returns with a rejected promise because the request status is between 400 and 499', async () => {
         new XHR();
         const xhrMock = XHR.mock.instances[0];
