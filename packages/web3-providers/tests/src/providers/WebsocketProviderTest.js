@@ -13,7 +13,7 @@ describe('WebsocketProviderTest', () => {
         socketMock.addEventListener = jest.fn();
         socketMock.removeEventListener = jest.fn();
 
-        websocketProvider = new WebsocketProvider(socketMock, 1);
+        websocketProvider = new WebsocketProvider(socketMock, 1, 1);
     });
 
     it('constructor check', () => {
@@ -22,6 +22,8 @@ describe('WebsocketProviderTest', () => {
         expect(websocketProvider.connection).toEqual(socketMock);
 
         expect(websocketProvider.timeout).toEqual(1);
+
+        expect(websocketProvider.reconnectDelay).toEqual(1);
 
         expect(socketMock.addEventListener.mock.calls[0][0]).toEqual('message');
         expect(socketMock.addEventListener.mock.calls[0][1]).toBeInstanceOf(Function);
@@ -444,5 +446,14 @@ describe('WebsocketProviderTest', () => {
         expect(websocketProvider.listenerCount('0x0')).toEqual(0);
 
         expect(websocketProvider.listenerCount('connect')).toEqual(0);
+    });
+
+    it('calls onConnect after the connection got lost', (done) => {
+        websocketProvider.on('reconnected', () => {
+            done();
+        });
+
+        websocketProvider.reconnecting = true;
+        websocketProvider.onConnect();
     });
 });

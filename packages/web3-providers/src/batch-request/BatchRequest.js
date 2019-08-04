@@ -62,9 +62,15 @@ export default class BatchRequest {
     async execute() {
         const payload = await this.toPayload();
         const response = await this.moduleInstance.currentProvider.sendPayload(payload);
+        let hasCallbacks = false;
 
         let errors = [];
         this.methods.forEach((method, index) => {
+            // TODO: Remove callbacks
+            if (!hasCallbacks && method.callback) {
+                hasCallbacks = true;
+            }
+
             if (!isArray(response)) {
                 if (method.callback) {
                     method.callback(
@@ -122,7 +128,7 @@ export default class BatchRequest {
             }
         });
 
-        if (errors.length > 0) {
+        if (errors.length > 0 && !hasCallbacks) {
             // eslint-disable-next-line no-throw-literal
             throw {
                 errors,

@@ -168,5 +168,5 @@ export StopWsMethod from './methods/admin/StopWsMethod';
 export SetEtherBaseMethod from './methods/miner/SetEtherBaseMethod';
 export SetExtraMethod from './methods/miner/SetExtraMethod';
 export SetGasPriceMethod from './methods/miner/SetGasPriceMethod';
-export StartMinerMethod from './methods/miner/StartMinerMethod';
-export StopMinerMethod from './methods/miner/StopMinerMethod';
+export StartMiningMethod from './methods/miner/StartMiningMethod';
+export StopMiningMethod from './methods/miner/StopMiningMethod';
