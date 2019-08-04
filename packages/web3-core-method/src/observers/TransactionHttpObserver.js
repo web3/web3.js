@@ -19,28 +19,20 @@
  */
 
 import {Observable} from 'rxjs';
-import AbstractTransactionObserver from '../../lib/observer/AbstractTransactionObserver';
+import AbstractTransactionObserver from '../../lib/observers/AbstractTransactionObserver';
 
-export default class TransactionHTTPObserver extends AbstractTransactionObserver {
+export default class TransactionHttpObserver extends AbstractTransactionObserver {
     /**
      * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
      * @param {Number} timeout
      * @param {Number} blockConfirmations
-     * @param {Boolean} instantmine
      * @param {GetTransactionReceiptMethod} getTransactionReceiptMethod
      * @param {GetBlockByNumberMethod} getBlockByNumberMethod
      *
      * @constructor
      */
-    constructor(
-        provider,
-        timeout,
-        blockConfirmations,
-        instantmine,
-        getTransactionReceiptMethod,
-        getBlockByNumberMethod
-    ) {
-        super(provider, timeout, blockConfirmations, instantmine, getTransactionReceiptMethod);
+    constructor(provider, timeout, blockConfirmations, getTransactionReceiptMethod, getBlockByNumberMethod) {
+        super(provider, timeout, blockConfirmations, getTransactionReceiptMethod);
 
         this.getBlockByNumberMethod = getBlockByNumberMethod;
         this.lastBlock = false;

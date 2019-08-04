@@ -25,22 +25,14 @@ export default class AbstractTransactionObserver {
      * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
      * @param {Number} timeout
      * @param {Number} blockConfirmations
-     * @param {Boolean} instantmine
      * @param {GetTransactionReceiptMethod} getTransactionReceiptMethod
      *
      * @constructor
      */
-    constructor(
-        provider,
-        timeout,
-        blockConfirmations,
-        instantmine,
-        getTransactionReceiptMethod
-    ) {
+    constructor(provider, timeout, blockConfirmations, getTransactionReceiptMethod) {
         this.provider = provider;
         this.timeout = timeout;
         this.blockConfirmations = blockConfirmations;
-        this.instantmine = instantmine;
         this.getTransactionReceiptMethod = getTransactionReceiptMethod;
 
         this.confirmations = 0;
@@ -56,7 +48,7 @@ export default class AbstractTransactionObserver {
      *
      * @returns {Observable}
      */
-    observe(transactionHash) { }
+    observe(transactionHash) {}
 
     /**
      * Calls the next callback method of the Observer

@@ -27,7 +27,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
-     * @param {TransactionObserver} transactionObserver
+     * @param {AbstractTransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
      *

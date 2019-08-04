@@ -23,9 +23,10 @@
 import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import GetBlockByNumberMethod from '../../src/methods/block/GetBlockByNumberMethod';
 import GetTransactionReceiptMethod from '../../src/methods/transaction/GetTransactionReceiptMethod';
-import TransactionObserver from '../../src/observers/TransactionObserver';
 import GetTransactionCountMethod from '../../src/methods/account/GetTransactionCountMethod';
 import ChainIdMethod from '../../src/methods/network/ChainIdMethod';
+import TransactionSocketObserver from '../../src/observers/TransactionSocketObserver';
+import TransactionHttpObserver from '../../src/observers/TransactionHttpObserver';
 
 export default class AbstractMethodFactory {
     /**
@@ -143,16 +144,27 @@ export default class AbstractMethodFactory {
      *
      * @param {AbstractWeb3Module} moduleInstance
      *
-     * @returns {TransactionObserver}
+     * @returns {TransactionHttpObserver|TransactionSocketObserver}
      */
     createTransactionObserver(moduleInstance) {
-        return new TransactionObserver(
+        if (moduleInstance.currentProvider.supportsSubscriptions()) {
+            return new TransactionSocketObserver(
+                moduleInstance.currentProvider,
+                this.getTimeout(moduleInstance),
+                moduleInstance.transactionConfirmationBlocks,
+                moduleInstance.instantmine,
+                new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
+                new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
+            );
+        }
+
+        return new TransactionHttpObserver(
             moduleInstance.currentProvider,
             this.getTimeout(moduleInstance),
             moduleInstance.transactionConfirmationBlocks,
+            moduleInstance.instantmine,
             new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
-            new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance),
-            new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
+            new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance)
         );
     }
 }
