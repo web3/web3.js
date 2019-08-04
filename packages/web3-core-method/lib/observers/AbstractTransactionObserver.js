@@ -20,7 +20,7 @@
 
 import {Observable} from 'rxjs';
 
-export default class  {
+export default class AbstractTransactionObserver {
     /**
      * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
      * @param {Number} timeout

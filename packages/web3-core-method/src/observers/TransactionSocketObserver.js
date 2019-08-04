@@ -12,7 +12,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file TransactionObserver.js
+ * @file TransactionSocketObserver.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2019
