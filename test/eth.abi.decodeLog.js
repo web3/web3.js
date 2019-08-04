@@ -4,6 +4,18 @@ var Web3Abi = require('../packages/web3-eth-abi');
 
 var tests = [{
     params: [[{
+        type: 'uint256',
+        name: 'myNumber',
+        indexed: true
+    }], '0x',
+        ['0x00000000000000000000000000000000000000000000726f7463697665676166']],
+    result: {
+        '0': '540405754302209636917606',
+        myNumber: '540405754302209636917606',
+        "__length__": 1
+    }
+},{
+    params: [[{
         type: 'string',
         name: 'myString'
     },{
