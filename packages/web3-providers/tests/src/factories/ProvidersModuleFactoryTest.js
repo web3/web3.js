@@ -67,7 +67,8 @@ describe('ProvidersModuleFactoryTest', () => {
             providersModuleFactory.createWebsocketProvider('ws://username:password@hallo:5544', {
                 protocol: 'string',
                 clientConfig: 'string',
-		requestOptions: null,
+                requestOptions: null,
+                origin: null
             })
         ).toBeInstanceOf(WebsocketProvider);
 
