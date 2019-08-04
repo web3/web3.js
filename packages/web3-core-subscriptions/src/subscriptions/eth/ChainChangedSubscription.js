@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file AccountsChangedSubscription
+ * @file ChainChangedSubscription
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
 
 import AbstractProviderSubscription from '../../../lib/subscriptions/AbstractProviderSubscription';
 
-export default class AccountsChangedSubscription extends AbstractProviderSubscription {
+export default class ChainChangedSubscription extends AbstractProviderSubscription {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
@@ -31,6 +31,6 @@ export default class AccountsChangedSubscription extends AbstractProviderSubscri
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('', 'accountsChanged', null, utils, formatters, moduleInstance);
+        super('', 'chainChanged', null, utils, formatters, moduleInstance);
     }
 }
