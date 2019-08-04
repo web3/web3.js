@@ -118,12 +118,12 @@ export const isAddress = (address, chainId = null) => {
  *
  * @method stripHexPrefix
  *
- * @param {string} address
+ * @param {string} string
  *
  * @returns {string} address without prefix
  */
 export const stripHexPrefix = (string) => {
-    return string.slice(0, 2) === '0x' ? string.slice(2) : string;
+    return string.startsWith('0x') || string.startsWith('0X') ? string.slice(2) : string;
 };
 
 /**
@@ -299,6 +299,10 @@ export const hexToNumber = (value) => {
  */
 export const hexToNumberString = (value) => {
     if (!value) return value;
+
+    if (isString(value)) {
+        if (!isHexStrict(value)) throw new Error(`Given value "${value}" is not a valid hex string.`);
+    }
 
     return toBN(value).toString(10);
 };

@@ -188,7 +188,7 @@ export interface BlockHeader {
 }
 
 export interface Block extends BlockHeader {
-    transactions: Transaction[];
+    transactions: Transaction[] | string[];
     size: number
     difficulty: number
     totalDifficulty: number
@@ -216,11 +216,11 @@ export interface Subscription<T> {
 
     unsubscribe(callback?: (error: Error, result: boolean) => void): Promise<undefined | boolean>;
 
-    on(type: 'data', handler: (data: T) => void): void
+    on(type: 'data', handler: (data: T) => void): Subscription<T>
 
-    on(type: 'changed', handler: (data: T) => void): void
+    on(type: 'changed', handler: (data: T) => void): Subscription<T>
 
-    on(type: 'error', handler: (data: Error) => void): void
+    on(type: 'error', handler: (data: Error) => void): Subscription<T>
 }
 
 export interface GetProof {

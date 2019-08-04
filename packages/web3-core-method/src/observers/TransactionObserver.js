@@ -14,6 +14,7 @@
 /**
  * @file TransactionObserver.js
  * @author Samuel Furter <samuel@ethereum.org>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2019
  */
 
@@ -148,7 +149,9 @@ export default class TransactionObserver {
 
                 const receipt = await this.getTransactionReceiptMethod.execute();
 
-                if (receipt) {
+                // on parity nodes you can get the receipt without it being mined
+                // so the receipt may not have a block number at this point
+                if (receipt && receipt.blockNumber) {
                     if (this.lastBlock) {
                         const block = await this.getBlockByNumber(this.lastBlock.number + 1);
 

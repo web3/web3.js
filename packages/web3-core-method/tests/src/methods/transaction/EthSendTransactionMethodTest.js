@@ -204,7 +204,7 @@ describe('EthSendTransactionMethodTest', () => {
 
             expect(hash).toEqual('0x0');
 
-            expect(customSigner.sign).toHaveBeenCalledWith(mappedTransaction, null);
+            expect(customSigner.sign).toHaveBeenCalledWith(mappedTransaction, undefined);
 
             expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
@@ -246,7 +246,7 @@ describe('EthSendTransactionMethodTest', () => {
 
         await expect(method.execute()).rejects.toThrow('ERROR');
 
-        expect(customSigner.sign).toHaveBeenCalledWith(mappedTransaction, null);
+        expect(customSigner.sign).toHaveBeenCalledWith(mappedTransaction, undefined);
 
         expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
     });

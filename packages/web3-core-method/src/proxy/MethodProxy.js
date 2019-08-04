@@ -63,7 +63,7 @@ export default class MethodProxy {
                     return RpcMethod;
                 }
 
-                return target[name];
+                return Reflect.get(target, name);
             }
         });
     }

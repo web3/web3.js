@@ -34,7 +34,7 @@ export default class AbstractSocketProvider extends EventEmitter {
         super();
         this.connection = connection;
         this.timeout = timeout;
-        this.subscriptions = {};
+        this.subscriptions = new Map();
         this.registerEventListeners();
 
         this.READY = 'ready';
@@ -166,7 +166,6 @@ export default class AbstractSocketProvider extends EventEmitter {
         this.emit(this.ERROR, error);
         this.emit(this.SOCKET_ERROR, error);
         this.removeAllSocketListeners();
-        this.removeAllListeners();
     }
 
     /**
@@ -189,21 +188,23 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @method onConnect
      */
     async onConnect() {
-        const subscriptionKeys = Object.keys(this.subscriptions);
+        if (this.subscriptions.size > 0) {
+            let subscriptionId, value;
 
-        if (subscriptionKeys.length > 0) {
-            let subscriptionId;
+            for (let item of this.subscriptions) {
+                value = item[1];
 
-            for (let key of subscriptionKeys) {
                 subscriptionId = await this.subscribe(
-                    this.subscriptions[key].subscribeMethod,
-                    this.subscriptions[key].parameters[0],
-                    this.subscriptions[key].parameters.slice(1)
+                    value.subscribeMethod,
+                    value.parameters[0],
+                    value.parameters.slice(1)
                 );
 
-                delete this.subscriptions[subscriptionId];
+                if (item[0] !== subscriptionId) {
+                    this.subscriptions.delete(subscriptionId);
+                }
 
-                this.subscriptions[key].id = subscriptionId;
+                value.id = subscriptionId;
             }
         }
 
@@ -264,11 +265,11 @@ export default class AbstractSocketProvider extends EventEmitter {
 
         return this.send(subscribeMethod, parameters)
             .then((subscriptionId) => {
-                this.subscriptions[subscriptionId] = {
+                this.subscriptions.set(subscriptionId, {
                     id: subscriptionId,
                     subscribeMethod: subscribeMethod,
                     parameters: parameters
-                };
+                });
 
                 return subscriptionId;
             })
@@ -293,7 +294,7 @@ export default class AbstractSocketProvider extends EventEmitter {
                 if (response) {
                     this.removeAllListeners(this.getSubscriptionEvent(subscriptionId));
 
-                    delete this.subscriptions[subscriptionId];
+                    this.subscriptions.delete(subscriptionId);
                 }
 
                 return response;
@@ -315,9 +316,10 @@ export default class AbstractSocketProvider extends EventEmitter {
     clearSubscriptions(unsubscribeMethod = 'eth_unsubscribe') {
         let unsubscribePromises = [];
 
-        Object.keys(this.subscriptions).forEach((key) => {
+        this.subscriptions.forEach((value, key) => {
             this.removeAllListeners(key);
-            unsubscribePromises.push(this.unsubscribe(this.subscriptions[key].id, unsubscribeMethod));
+
+            unsubscribePromises.push(this.unsubscribe(value.id, unsubscribeMethod));
         });
 
         return Promise.all(unsubscribePromises).then((results) => {
@@ -352,13 +354,13 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @returns {String}
      */
     getSubscriptionEvent(subscriptionId) {
-        if (this.subscriptions[subscriptionId]) {
+        if (this.subscriptions.get(subscriptionId)) {
             return subscriptionId;
         }
 
         let event;
-        Object.keys(this.subscriptions).forEach((key) => {
-            if (this.subscriptions[key].id === subscriptionId) {
+        this.subscriptions.forEach((value, key) => {
+            if (value.id === subscriptionId) {
                 event = key;
             }
         });

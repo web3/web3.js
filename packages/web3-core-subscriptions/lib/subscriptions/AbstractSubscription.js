@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import isFunction from 'lodash/isFunction';
 import EventEmitter from 'eventemitter3';
 
 /**
@@ -80,7 +79,9 @@ export default class AbstractSubscription extends EventEmitter {
      * @callback callback callback(error, result)
      * @returns {AbstractSubscription}
      */
-    subscribe(callback) {
+    subscribe(callback = null) {
+        this.callback = callback;
+
         this.beforeSubscription(this.moduleInstance);
         let subscriptionParameters = [];
 
@@ -93,34 +94,13 @@ export default class AbstractSubscription extends EventEmitter {
             .then((subscriptionId) => {
                 this.id = subscriptionId;
 
-                this.moduleInstance.currentProvider.once('error', (error) => {
-                    this.moduleInstance.currentProvider.removeAllListeners(this.id);
-
-                    if (isFunction(callback)) {
-                        callback(error, false);
-
-                        return;
-                    }
-
-                    this.emit('error', error);
-                    this.removeAllListeners();
-                });
-
-                this.moduleInstance.currentProvider.on(this.id, (response) => {
-                    const formattedOutput = this.onNewSubscriptionItem(response.result);
-
-                    if (isFunction(callback)) {
-                        callback(false, formattedOutput);
-
-                        return;
-                    }
-
-                    this.emit('data', formattedOutput);
-                });
+                // TODO: Improve listener handling for subscriptions
+                this.moduleInstance.currentProvider.on('error', this.errorListener.bind(this));
+                this.moduleInstance.currentProvider.on(this.id, this.subscriptionListener.bind(this));
             })
             .catch((error) => {
-                if (isFunction(callback)) {
-                    callback(error, null);
+                if (this.callback) {
+                    this.callback(error, null);
 
                     return;
                 }
@@ -130,6 +110,42 @@ export default class AbstractSubscription extends EventEmitter {
             });
 
         return this;
+    }
+
+    /**
+     * Listens to the provider errors
+     *
+     * @method errorListener
+     *
+     * @param {Error} error
+     */
+    errorListener(error) {
+        if (this.callback) {
+            this.callback(error, false);
+
+            return;
+        }
+
+        this.emit('error', error);
+    }
+
+    /**
+     * Listens to the subscription
+     *
+     * @method subscriptionListener
+     *
+     * @param {Object} response
+     */
+    subscriptionListener(response) {
+        const formattedOutput = this.onNewSubscriptionItem(response.result);
+
+        if (this.callback) {
+            this.callback(false, formattedOutput);
+
+            return;
+        }
+
+        this.emit('data', formattedOutput);
     }
 
     /**
@@ -148,17 +164,20 @@ export default class AbstractSubscription extends EventEmitter {
             .then((response) => {
                 if (!response) {
                     const error = new Error('Error on unsubscribe!');
-                    if (isFunction(callback)) {
+                    if (callback) {
                         callback(error, null);
                     }
 
                     throw error;
                 }
 
-                this.id = null;
-                this.removeAllListeners('data');
+                this.moduleInstance.currentProvider.removeListener('error', this.errorListener);
+                this.moduleInstance.currentProvider.removeListener(this.id, this.subscriptionListener);
 
-                if (isFunction(callback)) {
+                this.id = null;
+                this.removeAllListeners();
+
+                if (callback) {
                     callback(false, true);
                 }
 

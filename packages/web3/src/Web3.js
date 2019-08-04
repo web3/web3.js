@@ -49,6 +49,17 @@ export default class Web3 extends AbstractWeb3Module {
     }
 
     /**
+     * Returns the Accounts module from the Eth module
+     *
+     * @property accounts
+     *
+     * @returns {Accounts}
+     */
+    get accounts() {
+        return this.eth.accounts;
+    }
+
+    /**
      * Sets the defaultGasPrice property on the eth module and also on the shh module
      *
      * @property defaultGasPrice

@@ -23,6 +23,7 @@
 import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
+import JsonRpcMapper from '../mappers/JsonRpcMapper';
 
 export default class BatchRequest {
     /**
@@ -33,6 +34,7 @@ export default class BatchRequest {
     constructor(moduleInstance) {
         this.moduleInstance = moduleInstance;
         this.methods = [];
+        this.accounts = [];
     }
 
     /**
@@ -57,51 +59,119 @@ export default class BatchRequest {
      *
      * @returns Promise<{methods: AbstractMethod[], response: Object[]}|Error[]>
      */
-    execute() {
-        return this.moduleInstance.currentProvider.sendBatch(this.methods, this.moduleInstance).then((response) => {
-            let errors = [];
-            this.methods.forEach((method, index) => {
-                if (!isArray(response)) {
+    async execute() {
+        const payload = await this.toPayload();
+        const response = await this.moduleInstance.currentProvider.sendPayload(payload);
+        let hasCallbacks = false;
+
+        let errors = [];
+        this.methods.forEach((method, index) => {
+            // TODO: Remove callbacks
+            if (!hasCallbacks && method.callback) {
+                hasCallbacks = true;
+            }
+
+            if (!isArray(response)) {
+                if (method.callback) {
                     method.callback(
                         new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`),
                         null
                     );
 
-                    errors.push(`Response should be of type Array but is: ${typeof response}`);
-
                     return;
                 }
 
-                const responseItem = response[index] || null;
-
-                const validationResult = JsonRpcResponseValidator.validate(responseItem);
-
-                if (validationResult) {
-                    try {
-                        const mappedResult = method.afterExecution(responseItem.result);
-
-                        response[index] = mappedResult;
-                        method.callback(false, mappedResult);
-                    } catch (error) {
-                        errors.push(error);
-                        method.callback(error, null);
-                    }
-
-                    return;
-                }
-
-                errors.push(validationResult);
-                method.callback(validationResult, null);
-            });
-
-            if (errors.length > 0) {
-                throw new Error(`BatchRequest error: ${JSON.stringify(errors)}`);
+                throw new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`);
             }
 
-            return {
-                methods: this.methods,
+            const responseItem = response[index] || null;
+            const validationResult = JsonRpcResponseValidator.validate(responseItem);
+
+            if (validationResult === true) {
+                try {
+                    let mappedResult;
+
+                    // TODO: Find a better handling for custom behaviours in a batch request (afterBatchRequest?)
+                    if (
+                        method.Type === 'eth-send-transaction-method' ||
+                        method.Type === 'observed-transaction-method'
+                    ) {
+                        mappedResult = responseItem.result;
+                    } else {
+                        mappedResult = method.afterExecution(responseItem.result);
+                    }
+
+                    response[index] = mappedResult;
+
+                    if (method.callback) {
+                        method.callback(false, mappedResult);
+                    }
+                } catch (error) {
+                    errors[index] = {method, error};
+
+                    if (method.callback) {
+                        method.callback(error, null);
+                    }
+                }
+
+                return;
+            }
+
+            errors[index] = {method, error: validationResult};
+
+            if (this.accounts[index] && this.accounts[index].nonce) {
+                this.accounts[index].nonce--;
+            }
+
+            if (method.callback) {
+                method.callback(validationResult, null);
+            }
+        });
+
+        if (errors.length > 0 && !hasCallbacks) {
+            // eslint-disable-next-line no-throw-literal
+            throw {
+                errors,
                 response
             };
-        });
+        }
+
+        return {
+            methods: this.methods,
+            response
+        };
+    }
+
+    /**
+     *  Creates a payload and signs the transactions locally if required.
+     *
+     * @method toPayload
+     *
+     * @returns {Promise<Array>}
+     */
+    async toPayload() {
+        let payload = [];
+
+        for (let i = 0; i < this.methods.length; i++) {
+            const method = this.methods[i];
+            method.beforeExecution(this.moduleInstance);
+
+            // TODO: The method type specific handling shouldn't be done here.
+            if (this.moduleInstance.accounts && method.Type === 'eth-send-transaction-method' && method.hasAccounts()) {
+                const account = this.moduleInstance.accounts.wallet[method.parameters[0].from];
+
+                if (account) {
+                    const response = await method.signTransaction(account);
+                    method.parameters = [response.rawTransaction];
+                    method.rpcMethod = 'eth_sendRawTransaction';
+
+                    this.accounts[i] = account;
+                }
+            }
+
+            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
+        }
+
+        return payload;
     }
 }

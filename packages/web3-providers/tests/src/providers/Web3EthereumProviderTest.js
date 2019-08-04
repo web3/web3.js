@@ -1,5 +1,4 @@
 import Web3EthereumProvider from '../../../src/providers/Web3EthereumProvider';
-import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
 import AbstractMethod from '../../__mocks__/AbstractMethod';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
 import AbstractSocketProvider from '../../../lib/providers/AbstractSocketProvider';
@@ -135,11 +134,20 @@ describe('Web3EthereumProviderTest', () => {
     });
 
     it('calls removeAllSocketListeners', () => {
-        socketMock.removeAllListeners = jest.fn();
+        socketMock.removeListener = jest.fn();
 
         ethereumProvider.removeAllSocketListeners();
 
-        expect(socketMock.removeAllListeners).toHaveBeenCalled();
+        expect(socketMock.removeListener).toHaveBeenNthCalledWith(
+            1,
+            'accountsChanged',
+            ethereumProvider.onAccountsChanged
+        );
+        expect(socketMock.removeListener).toHaveBeenNthCalledWith(
+            2,
+            'networkChanged',
+            ethereumProvider.onNetworkChanged
+        );
     });
 
     it('calls onNetworkChanged and emits the "networkChanged" event', (done) => {
@@ -163,7 +171,7 @@ describe('Web3EthereumProviderTest', () => {
     });
 
     it('calls onMessage and emits the correct event', (done) => {
-        ethereumProvider.subscriptions['0x0'] = true;
+        ethereumProvider.subscriptions.set('0x0', true);
 
         ethereumProvider.on('0x0', (accounts) => {
             expect(accounts).toEqual({subscription: '0x0'});
@@ -175,10 +183,6 @@ describe('Web3EthereumProviderTest', () => {
     });
 
     it('calls send and returns a resolved promise with the response', async () => {
-        JsonRpcResponseValidator.validate = jest.fn(() => {
-            return true;
-        });
-
         socketMock.send = jest.fn((method, parameters) => {
             expect(method).toEqual('method');
 
@@ -190,26 +194,18 @@ describe('Web3EthereumProviderTest', () => {
         const response = await ethereumProvider.send('method', []);
 
         expect(response).toEqual(true);
-
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalled();
     });
 
-    it('calls send and returns a rejected promise because of a invalid response', async () => {
-        JsonRpcResponseValidator.validate = jest.fn(() => {
-            return new Error('invalid');
-        });
-
+    it('calls send and returns a rejected promise because of an error response', async () => {
         socketMock.send = jest.fn((method, parameters) => {
             expect(method).toEqual('method');
 
             expect(parameters).toEqual([]);
 
-            return Promise.resolve(false);
+            return Promise.reject(new Error('invalid'));
         });
 
-        await expect(ethereumProvider.send('method', [])).rejects.toThrow('invalid');
-
-        expect(JsonRpcResponseValidator.validate).toHaveBeenCalled();
+        await expect(ethereumProvider.send('method', [])).rejects.toThrow('Node error: invalid');
     });
 
     it('calls sendBatch and returns a resolved promise with the response', async () => {

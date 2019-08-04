@@ -27,12 +27,30 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     /**
      * @param {WebSocket} connection
      * @param {Number} timeout
+     * @param {Number} reconnectDelay
      *
      * @constructor
      */
-    constructor(connection, timeout) {
+    constructor(connection, timeout, reconnectDelay = 5000) {
         super(connection, timeout);
         this.host = this.connection.url;
+        this.reconnectDelay = reconnectDelay;
+        this.reconnecting = false;
+    }
+
+    /**
+     * Emits the connect event and checks if there are subscriptions defined that should be resubscribed.
+     *
+     * @method onConnect
+     */
+    async onConnect() {
+        if (this.reconnecting) {
+            this.emit('reconnected');
+        }
+
+        await super.onConnect();
+
+        this.reconnecting = false;
     }
 
     /**
@@ -64,7 +82,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     }
 
     /**
-     * This ist the listener for the 'close' event of the current socket connection.
+     * This is the listener for the 'close' event of the current socket connection.
      *
      * @method onClose
      *
@@ -86,12 +104,14 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @method reconnect
      */
     reconnect() {
+        this.reconnecting = true;
+
         setTimeout(() => {
             this.removeAllSocketListeners();
 
             let connection = [];
 
-            if (this.connection.constructor.name === 'W3CWebsocket') {
+            if (this.connection.constructor.name === 'W3CWebSocket') {
                 connection = new this.connection.constructor(
                     this.host,
                     this.connection._client.protocol,
@@ -106,7 +126,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
             this.connection = connection;
             this.registerEventListeners();
-        }, 5000);
+        }, this.reconnectDelay);
     }
 
     /**
@@ -204,19 +224,17 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 let timeout, id;
 
                 if (this.connection.readyState !== this.connection.OPEN) {
+                    this.removeListener('error', reject);
+
                     return reject(new Error('Connection error: Connection is not open on send()'));
                 }
 
                 try {
                     this.connection.send(JSON.stringify(payload));
                 } catch (error) {
-                    reject(error);
-                }
+                    this.removeListener('error', reject);
 
-                if (this.timeout) {
-                    timeout = setTimeout(() => {
-                        reject(new Error('Connection error: Timeout exceeded'));
-                    }, this.timeout);
+                    return reject(error);
                 }
 
                 if (isArray(payload)) {
@@ -225,10 +243,21 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                     id = payload.id;
                 }
 
+                if (this.timeout) {
+                    timeout = setTimeout(() => {
+                        this.removeListener('error', reject);
+                        this.removeAllListeners(id);
+
+                        reject(new Error('Connection error: Timeout exceeded'));
+                    }, this.timeout);
+                }
+
                 this.once(id, (response) => {
                     if (timeout) {
                         clearTimeout(timeout);
                     }
+
+                    this.removeListener('error', reject);
 
                     return resolve(response);
                 });
@@ -238,8 +267,16 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
             this.once('connect', () => {
                 this.sendPayload(payload)
-                    .then(resolve)
-                    .catch(reject);
+                    .then((response) => {
+                        this.removeListener('error', reject);
+
+                        return resolve(response);
+                    })
+                    .catch((error) => {
+                        this.removeListener('error', reject);
+
+                        return reject(error);
+                    });
             });
         });
     }

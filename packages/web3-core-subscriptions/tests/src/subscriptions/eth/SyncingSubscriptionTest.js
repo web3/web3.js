@@ -50,8 +50,6 @@ describe('SyncingSubscriptionTest', () => {
     });
 
     it('calls onNewSubscriptionItem and returns the syncing status', () => {
-        expect(
-            syncingSubscription.onNewSubscriptionItem({status: true, syncing: true})
-        ).toEqual(true);
+        expect(syncingSubscription.onNewSubscriptionItem({status: true, syncing: true})).toEqual(true);
     });
 });

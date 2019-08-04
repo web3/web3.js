@@ -29,7 +29,22 @@ export class BatchRequest {
 
     add(method: AbstractMethod): void;
 
-    execute(): Promise<{methods: AbstractMethod[]; response: any[]} | Error[]>;
+    execute(): Promise<BatchError | BatchResponse>;
+}
+
+export interface BatchError {
+    errors: BatchErrorItem[];
+    response: any[];
+}
+
+export interface BatchErrorItem {
+    error: Error;
+    method: AbstractMethod;
+}
+
+export interface BatchResponse {
+    methods: AbstractMethod[];
+    response: any[]
 }
 
 export class ProviderDetector {
@@ -162,7 +177,10 @@ export interface HttpProviderOptions {
 export interface WebsocketProviderOptions {
     host?: string;
     timeout?: number;
+    reconnectDelay?: number;
     headers?: {};
     protocol?: string;
     clientConfig?: string;
+    requestOptions?: object,
+    origin?: string
 }

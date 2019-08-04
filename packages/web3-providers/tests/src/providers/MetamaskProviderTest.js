@@ -79,14 +79,14 @@ describe('MetamaskProviderTest', () => {
         metamaskProvider.removeAllSocketListeners();
 
         expect(inpageProvider.removeListener).toHaveBeenNthCalledWith(
-            1,
-            metamaskProvider.SOCKET_NETWORK_CHANGED,
+            2,
+            'networkChanged',
             metamaskProvider.onNetworkChanged
         );
 
         expect(inpageProvider.removeListener).toHaveBeenNthCalledWith(
-            2,
-            metamaskProvider.SOCKET_ACCOUNTS_CHANGED,
+            1,
+            'accountsChanged',
             metamaskProvider.onAccountsChanged
         );
     });

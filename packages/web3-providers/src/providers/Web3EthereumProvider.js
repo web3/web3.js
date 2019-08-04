@@ -17,7 +17,6 @@
  * @date 2018
  */
 
-import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 
 export default class Web3EthereumProvider extends AbstractSocketProvider {
@@ -86,7 +85,10 @@ export default class Web3EthereumProvider extends AbstractSocketProvider {
      * @method removeAllSocketListeners
      */
     removeAllSocketListeners() {
-        this.connection.removeAllListeners();
+        this.removeAllListeners(this.SOCKET_ACCOUNTS_CHANGED);
+        this.removeAllListeners(this.SOCKET_NETWORK_CHANGED);
+
+        super.removeAllSocketListeners();
     }
 
     /**
@@ -129,14 +131,11 @@ export default class Web3EthereumProvider extends AbstractSocketProvider {
      * @returns {Promise<Object>}
      */
     async send(method, parameters) {
-        const response = this.connection.send(method, parameters);
-        const validationResult = JsonRpcResponseValidator.validate(response);
-
-        if (validationResult instanceof Error) {
-            throw validationResult;
+        try {
+            return await this.connection.send(method, parameters);
+        } catch (error) {
+            throw new Error(`Node error: ${error.message}`);
         }
-
-        return response;
     }
 
     /**
