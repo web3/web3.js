@@ -25,6 +25,7 @@ export default class TransactionObserver {
      * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
      * @param {Number} timeout
      * @param {Number} blockConfirmations
+     * @param {Boolean} automine
      * @param {GetTransactionReceiptMethod} getTransactionReceiptMethod
      * @param {GetBlockByNumberMethod} getBlockByNumberMethod
      * @param {NewHeadsSubscription} newHeadsSubscription
@@ -35,6 +36,7 @@ export default class TransactionObserver {
         provider,
         timeout,
         blockConfirmations,
+        automine,
         getTransactionReceiptMethod,
         getBlockByNumberMethod,
         newHeadsSubscription
@@ -64,11 +66,27 @@ export default class TransactionObserver {
      */
     observe(transactionHash) {
         return Observable.create((observer) => {
+            if (this.automine) {
+                try {
+                    this.getTransactionReceiptMethod.parameters = [transactionHash];
+                    const receipt = await this.getTransactionReceiptMethod.execute();
+
+                    this.emitNext(receipt, observer);
+                    observer.complete();
+                } catch (error) {
+                    this.emiterror(error);
+                }
+
+                return;
+            }
+
             if (this.provider.supportsSubscriptions()) {
                 this.startSocketObserver(transactionHash, observer);
-            } else {
-                this.startHttpObserver(transactionHash, observer);
+
+                return;
             }
+
+            this.startHttpObserver(transactionHash, observer);
         });
     }
 
