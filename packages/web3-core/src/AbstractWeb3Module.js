@@ -52,7 +52,7 @@ export default class AbstractWeb3Module {
         this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
         this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
         this._transactionPollingTimeout = options.transactionPollingTimeout || 750;
-        this._transactionAutomine = options.automine || false;
+        this._instantmine = options.instantmine || false;
         this._defaultGasPrice = options.defaultGasPrice;
         this._defaultGas = options.defaultGas;
 
@@ -85,6 +85,28 @@ export default class AbstractWeb3Module {
      */
     set defaultBlock(value) {
         this._defaultBlock = value;
+    }
+
+    /**
+     * Getter for the instantmine property
+     *
+     * @property instantmine
+     *
+     * @returns {Boolean}
+     */
+    get instantmine() {
+        return this._instantmine;
+    }
+
+    /**
+     * Setter for the instantmine property
+     *
+     * @property instantmine
+     *
+     * @param {Boolean} value
+     */
+    set instantmine(value) {
+        this._instantmine = value;
     }
 
     /**

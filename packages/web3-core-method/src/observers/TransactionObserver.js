@@ -20,12 +20,13 @@
 
 import {Observable} from 'rxjs';
 
+//TODO: Split the TransactionObserver up into a TransactionHttpObserver, TransactionSocketObserver, and TranactionAutomineObserver
 export default class TransactionObserver {
     /**
      * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
      * @param {Number} timeout
      * @param {Number} blockConfirmations
-     * @param {Boolean} automine
+     * @param {Boolean} instantmine
      * @param {GetTransactionReceiptMethod} getTransactionReceiptMethod
      * @param {GetBlockByNumberMethod} getBlockByNumberMethod
      * @param {NewHeadsSubscription} newHeadsSubscription
@@ -36,7 +37,7 @@ export default class TransactionObserver {
         provider,
         timeout,
         blockConfirmations,
-        automine,
+        instantmine,
         getTransactionReceiptMethod,
         getBlockByNumberMethod,
         newHeadsSubscription
@@ -44,6 +45,7 @@ export default class TransactionObserver {
         this.provider = provider;
         this.timeout = timeout;
         this.blockConfirmations = blockConfirmations;
+        this.instantmine = instantmine;
         this.getTransactionReceiptMethod = getTransactionReceiptMethod;
         this.getBlockByNumberMethod = getBlockByNumberMethod;
         this.newHeadsSubscription = newHeadsSubscription;
@@ -74,7 +76,7 @@ export default class TransactionObserver {
                     this.emitNext(receipt, observer);
                     observer.complete();
                 } catch (error) {
-                    this.emiterror(error);
+                    this.emitError(error);
                 }
 
                 return;
@@ -164,7 +166,6 @@ export default class TransactionObserver {
                 }
 
                 this.getTransactionReceiptMethod.parameters = [transactionHash];
-
                 const receipt = await this.getTransactionReceiptMethod.execute();
 
                 // on parity nodes you can get the receipt without it being mined
@@ -172,8 +173,7 @@ export default class TransactionObserver {
                 if (receipt && receipt.blockNumber) {
                     if (this.lastBlock) {
                         const block = await this.getBlockByNumber(this.lastBlock.number + 1);
-
-                        if (block && this.isValidConfirmation(block)) {
+                        if (block) {
                             this.lastBlock = block;
                             this.confirmations++;
                             this.emitNext(receipt, observer);
@@ -265,19 +265,6 @@ export default class TransactionObserver {
      */
     isConfirmed() {
         return this.confirmations === this.blockConfirmations;
-    }
-
-    /**
-     * Checks if the new block counts as confirmation
-     *
-     * @method isValidConfirmation
-     *
-     * @param {Object} block
-     *
-     * @returns {Boolean}
-     */
-    isValidConfirmation(block) {
-        return this.lastBlock.hash === block.parentHash && this.lastBlock.number !== block.number;
     }
 
     /**

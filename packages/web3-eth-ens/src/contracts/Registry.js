@@ -41,6 +41,257 @@ export default class Registry extends AbstractContract {
         this.net = net;
         this.resolverContract = null;
         this.resolverName = null;
+        this._transactionSigner = options.transactionSigner;
+    }
+
+    /**
+     * Getter for the transactionSigner property
+     *
+     * @property transactionSigner
+     *
+     * @returns {TransactionSigner}
+     */
+    get transactionSigner() {
+        return this._transactionSigner;
+    }
+
+    /**
+     * TODO: Remove setter
+     *
+     * Setter for the transactionSigner property
+     *
+     * @property transactionSigner
+     *
+     * @param {TransactionSigner} value
+     */
+    set transactionSigner(value) {
+        if (value.type && value.type === 'TransactionSigner') {
+            throw new Error('Invalid TransactionSigner given!');
+        }
+
+        this.resolverContract.transactionSigner = value;
+        this._transactionSigner = value;
+    }
+
+    /**
+     * Clears all subscriptions and listeners
+     *
+     * @method clearSubscriptions
+     *
+     * @returns {Promise<Boolean|Error>}
+     */
+    clearSubscriptions() {
+        this.resolverContract.clearSubscriptions('eth_unsubscribe');
+
+        return super.clearSubscriptions('eth_unsubscribe');
+    }
+
+    /**
+     * Sets the defaultGasPrice property on all contracts and on all sub-modules
+     *
+     * @property defaultGasPrice
+     *
+     * @param {String|Number} value
+     */
+    set defaultGasPrice(value) {
+        if (this.resolverContract) {
+            this.resolverContract.defaultGasPrice = value;
+        }
+
+        super.defaultGasPrice = value;
+    }
+
+    /**
+     * Gets the defaultGasPrice property
+     *
+     * @property defaultGasPrice
+     *
+     * @returns {String|Number} value
+     */
+    get defaultGasPrice() {
+        return super.defaultGasPrice;
+    }
+
+    /**
+     * Sets the defaultGas property on all contracts and on all sub-modules
+     *
+     * @property defaultGas
+     *
+     * @param {Number} value
+     */
+    set defaultGas(value) {
+        if (this.resolverContract) {
+            this.resolverContract.defaultGas = value;
+        }
+
+        super.defaultGas = value;
+    }
+
+    /**
+     * Gets the defaultGas property
+     *
+     * @property defaultGas
+     *
+     * @returns {String|Number} value
+     */
+    get defaultGas() {
+        return super.defaultGas;
+    }
+
+    /**
+     * Sets the transactionBlockTimeout property on all contracts and on all sub-modules
+     *
+     * @property transactionBlockTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionBlockTimeout(value) {
+        if (this.resolverContract) {
+            this.resolverContract.transactionBlockTimeout = value;
+        }
+
+        super.transactionBlockTimeout = value;
+    }
+
+    /**
+     * Gets the transactionBlockTimeout property
+     *
+     * @property transactionBlockTimeout
+     *
+     * @returns {Number} value
+     */
+    get transactionBlockTimeout() {
+        return super.transactionBlockTimeout;
+    }
+
+    /**
+     * Sets the instantmine property on all contracts and on all sub-modules
+     *
+     * @property instantmine
+     *
+     * @param {Boolean} value
+     */
+    set instantmine(value) {
+        if (this.resolverContract) {
+            this.resolverContract.instantmine = value;
+        }
+
+        super.instantmine = value;
+    }
+
+    /**
+     * Gets the instantmine property
+     *
+     * @property instantmine
+     *
+     * @returns {Boolean} value
+     */
+    get instantmine() {
+        return super.instantmine;
+    }
+
+    /**
+     * Sets the transactionConfirmationBlocks property on all contracts and on all sub-modules
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @param {Number} value
+     */
+    set transactionConfirmationBlocks(value) {
+        if (this.resolverContract) {
+            this.resolverContract.transactionConfirmationBlocks = value;
+        }
+
+        super.transactionConfirmationBlocks = value;
+    }
+
+    /**
+     * Gets the transactionConfirmationBlocks property
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @returns {Number} value
+     */
+    get transactionConfirmationBlocks() {
+        return super.transactionConfirmationBlocks;
+    }
+
+    /**
+     * Sets the transactionPollingTimeout property on all contracts and on all sub-modules
+     *
+     * @property transactionPollingTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionPollingTimeout(value) {
+        if (this.resolverContract) {
+            this.resolverContract.transactionPollingTimeout = value;
+        }
+
+        super.transactionPollingTimeout = value;
+    }
+
+    /**
+     * Gets the transactionPollingTimeout property
+     *
+     * @property transactionPollingTimeout
+     *
+     * @returns {Number} value
+     */
+    get transactionPollingTimeout() {
+        return super.transactionPollingTimeout;
+    }
+
+    /**
+     * Sets the defaultAccount property on all contracts and on the personal module
+     *
+     * @property defaultAccount
+     *
+     * @param {String} value
+     */
+    set defaultAccount(value) {
+        if (this.resolverContract) {
+            this.resolverContract.defaultAccount = value;
+        }
+
+        super.defaultAccount = value;
+    }
+
+    /**
+     * Gets the defaultAccount property
+     *
+     * @property defaultAccount
+     *
+     * @returns {String} value
+     */
+    get defaultAccount() {
+        return super.defaultAccount;
+    }
+
+    /**
+     * Setter for the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @param {String|Number}value
+     */
+    set defaultBlock(value) {
+        if (this.resolverContract) {
+            this.resolverContract.defaultBlock = value;
+        }
+
+        super.defaultBlock = value;
+    }
+
+    /**
+     * Gets the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @returns {String|Number} value
+     */
+    get defaultBlock() {
+        return super.defaultBlock;
     }
 
     /**

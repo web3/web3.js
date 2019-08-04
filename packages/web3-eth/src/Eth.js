@@ -169,6 +169,7 @@ export default class Eth extends AbstractWeb3Module {
 
         this.net.defaultGasPrice = value;
         this.personal.defaultGasPrice = value;
+        this.ens.defaultGasPrice = value;
 
         super.defaultGasPrice = value;
     }
@@ -198,6 +199,7 @@ export default class Eth extends AbstractWeb3Module {
 
         this.net.defaultGas = value;
         this.personal.defaultGas = value;
+        this.ens.defaultGas = value;
 
         super.defaultGas = value;
     }
@@ -227,6 +229,7 @@ export default class Eth extends AbstractWeb3Module {
 
         this.net.transactionBlockTimeout = value;
         this.personal.transactionBlockTimeout = value;
+        this.ens.transactionBlockTimeout = value;
 
         super.transactionBlockTimeout = value;
     }
@@ -243,6 +246,36 @@ export default class Eth extends AbstractWeb3Module {
     }
 
     /**
+     * Sets the instantmine property on all contracts and on all sub-modules
+     *
+     * @property instantmine
+     *
+     * @param {Boolean} value
+     */
+    set instantmine(value) {
+        this.initiatedContracts.forEach((contract) => {
+            contract.instantmine = value;
+        });
+
+        this.net.instantmine = value;
+        this.personal.instantmine = value;
+        this.ens.instantmine = value;
+
+        super.instantmine = value;
+    }
+
+    /**
+     * Gets the instantmine property
+     *
+     * @property instantmine
+     *
+     * @returns {Boolean} value
+     */
+    get instantmine() {
+        return super.instantmine;
+    }
+
+    /**
      * Sets the transactionConfirmationBlocks property on all contracts and on all sub-modules
      *
      * @property transactionConfirmationBlocks
@@ -256,6 +289,7 @@ export default class Eth extends AbstractWeb3Module {
 
         this.net.transactionConfirmationBlocks = value;
         this.personal.transactionConfirmationBlocks = value;
+        this.ens.transactionConfirmationBlocks = value;
 
         super.transactionConfirmationBlocks = value;
     }
@@ -285,6 +319,7 @@ export default class Eth extends AbstractWeb3Module {
 
         this.net.transactionPollingTimeout = value;
         this.personal.transactionPollingTimeout = value;
+        this.ens.transactionPollingTimeout = value;
 
         super.transactionPollingTimeout = value;
     }
@@ -314,6 +349,7 @@ export default class Eth extends AbstractWeb3Module {
 
         this.net.defaultAccount = value;
         this.personal.defaultAccount = value;
+        this.ens.defaultAccount = value;
 
         super.defaultAccount = value;
     }
@@ -343,6 +379,7 @@ export default class Eth extends AbstractWeb3Module {
 
         this.net.defaultBlock = value;
         this.personal.defaultBlock = value;
+        this.ens.defaultBlock = value;
 
         super.defaultBlock = value;
     }
@@ -391,6 +428,7 @@ export default class Eth extends AbstractWeb3Module {
         return (
             this.net.setProvider(provider, net) &&
             this.personal.setProvider(provider, net) &&
+            this.ens.setProvider(provider, net) &&
             super.setProvider(provider, net) &&
             setContractProviders
         );
