@@ -256,7 +256,7 @@ describe('AbstractSocketProviderTest', () => {
     });
 
     it('calls clearSubscriptions and one unsubscribe call returns false', async () => {
-        abstractSocketProvider.subscriptions.set('0x0', {id: '0x0'});
+        abstractSocketProvider.subscriptions.set('0x0', {id: '0x0', subscribeMethod: 'eth_subscribe'});
         abstractSocketProvider.removeAllListeners = jest.fn();
 
         abstractSocketProvider.send = jest.fn((subscribeMethod, parameters) => {
@@ -270,12 +270,10 @@ describe('AbstractSocketProviderTest', () => {
         await expect(abstractSocketProvider.clearSubscriptions('eth_unsubscribe')).rejects.toThrow(
             `Could not unsubscribe all subscriptions: ${JSON.stringify([false])}`
         );
-
-        expect(abstractSocketProvider.removeAllListeners).toHaveBeenCalledWith('0x0');
     });
 
     it('calls clearSubscriptions and all unsubscribe calls are returning true', async () => {
-        abstractSocketProvider.subscriptions.set('0x0', {id: '0x0'});
+        abstractSocketProvider.subscriptions.set('0x0', {id: '0x0', subscribeMethod: 'eth_subscribe'});
         abstractSocketProvider.removeAllListeners = jest.fn();
 
         abstractSocketProvider.send = jest.fn((subscribeMethod, parameters) => {
@@ -289,8 +287,6 @@ describe('AbstractSocketProviderTest', () => {
         const response = await abstractSocketProvider.clearSubscriptions('eth_unsubscribe');
 
         expect(response).toEqual(true);
-
-        expect(abstractSocketProvider.removeAllListeners).toHaveBeenCalledWith('0x0');
 
         expect(abstractSocketProvider.subscriptions).toEqual(new Map());
     });
