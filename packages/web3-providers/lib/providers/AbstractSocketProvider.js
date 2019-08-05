@@ -67,7 +67,8 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @method registerEventListeners
      */
-    registerEventListeners() {}
+    registerEventListeners() {
+    }
 
     /**
      * Removes all socket listeners
@@ -90,7 +91,8 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {Number} code
      * @param {String} reason
      */
-    disconnect(code, reason) {}
+    disconnect(code, reason) {
+    }
 
     /**
      * Returns true if the socket is connected
@@ -99,7 +101,8 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Boolean}
      */
-    get connected() {}
+    get connected() {
+    }
 
     /**
      * Creates the JSON-RPC payload and sends it to the node.
@@ -314,24 +317,30 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @returns {Promise<Boolean|Error>}
      */
     clearSubscriptions(unsubscribeMethod = '') {
-        let unsubscribePromises = [];
-        const type = unsubscribeMethod.slice(0, 3);
+        if (this.subscriptions.size > 0) {
+            let unsubscribePromises = [];
+            const type = unsubscribeMethod.slice(0, 3);
 
-        this.subscriptions.forEach((value) => {
-            if (type === '') {
-                unsubscribePromises.push(this.unsubscribe(value.id, `${value.subscribeMethod.slice(0, 3)}_unsubscribe`));
-            } else if (type === value.subscribeMethod.slice(0, 3)) {
-                unsubscribePromises.push(this.unsubscribe(value.id, unsubscribeMethod));
-            }
-        });
+            this.subscriptions.forEach((value) => {
+                if (type === '') {
+                    unsubscribePromises.push(
+                        this.unsubscribe(value.id, `${value.subscribeMethod.slice(0, 3)}_unsubscribe`)
+                    );
+                } else if (type === value.subscribeMethod.slice(0, 3)) {
+                    unsubscribePromises.push(this.unsubscribe(value.id, unsubscribeMethod));
+                }
+            });
 
-        return Promise.all(unsubscribePromises).then((results) => {
-            if (results.includes(false)) {
-                throw new Error(`Could not unsubscribe all subscriptions: ${JSON.stringify(results)}`);
-            }
+            return Promise.all(unsubscribePromises).then((results) => {
+                if (results.includes(false)) {
+                    throw new Error(`Could not unsubscribe all subscriptions: ${JSON.stringify(results)}`);
+                }
 
-            return true;
-        });
+                return true;
+            });
+        }
+
+        return Promise.resolve(true);
     }
 
     /**

@@ -311,7 +311,7 @@ export default class AbstractWeb3Module {
      * @returns {Promise<Boolean|Error>}
      */
     clearSubscriptions(unsubscribeMethod) {
-        if (this.currentProvider.supportsSubscriptions() && this.currentProvider.subscriptions.length > 0) {
+        if (this.currentProvider.supportsSubscriptions()) {
             return this.currentProvider.clearSubscriptions(unsubscribeMethod);
         }
 
