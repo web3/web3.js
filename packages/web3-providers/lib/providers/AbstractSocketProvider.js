@@ -260,7 +260,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Promise<String|Error>}
      */
-    subscribe(subscribeMethod = 'eth_subscribe', subscriptionMethod, parameters) {
+    subscribe(subscribeMethod, subscriptionMethod, parameters) {
         parameters.unshift(subscriptionMethod);
 
         return this.send(subscribeMethod, parameters)
@@ -288,7 +288,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Promise<Boolean|Error>}
      */
-    unsubscribe(subscriptionId, unsubscribeMethod = 'eth_unsubscribe') {
+    unsubscribe(subscriptionId, unsubscribeMethod) {
         if (this.hasSubscription(subscriptionId)) {
             return this.send(unsubscribeMethod, [subscriptionId]).then((response) => {
                 if (response) {
@@ -313,13 +313,14 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Promise<Boolean|Error>}
      */
-    clearSubscriptions(unsubscribeMethod = 'eth_unsubscribe') {
+    clearSubscriptions(unsubscribeMethod) {
         let unsubscribePromises = [];
+        const type = unsubscribeMethod.slice(0, 3);
 
         this.subscriptions.forEach((value, key) => {
-            this.removeAllListeners(key);
-
-            unsubscribePromises.push(this.unsubscribe(value.id, unsubscribeMethod));
+            if (type === value.subscribeMethod.slice(0, 3)) {
+                unsubscribePromises.push(this.unsubscribe(value.id, unsubscribeMethod));
+            }
         });
 
         return Promise.all(unsubscribePromises).then((results) => {
