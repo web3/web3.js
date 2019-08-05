@@ -313,12 +313,13 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Promise<Boolean|Error>}
      */
-    clearSubscriptions(unsubscribeMethod) {
+    clearSubscriptions(unsubscribeMethod = '') {
         let unsubscribePromises = [];
-        const type = unsubscribeMethod.slice(0, 3);
 
-        this.subscriptions.forEach((value, key) => {
-            if (type === value.subscribeMethod.slice(0, 3)) {
+        this.subscriptions.forEach((value) => {
+            if (unsubscribeMethod === '') {
+                unsubscribePromises.push(this.unsubscribe(value.id, `${value.subscribeMethod.slice(0, 3)}_unsubscribe`));
+            } else if (unsubscribeMethod.slice(0, 3) === value.subscribeMethod.slice(0, 3)) {
                 unsubscribePromises.push(this.unsubscribe(value.id, unsubscribeMethod));
             }
         });
