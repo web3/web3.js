@@ -50,8 +50,8 @@ export default class AbstractProviderSubscription extends AbstractSubscription {
     subscribe(callback) {
         this.callback = callback;
 
-        this.moduleInstance.currentProvider.on(this.method, this.onNewSubscriptionItem);
-        this.moduleInstance.currentProvider.on('error', this.onError);
+        this.moduleInstance.currentProvider.on(this.method, this.onNewSubscriptionItem.bind(this));
+        this.moduleInstance.currentProvider.on('error', this.onError.bind(this));
 
         return this;
     }
@@ -63,9 +63,14 @@ export default class AbstractProviderSubscription extends AbstractSubscription {
      *
      * @return {Boolean}
      */
-    async unsubscribe() {
+    async unsubscribe(callback) {
         this.moduleInstance.currentProvider.removeListener(this.method, this.onNewSubscriptionItem);
         this.moduleInstance.currentProvider.removeListener('error', this.onError);
+        this.removeAllListeners();
+
+        if (callback) {
+            callback(false, true);
+        }
 
         return true;
     }
@@ -78,7 +83,11 @@ export default class AbstractProviderSubscription extends AbstractSubscription {
      * @param {Error} error
      */
     onError(error) {
-        this.callback(false, error);
+        if (this.callback) {
+            this.callback(error, null);
+        }
+
+        this.emit('error', error);
     }
 
     /**
@@ -87,6 +96,10 @@ export default class AbstractProviderSubscription extends AbstractSubscription {
      * @param {Error|Array} value
      */
     onNewSubscriptionItem(value) {
-        this.callback(value, null);
+        if (this.callback) {
+            this.callback(false, value);
+        }
+
+        this.emit('data', value);
     }
 }
