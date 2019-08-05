@@ -257,7 +257,6 @@ describe('AbstractSocketProviderTest', () => {
 
     it('calls clearSubscriptions and one unsubscribe call returns false', async () => {
         abstractSocketProvider.subscriptions.set('0x0', {id: '0x0', subscribeMethod: 'eth_subscribe'});
-        abstractSocketProvider.removeAllListeners = jest.fn();
 
         abstractSocketProvider.send = jest.fn((subscribeMethod, parameters) => {
             expect(subscribeMethod).toEqual('eth_unsubscribe');
@@ -274,7 +273,6 @@ describe('AbstractSocketProviderTest', () => {
 
     it('calls clearSubscriptions and all unsubscribe calls are returning true', async () => {
         abstractSocketProvider.subscriptions.set('0x0', {id: '0x0', subscribeMethod: 'eth_subscribe'});
-        abstractSocketProvider.removeAllListeners = jest.fn();
 
         abstractSocketProvider.send = jest.fn((subscribeMethod, parameters) => {
             expect(subscribeMethod).toEqual('eth_unsubscribe');
@@ -289,6 +287,30 @@ describe('AbstractSocketProviderTest', () => {
         expect(response).toEqual(true);
 
         expect(abstractSocketProvider.subscriptions).toEqual(new Map());
+    });
+
+    it('calls clearSubscriptions without a type given and all unsubscribe calls are returning true', async () => {
+        abstractSocketProvider.subscriptions.set('0x0', {id: '0x0', subscribeMethod: 'eth_subscribe'});
+
+        abstractSocketProvider.send = jest.fn((subscribeMethod, parameters) => {
+            expect(subscribeMethod).toEqual('eth_unsubscribe');
+
+            expect(parameters).toEqual(['0x0']);
+
+            return Promise.resolve(true);
+        });
+
+        const response = await abstractSocketProvider.clearSubscriptions();
+
+        expect(response).toEqual(true);
+
+        expect(abstractSocketProvider.subscriptions).toEqual(new Map());
+    });
+
+    it('calls clearSubscriptions without running subscriptions and resolves with true', async () => {
+        const response = await abstractSocketProvider.clearSubscriptions();
+
+        expect(response).toEqual(true);
     });
 
     it('calls getSubscriptionEvent and has to iterate over all items', () => {
