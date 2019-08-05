@@ -315,11 +315,12 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     clearSubscriptions(unsubscribeMethod = '') {
         let unsubscribePromises = [];
+        const type = unsubscribeMethod.slice(0, 3);
 
         this.subscriptions.forEach((value) => {
-            if (unsubscribeMethod === '') {
+            if (type === '') {
                 unsubscribePromises.push(this.unsubscribe(value.id, `${value.subscribeMethod.slice(0, 3)}_unsubscribe`));
-            } else if (unsubscribeMethod.slice(0, 3) === value.subscribeMethod.slice(0, 3)) {
+            } else if (type === value.subscribeMethod.slice(0, 3)) {
                 unsubscribePromises.push(this.unsubscribe(value.id, unsubscribeMethod));
             }
         });

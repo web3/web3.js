@@ -42,7 +42,7 @@ export default class AbstractWeb3Module {
      * @constructor
      */
     constructor(provider, options = {}, methodFactory = null, nodeNet = null) {
-        // ProviderDetector and ProviderResolver are created in the constructor for providing a simpler Web3 Module API.
+        // TODO: Move the ProviderResolver dependency injection to the planned public_api layer.
         this.providerResolver = new ProviderResolver();
         this.givenProvider = ProviderDetector.detect();
 
@@ -257,6 +257,8 @@ export default class AbstractWeb3Module {
     }
 
     /**
+     * TODO: setProvider has to be asynchronous because of the clearSubscriptions method.
+     *
      * Sets the currentProvider and provider property
      *
      * @method setProvider
@@ -309,10 +311,7 @@ export default class AbstractWeb3Module {
      * @returns {Promise<Boolean|Error>}
      */
     clearSubscriptions(unsubscribeMethod) {
-        if (
-            typeof this.currentProvider.clearSubscriptions !== 'undefined' &&
-            this.currentProvider.subscriptions.length > 0
-        ) {
+        if (this.currentProvider.supportsSubscriptions() && this.currentProvider.subscriptions.length > 0) {
             return this.currentProvider.clearSubscriptions(unsubscribeMethod);
         }
 
