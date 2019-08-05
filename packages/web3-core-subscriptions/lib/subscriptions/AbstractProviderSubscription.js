@@ -20,8 +20,11 @@
  * @date 2019
  */
 
+import AbstractSubscription from './AbstractSubscription';
+
 export default class AbstractProviderSubscription extends AbstractSubscription {
     /**
+     * @param {String} method
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
@@ -75,7 +78,7 @@ export default class AbstractProviderSubscription extends AbstractSubscription {
      * @param {Error} error
      */
     onError(error) {
-        this.callback(false, value);
+        this.callback(false, error);
     }
 
     /**

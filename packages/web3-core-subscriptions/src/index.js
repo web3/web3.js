@@ -27,6 +27,9 @@ export LogSubscription from './subscriptions/eth/LogSubscription';
 export NewHeadsSubscription from './subscriptions/eth/NewHeadsSubscription';
 export NewPendingTransactionsSubscription from './subscriptions/eth/NewPendingTransactionsSubscription';
 export SyncingSubscription from './subscriptions/eth/SyncingSubscription';
+export AccountsChangedSubscription from './subscriptions/eth/AccountsChangedSubscription';
+export NetworkChangedSubscription from './subscriptions/eth/NetworkChangedSubscription';
+export ChainChangedSubscription from './subscriptions/eth/ChainChangedSubscription';
 
 // Shh
 export MessagesSubscription from './subscriptions/shh/MessagesSubscription';

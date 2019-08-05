@@ -21,7 +21,10 @@ import {
     LogSubscription,
     NewHeadsSubscription,
     NewPendingTransactionsSubscription,
-    SyncingSubscription
+    SyncingSubscription,
+    AccountsChangedSubscription,
+    NetworkChangedSubscription,
+    ChainChangedSubscription
 } from 'web3-core-subscriptions';
 
 import {GetPastLogsMethod} from 'web3-core-method';
@@ -65,6 +68,12 @@ export default class SubscriptionsFactory {
                 return new NewPendingTransactionsSubscription(this.utils, this.formatters, moduleInstance);
             case 'syncing':
                 return new SyncingSubscription(this.utils, this.formatters, moduleInstance);
+            case 'accountsChanged':
+                return new AccountsChangedSubscription(this.utils, this.formatters, moduleInstance);
+            case 'networkChanged':
+                return new NetworkChangedSubscription(this.utils, this.formatters, moduleInstance);
+            case 'chainChanged':
+                return new ChainChangedSubscription(this.utils, this.formatters, moduleInstance);
             default:
                 throw new Error(`Unknown subscription: ${type}`);
         }
