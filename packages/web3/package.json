@@ -44,12 +44,12 @@
         }
     ],
     "dependencies": {
-        "web3-bzz": "1.2.0",
-        "web3-core": "1.2.0",
-        "web3-eth": "1.2.0",
-        "web3-eth-personal": "1.2.0",
-        "web3-net": "1.2.0",
-        "web3-shh": "1.2.0",
-        "web3-utils": "1.2.0"
+        "web3-bzz": "1.2.1",
+        "web3-core": "1.2.1",
+        "web3-eth": "1.2.1",
+        "web3-eth-personal": "1.2.1",
+        "web3-net": "1.2.1",
+        "web3-shh": "1.2.1",
+        "web3-utils": "1.2.1"
     }
 }
