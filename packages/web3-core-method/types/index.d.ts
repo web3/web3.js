@@ -52,8 +52,6 @@ export class AbstractMethod {
     afterExecution(response: any): any;
 
     execute(): Promise<any> | PromiEvent<any> | string;
-
-    clearSubscriptions(unsubscribeMethod: string): Promise<boolean | Error>;
 }
 
 export class AbstractMethodFactory {

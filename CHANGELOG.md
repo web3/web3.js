@@ -66,10 +66,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Length check of the PK added to the ``fromPrivateKey`` method of the ``Account`` model (#2928)
+- WebsocketProvider options extended with ``requestOptions`` and ``origins`` (#2938, #2995)
+- ``changed`` listener added to Contract event subscriptions (#2960)
 
 ### Changed
 
 - fsevents bumbed to v1.2.9 (#2951)
+- ``websocket`` dependency changed to github fork (#2995)
 
 ### Fixed
 
@@ -78,4 +81,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ``ContractOptions`` type definitions corrected (#2939)
 - Scrypt compatibility with older and newer nodejs versions fixed (#2952)
 - Encryption of the V3Keystore fixed (#2950)
+- Provider timeout fixed and Maps are used now to handle subscriptions (#2955)
+- stripHexPrefix fixed (#2989)
+- BatchRequest error handling fixed for callbacks (#2993)
+- ``reconnected`` event and reconnection timeout option added to WebsocketProvider (#2994)
+- ``clearSubscriptions`` fixed (#3007)
 
+## [Unreleased]
+
+## [2.0.0-alpha.2]

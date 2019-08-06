@@ -1,7 +1,7 @@
 {
     "name": "web3",
     "namespace": "ethereum",
-    "version": "2.0.0-alpha",
+    "version": "2.0.0-alpha.1",
     "description": "Ethereum JavaScript API",
     "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3",
     "license": "LGPL-3.0",
@@ -62,13 +62,13 @@
     "dependencies": {
         "@babel/runtime": "^7.3.1",
         "@types/node": "^12.6.1",
-        "web3-core": "2.0.0-alpha",
-        "web3-eth": "2.0.0-alpha",
-        "web3-eth-personal": "2.0.0-alpha",
-        "web3-net": "2.0.0-alpha",
-        "web3-providers": "2.0.0-alpha",
-        "web3-shh": "2.0.0-alpha",
-        "web3-utils": "2.0.0-alpha"
+        "web3-core": "2.0.0-alpha.1",
+        "web3-eth": "2.0.0-alpha.1",
+        "web3-eth-personal": "2.0.0-alpha.1",
+        "web3-net": "2.0.0-alpha.1",
+        "web3-providers": "2.0.0-alpha.1",
+        "web3-shh": "2.0.0-alpha.1",
+        "web3-utils": "2.0.0-alpha.1"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
@@ -79,5 +79,5 @@
         "types/index.d.ts",
         "angular-patch.js"
     ],
-    "gitHead": "a09d2cc84c1f08aa673028cc7c517d40a1f72972"
+    "gitHead": "cb266cc298150f4eb1c8cdac4f41551dd8819a81"
 }
