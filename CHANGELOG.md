@@ -86,3 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BatchRequest error handling fixed for callbacks (#2993)
 - ``reconnected`` event and reconnection timeout option added to WebsocketProvider (#2994)
 - ``clearSubscriptions`` fixed (#3007)
+
+## [Unreleased]
+
+## [2.0.0-alpha.2]
