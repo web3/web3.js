@@ -123,8 +123,7 @@ describe('AbstractProviderSubscriptionTest', () => {
 
     it('calls unsubscribe and returns with a resolved promise', async () => {
         moduleInstanceMock.currentProvider.removeListener = jest.fn();
-        abstractProviderSubscription.on('data', () => {
-        });
+        abstractProviderSubscription.on('data', () => {});
 
         const callback = jest.fn();
         const response = await abstractProviderSubscription.unsubscribe(callback);

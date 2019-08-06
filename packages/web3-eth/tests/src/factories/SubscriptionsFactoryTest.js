@@ -4,7 +4,10 @@ import {
     LogSubscription,
     NewHeadsSubscription,
     NewPendingTransactionsSubscription,
-    SyncingSubscription
+    SyncingSubscription,
+    AccountsChangedSubscription,
+    NetworkChangedSubscription,
+    ChainChangedSubscription
 } from 'web3-core-subscriptions';
 
 import SubscriptionsFactory from '../../../src/factories/SubscriptionsFactory';
@@ -46,6 +49,22 @@ describe('SubscriptionsFactoryTest', () => {
 
     it('calls getSubscription with "syncing" and returns the LogsSubscription', () => {
         expect(subscriptionsFactory.getSubscription({}, 'syncing', {})).toBeInstanceOf(SyncingSubscription);
+    });
+
+    it('calls getSubscription with "accountsChanged" and returns the AccountsChangedSubscription', () => {
+        expect(subscriptionsFactory.getSubscription({}, 'accountsChanged', {})).toBeInstanceOf(
+            AccountsChangedSubscription
+        );
+    });
+
+    it('calls getSubscription with "chainChanged" and returns the ChainChangedSubscription', () => {
+        expect(subscriptionsFactory.getSubscription({}, 'chainChanged', {})).toBeInstanceOf(ChainChangedSubscription);
+    });
+
+    it('calls getSubscription with "networkChanged" and returns the NetworkChangedSubscription', () => {
+        expect(subscriptionsFactory.getSubscription({}, 'networkChanged', {})).toBeInstanceOf(
+            NetworkChangedSubscription
+        );
     });
 
     it('calls getSubscription and throws an error', () => {

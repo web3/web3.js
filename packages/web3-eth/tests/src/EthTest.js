@@ -117,6 +117,32 @@ describe('EthTest', () => {
         expect(eth.Contract).toBeInstanceOf(Function);
     });
 
+    it('sets the transactionSigner property', () => {
+        const transactionSigner = {type: true};
+        eth.initiatedContracts = [{transactionSigner: undefined}];
+        eth.accounts = {transactionSigner: false};
+        eth.ens = {transactionSigner: false};
+
+        eth.transactionSigner = transactionSigner;
+
+        expect(eth.accounts.transactionSigner).toEqual(transactionSigner);
+
+        expect(eth.ens.transactionSigner).toEqual(transactionSigner);
+
+        expect(eth.transactionSigner).toEqual(transactionSigner);
+
+        expect(eth.initiatedContracts[0].transactionSigner).toEqual(transactionSigner);
+
+    });
+
+    it('sets the transactionSigner property and throws a error', () => {
+        try {
+            eth.transactionSigner = {type: 'TransactionSigner'};
+        } catch (error) {
+            expect(error).toEqual(new Error('Invalid TransactionSigner given!'));
+        }
+    });
+
     it('sets the defaultGasPrice property', () => {
         eth.initiatedContracts = [{defaultGasPrice: 20}];
 
@@ -215,8 +241,6 @@ describe('EthTest', () => {
     });
 
     it('calls subscribe wih "logs" as type', () => {
-        subscriptionsFactoryMock.createLogSubscription = jest.fn();
-
         new LogSubscription();
         const logSubscriptionMock = LogSubscription.mock.instances[0];
 
@@ -224,7 +248,8 @@ describe('EthTest', () => {
 
         subscriptionsFactoryMock.getSubscription.mockReturnValueOnce(logSubscriptionMock);
 
-        const callback = () => {};
+        const callback = () => {
+        };
 
         expect(eth.subscribe('logs', {}, callback)).toBeInstanceOf(LogSubscription);
 
@@ -234,8 +259,6 @@ describe('EthTest', () => {
     });
 
     it('calls subscribe wih "newBlockHeaders" as type', () => {
-        subscriptionsFactoryMock.createNewHeadsSubscription = jest.fn();
-
         new AbstractSubscription();
         const abstractSubscriptionMock = AbstractSubscription.mock.instances[0];
 
@@ -243,7 +266,8 @@ describe('EthTest', () => {
 
         subscriptionsFactoryMock.getSubscription.mockReturnValueOnce(abstractSubscriptionMock);
 
-        const callback = () => {};
+        const callback = () => {
+        };
 
         expect(eth.subscribe('newBlockHeaders', {}, callback)).toBeInstanceOf(AbstractSubscription);
 
@@ -253,8 +277,6 @@ describe('EthTest', () => {
     });
 
     it('calls subscribe wih "pendingTransactions" as type', () => {
-        subscriptionsFactoryMock.createNewPendingTransactionsSubscription = jest.fn();
-
         new AbstractSubscription();
         const abstractSubscriptionMock = AbstractSubscription.mock.instances[0];
 
@@ -262,7 +284,8 @@ describe('EthTest', () => {
 
         subscriptionsFactoryMock.getSubscription.mockReturnValueOnce(abstractSubscriptionMock);
 
-        const callback = () => {};
+        const callback = () => {
+        };
 
         expect(eth.subscribe('pendingTransactions', {}, callback)).toBeInstanceOf(AbstractSubscription);
 
@@ -272,8 +295,6 @@ describe('EthTest', () => {
     });
 
     it('calls subscribe wih "syncing" as type', () => {
-        subscriptionsFactoryMock.createSyncingSubscription = jest.fn();
-
         new AbstractSubscription();
         const abstractSubscriptionMock = AbstractSubscription.mock.instances[0];
 
@@ -281,11 +302,66 @@ describe('EthTest', () => {
 
         subscriptionsFactoryMock.getSubscription.mockReturnValueOnce(abstractSubscriptionMock);
 
-        const callback = () => {};
+        const callback = () => {
+        };
 
         expect(eth.subscribe('syncing', {}, callback)).toBeInstanceOf(AbstractSubscription);
 
         expect(subscriptionsFactoryMock.getSubscription).toHaveBeenCalledWith(eth, 'syncing', {});
+
+        expect(abstractSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
+    });
+
+    it('calls subscribe wih "accountsChanged" as type', () => {
+        new AbstractSubscription();
+        const abstractSubscriptionMock = AbstractSubscription.mock.instances[0];
+
+        abstractSubscriptionMock.subscribe.mockReturnValueOnce(abstractSubscriptionMock);
+
+        subscriptionsFactoryMock.getSubscription.mockReturnValueOnce(abstractSubscriptionMock);
+
+        const callback = () => {
+        };
+
+        expect(eth.subscribe('accountsChanged', {}, callback)).toBeInstanceOf(AbstractSubscription);
+
+        expect(subscriptionsFactoryMock.getSubscription).toHaveBeenCalledWith(eth, 'accountsChanged', {});
+
+        expect(abstractSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
+    });
+
+    it('calls subscribe wih "chainChanged" as type', () => {
+        new AbstractSubscription();
+        const abstractSubscriptionMock = AbstractSubscription.mock.instances[0];
+
+        abstractSubscriptionMock.subscribe.mockReturnValueOnce(abstractSubscriptionMock);
+
+        subscriptionsFactoryMock.getSubscription.mockReturnValueOnce(abstractSubscriptionMock);
+
+        const callback = () => {
+        };
+
+        expect(eth.subscribe('chainChanged', {}, callback)).toBeInstanceOf(AbstractSubscription);
+
+        expect(subscriptionsFactoryMock.getSubscription).toHaveBeenCalledWith(eth, 'chainChanged', {});
+
+        expect(abstractSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
+    });
+
+    it('calls subscribe wih "networkChanged" as type', () => {
+        new AbstractSubscription();
+        const abstractSubscriptionMock = AbstractSubscription.mock.instances[0];
+
+        abstractSubscriptionMock.subscribe.mockReturnValueOnce(abstractSubscriptionMock);
+
+        subscriptionsFactoryMock.getSubscription.mockReturnValueOnce(abstractSubscriptionMock);
+
+        const callback = () => {
+        };
+
+        expect(eth.subscribe('networkChanged', {}, callback)).toBeInstanceOf(AbstractSubscription);
+
+        expect(subscriptionsFactoryMock.getSubscription).toHaveBeenCalledWith(eth, 'networkChanged', {});
 
         expect(abstractSubscriptionMock.subscribe).toHaveBeenCalledWith(callback);
     });
