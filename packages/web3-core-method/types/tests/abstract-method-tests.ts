@@ -66,6 +66,3 @@ abstractMethod.afterExecution('response');
 
 // $ExpectType string | PromiEvent<any> | Promise<any>
 abstractMethod.execute();
-
-// $ExpectType Promise<boolean | Error>
-abstractMethod.clearSubscriptions('eth_unsubscribe');
