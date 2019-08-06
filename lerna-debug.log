@@ -6,55 +6,61 @@
 5 silly isInitialized true
 6 silly existsSync /Users/work/Development/foundation/web3.js/VERSION
 7 silly initialize attempt
-8 info current version 1.0.0
+8 info current version 1.2.0
 9 silly getUpdates
 10 info Checking for updated packages...
 11 silly hasTags
 12 verbose hasTags true
 13 silly getLastTag
-14 verbose getLastTag v1.0.0
-15 info Comparing with v1.0.0.
-16 silly diffSinceIn v1.0.0 packages/web3-bzz
+14 verbose getLastTag v1.2.0
+15 info Comparing with v1.2.0.
+16 silly diffSinceIn v1.2.0 packages/web3-bzz
 17 silly diff packages/web3-bzz/package.json
-18 silly diffSinceIn v1.0.0 packages/web3-core-helpers
+18 silly diffSinceIn v1.2.0 packages/web3-core-helpers
 19 silly diff packages/web3-core-helpers/package.json
-20 silly diffSinceIn v1.0.0 packages/web3-core-method
+20 silly diffSinceIn v1.2.0 packages/web3-core-method
 21 silly diff packages/web3-core-method/package.json
-22 silly diffSinceIn v1.0.0 packages/web3-core-promievent
+22 silly diffSinceIn v1.2.0 packages/web3-core-promievent
 23 silly diff packages/web3-core-promievent/package.json
-24 silly diffSinceIn v1.0.0 packages/web3-core-requestmanager
+24 silly diffSinceIn v1.2.0 packages/web3-core-requestmanager
 25 silly diff packages/web3-core-requestmanager/package.json
-26 silly diffSinceIn v1.0.0 packages/web3-core-subscriptions
+26 silly diffSinceIn v1.2.0 packages/web3-core-subscriptions
 27 silly diff packages/web3-core-subscriptions/package.json
-28 silly diffSinceIn v1.0.0 packages/web3-core
+28 silly diffSinceIn v1.2.0 packages/web3-core
 29 silly diff packages/web3-core/package.json
-30 silly diffSinceIn v1.0.0 packages/web3-eth-abi
+30 silly diffSinceIn v1.2.0 packages/web3-eth-abi
 31 silly diff packages/web3-eth-abi/package.json
-32 silly diffSinceIn v1.0.0 packages/web3-eth-accounts
+32 silly diffSinceIn v1.2.0 packages/web3-eth-accounts
+33 silly diff packages/web3-eth-accounts/package-lock.json
 33 silly diff packages/web3-eth-accounts/package.json
-34 silly diffSinceIn v1.0.0 packages/web3-eth-contract
+33 silly diff packages/web3-eth-accounts/src/index.js
+33 silly diff packages/web3-eth-accounts/src/scrypt.js
+34 silly diffSinceIn v1.2.0 packages/web3-eth-contract
 35 silly diff packages/web3-eth-contract/package.json
-36 silly diffSinceIn v1.0.0 packages/web3-eth-ens
+36 silly diffSinceIn v1.2.0 packages/web3-eth-ens
 37 silly diff packages/web3-eth-ens/package.json
-38 silly diffSinceIn v1.0.0 packages/web3-eth-iban
+38 silly diffSinceIn v1.2.0 packages/web3-eth-iban
 39 silly diff packages/web3-eth-iban/package.json
-40 silly diffSinceIn v1.0.0 packages/web3-eth-personal
+40 silly diffSinceIn v1.2.0 packages/web3-eth-personal
 41 silly diff packages/web3-eth-personal/package.json
-42 silly diffSinceIn v1.0.0 packages/web3-eth
+42 silly diffSinceIn v1.2.0 packages/web3-eth
 43 silly diff packages/web3-eth/package.json
-44 silly diffSinceIn v1.0.0 packages/web3-net
+44 silly diffSinceIn v1.2.0 packages/web3-net
 45 silly diff packages/web3-net/package.json
-46 silly diffSinceIn v1.0.0 packages/web3-providers-http
+46 silly diffSinceIn v1.2.0 packages/web3-providers-http
 47 silly diff packages/web3-providers-http/package.json
-48 silly diffSinceIn v1.0.0 packages/web3-providers-ipc
+48 silly diffSinceIn v1.2.0 packages/web3-providers-ipc
 49 silly diff packages/web3-providers-ipc/package.json
-50 silly diffSinceIn v1.0.0 packages/web3-providers-ws
+50 silly diffSinceIn v1.2.0 packages/web3-providers-ws
+51 silly diff packages/web3-providers-ws/package-lock.json
 51 silly diff packages/web3-providers-ws/package.json
-52 silly diffSinceIn v1.0.0 packages/web3-shh
+51 silly diff packages/web3-providers-ws/src/index.js
+52 silly diffSinceIn v1.2.0 packages/web3-shh
 53 silly diff packages/web3-shh/package.json
-54 silly diffSinceIn v1.0.0 packages/web3-utils
+54 silly diffSinceIn v1.2.0 packages/web3-utils
 55 silly diff packages/web3-utils/package.json
-56 silly diffSinceIn v1.0.0 packages/web3
+56 silly diffSinceIn v1.2.0 packages/web3
+57 silly diff packages/web3/README.md
 57 silly diff packages/web3/package.json
 58 verbose updated web3-bzz
 59 verbose updated web3-core-helpers
@@ -1814,15 +1820,15 @@
 1811 silly publishTaggedInDir latest web3-utils
 1812 silly getExecOpts { cwd:
 1812 silly getExecOpts    '/Users/work/Development/foundation/web3.js/packages/web3-utils' }
-1813 info published web3-core-promievent
-1814 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-core-promievent/scripts/postpublish.js
-1815 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-core-promievent/scripts/postpublish.js
+1813 info published web3-utils
+1814 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-utils/scripts/postpublish.js
+1815 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-utils/scripts/postpublish.js
 1816 info published web3-bzz
 1817 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-bzz/scripts/postpublish.js
 1818 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-bzz/scripts/postpublish.js
-1819 info published web3-utils
-1820 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-utils/scripts/postpublish.js
-1821 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-utils/scripts/postpublish.js
+1819 info published web3-core-promievent
+1820 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-core-promievent/scripts/postpublish.js
+1821 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-core-promievent/scripts/postpublish.js
 1822 verbose publishing web3-eth-abi
 1823 silly publishTaggedInDir latest web3-eth-abi
 1824 silly getExecOpts { cwd:
@@ -1831,12 +1837,12 @@
 1826 silly publishTaggedInDir latest web3-eth-iban
 1827 silly getExecOpts { cwd:
 1827 silly getExecOpts    '/Users/work/Development/foundation/web3.js/packages/web3-eth-iban' }
-1828 info published web3-eth-abi
-1829 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-eth-abi/scripts/postpublish.js
-1830 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-eth-abi/scripts/postpublish.js
-1831 info published web3-eth-iban
-1832 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-eth-iban/scripts/postpublish.js
-1833 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-eth-iban/scripts/postpublish.js
+1828 info published web3-eth-iban
+1829 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-eth-iban/scripts/postpublish.js
+1830 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-eth-iban/scripts/postpublish.js
+1831 info published web3-eth-abi
+1832 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-eth-abi/scripts/postpublish.js
+1833 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-eth-abi/scripts/postpublish.js
 1834 verbose publishing web3-core-helpers
 1835 silly publishTaggedInDir latest web3-core-helpers
 1836 silly getExecOpts { cwd:
@@ -1860,15 +1866,15 @@
 1850 silly publishTaggedInDir latest web3-providers-ws
 1851 silly getExecOpts { cwd:
 1851 silly getExecOpts    '/Users/work/Development/foundation/web3.js/packages/web3-providers-ws' }
-1852 info published web3-providers-http
-1853 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-providers-http/scripts/postpublish.js
-1854 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-providers-http/scripts/postpublish.js
-1855 info published web3-core-subscriptions
-1856 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-core-subscriptions/scripts/postpublish.js
-1857 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-core-subscriptions/scripts/postpublish.js
-1858 info published web3-providers-ipc
-1859 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-providers-ipc/scripts/postpublish.js
-1860 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-providers-ipc/scripts/postpublish.js
+1852 info published web3-core-subscriptions
+1853 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-core-subscriptions/scripts/postpublish.js
+1854 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-core-subscriptions/scripts/postpublish.js
+1855 info published web3-providers-ipc
+1856 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-providers-ipc/scripts/postpublish.js
+1857 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-providers-ipc/scripts/postpublish.js
+1858 info published web3-providers-http
+1859 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-providers-http/scripts/postpublish.js
+1860 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-providers-http/scripts/postpublish.js
 1861 info published web3-providers-ws
 1862 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-providers-ws/scripts/postpublish.js
 1863 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-providers-ws/scripts/postpublish.js
@@ -1905,15 +1911,15 @@
 1889 silly publishTaggedInDir latest web3-net
 1890 silly getExecOpts { cwd:
 1890 silly getExecOpts    '/Users/work/Development/foundation/web3.js/packages/web3-net' }
-1891 info published web3-eth-accounts
-1892 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-eth-accounts/scripts/postpublish.js
-1893 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-eth-accounts/scripts/postpublish.js
+1891 info published web3-net
+1892 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-net/scripts/postpublish.js
+1893 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-net/scripts/postpublish.js
 1894 info published web3-eth-contract
 1895 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-eth-contract/scripts/postpublish.js
 1896 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-eth-contract/scripts/postpublish.js
-1897 info published web3-net
-1898 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-net/scripts/postpublish.js
-1899 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-net/scripts/postpublish.js
+1897 info published web3-eth-accounts
+1898 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-eth-accounts/scripts/postpublish.js
+1899 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-eth-accounts/scripts/postpublish.js
 1900 verbose publishing web3-eth-ens
 1901 silly publishTaggedInDir latest web3-eth-ens
 1902 silly getExecOpts { cwd:
@@ -1929,12 +1935,12 @@
 1909 info published web3-eth-personal
 1910 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-eth-personal/scripts/postpublish.js
 1911 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-eth-personal/scripts/postpublish.js
-1912 info published web3-eth-ens
-1913 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-eth-ens/scripts/postpublish.js
-1914 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-eth-ens/scripts/postpublish.js
-1915 info published web3-shh
-1916 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-shh/scripts/postpublish.js
-1917 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-shh/scripts/postpublish.js
+1912 info published web3-shh
+1913 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-shh/scripts/postpublish.js
+1914 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-shh/scripts/postpublish.js
+1915 info published web3-eth-ens
+1916 silly existsSync /Users/work/Development/foundation/web3.js/packages/web3-eth-ens/scripts/postpublish.js
+1917 verbose execScript No postpublish script found at /Users/work/Development/foundation/web3.js/packages/web3-eth-ens/scripts/postpublish.js
 1918 verbose publishing web3-eth
 1919 silly publishTaggedInDir latest web3-eth
 1920 silly getExecOpts { cwd:
@@ -1967,18 +1973,18 @@
 1946 silly getExecOpts { cwd: '/Users/work/Development/foundation/web3.js/packages/web3' }
 1947 error publish Ran out of retries while publishing web3 Error: Command failed: npm publish --tag latest
 1947 error publish npm notice
-1947 error publish npm notice 📦  web3@1.2.0
+1947 error publish npm notice 📦  web3@1.2.1
 1947 error publish npm notice === Tarball Contents ===
 1947 error publish npm notice 1.4kB package.json
-1947 error publish npm notice 297B  README.md
+1947 error publish npm notice 270B  README.md
 1947 error publish npm notice 2.1kB src/index.js
 1947 error publish npm notice === Tarball Details ===
 1947 error publish npm notice name:          web3
-1947 error publish npm notice version:       1.2.0
+1947 error publish npm notice version:       1.2.1
 1947 error publish npm notice package size:  1.6 kB
 1947 error publish npm notice unpacked size: 3.8 kB
-1947 error publish npm notice shasum:        ef9c43a99eac348a85c09179690290d45a96a5f2
-1947 error publish npm notice integrity:     sha512-iFrVAexsopX97[...]iFDcqnw7eJ0bA==
+1947 error publish npm notice shasum:        5d8158bcca47838ab8c2b784a2dee4c3ceb4179b
+1947 error publish npm notice integrity:     sha512-nNMzeCK0agb5i[...]GaOC2zKDFuFRw==
 1947 error publish npm notice total files:   3
 1947 error publish npm notice
 1947 error publish npm ERR! code EOTP
@@ -1988,25 +1994,25 @@
 1947 error publish npm ERR! it, or it timed out. Please try again.
 1947 error publish
 1947 error publish npm ERR! A complete log of this run can be found in:
-1947 error publish npm ERR!     /Users/work/.npm/_logs/2019-07-23T09_35_00_559Z-debug.log
+1947 error publish npm ERR!     /Users/work/.npm/_logs/2019-08-06T09_51_25_563Z-debug.log
 1947 error publish
 1947 error publish     at Promise.all.then.arr (/Users/work/Development/foundation/web3.js/node_modules/execa/index.js:236:11)
 1947 error publish     at process._tickCallback (internal/process/next_tick.js:68:7)
 1948 error execute callback with error
 1949 error Error: Command failed: npm publish --tag latest
 1949 error npm notice
-1949 error npm notice 📦  web3@1.2.0
+1949 error npm notice 📦  web3@1.2.1
 1949 error npm notice === Tarball Contents ===
 1949 error npm notice 1.4kB package.json
-1949 error npm notice 297B  README.md
+1949 error npm notice 270B  README.md
 1949 error npm notice 2.1kB src/index.js
 1949 error npm notice === Tarball Details ===
 1949 error npm notice name:          web3
-1949 error npm notice version:       1.2.0
+1949 error npm notice version:       1.2.1
 1949 error npm notice package size:  1.6 kB
 1949 error npm notice unpacked size: 3.8 kB
-1949 error npm notice shasum:        ef9c43a99eac348a85c09179690290d45a96a5f2
-1949 error npm notice integrity:     sha512-iFrVAexsopX97[...]iFDcqnw7eJ0bA==
+1949 error npm notice shasum:        5d8158bcca47838ab8c2b784a2dee4c3ceb4179b
+1949 error npm notice integrity:     sha512-nNMzeCK0agb5i[...]GaOC2zKDFuFRw==
 1949 error npm notice total files:   3
 1949 error npm notice
 1949 error npm ERR! code EOTP
@@ -2016,6 +2022,6 @@
 1949 error npm ERR! it, or it timed out. Please try again.
 1949 error
 1949 error npm ERR! A complete log of this run can be found in:
-1949 error npm ERR!     /Users/work/.npm/_logs/2019-07-23T09_35_00_559Z-debug.log
+1949 error npm ERR!     /Users/work/.npm/_logs/2019-08-06T09_51_25_563Z-debug.log
 1949 error
 1949 error     at Promise.all.then.arr (/Users/work/Development/foundation/web3.js/node_modules/execa/index.js:236:11)
