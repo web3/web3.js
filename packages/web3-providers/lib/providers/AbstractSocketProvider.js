@@ -67,8 +67,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @method registerEventListeners
      */
-    registerEventListeners() {
-    }
+    registerEventListeners() {}
 
     /**
      * Removes all socket listeners
@@ -91,8 +90,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {Number} code
      * @param {String} reason
      */
-    disconnect(code, reason) {
-    }
+    disconnect(code, reason) {}
 
     /**
      * Returns true if the socket is connected
@@ -101,8 +99,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Boolean}
      */
-    get connected() {
-    }
+    get connected() {}
 
     /**
      * Creates the JSON-RPC payload and sends it to the node.
