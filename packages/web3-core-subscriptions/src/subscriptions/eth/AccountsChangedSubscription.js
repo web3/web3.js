@@ -31,6 +31,6 @@ export default class AccountsChangedSubscription extends AbstractProviderSubscri
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('', 'accountsChanged', null, utils, formatters, moduleInstance);
+        super('accountsChanged', utils, formatters, moduleInstance);
     }
 }

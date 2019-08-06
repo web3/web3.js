@@ -31,6 +31,6 @@ export default class NetworkChangedSubscription extends AbstractProviderSubscrip
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('', 'networkChanged', null, utils, formatters, moduleInstance);
+        super('networkChanged', utils, formatters, moduleInstance);
     }
 }

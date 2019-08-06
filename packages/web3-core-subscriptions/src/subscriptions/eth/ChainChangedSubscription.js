@@ -31,6 +31,6 @@ export default class ChainChangedSubscription extends AbstractProviderSubscripti
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('', 'chainChanged', null, utils, formatters, moduleInstance);
+        super('chainChanged', utils, formatters, moduleInstance);
     }
 }

@@ -16,12 +16,7 @@ describe('AbstractProviderSubscriptionTest', () => {
         moduleInstanceMock.currentProvider = new SocketProvider();
         moduleInstanceMock.currentProvider.on = jest.fn();
 
-        abstractProviderSubscription = new AbstractProviderSubscription(
-            'eventName',
-            {},
-            {},
-            moduleInstanceMock
-        );
+        abstractProviderSubscription = new AbstractProviderSubscription('eventName', {}, {}, moduleInstanceMock);
     });
 
     it('constructor check', () => {
@@ -47,7 +42,7 @@ describe('AbstractProviderSubscriptionTest', () => {
             done();
         });
 
-        abstractProviderSubscription.onNewSubscriptionItem('string')
+        abstractProviderSubscription.onNewSubscriptionItem('string');
     });
 
     it('calls onNewSubscriptionItem and emits the data event with the given value', (done) => {
@@ -57,7 +52,7 @@ describe('AbstractProviderSubscriptionTest', () => {
             done();
         });
 
-        abstractProviderSubscription.onNewSubscriptionItem('string')
+        abstractProviderSubscription.onNewSubscriptionItem('string');
     });
 
     it('calls subscribe and emits a error from the provider error listener', (done) => {
@@ -69,15 +64,19 @@ describe('AbstractProviderSubscriptionTest', () => {
             }
         });
 
+        const callback = jest.fn();
+
         abstractProviderSubscription.on('error', (error) => {
             expect(error).toEqual(new Error('ERROR'));
 
             expect(moduleInstanceMock.currentProvider.on).toHaveBeenCalledTimes(2);
 
+            expect(callback).toHaveBeenCalledWith(new Error('ERROR'), null);
+
             done();
         });
 
-        abstractProviderSubscription.subscribe();
+        abstractProviderSubscription.subscribe(callback);
     });
 
     it('calls subscribe with a callback and it returns the expected value', (done) => {
@@ -124,7 +123,8 @@ describe('AbstractProviderSubscriptionTest', () => {
 
     it('calls unsubscribe and returns with a resolved promise', async () => {
         moduleInstanceMock.currentProvider.removeListener = jest.fn();
-        abstractProviderSubscription.on('data', () => {});
+        abstractProviderSubscription.on('data', () => {
+        });
 
         const callback = jest.fn();
         const response = await abstractProviderSubscription.unsubscribe(callback);
