@@ -38,8 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Released with 1.0.0-beta.37 code base.
 
-## [Unreleased]
-
 ## [1.2.1]
 
 ### Fixed
@@ -47,3 +45,7 @@ Released with 1.0.0-beta.37 code base.
 - ``websocket`` dependency fixed (#2971, #2976)
 - ``requestOptions`` added to ``WebsocketProvider`` (#2979) 
 - Node >= v8.0.0 support (#2938)
+
+## [Unreleased]
+
+## [1.2.2]
