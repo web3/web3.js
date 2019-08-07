@@ -49,58 +49,65 @@ export default class TransactionHttpObserver extends AbstractTransactionObserver
      * @returns {Observable}
      */
     observe(transactionHash) {
-        return Observable.create(async (observer) => {
-            const interval = setInterval(async () => {
-                try {
-                    if (observer.closed) {
-                        clearInterval(interval);
+        return Observable.create((observer) => {
+            this.getTransactionReceipt(transactionHash)
+                .then((receipt) => {
+                    const interval = setInterval(async () => {
+                        if (observer.closed) {
+                            clearInterval(interval);
 
-                        return;
-                    }
+                            return;
+                        }
 
-                    this.getTransactionReceiptMethod.parameters = [transactionHash];
-                    const receipt = await this.getTransactionReceiptMethod.execute();
+                        if (receipt && this.blockConfirmations === 0) {
+                            this.emitNext(receipt, observer);
+                            observer.complete();
 
-                    // on parity nodes you can get the receipt without it being mined
-                    // so the receipt may not have a block number at this point
-                    if (receipt && receipt.blockNumber) {
-                        if (this.lastBlock) {
-                            const block = await this.getBlockByNumber(this.lastBlock.number + 1);
-                            if (block) {
-                                this.lastBlock = block;
+                            return;
+                        }
+
+                        receipt = await this.getTransactionReceipt(transactionHash);
+
+                        // on parity nodes you can get the receipt without it being mined
+                        // so the receipt may not have a block number at this point
+                        if (receipt && receipt.blockNumber) {
+                            if (this.lastBlock) {
+                                const block = await this.getBlockByNumber(this.lastBlock.number + 1);
+                                if (block) {
+                                    this.lastBlock = block;
+                                    this.confirmations++;
+                                    this.emitNext(receipt, observer);
+                                }
+                            } else {
+                                this.lastBlock = await this.getBlockByNumber(receipt.blockNumber);
                                 this.confirmations++;
                                 this.emitNext(receipt, observer);
                             }
-                        } else {
-                            this.lastBlock = await this.getBlockByNumber(receipt.blockNumber);
-                            this.confirmations++;
-                            this.emitNext(receipt, observer);
+
+                            if (this.isConfirmed()) {
+                                observer.complete();
+                                clearInterval(interval);
+                            }
                         }
 
-                        if (this.isConfirmed()) {
-                            observer.complete();
+                        this.confirmationChecks++;
+
+                        if (this.isTimeoutTimeExceeded()) {
                             clearInterval(interval);
+
+                            this.emitError(
+                                new Error(
+                                    'Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
+                                ),
+                                receipt,
+                                observer
+                            );
                         }
-                    }
-
-                    this.confirmationChecks++;
-
-                    if (this.isTimeoutTimeExceeded()) {
-                        clearInterval(interval);
-
-                        this.emitError(
-                            new Error(
-                                'Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
-                            ),
-                            receipt,
-                            observer
-                        );
-                    }
-                } catch (error) {
-                    clearInterval(interval);
+                    }, 1000);
+                })
+                .catch((error) => {
                     this.emitError(error, false, observer);
-                }
-            }, 1000);
+                });
         });
     }
 

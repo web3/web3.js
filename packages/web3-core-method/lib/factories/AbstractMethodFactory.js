@@ -152,7 +152,6 @@ export default class AbstractMethodFactory {
                 moduleInstance.currentProvider,
                 this.getTimeout(moduleInstance),
                 moduleInstance.transactionConfirmationBlocks,
-                moduleInstance.instantmine,
                 new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
                 new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
             );
@@ -162,7 +161,6 @@ export default class AbstractMethodFactory {
             moduleInstance.currentProvider,
             this.getTimeout(moduleInstance),
             moduleInstance.transactionConfirmationBlocks,
-            moduleInstance.instantmine,
             new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
             new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance)
         );

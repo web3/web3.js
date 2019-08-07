@@ -60,7 +60,7 @@ export default class Ens extends AbstractWeb3Module {
         this.formatters = formatters;
         this.registryOptions = options;
         this.net = net;
-        this.transactionSigner = options.transactionSigner;
+        this._transactionSigner = options.transactionSigner;
         this._registry = false;
     }
 
@@ -173,30 +173,6 @@ export default class Ens extends AbstractWeb3Module {
      */
     get transactionBlockTimeout() {
         return super.transactionBlockTimeout;
-    }
-
-    /**
-     * Sets the instantmine property on all contracts and on all sub-modules
-     *
-     * @property instantmine
-     *
-     * @param {Boolean} value
-     */
-    set instantmine(value) {
-        this.registry.instantmine = value;
-
-        super.instantmine = value;
-    }
-
-    /**
-     * Gets the instantmine property
-     *
-     * @property instantmine
-     *
-     * @returns {Boolean} value
-     */
-    get instantmine() {
-        return super.instantmine;
     }
 
     /**

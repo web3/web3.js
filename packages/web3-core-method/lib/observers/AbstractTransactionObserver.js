@@ -18,8 +18,6 @@
  * @date 2019
  */
 
-import {Observable} from 'rxjs';
-
 export default class AbstractTransactionObserver {
     /**
      * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
@@ -101,5 +99,20 @@ export default class AbstractTransactionObserver {
      */
     isTimeoutTimeExceeded() {
         return this.confirmationChecks === this.timeout;
+    }
+
+    /**
+     * Returns the transaction receipt
+     *
+     * @method getTransactionReceipt
+     *
+     * @param {String} transactionHash
+     *
+     * @returns {Promise<Object|null>}
+     */
+    getTransactionReceipt(transactionHash) {
+        this.getTransactionReceiptMethod.parameters = [transactionHash];
+
+        return this.getTransactionReceiptMethod.execute();
     }
 }

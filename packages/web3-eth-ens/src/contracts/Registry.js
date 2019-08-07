@@ -165,32 +165,6 @@ export default class Registry extends AbstractContract {
     }
 
     /**
-     * Sets the instantmine property on all contracts and on all sub-modules
-     *
-     * @property instantmine
-     *
-     * @param {Boolean} value
-     */
-    set instantmine(value) {
-        if (this.resolverContract) {
-            this.resolverContract.instantmine = value;
-        }
-
-        super.instantmine = value;
-    }
-
-    /**
-     * Gets the instantmine property
-     *
-     * @property instantmine
-     *
-     * @returns {Boolean} value
-     */
-    get instantmine() {
-        return super.instantmine;
-    }
-
-    /**
      * Sets the transactionConfirmationBlocks property on all contracts and on all sub-modules
      *
      * @property transactionConfirmationBlocks

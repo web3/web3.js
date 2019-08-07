@@ -246,36 +246,6 @@ export default class Eth extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the instantmine property on all contracts and on all sub-modules
-     *
-     * @property instantmine
-     *
-     * @param {Boolean} value
-     */
-    set instantmine(value) {
-        this.initiatedContracts.forEach((contract) => {
-            contract.instantmine = value;
-        });
-
-        this.net.instantmine = value;
-        this.personal.instantmine = value;
-        this.ens.instantmine = value;
-
-        super.instantmine = value;
-    }
-
-    /**
-     * Gets the instantmine property
-     *
-     * @property instantmine
-     *
-     * @returns {Boolean} value
-     */
-    get instantmine() {
-        return super.instantmine;
-    }
-
-    /**
      * Sets the transactionConfirmationBlocks property on all contracts and on all sub-modules
      *
      * @property transactionConfirmationBlocks

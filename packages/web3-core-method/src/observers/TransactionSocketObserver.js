@@ -48,52 +48,60 @@ export default class TransactionSocketObserver extends AbstractTransactionObserv
      * @returns {Observable}
      */
     observe(transactionHash) {
-        return Observable.create(async (observer) => {
-            this.newHeadsSubscription.subscribe(async (error, newHead) => {
-                try {
-                    if (observer.closed) {
-                        await this.newHeadsSubscription.unsubscribe();
-
-                        return;
+        return Observable.create((observer) => {
+            this.getTransactionReceipt(transactionHash)
+                .then((receipt) => {
+                    if (receipt && this.blockConfirmations === 0) {
+                        this.emitNext(receipt, observer);
+                        observer.complete();
                     }
 
-                    if (error) {
-                        throw error;
-                    }
-
-                    this.getTransactionReceiptMethod.parameters = [transactionHash];
-                    const receipt = await this.getTransactionReceiptMethod.execute();
-
-                    if (!this.blockNumbers.includes(newHead.number)) {
-                        if (receipt) {
-                            this.confirmations++;
-                            this.emitNext(receipt, observer);
-
-                            if (this.isConfirmed()) {
-                                await this.newHeadsSubscription.unsubscribe();
-                                observer.complete();
-                            }
-                        }
-
-                        this.blockNumbers.push(newHead.number);
-                        this.confirmationChecks++;
-
-                        if (this.isTimeoutTimeExceeded()) {
+                    this.newHeadsSubscription.subscribe(async (error, newHead) => {
+                        if (observer.closed) {
                             await this.newHeadsSubscription.unsubscribe();
 
-                            this.emitError(
-                                new Error(
-                                    'Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
-                                ),
-                                receipt,
-                                observer
-                            );
+                            return;
                         }
-                    }
-                } catch (error2) {
-                    this.emitError(error2, false, observer);
-                }
-            });
+
+                        if (error) {
+                            throw error;
+                        }
+
+                        if (receipt) {
+                            receipt = await this.getTransactionReceipt(transactionHash);
+
+                            if (!this.blockNumbers.includes(newHead.number)) {
+                                if (receipt) {
+                                    this.confirmations++;
+                                    this.emitNext(receipt, observer);
+
+                                    if (this.isConfirmed()) {
+                                        await this.newHeadsSubscription.unsubscribe();
+                                        observer.complete();
+                                    }
+                                }
+
+                                this.blockNumbers.push(newHead.number);
+                                this.confirmationChecks++;
+
+                                if (this.isTimeoutTimeExceeded()) {
+                                    await this.newHeadsSubscription.unsubscribe();
+
+                                    this.emitError(
+                                        new Error(
+                                            'Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
+                                        ),
+                                        receipt,
+                                        observer
+                                    );
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch((error) => {
+                    this.emitError(error, false, observer);
+                });
         });
     }
 }

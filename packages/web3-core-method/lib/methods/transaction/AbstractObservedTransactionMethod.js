@@ -84,73 +84,67 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
 
                 this.promiEvent.emit('transactionHash', transactionHash);
 
-                if (!this.moduleInstance.instantmine) {
-                    const transactionConfirmationSubscription = this.transactionObserver
-                        .observe(transactionHash)
-                        .subscribe(
-                            (transactionConfirmation) => {
-                                confirmations = transactionConfirmation.confirmations;
-                                receipt = transactionConfirmation.receipt;
+                const transactionConfirmationSubscription = this.transactionObserver.observe(transactionHash).subscribe(
+                    (transactionConfirmation) => {
+                        confirmations = transactionConfirmation.confirmations;
+                        receipt = transactionConfirmation.receipt;
 
-                                if (!receipt.status) {
-                                    if (this.parameters[0].gas === receipt.gasUsed) {
-                                        this.handleError(
-                                            new Error(
-                                                `Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(
-                                                    receipt,
-                                                    null,
-                                                    2
-                                                )}`
-                                            ),
+                        if (!receipt.status) {
+                            if (this.parameters[0].gas === receipt.gasUsed) {
+                                this.handleError(
+                                    new Error(
+                                        `Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(
                                             receipt,
-                                            confirmations
-                                        );
-
-                                        transactionConfirmationSubscription.unsubscribe();
-
-                                        return;
-                                    }
-
-                                    this.handleError(
-                                        new Error(
-                                            `Transaction has been reverted by the EVM:\n${JSON.stringify(
-                                                receipt,
-                                                null,
-                                                2
-                                            )}`
-                                        ),
-                                        receipt,
-                                        confirmations
-                                    );
-
-                                    transactionConfirmationSubscription.unsubscribe();
-
-                                    return;
-                                }
-
-                                this.promiEvent.emit(
-                                    'confirmation',
-                                    confirmations,
-                                    this.formatters.outputTransactionFormatter(receipt)
+                                            null,
+                                            2
+                                        )}`
+                                    ),
+                                    receipt,
+                                    confirmations
                                 );
-                            },
-                            (error) => {
-                                this.handleError(error, receipt, confirmations);
-                            },
-                            () => {
-                                if (this.promiEvent.listenerCount('receipt') > 0) {
-                                    this.promiEvent.emit('receipt', this.afterExecution(receipt));
-                                    this.promiEvent.removeAllListeners();
 
-                                    return;
-                                }
+                                transactionConfirmationSubscription.unsubscribe();
 
-                                this.promiEvent.resolve(this.afterExecution(receipt));
+                                return;
                             }
+
+                            this.handleError(
+                                new Error(
+                                    `Transaction has been reverted by the EVM:\n${JSON.stringify(
+                                        receipt,
+                                        null,
+                                        2
+                                    )}`
+                                ),
+                                receipt,
+                                confirmations
+                            );
+
+                            transactionConfirmationSubscription.unsubscribe();
+
+                            return;
+                        }
+
+                        this.promiEvent.emit(
+                            'confirmation',
+                            confirmations,
+                            this.formatters.outputTransactionFormatter(receipt)
                         );
-                } else {
-                    // TODO: get receipt directly
-                }
+                    },
+                    (error) => {
+                        this.handleError(error, receipt, confirmations);
+                    },
+                    () => {
+                        if (this.promiEvent.listenerCount('receipt') > 0) {
+                            this.promiEvent.emit('receipt', this.afterExecution(receipt));
+                            this.promiEvent.removeAllListeners();
+
+                            return;
+                        }
+
+                        this.promiEvent.resolve(this.afterExecution(receipt));
+                    }
+                );
             })
             .catch((error) => {
                 if (this.callback) {
