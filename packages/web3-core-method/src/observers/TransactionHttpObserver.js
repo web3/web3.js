@@ -52,25 +52,27 @@ export default class TransactionHttpObserver extends AbstractTransactionObserver
         return Observable.create((observer) => {
             this.getTransactionReceipt(transactionHash)
                 .then((receipt) => {
+                    if (this.blockConfirmations === 0) {
+                        if (receipt && receipt.blockNumber) {
+                            this.emitNext(receipt, observer);
+                            observer.complete();
+
+                            return;
+                        }
+                    }
+
                     const interval = setInterval(async () => {
+                        receipt = await this.getTransactionReceipt(transactionHash);
+
                         if (observer.closed) {
                             clearInterval(interval);
 
                             return;
                         }
 
-                        if (receipt && this.blockConfirmations === 0) {
-                            this.emitNext(receipt, observer);
-                            observer.complete();
-
-                            return;
-                        }
-
-                        receipt = await this.getTransactionReceipt(transactionHash);
-
                         // on parity nodes you can get the receipt without it being mined
                         // so the receipt may not have a block number at this point
-                        if (receipt && receipt.blockNumber) {
+                        if (receipt.blockNumber) {
                             if (this.lastBlock) {
                                 const block = await this.getBlockByNumber(this.lastBlock.number + 1);
                                 if (block) {

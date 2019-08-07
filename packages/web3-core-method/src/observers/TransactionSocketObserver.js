@@ -51,11 +51,15 @@ export default class TransactionSocketObserver extends AbstractTransactionObserv
         return Observable.create((observer) => {
             this.getTransactionReceipt(transactionHash)
                 .then((receipt) => {
-                    if (receipt && this.blockConfirmations === 0) {
-                        this.emitNext(receipt, observer);
-                        observer.complete();
-                    }
+                    if (this.blockConfirmations === 0) {
+                        if (receipt && receipt.blockNumber) {
+                            this.emitNext(receipt, observer);
+                            observer.complete();
 
+                            return;
+                        }
+                    }
+                    
                     this.newHeadsSubscription.subscribe(async (error, newHead) => {
                         if (observer.closed) {
                             await this.newHeadsSubscription.unsubscribe();
