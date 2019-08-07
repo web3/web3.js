@@ -289,12 +289,13 @@ describe('HttpProviderTest', () => {
     it('calls sendPayload and returns with a rejected promise because of the exceeded timeout', async () => {
         new XHR();
         const xhrMock = XHR.mock.instances[0];
+        xhrMock.addEventListener = jest.fn((event, callback) => {
+            if (event === 'timeout') {
+                callback();
+            }
+        });
 
         providersModuleFactoryMock.createXMLHttpRequest.mockReturnValueOnce(xhrMock);
-
-        setTimeout(() => {
-            xhrMock.ontimeout();
-        }, 1);
 
         await expect(httpProvider.sendPayload({id: '0x0'})).rejects.toThrow(
             'Connection error: Timeout exceeded after 1ms'
@@ -316,12 +317,13 @@ describe('HttpProviderTest', () => {
     it('calls sendPayload and returns with a rejected promise because of the http error listener', async () => {
         new XHR();
         const xhrMock = XHR.mock.instances[0];
+        xhrMock.addEventListener = jest.fn((event, callback) => {
+            if (event === 'error') {
+                callback();
+            }
+        });
 
         providersModuleFactoryMock.createXMLHttpRequest.mockReturnValueOnce(xhrMock);
-
-        setTimeout(() => {
-            xhrMock.onerror();
-        }, 1);
 
         await expect(httpProvider.sendPayload({id: '0x0'})).rejects.toThrow(
             `Network error ${JSON.stringify({id: '0x0'})}`

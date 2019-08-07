@@ -175,11 +175,11 @@ export default class HttpProvider {
                 }
             };
 
-            request.ontimeout = () => {
+            request.addEventListener('timeout', () => {
                 this.connected = false;
 
                 reject(new Error(`Connection error: Timeout exceeded after ${this.timeout}ms`));
-            };
+            });
 
             request.addEventListener('error', () => {
                 this.connected = false;
