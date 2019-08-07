@@ -1,5 +1,6 @@
-
+<center>
 <img src="https://github.com/ethereum/web3.js/raw/1.x/web3js.jpg" width=200 />
+</center>
 
 # web3.js - Ethereum JavaScript API
 
@@ -151,12 +152,12 @@ npm test
 
 
 ### Similar libraries in other languages
- - Python [Web3.py](https://github.com/pipermerriam/web3.py)
- - Haskell [hs-web3](https://github.com/airalab/hs-web3)		   
- - Java [web3j](https://github.com/web3j/web3j)		   
- - Scala [web3j-scala](https://github.com/mslinn/web3j-scala)
- - Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
- - PHP [web3.php](https://github.com/sc0Vu/web3.php)
+ - Python - [Web3.py](https://github.com/pipermerriam/web3.py)
+ - Haskell - [hs-web3](https://github.com/airalab/hs-web3)		   
+ - Java - [web3j](https://github.com/web3j/web3j)		   
+ - Scala - [web3j-scala](https://github.com/mslinn/web3j-scala)
+ - Purescript - [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
+ - PHP - [web3.php](https://github.com/sc0Vu/web3.php)
 
 
 [repo]: https://github.com/ethereum/web3.js
