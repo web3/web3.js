@@ -1,16 +1,16 @@
 {
-    "name": "web3-eth-debug",
-    "namespace": "ethereum",
-    "version": "2.0.0-alpha",
+    "name": "conflux-web-cfx-debug",
+    "namespace": "conflux-web",
+    "version": "",
     "description": "Web3 module to interact with the Ethereum blockchain accounts stored in the node.",
-    "repository": "https://github.com/ethereum/web3.js/tree/1.0/packages/web3-eth-debug",
+    "repository": "https://github.com/ethereum/conflux-web.js/tree/1.0/packages/conflux-web-eth-debug",
     "license": "LGPL-3.0",
     "engines": {
         "node": ">=8.0.0"
     },
-    "main": "dist/web3-eth-debug.cjs.js",
-    "module": "dist/web3-eth-debug.esm.js",
-    "browser": "dist/web3-eth-debug.umd.js",
+    "main": "dist/conflux-web-cfx-debug.cjs.js",
+    "module": "dist/conflux-web-cfx-debug.esm.js",
+    "browser": "dist/conflux-web-cfx-debug.umd.js",
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
@@ -20,12 +20,12 @@
     "types": "types/index.d.ts",
     "dependencies": {
         "@babel/runtime": "^7.3.1",
-        "web3-core": "2.0.0-alpha",
-        "web3-core-helpers": "2.0.0-alpha",
-        "web3-core-method": "2.0.0-alpha",
-        "web3-net": "2.0.0-alpha",
-        "web3-providers": "2.0.0-alpha",
-        "web3-utils": "2.0.0-alpha"
+        "conflux-web-core": "0.1.18-alpha.0",
+        "conflux-web-core-helpers": "0.1.15-alpha.0",
+        "conflux-web-core-method": "0.1.18-alpha.0",
+        "conflux-web-net": "0.1.15-alpha.0",
+        "conflux-web-providers": "0.1.15-alpha.0",
+        "conflux-web-utils": "0.1.15-alpha.0"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
