@@ -58,6 +58,16 @@ export default class TransactionSocketObserver extends AbstractTransactionObserv
 
                             return;
                         }
+
+                        this.emitError(
+                            new Error(
+                                'No transaction receipt found! Increase the transactionConfirmationBlocks property or enable automine/instant-seal in your Ethereumm node settings'
+                            ),
+                            false,
+                            observer
+                        );
+
+                        return;
                     }
 
                     this.newHeadsSubscription.subscribe(async (error, newHead) => {
@@ -72,7 +82,7 @@ export default class TransactionSocketObserver extends AbstractTransactionObserv
                         }
 
                         receipt = await this.getTransactionReceipt(transactionHash);
-                        
+
                         if (receipt && receipt.blockNumber) {
                             receipt = await this.getTransactionReceipt(transactionHash);
 

@@ -59,6 +59,16 @@ export default class TransactionHttpObserver extends AbstractTransactionObserver
 
                             return;
                         }
+
+                        this.emitError(
+                            new Error(
+                                'No transaction receipt found! Increase the transactionConfirmationBlocks property or be sure automine is activated in your development environment.'
+                            ),
+                            false,
+                            observer
+                        );
+
+                        return;
                     }
 
                     const interval = setInterval(async () => {
