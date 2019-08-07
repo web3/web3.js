@@ -1,5 +1,6 @@
-
-<img align="center" src="https://github.com/ethereum/web3.js/raw/1.x/web3js.jpg" width=200 />
+<p align="center">
+<img src="https://github.com/ethereum/web3.js/raw/1.x/web3js.jpg" width=200 />
+</p>
 
 # web3.js - Ethereum JavaScript API
 
