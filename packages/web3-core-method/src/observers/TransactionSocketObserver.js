@@ -59,7 +59,7 @@ export default class TransactionSocketObserver extends AbstractTransactionObserv
                             return;
                         }
                     }
-                    
+
                     this.newHeadsSubscription.subscribe(async (error, newHead) => {
                         if (observer.closed) {
                             await this.newHeadsSubscription.unsubscribe();
@@ -71,7 +71,9 @@ export default class TransactionSocketObserver extends AbstractTransactionObserv
                             throw error;
                         }
 
-                        if (receipt) {
+                        receipt = await this.getTransactionReceipt(transactionHash);
+                        
+                        if (receipt && receipt.blockNumber) {
                             receipt = await this.getTransactionReceipt(transactionHash);
 
                             if (!this.blockNumbers.includes(newHead.number)) {

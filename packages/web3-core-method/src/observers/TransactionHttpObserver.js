@@ -72,7 +72,7 @@ export default class TransactionHttpObserver extends AbstractTransactionObserver
 
                         // on parity nodes you can get the receipt without it being mined
                         // so the receipt may not have a block number at this point
-                        if (receipt.blockNumber) {
+                        if (receipt && receipt.blockNumber) {
                             if (this.lastBlock) {
                                 const block = await this.getBlockByNumber(this.lastBlock.number + 1);
                                 if (block) {
