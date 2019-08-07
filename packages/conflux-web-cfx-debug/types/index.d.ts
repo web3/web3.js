@@ -19,11 +19,11 @@
  */
 
 import {provider} from 'conflux-web-providers';
-import {AbstractWeb3Module, Web3ModuleOptions} from 'conflux-web-core';
+import {AbstractConfluxWebModule, ConfluxWebModuleOptions} from 'conflux-web-core';
 import * as net from 'net';
 
-export class Debug extends AbstractWeb3Module {
-    constructor(provider: provider, net?: net.Socket | null, options?: Web3ModuleOptions);
+export class Debug extends AbstractConfluxWebModule {
+    constructor(provider: provider, net?: net.Socket | null, options?: ConfluxWebModuleOptions);
 
     setBackTraceAt(
         location: string,
