@@ -1,7 +1,7 @@
 import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
 import {Network} from 'conflux-web-net';
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxWebModule} from 'conflux-web-core';
 import MethodFactory from '../../src/factories/MethodFactory';
 import Debug from '../../src/Debug';
 
@@ -33,7 +33,7 @@ describe('DebugTest', () => {
 
         expect(debug.formatters).toEqual(formatters);
 
-        expect(debug).toBeInstanceOf(AbstractWeb3Module);
+        expect(debug).toBeInstanceOf(AbstractConfluxWebModule);
     });
 
     it('calls setProvider and returns true', () => {
