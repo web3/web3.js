@@ -11,7 +11,7 @@ This is the Ethereum [JavaScript API][docs]
 which connects to the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
 
 
-You need to run a local or remote Ethereum node to use this library.
+You need to run a local or remote [Ethereum](https://www.ethereum.org/) node to use this library.
 
 Please read the [documentation][docs] for more.
 
@@ -65,7 +65,7 @@ console.log(web3);
 }
 ```
 
-Additionally you can set a provider using `web3.setProvider()` (e.g. WebsocketProvider)
+Additionally you can set a provider using `web3.setProvider()` (e.g. WebsocketProvider):
 
 ```js
 web3.setProvider('ws://localhost:8546');
@@ -82,7 +82,7 @@ web3.eth.getAccounts()
 
 ### Usage with TypeScript
 
-Type definitions are maintained at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) by others. You can install them with
+Type definitions are maintained at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) by others. You can install them with:
 
 ```bash
 npm install --dev @types/web3.js
@@ -101,7 +101,7 @@ const web3 = new Web3("ws://localhost:8546");
 
 ## Documentation
 
-Documentation can be found at [read the docs][docs]
+Documentation can be found at [read the docs][docs].
 
 
 ## Building
@@ -109,7 +109,7 @@ Documentation can be found at [read the docs][docs]
 ### Requirements
 
 * [Node.js](https://nodejs.org)
-* npm
+* [npm](https://www.npmjs.com/)
 
 ```bash
 sudo apt-get update
@@ -125,7 +125,7 @@ Build only the web3.js package
 npm run-script build
 ```
 
-Or build all sub packages as well
+Or build all sub packages as well:
 
 ```bash
 npm run-script build-all
