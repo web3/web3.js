@@ -33,7 +33,7 @@ export default class AbstractTransactionObserver {
         this.blockConfirmations = blockConfirmations;
         this.getTransactionReceiptMethod = getTransactionReceiptMethod;
 
-        this.confirmations = 0;
+        this.confirmations = 1;
         this.confirmationChecks = 0;
     }
 
