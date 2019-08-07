@@ -1,6 +1,6 @@
 {
     "name": "conflux-web",
-    "version": "0.1.18-alpha.0",
+    "version": "0.1.19-alpha.0",
     "description": "Conflux JavaScript API",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web",
     "license": "LGPL-3.0",
@@ -30,7 +30,7 @@
     "dependencies": {
         "@babel/runtime": "^7.3.1",
         "@types/node": "^10.12.18",
-        "conflux-web-cfx": "0.1.18-alpha.0",
+        "conflux-web-cfx": "0.1.19-alpha.0",
         "conflux-web-core": "0.1.18-alpha.0",
         "conflux-web-core-helpers": "0.1.15-alpha.0",
         "conflux-web-core-method": "0.1.18-alpha.0",
