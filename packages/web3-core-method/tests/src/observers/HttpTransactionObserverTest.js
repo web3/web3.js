@@ -91,8 +91,8 @@ describe('HttpTransactionObserverTest', () => {
         httpTransactionObserver.blockConfirmations = 2;
 
         const receipt = {blockNumber: 0};
-        const blockOne = {number: 1, hash: '0x0'};
-        const blockTwo = {number: 2, parentHash: '0x0'};
+        const blockOne = {number: 0, hash: '0x0'};
+        const blockTwo = {number: 1, parentHash: '0x0'};
 
         getTransactionReceiptMethodMock.execute
             .mockReturnValueOnce(Promise.resolve(receipt))
@@ -122,7 +122,7 @@ describe('HttpTransactionObserverTest', () => {
 
                 expect(getTransactionReceiptMethodMock.parameters).toEqual(['transactionHash']);
 
-                expect(getBlockByNumberMethodMock.parameters).toEqual([2]);
+                expect(getBlockByNumberMethodMock.parameters).toEqual([1]);
 
                 done();
             }
