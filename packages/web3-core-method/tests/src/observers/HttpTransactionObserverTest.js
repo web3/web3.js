@@ -87,6 +87,48 @@ describe('HttpTransactionObserverTest', () => {
         );
     });
 
+    it('calls observe and it returns the expected value also with blockNumber set to 0', (done) => {
+        httpTransactionObserver.blockConfirmations = 2;
+
+        const receipt = {blockNumber: 0};
+        const blockOne = {number: 0, hash: '0x0'};
+        const blockTwo = {number: 1, parentHash: '0x0'};
+
+        getTransactionReceiptMethodMock.execute
+            .mockReturnValueOnce(Promise.resolve(receipt))
+            .mockReturnValueOnce(Promise.resolve(receipt))
+            .mockReturnValueOnce(Promise.resolve(receipt));
+
+        getBlockByNumberMethodMock.execute
+            .mockReturnValueOnce(Promise.resolve(blockOne))
+            .mockReturnValueOnce(Promise.resolve(blockTwo));
+
+        httpTransactionObserver.observe('transactionHash').subscribe(
+            (transactionConfirmation) => {
+                if (transactionConfirmation.confirmations === 1) {
+                    expect(transactionConfirmation.receipt).toEqual(receipt);
+                    expect(httpTransactionObserver.lastBlock).toEqual(blockOne);
+
+                    return;
+                }
+
+                expect(transactionConfirmation.receipt).toEqual(receipt);
+                expect(transactionConfirmation.confirmations).toEqual(2);
+                expect(httpTransactionObserver.lastBlock).toEqual(blockTwo);
+            },
+            () => {},
+            () => {
+                expect(getTransactionReceiptMethodMock.execute).toHaveBeenCalledTimes(3);
+
+                expect(getTransactionReceiptMethodMock.parameters).toEqual(['transactionHash']);
+
+                expect(getBlockByNumberMethodMock.parameters).toEqual([1]);
+
+                done();
+            }
+        );
+    });
+
     it('calls observe and the timeout got exceeded', (done) => {
         httpTransactionObserver.blockConfirmations = 2;
         httpTransactionObserver.timeout = 1;
