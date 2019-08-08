@@ -1,3 +1,3 @@
 export default class ProviderResolver {
-    resolve() { }
+    resolve() {}
 }
