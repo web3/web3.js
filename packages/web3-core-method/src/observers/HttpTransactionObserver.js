@@ -52,7 +52,7 @@ export default class HttpTransactionObserver extends AbstractTransactionObserver
             this.getTransactionReceipt(transactionHash)
                 .then((receipt) => {
                     if (this.blockConfirmations === 0) {
-                        if (receipt && receipt.blockNumber) {
+                        if (receipt) {
                             this.emitNext(receipt, observer);
                             observer.complete();
 
