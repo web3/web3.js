@@ -74,8 +74,7 @@ describe('HttpTransactionObserverTest', () => {
                 expect(transactionConfirmation.confirmations).toEqual(2);
                 expect(httpTransactionObserver.lastBlock).toEqual(blockTwo);
             },
-            () => {
-            },
+            () => {},
             () => {
                 expect(getTransactionReceiptMethodMock.execute).toHaveBeenCalledTimes(3);
 
@@ -182,7 +181,11 @@ describe('HttpTransactionObserverTest', () => {
         httpTransactionObserver.observe('transactionHash').subscribe(
             () => {},
             (error) => {
-                expect(error.error).toEqual(new Error('No transaction receipt found! Increase the transactionConfirmationBlocks property or be sure automine is activated in your development environment.'));
+                expect(error.error).toEqual(
+                    new Error(
+                        'No transaction receipt found! Increase the transactionConfirmationBlocks property or be sure automine is activated in your development environment.'
+                    )
+                );
                 expect(error.receipt).toEqual(false);
                 expect(error.confirmations).toEqual(0);
                 expect(error.confirmationChecks).toEqual(0);

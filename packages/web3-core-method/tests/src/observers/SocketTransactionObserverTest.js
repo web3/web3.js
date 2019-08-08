@@ -81,8 +81,7 @@ describe('SocketTransactionObserverTest', () => {
                 expect(transactionConfirmation.receipt).toEqual(receipt);
                 expect(transactionConfirmation.confirmations).toEqual(2);
             },
-            () => {
-            },
+            () => {},
             () => {
                 expect(newHeadsSubscriptionMock.unsubscribe).toHaveBeenCalled();
 
@@ -145,8 +144,7 @@ describe('SocketTransactionObserverTest', () => {
         });
 
         socketTransactionObserver.observe('transactionHash').subscribe(
-            () => {
-            },
+            () => {},
             (error) => {
                 expect(error.error).toEqual(true);
 
@@ -172,8 +170,7 @@ describe('SocketTransactionObserverTest', () => {
 
                 expect(transactionConfirmation.confirmations).toEqual(0);
             },
-            () => {
-            },
+            () => {},
             () => {
                 expect(getTransactionReceiptMethodMock.execute).toHaveBeenCalledTimes(1);
 
@@ -190,10 +187,13 @@ describe('SocketTransactionObserverTest', () => {
         getTransactionReceiptMethodMock.execute.mockReturnValueOnce(Promise.resolve(null));
 
         socketTransactionObserver.observe('transactionHash').subscribe(
-            () => {
-            },
+            () => {},
             (error) => {
-                expect(error.error).toEqual(new Error('No transaction receipt found! Increase the transactionConfirmationBlocks property or enable automine/instant-seal in your Ethereumm node settings'));
+                expect(error.error).toEqual(
+                    new Error(
+                        'No transaction receipt found! Increase the transactionConfirmationBlocks property or enable automine/instant-seal in your Ethereumm node settings'
+                    )
+                );
                 expect(error.receipt).toEqual(false);
                 expect(error.confirmations).toEqual(0);
                 expect(error.confirmationChecks).toEqual(0);

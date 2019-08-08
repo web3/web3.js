@@ -58,13 +58,39 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.accounts = accounts;
         this.methodFactory = this.contractModuleFactory.createMethodFactory();
         this.abiModel = this.abiMapper.map(abi);
-        this.transactionSigner = options.transactionSigner;
+        this._transactionSigner = options.transactionSigner;
         this.methods = this.contractModuleFactory.createMethodsProxy(this);
         this.events = this.contractModuleFactory.createEventSubscriptionsProxy(this);
 
         if (address) {
             this.address = address;
         }
+    }
+
+    /**
+     * Setter for the transactionSigner property
+     *
+     * @property transactionSigner
+     *
+     * @param {TransactionSigner} value
+     */
+    set transactionSigner(value) {
+        if (value.type && value.type === 'TransactionSigner') {
+            throw new Error('Invalid TransactionSigner given!');
+        }
+
+        this._transactionSigner = value;
+    }
+
+    /**
+     * Getter for the transactionSigner property
+     *
+     * @property transactionSigner
+     *
+     * @returns {TransactionSigner}
+     */
+    get transactionSigner() {
+        return this._transactionSigner;
     }
 
     /**

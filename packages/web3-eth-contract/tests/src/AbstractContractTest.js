@@ -126,6 +126,20 @@ describe('AbstractContractTest', () => {
         expect(abstractContract).toBeInstanceOf(AbstractWeb3Module);
     });
 
+    it('sets the transactionSigner property', () => {
+        abstractContract.transactionSigner = {};
+
+        expect(abstractContract.transactionSigner).toEqual({});
+    });
+
+    it('sets the transactionSigner property and throws the expected error', () => {
+        try {
+            abstractContract.transactionSigner = {type: 'TransactionSigner'};
+        } catch (error) {
+            expect(error).toEqual(new Error('Invalid TransactionSigner given!'));
+        }
+    });
+
     it('calls once and throws an error because no callback is defined', () => {
         expect(() => {
             abstractContract.once('event', {});
@@ -153,7 +167,8 @@ describe('AbstractContractTest', () => {
         });
 
         const options = {fromBlock: true};
-        abstractContract.once('event', options, () => {});
+        abstractContract.once('event', options, () => {
+        });
 
         expect(eventSubscriptionMock.unsubscribe).toHaveBeenCalled();
 
@@ -173,7 +188,8 @@ describe('AbstractContractTest', () => {
 
         methodFactoryMock.createPastEventLogsMethod.mockReturnValueOnce(getPastLogsMethodMock);
 
-        await expect(abstractContract.getPastEvents('eventName', {}, () => {})).resolves.toEqual(true);
+        await expect(abstractContract.getPastEvents('eventName', {}, () => {
+        })).resolves.toEqual(true);
 
         expect(abiModelMock.hasEvent).toHaveBeenCalledWith('eventName');
 
@@ -195,7 +211,8 @@ describe('AbstractContractTest', () => {
 
         methodFactoryMock.createAllPastEventLogsMethod.mockReturnValueOnce(getPastLogsMethodMock);
 
-        await expect(abstractContract.getPastEvents('allEvents', {}, () => {})).resolves.toEqual(true);
+        await expect(abstractContract.getPastEvents('allEvents', {}, () => {
+        })).resolves.toEqual(true);
 
         expect(getPastLogsMethodMock.execute).toHaveBeenCalled();
 
@@ -209,7 +226,8 @@ describe('AbstractContractTest', () => {
     it('calls getPastEvents and returns a rejected promise', async () => {
         abiModelMock.hasEvent.mockReturnValueOnce(false);
 
-        await expect(abstractContract.getPastEvents('eventName', {}, () => {})).rejects.toThrow(
+        await expect(abstractContract.getPastEvents('eventName', {}, () => {
+        })).rejects.toThrow(
             'Event with name "eventName" does not exists.'
         );
 
@@ -243,7 +261,7 @@ describe('AbstractContractTest', () => {
                 defaultGas: undefined,
                 defaultGasPrice: undefined,
                 transactionBlockTimeout: 50,
-                transactionConfirmationBlocks: 24,
+                transactionConfirmationBlocks: 0,
                 transactionPollingTimeout: 750,
                 transactionSigner: {}
             }

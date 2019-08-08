@@ -41,7 +41,23 @@ export default class Registry extends AbstractContract {
         this.net = net;
         this.resolverContract = null;
         this.resolverName = null;
-        this._transactionSigner = options.transactionSigner;
+    }
+
+    /**
+     * TODO: Remove setter
+     *
+     * Setter for the transactionSigner property
+     *
+     * @property transactionSigner
+     *
+     * @param {TransactionSigner} value
+     */
+    set transactionSigner(value) {
+        if (this.resolverContract) {
+            this.resolverContract.transactionSigner = value;
+        }
+
+        super.transactionSigner = value;
     }
 
     /**
@@ -56,24 +72,6 @@ export default class Registry extends AbstractContract {
     }
 
     /**
-     * TODO: Remove setter
-     *
-     * Setter for the transactionSigner property
-     *
-     * @property transactionSigner
-     *
-     * @param {TransactionSigner} value
-     */
-    set transactionSigner(value) {
-        if (value.type && value.type === 'TransactionSigner') {
-            throw new Error('Invalid TransactionSigner given!');
-        }
-
-        this.resolverContract.transactionSigner = value;
-        this._transactionSigner = value;
-    }
-
-    /**
      * Clears all subscriptions and listeners
      *
      * @method clearSubscriptions
@@ -81,7 +79,9 @@ export default class Registry extends AbstractContract {
      * @returns {Promise<Boolean|Error>}
      */
     clearSubscriptions() {
-        this.resolverContract.clearSubscriptions('eth_unsubscribe');
+        if (this.resolverContract) {
+            this.resolverContract.clearSubscriptions('eth_unsubscribe');
+        }
 
         return super.clearSubscriptions('eth_unsubscribe');
     }
@@ -314,7 +314,7 @@ export default class Registry extends AbstractContract {
      */
     setProvider(provider, net) {
         if (this.resolverContract) {
-            return this.resolverContract.setProvider(provider, net) && super.setProvider(provider, net);
+            this.resolverContract.setProvider(provider, net);
         }
 
         return super.setProvider(provider, net);

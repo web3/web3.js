@@ -4,6 +4,7 @@ import {Network} from 'web3-net';
 import {AbiCoder} from 'web3-eth-abi';
 import Registry from '../../src/contracts/Registry';
 import namehash from 'eth-ens-namehash';
+import {toChecksumAddress} from 'web3-utils';
 import Ens from '../../src/Ens';
 import EnsModuleFactory from '../../src/factories/EnsModuleFactory';
 
@@ -79,6 +80,98 @@ describe('EnsTest', () => {
         expect(ens.registryOptions).toEqual({});
 
         expect(ens.net).toEqual(networkMock);
+    });
+
+    it('sets the transactionSigner property', () => {
+        ens._registry = {transactionSigner: true};
+
+        ens.transactionSigner = {};
+
+        expect(ens.transactionSigner).toEqual({});
+
+        expect(ens.registry.transactionSigner).toEqual({});
+    });
+
+    it('sets the transactionSigner property and throws the expected error', () => {
+        try {
+            ens.transactionSigner = {type: 'TransactionSigner'};
+        } catch (error) {
+            expect(error).toEqual(new Error('Invalid TransactionSigner given!'));
+        }
+    });
+
+    it('sets the defaultGasPrice property', () => {
+        ens._registry = {defaultGasPrice: 0};
+
+        ens.defaultGasPrice = 10;
+
+        expect(ens.registry.defaultGasPrice).toEqual(10);
+
+        expect(ens.defaultGasPrice).toEqual(10);
+    });
+
+    it('sets the defaultGas property', () => {
+        ens._registry = {defaultGas: 0};
+
+        ens.defaultGas = 10;
+
+        expect(ens.registry.defaultGas).toEqual(10);
+
+        expect(ens.defaultGas).toEqual(10);
+    });
+
+    it('sets the transactionBlockTimeout property', () => {
+        ens._registry = {transactionBlockTimeout: 0};
+
+        ens.transactionBlockTimeout = 10;
+
+        expect(ens.registry.transactionBlockTimeout).toEqual(10);
+
+        expect(ens.transactionBlockTimeout).toEqual(10);
+    });
+
+    it('sets the transactionConfirmationBlocks property', () => {
+        ens._registry = {transactionConfirmationBlocks: 0};
+
+        ens.transactionConfirmationBlocks = 10;
+
+        expect(ens.registry.transactionConfirmationBlocks).toEqual(10);
+
+        expect(ens.transactionConfirmationBlocks).toEqual(10);
+    });
+
+    it('sets the transactionPollingTimeout property', () => {
+        ens._registry = {transactionPollingTimeout: 0};
+
+        ens.transactionPollingTimeout = 10;
+
+        expect(ens.registry.transactionPollingTimeout).toEqual(10);
+
+        expect(ens.transactionPollingTimeout).toEqual(10);
+    });
+
+    it('sets the defaultAccount property', () => {
+        toChecksumAddress.mockReturnValueOnce('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
+
+        ens._registry = {defaultAccount: '0x0'};
+
+        ens.defaultAccount = '0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B';
+
+        expect(ens.defaultAccount).toEqual('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
+
+        expect(ens.registry.defaultAccount).toEqual('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
+
+        expect(toChecksumAddress).toHaveBeenCalledWith('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
+    });
+
+    it('sets the defaultBlock property', () => {
+        ens._registry = {defaultBlock: '0x0'};
+
+        ens.defaultBlock = '0x1';
+
+        expect(ens.registry.defaultBlock).toEqual('0x1');
+
+        expect(ens.defaultBlock).toEqual('0x1');
     });
 
     it('calls resolver and returns with a resolved promise', async () => {

@@ -3,6 +3,7 @@ import {Network} from 'web3-net';
 import namehash from 'eth-ens-namehash';
 import {RESOLVER_ABI} from '../../../ressources/ABI/Resolver';
 import Registry from '../../../src/contracts/Registry';
+import * as Utils from 'web3-utils';
 
 // Mocks
 jest.mock('web3-net');
@@ -36,7 +37,16 @@ describe('RegistryTest', () => {
             return Promise.resolve('rinkeby');
         });
 
-        registry = new Registry(providerMock, contractModuleFactoryMock, {}, {}, {}, {}, {}, networkMock);
+        registry = new Registry(
+            providerMock,
+            contractModuleFactoryMock,
+            {},
+            {},
+            {},
+            {},
+            {transactionSigner: true},
+            networkMock
+        );
 
         registry.methods = {};
         registry.events = {};
@@ -50,6 +60,94 @@ describe('RegistryTest', () => {
         expect(registry.resolverContract).toEqual(null);
 
         expect(registry.resolverName).toEqual(null);
+    });
+
+    it('sets the transactionSigner property', () => {
+        registry.resolverContract = {transactionSigner: true};
+
+        registry.transactionSigner = {};
+
+        expect(registry.transactionSigner).toEqual({});
+
+        expect(registry.resolverContract.transactionSigner).toEqual({});
+    });
+
+    it('sets the transactionSigner property and throws the expected error', () => {
+        try {
+            registry.transactionSigner = {type: 'TransactionSigner'};
+        } catch (error) {
+            expect(error).toEqual(new Error('Invalid TransactionSigner given!'));
+        }
+    });
+
+    it('sets the defaultGasPrice property', () => {
+        registry.resolverContract = {defaultGasPrice: 0};
+
+        registry.defaultGasPrice = 10;
+
+        expect(registry.resolverContract.defaultGasPrice).toEqual(10);
+
+        expect(registry.defaultGasPrice).toEqual(10);
+    });
+
+    it('sets the defaultGas property', () => {
+        registry.resolverContract = {defaultGas: 0};
+
+        registry.defaultGas = 10;
+
+        expect(registry.resolverContract.defaultGas).toEqual(10);
+
+        expect(registry.defaultGas).toEqual(10);
+    });
+
+    it('sets the transactionBlockTimeout property', () => {
+        registry.resolverContract = {transactionBlockTimeout: 0};
+
+        registry.transactionBlockTimeout = 10;
+
+        expect(registry.resolverContract.transactionBlockTimeout).toEqual(10);
+
+        expect(registry.transactionBlockTimeout).toEqual(10);
+    });
+
+    it('sets the transactionConfirmationBlocks property', () => {
+        registry.resolverContract = {transactionConfirmationBlocks: 0};
+
+        registry.transactionConfirmationBlocks = 10;
+
+        expect(registry.resolverContract.transactionConfirmationBlocks).toEqual(10);
+
+        expect(registry.transactionConfirmationBlocks).toEqual(10);
+    });
+
+    it('sets the transactionPollingTimeout property', () => {
+        registry.resolverContract = {transactionPollingTimeout: 0};
+
+        registry.transactionPollingTimeout = 10;
+
+        expect(registry.resolverContract.transactionPollingTimeout).toEqual(10);
+
+        expect(registry.transactionPollingTimeout).toEqual(10);
+    });
+
+    it('sets the defaultAccount property', () => {
+        registry.resolverContract = {defaultAccount: '0x0'};
+
+        registry.defaultAccount = '0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B';
+
+        expect(registry.resolverContract.defaultAccount).toEqual('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
+
+        expect(registry.defaultAccount).toEqual('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
+    });
+
+    it('sets the defaultBlock property', () => {
+        registry.resolverContract = {defaultBlock: '0x0'};
+
+        registry.defaultBlock = '0x1';
+
+        expect(registry.resolverContract.defaultBlock).toEqual('0x1');
+
+        expect(registry.defaultBlock).toEqual('0x1');
     });
 
     it('calls owner and returns a resolved promise', async () => {
@@ -169,12 +267,14 @@ describe('RegistryTest', () => {
 
     it('calls setProvider with resolver defined and returns true', () => {
         const providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
-        registry.resolverContract = {setProvider: jest.fn()};
+        registry.resolverContract = {setProvider: jest.fn(), clearSubscriptions: jest.fn()};
         registry.resolverContract.setProvider.mockReturnValueOnce(true);
 
         expect(registry.setProvider(providerMock, 'net')).toEqual(true);
 
         expect(registry.resolverContract.setProvider).toHaveBeenCalledWith(providerMock, 'net');
+
+        expect(registry.resolverContract.clearSubscriptions).toHaveBeenCalled();
     });
 
     it('calls setProvider returns true', () => {

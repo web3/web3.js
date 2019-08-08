@@ -90,6 +90,7 @@ export default class Ens extends AbstractWeb3Module {
         }
 
         this.registry.transactionSigner = transactionSigner;
+        this._transactionSigner = transactionSigner;
     }
 
     /**
