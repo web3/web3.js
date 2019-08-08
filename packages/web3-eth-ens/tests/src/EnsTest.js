@@ -4,7 +4,6 @@ import {Network} from 'web3-net';
 import {AbiCoder} from 'web3-eth-abi';
 import Registry from '../../src/contracts/Registry';
 import namehash from 'eth-ens-namehash';
-import {toChecksumAddress} from 'web3-utils';
 import Ens from '../../src/Ens';
 import EnsModuleFactory from '../../src/factories/EnsModuleFactory';
 
@@ -151,7 +150,7 @@ describe('EnsTest', () => {
     });
 
     it('sets the defaultAccount property', () => {
-        toChecksumAddress.mockReturnValueOnce('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
+        Utils.toChecksumAddress.mockReturnValueOnce('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
 
         ens._registry = {defaultAccount: '0x0'};
 
@@ -161,7 +160,7 @@ describe('EnsTest', () => {
 
         expect(ens.registry.defaultAccount).toEqual('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
 
-        expect(toChecksumAddress).toHaveBeenCalledWith('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
+        expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
     });
 
     it('sets the defaultBlock property', () => {

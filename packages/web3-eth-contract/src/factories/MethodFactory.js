@@ -218,7 +218,6 @@ export default class MethodFactory {
         return timeout;
     }
 
-
     /**
      * Returns a object of type AbstractTransactionObserver
      *

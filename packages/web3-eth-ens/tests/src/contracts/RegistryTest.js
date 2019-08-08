@@ -3,7 +3,6 @@ import {Network} from 'web3-net';
 import namehash from 'eth-ens-namehash';
 import {RESOLVER_ABI} from '../../../ressources/ABI/Resolver';
 import Registry from '../../../src/contracts/Registry';
-import * as Utils from 'web3-utils';
 
 // Mocks
 jest.mock('web3-net');
