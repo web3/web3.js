@@ -29,6 +29,7 @@ import {
     TransactionConfig,
     TransactionReceipt,
     Web3ModuleOptions,
+    TransactionSigner
 } from 'web3-core';
 import {Contract, ContractOptions} from 'web3-eth-contract';
 import {Iban} from 'web3-eth-iban';
@@ -54,6 +55,7 @@ export class Eth extends AbstractWeb3Module {
     ens: Ens;
     abi: AbiCoder;
     net: Network;
+    transactionSigner: TransactionSigner;
 
     clearSubscriptions(): Promise<boolean>;
 

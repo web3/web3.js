@@ -24,6 +24,9 @@ const contract = new Contract('http://localhost:500', []);
 // $ExpectType string
 contract.address;
 
+// $ExpectType TransactionSigner
+contract.transactionSigner;
+
 // $ExpectType string
 contract.options.address;
 
