@@ -104,4 +104,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Error handling of the HttpProvider fixed (#2887)
 - Property handling for the Ens module fixed (#3008)
+- ``blockNumber`` check of the received receipt fixed in transaction observers (#3012)
 
