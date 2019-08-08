@@ -138,13 +138,13 @@ export default class AbstractMethodFactory {
     }
 
     /**
-     * Returns a object of type TransactionObserver
+     * Returns a object of type AbstractTransactionObserver
      *
      * @method createTransactionObserver
      *
      * @param {AbstractWeb3Module} moduleInstance
      *
-     * @returns {HttpTransactionObserver|SocketTransactionObserver}
+     * @returns {AbstractTransactionObserver}
      */
     createTransactionObserver(moduleInstance) {
         if (moduleInstance.currentProvider.supportsSubscriptions()) {

@@ -1,11 +1,11 @@
 import {formatters} from 'web3-core-helpers';
 import PromiEvent from '../../../../lib/PromiEvent';
-import TransactionObserver from '../../../../src/observers/TransactionObserver';
+import AbstractTransactionObserver from '../../../../lib/observers/AbstractTransactionObserver';
 import AbstractObservedTransactionMethod from '../../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
 // Mocks
 jest.mock('web3-core-helpers');
-jest.mock('../../../../src/observers/TransactionObserver');
+jest.mock('../../../../lib/observers/AbstractTransactionObserver');
 
 /**
  * AbstractObservedTransactionMethod test
@@ -32,8 +32,8 @@ describe('AbstractObservedTransactionMethodTest', () => {
         transactionHashCallback = jest.fn();
         confirmationCallback = jest.fn();
 
-        new TransactionObserver();
-        transactionObserverMock = TransactionObserver.mock.instances[0];
+        new AbstractTransactionObserver();
+        transactionObserverMock = AbstractTransactionObserver.mock.instances[0];
         transactionObserverMock.observe.mockReturnValue(observableMock);
 
         beforeExecutionMock = jest.fn();
