@@ -110,11 +110,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
 
                             this.handleError(
                                 new Error(
-                                    `Transaction has been reverted by the EVM:\n${JSON.stringify(
-                                        receipt,
-                                        null,
-                                        2
-                                    )}`
+                                    `Transaction has been reverted by the EVM:\n${JSON.stringify(receipt, null, 2)}`
                                 ),
                                 receipt,
                                 confirmations

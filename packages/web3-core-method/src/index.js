@@ -26,8 +26,8 @@ export AbstractMethodFactory from '../lib/factories/AbstractMethodFactory';
 export AbstractMethod from '../lib/methods/AbstractMethod';
 export MethodProxy from './proxy/MethodProxy';
 export AbstractTransactionObserver from '../lib/observers/AbstractTransactionObserver';
-export TransactionHttpObserver from './observers/TransactionHttpObserver';
-export TransactionSocketObserver from './observers/TransactionSocketObserver';
+export HttpTransactionObserver from './observers/HttpTransactionObserver';
+export SocketTransactionObserver from './observers/SocketTransactionObserver';
 
 // Network
 export GetProtocolVersionMethod from './methods/network/GetProtocolVersionMethod';

@@ -12,7 +12,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file TransactionSocketObserver.js
+ * @file TransactionHttpObserver.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2019
@@ -21,21 +21,21 @@
 import {Observable} from 'rxjs';
 import AbstractTransactionObserver from '../../lib/observers/AbstractTransactionObserver';
 
-export default class TransactionSocketObserver extends AbstractTransactionObserver {
+export default class HttpTransactionObserver extends AbstractTransactionObserver {
     /**
      * @param {AbstractSocketProvider|HttpProvider|CustomProvider} provider
      * @param {Number} timeout
      * @param {Number} blockConfirmations
      * @param {GetTransactionReceiptMethod} getTransactionReceiptMethod
-     * @param {NewHeadsSubscription} newHeadsSubscription
+     * @param {GetBlockByNumberMethod} getBlockByNumberMethod
      *
      * @constructor
      */
-    constructor(provider, timeout, blockConfirmations, getTransactionReceiptMethod, newHeadsSubscription) {
+    constructor(provider, timeout, blockConfirmations, getTransactionReceiptMethod, getBlockByNumberMethod) {
         super(provider, timeout, blockConfirmations, getTransactionReceiptMethod);
 
-        this.newHeadsSubscription = newHeadsSubscription;
-        this.blockNumbers = [];
+        this.getBlockByNumberMethod = getBlockByNumberMethod;
+        this.lastBlock = false;
     }
 
     /**
@@ -61,7 +61,7 @@ export default class TransactionSocketObserver extends AbstractTransactionObserv
 
                         this.emitError(
                             new Error(
-                                'No transaction receipt found! Increase the transactionConfirmationBlocks property or enable automine/instant-seal in your Ethereumm node settings'
+                                'No transaction receipt found! Increase the transactionConfirmationBlocks property or be sure automine is activated in your development environment.'
                             ),
                             false,
                             observer
@@ -70,54 +70,70 @@ export default class TransactionSocketObserver extends AbstractTransactionObserv
                         return;
                     }
 
-                    this.newHeadsSubscription.subscribe(async (error, newHead) => {
+                    const interval = setInterval(async () => {
+                        receipt = await this.getTransactionReceipt(transactionHash);
+
                         if (observer.closed) {
-                            await this.newHeadsSubscription.unsubscribe();
+                            clearInterval(interval);
 
                             return;
                         }
 
-                        if (error) {
-                            throw error;
-                        }
-
-                        receipt = await this.getTransactionReceipt(transactionHash);
-
+                        // on parity nodes you can get the receipt without it being mined
+                        // so the receipt may not have a block number at this point
                         if (receipt && receipt.blockNumber) {
-                            receipt = await this.getTransactionReceipt(transactionHash);
-
-                            if (!this.blockNumbers.includes(newHead.number)) {
-                                if (receipt) {
+                            if (this.lastBlock) {
+                                const block = await this.getBlockByNumber(this.lastBlock.number + 1);
+                                if (block) {
+                                    this.lastBlock = block;
                                     this.confirmations++;
                                     this.emitNext(receipt, observer);
-
-                                    if (this.isConfirmed()) {
-                                        await this.newHeadsSubscription.unsubscribe();
-                                        observer.complete();
-                                    }
                                 }
+                            } else {
+                                this.lastBlock = await this.getBlockByNumber(receipt.blockNumber);
+                                this.confirmations++;
+                                this.emitNext(receipt, observer);
+                            }
 
-                                this.blockNumbers.push(newHead.number);
-                                this.confirmationChecks++;
-
-                                if (this.isTimeoutTimeExceeded()) {
-                                    await this.newHeadsSubscription.unsubscribe();
-
-                                    this.emitError(
-                                        new Error(
-                                            'Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
-                                        ),
-                                        receipt,
-                                        observer
-                                    );
-                                }
+                            if (this.isConfirmed()) {
+                                observer.complete();
+                                clearInterval(interval);
                             }
                         }
-                    });
+
+                        this.confirmationChecks++;
+
+                        if (this.isTimeoutTimeExceeded()) {
+                            clearInterval(interval);
+
+                            this.emitError(
+                                new Error(
+                                    'Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
+                                ),
+                                receipt,
+                                observer
+                            );
+                        }
+                    }, 1000);
                 })
                 .catch((error) => {
                     this.emitError(error, false, observer);
                 });
         });
+    }
+
+    /**
+     * Returns a block by the given blockNumber
+     *
+     * @method getBlockByNumber
+     *
+     * @param {String} blockNumber
+     *
+     * @returns {Promise<Object>}
+     */
+    getBlockByNumber(blockNumber) {
+        this.getBlockByNumberMethod.parameters = [blockNumber];
+
+        return this.getBlockByNumberMethod.execute();
     }
 }
