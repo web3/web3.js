@@ -83,7 +83,7 @@ export default class SocketTransactionObserver extends AbstractTransactionObserv
 
                         receipt = await this.getTransactionReceipt(transactionHash);
 
-                        if (receipt && receipt.blockNumber) {
+                        if (receipt && (receipt.blockNumber === 0 || receipt.blockNumber)) {
                             if (!this.blockNumbers.includes(newHead.number)) {
                                 if (receipt) {
                                     this.confirmations++;
