@@ -244,3 +244,7 @@ export interface PeerInfo {
     };
     protocols: any; // Any because it's not documented what each protocol (eth, shh etc.) is defining here
 }
+
+export interface TransactionSigner {
+    sign(txObject: TransactionConfig): Promise<SignedTransaction>
+}

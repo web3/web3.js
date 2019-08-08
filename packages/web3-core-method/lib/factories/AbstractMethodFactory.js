@@ -23,9 +23,10 @@
 import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import GetBlockByNumberMethod from '../../src/methods/block/GetBlockByNumberMethod';
 import GetTransactionReceiptMethod from '../../src/methods/transaction/GetTransactionReceiptMethod';
-import TransactionObserver from '../../src/observers/TransactionObserver';
 import GetTransactionCountMethod from '../../src/methods/account/GetTransactionCountMethod';
 import ChainIdMethod from '../../src/methods/network/ChainIdMethod';
+import SocketTransactionObserver from '../../src/observers/SocketTransactionObserver';
+import HttpTransactionObserver from '../../src/observers/HttpTransactionObserver';
 
 export default class AbstractMethodFactory {
     /**
@@ -137,22 +138,31 @@ export default class AbstractMethodFactory {
     }
 
     /**
-     * Returns a object of type TransactionObserver
+     * Returns a object of type AbstractTransactionObserver
      *
      * @method createTransactionObserver
      *
      * @param {AbstractWeb3Module} moduleInstance
      *
-     * @returns {TransactionObserver}
+     * @returns {AbstractTransactionObserver}
      */
     createTransactionObserver(moduleInstance) {
-        return new TransactionObserver(
+        if (moduleInstance.currentProvider.supportsSubscriptions()) {
+            return new SocketTransactionObserver(
+                moduleInstance.currentProvider,
+                this.getTimeout(moduleInstance),
+                moduleInstance.transactionConfirmationBlocks,
+                new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
+                new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
+            );
+        }
+
+        return new HttpTransactionObserver(
             moduleInstance.currentProvider,
             this.getTimeout(moduleInstance),
             moduleInstance.transactionConfirmationBlocks,
             new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
-            new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance),
-            new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
+            new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance)
         );
     }
 }

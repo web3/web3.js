@@ -26,7 +26,8 @@ import {
     GetTransactionCountMethod,
     GetTransactionReceiptMethod,
     GetBlockByNumberMethod,
-    TransactionObserver
+    SocketTransactionObserver,
+    HttpTransactionObserver
 } from 'web3-core-method';
 import {NewHeadsSubscription} from 'web3-core-subscriptions';
 import CallContractMethod from '../methods/CallContractMethod';
@@ -218,22 +219,31 @@ export default class MethodFactory {
     }
 
     /**
-     * Returns a object of type TransactionObserver
+     * Returns a object of type AbstractTransactionObserver
      *
      * @method createTransactionObserver
      *
-     * @param {AbstractContract} contract
+     * @param {AbstractWeb3Module} moduleInstance
      *
-     * @returns {TransactionObserver}
+     * @returns {AbstractTransactionObserver}
      */
-    createTransactionObserver(contract) {
-        return new TransactionObserver(
-            contract.currentProvider,
-            this.getTimeout(contract),
-            contract.transactionConfirmationBlocks,
-            new GetTransactionReceiptMethod(this.utils, this.formatters, contract),
-            new GetBlockByNumberMethod(this.utils, this.formatters, contract),
-            new NewHeadsSubscription(this.utils, this.formatters, contract)
+    createTransactionObserver(moduleInstance) {
+        if (moduleInstance.currentProvider.supportsSubscriptions()) {
+            return new SocketTransactionObserver(
+                moduleInstance.currentProvider,
+                this.getTimeout(moduleInstance),
+                moduleInstance.transactionConfirmationBlocks,
+                new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
+                new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
+            );
+        }
+
+        return new HttpTransactionObserver(
+            moduleInstance.currentProvider,
+            this.getTimeout(moduleInstance),
+            moduleInstance.transactionConfirmationBlocks,
+            new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
+            new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance)
         );
     }
 }

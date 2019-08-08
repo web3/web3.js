@@ -27,7 +27,7 @@ export default class SendTransactionMethod extends AbstractObservedTransactionMe
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
-     * @param {TransactionObserver} transactionObserver
+     * @param {AbstractTransactionObserver} transactionObserver
      *
      * @constructor
      */

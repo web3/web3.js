@@ -20,7 +20,7 @@
 import BN = require('bn.js');
 import {provider} from 'web3-providers';
 import {AbiInput, AbiOutput, AbiItem} from 'web3-utils';
-import {PromiEvent, Web3ModuleOptions} from 'web3-core';
+import {PromiEvent, Web3ModuleOptions, TransactionSigner} from 'web3-core';
 
 export class Contract {
     constructor(
@@ -32,6 +32,7 @@ export class Contract {
 
     address: string;
     jsonInterface: AbiModel;
+    transactionSigner: TransactionSigner;
 
     options: Options;
 
