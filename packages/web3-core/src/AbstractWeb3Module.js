@@ -21,14 +21,7 @@
  */
 
 import isObject from 'lodash/isObject';
-import {
-    HttpProvider,
-    WebsocketProvider,
-    IpcProvider,
-    BatchRequest,
-    ProviderDetector,
-    ProviderResolver
-} from 'web3-providers';
+import {HttpProvider, WebsocketProvider, IpcProvider, BatchRequest, ProviderDetector} from 'web3-providers';
 import {MethodProxy} from 'web3-core-method';
 import {toChecksumAddress} from 'web3-utils';
 
@@ -38,14 +31,13 @@ export default class AbstractWeb3Module {
      * @param {Object} options
      * @param {MethodFactory} methodFactory
      * @param {Net.Socket} nodeNet
+     * @param {ProviderResolver} providerResolver
      *
      * @constructor
      */
-    constructor(provider, options = {}, methodFactory = null, nodeNet = null) {
-        // TODO: Move the ProviderResolver dependency injection to the planned public_api layer.
-        this.providerResolver = new ProviderResolver();
+    constructor(provider, options = {}, methodFactory = null, nodeNet = null, providerResolver) {
+        this.providerResolver = providerResolver;
         this.givenProvider = ProviderDetector.detect();
-
         this._currentProvider = this.providerResolver.resolve(provider, nodeNet);
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
         this._defaultBlock = options.defaultBlock || 'latest';

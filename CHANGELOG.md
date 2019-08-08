@@ -94,6 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - ``automine`` and ``Instant Seal`` support added (#2940)
+- Public API layer added to ``web3-core`` module (#3013)
 
 ### Changed
 

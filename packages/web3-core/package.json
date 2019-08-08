@@ -9,8 +9,8 @@
         "node": ">=8.0.0"
     },
     "main": "dist/web3-core.cjs.js",
-    "module": "dist/web3-core.esm.js",
     "browser": "dist/web3-core.umd.js",
+    "module": "public_api",
     "types": "types/index.d.ts",
     "scripts": {
         "build": "rollup -c",
@@ -33,7 +33,8 @@
     },
     "files": [
         "dist",
-        "types/index.d.ts"
+        "types/index.d.ts",
+        "public_api"
     ],
     "gitHead": "cb266cc298150f4eb1c8cdac4f41551dd8819a81"
 }

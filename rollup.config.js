@@ -38,31 +38,10 @@ const config = [
                 plugins: [
                     '@babel/plugin-proposal-export-default-from',
                     '@babel/plugin-proposal-export-namespace-from',
-                    ["@babel/plugin-transform-runtime", {
-                        "helpers": true,
-                        "regenerator": true
+                    ['@babel/plugin-transform-runtime', {
+                        'helpers': true,
+                        'regenerator': true
                     }]
-                ]
-            }),
-            json(),
-            autoExternal(),
-            cleanup()
-        ]
-    },
-    {
-        input: 'src/index.js',
-        output: [
-            {
-                file: '',
-                format: 'es'
-            }
-        ],
-        plugins: [
-            babel({
-                exclude: 'node_modules/**',
-                plugins: [
-                    '@babel/plugin-proposal-export-default-from',
-                    '@babel/plugin-proposal-export-namespace-from'
                 ]
             }),
             json(),
@@ -78,10 +57,11 @@ const config = [
  * @param {String} name
  * @param {String} outputFileName
  * @param {Object} globals
+ * @param {Boolean} ignoreEsm
  *
  * @returns {Array}
  */
-export default (name, outputFileName, globals) => {
+export default (name, outputFileName, globals, ignoreEsm) => {
     // CJS
     config[0].output[0].file = 'dist/' + outputFileName + '.cjs.js';
 
@@ -90,12 +70,36 @@ export default (name, outputFileName, globals) => {
     config[0].output[1].file = 'dist/' + outputFileName + '.umd.js';
     config[0].output[1].globals = globals;
 
-    // ESM
-    config[1].output[0].file = 'dist/' + outputFileName + '.esm.js';
+    if (!ignoreEsm) {
+        config[1] = {
+            input: 'src/index.js',
+            output: [
+                {
+                    file: 'dist/' + outputFileName + '.esm.js',
+                    format: 'es'
+                }
+            ],
+            plugins: [
+                babel({
+                    exclude: 'node_modules/**',
+                    plugins: [
+                        '@babel/plugin-proposal-export-default-from',
+                        '@babel/plugin-proposal-export-namespace-from'
+                    ]
+                }),
+                json(),
+                autoExternal(),
+                cleanup()
+            ]
+        };
+
+        if (name === 'Web3') {
+            config[1].input = 'src/Web3.js';
+        }
+    }
 
     if (name === 'Web3') {
         config[0].input = 'src/Web3.js';
-        config[1].input = 'src/Web3.js';
     }
 
     return config;
