@@ -90,6 +90,51 @@ describe('SocketTransactionObserverTest', () => {
         );
     });
 
+    it('calls observe and it returns the expected value also with blockNumber set to 0', (done) => {
+        socketTransactionObserver.blockConfirmations = 2;
+
+        const blockHeadOne = {
+            number: 0
+        };
+
+        const blockHeadTwo = {
+            number: 1
+        };
+
+        const receipt = {blockNumber: 0};
+
+        newHeadsSubscriptionMock.subscribe = jest.fn((callback) => {
+            callback(false, blockHeadOne);
+            callback(false, blockHeadTwo);
+        });
+
+        newHeadsSubscriptionMock.unsubscribe.mockReturnValueOnce(Promise.resolve(true));
+
+        getTransactionReceiptMethodMock.execute
+            .mockReturnValueOnce(Promise.resolve(receipt))
+            .mockReturnValueOnce(Promise.resolve(receipt))
+            .mockReturnValueOnce(Promise.resolve(receipt));
+
+        socketTransactionObserver.observe('transactionHash').subscribe(
+            (transactionConfirmation) => {
+                if (transactionConfirmation.confirmations === 1) {
+                    expect(transactionConfirmation.receipt).toEqual(receipt);
+
+                    return;
+                }
+
+                expect(transactionConfirmation.receipt).toEqual(receipt);
+                expect(transactionConfirmation.confirmations).toEqual(2);
+            },
+            () => {},
+            () => {
+                expect(newHeadsSubscriptionMock.unsubscribe).toHaveBeenCalled();
+
+                done();
+            }
+        );
+    });
+
     it('calls observe throws an timeout error', (done) => {
         socketTransactionObserver.blockConfirmations = 2;
         socketTransactionObserver.timeout = 1;
