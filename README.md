@@ -104,7 +104,6 @@ npm run bootstrap # install all dependencies and symlinks the internal modules f
 npm run build # runs rollup
 npm run test # runs all tests 
 npm run clean # removes all the node_modules folders in all modules
-npm run dev # runs rollup with a watcher
 
 ```
 
