@@ -35,7 +35,7 @@ export default class Log extends AbstractType {
 
         this.blockHash = log.blockHash;
         this.transactionHash = log.transactionHash;
-        this.value.id = this.generateId(log);
+        this.value.id = this.generateId();
         this.blockNumber = log.blockNumber;
         this.transactionIndex = log.transactionIndex;
         this.logIndex = log.logIndex;
@@ -154,18 +154,18 @@ export default class Log extends AbstractType {
      *
      * @method generateId
      *
-     * @param log
-     *
      * @returns {String|null}
      */
-    generateId(log) {
+    generateId() {
         if (
-            typeof log.blockHash === 'string' &&
-            typeof log.transactionHash === 'string' &&
-            typeof log.logIndex === 'string'
+            typeof this.rawValue.blockHash === 'string' &&
+            typeof this.rawValue.transactionHash === 'string' &&
+            typeof this.rawValue.logIndex === 'string'
         ) {
             const shaId = Crypto.keccak256(
-                log.blockHash.replace('0x', '') + log.transactionHash.replace('0x', '') + log.logIndex.replace('0x', '')
+                this.rawValue.blockHash.replace('0x', '') +
+                    this.rawValue.transactionHash.replace('0x', '') +
+                    this.rawValue.logIndex.replace('0x', '')
             );
 
             shaId.replace('0x', '').substr(0, 8);
@@ -173,7 +173,7 @@ export default class Log extends AbstractType {
             return `log_${shaId}`;
         }
 
-        if (!log.id) {
+        if (!this.rawValue.id) {
             return null;
         }
     }
