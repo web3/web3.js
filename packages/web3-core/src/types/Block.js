@@ -34,7 +34,7 @@ export default class Block extends AbstractType {
      * @constructor
      */
     constructor(block) {
-        super();
+        super(block);
 
         this.gasLimit = block.gasLimit;
         this.gasUsed = block.gasUsed;
@@ -45,7 +45,6 @@ export default class Block extends AbstractType {
         this.totalDifficulty = block.totalDifficulty;
         this.transactions = block.transactions;
         this.miner = block.miner;
-        this.rawValue = block;
     }
 
     /**
@@ -56,7 +55,7 @@ export default class Block extends AbstractType {
      * @returns {*}
      */
     get gasLimit() {
-        return this.rawValue.gasLimit;
+        return this.value.gasLimit;
     }
 
     /**
@@ -67,7 +66,7 @@ export default class Block extends AbstractType {
      * @returns {*}
      */
     set gasLimit(gasLimit) {
-        this.rawValue.gasLimit = new Hex(gasLimit).toNumber();
+        this.value.gasLimit = new Hex(gasLimit).toNumber();
     }
 
     /**
@@ -78,7 +77,7 @@ export default class Block extends AbstractType {
      * @returns {*}
      */
     get gasUsed() {
-        return this.rawValue.gasUsed;
+        return this.value.gasUsed;
     }
 
     /**
@@ -89,7 +88,7 @@ export default class Block extends AbstractType {
      * @returns {*}
      */
     set gasUsed(gasUsed) {
-        this.rawValue.gasUsed = new Hex(gasUsed).toNumber();
+        this.value.gasUsed = new Hex(gasUsed).toNumber();
     }
 
     /**
@@ -100,7 +99,7 @@ export default class Block extends AbstractType {
      * @returns {*}
      */
     get size() {
-        return this.rawValue.size;
+        return this.value.size;
     }
 
     /**
@@ -111,7 +110,7 @@ export default class Block extends AbstractType {
      * @returns {*}
      */
     set size(size) {
-        this.rawValue.size = new Hex(size).toNumber();
+        this.value.size = new Hex(size).toNumber();
     }
 
     /**
@@ -141,7 +140,7 @@ export default class Block extends AbstractType {
             timestamp = timestamp.toString(10);
         }
 
-        this.rawValue.timestamp = timestamp;
+        this.value.timestamp = timestamp;
     }
 
     /**
@@ -164,10 +163,10 @@ export default class Block extends AbstractType {
      */
     set number(number) {
         if (number !== null) {
-            this.rawValue.number = new Hex(number).toNumber();
+            this.value.number = new Hex(number).toNumber();
         }
 
-        this.rawValue.number = number;
+        this.value.number = number;
     }
 
     /**
@@ -178,7 +177,7 @@ export default class Block extends AbstractType {
      * @returns {}
      */
     get difficulty() {
-        return this.rawValue.difficulty;
+        return this.value.difficulty;
     }
 
     /**
@@ -190,7 +189,7 @@ export default class Block extends AbstractType {
      */
     set difficulty(difficulty) {
         if (difficulty) {
-            this.rawValue.difficulty = new BigNumber(difficulty).toString(10);
+            this.value.difficulty = new BigNumber(difficulty).toString(10);
         }
     }
 
@@ -202,7 +201,7 @@ export default class Block extends AbstractType {
      * @returns {}
      */
     get totalDifficulty() {
-        return this.rawValue.totalDifficulty;
+        return this.value.totalDifficulty;
     }
 
     /**
@@ -214,7 +213,7 @@ export default class Block extends AbstractType {
      */
     set totalDifficulty(totalDifficulty) {
         if (totalDifficulty) {
-            this.rawValue.totalDifficulty = new BigNumber(totalDifficulty).toString(10);
+            this.value.totalDifficulty = new BigNumber(totalDifficulty).toString(10);
         }
     }
 
@@ -226,7 +225,7 @@ export default class Block extends AbstractType {
      * @returns {}
      */
     get transactions() {
-        return this.rawValue.transactions;
+        return this.transactions;
     }
 
     /**
@@ -238,7 +237,7 @@ export default class Block extends AbstractType {
      */
     set transactions(transactions) {
         if (isArray(transactions)) {
-            this.rawValue.transactions = transactions.map((item) => {
+            this.value.transactions = transactions.map((item) => {
                 if (!isString(item)) {
                     return new Transaction(item).toObject();
                 }
@@ -254,7 +253,7 @@ export default class Block extends AbstractType {
      * @returns {*|string|string}
      */
     get miner() {
-        return this.rawValue.miner;
+        return this.value.miner;
     }
 
     /**
@@ -266,7 +265,7 @@ export default class Block extends AbstractType {
      */
     set miner(miner) {
         if (miner) {
-            this.rawValue.miner = new Address(miner).toChecksumAddress();
+            this.value.miner = new Address(miner).toChecksumAddress();
         }
     }
 }

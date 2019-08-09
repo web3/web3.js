@@ -17,6 +17,8 @@
  * @date 2019
  */
 
+import cloneDeep from 'lodash/cloneDeep';
+
 export default class AbstractType {
     /**
      * @param {any} value
@@ -25,6 +27,7 @@ export default class AbstractType {
      */
     constructor(value = {}) {
         this._rawValue = value;
+        this._value = cloneDeep(value);
     }
 
     /**
@@ -47,5 +50,23 @@ export default class AbstractType {
      */
     get rawValue() {
         return this._rawValue;
+    }
+
+    /**
+     * Getter for the value property
+     *
+     * @returns {any}
+     */
+    get value() {
+        return this._value;
+    }
+
+    /**
+     * Setter for the value property
+     *
+     * @returns {any}
+     */
+    set value(value) {
+        this._value = value;
     }
 }
