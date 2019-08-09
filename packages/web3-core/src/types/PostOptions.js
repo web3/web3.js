@@ -26,40 +26,128 @@ import AbstractType from '../../lib/types/AbstractType';
 
 export default class PostOptions extends AbstractType {
     /**
-     * Setter for the value property.
-     *
-     * @property value
-     *
      * @param {Object} options
+     *
+     * @constructor
      */
-    set value(options) {
-        if (options.ttl) {
-            options.ttl = Hex.fromNumber(options.ttl).toString();
-        }
+    constructor(options) {
+        super(options);
 
-        if (options.workToProve) {
-            options.workToProve = Hex.fromNumber(options.workToProve).toString();
-        }
+        this.value.ttl = options.ttl;
+        this.value.workToProve = options.workToProve;
+        this.value.priority = options.priority;
+        this.value.topics = options.topics;
+    }
 
-        if (options.priority) {
-            options.priority = Hex.fromNumber(options.priority).toString();
-        }
+    /**
+     * Getter for the ttl property.
+     *
+     * @property ttl
+     *
+     * @returns {Number}
+     */
+    get ttl() {
+        return this.value.ttl;
+    }
 
-        // fallback
-        if (!isArray(options.topics)) {
-            options.topics = options.topics ? [options.topics] : [];
+    /**
+     * Setter for the ttl property.
+     *
+     * @property ttl
+     *
+     * @param {Number} ttl
+     */
+    set ttl(ttl) {
+        if (ttl) {
+            this.value.ttl = Hex.fromNumber(ttl).toString();
+        }
+    }
+
+    /**
+     * Getter for the workToProve property.
+     *
+     * @property workToProve
+     *
+     * @returns {String}
+     */
+    get workToProve() {
+        return this.value.workToProve;
+    }
+
+    /**
+     * Setter for the workToProve property.
+     *
+     * @property workToProve
+     *
+     * @param {String} workToProve
+     */
+    set workToProve(workToProve) {
+        if (workToProve) {
+            this.value.workToProve = Hex.fromNumber(workToProve).toString();
+        }
+    }
+
+    /**
+     * Getter for the priority property.
+     *
+     * @property priority
+     *
+     * @returns {String}
+     */
+    get priority() {
+        return this.value.priority;
+    }
+
+    /**
+     * Setter for the priority property.
+     *
+     * @property priority
+     *
+     * @param {Number} priority
+     */
+    set priority(priority) {
+        if (priority) {
+            this.value.priority = Hex.fromNumber(this.value.priority).toString();
+        }
+    }
+
+    /**
+     * Getter for the topics array.
+     *
+     * @property topics
+     *
+     * @returns {Array<String>}
+     */
+    get topics() {
+        return this.value.topics;
+    }
+
+    /**
+     * Setter for the topics property.
+     *
+     * @property topics
+     *
+     * @param {any} topics
+     */
+    set topics(topics) {
+        if (!isArray(topics)) {
+            if (topics) {
+                this.value.topics = [topics];
+
+                return;
+            }
+
+            this.value.topics = [];
         }
 
         // format the following options
-        options.topics = options.topics.map((topic) => {
+        this.value.topics = this.value.topics.map((topic) => {
             // convert only if not hex
-            if (topic.indexOf('0x') === 0) {
+            if (topic.startsWith('0x') === 0) {
                 return topic;
             }
 
             return new Utf8(topic).toHex();
         });
-
-        this._value = options;
     }
 }

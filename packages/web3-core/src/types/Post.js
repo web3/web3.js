@@ -24,35 +24,153 @@ import AbstractType from '../../lib/types/AbstractType';
 
 export default class Post extends AbstractType {
     /**
-     * Setter for the value property.
-     *
-     * @property value
-     *
      * @param {Object} post
+     *
+     * @constructor
      */
-    set value(post) {
-        post.expiry = new Hex(post.expiry).toNumber();
-        post.sent = new Hex(post.sent).toNumber();
-        post.ttl = new Hex(post.ttl).toNumber();
-        post.workProved = new Hex(post.workProved).toNumber();
+    constructor(post) {
+        super(post);
 
-        // TODO: Check why out-commented
-        // post.payloadRaw = post.payload;
-        // post.payload = Utils.hexToAscii(post.payload);
+        this.expiry = post.expiry;
+        this.sent = post.sent;
+        this.ttl = post.ttl;
+        this.workProved = post.workProved;
+        this.topics = post.topics;
+    }
 
-        // if (Utils.isJson(post.payload)) {
-        //     post.payload = JSON.parse(post.payload);
-        // }
+    /**
+     * Setter for the expiry property
+     *
+     * @property expiry
+     *
+     * @param {String} expiry
+     */
+    set expiry(expiry) {
+        this.value.expiry = new Hex(expiry).toNumber();
+    }
 
-        // format the following options
-        if (!post.topics) {
-            post.topics = [];
+    /**
+     * Getter for the expiry property
+     *
+     * @property expiry
+     *
+     * @returns {Number}
+     */
+    get expiry() {
+        return this.value.expiry;
+    }
+
+    /**
+     * Setter for the sent property
+     *
+     * @property sent
+     *
+     * @param {String} sent
+     */
+    set sent(sent) {
+        this.value.sent = new Hex(sent).toNumber();
+    }
+
+    /**
+     * Getter for the sent property
+     *
+     * @property sent
+     *
+     * @returns {Number}
+     */
+    get sent() {
+        return this.value.sent;
+    }
+
+    /**
+     * Setter for the ttl property
+     *
+     * @property ttl
+     *
+     * @param {String} ttl
+     */
+    set ttl(ttl) {
+        this.value.ttl = new Hex(ttl).toNumber();
+    }
+
+    /**
+     * Getter for the ttl property
+     *
+     * @property ttl
+     *
+     * @returns {Number}
+     */
+    get ttl() {
+        return this.value.ttl;
+    }
+
+    /**
+     * Setter for the workProved property
+     *
+     * @property workProved
+     *
+     * @param {String} workProved
+     */
+    set workProved(workProved) {
+        return new Hex(workProved).toNumber();
+    }
+
+    /**
+     * Getter for the workProved property
+     *
+     * @property workProved
+     *
+     * @returns {Number}
+     */
+    get workProved() {
+        return this.value.workProved;
+    }
+
+    /**
+     * Setter for the topics property
+     *
+     * @property topics
+     *
+     * @param {Array<String>} topics
+     */
+    set topics(topics) {
+        if (!topics) {
+            this.value.topics = topics;
         }
 
-        post.topics = post.topics.map((topic) => {
+        this.value.topics = topics.map((topic) => {
             return new Hex(topic).toUtf8();
         });
+    }
 
-        super.value = post;
+    /**
+     * Getter for the topics property
+     *
+     * @property topics
+     *
+     * @returns {Number}
+     */
+    get topics() {
+        return this.value.topics;
+    }
+
+    /**
+     * Setter for the payload property.
+     *
+     * @param {Object} payload
+     */
+    set payload(payload) {
+        this.value.payload = new Hex(payload).toAscii();
+    }
+
+    /**
+     * Getter for the payload property
+     *
+     * @property payload
+     *
+     * @returns {Number}
+     */
+    get payload() {
+        return this.value.payload;
     }
 }

@@ -164,8 +164,8 @@ export default class Log extends AbstractType {
         ) {
             const shaId = Crypto.keccak256(
                 this.rawValue.blockHash.replace('0x', '') +
-                    this.rawValue.transactionHash.replace('0x', '') +
-                    this.rawValue.logIndex.replace('0x', '')
+                this.rawValue.transactionHash.replace('0x', '') +
+                this.rawValue.logIndex.replace('0x', '')
             );
 
             shaId.replace('0x', '').substr(0, 8);
