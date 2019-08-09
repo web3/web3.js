@@ -25,15 +25,26 @@ import AbstractType from '../../lib/types/AbstractType';
 
 export default class BlockNumber extends AbstractType {
     /**
-     * Setter for the value property
+     * @param {String|Number} blockNumber
      *
-     * @property value
+     * @constructor
+     */
+    constructor(blockNumber) {
+        super(blockNumber);
+
+        this.blockNumber = blockNumber;
+    }
+
+    /**
+     * Setter for the blockNumber property
+     *
+     * @property blockNumber
      *
      * @param {any} blockNumber
      */
-    set value(blockNumber) {
+    set blockNumber(blockNumber) {
         if (blockNumber === undefined || blockNumber === null || BlockNumber.isPredefinedBlockNumber(blockNumber)) {
-            this._value = blockNumber;
+            this.value = blockNumber;
 
             return;
         }
@@ -43,7 +54,7 @@ export default class BlockNumber extends AbstractType {
                 return blockNumber.toLowerCase();
             }
 
-            this._value = blockNumber;
+            this.value = blockNumber;
 
             return;
         }
@@ -52,13 +63,24 @@ export default class BlockNumber extends AbstractType {
     }
 
     /**
-     * Checks if the given blockNumber value is a pre-defined block number.
+     * Getter for the blockNumber property.
      *
-     * @param blockNumber
+     * @property blockNumber
+     *
+     * @returns {String}
+     */
+    get blockNumber() {
+        return this.value;
+    }
+
+    /**
+     * Checks if the given blockNumber value is a pre-defined block number.
      *
      * @method isPredefinedBlockNumber
      *
-     * @returns {boolean}
+     * @param blockNumber
+     *
+     * @returns {Boolean}
      */
     static isPredefinedBlockNumber(blockNumber) {
         return ['latest', 'pending', 'earliest'].includes(blockNumber);

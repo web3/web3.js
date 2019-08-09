@@ -52,7 +52,7 @@ export default class Block extends AbstractType {
      *
      * @property gasLimit
      *
-     * @returns {*}
+     * @returns {Number}
      */
     get gasLimit() {
         return this.value.gasLimit;
@@ -62,8 +62,6 @@ export default class Block extends AbstractType {
      * Setter for the gasLimit property.
      *
      * @property gasLimit
-     *
-     * @returns {*}
      */
     set gasLimit(gasLimit) {
         this.value.gasLimit = new Hex(gasLimit).toNumber();
@@ -74,7 +72,7 @@ export default class Block extends AbstractType {
      *
      * @property gasUsed
      *
-     * @returns {*}
+     * @returns {Number}
      */
     get gasUsed() {
         return this.value.gasUsed;
@@ -84,8 +82,6 @@ export default class Block extends AbstractType {
      * Setter for the gasUsed property.
      *
      * @property gasUsed
-     *
-     * @returns {*}
      */
     set gasUsed(gasUsed) {
         this.value.gasUsed = new Hex(gasUsed).toNumber();
@@ -96,7 +92,7 @@ export default class Block extends AbstractType {
      *
      * @property size
      *
-     * @returns {*}
+     * @returns {Number}
      */
     get size() {
         return this.value.size;
@@ -106,8 +102,6 @@ export default class Block extends AbstractType {
      * Setter for the size property.
      *
      * @property size
-     *
-     * @returns {*}
      */
     set size(size) {
         this.value.size = new Hex(size).toNumber();
@@ -118,7 +112,7 @@ export default class Block extends AbstractType {
      *
      * @property timestamp
      *
-     * @returns {*}
+     * @returns {String|Number}
      */
     get timestamp() {
         return this.value.timestamp;
@@ -128,8 +122,6 @@ export default class Block extends AbstractType {
      * Setter for the timestamp property.
      *
      * @property timestamp
-     *
-     * @returns {*}
      */
     set timestamp(timestamp) {
         timestamp = new BigNumber(timestamp);
@@ -148,7 +140,7 @@ export default class Block extends AbstractType {
      *
      * @property number
      *
-     * @returns {*}
+     * @returns {Number|null}
      */
     get number() {
         return this.value.number;
@@ -158,8 +150,6 @@ export default class Block extends AbstractType {
      * Getter for the number property.
      *
      * @property number
-     *
-     * @returns {*}
      */
     set number(number) {
         if (number !== null) {
@@ -174,7 +164,7 @@ export default class Block extends AbstractType {
      *
      * @property difficulty
      *
-     * @returns {}
+     * @returns {String}
      */
     get difficulty() {
         return this.value.difficulty;
@@ -184,8 +174,6 @@ export default class Block extends AbstractType {
      * Setter for the difficulty property.
      *
      * @property difficulty
-     *
-     * @returns {}
      */
     set difficulty(difficulty) {
         if (difficulty) {
@@ -198,7 +186,7 @@ export default class Block extends AbstractType {
      *
      * @property totalDifficulty
      *
-     * @returns {}
+     * @returns {String}
      */
     get totalDifficulty() {
         return this.value.totalDifficulty;
@@ -208,8 +196,6 @@ export default class Block extends AbstractType {
      * Getter for the totalDifficulty property.
      *
      * @property totalDifficulty
-     *
-     * @returns {}
      */
     set totalDifficulty(totalDifficulty) {
         if (totalDifficulty) {
@@ -222,7 +208,7 @@ export default class Block extends AbstractType {
      *
      * @property transactions
      *
-     * @returns {}
+     * @returns {Array<Transaction>}
      */
     get transactions() {
         return this.transactions;
@@ -232,8 +218,6 @@ export default class Block extends AbstractType {
      * Getter for the transactions property.
      *
      * @property transactions
-     *
-     * @returns {}
      */
     set transactions(transactions) {
         if (isArray(transactions)) {
@@ -250,7 +234,7 @@ export default class Block extends AbstractType {
      *
      * @property miner
      *
-     * @returns {*|string|string}
+     * @returns {String}
      */
     get miner() {
         return this.value.miner;
@@ -260,8 +244,6 @@ export default class Block extends AbstractType {
      * Setter for the miner property.
      *
      * @property miner
-     *
-     * @returns {*|string|string}
      */
     set miner(miner) {
         if (miner) {

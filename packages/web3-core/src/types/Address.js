@@ -24,25 +24,47 @@ import AbstractType from '../../lib/types/AbstractType';
 
 export default class Address extends AbstractType {
     /**
-     * Setter for the value property.
+     * @param {String} address
      *
-     * @property value
-     *
-     * @param {string} address
+     * @constructor
      */
-    set value(address) {
+    constructor(address) {
+        super(address);
+
+        this.address = address;
+    }
+
+    /**
+     * Setter for the address property.
+     *
+     * @property address
+     *
+     * @param {String} address
+     */
+    set address(address) {
         const iban = new Iban(address);
 
         if (iban.isValid() && iban.isDirect()) {
-            return iban.toAddress().toLowerCase();
+            this.value = iban.toAddress().toLowerCase();
         }
 
         if (Address.isValid(address)) {
-            return `0x${address.toLowerCase().replace('0x', '')}`;
+            this.value = `0x${address.toLowerCase().replace('0x', '')}`;
         }
 
         throw new Error(
             `Provided address "${address}" is invalid, the capitalization checksum test failed, or its an indrect IBAN address which can't be converted.`
         );
+    }
+
+    /**
+     * Getter for the address property.
+     *
+     * @property address
+     *
+     * @returns {String}
+     */
+    get address() {
+        return this.value;
     }
 }

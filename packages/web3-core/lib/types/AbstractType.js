@@ -17,6 +17,7 @@
  * @date 2019
  */
 
+import isObject from 'lodash/isObject';
 import cloneDeep from 'lodash/cloneDeep';
 
 export default class AbstractType {
@@ -27,7 +28,12 @@ export default class AbstractType {
      */
     constructor(value = {}) {
         this._rawValue = value;
-        this._value = cloneDeep(value);
+
+        if (isObject(value)) {
+            this._value = cloneDeep(value);
+        }
+
+        this._value = value;
     }
 
     /**

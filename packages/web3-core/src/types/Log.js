@@ -26,14 +26,139 @@ import AbstractType from '../../lib/types/AbstractType';
 
 export default class Log extends AbstractType {
     /**
-     * Setter of the value property.
-     *
-     * @property value
-     *
      * @param {Object} log
+     *
+     * @constructor
      */
-    set value(log) {
-        // generate a custom log id
+    constructor(log) {
+        super(log);
+
+        this.blockHash = log.blockHash;
+        this.transactionHash = log.transactionHash;
+        this.value.id = this.generateId(log);
+        this.blockNumber = log.blockNumber;
+        this.transactionIndex = log.transactionIndex;
+        this.logIndex = log.logIndex;
+        this.address = log.address;
+    }
+
+    /**
+     * Getter for the id property.
+     *
+     * @property id
+     *
+     * @returns {String}
+     */
+    get id() {
+        return this.value.id;
+    }
+
+    /**
+     * Setter for the blockNumber property.
+     *
+     * @property blockNumber
+     *
+     * @param {String} blockNumber
+     */
+    set blockNumber(blockNumber) {
+        if (blockNumber !== null) {
+            this.value.blockNumber = new Hex(blockNumber).toNumber();
+        }
+    }
+
+    /**
+     * Getter for the blockNumber property.
+     *
+     * @property blockNumber
+     *
+     * @returns {Number}
+     */
+    get blockNumber() {
+        return this.value.blockNumber;
+    }
+
+    /**
+     * Setter for the transactionIndex property.
+     *
+     * @property transactionIndex
+     *
+     * @param {String} transactionIndex
+     */
+    set transactionIndex(transactionIndex) {
+        if (transactionIndex !== null) {
+            this.value.transactionIndex = new Hex(transactionIndex).toNumber();
+        }
+    }
+
+    /**
+     * Getter for the transactionIndex property.
+     *
+     * @property transactionIndex
+     *
+     * @returns {Number}
+     */
+    get transactionIndex() {
+        return this.value.transactionIndex;
+    }
+
+    /**
+     * Setter for the logIndex property.
+     *
+     * @property logIndex
+     *
+     * @param {String} logIndex
+     */
+    set logIndex(logIndex) {
+        if (logIndex !== null) {
+            this.value.logIndex = new Hex(logIndex).toNumber();
+        }
+    }
+
+    /**
+     * Getter for the logIndex property.
+     *
+     * @property logIndex
+     *
+     * @returns {Number}
+     */
+    get logIndex() {
+        return this.value.logIndex;
+    }
+
+    /**
+     * Setter for the address property.
+     *
+     * @property address
+     *
+     * @param {String} address
+     */
+    set address(address) {
+        if (address) {
+            this.value.address = new Address(address).toChecksumAddress();
+        }
+    }
+
+    /**
+     * Getter for the address property.
+     *
+     * @property address
+     *
+     * @returns {String}
+     */
+    get address() {
+        return this.value.address;
+    }
+
+    /**
+     * Generates the id with the blockHash, transactionHash, and logIndex.
+     *
+     * @method generateId
+     *
+     * @param log
+     *
+     * @returns {String|null}
+     */
+    generateId(log) {
         if (
             typeof log.blockHash === 'string' &&
             typeof log.transactionHash === 'string' &&
@@ -45,27 +170,11 @@ export default class Log extends AbstractType {
 
             shaId.replace('0x', '').substr(0, 8);
 
-            log.id = `log_${shaId}`;
-        } else if (!log.id) {
-            log.id = null;
+            return `log_${shaId}`;
         }
 
-        if (log.blockNumber !== null) {
-            log.blockNumber = new Hex(log.blockNumber).toNumber();
+        if (!log.id) {
+            return null;
         }
-
-        if (log.transactionIndex !== null) {
-            log.transactionIndex = new Hex(log.transactionIndex).toNumber();
-        }
-
-        if (log.logIndex !== null) {
-            log.logIndex = new Hex(log.logIndex).toNumber();
-        }
-
-        if (log.address) {
-            log.address = new Address(log.address).toChecksumAddress();
-        }
-
-        super.value = log;
     }
 }
