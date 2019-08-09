@@ -22,57 +22,33 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default class AbstractType {
     /**
-     * @param {any} value
+     * @param {any} properties
      *
      * @constructor
      */
-    constructor(value = {}) {
-        this._rawValue = value;
-
-        if (isObject(value)) {
-            this._value = cloneDeep(value);
+    constructor(properties = {}) {
+        if (isObject(properties)) {
+            this._properties = cloneDeep(properties);
         }
 
-        this._value = value;
+        this._properties = properties;
     }
 
     /**
-     * Setter for the rawValue property.
-     *
-     * @property value
-     *
-     * @param {any} value
-     */
-    set rawValue(value) {
-        this._rawValue = value;
-    }
-
-    /**
-     * Setter for the value property.
-     *
-     * @property value
+     * Getter for the properties property
      *
      * @returns {any}
      */
-    get rawValue() {
-        return this._rawValue;
+    get properties() {
+        return this._properties;
     }
 
     /**
-     * Getter for the value property
+     * Setter for the properties property
      *
      * @returns {any}
      */
-    get value() {
-        return this._value;
-    }
-
-    /**
-     * Setter for the value property
-     *
-     * @returns {any}
-     */
-    set value(value) {
-        this._value = value;
+    set properties(properties) {
+        this._properties = properties;
     }
 }

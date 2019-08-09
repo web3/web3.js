@@ -35,11 +35,11 @@ export default class Log extends AbstractType {
 
         this.blockHash = log.blockHash;
         this.transactionHash = log.transactionHash;
-        this.value.id = this.generateId();
         this.blockNumber = log.blockNumber;
         this.transactionIndex = log.transactionIndex;
         this.logIndex = log.logIndex;
         this.address = log.address;
+        this.properties.id = this.generateId();
     }
 
     /**
@@ -50,7 +50,7 @@ export default class Log extends AbstractType {
      * @returns {String}
      */
     get id() {
-        return this.value.id;
+        return this.properties.id;
     }
 
     /**
@@ -62,7 +62,7 @@ export default class Log extends AbstractType {
      */
     set blockNumber(blockNumber) {
         if (blockNumber !== null) {
-            this.value.blockNumber = new Hex(blockNumber).toNumber();
+            this.properties.blockNumber = new Hex(blockNumber).toNumber();
         }
     }
 
@@ -74,7 +74,7 @@ export default class Log extends AbstractType {
      * @returns {Number}
      */
     get blockNumber() {
-        return this.value.blockNumber;
+        return this.properties.blockNumber;
     }
 
     /**
@@ -86,7 +86,7 @@ export default class Log extends AbstractType {
      */
     set transactionIndex(transactionIndex) {
         if (transactionIndex !== null) {
-            this.value.transactionIndex = new Hex(transactionIndex).toNumber();
+            this.properties.transactionIndex = new Hex(transactionIndex).toNumber();
         }
     }
 
@@ -98,7 +98,7 @@ export default class Log extends AbstractType {
      * @returns {Number}
      */
     get transactionIndex() {
-        return this.value.transactionIndex;
+        return this.properties.transactionIndex;
     }
 
     /**
@@ -110,7 +110,7 @@ export default class Log extends AbstractType {
      */
     set logIndex(logIndex) {
         if (logIndex !== null) {
-            this.value.logIndex = new Hex(logIndex).toNumber();
+            this.properties.logIndex = new Hex(logIndex).toNumber();
         }
     }
 
@@ -122,7 +122,7 @@ export default class Log extends AbstractType {
      * @returns {Number}
      */
     get logIndex() {
-        return this.value.logIndex;
+        return this.properties.logIndex;
     }
 
     /**
@@ -134,7 +134,7 @@ export default class Log extends AbstractType {
      */
     set address(address) {
         if (address) {
-            this.value.address = new Address(address).toChecksumAddress();
+            this.properties.address = new Address(address).toChecksumAddress();
         }
     }
 
@@ -146,7 +146,7 @@ export default class Log extends AbstractType {
      * @returns {String}
      */
     get address() {
-        return this.value.address;
+        return this.properties.address;
     }
 
     /**
@@ -158,14 +158,14 @@ export default class Log extends AbstractType {
      */
     generateId() {
         if (
-            typeof this.rawValue.blockHash === 'string' &&
-            typeof this.rawValue.transactionHash === 'string' &&
-            typeof this.rawValue.logIndex === 'string'
+            typeof this.properties.blockHash === 'string' &&
+            typeof this.properties.transactionHash === 'string' &&
+            typeof this.properties.logIndex === 'string'
         ) {
             const shaId = Crypto.keccak256(
-                this.rawValue.blockHash.replace('0x', '') +
-                this.rawValue.transactionHash.replace('0x', '') +
-                this.rawValue.logIndex.replace('0x', '')
+                this.properties.blockHash.replace('0x', '') +
+                this.properties.transactionHash.replace('0x', '') +
+                this.properties.logIndex.replace('0x', '')
             );
 
             shaId.replace('0x', '').substr(0, 8);
@@ -173,7 +173,7 @@ export default class Log extends AbstractType {
             return `log_${shaId}`;
         }
 
-        if (!this.rawValue.id) {
+        if (!this.properties.id) {
             return null;
         }
     }

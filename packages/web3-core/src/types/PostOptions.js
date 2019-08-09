@@ -33,10 +33,10 @@ export default class PostOptions extends AbstractType {
     constructor(options) {
         super(options);
 
-        this.value.ttl = options.ttl;
-        this.value.workToProve = options.workToProve;
-        this.value.priority = options.priority;
-        this.value.topics = options.topics;
+        this.properties.ttl = options.ttl;
+        this.properties.workToProve = options.workToProve;
+        this.properties.priority = options.priority;
+        this.properties.topics = options.topics;
     }
 
     /**
@@ -47,7 +47,7 @@ export default class PostOptions extends AbstractType {
      * @returns {Number}
      */
     get ttl() {
-        return this.value.ttl;
+        return this.properties.ttl;
     }
 
     /**
@@ -59,7 +59,7 @@ export default class PostOptions extends AbstractType {
      */
     set ttl(ttl) {
         if (ttl) {
-            this.value.ttl = Hex.fromNumber(ttl).toString();
+            this.properties.ttl = Hex.fromNumber(ttl).toString();
         }
     }
 
@@ -71,7 +71,7 @@ export default class PostOptions extends AbstractType {
      * @returns {String}
      */
     get workToProve() {
-        return this.value.workToProve;
+        return this.properties.workToProve;
     }
 
     /**
@@ -83,7 +83,7 @@ export default class PostOptions extends AbstractType {
      */
     set workToProve(workToProve) {
         if (workToProve) {
-            this.value.workToProve = Hex.fromNumber(workToProve).toString();
+            this.properties.workToProve = Hex.fromNumber(workToProve).toString();
         }
     }
 
@@ -95,7 +95,7 @@ export default class PostOptions extends AbstractType {
      * @returns {String}
      */
     get priority() {
-        return this.value.priority;
+        return this.properties.priority;
     }
 
     /**
@@ -107,7 +107,7 @@ export default class PostOptions extends AbstractType {
      */
     set priority(priority) {
         if (priority) {
-            this.value.priority = Hex.fromNumber(this.value.priority).toString();
+            this.properties.priority = Hex.fromNumber(this.properties.priority).toString();
         }
     }
 
@@ -119,7 +119,7 @@ export default class PostOptions extends AbstractType {
      * @returns {Array<String>}
      */
     get topics() {
-        return this.value.topics;
+        return this.properties.topics;
     }
 
     /**
@@ -132,16 +132,16 @@ export default class PostOptions extends AbstractType {
     set topics(topics) {
         if (!isArray(topics)) {
             if (topics) {
-                this.value.topics = [topics];
+                this.properties.topics = [topics];
 
                 return;
             }
 
-            this.value.topics = [];
+            this.properties.topics = [];
         }
 
         // format the following options
-        this.value.topics = this.value.topics.map((topic) => {
+        this.properties.topics = this.properties.topics.map((topic) => {
             // convert only if not hex
             if (topic.startsWith('0x') === 0) {
                 return topic;

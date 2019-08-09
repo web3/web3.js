@@ -36,6 +36,17 @@ export default class BlockNumber extends AbstractType {
     }
 
     /**
+     * Getter for the blockNumber property.
+     *
+     * @property blockNumber
+     *
+     * @returns {String}
+     */
+    get blockNumber() {
+        return this.properties;
+    }
+
+    /**
      * Setter for the blockNumber property
      *
      * @property blockNumber
@@ -44,7 +55,7 @@ export default class BlockNumber extends AbstractType {
      */
     set blockNumber(blockNumber) {
         if (blockNumber === undefined || blockNumber === null || BlockNumber.isPredefinedBlockNumber(blockNumber)) {
-            this.value = blockNumber;
+            this.properties = blockNumber;
 
             return;
         }
@@ -54,27 +65,16 @@ export default class BlockNumber extends AbstractType {
                 return blockNumber.toLowerCase();
             }
 
-            this.value = blockNumber;
+            this.properties = blockNumber;
 
             return;
         }
 
-        super.value = Hex.fromNumber(blockNumber);
+        super.properties = Hex.fromNumber(blockNumber);
     }
 
     /**
-     * Getter for the blockNumber property.
-     *
-     * @property blockNumber
-     *
-     * @returns {String}
-     */
-    get blockNumber() {
-        return this.value;
-    }
-
-    /**
-     * Checks if the given blockNumber value is a pre-defined block number.
+     * Checks if the given blockNumber properties is a pre-defined block number.
      *
      * @method isPredefinedBlockNumber
      *

@@ -27,51 +27,191 @@ import AbstractType from '../../lib/types/AbstractType';
 
 export default class Transaction extends AbstractType {
     /**
-     * Setter for the value property
+     * @param {Object} options
      *
-     * @param {Object} transactionOptions
-     *
-     * @property value
+     * @constructor
      */
-    set value(transactionOptions) {
-        if (!transactionOptions.from && !isNumber(transactionOptions.from)) {
+    constructor(options) {
+        super(options);
+
+        if (!options.from && !isNumber(options.from)) {
             throw new Error('The send transactions "from" field must be defined!');
         }
 
-        transactionOptions.from = new Address(transactionOptions.from).toString();
+        this.properties.from = options.from;
+        this.properties.to = options.to;
+        this.properties.data = options.data;
+        this.properties.gas = options.gas;
+        this.properties.gasPrice = options.gasPrice;
+        this.properties.value = options.value;
+        this.properties.nonce = options.nonce;
+    }
 
-        if (transactionOptions.to) {
-            transactionOptions.to = new Address(transactionOptions.to).toString();
+    /**
+     * Getter for the from property.
+     *
+     * @property from
+     *
+     * @returns {String}
+     */
+    get from() {
+        return this.properties.from;
+    }
+
+    /**
+     * Setter for the from property.
+     *
+     * @property from
+     *
+     * @param {String} from
+     */
+    set from(from) {
+        if (from) {
+            this.properties.from = new Address(from).toChecksumAddress();
+        }
+    }
+
+    /**
+     * Getter for the to property.
+     *
+     * @property to
+     *
+     * @returns {String}
+     */
+    get to() {
+        return this.properties.to;
+    }
+
+    /**
+     * Setter for the to property.
+     *
+     * @property to
+     *
+     * @param {String} to
+     */
+    set to(to) {
+        this.properties.to = new Address(to).toString();
+    }
+
+    /**
+     * Getter of the data property.
+     *
+     * @property data
+     *
+     * @returns {String}
+     */
+    get data() {
+        return this.properties.data;
+    }
+
+    /**
+     * Setter of the data property.
+     *
+     * @property data
+     *
+     * @param {String} data
+     */
+    set data(data) {
+        if (Hex.isValid(data)) {
+            this.properties.data = data;
         }
 
-        if (transactionOptions.data && transactionOptions.input) {
-            throw new Error(
-                'You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.'
-            );
+        throw new Error('The data field must be HEX encoded data.');
+    }
+
+    /**
+     * Getter of the gas property.
+     *
+     * @property gas
+     *
+     * @returns {String}
+     */
+    get gas() {
+        return this.properties.gas;
+    }
+
+    /**
+     * Setter of the gas property.
+     *
+     * @property gas
+     *
+     * @param {Number} gas
+     */
+    set gas(gas) {
+        if (gas) {
+            this.properties.nonce = Hex.fromNumber(gas).toString();
         }
+    }
 
-        if (!transactionOptions.data && transactionOptions.input) {
-            transactionOptions.data = transactionOptions.input;
-            delete transactionOptions.input;
+    /**
+     * Getter of the gasPrice property.
+     *
+     * @property gasPrice
+     *
+     * @returns {String}
+     */
+    get gasPrice() {
+        return this.properties.gasPrice;
+    }
+
+    /**
+     * Setter of the gasPrice property.
+     *
+     * @property gasPrice
+     *
+     * @param {Number} gasPrice
+     */
+    set gasPrice(gasPrice) {
+        if (gasPrice) {
+            this.properties.properties = Hex.fromNumber(gasPrice).toString();
         }
+    }
 
-        if (transactionOptions.data && !Hex.isValid(transactionOptions.data)) {
-            throw new Error('The data field must be HEX encoded data.');
+    /**
+     * Getter of the properties property.
+     *
+     * @property properties
+     *
+     * @returns {String}
+     */
+    get value() {
+        return this.properties.properties;
+    }
+
+    /**
+     * Setter of the properties property.
+     *
+     * @property properties
+     *
+     * @param {String} nonce
+     */
+    set value(nonce) {
+        if (nonce) {
+            this.properties.properties = Hex.fromNumber(nonce).toString();
         }
+    }
 
-        // allow both
-        if (transactionOptions.gas || transactionOptions.gasLimit) {
-            transactionOptions.gas = transactionOptions.gas || transactionOptions.gasLimit;
+    /**
+     * Getter of the nonce property.
+     *
+     * @property nonce
+     *
+     * @returns {String}
+     */
+    get nonce() {
+        return this.properties.nonce;
+    }
+
+    /**
+     * Setter of the nonce property.
+     *
+     * @property nonce
+     *
+     * @param {Number} nonce
+     */
+    set nonce(nonce) {
+        if (nonce) {
+            this.properties.nonce = Hex.fromNumber(nonce).toString();
         }
-
-        ['gasPrice', 'gas', 'value', 'nonce']
-            .filter((key) => {
-                return transactionOptions[key] !== undefined;
-            })
-            .forEach((key) => {
-                transactionOptions[key] = Hex.fromNumber(transactionOptions[key]).toString();
-            });
-
-        super.value = transactionOptions;
     }
 }

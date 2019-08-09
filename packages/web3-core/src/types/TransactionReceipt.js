@@ -19,65 +19,344 @@
  * @date 2019
  */
 
+import BigNumber from '';
+import Address from './Address';
+import Hex from './Hex';
+import Log from './Log';
+import isArray from 'lodash/isArray';
 import AbstractType from '../../lib/types/AbstractType';
 
 export default class TransactionReceipt extends AbstractType {
     /**
-     * Setter for the value property.
+     * @param {Object} receipt
+     *
+     * @constructor
+     */
+    constructor(receipt) {
+        super(receipt);
+
+        this.blockNumber = receipt.blockNumber;
+        this.transactionIndex = receipt.transactionIndex;
+        this.gasPrice = receipt.gasPrice;
+        this.value = receipt;
+    }
+
+    /**
+     * Getter for the blockNumber property.
+     *
+     * @property blockNumber
+     *
+     * @returns {String}
+     */
+    get blockNumber() {
+        return this.value.blockNumber;
+    }
+
+    /**
+     * Setter for the blockNumber property.
+     *
+     * @property blockNumber
+     *
+     * @param {Number|null} blockNumber
+     */
+    set blockNumber(blockNumber) {
+        if (blockNumber !== null) {
+            this.value.blockNumber = Hex.fromNumber(blockNumber).toString();
+        }
+
+        this.value.blockNumber = null;
+    }
+
+    /**
+     * Getter for the transactionIndex property.
+     *
+     * @property transactionIndex
+     *
+     * @returns {Number}
+     */
+    get transactionIndex() {
+        return this.value.transactionIndex;
+    }
+
+    /**
+     * Setter for the transactionIndex property.
+     *
+     * @property transactionIndex
+     *
+     * @param {String|null} transactionIndex
+     */
+    set transactionIndex(transactionIndex) {
+        if (transactionIndex !== null) {
+            this.value.transactionIndex = new Hex(transactionIndex).toNumber();
+        }
+
+        this.value.transactionIndex = transactionIndex;
+    }
+
+    /**
+     * Getter for the gasPrice property.
+     *
+     * @property gasPrice
+     *
+     * @returns {Number}
+     */
+    get gasPrice() {
+        return this.value.gasPrice;
+    }
+
+    /**
+     * Getter for the gasPrice property.
+     *
+     * @property gasPrice
+     *
+     * @param {String} gasPrice
+     */
+    set gasPrice(gasPrice) {
+        if (gasPrice) {
+            this.value.gasPrice = new BigNumber(gasPrice).toString(10);
+        }
+
+        this.value.gasPrice = gasPrice;
+    }
+
+    /**
+     * Getter for the value property.
      *
      * @property value
      *
-     * @param {Object} receipt
+     * @returns {String}
      */
-    set value(receipt) {
-        if (receipt.blockNumber !== null) {
-            receipt.blockNumber = Hex.fromNumber(receipt.blockNumber).toString();
+    get value() {
+        return this.properties.value;
+    }
+
+    /**
+     * Setter for the value property
+     *
+     * @property value
+     *
+     * @param {String} value
+     */
+    set value(value) {
+        if (value) {
+            this.properties.value = new BigNumber(value).toString(10);
         }
 
-        if (receipt.transactionIndex !== null) {
-            receipt.transactionIndex = new Hex(receipt.transactionIndex).toNumber();
-        }
+        this.properties.value = value;
+    }
 
-        if (receipt.gasPrice) {
-            receipt.gasPrice = new BigNumber(receipt.gasPrice).toString(10);
-        }
+    /**
+     * Getter for the nonce property.
+     *
+     * @property nonce
+     *
+     * @returns {Number}
+     */
+    get nonce() {
+        return this.properties.nonce;
+    }
 
-        if (receipt.value) {
-            receipt.value = new BigNumber(receipt.gasPrice).toString(10);
-        }
+    /**
+     * Setter for the nonce property.
+     *
+     * @property nonce
+     *
+     * @param {String} nonce
+     */
+    set nonce(nonce) {
+        this.properties.nonce = new Hex(nonce).toNumber();
+    }
 
-        receipt.nonce = new Hex((receipt.nonce).toNumber();
-        receipt.gas = new Hex(receipt.gas).toNumber();
-        receipt.cumulativeGasUsed = new Hex(receipt.cumulativeGasUsed).toNumber();
-        receipt.gasUsed = new Hex(receipt.gasUsed).toNumber();
+    /**
+     * Getter for the gas property.
+     *
+     * @property gas
+     *
+     * @returns {Number}
+     */
+    get gas() {
+        return this.properties.gas;
+    }
 
-        if (receipt.to && Address.isValid(receipt.to)) {
+    /**
+     * Setter for the gas property.
+     *
+     * @property gas
+     *
+     * @param {String} gas
+     */
+    set gas(gas) {
+        this.properties.gas = new Hex(gas).toNumber();
+    }
+
+    /**
+     * Getter for the cumulativeGasUsed property.
+     *
+     * @property cumulativeGasUsed
+     *
+     * @returns {Number}
+     */
+    get cumulativeGasUsed() {
+        return this.properties.cumulativeGasUsed;
+    }
+
+    /**
+     * Setter for the cumulativeGasUsed property.
+     *
+     * @property cumulativeGasUsed
+     *
+     * @param cumulativeGasUsed
+     */
+    set cumulativeGasUsed(cumulativeGasUsed) {
+        this.properties.cumulativeGasUsed = new Hex(cumulativeGasUsed).toNumber();
+    }
+
+    /**
+     * Getter for the gasUsed property.
+     *
+     * @property gasUsed
+     *
+     * @returns {Number}
+     */
+    get gasUsed() {
+        return this.properties.gasUsed;
+    }
+
+    /**
+     * Setter for gasUsed property.
+     *
+     * @property gasUsed
+     *
+     * @param {String} gasUsed
+     */
+    set gasUsed(gasUsed) {
+        this.properties.gasUsed = new Hex(gasUsed).toNumber();
+    }
+
+    /**
+     * Getter for the to property.
+     *
+     * @property to
+     *
+     * @returns {String|null}
+     */
+    get to() {
+        return this.properties.to;
+    }
+
+    /**
+     * Setter for the to property.
+     *
+     * @property to
+     *
+     * @param {String} to
+     */
+    set to(to) {
+        if (to && Address.isValid(to)) {
             // tx.to could be `0x0` or `null` while contract creation
-            receipt.to = new Address(receipt.to).toChecksumAddress();
+            this.properties.to = new Address(to).toChecksumAddress();
         } else {
-            receipt.to = null; // set to `null` if invalid address
+            this.properties.to = null; // set to `null` if invalid address
         }
+    }
 
-        if (receipt.from) {
-            receipt.from = new Address(receipt.from).toChecksumAddress();
+    /**
+     * Getter for the from property.
+     *
+     * @property from
+     *
+     * @returns {String}
+     */
+    get from() {
+        return this.properties.from;
+    }
+
+    /**
+     * Setter for the from property.
+     *
+     * @property from
+     *
+     * @param {String} from
+     */
+    set from(from) {
+        if (from) {
+            this.properties.from = new Address(from).toChecksumAddress();
         }
+    }
 
-        if (isArray(receipt.logs)) {
-            receipt.logs = receipt.logs.map((log) => {
+    /**
+     * Getter for the logs property.
+     *
+     * @property logs
+     *
+     * @returns {Array<Log>}
+     */
+    get logs() {
+        return this.properties.log;
+    }
+
+    /**
+     * Setter for the logs property.
+     *
+     * @property logs
+     *
+     * @param {Log} logs
+     */
+    set logs(logs) {
+        if (isArray(logs)) {
+            this.properties.logs = logs.map((log) => {
                 return new Log(log);
             });
         }
+    }
 
-        if (receipt.contractAddress) {
-            receipt.contractAddress = new Address(receipt.contractAddress).toChecksumAddress();
+    /**
+     * Getter for the contractAddress property.
+     *
+     * @property contractAddress
+     *
+     * @returns {Array<Log>}
+     */
+    get contractAddress() {
+        return this.properties.contractAddress;
+    }
+
+    /**
+     * Setter for the contractAddress property.
+     *
+     * @property contractAddress
+     *
+     * @param {String} contractAddress
+     */
+    set contractAddress(contractAddress) {
+        if (contractAddress) {
+            this.properties.contractAddress = new Address(contractAddress).toChecksumAddress();
         }
+    }
 
-        if (typeof receipt.status !== 'undefined' && receipt.status !== null) {
-            receipt.status = Boolean(parseInt(receipt.status));
+    /**
+     * Getter for the status property.
+     *
+     * @property status
+     *
+     * @returns {Array<Log>}
+     */
+    get status() {
+        return this.properties.status;
+    }
+
+    /**
+     * Setter for the status property.
+     *
+     * @property status
+     *
+     * @param {String} status
+     */
+    set status(status) {
+        if (typeof status !== 'undefined' && status !== null) {
+            this.properties.status = Boolean(parseInt(status));
         } else {
-            receipt.status = true;
+            this.properties.status = true;
         }
-
-        super.value = receipt;
     }
 }

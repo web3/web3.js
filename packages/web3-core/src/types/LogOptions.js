@@ -48,7 +48,7 @@ export default class LogOptions extends AbstractType {
      * @returns {String}
      */
     get fromBlock() {
-        return this.value.fromBlock;
+        return this.properties.fromBlock;
     }
 
     /**
@@ -60,7 +60,7 @@ export default class LogOptions extends AbstractType {
      */
     set fromBlock(fromBlock) {
         if (fromBlock) {
-            this.value.fromBlock = new BlockNumber(fromBlock).toString();
+            this.properties.fromBlock = new BlockNumber(fromBlock).toString();
         }
     }
 
@@ -72,7 +72,7 @@ export default class LogOptions extends AbstractType {
      * @returns {String}
      */
     get toBlock() {
-        return this.value.toBlock;
+        return this.properties.toBlock;
     }
 
     /**
@@ -84,7 +84,7 @@ export default class LogOptions extends AbstractType {
      */
     set toBlock(toBlock) {
         if (toBlock) {
-            this.value.toBlock = new BlockNumber(toBlock).toString();
+            this.properties.toBlock = new BlockNumber(toBlock).toString();
         }
     }
 
@@ -96,7 +96,7 @@ export default class LogOptions extends AbstractType {
      * @returns {Array<String>}
      */
     get topics() {
-        return this.value.topics;
+        return this.properties.topics;
     }
 
     /**
@@ -109,7 +109,7 @@ export default class LogOptions extends AbstractType {
     set topics(topics) {
         // make sure topics, get converted to hex
         if (isArray(topics)) {
-            this.value.topics = topics.map((topic) => {
+            this.properties.topics = topics.map((topic) => {
                 if (isArray(topic)) {
                     return topic.map(this.toTopic);
                 }
@@ -120,7 +120,7 @@ export default class LogOptions extends AbstractType {
             return;
         }
 
-        this.value.topics = [];
+        this.properties.topics = [];
     }
 
     /**
@@ -131,7 +131,7 @@ export default class LogOptions extends AbstractType {
      * @returns {String}
      */
     get address() {
-        return this.value.address;
+        return this.properties.address;
     }
 
     /**
@@ -144,14 +144,14 @@ export default class LogOptions extends AbstractType {
     set address(address) {
         if (address) {
             if (isArray(address)) {
-                this.value.address = address.map((addr) => {
+                this.properties.address = address.map((addr) => {
                     return new Address(addr).toString();
                 });
 
                 return;
             }
 
-            this.value.address = new Address(this.value.address).toString();
+            this.properties.address = new Address(this.properties.address).toString();
         }
     }
 
@@ -160,21 +160,21 @@ export default class LogOptions extends AbstractType {
      *
      * @method toTopic
      *
-     * @param {string} value
+     * @param {string} properties
      *
      * @returns {string}
      */
-    toTopic(value) {
-        if (value === null || typeof value === 'undefined') {
+    toTopic(properties) {
+        if (properties === null || typeof properties === 'undefined') {
             return null;
         }
 
-        value = String(value);
+        properties = String(properties);
 
-        if (value.indexOf('0x') === 0) {
-            return value;
+        if (properties.indexOf('0x') === 0) {
+            return properties;
         }
 
-        return new Utf8(value).toHex();
+        return new Utf8(properties).toHex();
     }
 }

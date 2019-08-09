@@ -55,7 +55,7 @@ export default class Block extends AbstractType {
      * @returns {Number}
      */
     get gasLimit() {
-        return this.value.gasLimit;
+        return this.properties.gasLimit;
     }
 
     /**
@@ -64,7 +64,7 @@ export default class Block extends AbstractType {
      * @property gasLimit
      */
     set gasLimit(gasLimit) {
-        this.value.gasLimit = new Hex(gasLimit).toNumber();
+        this.properties.gasLimit = new Hex(gasLimit).toNumber();
     }
 
     /**
@@ -75,7 +75,7 @@ export default class Block extends AbstractType {
      * @returns {Number}
      */
     get gasUsed() {
-        return this.value.gasUsed;
+        return this.properties.gasUsed;
     }
 
     /**
@@ -84,7 +84,7 @@ export default class Block extends AbstractType {
      * @property gasUsed
      */
     set gasUsed(gasUsed) {
-        this.value.gasUsed = new Hex(gasUsed).toNumber();
+        this.properties.gasUsed = new Hex(gasUsed).toNumber();
     }
 
     /**
@@ -95,7 +95,7 @@ export default class Block extends AbstractType {
      * @returns {Number}
      */
     get size() {
-        return this.value.size;
+        return this.properties.size;
     }
 
     /**
@@ -104,7 +104,7 @@ export default class Block extends AbstractType {
      * @property size
      */
     set size(size) {
-        this.value.size = new Hex(size).toNumber();
+        this.properties.size = new Hex(size).toNumber();
     }
 
     /**
@@ -115,7 +115,7 @@ export default class Block extends AbstractType {
      * @returns {String|Number}
      */
     get timestamp() {
-        return this.value.timestamp;
+        return this.properties.timestamp;
     }
 
     /**
@@ -132,7 +132,7 @@ export default class Block extends AbstractType {
             timestamp = timestamp.toString(10);
         }
 
-        this.value.timestamp = timestamp;
+        this.properties.timestamp = timestamp;
     }
 
     /**
@@ -143,7 +143,7 @@ export default class Block extends AbstractType {
      * @returns {Number|null}
      */
     get number() {
-        return this.value.number;
+        return this.properties.number;
     }
 
     /**
@@ -153,10 +153,10 @@ export default class Block extends AbstractType {
      */
     set number(number) {
         if (number !== null) {
-            this.value.number = new Hex(number).toNumber();
+            this.properties.number = new Hex(number).toNumber();
         }
 
-        this.value.number = number;
+        this.properties.number = number;
     }
 
     /**
@@ -167,7 +167,7 @@ export default class Block extends AbstractType {
      * @returns {String}
      */
     get difficulty() {
-        return this.value.difficulty;
+        return this.properties.difficulty;
     }
 
     /**
@@ -177,7 +177,7 @@ export default class Block extends AbstractType {
      */
     set difficulty(difficulty) {
         if (difficulty) {
-            this.value.difficulty = new BigNumber(difficulty).toString(10);
+            this.properties.difficulty = new BigNumber(difficulty).toString(10);
         }
     }
 
@@ -189,7 +189,7 @@ export default class Block extends AbstractType {
      * @returns {String}
      */
     get totalDifficulty() {
-        return this.value.totalDifficulty;
+        return this.properties.totalDifficulty;
     }
 
     /**
@@ -199,7 +199,7 @@ export default class Block extends AbstractType {
      */
     set totalDifficulty(totalDifficulty) {
         if (totalDifficulty) {
-            this.value.totalDifficulty = new BigNumber(totalDifficulty).toString(10);
+            this.properties.totalDifficulty = new BigNumber(totalDifficulty).toString(10);
         }
     }
 
@@ -221,7 +221,7 @@ export default class Block extends AbstractType {
      */
     set transactions(transactions) {
         if (isArray(transactions)) {
-            this.value.transactions = transactions.map((item) => {
+            this.properties.transactions = transactions.map((item) => {
                 if (!isString(item)) {
                     return new Transaction(item).toObject();
                 }
@@ -237,7 +237,7 @@ export default class Block extends AbstractType {
      * @returns {String}
      */
     get miner() {
-        return this.value.miner;
+        return this.properties.miner;
     }
 
     /**
@@ -247,7 +247,7 @@ export default class Block extends AbstractType {
      */
     set miner(miner) {
         if (miner) {
-            this.value.miner = new Address(miner).toChecksumAddress();
+            this.properties.miner = new Address(miner).toChecksumAddress();
         }
     }
 }

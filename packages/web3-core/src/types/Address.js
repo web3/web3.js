@@ -35,6 +35,17 @@ export default class Address extends AbstractType {
     }
 
     /**
+     * Getter for the address property.
+     *
+     * @property address
+     *
+     * @returns {String}
+     */
+    get address() {
+        return this.properties;
+    }
+
+    /**
      * Setter for the address property.
      *
      * @property address
@@ -45,26 +56,15 @@ export default class Address extends AbstractType {
         const iban = new Iban(address);
 
         if (iban.isValid() && iban.isDirect()) {
-            this.value = iban.toAddress().toLowerCase();
+            this.properties = iban.toAddress().toLowerCase();
         }
 
         if (Address.isValid(address)) {
-            this.value = `0x${address.toLowerCase().replace('0x', '')}`;
+            this.properties = `0x${address.toLowerCase().replace('0x', '')}`;
         }
 
         throw new Error(
-            `Provided address "${address}" is invalid, the capitalization checksum test failed, or its an indrect IBAN address which can't be converted.`
+            `Provided address "${address}" is invalid, the capitalization checksum test failed, or its an indirect IBAN address which can't be converted.`
         );
-    }
-
-    /**
-     * Getter for the address property.
-     *
-     * @property address
-     *
-     * @returns {String}
-     */
-    get address() {
-        return this.value;
     }
 }

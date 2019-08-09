@@ -39,17 +39,6 @@ export default class Post extends AbstractType {
     }
 
     /**
-     * Setter for the expiry property
-     *
-     * @property expiry
-     *
-     * @param {String} expiry
-     */
-    set expiry(expiry) {
-        this.value.expiry = new Hex(expiry).toNumber();
-    }
-
-    /**
      * Getter for the expiry property
      *
      * @property expiry
@@ -57,18 +46,18 @@ export default class Post extends AbstractType {
      * @returns {Number}
      */
     get expiry() {
-        return this.value.expiry;
+        return this.properties.expiry;
     }
 
     /**
-     * Setter for the sent property
+     * Setter for the expiry property
      *
-     * @property sent
+     * @property expiry
      *
-     * @param {String} sent
+     * @param {String} expiry
      */
-    set sent(sent) {
-        this.value.sent = new Hex(sent).toNumber();
+    set expiry(expiry) {
+        this.properties.expiry = new Hex(expiry).toNumber();
     }
 
     /**
@@ -79,18 +68,18 @@ export default class Post extends AbstractType {
      * @returns {Number}
      */
     get sent() {
-        return this.value.sent;
+        return this.properties.sent;
     }
 
     /**
-     * Setter for the ttl property
+     * Setter for the sent property
      *
-     * @property ttl
+     * @property sent
      *
-     * @param {String} ttl
+     * @param {String} sent
      */
-    set ttl(ttl) {
-        this.value.ttl = new Hex(ttl).toNumber();
+    set sent(sent) {
+        this.properties.sent = new Hex(sent).toNumber();
     }
 
     /**
@@ -101,7 +90,29 @@ export default class Post extends AbstractType {
      * @returns {Number}
      */
     get ttl() {
-        return this.value.ttl;
+        return this.properties.ttl;
+    }
+
+    /**
+     * Setter for the ttl property
+     *
+     * @property ttl
+     *
+     * @param {String} ttl
+     */
+    set ttl(ttl) {
+        this.properties.ttl = new Hex(ttl).toNumber();
+    }
+
+    /**
+     * Getter for the workProved property
+     *
+     * @property workProved
+     *
+     * @returns {Number}
+     */
+    get workProved() {
+        return this.properties.workProved;
     }
 
     /**
@@ -116,14 +127,14 @@ export default class Post extends AbstractType {
     }
 
     /**
-     * Getter for the workProved property
+     * Getter for the topics property
      *
-     * @property workProved
+     * @property topics
      *
      * @returns {Number}
      */
-    get workProved() {
-        return this.value.workProved;
+    get topics() {
+        return this.properties.topics;
     }
 
     /**
@@ -135,32 +146,12 @@ export default class Post extends AbstractType {
      */
     set topics(topics) {
         if (!topics) {
-            this.value.topics = topics;
+            this.properties.topics = topics;
         }
 
-        this.value.topics = topics.map((topic) => {
+        this.properties.topics = topics.map((topic) => {
             return new Hex(topic).toUtf8();
         });
-    }
-
-    /**
-     * Getter for the topics property
-     *
-     * @property topics
-     *
-     * @returns {Number}
-     */
-    get topics() {
-        return this.value.topics;
-    }
-
-    /**
-     * Setter for the payload property.
-     *
-     * @param {Object} payload
-     */
-    set payload(payload) {
-        this.value.payload = new Hex(payload).toAscii();
     }
 
     /**
@@ -171,6 +162,15 @@ export default class Post extends AbstractType {
      * @returns {Number}
      */
     get payload() {
-        return this.value.payload;
+        return this.properties.payload;
+    }
+
+    /**
+     * Setter for the payload property.
+     *
+     * @param {Object} payload
+     */
+    set payload(payload) {
+        this.properties.payload = new Hex(payload).toAscii();
     }
 }
