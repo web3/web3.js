@@ -10,7 +10,7 @@
     },
     "main": "dist/web3-core.cjs.js",
     "browser": "dist/web3-core.umd.js",
-    "module": "public_api",
+    "module": "public_api/*",
     "types": "types/index.d.ts",
     "scripts": {
         "build": "rollup -c",
