@@ -206,7 +206,6 @@ export const inputSignFormatter = (data) => {
 };
 
 /**
- * TODO: Check where this is used and why the method below (outputTransactionReceiptFormatter) also exists.
  * Formats the output of a transaction to its proper values
  *
  * @method outputTransactionFormatter

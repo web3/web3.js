@@ -24,4 +24,3 @@ script:
     - npm run travis
 after_script:
     - npm run coveralls
-
