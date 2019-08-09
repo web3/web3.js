@@ -17,7 +17,7 @@
  * @date 2019
  */
 
-import {Debug, Stats, TransactionTrace, WorldState, MemStats, BlockTraceResult} from 'conflux-web-eth-debug';
+import {Debug, Stats, TransactionTrace, WorldState, MemStats, BlockTraceResult} from 'conflux-web-cfx-debug';
 
 const debug = new Debug('http://localhost:8545');
 
