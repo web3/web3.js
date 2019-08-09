@@ -23,18 +23,9 @@
 import isNumber from 'lodash/isNumber';
 import Address from './Address';
 import Hex from './Hex';
+import AbstractType from '../../lib/types/AbstractType';
 
-export default class Transaction {
-    /**
-     * @param {Object} transactionOptions
-     *
-     * @constructor
-     */
-    constructor(transactionOptions) {
-        this._value = null;
-        this.value = transactionOptions;
-    }
-
+export default class Transaction extends AbstractType {
     /**
      * Setter for the value property
      *
@@ -81,17 +72,6 @@ export default class Transaction {
                 transactionOptions[key] = Hex.fromNumber(transactionOptions[key]).toString();
             });
 
-        this._value = transactionOptions;
-    }
-
-    /**
-     * Getter for the value property
-     *
-     * @property value
-     *
-     * @returns {null | Object}
-     */
-    get value() {
-        return this._value;
+        super.value = transactionOptions;
     }
 }

@@ -12,34 +12,41 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file SyncState.js
+ * @file AbstractType
  * @author Samuel Furter <samuel@ethereum.org>
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @author Marek Kotewicz <marek@parity.io>
  * @date 2019
  */
 
-import Hex from './Hex';
-import AbstractType from '../../lib/types/AbstractType';
-
-export default class SyncState extends AbstractType {
+export default class AbstractType {
     /**
-     * Setter of the value property
+     * @param {any} value
+     *
+     * @constructor
+     */
+    constructor(value) {
+        this._value = null;
+        this.value = value;
+    }
+
+    /**
+     * Setter for the value property
      *
      * @property value
      *
-     * @param {Object} syncState
+     * @param {any} value
      */
-    set value(syncState) {
-        syncState.startingBlock = new Hex(syncState.startingBlock).toNumber();
-        syncState.currentBlock = new Hex(syncState.currentBlock).toNumber();
-        syncState.highestBlock = new Hex(syncState.highestBlock).toNumber();
+    set value(value) {
+        this._value = value;
+    }
 
-        if (syncState.knownStates) {
-            syncState.knownStates = new Hex(syncState.knownStates).toNumber();
-            syncState.pulledStates = new Hex(syncState.pulledStates).toNumber();
-        }
-
-        super.value = syncState;
+    /**
+     * Getter for the value property.
+     *
+     * @property value
+     *
+     * @returns {any}
+     */
+    get value() {
+        return this._value;
     }
 }

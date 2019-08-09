@@ -20,19 +20,9 @@
  */
 
 import Iban from '';
-import Address from './Address';
+import AbstractType from '../../lib/types/AbstractType';
 
-export default class Address {
-    /**
-     * @param {String} address
-     *
-     * @constructor
-     */
-    constructor(address) {
-        this._value = null;
-        this.value = address;
-    }
-
+export default class Address extends AbstractType {
     /**
      * Setter for the value property.
      *
@@ -54,16 +44,5 @@ export default class Address {
         throw new Error(
             `Provided address "${address}" is invalid, the capitalization checksum test failed, or its an indrect IBAN address which can't be converted.`
         );
-    }
-
-    /**
-     * Getter for the value property.
-     *
-     * @property value
-     *
-     * @returns {string}
-     */
-    get value() {
-        return this._value;
     }
 }

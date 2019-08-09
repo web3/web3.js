@@ -22,18 +22,9 @@
 import Crypto from '';
 import Hex from './Hex';
 import Address from './Address';
+import AbstractType from '../../lib/types/AbstractType';
 
-export default class Log {
-    /**
-     * @param {Object} log
-     *
-     * @constructor
-     */
-    constructor(log) {
-        this._value = null;
-        this.value = log;
-    }
-
+export default class Log extends AbstractType {
     /**
      * Setter of the value property.
      *
@@ -75,17 +66,6 @@ export default class Log {
             log.address = new Address(log.address).toChecksumAddress();
         }
 
-        this._value = log;
-    }
-
-    /**
-     * Getter for the value property.
-     *
-     * @property value
-     *
-     * @returns {Object}
-     */
-    get value() {
-        return this._value;
+        super.value = log;
     }
 }

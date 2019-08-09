@@ -21,18 +21,9 @@
 
 import isString from 'lodash/isString';
 import Hex from './Hex';
+import AbstractType from '../../lib/types/AbstractType';
 
-export default class BlockNumber {
-    /**
-     * @param {any} blockNumber
-     *
-     * @constructor
-     */
-    constructor(blockNumber) {
-        this._value = null;
-        this.value = blockNumber;
-    }
-
+export default class BlockNumber extends AbstractType {
     /**
      * Setter for the value property
      *
@@ -57,18 +48,7 @@ export default class BlockNumber {
             return;
         }
 
-        this._value = Hex.fromNumber(blockNumber);
-    }
-
-    /**
-     * Getter for the value property
-     *
-     * @property value
-     *
-     * @returns {String}
-     */
-    get value() {
-        return this._value;
+        super.value = Hex.fromNumber(blockNumber);
     }
 
     /**

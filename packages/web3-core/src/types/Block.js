@@ -25,18 +25,9 @@ import Hex from './Hex';
 import Address from './Address';
 import BigNumber from './BigNumber';
 import Transaction from './Transaction';
+import AbstractType from '../../lib/types/AbstractType';
 
-export default class Block {
-    /**
-     * @param {Object} block
-     *
-     * @constructor
-     */
-    constructor(block) {
-        this._value = null;
-        this.value = block;
-    }
-
+export default class Block extends AbstractType {
     /**
      * Setter for the value property.
      *
@@ -82,16 +73,5 @@ export default class Block {
         }
 
         this._value = block;
-    }
-
-    /**
-     * Getter for the value property.
-     *
-     * @property value
-     *
-     * @returns {null|Object}
-     */
-    get value() {
-        return this._value;
     }
 }

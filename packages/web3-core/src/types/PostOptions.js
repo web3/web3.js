@@ -22,18 +22,9 @@
 import isArray from 'lodash/isArray';
 import Hex from './Hex';
 import Utf8 from './Utf8';
+import AbstractType from '../../lib/types/AbstractType';
 
-export default class PostOptions {
-    /**
-     * @param {Object} options
-     *
-     * @constructor
-     */
-    constructor(options) {
-        this._value = null;
-        this.value = options;
-    }
-
+export default class PostOptions extends AbstractType {
     /**
      * Setter for the value property.
      *
@@ -70,16 +61,5 @@ export default class PostOptions {
         });
 
         this._value = options;
-    }
-
-    /**
-     * Getter for the value property.
-     *
-     * @property value
-     *
-     * @returns {Object}
-     */
-    get value() {
-        return this._value;
     }
 }

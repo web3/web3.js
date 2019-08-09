@@ -20,18 +20,9 @@
  */
 
 import Hex from './Hex';
+import AbstractType from '../../lib/types/AbstractType';
 
-export default class Post {
-    /**
-     * @param {Object} post
-     *
-     * @constructor
-     */
-    constructor(post) {
-        this._value = null;
-        this.value = post;
-    }
-
+export default class Post extends AbstractType {
     /**
      * Setter for the value property.
      *
@@ -62,17 +53,6 @@ export default class Post {
             return new Hex(topic).toUtf8();
         });
 
-        this._value = post;
-    }
-
-    /**
-     * Getter for the value property.
-     *
-     * @property value
-     *
-     * @returns {Object}
-     */
-    get value() {
-        return this._value;
+        super.value = post;
     }
 }

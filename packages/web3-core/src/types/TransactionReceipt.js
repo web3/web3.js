@@ -19,17 +19,9 @@
  * @date 2019
  */
 
-export default class TransactionReceipt {
-    /**
-     * @param {Object} receipt
-     *
-     * @constructor
-     */
-    constructor(receipt) {
-        this._value = null;
-        this.value = receipt;
-    }
+import AbstractType from '../../lib/types/AbstractType';
 
+export default class TransactionReceipt extends AbstractType {
     /**
      * Setter for the value property.
      *
@@ -85,16 +77,7 @@ export default class TransactionReceipt {
         } else {
             receipt.status = true;
         }
-    }
 
-    /**
-     * Getter for the value property.
-     *
-     * @property value
-     *
-     * @returns {null|Object}
-     */
-    get value() {
-        return this._value;
+        super.value = receipt;
     }
 }
