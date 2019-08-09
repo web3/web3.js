@@ -23,30 +23,29 @@ export default class AbstractType {
      *
      * @constructor
      */
-    constructor(value) {
-        this._value = null;
-        this.value = value;
+    constructor(value = {}) {
+        this._rawValue = value;
     }
 
     /**
-     * Setter for the value property
+     * Setter for the rawValue property.
      *
      * @property value
      *
      * @param {any} value
      */
-    set value(value) {
-        this._value = value;
+    set rawValue(value) {
+        this._rawValue = value;
     }
 
     /**
-     * Getter for the value property.
+     * Setter for the value property.
      *
      * @property value
      *
      * @returns {any}
      */
-    get value() {
-        return this._value;
+    get rawValue() {
+        return this._rawValue;
     }
 }

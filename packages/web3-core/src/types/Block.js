@@ -29,49 +29,244 @@ import AbstractType from '../../lib/types/AbstractType';
 
 export default class Block extends AbstractType {
     /**
-     * Setter for the value property.
+     * @param {Object} block
      *
-     * @property value
-     *
-     * @param block
+     * @constructor
      */
-    set value(block) {
-        block.gasLimit = new Hex(block.gasLimit).toNumber();
-        block.gasUsed = new Hex(block.gasUsed).toNumber();
-        block.size = new Hex(block.size).toNumber();
+    constructor(block) {
+        super();
 
-        const timestamp = new BigNumber(block.timestamp);
+        this.gasLimit = block.gasLimit;
+        this.gasUsed = block.gasUsed;
+        this.size = block.size;
+        this.timestamp = block.timestamp;
+        this.number = block.number;
+        this.difficulty = block.difficulty;
+        this.totalDifficulty = block.totalDifficulty;
+        this.transactions = block.transactions;
+        this.miner = block.miner;
+        this.rawValue = block;
+    }
+
+    /**
+     * Getter for the gasLimit property.
+     *
+     * @property gasLimit
+     *
+     * @returns {*}
+     */
+    get gasLimit() {
+        return this.rawValue.gasLimit;
+    }
+
+    /**
+     * Setter for the gasLimit property.
+     *
+     * @property gasLimit
+     *
+     * @returns {*}
+     */
+    set gasLimit(gasLimit) {
+        this.rawValue.gasLimit = new Hex(gasLimit).toNumber();
+    }
+
+    /**
+     * Getter for the gasUsed property.
+     *
+     * @property gasUsed
+     *
+     * @returns {*}
+     */
+    get gasUsed() {
+        return this.rawValue.gasUsed;
+    }
+
+    /**
+     * Setter for the gasUsed property.
+     *
+     * @property gasUsed
+     *
+     * @returns {*}
+     */
+    set gasUsed(gasUsed) {
+        this.rawValue.gasUsed = new Hex(gasUsed).toNumber();
+    }
+
+    /**
+     * Getter for the size property.
+     *
+     * @property size
+     *
+     * @returns {*}
+     */
+    get size() {
+        return this.rawValue.size;
+    }
+
+    /**
+     * Setter for the size property.
+     *
+     * @property size
+     *
+     * @returns {*}
+     */
+    set size(size) {
+        this.rawValue.size = new Hex(size).toNumber();
+    }
+
+    /**
+     * Getter for the timestamp property.
+     *
+     * @property timestamp
+     *
+     * @returns {*}
+     */
+    get timestamp() {
+        return this.value.timestamp;
+    }
+
+    /**
+     * Setter for the timestamp property.
+     *
+     * @property timestamp
+     *
+     * @returns {*}
+     */
+    set timestamp(timestamp) {
+        timestamp = new BigNumber(timestamp);
 
         if (timestamp.bitLength() <= 53) {
-            block.timestamp = timestamp.toNumber();
+            timestamp = timestamp.toNumber();
         } else {
-            block.timestamp = timestamp.toString(10);
+            timestamp = timestamp.toString(10);
         }
 
-        if (block.number !== null) {
-            block.number = new Hex(block.number).toNumber();
+        this.rawValue.timestamp = timestamp;
+    }
+
+    /**
+     * Getter for the number property.
+     *
+     * @property number
+     *
+     * @returns {*}
+     */
+    get number() {
+        return this.value.number;
+    }
+
+    /**
+     * Getter for the number property.
+     *
+     * @property number
+     *
+     * @returns {*}
+     */
+    set number(number) {
+        if (number !== null) {
+            this.rawValue.number = new Hex(number).toNumber();
         }
 
-        if (block.difficulty) {
-            block.difficulty = new BigNumber(block.difficulty).toString(10);
-        }
+        this.rawValue.number = number;
+    }
 
-        if (block.totalDifficulty) {
-            block.totalDifficulty = new BigNumber(block.totalDifficulty).toString(10);
-        }
+    /**
+     * Getter for the difficulty property.
+     *
+     * @property difficulty
+     *
+     * @returns {}
+     */
+    get difficulty() {
+        return this.rawValue.difficulty;
+    }
 
-        if (isArray(block.transactions)) {
-            block.transactions = block.transactions.map((item) => {
+    /**
+     * Setter for the difficulty property.
+     *
+     * @property difficulty
+     *
+     * @returns {}
+     */
+    set difficulty(difficulty) {
+        if (difficulty) {
+            this.rawValue.difficulty = new BigNumber(difficulty).toString(10);
+        }
+    }
+
+    /**
+     * Getter for the totalDifficulty property.
+     *
+     * @property totalDifficulty
+     *
+     * @returns {}
+     */
+    get totalDifficulty() {
+        return this.rawValue.totalDifficulty;
+    }
+
+    /**
+     * Getter for the totalDifficulty property.
+     *
+     * @property totalDifficulty
+     *
+     * @returns {}
+     */
+    set totalDifficulty(totalDifficulty) {
+        if (totalDifficulty) {
+            this.rawValue.totalDifficulty = new BigNumber(totalDifficulty).toString(10);
+        }
+    }
+
+    /**
+     * Getter for the transactions property.
+     *
+     * @property transactions
+     *
+     * @returns {}
+     */
+    get transactions() {
+        return this.rawValue.transactions;
+    }
+
+    /**
+     * Getter for the transactions property.
+     *
+     * @property transactions
+     *
+     * @returns {}
+     */
+    set transactions(transactions) {
+        if (isArray(transactions)) {
+            this.rawValue.transactions = transactions.map((item) => {
                 if (!isString(item)) {
                     return new Transaction(item).toObject();
                 }
             });
         }
+    }
 
-        if (block.miner) {
-            block.miner = new Address(block.miner).toChecksumAddress();
+    /**
+     * Getter for the miner property.
+     *
+     * @property miner
+     *
+     * @returns {*|string|string}
+     */
+    get miner() {
+        return this.rawValue.miner;
+    }
+
+    /**
+     * Setter for the miner property.
+     *
+     * @property miner
+     *
+     * @returns {*|string|string}
+     */
+    set miner(miner) {
+        if (miner) {
+            this.rawValue.miner = new Address(miner).toChecksumAddress();
         }
-
-        this._value = block;
     }
 }
