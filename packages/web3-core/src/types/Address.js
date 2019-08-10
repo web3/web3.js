@@ -90,16 +90,21 @@ export default class Address extends AbstractType {
      *
      * @returns {String}
      */
-    static toChecksumAddress(address, chainId = null) {
+    static toChecksum(address, chainId = null) {
         if (typeof address !== 'string') {
             return '';
         }
 
-        if (!/^(0x)?[0-9a-f]{40}$/i.test(address))
+        if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
             throw new Error(`Given address "${address}" is not a valid Ethereum address.`);
+        }
 
         const stripAddress = this.stripHexPrefix(address).toLowerCase();
-        const prefix = chainId != null ? chainId.toString() + '0x' : '';
+        let prefix = '';
+
+        if (chainId != null) {
+            prefix = chainId.toString() + '0x';
+        }
 
         const keccakHash = Hash.keccak256(prefix + stripAddress)
             .toString('hex')
@@ -107,10 +112,39 @@ export default class Address extends AbstractType {
 
         let checksumAddress = '0x';
 
-        for (let i = 0; i < stripAddress.length; i++)
-            checksumAddress += parseInt(keccakHash[i], 16) >= 8 ? stripAddress[i].toUpperCase() : stripAddress[i];
+        for (let i = 0; i < stripAddress.length; i++) {
+            if (parseInt(keccakHash[i], 16) >= 8) {
+                checksumAddress += stripAddress[i].toUpperCase();
+
+                return;
+            }
+
+            checksumAddress += stripAddress[i];
+        }
 
         return checksumAddress;
+    }
+
+    /**
+     * Validate address checksum.
+     * @param address
+     * @param chainId
+     * @returns {boolean}
+     */
+    static isValidChecksum(address, chainId = null) {
+        const stripAddress = this.stripHexPrefix(address).toLowerCase();
+        const prefix = chainId != null ? chainId.toString() + '0x' : '';
+        const keccakHash = Hash.keccak256(prefix + stripAddress)
+            .toString('hex')
+            .replace(/^0x/i, '');
+
+        for (let i = 0; i < stripAddress.length; i++) {
+            let output = parseInt(keccakHash[i], 16) >= 8 ? stripAddress[i].toUpperCase() : stripAddress[i];
+            if (this.stripHexPrefix(address)[i] !== output) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -135,6 +169,6 @@ export default class Address extends AbstractType {
         }
 
         // Otherwise check each case
-        return this.checkAddressChecksum(address, chainId);
+        return this.isValidChecksum(address, chainId);
     }
 }
