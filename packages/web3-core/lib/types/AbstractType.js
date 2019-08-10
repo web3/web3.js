@@ -51,4 +51,17 @@ export default class AbstractType {
     set properties(properties) {
         this._properties = properties;
     }
+
+    /**
+     * Removes the hex prefix '0x'
+     *
+     * @method stripHexPrefix
+     *
+     * @param {String} value
+     *
+     * @returns {String}
+     */
+    stripHexPrefix(value) {
+        return value.startsWith('0x') || value.startsWith('0X') ? value.slice(2) : value;
+    }
 }

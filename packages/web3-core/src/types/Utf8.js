@@ -20,8 +20,5 @@
  */
 
 export default class Utf8 {
-
-    constructor() {
-
-    }
+    constructor() {}
 }

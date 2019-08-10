@@ -20,8 +20,5 @@
  */
 
 export default class Hex {
-
-    constructor() {
-
-    }
+    constructor() {}
 }

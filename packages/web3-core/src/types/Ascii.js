@@ -20,8 +20,5 @@
  */
 
 export default class Ascii {
-
-    constructor() {
-
-    }
+    constructor() {}
 }

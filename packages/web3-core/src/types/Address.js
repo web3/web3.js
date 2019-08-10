@@ -19,6 +19,7 @@
  * @date 2019
  */
 
+import Hash from 'eth-lib/lib/hash';
 import Iban from '';
 import AbstractType from '../../lib/types/AbstractType';
 
@@ -66,5 +67,74 @@ export default class Address extends AbstractType {
         throw new Error(
             `Provided address "${address}" is invalid, the capitalization checksum test failed, or its an indirect IBAN address which can't be converted.`
         );
+    }
+
+    /**
+     * Address property wrapper.
+     *
+     * @method toString
+     *
+     * @returns {String}
+     */
+    toString() {
+        return this.address;
+    }
+
+    /**
+     * Maps the given address to a checksum address.
+     *
+     * @method toChecksumAddress
+     *
+     * @param {String} address
+     * @param {Number} chainId
+     *
+     * @returns {String}
+     */
+    static toChecksumAddress(address, chainId = null) {
+        if (typeof address !== 'string') {
+            return '';
+        }
+
+        if (!/^(0x)?[0-9a-f]{40}$/i.test(address))
+            throw new Error(`Given address "${address}" is not a valid Ethereum address.`);
+
+        const stripAddress = this.stripHexPrefix(address).toLowerCase();
+        const prefix = chainId != null ? chainId.toString() + '0x' : '';
+
+        const keccakHash = Hash.keccak256(prefix + stripAddress)
+            .toString('hex')
+            .replace(/^0x/i, '');
+
+        let checksumAddress = '0x';
+
+        for (let i = 0; i < stripAddress.length; i++)
+            checksumAddress += parseInt(keccakHash[i], 16) >= 8 ? stripAddress[i].toUpperCase() : stripAddress[i];
+
+        return checksumAddress;
+    }
+
+    /**
+     * Validates the given address.
+     *
+     * @method isValid
+     *
+     * @param {String} address
+     * @param {Number} chainId
+     *
+     * @returns {Boolean}
+     */
+    static isValid(address, chainId = null) {
+        // check if it has the basic requirements of an address
+        if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+            return false;
+        }
+
+        // If it's ALL lowercase or ALL upppercase
+        if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
+            return true;
+        }
+
+        // Otherwise check each case
+        return this.checkAddressChecksum(address, chainId);
     }
 }
