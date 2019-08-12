@@ -23,9 +23,8 @@ import isArray from 'lodash/isArray';
 import isString from 'lodash/isString';
 import Hex from './Hex';
 import Address from './Address';
-import BigNumber from './BigNumber';
 import Transaction from './Transaction';
-import AbstractType from '../../lib/types/AbstractType';
+import BigNumber from './BigNumber';
 
 export default class Block {
     /**
@@ -223,7 +222,7 @@ export default class Block {
         if (isArray(transactions)) {
             this.properties.transactions = transactions.map((item) => {
                 if (!isString(item)) {
-                    return new Transaction(item).toObject();
+                    return new Transaction(item);
                 }
             });
         }

@@ -20,7 +20,6 @@
  */
 
 import Hex from './Hex';
-import AbstractType from '../../lib/types/AbstractType';
 
 export default class Post {
     /**

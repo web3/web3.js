@@ -24,7 +24,6 @@ import Address from './Address';
 import Hex from './Hex';
 import Log from './Log';
 import isArray from 'lodash/isArray';
-import AbstractType from '../../lib/types/AbstractType';
 
 export default class TransactionReceipt {
     /**
@@ -37,8 +36,14 @@ export default class TransactionReceipt {
 
         this.blockNumber = receipt.blockNumber;
         this.transactionIndex = receipt.transactionIndex;
-        this.gasPrice = receipt.gasPrice;
-        this.value = receipt;
+        this.gas = receipt.gas;
+        this.cumulativeGasUsed = receipt.cumulativeGasUsed;
+        this.gasUsed = receipt.gasUsed;
+        this.to = receipt.to;
+        this.from = receipt.from;
+        this.logs = receipt.logs;
+        this.contractAddress = receipt.contractAddress;
+        this.status = receipt.status;
     }
 
     /**
@@ -49,7 +54,7 @@ export default class TransactionReceipt {
      * @returns {String}
      */
     get blockNumber() {
-        return this.value.blockNumber;
+        return this.properties.blockNumber;
     }
 
     /**
@@ -61,10 +66,10 @@ export default class TransactionReceipt {
      */
     set blockNumber(blockNumber) {
         if (blockNumber !== null) {
-            this.value.blockNumber = Hex.fromNumber(blockNumber).toString();
+            this.properties.blockNumber = Hex.fromNumber(blockNumber).toString();
         }
 
-        this.value.blockNumber = null;
+        this.properties.blockNumber = null;
     }
 
     /**
@@ -75,7 +80,7 @@ export default class TransactionReceipt {
      * @returns {Number}
      */
     get transactionIndex() {
-        return this.value.transactionIndex;
+        return this.properties.transactionIndex;
     }
 
     /**
@@ -87,10 +92,10 @@ export default class TransactionReceipt {
      */
     set transactionIndex(transactionIndex) {
         if (transactionIndex !== null) {
-            this.value.transactionIndex = new Hex(transactionIndex).toNumber();
+            this.properties.transactionIndex = new Hex(transactionIndex).toNumber();
         }
 
-        this.value.transactionIndex = transactionIndex;
+        this.properties.transactionIndex = transactionIndex;
     }
 
     /**
@@ -101,7 +106,7 @@ export default class TransactionReceipt {
      * @returns {Number}
      */
     get gasPrice() {
-        return this.value.gasPrice;
+        return this.properties.gasPrice;
     }
 
     /**
@@ -113,10 +118,10 @@ export default class TransactionReceipt {
      */
     set gasPrice(gasPrice) {
         if (gasPrice) {
-            this.value.gasPrice = new BigNumber(gasPrice).toString(10);
+            this.properties.gasPrice = new BigNumber(gasPrice).toString(10);
         }
 
-        this.value.gasPrice = gasPrice;
+        this.properties.gasPrice = gasPrice;
     }
 
     /**
@@ -358,5 +363,93 @@ export default class TransactionReceipt {
         } else {
             this.properties.status = true;
         }
+    }
+
+    /**
+     * Getter for the transactionHash property.
+     *
+     * @method transactionHash
+     *
+     * @returns {String}
+     */
+    get transactionHash() {
+        return this.properties.transactionHash;
+    }
+
+    /**
+     * Setter for the transactionHash property.
+     *
+     * @property transactionHash
+     *
+     * @param {String} transactionHash
+     */
+    set transactionHash(transactionHash) {
+        this.properties.transactionHash = transactionHash;
+    }
+
+    /**
+     * Getter for the logsBloom property.
+     *
+     * @method logsBloom
+     *
+     * @returns {String}
+     */
+    get logsBloom() {
+        return this.properties.logsBloom;
+    }
+
+    /**
+     * Setter for the logsBloom property.
+     *
+     * @property logsBloom
+     *
+     * @param {String} logsBloom
+     */
+    set logsBloom(logsBloom) {
+        this.properties.logsBloom = logsBloom;
+    }
+
+    /**
+     * Setter for the root property.
+     *
+     * @property root
+     *
+     * @param {String} root
+     */
+    set root(root) {
+        this.properties.root = root;
+    }
+
+    /**
+     * Getter for the root property.
+     *
+     * @property root
+     *
+     * @returns {String}
+     */
+    get root() {
+        return this.properties.root;
+    }
+
+    /**
+     * Getter for the blockHash property.
+     *
+     * @property blockHash
+     *
+     * @returns {String}
+     */
+    get blockHash() {
+        return this.properties.blockHash;
+    }
+
+    /**
+     * Setter for the blockHash property.
+     *
+     * @property blockHash
+     *
+     * @param {String} blockHash
+     */
+    set blockHash(blockHash) {
+        this.properties.blockHash = blockHash;
     }
 }

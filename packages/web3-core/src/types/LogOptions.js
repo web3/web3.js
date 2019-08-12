@@ -23,7 +23,6 @@ import isArray from 'lodash/isArray';
 import Utf8 from './Utf8';
 import Address from './Address';
 import BlockNumber from './BlockNumber';
-import AbstractType from '../../lib/types/AbstractType';
 
 export default class LogOptions {
     /**
@@ -153,6 +152,28 @@ export default class LogOptions {
 
             this.properties.address = new Address(this.properties.address).toString();
         }
+    }
+
+    /**
+     * Setter for the blockHash property.
+     *
+     * @property blockHash
+     *
+     * @param {String} blockHash
+     */
+    set blockHash(blockHash) {
+        this.properties.blockHash = blockHash;
+    }
+
+    /**
+     * Getter for the blockHash property.
+     *
+     * @property blockHash
+     *
+     * @returns {String}
+     */
+    get blockHash() {
+        return this.properties.blockHash;
     }
 
     /**

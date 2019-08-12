@@ -20,5 +20,19 @@
  */
 
 export default class Hex {
-    constructor() {}
+    constructor() {
+    }
+
+    /**
+     * Removes the hex prefix '0x' from the given string
+     *
+     * @method stripPrefix
+     *
+     * @param {String} value
+     *
+     * @returns {String}
+     */
+    static stripPrefix(value) {
+        return value.startsWith('0x') || value.startsWith('0X') ? value.slice(2) : value;
+    }
 }

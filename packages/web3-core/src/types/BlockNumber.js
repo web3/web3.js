@@ -21,7 +21,6 @@
 
 import isString from 'lodash/isString';
 import Hex from './Hex';
-import AbstractType from '../../lib/types/AbstractType';
 
 export default class BlockNumber {
     /**
@@ -38,7 +37,7 @@ export default class BlockNumber {
 
         if (Hex.isStrict(blockNumber)) {
             if (isString(blockNumber)) {
-                return blockNumber.toLowerCase();
+                this._blockNumber = blockNumber.toLowerCase();
             }
 
             this._blockNumber = blockNumber;

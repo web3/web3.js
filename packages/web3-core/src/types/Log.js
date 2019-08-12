@@ -22,7 +22,6 @@
 import Crypto from '';
 import Hex from './Hex';
 import Address from './Address';
-import AbstractType from '../../lib/types/AbstractType';
 
 export default class Log {
     /**
@@ -33,8 +32,6 @@ export default class Log {
     constructor(log) {
         this.properties = log;
 
-        this.blockHash = log.blockHash;
-        this.transactionHash = log.transactionHash;
         this.blockNumber = log.blockNumber;
         this.transactionIndex = log.transactionIndex;
         this.logIndex = log.logIndex;
@@ -150,6 +147,116 @@ export default class Log {
     }
 
     /**
+     * Getter for the removed property.
+     *
+     * @property removed
+     *
+     * @returns {Boolean}
+     */
+    get removed() {
+        return this.properties.removed;
+    }
+
+    /**
+     * Setter for the removed property.
+     *
+     * @property removed
+     *
+     * @param {Boolean} value
+     */
+    set removed(value) {
+        this.properties.removed = value;
+    }
+
+    /**
+     * Getter for the blockHash property.
+     *
+     * @property blockHash
+     *
+     * @returns {String}
+     */
+    get blockHash() {
+        return this.properties.blockHash;
+    }
+
+    /**
+     * Setter for the blockHash property.
+     *
+     * @property blockHash
+     *
+     * @param {String} value
+     */
+    set blockHash(value) {
+        this.properties.blockHash = value;
+    }
+
+    /**
+     * Getter for the transactionHash property.
+     *
+     * @property transactionHash
+     *
+     * @returns {String}
+     */
+    get transactionHash() {
+        return this.properties.transactionHash;
+    }
+
+    /**
+     * Setter for the transactionHash property.
+     *
+     * @property transactionHash
+     *
+     * @param {String} transactionHash
+     */
+    set transactionHash(transactionHash) {
+        this.properties.transactionHash = transactionHash;
+    }
+
+    /**
+     * Getter for the data property.
+     *
+     * @property data
+     *
+     * @returns {String}
+     */
+    get data() {
+        return this.properties.data;
+    }
+
+    /**
+     * Setter for the data property.
+     *
+     * @property data
+     *
+     * @param {String} data
+     */
+    set data(data) {
+        this.properties.data = data;
+    }
+
+    /**
+     * Getter for the topics property.
+     *
+     * @property topics
+     *
+     * @returns {Array<String>}
+     */
+    get topics() {
+        return this.properties.topics;
+    }
+
+    /**
+     * Setter for the topics property.
+     *
+     * @property topics
+     *
+     * @param topics
+     */
+    set topics(topics) {
+        this.properties.topics = topics;
+    }
+
+    /**
      * Generates the id with the blockHash, transactionHash, and logIndex.
      *
      * @method generateId
@@ -164,8 +271,8 @@ export default class Log {
         ) {
             const shaId = Crypto.keccak256(
                 this.properties.blockHash.replace('0x', '') +
-                    this.properties.transactionHash.replace('0x', '') +
-                    this.properties.logIndex.replace('0x', '')
+                this.properties.transactionHash.replace('0x', '') +
+                this.properties.logIndex.replace('0x', '')
             );
 
             shaId.replace('0x', '').substr(0, 8);

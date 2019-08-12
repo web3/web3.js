@@ -45,6 +45,19 @@ export default class Address {
     }
 
     /**
+     * Removes the hex prefix '0x' from the given string
+     *
+     * @method stripPrefix
+     *
+     * @param {String} value
+     *
+     * @returns {String}
+     */
+    stripPrefix(value) {
+        return value.startsWith('0x') || value.startsWith('0X') ? value.slice(2) : value;
+    }
+
+    /**
      * Address property wrapper.
      *
      * @method toString
@@ -107,18 +120,25 @@ export default class Address {
      * @returns {boolean}
      */
     static isValidChecksum(address, chainId = null) {
-        const stripAddress = this.stripHexPrefix(address).toLowerCase();
+        let output;
+        const stripAddress = this.stripPrefix(address).toLowerCase();
         const prefix = chainId != null ? chainId.toString() + '0x' : '';
         const keccakHash = Hash.keccak256(prefix + stripAddress)
             .toString('hex')
             .replace(/^0x/i, '');
 
         for (let i = 0; i < stripAddress.length; i++) {
-            let output = parseInt(keccakHash[i], 16) >= 8 ? stripAddress[i].toUpperCase() : stripAddress[i];
+            if (parseInt(keccakHash[i], 16) >= 8) {
+                output = stripAddress[i].toUpperCase();
+            } else {
+                output = stripAddress[i];
+            }
+
             if (this.stripHexPrefix(address)[i] !== output) {
                 return false;
             }
         }
+
         return true;
     }
 

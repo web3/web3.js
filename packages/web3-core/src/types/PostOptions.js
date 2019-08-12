@@ -22,7 +22,6 @@
 import isArray from 'lodash/isArray';
 import Hex from './Hex';
 import Utf8 from './Utf8';
-import AbstractType from '../../lib/types/AbstractType';
 
 export default class PostOptions {
     /**

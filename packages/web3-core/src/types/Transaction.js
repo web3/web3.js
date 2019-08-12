@@ -11,140 +11,166 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 /**
- * @file Transaction.js
+ * @file Transaction
  * @author Samuel Furter <samuel@ethereum.org>
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @author Marek Kotewicz <marek@parity.io>
  * @date 2019
  */
 
-import isNumber from 'lodash/isNumber';
-import Address from './Address';
 import Hex from './Hex';
-import AbstractType from '../../lib/types/AbstractType';
+import BigNumber from './BigNumber';
+import TransactionReceipt from './TransactionReceipt';
 
-export default class Transaction {
+export default class Transaction extends TransactionReceipt {
     /**
-     * @param {Object} options
+     * @param {Object} transaction
      *
      * @constructor
      */
-    constructor(options) {
-        if (!options.from && !isNumber(options.from)) {
-            throw new Error('The send transactions "from" field must be defined!');
-        }
+    constructor(transaction) {
+        super(transaction);
 
-        this.properties = options;
-
-        this.from = options.from;
-        this.to = options.to;
-        this.data = options.data;
-        this.gas = options.gas;
-        this.gasPrice = options.gasPrice;
-        this.value = options.value;
-        this.nonce = options.nonce;
+        this.nonce = transaction.nonce;
+        this.gasPrice = transaction.gasPrice;
+        this.value = transaction.value;
+        this.v = transaction.v;
+        this.r = transaction.r;
     }
 
     /**
-     * Getter for the from property.
+     * Getter for the input property.
      *
-     * @property from
+     * @property input
      *
      * @returns {String}
      */
-    get from() {
-        return this.properties.from;
+    get input() {
+        return this.properties.input;
     }
 
     /**
-     * Setter for the from property.
+     * Setter for the input property,
      *
-     * @property from
+     * @property input
      *
-     * @param {String} from
+     * @param {String} input
      */
-    set from(from) {
-        if (from) {
-            this.properties.from = new Address(from).toChecksumAddress();
-        }
+    set input(input) {
+        this.properties.input = input;
     }
 
     /**
-     * Getter for the to property.
+     * Getter for the nonce property.
      *
-     * @property to
+     * @property nonce
+     *
+     * @returns {Number}
+     */
+    get nonce() {
+        return this.properties.nonce;
+    }
+
+    /**
+     * Setter for the nonce property.
+     *
+     * @property nonce
+     *
+     * @param {} nonce
+     */
+    set nonce(nonce) {
+        this.properties.nonce = new Hex(nonce).toNumber();
+    }
+
+    /**
+     * Getter for the v property.
+     *
+     * @property v
      *
      * @returns {String}
      */
-    get to() {
-        return this.properties.to;
+    get v() {
+        return this.properties.v;
     }
 
     /**
-     * Setter for the to property.
+     * Setter for the v property.
      *
-     * @property to
+     * @property v
      *
-     * @param {String} to
+     * @param {String} v
      */
-    set to(to) {
-        this.properties.to = new Address(to).toString();
+    set v(v) {
+        this.properties.v = v;
     }
 
     /**
-     * Getter of the data property.
+     * Getter for the r property.
      *
-     * @property data
+     * @proeprty r
      *
      * @returns {String}
      */
-    get data() {
-        return this.properties.data;
+    get r() {
+        return this.properties.r;
     }
 
     /**
-     * Setter of the data property.
+     * Setter for the r property.
      *
-     * @property data
+     * @property r
      *
-     * @param {String} data
+     * @param r
      */
-    set data(data) {
-        if (Hex.isValid(data)) {
-            this.properties.data = data;
-        }
-
-        throw new Error('The data field must be HEX encoded data.');
+    set r(r) {
+        this.properties.r = r;
     }
 
     /**
-     * Getter of the gas property.
+     * Getter for the s property.
      *
-     * @property gas
+     * @property s
      *
      * @returns {String}
      */
-    get gas() {
-        return this.properties.gas;
+    get s() {
+        return this.properties.s;
     }
 
     /**
-     * Setter of the gas property.
+     * Setter for the s property.
      *
-     * @property gas
+     * @property s
      *
-     * @param {Number} gas
+     * @param {String} s
      */
-    set gas(gas) {
-        if (gas) {
-            this.properties.nonce = Hex.fromNumber(gas).toString();
-        }
+    set s(s) {
+        this.properties.s = s;
     }
 
     /**
-     * Getter of the gasPrice property.
+     * Getter for the value property.
+     *
+     * @property value
+     *
+     * @returns {String|Number}
+     */
+    get value() {
+        return this.properties.value;
+    }
+
+    /**
+     * Setter for the value property.
+     *
+     * @property value
+     *
+     * @param {String} value
+     */
+    set value(value) {
+        this.properties.value = new BigNumber(value).toString(10);
+    }
+
+    /**
+     * Getter for the gasPrice property.
      *
      * @property gasPrice
      *
@@ -155,63 +181,13 @@ export default class Transaction {
     }
 
     /**
-     * Setter of the gasPrice property.
+     * Setter for the gasPrice property.
      *
      * @property gasPrice
      *
-     * @param {Number} gasPrice
+     * @param gasPrice
      */
     set gasPrice(gasPrice) {
-        if (gasPrice) {
-            this.properties.properties = Hex.fromNumber(gasPrice).toString();
-        }
-    }
-
-    /**
-     * Getter of the properties property.
-     *
-     * @property properties
-     *
-     * @returns {String}
-     */
-    get value() {
-        return this.properties.properties;
-    }
-
-    /**
-     * Setter of the properties property.
-     *
-     * @property properties
-     *
-     * @param {String} nonce
-     */
-    set value(nonce) {
-        if (nonce) {
-            this.properties.properties = Hex.fromNumber(nonce).toString();
-        }
-    }
-
-    /**
-     * Getter of the nonce property.
-     *
-     * @property nonce
-     *
-     * @returns {String}
-     */
-    get nonce() {
-        return this.properties.nonce;
-    }
-
-    /**
-     * Setter of the nonce property.
-     *
-     * @property nonce
-     *
-     * @param {Number} nonce
-     */
-    set nonce(nonce) {
-        if (nonce) {
-            this.properties.nonce = Hex.fromNumber(nonce).toString();
-        }
+        this.properties.gasPrice = new BigNumber(gasPrice).toString(10);
     }
 }
