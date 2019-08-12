@@ -21,47 +21,22 @@
 
 import Hash from 'eth-lib/lib/hash';
 import Iban from '';
-import AbstractType from '../../lib/types/AbstractType';
 
-export default class Address extends AbstractType {
+export default class Address {
     /**
      * @param {String} address
      *
      * @constructor
      */
     constructor(address) {
-        super(address);
-
-        this.address = address;
-    }
-
-    /**
-     * Getter for the address property.
-     *
-     * @property address
-     *
-     * @returns {String}
-     */
-    get address() {
-        return this.properties;
-    }
-
-    /**
-     * Setter for the address property.
-     *
-     * @property address
-     *
-     * @param {String} address
-     */
-    set address(address) {
         const iban = new Iban(address);
 
         if (iban.isValid() && iban.isDirect()) {
-            this.properties = iban.toAddress().toLowerCase();
+            this._address = iban.toAddress().toLowerCase();
         }
 
         if (Address.isValid(address)) {
-            this.properties = `0x${address.toLowerCase().replace('0x', '')}`;
+            this._address = `0x${address.toLowerCase().replace('0x', '')}`;
         }
 
         throw new Error(
@@ -77,7 +52,7 @@ export default class Address extends AbstractType {
      * @returns {String}
      */
     toString() {
-        return this.address;
+        return this._address;
     }
 
     /**

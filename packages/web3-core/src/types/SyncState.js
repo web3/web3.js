@@ -22,14 +22,14 @@
 import Hex from './Hex';
 import AbstractType from '../../lib/types/AbstractType';
 
-export default class SyncState extends AbstractType {
+export default class SyncState {
     /**
      * @param {Object} syncState
      *
      * @constructor
      */
     constructor(syncState) {
-        super(syncState);
+        this.properties = syncState;
 
         this.startingBlock = syncState.startingBlock;
         this.currentBlock = syncState.currentBlock;

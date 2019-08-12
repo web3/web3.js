@@ -24,19 +24,19 @@ import Hex from './Hex';
 import Utf8 from './Utf8';
 import AbstractType from '../../lib/types/AbstractType';
 
-export default class PostOptions extends AbstractType {
+export default class PostOptions {
     /**
      * @param {Object} options
      *
      * @constructor
      */
     constructor(options) {
-        super(options);
+        this.properties = options;
 
-        this.properties.ttl = options.ttl;
-        this.properties.workToProve = options.workToProve;
-        this.properties.priority = options.priority;
-        this.properties.topics = options.topics;
+        this.ttl = options.ttl;
+        this.workToProve = options.workToProve;
+        this.priority = options.priority;
+        this.topics = options.topics;
     }
 
     /**

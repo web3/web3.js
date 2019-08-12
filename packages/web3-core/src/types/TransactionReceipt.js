@@ -26,14 +26,14 @@ import Log from './Log';
 import isArray from 'lodash/isArray';
 import AbstractType from '../../lib/types/AbstractType';
 
-export default class TransactionReceipt extends AbstractType {
+export default class TransactionReceipt {
     /**
      * @param {Object} receipt
      *
      * @constructor
      */
     constructor(receipt) {
-        super(receipt);
+        this.properties = receipt;
 
         this.blockNumber = receipt.blockNumber;
         this.transactionIndex = receipt.transactionIndex;

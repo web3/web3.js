@@ -25,26 +25,26 @@ import Address from './Address';
 import Hex from './Hex';
 import AbstractType from '../../lib/types/AbstractType';
 
-export default class Transaction extends AbstractType {
+export default class Transaction {
     /**
      * @param {Object} options
      *
      * @constructor
      */
     constructor(options) {
-        super(options);
-
         if (!options.from && !isNumber(options.from)) {
             throw new Error('The send transactions "from" field must be defined!');
         }
 
-        this.properties.from = options.from;
-        this.properties.to = options.to;
-        this.properties.data = options.data;
-        this.properties.gas = options.gas;
-        this.properties.gasPrice = options.gasPrice;
-        this.properties.value = options.value;
-        this.properties.nonce = options.nonce;
+        this.properties = options;
+
+        this.from = options.from;
+        this.to = options.to;
+        this.data = options.data;
+        this.gas = options.gas;
+        this.gasPrice = options.gasPrice;
+        this.value = options.value;
+        this.nonce = options.nonce;
     }
 
     /**

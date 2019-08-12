@@ -24,14 +24,14 @@ import Hex from './Hex';
 import Address from './Address';
 import AbstractType from '../../lib/types/AbstractType';
 
-export default class Log extends AbstractType {
+export default class Log {
     /**
      * @param {Object} log
      *
      * @constructor
      */
     constructor(log) {
-        super(log);
+        this.properties = log;
 
         this.blockHash = log.blockHash;
         this.transactionHash = log.transactionHash;

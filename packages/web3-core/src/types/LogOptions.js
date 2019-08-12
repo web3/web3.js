@@ -25,14 +25,14 @@ import Address from './Address';
 import BlockNumber from './BlockNumber';
 import AbstractType from '../../lib/types/AbstractType';
 
-export default class LogOptions extends AbstractType {
+export default class LogOptions {
     /**
      * @param {Object} options
      *
      * @constructor
      */
     constructor(options) {
-        super(options);
+        this.properties = options;
 
         this.fromBlock = options.fromBlock;
         this.toBlock = options.toBlock;

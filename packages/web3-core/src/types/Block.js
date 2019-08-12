@@ -27,14 +27,14 @@ import BigNumber from './BigNumber';
 import Transaction from './Transaction';
 import AbstractType from '../../lib/types/AbstractType';
 
-export default class Block extends AbstractType {
+export default class Block {
     /**
      * @param {Object} block
      *
      * @constructor
      */
     constructor(block) {
-        super(block);
+        this.properties = block;
 
         this.gasLimit = block.gasLimit;
         this.gasUsed = block.gasUsed;

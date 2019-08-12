@@ -22,14 +22,14 @@
 import Hex from './Hex';
 import AbstractType from '../../lib/types/AbstractType';
 
-export default class Post extends AbstractType {
+export default class Post {
     /**
      * @param {Object} post
      *
      * @constructor
      */
     constructor(post) {
-        super(post);
+        this.properties = post;
 
         this.expiry = post.expiry;
         this.sent = post.sent;

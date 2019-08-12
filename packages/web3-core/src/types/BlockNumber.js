@@ -23,39 +23,15 @@ import isString from 'lodash/isString';
 import Hex from './Hex';
 import AbstractType from '../../lib/types/AbstractType';
 
-export default class BlockNumber extends AbstractType {
+export default class BlockNumber {
     /**
      * @param {String|Number} blockNumber
      *
      * @constructor
      */
     constructor(blockNumber) {
-        super(blockNumber);
-
-        this.blockNumber = blockNumber;
-    }
-
-    /**
-     * Getter for the blockNumber property.
-     *
-     * @property blockNumber
-     *
-     * @returns {String}
-     */
-    get blockNumber() {
-        return this.properties;
-    }
-
-    /**
-     * Setter for the blockNumber property
-     *
-     * @property blockNumber
-     *
-     * @param {any} blockNumber
-     */
-    set blockNumber(blockNumber) {
         if (blockNumber === undefined || blockNumber === null || BlockNumber.isPredefinedBlockNumber(blockNumber)) {
-            this.properties = blockNumber;
+            this._blockNumber = blockNumber;
 
             return;
         }
@@ -65,12 +41,23 @@ export default class BlockNumber extends AbstractType {
                 return blockNumber.toLowerCase();
             }
 
-            this.properties = blockNumber;
+            this._blockNumber = blockNumber;
 
             return;
         }
 
-        super.properties = Hex.fromNumber(blockNumber);
+        this._blockNumber = Hex.fromNumber(blockNumber);
+    }
+
+    /**
+     * Returns the blockNumber value as string
+     *
+     * @method toString
+     *
+     * @returns {String}
+     */
+    toString() {
+        return this._blockNumber;
     }
 
     /**
