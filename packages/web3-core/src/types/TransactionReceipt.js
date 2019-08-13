@@ -22,7 +22,6 @@
 import {BigNumber} from '@ethersproject/bignumber';
 import isArray from 'lodash/isArray';
 import Address from './Address';
-import Hex from './Hex';
 import Log from './Log';
 
 export default class TransactionReceipt {
@@ -66,7 +65,7 @@ export default class TransactionReceipt {
      */
     set blockNumber(blockNumber) {
         if (blockNumber || blockNumber === 0) {
-            this.properties.blockNumber = new Hex(blockNumber).toNumber();
+            this.properties.blockNumber = BigNumber.from(blockNumber).toString();
 
             return;
         }
@@ -93,8 +92,8 @@ export default class TransactionReceipt {
      * @param {String|null} transactionIndex
      */
     set transactionIndex(transactionIndex) {
-        if (transactionIndex !== null) {
-            this.properties.transactionIndex = new Hex(transactionIndex).toNumber();
+        if (transactionIndex || transactionIndex === 0) {
+            this.properties.transactionIndex = BigNumber.from(transactionIndex).toString();
 
             return;
         }
@@ -177,7 +176,7 @@ export default class TransactionReceipt {
      * @param {String} nonce
      */
     set nonce(nonce) {
-        this.properties.nonce = new Hex(nonce).toNumber();
+        this.properties.nonce = BigNumber.from(nonce).toString();
     }
 
     /**
@@ -199,7 +198,7 @@ export default class TransactionReceipt {
      * @param {String} gas
      */
     set gas(gas) {
-        this.properties.gas = new Hex(gas).toNumber();
+        this.properties.gas = BigNumber.from(gas).toString();
     }
 
     /**
@@ -221,7 +220,7 @@ export default class TransactionReceipt {
      * @param cumulativeGasUsed
      */
     set cumulativeGasUsed(cumulativeGasUsed) {
-        this.properties.cumulativeGasUsed = new Hex(cumulativeGasUsed).toNumber();
+        this.properties.cumulativeGasUsed = BigNumber.from(cumulativeGasUsed).toString();
     }
 
     /**
@@ -243,7 +242,7 @@ export default class TransactionReceipt {
      * @param {String} gasUsed
      */
     set gasUsed(gasUsed) {
-        this.properties.gasUsed = new Hex(gasUsed).toNumber();
+        this.properties.gasUsed = BigNumber.from(gasUsed).toString();
     }
 
     /**

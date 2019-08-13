@@ -17,7 +17,6 @@
  * @date 2019
  */
 
-import Hex from './Hex';
 import {BigNumber} from '@ethersproject/bignumber';
 import TransactionReceipt from './TransactionReceipt';
 
@@ -55,28 +54,6 @@ export default class Transaction extends TransactionReceipt {
      */
     set input(input) {
         this.properties.input = input;
-    }
-
-    /**
-     * Getter for the nonce property.
-     *
-     * @property nonce
-     *
-     * @returns {Number}
-     */
-    get nonce() {
-        return this.properties.nonce;
-    }
-
-    /**
-     * Setter for the nonce property.
-     *
-     * @property nonce
-     *
-     * @param {String} nonce
-     */
-    set nonce(nonce) {
-        this.properties.nonce = new Hex(nonce).toNumber();
     }
 
     /**

@@ -33,15 +33,15 @@ describe('TransactionReceiptTest', () => {
     it('calls the constructor and defines all properties correctly', () => {
         const transactionReceipt = new TransactionReceipt(transactionReceiptMock);
 
-        expect(transactionReceipt.blockNumber).toEqual(0);
+        expect(transactionReceipt.blockNumber).toEqual('0');
 
-        expect(transactionReceipt.transactionIndex).toEqual(0);
+        expect(transactionReceipt.transactionIndex).toEqual('0');
 
-        expect(transactionReceipt.gas).toEqual(0);
+        expect(transactionReceipt.gas).toEqual('0');
 
-        expect(transactionReceipt.cumulativeGasUsed).toEqual(0);
+        expect(transactionReceipt.cumulativeGasUsed).toEqual('0');
 
-        expect(transactionReceipt.gasUsed).toEqual(0);
+        expect(transactionReceipt.gasUsed).toEqual('0');
 
         expect(transactionReceipt.to).toEqual('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
 
