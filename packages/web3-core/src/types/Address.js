@@ -20,7 +20,7 @@
  */
 
 import Hash from 'eth-lib/lib/hash';
-import Iban from '';
+import Iban from './Iban';
 
 export default class Address {
     /**
@@ -33,28 +33,19 @@ export default class Address {
 
         if (iban.isValid() && iban.isDirect()) {
             this._address = iban.toAddress().toLowerCase();
+
+            return;
         }
 
         if (Address.isValid(address)) {
             this._address = `0x${address.toLowerCase().replace('0x', '')}`;
+
+            return;
         }
 
         throw new Error(
             `Provided address "${address}" is invalid, the capitalization checksum test failed, or its an indirect IBAN address which can't be converted.`
         );
-    }
-
-    /**
-     * Removes the hex prefix '0x' from the given string
-     *
-     * @method stripPrefix
-     *
-     * @param {String} value
-     *
-     * @returns {String}
-     */
-    stripPrefix(value) {
-        return value.startsWith('0x') || value.startsWith('0X') ? value.slice(2) : value;
     }
 
     /**
@@ -71,7 +62,7 @@ export default class Address {
     /**
      * Maps the given address to a checksum address.
      *
-     * @method toChecksumAddress
+     * @method toChecksum
      *
      * @param {String} address
      * @param {Number} chainId
@@ -87,7 +78,11 @@ export default class Address {
             throw new Error(`Given address "${address}" is not a valid Ethereum address.`);
         }
 
-        const stripAddress = this.stripHexPrefix(address).toLowerCase();
+        if (address.startsWith('0x') || address.startsWith('0X')) {
+            address = address.slice(2);
+        }
+
+        const stripAddress = address.toLowerCase();
         let prefix = '';
 
         if (chainId != null) {
@@ -103,11 +98,9 @@ export default class Address {
         for (let i = 0; i < stripAddress.length; i++) {
             if (parseInt(keccakHash[i], 16) >= 8) {
                 checksumAddress += stripAddress[i].toUpperCase();
-
-                return;
+            } else {
+                checksumAddress += stripAddress[i];
             }
-
-            checksumAddress += stripAddress[i];
         }
 
         return checksumAddress;
@@ -115,31 +108,20 @@ export default class Address {
 
     /**
      * Validate address checksum.
-     * @param address
-     * @param chainId
-     * @returns {boolean}
+     *
+     * @method isValidChecksum
+     *
+     * @param {String} address
+     * @param {Number} chainId - RSKIP-60 https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md
+     *
+     * @returns {Boolean}
      */
     static isValidChecksum(address, chainId = null) {
-        let output;
-        const stripAddress = this.stripPrefix(address).toLowerCase();
-        const prefix = chainId != null ? chainId.toString() + '0x' : '';
-        const keccakHash = Hash.keccak256(prefix + stripAddress)
-            .toString('hex')
-            .replace(/^0x/i, '');
-
-        for (let i = 0; i < stripAddress.length; i++) {
-            if (parseInt(keccakHash[i], 16) >= 8) {
-                output = stripAddress[i].toUpperCase();
-            } else {
-                output = stripAddress[i];
-            }
-
-            if (this.stripHexPrefix(address)[i] !== output) {
-                return false;
-            }
+        if (address.startsWith('0X')) {
+            address = '0x' + address.slice(2);
         }
 
-        return true;
+        return Address.toChecksum(address, chainId) === address;
     }
 
     /**
@@ -148,7 +130,7 @@ export default class Address {
      * @method isValid
      *
      * @param {String} address
-     * @param {Number} chainId
+     * @param {Number} chainId - RSKIP-60 https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md
      *
      * @returns {Boolean}
      */
@@ -164,6 +146,6 @@ export default class Address {
         }
 
         // Otherwise check each case
-        return this.isValidChecksum(address, chainId);
+        return Address.isValidChecksum(address, chainId);
     }
 }

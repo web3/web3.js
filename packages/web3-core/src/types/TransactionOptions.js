@@ -66,7 +66,7 @@ export default class TransactionOptions {
      */
     set from(from) {
         if (from) {
-            this.properties.from = new Address(from).toChecksumAddress();
+            this.properties.from = Address.toChecksum(from);
         }
     }
 
@@ -113,6 +113,8 @@ export default class TransactionOptions {
     set data(data) {
         if (Hex.isValid(data)) {
             this.properties.data = data;
+
+            return;
         }
 
         throw new Error('The data field must be HEX encoded data.');
@@ -137,8 +139,8 @@ export default class TransactionOptions {
      * @param {Number} gas
      */
     set gas(gas) {
-        if (gas) {
-            this.properties.nonce = Hex.fromNumber(gas).toString();
+        if (gas || gas === 0) {
+            this.properties.gas = Hex.fromNumber(gas).toString();
         }
     }
 
@@ -161,8 +163,8 @@ export default class TransactionOptions {
      * @param {Number} gasPrice
      */
     set gasPrice(gasPrice) {
-        if (gasPrice) {
-            this.properties.properties = Hex.fromNumber(gasPrice).toString();
+        if (gasPrice || gasPrice === 0) {
+            this.properties.gasPrice = Hex.fromNumber(gasPrice).toString();
         }
     }
 
@@ -174,7 +176,7 @@ export default class TransactionOptions {
      * @returns {String}
      */
     get value() {
-        return this.properties.properties;
+        return this.properties.value;
     }
 
     /**
@@ -182,11 +184,11 @@ export default class TransactionOptions {
      *
      * @property properties
      *
-     * @param {String} nonce
+     * @param {Number} value
      */
-    set value(nonce) {
-        if (nonce) {
-            this.properties.properties = Hex.fromNumber(nonce).toString();
+    set value(value) {
+        if (value || value === 0) {
+            this.properties.value = Hex.fromNumber(value).toString();
         }
     }
 
@@ -209,7 +211,7 @@ export default class TransactionOptions {
      * @param {Number} nonce
      */
     set nonce(nonce) {
-        if (nonce) {
+        if (nonce || nonce === 0) {
             this.properties.nonce = Hex.fromNumber(nonce).toString();
         }
     }

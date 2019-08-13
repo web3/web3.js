@@ -19,9 +19,9 @@
  * @date 2019
  */
 
-import Crypto from '';
 import Hex from './Hex';
 import Address from './Address';
+import Hash from 'eth-lib/lib/hash';
 
 export default class Log {
     /**
@@ -32,11 +32,11 @@ export default class Log {
     constructor(log) {
         this.properties = log;
 
+        this.properties.id = this.generateId();
         this.blockNumber = log.blockNumber;
         this.transactionIndex = log.transactionIndex;
         this.logIndex = log.logIndex;
         this.address = log.address;
-        this.properties.id = this.generateId();
     }
 
     /**
@@ -131,7 +131,7 @@ export default class Log {
      */
     set address(address) {
         if (address) {
-            this.properties.address = new Address(address).toChecksumAddress();
+            this.properties.address = Address.toChecksum(address);
         }
     }
 
@@ -269,7 +269,7 @@ export default class Log {
             typeof this.properties.transactionHash === 'string' &&
             typeof this.properties.logIndex === 'string'
         ) {
-            const shaId = Crypto.keccak256(
+            const shaId = Hash.keccak256(
                 this.properties.blockHash.replace('0x', '') +
                 this.properties.transactionHash.replace('0x', '') +
                 this.properties.logIndex.replace('0x', '')
@@ -280,8 +280,6 @@ export default class Log {
             return `log_${shaId}`;
         }
 
-        if (!this.properties.id) {
-            return null;
-        }
+        return null;
     }
 }

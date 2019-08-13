@@ -20,9 +20,9 @@
  */
 
 import isArray from 'lodash/isArray';
-import Utf8 from './Utf8';
 import Address from './Address';
 import BlockNumber from './BlockNumber';
+import Hex from './Hex';
 
 export default class LogOptions {
     /**
@@ -55,7 +55,7 @@ export default class LogOptions {
      *
      * @property fromBlock
      *
-     * @param {any}
+     * @param {any} fromBlock
      */
     set fromBlock(fromBlock) {
         if (fromBlock) {
@@ -150,7 +150,7 @@ export default class LogOptions {
                 return;
             }
 
-            this.properties.address = new Address(this.properties.address).toString();
+            this.properties.address = new Address(address).toString();
         }
     }
 
@@ -196,6 +196,6 @@ export default class LogOptions {
             return properties;
         }
 
-        return new Utf8(properties).toHex();
+        return Hex.fromUTF8(properties).toString();
     }
 }

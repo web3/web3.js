@@ -35,6 +35,7 @@ export default class Post {
         this.ttl = post.ttl;
         this.workProved = post.workProved;
         this.topics = post.topics;
+        this.payload = post.payload;
     }
 
     /**
@@ -122,7 +123,7 @@ export default class Post {
      * @param {String} workProved
      */
     set workProved(workProved) {
-        return new Hex(workProved).toNumber();
+        this.properties.workProved = new Hex(workProved).toNumber();
     }
 
     /**
@@ -146,10 +147,12 @@ export default class Post {
     set topics(topics) {
         if (!topics) {
             this.properties.topics = topics;
+
+            return;
         }
 
         this.properties.topics = topics.map((topic) => {
-            return new Hex(topic).toUtf8();
+            return new Hex(topic).toUTF8();
         });
     }
 
@@ -167,7 +170,7 @@ export default class Post {
     /**
      * Setter for the payload property.
      *
-     * @param {Object} payload
+     * @param {String} payload
      */
     set payload(payload) {
         this.properties.payload = new Hex(payload).toAscii();

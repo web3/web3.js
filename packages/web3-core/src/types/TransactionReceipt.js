@@ -19,7 +19,7 @@
  * @date 2019
  */
 
-import BigNumber from '';
+import BigNumber from '@ethersproject/bignumber';
 import Address from './Address';
 import Hex from './Hex';
 import Log from './Log';

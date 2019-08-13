@@ -21,7 +21,6 @@
 
 import isArray from 'lodash/isArray';
 import Hex from './Hex';
-import Utf8 from './Utf8';
 
 export default class PostOptions {
     /**
@@ -57,7 +56,7 @@ export default class PostOptions {
      * @param {Number} ttl
      */
     set ttl(ttl) {
-        if (ttl) {
+        if (ttl || ttl === 0) {
             this.properties.ttl = Hex.fromNumber(ttl).toString();
         }
     }
@@ -81,7 +80,7 @@ export default class PostOptions {
      * @param {String} workToProve
      */
     set workToProve(workToProve) {
-        if (workToProve) {
+        if (workToProve || workToProve === 0) {
             this.properties.workToProve = Hex.fromNumber(workToProve).toString();
         }
     }
@@ -105,7 +104,7 @@ export default class PostOptions {
      * @param {Number} priority
      */
     set priority(priority) {
-        if (priority) {
+        if (priority || priority === 0) {
             this.properties.priority = Hex.fromNumber(this.properties.priority).toString();
         }
     }
@@ -142,11 +141,11 @@ export default class PostOptions {
         // format the following options
         this.properties.topics = this.properties.topics.map((topic) => {
             // convert only if not hex
-            if (topic.startsWith('0x') === 0) {
+            if (topic.startsWith('0x')) {
                 return topic;
             }
 
-            return new Utf8(topic).toHex();
+            return Hex.fromUTF8(topic).toString();
         });
     }
 }

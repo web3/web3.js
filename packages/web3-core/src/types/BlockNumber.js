@@ -35,7 +35,7 @@ export default class BlockNumber {
             return;
         }
 
-        if (Hex.isStrict(blockNumber)) {
+        if (Hex.isValid(blockNumber)) {
             if (isString(blockNumber)) {
                 this._blockNumber = blockNumber.toLowerCase();
             }

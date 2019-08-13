@@ -18,7 +18,7 @@
  */
 
 import Hex from './Hex';
-import BigNumber from './BigNumber';
+import BigNumber from '@ethersproject/bignumber';
 import TransactionReceipt from './TransactionReceipt';
 
 export default class Transaction extends TransactionReceipt {
@@ -33,8 +33,6 @@ export default class Transaction extends TransactionReceipt {
         this.nonce = transaction.nonce;
         this.gasPrice = transaction.gasPrice;
         this.value = transaction.value;
-        this.v = transaction.v;
-        this.r = transaction.r;
     }
 
     /**
@@ -75,7 +73,7 @@ export default class Transaction extends TransactionReceipt {
      *
      * @property nonce
      *
-     * @param {} nonce
+     * @param {String} nonce
      */
     set nonce(nonce) {
         this.properties.nonce = new Hex(nonce).toNumber();

@@ -24,7 +24,7 @@ import isString from 'lodash/isString';
 import Hex from './Hex';
 import Address from './Address';
 import Transaction from './Transaction';
-import BigNumber from './BigNumber';
+import BigNumber from '@ethersproject/bignumber';
 
 export default class Block {
     /**
@@ -243,6 +243,8 @@ export default class Block {
      * Setter for the miner property.
      *
      * @property miner
+     *
+     * @param {String} miner
      */
     set miner(miner) {
         if (miner) {
