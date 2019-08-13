@@ -19,7 +19,7 @@
  * @date 2019
  */
 
-import BigNumber from '@ethersproject/bignumber';
+import {BigNumber} from '@ethersproject/bignumber';
 import Address from './Address';
 import Hex from './Hex';
 import Log from './Log';
@@ -118,7 +118,7 @@ export default class TransactionReceipt {
      */
     set gasPrice(gasPrice) {
         if (gasPrice) {
-            this.properties.gasPrice = new BigNumber(gasPrice).toString(10);
+            this.properties.gasPrice = BigNumber.from(gasPrice).toString();
         }
 
         this.properties.gasPrice = gasPrice;
@@ -144,7 +144,7 @@ export default class TransactionReceipt {
      */
     set value(value) {
         if (value) {
-            this.properties.value = new BigNumber(value).toString(10);
+            this.properties.value = BigNumber.from(value).toString();
         }
 
         this.properties.value = value;
@@ -259,7 +259,7 @@ export default class TransactionReceipt {
     set to(to) {
         if (to && Address.isValid(to)) {
             // tx.to could be `0x0` or `null` while contract creation
-            this.properties.to = new Address(to).toChecksumAddress();
+            this.properties.to = Address.toChecksum(to);
         } else {
             this.properties.to = null; // set to `null` if invalid address
         }
@@ -285,7 +285,7 @@ export default class TransactionReceipt {
      */
     set from(from) {
         if (from) {
-            this.properties.from = new Address(from).toChecksumAddress();
+            this.properties.from = Address.toChecksum(from);
         }
     }
 
@@ -335,7 +335,7 @@ export default class TransactionReceipt {
      */
     set contractAddress(contractAddress) {
         if (contractAddress) {
-            this.properties.contractAddress = new Address(contractAddress).toChecksumAddress();
+            this.properties.contractAddress = Address.toChecksum(contractAddress);
         }
     }
 

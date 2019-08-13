@@ -24,7 +24,7 @@ import isString from 'lodash/isString';
 import Hex from './Hex';
 import Address from './Address';
 import Transaction from './Transaction';
-import BigNumber from '@ethersproject/bignumber';
+import {BigNumber} from '@ethersproject/bignumber';
 
 export default class Block {
     /**
@@ -123,12 +123,12 @@ export default class Block {
      * @property timestamp
      */
     set timestamp(timestamp) {
-        timestamp = new BigNumber(timestamp);
+        timestamp = BigNumber.from(timestamp);
 
-        if (timestamp.bitLength() <= 53) {
+        try {
             timestamp = timestamp.toNumber();
-        } else {
-            timestamp = timestamp.toString(10);
+        } catch (error) {
+            timestamp = timestamp.toString();
         }
 
         this.properties.timestamp = timestamp;
@@ -151,8 +151,10 @@ export default class Block {
      * @property number
      */
     set number(number) {
-        if (number !== null) {
+        if (number) {
             this.properties.number = new Hex(number).toNumber();
+
+            return;
         }
 
         this.properties.number = number;
@@ -176,7 +178,7 @@ export default class Block {
      */
     set difficulty(difficulty) {
         if (difficulty) {
-            this.properties.difficulty = new BigNumber(difficulty).toString(10);
+            this.properties.difficulty = BigNumber.from(difficulty).toString();
         }
     }
 
@@ -198,7 +200,7 @@ export default class Block {
      */
     set totalDifficulty(totalDifficulty) {
         if (totalDifficulty) {
-            this.properties.totalDifficulty = new BigNumber(totalDifficulty).toString(10);
+            this.properties.totalDifficulty = BigNumber.from(totalDifficulty).toString();
         }
     }
 
@@ -210,7 +212,7 @@ export default class Block {
      * @returns {Array<Transaction>}
      */
     get transactions() {
-        return this.transactions;
+        return this.properties.transactions;
     }
 
     /**
@@ -224,6 +226,8 @@ export default class Block {
                 if (!isString(item)) {
                     return new Transaction(item);
                 }
+
+                return item;
             });
         }
     }
@@ -248,7 +252,7 @@ export default class Block {
      */
     set miner(miner) {
         if (miner) {
-            this.properties.miner = new Address(miner).toChecksumAddress();
+            this.properties.miner = Address.toChecksum(miner);
         }
     }
 }

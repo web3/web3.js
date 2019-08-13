@@ -18,7 +18,7 @@
  */
 
 import Hex from './Hex';
-import BigNumber from '@ethersproject/bignumber';
+import {BigNumber} from '@ethersproject/bignumber';
 import TransactionReceipt from './TransactionReceipt';
 
 export default class Transaction extends TransactionReceipt {
@@ -164,7 +164,7 @@ export default class Transaction extends TransactionReceipt {
      * @param {String} value
      */
     set value(value) {
-        this.properties.value = new BigNumber(value).toString(10);
+        this.properties.value = BigNumber.from(value).toString();
     }
 
     /**
@@ -186,6 +186,6 @@ export default class Transaction extends TransactionReceipt {
      * @param gasPrice
      */
     set gasPrice(gasPrice) {
-        this.properties.gasPrice = new BigNumber(gasPrice).toString(10);
+        this.properties.gasPrice = BigNumber.from(gasPrice).toString();
     }
 }

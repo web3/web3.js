@@ -106,8 +106,7 @@ describe('AddressTest', () => {
     it('calls isAddress and returns the expected results', () => {
         const tests = [
             {
-                value: () => {
-                },
+                value: () => {},
                 is: false
             },
             /* eslint-disable no-new-func */
