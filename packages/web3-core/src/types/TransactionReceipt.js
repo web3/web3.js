@@ -20,10 +20,10 @@
  */
 
 import {BigNumber} from '@ethersproject/bignumber';
+import isArray from 'lodash/isArray';
 import Address from './Address';
 import Hex from './Hex';
 import Log from './Log';
-import isArray from 'lodash/isArray';
 
 export default class TransactionReceipt {
     /**
@@ -65,8 +65,10 @@ export default class TransactionReceipt {
      * @param {Number|null} blockNumber
      */
     set blockNumber(blockNumber) {
-        if (blockNumber !== null) {
-            this.properties.blockNumber = Hex.fromNumber(blockNumber).toString();
+        if (blockNumber || blockNumber === 0) {
+            this.properties.blockNumber = new Hex(blockNumber).toNumber();
+
+            return;
         }
 
         this.properties.blockNumber = null;
@@ -93,6 +95,8 @@ export default class TransactionReceipt {
     set transactionIndex(transactionIndex) {
         if (transactionIndex !== null) {
             this.properties.transactionIndex = new Hex(transactionIndex).toNumber();
+
+            return;
         }
 
         this.properties.transactionIndex = transactionIndex;
@@ -119,6 +123,8 @@ export default class TransactionReceipt {
     set gasPrice(gasPrice) {
         if (gasPrice) {
             this.properties.gasPrice = BigNumber.from(gasPrice).toString();
+
+            return;
         }
 
         this.properties.gasPrice = gasPrice;
@@ -145,6 +151,8 @@ export default class TransactionReceipt {
     set value(value) {
         if (value) {
             this.properties.value = BigNumber.from(value).toString();
+
+            return;
         }
 
         this.properties.value = value;
@@ -260,9 +268,11 @@ export default class TransactionReceipt {
         if (to && Address.isValid(to)) {
             // tx.to could be `0x0` or `null` while contract creation
             this.properties.to = Address.toChecksum(to);
-        } else {
-            this.properties.to = null; // set to `null` if invalid address
+
+            return;
         }
+
+        this.properties.to = null; // set to `null` if invalid address
     }
 
     /**
@@ -297,7 +307,7 @@ export default class TransactionReceipt {
      * @returns {Array<Log>}
      */
     get logs() {
-        return this.properties.log;
+        return this.properties.logs;
     }
 
     /**
@@ -360,9 +370,11 @@ export default class TransactionReceipt {
     set status(status) {
         if (typeof status !== 'undefined' && status !== null) {
             this.properties.status = Boolean(parseInt(status));
-        } else {
-            this.properties.status = true;
+
+            return;
         }
+
+        this.properties.status = true;
     }
 
     /**
