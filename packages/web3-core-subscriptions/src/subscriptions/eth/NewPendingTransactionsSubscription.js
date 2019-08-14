@@ -24,13 +24,11 @@ import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscriptio
 
 export default class NewPendingTransactionsSubscription extends AbstractSubscription {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_subscribe', 'newPendingTransactions', null, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_subscribe', 'newPendingTransactions', null, moduleInstance);
     }
 }

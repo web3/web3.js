@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import {formatters} from 'web3-core-helpers';
 import {Accounts} from 'web3-eth-accounts';
 import {Ens} from 'web3-eth-ens';
 import {ContractModuleFactory} from 'web3-eth-contract';
@@ -28,7 +27,6 @@ import {Personal} from 'web3-eth-personal';
 import {AbiCoder} from 'web3-eth-abi';
 import {Iban} from 'web3-eth-iban';
 import {Network} from 'web3-net';
-import * as Utils from 'web3-utils';
 import EthTransactionSigner from './signers/TransactionSigner';
 import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';
@@ -42,7 +40,7 @@ import EthModule from './Eth.js';
  * @constructor
  */
 export function TransactionSigner() {
-    return new EthTransactionSigner(Utils, formatters);
+    return new EthTransactionSigner();
 }
 
 /**
@@ -68,17 +66,15 @@ export function Eth(provider, net = null, options = {}) {
 
     return new EthModule(
         resolvedProvider,
-        new MethodFactory(Utils, formatters),
+        new MethodFactory(),
         new Network(resolvedProvider, null, options),
         accounts,
         new Personal(resolvedProvider, null, accounts, options),
         Iban,
         abiCoder,
         new Ens(resolvedProvider, null, accounts, options),
-        Utils,
-        formatters,
-        new SubscriptionsFactory(Utils, formatters),
-        new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
+        new SubscriptionsFactory(),
+        new ContractModuleFactory(abiCoder, accounts),
         options,
         net
     );

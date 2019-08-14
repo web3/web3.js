@@ -21,18 +21,13 @@ import {ChainIdMethod, GetGasPriceMethod, GetTransactionCountMethod, AbstractMet
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
-     * @param utils
-     * @param formatters
-     *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super(utils, formatters);
-
-        this.methods = {
+    constructor() {
+        super({
             getChainId: ChainIdMethod,
             getGasPrice: GetGasPriceMethod,
             getTransactionCount: GetTransactionCountMethod
-        };
+        });
     }
 }

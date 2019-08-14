@@ -26,8 +26,6 @@ import {EthSendTransactionMethod} from 'web3-core-method';
 // TODO: Implement revert handling (AbstractContractMethod)
 export default class SendContractMethod extends EthSendTransactionMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      * @param {AbstractTransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
@@ -38,8 +36,6 @@ export default class SendContractMethod extends EthSendTransactionMethod {
      * @constructor
      */
     constructor(
-        utils,
-        formatters,
         moduleInstance,
         transactionObserver,
         chainIdMethod,
@@ -47,7 +43,7 @@ export default class SendContractMethod extends EthSendTransactionMethod {
         allEventsLogDecoder,
         abiModel
     ) {
-        super(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod);
+        super(moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod);
 
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.abiModel = abiModel;

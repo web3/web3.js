@@ -24,18 +24,13 @@ import {AbstractMethodFactory, ContentMethod, InspectMethod, StatusMethod} from 
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super(utils, formatters);
-
-        this.methods = {
+    constructor() {
+        super({
             getContent: ContentMethod,
             getInspection: InspectMethod,
             getStatus: StatusMethod
-        };
+        });
     }
 }

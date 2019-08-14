@@ -24,14 +24,12 @@ import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscriptio
 
 export default class NewHeadsSubscription extends AbstractSubscription {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_subscribe', 'newHeads', null, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_subscribe', 'newHeads', null, moduleInstance);
     }
 
     /**

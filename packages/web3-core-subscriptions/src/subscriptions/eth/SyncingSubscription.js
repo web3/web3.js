@@ -24,14 +24,12 @@ import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscriptio
 
 export default class SyncingSubscription extends AbstractSubscription {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_subscribe', 'syncing', null, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_subscribe', 'syncing', null, moduleInstance);
         this.isSyncing = null;
     }
 

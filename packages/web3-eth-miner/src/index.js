@@ -21,8 +21,6 @@
  */
 
 import {Network} from 'web3-net';
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {ProviderResolver} from 'web3-providers';
 import MethodFactory from './factories/MethodFactory';
 import MinerModule from './Miner.js';
@@ -43,10 +41,8 @@ export function Miner(provider, net = null, options = {}) {
 
     return new MinerModule(
         resolvedProvider,
-        new MethodFactory(Utils, formatters),
+        new MethodFactory(),
         new Network(resolvedProvider, null, options),
-        Utils,
-        formatters,
         options,
         null
     );

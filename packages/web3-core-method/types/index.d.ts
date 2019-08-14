@@ -55,7 +55,7 @@ export class AbstractMethod {
 }
 
 export class AbstractMethodFactory {
-    constructor(utils: Utils, formatters: formatters);
+    constructor(methods: object);
 
     methods: null | object;
     hasMethod: boolean;

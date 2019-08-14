@@ -35,15 +35,10 @@ import {
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super(utils, formatters);
-
-        this.methods = {
+    constructor() {
+        super({
             getAccounts: GetAccountsMethod,
             newAccount: NewAccountMethod,
             unlockAccount: UnlockAccountMethod,
@@ -53,6 +48,6 @@ export default class MethodFactory extends AbstractMethodFactory {
             signTransaction: PersonalSignTransactionMethod,
             sign: PersonalSignMethod,
             ecRecover: EcRecoverMethod
-        };
+        });
     }
 }

@@ -27,15 +27,13 @@ import isFunction from 'lodash/isFunction';
 export default class LogSubscription extends AbstractSubscription {
     /**
      * @param {Object} options
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {GetPastLogsMethod} getPastLogsMethod
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(options, utils, formatters, moduleInstance, getPastLogsMethod) {
-        super('eth_subscribe', 'logs', options, utils, formatters, moduleInstance);
+    constructor(options, moduleInstance, getPastLogsMethod) {
+        super('eth_subscribe', 'logs', options, moduleInstance);
         this.getPastLogsMethod = getPastLogsMethod;
     }
 
@@ -51,7 +49,7 @@ export default class LogSubscription extends AbstractSubscription {
      */
     subscribe(callback) {
         if ((this.options.fromBlock && this.options.fromBlock !== 'latest') || this.options.fromBlock === 0) {
-            this.getPastLogsMethod.parameters = [this.formatters.inputLogFormatter(this.options)];
+            this.getPastLogsMethod.parameters = [new LogOptions(this.options)];
             this.getPastLogsMethod
                 .execute()
                 .then((logs) => {
@@ -94,7 +92,7 @@ export default class LogSubscription extends AbstractSubscription {
      * @returns {Object}
      */
     onNewSubscriptionItem(subscriptionItem) {
-        const log = this.formatters.outputLogFormatter(subscriptionItem);
+        const log = new Log(subscriptionItem);
 
         if (log.removed) {
             this.emit('changed', log);

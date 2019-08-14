@@ -24,8 +24,6 @@ import {EthSendTransactionMethod} from 'web3-core-method';
 
 export default class ContractDeployMethod extends EthSendTransactionMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      * @param {AbstractTransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
@@ -33,8 +31,8 @@ export default class ContractDeployMethod extends EthSendTransactionMethod {
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod) {
-        super(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod);
+    constructor(moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod) {
+        super(moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod);
     }
 
     /**

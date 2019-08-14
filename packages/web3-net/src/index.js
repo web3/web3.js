@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-import {formatters} from 'web3-core-helpers';
-import * as Utils from 'web3-utils';
 import MethodFactory from './factories/MethodFactory';
 import NetworkModule from './Network.js';
 
@@ -37,5 +35,5 @@ import NetworkModule from './Network.js';
  * @returns {Network}
  */
 export function Network(provider, net = null, options = {}) {
-    return new NetworkModule(provider, new MethodFactory(Utils, formatters), Utils, formatters, options, null);
+    return new NetworkModule(provider, new MethodFactory(), options, null);
 }

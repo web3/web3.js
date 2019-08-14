@@ -22,13 +22,11 @@ import Account from './Account';
 
 export default class Wallet {
     /**
-     * @param {Utils} utils
      * @param {Accounts} accountsModule
      *
      * @constructor
      */
-    constructor(utils, accountsModule) {
-        this.utils = utils;
+    constructor(accountsModule) {
         this.accountsModule = accountsModule;
         this.defaultKeyName = 'web3js_wallet';
         this.accounts = {};
@@ -61,7 +59,7 @@ export default class Wallet {
      */
     create(numberOfAccounts, entropy) {
         for (let i = 0; i < numberOfAccounts; ++i) {
-            this.add(Account.from(entropy || this.utils.randomHex(32), this.accountsModule));
+            this.add(Account.from(entropy || Hex.random(32), this.accountsModule));
         }
 
         return this;

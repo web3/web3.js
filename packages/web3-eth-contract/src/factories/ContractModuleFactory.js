@@ -40,15 +40,11 @@ import AbstractContract from '../AbstractContract';
 
 export default class ContractModuleFactory {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbiCoder} abiCoder
      *
      * @constructor
      */
-    constructor(utils, formatters, abiCoder) {
-        this.utils = utils;
-        this.formatters = formatters;
+    constructor(abiCoder) {
         this.abiCoder = abiCoder;
     }
 
@@ -66,17 +62,7 @@ export default class ContractModuleFactory {
      * @returns {AbstractContract}
      */
     createContract(provider, accounts, abi, address, options) {
-        return new AbstractContract(
-            provider,
-            this,
-            accounts,
-            this.abiCoder,
-            this.utils,
-            this.formatters,
-            abi,
-            address,
-            options
-        );
+        return new AbstractContract(provider, this, accounts, this.abiCoder, abi, address, options);
     }
 
     /**
@@ -146,7 +132,7 @@ export default class ContractModuleFactory {
      * @returns {AbiMapper}
      */
     createAbiMapper() {
-        return new AbiMapper(this, this.abiCoder, this.utils);
+        return new AbiMapper(this, this.abiCoder);
     }
 
     /**
@@ -179,7 +165,7 @@ export default class ContractModuleFactory {
      * @returns {MethodOptionsValidator}
      */
     createMethodOptionsValidator() {
-        return new MethodOptionsValidator(this.utils);
+        return new MethodOptionsValidator();
     }
 
     /**
@@ -190,7 +176,7 @@ export default class ContractModuleFactory {
      * @returns {MethodOptionsMapper}
      */
     createMethodOptionsMapper() {
-        return new MethodOptionsMapper(this.utils, this.formatters);
+        return new MethodOptionsMapper();
     }
 
     /**
@@ -201,7 +187,7 @@ export default class ContractModuleFactory {
      * @returns {EventOptionsMapper}
      */
     createEventOptionsMapper() {
-        return new EventOptionsMapper(this.formatters, this.createEventFilterEncoder());
+        return new EventOptionsMapper(this.createEventFilterEncoder());
     }
 
     /**
@@ -212,7 +198,7 @@ export default class ContractModuleFactory {
      * @returns {AllEventsOptionsMapper}
      */
     createAllEventsOptionsMapper() {
-        return new AllEventsOptionsMapper(this.formatters, this.createAllEventsFilterEncoder());
+        return new AllEventsOptionsMapper(this.createAllEventsFilterEncoder());
     }
 
     /**
@@ -223,7 +209,7 @@ export default class ContractModuleFactory {
      * @returns {MethodFactory}
      */
     createMethodFactory() {
-        return new MethodFactory(this.utils, this.formatters, this, this.abiCoder);
+        return new MethodFactory(this, this.abiCoder);
     }
 
     /**
@@ -273,6 +259,6 @@ export default class ContractModuleFactory {
      * @returns {EventSubscriptionFactory}
      */
     createEventSubscriptionFactory() {
-        return new EventSubscriptionFactory(this.utils, this.formatters);
+        return new EventSubscriptionFactory();
     }
 }

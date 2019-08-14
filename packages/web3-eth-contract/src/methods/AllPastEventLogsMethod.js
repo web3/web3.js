@@ -24,8 +24,6 @@ import {GetPastLogsMethod} from 'web3-core-method';
 
 export default class AllPastEventLogsMethod extends GetPastLogsMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
@@ -33,8 +31,8 @@ export default class AllPastEventLogsMethod extends GetPastLogsMethod {
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance, allEventsLogDecoder, abiModel, allEventsOptionsMapper) {
-        super(utils, formatters, moduleInstance);
+    constructor(moduleInstance, allEventsLogDecoder, abiModel, allEventsOptionsMapper) {
+        super(moduleInstance);
         this.abiModel = abiModel;
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.allEventsOptionsMapper = allEventsOptionsMapper;

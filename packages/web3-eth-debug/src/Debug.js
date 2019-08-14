@@ -28,18 +28,14 @@ export default class Debug extends AbstractWeb3Module {
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {MethodFactory} methodFactory
      * @param {Network} net
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {Object} options
      * @param {Net.Socket} nodeNet
      *
      * @constructor
      */
-    constructor(provider, methodFactory, net, utils, formatters, options, nodeNet) {
+    constructor(provider, methodFactory, net, options, nodeNet) {
         super(provider, options, methodFactory, nodeNet);
 
-        this.utils = utils;
-        this.formatters = formatters;
         this.net = net;
     }
 

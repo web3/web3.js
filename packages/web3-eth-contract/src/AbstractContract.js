@@ -28,31 +28,17 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {AbiCoder} abiCoder
      * @param {Accounts} accounts
-     * @param {Object} utils
-     * @param {Object} formatters
      * @param {Array} abi
      * @param {String} address
      * @param {Object} options
      *
      * @constructor
      */
-    constructor(
-        provider,
-        contractModuleFactory,
-        accounts,
-        abiCoder,
-        utils,
-        formatters,
-        abi = [],
-        address = '',
-        options = {}
-    ) {
+    constructor(provider, contractModuleFactory, accounts, abiCoder, abi = [], address = '', options = {}) {
         super(provider, options, null, null);
 
         this.contractModuleFactory = contractModuleFactory;
         this.abiCoder = abiCoder;
-        this.utils = utils;
-        this.formatters = formatters;
         this.abiMapper = this.contractModuleFactory.createAbiMapper();
         this.options = options;
         this.accounts = accounts;

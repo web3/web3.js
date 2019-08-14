@@ -31,8 +31,6 @@ export default class Ens extends AbstractWeb3Module {
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {Accounts} accounts
      * @param {AbiCoder} abiCoder
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {Network} net
      * @param {Net.Socket} nodeNet
      *
@@ -45,8 +43,6 @@ export default class Ens extends AbstractWeb3Module {
         contractModuleFactory,
         accounts,
         abiCoder,
-        utils,
-        formatters,
         net,
         nodeNet
     ) {
@@ -56,8 +52,6 @@ export default class Ens extends AbstractWeb3Module {
         this.ensModuleFactory = ensModuleFactory;
         this.contractModuleFactory = contractModuleFactory;
         this.abiCoder = abiCoder;
-        this.utils = utils;
-        this.formatters = formatters;
         this.registryOptions = options;
         this.net = net;
         this._transactionSigner = options.transactionSigner;
@@ -286,8 +280,6 @@ export default class Ens extends AbstractWeb3Module {
                 this.contractModuleFactory,
                 this.accounts,
                 this.abiCoder,
-                this.utils,
-                this.formatters,
                 this.registryOptions,
                 this.net
             );

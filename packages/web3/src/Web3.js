@@ -19,12 +19,8 @@
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
-// TODO: Export here a web3 namespace with context handling possibilities and not a object and remove the factory
-// TODO: objects and do them the functional way because of the tree shaking.
-// TODO: Move the folders back to simpler structure e.g.: "packages/core/<methods|subscriptions|providers>"
 import {AbstractWeb3Module} from 'web3-core';
 import {ProviderDetector, ProvidersModuleFactory} from 'web3-providers';
-import * as Utils from 'web3-utils';
 import {Eth} from 'web3-eth';
 import {Shh} from 'web3-shh';
 import {Network} from 'web3-net';
@@ -44,7 +40,6 @@ export default class Web3 extends AbstractWeb3Module {
 
         this.eth = new Eth(this.currentProvider, net, options);
         this.shh = new Shh(this.currentProvider, net, options);
-        this.utils = Utils;
         this.version = version;
     }
 

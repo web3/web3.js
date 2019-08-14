@@ -22,17 +22,6 @@
 
 export default class MethodOptionsMapper {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     *
-     * @constructor
-     */
-    constructor(utils, formatters) {
-        this.utils = utils;
-        this.formatters = formatters;
-    }
-
-    /**
      * Sets the default options where it is required
      *
      * @param {AbstractContract} contract
@@ -44,7 +33,7 @@ export default class MethodOptionsMapper {
         let from = null;
 
         if (options.from) {
-            from = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(options.from));
+            from = new Address(options.from).toChecksum();
         }
 
         options.to = contract.address;

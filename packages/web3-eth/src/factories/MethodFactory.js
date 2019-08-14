@@ -61,15 +61,10 @@ import EthGetAccountsMethod from '../methods/EthGetAccountsMethod';
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super(utils, formatters);
-
-        this.methods = {
+    constructor() {
+        super({
             getNodeInfo: GetNodeInfoMethod,
             getProtocolVersion: GetProtocolVersionMethod,
             getCoinbase: GetCoinbaseMethod,
@@ -104,6 +99,6 @@ export default class MethodFactory extends AbstractMethodFactory {
             getId: VersionMethod,
             getChainId: ChainIdMethod,
             getProof: GetProofMethod
-        };
+        });
     }
 }

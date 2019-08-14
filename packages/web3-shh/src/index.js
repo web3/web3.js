@@ -21,8 +21,6 @@
  */
 
 import {Network} from 'web3-net';
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {ProviderResolver} from 'web3-providers';
 import MethodFactory from './factories/MethodFactory';
 import SubscriptionsFactory from './factories/SubscriptionsFactory';
@@ -44,8 +42,8 @@ export function Shh(provider, net = null, options = {}) {
 
     return new ShhModule(
         resolvedProvider,
-        new MethodFactory(Utils, formatters),
-        new SubscriptionsFactory(Utils, formatters),
+        new MethodFactory(),
+        new SubscriptionsFactory(),
         new Network(resolvedProvider, null, options),
         options,
         null

@@ -51,15 +51,10 @@ import {
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super(utils, formatters);
-
-        this.methods = {
+    constructor() {
+        super({
             setBackTraceAt: BackTraceAtMethod,
             blockProfile: BlockProfileMethod,
             cpuProfile: CpuProfileMethod,
@@ -85,6 +80,6 @@ export default class MethodFactory extends AbstractMethodFactory {
             setVerbosityPattern: VmoduleMethod,
             writeBlockProfile: WriteBlockProfileMethod,
             writeMemProfile: WriteMemProfileMethod
-        };
+        });
     }
 }

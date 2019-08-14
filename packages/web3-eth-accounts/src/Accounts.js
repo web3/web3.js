@@ -34,24 +34,20 @@ import Wallet from './models/Wallet';
 export default class Accounts extends AbstractWeb3Module {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
-     * @param {Object} formatters
-     * @param {Utils} utils
      * @param {MethodFactory} methodFactory
      * @param {Object} options
      * @param {Net.Socket} net
      *
      * @constructor
      */
-    constructor(provider, utils, formatters, methodFactory, options, net) {
+    constructor(provider, methodFactory, options, net) {
         super(provider, options, methodFactory, net);
 
-        this.utils = utils;
-        this.formatters = formatters;
         this._transactionSigner = options.transactionSigner;
         this.defaultKeyName = 'web3js_wallet';
         this.accounts = {};
         this.accountsIndex = 0;
-        this.wallet = new Wallet(utils, this);
+        this.wallet = new Wallet(this);
     }
 
     /**
@@ -118,8 +114,8 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {String}
      */
     hashMessage(data) {
-        if (this.utils.isHexStrict(data)) {
-            data = this.utils.hexToBytes(data);
+        if (Hex.isValid(data)) {
+            data = new Hex(data).toBytes();
         }
 
         const messageBuffer = Buffer.from(data);
@@ -160,7 +156,7 @@ export default class Accounts extends AbstractWeb3Module {
             }
 
             const signedTransaction = await this.transactionSigner.sign(
-                this.formatters.inputCallFormatter(tx, this),
+                inputCallFormatter(tx, this),
                 account.privateKey
             );
 
@@ -211,8 +207,8 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Object}
      */
     sign(data, privateKey) {
-        if (this.utils.isHexStrict(data)) {
-            data = this.utils.hexToBytes(data);
+        if (Hex.isValid(data)) {
+            data = new Hex(data).toBytes();
         }
 
         return Account.fromPrivateKey(privateKey, this).sign(data);

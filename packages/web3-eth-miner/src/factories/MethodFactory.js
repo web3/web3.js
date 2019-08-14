@@ -31,20 +31,15 @@ import {
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super(utils, formatters);
-
-        this.methods = {
+    constructor() {
+        super({
             setEtherbase: SetEtherBaseMethod,
             setExtra: SetExtraMethod,
             setGasPrice: SetGasPriceMethod,
             startMining: StartMiningMethod,
             stopMining: StopMiningMethod
-        };
+        });
     }
 }

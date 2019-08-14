@@ -17,8 +17,6 @@
  * @date 2018
  */
 
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {ProviderResolver} from 'web3-providers';
 import {ContractModuleFactory} from 'web3-eth-contract';
 import {AbiCoder} from 'web3-eth-abi';
@@ -44,11 +42,9 @@ export function Ens(provider, net = null, options = {}, accounts = {}) {
 
     return new EnsModuleFactory().createENS(
         resolvedProvider,
-        new ContractModuleFactory(Utils, formatters, abiCoder),
+        new ContractModuleFactory(abiCoder),
         accounts,
         abiCoder,
-        Utils,
-        formatters,
         new Network(resolvedProvider, null, options),
         options,
         null

@@ -21,17 +21,6 @@ import EthereumTx from 'ethereumjs-tx';
 
 export default class TransactionSigner {
     /**
-     * @param {Utils} utils // TODO: Remove utils dependency and use a Hex VO
-     * @param {Object} formatters // TODO: Remove formatters dependency and use a Transaction VO
-     *
-     * @constructor
-     */
-    constructor(utils, formatters) {
-        this.utils = utils;
-        this.formatters = formatters;
-    }
-
-    /**
      * Add to be production build save
      *
      * @property Type
@@ -70,7 +59,7 @@ export default class TransactionSigner {
 
         const rlpEncoded = ethTx.serialize().toString('hex');
         const rawTransaction = '0x' + rlpEncoded;
-        const transactionHash = this.utils.keccak256(rawTransaction);
+        const transactionHash = keccak256(rawTransaction);
 
         return {
             messageHash: Buffer.from(ethTx.hash(false)).toString('hex'),

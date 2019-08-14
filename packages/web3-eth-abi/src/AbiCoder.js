@@ -27,13 +27,11 @@ import isObject from 'lodash/isObject';
 // TODO: Implement it by our self this can't be a dependency because of the importance of it.
 export default class AbiCoder {
     /**
-     * @param {Utils} utils
      * @param {EthersAbiCoder} ethersAbiCoder
      *
      * @constructor
      */
-    constructor(utils, ethersAbiCoder) {
-        this.utils = utils;
+    constructor(ethersAbiCoder) {
         this.ethersAbiCoder = ethersAbiCoder;
     }
 
@@ -48,10 +46,10 @@ export default class AbiCoder {
      */
     encodeFunctionSignature(functionName) {
         if (isObject(functionName)) {
-            functionName = this.utils.jsonInterfaceMethodToString(functionName);
+            functionName = jsonInterfaceMethodToString(functionName);
         }
 
-        return this.utils.keccak256(functionName).slice(0, 10);
+        return keccak256(functionName).slice(0, 10);
     }
 
     /**
@@ -65,10 +63,10 @@ export default class AbiCoder {
      */
     encodeEventSignature(functionName) {
         if (isObject(functionName)) {
-            functionName = this.utils.jsonInterfaceMethodToString(functionName);
+            functionName = jsonInterfaceMethodToString(functionName);
         }
 
-        return this.utils.keccak256(functionName);
+        return keccak256(functionName);
     }
 
     /**

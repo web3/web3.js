@@ -43,7 +43,7 @@ export function Personal(provider, net = null, options = {}) {
 
     return new PersonalModule(
         resolvedProvider,
-        new MethodFactory(Utils, formatters),
+        new MethodFactory(),
         new Network(resolvedProvider, null, options),
         Utils,
         formatters,

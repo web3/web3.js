@@ -25,13 +25,11 @@ import isArray from 'lodash/isArray';
 // TODO: Remove code duplication and create a AbstractEventsOptionsMapper
 export default class AllEventsOptionsMapper {
     /**
-     * @param {Object} formatters
      * @param {AllEventsFilterEncoder} allEventsFilterEncoder
      *
      * @constructor
      */
-    constructor(formatters, allEventsFilterEncoder) {
-        this.formatters = formatters;
+    constructor(allEventsFilterEncoder) {
         this.allEventsFilterEncoder = allEventsFilterEncoder;
     }
 
@@ -52,13 +50,13 @@ export default class AllEventsOptionsMapper {
         }
 
         if (typeof options.fromBlock !== 'undefined') {
-            options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);
+            options.fromBlock = new BlockNumber(options.fromBlock).toString();
         } else if (contract.defaultBlock !== null) {
             options.fromBlock = contract.defaultBlock;
         }
 
         if (typeof options.toBlock !== 'undefined') {
-            options.toBlock = this.formatters.inputBlockNumberFormatter(options.toBlock);
+            options.toBlock = new BlockNumber(options.toBlock).toString();
         }
 
         if (typeof options.filter !== 'undefined') {

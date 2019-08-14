@@ -30,19 +30,15 @@ export default class AbstractSubscription extends EventEmitter {
      * @param {String} type
      * @param {String} method
      * @param {Object} options
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(type, method, options = null, utils, formatters, moduleInstance) {
+    constructor(type, method, options = null, moduleInstance) {
         super();
         this.type = type;
         this.method = method;
         this.options = options;
-        this.utils = utils;
-        this.formatters = formatters;
         this.moduleInstance = moduleInstance;
         this.id = null;
     }
@@ -51,10 +47,8 @@ export default class AbstractSubscription extends EventEmitter {
      * This method will be executed before the subscription starts.
      *
      * @method beforeSubscription
-     *
-     * @param {AbstractWeb3Module} moduleInstance
      */
-    beforeSubscription(moduleInstance) {}
+    beforeSubscription() {}
 
     /**
      * This method will be executed on each new subscription item.
@@ -82,7 +76,7 @@ export default class AbstractSubscription extends EventEmitter {
     subscribe(callback = null) {
         this.callback = callback;
 
-        this.beforeSubscription(this.moduleInstance);
+        this.beforeSubscription();
         let subscriptionParameters = [];
 
         if (this.options !== null) {

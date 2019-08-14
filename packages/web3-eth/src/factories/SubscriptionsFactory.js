@@ -28,17 +28,6 @@ import {GetPastLogsMethod} from 'web3-core-method';
 
 export default class SubscriptionsFactory {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     *
-     * @constructor
-     */
-    constructor(utils, formatters) {
-        this.utils = utils;
-        this.formatters = formatters;
-    }
-
-    /**
      * Gets the correct subscription class by the given name.
      *
      * @method getSubscription
@@ -52,19 +41,13 @@ export default class SubscriptionsFactory {
     getSubscription(moduleInstance, type, options) {
         switch (type) {
             case 'logs':
-                return new LogSubscription(
-                    options,
-                    this.utils,
-                    this.formatters,
-                    moduleInstance,
-                    new GetPastLogsMethod(this.utils, this.formatters, moduleInstance)
-                );
+                return new LogSubscription(options, moduleInstance, new GetPastLogsMethod(moduleInstance));
             case 'newBlockHeaders':
-                return new NewHeadsSubscription(this.utils, this.formatters, moduleInstance);
+                return new NewHeadsSubscription(moduleInstance);
             case 'pendingTransactions':
-                return new NewPendingTransactionsSubscription(this.utils, this.formatters, moduleInstance);
+                return new NewPendingTransactionsSubscription(moduleInstance);
             case 'syncing':
-                return new SyncingSubscription(this.utils, this.formatters, moduleInstance);
+                return new SyncingSubscription(moduleInstance);
             default:
                 throw new Error(`Unknown subscription: ${type}`);
         }

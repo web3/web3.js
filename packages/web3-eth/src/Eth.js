@@ -32,8 +32,6 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Iban} Iban
      * @param {AbiCoder} abiCoder
      * @param {Ens} ens
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {Object} options
@@ -50,8 +48,6 @@ export default class Eth extends AbstractWeb3Module {
         Iban,
         abiCoder,
         ens,
-        utils,
-        formatters,
         subscriptionsFactory,
         contractModuleFactory,
         options,
@@ -66,8 +62,6 @@ export default class Eth extends AbstractWeb3Module {
         this.abi = abiCoder;
         this.ens = ens;
 
-        this.utils = utils;
-        this.formatters = formatters;
         this.subscriptionsFactory = subscriptionsFactory;
         this.contractModuleFactory = contractModuleFactory;
         this.initiatedContracts = [];
@@ -314,7 +308,7 @@ export default class Eth extends AbstractWeb3Module {
      */
     set defaultAccount(value) {
         this.initiatedContracts.forEach((contract) => {
-            contract.defaultAccount = this.utils.toChecksumAddress(value);
+            contract.defaultAccount = new Address(value).toChecksum();
         });
 
         this.net.defaultAccount = value;

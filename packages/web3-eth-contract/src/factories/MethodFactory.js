@@ -38,16 +38,12 @@ import SendContractMethod from '../methods/SendContractMethod';
 
 export default class MethodFactory {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {AbiCoder} abiCoder
      *
      * @constructor
      */
-    constructor(utils, formatters, contractModuleFactory, abiCoder) {
-        this.utils = utils;
-        this.formatters = formatters;
+    constructor(contractModuleFactory, abiCoder) {
         this.contractModuleFactory = contractModuleFactory;
         this.abiCoder = abiCoder;
     }
@@ -100,8 +96,6 @@ export default class MethodFactory {
      */
     createPastEventLogsMethod(abiItem, contract) {
         return new PastEventLogsMethod(
-            this.utils,
-            this.formatters,
             contract,
             this.contractModuleFactory.createEventLogDecoder(),
             abiItem,
@@ -121,8 +115,6 @@ export default class MethodFactory {
      */
     createAllPastEventLogsMethod(abiModel, contract) {
         return new AllPastEventLogsMethod(
-            this.utils,
-            this.formatters,
             contract,
             this.contractModuleFactory.createAllEventsLogDecoder(),
             abiModel,
@@ -141,7 +133,7 @@ export default class MethodFactory {
      * @returns {CallContractMethod}
      */
     createCallContractMethod(abiItem, contract) {
-        return new CallContractMethod(this.utils, this.formatters, contract, this.abiCoder, abiItem);
+        return new CallContractMethod(contract, this.abiCoder, abiItem);
     }
 
     /**
@@ -155,12 +147,10 @@ export default class MethodFactory {
      */
     createSendContractMethod(contract) {
         return new SendContractMethod(
-            this.utils,
-            this.formatters,
             contract,
             this.createTransactionObserver(contract),
-            new ChainIdMethod(this.utils, this.formatters, contract),
-            new GetTransactionCountMethod(this.utils, this.formatters, contract),
+            new ChainIdMethod(contract),
+            new GetTransactionCountMethod(contract),
             this.contractModuleFactory.createAllEventsLogDecoder(),
             contract.abiModel
         );
@@ -177,12 +167,10 @@ export default class MethodFactory {
      */
     createContractDeployMethod(contract) {
         return new ContractDeployMethod(
-            this.utils,
-            this.formatters,
             contract,
             this.createTransactionObserver(contract),
-            new ChainIdMethod(this.utils, this.formatters, contract),
-            new GetTransactionCountMethod(this.utils, this.formatters, contract)
+            new ChainIdMethod(contract),
+            new GetTransactionCountMethod(contract)
         );
     }
 
@@ -196,7 +184,7 @@ export default class MethodFactory {
      * @returns {EstimateGasMethod}
      */
     createEstimateGasMethod(contract) {
-        return new EstimateGasMethod(this.utils, this.formatters, contract);
+        return new EstimateGasMethod(contract);
     }
 
     /**
@@ -233,8 +221,8 @@ export default class MethodFactory {
                 moduleInstance.currentProvider,
                 this.getTimeout(moduleInstance),
                 moduleInstance.transactionConfirmationBlocks,
-                new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
-                new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
+                new GetTransactionReceiptMethod(moduleInstance),
+                new NewHeadsSubscription(moduleInstance)
             );
         }
 
@@ -242,8 +230,8 @@ export default class MethodFactory {
             moduleInstance.currentProvider,
             this.getTimeout(moduleInstance),
             moduleInstance.transactionConfirmationBlocks,
-            new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
-            new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance)
+            new GetTransactionReceiptMethod(moduleInstance),
+            new GetBlockByNumberMethod(moduleInstance)
         );
     }
 }

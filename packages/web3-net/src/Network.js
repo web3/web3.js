@@ -27,18 +27,13 @@ export default class Network extends AbstractWeb3Module {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {MethodFactory} methodFactory
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {Object} options
      * @param {Net.Socket} nodeNet
      *
      * @constructor
      */
-    constructor(provider, methodFactory, utils, formatters, options, nodeNet) {
+    constructor(provider, methodFactory, options, nodeNet) {
         super(provider, options, methodFactory, nodeNet);
-
-        this.utils = utils;
-        this.formatters = formatters;
     }
 
     /**

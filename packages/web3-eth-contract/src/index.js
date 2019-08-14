@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
 import ContractModuleFactory from './factories/ContractModuleFactory';
 
@@ -46,11 +44,5 @@ export ContractModuleFactory from './factories/ContractModuleFactory';
  * @constructor
  */
 export function Contract(provider, abi, accounts, address, options) {
-    return new ContractModuleFactory(Utils, formatters, new AbiCoder()).createContract(
-        provider,
-        accounts,
-        abi,
-        address,
-        options
-    );
+    return new ContractModuleFactory(new AbiCoder()).createContract(provider, accounts, abi, address, options);
 }

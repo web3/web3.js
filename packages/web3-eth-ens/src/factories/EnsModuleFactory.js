@@ -30,15 +30,13 @@ export default class EnsModuleFactory {
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {Accounts} accounts
      * @param {AbiCoder} abiCoder
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {Network} net
      * @param {Object} ensModuleOptions
      * @param {Net.Socket} nodeNet
      *
      * @returns {Ens}
      */
-    createENS(provider, contractModuleFactory, accounts, abiCoder, utils, formatters, net, ensModuleOptions, nodeNet) {
+    createENS(provider, contractModuleFactory, accounts, abiCoder, net, ensModuleOptions, nodeNet) {
         return new Ens(
             provider,
             ensModuleOptions,
@@ -46,8 +44,6 @@ export default class EnsModuleFactory {
             contractModuleFactory,
             accounts,
             abiCoder,
-            utils,
-            formatters,
             net,
             nodeNet
         );
@@ -62,14 +58,12 @@ export default class EnsModuleFactory {
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {Accounts} accounts
      * @param {AbiCoder} abiCoder
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {Object} options
      * @param {Network} net
      *
      * @returns {Registry}
      */
-    createRegistry(provider, contractModuleFactory, accounts, abiCoder, utils, formatters, options, net) {
-        return new Registry(provider, contractModuleFactory, accounts, abiCoder, utils, formatters, options, net);
+    createRegistry(provider, contractModuleFactory, accounts, abiCoder, options, net) {
+        return new Registry(provider, contractModuleFactory, accounts, abiCoder, options, net);
     }
 }

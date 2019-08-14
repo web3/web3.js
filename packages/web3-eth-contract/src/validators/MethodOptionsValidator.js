@@ -24,15 +24,6 @@ import SendContractMethod from '../methods/SendContractMethod';
 
 export default class MethodOptionsValidator {
     /**
-     * @param {Utils} utils
-     *
-     * @constructor
-     */
-    constructor(utils) {
-        this.utils = utils;
-    }
-
-    /**
      * Validates the options object for the RPC-Method call
      *
      * @method validate
@@ -73,7 +64,7 @@ export default class MethodOptionsValidator {
             return true;
         }
 
-        return this.utils.isAddress(method.parameters[0].to);
+        return Adress.isValid(method.parameters[0].to);
     }
 
     /**
@@ -86,7 +77,7 @@ export default class MethodOptionsValidator {
      * @returns {Boolean}
      */
     isFromSet(method) {
-        return this.utils.isAddress(method.parameters[0].from);
+        return Adress.isValid(method.parameters[0].from);
     }
 
     /**

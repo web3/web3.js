@@ -43,10 +43,8 @@ export function Debug(provider, net = null, options = {}) {
 
     return new DebugModule(
         resolvedProvider,
-        new MethodFactory(Utils, formatters),
+        new MethodFactory(),
         new Network(resolvedProvider, null, options),
-        Utils,
-        formatters,
         options,
         null
     );

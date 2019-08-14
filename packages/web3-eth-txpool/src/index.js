@@ -21,8 +21,6 @@
  */
 
 import {Network} from 'web3-net';
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {ProviderResolver} from 'web3-providers';
 import MethodFactory from './factories/MethodFactory';
 import TxPoolModule from './TxPool.js';
@@ -43,10 +41,8 @@ export function TxPool(provider, net = null, options = {}) {
 
     return new TxPoolModule(
         resolvedProvider,
-        new MethodFactory(Utils, formatters),
+        new MethodFactory(),
         new Network(resolvedProvider, null, options),
-        Utils,
-        formatters,
         options,
         null
     );

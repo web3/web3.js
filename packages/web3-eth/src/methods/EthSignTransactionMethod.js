@@ -25,14 +25,12 @@ import {SignTransactionMethod} from 'web3-core-method';
 
 export default class EthSignTransactionMethod extends SignTransactionMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super(utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super(moduleInstance);
     }
 
     /**

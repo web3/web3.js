@@ -47,15 +47,10 @@ import {
 
 export default class MethodFactory extends AbstractMethodFactory {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super(utils, formatters);
-
-        this.methods = {
+    constructor() {
+        super({
             getVersion: ShhVersionMethod,
             getInfo: GetInfoMethod,
             setMaxMessageSize: SetMaxMessageSizeMethod,
@@ -77,6 +72,6 @@ export default class MethodFactory extends AbstractMethodFactory {
             getFilterMessages: GetFilterMessagesMethod,
             deleteMessageFilter: DeleteMessageFilterMethod,
             post: PostMethod
-        };
+        });
     }
 }
