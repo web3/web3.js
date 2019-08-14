@@ -14,7 +14,7 @@ if (isNode) {
         return function() {
             if (scryptPkg !== undefined) { return scryptPkg; }
             try {
-                scryptPkg = require('scrypt');
+                scryptPkg = (function() { return require('scrypt'); })();
             } catch (e) {
                 if (/was compiled against a different/.test(e.message)) {
                     throw e;
