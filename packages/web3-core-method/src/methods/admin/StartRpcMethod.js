@@ -24,26 +24,22 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class StartRpcMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('admin_startRPC', 4, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('admin_startRPC', 4, moduleInstance);
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
+    beforeExecution() {
         if (this.parameters[1]) {
-            this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+            this.parameters[1] = Hex.fromNumber(this.parameters[1]).toString();
         }
     }
 }

@@ -25,26 +25,22 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 export default class AbstractGetUncleMethod extends AbstractMethod {
     /**
      * @param {String} rpcMethod
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(rpcMethod, utils, formatters, moduleInstance) {
-        super(rpcMethod, 2, utils, formatters, moduleInstance);
+    constructor(rpcMethod, moduleInstance) {
+        super(rpcMethod, 2, moduleInstance);
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
-        this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+    beforeExecution() {
+        this.parameters[0] = new BlockNumber(this.parameters[0]).toString();
+        this.parameters[1] = Hex.fromNumber(this.parameters[1]).toString();
     }
 
     /**
@@ -57,6 +53,6 @@ export default class AbstractGetUncleMethod extends AbstractMethod {
      * @returns {Object}
      */
     afterExecution(response) {
-        return this.formatters.outputBlockFormatter(response);
+        return new Block(response);
     }
 }

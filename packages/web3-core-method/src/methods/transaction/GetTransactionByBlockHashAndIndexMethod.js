@@ -24,13 +24,11 @@ import AbstractGetTransactionFromBlockMethod from '../../../lib/methods/transact
 
 export default class GetTransactionByBlockHashAndIndexMethod extends AbstractGetTransactionFromBlockMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getTransactionByBlockHashAndIndex', utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_getTransactionByBlockHashAndIndex', moduleInstance);
     }
 }

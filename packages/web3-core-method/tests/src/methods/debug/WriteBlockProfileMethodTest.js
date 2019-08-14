@@ -8,7 +8,7 @@ describe('WriteBlockProfileMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new WriteBlockProfileMethod({}, {}, {});
+        method = new WriteBlockProfileMethod({});
     });
 
     it('constructor check', () => {

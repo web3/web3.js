@@ -1,7 +1,5 @@
-import {formatters} from 'web3-core-helpers';
 import {WebsocketProvider} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
-import * as Utils from 'web3-utils';
 import TransactionSigner from '../../../__mocks__/TransactionSigner';
 import ChainIdMethod from '../../../../src/methods/network/ChainIdMethod';
 import AbstractTransactionObserver from '../../../../lib/observers/AbstractTransactionObserver';
@@ -10,8 +8,6 @@ import EthSendTransactionMethod from '../../../../src/methods/transaction/EthSen
 import AbstractObservedTransactionMethod from '../../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
 // Mocks
-jest.mock('web3-core-helpers');
-jest.mock('web3-utils');
 jest.mock('web3-providers');
 jest.mock('web3-core');
 jest.mock('../../../../src/methods/network/ChainIdMethod');
@@ -55,8 +51,6 @@ describe('EthSendTransactionMethodTest', () => {
         transactionObserverMock = AbstractTransactionObserver.mock.instances[0];
 
         method = new EthSendTransactionMethod(
-            Utils,
-            formatters,
             moduleInstanceMock,
             transactionObserverMock,
             chainIdMethodMock,
@@ -81,13 +75,9 @@ describe('EthSendTransactionMethodTest', () => {
     it('calls beforeExecution and checks the rpc method', () => {
         method.parameters = ['tx'];
 
-        formatters.inputTransactionFormatter.mockReturnValueOnce('0x0');
-
-        method.beforeExecution(moduleInstanceMock);
+        method.beforeExecution();
 
         expect(method.parameters[0]).toEqual('0x0');
-
-        expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith('tx', moduleInstanceMock);
     });
 
     it('calls execute with wallets defined and returns with a resolved promise', (done) => {
@@ -114,16 +104,12 @@ describe('EthSendTransactionMethodTest', () => {
             chainId: 1
         };
 
-        formatters.inputTransactionFormatter.mockReturnValueOnce(mappedTransaction);
-
         method.callback = (error, hash) => {
             expect(error).toEqual(false);
 
             expect(hash).toEqual('0x0');
 
             expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, '0x0');
-
-            expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
             done();
         };
@@ -157,15 +143,11 @@ describe('EthSendTransactionMethodTest', () => {
             chainId: 1
         };
 
-        formatters.inputTransactionFormatter.mockReturnValueOnce(mappedTransaction);
-
         method.parameters = [transaction];
 
         await expect(method.execute()).rejects.toThrow('ERROR');
 
         expect(transactionSignerMock.sign).toHaveBeenCalledWith(mappedTransaction, '0x0');
-
-        expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
     });
 
     it('calls execute with a custom transaction signer defined and returns with a resolved promise', (done) => {
@@ -197,16 +179,12 @@ describe('EthSendTransactionMethodTest', () => {
             chainId: 1
         };
 
-        formatters.inputTransactionFormatter.mockReturnValueOnce(mappedTransaction);
-
         method.callback = (error, hash) => {
             expect(error).toEqual(false);
 
             expect(hash).toEqual('0x0');
 
             expect(customSigner.sign).toHaveBeenCalledWith(mappedTransaction, undefined);
-
-            expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
             done();
         };
@@ -240,15 +218,11 @@ describe('EthSendTransactionMethodTest', () => {
             chainId: 1
         };
 
-        formatters.inputTransactionFormatter.mockReturnValueOnce(mappedTransaction);
-
         method.parameters = [transaction];
 
         await expect(method.execute()).rejects.toThrow('ERROR');
 
         expect(customSigner.sign).toHaveBeenCalledWith(mappedTransaction, undefined);
-
-        expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
     });
 
     it('calls execute signs locally but doesnt have chainId defined and returns with a resolved promise', (done) => {
@@ -281,10 +255,6 @@ describe('EthSendTransactionMethodTest', () => {
             chainId: 0
         };
 
-        Utils.numberToHex.mockReturnValueOnce(1);
-
-        formatters.inputTransactionFormatter.mockReturnValueOnce(mappedTransaction);
-
         method.callback = (error, hash) => {
             expect(error).toEqual(false);
 
@@ -306,10 +276,6 @@ describe('EthSendTransactionMethodTest', () => {
             expect(chainIdMethodMock.execute).toHaveBeenCalled();
 
             expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
-
-            expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
-
-            expect(Utils.numberToHex).toHaveBeenCalledWith(1);
 
             done();
         };
@@ -337,8 +303,6 @@ describe('EthSendTransactionMethodTest', () => {
 
         method.parameters = [transaction];
 
-        Utils.numberToHex.mockReturnValueOnce(1);
-
         const mappedTransaction = {
             from: 0,
             gas: 1,
@@ -346,8 +310,6 @@ describe('EthSendTransactionMethodTest', () => {
             nonce: false,
             chainId: 1
         };
-
-        formatters.inputTransactionFormatter.mockReturnValueOnce(mappedTransaction);
 
         method.callback = (error, hash) => {
             expect(error).toEqual(false);
@@ -372,10 +334,6 @@ describe('EthSendTransactionMethodTest', () => {
             expect(getTransactionCountMethodMock.parameters).toEqual([0, 'latest']);
 
             expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
-
-            expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
-
-            expect(Utils.numberToHex).toHaveBeenCalledWith(1);
 
             done();
         };
@@ -409,10 +367,6 @@ describe('EthSendTransactionMethodTest', () => {
             chainId: 1
         };
 
-        Utils.numberToHex.mockReturnValueOnce(1);
-
-        formatters.inputTransactionFormatter.mockReturnValueOnce(mappedTransaction);
-
         method.callback = (error, hash) => {
             expect(error).toEqual(false);
 
@@ -432,10 +386,6 @@ describe('EthSendTransactionMethodTest', () => {
             );
 
             expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
-
-            expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
-
-            expect(Utils.numberToHex).toHaveBeenCalledWith(1);
 
             done();
         };
@@ -469,10 +419,6 @@ describe('EthSendTransactionMethodTest', () => {
             chainId: 1
         };
 
-        Utils.numberToHex.mockReturnValueOnce(1);
-
-        formatters.inputTransactionFormatter.mockReturnValueOnce(mappedTransaction);
-
         method.callback = (error, hash) => {
             expect(error).toEqual(false);
 
@@ -492,10 +438,6 @@ describe('EthSendTransactionMethodTest', () => {
             );
 
             expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
-
-            expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
-
-            expect(Utils.numberToHex).toHaveBeenCalledWith(1);
 
             done();
         };
@@ -530,10 +472,6 @@ describe('EthSendTransactionMethodTest', () => {
             chainId: 1
         };
 
-        Utils.numberToHex.mockReturnValueOnce(1);
-
-        formatters.inputTransactionFormatter.mockReturnValueOnce(mappedTransaction);
-
         method.callback = (error, hash) => {
             expect(error).toEqual(false);
 
@@ -553,10 +491,6 @@ describe('EthSendTransactionMethodTest', () => {
             );
 
             expect(method.rpcMethod).toEqual('eth_sendRawTransaction');
-
-            expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
-
-            expect(Utils.numberToHex).toHaveBeenCalledWith(1);
 
             done();
         };

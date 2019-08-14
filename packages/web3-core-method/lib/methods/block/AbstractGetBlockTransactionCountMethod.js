@@ -25,25 +25,21 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 export default class AbstractGetBlockTransactionCountMethod extends AbstractMethod {
     /**
      * @param {String} rpcMethod
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(rpcMethod, utils, formatters, moduleInstance) {
-        super(rpcMethod, 1, utils, formatters, moduleInstance);
+    constructor(rpcMethod, moduleInstance) {
+        super(rpcMethod, 1, moduleInstance);
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+    beforeExecution() {
+        this.parameters[0] = new BlockNumber(this.parameters[0]).toString();
     }
 
     /**
@@ -56,6 +52,6 @@ export default class AbstractGetBlockTransactionCountMethod extends AbstractMeth
      * @returns {Number}
      */
     afterExecution(response) {
-        return this.utils.hexToNumber(response);
+        return new Hex(response).toNumber();
     }
 }

@@ -24,15 +24,13 @@ import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/
 
 export default class SendRawTransactionMethod extends AbstractObservedTransactionMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      * @param {AbstractTransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance, transactionObserver) {
-        super('eth_sendRawTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
+    constructor(moduleInstance, transactionObserver) {
+        super('eth_sendRawTransaction', 1, moduleInstance, transactionObserver);
     }
 
     /**

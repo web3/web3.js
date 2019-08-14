@@ -24,14 +24,12 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class VersionMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('net_version', 0, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('net_version', 0, moduleInstance);
     }
 
     /**
@@ -44,6 +42,6 @@ export default class VersionMethod extends AbstractMethod {
      * @returns {Number}
      */
     afterExecution(response) {
-        return this.utils.hexToNumber(response);
+        return new Hex(response).toNumber();
     }
 }

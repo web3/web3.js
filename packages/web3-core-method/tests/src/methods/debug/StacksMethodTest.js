@@ -8,7 +8,7 @@ describe('StacksMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new StacksMethod({}, {}, {});
+        method = new StacksMethod({});
     });
 
     it('constructor check', () => {

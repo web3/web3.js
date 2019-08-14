@@ -1,9 +1,5 @@
-import {formatters} from 'web3-core-helpers';
 import {SignTransactionMethod} from 'web3-core-method';
 import EthSignTransactionMethod from '../../../src/methods/EthSignTransactionMethod';
-
-// Mocks
-jest.mock('web3-core-helpers');
 
 /**
  * EthSignTransactionMethod test
@@ -20,7 +16,7 @@ describe('EthSignTransactionMethodTest', () => {
             })
         };
 
-        method = new EthSignTransactionMethod(null, formatters, moduleInstanceMock);
+        method = new EthSignTransactionMethod(moduleInstanceMock);
     });
 
     it('constructor check', () => {
@@ -30,13 +26,9 @@ describe('EthSignTransactionMethodTest', () => {
     it('beforeExecution should execute the inputTransactionFormatter', () => {
         method.parameters = [{}];
 
-        formatters.inputTransactionFormatter.mockReturnValueOnce({empty: false});
-
-        method.beforeExecution({});
+        method.beforeExecution();
 
         expect(method.parameters[0]).toHaveProperty('empty', false);
-
-        expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith({}, {});
     });
 
     it('calls execute and a local unlocked account does exist', async () => {

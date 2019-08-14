@@ -24,24 +24,20 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class SetEtherBaseMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('miner_setEtherbase', 1, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('miner_setEtherbase', 1, moduleInstance);
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+    beforeExecution() {
+        this.parameters[0] = new Address(this.parameters[0]).toString();
     }
 }

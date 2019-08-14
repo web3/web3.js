@@ -8,7 +8,7 @@ describe('TraceBlockFromFileMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new TraceBlockFromFileMethod({}, {}, {});
+        method = new TraceBlockFromFileMethod({});
     });
 
     it('constructor check', () => {

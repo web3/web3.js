@@ -24,24 +24,20 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class SetHeadMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('debug_setHead', 1, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('debug_setHead', 1, moduleInstance);
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.utils.numberToHex(this.parameters[0]);
+    beforeExecution() {
+        this.parameters[0] = Hex.fromNumber(this.parameters[0]).toString();
     }
 }

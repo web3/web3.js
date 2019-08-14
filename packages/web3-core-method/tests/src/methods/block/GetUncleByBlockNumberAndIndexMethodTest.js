@@ -8,7 +8,7 @@ describe('GetUncleByBlockNumberAndIndexMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetUncleByBlockNumberAndIndexMethod({}, {}, {});
+        method = new GetUncleByBlockNumberAndIndexMethod({});
     });
 
     it('constructor check', () => {

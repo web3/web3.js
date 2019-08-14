@@ -8,7 +8,7 @@ describe('TraceTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new TraceTransactionMethod({}, {}, {});
+        method = new TraceTransactionMethod({});
     });
 
     it('constructor check', () => {

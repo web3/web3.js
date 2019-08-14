@@ -25,33 +25,33 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class GetTransactionCountMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getTransactionCount', 2, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_getTransactionCount', 2, moduleInstance);
     }
 
     /**
      * This method will be executed before the effective execution.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+    beforeExecution() {
+        this.parameters[0] = new Address(this.parameters[0]).toString();
 
         // Optional second parameter 'defaultBlock' could also be the callback
         if (isFunction(this.parameters[1])) {
             this.callback = this.parameters[1];
-            this.parameters[1] = moduleInstance.defaultBlock;
+            this.parameters[1] = this.moduleInstance.defaultBlock;
         }
 
-        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
+        if (this.parameters[1]) {
+            this.parameters[1] = new BlockNumber(this.parameters[1]).toString();
+        } else {
+            this.parameters[1] = new BlockNumber(this.moduleInstance.defaultBlock).toString();
+        }
     }
 
     /**

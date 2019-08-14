@@ -8,7 +8,7 @@ describe('ListeningMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new ListeningMethod(null, null, {});
+        method = new ListeningMethod({});
     });
 
     it('constructor check', () => {
@@ -17,9 +17,5 @@ describe('ListeningMethodTest', () => {
         expect(method.rpcMethod).toEqual('net_listening');
 
         expect(method.parametersAmount).toEqual(0);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(null);
     });
 });

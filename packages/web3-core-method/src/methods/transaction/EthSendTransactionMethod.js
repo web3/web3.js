@@ -24,8 +24,6 @@ import SendTransactionMethod from './SendTransactionMethod';
 
 export default class EthSendTransactionMethod extends SendTransactionMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      * @param {AbstractTransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
@@ -33,8 +31,8 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod) {
-        super(utils, formatters, moduleInstance, transactionObserver);
+    constructor(moduleInstance, transactionObserver, chainIdMethod, getTransactionCountMethod) {
+        super(moduleInstance, transactionObserver);
 
         this.chainIdMethod = chainIdMethod;
         this.getTransactionCountMethod = getTransactionCountMethod;
@@ -64,12 +62,10 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The module where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
+    beforeExecution() {
         if (this.rpcMethod !== 'eth_sendRawTransaction') {
-            super.beforeExecution(moduleInstance);
+            super.beforeExecution();
         }
     }
 
@@ -156,7 +152,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
      * @returns {Promise<void>}
      */
     async signTransaction(account = {}) {
-        this.beforeExecution(this.moduleInstance);
+        this.beforeExecution();
 
         if (!this.parameters[0].chainId) {
             this.parameters[0].chainId = await this.chainIdMethod.execute();
@@ -183,7 +179,7 @@ export default class EthSendTransactionMethod extends SendTransactionMethod {
         transaction.to = transaction.to || '0x';
         transaction.data = transaction.data || '0x';
         transaction.value = transaction.value || '0x';
-        transaction.chainId = this.utils.numberToHex(transaction.chainId);
+        transaction.chainId = Hex.fromNumber(transaction.chainId).toString();
 
         delete transaction.from;
 

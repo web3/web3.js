@@ -24,14 +24,12 @@ import {AbstractGetBlockTransactionCountMethod} from 'web3-core-method';
 
 export default class GetBlockTransactionCountMethod extends AbstractGetBlockTransactionCountMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getBlockTransactionCountByNumber', utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_getBlockTransactionCountByNumber', moduleInstance);
     }
 
     /**
@@ -40,14 +38,12 @@ export default class GetBlockTransactionCountMethod extends AbstractGetBlockTran
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance
      */
-    beforeExecution(moduleInstance) {
+    beforeExecution() {
         if (this.isHash(this.parameters[0])) {
             this.rpcMethod = 'eth_getBlockTransactionCountByHash';
         }
 
-        super.beforeExecution(moduleInstance);
+        super.beforeExecution();
     }
 }

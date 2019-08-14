@@ -24,13 +24,11 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class WriteBlockProfileMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('debug_writeBlockProfile', 1, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('debug_writeBlockProfile', 1, moduleInstance);
     }
 }

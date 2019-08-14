@@ -8,7 +8,7 @@ describe('AdminAddPeerMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new AddPeerMethod({}, {}, {});
+        method = new AddPeerMethod({});
     });
 
     it('constructor check', () => {

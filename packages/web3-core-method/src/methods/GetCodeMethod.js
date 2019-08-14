@@ -25,25 +25,21 @@ import AbstractMethod from '../../lib/methods/AbstractMethod';
 
 export default class GetCodeMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getCode', 2, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_getCode', 2, moduleInstance);
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+    beforeExecution() {
+        this.parameters[0] = new Address(this.parameters[0]).toString();
 
         // Optional second parameter 'defaultBlock' could also be the callback
         if (isFunction(this.parameters[1])) {

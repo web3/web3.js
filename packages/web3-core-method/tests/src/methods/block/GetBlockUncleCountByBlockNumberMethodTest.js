@@ -8,7 +8,7 @@ describe('GetBlockUncleCountByBlockNumberMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBlockUncleCountByBlockNumberMethod({}, {}, {});
+        method = new GetBlockUncleCountByBlockNumberMethod({});
     });
 
     it('constructor check', () => {

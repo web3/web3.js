@@ -113,11 +113,12 @@ export default class Hex {
      * @returns {String}
      */
     toTwosComplement() {
-        const twos = this.toBigNumber()
-            .toTwos(256)
-            .toHexString();
-
-        return Hex.leftPad(twos, 64);
+        return Hex.leftPad(
+            this.toBigNumber()
+                .toTwos(256)
+                .toHexString(),
+            64
+        );
     }
 
     /**
@@ -347,7 +348,7 @@ export default class Hex {
      */
     static from(value) {
         if (Address.isValid(value)) {
-            throw new Error('Please use the Address type object for interacting with a Ethereum Address.');
+            throw new Error('Please use the Address type object to interact with a Ethereum Address.');
         }
 
         if (isBoolean(value)) {

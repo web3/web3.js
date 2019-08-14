@@ -24,14 +24,12 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class IsSyncingMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_syncing', 0, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_syncing', 0, moduleInstance);
     }
 
     /**
@@ -41,11 +39,11 @@ export default class IsSyncingMethod extends AbstractMethod {
      *
      * @param {Object} response
      *
-     * @returns {Object|Boolean}
+     * @returns {SyncState|Boolean}
      */
     afterExecution(response) {
         if (typeof response !== 'boolean') {
-            return this.formatters.outputSyncingFormatter(response);
+            return new SyncState(response);
         }
 
         return response;

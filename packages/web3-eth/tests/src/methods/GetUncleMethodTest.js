@@ -1,5 +1,3 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import GetUncleMethod from '../../../src/methods/GetUncleMethod';
 
 /**
@@ -9,7 +7,7 @@ describe('GetUncleMethodTest', () => {
     let getUncleMethod;
 
     beforeEach(() => {
-        getUncleMethod = new GetUncleMethod(Utils, formatters, {});
+        getUncleMethod = new GetUncleMethod({});
     });
 
     it('constructor check', () => {
@@ -19,7 +17,7 @@ describe('GetUncleMethodTest', () => {
     it('calls execute with hash', () => {
         getUncleMethod.parameters = ['0x0'];
 
-        getUncleMethod.beforeExecution({});
+        getUncleMethod.beforeExecution();
 
         expect(getUncleMethod.rpcMethod).toEqual('eth_getUncleByBlockHashAndIndex');
     });
@@ -27,7 +25,7 @@ describe('GetUncleMethodTest', () => {
     it('calls execute with number', () => {
         getUncleMethod.parameters = [100];
 
-        getUncleMethod.beforeExecution({});
+        getUncleMethod.beforeExecution();
 
         expect(getUncleMethod.rpcMethod).toEqual('eth_getUncleByBlockNumberAndIndex');
     });

@@ -154,7 +154,7 @@ export default class BatchRequest {
 
         for (let i = 0; i < this.methods.length; i++) {
             const method = this.methods[i];
-            method.beforeExecution(this.moduleInstance);
+            method.beforeExecution();
 
             // TODO: The method type specific handling shouldn't be done here.
             if (this.moduleInstance.accounts && method.Type === 'eth-send-transaction-method' && method.hasAccounts()) {

@@ -24,24 +24,20 @@ import AbstractMethod from '../../lib/methods/AbstractMethod';
 
 export default class EstimateGasMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_estimateGas', 1, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_estimateGas', 1, moduleInstance);
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
+    beforeExecution() {
         this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
     }
 
@@ -55,6 +51,6 @@ export default class EstimateGasMethod extends AbstractMethod {
      * @returns {Number}
      */
     afterExecution(response) {
-        return this.utils.hexToNumber(response);
+        return new Hex(response).toNumber();
     }
 }

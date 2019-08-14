@@ -39,11 +39,9 @@ export default class EthSignTransactionMethod extends SignTransactionMethod {
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
+    beforeExecution() {
+        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], this.moduleInstance);
     }
 
     /**

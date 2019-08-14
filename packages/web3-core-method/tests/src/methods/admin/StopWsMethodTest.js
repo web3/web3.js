@@ -8,7 +8,7 @@ describe('StopWsMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new StopWsMethod({}, {}, {});
+        method = new StopWsMethod({});
     });
 
     it('constructor check', () => {

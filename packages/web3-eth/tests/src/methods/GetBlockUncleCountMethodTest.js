@@ -1,4 +1,3 @@
-import {formatters} from 'web3-core-helpers';
 import GetBlockUncleCountMethod from '../../../src/methods/GetBlockUncleCountMethod';
 
 /**
@@ -8,7 +7,7 @@ describe('GetBlockUncleCountMethodTest', () => {
     let getBlockUncleCountMethod;
 
     beforeEach(() => {
-        getBlockUncleCountMethod = new GetBlockUncleCountMethod({}, formatters, {});
+        getBlockUncleCountMethod = new GetBlockUncleCountMethod({});
     });
 
     it('constructor check', () => {
@@ -18,7 +17,7 @@ describe('GetBlockUncleCountMethodTest', () => {
     it('calls execute with hash', () => {
         getBlockUncleCountMethod.parameters = ['0x0'];
 
-        getBlockUncleCountMethod.beforeExecution({});
+        getBlockUncleCountMethod.beforeExecution();
 
         expect(getBlockUncleCountMethod.rpcMethod).toEqual('eth_getUncleCountByBlockHash');
     });
@@ -26,7 +25,7 @@ describe('GetBlockUncleCountMethodTest', () => {
     it('calls execute with number', () => {
         getBlockUncleCountMethod.parameters = [100];
 
-        getBlockUncleCountMethod.beforeExecution({});
+        getBlockUncleCountMethod.beforeExecution();
 
         expect(getBlockUncleCountMethod.rpcMethod).toEqual('eth_getUncleCountByBlockNumber');
     });

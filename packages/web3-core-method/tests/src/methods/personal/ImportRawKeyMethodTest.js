@@ -8,7 +8,7 @@ describe('ImportRawKeyMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new ImportRawKeyMethod(null, null, {});
+        method = new ImportRawKeyMethod({});
     });
 
     it('constructor check', () => {
@@ -17,9 +17,5 @@ describe('ImportRawKeyMethodTest', () => {
         expect(method.rpcMethod).toEqual('personal_importRawKey');
 
         expect(method.parametersAmount).toEqual(2);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(null);
     });
 });

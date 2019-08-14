@@ -8,7 +8,7 @@ describe('StartCpuProfileMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new StartCpuProfileMethod({}, {}, {});
+        method = new StartCpuProfileMethod({});
     });
 
     it('constructor check', () => {

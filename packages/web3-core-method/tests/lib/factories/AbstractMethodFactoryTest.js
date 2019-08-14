@@ -27,19 +27,13 @@ describe('AbstractMethodFactoryTest', () => {
     let abstractMethodFactory;
 
     beforeEach(() => {
-        abstractMethodFactory = new AbstractMethodFactory({}, {});
-
-        abstractMethodFactory.methods = {
-            send: AbstractMethod,
-            sendObserved: AbstractObservedTransactionMethod,
-            sendEthObserved: EthSendTransactionMethod
-        };
-    });
-
-    it('constructor check', () => {
-        expect(abstractMethodFactory.utils).toEqual({});
-
-        expect(abstractMethodFactory.formatters).toEqual({});
+        abstractMethodFactory = new AbstractMethodFactory();
+        //
+        // abstractMethodFactory.methods = {
+        //     send: AbstractMethod,
+        //     sendObserved: AbstractObservedTransactionMethod,
+        //     sendEthObserved: EthSendTransactionMethod
+        // };
     });
 
     it('throws an error on calling the methods property if now methods are defined', () => {

@@ -25,24 +25,20 @@ import AbstractMethod from '../../lib/methods/AbstractMethod';
 
 export default class CallMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_call', 2, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_call', 2, moduleInstance);
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
+    beforeExecution() {
         this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
 
         // Optional second parameter 'defaultBlock' could also be the callback
@@ -51,6 +47,6 @@ export default class CallMethod extends AbstractMethod {
             this.parameters[1] = moduleInstance.defaultBlock;
         }
 
-        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
+        this.parameters[1] = new BlockNumber(this.parameters[1], moduleInstance).toString();
     }
 }

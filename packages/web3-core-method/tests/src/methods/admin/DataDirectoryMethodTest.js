@@ -8,7 +8,7 @@ describe('DataDirectoryMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new DataDirectoryMethod({}, {}, {});
+        method = new DataDirectoryMethod({});
     });
 
     it('constructor check', () => {

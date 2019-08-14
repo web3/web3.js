@@ -8,7 +8,7 @@ describe('GetNodeInfoMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetNodeInfoMethod(null, null, {});
+        method = new GetNodeInfoMethod({});
     });
 
     it('constructor check', () => {
@@ -17,9 +17,5 @@ describe('GetNodeInfoMethodTest', () => {
         expect(method.rpcMethod).toEqual('web3_clientVersion');
 
         expect(method.parametersAmount).toEqual(0);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(null);
     });
 });

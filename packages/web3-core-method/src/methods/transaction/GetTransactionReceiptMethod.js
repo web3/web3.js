@@ -24,14 +24,12 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class GetTransactionReceiptMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getTransactionReceipt', 1, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_getTransactionReceipt', 1, moduleInstance);
     }
 
     /**
@@ -45,7 +43,7 @@ export default class GetTransactionReceiptMethod extends AbstractMethod {
      */
     afterExecution(response) {
         if (response !== null) {
-            return this.formatters.outputTransactionReceiptFormatter(response);
+            return new TransactionReceipt(response);
         }
 
         return response;

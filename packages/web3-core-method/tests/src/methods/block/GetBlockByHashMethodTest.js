@@ -7,7 +7,7 @@ describe('GetBlockByHashMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBlockByHashMethod({}, {}, {});
+        method = new GetBlockByHashMethod({});
     });
 
     it('constructor check', () => {

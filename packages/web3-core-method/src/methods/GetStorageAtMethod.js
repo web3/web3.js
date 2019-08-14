@@ -25,33 +25,29 @@ import AbstractMethod from '../../lib/methods/AbstractMethod';
 
 export default class GetStorageAtMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getStorageAt', 3, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_getStorageAt', 3, moduleInstance);
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
-        this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+    beforeExecution() {
+        this.parameters[0] = new Address(this.parameters[0]).toString();
+        this.parameters[1] = Hex.fromNumber(this.parameters[1]).toNumber();
 
         // Optional second parameter 'defaultBlock' could also be the callback
         if (isFunction(this.parameters[2])) {
             this.callback = this.parameters[2];
-            this.parameters[2] = moduleInstance.defaultBlock;
+            this.parameters[2] = this.moduleInstance.defaultBlock;
         }
 
-        this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], moduleInstance);
+        this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], this.moduleInstance);
     }
 }

@@ -1,10 +1,8 @@
-import {formatters} from 'web3-core-helpers';
 import PromiEvent from '../../../../lib/PromiEvent';
 import AbstractTransactionObserver from '../../../../lib/observers/AbstractTransactionObserver';
 import AbstractObservedTransactionMethod from '../../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
 // Mocks
-jest.mock('web3-core-helpers');
 jest.mock('../../../../lib/observers/AbstractTransactionObserver');
 
 /**
@@ -44,8 +42,6 @@ describe('AbstractObservedTransactionMethodTest', () => {
         method = new AbstractObservedTransactionMethod(
             'rpcMethod',
             5,
-            {},
-            formatters,
             moduleInstanceMock,
             transactionObserverMock
         );
@@ -72,8 +68,6 @@ describe('AbstractObservedTransactionMethodTest', () => {
     it('calls execute with event listeners and is emitting the expected values', (done) => {
         providerMock.send.mockReturnValueOnce(Promise.resolve('transactionHash'));
 
-        formatters.outputTransactionFormatter.mockReturnValue({status: false});
-
         observableMock.subscribe = jest.fn((next, error, complete) => {
             next({confirmations: 0, receipt: {status: true}});
 
@@ -95,10 +89,6 @@ describe('AbstractObservedTransactionMethodTest', () => {
             expect(transactionHashCallback).toHaveBeenCalledWith('transactionHash');
 
             expect(confirmationCallback).toHaveBeenCalledWith(0, {status: false});
-
-            expect(formatters.outputTransactionFormatter).toHaveBeenNthCalledWith(1, {status: true});
-
-            expect(formatters.outputTransactionFormatter).toHaveBeenCalledTimes(1);
 
             done();
         });

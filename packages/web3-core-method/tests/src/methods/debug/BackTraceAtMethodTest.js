@@ -8,7 +8,7 @@ describe('BackTraceAtMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new BackTraceAtMethod({}, {}, {});
+        method = new BackTraceAtMethod({});
     });
 
     it('constructor check', () => {

@@ -24,13 +24,11 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class InspectMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('txpool_inspect', 0, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('txpool_inspect', 0, moduleInstance);
     }
 }

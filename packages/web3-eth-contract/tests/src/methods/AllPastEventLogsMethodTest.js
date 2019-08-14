@@ -58,7 +58,7 @@ describe('AllPastEventLogsMethodTest', () => {
         formatters.inputLogFormatter.mockReturnValueOnce({options: true});
 
         allPastEventLogsMethod.parameters = [{}];
-        allPastEventLogsMethod.beforeExecution(contractMock);
+        allPastEventLogsMethod.beforeExecution();
 
         expect(allEventsOptionsMapperMock.map).toHaveBeenCalledWith(abiModelMock, contractMock, {options: true});
 

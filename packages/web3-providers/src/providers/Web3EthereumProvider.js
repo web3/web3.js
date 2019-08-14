@@ -144,15 +144,14 @@ export default class Web3EthereumProvider extends AbstractSocketProvider {
      * @method sendBatch
      *
      * @param {AbstractMethod[]} methods
-     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {Promise<Array|Error>}
      */
-    sendBatch(methods, moduleInstance) {
+    sendBatch(methods) {
         let methodCalls = [];
 
         methods.forEach((method) => {
-            method.beforeExecution(moduleInstance);
+            method.beforeExecution();
             methodCalls.push(this.connection.send(method.rpcMethod, method.parameters));
         });
 

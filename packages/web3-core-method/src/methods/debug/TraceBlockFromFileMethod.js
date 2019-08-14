@@ -24,13 +24,11 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class TraceBlockFromFileMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('debug_traceBlockFromFile', 2, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('debug_traceBlockFromFile', 2, moduleInstance);
     }
 }

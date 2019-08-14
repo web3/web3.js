@@ -28,15 +28,11 @@ export default class AbstractMethod {
     /**
      * @param {String} rpcMethod
      * @param {Number} parametersAmount
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(rpcMethod, parametersAmount, utils, formatters, moduleInstance) {
-        this.utils = utils;
-        this.formatters = formatters;
+    constructor(rpcMethod, parametersAmount, moduleInstance) {
         this.moduleInstance = moduleInstance;
         this._arguments = {
             parameters: []
@@ -49,10 +45,8 @@ export default class AbstractMethod {
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {}
+    beforeExecution() {}
 
     /**
      * This method will be executed after the RPC request.
@@ -76,7 +70,7 @@ export default class AbstractMethod {
      * @returns {Promise<Object|String>}
      */
     async execute() {
-        this.beforeExecution(this.moduleInstance);
+        this.beforeExecution();
 
         if (this.parameters.length !== this.parametersAmount) {
             const error = new Error(

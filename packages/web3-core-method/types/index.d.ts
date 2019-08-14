@@ -47,7 +47,7 @@ export class AbstractMethod {
 
     callback(error: string | Error, response: any): void;
 
-    beforeExecution(moduleInstance: AbstractWeb3Module): void;
+    beforeExecution(): void;
 
     afterExecution(response: any): any;
 

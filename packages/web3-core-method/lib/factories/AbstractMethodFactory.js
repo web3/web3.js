@@ -30,15 +30,10 @@ import HttpTransactionObserver from '../../src/observers/HttpTransactionObserver
 
 export default class AbstractMethodFactory {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     *
      * @constructor
      */
-    constructor(utils, formatters) {
-        this.utils = utils;
-        this.formatters = formatters;
-        this._methods = null;
+    constructor(methods) {
+        this._methods = methods;
     }
 
     /**
@@ -93,29 +88,22 @@ export default class AbstractMethodFactory {
 
         if (method.Type === 'observed-transaction-method') {
             // eslint-disable-next-line new-cap
-            return new method(
-                this.utils,
-                this.formatters,
-                moduleInstance,
-                this.createTransactionObserver(moduleInstance)
-            );
+            return new method(moduleInstance, this.createTransactionObserver(moduleInstance));
         }
 
         // TODO: Move this to the eth module later.
         if (method.Type === 'eth-send-transaction-method') {
             // eslint-disable-next-line new-cap
             return new method(
-                this.utils,
-                this.formatters,
                 moduleInstance,
                 this.createTransactionObserver(moduleInstance),
-                new ChainIdMethod(this.utils, this.formatters, moduleInstance),
-                new GetTransactionCountMethod(this.utils, this.formatters, moduleInstance)
+                new ChainIdMethod(moduleInstance),
+                new GetTransactionCountMethod(moduleInstance)
             );
         }
 
         // eslint-disable-next-line new-cap
-        return new method(this.utils, this.formatters, moduleInstance);
+        return new method(moduleInstance);
     }
 
     /**
@@ -152,8 +140,8 @@ export default class AbstractMethodFactory {
                 moduleInstance.currentProvider,
                 this.getTimeout(moduleInstance),
                 moduleInstance.transactionConfirmationBlocks,
-                new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
-                new NewHeadsSubscription(this.utils, this.formatters, moduleInstance)
+                new GetTransactionReceiptMethod(moduleInstance),
+                new NewHeadsSubscription(moduleInstance)
             );
         }
 
@@ -161,8 +149,8 @@ export default class AbstractMethodFactory {
             moduleInstance.currentProvider,
             this.getTimeout(moduleInstance),
             moduleInstance.transactionConfirmationBlocks,
-            new GetTransactionReceiptMethod(this.utils, this.formatters, moduleInstance),
-            new GetBlockByNumberMethod(this.utils, this.formatters, moduleInstance)
+            new GetTransactionReceiptMethod(moduleInstance),
+            new GetBlockByNumberMethod(moduleInstance)
         );
     }
 }

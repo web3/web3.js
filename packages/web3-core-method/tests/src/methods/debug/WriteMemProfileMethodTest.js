@@ -8,7 +8,7 @@ describe('WriteMemProfileMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new WriteMemProfileMethod({}, {}, {});
+        method = new WriteMemProfileMethod({});
     });
 
     it('constructor check', () => {

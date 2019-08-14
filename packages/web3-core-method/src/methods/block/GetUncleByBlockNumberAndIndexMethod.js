@@ -24,13 +24,11 @@ import AbstractGetUncleMethod from '../../../lib/methods/block/AbstractGetUncleM
 
 export default class GetUncleByBlockNumberAndIndexMethod extends AbstractGetUncleMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getUncleByBlockNumberAndIndex', utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_getUncleByBlockNumberAndIndex', moduleInstance);
     }
 }

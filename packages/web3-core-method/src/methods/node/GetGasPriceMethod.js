@@ -24,14 +24,12 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class GetGasPriceMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_gasPrice', 0, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_gasPrice', 0, moduleInstance);
     }
 
     /**
@@ -44,6 +42,6 @@ export default class GetGasPriceMethod extends AbstractMethod {
      * @returns {BigNumber}
      */
     afterExecution(response) {
-        return this.formatters.outputBigNumberFormatter(response);
+        return new Hex(response).toBigNumber();
     }
 }

@@ -8,7 +8,7 @@ describe('StopRpcMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new StopRpcMethod({}, {}, {});
+        method = new StopRpcMethod({});
     });
 
     it('constructor check', () => {

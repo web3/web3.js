@@ -8,7 +8,7 @@ describe('StopMiningMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new StopMiningMethod({}, {}, {});
+        method = new StopMiningMethod({});
     });
 
     it('constructor check', () => {

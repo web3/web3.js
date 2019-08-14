@@ -8,7 +8,7 @@ describe('InspectMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new InspectMethod({}, {}, {});
+        method = new InspectMethod({});
     });
 
     it('constructor check', () => {

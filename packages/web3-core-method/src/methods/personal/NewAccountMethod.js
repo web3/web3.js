@@ -24,14 +24,12 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class NewAccountMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('personal_newAccount', 1, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('personal_newAccount', 1, moduleInstance);
     }
 
     /**
@@ -44,6 +42,6 @@ export default class NewAccountMethod extends AbstractMethod {
      * @returns {String}
      */
     afterExecution(response) {
-        return this.utils.toChecksumAddress(response);
+        return Address.toChecksum(response);
     }
 }

@@ -1,9 +1,5 @@
-import * as Utils from 'web3-utils';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import PeerCountMethod from '../../../../src/methods/network/PeerCountMethod';
-
-// Mocks
-jest.mock('web3-utils');
 
 /**
  * PeerCountMethod test
@@ -12,7 +8,7 @@ describe('PeerCountMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new PeerCountMethod(Utils, null, {});
+        method = new PeerCountMethod({});
     });
 
     it('constructor check', () => {
@@ -21,17 +17,9 @@ describe('PeerCountMethodTest', () => {
         expect(method.rpcMethod).toEqual('net_peerCount');
 
         expect(method.parametersAmount).toEqual(0);
-
-        expect(method.utils).toEqual(Utils);
-
-        expect(method.formatters).toEqual(null);
     });
 
     it('afterExecution should map the response', () => {
-        Utils.hexToNumber.mockReturnValueOnce(100);
-
         expect(method.afterExecution('0x0')).toEqual(100);
-
-        expect(Utils.hexToNumber).toHaveBeenCalledWith('0x0');
     });
 });

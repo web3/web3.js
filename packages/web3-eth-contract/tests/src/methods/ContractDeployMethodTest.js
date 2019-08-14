@@ -29,7 +29,7 @@ describe('ContractDeployMethodTest', () => {
 
         formatters.inputTransactionFormatter.mockReturnValueOnce([{to: true}]);
 
-        contractDeployMethod.beforeExecution(contractMock);
+        contractDeployMethod.beforeExecution();
 
         expect(contractDeployMethod.parameters[0].to).toBeUndefined();
     });
@@ -38,7 +38,7 @@ describe('ContractDeployMethodTest', () => {
         contractDeployMethod.rpcMethod = 'eth_sendRawTransaction';
         contractDeployMethod.parameters = [{to: true}];
 
-        contractDeployMethod.beforeExecution(contractMock);
+        contractDeployMethod.beforeExecution();
 
         expect(contractDeployMethod.parameters).toEqual([{to: true}]);
     });

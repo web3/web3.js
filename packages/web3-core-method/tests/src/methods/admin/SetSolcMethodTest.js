@@ -8,7 +8,7 @@ describe('SetSolcMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SetSolcMethod({}, {}, {});
+        method = new SetSolcMethod({});
     });
 
     it('constructor check', () => {

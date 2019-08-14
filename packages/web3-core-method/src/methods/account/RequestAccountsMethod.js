@@ -21,13 +21,11 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class RequestAccountsMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_requestAccounts', 0, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_requestAccounts', 0, moduleInstance);
     }
 }

@@ -24,13 +24,11 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class BackTraceAtMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('debug_backtraceAt', 1, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('debug_backtraceAt', 1, moduleInstance);
     }
 }

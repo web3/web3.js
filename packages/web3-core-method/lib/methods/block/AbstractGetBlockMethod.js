@@ -26,14 +26,12 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 export default class AbstractGetBlockMethod extends AbstractMethod {
     /**
      * @param {String} rpcMethod
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(rpcMethod, utils, formatters, moduleInstance) {
-        super(rpcMethod, 2, utils, formatters, moduleInstance);
+    constructor(rpcMethod, moduleInstance) {
+        super(rpcMethod, 2, moduleInstance);
     }
 
     /**
@@ -41,10 +39,9 @@ export default class AbstractGetBlockMethod extends AbstractMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+    beforeExecution() {
+        this.parameters[0] = new BlockNumber(this.parameters[0]).toString();
 
         // Optional second parameter 'returnTransactionObjects' could also be the callback
         if (isFunction(this.parameters[1])) {
@@ -65,6 +62,6 @@ export default class AbstractGetBlockMethod extends AbstractMethod {
      * @returns {Object}
      */
     afterExecution(response) {
-        return this.formatters.outputBlockFormatter(response);
+        return new Block(response);
     }
 }

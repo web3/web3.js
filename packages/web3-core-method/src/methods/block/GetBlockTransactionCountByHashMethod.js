@@ -24,13 +24,11 @@ import AbstractGetBlockTransactionCountMethod from '../../../lib/methods/block/A
 
 export default class GetBlockTransactionCountByHashMethod extends AbstractGetBlockTransactionCountMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getBlockTransactionCountByHash', utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_getBlockTransactionCountByHash', moduleInstance);
     }
 }

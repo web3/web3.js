@@ -8,7 +8,7 @@ describe('GetBlockTransactionCountByHashMethodMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBlockTransactionCountByHashMethod({}, {}, {});
+        method = new GetBlockTransactionCountByHashMethod({});
     });
 
     it('constructor check', () => {

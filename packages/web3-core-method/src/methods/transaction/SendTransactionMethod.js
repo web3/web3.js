@@ -24,26 +24,22 @@ import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/
 
 export default class SendTransactionMethod extends AbstractObservedTransactionMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      * @param {AbstractTransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance, transactionObserver) {
-        super('eth_sendTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
+    constructor(moduleInstance, transactionObserver) {
+        super('eth_sendTransaction', 1, moduleInstance, transactionObserver);
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
+    beforeExecution() {
+        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], this.moduleInstance);
     }
 
     /**

@@ -8,7 +8,7 @@ describe('StopGoTraceMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new StopGoTraceMethod({}, {}, {});
+        method = new StopGoTraceMethod({});
     });
 
     it('constructor check', () => {

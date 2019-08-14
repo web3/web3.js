@@ -8,7 +8,7 @@ describe('PeersMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new PeersMethod({}, {}, {});
+        method = new PeersMethod({});
     });
 
     it('constructor check', () => {

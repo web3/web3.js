@@ -24,26 +24,22 @@ import AbstractMethod from '../../lib/methods/AbstractMethod';
 
 export default class SignMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_sign', 2, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_sign', 2, moduleInstance);
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
+    beforeExecution() {
         this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
-        this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
+        this.parameters[1] = new Address(this.parameters[1]).toString();
         this.parameters.reverse();
     }
 }

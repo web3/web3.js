@@ -8,7 +8,7 @@ describe('StopCpuProfileMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new StopCpuProfileMethod({}, {}, {});
+        method = new StopCpuProfileMethod({});
     });
 
     it('constructor check', () => {

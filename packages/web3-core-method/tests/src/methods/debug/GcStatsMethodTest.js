@@ -8,7 +8,7 @@ describe('GcStatsMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GcStatsMethod({}, {}, {});
+        method = new GcStatsMethod({});
     });
 
     it('constructor check', () => {

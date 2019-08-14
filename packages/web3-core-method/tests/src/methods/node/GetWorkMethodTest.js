@@ -8,7 +8,7 @@ describe('GetWorkMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetWorkMethod(null, null, {});
+        method = new GetWorkMethod({});
     });
 
     it('constructor check', () => {
@@ -17,9 +17,5 @@ describe('GetWorkMethodTest', () => {
         expect(method.rpcMethod).toEqual('eth_getWork');
 
         expect(method.parametersAmount).toEqual(0);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(null);
     });
 });

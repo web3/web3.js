@@ -24,13 +24,11 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class MemStatsMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('debug_memStats', 0, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('debug_memStats', 0, moduleInstance);
     }
 }

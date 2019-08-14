@@ -44,12 +44,10 @@ export default class AllPastEventLogsMethod extends GetPastLogsMethod {
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
-        super.beforeExecution(moduleInstance);
-        this.parameters[0] = this.allEventsOptionsMapper.map(this.abiModel, moduleInstance, this.parameters[0]);
+    beforeExecution() {
+        super.beforeExecution();
+        this.parameters[0] = this.allEventsOptionsMapper.map(this.abiModel, this.moduleInstance, this.parameters[0]);
     }
 
     /**

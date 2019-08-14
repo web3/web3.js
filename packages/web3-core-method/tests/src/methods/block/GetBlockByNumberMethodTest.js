@@ -8,7 +8,7 @@ describe('GetBlockByNumberMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBlockByNumberMethod({}, {}, {});
+        method = new GetBlockByNumberMethod({});
     });
 
     it('constructor check', () => {

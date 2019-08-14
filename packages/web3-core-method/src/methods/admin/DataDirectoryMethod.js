@@ -24,13 +24,11 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class DataDirectoryMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('admin_datadir', 0, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('admin_datadir', 0, moduleInstance);
     }
 }

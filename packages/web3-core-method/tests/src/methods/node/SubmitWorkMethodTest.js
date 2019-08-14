@@ -8,7 +8,7 @@ describe('SubmitWorkMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SubmitWorkMethod(null, null, {});
+        method = new SubmitWorkMethod({});
     });
 
     it('constructor check', () => {
@@ -17,9 +17,5 @@ describe('SubmitWorkMethodTest', () => {
         expect(method.rpcMethod).toEqual('eth_submitWork');
 
         expect(method.parametersAmount).toEqual(3);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(null);
     });
 });

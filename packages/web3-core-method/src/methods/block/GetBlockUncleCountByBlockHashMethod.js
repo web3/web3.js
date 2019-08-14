@@ -24,13 +24,11 @@ import AbstractGetBlockUncleCountMethod from '../../../lib/methods/block/Abstrac
 
 export default class GetBlockUncleCountByBlockHashMethod extends AbstractGetBlockUncleCountMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getUncleCountByBlockHash', utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_getUncleCountByBlockHash', moduleInstance);
     }
 }

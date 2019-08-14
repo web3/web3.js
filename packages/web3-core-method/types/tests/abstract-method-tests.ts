@@ -59,7 +59,7 @@ abstractMethod.hasWallets();
 abstractMethod.callback('error', 'response');
 
 // $ExpectType void
-abstractMethod.beforeExecution(abstractWeb3Module);
+abstractMethod.beforeExecution();
 
 // $ExpectType any
 abstractMethod.afterExecution('response');

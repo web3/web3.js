@@ -98,15 +98,14 @@ export default class CustomProvider {
      * @method sendBatch
      *
      * @param {AbstractMethod[]} methods
-     * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns Promise<Object[]>
      */
-    sendBatch(methods, moduleInstance) {
+    sendBatch(methods) {
         let payload = [];
 
         methods.forEach((method) => {
-            method.beforeExecution(moduleInstance);
+            method.beforeExecution();
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         });
 

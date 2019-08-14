@@ -24,26 +24,27 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class GetProofMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getProof', 3, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_getProof', 3, moduleInstance);
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
-        this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], moduleInstance);
+    beforeExecution() {
+        this.parameters[0] = new Address(this.parameters[0]).toString();
+
+        if (this.parameters[2]) {
+            this.parameters[2] = new Block(this.parameters[2]).toString();
+        } else {
+            this.parameters[2] = new Block(this.moduleInstance.defaultBlock);
+        }
     }
 
     /**
@@ -56,11 +57,11 @@ export default class GetProofMethod extends AbstractMethod {
      * @returns {Object}
      */
     afterExecution(response) {
-        response.nonce = this.utils.toBN(response.nonce).toString(10);
-        response.balance = this.utils.toBN(response.balance).toString(10);
+        response.nonce = new Hex(response.nonce).toNumberString();
+        response.balance = new Hex(response.balance).toNumberString();
 
         for (let i = 0; i < response.storageProof.length; i++) {
-            response.storageProof[i].value = this.utils.toBN(response.storageProof[i].value).toString(10);
+            response.storageProof[i].value = new Hex(response.storageProof[i].value).toNumberString();
         }
 
         return response;

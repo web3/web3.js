@@ -8,7 +8,7 @@ describe('ContentMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new ContentMethod({}, {}, {});
+        method = new ContentMethod({});
     });
 
     it('constructor check', () => {

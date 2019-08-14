@@ -8,7 +8,7 @@ describe('SetExtraMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SetExtraMethod({}, {}, {});
+        method = new SetExtraMethod({});
     });
 
     it('constructor check', () => {

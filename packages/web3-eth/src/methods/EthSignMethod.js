@@ -59,7 +59,7 @@ export default class EthSignMethod extends SignMethod {
      */
     async signLocally() {
         try {
-            this.beforeExecution(this.moduleInstance);
+            this.beforeExecution();
 
             let signedMessage = this.moduleInstance.accounts.sign(
                 this.parameters[1],

@@ -1,9 +1,5 @@
-import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 import GetGasPriceMethod from '../../../../src/methods/node/GetGasPriceMethod';
-
-// Mocks
-jest.mock('web3-core-helpers');
 
 /**
  * GetGasPriceMethod test
@@ -12,7 +8,7 @@ describe('GetGasPriceMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetGasPriceMethod(null, formatters, {});
+        method = new GetGasPriceMethod({});
     });
 
     it('constructor check', () => {
@@ -21,17 +17,9 @@ describe('GetGasPriceMethodTest', () => {
         expect(method.rpcMethod).toEqual('eth_gasPrice');
 
         expect(method.parametersAmount).toEqual(0);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(formatters);
     });
 
     it('afterExecution should map the response', () => {
-        formatters.outputBigNumberFormatter.mockReturnValueOnce({bigNumber: true});
-
         expect(method.afterExecution('1000')).toHaveProperty('bigNumber', true);
-
-        expect(formatters.outputBigNumberFormatter).toHaveBeenCalledWith('1000');
     });
 });

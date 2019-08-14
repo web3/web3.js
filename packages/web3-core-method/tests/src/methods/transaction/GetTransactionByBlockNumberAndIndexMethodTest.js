@@ -8,7 +8,7 @@ describe('GetTransactionByBlockNumberAndIndexMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetTransactionByBlockNumberAndIndexMethod({}, {}, {});
+        method = new GetTransactionByBlockNumberAndIndexMethod({});
     });
 
     it('constructor check', () => {

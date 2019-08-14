@@ -1,4 +1,3 @@
-import {formatters} from 'web3-core-helpers';
 import GetBlockTransactionCountMethod from '../../../src/methods/GetBlockTransactionCountMethod';
 
 /**
@@ -8,7 +7,7 @@ describe('GetBlockTransactionCountMethodTest', () => {
     let getBlockTransactionCountMethod;
 
     beforeEach(() => {
-        getBlockTransactionCountMethod = new GetBlockTransactionCountMethod({}, formatters, {});
+        getBlockTransactionCountMethod = new GetBlockTransactionCountMethod({});
     });
 
     it('constructor check', () => {
@@ -18,7 +17,7 @@ describe('GetBlockTransactionCountMethodTest', () => {
     it('calls execute with hash', () => {
         getBlockTransactionCountMethod.parameters = ['0x0'];
 
-        getBlockTransactionCountMethod.beforeExecution({});
+        getBlockTransactionCountMethod.beforeExecution();
 
         expect(getBlockTransactionCountMethod.rpcMethod).toEqual('eth_getBlockTransactionCountByHash');
     });
@@ -26,7 +25,7 @@ describe('GetBlockTransactionCountMethodTest', () => {
     it('calls execute with number', () => {
         getBlockTransactionCountMethod.parameters = [100];
 
-        getBlockTransactionCountMethod.beforeExecution({});
+        getBlockTransactionCountMethod.beforeExecution();
 
         expect(getBlockTransactionCountMethod.rpcMethod).toEqual('eth_getBlockTransactionCountByNumber');
     });

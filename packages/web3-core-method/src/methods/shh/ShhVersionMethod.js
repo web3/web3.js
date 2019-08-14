@@ -24,13 +24,11 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class ShhVersionMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('shh_version', 0, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('shh_version', 0, moduleInstance);
     }
 }

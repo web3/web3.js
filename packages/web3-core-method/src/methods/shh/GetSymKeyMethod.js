@@ -24,13 +24,11 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class GetSymKeyMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('shh_getSymKey', 1, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('shh_getSymKey', 1, moduleInstance);
     }
 }

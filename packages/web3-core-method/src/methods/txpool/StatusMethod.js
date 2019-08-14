@@ -24,14 +24,12 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class StatusMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('txpool_status', 0, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('txpool_status', 0, moduleInstance);
     }
 
     /**
@@ -45,8 +43,8 @@ export default class StatusMethod extends AbstractMethod {
      */
     afterExecution(response) {
         if (response) {
-            response.pending = this.utils.hexToNumber(response.pending);
-            response.queued = this.utils.hexToNumber(response.queued);
+            response.pending = new Hex(response.pending).toNumber();
+            response.queued = new Hex(response.queued).toNumber();
         }
 
         return response;

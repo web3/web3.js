@@ -24,13 +24,11 @@ import AbstractGetBlockMethod from '../../../lib/methods/block/AbstractGetBlockM
 
 export default class GetBlockByHashMethod extends AbstractGetBlockMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getBlockByHash', utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('eth_getBlockByHash', moduleInstance);
     }
 }

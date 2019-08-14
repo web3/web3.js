@@ -24,14 +24,12 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class NodeInfoMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('admin_nodeInfo', 0, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('admin_nodeInfo', 0, moduleInstance);
     }
 
     /**
@@ -45,8 +43,8 @@ export default class NodeInfoMethod extends AbstractMethod {
      */
     afterExecution(response) {
         if (response) {
-            response.ports.discovery = this.utils.hexToNumber(response.ports.discovery);
-            response.ports.listener = this.utils.hexToNumber(response.ports.listener);
+            response.ports.discovery = new Hex(response.ports.discovery).toNumber();
+            response.ports.listener = new Hex(response.ports.listener).toNumber();
         }
 
         return response;

@@ -8,7 +8,7 @@ describe('IsMiningMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new IsMiningMethod(null, null, {});
+        method = new IsMiningMethod({});
     });
 
     it('constructor check', () => {
@@ -17,9 +17,5 @@ describe('IsMiningMethodTest', () => {
         expect(method.rpcMethod).toEqual('eth_mining');
 
         expect(method.parametersAmount).toEqual(0);
-
-        expect(method.utils).toEqual(null);
-
-        expect(method.formatters).toEqual(null);
     });
 });

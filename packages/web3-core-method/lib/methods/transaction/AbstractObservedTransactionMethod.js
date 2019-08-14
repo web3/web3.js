@@ -27,15 +27,13 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
     /**
      * @param {String} rpcMethod
      * @param {Number} parametersAmount
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      * @param {AbstractTransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(rpcMethod, parametersAmount, utils, formatters, moduleInstance, transactionObserver) {
-        super(rpcMethod, parametersAmount, utils, formatters, moduleInstance);
+    constructor(rpcMethod, parametersAmount, moduleInstance, transactionObserver) {
+        super(rpcMethod, parametersAmount, moduleInstance);
 
         this.transactionObserver = transactionObserver;
         this.promiEvent = new PromiEvent();
@@ -69,7 +67,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
      * @returns {PromiEvent}
      */
     execute() {
-        this.beforeExecution(this.moduleInstance);
+        this.beforeExecution();
 
         this.moduleInstance.currentProvider
             .send(this.rpcMethod, this.parameters)
@@ -121,11 +119,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                             return;
                         }
 
-                        this.promiEvent.emit(
-                            'confirmation',
-                            confirmations,
-                            this.formatters.outputTransactionFormatter(receipt)
-                        );
+                        this.promiEvent.emit('confirmation', confirmations, new TransactionReceipt(receipt));
                     },
                     (error) => {
                         this.handleError(error, receipt, confirmations);

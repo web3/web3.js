@@ -8,7 +8,7 @@ describe('VmoduleMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new VmoduleMethod({}, {}, {});
+        method = new VmoduleMethod({});
     });
 
     it('constructor check', () => {

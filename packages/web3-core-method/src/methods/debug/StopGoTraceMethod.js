@@ -24,13 +24,11 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class StopGoTraceMethod extends AbstractMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('debug_stopGoTrace', 0, utils, formatters, moduleInstance);
+    constructor(moduleInstance) {
+        super('debug_stopGoTrace', 0, moduleInstance);
     }
 }
