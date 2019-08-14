@@ -24,7 +24,7 @@
  */
 
 import Address from './Address';
-import BigNumber from 'bn.js';
+import BN from 'bn.js';
 
 export default class Iban {
     /**
@@ -83,7 +83,7 @@ export default class Iban {
             .replace('0x', '')
             .replace('0X', '');
 
-        const asBn = new BigNumber(address, 16);
+        const asBn = new BN(address, 16);
 
         let padded = asBn.toString(36);
 
@@ -223,7 +223,7 @@ export default class Iban {
     toAddress() {
         if (this.isDirect()) {
             const base36 = this._iban.substr(4);
-            const asBn = new BigNumber(base36, 36);
+            const asBn = new BN(base36, 36);
             return Address.toChecksum(asBn.toString(16, 20));
         }
 

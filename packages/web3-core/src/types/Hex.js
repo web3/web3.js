@@ -20,8 +20,13 @@
  */
 
 import utf8 from 'utf8';
+import BN from 'bn.js';
+import isBoolean from 'lodash/isBoolean';
+import isObject from 'lodash/isObject';
 import isString from 'lodash/isString';
 import isNumber from 'lodash/isNumber';
+import randombytes from 'randombytes';
+import Address from './Address';
 import {BigNumber} from '@ethersproject/bignumber';
 
 export default class Hex {
@@ -75,7 +80,7 @@ export default class Hex {
      * @returns {Number}
      */
     toNumber() {
-        return BigNumber.from(this.toString()).toNumber();
+        return this.toBigNumber().toNumber();
     }
 
     /**
@@ -86,7 +91,18 @@ export default class Hex {
      * @returns {String}
      */
     toNumberString() {
-        return BigNumber.from(this.toString()).toString();
+        return this.toBigNumber().toString();
+    }
+
+    /**
+     * Return the given hex string as BigNumber object
+     *
+     * @method toBigNumber
+     *
+     * @returns {BigNumber}
+     */
+    toBigNumber() {
+        return BigNumber.from(this.toString());
     }
 
     /**
@@ -97,7 +113,11 @@ export default class Hex {
      * @returns {String}
      */
     toTwosComplement() {
-        return `0x${BigNumber.from(this.toString()).toTwos(256)}`;
+        const twos = this.toBigNumber()
+            .toTwos(256)
+            .toHexString();
+
+        return Hex.leftPad(twos, 64);
     }
 
     /**
@@ -316,6 +336,75 @@ export default class Hex {
     }
 
     /**
+     * Auto converts any given value into it's hex representation.
+     * And even stringifys objects before.
+     *
+     * @method toHex
+     *
+     * @param {String|Number|BN|Object} value
+     *
+     * @returns {Hex}
+     */
+    static from(value) {
+        if (Address.isValid(value)) {
+            throw new Error('Please use the Address type object for interacting with a Ethereum Address.');
+        }
+
+        if (isBoolean(value)) {
+            if (value === true) {
+                return new Hex('0x01');
+            }
+
+            return new Hex('0x00');
+        }
+
+        if (isObject(value) && !BigNumber.isBigNumber(value) && !BN.isBN(value)) {
+            return Hex.fromUTF8(JSON.stringify(value));
+        }
+
+        if (isString(value)) {
+            if (
+                value.startsWith('-0x') ||
+                value.startsWith('-0X') ||
+                value.startsWith('0x') ||
+                value.startsWith('0X')
+            ) {
+                return new Hex(value);
+            }
+
+            if (!isFinite(value)) {
+                return Hex.fromUTF8(value);
+            }
+        }
+
+        if (BigNumber.isBigNumber(value)) {
+            let hex = value.toString(16);
+
+            if (value.toHexString) {
+                hex = value.toHexString();
+            }
+
+            if (hex.startsWith('-')) {
+                return new Hex('-0x' + hex.slice(1));
+            }
+
+            return new Hex('0x' + value.toString(16));
+        }
+
+        if (BN.isBN(value)) {
+            const hex = value.toString(16);
+
+            if (hex.startsWith('-')) {
+                return new Hex('-0x' + hex.slice(1));
+            }
+
+            return new Hex('0x' + value.toString(16));
+        }
+
+        return Hex.fromNumber(value);
+    }
+
+    /**
      * Validates the given hex.
      *
      * @param {String} hex
@@ -375,5 +464,18 @@ export default class Hex {
         }
 
         return /^(0x)?[0-9a-f]{64}$/.test(topic) || /^(0x)?[0-9A-F]{64}$/.test(topic);
+    }
+
+    /**
+     * Returns a random hex string with the defined size.
+     *
+     * @method random
+     *
+     * @param {Number} size
+     *
+     * @returns {String}
+     */
+    static random(size) {
+        return '0x' + randombytes(size).toString('hex');
     }
 }

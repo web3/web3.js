@@ -35,6 +35,50 @@ export default class Transaction extends TransactionReceipt {
     }
 
     /**
+     * Getter for the hash property.
+     *
+     * @property hash
+     *
+     * @returns {String}
+     */
+    get hash() {
+        return this.properties.hash;
+    }
+
+    /**
+     * Setter for the hash property.
+     *
+     * @property hash
+     *
+     * @param {String} hash
+     */
+    set hash(hash) {
+        this.properties.hash = hash;
+    }
+
+    /**
+     * Getter for the transactionHash property.
+     *
+     * @proeprty transactionHash
+     *
+     * @returns {String}
+     */
+    get transactionHash() {
+        return this.properties.hash;
+    }
+
+    /**
+     * Setter for the transactionHash property.
+     *
+     * @property transactionHash
+     *
+     * @param {String} hash
+     */
+    set transactionHash(hash) {
+        this.properties.hash = hash;
+    }
+
+    /**
      * Getter for the input property.
      *
      * @property input
