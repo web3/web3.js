@@ -22,11 +22,10 @@ import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
 import * as EthLibAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
+import {Hex} from 'web3-core';
 import Hash from 'eth-lib/lib/hash';
-import randomBytes from 'randombytes';
 import {pbkdf2Sync} from 'pbkdf2';
 import {createCipheriv, createDecipheriv} from 'browserify-cipher';
-import {isHexStrict, hexToBytes, randomHex, keccak256} from 'web3-utils'; // TODO: Use the VO's of a web3-types module.
 
 export default class Account {
     /**
@@ -68,8 +67,8 @@ export default class Account {
      * @returns {String}
      */
     sign(data) {
-        if (isHexStrict(data)) {
-            data = hexToBytes(data);
+        if (Hex.isValid(data)) {
+            data = new Hex(data).toBytes();
         }
 
         const messageBuffer = Buffer.from(data);
@@ -111,7 +110,7 @@ export default class Account {
      * @returns {Account}
      */
     static from(entropy, accounts = {}) {
-        return new Account(EthLibAccount.create(entropy || randomHex(32)), accounts);
+        return new Account(EthLibAccount.create(entropy || Hex.random(32).toString()), accounts);
     }
 
     /**
@@ -147,8 +146,8 @@ export default class Account {
      */
     toV3Keystore(password, options) {
         options = options || {};
-        const salt = options.salt || randomBytes(32);
-        const iv = options.iv || randomBytes(16);
+        const salt = options.salt || Hex.random(32).toBytes();
+        const iv = options.iv || Hex.random(16).toBytes();
 
         let derivedKey;
         const kdf = options.kdf || 'scrypt';
@@ -201,7 +200,7 @@ export default class Account {
 
         return {
             version: 3,
-            id: uuid.v4({random: options.uuid || randomBytes(16)}),
+            id: uuid.v4({random: options.uuid || Hex.random(16).toString()}),
             address: this.address.toLowerCase().replace('0x', ''),
             crypto: {
                 ciphertext: ciphertext.toString('hex'),

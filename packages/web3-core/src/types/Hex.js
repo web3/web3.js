@@ -474,9 +474,9 @@ export default class Hex {
      *
      * @param {Number} size
      *
-     * @returns {String}
+     * @returns {Hex}
      */
     static random(size) {
-        return '0x' + randombytes(size).toString('hex');
+        return new Hex('0x' + randombytes(size).toString('hex'));
     }
 }

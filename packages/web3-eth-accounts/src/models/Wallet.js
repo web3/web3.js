@@ -60,7 +60,7 @@ export default class Wallet {
      */
     create(numberOfAccounts, entropy) {
         for (let i = 0; i < numberOfAccounts; ++i) {
-            this.add(Account.from(entropy || Hex.random(32), this.accountsModule));
+            this.add(Account.from(entropy || Hex.random(32).toString(), this.accountsModule));
         }
 
         return this;

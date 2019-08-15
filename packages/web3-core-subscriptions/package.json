@@ -20,7 +20,8 @@
     "dependencies": {
         "@babel/runtime": "^7.3.1",
         "eventemitter3": "^4.0.0",
-        "lodash": "^4.17.11"
+        "lodash": "^4.17.11",
+        "web3-core": "2.0.0-alpha.1"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",

@@ -17,6 +17,7 @@
  * @date 2019
  */
 
+import Hash from 'eth-lib/lib/hash';
 import EthereumTx from 'ethereumjs-tx';
 
 export default class TransactionSigner {
