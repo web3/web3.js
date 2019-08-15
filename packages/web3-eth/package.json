@@ -29,7 +29,6 @@
         "web3-eth-accounts": "2.0.0-alpha.1",
         "web3-eth-contract": "2.0.0-alpha.1",
         "web3-eth-ens": "2.0.0-alpha.1",
-        "web3-eth-iban": "2.0.0-alpha.1",
         "web3-eth-personal": "2.0.0-alpha.1",
         "web3-net": "2.0.0-alpha.1",
         "web3-providers": "2.0.0-alpha.1"

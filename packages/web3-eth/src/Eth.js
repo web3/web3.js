@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'web3-core';
+import {AbstractWeb3Module, Iban} from 'web3-core';
 
 export default class Eth extends AbstractWeb3Module {
     /**
@@ -29,7 +29,6 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Network} net
      * @param {Accounts} accounts
      * @param {Personal} personal
-     * @param {Iban} Iban
      * @param {AbiCoder} abiCoder
      * @param {Ens} ens
      * @param {SubscriptionsFactory} subscriptionsFactory
@@ -45,7 +44,6 @@ export default class Eth extends AbstractWeb3Module {
         net,
         accounts,
         personal,
-        Iban,
         abiCoder,
         ens,
         subscriptionsFactory,

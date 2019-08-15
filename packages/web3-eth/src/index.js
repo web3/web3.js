@@ -25,7 +25,6 @@ import {Ens} from 'web3-eth-ens';
 import {ContractModuleFactory} from 'web3-eth-contract';
 import {Personal} from 'web3-eth-personal';
 import {AbiCoder} from 'web3-eth-abi';
-import {Iban} from 'web3-eth-iban';
 import {Network} from 'web3-net';
 import EthTransactionSigner from './signers/TransactionSigner';
 import MethodFactory from './factories/MethodFactory';
@@ -70,7 +69,6 @@ export function Eth(provider, net = null, options = {}) {
         new Network(resolvedProvider, null, options),
         accounts,
         new Personal(resolvedProvider, null, accounts, options),
-        Iban,
         abiCoder,
         new Ens(resolvedProvider, null, accounts, options),
         new SubscriptionsFactory(),

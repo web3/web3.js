@@ -1,4 +1,4 @@
-import Iban from '../../src/Iban';
+import Iban from '../../../src/types/Iban';
 
 /**
  * Iban test

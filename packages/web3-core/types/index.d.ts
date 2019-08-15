@@ -248,3 +248,42 @@ export interface PeerInfo {
 export interface TransactionSigner {
     sign(txObject: TransactionConfig): Promise<SignedTransaction>
 }
+
+export class Iban {
+    constructor(
+        iban: string
+    )
+
+    static toAddress(iban: string): string;
+
+    static toIban(address: string): string;
+
+    static fromAddress(address: string): Iban;
+
+    static fromBban(bban: string): Iban;
+
+    static createIndirect(options: IndirectOptions): Iban;
+
+    static isValid(iban: string): boolean;
+
+    isValid(): boolean;
+
+    isDirect(): boolean;
+
+    isIndirect(): boolean;
+
+    checksum(): string;
+
+    institution(): string;
+
+    client(): string;
+
+    toAddress(): string;
+
+    toString(): string;
+}
+
+export interface IndirectOptions {
+    institution: string;
+    identifier: string;
+}

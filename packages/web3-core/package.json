@@ -25,7 +25,12 @@
         "@types/node": "^12.6.1",
         "lodash": "^4.17.11",
         "web3-core-method": "2.0.0-alpha.1",
-        "web3-providers": "2.0.0-alpha.1"
+        "web3-providers": "2.0.0-alpha.1",
+        "bn.js": "4.11.8",
+        "eth-lib": "0.2.8",
+        "ethjs-unit": "^0.1.6",
+        "randombytes": "^2.1.0",
+        "utf8": "2.1.1"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",

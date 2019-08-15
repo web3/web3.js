@@ -32,10 +32,10 @@ import {
     TransactionSigner
 } from 'web3-core';
 import {Contract, ContractOptions} from 'web3-eth-contract';
-import {Iban} from 'web3-eth-iban';
 import {Accounts} from 'web3-eth-accounts';
 import {AbiCoder} from 'web3-eth-abi';
 import {Network} from 'web3-net';
+import {Iban} from 'web3-core';
 import {Personal} from 'web3-eth-personal';
 import {AbiItem} from 'web3-utils';
 import {Ens} from 'web3-eth-ens';
