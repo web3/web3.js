@@ -21,6 +21,7 @@
  */
 
 import isFunction from 'lodash/isFunction';
+import {Address} from 'web3-core';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class PersonalSignMethod extends AbstractMethod {

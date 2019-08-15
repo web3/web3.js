@@ -38,6 +38,6 @@ export default class PersonalSendTransactionMethod extends AbstractMethod {
      * @method beforeExecution
      */
     beforeExecution() {
-        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
+        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], this.moduleInstance);
     }
 }

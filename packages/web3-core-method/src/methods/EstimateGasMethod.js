@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {Hex} from 'web3-core';
 import AbstractMethod from '../../lib/methods/AbstractMethod';
 
 export default class EstimateGasMethod extends AbstractMethod {
@@ -38,7 +39,7 @@ export default class EstimateGasMethod extends AbstractMethod {
      * @method beforeExecution
      */
     beforeExecution() {
-        this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
+        this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], this.moduleInstance);
     }
 
     /**

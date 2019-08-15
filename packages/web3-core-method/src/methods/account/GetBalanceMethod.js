@@ -22,6 +22,7 @@
 
 import isFunction from 'lodash/isFunction';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import {Address, BlockNumber, Hex} from 'web3-core';
 
 export default class GetBalanceMethod extends AbstractMethod {
     /**
@@ -64,6 +65,6 @@ export default class GetBalanceMethod extends AbstractMethod {
      * @returns {BigNumber}
      */
     afterExecution(response) {
-        return this.formatters.outputBigNumberFormatter(response);
+        return new Hex(response).toBigNumber();
     }
 }

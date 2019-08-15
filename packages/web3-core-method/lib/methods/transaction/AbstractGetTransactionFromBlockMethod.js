@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {BlockNumber, Transaction, Hex} from 'web3-core';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class AbstractGetTransactionFromBlockMethod extends AbstractMethod {

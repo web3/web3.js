@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {Hex} from 'web3-core';
 import SendTransactionMethod from './SendTransactionMethod';
 
 export default class EthSendTransactionMethod extends SendTransactionMethod {

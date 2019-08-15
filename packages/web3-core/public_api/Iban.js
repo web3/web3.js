@@ -15,30 +15,20 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file BlockProfileMethod.js
- * @author Prince Sinha <sinhaprince013@gmail.com>
+ * @file Iban.js
+ * @author Samuel Furter<samuel@ethereum.org>
  * @date 2019
  */
 
-import {Hex} from 'web3-core';
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import InternalIban from '../src/types/Iban';
 
-export default class BlockProfileMethod extends AbstractMethod {
+export default class Iban extends InternalIban {
     /**
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {String} iban
      *
      * @constructor
      */
-    constructor(moduleInstance) {
-        super('debug_blockProfile', 2, moduleInstance);
-    }
-
-    /**
-     * This method will be executed before the RPC request.
-     *
-     * @method beforeExecution
-     */
-    beforeExecution() {
-        this.parameters[1] = Hex.fromNumber(this.parameters[1]).toString();
+    constructor(iban) {
+        super(iban);
     }
 }

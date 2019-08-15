@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {Address} from 'web3-core';
 import isFunction from 'lodash/isFunction';
 import AbstractMethod from '../../lib/methods/AbstractMethod';
 
@@ -44,9 +45,9 @@ export default class GetCodeMethod extends AbstractMethod {
         // Optional second parameter 'defaultBlock' could also be the callback
         if (isFunction(this.parameters[1])) {
             this.callback = this.parameters[1];
-            this.parameters[1] = moduleInstance.defaultBlock;
+            this.parameters[1] = this.moduleInstance.defaultBlock;
         }
 
-        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
+        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], this.moduleInstance);
     }
 }

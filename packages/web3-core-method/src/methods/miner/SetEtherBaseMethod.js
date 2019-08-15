@@ -20,6 +20,7 @@
  * @date 2019
  */
 
+import {Address} from 'web3-core';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class SetEtherBaseMethod extends AbstractMethod {

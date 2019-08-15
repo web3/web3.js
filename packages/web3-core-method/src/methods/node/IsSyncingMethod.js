@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {SyncState} from 'web3-core';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class IsSyncingMethod extends AbstractMethod {

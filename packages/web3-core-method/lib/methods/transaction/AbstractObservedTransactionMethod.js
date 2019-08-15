@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {TransactionReceipt} from 'web3-core';
 import PromiEvent from '../../PromiEvent';
 import AbstractMethod from '../AbstractMethod';
 

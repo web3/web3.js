@@ -21,3 +21,19 @@
  */
 
 export AbstractWeb3Module from '../public_api/AbstractWeb3Module';
+
+// Types
+export Address from '../public_api/types/Address';
+export Block from '../public_api/types/Block';
+export BlockNumber from '../public_api/types/BlockNumber';
+export Hex from '../public_api/types/Hex';
+export Iban from '../public_api/types/Iban';
+export Log from '../public_api/types/Log';
+export LogOptions from '../public_api/types/LogOptions';
+export Post from '../public_api/types/Post';
+export PostOptions from '../public_api/types/PostOptions';
+export SyncState from '../public_api/types/SyncState';
+export Transaction from '../public_api/types/Transaction';
+export TransactionOptions from '../public_api/types/TransactionOptions';
+export TransactionReceipt from '../public_api/types/TransactionReceipt';
+export Units from '../public_api/types/Units';

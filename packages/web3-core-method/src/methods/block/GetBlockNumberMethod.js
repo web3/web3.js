@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {Hex} from 'web3-core';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class GetBlockNumberMethod extends AbstractMethod {
