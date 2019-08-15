@@ -46,7 +46,7 @@ export default class AbiCoder {
      */
     encodeFunctionSignature(functionName) {
         if (isObject(functionName)) {
-            functionName = jsonInterfaceMethodToString(functionName);
+            functionName = this.jsonInterfaceMethodToString(functionName);
         }
 
         return keccak256(functionName).slice(0, 10);
@@ -63,7 +63,7 @@ export default class AbiCoder {
      */
     encodeEventSignature(functionName) {
         if (isObject(functionName)) {
-            functionName = jsonInterfaceMethodToString(functionName);
+            functionName = this.jsonInterfaceMethodToString(functionName);
         }
 
         return keccak256(functionName);
@@ -265,5 +265,67 @@ export default class AbiCoder {
         }
 
         return true;
+    }
+
+    /**
+     * Should be used to create full function/event name from json abi
+     *
+     * @method jsonInterfaceMethodToString
+     *
+     * @param {Object} json
+     *
+     * @returns {String} full function/event name
+     */
+    jsonInterfaceMethodToString(json) {
+        if (isObject(json) && json.name && json.name.includes('(')) {
+            return json.name;
+        }
+
+        return `${json.name}(${this.flattenTypes(false, json.inputs).join(',')})`;
+    }
+
+    /**
+     * Should be used to flatten json abi inputs/outputs into an array of type-representing-strings
+     *
+     * @method _flattenTypes
+     *
+     * @param {Boolean} includeTuple
+     * @param {Object} puts
+     *
+     * @returns {Array} parameters as strings
+     */
+    flattenTypes(includeTuple, puts) {
+        // console.log("entered _flattenTypes. inputs/outputs: " + puts)
+        const types = [];
+
+        puts.forEach((param) => {
+            if (typeof param.components === 'object') {
+                if (param.type.substring(0, 5) !== 'tuple') {
+                    throw new Error('components found but type is not tuple; report on GitHub');
+                }
+                let suffix = '';
+                const arrayBracket = param.type.indexOf('[');
+                if (arrayBracket >= 0) {
+                    suffix = param.type.substring(arrayBracket);
+                }
+                const result = this.flattenTypes(includeTuple, param.components);
+                // console.log("result should have things: " + result)
+                if (isArray(result) && includeTuple) {
+                    // console.log("include tuple word, and its an array. joining...: " + result.types)
+                    types.push(`tuple(${result.join(',')})${suffix}`);
+                } else if (!includeTuple) {
+                    // console.log("don't include tuple, but its an array. joining...: " + result)
+                    types.push(`(${result.join(',')})${suffix}`);
+                } else {
+                    // console.log("its a single type within a tuple: " + result.types)
+                    types.push(`(${result})`);
+                }
+            } else {
+                // console.log("its a type and not directly in a tuple: " + param.type)
+                types.push(param.type);
+            }
+        });
+
+        return types;
     }
 }
