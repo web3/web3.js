@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {Transaction} from 'web3-core';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class GetPendingTransactionsMethod extends AbstractMethod {
@@ -44,7 +45,7 @@ export default class GetPendingTransactionsMethod extends AbstractMethod {
     afterExecution(response) {
         if (response) {
             return response.map((item) => {
-                return this.formatters.outputTransactionFormatter(item);
+                return new Transaction(item);
             });
         }
 

@@ -21,7 +21,7 @@
  */
 
 import isFunction from 'lodash/isFunction';
-import {BlockNumber} from 'web3-core';
+import {BlockNumber, TransactionOptions} from 'web3-core';
 import AbstractMethod from '../../lib/methods/AbstractMethod';
 
 export default class CallMethod extends AbstractMethod {
@@ -40,7 +40,11 @@ export default class CallMethod extends AbstractMethod {
      * @method beforeExecution
      */
     beforeExecution() {
-        this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], this.moduleInstance);
+        if (!this.parameters[0].from) {
+            this.parameters[0].from = this.moduleInstance.defaultAccount;
+        }
+
+        this.parameters[0] = new TransactionOptions(this.parameters[0]);
 
         // Optional second parameter 'defaultBlock' could also be the callback
         if (isFunction(this.parameters[1])) {
@@ -48,6 +52,10 @@ export default class CallMethod extends AbstractMethod {
             this.parameters[1] = this.moduleInstance.defaultBlock;
         }
 
-        this.parameters[1] = new BlockNumber(this.parameters[1], this.moduleInstance).toString();
+        if (!this.parameters[1]) {
+            this.parameters[1] = this.moduleInstance.defaultBlock;
+        }
+
+        this.parameters[1] = new BlockNumber(this.parameters[1]).toString();
     }
 }

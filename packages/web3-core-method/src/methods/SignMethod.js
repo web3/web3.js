@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {Address} from 'web3-core';
+import {Address, Hex} from 'web3-core';
 import AbstractMethod from '../../lib/methods/AbstractMethod';
 
 export default class SignMethod extends AbstractMethod {
@@ -39,7 +39,10 @@ export default class SignMethod extends AbstractMethod {
      * @method beforeExecution
      */
     beforeExecution() {
-        this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
+        if (!Hex.isValid(this.parameters[0])) {
+            this.parameters[0] = Hex.fromUTF8(this.parameters[0]).toString();
+        }
+
         this.parameters[1] = new Address(this.parameters[1]).toString();
         this.parameters.reverse();
     }

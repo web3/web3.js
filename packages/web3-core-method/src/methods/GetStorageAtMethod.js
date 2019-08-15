@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {Address, Hex} from 'web3-core';
+import {Address, BlockNumber, Hex} from 'web3-core';
 import isFunction from 'lodash/isFunction';
 import AbstractMethod from '../../lib/methods/AbstractMethod';
 
@@ -49,6 +49,10 @@ export default class GetStorageAtMethod extends AbstractMethod {
             this.parameters[2] = this.moduleInstance.defaultBlock;
         }
 
-        this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], this.moduleInstance);
+        if (!this.parameters[2]) {
+            this.parameters[2] = this.moduleInstance.defaultBlock;
+        }
+
+        this.parameters[2] = new BlockNumber(this.parameters[2]).toString();
     }
 }

@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {Transaction} from 'web3-core';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class GetTransactionMethod extends AbstractMethod {
@@ -42,6 +43,6 @@ export default class GetTransactionMethod extends AbstractMethod {
      * @returns {Object}
      */
     afterExecution(response) {
-        return this.formatters.outputTransactionFormatter(response);
+        return new Transaction(response);
     }
 }

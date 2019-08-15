@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {Hex} from 'web3-core';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class EcRecoverMethod extends AbstractMethod {
@@ -38,6 +39,8 @@ export default class EcRecoverMethod extends AbstractMethod {
      * @method beforeExecution
      */
     beforeExecution() {
-        this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
+        if (!Hex.isValid(this.parameters[0])) {
+            this.parameters[0] = Hex.fromUTF8(this.parameters[0]).toString();
+        }
     }
 }

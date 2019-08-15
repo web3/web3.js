@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {TransactionOptions, TransactionReceipt} from 'web3-core';
 import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
 export default class SendTransactionMethod extends AbstractObservedTransactionMethod {
@@ -39,7 +40,11 @@ export default class SendTransactionMethod extends AbstractObservedTransactionMe
      * @method beforeExecution
      */
     beforeExecution() {
-        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], this.moduleInstance);
+        if (!this.parameters[0].from) {
+            this.parameters[0].from = this.moduleInstance.defaultAccount;
+        }
+
+        this.parameters[0] = new TransactionOptions(this.parameters[0]);
     }
 
     /**
@@ -52,6 +57,6 @@ export default class SendTransactionMethod extends AbstractObservedTransactionMe
      * @returns {Object}
      */
     afterExecution(response) {
-        return this.formatters.outputTransactionFormatter(response);
+        return new TransactionReceipt(response);
     }
 }

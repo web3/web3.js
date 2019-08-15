@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {TransactionOptions} from 'web3-core';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class SignTransactionMethod extends AbstractMethod {
@@ -38,6 +39,10 @@ export default class SignTransactionMethod extends AbstractMethod {
      * @method beforeExecution
      */
     beforeExecution() {
-        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], this.moduleInstance);
+        if (!this.parameters[0].from) {
+            this.parameters[0].from = this.moduleInstance.defaultAccount;
+        }
+
+        this.parameters[0] = new TransactionOptions(this.parameters[0]);
     }
 }

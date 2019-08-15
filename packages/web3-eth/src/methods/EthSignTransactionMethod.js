@@ -21,6 +21,7 @@
  */
 
 import isString from 'lodash/isString';
+import {TransactionOptions} from 'web3-core';
 import {SignTransactionMethod} from 'web3-core-method';
 
 export default class EthSignTransactionMethod extends SignTransactionMethod {
@@ -39,7 +40,7 @@ export default class EthSignTransactionMethod extends SignTransactionMethod {
      * @method beforeExecution
      */
     beforeExecution() {
-        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], this.moduleInstance);
+        this.parameters[0] = new TransactionOptions(this.parameters[0]);
     }
 
     /**

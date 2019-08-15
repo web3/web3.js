@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {TransactionReceipt} from 'web3-core';
 import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
 export default class SendRawTransactionMethod extends AbstractObservedTransactionMethod {
@@ -43,6 +44,6 @@ export default class SendRawTransactionMethod extends AbstractObservedTransactio
      * @returns {Object}
      */
     afterExecution(response) {
-        return this.formatters.outputTransactionFormatter(response);
+        return new TransactionReceipt(response);
     }
 }
