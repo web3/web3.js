@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {Log} from 'web3-core';
 import {LogSubscription} from 'web3-core-subscriptions';
 
 export default class AllEventsLogSubscription extends LogSubscription {

@@ -17,6 +17,7 @@
  * @date 2019
  */
 
+import {Hex} from 'web3-core';
 import isString from 'lodash/isString';
 import Account from './Account';
 

@@ -37,16 +37,7 @@ export default class EnsModuleFactory {
      * @returns {Ens}
      */
     createENS(provider, contractModuleFactory, accounts, abiCoder, net, ensModuleOptions, nodeNet) {
-        return new Ens(
-            provider,
-            ensModuleOptions,
-            this,
-            contractModuleFactory,
-            accounts,
-            abiCoder,
-            net,
-            nodeNet
-        );
+        return new Ens(provider, ensModuleOptions, this, contractModuleFactory, accounts, abiCoder, net, nodeNet);
     }
 
     /**

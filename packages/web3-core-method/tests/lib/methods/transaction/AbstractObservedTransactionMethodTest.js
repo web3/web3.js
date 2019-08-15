@@ -39,12 +39,7 @@ describe('AbstractObservedTransactionMethodTest', () => {
             return value;
         });
 
-        method = new AbstractObservedTransactionMethod(
-            'rpcMethod',
-            5,
-            moduleInstanceMock,
-            transactionObserverMock
-        );
+        method = new AbstractObservedTransactionMethod('rpcMethod', 5, moduleInstanceMock, transactionObserverMock);
         method.beforeExecution = beforeExecutionMock;
         method.afterExecution = afterExecutionMock;
     });

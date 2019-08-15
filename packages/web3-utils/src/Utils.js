@@ -20,35 +20,7 @@
 //  * @author Prince Sinha <sinhaprince013@gmail.com>
 //  * @date 2017
 //  */
-//
-// import Hash from 'eth-lib/lib/hash';
-//
-// /**
-//  * Hashes values to a keccak256 hash using keccak 256
-//  *
-//  * To hash a HEX string the hex must have 0x in front.
-//  *
-//  * @method keccak256
-//  * @return {String} the keccak256 string
-//  */
-// const KECCAK256_NULL_S = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
-//
-// export const keccak256 = (value) => {
-//     if (isHexStrict(value) && /^0x/i.test(value.toString())) {
-//         value = hexToBytes(value);
-//     }
-//
-//     const returnValue = Hash.keccak256(value); // jshint ignore:line
-//
-//     if (returnValue === KECCAK256_NULL_S) {
-//         return null;
-//     } else {
-//         return returnValue;
-//     }
-// };
-// // expose the under the hood keccak256
-// keccak256._Hash = Hash;
-//
+// TODO: SIGNATURE TYPE OBJECT
 // /**
 //  * Gets the r,s,v values from a signature
 //  *

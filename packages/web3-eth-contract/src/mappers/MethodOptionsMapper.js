@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import {Address} from 'web3-core';
+
 export default class MethodOptionsMapper {
     /**
      * Sets the default options where it is required

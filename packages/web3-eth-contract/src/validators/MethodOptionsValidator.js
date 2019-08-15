@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {Address} from 'web3-core';
 import SendContractMethod from '../methods/SendContractMethod';
 
 export default class MethodOptionsValidator {
@@ -64,7 +65,7 @@ export default class MethodOptionsValidator {
             return true;
         }
 
-        return Adress.isValid(method.parameters[0].to);
+        return Address.isValid(method.parameters[0].to);
     }
 
     /**
@@ -77,7 +78,7 @@ export default class MethodOptionsValidator {
      * @returns {Boolean}
      */
     isFromSet(method) {
-        return Adress.isValid(method.parameters[0].from);
+        return Address.isValid(method.parameters[0].from);
     }
 
     /**

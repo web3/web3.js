@@ -30,6 +30,8 @@ import HttpTransactionObserver from '../../src/observers/HttpTransactionObserver
 
 export default class AbstractMethodFactory {
     /**
+     * @param {Object} methods
+     *
      * @constructor
      */
     constructor(methods) {

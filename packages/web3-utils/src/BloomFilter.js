@@ -21,8 +21,6 @@
  * @date 2017
  */
 
-import * as utils from './Utils.js';
-
 /**
  * @method codePointToInt
  *
@@ -58,7 +56,7 @@ function codePointToInt(codePoint) {
  * @returns {Boolean}
  */
 function testBytes(bloom, bytes) {
-    const hash = utils.keccak256(bytes).replace('0x', '');
+    const hash = keccak256(bytes).replace('0x', '');
 
     for (let i = 0; i < 12; i += 4) {
         // calculate bit position in bloom filter that must be active
@@ -88,10 +86,10 @@ function testBytes(bloom, bytes) {
  * @returns {Boolean} topic is (probably) part of the block
  */
 export const testAddress = (bloom, address) => {
-    if (!utils.isBloom(bloom)) {
+    if (!isBloom(bloom)) {
         throw new Error('Invalid bloom given');
     }
-    if (!utils.isAddress(address)) {
+    if (!isAddress(address)) {
         throw new Error(`Invalid address given: "${address}"`);
     }
 
@@ -110,11 +108,11 @@ export const testAddress = (bloom, address) => {
  * @returns {Boolean} topic is (probably) part of the block
  */
 export const testTopic = (bloom, topic) => {
-    if (!utils.isBloom(bloom)) {
+    if (!isBloom(bloom)) {
         throw new Error('invalid bloom');
     }
 
-    if (!utils.isTopic(topic)) {
+    if (!isTopic(topic)) {
         throw new Error('invalid topic');
     }
 

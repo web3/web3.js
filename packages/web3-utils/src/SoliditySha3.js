@@ -235,6 +235,8 @@ const _processSoliditySha3Arguments = (argument) => {
 /**
  * Hashes solidity values to a sha3 hash using keccak 256
  *
+ * TODO: SOLIDITY TYPE OBJECT
+ *
  * @method soliditySha3
  * @return {Object} the sha3
  */
@@ -243,5 +245,5 @@ export const soliditySha3 = function() {
 
     const hexArguments = map(arguments_, _processSoliditySha3Arguments);
 
-    return utils.keccak256(`0x${hexArguments.join('')}`);
+    return keccak256(`0x${hexArguments.join('')}`);
 };

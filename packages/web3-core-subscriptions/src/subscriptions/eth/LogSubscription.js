@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {Log, LogOptions} from 'web3-core';
 import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
 import isFunction from 'lodash/isFunction';
 

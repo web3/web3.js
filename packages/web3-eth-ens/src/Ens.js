@@ -36,16 +36,7 @@ export default class Ens extends AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(
-        provider,
-        options,
-        ensModuleFactory,
-        contractModuleFactory,
-        accounts,
-        abiCoder,
-        net,
-        nodeNet
-    ) {
+    constructor(provider, options, ensModuleFactory, contractModuleFactory, accounts, abiCoder, net, nodeNet) {
         super(provider, options, null, nodeNet);
 
         this.accounts = accounts;

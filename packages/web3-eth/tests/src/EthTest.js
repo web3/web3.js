@@ -1,3 +1,4 @@
+import {Iban} from 'web3-core';
 import {AbstractSubscription, LogSubscription} from 'web3-core-subscriptions';
 import {AbiCoder} from 'web3-eth-abi';
 import {Accounts} from 'web3-eth-accounts';

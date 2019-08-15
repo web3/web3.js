@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {BlockNumber} from 'web3-core';
 import isArray from 'lodash/isArray';
 
 // TODO: Remove code duplication and create a AbstractEventsOptionsMapper

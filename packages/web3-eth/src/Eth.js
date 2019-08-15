@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module, Iban} from 'web3-core';
+import {AbstractWeb3Module, Iban, Address} from 'web3-core';
 
 export default class Eth extends AbstractWeb3Module {
     /**

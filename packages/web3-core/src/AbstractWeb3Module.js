@@ -39,7 +39,7 @@ export default class AbstractWeb3Module {
         this.providerResolver = providerResolver;
         this.givenProvider = ProviderDetector.detect(); // TODO: DI
         this._currentProvider = this.providerResolver.resolve(provider, nodeNet);
-        this._defaultAccount = options.defaultAccount ? new Address(options.defaultAccount).toChecksum() : undefined;// TODO: Create a Web3ModuleOptions VO
+        this._defaultAccount = options.defaultAccount ? new Address(options.defaultAccount).toChecksum() : undefined; // TODO: Create a Web3ModuleOptions VO
         this._defaultBlock = options.defaultBlock || 'latest';
         this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
         this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 0;

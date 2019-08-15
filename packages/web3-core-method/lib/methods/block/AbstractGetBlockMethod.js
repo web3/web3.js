@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {BlockNumber} from 'web3-core';
+import {BlockNumber, Block} from 'web3-core';
 import isFunction from 'lodash/isFunction';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
