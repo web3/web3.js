@@ -23,13 +23,11 @@
         "@types/bn.js": "^4.11.4",
         "lodash": "^4.17.11",
         "web3-core": "2.0.0-alpha.1",
-        "web3-core-helpers": "2.0.0-alpha.1",
         "web3-core-method": "2.0.0-alpha.1",
         "web3-core-subscriptions": "2.0.0-alpha.1",
         "web3-eth-abi": "2.0.0-alpha.1",
         "web3-eth-accounts": "2.0.0-alpha.1",
-        "web3-providers": "2.0.0-alpha.1",
-        "web3-utils": "2.0.0-alpha.1"
+        "web3-providers": "2.0.0-alpha.1"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",

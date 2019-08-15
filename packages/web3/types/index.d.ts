@@ -18,7 +18,6 @@
  */
 
 import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
-import {Utils} from 'web3-utils';
 import * as net from 'net';
 import {provider} from 'web3-providers';
 import {Eth} from 'web3-eth';
@@ -27,16 +26,11 @@ import {Shh} from 'web3-shh';
 import {Personal} from 'web3-eth-personal';
 
 export default class Web3 extends AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        net?: net.Socket,
-        options?: Web3ModuleOptions
-    );
+    constructor(provider: provider, net?: net.Socket, options?: Web3ModuleOptions);
 
     static modules: Modules;
     static readonly givenProvider: any;
 
-    utils: Utils;
     eth: Eth;
     shh: Shh;
     version: string;

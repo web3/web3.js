@@ -7,7 +7,7 @@ describe('NewPendingTransactionsSubscriptionTest', () => {
     let newPendingTransactionsSubscription;
 
     beforeEach(() => {
-        newPendingTransactionsSubscription = new NewPendingTransactionsSubscription({}, {}, {});
+        newPendingTransactionsSubscription = new NewPendingTransactionsSubscription({});
     });
 
     it('constructor check', () => {
@@ -16,8 +16,6 @@ describe('NewPendingTransactionsSubscriptionTest', () => {
         expect(newPendingTransactionsSubscription.type).toEqual('eth_subscribe');
 
         expect(newPendingTransactionsSubscription.options).toEqual(null);
-
-        expect(newPendingTransactionsSubscription.utils).toEqual({});
 
         expect(newPendingTransactionsSubscription.moduleInstance).toEqual({});
     });

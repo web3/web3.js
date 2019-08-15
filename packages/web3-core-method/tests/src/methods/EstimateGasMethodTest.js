@@ -1,4 +1,3 @@
-import * as Utils from 'web3-utils';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import EstimateGasMethod from '../../../src/methods/EstimateGasMethod';
 

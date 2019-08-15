@@ -1,13 +1,9 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
 import {AbstractWeb3Module} from 'web3-core';
 import MethodFactory from '../../src/factories/MethodFactory';
 import TxPool from '../../src/TxPool';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 jest.mock('web3-net');
 
 /**
@@ -18,20 +14,16 @@ describe('TxpoolTest', () => {
 
     beforeEach(() => {
         providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
-        methodFactory = new MethodFactory(Utils, formatters);
+        methodFactory = new MethodFactory();
 
         new Network();
         networkMock = Network.mock.instances[0];
 
-        txpool = new TxPool(providerMock, methodFactory, networkMock, Utils, formatters, {}, {});
+        txpool = new TxPool(providerMock, methodFactory, networkMock, {}, {});
     });
 
     it('constructor check', () => {
         expect(txpool.net).toEqual(networkMock);
-
-        expect(txpool.utils).toEqual(Utils);
-
-        expect(txpool.formatters).toEqual(formatters);
 
         expect(txpool).toBeInstanceOf(AbstractWeb3Module);
     });
@@ -86,15 +78,11 @@ describe('TxpoolTest', () => {
     });
 
     it('sets the defaultAccount property', () => {
-        Utils.toChecksumAddress.mockReturnValue('0x2');
-
         txpool.defaultAccount = '0x0';
 
         expect(txpool.defaultAccount).toEqual('0x2');
 
         expect(networkMock.defaultAccount).toEqual('0x0');
-
-        expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x0');
     });
 
     it('sets the defaultBlock property', () => {

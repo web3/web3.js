@@ -1,10 +1,4 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import TransactionSigner from '../../../src/signers/TransactionSigner';
-
-// Mocks
-// jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 
 /**
  * TransactionSigner test
@@ -13,13 +7,7 @@ describe('TransactionSignerTest', () => {
     let transactionSigner;
 
     beforeEach(() => {
-        transactionSigner = new TransactionSigner(Utils, formatters);
-    });
-
-    it('constructor check', () => {
-        expect(transactionSigner.formatters).toEqual(formatters);
-
-        expect(transactionSigner.utils).toEqual(Utils);
+        transactionSigner = new TransactionSigner();
     });
 
     it('calls sign and returns the expected resolved promise', async () => {

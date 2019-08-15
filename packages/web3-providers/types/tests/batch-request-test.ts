@@ -23,15 +23,13 @@
 import {AbstractWeb3Module} from 'web3-core';
 import {AbstractMethod} from 'web3-core-method';
 import {BatchRequest} from 'web3-providers';
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 
 const batchRequest = new BatchRequest(
     new AbstractWeb3Module('http://localhost:7545')
 );
 
 // $ExpectType void
-batchRequest.add(new AbstractMethod('eth_coinbase', 1, Utils, formatters, new AbstractWeb3Module('http://localhost:7545')));
+batchRequest.add(new AbstractMethod('eth_coinbase', 1, new AbstractWeb3Module('http://localhost:7545')));
 
 // $ExpectType Promise<BatchError | BatchResponse>
 batchRequest.execute();

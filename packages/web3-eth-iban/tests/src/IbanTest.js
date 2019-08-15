@@ -1,9 +1,4 @@
-import BigNumber from 'bn.js';
-import * as Utils from 'web3-utils';
 import Iban from '../../src/Iban';
-
-// Mocks
-jest.mock('web3-utils');
 
 /**
  * Iban test
@@ -76,11 +71,7 @@ describe('IbanTest', () => {
     it('calls toAddress with a direct Iban and returns the expected string', () => {
         iban._iban = '0000000000000000000000000000000000';
 
-        Utils.toChecksumAddress.mockReturnValueOnce('0x0');
-
         expect(iban.toAddress()).toEqual('0x0');
-
-        expect(Utils.toChecksumAddress).toHaveBeenCalledWith(new BigNumber(iban._iban.substr(4)).toString(16, 20));
     });
 
     it('calls toAddress with a indirect Iban and returns the expected string', () => {
@@ -92,11 +83,7 @@ describe('IbanTest', () => {
     });
 
     it('calls the static method toAddress and returns the expected string', () => {
-        Utils.toChecksumAddress.mockReturnValueOnce('0x0');
-
         expect(Iban.toAddress('0000000000000000000000000000000000')).toEqual('0x0');
-
-        expect(Utils.toChecksumAddress).toHaveBeenCalledWith(new BigNumber(iban._iban.substr(4)).toString(16, 20));
     });
 
     it('calls the static method toAddress with a indirect Iban and throws an error', () => {
@@ -106,16 +93,10 @@ describe('IbanTest', () => {
     });
 
     it('calls toIban and returns the expected string', () => {
-        Utils.isAddress.mockReturnValueOnce(true);
-
         expect(Iban.toIban('0x0').toString()).toEqual('XE50000000000000000000000000000000');
-
-        expect(Utils.isAddress).toHaveBeenCalledWith('0x0');
     });
 
     it('calls fromAddress and throws an error', () => {
-        Utils.isAddress.mockReturnValueOnce(false);
-
         expect(() => {
             Iban.fromAddress('0');
         }).toThrow('Provided address is not a valid address: 0');

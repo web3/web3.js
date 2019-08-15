@@ -1,9 +1,7 @@
-import * as Utils from 'web3-utils';
 import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
 import AbiCoder from '../src/AbiCoder';
 
 // Mocks
-jest.mock('web3-utils');
 jest.mock('ethers/utils/abi-coder');
 
 /**
@@ -16,61 +14,27 @@ describe('AbiCoderTest', () => {
         new EthersAbiCoder();
         ethersAbiCoderMock = EthersAbiCoder.mock.instances[0];
 
-        abiCoder = new AbiCoder(Utils, ethersAbiCoderMock);
+        abiCoder = new AbiCoder(ethersAbiCoderMock);
     });
 
     it('constructor check', () => {
-        expect(abiCoder.utils).toEqual(Utils);
-
         expect(abiCoder.ethersAbiCoder).toEqual(ethersAbiCoderMock);
     });
 
     it('calls encodeFunctionSignature with a string as parameter', () => {
-        Utils.keccak256 = jest.fn(() => {
-            return '0x000000000';
-        });
-
         expect(abiCoder.encodeFunctionSignature('functionName')).toEqual('0x00000000');
-
-        expect(Utils.keccak256).toHaveBeenCalledWith('functionName');
     });
 
     it('calls encodeFunctionSignature with a object as parameter', () => {
-        Utils.jsonInterfaceMethodToString.mockReturnValueOnce('0x000000000');
-
-        Utils.keccak256 = jest.fn(() => {
-            return '0x000000000';
-        });
-
         expect(abiCoder.encodeFunctionSignature({})).toEqual('0x00000000');
-
-        expect(Utils.jsonInterfaceMethodToString).toHaveBeenCalledWith({});
-
-        expect(Utils.keccak256).toHaveBeenCalledWith('0x000000000');
     });
 
     it('calls encodeEventSignature with a object as parameter', () => {
-        Utils.jsonInterfaceMethodToString.mockReturnValueOnce('0x000000000');
-
-        Utils.keccak256 = jest.fn(() => {
-            return '0x000000000';
-        });
-
         expect(abiCoder.encodeEventSignature({})).toEqual('0x000000000');
-
-        expect(Utils.jsonInterfaceMethodToString).toHaveBeenCalledWith({});
-
-        expect(Utils.keccak256).toHaveBeenCalledWith('0x000000000');
     });
 
     it('calls encodeEventSignature with a string as parameter', () => {
-        Utils.keccak256 = jest.fn(() => {
-            return '0x000000000';
-        });
-
         expect(abiCoder.encodeEventSignature('functionName')).toEqual('0x000000000');
-
-        expect(Utils.keccak256).toHaveBeenCalledWith('functionName');
     });
 
     it('calls encodeParameters', () => {
@@ -90,10 +54,6 @@ describe('AbiCoderTest', () => {
     });
 
     it('calls encodeFunctionCall and returns the expected string', () => {
-        Utils.keccak256 = jest.fn(() => {
-            return '0x000000000';
-        });
-
         ethersAbiCoderMock.encode.mockReturnValueOnce('0x0');
 
         expect(abiCoder.encodeFunctionCall({inputs: [{components: true}]}, [])).toEqual('0x000000000');

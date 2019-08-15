@@ -8,16 +8,10 @@ describe('MethodFactoryTest', () => {
     let methodFactory;
 
     beforeEach(() => {
-        methodFactory = new MethodFactory({}, {});
+        methodFactory = new MethodFactory();
     });
 
     it('constructor check', () => {
-        expect(methodFactory.utils).toEqual({});
-
-        expect(methodFactory.formatters).toEqual({});
-    });
-
-    it('JSON-RPC methods check', () => {
         expect(methodFactory.methods).toEqual({
             getId: VersionMethod,
             getBlockByNumber: GetBlockByNumberMethod,

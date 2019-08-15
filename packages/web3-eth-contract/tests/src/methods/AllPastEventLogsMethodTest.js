@@ -1,5 +1,3 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {GetPastLogsMethod} from 'web3-core-method';
 import AllEventsLogDecoder from '../../../src/decoders/AllEventsLogDecoder';
 import AllEventsOptionsMapper from '../../../src/mappers/AllEventsOptionsMapper';
@@ -8,8 +6,6 @@ import AbstractContract from '../../../src/AbstractContract';
 import AllPastEventLogsMethod from '../../../src/methods/AllPastEventLogsMethod';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 jest.mock('../../../src/decoders/AllEventsLogDecoder');
 jest.mock('../../../src/models/AbiModel');
 jest.mock('../../../src/mappers/AllEventsOptionsMapper');
@@ -32,8 +28,6 @@ describe('AllPastEventLogsMethodTest', () => {
         allEventsOptionsMapperMock = AllEventsOptionsMapper.mock.instances[0];
 
         allPastEventLogsMethod = new AllPastEventLogsMethod(
-            Utils,
-            formatters,
             {},
             allEventsLogDecoderMock,
             abiModelMock,
@@ -55,28 +49,20 @@ describe('AllPastEventLogsMethodTest', () => {
 
         allEventsOptionsMapperMock.map.mockReturnValueOnce({mapped: true});
 
-        formatters.inputLogFormatter.mockReturnValueOnce({options: true});
-
         allPastEventLogsMethod.parameters = [{}];
         allPastEventLogsMethod.beforeExecution();
 
         expect(allEventsOptionsMapperMock.map).toHaveBeenCalledWith(abiModelMock, contractMock, {options: true});
-
-        expect(formatters.inputLogFormatter).toHaveBeenCalledWith({});
     });
 
     it('calls afterExecution and returns the expected result', () => {
         const response = [false, false, false];
-
-        formatters.outputLogFormatter.mockReturnValue(true);
 
         allEventsLogDecoderMock.decode.mockReturnValue('decoded');
 
         const mappedResponse = allPastEventLogsMethod.afterExecution(response);
 
         expect(mappedResponse).toEqual(['decoded', 'decoded', 'decoded']);
-
-        expect(formatters.outputLogFormatter).toHaveBeenCalledTimes(3);
 
         expect(allEventsLogDecoderMock.decode).toHaveBeenCalledTimes(3);
 

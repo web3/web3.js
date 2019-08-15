@@ -3,7 +3,6 @@ import {Shh} from 'web3-shh';
 import {Network} from 'web3-net';
 import {Personal} from 'web3-eth-personal';
 import {AbstractWeb3Module} from 'web3-core';
-import * as Utils from 'web3-utils';
 import Web3 from '../../src/Web3';
 
 // Mocks
@@ -11,7 +10,6 @@ jest.mock('web3-eth');
 jest.mock('web3-shh');
 jest.mock('web3-net');
 jest.mock('web3-eth-personal');
-jest.mock('web3-utils');
 
 /**
  * Web3 test
@@ -82,8 +80,6 @@ describe('Web3Test', () => {
     });
 
     it('sets the defaultAccount property', () => {
-        Utils.toChecksumAddress.mockReturnValue('0x2');
-
         web3.defaultAccount = '0x1';
 
         expect(web3.defaultAccount).toEqual('0x2');
@@ -91,8 +87,6 @@ describe('Web3Test', () => {
         expect(Eth.mock.instances[0].defaultAccount).toEqual('0x1');
 
         expect(Shh.mock.instances[0].defaultAccount).toEqual('0x1');
-
-        expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x1');
     });
 
     it('sets the defaultBlock property', () => {

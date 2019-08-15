@@ -22,9 +22,7 @@ import {AbiCoder} from 'web3-eth-abi';
 import {Contract, ContractModuleFactory} from 'web3-eth-contract';
 import {provider} from 'web3-providers';
 import {AbstractWeb3Module, PromiEvent, Web3ModuleOptions, TransactionConfig, TransactionSigner} from 'web3-core';
-import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
-import {Utils} from 'web3-utils';
 import * as net from 'net';
 
 export class Ens extends AbstractWeb3Module {
@@ -112,8 +110,6 @@ export class Registry {
         contractModuleFactory: ContractModuleFactory,
         accounts: Accounts,
         abiCoder: AbiCoder,
-        utils: Utils,
-        formatters: formatters,
         options: Web3ModuleOptions,
         net: Network
     );

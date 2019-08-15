@@ -1,5 +1,3 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {AbstractSubscription, LogSubscription} from 'web3-core-subscriptions';
 import {AbiCoder} from 'web3-eth-abi';
 import {Accounts} from 'web3-eth-accounts';
@@ -23,8 +21,6 @@ jest.mock('web3-eth-iban');
 jest.mock('web3-eth-personal');
 jest.mock('web3-net');
 jest.mock('web3-eth-contract');
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 jest.mock('../../src/factories/MethodFactory');
 jest.mock('../../src/signers/TransactionSigner');
 jest.mock('../../src/factories/SubscriptionsFactory');
@@ -84,8 +80,6 @@ describe('EthTest', () => {
             Iban,
             abiCoderMock,
             ensMock,
-            Utils,
-            formatters,
             subscriptionsFactoryMock,
             contractModuleFactoryMock,
             {transactionSigner: transactionSignerMock},
@@ -107,10 +101,6 @@ describe('EthTest', () => {
         expect(eth.abi).toEqual(abiCoderMock);
 
         expect(eth.ens).toEqual(ensMock);
-
-        expect(eth.utils).toEqual(Utils);
-
-        expect(eth.formatters).toEqual(formatters);
 
         expect(eth.initiatedContracts).toEqual([]);
 
@@ -186,8 +176,6 @@ describe('EthTest', () => {
     it('sets the defaultAccount property', () => {
         eth.initiatedContracts = [{defaultAccount: '0x0'}];
 
-        Utils.toChecksumAddress.mockReturnValueOnce('0x1');
-
         eth.defaultAccount = '0x1';
 
         expect(eth.initiatedContracts[0].defaultAccount).toEqual('0x1');
@@ -197,8 +185,6 @@ describe('EthTest', () => {
         expect(networkMock.defaultAccount).toEqual('0x1');
 
         expect(personalMock.defaultAccount).toEqual('0x1');
-
-        expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x1');
     });
 
     it('sets the defaultBlock property', () => {

@@ -17,21 +17,15 @@
  * @date 2018
  */
 
-import {Utils} from 'web3-utils';
 import {AbstractWeb3Module, PromiEvent} from 'web3-core';
-import {formatters} from 'web3-core-helpers';
 
 export class AbstractMethod {
     constructor(
         rpcMethod: string,
         parametersAmount: number,
-        utils: Utils,
-        formatters: formatters,
         moduleInstance: AbstractWeb3Module
     );
 
-    utils: Utils;
-    formatters: formatters;
     promiEvent: PromiEvent<any>;
     rpcMethod: string;
     parametersAmount: number;

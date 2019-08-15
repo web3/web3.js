@@ -1,5 +1,3 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {GetPastLogsMethod} from 'web3-core-method';
 import {LogSubscription} from 'web3-core-subscriptions';
 import AbstractContract from '../../../src/AbstractContract';
@@ -8,8 +6,6 @@ import AbiItemModel from '../../../src/models/AbiItemModel';
 import EventLogSubscription from '../../../src/subscriptions/EventLogSubscription';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 jest.mock('web3-core-method');
 jest.mock('../../../src/AbstractContract');
 jest.mock('../../../src/decoders/EventLogDecoder');
@@ -36,8 +32,6 @@ describe('EventLogSubscriptionTest', () => {
 
         eventLogSubscription = new EventLogSubscription(
             {},
-            Utils,
-            formatters,
             contractMock,
             getPastLogsMethodMock,
             eventLogDecoderMock,
@@ -56,19 +50,13 @@ describe('EventLogSubscriptionTest', () => {
     it('calls onNewSubscriptionItem returns decoded item', () => {
         eventLogDecoderMock.decode.mockReturnValueOnce(true);
 
-        formatters.outputLogFormatter.mockReturnValueOnce({item: false});
-
         expect(eventLogSubscription.onNewSubscriptionItem({item: true})).toEqual(true);
 
         expect(eventLogDecoderMock.decode).toHaveBeenCalledWith(abiItemModelMock, {item: false});
-
-        expect(formatters.outputLogFormatter).toHaveBeenCalledWith({item: true});
     });
 
     it('calls onNewSubscriptionItem returns the decoded items and triggers the changed event', (done) => {
         eventLogDecoderMock.decode.mockReturnValueOnce(true);
-
-        formatters.outputLogFormatter.mockReturnValueOnce({item: false, removed: 1});
 
         eventLogSubscription.on('changed', (decodedLog) => {
             expect(decodedLog).toEqual(true);
@@ -79,7 +67,5 @@ describe('EventLogSubscriptionTest', () => {
         expect(eventLogSubscription.onNewSubscriptionItem({item: true, removed: 1})).toEqual(true);
 
         expect(eventLogDecoderMock.decode).toHaveBeenCalledWith(abiItemModelMock, {item: false, removed: 1});
-
-        expect(formatters.outputLogFormatter).toHaveBeenCalledWith({item: true, removed: 1});
     });
 });

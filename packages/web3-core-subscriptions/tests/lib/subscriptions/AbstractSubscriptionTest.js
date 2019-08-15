@@ -1,12 +1,8 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
 import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
 import SocketProvider from '../../__mocks__/SocketProvider';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 jest.mock('../../__mocks__/SocketProvider');
 
 /**
@@ -32,14 +28,7 @@ describe('AbstractSubscriptionTest', () => {
             return Promise.resolve('MY_ID');
         });
 
-        abstractSubscription = new AbstractSubscription(
-            'eth_subscribe',
-            'rpc_method',
-            {},
-            Utils,
-            formatters,
-            moduleInstanceMock
-        );
+        abstractSubscription = new AbstractSubscription('eth_subscribe', 'rpc_method', {}, moduleInstanceMock);
     });
 
     it('constructor check', () => {
@@ -48,10 +37,6 @@ describe('AbstractSubscriptionTest', () => {
         expect(abstractSubscription.method).toEqual('rpc_method');
 
         expect(abstractSubscription.options).toEqual({});
-
-        expect(abstractSubscription.utils).toEqual(Utils);
-
-        expect(abstractSubscription.formatters).toEqual(formatters);
 
         expect(abstractSubscription.moduleInstance).toEqual(moduleInstanceMock);
 

@@ -1,13 +1,7 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import LogSubscription from '../../../../src/subscriptions/eth/LogSubscription';
 import AbstractWeb3Module from '../../../__mocks__/AbstractWeb3Module';
 import GetPastLogsMethod from '../../../__mocks__/GetPastLogsMethod';
 import SocketProvider from '../../../__mocks__/SocketProvider';
-
-// Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 
 /**
  * LogSubscription test
@@ -21,7 +15,7 @@ describe('LogSubscriptionTest', () => {
         getPastLogsMethodMock = new GetPastLogsMethod();
         getPastLogsMethodMock.execute = jest.fn();
 
-        logSubscription = new LogSubscription({}, Utils, formatters, moduleInstanceMock, getPastLogsMethodMock);
+        logSubscription = new LogSubscription({}, moduleInstanceMock, getPastLogsMethodMock);
     });
 
     it('constructor check', () => {
@@ -31,18 +25,12 @@ describe('LogSubscriptionTest', () => {
 
         expect(logSubscription.options).toEqual({});
 
-        expect(logSubscription.utils).toEqual(Utils);
-
         expect(logSubscription.moduleInstance).toEqual(moduleInstanceMock);
 
         expect(logSubscription.getPastLogsMethod).toEqual(getPastLogsMethodMock);
     });
 
     it('calls subscribe executes GetPastLogsMethod and calls the callback twice because of the past logs', (done) => {
-        formatters.inputLogFormatter.mockReturnValueOnce({});
-
-        formatters.outputLogFormatter.mockReturnValueOnce(0).mockReturnValueOnce('ITEM');
-
         getPastLogsMethodMock.execute.mockReturnValueOnce(Promise.resolve([0]));
 
         socketProviderMock.subscribe = jest.fn((type, method, parameters) => {
@@ -78,8 +66,6 @@ describe('LogSubscriptionTest', () => {
 
             expect(response).toEqual(expectedResponse);
 
-            expect(formatters.inputLogFormatter).toHaveBeenCalledWith(logSubscription.options);
-
             expect(getPastLogsMethodMock.parameters).toEqual([{}]);
 
             expect(getPastLogsMethodMock.execute).toHaveBeenCalled();
@@ -97,8 +83,6 @@ describe('LogSubscriptionTest', () => {
     });
 
     it('calls subscribe executes GetPastLogsMethod and the method throws an error', (done) => {
-        formatters.inputLogFormatter.mockReturnValueOnce({});
-
         getPastLogsMethodMock.execute = jest.fn(() => {
             return Promise.reject(new Error('ERROR'));
         });
@@ -110,8 +94,6 @@ describe('LogSubscriptionTest', () => {
 
                 expect(response).toEqual(null);
 
-                expect(formatters.inputLogFormatter).toHaveBeenCalledWith(logSubscription.options);
-
                 expect(getPastLogsMethodMock.parameters).toEqual([{}]);
 
                 expect(getPastLogsMethodMock.execute).toHaveBeenCalled();
@@ -122,8 +104,6 @@ describe('LogSubscriptionTest', () => {
     });
 
     it('calls subscribe executes GetPastLogsMethod and emits the error event', (done) => {
-        formatters.inputLogFormatter.mockReturnValueOnce({});
-
         getPastLogsMethodMock.execute = jest.fn(() => {
             return Promise.reject(new Error('ERROR'));
         });
@@ -134,8 +114,6 @@ describe('LogSubscriptionTest', () => {
 
         subscription.on('error', (error) => {
             expect(error).toEqual(new Error('ERROR'));
-
-            expect(formatters.inputLogFormatter).toHaveBeenCalledWith(logSubscription.options);
 
             expect(getPastLogsMethodMock.parameters).toEqual([{}]);
 
@@ -148,8 +126,6 @@ describe('LogSubscriptionTest', () => {
     });
 
     it('calls subscribe and calls the callback once', (done) => {
-        formatters.outputLogFormatter.mockReturnValueOnce('ITEM');
-
         socketProviderMock.subscribe = jest.fn((type, method, parameters) => {
             expect(type).toEqual('eth_subscribe');
 
@@ -184,8 +160,6 @@ describe('LogSubscriptionTest', () => {
     });
 
     it('calls subscribe and it returns with an Subscription object that calls the callback with an error', (done) => {
-        formatters.inputLogFormatter.mockReturnValueOnce({});
-
         socketProviderMock.subscribe = jest.fn(() => {
             return Promise.reject(new Error('ERROR'));
         });
@@ -204,12 +178,8 @@ describe('LogSubscriptionTest', () => {
     });
 
     it('calls onNewSubscriptionItem with removed set to true', (done) => {
-        formatters.outputLogFormatter.mockReturnValueOnce({removed: true});
-
         logSubscription.on('changed', (response) => {
             expect(response).toEqual({removed: true});
-
-            expect(formatters.outputLogFormatter).toHaveBeenCalledWith({removed: false});
 
             done();
         });
@@ -218,10 +188,6 @@ describe('LogSubscriptionTest', () => {
     });
 
     it('calls onNewSubscriptionItem with removed set to false', () => {
-        formatters.outputLogFormatter.mockReturnValueOnce({removed: true});
-
         expect(logSubscription.onNewSubscriptionItem({removed: false})).toEqual({removed: true});
-
-        expect(formatters.outputLogFormatter).toHaveBeenCalledWith({removed: false});
     });
 });

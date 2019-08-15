@@ -1,5 +1,3 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
 import {AbstractWeb3Module} from 'web3-core';
 import AbiMapper from '../../src/mappers/AbiMapper';
@@ -76,8 +74,6 @@ describe('AbstractContractTest', () => {
             contractModuleFactoryMock,
             {},
             abiCoderMock,
-            Utils,
-            formatters,
             abi,
             '0x0',
             options
@@ -98,10 +94,6 @@ describe('AbstractContractTest', () => {
         expect(abstractContract.contractModuleFactory).toEqual(contractModuleFactoryMock);
 
         expect(abstractContract.abiCoder).toEqual(abiCoderMock);
-
-        expect(abstractContract.utils).toEqual(Utils);
-
-        expect(abstractContract.formatters).toEqual(formatters);
 
         expect(abstractContract.abiMapper).toEqual(abiMapperMock);
 

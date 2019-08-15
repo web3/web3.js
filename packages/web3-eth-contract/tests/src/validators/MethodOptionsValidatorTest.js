@@ -1,9 +1,7 @@
-import * as Utils from 'web3-utils';
 import SendContractMethod from '../../../src/methods/SendContractMethod';
 import MethodOptionsValidator from '../../../src/validators/MethodOptionsValidator';
 
 // Mocks
-jest.mock('web3-utils');
 jest.mock('../../../src/methods/SendContractMethod');
 
 /**
@@ -18,11 +16,7 @@ describe('MethodOptionsValidatorTest', () => {
         new SendContractMethod();
         sendContractMethodMock = SendContractMethod.mock.instances[0];
 
-        methodOptionsValidator = new MethodOptionsValidator(Utils);
-    });
-
-    it('constructor check', () => {
-        expect(methodOptionsValidator.utils).toEqual(Utils);
+        methodOptionsValidator = new MethodOptionsValidator();
     });
 
     it('calls validate and returns true', () => {
@@ -32,11 +26,7 @@ describe('MethodOptionsValidatorTest', () => {
 
         sendContractMethodMock.parameters = [{value: 100, from: '0x0'}];
 
-        Utils.isAddress.mockReturnValueOnce(true);
-
         expect(methodOptionsValidator.validate(abiItemModelMock, sendContractMethodMock)).toEqual(true);
-
-        expect(Utils.isAddress).toHaveBeenCalledWith('0x0');
 
         expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('constructor');
     });
@@ -46,13 +36,9 @@ describe('MethodOptionsValidatorTest', () => {
 
         sendContractMethodMock.parameters = [{value: 100, to: '0x0'}];
 
-        Utils.isAddress.mockReturnValueOnce(false);
-
         expect(() => {
             methodOptionsValidator.validate(abiItemModelMock, sendContractMethodMock);
         }).toThrow("This contract object doesn't have address set yet, please set an address first.");
-
-        expect(Utils.isAddress).toHaveBeenCalledWith('0x0');
 
         expect(abiItemModelMock.isOfType).toHaveBeenCalledWith('constructor');
     });
@@ -63,13 +49,9 @@ describe('MethodOptionsValidatorTest', () => {
 
         sendContractMethodMock.parameters = [{value: 100, from: 'asdf'}];
 
-        Utils.isAddress.mockReturnValueOnce(false);
-
         expect(() => {
             methodOptionsValidator.validate(abiItemModelMock, sendContractMethodMock);
         }).toThrow('No valid "from" address specified in neither the given options, nor the default options.');
-
-        expect(Utils.isAddress).toHaveBeenCalledWith('asdf');
     });
 
     it('calls validate and throws isValueValid error', () => {
@@ -78,8 +60,6 @@ describe('MethodOptionsValidatorTest', () => {
         abiItemModelMock.isOfType.mockReturnValueOnce(true);
 
         sendContractMethodMock.parameters = [{value: 100, from: '0x0'}];
-
-        Utils.isAddress.mockReturnValueOnce(true);
 
         expect(() => {
             methodOptionsValidator.validate(abiItemModelMock, sendContractMethodMock);
@@ -92,8 +72,6 @@ describe('MethodOptionsValidatorTest', () => {
         abiItemModelMock.isOfType.mockReturnValueOnce(true);
 
         sendContractMethodMock.parameters = [{value: 0, from: '0x0'}];
-
-        Utils.isAddress.mockReturnValueOnce(true);
 
         expect(methodOptionsValidator.validate(abiItemModelMock, sendContractMethodMock)).toEqual(true);
     });

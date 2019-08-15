@@ -1,6 +1,4 @@
 import {ChainIdMethod, EstimateGasMethod, GetTransactionCountMethod} from 'web3-core-method';
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
 
 import MethodFactory from '../../../src/factories/MethodFactory';
@@ -12,8 +10,6 @@ import PastEventLogsMethod from '../../../src/methods/PastEventLogsMethod';
 import AllPastEventLogsMethod from '../../../src/methods/AllPastEventLogsMethod';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 jest.mock('web3-eth-abi');
 jest.mock('web3-core-method');
 jest.mock('../../../src/factories/ContractModuleFactory');
@@ -38,21 +34,17 @@ describe('MethodFactoryTest', () => {
         new AbiCoder();
         abiCoderMock = AbiCoder.mock.instances[0];
 
-        methodFactory = new MethodFactory(Utils, formatters, contractModuleFactoryMock, abiCoderMock);
+        methodFactory = new MethodFactory(contractModuleFactoryMock, abiCoderMock);
     });
 
     it('constructor check', () => {
-        expect(methodFactory.utils).toEqual(Utils);
-
-        expect(methodFactory.formatters).toEqual(formatters);
-
         expect(methodFactory.contractModuleFactory).toEqual(contractModuleFactoryMock);
     });
 
     it('calls createMethodByRequestType with requestType call', () => {
         expect(methodFactory.createMethodByRequestType({}, contract, 'call')).toBeInstanceOf(CallContractMethod);
 
-        expect(CallContractMethod).toHaveBeenCalledWith(Utils, formatters, contract, abiCoderMock, {});
+        expect(CallContractMethod).toHaveBeenCalledWith(contract, abiCoderMock, {});
     });
 
     it('calls createMethodByRequestType with requestType send', () => {
@@ -62,9 +54,9 @@ describe('MethodFactoryTest', () => {
 
         expect(SendContractMethod).toHaveBeenCalled();
 
-        expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(ChainIdMethod).toHaveBeenCalledWith(contract);
 
-        expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(GetTransactionCountMethod).toHaveBeenCalledWith(contract);
 
         expect(contract.currentProvider.supportsSubscriptions).toHaveBeenCalled();
     });
@@ -78,15 +70,15 @@ describe('MethodFactoryTest', () => {
 
         expect(SendContractMethod).toHaveBeenCalled();
 
-        expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(ChainIdMethod).toHaveBeenCalledWith(contract);
 
-        expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(GetTransactionCountMethod).toHaveBeenCalledWith(contract);
     });
 
     it('calls createMethodByRequestType with requestType estimate', () => {
         expect(methodFactory.createMethodByRequestType({}, contract, 'estimate')).toBeInstanceOf(EstimateGasMethod);
 
-        expect(EstimateGasMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(EstimateGasMethod).toHaveBeenCalledWith(contract);
     });
 
     it('calls createMethodByRequestType with requestType contract-deployment', () => {
@@ -100,9 +92,9 @@ describe('MethodFactoryTest', () => {
 
         expect(ContractDeployMethod).toHaveBeenCalled();
 
-        expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(ChainIdMethod).toHaveBeenCalledWith(contract);
 
-        expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(GetTransactionCountMethod).toHaveBeenCalledWith(contract);
     });
 
     it('calls createMethodByRequestType with unknown requestType', () => {
@@ -122,7 +114,7 @@ describe('MethodFactoryTest', () => {
 
         expect(contractModuleFactoryMock.createEventOptionsMapper).toHaveBeenCalled();
 
-        expect(PastEventLogsMethod).toHaveBeenCalledWith(Utils, formatters, contract, {}, {}, {});
+        expect(PastEventLogsMethod).toHaveBeenCalledWith(contract, {}, {}, {});
     });
 
     it('calls createAllPastEventLogsMethod and returns AllPastEventLogsMethod object', () => {
@@ -136,13 +128,13 @@ describe('MethodFactoryTest', () => {
 
         expect(contractModuleFactoryMock.createAllEventsOptionsMapper).toHaveBeenCalled();
 
-        expect(AllPastEventLogsMethod).toHaveBeenCalledWith(Utils, formatters, contract, {}, {}, {});
+        expect(AllPastEventLogsMethod).toHaveBeenCalledWith(contract, {}, {}, {});
     });
 
     it('calls createCallContractMethod and returns CallContractMethod object', () => {
         expect(methodFactory.createCallContractMethod({}, contract)).toBeInstanceOf(CallContractMethod);
 
-        expect(CallContractMethod).toHaveBeenCalledWith(Utils, formatters, contract, abiCoderMock, {});
+        expect(CallContractMethod).toHaveBeenCalledWith(contract, abiCoderMock, {});
     });
 
     it('calls createSendContractMethod and returns SendContractMethod object', () => {
@@ -156,9 +148,9 @@ describe('MethodFactoryTest', () => {
 
         expect(SendContractMethod).toHaveBeenCalled();
 
-        expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(ChainIdMethod).toHaveBeenCalledWith(contract);
 
-        expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(GetTransactionCountMethod).toHaveBeenCalledWith(contract);
     });
 
     it('calls createContractDeployMethod and returns ContractDeployMethod object', () => {
@@ -170,15 +162,15 @@ describe('MethodFactoryTest', () => {
 
         expect(ContractDeployMethod).toHaveBeenCalled();
 
-        expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(ChainIdMethod).toHaveBeenCalledWith(contract);
 
-        expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(GetTransactionCountMethod).toHaveBeenCalledWith(contract);
     });
 
     it('calls createEstimateGasMethod and returns EstimateGasMethod object', () => {
         expect(methodFactory.createEstimateGasMethod(contract)).toBeInstanceOf(EstimateGasMethod);
 
-        expect(EstimateGasMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(EstimateGasMethod).toHaveBeenCalledWith(contract);
     });
 
     it('calls createSendContractMethod with a socket based provider and returns SendContractMethod object', () => {
@@ -192,8 +184,8 @@ describe('MethodFactoryTest', () => {
 
         expect(SendContractMethod).toHaveBeenCalled();
 
-        expect(ChainIdMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(ChainIdMethod).toHaveBeenCalledWith(contract);
 
-        expect(GetTransactionCountMethod).toHaveBeenCalledWith(Utils, formatters, contract);
+        expect(GetTransactionCountMethod).toHaveBeenCalledWith(contract);
     });
 });

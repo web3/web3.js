@@ -1,11 +1,4 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
-
 import MethodOptionsMapper from '../../../src/mappers/MethodOptionsMapper';
-
-// Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 
 /**
  * MethodOptionsMapper test
@@ -14,13 +7,7 @@ describe('MethodOptionsMapperTest', () => {
     let methodOptionsMapper;
 
     beforeEach(() => {
-        methodOptionsMapper = new MethodOptionsMapper(Utils, formatters);
-    });
-
-    it('constructor check', () => {
-        expect(methodOptionsMapper.utils).toEqual(Utils);
-
-        expect(methodOptionsMapper.formatters).toEqual(formatters);
+        methodOptionsMapper = new MethodOptionsMapper();
     });
 
     it('calls map with a from property and returns the expected result', () => {
@@ -34,10 +21,6 @@ describe('MethodOptionsMapperTest', () => {
             address: '0x0'
         };
 
-        formatters.inputAddressFormatter.mockReturnValue('0x0');
-
-        Utils.toChecksumAddress.mockReturnValueOnce('0x0');
-
         const response = methodOptionsMapper.map(contract, options);
 
         expect(response).toEqual({
@@ -46,10 +29,6 @@ describe('MethodOptionsMapperTest', () => {
             gasPrice: 100,
             gas: 100
         });
-
-        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
-
-        expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x0');
     });
 
     it('calls map with a gasPrice property and returns the expected result', () => {

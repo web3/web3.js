@@ -25,9 +25,7 @@
         "lodash": "^4.17.11",
         "rxjs": "^6.4.0",
         "web3-core": "2.0.0-alpha.1",
-        "web3-core-helpers": "2.0.0-alpha.1",
-        "web3-core-subscriptions": "2.0.0-alpha.1",
-        "web3-utils": "2.0.0-alpha.1"
+        "web3-core-subscriptions": "2.0.0-alpha.1"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",

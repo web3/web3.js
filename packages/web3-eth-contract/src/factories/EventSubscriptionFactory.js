@@ -26,17 +26,6 @@ import AllEventsLogSubscription from '../subscriptions/AllEventsLogSubscription'
 
 export default class EventSubscriptionFactory {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     *
-     * @constructor
-     */
-    constructor(utils, formatters) {
-        this.utils = utils;
-        this.formatters = formatters;
-    }
-
-    /**
      * Returns an event log subscription
      *
      * @param {EventLogDecoder} eventLogDecoder
@@ -49,10 +38,8 @@ export default class EventSubscriptionFactory {
     createEventLogSubscription(eventLogDecoder, contract, options, abiItemModel) {
         return new EventLogSubscription(
             options,
-            this.utils,
-            this.formatters,
             contract,
-            new GetPastLogsMethod(this.utils, this.formatters, contract),
+            new GetPastLogsMethod(contract),
             eventLogDecoder,
             abiItemModel
         );
@@ -70,10 +57,8 @@ export default class EventSubscriptionFactory {
     createAllEventsLogSubscription(allEventsLogDecoder, contract, options) {
         return new AllEventsLogSubscription(
             options,
-            this.utils,
-            this.formatters,
             contract,
-            new GetPastLogsMethod(this.utils, this.formatters, contract),
+            new GetPastLogsMethod(contract),
             allEventsLogDecoder,
             contract.abiModel
         );

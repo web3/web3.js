@@ -1,13 +1,8 @@
-import {formatters} from 'web3-core-helpers';
-import * as Utils from 'web3-utils';
-
 import EventSubscriptionFactory from '../../../src/factories/EventSubscriptionFactory';
 import EventLogSubscription from '../../../src/subscriptions/EventLogSubscription';
 import AllEventsLogSubscription from '../../../src/subscriptions/AllEventsLogSubscription';
 
 // Mocks
-jest.mock('web3-core-helpers');
-jest.mock('web3-utils');
 jest.mock('../../../src/subscriptions/EventLogSubscription');
 jest.mock('../../../src/subscriptions/AllEventsLogSubscription');
 
@@ -18,13 +13,7 @@ describe('EventSubscriptionFactoryTest', () => {
     let eventSubscriptionFactory;
 
     beforeEach(() => {
-        eventSubscriptionFactory = new EventSubscriptionFactory(Utils, formatters);
-    });
-
-    it('constructor check', () => {
-        expect(eventSubscriptionFactory.utils).toEqual(Utils);
-
-        expect(eventSubscriptionFactory.formatters).toEqual(formatters);
+        eventSubscriptionFactory = new EventSubscriptionFactory();
     });
 
     it('calls createEventLogSubscription and returns an EventLogSubscription object', () => {

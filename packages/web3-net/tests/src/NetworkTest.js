@@ -1,11 +1,5 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {AbstractWeb3Module} from 'web3-core';
 import Network from '../../src/Network';
-
-// Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 
 /**
  * Network test
@@ -21,14 +15,10 @@ describe('NetworkTest', () => {
             }
         };
 
-        network = new Network(providerMock, methodFactoryMock, Utils, formatters, {}, {});
+        network = new Network(providerMock, methodFactoryMock, {}, {});
     });
 
     it('constructor check', () => {
-        expect(network.utils).toEqual(Utils);
-
-        expect(network.formatters).toEqual(formatters);
-
         expect(network).toBeInstanceOf(AbstractWeb3Module);
     });
 

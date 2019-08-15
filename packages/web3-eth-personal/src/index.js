@@ -21,8 +21,6 @@
  */
 
 import {Network} from 'web3-net';
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {ProviderResolver} from 'web3-providers';
 import MethodFactory from './factories/MethodFactory';
 import PersonalModule from './Personal.js';
@@ -45,8 +43,6 @@ export function Personal(provider, net = null, options = {}) {
         resolvedProvider,
         new MethodFactory(),
         new Network(resolvedProvider, null, options),
-        Utils,
-        formatters,
         options,
         null
     );

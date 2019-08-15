@@ -1,13 +1,9 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
 import {AbstractWeb3Module} from 'web3-core';
 import MethodFactory from '../../src/factories/MethodFactory';
 import Personal from '../../src/Personal';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 jest.mock('web3-net');
 
 /**
@@ -18,20 +14,16 @@ describe('PersonalTest', () => {
 
     beforeEach(() => {
         providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
-        methodFactory = new MethodFactory(Utils, formatters);
+        methodFactory = new MethodFactory();
 
         new Network();
         networkMock = Network.mock.instances[0];
 
-        personal = new Personal(providerMock, methodFactory, networkMock, Utils, formatters, {}, {});
+        personal = new Personal(providerMock, methodFactory, networkMock, {}, {});
     });
 
     it('constructor check', () => {
         expect(personal.net).toEqual(networkMock);
-
-        expect(personal.utils).toEqual(Utils);
-
-        expect(personal.formatters).toEqual(formatters);
 
         expect(personal).toBeInstanceOf(AbstractWeb3Module);
     });
@@ -86,15 +78,11 @@ describe('PersonalTest', () => {
     });
 
     it('sets the defaultAccount property', () => {
-        Utils.toChecksumAddress.mockReturnValue('0x2');
-
         personal.defaultAccount = '0x0';
 
         expect(personal.defaultAccount).toEqual('0x2');
 
         expect(networkMock.defaultAccount).toEqual('0x0');
-
-        expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x0');
     });
 
     it('sets the defaultBlock property', () => {

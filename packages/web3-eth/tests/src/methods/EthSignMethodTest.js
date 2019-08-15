@@ -1,12 +1,8 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {AbstractWeb3Module} from 'web3-core';
 import {SignMethod} from 'web3-core-method';
 import EthSignMethod from '../../../src/methods/EthSignMethod';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 jest.mock('web3-core');
 
 /**
@@ -25,10 +21,7 @@ describe('EthSignMethodTest', () => {
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
         moduleInstanceMock.accounts = accountsMock;
 
-        formatters.inputAddressFormatter.mockReturnValue('0x0');
-        formatters.inputSignFormatter.mockReturnValue('string');
-
-        method = new EthSignMethod(Utils, formatters, moduleInstanceMock);
+        method = new EthSignMethod(moduleInstanceMock);
         method.parameters = ['nope', '0x0'];
     });
 
@@ -47,10 +40,6 @@ describe('EthSignMethodTest', () => {
 
         expect(method.parameters[1]).toEqual('string');
 
-        expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
-
-        expect(formatters.inputSignFormatter).toHaveBeenCalledWith('nope');
-
         expect(accountsMock.sign).toHaveBeenCalledWith('string', '0x0');
     });
 
@@ -65,10 +54,6 @@ describe('EthSignMethodTest', () => {
             expect(method.parameters[0]).toEqual('0x0');
 
             expect(method.parameters[1]).toEqual('string');
-
-            expect(formatters.inputAddressFormatter).toHaveBeenCalledWith('0x0');
-
-            expect(formatters.inputSignFormatter).toHaveBeenCalledWith('nope');
 
             expect(accountsMock.sign).toHaveBeenCalledWith('string', '0x0');
 

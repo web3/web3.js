@@ -64,6 +64,6 @@ export default class GetTransactionCountMethod extends AbstractMethod {
      * @returns {Number}
      */
     afterExecution(response) {
-        return this.utils.hexToNumber(response);
+        return new Hex(response).toNumber();
     }
 }

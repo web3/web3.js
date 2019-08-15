@@ -1,6 +1,4 @@
 import {AbiCoder} from 'web3-eth-abi';
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 
 import MethodOptionsValidator from '../../../src/validators/MethodOptionsValidator';
 import MethodOptionsMapper from '../../../src/mappers/MethodOptionsMapper';
@@ -23,8 +21,6 @@ import ContractModuleFactory from '../../../src/factories/ContractModuleFactory'
 
 // Mocks
 jest.mock('web3-eth-abi');
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 jest.mock('../../../src/validators/MethodOptionsValidator');
 jest.mock('../../../src/mappers/MethodOptionsMapper');
 jest.mock('../../../src/proxies/EventSubscriptionsProxy');
@@ -53,14 +49,10 @@ describe('ContractModuleFactoryTest', () => {
         new AbiCoder();
         abiCoderMock = AbiCoder.mock.instances[0];
 
-        contractModuleFactory = new ContractModuleFactory(Utils, formatters, abiCoderMock);
+        contractModuleFactory = new ContractModuleFactory(abiCoderMock);
     });
 
     it('constructor check', () => {
-        expect(contractModuleFactory.utils).toEqual(Utils);
-
-        expect(contractModuleFactory.formatters).toEqual(formatters);
-
         expect(contractModuleFactory.abiCoder).toEqual(abiCoderMock);
     });
 

@@ -1,13 +1,9 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
 import {AbstractWeb3Module} from 'web3-core';
 import MethodFactory from '../../src/factories/MethodFactory';
 import Admin from '../../src/Admin';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 jest.mock('web3-net');
 
 /**
@@ -18,20 +14,16 @@ describe('AdminTest', () => {
 
     beforeEach(() => {
         providerMock = {send: jest.fn(), clearSubscriptions: jest.fn()};
-        methodFactory = new MethodFactory(Utils, formatters);
+        methodFactory = new MethodFactory();
 
         new Network();
         networkMock = Network.mock.instances[0];
 
-        admin = new Admin(providerMock, methodFactory, networkMock, Utils, formatters, {}, {});
+        admin = new Admin(providerMock, methodFactory, networkMock, {}, {});
     });
 
     it('constructor check', () => {
         expect(admin.net).toEqual(networkMock);
-
-        expect(admin.utils).toEqual(Utils);
-
-        expect(admin.formatters).toEqual(formatters);
 
         expect(admin).toBeInstanceOf(AbstractWeb3Module);
     });
@@ -86,15 +78,11 @@ describe('AdminTest', () => {
     });
 
     it('sets the defaultAccount property', () => {
-        Utils.toChecksumAddress.mockReturnValue('0x2');
-
         admin.defaultAccount = '0x0';
 
         expect(admin.defaultAccount).toEqual('0x2');
 
         expect(networkMock.defaultAccount).toEqual('0x0');
-
-        expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x0');
     });
 
     it('sets the defaultBlock property', () => {

@@ -1,5 +1,3 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
 import {AbiCoder} from 'web3-eth-abi';
 import Registry from '../../src/contracts/Registry';
@@ -9,9 +7,7 @@ import EnsModuleFactory from '../../src/factories/EnsModuleFactory';
 
 // Mocks
 jest.mock('web3-net');
-jest.mock('web3-utils');
 jest.mock('web3-eth-abi');
-jest.mock('web3-core-helpers');
 jest.mock('eth-ens-namehash');
 jest.mock('../../src/factories/EnsModuleFactory');
 jest.mock('../../src/contracts/Registry');
@@ -47,8 +43,6 @@ describe('EnsTest', () => {
             {},
             {},
             abiCoderMock,
-            Utils,
-            formatters,
             networkMock,
             {}
         );
@@ -62,8 +56,6 @@ describe('EnsTest', () => {
             ens.contractModuleFactory,
             ens.accounts,
             ens.abiCoder,
-            ens.utils,
-            ens.formatters,
             ens.registryOptions,
             ens.net
         );
@@ -73,8 +65,6 @@ describe('EnsTest', () => {
         expect(ens.contractModuleFactory).toEqual({});
 
         expect(ens.abiCoder).toEqual(abiCoderMock);
-
-        expect(ens.utils).toEqual(Utils);
 
         expect(ens.registryOptions).toEqual({});
 
@@ -150,8 +140,6 @@ describe('EnsTest', () => {
     });
 
     it('sets the defaultAccount property', () => {
-        Utils.toChecksumAddress.mockReturnValueOnce('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
-
         ens._registry = {defaultAccount: '0x0'};
 
         ens.defaultAccount = '0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B';
@@ -159,8 +147,6 @@ describe('EnsTest', () => {
         expect(ens.defaultAccount).toEqual('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
 
         expect(ens.registry.defaultAccount).toEqual('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
-
-        expect(Utils.toChecksumAddress).toHaveBeenCalledWith('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
     });
 
     it('sets the defaultBlock property', () => {

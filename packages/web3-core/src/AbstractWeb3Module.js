@@ -215,9 +215,6 @@ export default class AbstractWeb3Module {
     }
 
     /**
-     * TODO: Add utils and formatters as dependency or create the core-types module and pass the factory to the
-     * TODO: AbstractWeb3Module (factory.createAddress())
-     *
      * Sets the defaultAccount of the current object
      *
      * @property defaultAccount
@@ -225,7 +222,7 @@ export default class AbstractWeb3Module {
      * @param {String} value
      */
     set defaultAccount(value) {
-        this._defaultAccount = toChecksumAddress(value);
+        this._defaultAccount = new Address(value).toChecksum();
     }
 
     /**

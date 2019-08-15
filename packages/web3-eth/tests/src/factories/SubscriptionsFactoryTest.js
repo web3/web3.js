@@ -1,5 +1,3 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {
     LogSubscription,
     NewHeadsSubscription,
@@ -10,8 +8,6 @@ import {
 import SubscriptionsFactory from '../../../src/factories/SubscriptionsFactory';
 
 // Mocks
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 jest.mock('web3-core-subscriptions');
 
 /**
@@ -21,13 +17,7 @@ describe('SubscriptionsFactoryTest', () => {
     let subscriptionsFactory;
 
     beforeEach(() => {
-        subscriptionsFactory = new SubscriptionsFactory(Utils, formatters);
-    });
-
-    it('constructor check', () => {
-        expect(subscriptionsFactory.utils).toEqual(Utils);
-
-        expect(subscriptionsFactory.formatters).toEqual(formatters);
+        subscriptionsFactory = new SubscriptionsFactory();
     });
 
     it('calls getSubscription with "logs" and returns the LogsSubscription', () => {

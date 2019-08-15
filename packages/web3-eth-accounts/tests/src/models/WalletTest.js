@@ -1,10 +1,8 @@
-import * as Utils from 'web3-utils';
 import Wallet from '../../../src/models/Wallet';
 import Account from '../../../src/models/Account';
 import Accounts from '../../../src/Accounts';
 
 // Mocks
-jest.mock('web3-utils');
 jest.mock('../../../src/models/Account');
 jest.mock('../../../src/Accounts');
 
@@ -18,12 +16,10 @@ describe('WalletTest', () => {
         new Accounts();
         accountsMock = Accounts.mock.instances[0];
 
-        wallet = new Wallet(Utils, accountsMock);
+        wallet = new Wallet(accountsMock);
     });
 
     it('constructor check', () => {
-        expect(wallet.utils).toEqual(Utils);
-
         expect(wallet.accountsModule).toEqual(accountsMock);
 
         expect(wallet.accounts).toEqual({});
@@ -40,13 +36,9 @@ describe('WalletTest', () => {
     });
 
     it('calls create and returns the expected value', () => {
-        Utils.randomHex.mockReturnValueOnce('asdf');
-
         Account.from.mockReturnValueOnce({address: '0x0', privateKey: '0x0'});
 
         expect(wallet.create(1)).toEqual(wallet);
-
-        expect(Utils.randomHex).toHaveBeenCalledWith(32);
 
         expect(Account.from).toHaveBeenCalledWith('asdf', accountsMock);
 

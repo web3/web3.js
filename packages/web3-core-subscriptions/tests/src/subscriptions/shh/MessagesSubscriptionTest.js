@@ -7,7 +7,7 @@ describe('MessagesSubscriptionTest', () => {
     let messagesSubscription;
 
     beforeEach(() => {
-        messagesSubscription = new MessagesSubscription({}, {}, {}, {});
+        messagesSubscription = new MessagesSubscription({}, {});
     });
 
     it('constructor check', () => {

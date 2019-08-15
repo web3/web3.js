@@ -1,5 +1,3 @@
-import * as Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
 import {AbstractSubscription} from 'web3-core-subscriptions';
 import {Network} from 'web3-net';
 import MethodFactory from '../../src/factories/MethodFactory';
@@ -9,8 +7,6 @@ import Shh from '../../src/Shh';
 // Mocks
 jest.mock('web3-core-subscriptions');
 jest.mock('web3-net');
-jest.mock('web3-utils');
-jest.mock('web3-core-helpers');
 jest.mock('../../src/factories/SubscriptionsFactory');
 jest.mock('../../src/factories/MethodFactory');
 
@@ -21,7 +17,7 @@ describe('ShhTest', () => {
     let shh, methodFactory, subscriptionsFactoryMock, providerMock, networkMock;
 
     beforeEach(() => {
-        methodFactory = new MethodFactory(Utils, formatters);
+        methodFactory = new MethodFactory();
 
         new SubscriptionsFactory();
         subscriptionsFactoryMock = SubscriptionsFactory.mock.instances[0];
@@ -99,8 +95,6 @@ describe('ShhTest', () => {
     });
 
     it('sets the defaultAccount property', () => {
-        Utils.toChecksumAddress.mockReturnValue('0x2');
-
         shh.defaultAccount = '0x1';
 
         expect(shh.defaultAccount).toEqual('0x2');
