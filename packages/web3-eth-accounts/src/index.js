@@ -540,7 +540,7 @@ function storageAvailable(type) {
         return true;
     }
     catch(e) {
-        return e instanceof DOMException && (
+        return e && (
             // everything except Firefox
             e.code === 22 ||
             // Firefox
