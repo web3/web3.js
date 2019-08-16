@@ -216,7 +216,7 @@ export default class Iban {
      */
     toAddress() {
         if (this.isDirect()) {
-            return Address.toChecksum(Hex.leftPad(new BN(this._iban.substr(4), 36).toString(16), 20));
+            return Address.toChecksum(new BN(this._iban.substr(4), 36).toString(16));
         }
 
         return '';

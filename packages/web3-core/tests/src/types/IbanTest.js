@@ -71,7 +71,7 @@ describe('IbanTest', () => {
     it('calls toAddress with a direct Iban and returns the expected string', () => {
         iban._iban = '0000000000000000000000000000000000';
 
-        expect(iban.toAddress()).toEqual('0x00000000000000000000');
+        expect(iban.toAddress()).toEqual('0x0');
     });
 
     it('calls toAddress with a indirect Iban and returns the expected string', () => {
@@ -83,7 +83,7 @@ describe('IbanTest', () => {
     });
 
     it('calls the static method toAddress and returns the expected string', () => {
-        expect(Iban.toAddress('0000000000000000000000000000000000')).toEqual('0x00000000000000000000');
+        expect(Iban.toAddress('0000000000000000000000000000000000')).toEqual('0x0');
     });
 
     it('calls the static method toAddress with a indirect Iban and throws an error', () => {
