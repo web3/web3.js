@@ -1,4 +1,4 @@
-import scrypt from '../../../src/crypto/Scrypt';
+import scrypt from 'scrypt-shim';
 import randomBytes from 'randombytes';
 import {pbkdf2Sync} from 'pbkdf2';
 import {createCipheriv, createDecipheriv} from 'browserify-cipher';
@@ -18,7 +18,7 @@ jest.mock('uuid');
 jest.mock('randombytes');
 jest.mock('pbkdf2');
 jest.mock('browserify-cipher');
-jest.mock('../../../src/crypto/Scrypt');
+jest.mock('scrypt-shim');
 jest.mock('../../../src/Accounts');
 
 /**
