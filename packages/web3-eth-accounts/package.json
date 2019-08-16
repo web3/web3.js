@@ -22,6 +22,7 @@
         "@babel/runtime": "^7.3.1",
         "browserify-cipher": "^1.0.1",
         "eth-lib": "0.2.8",
+        "js-sha3": "^0.8.0",
         "lodash": "^4.17.11",
         "pbkdf2": "^3.0.17",
         "randombytes": "^2.1.0",

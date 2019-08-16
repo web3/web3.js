@@ -21,6 +21,7 @@
  * @date 2018
  */
 
+import {keccak256} from 'js-sha3';
 import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
 

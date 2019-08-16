@@ -17,13 +17,13 @@
  * @date 2019
  */
 
+import {keccak256} from 'js-sha3';
 import scrypt from '../crypto/Scrypt';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
 import * as EthLibAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
 import {Hex} from 'web3-core';
-import Hash from 'eth-lib/lib/hash';
 import {pbkdf2Sync} from 'pbkdf2';
 import {createCipheriv, createDecipheriv} from 'browserify-cipher';
 
@@ -75,7 +75,7 @@ export default class Account {
         const preamble = `\u0019Ethereum Signed Message:\n${data.length}`;
         const preambleBuffer = Buffer.from(preamble);
         const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
-        const hash = Hash.keccak256s(ethMessage);
+        const hash = keccak256(ethMessage);
         const signature = EthLibAccount.sign(hash, this.privateKey);
         const vrs = EthLibAccount.decodeSignature(signature);
 
