@@ -30,20 +30,27 @@ export default class Address {
      * @constructor
      */
     constructor(address) {
+        this.address = address;
+    }
+
+    /**
+     * Setter for the address property
+     *
+     * @property address
+     *
+     * @param {String} address
+     */
+    set address(address) {
         const iban = new Iban(address);
 
-        // check if it has the basic requirements of an address
-        if (/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-            this._address = address.toLowerCase();
-        }
-
-        // If it's ALL lowercase or ALL upppercase
-        if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
-            this._address = address.toLowerCase();
-        }
-
         if (iban.isValid() && iban.isDirect()) {
-            this._address = `0x${address.toLowerCase().replace('0x', '')}`;
+            this._address = iban.toAddress().toLowerCase();
+
+            return;
+        }
+
+        if (Address.isValid(address)) {
+            this._address = address.toLowerCase();
 
             return;
         }
@@ -54,6 +61,17 @@ export default class Address {
     }
 
     /**
+     * Getter for the address property.
+     *
+     * @property address
+     *
+     * @returns {String}
+     */
+    get address() {
+        return this._address;
+    }
+
+    /**
      * Address property wrapper.
      *
      * @method toString
@@ -61,7 +79,7 @@ export default class Address {
      * @returns {String}
      */
     toString() {
-        return this._address;
+        return this.address;
     }
 
     /**
@@ -74,7 +92,21 @@ export default class Address {
      * @returns {String}
      */
     toChecksum(chainId = null) {
-        const stripAddress = Hex.stripPrefix(this._address).toLowerCase();
+        return Address.toChecksum(this.address, chainId);
+    }
+
+    /**
+     * Maps the given address to a checksum address.
+     *
+     * @method toChecksum
+     *
+     * @param {String} address
+     * @param {Number} chainId
+     *
+     * @returns {String}
+     */
+    static toChecksum(address, chainId = null) {
+        const stripAddress = Hex.stripPrefix(address).toLowerCase();
         let prefix = '';
 
         if (chainId != null) {
@@ -99,20 +131,6 @@ export default class Address {
     }
 
     /**
-     * Maps the given address to a checksum address.
-     *
-     * @method toChecksum
-     *
-     * @param {String} address
-     * @param {Number} chainId
-     *
-     * @returns {String}
-     */
-    static toChecksum(address, chainId = null) {
-        return new Address(address).toChecksum(chainId);
-    }
-
-    /**
      * Validate address checksum.
      *
      * @method isValidChecksum
@@ -123,7 +141,7 @@ export default class Address {
      * @returns {Boolean}
      */
     static isValidChecksum(address, chainId = null) {
-        return new Address(address).toChecksum(chainId) === address;
+        return Address.toChecksum(address, chainId) === address;
     }
 
     /**
@@ -137,6 +155,17 @@ export default class Address {
      * @returns {Boolean}
      */
     static isValid(address, chainId = null) {
-        return Address.isValidChecksum(new Address(address).toString(), chainId);
+        // check if it has the basic requirements of an address
+        if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+            return false;
+        }
+
+        // If it's ALL lowercase or ALL upppercase
+        if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
+            return true;
+        }
+
+        // Otherwise check each case
+        return Address.isValidChecksum(address, chainId);
     }
 }

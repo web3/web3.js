@@ -74,7 +74,7 @@ describe('AddressTest', () => {
         } catch (error) {
             expect(error).toEqual(
                 new Error(
-                    'Given address "0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B00" is not a valid Ethereum address.'
+                    'Provided address "0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B00" is invalid, the capitalization checksum test failed, or its an indirect IBAN address which can\'t be converted.'
                 )
             );
         }
@@ -82,10 +82,6 @@ describe('AddressTest', () => {
 
     it('calls isValidChecksum and returns true', () => {
         expect(Address.isValidChecksum('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B')).toEqual(true);
-    });
-
-    it('calls isValidChecksum with a upper case prefix and returns true', () => {
-        expect(Address.isValidChecksum('0X6d6dC708643A2782bE27191E2ABCae7E1B0cA38B')).toEqual(true);
     });
 
     it('calls isValidChecksum with a chainId and returns true', () => {
@@ -96,7 +92,7 @@ describe('AddressTest', () => {
         expect(Address.isValidChecksum('0x6d6dc708643a2782be27191e2abcae7e1b0ca38b')).toEqual(false);
     });
 
-    it('calls isAddress and returns the expected results', () => {
+    it('calls isValid and returns the expected results', () => {
         const tests = [
             {
                 value: () => {},
@@ -121,7 +117,7 @@ describe('AddressTest', () => {
         });
     });
 
-    it('calls isAddress with chainId 30 and returns the expected results', () => {
+    it('calls isValid with chainId 30 and returns the expected results', () => {
         const tests = [
             {value: '0x5aaEB6053f3e94c9b9a09f33669435E7ef1bEAeD', is: true},
             {value: '0xFb6916095cA1Df60bb79ce92cE3EA74c37c5d359', is: true},
