@@ -1,8 +1,5 @@
 import Address from '../../../src/types/Address';
 
-// Mocks
-jest.mock('');
-
 /**
  * Address test
  */
@@ -69,10 +66,6 @@ describe('AddressTest', () => {
         tests.forEach((test) => {
             expect(Address.toChecksum(test.value)).toEqual(test.is);
         });
-    });
-
-    it('calls toChecksum and returns empty string', () => {
-        expect(Address.toChecksum(123)).toEqual('');
     });
 
     it('calls toChecksum and throws an error empty string', () => {

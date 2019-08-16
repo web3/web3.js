@@ -1,8 +1,4 @@
-import Hex from '../../../src/types/Hex';
 import BlockNumber from '../../../src/types/BlockNumber';
-
-// Mocks
-jest.mock('../../../src/types/Hex');
 
 /**
  * BlockNumber test
@@ -21,20 +17,14 @@ describe('BlockNumberTest', () => {
     });
 
     it('calls the constructor with a number', () => {
-        Hex.fromNumber.mockReturnValueOnce('hex');
-
-        expect(new BlockNumber(1234).toString()).toEqual('hex');
+        expect(new BlockNumber(1234).toString()).toEqual('0x04d2');
     });
 
     it('calls the constructor with a hex string', () => {
-        Hex.isValid.mockReturnValueOnce(true);
-
         expect(new BlockNumber('0x0A').toString()).toEqual('0x0A');
     });
 
     it('calls the constructor with a hex', () => {
-        Hex.isValid.mockReturnValueOnce(true);
-
-        expect(new BlockNumber(0x0a).toString()).toEqual(0x0a);
+        expect(new BlockNumber(0x0a).toString()).toEqual('0x0a');
     });
 });

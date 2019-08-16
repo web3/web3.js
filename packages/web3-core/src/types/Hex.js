@@ -434,7 +434,7 @@ export default class Hex {
             value = value.slice(3);
         }
 
-        return value.startsWith('0x') || value.startsWith('0X') ? value.slice(2) : value;
+        return value;
     }
 
     /**

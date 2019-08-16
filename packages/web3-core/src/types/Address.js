@@ -20,6 +20,7 @@
  */
 
 import Hash from 'eth-lib/lib/hash';
+import Hex from './Hex';
 import Iban from './Iban';
 
 export default class Address {
@@ -31,13 +32,17 @@ export default class Address {
     constructor(address) {
         const iban = new Iban(address);
 
-        if (iban.isValid() && iban.isDirect()) {
-            this._address = iban.toAddress().toLowerCase();
-
-            return;
+        // check if it has the basic requirements of an address
+        if (/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+            this._address = address.toLowerCase();
         }
 
-        if (Address.isValid(address)) {
+        // If it's ALL lowercase or ALL upppercase
+        if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
+            this._address = address.toLowerCase();
+        }
+
+        if (iban.isValid() && iban.isDirect()) {
             this._address = `0x${address.toLowerCase().replace('0x', '')}`;
 
             return;
@@ -69,29 +74,7 @@ export default class Address {
      * @returns {String}
      */
     toChecksum(chainId = null) {
-        return Address.toChecksum(this.toString(), chainId);
-    }
-
-    /**
-     * Maps the given address to a checksum address.
-     *
-     * @method toChecksum
-     *
-     * @param {String} address
-     * @param {Number} chainId
-     *
-     * @returns {String}
-     */
-    static toChecksum(address, chainId = null) {
-        if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-            throw new Error(`Given address "${address}" is not a valid Ethereum address.`);
-        }
-
-        if (address.startsWith('0x') || address.startsWith('0X')) {
-            address = address.slice(2);
-        }
-
-        const stripAddress = address.toLowerCase();
+        const stripAddress = Hex.stripPrefix(this._address).toLowerCase();
         let prefix = '';
 
         if (chainId != null) {
@@ -116,6 +99,20 @@ export default class Address {
     }
 
     /**
+     * Maps the given address to a checksum address.
+     *
+     * @method toChecksum
+     *
+     * @param {String} address
+     * @param {Number} chainId
+     *
+     * @returns {String}
+     */
+    static toChecksum(address, chainId = null) {
+        return new Address(address).toChecksum(chainId);
+    }
+
+    /**
      * Validate address checksum.
      *
      * @method isValidChecksum
@@ -126,11 +123,7 @@ export default class Address {
      * @returns {Boolean}
      */
     static isValidChecksum(address, chainId = null) {
-        if (address.startsWith('0X')) {
-            address = '0x' + address.slice(2);
-        }
-
-        return Address.toChecksum(address, chainId) === address;
+        return new Address(address).toChecksum(chainId) === address;
     }
 
     /**
@@ -144,17 +137,6 @@ export default class Address {
      * @returns {Boolean}
      */
     static isValid(address, chainId = null) {
-        // check if it has the basic requirements of an address
-        if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-            return false;
-        }
-
-        // If it's ALL lowercase or ALL upppercase
-        if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
-            return true;
-        }
-
-        // Otherwise check each case
-        return Address.isValidChecksum(address, chainId);
+        return Address.isValidChecksum(new Address(address).toString(), chainId);
     }
 }

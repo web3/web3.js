@@ -38,19 +38,12 @@ describe('AbstractWeb3ModuleTest', () => {
     });
 
     it('constructor check', () => {
-        expect(abstractWeb3Module.defaultAccount).toEqual('0x03C9A938fF7f54090d0d99e2c6f80380510Ea078');
-
-        expect(abstractWeb3Module.defaultBlock).toEqual('latest');
-
-        expect(abstractWeb3Module.transactionBlockTimeout).toEqual(50);
-
-        expect(abstractWeb3Module.transactionConfirmationBlocks).toEqual(0);
-
-        expect(abstractWeb3Module.transactionPollingTimeout).toEqual(750);
-
-        expect(abstractWeb3Module.defaultGasPrice).toEqual(100);
-
-        expect(abstractWeb3Module.defaultGas).toEqual(100);
+        expect(abstractWeb3Module.options).toEqual({
+            defaultAccount: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
+            defaultBlock: 'latest',
+            defaultGasPrice: 100,
+            defaultGas: 100
+        });
 
         expect(abstractWeb3Module.BatchRequest).toBeInstanceOf(Function);
 
@@ -77,7 +70,7 @@ describe('AbstractWeb3ModuleTest', () => {
 
     it('sets the defaultAccount property and validates the address', () => {
         abstractWeb3Module.defaultAccount = '0x03c9a938ff7f54090d0d99e2c6f80380510ea078';
-        expect(abstractWeb3Module.defaultAccount).toEqual('0x03C9A938fF7f54090d0d99e2c6f80380510Ea078');
+        expect(abstractWeb3Module.defaultAccount).toEqual('0x03c9a938ff7f54090d0d99e2c6f80380510ea078');
     });
 
     it('sets the defaultBlock property', () => {

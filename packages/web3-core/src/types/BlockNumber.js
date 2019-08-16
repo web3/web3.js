@@ -29,7 +29,7 @@ export default class BlockNumber {
      * @constructor
      */
     constructor(blockNumber) {
-        if (blockNumber === undefined || blockNumber === null || BlockNumber.isPredefinedBlockNumber(blockNumber)) {
+        if (BlockNumber.isPredefinedBlockNumber(blockNumber)) {
             this._blockNumber = blockNumber;
 
             return;
