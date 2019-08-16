@@ -1,17 +1,16 @@
-
+<p align="center">
 <img src="https://github.com/ethereum/web3.js/raw/1.x/web3js.jpg" width=200 />
+</p>
 
 # web3.js - Ethereum JavaScript API
 
-[![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![npm](https://img.shields.io/npm/dm/web3.svg)](https://www.npmjs.com/package/web3) [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Stories in Ready][waffle-image]][waffle-url]
+[![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)[![npm](https://img.shields.io/npm/dm/web3.svg)](https://www.npmjs.com/package/web3) [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url] [![Coverage Status][coveralls-image]][coveralls-url]
 
 This is the Ethereum [JavaScript API][docs]
 which connects to the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
 
 
-You need to run a local or remote Ethereum node to use this library.
+You need to run a local or remote [Ethereum](https://www.ethereum.org/) node to use this library.
 
 Please read the [documentation][docs] for more.
 
@@ -65,7 +64,7 @@ console.log(web3);
 }
 ```
 
-Additionally you can set a provider using `web3.setProvider()` (e.g. WebsocketProvider)
+Additionally you can set a provider using `web3.setProvider()` (e.g. WebsocketProvider):
 
 ```js
 web3.setProvider('ws://localhost:8546');
@@ -82,7 +81,7 @@ web3.eth.getAccounts()
 
 ### Usage with TypeScript
 
-Type definitions are maintained at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) by others. You can install them with
+Type definitions are maintained at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) by others. You can install them with:
 
 ```bash
 npm install --dev @types/web3.js
@@ -101,7 +100,7 @@ const web3 = new Web3("ws://localhost:8546");
 
 ## Documentation
 
-Documentation can be found at [read the docs][docs]
+Documentation can be found at [read the docs][docs].
 
 
 ## Building
@@ -109,7 +108,7 @@ Documentation can be found at [read the docs][docs]
 ### Requirements
 
 * [Node.js](https://nodejs.org)
-* npm
+* [npm](https://www.npmjs.com/)
 
 ```bash
 sudo apt-get update
@@ -125,7 +124,7 @@ Build only the web3.js package
 npm run-script build
 ```
 
-Or build all sub packages as well
+Or build all sub packages as well:
 
 ```bash
 npm run-script build-all
@@ -151,12 +150,12 @@ npm test
 
 
 ### Similar libraries in other languages
- - Python [Web3.py](https://github.com/pipermerriam/web3.py)
- - Haskell [hs-web3](https://github.com/airalab/hs-web3)		   
- - Java [web3j](https://github.com/web3j/web3j)		   
- - Scala [web3j-scala](https://github.com/mslinn/web3j-scala)
- - Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
- - PHP [web3.php](https://github.com/sc0Vu/web3.php)
+ - Python - [Web3.py](https://github.com/pipermerriam/web3.py)
+ - Haskell - [hs-web3](https://github.com/airalab/hs-web3)		   
+ - Java - [web3j](https://github.com/web3j/web3j)		   
+ - Scala - [web3j-scala](https://github.com/mslinn/web3j-scala)
+ - Purescript - [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
+ - PHP - [web3.php](https://github.com/sc0Vu/web3.php)
 
 
 [repo]: https://github.com/ethereum/web3.js
