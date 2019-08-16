@@ -36,11 +36,7 @@ export default class BlockNumber {
         }
 
         if (Hex.isValid(blockNumber)) {
-            if (isString(blockNumber)) {
-                this._blockNumber = blockNumber.toLowerCase();
-            }
-
-            this._blockNumber = blockNumber;
+            this._blockNumber = new Hex(blockNumber);
 
             return;
         }
@@ -56,7 +52,11 @@ export default class BlockNumber {
      * @returns {String}
      */
     toString() {
-        return this._blockNumber;
+        if (isString(this._blockNumber)) {
+            return this._blockNumber;
+        }
+
+        return this._blockNumber.toString();
     }
 
     /**

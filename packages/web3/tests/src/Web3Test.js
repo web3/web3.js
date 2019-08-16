@@ -80,19 +80,19 @@ describe('Web3Test', () => {
     });
 
     it('sets the defaultAccount property', () => {
-        web3.defaultAccount = '0x1';
+        web3.defaultAccount = '0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B';
 
-        expect(web3.defaultAccount).toEqual('0x2');
+        expect(web3.defaultAccount).toEqual('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
 
-        expect(Eth.mock.instances[0].defaultAccount).toEqual('0x1');
+        expect(Eth.mock.instances[0].defaultAccount).toEqual('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
 
-        expect(Shh.mock.instances[0].defaultAccount).toEqual('0x1');
+        expect(Shh.mock.instances[0].defaultAccount).toEqual('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B');
     });
 
     it('sets the defaultBlock property', () => {
         web3.defaultBlock = 10;
 
-        expect(web3.defaultBlock).toEqual(10);
+        expect(web3.defaultBlock).toEqual('0x0a');
 
         expect(Eth.mock.instances[0].defaultBlock).toEqual(10);
 

@@ -23,7 +23,6 @@
 import isObject from 'lodash/isObject';
 import {HttpProvider, WebsocketProvider, IpcProvider, BatchRequest, ProviderDetector} from 'web3-providers';
 import {MethodProxy} from 'web3-core-method';
-import Address from './types/Address';
 
 export default class AbstractWeb3Module {
     /**
@@ -39,13 +38,7 @@ export default class AbstractWeb3Module {
         this.providerResolver = providerResolver;
         this.givenProvider = ProviderDetector.detect(); // TODO: DI
         this._currentProvider = this.providerResolver.resolve(provider, nodeNet);
-        this._defaultAccount = options.defaultAccount ? new Address(options.defaultAccount).toChecksum() : undefined; // TODO: Create a Web3ModuleOptions VO
-        this._defaultBlock = options.defaultBlock || 'latest';
-        this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
-        this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 0;
-        this._transactionPollingTimeout = options.transactionPollingTimeout || 750;
-        this._defaultGasPrice = options.defaultGasPrice;
-        this._defaultGas = options.defaultGas;
+        this.options = options;
 
         this.BatchRequest = () => {
             return new BatchRequest(this);
@@ -64,7 +57,7 @@ export default class AbstractWeb3Module {
      * @returns {String|Number}
      */
     get defaultBlock() {
-        return this._defaultBlock;
+        return this.options.defaultBlock;
     }
 
     /**
@@ -75,7 +68,7 @@ export default class AbstractWeb3Module {
      * @param {String|Number} value
      */
     set defaultBlock(value) {
-        this._defaultBlock = value;
+        this.options.defaultBlock = value;
     }
 
     /**
@@ -86,7 +79,7 @@ export default class AbstractWeb3Module {
      * @returns {Number}
      */
     get transactionBlockTimeout() {
-        return this._transactionBlockTimeout;
+        return this.options.transactionBlockTimeout;
     }
 
     /**
@@ -97,7 +90,7 @@ export default class AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionBlockTimeout(value) {
-        this._transactionBlockTimeout = value;
+        this.options.transactionBlockTimeout = value;
     }
 
     /**
@@ -108,7 +101,7 @@ export default class AbstractWeb3Module {
      * @returns {Number}
      */
     get transactionConfirmationBlocks() {
-        return this._transactionConfirmationBlocks;
+        return this.options.transactionConfirmationBlocks;
     }
 
     /**
@@ -119,7 +112,7 @@ export default class AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionConfirmationBlocks(value) {
-        this._transactionConfirmationBlocks = value;
+        this.options.transactionConfirmationBlocks = value;
     }
 
     /**
@@ -130,7 +123,7 @@ export default class AbstractWeb3Module {
      * @returns {Number}
      */
     get transactionPollingTimeout() {
-        return this._transactionPollingTimeout;
+        return this.options.transactionPollingTimeout;
     }
 
     /**
@@ -141,7 +134,7 @@ export default class AbstractWeb3Module {
      * @param {Number} value
      */
     set transactionPollingTimeout(value) {
-        this._transactionPollingTimeout = value;
+        this.options.transactionPollingTimeout = value;
     }
 
     /**
@@ -152,7 +145,7 @@ export default class AbstractWeb3Module {
      * @returns {Number|String}
      */
     get defaultGasPrice() {
-        return this._defaultGasPrice;
+        return this.options.defaultGasPrice;
     }
 
     /**
@@ -163,7 +156,7 @@ export default class AbstractWeb3Module {
      * @param {Number|String} value
      */
     set defaultGasPrice(value) {
-        this._defaultGasPrice = value;
+        this.options.defaultGasPrice = value;
     }
 
     /**
@@ -174,7 +167,7 @@ export default class AbstractWeb3Module {
      * @returns {Number|String}
      */
     get defaultGas() {
-        return this._defaultGas;
+        return this.options.defaultGas;
     }
 
     /**
@@ -185,7 +178,7 @@ export default class AbstractWeb3Module {
      * @param {Number|String} value
      */
     set defaultGas(value) {
-        this._defaultGas = value;
+        this.options.defaultGas = value;
     }
 
     /**
@@ -211,7 +204,7 @@ export default class AbstractWeb3Module {
      * @returns {null|String}
      */
     get defaultAccount() {
-        return this._defaultAccount;
+        return this.options.defaultAccount;
     }
 
     /**
@@ -222,7 +215,7 @@ export default class AbstractWeb3Module {
      * @param {String} value
      */
     set defaultAccount(value) {
-        this._defaultAccount = new Address(value).toChecksum();
+        this.options.defaultAccount = value;
     }
 
     /**

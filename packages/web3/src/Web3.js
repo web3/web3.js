@@ -19,7 +19,7 @@
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
-import {AbstractWeb3Module} from 'web3-core';
+import {AbstractWeb3Module, ModuleOptions} from 'web3-core';
 import {ProviderDetector, ProvidersModuleFactory} from 'web3-providers';
 import {Eth} from 'web3-eth';
 import {Shh} from 'web3-shh';
@@ -36,6 +36,8 @@ export default class Web3 extends AbstractWeb3Module {
      * @constructor
      */
     constructor(provider, net, options = {}) {
+        options = new ModuleOptions(options);
+
         super(provider, options, null, net);
 
         this.eth = new Eth(this.currentProvider, net, options);

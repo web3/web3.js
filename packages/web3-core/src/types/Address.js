@@ -60,6 +60,19 @@ export default class Address {
     }
 
     /**
+     * Returns the checksum of the current address
+     *
+     * @method toChecksum
+     *
+     * @param {Number} chainId
+     *
+     * @returns {String}
+     */
+    toChecksum(chainId = null) {
+        return Address.toChecksum(this.toString(), chainId);
+    }
+
+    /**
      * Maps the given address to a checksum address.
      *
      * @method toChecksum
@@ -70,10 +83,6 @@ export default class Address {
      * @returns {String}
      */
     static toChecksum(address, chainId = null) {
-        if (typeof address !== 'string') {
-            return '';
-        }
-
         if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
             throw new Error(`Given address "${address}" is not a valid Ethereum address.`);
         }

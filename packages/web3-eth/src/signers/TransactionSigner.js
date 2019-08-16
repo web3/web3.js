@@ -19,7 +19,6 @@
 
 import EthereumTx from 'ethereumjs-tx';
 import {keccak256} from 'js-sha3';
-import {Hex} from 'web3-core';
 
 export default class TransactionSigner {
     /**

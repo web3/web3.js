@@ -37,3 +37,4 @@ export Transaction from '../public_api/Transaction';
 export TransactionOptions from '../public_api/TransactionOptions';
 export TransactionReceipt from '../public_api/TransactionReceipt';
 export Units from '../public_api/Units';
+export ModuleOptions from '../public_api/ModuleOptions';

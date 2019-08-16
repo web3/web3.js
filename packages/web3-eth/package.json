@@ -23,6 +23,7 @@
         "ethereumjs-tx": "^1.3.7",
         "rxjs": "^6.4.0",
         "eth-lib": "^0.2.8",
+        "js-sha3": "^0.8.0",
         "web3-core": "2.0.0-alpha.1",
         "web3-core-method": "2.0.0-alpha.1",
         "web3-core-subscriptions": "2.0.0-alpha.1",
