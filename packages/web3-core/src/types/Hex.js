@@ -269,7 +269,7 @@ export default class Hex {
      *
      * @returns {String}
      */
-    static rightPad(string, chars, sign) {
+    static rightPad(string, chars, sign = null) {
         string = Hex.stripPrefix(string.toString(16));
 
         const padding = chars - string.length + 1 >= 0 ? chars - string.length + 1 : 0;
@@ -288,7 +288,7 @@ export default class Hex {
      *
      * @returns {Hex}
      */
-    static leftPad(string, chars, sign) {
+    static leftPad(string, chars, sign = null) {
         string = Hex.stripPrefix(string.toString(16));
 
         const padding = chars - string.length + 1 >= 0 ? chars - string.length + 1 : 0;

@@ -23,6 +23,7 @@
  * @date 2015
  */
 
+import Hex from './Hex';
 import Address from './Address';
 import BN from 'bn.js';
 
@@ -78,14 +79,7 @@ export default class Iban {
      * @returns {Iban} the IBAN object
      */
     static fromAddress(address) {
-        address = new Address(address)
-            .toString()
-            .replace('0x', '')
-            .replace('0X', '');
-
-        const asBn = new BN(address, 16);
-
-        let padded = asBn.toString(36);
+        let padded = new BN(Hex.stripPrefix(new Address(address).toString()), 16).toString(36);
 
         while (padded.length < 15 * 2) {
             padded = `0${padded}`;
@@ -222,9 +216,7 @@ export default class Iban {
      */
     toAddress() {
         if (this.isDirect()) {
-            const base36 = this._iban.substr(4);
-            const asBn = new BN(base36, 36);
-            return Address.toChecksum(asBn.toString(16, 20));
+            return Address.toChecksum(Hex.leftPad(new BN(this._iban.substr(4), 36).toString(16), 20));
         }
 
         return '';

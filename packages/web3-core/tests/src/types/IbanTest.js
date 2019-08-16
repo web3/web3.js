@@ -71,7 +71,7 @@ describe('IbanTest', () => {
     it('calls toAddress with a direct Iban and returns the expected string', () => {
         iban._iban = '0000000000000000000000000000000000';
 
-        expect(iban.toAddress()).toEqual('0x0');
+        expect(iban.toAddress()).toEqual('0x00000000000000000000');
     });
 
     it('calls toAddress with a indirect Iban and returns the expected string', () => {
@@ -83,7 +83,7 @@ describe('IbanTest', () => {
     });
 
     it('calls the static method toAddress and returns the expected string', () => {
-        expect(Iban.toAddress('0000000000000000000000000000000000')).toEqual('0x0');
+        expect(Iban.toAddress('0000000000000000000000000000000000')).toEqual('0x00000000000000000000');
     });
 
     it('calls the static method toAddress with a indirect Iban and throws an error', () => {
@@ -93,13 +93,17 @@ describe('IbanTest', () => {
     });
 
     it('calls toIban and returns the expected string', () => {
-        expect(Iban.toIban('0x0').toString()).toEqual('XE50000000000000000000000000000000');
+        expect(Iban.toIban('0x6d6dC708643A2782bE27191E2ABCae7E1B0cA38B').toString()).toEqual(
+            'XE43CS64MODVJHVFDL7WC89X5OD4ET3PPCB'
+        );
     });
 
     it('calls fromAddress and throws an error', () => {
         expect(() => {
             Iban.fromAddress('0');
-        }).toThrow('Provided address is not a valid address: 0');
+        }).toThrow(
+            'Provided address "0" is invalid, the capitalization checksum test failed, or its an indirect IBAN address which can\'t be converted.'
+        );
     });
 
     it('calls fromBban and returns the expected Iban object', () => {
