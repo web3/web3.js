@@ -57,11 +57,6 @@ if (isNode) {
             scrypt = function(key, salt, N, r, p, dkLen) {
                 return scryptPkg.hashSync(key, {N: N, r: r, p: p}, dkLen, salt);
             };
-        } else {
-            console.warn(
-                '\x1b[33m%s\x1b[0m',
-                'You ' + canImprove(NODE_MIN_VER_WITH_BUILTIN_SCRYPT)
-            );
         }
     }
 }
