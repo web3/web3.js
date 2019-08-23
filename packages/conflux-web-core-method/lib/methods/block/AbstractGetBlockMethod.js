@@ -33,7 +33,6 @@ export default class AbstractGetBlockMethod extends AbstractMethod {
      * @constructor
      */
     constructor(rpcMethod, utils, formatters, moduleInstance) {
-        console.log('xfdsfjasdfajslfksdajfkl rpcMethod: %j', rpcMethod);
         super(rpcMethod, 2, utils, formatters, moduleInstance);
     }
 

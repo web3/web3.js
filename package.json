@@ -108,5 +108,9 @@
         "rollup-plugin-cleanup": "^3.1.1",
         "rollup-plugin-json": "^4.0.0",
         "typescript": "^3.4.1"
+    },
+    "dependencies": {
+        "acorn": "^6.2.1",
+        "scrypt": "^6.0.3"
     }
 }
