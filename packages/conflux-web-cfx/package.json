@@ -1,6 +1,6 @@
 {
     "name": "conflux-web-cfx",
-    "version": "0.1.20-alpha.0",
+    "version": "0.1.21-alpha.0",
     "description": "ConfluxWeb module to interact with the Conflux blockchain and smart contracts.",
     "repository": "https://github.com/Conflux-Chain/ConfluxWeb/tree/master/packages/conflux-web-cfx",
     "license": "LGPL-3.0",
@@ -17,11 +17,11 @@
     "dependencies": {
         "@babel/runtime": "^7.3.1",
         "conflux-web-cfx-abi": "0.1.15-alpha.0",
-        "conflux-web-cfx-accounts": "0.1.18-alpha.0",
-        "conflux-web-cfx-contract": "0.1.18-alpha.0",
-        "conflux-web-core": "0.1.18-alpha.0",
+        "conflux-web-cfx-accounts": "0.1.21-alpha.0",
+        "conflux-web-cfx-contract": "0.1.21-alpha.0",
+        "conflux-web-core": "0.1.21-alpha.0",
         "conflux-web-core-helpers": "0.1.15-alpha.0",
-        "conflux-web-core-method": "0.1.18-alpha.0",
+        "conflux-web-core-method": "0.1.21-alpha.0",
         "conflux-web-core-subscriptions": "0.1.15-alpha.0",
         "conflux-web-net": "0.1.15-alpha.0",
         "conflux-web-providers": "0.1.15-alpha.0",
