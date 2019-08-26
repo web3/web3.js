@@ -1,0 +1,14 @@
+{
+   "persistentCheckout": true,
+   "icon": "https://raw.githubusercontent.com/ethereum/web3.js/2.x/assets/web3js.jpg",
+   "callToAction": {
+     "default": "Please, support our work by purchasing a key to our supporters lock. You will receive a unique Web3.js Non Fungible Token!",
+     "pending": "Thank you for your support. It means a lot to us!",
+     "confirmed": "Thank you for your support. It means a lot to us!"
+   },
+   "locks": {
+     "0xe8846DE6aAF1B50A3e300cc2AB568D544709385B": {
+       "name": "Web3.js Supporters"
+     }
+   }
+ }
