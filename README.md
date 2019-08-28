@@ -1,7 +1,7 @@
 
 ![Web3.js logo](assets/web3js.svg)
 
-# web3.js - Ethereum JavaScript API
+# conflux-web.js - Ethereum JavaScript API
 
 [![npm](https://img.shields.io/npm/dm/web3.svg)](https://www.npmjs.com/package/web3) [![Build Status][travis-image]][travis-url] ![Coverage Status](https://coveralls.io/repos/github/ethereum/web3.js/badge.svg?branch=1.0&kill_cache=1)
 [![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -18,47 +18,47 @@ Please read the [documentation][docs] for more.
 ### Node
 
 ```bash
-npm install web3
+npm install conflux-web
 ```
 
 ### Yarn
 
 ```bash
-yarn add web3
+yarn add conflux-web
 ```
 
 ### Meteor
 
 ```bash
-meteor npm install --save web3@1.x
+meteor npm install --save conflux-web@0.x
 ```
 
 ## Usage
 
 ```js
-import Web3 from 'web3';
+import Web3 from 'conflux-web';
 
-const web3 = new Web3('ws://localhost:8546');
-console.log(web3);
+const conflux-web = new Web3('ws://localhost:8546');
+console.log(conflux-web);
 > {
-    eth: ... ,
+    cfx: ... ,
     utils: ...,
     ...
 }
 ```
 
-Additionally you can set a provider using `web3.setProvider()` (e.g. WebsocketProvider)
+Additionally you can set a provider using `conflux-web.setProvider()` (e.g. WebsocketProvider)
 
 ```js
-web3.setProvider('ws://localhost:8546');
+conflux-web.setProvider('ws://localhost:8546');
 // or
-web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
+conflux-web.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 ```
 
 There you go, now you can use it:
 
 ```js
-web3.eth.getAccounts()
+conflux-web.cfx.getAccounts()
 .then(console.log);
 ```
 
@@ -66,11 +66,11 @@ web3.eth.getAccounts()
 
 We support types within the repo itself. Please open an issue here if you find any wrong types.
 
-You can use `web3.js` as follows:
+You can use `conflux-web.js` as follows:
 
 ```typescript
-import Web3 from 'web3';
-const web3 = new Web3("ws://localhost:8546");
+import Web3 from 'conflux-web';
+const conflux-web = new Web3("ws://localhost:8546");
 ```
 
 If you are using the types in a `commonjs` module like for example a node app you just have to enable `esModuleInterop` in your `tsconfig` compile option, also enable `allowSyntheticDefaultImports` for typesystem compatibility:
