@@ -45,7 +45,6 @@ export default class AbstractGetBlockMethod extends AbstractMethod {
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputBlockAddressFormatter(this.parameters[0]);
-        console.log('xxdfdfsfdsfsdfsdfsdfsfsfsfsdfdfdsfs:%j', [this.parameters]);
         // Optional second parameter 'returnTransactionObjects' could also be the callback
         if (isFunction(this.parameters[1])) {
             this.callback = this.parameters[1];
