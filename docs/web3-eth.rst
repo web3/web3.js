@@ -1119,8 +1119,21 @@ Returns
 -------
 
 
-``Promise<string>`` - The signature.
+``Promise<Object>`` - Signature Object.
 
+-------
+Returns
+-------
+
+
+``Promise`` returns ``Object`` - A signature object, or ``null`` when failed to sign:
+
+  - ``message`` - ``Array``: Encoded message.
+  - ``messageHash`` 32 Bytes - ``String``: Hash of the messsage.
+  - ``v`` - 2 Bytes - ``String``: V part of the signature (uint8).
+  - ``r`` - 32 Bytes - ``String``: R part of the signature.
+  - ``s`` - 32 Bytes - ``String``: S part of the signature.
+  - ``signature``- 65 Bytes - ``String``: Full signature (V+R+S).
 
 -------
 Example
@@ -1130,12 +1143,12 @@ Example
 .. code-block:: javascript
 
     web3.eth.sign("Hello world", "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe")
-    .then(console.log);
+    .then((sig) => console.log(sig.signature));
     > "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"
 
     // the below is the same
     web3.eth.sign(web3.utils.utf8ToHex("Hello world"), "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe")
-    .then(console.log);
+    .then((sig) => console.log(sig.signature)));
     > "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"
 
 ------------------------------------------------------------------------------
