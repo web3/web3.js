@@ -32,7 +32,7 @@ var RLP = require("eth-lib/lib/rlp");
 var Nat = require("eth-lib/lib/nat");
 var Bytes = require("eth-lib/lib/bytes");
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
-var scrypt = require('./scrypt');
+var scrypt = require('scrypt-shim');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
