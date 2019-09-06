@@ -456,11 +456,11 @@ eth.submitWork(
     (error: Error, result: boolean) => {}
 );
 
-// $ExpectType Promise<[]>
-eth.pendingTransactions();
+// $ExpectType Promise<Transaction[]>
+eth.getPendingTransactions();
 
-// $ExpectType Promise<[]>
-eth.pendingTransactions((error: Error, result: []) => {});
+// $ExpectType Promise<Transaction[]>
+eth.getPendingTransactions((error: Error, result: Transaction[]) => {});
 
 // $ExpectType Promise<GetProof>
 eth.getProof(
