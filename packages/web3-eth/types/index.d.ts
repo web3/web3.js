@@ -114,6 +114,8 @@ export class Eth extends AbstractWeb3Module {
 
     getTransaction(transactionHash: string, callback?: (error: Error, transaction: Transaction) => void): Promise<Transaction>;
 
+    getPendingTransactions(callback?: (error: Error, result: []) => void): Promise<[]>;
+
     getTransactionFromBlock(hashStringOrNumber: string | number, indexNumber: number, callback?: (error: Error, transaction: Transaction) => void): Promise<Transaction>;
 
     getTransactionReceipt(hash: string, callback?: (error: Error, transactionReceipt: TransactionReceipt) => void): Promise<TransactionReceipt>;
@@ -145,8 +147,6 @@ export class Eth extends AbstractWeb3Module {
     getWork(callback?: (error: Error, result: string[]) => void): Promise<string[]>;
 
     submitWork(data: [string, string, string], callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-
-    pendingTransactions(callback?: (error: Error, result: []) => void): Promise<[]>;
 
     getProof(address: string, storageKey: string[], blockNumber: number | string | "latest" | "earliest", callback?: (error: Error, result: GetProof) => void): Promise<GetProof>;
 }

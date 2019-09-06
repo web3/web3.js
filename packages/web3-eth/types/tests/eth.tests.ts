@@ -457,10 +457,10 @@ eth.submitWork(
 );
 
 // $ExpectType Promise<[]>
-eth.pendingTransactions();
+eth.getPendingTransactions();
 
 // $ExpectType Promise<[]>
-eth.pendingTransactions((error: Error, result: []) => {});
+eth.getPendingTransactions((error: Error, result: []) => {});
 
 // $ExpectType Promise<GetProof>
 eth.getProof(
