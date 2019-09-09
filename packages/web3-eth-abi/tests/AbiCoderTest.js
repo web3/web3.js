@@ -89,6 +89,16 @@ describe('AbiCoderTest', () => {
         expect(ethersAbiCoderMock.encode).toHaveBeenCalledWith([{components: true}], ['']);
     });
 
+    it('calls encodeParameter with string type', () => {
+        Utils.keccak256 = jest.fn(() => {
+            return '0x000000000';
+        });
+
+        expect(abiCoder.encodeParameter('string', 'qwerty')).toEqual('0x000000000');
+
+        expect(Utils.keccak256).toHaveBeenCalledWith('qwerty');
+    });
+
     it('calls encodeFunctionCall and returns the expected string', () => {
         Utils.keccak256 = jest.fn(() => {
             return '0x000000000';

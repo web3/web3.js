@@ -82,6 +82,10 @@ export default class AbiCoder {
      * @returns {String} encoded plain param
      */
     encodeParameter(type, param) {
+        if (type === 'string') {
+            return this.utils.keccak256(param);
+        }
+
         return this.encodeParameters([type], [param]);
     }
 
