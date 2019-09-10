@@ -22,6 +22,21 @@
 
 import isArray from 'lodash/isArray';
 
+/**
+ * @param {String} type
+ * @param {String | Number} param
+ * @param {AbiCoder} abiCoder
+ *
+ * @returns {String} encoded plain param
+ */
+const encodeParameter = (type, param, abiCoder) => {
+    if (type === 'string' || type === 'string[]') {
+        return abiCoder.utils.keccak256(param);
+    }
+
+    return abiCoder.encodeParameter(type, param);
+};
+
 export default class EventFilterEncoder {
     /**
      * @param {AbiCoder} abiCoder
@@ -49,7 +64,7 @@ export default class EventFilterEncoder {
 
                 if (isArray(filterItem)) {
                     filterItem = filterItem.map((item) => {
-                        return this.abiCoder.encodeParameter(input.type, item);
+                        return encodeParameter(input.type, item, this.abiCoder);
                     });
 
                     topics.push(filterItem);
@@ -57,7 +72,7 @@ export default class EventFilterEncoder {
                     return;
                 }
 
-                topics.push(this.abiCoder.encodeParameter(input.type, filterItem));
+                topics.push(encodeParameter(input.type, filterItem, this.abiCoder));
 
                 return;
             }
