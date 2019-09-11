@@ -179,12 +179,12 @@ packages.forEach(function (pckg, i) {
             .pipe(source(pckg.fileName + '.js'))
             .pipe(streamify(babel({
                 compact: false,
-                presets: ['env']
+                presets: ['@babel/preset-env']
             })))
             .pipe(gulp.dest(DEST))
             .pipe(streamify(babel({
                 compact: true,
-                presets: ['env']
+                presets: ['@babel/preset-env']
             })))
             .pipe(streamify(uglify(ugliyOptions)))
             .on('error', function (err) { console.error(err); })
