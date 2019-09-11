@@ -49,3 +49,12 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.2.2]
+
+### Added
+
+- localStorage support detection added (#3031)
+
+### Fixed
+
+- regeneratorRuntime error fixed (#3058)
+- Fix accessing event.name where event is undefined (#3014)
