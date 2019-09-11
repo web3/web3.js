@@ -525,9 +525,43 @@ Wallet.prototype.load = function (password, keyName) {
     return this.decrypt(keystore || [], password);
 };
 
-if (typeof localStorage === 'undefined') {
+if (!storageAvailable('localStorage')) {
     delete Wallet.prototype.save;
     delete Wallet.prototype.load;
+}
+
+/**
+ * Checks whether a storage type is available or not
+ * For more info on how this works, please refer to MDN documentation
+ * https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API#Feature-detecting_localStorage
+ *
+ * @method storageAvailable
+ * @param {String} type the type of storage ('localStorage', 'sessionStorage')
+ * @returns {Boolean} a boolean indicating whether the specified storage is available or not
+ */
+function storageAvailable(type) {
+    var storage;
+    try {
+        storage = window[type];
+        var x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            (storage && storage.length !== 0);
+    }
 }
 
 
