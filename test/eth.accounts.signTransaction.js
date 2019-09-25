@@ -414,7 +414,7 @@ describe("eth", function () {
                     assert.equal(testAccount.address, test.address);
 
                     testAccount.signTransaction(test.transaction).then(function (tx) {
-                        assert.equal(tx.rawTransaction, test.rawTransaction);
+                        assert.equal(tx.raw, test.rawTransaction);
                         done();
                     });
                 });
@@ -429,7 +429,7 @@ describe("eth", function () {
                     transaction.to = transaction.toIban;
                     delete transaction.toIban;
                     testAccount.signTransaction(transaction).then(function (tx) {
-                        assert.equal(tx.rawTransaction, test.rawTransaction);
+                        assert.equal(tx.raw, test.rawTransaction);
                         done();
                     });
                 });
@@ -455,7 +455,7 @@ describe("eth", function () {
                     testAccount.signTransaction(transaction)
                     .then(function (tx) {
                         assert.isObject(tx);
-                        assert.isString(tx.rawTransaction);
+                        assert.isString(tx.raw);
 
                         done();
                     });
@@ -482,7 +482,7 @@ describe("eth", function () {
                     testAccount.signTransaction(transaction)
                     .then(function (tx) {
                         assert.isObject(tx);
-                        assert.isString(tx.rawTransaction);
+                        assert.isString(tx.raw);
 
                         done();
                     });
@@ -509,7 +509,7 @@ describe("eth", function () {
                     testAccount.signTransaction(transaction)
                     .then(function (tx) {
                         assert.isObject(tx);
-                        assert.isString(tx.rawTransaction);
+                        assert.isString(tx.raw);
 
                         done();
                     });
@@ -550,7 +550,7 @@ describe("eth", function () {
                     testAccount.signTransaction(transaction)
                     .then(function (tx) {
                         assert.isObject(tx);
-                        assert.isString(tx.rawTransaction);
+                        assert.isString(tx.raw);
 
                         done();
                     });
@@ -563,7 +563,7 @@ describe("eth", function () {
                     assert.equal(testAccount.address, test.address);
 
                     testAccount.signTransaction(test.transaction).then(function (tx) {
-                        assert.equal(ethAccounts.recoverTransaction(tx.rawTransaction), test.address);
+                        assert.equal(ethAccounts.recoverTransaction(tx.raw), test.address);
                     });
                 });
 

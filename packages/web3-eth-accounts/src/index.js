@@ -196,11 +196,19 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
             var values = RLP.decode(rawTransaction);
             result = {
-                messageHash: hash,
-                v: trimLeadingZero(values[6]),
-                r: trimLeadingZero(values[7]),
-                s: trimLeadingZero(values[8]),
-                rawTransaction: rawTransaction
+                raw: rawTransaction,
+                tx: {
+                    nonce: transaction.nonce,
+                    gasPrice: transaction.gasPrice,
+                    gas: transaction.gas,
+                    to: transaction.to,
+                    value: transaction.value,
+                    input: transaction.data,
+                    v: trimLeadingZero(values[6]),
+                    r: trimLeadingZero(values[7]),
+                    s: trimLeadingZero(values[8]),
+                    hash:hash
+                }
             };
 
         } catch(e) {

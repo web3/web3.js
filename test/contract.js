@@ -3031,7 +3031,7 @@ describe('typical usage', function() {
                 chainId: '0x1',
                 nonce: '0x1',
             }).then(function (tx) {
-                const expected = tx.rawTransaction;
+                const expected = tx.raw;
                 assert.equal(payload.method, 'eth_sendRawTransaction');
                 assert.deepEqual(payload.params, [expected]);
             });

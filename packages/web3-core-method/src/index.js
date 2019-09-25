@@ -513,9 +513,8 @@ Method.prototype.buildCall = function() {
 
             var signedPayload = _.extend({}, payload, {
                 method: 'eth_sendRawTransaction',
-                params: [sign.rawTransaction]
+                params: [sign.raw]
             });
-
             method.requestManager.send(signedPayload, sendTxCallback);
         };
 
