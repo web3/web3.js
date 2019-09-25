@@ -333,7 +333,11 @@ var toHex = function (value, returnType) {
     if (_.isBoolean(value)) {
         return returnType ? 'bool' : value ? '0x01' : '0x00';
     }
-
+    
+    // if it is a buffer then, pass it through bytesToHex
+    if (Buffer.isBuffer(value)) {
+        return bytesToHex(value);
+    }
 
     if (_.isObject(value) && !isBigNumber(value) && !isBN(value)) {
         return returnType ? 'string' : utf8ToHex(JSON.stringify(value));
