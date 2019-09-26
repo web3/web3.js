@@ -62,13 +62,13 @@ describe('RegistryTest', () => {
     });
 
     it('sets the transactionSigner property', () => {
-        registry.resolverContract = {transactionSigner: true};
-
         registry.transactionSigner = {};
+
+        registry.resolverContract = {transactionSigner: true};
 
         expect(registry.transactionSigner).toEqual({});
 
-        expect(registry.resolverContract.transactionSigner).toEqual({});
+        expect(registry.resolverContract.transactionSigner).toEqual(true);
     });
 
     it('sets the transactionSigner property and throws the expected error', () => {
