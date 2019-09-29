@@ -58,3 +58,4 @@ Released with 1.0.0-beta.37 code base.
 
 - regeneratorRuntime error fixed (#3058)
 - Fix accessing event.name where event is undefined (#3014)
+- fixed Web3Utils toHex() for Buffer input (#3021)

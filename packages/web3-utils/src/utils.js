@@ -319,7 +319,7 @@ var hexToBytes = function(hex) {
  * And even stringifys objects before.
  *
  * @method toHex
- * @param {String|Number|BN|Object} value
+ * @param {String|Number|BN|Object|Buffer} value
  * @param {Boolean} returnType
  * @return {String}
  */
@@ -333,7 +333,7 @@ var toHex = function (value, returnType) {
     if (_.isBoolean(value)) {
         return returnType ? 'bool' : value ? '0x01' : '0x00';
     }
-    
+
     // if it is a buffer then, pass it through bytesToHex
     if (Buffer.isBuffer(value)) {
         return bytesToHex(value);
