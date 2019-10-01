@@ -231,6 +231,10 @@ var hexToNumber = function (value) {
         return value;
     }
 
+    if (_.isString(value) && !isHexStrict(value)) {
+        throw new Error('Given value "'+value+'" is not a valid hex string.');
+    }
+
     return toBN(value).toNumber();
 };
 
@@ -243,6 +247,10 @@ var hexToNumber = function (value) {
  */
 var hexToNumberString = function (value) {
     if (!value) return value;
+
+    if (_.isString(value) && !isHexStrict(value)) {
+        throw new Error('Given value "'+value+'" is not a valid hex string.');
+    }
 
     return toBN(value).toString(10);
 };
