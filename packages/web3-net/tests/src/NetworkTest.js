@@ -102,6 +102,20 @@ describe('NetworkTest', () => {
         expect(network.getId).toHaveBeenCalled();
     });
 
+    it('calls getNetworkType and resolves to the network name "goerli', async () => {
+        const callback = jest.fn();
+
+        network.getId = jest.fn(() => {
+            return Promise.resolve(5);
+        });
+
+        await expect(network.getNetworkType(callback)).resolves.toEqual('goerli');
+
+        expect(callback).toHaveBeenCalledWith(null, 'goerli');
+
+        expect(network.getId).toHaveBeenCalled();
+    });
+
     it('calls getNetworkType and resolves to the network name "kovan', async () => {
         const callback = jest.fn();
 
