@@ -1,7 +1,7 @@
 {
     "name": "@fortmatic/fortmatic-web3",
     "private": true,
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
     "engines": {
