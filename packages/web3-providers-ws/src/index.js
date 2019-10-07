@@ -345,7 +345,9 @@ WebsocketProvider.prototype.once = function (type, callback) {
     var _this = this;
 
     function onceCallback(event) {
-        _this.removeListener(type, onceCallback);
+        setTimeout(function () {
+            _this.removeListener(type, onceCallback);
+        }, 0);
 
         callback(event);
     }
