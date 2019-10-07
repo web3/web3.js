@@ -104,4 +104,19 @@ describe('outputTransactionReceiptFormatter', function() {
 
         assert.equal(formatters.outputTransactionReceiptFormatter(receipt).status, undefined)
     });
+
+    it('call outputTransactionReceiptFormatter when status is "null"', function() {
+        var receipt = {
+            status: null,
+            cumulativeGasUsed: '0x100',
+            gasUsed: '0x100',
+            blockNumber: '0x100',
+            transactionIndex: '0xa',
+            to: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
+            from: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
+            contractAddress: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
+        };
+
+        assert.equal(formatters.outputTransactionReceiptFormatter(receipt).status, null)
+    });
 });
