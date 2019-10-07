@@ -275,6 +275,13 @@ Subscription.prototype.subscribe = function() {
                     _this._resubscribe(err);
                 }
             });
+
+            // just in case the provider reconnects silently, resubscribe over the new connection
+            if (_this.options.requestManager.provider.once) {
+                _this.options.requestManager.provider.once('connect', function () {
+                    _this._resubscribe();
+                });
+            }
         } else {
             _this._resubscribe(err);
         }
@@ -310,7 +317,9 @@ Subscription.prototype._resubscribe = function (err) {
         });
     }
 
-    this.emit('error', err);
+    if (err) {
+        this.emit('error', err);
+    }
 
     // call the callback, last so that unsubscribe there won't affect the emit above
     this.callback(err, null, this);
