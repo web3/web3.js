@@ -26,7 +26,7 @@ var _ = require('underscore');
 var ethjsUnit = require('ethjs-unit');
 var utils = require('./utils.js');
 var soliditySha3 = require('./soliditySha3.js');
-var randomHex = require('randomhex');
+var randombytes = require('randombytes');
 
 
 
@@ -146,6 +146,16 @@ var _flattenTypes = function(includeTuple, puts)
 
 
 /**
+ * Returns a random hex string by the given bytes size
+ *
+ * @param {Number} size
+ * @returns {string}
+ */
+var randomHex = function(size) {
+    return '0x' + randombytes(size).toString('hex');
+};
+
+/**
  * Should be called to get ascii from it's hex representation
  *
  * @method hexToAscii
@@ -232,7 +242,7 @@ var fromWei = function(number, unit) {
     unit = getUnitValue(unit);
 
     if(!utils.isBN(number) && !_.isString(number)) {
-        throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+        throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
     return utils.isBN(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
@@ -264,7 +274,7 @@ var toWei = function(number, unit) {
     unit = getUnitValue(unit);
 
     if(!utils.isBN(number) && !_.isString(number)) {
-        throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+        throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
     return utils.isBN(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
