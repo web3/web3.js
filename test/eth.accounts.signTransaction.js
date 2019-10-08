@@ -495,7 +495,7 @@ describe("eth", function () {
                     provider.injectResult(1);
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
-                        assert.equal(payload.method, 'net_version');
+                        assert.equal(payload.method, 'eth_chainId');
                         assert.deepEqual(payload.params, []);
                     });
 
@@ -522,7 +522,7 @@ describe("eth", function () {
                     provider.injectResult(1);
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
-                        assert.equal(payload.method, 'net_version');
+                        assert.equal(payload.method, 'eth_chainId');
                         assert.deepEqual(payload.params, []);
                     });
                     provider.injectResult(1);

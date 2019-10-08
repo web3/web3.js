@@ -69,7 +69,7 @@ var Accounts = function Accounts() {
     var _ethereumCall = [
         new Method({
             name: 'getId',
-            call: 'net_version',
+            call: 'eth_chainId',
             params: 0,
             outputFormatter: utils.hexToNumber
         }),

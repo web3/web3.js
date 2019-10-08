@@ -10,10 +10,10 @@ var useLocalWallet = function (test, provider, web3) {
 
     test.useLocalWallet(web3);
 
-    provider.injectResult(1);
+    provider.injectResult("0x1");
     provider.injectValidation(function (payload) {
         assert.equal(payload.jsonrpc, '2.0');
-        assert.equal(payload.method, 'net_version');
+        assert.equal(payload.method, 'eth_chainId');
         assert.deepEqual(payload.params, []);
     });
 
