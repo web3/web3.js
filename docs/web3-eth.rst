@@ -1467,3 +1467,31 @@ Example
 
 
 ------------------------------------------------------------------------------
+
+.. _eth-chainId:
+
+getChainId
+==========
+
+.. code-block:: javascript
+
+    web3.eth.getChainId([callback])
+
+Returns the chain ID of the current connected node as described in the `EIP-695 <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-695.md>`_.
+
+-------
+Returns
+-------
+
+``Promise<Number>`` - Returns chain ID.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.getChainId().then(console.log);
+    > 61
+
+------------------------------------------------------------------------------
