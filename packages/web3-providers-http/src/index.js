@@ -120,5 +120,8 @@ HttpProvider.prototype.disconnect = function () {
     //NO OP
 };
 
+HttpProvider.prototype.supportsSubscriptions = function () {
+    return false;
+};
 
 module.exports = HttpProvider;

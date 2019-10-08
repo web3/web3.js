@@ -311,5 +311,12 @@ IpcProvider.prototype.reset = function () {
     this.addDefaultEvents();
 };
 
+/**
+ * @returns {boolean}
+ */
+IpcProvider.prototype.supportsSubscriptions = function () {
+    return true;
+};
+
 module.exports = IpcProvider;
 

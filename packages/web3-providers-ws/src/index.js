@@ -404,4 +404,11 @@ WebsocketProvider.prototype.disconnect = function () {
     }
 };
 
+/**
+ * @returns {boolean}
+ */
+WebsocketProvider.prototype.supportsSubscriptions = function () {
+    return true;
+};
+
 module.exports = WebsocketProvider;
