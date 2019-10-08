@@ -80,7 +80,17 @@ sign
 
     web3.eth.personal.sign(dataToSign, address, password [, callback])
 
-Signs data using a specific account.
+The sign method calculates an Ethereum specific signature with:
+
+.. code-block:: javascript
+
+    sign(keccak256("\x19Ethereum Signed Message:\n" + dataToSign.length + dataToSign)))
+
+Adding a prefix to the message makes the calculated signature recognisable as an Ethereum specific signature.
+
+If you have the original message and the signed message, you can discover the signing account address
+using :ref:`web3.eth.personal.ecRecover <eth-personal-ecRecover>` (See example below)
+
 
 .. note:: Sending your account password over an unsecured HTTP RPC connection is highly unsecure.
 
@@ -118,6 +128,11 @@ Example
     web3.eth.personal.sign(web3.utils.utf8ToHex("Hello world"), "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", "test password!")
     .then(console.log);
     > "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"
+
+    // recover the signing account address using original message and signed message
+    web3.eth.personal.ecRecover("Hello world", "0x30755ed65396...etc...")
+    .then(console.log);
+    > "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe"
 
 
 ------------------------------------------------------------------------------
