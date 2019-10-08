@@ -35,6 +35,7 @@ describe('lib/utils/utils', function () {
             assert.throws(function () {utils.toWei(1, 'wei1');}, Error);
         });
 
+
         it('should verify "number" arg is string or BN', function () {
             try {
                 utils.toWei(1, 'wei')
@@ -42,6 +43,17 @@ describe('lib/utils/utils', function () {
             } catch (error) {
                 assert(error.message.includes('Please pass numbers as strings or BN objects'))
             }
+        });
+
+        // toWei returns string when given string, BN when given BN
+        it('should return the correct type', function(){
+            var weiString = '1';
+            var weiBN = utils.toBN(weiString);
+
+            var bn = utils.toWei(weiBN);
+
+            assert(utils.isBN(bn));
+            assert(typeof utils.toWei(weiString) === 'string');
         })
     });
 });
