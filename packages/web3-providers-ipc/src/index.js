@@ -311,5 +311,15 @@ IpcProvider.prototype.reset = function () {
     this.addDefaultEvents();
 };
 
+/**
+ * Returns the desired boolean.
+ *
+ * @method supportsSubscriptions
+ * @returns {boolean}
+ */
+IpcProvider.prototype.supportsSubscriptions = function () {
+    return true;
+};
+
 module.exports = IpcProvider;
 

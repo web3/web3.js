@@ -120,6 +120,15 @@ HttpProvider.prototype.disconnect = function () {
     //NO OP
 };
 
+/**
+ * Returns the desired boolean.
+ *
+ * @method supportsSubscriptions
+ * @returns {boolean}
+ */
+HttpProvider.prototype.supportsSubscriptions = function () {
+    return false;
+};
 
 module.exports = HttpProvider;
 
