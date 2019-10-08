@@ -790,7 +790,7 @@ Parameters
 
 1. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``fromBlock`` - ``Number`` (optional): The block number from which to get events on.
+    * ``fromBlock`` - ``Number`` (optional): The block number (greater than or equal to) from which to get events on.
     * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
 2. ``callback`` - ``Function`` (optional): This callback will be fired for each *event* as the second argument, or an error as the first argument.
 
@@ -893,8 +893,8 @@ Parameters
 1. ``event`` - ``String``: The name of the event in the contract, or ``"allEvents"`` to get all events.
 2. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Lets you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``fromBlock`` - ``Number`` (optional): The block number from which to get events on.
-    * ``toBlock`` - ``Number`` (optional): The block number to get events up to (Defaults to ``"latest"``).
+    * ``fromBlock`` - ``Number`` (optional): The block number (greater than or equal to) from which to get events on.
+    * ``toBlock`` - ``Number`` (optional): The block number (less than or equal to) to get events up to (Defaults to ``"latest"``).
     * ``topics`` - ``Array`` (optional): This allows manually setting the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
 3. ``callback`` - ``Function`` (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
 
