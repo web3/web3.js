@@ -56,7 +56,7 @@ HttpProvider.prototype._prepareRequest = function(){
 
     // runtime is of type node
     if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
-        request = new XHR();
+        request = new XHR2();
         request.nodejsSet({
             httpsAgent:this.httpsAgent,
             httpAgent:this.httpAgent
