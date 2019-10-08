@@ -34,10 +34,7 @@ var https = require('https');
 var HttpProvider = function HttpProvider(host, options) {
     options = options || {};
 
-    var keepAlive =
-        (options.keepAlive === true || options.keepAlive !== false) ?
-            true :
-            false;
+    var keepAlive = (options.keepAlive === true || options.keepAlive !== false) ? true : false;
     this.host = host || 'http://localhost:8545';
     if (this.host.substring(0,5) === "https") {
         this.httpsAgent = new https.Agent({ keepAlive: keepAlive });
@@ -55,7 +52,7 @@ HttpProvider.prototype._prepareRequest = function(){
     var request;
 
     // runtime is of type node
-    if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
+    if (typeof process !== 'undefined' && process.versions !== null && process.versions.node !== null) {
         request = new XHR2();
         request.nodejsSet({
             httpsAgent:this.httpsAgent,
@@ -64,7 +61,6 @@ HttpProvider.prototype._prepareRequest = function(){
     } else {
         request = new XMLHttpRequest();
     }
-
 
     request.open('POST', this.host, true);
     request.setRequestHeader('Content-Type','application/json');
