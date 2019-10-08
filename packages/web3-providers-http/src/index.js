@@ -51,15 +51,15 @@ var HttpProvider = function HttpProvider(host, options) {
 HttpProvider.prototype._prepareRequest = function(){
     var request;
 
-    // runtime is of type node
-    if (typeof process !== 'undefined' && process.versions !== null && process.versions.node !== null) {
+    // the current runtime is a browser
+    if (typeof XMLHttpRequest !== 'undefined') {
+        request = new XMLHttpRequest();
+    } else {
         request = new XHR2();
         request.nodejsSet({
             httpsAgent:this.httpsAgent,
             httpAgent:this.httpAgent
         });
-    } else {
-        request = new XMLHttpRequest();
     }
 
     request.open('POST', this.host, true);
