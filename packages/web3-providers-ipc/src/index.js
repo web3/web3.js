@@ -312,6 +312,9 @@ IpcProvider.prototype.reset = function () {
 };
 
 /**
+ * Returns the desired boolean.
+ *
+ * @method supportsSubscriptions
  * @returns {boolean}
  */
 IpcProvider.prototype.supportsSubscriptions = function () {
