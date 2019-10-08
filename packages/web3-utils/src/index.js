@@ -242,7 +242,7 @@ var fromWei = function(number, unit) {
     unit = getUnitValue(unit);
 
     if(!utils.isBN(number) && !_.isString(number)) {
-        throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+        throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
     return utils.isBN(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
@@ -274,7 +274,7 @@ var toWei = function(number, unit) {
     unit = getUnitValue(unit);
 
     if(!utils.isBN(number) && !_.isString(number)) {
-        throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+        throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
     return utils.isBN(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
