@@ -57,5 +57,6 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 
 - Fix error incorrectly thrown when receipt.status is `null` (#2183)
+- Fix incorrectly populating chainId param with `net_version` when signing txs (#2378)
 - regeneratorRuntime error fixed (#3058)
 - Fix accessing event.name where event is undefined (#3014)
