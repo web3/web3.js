@@ -18,5 +18,14 @@ describe('lib/utils/utils', function () {
             assert.equal(utils.fromWei('1000000000000000000', 'gether'), '0.000000001');
             assert.equal(utils.fromWei('1000000000000000000', 'tether'), '0.000000000001');
         });
+
+        it('should verify "number" arg is string or BN', function () {
+            try {
+                utils.fromWei(100000000000, 'wei')
+                assert.fail();
+            } catch (error) {
+                assert(error.message.includes('Please pass numbers as strings or BN objects'))
+            }
+        })
     });
 });
