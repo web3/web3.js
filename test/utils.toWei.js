@@ -34,5 +34,14 @@ describe('lib/utils/utils', function () {
 
             assert.throws(function () {utils.toWei(1, 'wei1');}, Error);
         });
+
+        it('should verify "number" arg is string or BN', function () {
+            try {
+                utils.toWei(1, 'wei')
+                assert.fail();
+            } catch (error) {
+                assert(error.message.includes('Please pass numbers as strings or BN objects'))
+            }
+        })
     });
 });
