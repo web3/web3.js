@@ -53,6 +53,7 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - localStorage support detection added (#3031)
+- getNetworkType method extended with Görli testnet (#3095)
 
 ### Fixed
 
