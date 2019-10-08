@@ -26,7 +26,7 @@ var _ = require('underscore');
 var ethjsUnit = require('ethjs-unit');
 var utils = require('./utils.js');
 var soliditySha3 = require('./soliditySha3.js');
-var randomHex = require('randomhex');
+var randombytes = require('randombytes');
 
 
 
@@ -144,6 +144,16 @@ var _flattenTypes = function(includeTuple, puts)
     return types;
 };
 
+
+/**
+ * Returns a random hex string by the given bytes size
+ *
+ * @param {Number} size
+ * @returns {string}
+ */
+var randomHex = function(size) {
+    return '0x' + randombytes(size).toString('hex');
+};
 
 /**
  * Should be called to get ascii from it's hex representation
