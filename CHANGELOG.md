@@ -56,6 +56,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 
+- Fix make isBN minification safe (#1777)
 - Fix incorrect references to BigNumber in utils.fromWei and utils.toWei error messages (#2468)
 - Fix error incorrectly thrown when receipt.status is `null` (#2183)
 - Fix incorrectly populating chainId param with `net_version` when signing txs (#2378)

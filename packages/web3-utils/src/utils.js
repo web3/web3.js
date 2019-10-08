@@ -35,8 +35,7 @@ var Hash = require("eth-lib/lib/hash");
  * @return {Boolean}
  */
 var isBN = function (object) {
-    return object instanceof BN ||
-        (object && object.constructor && object.constructor.name === 'BN');
+    return BN.isBN(object);
 };
 
 /**
