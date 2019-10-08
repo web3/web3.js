@@ -27,5 +27,13 @@ describe('lib/utils/utils', function () {
                 assert(error.message.includes('Please pass numbers as strings or BN objects'))
             }
         })
+        // fromWei always returns string
+        it('should return the correct type', function(){
+            var weiString = '100000000000000000';
+            var weiBN = utils.toBN(weiString);
+
+            assert(typeof utils.fromWei(weiString) === 'string');
+            assert(typeof utils.fromWei(weiBN) === 'string');
+        })
     });
 });
