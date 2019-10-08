@@ -151,7 +151,7 @@ npm test
 
 
 ### Similar libraries in other languages
- - Python - [Web3.py](https://github.com/pipermerriam/web3.py)
+ - Python - [Web3.py](https://github.com/ethereum/web3.py)
  - Haskell - [hs-web3](https://github.com/airalab/hs-web3)		   
  - Java - [web3j](https://github.com/web3j/web3j)		   
  - Scala - [web3j-scala](https://github.com/mslinn/web3j-scala)
