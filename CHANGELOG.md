@@ -57,6 +57,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 
+- Fix allow `0` as a valid `fromBlock` or `toBlock` filter param (#1100)
 - Fix randomHex returning inconsistent string lengths (#1490)
 - Fix make isBN minification safe (#1777)
 - Fix incorrect references to BigNumber in utils.fromWei and utils.toWei error messages (#2468)
