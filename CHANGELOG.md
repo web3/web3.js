@@ -53,9 +53,20 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - localStorage support detection added (#3031)
+- getNetworkType method extended with Görli testnet (#3095)
+- supportsSubscriptions method added to providers (#3116)
+- Add `eth.getChainId` method (#3113)
 
 ### Fixed
 
+- Fix allow `0` as a valid `fromBlock` or `toBlock` filter param (#1100)
+- Fix randomHex returning inconsistent string lengths (#1490)
+- Fix make isBN minification safe (#1777)
+- Fix incorrect references to BigNumber in utils.fromWei and utils.toWei error messages (#2468)
+- Fix error incorrectly thrown when receipt.status is `null` (#2183)
+- Fix incorrectly populating chainId param with `net_version` when signing txs (#2378)
 - regeneratorRuntime error fixed (#3058)
 - Fix accessing event.name where event is undefined (#3014)
 - fixed Web3Utils toHex() for Buffer input (#3021)
+- Fix bubbling up tx signing errors (#2063, #3105)
+- HttpProvider: CORS issue with Firefox and Safari (#2978)
