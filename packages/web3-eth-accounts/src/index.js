@@ -162,7 +162,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         }
 
         try {
-            var transaction = helpers.formatters.inputCallFormatter(JSON.parse(JSON.stringify(tx)));
+            var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
             transaction.to = transaction.to || '0x';
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
