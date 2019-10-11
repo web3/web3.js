@@ -147,17 +147,23 @@ describe('method.send [ @E2E ]', function() {
                 })
         })
 
-        // Confirmation handling somewhat broken right now...
         it('fires the confirmation handler', function(){
             return new Promise(async (resolve, reject) => {
+
+                var startBlock = await web3.eth.getBlockNumber();
+
                 await instance
                     .methods
                     .setValue('1')
                     .send({from: accounts[0]})
 
-                    // With geth automine it's (incorrectly) fired every second
-                    .on('confirmation', (number, receipt) => {
-                        resolve();
+                     // Confirmation numbers are zero indexed
+                    .on('confirmation', async (number, receipt) => {
+                        if (number === 1){
+                            var endBlock = await web3.eth.getBlockNumber();
+                            assert(endBlock >= (startBlock + 2));
+                            resolve();
+                        }
                     })
 
                 // Necessary for instamine, should not interfere with automine.
