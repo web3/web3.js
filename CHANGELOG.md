@@ -70,3 +70,4 @@ Released with 1.0.0-beta.37 code base.
 - Fix bubbling up tx signing errors (#2063, #3105)
 - HttpProvider: CORS issue with Firefox and Safari (#2978)
 - Ensure the immutability of the `tx` object passed to function `signTransaction`
+- Gas check fixed (#2381)
