@@ -24,22 +24,15 @@
 
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
+var Ws = require('websocket').w3cwebsocket;
 
-var Ws = null;
+var isNode = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
+
 var _btoa = null;
 var parseURL = null;
-if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
-    Ws = function(url, protocols) {
-      return new window.WebSocket(url, protocols);
-    };
-    _btoa = btoa;
-    parseURL = function(url) {
-        return new URL(url);
-    };
-} else {
-    Ws = require('websocket').w3cwebsocket;
+if (isNode) {
     _btoa = function(str) {
-      return Buffer.from(str).toString('base64');
+        return Buffer.from(str).toString('base64');
     };
     var url = require('url');
     if (url.URL) {
@@ -53,6 +46,11 @@ if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
         // Web3 supports Node.js 5, so fall back to the legacy URL API if necessary
         parseURL = require('url').parse;
     }
+} else {
+    _btoa = btoa;
+    parseURL = function(url) {
+        return new URL(url);
+    };
 }
 // Default connection ws://localhost:8546
 
@@ -60,6 +58,10 @@ if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
 
 
 var WebsocketProvider = function WebsocketProvider(url, options)  {
+    if (!Ws) {
+        throw new Error('websocket is not available');
+    }
+
     var _this = this;
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
@@ -79,13 +81,17 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
 
     // Allow a custom client configuration
     var clientConfig = options.clientConfig || undefined;
+    
+    // Allow a custom request options
+    // https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketClient.md#connectrequesturl-requestedprotocols-origin-headers-requestoptions
+    var requestOptions = options.requestOptions || undefined;
 
     // When all node core implementations that do not have the
     // WHATWG compatible URL parser go out of service this line can be removed.
     if (parsedURL.auth) {
         headers.authorization = 'Basic ' + _btoa(parsedURL.auth);
     }
-    this.connection = new Ws(url, protocol, undefined, headers, undefined, clientConfig);
+    this.connection = new Ws(url, protocol, undefined, headers, requestOptions, clientConfig);
 
     this.addDefaultEvents();
 
@@ -396,6 +402,16 @@ WebsocketProvider.prototype.disconnect = function () {
     if (this.connection) {
         this.connection.close();
     }
+};
+
+/**
+ * Returns the desired boolean.
+ *
+ * @method supportsSubscriptions
+ * @returns {boolean}
+ */
+WebsocketProvider.prototype.supportsSubscriptions = function () {
+    return true;
 };
 
 module.exports = WebsocketProvider;
