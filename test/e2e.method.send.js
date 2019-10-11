@@ -37,7 +37,6 @@ describe('method.send [ @E2E ]', function() {
 
         it('errors on OOG', async function(){
             try {
-
                 await instance
                     .methods
                     .setValue('1')
@@ -95,7 +94,6 @@ describe('method.send [ @E2E ]', function() {
 
         it('errors on OOG', async function(){
             try {
-
                 await instance
                     .methods
                     .setValue('1')
