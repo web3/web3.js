@@ -528,16 +528,16 @@ Contract.prototype._generateEventOptions = function() {
     // get the options
     var options = (_.isObject(args[args.length - 1])) ? args.pop() : {};
 
-    var event = (_.isString(args[0])) ? args[0] : 'allevents';
-    event = (event.toLowerCase() === 'allevents') ? {
+    var eventName = (_.isString(args[0])) ? args[0] : 'allevents';
+    var event = (eventName.toLowerCase() === 'allevents') ? {
             name: 'ALLEVENTS',
             jsonInterface: this.options.jsonInterface
         } : this.options.jsonInterface.find(function (json) {
-            return (json.type === 'event' && (json.name === event || json.signature === '0x'+ event.replace('0x','')));
+            return (json.type === 'event' && (json.name === eventName || json.signature === '0x'+ eventName.replace('0x','')));
         });
 
     if (!event) {
-        throw new Error('Event "' + event.name + '" doesn\'t exist in this contract.');
+        throw new Error('Event "' + eventName + '" doesn\'t exist in this contract.');
     }
 
     if (!utils.isAddress(this.options.address)) {

@@ -368,6 +368,12 @@ var Eth = function Eth() {
             inputFormatter: [formatter.inputLogFormatter],
             outputFormatter: formatter.outputLogFormatter
         }),
+        new Method({
+            name: 'getChainId',
+            call: 'eth_chainId',
+            params: 0,
+            outputFormatter: utils.hexToNumber
+        }),
 
         // subscriptions
         new Subscriptions({

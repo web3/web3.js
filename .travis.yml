@@ -1,3 +1,5 @@
+services:
+    - xvfb
 language: node_js
 node_js:
     - "8"
@@ -12,10 +14,7 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.8
-before_script:
-    - export DISPLAY=:99.0
-    - sh -e /etc/init.d/xvfb start
-install:
+    install:
     - npm install
 script:
     - npm run-script build

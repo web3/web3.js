@@ -216,7 +216,7 @@ var outputTransactionReceiptFormatter = function (receipt){
         receipt.contractAddress = utils.toChecksumAddress(receipt.contractAddress);
     }
 
-    if(typeof receipt.status !== 'undefined') {
+    if(typeof receipt.status !== 'undefined' && receipt.status !== null) {
         receipt.status = Boolean(parseInt(receipt.status));
     }
 
@@ -279,10 +279,10 @@ var inputLogFormatter = function(options) {
             return utils.fromUtf8(value);
     };
 
-    if (options.fromBlock)
+    if (options.fromBlock || options.fromBlock === 0)
         options.fromBlock = inputBlockNumberFormatter(options.fromBlock);
 
-    if (options.toBlock)
+    if (options.toBlock || options.toBlock === 0)
         options.toBlock = inputBlockNumberFormatter(options.toBlock);
 
 

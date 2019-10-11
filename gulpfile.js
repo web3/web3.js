@@ -25,7 +25,7 @@ var packages = [{
     fileName: 'web3',
     expose: 'Web3',
     src: './packages/web3/src/index.js',
-    ignore: ['xmlhttprequest', 'websocket']
+    ignore: ['xmlhttprequest']
 }, {
     fileName: 'web3-utils',
     expose: 'Web3Utils',
@@ -83,7 +83,6 @@ var packages = [{
     fileName: 'web3-providers-ws',
     expose: 'Web3WsProvider',
     src: './packages/web3-providers-ws/src/index.js',
-    ignore: ['websocket']
 }, {
     fileName: 'web3-core-subscriptions',
     expose: 'Web3Subscriptions',
@@ -180,12 +179,12 @@ packages.forEach(function (pckg, i) {
             .pipe(source(pckg.fileName + '.js'))
             .pipe(streamify(babel({
                 compact: false,
-                presets: ['env']
+                presets: ['@babel/preset-env']
             })))
             .pipe(gulp.dest(DEST))
             .pipe(streamify(babel({
                 compact: true,
-                presets: ['env']
+                presets: ['@babel/preset-env']
             })))
             .pipe(streamify(uglify(ugliyOptions)))
             .on('error', function (err) { console.error(err); })
