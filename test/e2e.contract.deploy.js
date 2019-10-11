@@ -125,11 +125,9 @@ describe('contract.deploy [ @E2E ]', function() {
 
         // Confirmation handling somewhat broken right now...
         it('fires the confirmation handler', function(){
-            // Test is failing on ganache...handler never fires.
-            if (process.env.GANACHE) return
 
             return new Promise(async (resolve, reject) => {
-                basic.deploy().send({from: accounts[0]})
+                await basic.deploy().send({from: accounts[0]})
 
                     // With geth automine it's (incorrectly) fired every second
                     .on('confirmation', (number, receipt) => {
