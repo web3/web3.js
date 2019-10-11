@@ -348,7 +348,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                 if (!isContractDeployment && !promiseResolved) {
 
                     if(!receipt.outOfGas &&
-                        (!gasProvided || gasProvided !== receipt.gasUsed) &&
+                        (!gasProvided || gasProvided !== utils.numberToHex(receipt.gasUsed)) &&
                         (receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined')) {
                         defer.eventEmitter.emit('receipt', receipt);
                         defer.resolve(receipt);
