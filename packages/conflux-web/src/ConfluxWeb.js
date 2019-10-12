@@ -3,7 +3,6 @@ import {ProviderDetector, ProvidersModuleFactory} from 'conflux-web-providers';
 import * as Utils from 'conflux-web-utils';
 import {Cfx} from 'conflux-web-cfx';
 import {Network} from 'conflux-web-net';
-import {version} from '../package.json';
 
 export default class ConfluxWeb extends AbstractConfluxWebModule {
     /**
@@ -18,7 +17,11 @@ export default class ConfluxWeb extends AbstractConfluxWebModule {
 
         this.cfx = new Cfx(this.currentProvider, net, options);
         this.utils = Utils;
-        this.version = version;
+    }
+
+    get version() {
+        const {version} = require('../package');
+        return version;
     }
 
     /**
