@@ -334,7 +334,7 @@ var toHex = function (value, returnType) {
     }
 
     if (Buffer.isBuffer(value)) {
-        return value.toString('hex');
+        return '0x' + value.toString('hex');
     }
 
     if (_.isObject(value) && !isBigNumber(value) && !isBN(value)) {
