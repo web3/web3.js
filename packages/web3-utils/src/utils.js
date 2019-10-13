@@ -333,9 +333,8 @@ var toHex = function (value, returnType) {
         return returnType ? 'bool' : value ? '0x01' : '0x00';
     }
 
-    // if it is a buffer then, pass it through bytesToHex
     if (Buffer.isBuffer(value)) {
-        return bytesToHex(value);
+        return value.toString('hex');
     }
 
     if (_.isObject(value) && !isBigNumber(value) && !isBN(value)) {
