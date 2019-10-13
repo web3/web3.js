@@ -162,13 +162,11 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         }
 
         try {
-            tx = helpers.formatters.inputCallFormatter(tx);
-
-            var transaction = tx;
-            transaction.to = tx.to || '0x';
-            transaction.data = tx.data || '0x';
-            transaction.value = tx.value || '0x';
-            transaction.chainId = utils.numberToHex(tx.chainId);
+            var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
+            transaction.to = transaction.to || '0x';
+            transaction.data = transaction.data || '0x';
+            transaction.value = transaction.value || '0x';
+            transaction.chainId = utils.numberToHex(transaction.chainId);
 
             var rlpEncoded = RLP.encode([
                 Bytes.fromNat(transaction.nonce),
