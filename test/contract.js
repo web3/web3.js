@@ -3026,7 +3026,7 @@ describe('typical usage', function() {
             var expected = eth.accounts.wallet[0].signTransaction({
                 data: '0x1234567000000000000000000000000' + account.address.toLowerCase().replace('0x', '') + '00000000000000000000000000000000000000000000000000000000000000c8',
                 from: account.address.toLowerCase(),
-                gas: '0xc350',
+                gas: '0xd658',
                 gasPrice: '0xbb8',
                 chainId: '0x1',
                 nonce: '0x1',
@@ -3085,7 +3085,7 @@ describe('typical usage', function() {
             arguments: [account.address, 200]
         }).send({
             from: account.address,
-            gas: 50000,
+            gas: 54872,
             gasPrice: 3000,
             chainId: 1,
             nonce: 1,
