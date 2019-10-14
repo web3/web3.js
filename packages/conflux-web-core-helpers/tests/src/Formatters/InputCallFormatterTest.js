@@ -17,13 +17,6 @@ describe('InputCallFormatterTest', () => {
         };
 
         expect(inputCallFormatter(tx, {defaultAccount: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'})).toEqual({
-            blockHash: null,
-            contractCreated: null,
-            hash: '0x3d5cb19882200c8e1801a088bc9603abdd549212fd0e0a904da4fa7fa4d8c5e3',
-            r: '0x0',
-            s: '0x0',
-            v: '0x0',
-            transactionIndex: null,
             to: undefined,
             input: undefined,
             data: '0x0',
@@ -32,7 +25,7 @@ describe('InputCallFormatterTest', () => {
             gasPrice: '0x64',
             nonce: '0x1',
             value: '0x64',
-            from: '0xdbbce03f896e80e1ee4edb84fcc6b4587d6a7923'
+            from: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
         });
     });
 
@@ -50,13 +43,6 @@ describe('InputCallFormatterTest', () => {
         };
 
         expect(inputCallFormatter(tx, {})).toEqual({
-            blockHash: null,
-            contractCreated: null,
-            hash: '0x3d5cb19882200c8e1801a088bc9603abdd549212fd0e0a904da4fa7fa4d8c5e3',
-            r: '0x0',
-            s: '0x0',
-            v: '0x0',
-            transactionIndex: null,
             to: undefined,
             input: undefined,
             data: '0x0',

@@ -14,6 +14,6 @@ describe('GetBlockTransactionCountByHashMethodMethodTest', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractGetBlockTransactionCountMethod);
 
-        expect(method.rpcMethod).toEqual('eth_getBlockTransactionCountByHash');
+        expect(method.rpcMethod).toEqual('cfx_getBlockTransactionCountByHash');
     });
 });

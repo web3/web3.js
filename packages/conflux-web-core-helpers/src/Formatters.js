@@ -163,47 +163,14 @@ export const txInputFormatter = (txObject) => {
  */
 export const inputCallFormatter = (txObject, moduleInstance) => {
     txObject = txInputFormatter(txObject);
-    // let from = moduleInstance.defaultAccount;
-    //
-    // if (txObject.from) {
-    //     from = txObject.from;
-    // }
-    //
-    // if (from) {
-    //     txObject.from = inputAddressFormatter(from);
-    // }
-    if (txObject.from === null || txObject.from === undefined) {
-        txObject.from = '0xdbbce03f896e80e1ee4edb84fcc6b4587d6a7923';
+    let from = moduleInstance.defaultAccount;
+
+    if (txObject.from) {
+        from = txObject.from;
     }
-    if (txObject.hash === null || txObject.hash === undefined) {
-        txObject.hash = '0x3d5cb19882200c8e1801a088bc9603abdd549212fd0e0a904da4fa7fa4d8c5e3';
-    }
-    if (txObject.blockHash === undefined) {
-        txObject.blockHash = null;
-    }
-    if (txObject.transactionIndex === undefined) {
-        txObject.transactionIndex = null;
-    }
-    if (txObject.contractCreated === null || txObject.contractCreated === undefined) {
-        txObject.contractCreated = null;
-    }
-    if (txObject.r === null || txObject.r === undefined) {
-        txObject.r = '0x0';
-    }
-    if (txObject.s === null || txObject.s === undefined) {
-        txObject.s = '0x0';
-    }
-    if (txObject.v === null || txObject.v === undefined) {
-        txObject.v = '0x0';
-    }
-    if (txObject.nonce === null || txObject.nonce === undefined) {
-        txObject.nonce = '0x0';
-    }
-    if (txObject.value === null || txObject.value === undefined) {
-        txObject.value = '0x0';
-    }
-    if (txObject.gas === null || txObject.gas === undefined) {
-        txObject.gas = '0x1000000';
+
+    if (from) {
+        txObject.from = inputAddressFormatter(from);
     }
     return txObject;
 };

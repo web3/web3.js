@@ -31,11 +31,11 @@ export default class GetBlockTransactionCountMethod extends AbstractGetBlockTran
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getBlockTransactionCountByNumber', utils, formatters, moduleInstance);
+        super('cfx_getBlockTransactionCountByNumber', utils, formatters, moduleInstance);
     }
 
     /**
-     * TODO: Refactor public API and create two methods out of it: eth.getBlockTransactionCountByHash(...)
+     * TODO: Refactor public API and create two methods out of it: cfx.getBlockTransactionCountByHash(...)
      *
      * This method will be executed before the RPC request.
      *
@@ -45,7 +45,7 @@ export default class GetBlockTransactionCountMethod extends AbstractGetBlockTran
      */
     beforeExecution(moduleInstance) {
         if (this.isHash(this.parameters[0])) {
-            this.rpcMethod = 'eth_getBlockTransactionCountByHash';
+            this.rpcMethod = 'cfx_getBlockTransactionCountByHash';
         }
 
         super.beforeExecution(moduleInstance);

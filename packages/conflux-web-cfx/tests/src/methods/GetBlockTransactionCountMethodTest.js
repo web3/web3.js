@@ -12,7 +12,7 @@ describe('GetBlockTransactionCountMethodTest', () => {
     });
 
     it('constructor check', () => {
-        expect(getBlockTransactionCountMethod.rpcMethod).toEqual('eth_getBlockTransactionCountByNumber');
+        expect(getBlockTransactionCountMethod.rpcMethod).toEqual('cfx_getBlockTransactionCountByNumber');
     });
 
     it('calls execute with hash', () => {
@@ -20,7 +20,7 @@ describe('GetBlockTransactionCountMethodTest', () => {
 
         getBlockTransactionCountMethod.beforeExecution({});
 
-        expect(getBlockTransactionCountMethod.rpcMethod).toEqual('eth_getBlockTransactionCountByHash');
+        expect(getBlockTransactionCountMethod.rpcMethod).toEqual('cfx_getBlockTransactionCountByHash');
     });
 
     it('calls execute with number', () => {
@@ -28,6 +28,6 @@ describe('GetBlockTransactionCountMethodTest', () => {
 
         getBlockTransactionCountMethod.beforeExecution({});
 
-        expect(getBlockTransactionCountMethod.rpcMethod).toEqual('eth_getBlockTransactionCountByNumber');
+        expect(getBlockTransactionCountMethod.rpcMethod).toEqual('cfx_getBlockTransactionCountByNumber');
     });
 });

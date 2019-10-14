@@ -30,7 +30,7 @@ import {AbstractConfluxWebModule} from 'conflux-web-core';
 import Account from './models/Account';
 import Wallet from './models/Wallet';
 
-// TODO: Rename Accounts module to Wallet and move the Wallet class to the eth module.
+// TODO: Rename Accounts module to Wallet and move the Wallet class to the cfx module.
 export default class Accounts extends AbstractConfluxWebModule {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
@@ -130,7 +130,7 @@ export default class Accounts extends AbstractConfluxWebModule {
     }
 
     /**
-     * TODO: Add deprecation message and extend the signTransaction method in the eth module
+     * TODO: Add deprecation message and extend the signTransaction method in the cfx module
      *
      * Signs a transaction object with the given privateKey
      *

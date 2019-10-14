@@ -42,7 +42,7 @@ export default class ContractDeployMethod extends CfxSendTransactionMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractConfluxWebModule} moduleInstance - The module where the method is called from for example Eth.
+     * @param {AbstractConfluxWebModule} moduleInstance - The module where the method is called from for example Cfx.
      */
     beforeExecution(moduleInstance) {
         if (this.rpcMethod !== 'cfx_sendRawTransaction') {

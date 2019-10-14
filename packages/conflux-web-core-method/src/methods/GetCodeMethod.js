@@ -40,7 +40,7 @@ export default class GetCodeMethod extends AbstractMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Eth.
+     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Cfx.
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);

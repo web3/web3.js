@@ -41,7 +41,7 @@ export default class AbstractGetBlockMethod extends AbstractMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Eth.
+     * @param {AbstractConfluxWebModule} moduleInstance - The package where the method is called from for example Cfx.
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputBlockAddressFormatter(this.parameters[0]);

@@ -24,7 +24,7 @@ import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscriptio
 import isFunction from 'lodash/isFunction';
 
 // TODO: carefully go over this code when adding log
-// TODO: Move the past logs logic to the eth module
+// TODO: Move the past logs logic to the cfx module
 export default class LogSubscription extends AbstractSubscription {
     /**
      * @param {Object} options

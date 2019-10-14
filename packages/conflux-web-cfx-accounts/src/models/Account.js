@@ -40,7 +40,7 @@ export default class Account {
     }
 
     /**
-     * TODO: Add deprecation message, remove accounts dependency and extend the signTransaction method in the eth module.
+     * TODO: Add deprecation message, remove accounts dependency and extend the signTransaction method in the cfx module.
      * Signs a transaction object with the given privateKey
      *
      * @method signTransaction

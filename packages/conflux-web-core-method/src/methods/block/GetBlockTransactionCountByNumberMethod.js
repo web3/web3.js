@@ -31,6 +31,6 @@ export default class GetBlockTransactionCountByNumberMethod extends AbstractGetB
      * @constructor
      */
     constructor(utils, formatters, moduleInstance) {
-        super('eth_getBlockTransactionCountByNumber', utils, formatters, moduleInstance);
+        super('cfx_getBlockTransactionCountByNumber', utils, formatters, moduleInstance);
     }
 }
