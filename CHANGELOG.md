@@ -71,3 +71,4 @@ Released with 1.0.0-beta.37 code base.
 - HttpProvider: CORS issue with Firefox and Safari (#2978)
 - Ensure the immutability of the `tx` object passed to function `signTransaction` (#2190)
 - Gas check fixed (#2381)
+- Fixed inconsistency between web3.eth.signTransaction and web3.eth.accounts.signTransaction (#3078)

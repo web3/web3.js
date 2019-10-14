@@ -206,6 +206,10 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                     r: trimLeadingZero(values[7]),
                     s: trimLeadingZero(values[8]),
                     hash:hash
+                },
+                get rawTransaction(){
+                    console.warn('The property rawTransaction is deprecated and will be removed with version 1.2.3');
+                    return rawTransaction;
                 }
             };
 
