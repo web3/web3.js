@@ -171,7 +171,6 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             var rawTransaction = '0x' + rlpEncoded;
             var transactionHash = utils.keccak256(rawTransaction);
 
-            var values = RLP.decode(rawTransaction);
             result = {
                 raw: rawTransaction,
                 tx: {
@@ -181,10 +180,10 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                     to: transaction.to,
                     value: transaction.value,
                     input: transaction.data,
-                    v: trimLeadingZero(values[6]),
-                    r: trimLeadingZero(values[7]),
-                    s: trimLeadingZero(values[8]),
-                    hash:hash
+                    v: '0x' + Buffer.from(ethTx.v).toString('hex'),
+                    r: '0x' + Buffer.from(ethTx.r).toString('hex'),
+                    s: '0x' + Buffer.from(ethTx.s).toString('hex'),
+                    hash:transactionHash
                 },
                 get rawTransaction(){
                     console.warn('The property rawTransaction is deprecated and will be removed with version 1.2.3');
