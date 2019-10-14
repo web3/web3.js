@@ -318,7 +318,7 @@ var hexToBytes = function(hex) {
  * And even stringifys objects before.
  *
  * @method toHex
- * @param {String|Number|BN|Object} value
+ * @param {String|Number|BN|Object|Buffer} value
  * @param {Boolean} returnType
  * @return {String}
  */
@@ -333,6 +333,9 @@ var toHex = function (value, returnType) {
         return returnType ? 'bool' : value ? '0x01' : '0x00';
     }
 
+    if (Buffer.isBuffer(value)) {
+        return '0x' + value.toString('hex');
+    }
 
     if (_.isObject(value) && !isBigNumber(value) && !isBN(value)) {
         return returnType ? 'string' : utf8ToHex(JSON.stringify(value));
