@@ -130,7 +130,6 @@ describe('contract.deploy [ @E2E ]', function() {
                     assert(web3.utils.isHex(hash))
                     done();
                 })
-
         });
 
         it('fires the receipt event', function(done){
