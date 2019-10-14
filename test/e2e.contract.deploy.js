@@ -37,13 +37,19 @@ describe('contract.deploy [ @E2E ]', function() {
         })
 
         it('returns an instance', async function(){
-            var instance = await basic.deploy().send({from: accounts[0]})
+            var instance = await basic
+                .deploy()
+                .send({from: accounts[0]});
+
             assert(web3.utils.isAddress(instance.options.address));
         });
 
         it('errors on OOG', async function(){
             try {
-                await basic.deploy().send({from: accounts[0], gas: 1000});
+                await basic
+                    .deploy()
+                    .send({from: accounts[0], gas: 1000});
+
                 assert.fail();
             } catch(err){
                 assert(err.message.includes('gas'))
@@ -52,7 +58,10 @@ describe('contract.deploy [ @E2E ]', function() {
 
         it('errors on revert', async function(){
             try {
-                await reverts.deploy().send({from: accounts[0]});
+                await reverts
+                    .deploy()
+                    .send({from: accounts[0]});
+
                 assert.fail();
             } catch(err){
                 assert(
@@ -79,13 +88,19 @@ describe('contract.deploy [ @E2E ]', function() {
         })
 
         it('returns an instance', async function(){
-            var instance = await basic.deploy().send({from: accounts[0]})
+            var instance = await basic
+                .deploy()
+                .send({from: accounts[0]})
+
             assert(web3.utils.isAddress(instance.options.address));
         });
 
         it('errors on OOG', async function(){
             try {
-                await basic.deploy().send({from: accounts[0], gas: 1000});
+                await basic
+                    .deploy()
+                    .send({from: accounts[0], gas: 1000});
+
                 assert.fail();
             } catch(err){
                 assert(err.message.includes('gas'))
@@ -94,7 +109,10 @@ describe('contract.deploy [ @E2E ]', function() {
 
         it('errors on revert', async function(){
             try {
-                await reverts.deploy().send({from: accounts[0]});
+                await reverts
+                    .deploy()
+                    .send({from: accounts[0]});
+
                 assert.fail();
             } catch(err){
                 assert(
@@ -104,9 +122,10 @@ describe('contract.deploy [ @E2E ]', function() {
             }
         });
 
-        it('fires the transaction event', function(done){
-            basic.deploy().send({from: accounts[0]})
-
+        it('fires the transactionHash event', function(done){
+            basic
+                .deploy()
+                .send({from: accounts[0]})
                 .on('transactionHash', hash => {
                     assert(web3.utils.isHex(hash))
                     done();
@@ -115,8 +134,9 @@ describe('contract.deploy [ @E2E ]', function() {
         });
 
         it('fires the receipt event', function(done){
-            basic.deploy().send({from: accounts[0]})
-
+            basic
+                .deploy()
+                .send({from: accounts[0]})
                 .on('receipt', receipt => {
                     assert(web3.utils.isAddress(receipt.contractAddress))
                     done();
@@ -124,15 +144,14 @@ describe('contract.deploy [ @E2E ]', function() {
         })
 
         it('fires the confirmation handler', function(){
-
             return new Promise(async (resolve, reject) => {
                 var startBlock = await web3.eth.getBlockNumber();
 
-                await basic.deploy().send({from: accounts[0]})
-
-                    // Confirmation numbers are zero indexed
+                await basic
+                    .deploy()
+                    .send({from: accounts[0]})
                     .on('confirmation', async (number, receipt) => {
-                        if (number === 1){
+                        if (number === 1) { // Confirmation numbers are zero indexed
                             var endBlock = await web3.eth.getBlockNumber();
                             assert(endBlock >= (startBlock + 2));
                             resolve();
@@ -145,8 +164,9 @@ describe('contract.deploy [ @E2E ]', function() {
         });
 
         it('fires the error handler on OOG', function(done){
-            basic.deploy().send({from: accounts[0], gas: 1000})
-
+            basic
+                .deploy()
+                .send({from: accounts[0], gas: 1000})
                 .on('error', err => {
                     assert(err.message.includes('gas'))
                     done();
@@ -154,14 +174,14 @@ describe('contract.deploy [ @E2E ]', function() {
         })
 
         it('fires the error handler on revert', function(done){
-            reverts.deploy().send({from: accounts[0]})
-
+            reverts
+                .deploy()
+                .send({from: accounts[0]})
                 .on('error', err => {
                     assert(
                         err.message.includes(gethRevert) ||
                         err.message.includes(ganacheRevert)
                     );
-
                     done();
                 })
         })

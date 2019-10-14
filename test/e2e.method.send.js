@@ -123,12 +123,11 @@ describe('method.send [ @E2E ]', function() {
             }
         });
 
-        it('fires the transaction event', function(done){
+        it('fires the transactionHash event', function(done){
             instance
                 .methods
                 .setValue('1')
                 .send({from: accounts[0]})
-
                 .on('transactionHash', hash => {
                     assert(web3.utils.isHex(hash))
                     done();
@@ -140,7 +139,6 @@ describe('method.send [ @E2E ]', function() {
                 .methods
                 .setValue('1')
                 .send({from: accounts[0]})
-
                 .on('receipt', receipt => {
                     assert(receipt.status === true)
                     done();
@@ -156,10 +154,8 @@ describe('method.send [ @E2E ]', function() {
                     .methods
                     .setValue('1')
                     .send({from: accounts[0]})
-
-                     // Confirmation numbers are zero indexed
                     .on('confirmation', async (number, receipt) => {
-                        if (number === 1){
+                        if (number === 1) { // Confirmation numbers are zero indexed
                             var endBlock = await web3.eth.getBlockNumber();
                             assert(endBlock >= (startBlock + 2));
                             resolve();
@@ -176,7 +172,6 @@ describe('method.send [ @E2E ]', function() {
                 .methods
                 .setValue('1')
                 .send({from: accounts[0], gas: 100})
-
                 .on('error', err => {
                     assert(err.message.includes('gas'))
                     done();
@@ -188,7 +183,6 @@ describe('method.send [ @E2E ]', function() {
                 .methods
                 .reverts()
                 .send({from: accounts[0]})
-
                 .on('error', err => {
                     assert(err.message.includes('revert'));
                     done();

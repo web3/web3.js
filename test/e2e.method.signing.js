@@ -13,7 +13,6 @@ describe('transaction and message signing [ @E2E ]', function() {
     var Transaction = EJSTx.Transaction;
     var Common = EJSCommon.default;
 
-
     before(async function(){
         web3 = new Web3('http://localhost:8545');
         accounts = await web3.eth.getAccounts();
@@ -27,45 +26,6 @@ describe('transaction and message signing [ @E2E ]', function() {
             value: web3.utils.toWei('50', 'ether'),
         });
     })
-
-    it('sendSignedTransaction (with ethereumjs-tx@2.x)', async function(){
-        var destination = wallet[1].address;
-        var source = wallet[0].address;
-        var sourcePrivateKey = wallet[0].privateKey;
-
-        var networkId = await web3.eth.net.getId();
-        var chainId = await web3.eth.getChainId();
-
-        var customCommon = Common.forCustomChain(
-          'mainnet',
-          {
-            name: 'my-network',
-            networkId: networkId,
-            chainId: chainId,
-          },
-          'petersburg',
-        );
-
-        const txCount = await web3.eth.getTransactionCount(source);
-
-        var rawTx = {
-            nonce:    web3.utils.toHex(txCount),
-            to:       destination,
-            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
-            gasLimit: web3.utils.toHex(21000),
-            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei'))
-        }
-
-        var privateKey = Buffer.from(sourcePrivateKey.slice(2), 'hex');
-        var tx = new Transaction(rawTx, {common: customCommon});
-
-        tx.sign(privateKey);
-
-        var serialized = '0x' + tx.serialize().toString('hex');
-        var receipt = await web3.eth.sendSignedTransaction(serialized);
-
-        assert(receipt.status === true);
-    });
 
     it('sendSignedTransaction (with eth.signTransaction)', async function(){
         // ganache does not support eth_signTransaction
@@ -128,7 +88,7 @@ describe('transaction and message signing [ @E2E ]', function() {
     });
 
     it('eth.accounts.sign', async function(){
-      // ganache does not support eth_sign
+        // ganache does not support eth_sign
         if (process.env.GANACHE) return
 
         var message = 'hello';
