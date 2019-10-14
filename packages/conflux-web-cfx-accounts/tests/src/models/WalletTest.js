@@ -30,7 +30,7 @@ describe('WalletTest', () => {
 
         expect(wallet.accountsIndex).toEqual(0);
 
-        expect(wallet.defaultKeyName).toEqual('web3js_wallet');
+        expect(wallet.defaultKeyName).toEqual('confluxweb_wallet');
     });
 
     it('calls the length property and returns the accountsIndex', () => {

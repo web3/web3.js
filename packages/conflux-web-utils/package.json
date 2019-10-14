@@ -20,7 +20,7 @@
         "@types/node": "^10.12.18",
         "bn.js": "4.11.8",
         "confluxjs-unit": "*",
-        "eth-lib": "0.2.8",
+        "cfx-lib": "0.0.1",
         "lodash": "^4.17.11",
         "number-to-bn": "1.7.0",
         "randomhex": "0.1.5",

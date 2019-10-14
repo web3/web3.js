@@ -1,16 +1,16 @@
 import scryptsy from 'scrypt.js';
 import crypto from 'crypto';
 import uuid from 'uuid';
-import Hash from 'eth-lib/lib/hash';
-import {fromPrivate, sign, decodeSignature} from 'eth-lib/lib/account';
+import Hash from 'cfx-lib/lib/hash';
+import {fromPrivate, sign, decodeSignature} from 'cfx-lib/lib/account';
 import {hexToBytes, isHexStrict, sha3} from 'conflux-web-utils';
 import TransactionSigner from '../../__mocks__/TransactionSigner';
 import Accounts from '../../../src/Accounts';
 import Account from '../../../src/models/Account';
 
 // Mocks
-jest.mock('eth-lib/lib/account');
-jest.mock('eth-lib/lib/hash');
+jest.mock('cfx-lib/lib/account');
+jest.mock('cfx-lib/lib/hash');
 jest.mock('conflux-web-utils');
 jest.mock('uuid');
 jest.mock('crypto');

@@ -30,7 +30,7 @@ export default class Wallet {
     constructor(utils, accountsModule) {
         this.utils = utils;
         this.accountsModule = accountsModule;
-        this.defaultKeyName = 'web3js_wallet';
+        this.defaultKeyName = 'confluxweb_wallet';
         this.accounts = {};
         this.accountsIndex = 0;
 

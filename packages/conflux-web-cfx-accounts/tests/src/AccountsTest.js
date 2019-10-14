@@ -1,9 +1,9 @@
 import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
-import Hash from 'eth-lib/lib/hash';
-import RLP from 'eth-lib/lib/rlp';
-import Bytes from 'eth-lib/lib/bytes';
-import {encodeSignature, recover} from 'eth-lib/lib/account';
+import Hash from 'cfx-lib/lib/hash';
+import RLP from 'cfx-lib/lib/rlp';
+import Bytes from 'cfx-lib/lib/bytes';
+import {encodeSignature, recover} from 'cfx-lib/lib/account';
 import TransactionSigner from '../__mocks__/TransactionSigner';
 import Accounts from '../../src/Accounts';
 import Account from '../../src/models/Account';
@@ -12,11 +12,11 @@ import {AbstractConfluxWebModule} from 'conflux-web-core';
 // Mocks
 jest.mock('conflux-web-utils');
 jest.mock('conflux-web-core-helpers');
-jest.mock('eth-lib/lib/rlp');
-jest.mock('eth-lib/lib/nat');
-jest.mock('eth-lib/lib/bytes');
-jest.mock('eth-lib/lib/hash');
-jest.mock('eth-lib/lib/account');
+jest.mock('cfx-lib/lib/rlp');
+jest.mock('cfx-lib/lib/nat');
+jest.mock('cfx-lib/lib/bytes');
+jest.mock('cfx-lib/lib/hash');
+jest.mock('cfx-lib/lib/account');
 jest.mock('../../src/models/Account');
 
 /**
@@ -45,7 +45,7 @@ describe('AccountsTest', () => {
 
         expect(accounts.transactionSigner).toEqual(options.transactionSigner);
 
-        expect(accounts.defaultKeyName).toEqual('web3js_wallet');
+        expect(accounts.defaultKeyName).toEqual('confluxweb_wallet');
 
         expect(accounts.accounts).toEqual({});
 

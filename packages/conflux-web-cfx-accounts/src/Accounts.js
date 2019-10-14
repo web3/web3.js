@@ -22,10 +22,10 @@
 
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
-import Hash from 'eth-lib/lib/hash';
-import RLP from 'eth-lib/lib/rlp';
-import Bytes from 'eth-lib/lib/bytes';
-import {encodeSignature, recover} from 'eth-lib/lib/account'; // TODO: Remove this dependency
+import Hash from 'cfx-lib/lib/hash';
+import RLP from 'cfx-lib/lib/rlp';
+import Bytes from 'cfx-lib/lib/bytes';
+import {encodeSignature, recover} from 'cfx-lib/lib/account'; // TODO: Remove this dependency
 import {AbstractConfluxWebModule} from 'conflux-web-core';
 import Account from './models/Account';
 import Wallet from './models/Wallet';
@@ -48,7 +48,7 @@ export default class Accounts extends AbstractConfluxWebModule {
         this.utils = utils;
         this.formatters = formatters;
         this._transactionSigner = options.transactionSigner;
-        this.defaultKeyName = 'web3js_wallet';
+        this.defaultKeyName = 'confluxweb_wallet';
         this.accounts = {};
         this.accountsIndex = 0;
         this.wallet = new Wallet(utils, this);

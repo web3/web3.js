@@ -27,7 +27,7 @@ import isObject from 'lodash/isObject';
 import isNull from 'lodash/isNull';
 import numberToBN from 'number-to-bn';
 import utf8 from 'utf8';
-import Hash from 'eth-lib/lib/hash';
+import Hash from 'cfx-lib/lib/hash';
 import BN from 'bn.js';
 
 /**
