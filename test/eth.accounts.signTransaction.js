@@ -453,10 +453,9 @@ describe("eth", function () {
                     var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
                     assert.equal(testAccount.address, test.address);
 
-                    testAccount.signTransaction(test.transaction).then(function (tx) {
-                        assert.equal(tx.messageHash, test.messageHash);
-                        assert.equal(tx.transactionHash, test.transactionHash);
-                        assert.equal(tx.raw, test.rawTransaction);
+                    testAccount.signTransaction(test.transaction).then(function (result) {
+                        assert.equal(result.tx.hash, test.transactionHash);
+                        assert.equal(result.raw, test.rawTransaction);
                         done();
                     });
                 });
