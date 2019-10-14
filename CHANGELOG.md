@@ -67,6 +67,7 @@ Released with 1.0.0-beta.37 code base.
 - Fix incorrectly populating chainId param with `net_version` when signing txs (#2378)
 - regeneratorRuntime error fixed (#3058)
 - Fix accessing event.name where event is undefined (#3014)
+- fixed Web3Utils toHex() for Buffer input (#3021)
 - Fix bubbling up tx signing errors (#2063, #3105)
 - HttpProvider: CORS issue with Firefox and Safari (#2978)
 - Ensure the immutability of the `tx` object passed to function `signTransaction` (#2190)
