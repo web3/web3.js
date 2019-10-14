@@ -95,6 +95,7 @@ export default class Wallet {
         }
 
         if (!this.accounts[account.address]) {
+            account.index = this.accountsIndex;
             this.accounts[this.accountsIndex] = account;
             this.accounts[account.address] = account;
             this.accounts[account.address.toLowerCase()] = account;
