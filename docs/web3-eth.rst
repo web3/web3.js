@@ -227,7 +227,7 @@ This means the PromiEvent rejects with a timeout error when the timeout got exce
 Returns
 -------
 
-``number``: The current value of transactionBlockTimeout
+``number``: The current value of transactionBlockTimeout (default: 50)
 
 ------------------------------------------------------------------------------
 
@@ -247,7 +247,7 @@ This defines the number of blocks it requires until a transaction will be handle
 Returns
 -------
 
-``number``: The current value of transactionConfirmationBlocks
+``number``: The current value of transactionConfirmationBlocks (default: 24)
 
 ------------------------------------------------------------------------------
 
@@ -268,7 +268,7 @@ This option does define the amount of polls (each second) it should wait until t
 Returns
 -------
 
-``number``: The current value of transactionPollingTimeout
+``number``: The current value of transactionPollingTimeout (default: 750)
 
 ------------------------------------------------------------------------------
 
