@@ -2,8 +2,8 @@
     "name": "conflux-web-cfx-debug",
     "namespace": "conflux-web",
     "version": "0.1.20-alpha.0",
-    "description": "Web3 module to interact with the Ethereum blockchain accounts stored in the node.",
-    "repository": "https://github.com/ethereum/conflux-web.js/tree/1.0/packages/conflux-web-eth-debug",
+    "description": "ConfluxWeb module to interact with the ConfluxWeb blockchain accounts stored in the node.",
+    "repository": "https://github.com/Conflux-Chain/conflux-web.js/tree/1.0/packages/conflux-web-eth-debug",
     "license": "LGPL-3.0",
     "engines": {
         "node": ">=8.0.0"

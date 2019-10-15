@@ -1,18 +1,18 @@
 /*
-    This file is part of web3.js.
+    This file is part of confluxWeb.
 
-    web3.js is free software: you can redistribute it and/or modify
+    confluxWeb is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    web3.js is distributed in the hope that it will be useful,
+    confluxWeb is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Lesser General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+    along with confluxWeb.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as net from 'net';
@@ -42,7 +42,7 @@ export class ProvidersModuleFactory {
 
     createIpcProvider(path: string, net: net.Server): IpcProvider;
 
-    createWeb3EthereumProvider(connection: object): Web3EthereumProvider;
+    createConfluxWebCfxProvider(connection: object): ConfluxWebCfxProvider;
 }
 
 export class HttpProvider {
@@ -115,8 +115,8 @@ export class WebsocketProvider extends AbstractSocketProvider {
     isConnecting(): boolean;
 }
 
-export class Web3EthereumProvider extends AbstractSocketProvider {
-    constructor(ethereumProvider: any);
+export class ConfluxWebCfxProvider extends AbstractSocketProvider {
+    constructor(confluxProvider: any);
 }
 
 export class JsonRpcMapper {
@@ -133,7 +133,7 @@ export class JsonRpcResponseValidator {
     static isResponseItemValid(response: JsonRpcPayload): boolean;
 }
 
-export type provider = HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider | string;
+export type provider = HttpProvider | IpcProvider | WebsocketProvider | ConfluxWebCfxProvider | CustomProvider | string;
 
 export interface JsonRpcPayload {
     jsonrpc: string;

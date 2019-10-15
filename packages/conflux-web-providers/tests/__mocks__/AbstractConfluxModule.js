@@ -1,4 +1,4 @@
-export default class AbstractWeb3Module {
+export default class AbstractConfluxModule {
     constructor() {
         this.currentProvider = null;
     }

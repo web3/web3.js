@@ -4,7 +4,7 @@ import EventEmitter from 'eventemitter3';
 import JsonRpcMapper from '../../../src/mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
 import AbstractMethod from '../../__mocks__/AbstractMethod';
-import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
+import AbstractConfluxModule from '../../__mocks__/AbstractConfluxModule';
 
 // Mocks
 jest.mock('websocket');
@@ -314,7 +314,7 @@ describe('AbstractSocketProviderTest', () => {
     it('calls sendBatch and returns a resolved promise', async () => {
         const abstractMethodMock = new AbstractMethod();
 
-        const moduleInstanceMock = new AbstractWeb3Module();
+        const moduleInstanceMock = new AbstractConfluxModule();
 
         abstractMethodMock.beforeExecution = jest.fn();
         abstractMethodMock.rpcMethod = 'rpc_method';

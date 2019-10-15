@@ -1,18 +1,18 @@
 /*
-    This file is part of web3.js.
+    This file is part of confluxWeb.
 
-    web3.js is free software: you can redistribute it and/or modify
+    confluxWeb is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    web3.js is distributed in the hope that it will be useful,
+    confluxWeb is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Lesser General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+    along with confluxWeb.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {w3cwebsocket as W3CWebsocket} from 'websocket';
@@ -23,9 +23,9 @@ import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
 import BatchRequest from '../batch-request/BatchRequest';
-import Web3EthereumProvider from '../providers/Web3EthereumProvider';
+import ConfluxWebCfxProvider from '../providers/ConfluxWebCfxProvider';
 import MetamaskProvider from '../providers/MetamaskProvider';
-import MistEthereumProvider from '../providers/MistEthereumProvider';
+import MistConfluxProvider from '../providers/MistConfluxProvider';
 import CustomProvider from '../providers/CustomProvider';
 
 export default class ProvidersModuleFactory {
@@ -151,16 +151,16 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an Web3EthereumProvider object
+     * Returns an ConfluxWebCfxProvider object
      *
-     * @method createWeb3EthereumProvider
+     * @method createConfluxWebCfxProvider
      *
-     * @param {EthereumProvider} connection
+     * @param {CfxProvider} connection
      *
-     * @returns {Web3EthereumProvider}
+     * @returns {ConfluxWebCfxProvider}
      */
-    createWeb3EthereumProvider(connection) {
-        return new Web3EthereumProvider(connection);
+    createConfluxWebCfxProvider(connection) {
+        return new ConfluxWebCfxProvider(connection);
     }
 
     /**
@@ -177,16 +177,16 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an MistEthereumProvider object
+     * Returns an MistConfluxProvider object
      *
-     * @method createMistEthereumProvider
+     * @method createMistConfluxProvider
      *
-     * @param {MistEthereumProvider} mistEthereumProvider
+     * @param {MistConfluxProvider} mistConfluxProvider
      *
-     * @returns {MistEthereumProvider}
+     * @returns {MistConfluxProvider}
      */
-    createMistEthereumProvider(mistEthereumProvider) {
-        return new MistEthereumProvider(mistEthereumProvider);
+    createMistConfluxProvider(mistConfluxProvider) {
+        return new MistConfluxProvider(mistConfluxProvider);
     }
 
     /**

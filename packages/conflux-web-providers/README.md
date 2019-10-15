@@ -51,7 +51,7 @@ const websocketProvider = new WebsocketProvider('ws://localhost:8546', options);
 import {IpcProvider} from 'conflux-web-providers';
 import net from 'net';
 
-const ipcProvider = new IpcProvider('/Users/me/Library/Ethereum/geth.ipc', net);
+const ipcProvider = new IpcProvider('/Users/me/Library/Conflux/geth.ipc', net);
 ```
 
 #### BatchRequest

@@ -20,7 +20,7 @@ import {AbstractConfluxWebModule} from 'conflux-web-core';
 export default class Debug extends AbstractConfluxWebModule {
     /**
      * TODO: Add missing documentation for getAccounts, lockAccount and sendTransaction!
-     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {ConfluxWebCfxProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {MethodFactory} methodFactory
      * @param {Network} net
      * @param {Utils} utils
@@ -39,7 +39,7 @@ export default class Debug extends AbstractConfluxWebModule {
     }
 
     /**
-     * Extends setProvider method from AbstractWeb3Module.
+     * Extends setProvider method from AbstractConfluxModule.
      *
      * @method setProvider
      *

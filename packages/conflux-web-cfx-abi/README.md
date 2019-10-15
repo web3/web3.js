@@ -1,6 +1,6 @@
 # conflux-web-cfx-abi
 
-This is a sub package of [ConfluxWeb3.js][repo]
+This is a sub package of [ConfluxWeb][repo]
 
 This is the abi package will be used in the `conflux-web-cfx` package.
 

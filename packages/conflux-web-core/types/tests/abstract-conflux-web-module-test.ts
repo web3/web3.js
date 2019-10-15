@@ -1,15 +1,15 @@
 /*
-    This file is part of web3.js.
-    web3.js is free software: you can redistribute it and/or modify
+    This file is part of confluxWeb.
+    confluxWeb is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-    web3.js is distributed in the hope that it will be useful,
+    confluxWeb is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Lesser General Public License for more details.
     You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+    along with confluxWeb.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as net from 'net';
@@ -27,52 +27,52 @@ const options = {
 };
 const httpProvider = new HttpProvider('http://localhost:8545', options);
 const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', new net.Server());
-const abstractWeb3Module = new AbstractConfluxWebModule(httpProvider);
+const abstractConfluxModule = new AbstractConfluxWebModule(httpProvider);
 
 // $ExpectType BatchRequest
-new abstractWeb3Module.BatchRequest();
+new abstractConfluxModule.BatchRequest();
 
 // $ExpectType string | number
-abstractWeb3Module.defaultEpoch;
+abstractConfluxModule.defaultEpoch;
 
 // $ExpectType number
-abstractWeb3Module.transactionBlockTimeout;
+abstractConfluxModule.transactionBlockTimeout;
 
 // $ExpectType number
-abstractWeb3Module.transactionConfirmationBlocks;
+abstractConfluxModule.transactionConfirmationBlocks;
 
 // $ExpectType number
-abstractWeb3Module.transactionPollingTimeout;
+abstractConfluxModule.transactionPollingTimeout;
 
 // $ExpectType string
-abstractWeb3Module.defaultGasPrice;
+abstractConfluxModule.defaultGasPrice;
 
 // $ExpectType number
-abstractWeb3Module.defaultGas;
+abstractConfluxModule.defaultGas;
 
 // $ExpectType Providers
 AbstractConfluxWebModule.providers;
 
 // $ExpectType any
-abstractWeb3Module.givenProvider;
+abstractConfluxModule.givenProvider;
 
 // $ExpectType string | null
-abstractWeb3Module.defaultAccount;
+abstractConfluxModule.defaultAccount;
 
-// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
-abstractWeb3Module.currentProvider;
-
-// $ExpectType boolean
-abstractWeb3Module.setProvider(httpProvider);
+// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | ConfluxWebCfxProvider | CustomProvider
+abstractConfluxModule.currentProvider;
 
 // $ExpectType boolean
-abstractWeb3Module.setProvider('http://localhost:8545');
+abstractConfluxModule.setProvider(httpProvider);
 
 // $ExpectType boolean
-abstractWeb3Module.isSameProvider('http://localhost:8545');
+abstractConfluxModule.setProvider('http://localhost:8545');
 
 // $ExpectType boolean
-abstractWeb3Module.isSameProvider(httpProvider);
+abstractConfluxModule.isSameProvider('http://localhost:8545');
+
+// $ExpectType boolean
+abstractConfluxModule.isSameProvider(httpProvider);
 
 // $ExpectType Promise<boolean>
-abstractWeb3Module.clearSubscriptions('eth_unsubscribe');
+abstractConfluxModule.clearSubscriptions('eth_unsubscribe');

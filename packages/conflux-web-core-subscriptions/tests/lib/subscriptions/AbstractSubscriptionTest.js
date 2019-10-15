@@ -1,7 +1,7 @@
 import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
 import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
-import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
+import AbstractConfluxModule from '../../__mocks__/AbstractConfluxWebModule';
 
 // Mocks
 jest.mock('conflux-web-utils');
@@ -14,7 +14,7 @@ describe('AbstractSubscriptionTest', () => {
     let abstractSubscription, moduleInstanceMock;
 
     beforeEach(() => {
-        moduleInstanceMock = new AbstractWeb3Module();
+        moduleInstanceMock = new AbstractConfluxModule();
         moduleInstanceMock.currentProvider.subscribe = jest.fn((type, method, parameters) => {
             expect(type).toEqual(abstractSubscription.type);
 

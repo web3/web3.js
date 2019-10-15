@@ -1,4 +1,4 @@
-# conflux-web.js - Ethereum JavaScript API
+# conflux-web.js - Conflux JavaScript API
 
 This is the Conflux [JavaScript API][docs]
 which connects to the [Generic JSON RPC](https://conflux-chain.github.io/conflux-doc/json-rpc/) spec.

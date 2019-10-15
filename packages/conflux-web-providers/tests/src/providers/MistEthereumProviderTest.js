@@ -1,72 +1,72 @@
-import MistEthereumProvider from '../../../src/providers/MistEthereumProvider';
+import MistConfluxProvider from '../../../src/providers/MistConfluxProvider';
 
 /**
- * MistEthereumProvider test
+ * MistConfluxProvider test
  */
-describe('MistEthereumProviderTest', () => {
-    let mistEthereumProvider, ethereumProvider;
+describe('MistConfluxProviderTest', () => {
+    let mistConfluxProvider, confluxProvider;
 
     beforeEach(() => {
-        ethereumProvider = {on: jest.fn(), isConnected: jest.fn()};
-        mistEthereumProvider = new MistEthereumProvider(ethereumProvider);
+        confluxProvider = {on: jest.fn(), isConnected: jest.fn()};
+        mistConfluxProvider = new MistConfluxProvider(confluxProvider);
     });
 
     it('constructor check', () => {
-        expect(mistEthereumProvider.connection).toEqual(ethereumProvider);
+        expect(mistConfluxProvider.connection).toEqual(confluxProvider);
 
-        expect(mistEthereumProvider.host).toEqual('mist');
+        expect(mistConfluxProvider.host).toEqual('mist');
 
-        expect(mistEthereumProvider.timeout).toEqual(null);
+        expect(mistConfluxProvider.timeout).toEqual(null);
     });
 
     it('calls registerEventListeners and the expected listeners will be registered', () => {
-        mistEthereumProvider.registerEventListeners();
+        mistConfluxProvider.registerEventListeners();
 
-        expect(ethereumProvider.on.mock.calls[0][0]).toEqual('data');
-        expect(ethereumProvider.on.mock.calls[0][1]).toBeInstanceOf(Function);
+        expect(confluxProvider.on.mock.calls[0][0]).toEqual('data');
+        expect(confluxProvider.on.mock.calls[0][1]).toBeInstanceOf(Function);
 
-        expect(ethereumProvider.on.mock.calls[1][0]).toEqual('error');
-        expect(ethereumProvider.on.mock.calls[1][1]).toBeInstanceOf(Function);
+        expect(confluxProvider.on.mock.calls[1][0]).toEqual('error');
+        expect(confluxProvider.on.mock.calls[1][1]).toBeInstanceOf(Function);
 
-        expect(ethereumProvider.on.mock.calls[2][0]).toEqual('connect');
-        expect(ethereumProvider.on.mock.calls[2][1]).toBeInstanceOf(Function);
+        expect(confluxProvider.on.mock.calls[2][0]).toEqual('connect');
+        expect(confluxProvider.on.mock.calls[2][1]).toBeInstanceOf(Function);
 
-        expect(ethereumProvider.on.mock.calls[3][0]).toEqual('connect');
-        expect(ethereumProvider.on.mock.calls[3][1]).toBeInstanceOf(Function);
+        expect(confluxProvider.on.mock.calls[3][0]).toEqual('connect');
+        expect(confluxProvider.on.mock.calls[3][1]).toBeInstanceOf(Function);
 
-        expect(ethereumProvider.on.mock.calls[4][0]).toEqual('end');
-        expect(ethereumProvider.on.mock.calls[4][1]).toBeInstanceOf(Function);
+        expect(confluxProvider.on.mock.calls[4][0]).toEqual('end');
+        expect(confluxProvider.on.mock.calls[4][1]).toBeInstanceOf(Function);
     });
     it('calls disconnect and returns true', () => {
-        expect(mistEthereumProvider.disconnect()).toEqual(true);
+        expect(mistConfluxProvider.disconnect()).toEqual(true);
     });
 
     it('calls connected and returns true', () => {
-        ethereumProvider.isConnected.mockReturnValueOnce(true);
+        confluxProvider.isConnected.mockReturnValueOnce(true);
 
-        expect(mistEthereumProvider.connected).toEqual(true);
+        expect(mistConfluxProvider.connected).toEqual(true);
 
-        expect(ethereumProvider.isConnected).toHaveBeenCalled();
+        expect(confluxProvider.isConnected).toHaveBeenCalled();
     });
 
     it('calls removeAllListeners and executes the expected methods', () => {
-        ethereumProvider.removeListener = jest.fn();
+        confluxProvider.removeListener = jest.fn();
 
-        mistEthereumProvider.removeAllListeners('socket_message');
-        mistEthereumProvider.removeAllListeners('socket_error');
-        mistEthereumProvider.removeAllListeners('socket_connect');
-        mistEthereumProvider.removeAllListeners('socket_ready');
-        mistEthereumProvider.removeAllListeners('socket_close');
+        mistConfluxProvider.removeAllListeners('socket_message');
+        mistConfluxProvider.removeAllListeners('socket_error');
+        mistConfluxProvider.removeAllListeners('socket_connect');
+        mistConfluxProvider.removeAllListeners('socket_ready');
+        mistConfluxProvider.removeAllListeners('socket_close');
 
-        expect(ethereumProvider.removeListener).toHaveBeenNthCalledWith(1, 'data', mistEthereumProvider.onMessage);
-        expect(ethereumProvider.removeListener).toHaveBeenNthCalledWith(2, 'error', mistEthereumProvider.onError);
-        expect(ethereumProvider.removeListener).toHaveBeenNthCalledWith(3, 'connect', mistEthereumProvider.onConnect);
-        expect(ethereumProvider.removeListener).toHaveBeenNthCalledWith(4, 'connect', mistEthereumProvider.onConnect);
-        expect(ethereumProvider.removeListener).toHaveBeenNthCalledWith(5, 'end', mistEthereumProvider.onClose);
+        expect(confluxProvider.removeListener).toHaveBeenNthCalledWith(1, 'data', mistConfluxProvider.onMessage);
+        expect(confluxProvider.removeListener).toHaveBeenNthCalledWith(2, 'error', mistConfluxProvider.onError);
+        expect(confluxProvider.removeListener).toHaveBeenNthCalledWith(3, 'connect', mistConfluxProvider.onConnect);
+        expect(confluxProvider.removeListener).toHaveBeenNthCalledWith(4, 'connect', mistConfluxProvider.onConnect);
+        expect(confluxProvider.removeListener).toHaveBeenNthCalledWith(5, 'end', mistConfluxProvider.onClose);
     });
 
     it('calls sendPayload and returns with an resolved promise', async () => {
-        ethereumProvider.send = jest.fn((payload, callback) => {
+        confluxProvider.send = jest.fn((payload, callback) => {
             expect(callback).toBeInstanceOf(Function);
 
             expect(payload).toEqual({id: 0});
@@ -74,15 +74,15 @@ describe('MistEthereumProviderTest', () => {
             callback(false, true);
         });
 
-        const response = await mistEthereumProvider.sendPayload({id: 0});
+        const response = await mistConfluxProvider.sendPayload({id: 0});
 
         expect(response).toEqual(true);
 
-        expect(ethereumProvider.send).toHaveBeenCalled();
+        expect(confluxProvider.send).toHaveBeenCalled();
     });
 
     it('calls sendPayload and returns with an rejected promise', async () => {
-        ethereumProvider.send = jest.fn((payload, callback) => {
+        confluxProvider.send = jest.fn((payload, callback) => {
             expect(callback).toBeInstanceOf(Function);
 
             expect(payload).toEqual({id: 0});
@@ -90,8 +90,8 @@ describe('MistEthereumProviderTest', () => {
             callback(true, false);
         });
 
-        await expect(mistEthereumProvider.sendPayload({id: 0})).rejects.toEqual(true);
+        await expect(mistConfluxProvider.sendPayload({id: 0})).rejects.toEqual(true);
 
-        expect(ethereumProvider.send).toHaveBeenCalled();
+        expect(confluxProvider.send).toHaveBeenCalled();
     });
 });

@@ -14,7 +14,7 @@ describe('GetNodeInfoMethodTest', () => {
     it('constructor check', () => {
         expect(method).toBeInstanceOf(AbstractMethod);
 
-        expect(method.rpcMethod).toEqual('web3_clientVersion');
+        expect(method.rpcMethod).toEqual('confluxWeb_clientVersion');
 
         expect(method.parametersAmount).toEqual(0);
 

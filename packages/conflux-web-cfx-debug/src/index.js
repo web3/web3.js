@@ -27,7 +27,7 @@ import DebugModule from './Debug.js';
  *
  * @method Debug
  *
- * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+ * @param {ConfluxWebCfxProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Net.Socket} net
  * @param {Object} options
  *

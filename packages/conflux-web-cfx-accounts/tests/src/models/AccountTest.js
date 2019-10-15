@@ -70,7 +70,7 @@ describe('AccountTest', () => {
         });
 
         expect(Hash.keccak256s).toHaveBeenCalledWith(
-            Buffer.concat([Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')])
+            Buffer.concat([Buffer.from(`\u0019Conflux Signed Message:\n${'message'.length}`), Buffer.from('message')])
         );
 
         expect(sign).toHaveBeenCalledWith('keccak', 'pk');
@@ -101,7 +101,7 @@ describe('AccountTest', () => {
         });
 
         expect(Hash.keccak256s).toHaveBeenCalledWith(
-            Buffer.concat([Buffer.from(`\u0019Ethereum Signed Message:\n${'message'.length}`), Buffer.from('message')])
+            Buffer.concat([Buffer.from(`\u0019Conflux Signed Message:\n${'message'.length}`), Buffer.from('message')])
         );
 
         expect(sign).toHaveBeenCalledWith('keccak', 'pk');

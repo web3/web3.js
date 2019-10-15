@@ -1,18 +1,18 @@
 /*
-    This file is part of web3.js.
+    This file is part of confluxWeb.
 
-    web3.js is free software: you can redistribute it and/or modify
+    confluxWeb is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    web3.js is distributed in the hope that it will be useful,
+    confluxWeb is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Lesser General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+    along with confluxWeb.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import isFunction from 'lodash/isFunction';
@@ -28,7 +28,7 @@ import Wallet from './models/Wallet';
 // TODO: Rename Accounts module to Wallet and move the Wallet class to the cfx module.
 export default class Accounts extends AbstractConfluxWebModule {
     /**
-     * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {ConfluxWebCfxProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Object} formatters
      * @param {Utils} utils
      * @param {MethodFactory} methodFactory
@@ -118,10 +118,10 @@ export default class Accounts extends AbstractConfluxWebModule {
         }
 
         const messageBuffer = Buffer.from(data);
-        const preambleBuffer = Buffer.from(`\u0019Ethereum Signed Message:\n${data.length}`);
-        const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
+        const preambleBuffer = Buffer.from(`\u0019Conflux Signed Message:\n${data.length}`);
+        const cfxMessage = Buffer.concat([preambleBuffer, messageBuffer]);
 
-        return Hash.keccak256s(ethMessage);
+        return Hash.keccak256s(cfxMessage);
     }
 
     /**
@@ -214,7 +214,7 @@ export default class Accounts extends AbstractConfluxWebModule {
     }
 
     /**
-     * Recovers the Ethereum address which was used to sign the given data.
+     * Recovers the Conflux address which was used to sign the given data.
      *
      * @method recover
      *
@@ -248,7 +248,6 @@ export default class Accounts extends AbstractConfluxWebModule {
     /**
      * Decrypts account
      *
-     * Note: Taken from https://github.com/ethereumjs/ethereumjs-wallet
      *
      * @method decrypt
      *

@@ -4,7 +4,7 @@ import ProviderResolver from '../../../src/resolvers/ProviderResolver';
 import HttpProvider from '../../../src/providers/HttpProvider';
 import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import IpcProvider from '../../../src/providers/IpcProvider';
-import Web3EthereumProvider from '../../../src/providers/Web3EthereumProvider';
+import ConfluxWebCfxProvider from '../../../src/providers/ConfluxWebCfxProvider';
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import {w3cwebsocket as W3CWebsocket} from 'websocket';
 
@@ -16,7 +16,7 @@ jest.mock('../../../src/resolvers/ProviderResolver');
 jest.mock('../../../src/providers/HttpProvider');
 jest.mock('../../../src/providers/WebsocketProvider');
 jest.mock('../../../src/providers/IpcProvider');
-jest.mock('../../../src/providers/Web3EthereumProvider');
+jest.mock('../../../src/providers/ConfluxWebCfxProvider');
 
 /**
  * ProvidersModuleFactory test
@@ -92,7 +92,7 @@ describe('ProvidersModuleFactoryTest', () => {
         expect(net.connect).toHaveBeenCalled();
     });
 
-    it('createEthereumProvider returns instance of EthereumProvider', () => {
-        expect(providersModuleFactory.createWeb3EthereumProvider({})).toBeInstanceOf(Web3EthereumProvider);
+    it('createconfluxProvider returns instance of CfxProvider', () => {
+        expect(providersModuleFactory.createConfluxWebCfxProvider({})).toBeInstanceOf(ConfluxWebCfxProvider);
     });
 });

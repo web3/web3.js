@@ -1,7 +1,7 @@
 import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
 import LogSubscription from '../../../../src/subscriptions/cfx/LogSubscription';
-import AbstractWeb3Module from '../../../__mocks__/AbstractWeb3Module';
+import AbstractConfluxModule from '../../../__mocks__/AbstractConfluxWebModule';
 import GetPastLogsMethod from '../../../__mocks__/GetPastLogsMethod';
 import SocketProviderAdapter from '../../../__mocks__/SocketProviderAdapter';
 
@@ -16,7 +16,7 @@ describe('LogSubscriptionTest', () => {
     let logSubscription, moduleInstanceMock, getPastLogsMethodMock, socketProviderAdapterMock;
 
     beforeEach(() => {
-        moduleInstanceMock = new AbstractWeb3Module();
+        moduleInstanceMock = new AbstractConfluxModule();
         socketProviderAdapterMock = new SocketProviderAdapter();
         getPastLogsMethodMock = new GetPastLogsMethod();
         getPastLogsMethodMock.execute = jest.fn();

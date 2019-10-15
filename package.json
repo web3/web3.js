@@ -29,48 +29,16 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/ethereum/web3.js.git"
+        "url": "https://github.com/Conflux-Chain/ConfluxWeb.git"
     },
-    "homepage": "https://github.com/ethereum/web3.js",
+    "homepage": "https://github.com/Conflux-Chain/ConfluxWeb",
     "bugs": {
-        "url": "https://github.com/ethereum/web3.js/issues"
+        "url": "https://github.com/Conflux-Chain/ConfluxWeb/issues"
     },
     "keywords": [
-        "Ethereum",
+        "Conflux",
         "JavaScript",
         "API"
-    ],
-    "author": "Ethereum Foundation",
-    "authors": [
-        {
-            "name": "Samuel Furter",
-            "email": "samuel@ethereum.org",
-            "homepage": "https://github.com/nivida"
-        },
-        {
-            "name": "Fabian Vogelsteller",
-            "email": "fabian@ethereum.org",
-            "homepage": "https://github.com/frozeman"
-        },
-        {
-            "name": "Marek Kotewicz",
-            "email": "marek@parity.io",
-            "url": "https://github.com/debris"
-        },
-        {
-            "name": "Marian Oancea",
-            "url": "https://github.com/cubedro"
-        },
-        {
-            "name": "Gav Wood",
-            "email": "g@parity.io",
-            "homepage": "http://gavwood.com"
-        },
-        {
-            "name": "Jeffery Wilcke",
-            "email": "jeffrey.wilcke@ethereum.org",
-            "url": "https://github.com/obscuren"
-        }
     ],
     "devDependencies": {
         "@babel/core": "^7.4.0",

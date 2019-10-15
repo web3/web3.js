@@ -6,7 +6,7 @@
     "license": "LGPL-3.0",
     "main": "dist/conflux-web-core-method.cjs.js",
     "module": "dist/conflux-web-core-method.esm.js",
-    "browser": "dist/conflux-web3-core-method.umd.js",
+    "browser": "dist/conflux-web-core-method.umd.js",
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",

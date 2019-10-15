@@ -1,6 +1,6 @@
 # conflux-web
 
-This is the main package of [ConfluxWeb3.js][repo]
+This is the main package of [ConfluxWeb][repo]
 
 ## Installation
 

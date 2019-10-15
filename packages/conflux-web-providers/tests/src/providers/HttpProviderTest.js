@@ -4,7 +4,7 @@ import HttpProvider from '../../../src/providers/HttpProvider';
 import ProvidersModuleFactory from '../../../src/factories/ProvidersModuleFactory';
 import JsonRpcMapper from '../../../src/mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
-import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
+import AbstractConfluxModule from '../../__mocks__/AbstractConfluxModule';
 import AbstractMethod from '../../__mocks__/AbstractMethod';
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import NetworkError from '../../__mocks__/NetworkError';
@@ -187,7 +187,7 @@ describe('HttpProviderTest', () => {
     it('calls sendBatch and returns with a resolved promise', async () => {
         const abstractMethodMock = new AbstractMethod();
 
-        const moduleInstanceMock = new AbstractWeb3Module();
+        const moduleInstanceMock = new AbstractConfluxModule();
 
         abstractMethodMock.beforeExecution = jest.fn();
         abstractMethodMock.rpcMethod = 'rpc_method';

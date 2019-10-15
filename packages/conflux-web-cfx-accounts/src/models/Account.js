@@ -1,15 +1,15 @@
 /*
-    This file is part of web3.js.
-    web3.js is free software: you can redistribute it and/or modify
+    This file is part of confluxWeb.
+    confluxWeb is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-    web3.js is distributed in the hope that it will be useful,
+    confluxWeb is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Lesser General Public License for more details.
     You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+    along with confluxWeb.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import scryptsy from 'scrypt.js';
@@ -18,7 +18,7 @@ import isObject from 'lodash/isObject';
 import * as EthLibAccount from 'cfx-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
 import Hash from 'cfx-lib/lib/hash';
-import {isHexStrict, hexToBytes, randomHex, sha3} from 'conflux-web-utils'; // TODO: Use the VO's of a web3-types module.
+import {isHexStrict, hexToBytes, randomHex, sha3} from 'conflux-web-utils'; // TODO: Use the VO's of a confluxWeb-types module.
 const crypto = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
 
 export default class Account {
@@ -65,10 +65,10 @@ export default class Account {
         }
 
         const messageBuffer = Buffer.from(data);
-        const preamble = `\u0019Ethereum Signed Message:\n${data.length}`;
+        const preamble = `\u0019Conflux Signed Message:\n${data.length}`;
         const preambleBuffer = Buffer.from(preamble);
-        const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
-        const hash = Hash.keccak256s(ethMessage);
+        const cfxMessage = Buffer.concat([preambleBuffer, messageBuffer]);
+        const hash = Hash.keccak256s(cfxMessage);
         const signature = EthLibAccount.sign(hash, this.privateKey);
         const vrs = EthLibAccount.decodeSignature(signature);
 
@@ -188,7 +188,6 @@ export default class Account {
      *
      * Returns an Account object by the given V3Keystore object.
      *
-     * Note: Taken from https://github.com/ethereumjs/ethereumjs-wallet
      *
      * @method fromV3Keystore
      *

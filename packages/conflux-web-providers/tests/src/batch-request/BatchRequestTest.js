@@ -2,7 +2,7 @@ import BatchRequest from '../../../src/batch-request/BatchRequest';
 import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
 import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import AbstractMethod from '../../__mocks__/AbstractMethod';
-import AbstractWeb3Module from '../../__mocks__/AbstractWeb3Module';
+import AbstractConfluxModule from '../../__mocks__/AbstractConfluxModule';
 
 // Mocks
 jest.mock('../../../src/providers/WebsocketProvider');
@@ -17,7 +17,7 @@ describe('BatchRequestTest', () => {
         new WebsocketProvider({}, 0);
         providerMock = WebsocketProvider.mock.instances[0];
 
-        moduleInstanceMock = new AbstractWeb3Module();
+        moduleInstanceMock = new AbstractConfluxModule();
         moduleInstanceMock.currentProvider = providerMock;
 
         abstractMethodMock = new AbstractMethod();

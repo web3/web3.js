@@ -2,7 +2,7 @@
 
 This is a sub module of [ConfluxWeb][repo]
 
-The ```conflux-web-core``` contains the AbstractWeb3Module. 
+The ```conflux-web-core``` contains the AbstractConfluxModule. 
 This should be used if someone wants to implement a new confluxWeb module. 
 
 ## Installation
@@ -14,9 +14,9 @@ npm install conflux-web-core
 ## Usage
 
 ```js
-import {AbstractWeb3Module} from 'conflux-web-core';
+import {AbstractConfluxModule} from 'conflux-web-core';
 
-new AbstractWeb3Module(...);
+new AbstractConfluxModule(...);
 ```
 
 ## Types 
