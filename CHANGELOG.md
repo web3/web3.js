@@ -74,3 +74,4 @@ Released with 1.0.0-beta.37 code base.
 - Gas check fixed (#2381)
 - Signing issues #1998, #2033, and #1074 fixed (#3125)
 - Fixed inconsistency between web3.eth.signTransaction and web3.eth.accounts.signTransaction (#3078)
+- Fix hexToNumber and hexToNumberString prefix validation (#3086)
