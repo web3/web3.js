@@ -17,7 +17,7 @@
  * @date 2019
  */
 
-import scrypt from '../crypto/Scrypt';
+import scrypt from 'scrypt-shim';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
 import * as EthLibAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency
