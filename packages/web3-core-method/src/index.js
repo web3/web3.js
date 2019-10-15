@@ -370,11 +370,13 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
                     } else {
                         receiptJSON = JSON.stringify(receipt, null, 2);
+
                         if (receipt.status === false || receipt.status === '0x0') {
                             utils._fireError(
                                 new Error("Transaction has been reverted by the EVM:\n" + receiptJSON),
                                 defer.eventEmitter,
                                 defer.reject,
+                                null,
                                 receipt
                             );
                         } else {
@@ -382,6 +384,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                 new Error("Transaction ran out of gas. Please provide more gas:\n" + receiptJSON),
                                 defer.eventEmitter,
                                 defer.reject,
+                                null,
                                 receipt
                             );
                         }
