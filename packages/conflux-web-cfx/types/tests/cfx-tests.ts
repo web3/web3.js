@@ -11,11 +11,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file cfx-tests.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
- * @date 2018
- */
 
 import {Log, Transaction, TransactionReceipt, RLPEncodedTransaction} from 'conflux-web-core';
 import {Cfx, BlockHeader, Syncing, Block} from 'conflux-web-cfx';

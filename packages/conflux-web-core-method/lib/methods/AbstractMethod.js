@@ -14,11 +14,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file AbstractMethod.js
- * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
- */
+
 
 import isFunction from 'lodash/isFunction';
 import isString from 'lodash/isString';

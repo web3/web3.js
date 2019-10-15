@@ -11,12 +11,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file AbstractSocketProvider
- * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
- */
-
 import EventEmitter from 'eventemitter3';
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';

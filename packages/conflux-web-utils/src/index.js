@@ -14,12 +14,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file Utils.js
- * @author Marek Kotewicz <marek@parity.io>
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2017
- */
 
 import isObject from 'lodash/isObject';
 import isString from 'lodash/isString';

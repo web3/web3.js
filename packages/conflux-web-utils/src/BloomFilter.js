@@ -16,9 +16,6 @@
 */
 /**
  * TODO: Extend the documentation with the bloom filter method.
- * @file bloom.js
- * @author Bas van Kervel <bas@ethereum.org>
- * @date 2017
  */
 
 import * as utils from './Utils.js';

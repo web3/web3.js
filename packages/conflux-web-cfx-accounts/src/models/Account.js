@@ -11,11 +11,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file Account.js
- * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2019
- */
 
 import scryptsy from 'scrypt.js';
 import isString from 'lodash/isString';

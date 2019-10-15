@@ -11,11 +11,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file abstract-web3-module-test.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
- * @date 2018
- */
+
 import * as net from 'net';
 import {HttpProvider, IpcProvider, WebsocketProvider} from 'conflux-web-providers';
 import {AbstractConfluxWebModule, ConfluxWebModuleOptions} from 'conflux-web-core';

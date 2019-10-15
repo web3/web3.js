@@ -11,11 +11,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file Wallet.js
- * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2019
- */
 
 import isString from 'lodash/isString';
 import Account from './Account';

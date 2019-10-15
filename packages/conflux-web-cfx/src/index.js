@@ -27,11 +27,6 @@ import SubscriptionsFactory from './factories/SubscriptionsFactory';
 import {ProviderResolver} from 'conflux-web-providers';
 import CfxModule from './Cfx.js';
 
-/**
- * @file index.js
- * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
- */
 
 /**
  * Creates the TransactionSigner class

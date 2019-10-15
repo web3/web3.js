@@ -14,11 +14,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file ProviderPackageFactory.js
- * @authors: Samuel Furter <samuel@ethereum.org>
- * @date 2018
- */
 
 import {w3cwebsocket as W3CWebsocket} from 'websocket';
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';

@@ -11,12 +11,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with conflux-web.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file index.d.ts
- * @author Prince Sinha <sinhaprince013@gmail.com>
- * @author Samuel Furter <sinhaprince013@gmail.com>
- * @date 2019
- */
 
 import {provider} from 'conflux-web-providers';
 import {AbstractConfluxWebModule, ConfluxWebModuleOptions} from 'conflux-web-core';

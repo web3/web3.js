@@ -14,11 +14,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file index.js
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2017
- */
 // TODO: Most formatters and utils methods could be removed with a cfx-core-types module.
 // Note: Removed the errors temporary and will add later the Winston logger.
 // The errors are still the same as before with some new ones.

@@ -14,11 +14,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file is-hex-strict-test.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
- * @date 2018
- */
 
 import BN = require('bn.js');
 import {isHexStrict} from 'conflux-web-utils';

@@ -14,11 +14,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file Accounts.js
- * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2017
- */
 
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';

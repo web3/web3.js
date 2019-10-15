@@ -14,11 +14,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file SoliditySha3.js
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2017
- */
 
 import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';

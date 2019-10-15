@@ -14,11 +14,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with conflux-web.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file Debug.js
- * @author Prince Sinha <sinhaprince013@gmail.com>
- * @date 2019
- */
 
 import {AbstractConfluxWebModule} from 'conflux-web-core';
 

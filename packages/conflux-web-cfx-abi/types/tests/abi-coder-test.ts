@@ -14,11 +14,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file abi-coder-test.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
- * @date 2018
- */
 
 import {AbiCoder} from 'conflux-web-cfx-abi';
 

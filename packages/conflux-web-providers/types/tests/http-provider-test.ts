@@ -14,11 +14,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file http-provider-test.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk> , Samuel Furter <samuel@ethereum.org>
- * @date 2018
- */
+
 
 import {AbstractConfluxWebModule} from 'conflux-web-core';
 import {HttpProvider} from 'conflux-web-providers';

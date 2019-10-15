@@ -14,11 +14,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file get-signature-params-tests.ts
- * @author Aalok Singh <aalok_2@live.com>
- * @date 2018
- */
 
 import BN = require('bn.js');
 import {getSignatureParameters} from 'conflux-web-utils';
