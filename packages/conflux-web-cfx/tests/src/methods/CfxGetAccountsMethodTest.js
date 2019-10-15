@@ -8,7 +8,7 @@ jest.mock('conflux-web-core');
 /**
  * CfxGetAccountsMethod test
  */
-describe('EthGetAccountsMethodTest', () => {
+describe('CfxGetAccountsMethodTest', () => {
     let method, moduleInstanceMock, accountsMock;
 
     beforeEach(() => {

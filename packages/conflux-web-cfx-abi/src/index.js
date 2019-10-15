@@ -17,7 +17,7 @@
 
 import * as Utils from 'conflux-web-utils';
 import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
-import EthAbiCoder from './AbiCoder.js';
+import CfxAbiCoder from './AbiCoder.js';
 
 /**
  * Returns an object of AbiCoder
@@ -27,5 +27,5 @@ import EthAbiCoder from './AbiCoder.js';
  * @constructor
  */
 export function AbiCoder() {
-    return new EthAbiCoder(Utils, new EthersAbiCoder());
+    return new CfxAbiCoder(Utils, new EthersAbiCoder());
 }

@@ -15,7 +15,7 @@
 import scryptsy from 'scrypt.js';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
-import * as EthLibAccount from 'cfx-lib/lib/account'; // TODO: Remove this dependency
+import * as CfxLibAccount from 'cfx-lib/lib/account'; // TODO: Remove this dependency
 import uuid from 'uuid';
 import Hash from 'cfx-lib/lib/hash';
 import {isHexStrict, hexToBytes, randomHex, sha3} from 'conflux-web-utils'; // TODO: Use the VO's of a confluxWeb-types module.
@@ -69,8 +69,8 @@ export default class Account {
         const preambleBuffer = Buffer.from(preamble);
         const cfxMessage = Buffer.concat([preambleBuffer, messageBuffer]);
         const hash = Hash.keccak256s(cfxMessage);
-        const signature = EthLibAccount.sign(hash, this.privateKey);
-        const vrs = EthLibAccount.decodeSignature(signature);
+        const signature = CfxLibAccount.sign(hash, this.privateKey);
+        const vrs = CfxLibAccount.decodeSignature(signature);
 
         return {
             message: data,
@@ -103,7 +103,7 @@ export default class Account {
      * @returns {Account}
      */
     static from(entropy, accounts = {}) {
-        return new Account(EthLibAccount.create(entropy || randomHex(32)), accounts);
+        return new Account(CfxLibAccount.create(entropy || randomHex(32)), accounts);
     }
 
     /**
@@ -115,7 +115,7 @@ export default class Account {
      * @returns {Account}
      */
     static fromPrivateKey(privateKey, accounts = {}) {
-        return new Account(EthLibAccount.fromPrivate(privateKey), accounts);
+        return new Account(CfxLibAccount.fromPrivate(privateKey), accounts);
     }
 
     /**

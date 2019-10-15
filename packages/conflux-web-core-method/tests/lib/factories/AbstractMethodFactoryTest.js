@@ -101,7 +101,7 @@ describe('AbstractMethodFactoryTest', () => {
         expect(TransactionObserver).toHaveBeenCalledTimes(1);
     });
 
-    it('calls createMethod and returns a object of type EthSendTransactionMethod', () => {
+    it('calls createMethod and returns a object of type CfxSendTransactionMethod', () => {
         new AbstractConfluxWebModule();
         const moduleInstanceMock = AbstractConfluxWebModule.mock.instances[0];
         moduleInstanceMock.currentProvider = {supportsSubscriptions: jest.fn()};
