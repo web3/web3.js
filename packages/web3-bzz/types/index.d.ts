@@ -30,7 +30,6 @@ export class Bzz {
     download(bzzHash: string, localPath?: string): Promise<any>;
 
     pick: Pick;
-    BatchRequest: new () => any;
 }
 
 export interface Pick {
