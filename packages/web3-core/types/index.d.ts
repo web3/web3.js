@@ -54,10 +54,6 @@ export class AbstractWeb3Module {
     clearSubscriptions(subscriptionType: string): Promise<boolean>;
 }
 
-export interface TransactionSigner {
-    sign(transactionConfig: TransactionConfig): Promise<SignedTransaction>;
-}
-
 export interface SignedTransaction {
     messageHash?: string;
     r: string;
@@ -75,7 +71,6 @@ export interface Web3ModuleOptions {
     transactionPollingTimeout?: number;
     defaultGasPrice?: string;
     defaultGas?: number;
-    transactionSigner?: TransactionSigner;
 }
 
 export interface Providers {
@@ -261,10 +256,6 @@ export interface PeerInfo {
         remoteAddress: string;
     };
     protocols: any; // Any because it's not documented what each protocol (eth, shh etc.) is defining here
-}
-
-export interface TransactionSigner {
-    sign(txObject: TransactionConfig): Promise<SignedTransaction>;
 }
 
 // had to move `web3-net` due to other modules in `1.x` not referencing

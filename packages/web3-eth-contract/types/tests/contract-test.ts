@@ -17,15 +17,12 @@
  * @date 2018
  */
 
-import {Contract} from 'web3-eth-contract';
+import { Contract } from 'web3-eth-contract';
 
 const contract = new Contract('http://localhost:500', []);
 
 // $ExpectType string
 contract.address;
-
-// $ExpectType TransactionSigner
-contract.transactionSigner;
 
 // $ExpectType string
 contract.options.address;
@@ -46,20 +43,31 @@ contract.deploy({
 });
 
 // $ExpectType void
-contract.once('MyEvent', {
-    filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'},
-    fromBlock: 0
-}, (error, event) => { console.log(event); });
+contract.once(
+    'MyEvent',
+    {
+        filter: {
+            myIndexedParam: [20, 23],
+            myOtherIndexedParam: '0x123456789...'
+        },
+        fromBlock: 0
+    },
+    (error, event) => {
+        console.log(event);
+    }
+);
 
 // $ExpectType void
-contract.once('MyEvent', (error, event) => { console.log(event); });
+contract.once('MyEvent', (error, event) => {
+    console.log(event);
+});
 
 // $ExpectType Promise<EventData[]>
 contract.getPastEvents('MyEvent');
 
 // $ExpectType Promise<EventData[]>
 contract.getPastEvents('MyEvent', {
-    filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'},
+    filter: { myIndexedParam: [20, 23], myOtherIndexedParam: '0x123456789...' },
     fromBlock: 0,
     toBlock: 'latest'
 });
@@ -68,47 +76,77 @@ contract.getPastEvents('MyEvent', {
 contract.getPastEvents('MyEvent', {});
 
 // $ExpectType Promise<EventData[]>
-contract.getPastEvents('MyEvent', {
-    filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'},
-    fromBlock: 0,
-    toBlock: 'latest'
-}, (error, events) => { console.log(events); });
+contract.getPastEvents(
+    'MyEvent',
+    {
+        filter: {
+            myIndexedParam: [20, 23],
+            myOtherIndexedParam: '0x123456789...'
+        },
+        fromBlock: 0,
+        toBlock: 'latest'
+    },
+    (error, events) => {
+        console.log(events);
+    }
+);
 
 // $ExpectType Promise<EventData[]>
-contract.getPastEvents('MyEvent', (error, events) => { console.log(events); });
+contract.getPastEvents('MyEvent', (error, events) => {
+    console.log(events);
+});
 
 // $ExpectType Promise<number>
-contract.deploy({
-    data: '0x12345...',
-    arguments: [123, 'My String']
-}).estimateGas();
+contract
+    .deploy({
+        data: '0x12345...',
+        arguments: [123, 'My String']
+    })
+    .estimateGas();
 
 // $ExpectType Promise<number>
-contract.deploy({
-    data: '0x12345...',
-    arguments: [123, 'My String']
-}).estimateGas({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'});
+contract
+    .deploy({
+        data: '0x12345...',
+        arguments: [123, 'My String']
+    })
+    .estimateGas({ from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe' });
 
 // $ExpectType Promise<number>
-contract.deploy({
-    data: '0x12345...',
-    arguments: [123, 'My String']
-}).estimateGas((err: Error, gas: number) => { console.log(gas) });
+contract
+    .deploy({
+        data: '0x12345...',
+        arguments: [123, 'My String']
+    })
+    .estimateGas((err: Error, gas: number) => {
+        console.log(gas);
+    });
 
 // $ExpectType string
-contract.deploy({
-    data: '0x12345...',
-    arguments: [123, 'My String']
-}).encodeABI();
+contract
+    .deploy({
+        data: '0x12345...',
+        arguments: [123, 'My String']
+    })
+    .encodeABI();
 
 // $ExpectType PromiEvent<Contract>
-contract.deploy({
-    data: '0x12345...',
-    arguments: [123, 'My String']
-}).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'});
+contract
+    .deploy({
+        data: '0x12345...',
+        arguments: [123, 'My String']
+    })
+    .send({ from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe' });
 
 // $ExpectType PromiEvent<Contract>
-contract.deploy({
-    data: '0x12345...',
-    arguments: [123, 'My String']
-}).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, (err: Error, transactionHash: string) => { console.log(transactionHash) });
+contract
+    .deploy({
+        data: '0x12345...',
+        arguments: [123, 'My String']
+    })
+    .send(
+        { from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe' },
+        (err: Error, transactionHash: string) => {
+            console.log(transactionHash);
+        }
+    );

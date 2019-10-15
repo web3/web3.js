@@ -29,7 +29,6 @@ import {
     Transaction,
     TransactionConfig,
     TransactionReceipt,
-    TransactionSigner,
     Web3ModuleOptions
 } from 'web3-core';
 import { AbiCoder } from 'web3-eth-abi';
@@ -59,7 +58,6 @@ export class Eth extends AbstractWeb3Module {
     ens: Ens;
     abi: AbiCoder;
     net: Network;
-    transactionSigner: TransactionSigner;
 
     clearSubscriptions(): Promise<boolean>;
 

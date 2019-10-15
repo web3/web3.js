@@ -49,9 +49,6 @@ eth.abi;
 // $ExpectType Network
 eth.net;
 
-// $ExpectType TransactionSigner
-eth.transactionSigner;
-
 eth.clearSubscriptions();
 
 // $ExpectType Subscription<Log>

@@ -25,7 +25,6 @@ import {
     PromiEvent,
     provider,
     TransactionConfig,
-    TransactionSigner,
     Web3ModuleOptions
 } from 'web3-core';
 import { formatters } from 'web3-core-helpers';
@@ -42,7 +41,6 @@ export class Ens extends AbstractWeb3Module {
     );
 
     registry: Registry;
-    transactionSigner: TransactionSigner;
 
     resolver(name: string): Promise<Contract>;
 

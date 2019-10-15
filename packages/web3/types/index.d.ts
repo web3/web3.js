@@ -18,7 +18,7 @@
  */
 
 import * as net from 'net';
-import { AbstractWeb3Module, provider, Web3ModuleOptions } from 'web3-core';
+import { AbstractWeb3Module, provider } from 'web3-core';
 import { Eth } from 'web3-eth';
 import { Personal } from 'web3-eth-personal';
 import { Network } from 'web3-net';
@@ -26,11 +26,7 @@ import { Shh } from 'web3-shh';
 import { Utils } from 'web3-utils';
 
 export default class Web3 extends AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        net?: net.Socket,
-        options?: Web3ModuleOptions
-    );
+    constructor(provider: provider, net?: net.Socket);
 
     static modules: Modules;
     static readonly givenProvider: any;

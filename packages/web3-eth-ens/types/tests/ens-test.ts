@@ -29,9 +29,6 @@ const ens = new Ens(
 // $ExpectType Registry
 ens.registry;
 
-// $ExpectType TransactionSigner
-ens.transactionSigner;
-
 // $ExpectType Promise<Contract>
 ens.resolver('name');
 
