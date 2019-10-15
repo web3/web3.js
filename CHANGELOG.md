@@ -73,3 +73,4 @@ Released with 1.0.0-beta.37 code base.
 - Ensure the immutability of the `tx` object passed to function `signTransaction` (#2190)
 - Gas check fixed (#2381)
 - Signing issues #1998, #2033, and #1074 fixed (#3125)
+- Fix hexToNumber and hexToNumberString prefix validation (#3086)
