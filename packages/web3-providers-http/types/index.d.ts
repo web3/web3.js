@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file http-provider-test.ts
+ * @file index.d.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */

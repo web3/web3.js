@@ -1,5 +1,3 @@
-import * as net from 'net';
-
 /*
     This file is part of web3.js.
 
@@ -17,10 +15,13 @@ import * as net from 'net';
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file http-provider-test.ts
+ * @file index.d.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
+
+import * as net from 'net';
+
 export class AbstractSocketProvider {
     constructor(connection: any, timeout?: number);
 
