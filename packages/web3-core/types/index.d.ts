@@ -19,19 +19,8 @@
  */
 
 import * as net from 'net';
+import { AbstractMethod, AbstractMethodFactory } from 'web3-core-method';
 import BN = require('bn.js');
-import {AbstractMethodFactory} from 'web3-core-method';
-import {
-    BatchRequest,
-    Web3EthereumProvider,
-    HttpProvider,
-    HttpProviderOptions,
-    IpcProvider,
-    provider,
-    WebsocketProvider,
-    CustomProvider,
-    WebsocketProviderOptions
-} from 'web3-providers';
 
 export class AbstractWeb3Module {
     constructor(
@@ -50,7 +39,12 @@ export class AbstractWeb3Module {
     defaultGas: number;
     static readonly providers: Providers;
     defaultAccount: string | null;
-    readonly currentProvider: Web3EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider | CustomProvider;
+    readonly currentProvider:
+        | Web3EthereumProvider
+        | HttpProvider
+        | IpcProvider
+        | WebsocketProvider
+        | CustomProvider;
     readonly givenProvider: any;
 
     setProvider(provider: provider, net?: net.Socket): boolean;
@@ -85,17 +79,32 @@ export interface Web3ModuleOptions {
 }
 
 export interface Providers {
-    HttpProvider: new (host: string, options?: HttpProviderOptions) => HttpProvider;
-    WebsocketProvider: new (host: string, options?: WebsocketProviderOptions) => WebsocketProvider;
+    HttpProvider: new (
+        host: string,
+        options?: HttpProviderOptions
+    ) => HttpProvider;
+    WebsocketProvider: new (
+        host: string,
+        options?: WebsocketProviderOptions
+    ) => WebsocketProvider;
     IpcProvider: new (path: string, net: any) => IpcProvider;
 }
 
 export interface PromiEvent<T> extends Promise<T> {
-    once(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>;
+    once(
+        type: 'transactionHash',
+        handler: (receipt: string) => void
+    ): PromiEvent<T>;
 
-    once(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>;
+    once(
+        type: 'receipt',
+        handler: (receipt: TransactionReceipt) => void
+    ): PromiEvent<T>;
 
-    once(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>;
+    once(
+        type: 'confirmation',
+        handler: (confNumber: number, receipt: TransactionReceipt) => void
+    ): PromiEvent<T>;
 
     once(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
 
@@ -104,11 +113,20 @@ export interface PromiEvent<T> extends Promise<T> {
         handler: (error: Error | TransactionReceipt | string) => void
     ): PromiEvent<T>;
 
-    on(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>;
+    on(
+        type: 'transactionHash',
+        handler: (receipt: string) => void
+    ): PromiEvent<T>;
 
-    on(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>;
+    on(
+        type: 'receipt',
+        handler: (receipt: TransactionReceipt) => void
+    ): PromiEvent<T>;
 
-    on(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>;
+    on(
+        type: 'confirmation',
+        handler: (confNumber: number, receipt: TransactionReceipt) => void
+    ): PromiEvent<T>;
 
     on(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
 
@@ -156,7 +174,7 @@ export interface RLPEncodedTransaction {
         s: string;
         v: string;
         hash: string;
-    }
+    };
 }
 
 export interface TransactionReceipt {
@@ -186,7 +204,7 @@ export interface EventLog {
     transactionHash: string;
     blockHash: string;
     blockNumber: number;
-    raw?: {data: string; topics: any[]};
+    raw?: { data: string; topics: any[] };
 }
 
 export interface Log {
@@ -228,10 +246,10 @@ export interface NodeInfo {
     listenAddr: string;
     name: string;
     ports: {
-      discovery: string | number;
-      listener: string | number;
+        discovery: string | number;
+        listener: string | number;
     };
-    protocols: any // Any because it's not documented what each protocol (eth, shh etc.) is defining here
+    protocols: any; // Any because it's not documented what each protocol (eth, shh etc.) is defining here
 }
 
 export interface PeerInfo {
@@ -246,5 +264,194 @@ export interface PeerInfo {
 }
 
 export interface TransactionSigner {
-    sign(txObject: TransactionConfig): Promise<SignedTransaction>
+    sign(txObject: TransactionConfig): Promise<SignedTransaction>;
+}
+
+// put all the `web3-provider` typings in here so we can get to them everywhere as this module does not exist in 1.x
+
+export class BatchRequest {
+    constructor(moduleInstance: AbstractWeb3Module);
+
+    add(method: AbstractMethod): void;
+
+    execute(): Promise<BatchError | BatchResponse>;
+}
+
+export interface BatchError {
+    errors: BatchErrorItem[];
+    response: any[];
+}
+
+export interface BatchErrorItem {
+    error: Error;
+    method: AbstractMethod;
+}
+
+export interface BatchResponse {
+    methods: AbstractMethod[];
+    response: any[];
+}
+
+export class ProviderDetector {
+    static detect(): provider | undefined;
+}
+
+export class ProvidersModuleFactory {
+    createBatchRequest(moduleInstance: AbstractWeb3Module): BatchRequest;
+
+    createProviderResolver(): ProviderResolver;
+
+    createHttpProvider(url: string): HttpProvider;
+
+    createWebsocketProvider(url: string): WebsocketProvider;
+
+    createIpcProvider(path: string, net: net.Server): IpcProvider;
+
+    createWeb3EthereumProvider(connection: object): Web3EthereumProvider;
+}
+
+export class HttpProvider {
+    constructor(host: string, options?: HttpProviderOptions);
+
+    host: string;
+    connected: boolean;
+
+    supportsSubscriptions(): boolean;
+
+    send(method: string, parameters: any[]): Promise<any>;
+
+    sendBatch(
+        methods: AbstractMethod[],
+        moduleInstance: AbstractWeb3Module
+    ): Promise<any[]>;
+
+    disconnect(): boolean;
+}
+
+export class CustomProvider {
+    constructor(injectedProvider: any);
+
+    host: string;
+
+    supportsSubscriptions(): boolean;
+
+    send(method: string, parameters: any[]): Promise<any>;
+
+    sendBatch(
+        methods: AbstractMethod[],
+        moduleInstance: AbstractWeb3Module
+    ): Promise<any[]>;
+}
+
+export class AbstractSocketProvider {
+    constructor(connection: any, timeout?: number);
+
+    host: string;
+    connected: boolean;
+
+    supportsSubscriptions(): boolean;
+
+    registerEventListeners(): void;
+
+    send(method: string, parameters: any[]): Promise<any>;
+
+    sendBatch(
+        methods: AbstractMethod[],
+        moduleInstance: AbstractWeb3Module
+    ): Promise<any[]>;
+
+    subscribe(
+        subscribeMethod: string,
+        subscriptionMethod: string,
+        parameters: any[]
+    ): Promise<string>;
+
+    unsubscribe(
+        subscriptionId: string,
+        unsubscribeMethod: string
+    ): Promise<boolean>;
+
+    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>;
+
+    on(type: string, callback: () => void): void;
+
+    removeListener(type: string, callback: () => void): void;
+
+    removeAllListeners(type: string): void;
+
+    reset(): void;
+
+    reconnect(): void;
+
+    disconnect(code: number, reason: string): void;
+}
+
+export class IpcProvider extends AbstractSocketProvider {
+    constructor(path: string, net: net.Server);
+}
+
+export class WebsocketProvider extends AbstractSocketProvider {
+    constructor(host: string, options?: WebsocketProviderOptions);
+
+    isConnecting(): boolean;
+}
+
+export class Web3EthereumProvider extends AbstractSocketProvider {
+    constructor(ethereumProvider: any);
+}
+
+export class JsonRpcMapper {
+    static toPayload(method: string, params: any[]): JsonRpcPayload;
+}
+
+export class ProviderResolver {
+    resolve(provider: provider, net: net.Socket): provider;
+}
+
+export class JsonRpcResponseValidator {
+    static validate(
+        response: JsonRpcPayload[] | JsonRpcPayload,
+        payload?: object
+    ): boolean;
+
+    static isResponseItemValid(response: JsonRpcPayload): boolean;
+}
+
+export type provider =
+    | HttpProvider
+    | IpcProvider
+    | WebsocketProvider
+    | Web3EthereumProvider
+    | CustomProvider
+    | string
+    | null;
+
+export interface JsonRpcPayload {
+    jsonrpc: string;
+    method: string;
+    params: any[];
+    id?: string | number;
+}
+
+export interface HttpHeader {
+    name: string;
+    value: string;
+}
+
+export interface HttpProviderOptions {
+    host?: string;
+    timeout?: number;
+    headers?: HttpHeader[];
+    withCredentials?: boolean;
+}
+
+export interface WebsocketProviderOptions {
+    host?: string;
+    timeout?: number;
+    reconnectDelay?: number;
+    headers?: {};
+    protocol?: string;
+    clientConfig?: string;
+    requestOptions?: object;
+    origin?: string;
 }

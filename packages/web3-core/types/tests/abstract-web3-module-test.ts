@@ -17,8 +17,7 @@
  * @date 2018
  */
 import * as net from 'net';
-import {HttpProvider, IpcProvider, WebsocketProvider} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
+import { AbstractWeb3Module, HttpProvider, IpcProvider } from 'web3-core';
 
 const options = {
     timeout: 20000,
@@ -30,7 +29,10 @@ const options = {
     ]
 };
 const httpProvider = new HttpProvider('http://localhost:8545', options);
-const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', new net.Server());
+const ipcProvider = new IpcProvider(
+    '/Users/myuser/Library/Ethereum/geth.ipc',
+    new net.Server()
+);
 const abstractWeb3Module = new AbstractWeb3Module(httpProvider);
 
 // $ExpectType BatchRequest
