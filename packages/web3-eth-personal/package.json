@@ -9,10 +9,17 @@
     },
     "main": "src/index.js",
     "dependencies": {
+        "@types/node": "^12.6.1",
         "web3-core": "1.2.1",
         "web3-core-helpers": "1.2.1",
         "web3-core-method": "1.2.1",
         "web3-net": "1.2.1",
         "web3-utils": "1.2.1"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2",
+        "web3-eth-accounts": "1.2.1",
+        "web3-providers": "1.2.1"
     }
 }
