@@ -13,5 +13,9 @@
         "web3-core-method": "1.2.1",
         "web3-core-subscriptions": "1.2.1",
         "web3-net": "1.2.1"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     }
 }
