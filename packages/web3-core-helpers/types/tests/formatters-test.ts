@@ -17,8 +17,7 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'web3-core';
-import {formatters} from 'web3-core-helpers';
+import { formatters } from 'web3-core-helpers';
 
 // $ExpectType number
 formatters.outputBigNumberFormatter(100);
@@ -31,9 +30,6 @@ formatters.inputAddressFormatter('0x0');
 
 // $ExpectType boolean
 formatters.isPredefinedBlockNumber('latest');
-
-// $ExpectType string
-formatters.inputDefaultBlockNumberFormatter('0x0', new AbstractWeb3Module('http://localhost:8545'));
 
 // $ExpectType string | number
 formatters.inputBlockNumberFormatter('0x0');

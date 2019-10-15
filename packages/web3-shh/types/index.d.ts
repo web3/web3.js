@@ -17,10 +17,9 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
-import {provider} from 'web3-providers';
-import {Network} from 'web3-net';
 import * as net from 'net';
+import { AbstractWeb3Module, provider, Web3ModuleOptions } from 'web3-core';
+import { Network } from 'web3-net';
 
 export class Shh extends AbstractWeb3Module {
     constructor(

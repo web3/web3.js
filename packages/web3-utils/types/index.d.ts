@@ -21,7 +21,6 @@
  */
 
 import BN = require('bn.js');
-import {Buffer} from 'buffer';
 
 export type Unit =
     | 'noether'

@@ -17,24 +17,32 @@
  * @date 2018
  */
 
-import {Network} from 'web3-net';
+import { Network } from 'web3-net';
 
 const network = new Network('http://localhost:5000');
 
 // $ExpectType Promise<string>
-network.getNetworkType((error, returnValue) => { console.log(returnValue) });
+network.getNetworkType((error, returnValue) => {
+    console.log(returnValue);
+});
 
 // $ExpectType Promise<number>
 network.getId();
 // $ExpectType Promise<number>
-network.getId((error: Error, id: number) => { console.log(id) });
+network.getId((error: Error, id: number) => {
+    console.log(id);
+});
 
 // $ExpectType Promise<boolean>
 network.isListening();
 // $ExpectType Promise<boolean>
-network.isListening((error: Error, listening: boolean) => { console.log(listening) });
+network.isListening((error: Error, listening: boolean) => {
+    console.log(listening);
+});
 
 // $ExpectType Promise<number>
 network.getPeerCount();
 // $ExpectType Promise<number>
-network.getPeerCount((error: Error, peerCount: number) => { console.log(peerCount) });
+network.getPeerCount((error: Error, peerCount: number) => {
+    console.log(peerCount);
+});

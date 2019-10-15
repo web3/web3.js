@@ -17,9 +17,8 @@
  * @date 2018
  */
 
-import {Utils} from 'web3-utils';
-import {AbstractWeb3Module, PromiEvent} from 'web3-core';
-import {formatters} from 'web3-core-helpers';
+import { formatters } from 'web3-core-helpers';
+import { Utils } from 'web3-utils';
 
 export class AbstractMethod {
     constructor(
@@ -27,12 +26,12 @@ export class AbstractMethod {
         parametersAmount: number,
         utils: Utils,
         formatters: formatters,
-        moduleInstance: AbstractWeb3Module
+        moduleInstance: any
     );
 
     utils: Utils;
     formatters: formatters;
-    promiEvent: PromiEvent<any>;
+    promiEvent: any;
     rpcMethod: string;
     parametersAmount: number;
     parameters: any[];
@@ -47,11 +46,11 @@ export class AbstractMethod {
 
     callback(error: string | Error, response: any): void;
 
-    beforeExecution(moduleInstance: AbstractWeb3Module): void;
+    beforeExecution(moduleInstance: any): void;
 
     afterExecution(response: any): any;
 
-    execute(): Promise<any> | PromiEvent<any> | string;
+    execute(): Promise<any> | any | string;
 }
 
 export class AbstractMethodFactory {
@@ -60,5 +59,5 @@ export class AbstractMethodFactory {
     methods: null | object;
     hasMethod: boolean;
 
-    createMethod(name: string, moduleInstance: AbstractWeb3Module): AbstractMethod;
+    createMethod(name: string, moduleInstance: any): AbstractMethod;
 }

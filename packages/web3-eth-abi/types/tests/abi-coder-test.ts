@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {AbiCoder} from 'web3-eth-abi';
+import { AbiCoder } from 'web3-eth-abi';
 
 const abiCoder = new AbiCoder();
 
@@ -30,13 +30,16 @@ abiCoder.encodeFunctionSignature('myMethod(uint256,string)');
 abiCoder.encodeFunctionSignature({
     name: 'myMethod',
     type: 'function',
-    inputs: [{
-        type: 'uint256',
-        name: 'myNumber'
-    }, {
-        type: 'string',
-        name: 'myString'
-    }]
+    inputs: [
+        {
+            type: 'uint256',
+            name: 'myNumber'
+        },
+        {
+            type: 'string',
+            name: 'myString'
+        }
+    ]
 });
 
 // $ExpectError
@@ -64,13 +67,16 @@ abiCoder.encodeEventSignature('myEvent(uint256,bytes32)');
 abiCoder.encodeFunctionSignature({
     name: 'myEvent',
     type: 'event',
-    inputs: [{
-        type: 'uint256',
-        name: 'myNumber'
-    }, {
-        type: 'bytes32',
-        name: 'myBytes'
-    }]
+    inputs: [
+        {
+            type: 'uint256',
+            name: 'myNumber'
+        },
+        {
+            type: 'bytes32',
+            name: 'myBytes'
+        }
+    ]
 });
 
 // $ExpectError
@@ -126,7 +132,10 @@ abiCoder.encodeParameter(undefined, ['0xdf3234', '0xfdfd']);
 // $ExpectType string
 abiCoder.encodeParameters(['uint256', 'string'], ['2345675643', 'Hello!%']);
 // $ExpectType string
-abiCoder.encodeParameters(['uint8[]', 'bytes32'], [['34', '434'], '0x324567fff']);
+abiCoder.encodeParameters(
+    ['uint8[]', 'bytes32'],
+    [['34', '434'], '0x324567fff']
+);
 // $ExpectType string
 abiCoder.encodeParameters(
     [
@@ -165,17 +174,23 @@ abiCoder.encodeParameters(null, ['2345675643', 'Hello!%']);
 abiCoder.encodeParameters(undefined, ['2345675643', 'Hello!%']);
 
 // $ExpectType string
-abiCoder.encodeFunctionCall({
-    name: 'myMethod',
-    type: 'function',
-    inputs: [{
-        type: 'uint256',
-        name: 'myNumber'
-    }, {
-        type: 'string',
-        name: 'myString'
-    }]
-}, ['2345675643', 'Hello!%']);
+abiCoder.encodeFunctionCall(
+    {
+        name: 'myMethod',
+        type: 'function',
+        inputs: [
+            {
+                type: 'uint256',
+                name: 'myNumber'
+            },
+            {
+                type: 'string',
+                name: 'myString'
+            }
+        ]
+    },
+    ['2345675643', 'Hello!%']
+);
 
 // $ExpectError
 abiCoder.encodeFunctionCall([345], ['2345675643', 'Hello!%']);
@@ -190,90 +205,132 @@ abiCoder.encodeFunctionCall(null, ['2345675643', 'Hello!%']);
 // $ExpectError
 abiCoder.encodeFunctionCall(undefined, ['2345675643', 'Hello!%']);
 
-abiCoder.encodeFunctionCall({
-    name: 'myMethod',
-    type: 'function',
-    inputs: [{
-        type: 'uint256',
-        name: 'myNumber'
-    }, {
-        type: 'string',
-        name: 'myString'
-    }]
-    // $ExpectError
-}, 345);
+abiCoder.encodeFunctionCall(
+    {
+        name: 'myMethod',
+        type: 'function',
+        inputs: [
+            {
+                type: 'uint256',
+                name: 'myNumber'
+            },
+            {
+                type: 'string',
+                name: 'myString'
+            }
+        ]
+        // $ExpectError
+    },
+    345
+);
 
-abiCoder.encodeFunctionCall({
-    name: 'myMethod',
-    type: 'function',
-    inputs: [{
-        type: 'uint256',
-        name: 'myNumber'
-    }, {
-        type: 'string',
-        name: 'myString'
-    }]
-    // $ExpectError
-}, [345]);
+abiCoder.encodeFunctionCall(
+    {
+        name: 'myMethod',
+        type: 'function',
+        inputs: [
+            {
+                type: 'uint256',
+                name: 'myNumber'
+            },
+            {
+                type: 'string',
+                name: 'myString'
+            }
+        ]
+        // $ExpectError
+    },
+    [345]
+);
 
-abiCoder.encodeFunctionCall({
-    name: 'myMethod',
-    type: 'function',
-    inputs: [{
-        type: 'uint256',
-        name: 'myNumber'
-    }, {
-        type: 'string',
-        name: 'myString'
-    }]
-    // $ExpectError
-}, true);
+abiCoder.encodeFunctionCall(
+    {
+        name: 'myMethod',
+        type: 'function',
+        inputs: [
+            {
+                type: 'uint256',
+                name: 'myNumber'
+            },
+            {
+                type: 'string',
+                name: 'myString'
+            }
+        ]
+        // $ExpectError
+    },
+    true
+);
 
-abiCoder.encodeFunctionCall({
-    name: 'myMethod',
-    type: 'function',
-    inputs: [{
-        type: 'uint256',
-        name: 'myNumber'
-    }, {
-        type: 'string',
-        name: 'myString'
-    }]
-    // $ExpectError
-}, null);
+abiCoder.encodeFunctionCall(
+    {
+        name: 'myMethod',
+        type: 'function',
+        inputs: [
+            {
+                type: 'uint256',
+                name: 'myNumber'
+            },
+            {
+                type: 'string',
+                name: 'myString'
+            }
+        ]
+        // $ExpectError
+    },
+    null
+);
 
-abiCoder.encodeFunctionCall({
-    name: 'myMethod',
-    type: 'function',
-    inputs: [{
-        type: 'uint256',
-        name: 'myNumber'
-    }, {
-        type: 'string',
-        name: 'myString'
-    }]
-    // $ExpectError
-}, undefined);
+abiCoder.encodeFunctionCall(
+    {
+        name: 'myMethod',
+        type: 'function',
+        inputs: [
+            {
+                type: 'uint256',
+                name: 'myNumber'
+            },
+            {
+                type: 'string',
+                name: 'myString'
+            }
+        ]
+        // $ExpectError
+    },
+    undefined
+);
 
 // $ExpectType { [key: string]: any; }
-abiCoder.decodeParameter('uint256', '0x0000000000000000000000000000000000000000000000000000000000000010');
+abiCoder.decodeParameter(
+    'uint256',
+    '0x0000000000000000000000000000000000000000000000000000000000000010'
+);
 // $ExpectType { [key: string]: any; }
-abiCoder.decodeParameter('uint256', '0x0000000000000000000000000000000000000000000000000000000000000010');
+abiCoder.decodeParameter(
+    'uint256',
+    '0x0000000000000000000000000000000000000000000000000000000000000010'
+);
 // $ExpectType { [key: string]: any; }
-abiCoder.decodeParameter('uint256', '0x0000000000000000000000000000000000000000000000000000000000000010');
+abiCoder.decodeParameter(
+    'uint256',
+    '0x0000000000000000000000000000000000000000000000000000000000000010'
+);
 // $ExpectType { [key: string]: any; }
-abiCoder.decodeParameter({
-    ParentStruct: {
-        propertyOne: 'uint256',
-        propertyTwo: 'uint256',
-        childStruct: {
+abiCoder.decodeParameter(
+    {
+        ParentStruct: {
             propertyOne: 'uint256',
-            propertyTwo: 'uint256'
+            propertyTwo: 'uint256',
+            childStruct: {
+                propertyOne: 'uint256',
+                propertyTwo: 'uint256'
+            }
         }
-    }
-}, `0x000000000000000000000000000000000000000000000000000000000000002a00000000000000000000000000000000000000000000000000
+    },
+    `0x000000000000000000000000000000000000000000000000000000000000002a00000000000000000000000000000000000000000000000000
     00000000000038000000000000000000000000000000000000000000000000000000000000002d00000000000000000000000000000000000000
-    0000000000000000000000004e`);
+    0000000000000000000000004e`
+);
 
 // $ExpectError
 abiCoder.decodeParameter('uint256', [345]);
@@ -289,40 +346,67 @@ abiCoder.decodeParameter('uint256', null);
 abiCoder.decodeParameter('uint256', undefined);
 
 // $ExpectType { [key: string]: any; }
-abiCoder.decodeParameters(['string', 'uint256'], '0x0000000000000000000000000000000000000000000000000000000000000010');
+abiCoder.decodeParameters(
+    ['string', 'uint256'],
+    '0x0000000000000000000000000000000000000000000000000000000000000010'
+);
 // $ExpectType { [key: string]: any; }
-abiCoder.decodeParameters([{
-    type: 'string',
-    name: 'myString'
-}, {
-    type: 'uint256',
-    name: 'myNumber'
-}], '0x0000000000000000000000000000000000000000000000000000000000000010');
+abiCoder.decodeParameters(
+    [
+        {
+            type: 'string',
+            name: 'myString'
+        },
+        {
+            type: 'uint256',
+            name: 'myNumber'
+        }
+    ],
+    '0x0000000000000000000000000000000000000000000000000000000000000010'
+);
 // $ExpectType { [key: string]: any; }
-abiCoder.decodeParameters([
-    'uint8[]',
-    {
-        ParentStruct: {
-            propertyOne: 'uint256',
-            propertyTwo: 'uint256',
-            childStruct: {
+abiCoder.decodeParameters(
+    [
+        'uint8[]',
+        {
+            ParentStruct: {
                 propertyOne: 'uint256',
-                propertyTwo: 'uint256'
+                propertyTwo: 'uint256',
+                childStruct: {
+                    propertyOne: 'uint256',
+                    propertyTwo: 'uint256'
+                }
             }
         }
-    }
-], '0x0000000000000000000000000000000000000000000000000000000000000010');
+    ],
+    '0x0000000000000000000000000000000000000000000000000000000000000010'
+);
 
 // $ExpectError
-abiCoder.decodeParameters('uint256', '0x0000000000000000000000000000000000000000000000000000000000000010');
+abiCoder.decodeParameters(
+    'uint256',
+    '0x0000000000000000000000000000000000000000000000000000000000000010'
+);
 // $ExpectError
-abiCoder.decodeParameters(453, '0x0000000000000000000000000000000000000000000000000000000000000010');
+abiCoder.decodeParameters(
+    453,
+    '0x0000000000000000000000000000000000000000000000000000000000000010'
+);
 // $ExpectError
-abiCoder.decodeParameters(true, '0x0000000000000000000000000000000000000000000000000000000000000010');
+abiCoder.decodeParameters(
+    true,
+    '0x0000000000000000000000000000000000000000000000000000000000000010'
+);
 // $ExpectError
-abiCoder.decodeParameters(null, '0x0000000000000000000000000000000000000000000000000000000000000010');
+abiCoder.decodeParameters(
+    null,
+    '0x0000000000000000000000000000000000000000000000000000000000000010'
+);
 // $ExpectError
-abiCoder.decodeParameters(undefined, '0x0000000000000000000000000000000000000000000000000000000000000010');
+abiCoder.decodeParameters(
+    undefined,
+    '0x0000000000000000000000000000000000000000000000000000000000000010'
+);
 // $ExpectError
 abiCoder.decodeParameters(['string', 'uint256'], 345);
 // $ExpectError
@@ -342,11 +426,13 @@ abiCoder.decodeLog(
         {
             type: 'string',
             name: 'myString'
-        }, {
+        },
+        {
             type: 'uint256',
             name: 'myNumber',
             indexed: true
-        }, {
+        },
+        {
             type: 'uint8',
             name: 'mySmallNumber',
             indexed: true
@@ -355,49 +441,80 @@ abiCoder.decodeLog(
     `0x0000000000000000000000000000000000000000000000000000000000000020000000000000000
      000000000000000000000000000000000000000000000000748656c6c6f2521000000000000000000
      00000000000000000000000000000000`,
-    ['0x000000000000000000000000000000000000000000000000000000000000f310', '0x0000000000000000000000000000000000000000000000000000000000000010']);
+    [
+        '0x000000000000000000000000000000000000000000000000000000000000f310',
+        '0x0000000000000000000000000000000000000000000000000000000000000010'
+    ]
+);
 
 // $ExpectError
-abiCoder.decodeLog(['string'],
+abiCoder.decodeLog(
+    ['string'],
     `0x0000000000000000000000000000000000000000000000000000000000000020000000000000000
      000000000000000000000000000000000000000000000000748656c6c6f2521000000000000000000
      00000000000000000000000000000000`,
-    ['0x000000000000000000000000000000000000000000000000000000000000f310', '0x0000000000000000000000000000000000000000000000000000000000000010']);
+    [
+        '0x000000000000000000000000000000000000000000000000000000000000f310',
+        '0x0000000000000000000000000000000000000000000000000000000000000010'
+    ]
+);
 // $ExpectError
-abiCoder.decodeLog([345],
+abiCoder.decodeLog(
+    [345],
     `0x0000000000000000000000000000000000000000000000000000000000000020000000000000000
      000000000000000000000000000000000000000000000000748656c6c6f2521000000000000000000
      00000000000000000000000000000000`,
-    ['0x000000000000000000000000000000000000000000000000000000000000f310', '0x0000000000000000000000000000000000000000000000000000000000000010']);
+    [
+        '0x000000000000000000000000000000000000000000000000000000000000f310',
+        '0x0000000000000000000000000000000000000000000000000000000000000010'
+    ]
+);
 // $ExpectError
-abiCoder.decodeLog(true,
+abiCoder.decodeLog(
+    true,
     `0x0000000000000000000000000000000000000000000000000000000000000020000000000000000
      000000000000000000000000000000000000000000000000748656c6c6f2521000000000000000000
      00000000000000000000000000000000`,
-    ['0x000000000000000000000000000000000000000000000000000000000000f310', '0x0000000000000000000000000000000000000000000000000000000000000010']);
+    [
+        '0x000000000000000000000000000000000000000000000000000000000000f310',
+        '0x0000000000000000000000000000000000000000000000000000000000000010'
+    ]
+);
 // $ExpectError
-abiCoder.decodeLog([undefined],
+abiCoder.decodeLog(
+    [undefined],
     `0x0000000000000000000000000000000000000000000000000000000000000020000000000000000
      000000000000000000000000000000000000000000000000748656c6c6f2521000000000000000000
      00000000000000000000000000000000`,
-    ['0x000000000000000000000000000000000000000000000000000000000000f310', '0x0000000000000000000000000000000000000000000000000000000000000010']);
+    [
+        '0x000000000000000000000000000000000000000000000000000000000000f310',
+        '0x0000000000000000000000000000000000000000000000000000000000000010'
+    ]
+);
 // $ExpectError
-abiCoder.decodeLog([null],
+abiCoder.decodeLog(
+    [null],
     `0x0000000000000000000000000000000000000000000000000000000000000020000000000000000
      000000000000000000000000000000000000000000000000748656c6c6f2521000000000000000000
      00000000000000000000000000000000`,
-    ['0x000000000000000000000000000000000000000000000000000000000000f310', '0x0000000000000000000000000000000000000000000000000000000000000010']);
+    [
+        '0x000000000000000000000000000000000000000000000000000000000000f310',
+        '0x0000000000000000000000000000000000000000000000000000000000000010'
+    ]
+);
 
 abiCoder.decodeLog(
     [
         {
             type: 'string',
             name: 'myString'
-        }, {
+        },
+        {
             type: 'uint256',
             name: 'myNumber',
             indexed: true
-        }, {
+        },
+        {
             type: 'uint8',
             name: 'mySmallNumber',
             indexed: true
@@ -405,18 +522,24 @@ abiCoder.decodeLog(
     ],
     // $ExpectError
     345,
-    ['0x000000000000000000000000000000000000000000000000000000000000f310', '0x0000000000000000000000000000000000000000000000000000000000000010']);
+    [
+        '0x000000000000000000000000000000000000000000000000000000000000f310',
+        '0x0000000000000000000000000000000000000000000000000000000000000010'
+    ]
+);
 
 abiCoder.decodeLog(
     [
         {
             type: 'string',
             name: 'myString'
-        }, {
+        },
+        {
             type: 'uint256',
             name: 'myNumber',
             indexed: true
-        }, {
+        },
+        {
             type: 'uint8',
             name: 'mySmallNumber',
             indexed: true
@@ -424,18 +547,24 @@ abiCoder.decodeLog(
     ],
     // $ExpectError
     [345],
-    ['0x000000000000000000000000000000000000000000000000000000000000f310', '0x0000000000000000000000000000000000000000000000000000000000000010']);
+    [
+        '0x000000000000000000000000000000000000000000000000000000000000f310',
+        '0x0000000000000000000000000000000000000000000000000000000000000010'
+    ]
+);
 
 abiCoder.decodeLog(
     [
         {
             type: 'string',
             name: 'myString'
-        }, {
+        },
+        {
             type: 'uint256',
             name: 'myNumber',
             indexed: true
-        }, {
+        },
+        {
             type: 'uint8',
             name: 'mySmallNumber',
             indexed: true
@@ -443,18 +572,24 @@ abiCoder.decodeLog(
     ],
     // $ExpectError
     ['string'],
-    ['0x000000000000000000000000000000000000000000000000000000000000f310', '0x0000000000000000000000000000000000000000000000000000000000000010']);
+    [
+        '0x000000000000000000000000000000000000000000000000000000000000f310',
+        '0x0000000000000000000000000000000000000000000000000000000000000010'
+    ]
+);
 
 abiCoder.decodeLog(
     [
         {
             type: 'string',
             name: 'myString'
-        }, {
+        },
+        {
             type: 'uint256',
             name: 'myNumber',
             indexed: true
-        }, {
+        },
+        {
             type: 'uint8',
             name: 'mySmallNumber',
             indexed: true
@@ -462,18 +597,24 @@ abiCoder.decodeLog(
     ],
     // $ExpectError
     true,
-    ['0x000000000000000000000000000000000000000000000000000000000000f310', '0x0000000000000000000000000000000000000000000000000000000000000010']);
+    [
+        '0x000000000000000000000000000000000000000000000000000000000000f310',
+        '0x0000000000000000000000000000000000000000000000000000000000000010'
+    ]
+);
 
 abiCoder.decodeLog(
     [
         {
             type: 'string',
             name: 'myString'
-        }, {
+        },
+        {
             type: 'uint256',
             name: 'myNumber',
             indexed: true
-        }, {
+        },
+        {
             type: 'uint8',
             name: 'mySmallNumber',
             indexed: true
@@ -481,18 +622,24 @@ abiCoder.decodeLog(
     ],
     // $ExpectError
     null,
-    ['0x000000000000000000000000000000000000000000000000000000000000f310', '0x0000000000000000000000000000000000000000000000000000000000000010']);
+    [
+        '0x000000000000000000000000000000000000000000000000000000000000f310',
+        '0x0000000000000000000000000000000000000000000000000000000000000010'
+    ]
+);
 
 abiCoder.decodeLog(
     [
         {
             type: 'string',
             name: 'myString'
-        }, {
+        },
+        {
             type: 'uint256',
             name: 'myNumber',
             indexed: true
-        }, {
+        },
+        {
             type: 'uint8',
             name: 'mySmallNumber',
             indexed: true
@@ -500,18 +647,24 @@ abiCoder.decodeLog(
     ],
     // $ExpectError
     undefined,
-    ['0x000000000000000000000000000000000000000000000000000000000000f310', '0x0000000000000000000000000000000000000000000000000000000000000010']);
+    [
+        '0x000000000000000000000000000000000000000000000000000000000000f310',
+        '0x0000000000000000000000000000000000000000000000000000000000000010'
+    ]
+);
 
 abiCoder.decodeLog(
     [
         {
             type: 'string',
             name: 'myString'
-        }, {
+        },
+        {
             type: 'uint256',
             name: 'myNumber',
             indexed: true
-        }, {
+        },
+        {
             type: 'uint8',
             name: 'mySmallNumber',
             indexed: true
@@ -521,18 +674,21 @@ abiCoder.decodeLog(
      000000000000000000000000000000000000000000000000748656c6c6f2521000000000000000000
      00000000000000000000000000000000`,
     // $ExpectError
-    345);
+    345
+);
 
 abiCoder.decodeLog(
     [
         {
             type: 'string',
             name: 'myString'
-        }, {
+        },
+        {
             type: 'uint256',
             name: 'myNumber',
             indexed: true
-        }, {
+        },
+        {
             type: 'uint8',
             name: 'mySmallNumber',
             indexed: true
@@ -542,18 +698,21 @@ abiCoder.decodeLog(
      000000000000000000000000000000000000000000000000748656c6c6f2521000000000000000000
      00000000000000000000000000000000`,
     // $ExpectError
-    [345]);
+    [345]
+);
 
 abiCoder.decodeLog(
     [
         {
             type: 'string',
             name: 'myString'
-        }, {
+        },
+        {
             type: 'uint256',
             name: 'myNumber',
             indexed: true
-        }, {
+        },
+        {
             type: 'uint8',
             name: 'mySmallNumber',
             indexed: true
@@ -563,18 +722,21 @@ abiCoder.decodeLog(
      000000000000000000000000000000000000000000000000748656c6c6f2521000000000000000000
      00000000000000000000000000000000`,
     // $ExpectError
-    null);
+    null
+);
 
 abiCoder.decodeLog(
     [
         {
             type: 'string',
             name: 'myString'
-        }, {
+        },
+        {
             type: 'uint256',
             name: 'myNumber',
             indexed: true
-        }, {
+        },
+        {
             type: 'uint8',
             name: 'mySmallNumber',
             indexed: true
@@ -584,4 +746,5 @@ abiCoder.decodeLog(
      000000000000000000000000000000000000000000000000748656c6c6f2521000000000000000000
      00000000000000000000000000000000`,
     // $ExpectError
-    undefined);
+    undefined
+);

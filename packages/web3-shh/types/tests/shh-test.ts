@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {Shh, Info, Notification} from 'web3-shh';
+import { Info, Notification, Shh } from 'web3-shh';
 
 const shh = new Shh('https://localhost:5000');
 
@@ -82,7 +82,9 @@ shh.newKeyPair();
 shh.newKeyPair((error: Error, key: string) => {});
 
 // $ExpectType Promise<string>
-shh.addPrivateKey('0x8bda3abeb454847b515fa9b404cede50b1cc63cfdeddd4999d074284b4c21e15');
+shh.addPrivateKey(
+    '0x8bda3abeb454847b515fa9b404cede50b1cc63cfdeddd4999d074284b4c21e15'
+);
 // $ExpectType Promise<string>
 shh.addPrivateKey(
     '0x8bda3abeb454847b515fa9b404cede50b1cc63cfdeddd4999d074284b4c21e15',
@@ -90,7 +92,9 @@ shh.addPrivateKey(
 );
 
 // $ExpectType Promise<boolean>
-shh.deleteKeyPair('3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f');
+shh.deleteKeyPair(
+    '3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f'
+);
 // $ExpectType Promise<boolean>
 shh.deleteKeyPair(
     '3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
@@ -98,7 +102,9 @@ shh.deleteKeyPair(
 );
 
 // $ExpectType Promise<boolean>
-shh.hasKeyPair('fe22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f');
+shh.hasKeyPair(
+    'fe22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f'
+);
 // $ExpectType Promise<boolean>
 shh.hasKeyPair(
     'fe22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
@@ -106,7 +112,9 @@ shh.hasKeyPair(
 );
 
 // $ExpectType Promise<string>
-shh.getPublicKey('3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f');
+shh.getPublicKey(
+    '3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f'
+);
 // $ExpectType Promise<string>
 shh.getPublicKey(
     '3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
@@ -114,7 +122,9 @@ shh.getPublicKey(
 );
 
 // $ExpectType Promise<string>
-shh.getPrivateKey('3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f');
+shh.getPrivateKey(
+    '3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f'
+);
 // $ExpectType Promise<string>
 shh.getPrivateKey(
     '3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
@@ -127,17 +137,27 @@ shh.newSymKey();
 shh.newSymKey((error: Error, key: string) => {});
 
 // $ExpectType Promise<string>
-shh.addSymKey('0x5e11b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f');
+shh.addSymKey(
+    '0x5e11b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f'
+);
 // $ExpectType Promise<string>
-shh.addSymKey('0x5e11b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f', (error: Error, key: string) => {});
+shh.addSymKey(
+    '0x5e11b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
+    (error: Error, key: string) => {}
+);
 
 // $ExpectType Promise<string>
 shh.generateSymKeyFromPassword('Never use this password - password!');
 // $ExpectType Promise<string>
-shh.generateSymKeyFromPassword('Never use this password - password!', (error: Error, key: string) => {});
+shh.generateSymKeyFromPassword(
+    'Never use this password - password!',
+    (error: Error, key: string) => {}
+);
 
 // $ExpectType Promise<boolean>
-shh.hasSymKey('f6dcf21ed6a17bd78d8c4c63195ab997b3b65ea683705501eae82d32667adc92');
+shh.hasSymKey(
+    'f6dcf21ed6a17bd78d8c4c63195ab997b3b65ea683705501eae82d32667adc92'
+);
 // $ExpectType Promise<boolean>
 shh.hasSymKey(
     'f6dcf21ed6a17bd78d8c4c63195ab997b3b65ea683705501eae82d32667adc92',
@@ -145,12 +165,19 @@ shh.hasSymKey(
 );
 
 // $ExpectType Promise<string>
-shh.getSymKey('af33b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f');
+shh.getSymKey(
+    'af33b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f'
+);
 // $ExpectType Promise<string>
-shh.getSymKey('af33b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f', (error: Error, key: string) => {});
+shh.getSymKey(
+    'af33b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
+    (error: Error, key: string) => {}
+);
 
 // $ExpectType Promise<boolean>
-shh.deleteSymKey('bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f');
+shh.deleteSymKey(
+    'bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f'
+);
 // $ExpectType Promise<boolean>
 shh.deleteSymKey(
     'bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
@@ -183,7 +210,8 @@ shh.post(
 
 // $ExpectType Subscribe
 shh.subscribe('messages', {
-    symKeyID: 'bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
+    symKeyID:
+        'bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
     sig:
         '0x04d1574d4eab8f3dde4d2dc7ed2c4d699d77cbbdd09167b8fffa099652ce4df00c4c6e0263eafe05007a46fdf0c8d32b11aeabcd3abbc7b2bc2bb967368a68e9c6',
     ttl: 20,
@@ -194,7 +222,8 @@ shh.subscribe('messages', {
 shh.subscribe(
     'messages',
     {
-        symKeyID: 'bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
+        symKeyID:
+            'bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
         sig:
             '0x04d1574d4eab8f3dde4d2dc7ed2c4d699d77cbbdd09167b8fffa099652ce4df00c4c6e0263eafe05007a46fdf0c8d32b11aeabcd3abbc7b2bc2bb967368a68e9c6',
         ttl: 20,
@@ -208,7 +237,11 @@ shh.subscribe(
 shh.newMessageFilter();
 
 // $ExpectType Promise<boolean>
-shh.deleteMessageFilter('2b47fbafb3cce24570812a82e6e93cd9e2551bbc4823f6548ff0d82d2206b326');
+shh.deleteMessageFilter(
+    '2b47fbafb3cce24570812a82e6e93cd9e2551bbc4823f6548ff0d82d2206b326'
+);
 
 // $ExpectType Promise<Notification[]>
-shh.getFilterMessages('2b47fbafb3cce24570812a82e6e93cd9e2551bbc4823f6548ff0d82d2206b326');
+shh.getFilterMessages(
+    '2b47fbafb3cce24570812a82e6e93cd9e2551bbc4823f6548ff0d82d2206b326'
+);

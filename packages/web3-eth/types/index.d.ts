@@ -19,27 +19,16 @@
  * @date 2018
  */
 
-import {provider} from 'web3-providers';
-import {
-    AbstractWeb3Module,
-    Log,
-    PromiEvent,
-    RLPEncodedTransaction,
-    Transaction,
-    TransactionConfig,
-    TransactionReceipt,
-    Web3ModuleOptions,
-    TransactionSigner
-} from 'web3-core';
-import {Contract, ContractOptions} from 'web3-eth-contract';
-import {Iban} from 'web3-eth-iban';
-import {Accounts} from 'web3-eth-accounts';
-import {AbiCoder} from 'web3-eth-abi';
-import {Network} from 'web3-net';
-import {Personal} from 'web3-eth-personal';
-import {AbiItem} from 'web3-utils';
-import {Ens} from 'web3-eth-ens';
 import * as net from 'net';
+import { AbstractWeb3Module, Log, PromiEvent, provider, RLPEncodedTransaction, Transaction, TransactionConfig, TransactionReceipt, TransactionSigner, Web3ModuleOptions } from 'web3-core';
+import { AbiCoder } from 'web3-eth-abi';
+import { Accounts } from 'web3-eth-accounts';
+import { Contract, ContractOptions } from 'web3-eth-contract';
+import { Ens } from 'web3-eth-ens';
+import { Iban } from 'web3-eth-iban';
+import { Personal } from 'web3-eth-personal';
+import { Network } from 'web3-net';
+import { AbiItem } from 'web3-utils';
 
 export class Eth extends AbstractWeb3Module {
     constructor(

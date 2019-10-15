@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {Iban, IndirectOptions} from 'web3-eth-iban';
+import { Iban, IndirectOptions } from 'web3-eth-iban';
 
 const iban = 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS';
 const address = '0x45cd08334aeedd8a06265b2ae302e3597d8faa28';
@@ -113,9 +113,9 @@ Iban.fromBban(null);
 Iban.fromBban(undefined);
 
 const indirectOptions: IndirectOptions = {
-    institution: "XREG",
-    identifier: "GAVOFYORK"
-}
+    institution: 'XREG',
+    identifier: 'GAVOFYORK'
+};
 
 // $ExpectType Iban
 Iban.createIndirect(indirectOptions);

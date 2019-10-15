@@ -17,61 +17,16 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module, SignedTransaction, TransactionConfig, Web3ModuleOptions} from 'web3-core';
-import {provider} from 'web3-providers';
-import * as net from 'net';
+import {
+    AccountsBase,
+    SignedTransaction,
+    TransactionConfig,
+    WalletBase
+} from 'web3-core';
 
-export class Accounts extends AbstractWeb3Module {
-    constructor(provider: provider, net?: net.Socket | null, options?: Web3ModuleOptions);
+export class Accounts extends AccountsBase {}
 
-    create(entropy?: string): Account;
-
-    privateKeyToAccount(privateKey: string): Account;
-
-    signTransaction(transactionConfig: TransactionConfig, privateKey: string, callback?: () => void): Promise<SignedTransaction>;
-
-    recoverTransaction(signature: string): string;
-
-    hashMessage(message: string): string;
-
-    sign(data: string, privateKey: string): Sign;
-
-    recover(signatureObject: SignatureObject): string;
-    recover(message: string, signature: string, preFixed?: boolean): string;
-    recover(message: string, v: string, r: string, s: string, preFixed?: boolean): string;
-
-    encrypt(privateKey: string, password: string): EncryptedKeystoreV3Json;
-
-    decrypt(keystoreJsonV3: EncryptedKeystoreV3Json, password: string): Account;
-
-    wallet: Wallet;
-}
-
-export class Wallet {
-    constructor(accounts: Accounts);
-
-    accountsIndex: number;
-    length: number;
-    defaultKeyName: string;
-
-    [key: number]: Account;
-
-    create(numberOfAccounts: number, entropy?: string): Wallet;
-
-    add(account: string | AddAccount): AddedAccount;
-
-    remove(account: string | number): boolean;
-
-    clear(): Wallet;
-
-    encrypt(password: string): EncryptedKeystoreV3Json[];
-
-    decrypt(keystoreArray: EncryptedKeystoreV3Json[], password: string): Wallet;
-
-    save(password: string, keyName?: string): boolean;
-
-    load(password: string, keyName?: string): Wallet;
-}
+export class Wallet extends WalletBase {}
 
 export interface AddAccount {
     address: string;
@@ -99,7 +54,7 @@ export interface EncryptedKeystoreV3Json {
     address: string;
     crypto: {
         ciphertext: string;
-        cipherparams: {iv: string};
+        cipherparams: { iv: string };
         cipher: string;
         kdf: string;
         kdfparams: {

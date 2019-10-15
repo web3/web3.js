@@ -18,9 +18,13 @@
  */
 
 import BN = require('bn.js');
-import {provider} from 'web3-providers';
-import {AbiInput, AbiOutput, AbiItem} from 'web3-utils';
-import {PromiEvent, Web3ModuleOptions, TransactionSigner} from 'web3-core';
+import {
+    PromiEvent,
+    provider,
+    TransactionSigner,
+    Web3ModuleOptions
+} from 'web3-core';
+import { AbiInput, AbiItem, AbiOutput } from 'web3-utils';
 
 export class Contract {
     constructor(
@@ -28,7 +32,7 @@ export class Contract {
         abi: AbiItem[],
         address?: string,
         options?: ContractOptions
-    )
+    );
 
     address: string;
     jsonInterface: AbiModel;
@@ -42,19 +46,32 @@ export class Contract {
 
     methods: any;
 
-    once(event: string, callback: (error: Error, event: EventData) => void): void;
-    once(event: string, options: EventOptions, callback: (error: Error, event: EventData) => void): void;
+    once(
+        event: string,
+        callback: (error: Error, event: EventData) => void
+    ): void;
+    once(
+        event: string,
+        options: EventOptions,
+        callback: (error: Error, event: EventData) => void
+    ): void;
 
     events: any;
 
     getPastEvents(event: string): Promise<EventData[]>;
-    getPastEvents(event: string, options: EventOptions, callback: (error: Error, event: EventData) => void): Promise<EventData[]>;
+    getPastEvents(
+        event: string,
+        options: EventOptions,
+        callback: (error: Error, event: EventData) => void
+    ): Promise<EventData[]>;
     getPastEvents(event: string, options: EventOptions): Promise<EventData[]>;
-    getPastEvents(event: string, callback: (error: Error, event: EventData) => void): Promise<EventData[]>;
+    getPastEvents(
+        event: string,
+        callback: (error: Error, event: EventData) => void
+    ): Promise<EventData[]>;
 }
 
-export class ContractModuleFactory {
-} // TODO: Define methods
+export class ContractModuleFactory {} // TODO: Define methods
 
 export interface Options {
     address: string;
@@ -67,13 +84,22 @@ export interface DeployOptions {
 }
 
 export interface ContractSendMethod {
-    send(options: SendOptions, callback?: (err: Error, transactionHash: string) => void): PromiEvent<Contract>;
+    send(
+        options: SendOptions,
+        callback?: (err: Error, transactionHash: string) => void
+    ): PromiEvent<Contract>;
 
-    estimateGas(options: EstimateGasOptions, callback?: (err: Error, gas: number) => void): Promise<number>;
+    estimateGas(
+        options: EstimateGasOptions,
+        callback?: (err: Error, gas: number) => void
+    ): Promise<number>;
 
     estimateGas(callback: (err: Error, gas: number) => void): Promise<number>;
 
-    estimateGas(options: EstimateGasOptions, callback: (err: Error, gas: number) => void): Promise<number>;
+    estimateGas(
+        options: EstimateGasOptions,
+        callback: (err: Error, gas: number) => void
+    ): Promise<number>;
 
     estimateGas(options: EstimateGasOptions): Promise<number>;
 
@@ -116,11 +142,11 @@ export interface EventOptions {
 export interface EventData {
     returnValues: {
         [key: string]: any;
-    },
+    };
     raw: {
         data: string;
         topics: string[];
-    },
+    };
     event: string;
     signature: string;
     logIndex: number;

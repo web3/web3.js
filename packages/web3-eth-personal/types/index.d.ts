@@ -18,15 +18,28 @@
  * @date 2018
  */
 
-import {Accounts} from 'web3-eth-accounts';
-import {provider} from 'web3-providers';
-import {AbstractWeb3Module, RLPEncodedTransaction, TransactionConfig, Web3ModuleOptions} from 'web3-core';
 import * as net from 'net';
+import {
+    AbstractWeb3Module,
+    AccountsBase,
+    provider,
+    RLPEncodedTransaction,
+    TransactionConfig,
+    Web3ModuleOptions
+} from 'web3-core';
 
 export class Personal extends AbstractWeb3Module {
-    constructor(provider: provider, net?: net.Socket|null, options?: Web3ModuleOptions, accounts?: Accounts|null);
+    constructor(
+        provider: provider,
+        net?: net.Socket | null,
+        options?: Web3ModuleOptions,
+        accounts?: AccountsBase | null
+    );
 
-    newAccount(password: string, callback?: (error: Error, address: string) => void): Promise<string>;
+    newAccount(
+        password: string,
+        callback?: (error: Error, address: string) => void
+    ): Promise<string>;
 
     sign(
         dataToSign: string,
@@ -44,7 +57,10 @@ export class Personal extends AbstractWeb3Module {
     signTransaction(
         transactionConfig: TransactionConfig,
         password: string,
-        callback?: (error: Error, RLPEncodedTransaction: RLPEncodedTransaction) => void
+        callback?: (
+            error: Error,
+            RLPEncodedTransaction: RLPEncodedTransaction
+        ) => void
     ): Promise<RLPEncodedTransaction>;
 
     sendTransaction(
@@ -60,9 +76,14 @@ export class Personal extends AbstractWeb3Module {
         callback?: (error: Error) => void
     ): Promise<boolean>;
 
-    lockAccount(address: string, callback?: (error: Error, success: boolean) => void): Promise<boolean>;
+    lockAccount(
+        address: string,
+        callback?: (error: Error, success: boolean) => void
+    ): Promise<boolean>;
 
-    getAccounts(callback?: (error: Error, accounts: string[]) => void): Promise<string[]>;
+    getAccounts(
+        callback?: (error: Error, accounts: string[]) => void
+    ): Promise<string[]>;
 
     importRawKey(privateKey: string, password: string): Promise<string>;
 }

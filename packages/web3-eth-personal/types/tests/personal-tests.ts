@@ -19,9 +19,8 @@
  * @date 2018
  */
 
-import {RLPEncodedTransaction} from 'web3-core';
-import {Personal} from 'web3-eth-personal';
-import {Accounts} from 'web3-eth-accounts';
+import { RLPEncodedTransaction } from 'web3-core';
+import { Personal } from 'web3-eth-personal';
 
 const personal = new Personal('http://localhost:7545');
 
@@ -31,7 +30,11 @@ personal.newAccount('test password');
 personal.newAccount('test password', (error: Error, address: string) => {});
 
 // $ExpectType Promise<string>
-personal.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test password!');
+personal.sign(
+    'Hello world',
+    '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+    'test password!'
+);
 // $ExpectType Promise<string>
 personal.sign(
     'Hello world',
@@ -43,7 +46,11 @@ personal.sign(
 // $ExpectType Promise<string>
 personal.ecRecover('Hello world', '0x30755ed65396facf86c53e6217c52b4daebe72aa');
 // $ExpectType Promise<string>
-personal.ecRecover('Hello world', '0x30755ed65396facf86c53e6217c52b4daebe72aa', (error: Error, address: string) => {});
+personal.ecRecover(
+    'Hello world',
+    '0x30755ed65396facf86c53e6217c52b4daebe72aa',
+    (error: Error, address: string) => {}
+);
 
 // $ExpectType Promise<RLPEncodedTransaction>
 personal.signTransaction(
@@ -99,14 +106,26 @@ personal.sendTransaction(
 );
 
 // $ExpectType Promise<boolean>
-personal.unlockAccount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test password!', 600);
+personal.unlockAccount(
+    '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+    'test password!',
+    600
+);
 // $ExpectType Promise<boolean>
-personal.unlockAccount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test password!', 600, (error: Error) => {});
+personal.unlockAccount(
+    '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+    'test password!',
+    600,
+    (error: Error) => {}
+);
 
 // $ExpectType Promise<boolean>
 personal.lockAccount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe');
 // $ExpectType Promise<boolean>
-personal.lockAccount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', (error: Error, sucess: boolean) => {});
+personal.lockAccount(
+    '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+    (error: Error, sucess: boolean) => {}
+);
 
 // $ExpectType Promise<string[]>
 personal.getAccounts();

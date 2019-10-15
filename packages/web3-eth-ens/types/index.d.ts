@@ -17,21 +17,27 @@
  * @date 2018
  */
 
-import {Accounts} from 'web3-eth-accounts';
-import {AbiCoder} from 'web3-eth-abi';
-import {Contract, ContractModuleFactory} from 'web3-eth-contract';
-import {provider} from 'web3-providers';
-import {AbstractWeb3Module, PromiEvent, Web3ModuleOptions, TransactionConfig, TransactionSigner} from 'web3-core';
-import {formatters} from 'web3-core-helpers';
-import {Network} from 'web3-net';
-import {Utils} from 'web3-utils';
 import * as net from 'net';
+import {
+    AbstractWeb3Module,
+    AccountsBase,
+    NetworkBase,
+    PromiEvent,
+    provider,
+    TransactionConfig,
+    TransactionSigner,
+    Web3ModuleOptions
+} from 'web3-core';
+import { formatters } from 'web3-core-helpers';
+import { AbiCoder } from 'web3-eth-abi';
+import { Contract, ContractModuleFactory } from 'web3-eth-contract';
+import { Utils } from 'web3-utils';
 
 export class Ens extends AbstractWeb3Module {
     constructor(
         provider: provider,
-        net?: net.Socket|null,
-        accounts?: Accounts|null,
+        net?: net.Socket | null,
+        accounts?: AccountsBase | null,
         options?: Web3ModuleOptions
     );
 
@@ -46,7 +52,10 @@ export class Ens extends AbstractWeb3Module {
         callback?: (error: Error, supportsInterface: boolean) => void
     ): Promise<boolean>;
 
-    getAddress(name: string, callback?: (error: Error, address: string) => void): Promise<string>;
+    getAddress(
+        name: string,
+        callback?: (error: Error, address: string) => void
+    ): Promise<string>;
 
     setAddress(
         name: string,
@@ -57,8 +66,8 @@ export class Ens extends AbstractWeb3Module {
 
     getPubkey(
         name: string,
-        callback?: (error: Error, result: {[x: string]: string}) => void
-    ): Promise<{[x: string]: string}>;
+        callback?: (error: Error, result: { [x: string]: string }) => void
+    ): Promise<{ [x: string]: string }>;
 
     setPubkey(
         name: string,
@@ -68,7 +77,11 @@ export class Ens extends AbstractWeb3Module {
         callback?: (error: Error, result: any) => void
     ): PromiEvent<any>;
 
-    getText(name: string, key: string, callback?: (error: Error, ensName: string) => void): Promise<string>;
+    getText(
+        name: string,
+        key: string,
+        callback?: (error: Error, ensName: string) => void
+    ): Promise<string>;
 
     setText(
         name: string,
@@ -78,7 +91,10 @@ export class Ens extends AbstractWeb3Module {
         callback?: (error: Error, result: any) => void
     ): PromiEvent<any>;
 
-    getContent(name: string, callback?: (error: Error, contentHash: string) => void): Promise<string>;
+    getContent(
+        name: string,
+        callback?: (error: Error, contentHash: string) => void
+    ): Promise<string>;
 
     setContent(
         name: string,
@@ -87,7 +103,10 @@ export class Ens extends AbstractWeb3Module {
         callback?: (error: Error, result: any) => void
     ): PromiEvent<any>;
 
-    getMultihash(name: string, callback?: (error: Error, multihash: string) => void): Promise<string>;
+    getMultihash(
+        name: string,
+        callback?: (error: Error, multihash: string) => void
+    ): Promise<string>;
 
     setMultihash(
         name: string,
@@ -96,7 +115,10 @@ export class Ens extends AbstractWeb3Module {
         callback?: (error: Error, result: any) => void
     ): PromiEvent<any>;
 
-    getContenthash(name: string, callback?: (error: Error, contenthash: string) => void): Promise<string>;
+    getContenthash(
+        name: string,
+        callback?: (error: Error, contenthash: string) => void
+    ): Promise<string>;
 
     setContenthash(
         name: string,
@@ -110,12 +132,12 @@ export class Registry {
     constructor(
         provider: provider,
         contractModuleFactory: ContractModuleFactory,
-        accounts: Accounts,
+        accounts: AccountsBase,
         abiCoder: AbiCoder,
         utils: Utils,
         formatters: formatters,
         options: Web3ModuleOptions,
-        net: Network
+        net: NetworkBase
     );
 
     ens: Ens;
@@ -124,7 +146,10 @@ export class Registry {
 
     setProvider(provider: provider, net?: net.Socket): boolean;
 
-    owner(name: string, callback?: (error: Error, address: string) => void): Promise<string>;
+    owner(
+        name: string,
+        callback?: (error: Error, address: string) => void
+    ): Promise<string>;
 
     resolver(name: string): Promise<Contract>;
 

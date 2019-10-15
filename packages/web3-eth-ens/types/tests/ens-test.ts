@@ -17,10 +17,14 @@
  * @date 2018
  */
 
-import {Accounts} from 'web3-eth-accounts';
-import {Ens} from 'web3-eth-ens';
+import { AccountsBase } from 'web3-core';
+import { Ens } from 'web3-eth-ens';
 
-const ens = new Ens('http://localhost:7545', null, new Accounts('http://localhost:7545'));
+const ens = new Ens(
+    'http://localhost:7545',
+    null,
+    new AccountsBase('http://localhost:7545')
+);
 
 // $ExpectType Registry
 ens.registry;
@@ -34,7 +38,11 @@ ens.resolver('name');
 // $ExpectType Promise<boolean>
 ens.supportsInterface('name', 'interfaceId');
 // $ExpectType Promise<boolean>
-ens.supportsInterface('name', 'interfaceId', (error: Error, supportsInterface: boolean) => {});
+ens.supportsInterface(
+    'name',
+    'interfaceId',
+    (error: Error, supportsInterface: boolean) => {}
+);
 
 // $ExpectType Promise<string>
 ens.getAddress('name');
@@ -49,7 +57,7 @@ ens.setAddress('name', 'address', {}, (error: Error, result: any) => {});
 // $ExpectType Promise<{ [x: string]: string; }>
 ens.getPubkey('name');
 // $ExpectType Promise<{ [x: string]: string; }>
-ens.getPubkey('name', (error: Error, result: {[x: string]: string}) => {});
+ens.getPubkey('name', (error: Error, result: { [x: string]: string }) => {});
 
 // $ExpectType PromiEvent<any>
 ens.setPubkey('name', 'x', 'y', {});

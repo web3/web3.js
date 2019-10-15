@@ -17,8 +17,6 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module} from 'web3-core';
-
 export class formatters {
     static outputBigNumberFormatter(number: number): number;
 
@@ -28,9 +26,14 @@ export class formatters {
 
     static isPredefinedBlockNumber(blockNumber: string): boolean;
 
-    static inputDefaultBlockNumberFormatter(blockNumber: string, moduleInstance: AbstractWeb3Module): string;
+    static inputDefaultBlockNumberFormatter(
+        blockNumber: string,
+        moduleInstance: any
+    ): string;
 
-    static inputBlockNumberFormatter(blockNumber: string | number): string | number;
+    static inputBlockNumberFormatter(
+        blockNumber: string | number
+    ): string | number;
 
     static outputBlockFormatter(block: object): object; // TODO: Create Block interface
 

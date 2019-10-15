@@ -267,6 +267,153 @@ export interface TransactionSigner {
     sign(txObject: TransactionConfig): Promise<SignedTransaction>;
 }
 
+// had to move `web3-net` due to other modules in `1.x` not referencing
+
+export class NetworkBase extends AbstractWeb3Module {
+    constructor(
+        provider: provider,
+        net?: net.Socket | null,
+        options?: Web3ModuleOptions
+    );
+
+    getNetworkType(
+        callback?: (error: Error, returnValue: string) => void
+    ): Promise<string>;
+
+    getId(callback?: (error: Error, id: number) => void): Promise<number>;
+
+    isListening(
+        callback?: (error: Error, listening: boolean) => void
+    ): Promise<boolean>;
+
+    getPeerCount(
+        callback?: (error: Error, peerCount: number) => void
+    ): Promise<number>;
+}
+
+// had to move accounts from web3-eth-accounts due to other modules in 1.x not referencing
+
+export class AccountsBase extends AbstractWeb3Module {
+    constructor(
+        provider: provider,
+        net?: net.Socket | null,
+        options?: Web3ModuleOptions
+    );
+
+    create(entropy?: string): Account;
+
+    privateKeyToAccount(privateKey: string): Account;
+
+    signTransaction(
+        transactionConfig: TransactionConfig,
+        privateKey: string,
+        callback?: () => void
+    ): Promise<SignedTransaction>;
+
+    recoverTransaction(signature: string): string;
+
+    hashMessage(message: string): string;
+
+    sign(data: string, privateKey: string): Sign;
+
+    recover(signatureObject: SignatureObject): string;
+    recover(message: string, signature: string, preFixed?: boolean): string;
+    recover(
+        message: string,
+        v: string,
+        r: string,
+        s: string,
+        preFixed?: boolean
+    ): string;
+
+    encrypt(privateKey: string, password: string): EncryptedKeystoreV3Json;
+
+    decrypt(keystoreJsonV3: EncryptedKeystoreV3Json, password: string): Account;
+
+    wallet: WalletBase;
+}
+
+export class WalletBase {
+    constructor(accounts: AccountsBase);
+
+    accountsIndex: number;
+    length: number;
+    defaultKeyName: string;
+
+    [key: number]: Account;
+
+    create(numberOfAccounts: number, entropy?: string): WalletBase;
+
+    add(account: string | AddAccount): AddedAccount;
+
+    remove(account: string | number): boolean;
+
+    clear(): WalletBase;
+
+    encrypt(password: string): EncryptedKeystoreV3Json[];
+
+    decrypt(
+        keystoreArray: EncryptedKeystoreV3Json[],
+        password: string
+    ): WalletBase;
+
+    save(password: string, keyName?: string): boolean;
+
+    load(password: string, keyName?: string): WalletBase;
+}
+
+export interface AddAccount {
+    address: string;
+    privateKey: string;
+}
+
+export interface AddedAccount extends Account {
+    index: number;
+}
+
+export interface Account {
+    address: string;
+    privateKey: string;
+    signTransaction: (
+        transactionConfig: TransactionConfig,
+        callback?: (signTransaction: SignedTransaction) => void
+    ) => Promise<SignedTransaction>;
+    sign: (data: string) => Sign;
+    encrypt: (password: string) => EncryptedKeystoreV3Json;
+}
+
+export interface EncryptedKeystoreV3Json {
+    version: number;
+    id: string;
+    address: string;
+    crypto: {
+        ciphertext: string;
+        cipherparams: { iv: string };
+        cipher: string;
+        kdf: string;
+        kdfparams: {
+            dklen: number;
+            salt: string;
+            n: number;
+            r: number;
+            p: number;
+        };
+        mac: string;
+    };
+}
+
+export interface Sign extends SignedTransaction {
+    message: string;
+    signature: string;
+}
+
+export interface SignatureObject {
+    messageHash: string;
+    r: string;
+    s: string;
+    v: string;
+}
+
 // put all the `web3-provider` typings in here so we can get to them everywhere as this module does not exist in 1.x
 
 export class BatchRequest {
