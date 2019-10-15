@@ -23,7 +23,7 @@
 export AbstractSubscription from '../lib/subscriptions/AbstractSubscription';
 
 // Cfx
-export LogSubscription from './subscriptions/eth/LogSubscription';
-export NewHeadsSubscription from './subscriptions/eth/NewHeadsSubscription';
-export NewPendingTransactionsSubscription from './subscriptions/eth/NewPendingTransactionsSubscription';
-export SyncingSubscription from './subscriptions/eth/SyncingSubscription';
+export LogSubscription from './subscriptions/cfx/LogSubscription';
+export NewHeadsSubscription from './subscriptions/cfx/NewHeadsSubscription';
+export NewPendingTransactionsSubscription from './subscriptions/cfx/NewPendingTransactionsSubscription';
+export SyncingSubscription from './subscriptions/cfx/SyncingSubscription';

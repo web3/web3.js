@@ -13,21 +13,21 @@ The more details you include, the better the community will be able to help you!
 #### Expected behavior
 <!---------------------------------------------------------------------
     Example:
-    Calling `await web3.eth.getAccounts()` should return an array.
+    Calling `await confluxWeb.cfx.getAccounts()` should return an array.
 ----------------------------------------------------------------------->
 
 
 #### Actual behavior
 <!---------------------------------------------------------------------
     Example:
-    Calling `await web3.eth.getAccounts()` returns "monkey".
+    Calling `await confluxWeb.cfx.getAccounts()` returns "monkey".
 ----------------------------------------------------------------------->
 
 
 #### Steps to reproduce the behavior
 <!---------------------------------------------------------------------
     Example:
-    1. Import `web3`
+    1. Import `confluxWeb`
     2. Set the provider to `localhost`
     3. Fetch latest block
 
@@ -55,10 +55,8 @@ The more details you include, the better the community will be able to help you!
 
 
 ### Versions 
-* web3.js:
 * nodejs:
 * browser:
-* ethereum node:
 
 
 <!---------------------------------------------------------------------

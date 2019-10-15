@@ -1,6 +1,6 @@
 import {outputBigNumberFormatter} from '../../../src/Formatters';
 /**
- * Note: The real test with all cases for the Utils.toBN function can be found in the web3-utils module
+ * Note: The real test with all cases for the Utils.toBN function can be found in the cfx-utils module
  *
  * outputBigNumberFormatter test
  */

@@ -1,6 +1,6 @@
-# web3-eth-debug
+# conflux-web-cfx-debug
 
-This is a sub module of [web3.js][repo]
+This is a sub module of [confluxWeb][repo]
 
 This is the debug module and can be used as a standalone module.
 Please read the [documentation][docs] for more.
@@ -8,13 +8,13 @@ Please read the [documentation][docs] for more.
 ## Installation
 
 ```bash
-npm install web3-eth-debug
+npm install conflux-web-cfx-debug
 ```
 
 ## Usage
 
 ```js
-import {Debug} from 'web3-eth-debug';
+import {Debug} from 'conflux-web-cfx-debug';
 
 const debug = new Debug(
     'http://127.0.0.1:8546',
@@ -27,5 +27,5 @@ const debug = new Debug(
 
 All the typescript typings are placed in the types folder.
 
-[docs]: http://web3js.readthedocs.io/en/1.0/
-[repo]: https://github.com/ethereum/web3.js
+[repo]: https://github.com/Conflux-Chain/ConfluxWeb
+[docs]: https://conflux-chain.github.io/conflux-doc

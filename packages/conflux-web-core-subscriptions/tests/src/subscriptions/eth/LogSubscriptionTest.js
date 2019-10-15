@@ -1,6 +1,6 @@
 import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
-import LogSubscription from '../../../../src/subscriptions/eth/LogSubscription';
+import LogSubscription from '../../../../src/subscriptions/cfx/LogSubscription';
 import AbstractWeb3Module from '../../../__mocks__/AbstractWeb3Module';
 import GetPastLogsMethod from '../../../__mocks__/GetPastLogsMethod';
 import SocketProviderAdapter from '../../../__mocks__/SocketProviderAdapter';

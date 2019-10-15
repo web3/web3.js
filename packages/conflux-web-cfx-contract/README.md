@@ -1,4 +1,4 @@
-# conflux-web-eth-contract
+# conflux-web-cfx-contract
 
 This is a sub package of [ConfluxWeb.js][repo]
 

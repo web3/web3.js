@@ -1,5 +1,5 @@
 import {formatters} from 'conflux-web-core-helpers';
-import SyncingSubscription from '../../../../src/subscriptions/eth/SyncingSubscription';
+import SyncingSubscription from '../../../../src/subscriptions/cfx/SyncingSubscription';
 
 // Mocks
 jest.mock('conflux-web-core-helpers');

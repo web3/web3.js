@@ -1,9 +1,9 @@
 # conflux-web-core
 
-This is a sub module of [ConfluxWeb.js][repo]
+This is a sub module of [ConfluxWeb][repo]
 
 The ```conflux-web-core``` contains the AbstractWeb3Module. 
-This should be used if someone wants to implement a new web3 module. 
+This should be used if someone wants to implement a new confluxWeb module. 
 
 ## Installation
 

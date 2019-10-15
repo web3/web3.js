@@ -1,6 +1,6 @@
 import * as Utils from 'conflux-web-utils';
 import {formatters} from 'conflux-web-core-helpers';
-import NewHeadsSubscription from '../../../../src/subscriptions/eth/NewHeadsSubscription';
+import NewHeadsSubscription from '../../../../src/subscriptions/cfx/NewHeadsSubscription';
 
 // Mocks
 jest.mock('conflux-web-utils');

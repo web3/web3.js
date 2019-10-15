@@ -1,4 +1,4 @@
-import NewPendingTransactionsSubscription from '../../../../src/subscriptions/eth/NewPendingTransactionsSubscription';
+import NewPendingTransactionsSubscription from '../../../../src/subscriptions/cfx/NewPendingTransactionsSubscription';
 
 /**
  * NewPendingTransactionsSubscription test
