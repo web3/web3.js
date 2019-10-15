@@ -3,6 +3,7 @@ test
 dist
 docs
 coverage
+scripts
 .gitignore
 .editorconfig
 .travis.yml

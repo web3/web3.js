@@ -1,23 +1,33 @@
 services:
     - xvfb
 language: node_js
-node_js:
-    - "8"
-    - "10"
-    - "11"
-    - "12"
-env:
-    - CXX=g++-4.8
+matrix:
+  include:
+    - node_js: 8
+      env: TEST=unit
+    - node_js: 11
+      env: TEST=unit
+    - node_js: 12
+      env: TEST=unit
+    - node_js: 10
+      env: TEST=unit_and_e2e
 addons:
   apt:
     sources:
-    - ubuntu-toolchain-r-test
+      - ubuntu-toolchain-r-test
     packages:
-    - g++-4.8
-    install:
+      - gcc-5
+      - g++-5
+
+before_install:
+  - if [ $TRAVIS_OS_NAME == "linux" ]; then
+      export CC="gcc-5";
+      export CXX="g++-5";
+      export LINK="gcc-5";
+      export LINKXX="g++-5";
+    fi
+install:
     - npm install
 script:
-    - npm run-script build
-    - npm run-script test-coveralls
-after_script:
-    - cd test/node && npm install && node app.js
+    - npm run ci
+
