@@ -81,7 +81,61 @@ var Eth = function Eth() {
 
     var defaultAccount = null;
     var defaultBlock = 'latest';
+    var transactionBlockTimeout = 50;
+    var transactionConfirmationBlocks = 24;
+    var transactionPollingTimeout = 750;
 
+    Object.defineProperty(this, 'transactionPollingTimeout', {
+        get: function () {
+            return transactionPollingTimeout;
+        },
+        set: function (val) {
+            transactionPollingTimeout = val;
+
+            // also set on the Contract object
+            _this.Contract.transactionPollingTimeout = transactionPollingTimeout;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.transactionPollingTimeout = transactionPollingTimeout;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'transactionConfirmationBlocks', {
+        get: function () {
+            return transactionConfirmationBlocks;
+        },
+        set: function (val) {
+            transactionConfirmationBlocks = val;
+
+            // also set on the Contract object
+            _this.Contract.transactionConfirmationBlocks = transactionConfirmationBlocks;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.transactionConfirmationBlocks = transactionConfirmationBlocks;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'transactionBlockTimeout', {
+        get: function () {
+            return transactionBlockTimeout;
+        },
+        set: function (val) {
+            transactionBlockTimeout = val;
+
+            // also set on the Contract object
+            _this.Contract.transactionBlockTimeout = transactionBlockTimeout;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.transactionBlockTimeout = transactionBlockTimeout;
+            });
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
             return defaultAccount;
@@ -461,6 +515,9 @@ var Eth = function Eth() {
         method.setRequestManager(_this._requestManager, _this.accounts); // second param means is eth.accounts (necessary for wallet signing)
         method.defaultBlock = _this.defaultBlock;
         method.defaultAccount = _this.defaultAccount;
+        method.transactionBlockTimeout = _this.transactionBlockTimeout;
+        method.transactionConfirmationBlocks = _this.transactionConfirmationBlocks;
+        method.transactionPollingTimeout = _this.transactionPollingTimeout;
     });
 
 };
