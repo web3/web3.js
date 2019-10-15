@@ -229,7 +229,7 @@ var Eth = function Eth() {
     this.Contract.defaultBlock = this.defaultBlock;
     this.Contract.transactionBlockTimeout = this.transactionBlockTimeout;
     this.Contract.transactionConfirmationBlocks = this.transactionConfirmationBlocks;
-    this.Contract.transactionPollingTimeout= this.transactionPollingTimeout;
+    this.Contract.transactionPollingTimeout = this.transactionPollingTimeout;
     this.Contract.setProvider(this.currentProvider, this.accounts);
 
     // add IBAN
