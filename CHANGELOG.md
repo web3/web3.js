@@ -108,4 +108,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Property handling for the Ens module fixed (#3008)
 - ``blockNumber`` check of the received receipt fixed in transaction observers (#3012)
 - Cases for zero valued fromBlock, toBlock filters added (#3109)
-
+- Topic property of the LogsOptions type extended with null (#3128)
