@@ -348,7 +348,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                 if (!isContractDeployment && !promiseResolved) {
 
                     if(!receipt.outOfGas &&
-                        (!gasProvided || gasProvided !== receipt.gasUsed) &&
+                        (!gasProvided || gasProvided !== utils.numberToHex(receipt.gasUsed)) &&
                         (receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined')) {
                         defer.eventEmitter.emit('receipt', receipt);
                         defer.resolve(receipt);
@@ -533,7 +533,16 @@ Method.prototype.buildCall = function() {
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
-                        return method.accounts.signTransaction(_.omit(tx, 'from'), wallet.privateKey).then(sendSignedTx);
+                        return method.accounts.signTransaction(_.omit(tx, 'from'), wallet.privateKey)
+                            .then(sendSignedTx)
+                            .catch(function (err) {
+                                if (_.isFunction(defer.eventEmitter.listeners) && defer.eventEmitter.listeners('error').length) {
+                                    defer.eventEmitter.emit('error', err);
+                                    defer.eventEmitter.removeAllListeners();
+                                    defer.eventEmitter.catch(function () {});
+                                }
+                                defer.reject(err);
+                            });
                     }
 
                     // ETH_SIGN
