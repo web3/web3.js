@@ -57,3 +57,16 @@ export class formatters {
 
     static outputSyncingFormatter(result: any): any; // TODO: Create SyncLog interface
 }
+
+export class errors {
+    static ErrorResponse(result: Error): Error;
+    static InvalidNumberOfParams(
+        got: number,
+        expected: number,
+        method: string
+    ): Error;
+    static InvalidConnection(host: string): Error;
+    static InvalidProvider(): Error;
+    static InvalidResponse(result: Error): Error;
+    static ConnectionTimeout(ms: string): Error;
+}
