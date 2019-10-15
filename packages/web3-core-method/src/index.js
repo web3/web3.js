@@ -310,7 +310,13 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                             promiseResolved = true;
                         }
 
-                        utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.eventEmitter, defer.reject, receipt);
+                        utils._fireError(
+                            new Error('The transaction receipt didn\'t contain a contract address.'), 
+                            defer.eventEmitter, 
+                            defer.reject, 
+                            null,
+                            receipt
+                        );
                         return;
                     }
 
