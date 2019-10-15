@@ -7,10 +7,18 @@
     "engines": {
         "node": ">=8.0.0"
     },
+    "scripts": {
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
+    "types": "types/index.d.ts",
     "main": "src/index.js",
     "dependencies": {
         "underscore": "1.9.1",
         "web3-core-helpers": "1.2.1",
         "websocket": "github:web3-js/WebSocket-Node#polyfill/globalThis"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "^0.4.2"
     }
 }
