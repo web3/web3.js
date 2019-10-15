@@ -17,14 +17,13 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
-import {Utils} from 'web3-utils';
 import * as net from 'net';
-import {provider} from 'web3-providers';
-import {Eth} from 'web3-eth';
-import {Network} from 'web3-net';
-import {Shh} from 'web3-shh';
-import {Personal} from 'web3-eth-personal';
+import { AbstractWeb3Module, provider, Web3ModuleOptions } from 'web3-core';
+import { Eth } from 'web3-eth';
+import { Personal } from 'web3-eth-personal';
+import { Network } from 'web3-net';
+import { Shh } from 'web3-shh';
+import { Utils } from 'web3-utils';
 
 export default class Web3 extends AbstractWeb3Module {
     constructor(
