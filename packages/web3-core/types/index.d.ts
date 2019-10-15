@@ -440,7 +440,7 @@ export interface BatchResponse {
 }
 
 export class ProviderDetector {
-    static detect(): provider | undefined;
+    static detect(): provider;
 }
 
 export class ProvidersModuleFactory {
@@ -454,7 +454,7 @@ export class ProvidersModuleFactory {
 
     createIpcProvider(path: string, net: net.Server): IpcProvider;
 
-    createWeb3EthereumProvider(connection: object): Web3EthereumProvider;
+    createWeb3EthereumProvider(connection: any): Web3EthereumProvider;
 }
 
 export class HttpProvider {
@@ -558,7 +558,7 @@ export class ProviderResolver {
 export class JsonRpcResponseValidator {
     static validate(
         response: JsonRpcPayload[] | JsonRpcPayload,
-        payload?: object
+        payload?: any
     ): boolean;
 
     static isResponseItemValid(response: JsonRpcPayload): boolean;
@@ -596,9 +596,9 @@ export interface WebsocketProviderOptions {
     host?: string;
     timeout?: number;
     reconnectDelay?: number;
-    headers?: {};
+    headers?: any;
     protocol?: string;
     clientConfig?: string;
-    requestOptions?: object;
+    requestOptions?: any;
     origin?: string;
 }

@@ -34,35 +34,35 @@ formatters.isPredefinedBlockNumber('latest');
 // $ExpectType string | number
 formatters.inputBlockNumberFormatter('0x0');
 
-// $ExpectType object
+// $ExpectType any
 formatters.outputBlockFormatter({});
 
-// $ExpectType object
+// $ExpectType any
 formatters.txInputFormatter({});
 
-// $ExpectType object
+// $ExpectType any
 formatters.inputCallFormatter({});
 
-// $ExpectType object
+// $ExpectType any
 formatters.inputTransactionFormatter({});
 
-// $ExpectType object
+// $ExpectType any
 formatters.outputTransactionFormatter({});
 
-// $ExpectType object
+// $ExpectType any
 formatters.outputTransactionReceiptFormatter({});
 
-// $ExpectType object
+// $ExpectType any
 formatters.inputLogFormatter({});
 
-// $ExpectType object
+// $ExpectType any
 formatters.outputLogFormatter({});
 
-// $ExpectType object
+// $ExpectType any
 formatters.inputPostFormatter({});
 
-// $ExpectType object
+// $ExpectType any
 formatters.outputPostFormatter({});
 
-// $ExpectType object
+// $ExpectType any
 formatters.outputSyncingFormatter({});

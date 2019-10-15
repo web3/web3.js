@@ -50,13 +50,13 @@ export class AbstractMethod {
 
     afterExecution(response: any): any;
 
-    execute(): Promise<any> | any | string;
+    execute(): Promise<any> | string;
 }
 
 export class AbstractMethodFactory {
     constructor(utils: Utils, formatters: formatters);
 
-    methods: null | object;
+    methods: any;
     hasMethod: boolean;
 
     createMethod(name: string, moduleInstance: any): AbstractMethod;

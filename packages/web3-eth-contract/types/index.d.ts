@@ -133,7 +133,7 @@ export interface ContractOptions extends Web3ModuleOptions {
 }
 
 export interface EventOptions {
-    filter?: {};
+    filter?: any;
     fromBlock?: number;
     toBlock?: string | number;
     topics?: any[];

@@ -13,7 +13,7 @@
 */
 /**
  * @file index.d.ts
- * @author Samuel Furter <samuel@ethereum.org>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
 
@@ -35,25 +35,25 @@ export class formatters {
         blockNumber: string | number
     ): string | number;
 
-    static outputBlockFormatter(block: object): object; // TODO: Create Block interface
+    static outputBlockFormatter(block: any): any; // TODO: Create Block interface
 
-    static txInputFormatter(txObject: object): object;
+    static txInputFormatter(txObject: any): any;
 
-    static inputCallFormatter(txObject: object): object;
+    static inputCallFormatter(txObject: any): any;
 
-    static inputTransactionFormatter(txObject: object): object;
+    static inputTransactionFormatter(txObject: any): any;
 
-    static outputTransactionFormatter(receipt: object): object;
+    static outputTransactionFormatter(receipt: any): any;
 
-    static outputTransactionReceiptFormatter(receipt: object): object;
+    static outputTransactionReceiptFormatter(receipt: any): any;
 
-    static inputLogFormatter(log: object): object;
+    static inputLogFormatter(log: any): any;
 
-    static outputLogFormatter(log: object): object;
+    static outputLogFormatter(log: any): any;
 
-    static inputPostFormatter(post: object): object; // TODO: Create Post interface
+    static inputPostFormatter(post: any): any; // TODO: Create Post interface
 
-    static outputPostFormatter(post: object): object; // TODO: Create Post interface
+    static outputPostFormatter(post: any): any; // TODO: Create Post interface
 
-    static outputSyncingFormatter(result: object): object; // TODO: Create SyncLog interface
+    static outputSyncingFormatter(result: any): any; // TODO: Create SyncLog interface
 }

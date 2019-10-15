@@ -125,13 +125,13 @@ accounts.decrypt(
     'test!'
 );
 
-// $ExpectType Wallet
+// $ExpectType WalletBase
 accounts.wallet.create(2);
 
 // $ExpectType Account
 accounts.wallet[0];
 
-// $ExpectType Wallet
+// $ExpectType WalletBase
 accounts.wallet.create(
     2,
     '54674321§3456764321§345674321§3453647544±±±§±±±!!!43534534534534'
@@ -155,13 +155,13 @@ accounts.wallet.remove('0xF0109fC8DF283027b6285cc889F5aA624EaC1F55');
 // $ExpectType boolean
 accounts.wallet.remove(3);
 
-// $ExpectType Wallet
+// $ExpectType WalletBase
 accounts.wallet.clear();
 
 // $ExpectType EncryptedKeystoreV3Json[]
 accounts.wallet.encrypt('test');
 
-// $ExpectType Wallet
+// $ExpectType WalletBase
 accounts.wallet.decrypt(
     [
         {
@@ -215,8 +215,8 @@ accounts.wallet.decrypt(
 // $ExpectType boolean
 accounts.wallet.save('test#!$');
 
-// $ExpectType Wallet
+// $ExpectType WalletBase
 accounts.wallet.load('test#!$');
 
-// $ExpectType Wallet
+// $ExpectType WalletBase
 accounts.wallet.load('test#!$', 'myWalletKey');

@@ -35,7 +35,7 @@ abstractMethod.utils;
 // $ExpectType formatters
 abstractMethod.formatters;
 
-// $ExpectType PromiEvent<any>
+// $ExpectType any
 abstractMethod.promiEvent;
 
 // $ExpectType string
@@ -68,5 +68,5 @@ abstractMethod.beforeExecution({});
 // $ExpectType any
 abstractMethod.afterExecution('response');
 
-// $ExpectType string | PromiEvent<any> | Promise<any>
+// $ExpectType string | Promise<any>
 abstractMethod.execute();
