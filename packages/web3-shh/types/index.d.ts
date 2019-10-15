@@ -116,11 +116,20 @@ export class Shh extends AbstractWeb3Module {
         ) => void
     ): Subscribe;
 
-    newMessageFilter(options?: SubscriptionOptions): Promise<string>;
+    newMessageFilter(
+        options?: SubscriptionOptions,
+        callback?: (error: Error, result: string) => void
+    ): Promise<string>;
 
-    deleteMessageFilter(id: string): Promise<boolean>;
+    deleteMessageFilter(
+        id: string,
+        callback?: (error: Error, result: string) => void
+    ): Promise<boolean>;
 
-    getFilterMessages(id: string): Promise<Notification[]>;
+    getFilterMessages(
+        id: string,
+        callback?: (error: Error, result: string) => void
+    ): Promise<Notification[]>;
 }
 
 export interface Info {
