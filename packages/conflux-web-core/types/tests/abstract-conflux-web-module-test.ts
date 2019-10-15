@@ -26,7 +26,7 @@ const options = {
     ]
 };
 const httpProvider = new HttpProvider('http://localhost:8545', options);
-const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', new net.Server());
+const ipcProvider = new IpcProvider('/Users/myuser/Library/Conflux/geth.ipc', new net.Server());
 const abstractConfluxModule = new AbstractConfluxWebModule(httpProvider);
 
 // $ExpectType BatchRequest
