@@ -17,6 +17,10 @@
         "API"
     ],
     "author": "ethereum.org",
+    "types": "types/index.d.ts",
+    "scripts": {
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
     "authors": [
         {
             "name": "Fabian Vogelsteller",
