@@ -35,8 +35,7 @@ var Hash = require("eth-lib/lib/hash");
  * @return {Boolean}
  */
 var isBN = function (object) {
-    return object instanceof BN ||
-        (object && object.constructor && object.constructor.name === 'BN');
+    return BN.isBN(object);
 };
 
 /**
@@ -231,6 +230,10 @@ var hexToNumber = function (value) {
         return value;
     }
 
+    if (_.isString(value) && !isHexStrict(value)) {
+        throw new Error('Given value "'+value+'" is not a valid hex string.');
+    }
+
     return toBN(value).toNumber();
 };
 
@@ -243,6 +246,10 @@ var hexToNumber = function (value) {
  */
 var hexToNumberString = function (value) {
     if (!value) return value;
+
+    if (_.isString(value) && !isHexStrict(value)) {
+        throw new Error('Given value "'+value+'" is not a valid hex string.');
+    }
 
     return toBN(value).toString(10);
 };
@@ -319,7 +326,7 @@ var hexToBytes = function(hex) {
  * And even stringifys objects before.
  *
  * @method toHex
- * @param {String|Number|BN|Object} value
+ * @param {String|Number|BN|Object|Buffer} value
  * @param {Boolean} returnType
  * @return {String}
  */
@@ -334,6 +341,9 @@ var toHex = function (value, returnType) {
         return returnType ? 'bool' : value ? '0x01' : '0x00';
     }
 
+    if (Buffer.isBuffer(value)) {
+        return '0x' + value.toString('hex');
+    }
 
     if (_.isObject(value) && !isBigNumber(value) && !isBN(value)) {
         return returnType ? 'string' : utf8ToHex(JSON.stringify(value));

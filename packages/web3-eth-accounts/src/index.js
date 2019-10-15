@@ -28,33 +28,19 @@ var Method = require('web3-core-method');
 var Promise = require('any-promise');
 var Account = require("eth-lib/lib/account");
 var Hash = require("eth-lib/lib/hash");
-var RLP = require("eth-lib/lib/rlp");
-var Nat = require("eth-lib/lib/nat");
-var Bytes = require("eth-lib/lib/bytes");
+var RLP = require("eth-lib/lib/rlp");// jshint ignore:line
+var Bytes = require("eth-lib/lib/bytes");// jshint ignore:line
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scrypt = require('scrypt-shim');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
+var Transaction = require('ethereumjs-tx').Transaction;
+
 
 var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
 };
-
-var trimLeadingZero = function (hex) {
-    while (hex && hex.startsWith('0x0')) {
-        hex = '0x' + hex.slice(3);
-    }
-    return hex;
-};
-
-var makeEven = function (hex) {
-    if(hex.length % 2 === 1) {
-        hex = hex.replace('0x', '0x0');
-    }
-    return hex;
-};
-
 
 var Accounts = function Accounts() {
     var _this = this;
@@ -69,7 +55,7 @@ var Accounts = function Accounts() {
     var _ethereumCall = [
         new Method({
             name: 'getId',
-            call: 'net_version',
+            call: 'eth_chainId',
             params: 0,
             outputFormatter: utils.hexToNumber
         }),
@@ -162,45 +148,36 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         }
 
         try {
-            tx = helpers.formatters.inputCallFormatter(tx);
+            var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
+            transaction.to = transaction.to || '0x';
+            transaction.data = transaction.data || '0x';
+            transaction.value = transaction.value || '0x';
+            transaction.chainId = utils.numberToHex(transaction.chainId);
 
-            var transaction = tx;
-            transaction.to = tx.to || '0x';
-            transaction.data = tx.data || '0x';
-            transaction.value = tx.value || '0x';
-            transaction.chainId = utils.numberToHex(tx.chainId);
+            if (privateKey.startsWith('0x')) {
+                privateKey = privateKey.substring(2);
+            }
 
-            var rlpEncoded = RLP.encode([
-                Bytes.fromNat(transaction.nonce),
-                Bytes.fromNat(transaction.gasPrice),
-                Bytes.fromNat(transaction.gas),
-                transaction.to.toLowerCase(),
-                Bytes.fromNat(transaction.value),
-                transaction.data,
-                Bytes.fromNat(transaction.chainId || "0x1"),
-                "0x",
-                "0x"]);
+            var ethTx = new Transaction(transaction);
+            ethTx.sign(Buffer.from(privateKey, 'hex'));
 
+            var validationResult = ethTx.validate(true);
 
-            var hash = Hash.keccak256(rlpEncoded);
+            if (validationResult !== '') {
+                throw new Error('Signer Error: ' + validationResult);
+            }
 
-            var signature = Account.makeSigner(Nat.toNumber(transaction.chainId || "0x1") * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
+            var rlpEncoded = ethTx.serialize().toString('hex');
+            var rawTransaction = '0x' + rlpEncoded;
+            var transactionHash = utils.keccak256(rawTransaction);
 
-            var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
-
-            rawTx[6] = makeEven(trimLeadingZero(rawTx[6]));
-            rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
-            rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
-
-            var rawTransaction = RLP.encode(rawTx);
-
-            var values = RLP.decode(rawTransaction);
-            result = {
-                messageHash: hash,
-                v: trimLeadingZero(values[6]),
-                r: trimLeadingZero(values[7]),
-                s: trimLeadingZero(values[8]),
-                rawTransaction: rawTransaction
+            return {
+                messageHash: '0x' + Buffer.from(ethTx.hash(false)).toString('hex'),
+                v: '0x' + Buffer.from(ethTx.v).toString('hex'),
+                r: '0x' + Buffer.from(ethTx.r).toString('hex'),
+                s: '0x' + Buffer.from(ethTx.s).toString('hex'),
+                rawTransaction: rawTransaction,
+                transactionHash: transactionHash
             };
 
         } catch(e) {
@@ -525,9 +502,43 @@ Wallet.prototype.load = function (password, keyName) {
     return this.decrypt(keystore || [], password);
 };
 
-if (typeof localStorage === 'undefined') {
+if (!storageAvailable('localStorage')) {
     delete Wallet.prototype.save;
     delete Wallet.prototype.load;
+}
+
+/**
+ * Checks whether a storage type is available or not
+ * For more info on how this works, please refer to MDN documentation
+ * https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API#Feature-detecting_localStorage
+ *
+ * @method storageAvailable
+ * @param {String} type the type of storage ('localStorage', 'sessionStorage')
+ * @returns {Boolean} a boolean indicating whether the specified storage is available or not
+ */
+function storageAvailable(type) {
+    var storage;
+    try {
+        storage = window[type];
+        var x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            (storage && storage.length !== 0);
+    }
 }
 
 
