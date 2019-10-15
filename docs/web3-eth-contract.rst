@@ -77,6 +77,154 @@ Example
 = Properties =
 =========
 
+------------------------------------------------------------------------------
+
+.. _eth-contract-defaultaccount
+
+defaultAccount
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.defaultAccount
+    contract.defaultAccount // on contract instance
+
+This default address is used as the default ``"from"`` property, if no ``"from"`` property is specified in for the following methods:
+
+- :ref:`web3.eth.sendTransaction() <eth-sendtransaction>`
+- :ref:`web3.eth.call() <eth-call>`
+- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().call() <eth-contract-call>`
+- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().send() <eth-contract-send>`
+
+--------
+Property
+--------
+
+
+``String`` - 20 Bytes: Any ethereum address. You should have the private key for that address in your node or keystore. (Default is ``undefined``)
+
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.defaultAccount;
+    > undefined
+
+    // set the default account
+    web3.eth.defaultAccount = '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe';
+
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-defaultblock:
+
+defaultBlock
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.defaultBlock
+    contract.defaultBlock // on contract instance
+
+The default block is used for certain methods. You can override it by passing in the defaultBlock as last parameter.
+The default value of it is "latest".
+
+----------
+Property
+----------
+
+
+Default block parameters can be one of the following:
+
+- ``Number``: A block number
+- ``"genesis"`` - ``String``: The genesis block
+- ``"latest"`` - ``String``: The latest block (current head of the blockchain)
+- ``"pending"`` - ``String``: The currently mined block (including pending transactions)
+
+Default is ``"latest"``
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    contract.defaultBlock;
+    > "latest"
+
+    // set the default block
+    contract.defaultBlock = 231;
+
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-transactionblocktimeout:
+
+transactionBlockTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.transcationBlockTimeout
+    contract.transactionBlockTimeout // on contract instance
+
+The ``transactionBlockTimeout`` will be used over a socket based connection. This option does define the amount of new blocks it should wait until the first confirmation happens.
+This means the PromiEvent rejects with a timeout error when the timeout got exceeded.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionBlockTimeout
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-module-transactionconfirmationblocks:
+
+transactionConfirmationBlocks
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.transactionConfirmationBlocks
+    contract.transactionConfirmationBlocks // on contract instance
+
+This defines the number of blocks it requires until a transaction will be handled as confirmed.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionConfirmationBlocks
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-module-transactionpollingtimeout:
+
+transactionPollingTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.transactionPollingTimeout
+    contract.transactionPollingTimeout // on contract instance
+
+The ``transactionPollingTimeout``  will be used over a HTTP connection.
+This option does define the amount of polls (each second) it should wait until the first confirmation happens.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionPollingTimeout
 
 ------------------------------------------------------------------------------
 
