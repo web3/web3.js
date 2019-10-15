@@ -23,6 +23,7 @@
         "lint": "jshint *.js packages",
         "test": "mocha --grep E2E --invert; jshint *.js packages",
         "test:unit": "istanbul cover _mocha -- -R spec --grep E2E --invert",
+        "dtslint": "lerna run dtslint",
         "test:e2e:ganache": "./scripts/e2e.ganache.sh",
         "test:e2e:geth:auto": "./scripts/e2e.geth.automine.sh",
         "test:e2e:geth:insta": "./scripts/e2e.geth.instamine.sh",
