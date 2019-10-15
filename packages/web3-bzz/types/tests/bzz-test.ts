@@ -24,14 +24,23 @@ const bzz = new Bzz('http://swarm-gateways.net');
 // $ExpectType boolean
 bzz.setProvider('test.com');
 
-// $ExpectType boolean
-bzz.setProvider({});
+// $ExpectType any
+bzz.currentProvider;
 
 // $ExpectType any
 bzz.givenProvider;
 
 // $ExpectType string | null
-bzz.currentProvider;
+bzz.defaultAccount;
+
+// $ExpectType string | number
+bzz.defaultBlock;
+
+// $ExpectType boolean
+bzz.setProvider('https://localhost:2100');
+
+// $ExpectType any
+new bzz.BatchRequest();
 
 // $ExpectType Promise<string>
 bzz.upload('test file');
@@ -58,6 +67,3 @@ bzz.pick.directory();
 
 // $ExpectType Promise<any>
 bzz.pick.data();
-
-// $ExpectType any
-new bzz.BatchRequest();

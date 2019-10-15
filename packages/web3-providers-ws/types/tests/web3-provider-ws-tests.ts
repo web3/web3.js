@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import { WebsocketProvider, WebsocketProviderOptions } from 'web3-providers';
+import { WebsocketProviderOptions } from 'web3-core-helpers';
+import { WebsocketProvider } from 'web3-providers';
 
 const options: WebsocketProviderOptions = {
     timeout: 30000,
@@ -34,32 +35,38 @@ const wsProvider = new WebsocketProvider('ws://localhost:8545', options);
 // $ExpectType boolean
 wsProvider.isConnecting();
 
-// $ExpectType string
-wsProvider.host;
+// $ExpectType boolean
+wsProvider.connected;
+
+// $ExpectType void
+wsProvider.disconnect(100, 'reason');
+
+// $ExpectType any
+wsProvider.responseCallbacks;
+
+// $ExpectType any
+wsProvider.notificationCallbacks;
+
+// $ExpectType any
+wsProvider.connection;
 
 // $ExpectType boolean
 wsProvider.connected;
 
 // $ExpectType void
-wsProvider.registerEventListeners();
+wsProvider.addDefaultEvents();
 
-// $ExpectType Promise<any>
-wsProvider.send('rpc_method', []);
+// $ExpectType boolean
+wsProvider.supportsSubscriptions();
 
-// $ExpectType Promise<any[]>
-wsProvider.sendBatch([], {});
-
-// $ExpectType Promise<string>
-wsProvider.subscribe('eth_subscribe', 'logs', []);
-
-// $ExpectType Promise<boolean>
-wsProvider.unsubscribe('subId', 'eth_unsubscribe');
-
-// $ExpectType Promise<boolean>
-wsProvider.clearSubscriptions('eth_unsubscribe');
+// $ExpectType void
+wsProvider.send({} as any, () => {});
 
 // $ExpectType void
 wsProvider.on('type', () => {});
+
+// $ExpectType void
+wsProvider.once('type', () => {});
 
 // $ExpectType void
 wsProvider.removeListener('type', () => {});
@@ -69,9 +76,3 @@ wsProvider.removeAllListeners('type');
 
 // $ExpectType void
 wsProvider.reset();
-
-// $ExpectType void
-wsProvider.reconnect();
-
-// $ExpectType void
-wsProvider.disconnect(100, 'reason');

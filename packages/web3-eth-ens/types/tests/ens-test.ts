@@ -17,14 +17,9 @@
  * @date 2018
  */
 
-import { AccountsBase } from 'web3-core';
 import { Ens } from 'web3-eth-ens';
 
-const ens = new Ens(
-    'http://localhost:7545',
-    null,
-    new AccountsBase('http://localhost:7545')
-);
+const ens = new Ens('http://localhost:7545');
 
 // $ExpectType Registry
 ens.registry;

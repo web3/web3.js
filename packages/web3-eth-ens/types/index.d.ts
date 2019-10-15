@@ -17,28 +17,11 @@
  * @date 2018
  */
 
-import * as net from 'net';
-import {
-    AbstractWeb3Module,
-    AccountsBase,
-    NetworkBase,
-    PromiEvent,
-    provider,
-    TransactionConfig,
-    Web3ModuleOptions
-} from 'web3-core';
-import { formatters } from 'web3-core-helpers';
-import { AbiCoder } from 'web3-eth-abi';
-import { Contract, ContractModuleFactory } from 'web3-eth-contract';
-import { Utils } from 'web3-utils';
+import { PromiEvent, TransactionConfig } from 'web3-core';
+import { Contract } from 'web3-eth-contract';
 
-export class Ens extends AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        net?: net.Socket | null,
-        accounts?: AccountsBase | null,
-        options?: Web3ModuleOptions
-    );
+export class Ens {
+    constructor(eth: any);
 
     registry: Registry;
 
@@ -127,22 +110,11 @@ export class Ens extends AbstractWeb3Module {
 }
 
 export class Registry {
-    constructor(
-        provider: provider,
-        contractModuleFactory: ContractModuleFactory,
-        accounts: AccountsBase,
-        abiCoder: AbiCoder,
-        utils: Utils,
-        formatters: formatters,
-        options: Web3ModuleOptions,
-        net: NetworkBase
-    );
+    constructor(ens: Ens);
 
     ens: Ens;
 
-    resolverContract: Contract | null;
-
-    setProvider(provider: provider, net?: net.Socket): boolean;
+    contract: Contract | null;
 
     owner(
         name: string,
@@ -150,6 +122,4 @@ export class Registry {
     ): Promise<string>;
 
     resolver(name: string): Promise<Contract>;
-
-    checkNetwork(): Promise<string>;
 }

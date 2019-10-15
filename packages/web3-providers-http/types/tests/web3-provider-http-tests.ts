@@ -33,11 +33,8 @@ const httpProvider = new HttpProvider('http://localhost:8545', {
     withCredentials: false
 });
 
-// $ExpectType Promise<any>
-httpProvider.send('rpc_method', []);
-
-// $ExpectType Promise<any[]>
-httpProvider.sendBatch([], {});
+// $ExpectType void
+httpProvider.send({} as any, () => {});
 
 // $ExpectType boolean
 httpProvider.disconnect();

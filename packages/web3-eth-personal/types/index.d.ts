@@ -18,23 +18,10 @@
  * @date 2018
  */
 
-import * as net from 'net';
-import {
-    AbstractWeb3Module,
-    AccountsBase,
-    provider,
-    RLPEncodedTransaction,
-    TransactionConfig,
-    Web3ModuleOptions
-} from 'web3-core';
+import { provider, RLPEncodedTransaction, TransactionConfig } from 'web3-core';
 
-export class Personal extends AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        net?: net.Socket | null,
-        options?: Web3ModuleOptions,
-        accounts?: AccountsBase | null
-    );
+export class Personal {
+    constructor(currentProvider: provider);
 
     newAccount(
         password: string,
@@ -85,5 +72,9 @@ export class Personal extends AbstractWeb3Module {
         callback?: (error: Error, accounts: string[]) => void
     ): Promise<string[]>;
 
-    importRawKey(privateKey: string, password: string): Promise<string>;
+    importRawKey(
+        privateKey: string,
+        password: string,
+        callback?: (error: Error, result: string) => void
+    ): Promise<string>;
 }

@@ -18,13 +18,21 @@
  */
 
 import * as net from 'net';
-import { AbstractWeb3Module, provider } from 'web3-core';
+import { BatchRequest, provider, Providers } from 'web3-core';
 import { Network } from 'web3-net';
 
-export class Shh extends AbstractWeb3Module {
+export class Shh {
     constructor(provider: provider, net?: net.Socket | null);
 
     net: Network;
+
+    readonly givenProvider: any;
+    defaultAccount: string | null;
+    defaultBlock: string | number;
+    readonly currentProvider: provider;
+    setProvider(provider: provider): boolean;
+    BatchRequest: new () => BatchRequest;
+    static readonly providers: Providers;
 
     getVersion(
         callback?: (error: Error, version: string) => void

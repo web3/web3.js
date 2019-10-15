@@ -19,17 +19,16 @@
  * @date 2018
  */
 
-import * as net from 'net';
 import {
-    AbstractWeb3Module,
+    BatchRequest,
     Log,
     PromiEvent,
     provider,
+    Providers,
     RLPEncodedTransaction,
     Transaction,
     TransactionConfig,
-    TransactionReceipt,
-    Web3ModuleOptions
+    TransactionReceipt
 } from 'web3-core';
 import { AbiCoder } from 'web3-eth-abi';
 import { Accounts } from 'web3-eth-accounts';
@@ -40,12 +39,8 @@ import { Personal } from 'web3-eth-personal';
 import { Network } from 'web3-net';
 import { AbiItem } from 'web3-utils';
 
-export class Eth extends AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        net?: net.Socket | null,
-        options?: Web3ModuleOptions
-    );
+export class Eth {
+    constructor(currentProvider: provider);
 
     Contract: new (
         jsonInterface: AbiItem[] | AbiItem,
@@ -59,7 +54,15 @@ export class Eth extends AbstractWeb3Module {
     abi: AbiCoder;
     net: Network;
 
-    clearSubscriptions(): Promise<boolean>;
+    readonly givenProvider: any;
+    defaultAccount: string | null;
+    defaultBlock: string | number;
+    readonly currentProvider: provider;
+    setProvider(provider: provider): boolean;
+    BatchRequest: new () => BatchRequest;
+    static readonly providers: Providers;
+
+    clearSubscriptions(callback: (error: Error, result: boolean) => void): void;
 
     subscribe(
         type: 'logs',
@@ -321,11 +324,6 @@ export class Eth extends AbstractWeb3Module {
     ): Promise<GetProof>;
 }
 
-export interface Methods {
-    property?: string;
-    methods: Method[];
-}
-
 export interface Method {
     name: string;
     call: string;
@@ -383,6 +381,7 @@ export interface LogsOptions {
 export interface Subscription<T> {
     id: string;
     options: any;
+    callback: any;
 
     subscribe(callback?: (error: Error, result: T) => void): Subscription<T>;
 

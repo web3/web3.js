@@ -28,32 +28,32 @@ const ipcProvider = new IpcProvider(
     new net.Server()
 );
 
-// $ExpectType string
-ipcProvider.host;
+// $ExpectType any
+ipcProvider.responseCallbacks;
+
+// $ExpectType any
+ipcProvider.notificationCallbacks;
+
+// $ExpectType any
+ipcProvider.connection;
 
 // $ExpectType boolean
 ipcProvider.connected;
 
 // $ExpectType void
-ipcProvider.registerEventListeners();
+ipcProvider.addDefaultEvents();
 
-// $ExpectType Promise<any>
-ipcProvider.send('rpc_method', []);
+// $ExpectType boolean
+ipcProvider.supportsSubscriptions();
 
-// $ExpectType Promise<any[]>
-ipcProvider.sendBatch([], {});
-
-// $ExpectType Promise<string>
-ipcProvider.subscribe('eth_subscribe', 'logs', []);
-
-// $ExpectType Promise<boolean>
-ipcProvider.unsubscribe('subId', 'eth_unsubscribe');
-
-// $ExpectType Promise<boolean>
-ipcProvider.clearSubscriptions('eth_unsubscribe');
+// $ExpectType void
+ipcProvider.send({} as any, () => {});
 
 // $ExpectType void
 ipcProvider.on('type', () => {});
+
+// $ExpectType void
+ipcProvider.once('type', () => {});
 
 // $ExpectType void
 ipcProvider.removeListener('type', () => {});
@@ -66,6 +66,3 @@ ipcProvider.reset();
 
 // $ExpectType void
 ipcProvider.reconnect();
-
-// $ExpectType void
-ipcProvider.disconnect(100, 'reason');

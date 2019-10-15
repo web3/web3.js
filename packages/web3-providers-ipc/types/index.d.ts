@@ -21,35 +21,28 @@
  */
 
 import * as net from 'net';
+import { IpcProviderBase, JsonRpcPayload } from 'web3-core-helpers';
 
-export class AbstractSocketProvider {
-    constructor(connection: any, timeout?: number);
+export class IpcProvider extends IpcProviderBase {
+    constructor(path: string, net: net.Server);
 
-    host: string;
+    responseCallbacks: any;
+    notificationCallbacks: any;
     connected: boolean;
+    connection: any;
+
+    addDefaultEvents(): void;
 
     supportsSubscriptions(): boolean;
 
-    registerEventListeners(): void;
-
-    send(method: string, parameters: any[]): Promise<any>;
-
-    sendBatch(methods: any[], moduleInstance: any): Promise<any[]>;
-
-    subscribe(
-        subscribeMethod: string,
-        subscriptionMethod: string,
-        parameters: any[]
-    ): Promise<string>;
-
-    unsubscribe(
-        subscriptionId: string,
-        unsubscribeMethod: string
-    ): Promise<boolean>;
-
-    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>;
+    send(
+        payload: JsonRpcPayload,
+        callback: (error: Error, result: any) => void
+    ): void;
 
     on(type: string, callback: () => void): void;
+
+    once(type: string, callback: () => void): void;
 
     removeListener(type: string, callback: () => void): void;
 
@@ -58,10 +51,4 @@ export class AbstractSocketProvider {
     reset(): void;
 
     reconnect(): void;
-
-    disconnect(code: number, reason: string): void;
-}
-
-export class IpcProvider extends AbstractSocketProvider {
-    constructor(path: string, net: net.Server);
 }

@@ -49,7 +49,8 @@ eth.abi;
 // $ExpectType Network
 eth.net;
 
-eth.clearSubscriptions();
+// $ExpectType void
+eth.clearSubscriptions(() => {});
 
 // $ExpectType Subscription<Log>
 eth.subscribe('logs');
@@ -82,14 +83,11 @@ eth.subscribe(
     (error: Error, transactionHash: string) => {}
 );
 
-// $ExpectType Providers
-Eth.providers;
+// $ExpectType provider
+eth.currentProvider;
 
 // $ExpectType any
 eth.givenProvider;
-
-// $ExpectType BatchRequest
-new eth.BatchRequest();
 
 // $ExpectType string | null
 eth.defaultAccount;
@@ -97,8 +95,11 @@ eth.defaultAccount;
 // $ExpectType string | number
 eth.defaultBlock;
 
-// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
-eth.currentProvider;
+// $ExpectType boolean
+eth.setProvider('https://localhost:2100');
+
+// $ExpectType BatchRequest
+new eth.BatchRequest();
 
 // $ExpectType Promise<string>
 eth.getProtocolVersion();

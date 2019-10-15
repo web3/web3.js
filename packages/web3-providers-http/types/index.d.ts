@@ -20,7 +20,13 @@
  * @date 2018
  */
 
-export class HttpProvider {
+import {
+    HttpProviderBase,
+    HttpProviderOptions,
+    JsonRpcPayload
+} from 'web3-core-helpers';
+
+export class HttpProvider extends HttpProviderBase {
     constructor(host: string, options?: HttpProviderOptions);
 
     host: string;
@@ -28,21 +34,10 @@ export class HttpProvider {
 
     supportsSubscriptions(): boolean;
 
-    send(method: string, parameters: any[]): Promise<any>;
-
-    sendBatch(methods: any, moduleInstance: any): Promise<any[]>;
+    send(
+        payload: JsonRpcPayload,
+        callback: (error: Error, result: any) => void
+    ): void;
 
     disconnect(): boolean;
-}
-
-export interface HttpProviderOptions {
-    host?: string;
-    timeout?: number;
-    headers?: HttpHeader[];
-    withCredentials?: boolean;
-}
-
-export interface HttpHeader {
-    name: string;
-    value: string;
 }

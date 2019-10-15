@@ -22,16 +22,10 @@ import { Contract } from 'web3-eth-contract';
 const contract = new Contract('http://localhost:500', []);
 
 // $ExpectType string
-contract.address;
-
-// $ExpectType string
 contract.options.address;
 
-// $ExpectType string
-contract.options.data;
-
-// $ExpectType AbiModel
-contract.jsonInterface;
+// $ExpectType AbiItemModel[]
+contract.options.jsonInterface;
 
 // $ExpectType Contract
 contract.clone();
@@ -52,15 +46,11 @@ contract.once(
         },
         fromBlock: 0
     },
-    (error, event) => {
-        console.log(event);
-    }
+    (error, event) => {}
 );
 
 // $ExpectType void
-contract.once('MyEvent', (error, event) => {
-    console.log(event);
-});
+contract.once('MyEvent', (error, event) => {});
 
 // $ExpectType Promise<EventData[]>
 contract.getPastEvents('MyEvent');
@@ -86,15 +76,11 @@ contract.getPastEvents(
         fromBlock: 0,
         toBlock: 'latest'
     },
-    (error, events) => {
-        console.log(events);
-    }
+    (error, events) => {}
 );
 
 // $ExpectType Promise<EventData[]>
-contract.getPastEvents('MyEvent', (error, events) => {
-    console.log(events);
-});
+contract.getPastEvents('MyEvent', (error, events) => {});
 
 // $ExpectType Promise<number>
 contract
@@ -118,9 +104,7 @@ contract
         data: '0x12345...',
         arguments: [123, 'My String']
     })
-    .estimateGas((err: Error, gas: number) => {
-        console.log(gas);
-    });
+    .estimateGas((err: Error, gas: number) => {});
 
 // $ExpectType string
 contract
@@ -146,7 +130,5 @@ contract
     })
     .send(
         { from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe' },
-        (err: Error, transactionHash: string) => {
-            console.log(transactionHash);
-        }
+        (err: Error, transactionHash: string) => {}
     );

@@ -20,10 +20,13 @@
 export class Bzz {
     constructor(provider: any);
 
+    readonly givenProvider: any;
+    defaultAccount: string | null;
+    defaultBlock: string | number;
+    readonly currentProvider: any;
     setProvider(provider: any): boolean;
-
-    givenProvider: any;
-    currentProvider: string | null;
+    BatchRequest: new () => any;
+    static readonly providers: any;
 
     upload(data: any): Promise<string>;
 

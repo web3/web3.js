@@ -19,40 +19,15 @@
  */
 
 import * as net from 'net';
-import { AbstractMethod, AbstractMethodFactory } from 'web3-core-method';
+import {
+    HttpProviderBase,
+    HttpProviderOptions,
+    IpcProviderBase,
+    Method,
+    WebsocketProviderBase,
+    WebsocketProviderOptions
+} from 'web3-core-helpers';
 import BN = require('bn.js');
-
-export class AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        options?: Web3ModuleOptions,
-        methodFactory?: AbstractMethodFactory,
-        net?: net.Socket | null
-    );
-
-    BatchRequest: new () => BatchRequest;
-    defaultBlock: string | number;
-    transactionBlockTimeout: number;
-    transactionConfirmationBlocks: number;
-    transactionPollingTimeout: number;
-    defaultGasPrice: string;
-    defaultGas: number;
-    static readonly providers: Providers;
-    defaultAccount: string | null;
-    readonly currentProvider:
-        | Web3EthereumProvider
-        | HttpProvider
-        | IpcProvider
-        | WebsocketProvider
-        | CustomProvider;
-    readonly givenProvider: any;
-
-    setProvider(provider: provider, net?: net.Socket): boolean;
-
-    isSameProvider(provider: provider): boolean;
-
-    clearSubscriptions(subscriptionType: string): Promise<boolean>;
-}
 
 export interface SignedTransaction {
     messageHash?: string;
@@ -61,16 +36,6 @@ export interface SignedTransaction {
     v: string;
     rawTransaction?: string;
     transactionHash?: string;
-}
-
-export interface Web3ModuleOptions {
-    defaultAccount?: string;
-    defaultBlock?: string | number;
-    transactionBlockTimeout?: number;
-    transactionConfirmationBlocks?: number;
-    transactionPollingTimeout?: number;
-    defaultGasPrice?: string;
-    defaultGas?: number;
 }
 
 export interface Providers {
@@ -260,12 +225,8 @@ export interface PeerInfo {
 
 // had to move `web3-net` due to other modules in `1.x` not referencing
 
-export class NetworkBase extends AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        net?: net.Socket | null,
-        options?: Web3ModuleOptions
-    );
+export class NetworkBase {
+    constructor(provider: provider, net?: net.Socket | null);
 
     getNetworkType(
         callback?: (error: Error, returnValue: string) => void
@@ -284,12 +245,8 @@ export class NetworkBase extends AbstractWeb3Module {
 
 // had to move accounts from web3-eth-accounts due to other modules in 1.x not referencing
 
-export class AccountsBase extends AbstractWeb3Module {
-    constructor(
-        provider: provider,
-        net?: net.Socket | null,
-        options?: Web3ModuleOptions
-    );
+export class AccountsBase {
+    constructor(provider: provider, net?: net.Socket | null);
 
     create(entropy?: string): Account;
 
@@ -408,188 +365,30 @@ export interface SignatureObject {
 // put all the `web3-provider` typings in here so we can get to them everywhere as this module does not exist in 1.x
 
 export class BatchRequest {
-    constructor(moduleInstance: AbstractWeb3Module);
+    constructor();
 
-    add(method: AbstractMethod): void;
+    add(method: Method): void;
 
-    execute(): Promise<BatchError | BatchResponse>;
+    execute(): void;
 }
 
-export interface BatchError {
-    errors: BatchErrorItem[];
-    response: any[];
-}
-
-export interface BatchErrorItem {
-    error: Error;
-    method: AbstractMethod;
-}
-
-export interface BatchResponse {
-    methods: AbstractMethod[];
-    response: any[];
-}
-
-export class ProviderDetector {
-    static detect(): provider;
-}
-
-export class ProvidersModuleFactory {
-    createBatchRequest(moduleInstance: AbstractWeb3Module): BatchRequest;
-
-    createProviderResolver(): ProviderResolver;
-
-    createHttpProvider(url: string): HttpProvider;
-
-    createWebsocketProvider(url: string): WebsocketProvider;
-
-    createIpcProvider(path: string, net: net.Server): IpcProvider;
-
-    createWeb3EthereumProvider(connection: any): Web3EthereumProvider;
-}
-
-export class HttpProvider {
+export class HttpProvider extends HttpProviderBase {
     constructor(host: string, options?: HttpProviderOptions);
-
-    host: string;
-    connected: boolean;
-
-    supportsSubscriptions(): boolean;
-
-    send(method: string, parameters: any[]): Promise<any>;
-
-    sendBatch(
-        methods: AbstractMethod[],
-        moduleInstance: AbstractWeb3Module
-    ): Promise<any[]>;
-
-    disconnect(): boolean;
 }
 
-export class CustomProvider {
-    constructor(injectedProvider: any);
-
-    host: string;
-
-    supportsSubscriptions(): boolean;
-
-    send(method: string, parameters: any[]): Promise<any>;
-
-    sendBatch(
-        methods: AbstractMethod[],
-        moduleInstance: AbstractWeb3Module
-    ): Promise<any[]>;
-}
-
-export class AbstractSocketProvider {
-    constructor(connection: any, timeout?: number);
-
-    host: string;
-    connected: boolean;
-
-    supportsSubscriptions(): boolean;
-
-    registerEventListeners(): void;
-
-    send(method: string, parameters: any[]): Promise<any>;
-
-    sendBatch(
-        methods: AbstractMethod[],
-        moduleInstance: AbstractWeb3Module
-    ): Promise<any[]>;
-
-    subscribe(
-        subscribeMethod: string,
-        subscriptionMethod: string,
-        parameters: any[]
-    ): Promise<string>;
-
-    unsubscribe(
-        subscriptionId: string,
-        unsubscribeMethod: string
-    ): Promise<boolean>;
-
-    clearSubscriptions(unsubscribeMethod: string): Promise<boolean>;
-
-    on(type: string, callback: () => void): void;
-
-    removeListener(type: string, callback: () => void): void;
-
-    removeAllListeners(type: string): void;
-
-    reset(): void;
-
-    reconnect(): void;
-
-    disconnect(code: number, reason: string): void;
-}
-
-export class IpcProvider extends AbstractSocketProvider {
+export class IpcProvider extends IpcProviderBase {
     constructor(path: string, net: net.Server);
 }
 
-export class WebsocketProvider extends AbstractSocketProvider {
+export class WebsocketProvider extends WebsocketProviderBase {
     constructor(host: string, options?: WebsocketProviderOptions);
 
     isConnecting(): boolean;
-}
-
-export class Web3EthereumProvider extends AbstractSocketProvider {
-    constructor(ethereumProvider: any);
-}
-
-export class JsonRpcMapper {
-    static toPayload(method: string, params: any[]): JsonRpcPayload;
-}
-
-export class ProviderResolver {
-    resolve(provider: provider, net: net.Socket): provider;
-}
-
-export class JsonRpcResponseValidator {
-    static validate(
-        response: JsonRpcPayload[] | JsonRpcPayload,
-        payload?: any
-    ): boolean;
-
-    static isResponseItemValid(response: JsonRpcPayload): boolean;
 }
 
 export type provider =
     | HttpProvider
     | IpcProvider
     | WebsocketProvider
-    | Web3EthereumProvider
-    | CustomProvider
     | string
     | null;
-
-export interface JsonRpcPayload {
-    jsonrpc: string;
-    method: string;
-    params: any[];
-    id?: string | number;
-}
-
-export interface HttpHeader {
-    name: string;
-    value: string;
-}
-
-export interface HttpProviderOptions {
-    host?: string;
-    timeout?: number;
-    headers?: HttpHeader[];
-    withCredentials?: boolean;
-}
-
-export interface WebsocketProviderOptions {
-    host?: string;
-    timeout?: number;
-    reconnectDelay?: number;
-    headers?: any;
-    protocol?: string;
-    clientConfig?: string;
-    requestOptions?: any;
-    origin?: string;
-}

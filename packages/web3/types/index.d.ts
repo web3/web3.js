@@ -18,22 +18,30 @@
  */
 
 import * as net from 'net';
-import { AbstractWeb3Module, provider } from 'web3-core';
+import { Bzz } from 'web3-bzz';
+import { BatchRequest, provider, Providers } from 'web3-core';
 import { Eth } from 'web3-eth';
 import { Personal } from 'web3-eth-personal';
 import { Network } from 'web3-net';
 import { Shh } from 'web3-shh';
 import { Utils } from 'web3-utils';
 
-export default class Web3 extends AbstractWeb3Module {
+export default class Web3 {
     constructor(provider: provider, net?: net.Socket);
 
     static modules: Modules;
-    static readonly givenProvider: any;
+    readonly givenProvider: any;
+    defaultAccount: string | null;
+    defaultBlock: string | number;
+    readonly currentProvider: provider;
+    setProvider(provider: provider): boolean;
+    BatchRequest: new () => BatchRequest;
+    static readonly providers: Providers;
 
     utils: Utils;
     eth: Eth;
     shh: Shh;
+    bzz: Bzz;
     version: string;
 }
 

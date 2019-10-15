@@ -17,6 +17,8 @@
  * @date 2018
  */
 
+import * as net from 'net';
+
 export class formatters {
     static outputBigNumberFormatter(number: number): number;
 
@@ -69,4 +71,121 @@ export class errors {
     static InvalidProvider(): Error;
     static InvalidResponse(result: Error): Error;
     static ConnectionTimeout(ms: string): Error;
+}
+
+export interface Method {
+    name: string;
+    call: string;
+    params?: number;
+    inputFormatter?: Array<(() => void) | null>;
+    outputFormatter?: () => void;
+    extraFormatters?: any;
+}
+
+export class WebsocketProviderBase {
+    constructor(host: string, options?: WebsocketProviderOptions);
+
+    isConnecting(): boolean;
+
+    responseCallbacks: any;
+    notificationCallbacks: any;
+    connected: boolean;
+    connection: any;
+
+    addDefaultEvents(): void;
+
+    supportsSubscriptions(): boolean;
+
+    send(
+        payload: JsonRpcPayload,
+        callback: (error: Error, result: any) => void
+    ): void;
+
+    on(type: string, callback: () => void): void;
+
+    once(type: string, callback: () => void): void;
+
+    removeListener(type: string, callback: () => void): void;
+
+    removeAllListeners(type: string): void;
+
+    reset(): void;
+
+    disconnect(code: number, reason: string): void;
+}
+
+export class IpcProviderBase {
+    constructor(path: string, net: net.Server);
+
+    responseCallbacks: any;
+    notificationCallbacks: any;
+    connected: boolean;
+    connection: any;
+
+    addDefaultEvents(): void;
+
+    supportsSubscriptions(): boolean;
+
+    send(
+        payload: JsonRpcPayload,
+        callback: (error: Error, result: any) => void
+    ): void;
+
+    on(type: string, callback: () => void): void;
+
+    once(type: string, callback: () => void): void;
+
+    removeListener(type: string, callback: () => void): void;
+
+    removeAllListeners(type: string): void;
+
+    reset(): void;
+
+    reconnect(): void;
+}
+
+export class HttpProviderBase {
+    constructor(host: string, options?: HttpProviderOptions);
+
+    host: string;
+    connected: boolean;
+
+    supportsSubscriptions(): boolean;
+
+    send(
+        payload: JsonRpcPayload,
+        callback: (error: Error, result: any) => void
+    ): void;
+
+    disconnect(): boolean;
+}
+
+export interface HttpProviderOptions {
+    keepAlive?: boolean;
+    timeout?: number;
+    headers?: HttpHeader[];
+    withCredentials?: boolean;
+}
+
+export interface HttpHeader {
+    name: string;
+    value: string;
+}
+
+export interface WebsocketProviderOptions {
+    host?: string;
+    timeout?: number;
+    reconnectDelay?: number;
+    headers?: any;
+    protocol?: string;
+    clientConfig?: string;
+    requestOptions?: any;
+    origin?: string;
+}
+
+export interface JsonRpcPayload {
+    jsonrpc: string;
+    method: string;
+    params: any[];
+    id?: string | number;
 }

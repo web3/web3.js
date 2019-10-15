@@ -21,17 +21,20 @@ import { Info, Notification, Shh } from 'web3-shh';
 
 const shh = new Shh('https://localhost:5000');
 
-// $ExpectType boolean
-shh.setProvider('https://localhost:3000');
-
-// $ExpectType Providers
-Shh.providers;
+// $ExpectType provider
+shh.currentProvider;
 
 // $ExpectType any
 shh.givenProvider;
 
-// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Web3EthereumProvider | CustomProvider
-shh.currentProvider;
+// $ExpectType string | null
+shh.defaultAccount;
+
+// $ExpectType string | number
+shh.defaultBlock;
+
+// $ExpectType boolean
+shh.setProvider('https://localhost:2100');
 
 // $ExpectType BatchRequest
 new shh.BatchRequest();

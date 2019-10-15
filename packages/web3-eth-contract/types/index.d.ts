@@ -18,8 +18,8 @@
  */
 
 import BN = require('bn.js');
-import { PromiEvent, provider, Web3ModuleOptions } from 'web3-core';
-import { AbiInput, AbiItem, AbiOutput } from 'web3-utils';
+import { PromiEvent, provider } from 'web3-core';
+import { AbiItem } from 'web3-utils';
 
 export class Contract {
     constructor(
@@ -29,8 +29,8 @@ export class Contract {
         options?: ContractOptions
     );
 
-    address: string;
-    jsonInterface: AbiModel;
+    private _address: string;
+    private _jsonInterface: AbiItemModel[];
 
     options: Options;
 
@@ -65,11 +65,9 @@ export class Contract {
     ): Promise<EventData[]>;
 }
 
-export class ContractModuleFactory {} // TODO: Define methods
-
 export interface Options {
     address: string;
-    data: string;
+    jsonInterface: AbiItemModel[];
 }
 
 export interface DeployOptions {
@@ -115,7 +113,7 @@ export interface EstimateGasOptions {
     value?: number | string | BN;
 }
 
-export interface ContractOptions extends Web3ModuleOptions {
+export interface ContractOptions {
     // Sender to use for contract calls
     from?: string;
     // Gas price to use for contract calls
@@ -151,35 +149,8 @@ export interface EventData {
     address: string;
 }
 
-export interface AbiModel {
-    getMethod(name: string): AbiItemModel | false;
-
-    getMethods(): AbiItemModel[];
-
-    hasMethod(name: string): boolean;
-
-    getEvent(name: string): AbiItemModel | false;
-
-    getEvents(): AbiItemModel[];
-
-    getEventBySignature(signature: string): AbiItemModel;
-
-    hasEvent(name: string): boolean;
-}
-
 export interface AbiItemModel {
     signature: string;
     name: string;
     payable: boolean;
-    anonymous: boolean;
-
-    getInputLength(): number;
-
-    getInputs(): AbiInput[];
-
-    getIndexedInputs(): AbiInput[];
-
-    getOutputs(): AbiOutput[];
-
-    isOfType(): boolean;
 }
