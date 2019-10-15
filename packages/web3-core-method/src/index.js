@@ -347,6 +347,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                 new Error('The contract code couldn\'t be stored, please check your gas limit.'),
                                 defer.eventEmitter,
                                 defer.reject,
+                                null,
                                 receipt
                             );
                         }
