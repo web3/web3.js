@@ -20,7 +20,6 @@ addons:
       - g++-5
 
 before_install:
-  - npm i -g typescript@next
   - if [ $TRAVIS_OS_NAME == "linux" ]; then
       export CC="gcc-5";
       export CXX="g++-5";

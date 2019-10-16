@@ -109,6 +109,7 @@
         "sandboxed-module": "^2.0.3",
         "underscore": "^1.9.1",
         "vinyl-source-stream": "^2.0.0",
-        "wait-port": "^0.2.6"
+        "wait-port": "^0.2.6",
+        "typescript": "next"
     }
 }
