@@ -20,7 +20,8 @@
     "author": "ethereum.org",
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint types --onlyTestTsNext"
+        "dtslint": "dtslint types --onlyTestTsNext",
+        "postinstall": "node angular-patch.js"
     },
     "authors": [
         {
