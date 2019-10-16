@@ -56,6 +56,7 @@ Released with 1.0.0-beta.37 code base.
 - getNetworkType method extended with Görli testnet (#3095)
 - supportsSubscriptions method added to providers (#3116)
 - Add `eth.getChainId` method (#3113)
+- The transaction confirmation workflow can now be configured (#3130)
 
 ### Fixed
 

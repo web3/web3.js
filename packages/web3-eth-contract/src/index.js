@@ -180,6 +180,9 @@ var Contract = function Contract(jsonInterface, address, options) {
     // get default account from the Class
     var defaultAccount = this.constructor.defaultAccount;
     var defaultBlock = this.constructor.defaultBlock || 'latest';
+    this.transactionBlockTimeout = this.constructor.transactionBlockTimeout;
+    this.transactionConfirmationBlocks = this.constructor.transactionConfirmationBlocks;
+    this.transactionPollingTimeout = this.constructor.transactionPollingTimeout;
 
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
@@ -891,6 +894,9 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     accounts: _this.constructor._ethAccounts || _this._ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,
                     defaultBlock: _this._parent.defaultBlock,
+                    transactionBlockTimeout: _this._parent.transactionBlockTimeout,
+                    transactionConfirmationBlocks: _this._parent.transactionConfirmationBlocks,
+                    transactionPollingTimeout: _this._parent.transactionPollingTimeout,
                     extraFormatters: extraFormatters
                 })).createFunction();
 
