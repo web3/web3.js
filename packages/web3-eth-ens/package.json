@@ -7,6 +7,10 @@
     "engines": {
         "node": ">=8.0.0"
     },
+    "types": "types/index.d.ts",
+    "scripts": {
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
     "main": "src/index.js",
     "dependencies": {
         "eth-ens-namehash": "2.0.8",
@@ -17,5 +21,9 @@
         "web3-eth-abi": "1.2.1",
         "web3-eth-contract": "1.2.1",
         "web3-utils": "1.2.1"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     }
 }
