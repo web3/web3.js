@@ -256,7 +256,14 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             .catch(function (err) {
                 sub.unsubscribe();
                 promiseResolved = true;
-                utils._fireError({message: 'Failed to check for transaction receipt:', data: err}, defer.eventEmitter, defer.reject);
+                utils._fireError(
+                    {
+                        message: 'Failed to check for transaction receipt:',
+                        data: err
+                    },
+                    defer.eventEmitter,
+                    defer.reject
+                );
             })
             // if CONFIRMATION listener exists check for confirmations, by setting canUnsubscribe = false
             .then(function(receipt) {
@@ -302,7 +309,13 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                             promiseResolved = true;
                         }
 
-                        utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.eventEmitter, defer.reject);
+                        utils._fireError(
+                            new Error('The transaction receipt didn\'t contain a contract address.'), 
+                            defer.eventEmitter, 
+                            defer.reject, 
+                            null,
+                            receipt
+                        );
                         return;
                     }
 
@@ -329,7 +342,13 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                             }
 
                         } else {
-                            utils._fireError(new Error('The contract code couldn\'t be stored, please check your gas limit.'), defer.eventEmitter, defer.reject);
+                            utils._fireError(
+                                new Error('The contract code couldn\'t be stored, please check your gas limit.'),
+                                defer.eventEmitter,
+                                defer.reject,
+                                null,
+                                receipt
+                            );
                         }
 
                         if (canUnsubscribe) {
@@ -343,9 +362,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             })
             // CHECK for normal tx check for receipt only
             .then(function(receipt) {
-
                 if (!isContractDeployment && !promiseResolved) {
-
                     if(!receipt.outOfGas &&
                         (!gasProvided || gasProvided !== utils.numberToHex(receipt.gasUsed)) &&
                         (receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined')) {
@@ -359,13 +376,23 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
                     } else {
                         receiptJSON = JSON.stringify(receipt, null, 2);
+
                         if (receipt.status === false || receipt.status === '0x0') {
-                            utils._fireError(new Error("Transaction has been reverted by the EVM:\n" + receiptJSON),
-                                defer.eventEmitter, defer.reject);
+                            utils._fireError(
+                                new Error("Transaction has been reverted by the EVM:\n" + receiptJSON),
+                                defer.eventEmitter,
+                                defer.reject,
+                                null,
+                                receipt
+                            );
                         } else {
                             utils._fireError(
                                 new Error("Transaction ran out of gas. Please provide more gas:\n" + receiptJSON),
-                                defer.eventEmitter, defer.reject);
+                                defer.eventEmitter,
+                                defer.reject,
+                                null,
+                                receipt
+                            );
                         }
                     }
 
@@ -386,13 +413,21 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                     if (timeoutCount - 1 >= method.transactionPollingTimeout) {
                         sub.unsubscribe();
                         promiseResolved = true;
-                        utils._fireError(new Error('Transaction was not mined within' + method.transactionPollingTimeout + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
+                        utils._fireError(
+                            new Error('Transaction was not mined within ' + method.transactionPollingTimeout + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'), 
+                            defer.eventEmitter, 
+                            defer.reject
+                        );
                     }
                 } else {
                     if (timeoutCount - 1 >= method.transactionBlockTimeout) {
                         sub.unsubscribe();
                         promiseResolved = true;
-                        utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
+                        utils._fireError(
+                            new Error('Transaction was not mined within ' + method.transactionBlockTimeout + ' blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
+                            defer.eventEmitter,
+                            defer.reject
+                        );
                     }
                 }
             });
