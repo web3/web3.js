@@ -261,7 +261,7 @@ transactionPollingTimeout
     web3.eth.transactionPollingTimeout
 
 The ``transactionPollingTimeout``  will be used over a HTTP connection.
-This option does define the amount of polls (each second) it should wait until the first confirmation happens.
+This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. NB: If this method times out, the transaction may still be pending.
 
 
 -------
