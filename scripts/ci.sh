@@ -4,6 +4,9 @@
 # Travis CI matrix job selector
 # -----------------------------
 
+# Exit immediately on error
+set -o errexit
+
 if [ "$TEST" = "unit" ]; then
 
   npm run build
