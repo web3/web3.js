@@ -27,12 +27,6 @@ shh.currentProvider;
 // $ExpectType any
 shh.givenProvider;
 
-// $ExpectType string | null
-shh.defaultAccount;
-
-// $ExpectType string | number
-shh.defaultBlock;
-
 // $ExpectType boolean
 shh.setProvider('https://localhost:2100');
 

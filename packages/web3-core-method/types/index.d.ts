@@ -17,47 +17,16 @@
  * @date 2018
  */
 
-import { formatters } from 'web3-core-helpers';
-import { Utils } from 'web3-utils';
+import {JsonRpcPayload} from 'web3-core-helpers';
 
-export class AbstractMethod {
-    constructor(
-        rpcMethod: string,
-        parametersAmount: number,
-        utils: Utils,
-        formatters: formatters,
-        moduleInstance: any
-    );
-
-    utils: Utils;
-    formatters: formatters;
-    promiEvent: any;
-    rpcMethod: string;
-    parametersAmount: number;
-    parameters: any[];
-
-    getArguments(): any;
-
-    setArguments(args: any[]): void;
-
-    isHash(parameter: string): boolean;
-
-    hasWallets(): boolean;
-
-    callback(error: string | Error, response: any): void;
-
-    beforeExecution(moduleInstance: any): void;
-
-    afterExecution(response: any): any;
-
-    execute(): Promise<any> | string;
-}
-
-export class AbstractMethodFactory {
-    constructor(utils: Utils, formatters: formatters);
-
-    methods: any;
-    hasMethod: boolean;
-
-    createMethod(name: string, moduleInstance: any): AbstractMethod;
+export interface Method {
+    name: string;
+    call: string;
+    params?: number;
+    inputFormatter?: Array<(() => void) | null>;
+    outputFormatter?: () => void;
+    transformPayload?: () => void;
+    extraFormatters?: any;
+    defaultBlock?: string;
+    defaultAccount?: string | null;
 }

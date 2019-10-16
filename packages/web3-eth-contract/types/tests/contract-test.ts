@@ -24,8 +24,20 @@ const contract = new Contract('http://localhost:500', []);
 // $ExpectType string
 contract.options.address;
 
-// $ExpectType AbiItemModel[]
+// $ExpectType AbiItem[]
 contract.options.jsonInterface;
+
+// $ExpectType string | undefined
+contract.options.from;
+
+// $ExpectType number | undefined
+contract.options.gas;
+
+// $ExpectType string | undefined
+contract.options.gasPrice;
+
+// $ExpectType string | undefined
+contract.options.data;
 
 // $ExpectType Contract
 contract.clone();

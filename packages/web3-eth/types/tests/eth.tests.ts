@@ -40,6 +40,9 @@ eth.personal;
 // $ExpectType Accounts
 eth.accounts;
 
+// $ExpectType any
+eth.extend({property: 'test', methods: [{name: 'method', call: 'method'}]});
+
 // $ExpectType Ens
 eth.ens;
 

@@ -27,12 +27,11 @@ export class Shh {
     net: Network;
 
     readonly givenProvider: any;
-    defaultAccount: string | null;
-    defaultBlock: string | number;
     readonly currentProvider: provider;
-    setProvider(provider: provider): boolean;
-    BatchRequest: new () => BatchRequest;
     static readonly providers: Providers;
+    BatchRequest: new () => BatchRequest;
+
+    setProvider(provider: provider): boolean;
 
     getVersion(
         callback?: (error: Error, version: string) => void

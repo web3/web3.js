@@ -20,6 +20,21 @@ import { Accounts } from 'web3-eth-accounts';
 
 const accounts = new Accounts('http://localhost:8545');
 
+// $ExpectType provider
+accounts.currentProvider;
+
+// $ExpectType any
+accounts.givenProvider;
+
+// $ExpectType boolean
+accounts.setProvider('https://localhost:2100');
+
+// $ExpectType any
+accounts.extend({property: 'test', methods: [{name: 'method', call: 'method'}]});
+
+// $ExpectType BatchRequest
+new accounts.BatchRequest();
+
 // $ExpectType Account
 accounts.create();
 // $ExpectType Account

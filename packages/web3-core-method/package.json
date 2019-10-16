@@ -9,7 +9,7 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "ignore_dtslint": "dtslint types --onlyTestTsNext"
+        "dtslint": "dtslint types --onlyTestTsNext"
     },
     "main": "src/index.js",
     "dependencies": {

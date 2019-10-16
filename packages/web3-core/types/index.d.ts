@@ -23,10 +23,10 @@ import {
     HttpProviderBase,
     HttpProviderOptions,
     IpcProviderBase,
-    Method,
     WebsocketProviderBase,
     WebsocketProviderOptions
 } from 'web3-core-helpers';
+import { Method } from 'web3-core-method';
 import BN = require('bn.js');
 
 export interface SignedTransaction {
@@ -36,6 +36,11 @@ export interface SignedTransaction {
     v: string;
     rawTransaction?: string;
     transactionHash?: string;
+}
+
+export interface Extension {
+    property?: string,
+    methods: Method[]
 }
 
 export interface Providers {
@@ -164,7 +169,7 @@ export interface EventLog {
     transactionHash: string;
     blockHash: string;
     blockNumber: number;
-    raw?: { data: string; topics: any[] };
+    raw?: {data: string; topics: any[]};
 }
 
 export interface Log {
@@ -178,55 +183,19 @@ export interface Log {
     blockNumber: number;
 }
 
-export interface TxPoolContent {
-    pending: TxPool;
-    queued: TxPool;
-}
-
-export interface TxPoolInspect {
-    pending: TxPool;
-    queued: TxPool;
-}
-
-export interface TxPool {
-    [address: string]: {
-        [nonce: number]: string[] | Transaction[];
-    };
-}
-
-export interface TxPoolStatus {
-    pending: number;
-    queued: number;
-}
-
-export interface NodeInfo {
-    enode: string;
-    id: string;
-    ip: string;
-    listenAddr: string;
-    name: string;
-    ports: {
-        discovery: string | number;
-        listener: string | number;
-    };
-    protocols: any; // Any because it's not documented what each protocol (eth, shh etc.) is defining here
-}
-
-export interface PeerInfo {
-    caps: string[];
-    id: string;
-    name: string;
-    network: {
-        localAddress: string;
-        remoteAddress: string;
-    };
-    protocols: any; // Any because it's not documented what each protocol (eth, shh etc.) is defining here
-}
-
 // had to move `web3-net` due to other modules in `1.x` not referencing
 
 export class NetworkBase {
     constructor(provider: provider, net?: net.Socket | null);
+
+    readonly givenProvider: any;
+    readonly currentProvider: provider;
+    BatchRequest: new () => BatchRequest;
+    static readonly providers: Providers;
+
+    setProvider(provider: provider): boolean;
+
+    extend(extension: Extension): any;
 
     getNetworkType(
         callback?: (error: Error, returnValue: string) => void
@@ -247,6 +216,15 @@ export class NetworkBase {
 
 export class AccountsBase {
     constructor(provider: provider, net?: net.Socket | null);
+
+    readonly givenProvider: any;
+    readonly currentProvider: provider;
+    BatchRequest: new () => BatchRequest;
+    static readonly providers: Providers;
+
+    setProvider(provider: provider): boolean;
+
+    extend(extension: Extension): any;
 
     create(entropy?: string): Account;
 
@@ -284,7 +262,6 @@ export class AccountsBase {
 export class WalletBase {
     constructor(accounts: AccountsBase);
 
-    accountsIndex: number;
     length: number;
     defaultKeyName: string;
 
@@ -336,7 +313,7 @@ export interface EncryptedKeystoreV3Json {
     address: string;
     crypto: {
         ciphertext: string;
-        cipherparams: { iv: string };
+        cipherparams: {iv: string};
         cipher: string;
         kdf: string;
         kdfparams: {

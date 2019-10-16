@@ -18,8 +18,8 @@
  */
 
 import BN = require('bn.js');
-import { PromiEvent, provider } from 'web3-core';
-import { AbiItem } from 'web3-utils';
+import {PromiEvent, provider} from 'web3-core';
+import {AbiItem} from 'web3-utils';
 
 export class Contract {
     constructor(
@@ -30,7 +30,7 @@ export class Contract {
     );
 
     private _address: string;
-    private _jsonInterface: AbiItemModel[];
+    private _jsonInterface: AbiItem[];
 
     options: Options;
 
@@ -65,9 +65,9 @@ export class Contract {
     ): Promise<EventData[]>;
 }
 
-export interface Options {
+export interface Options extends ContractOptions {
     address: string;
-    jsonInterface: AbiItemModel[];
+    jsonInterface: AbiItem[];
 }
 
 export interface DeployOptions {
@@ -147,10 +147,4 @@ export interface EventData {
     blockHash: string;
     blockNumber: number;
     address: string;
-}
-
-export interface AbiItemModel {
-    signature: string;
-    name: string;
-    payable: boolean;
 }

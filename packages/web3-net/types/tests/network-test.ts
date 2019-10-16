@@ -21,6 +21,21 @@ import { Network } from 'web3-net';
 
 const network = new Network('http://localhost:5000');
 
+// $ExpectType provider
+network.currentProvider;
+
+// $ExpectType any
+network.givenProvider;
+
+// $ExpectType boolean
+network.setProvider('https://localhost:2100');
+
+// $ExpectType BatchRequest
+new network.BatchRequest();
+
+// $ExpectType any
+network.extend({property: 'test', methods: [{name: 'method', call: 'method'}]});
+
 // $ExpectType Promise<string>
 network.getNetworkType((error, returnValue) => {
     console.log(returnValue);

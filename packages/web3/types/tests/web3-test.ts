@@ -19,6 +19,12 @@
 
 import Web3 from 'web3';
 
+// $ExpectType Utils
+Web3.utils;
+
+// $ExpectType string
+Web3.version;
+
 // $ExpectType Modules
 Web3.modules;
 
@@ -29,6 +35,9 @@ const web3 = new Web3('https://localhost:5000/');
 
 // $ExpectType provider
 web3.currentProvider;
+
+// $ExpectType any
+web3.extend({property: 'test', methods: [{name: 'method', call: 'method'}]});
 
 // $ExpectType any
 web3.givenProvider;

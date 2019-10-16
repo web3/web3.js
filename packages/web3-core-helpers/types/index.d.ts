@@ -28,14 +28,9 @@ export class formatters {
 
     static isPredefinedBlockNumber(blockNumber: string): boolean;
 
-    static inputDefaultBlockNumberFormatter(
-        blockNumber: string,
-        moduleInstance: any
-    ): string;
+    static inputDefaultBlockNumberFormatter(blockNumber: string): string;
 
-    static inputBlockNumberFormatter(
-        blockNumber: string | number
-    ): string | number;
+    static inputBlockNumberFormatter(blockNumber: string | number): string | number;
 
     static outputBlockFormatter(block: any): any; // TODO: Create Block interface
 
@@ -71,15 +66,6 @@ export class errors {
     static InvalidProvider(): Error;
     static InvalidResponse(result: Error): Error;
     static ConnectionTimeout(ms: string): Error;
-}
-
-export interface Method {
-    name: string;
-    call: string;
-    params?: number;
-    inputFormatter?: Array<(() => void) | null>;
-    outputFormatter?: () => void;
-    extraFormatters?: any;
 }
 
 export class WebsocketProviderBase {

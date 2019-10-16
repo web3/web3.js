@@ -21,7 +21,7 @@
 import { provider, RLPEncodedTransaction, TransactionConfig } from 'web3-core';
 
 export class Personal {
-    constructor(currentProvider: provider);
+    constructor(provider: provider);
 
     newAccount(
         password: string,

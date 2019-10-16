@@ -21,6 +21,7 @@
 
 import {
     BatchRequest,
+    Extension,
     Log,
     PromiEvent,
     provider,
@@ -30,6 +31,7 @@ import {
     TransactionConfig,
     TransactionReceipt
 } from 'web3-core';
+import { Subscription } from 'web3-core-subscriptions';
 import { AbiCoder } from 'web3-eth-abi';
 import { Accounts } from 'web3-eth-accounts';
 import { Contract, ContractOptions } from 'web3-eth-contract';
@@ -61,6 +63,7 @@ export class Eth {
     setProvider(provider: provider): boolean;
     BatchRequest: new () => BatchRequest;
     static readonly providers: Providers;
+    extend(extension: Extension): any;
 
     clearSubscriptions(callback: (error: Error, result: boolean) => void): void;
 
@@ -324,14 +327,6 @@ export class Eth {
     ): Promise<GetProof>;
 }
 
-export interface Method {
-    name: string;
-    call: string;
-    params?: number;
-    inputFormatter?: Array<(() => void) | null>;
-    outputFormatter?: () => void;
-}
-
 export interface Syncing {
     StartingBlock: number;
     CurrentBlock: number;
@@ -376,24 +371,6 @@ export interface LogsOptions {
     fromBlock?: number | string;
     address?: string | string[];
     topics?: Array<string | string[] | null>;
-}
-
-export interface Subscription<T> {
-    id: string;
-    options: any;
-    callback: any;
-
-    subscribe(callback?: (error: Error, result: T) => void): Subscription<T>;
-
-    unsubscribe(
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<undefined | boolean>;
-
-    on(type: 'data', handler: (data: T) => void): Subscription<T>;
-
-    on(type: 'changed', handler: (data: T) => void): Subscription<T>;
-
-    on(type: 'error', handler: (data: Error) => void): Subscription<T>;
 }
 
 export interface GetProof {
