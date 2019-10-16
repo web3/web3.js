@@ -7,10 +7,19 @@
     "engines": {
         "node": ">=8.0.0"
     },
+    "types": "types/index.d.ts",
+    "scripts": {
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
     "main": "src/index.js",
     "dependencies": {
+        "@types/node": "^10.12.18",
         "got": "9.6.0",
         "swarm-js": "0.1.39",
         "underscore": "1.9.1"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     }
 }

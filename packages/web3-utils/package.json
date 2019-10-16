@@ -7,6 +7,10 @@
     "engines": {
         "node": ">=8.0.0"
     },
+    "types": "types/index.d.ts",
+    "scripts": {
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
     "main": "src/index.js",
     "dependencies": {
         "bn.js": "4.11.8",
@@ -16,5 +20,9 @@
         "randombytes": "^2.1.0",
         "underscore": "1.9.1",
         "utf8": "3.0.0"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     }
 }
