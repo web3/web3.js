@@ -57,6 +57,7 @@ Released with 1.0.0-beta.37 code base.
 - supportsSubscriptions method added to providers (#3116)
 - Add `eth.getChainId` method (#3113)
 - Minified file added to web3 package (#3131)
+- The transaction confirmation workflow can now be configured (#3130)
 
 ### Fixed
 

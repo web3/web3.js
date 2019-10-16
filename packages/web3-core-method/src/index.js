@@ -30,10 +30,6 @@ var utils = require('web3-utils');
 var promiEvent = require('web3-core-promievent');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 
-var TIMEOUTBLOCK = 50;
-var POLLINGTIMEOUT = 15 * TIMEOUTBLOCK; // ~average block time (seconds) * TIMEOUTBLOCK
-var CONFIRMATIONBLOCKS = 24;
-
 var Method = function Method(options) {
 
     if(!options.call || !options.name) {
@@ -55,6 +51,9 @@ var Method = function Method(options) {
 
     this.defaultBlock = options.defaultBlock || 'latest';
     this.defaultAccount = options.defaultAccount || null;
+    this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
+    this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
+    this.transactionPollingTimeout = options.transactionPollingTimeout || 750;
 };
 
 Method.prototype.setRequestManager = function (requestManager, accounts) {
@@ -290,7 +289,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                     canUnsubscribe = false;
                     confirmationCount++;
 
-                    if (confirmationCount === CONFIRMATIONBLOCKS + 1) { // add 1 so we account for conf 0
+                    if (confirmationCount === method.transactionConfirmationBlocks + 1) { // add 1 so we account for conf 0
                         sub.unsubscribe();
                         defer.eventEmitter.removeAllListeners();
                     }
@@ -410,22 +409,22 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
                 // check to see if we are http polling
                 if(!!isPolling) {
-                    // polling timeout is different than TIMEOUTBLOCK blocks since we are triggering every second
-                    if (timeoutCount - 1 >= POLLINGTIMEOUT) {
+                    // polling timeout is different than transactionBlockTimeout blocks since we are triggering every second
+                    if (timeoutCount - 1 >= method.transactionPollingTimeout) {
                         sub.unsubscribe();
                         promiseResolved = true;
                         utils._fireError(
-                            new Error('Transaction was not mined within ' + POLLINGTIMEOUT + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
-                            defer.eventEmitter,
+                            new Error('Transaction was not mined within ' + method.transactionPollingTimeout + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'), 
+                            defer.eventEmitter, 
                             defer.reject
                         );
                     }
                 } else {
-                    if (timeoutCount - 1 >= TIMEOUTBLOCK) {
+                    if (timeoutCount - 1 >= method.transactionBlockTimeout) {
                         sub.unsubscribe();
                         promiseResolved = true;
                         utils._fireError(
-                            new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
+                            new Error('Transaction was not mined within ' + method.transactionBlockTimeout + ' blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
                             defer.eventEmitter,
                             defer.reject
                         );
