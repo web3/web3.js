@@ -351,12 +351,12 @@ export const inputLogFormatter = (options) => {
         return Utils.fromUtf8(value);
     };
 
-    if (options.fromBlock) {
-        options.fromBlock = inputBlockAddressFormatter(options.fromBlock);
+    if (options.fromEpoch) {
+        options.fromEpoch = inputEpochNumberFormatter(options.fromEpoch);
     }
 
-    if (options.toBlock) {
-        options.toBlock = inputBlockAddressFormatter(options.toBlock);
+    if (options.toEpoch) {
+        options.toEpoch = inputEpochNumberFormatter(options.toEpoch);
     }
 
     // make sure topics, get converted to hex
