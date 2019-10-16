@@ -30,7 +30,10 @@ accounts.givenProvider;
 accounts.setProvider('https://localhost:2100');
 
 // $ExpectType any
-accounts.extend({property: 'test', methods: [{name: 'method', call: 'method'}]});
+accounts.extend({
+    property: 'test',
+    methods: [{ name: 'method', call: 'method' }]
+});
 
 // $ExpectType BatchRequest
 new accounts.BatchRequest();

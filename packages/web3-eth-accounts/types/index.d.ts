@@ -17,56 +17,11 @@
  * @date 2018
  */
 
-import {
-    AccountsBase,
-    SignedTransaction,
-    TransactionConfig,
-    WalletBase
-} from 'web3-core';
+import { AccountsBase, SignedTransaction, WalletBase } from 'web3-core';
 
 export class Accounts extends AccountsBase {}
 
 export class Wallet extends WalletBase {}
-
-export interface AddAccount {
-    address: string;
-    privateKey: string;
-}
-
-export interface Account {
-    address: string;
-    privateKey: string;
-    signTransaction: (
-        transactionConfig: TransactionConfig,
-        callback?: (signTransaction: SignedTransaction) => void
-    ) => Promise<SignedTransaction>;
-    sign: (data: string) => Sign;
-    encrypt: (password: string) => EncryptedKeystoreV3Json;
-}
-
-export interface AddedAccount extends Account {
-    index: number;
-}
-
-export interface EncryptedKeystoreV3Json {
-    version: number;
-    id: string;
-    address: string;
-    crypto: {
-        ciphertext: string;
-        cipherparams: { iv: string };
-        cipher: string;
-        kdf: string;
-        kdfparams: {
-            dklen: number;
-            salt: string;
-            n: number;
-            r: number;
-            p: number;
-        };
-        mac: string;
-    };
-}
 
 export interface Sign extends SignedTransaction {
     message: string;
