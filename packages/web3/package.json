@@ -8,6 +8,7 @@
         "node": ">=8.0.0"
     },
     "main": "src/index.js",
+    "browser": "dist/web3.min.js",
     "bugs": {
         "url": "https://github.com/ethereum/web3.js/issues"
     },
