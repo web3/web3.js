@@ -121,6 +121,7 @@ For ``web3.eth.net`` see the :ref:`net reference documentation <eth-net>`
 
 ------------------------------------------------------------------------------
 
+.. _eth-defaultaccount
 
 defaultAccount
 =====================
@@ -206,6 +207,68 @@ Example
     // set the default block
     web3.eth.defaultBlock = 231;
 
+
+------------------------------------------------------------------------------
+
+.. _web3-module-transactionblocktimeout:
+
+transactionBlockTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.transactionBlockTimeout
+
+The ``transactionBlockTimeout`` will be used over a socket based connection. This option does define the amount of new blocks it should wait until the first confirmation happens.
+This means the PromiEvent rejects with a timeout error when the timeout got exceeded.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionBlockTimeout (default: 50)
+
+------------------------------------------------------------------------------
+
+.. _web3-module-transactionconfirmationblocks:
+
+transactionConfirmationBlocks
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.transactionConfirmationBlocks
+
+This defines the number of blocks it requires until a transaction will be handled as confirmed.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionConfirmationBlocks (default: 24)
+
+------------------------------------------------------------------------------
+
+.. _web3-module-transactionpollingtimeout:
+
+transactionPollingTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.transactionPollingTimeout
+
+The ``transactionPollingTimeout``  will be used over a HTTP connection.
+This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. NB: If this method times out, the transaction may still be pending.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionPollingTimeout (default: 750)
 
 ------------------------------------------------------------------------------
 
@@ -1010,7 +1073,7 @@ The **callback** will return the 32 bytes transaction hash.
 - ``"transactionHash"`` returns ``String``: Is fired right after the transaction is sent and a transaction hash is available.
 - ``"receipt"`` returns ``Object``: Is fired when the transaction receipt is available.
 - ``"confirmation"`` returns ``Number``, ``Object``: Is fired for every confirmation up to the 12th confirmation. Receives the confirmation number as the first and the :ref:`receipt <eth-gettransactionreceipt-return>` as the second argument. Fired from confirmation 0 on, which is the block where its minded.
-- ``"error"`` returns ``Error``: Is fired if an error occurs during sending. If a out of gas error, the second parameter is the receipt.
+``"error"`` returns ``Error`` and ``Object|undefined``: Is fired if an error occurs during sending. If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
 
 
 -------
