@@ -24,7 +24,6 @@ npm run-script build-all
 Then include `dist/web3-core-method.js` in your html file.
 This will expose the `Web3Method` object on the window object.
 
-
 ## Usage
 
 ```js
@@ -42,8 +41,9 @@ method.attachToObject(myCoolLib);
 myCoolLib.sendTransaction({...}, function(){ ... });
 ```
 
+## Types
+
+All the typescript typings are placed in the types folder.
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
-
-

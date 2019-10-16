@@ -7,9 +7,17 @@
     "engines": {
         "node": ">=8.0.0"
     },
+    "scripts": {
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
+    "types": "types/index.d.ts",
     "main": "src/index.js",
     "dependencies": {
         "web3-core-helpers": "1.2.1",
         "xhr2-cookies": "1.1.0"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     }
 }

@@ -24,7 +24,6 @@ npm run-script build-all
 Then include `dist/web3-eth-abi.js` in your html file.
 This will expose the `Web3EthAbi` object on the window object.
 
-
 ## Usage
 
 ```js
@@ -35,8 +34,9 @@ Web3EthAbi.encodeFunctionSignature('myMethod(uint256,string)');
 > '0x24ee0097'
 ```
 
+## Types
+
+All the typescript typings are placed in the types folder.
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
-
-

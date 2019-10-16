@@ -7,6 +7,10 @@
     "engines": {
         "node": ">=8.0.0"
     },
+    "types": "types/index.d.ts",
+    "scripts": {
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
     "main": "src/index.js",
     "dependencies": {
         "any-promise": "1.3.0",
@@ -20,5 +24,9 @@
         "web3-core-method": "1.2.1",
         "web3-utils": "1.2.1",
         "ethereumjs-tx": "^2.1.1"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     }
 }

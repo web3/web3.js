@@ -24,7 +24,6 @@ npm run-script build-all
 Then include `dist/web3-net.js` in your html file.
 This will expose the `Web3Net` object on the window object.
 
-
 ## Usage
 
 ```js
@@ -34,8 +33,9 @@ var Web3Net = require('web3-net');
 var net = new Web3Net('ws://localhost:8546');
 ```
 
+## Types
+
+All the typescript typings are placed in the types folder.
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
-
-

@@ -23,6 +23,7 @@
         "lint": "jshint *.js packages",
         "test": "mocha --grep E2E --invert; jshint *.js packages",
         "test:unit": "istanbul cover _mocha -- -R spec --grep E2E --invert",
+        "dtslint": "lerna run dtslint",
         "test:e2e:ganache": "./scripts/e2e.ganache.sh",
         "test:e2e:geth:auto": "./scripts/e2e.geth.automine.sh",
         "test:e2e:geth:insta": "./scripts/e2e.geth.instamine.sh",
@@ -75,6 +76,8 @@
         "@babel/preset-env": "^7.6.0",
         "@types/bignumber.js": "^4.0.2",
         "@types/underscore": "^1.8.0",
+        "@types/bn.js": "^4.11.5",
+        "@types/node": "^12.6.1",
         "bignumber.js": "^4.0.0",
         "bluebird": "3.3.1",
         "bn.js": "^4.11.8",
@@ -106,7 +109,7 @@
         "sandboxed-module": "^2.0.3",
         "underscore": "^1.9.1",
         "vinyl-source-stream": "^2.0.0",
-        "wait-port": "^0.2.6"
-    },
-    "dependencies": {}
+        "wait-port": "^0.2.6",
+        "typescript": "next"
+    }
 }

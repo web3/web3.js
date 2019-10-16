@@ -112,7 +112,7 @@ Subscription.prototype._formatInput = function (args) {
  * Should be called to format output(result) of method
  *
  * @method formatOutput
- * @param {Object}
+ * @param result {Object}
  * @return {Object}
  */
 
