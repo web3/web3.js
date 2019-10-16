@@ -129,10 +129,15 @@ eth.getHashrate();
 // $ExpectType Promise<number>
 eth.getHashrate((error: Error, hashes: number) => {});
 
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.getNodeInfo();
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.getNodeInfo((error: Error, version: string) => {});
+
+// $ExpectType Promise<number>
+eth.getChainId();
+// $ExpectType Promise<number>
+eth.getChainId((error: Error, chainId: number) => {});
 
 // $ExpectType Promise<string>
 eth.getGasPrice();

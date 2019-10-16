@@ -118,6 +118,10 @@ export class Eth {
 
     getNodeInfo(
         callback?: (error: Error, version: string) => void
+    ): Promise<string>;
+
+    getChainId(
+        callback?: (error: Error, version: number) => void
     ): Promise<number>;
 
     getGasPrice(
