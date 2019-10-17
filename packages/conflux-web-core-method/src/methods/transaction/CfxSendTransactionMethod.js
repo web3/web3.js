@@ -124,9 +124,9 @@ export default class CfxSendTransactionMethod extends SendTransactionMethod {
     async sendRawTransaction(privateKey = null) {
         this.beforeExecution(this.moduleInstance);
 
-        if (!this.parameters[0].chainId) {
-            this.parameters[0].chainId = await this.chainIdMethod.execute();
-        }
+        // if (!this.parameters[0].chainId) {
+        //     this.parameters[0].chainId = await this.chainIdMethod.execute();
+        // }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
             this.getTransactionCountMethod.parameters = [this.parameters[0].from, 'latest_state'];
@@ -138,7 +138,7 @@ export default class CfxSendTransactionMethod extends SendTransactionMethod {
         transaction.to = transaction.to || '0x';
         transaction.data = transaction.data || '0x';
         transaction.value = transaction.value || '0x';
-        transaction.chainId = this.utils.numberToHex(transaction.chainId);
+        // transaction.chainId = this.utils.numberToHex(transaction.chainId);
         delete transaction.from;
 
         const response = await this.moduleInstance.transactionSigner.sign(transaction, privateKey);
