@@ -7,11 +7,21 @@
     "engines": {
         "node": ">=8.0.0"
     },
+    "types": "types/index.d.ts",
+    "scripts": {
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
     "main": "src/index.js",
     "dependencies": {
+        "@types/bn.js": "^4.11.4",
+        "@types/node": "^12.6.1",
         "web3-core-helpers": "1.2.1",
         "web3-core-method": "1.2.1",
         "web3-core-requestmanager": "1.2.1",
         "web3-utils": "1.2.1"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     }
 }

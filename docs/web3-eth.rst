@@ -1558,3 +1558,30 @@ Example
     > 61
 
 ------------------------------------------------------------------------------
+
+.. _eth-getNodeInfo:
+
+getNodeInfo
+===========
+
+.. code-block:: javascript
+
+    web3.eth.getNodeInfo([callback])
+
+-------
+Returns
+-------
+
+``Promise<String>`` - The current client version.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.getNodeInfo().then(console.log);
+    > "Mist/v0.9.3/darwin/go1.4.1"
+
+------------------------------------------------------------------------------
