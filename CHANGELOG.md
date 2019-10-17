@@ -56,6 +56,8 @@ Released with 1.0.0-beta.37 code base.
 - getNetworkType method extended with Görli testnet (#3095)
 - supportsSubscriptions method added to providers (#3116)
 - Add `eth.getChainId` method (#3113)
+- Minified file added to web3 package (#3131)
+- The transaction confirmation workflow can now be configured (#3130)
 
 ### Fixed
 
@@ -75,3 +77,4 @@ Released with 1.0.0-beta.37 code base.
 - Signing issues #1998, #2033, and #1074 fixed (#3125)
 - Fixed inconsistency between web3.eth.signTransaction and web3.eth.accounts.signTransaction (#3078)
 - Fix hexToNumber and hexToNumberString prefix validation (#3086)
+- The receipt will now returned on a EVM error (this got removed on beta.18) (#3129)
