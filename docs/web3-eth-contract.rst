@@ -953,6 +953,7 @@ Returns
 - ``"data"`` returns ``Object``: Fires on each incoming event with the event object as argument.
 - ``"changed"`` returns ``Object``: Fires on each event which was removed from the blockchain. The event will have the additional property ``"removed: true"``.
 - ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
+- ``"connected"`` returns ``String``: Fires once after the subscription successfully connected. Returns the subscription id.
 
 
 The structure of the returned event ``Object`` looks as follows:
@@ -979,6 +980,9 @@ Example
         filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
         fromBlock: 0
     }, function(error, event){ console.log(event); })
+    .on("connected", function(subscriptionId){
+        console.log(subscriptionId);
+    })
     .on('data', function(event){
         console.log(event); // same results as the optional callback above
     })

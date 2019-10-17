@@ -249,6 +249,7 @@ Subscription.prototype.subscribe = function() {
     this.options.requestManager.send(payload, function (err, result) {
         if(!err && result) {
             _this.id = result;
+            _this.emit('connected', result);
 
             // call callback on notifications
             _this.options.requestManager.addSubscription(_this.id, payload.params[0] , _this.options.type, function(err, result) {
