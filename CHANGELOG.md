@@ -59,6 +59,7 @@ Released with 1.0.0-beta.37 code base.
 - Minified file added to web3 package (#3131)
 - The transaction confirmation workflow can now be configured (#3130)
 - TypeScript type definitions added for all modules (#3132)
+- Bloom filters added to web3.utils (#3137)
 
 ### Fixed
 
