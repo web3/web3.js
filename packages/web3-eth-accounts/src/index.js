@@ -118,6 +118,7 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
     var _this = this,
         error = false,
+        transactionOptions = {},
         result;
 
     callback = callback || function () {};
@@ -130,6 +131,10 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     }
 
     function signed (tx) {
+
+        if (tx.common && (tx.chain && tx.hardfork)) {
+            error = new Error('Please provide the ethereumjs-common object or the chain and hardfork property but not both.')
+        }
 
         if (!tx.gas && !tx.gasLimit) {
             error = new Error('"gas" is missing');
@@ -154,11 +159,27 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             transaction.value = transaction.value || '0x';
             transaction.chainId = utils.numberToHex(transaction.chainId);
 
+            if (transaction.common) {
+                transactionOptions['common'] = transaction.common;
+                delete transaction.common;
+            }
+
+            if (transaction.chain) {
+                transactionOptions['chain'] = transaction.chain;
+                delete transaction.chain;
+            }
+
+            if (transaction.hardfork) {
+                transactionOptions['hardfork'] = transaction.hardfork;
+                delete transaction.hardfork;
+            }
+
             if (privateKey.startsWith('0x')) {
                 privateKey = privateKey.substring(2);
             }
 
-            var ethTx = new Transaction(transaction);
+            var ethTx = new Transaction(transaction, transactionOptions);
+
             ethTx.sign(Buffer.from(privateKey, 'hex'));
 
             var validationResult = ethTx.validate(true);
