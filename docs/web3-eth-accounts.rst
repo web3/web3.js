@@ -143,6 +143,9 @@ Parameters
 ----------
 
 1. ``tx`` - ``Object``: The transaction object as follows:
+    - ``chain`` - ``String``: (optional) Defaults to ``mainnet``.
+    - ``hardfork`` - ``String``: (optional) Defaults to ``petersburg``.
+    - ``common`` - ``String``: (optional) The initiated common object of the `ethereumjs-common <https://www.npmjs.com/package/ethereumjs-common>`_ package.
     - ``nonce`` - ``String``: (optional) The nonce to use when signing this transaction. Default will use :ref:`web3.eth.getTransactionCount() <eth-gettransactioncount>`.
     - ``chainId`` - ``String``: (optional) The chain id to use when signing this transaction. Default will use :ref:`web3.eth.net.getId() <net-getid>`.
     - ``to`` - ``String``: (optional) The recevier of the transaction, can be empty when deploying a contract.
