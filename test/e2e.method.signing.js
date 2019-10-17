@@ -51,7 +51,7 @@ describe('transaction and message signing [ @E2E ]', function() {
         assert(receipt.status === true);
     });
 
-    it('sendSignedTransaction (with eth.accounts.signTransaction)', async function(){
+    it.skip('sendSignedTransaction (with eth.accounts.signTransaction)', async function(){
         var source = wallet[0].address
         var destination = wallet[1].address;
 
