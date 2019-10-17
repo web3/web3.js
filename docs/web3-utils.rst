@@ -8,6 +8,42 @@ This package provides utility functions for Ethereum dapps and other web3.js pac
 
 ------------------------------------------------------------------------------
 
+Bloom Filters
+=====================
+
+-----------------------
+What are bloom filters?
+-----------------------
+
+A Bloom filter is a probabilistic, space-efficient data structure used for fast checks of set membership. That probably doesn’t mean much to you yet, and so let’s explore how bloom filters might be used.
+
+Imagine that we have some large set of data, and we want to be able to quickly test if some element is currently in that set. The naive way of checking might be to query the set to see if our element is in there. That’s probably fine if our data set is relatively small. Unfortunately, if our data set is really big, this search might take a while. Luckily, we have tricks to speed things up in the ethereum world!
+
+A bloom filter is one of these tricks. The basic idea behind the Bloom filter is to hash each new element that goes into the data set, take certain bits from this hash, and then use those bits to fill in parts of a fixed-size bit array (e.g. set certain bits to 1). This bit array is called a bloom filter.
+
+Later, when we want to check if an element is in the set, we simply hash the element and check that the right bits are in the bloom filter. If at least one of the bits is 0, then the element definitely isn’t in our data set! If all of the bits are 1, then the element might be in the data set, but we need to actually query the database to be sure. So we might have false positives, but we’ll never have false negatives. This can greatly reduce the number of database queries we have to make.
+
+**Real Life Example**
+
+A ethereum real life example in where this is useful is if you want to update a users balance on every new block so it stays as close to real time as possible. Without using a bloom filter on every new block you would have to force the balances even if that user may not of had any activity within that block. But if you use the logBlooms from the block you can test the bloom filter against the users ethereum address before you do any more slow operations, this will dramatically decrease the amount of calls you do as you will only be doing those extra operations if that ethereum address is within that block (minus the false positives outcome which will be negligible). This will be highly performant for your app.
+
+---------
+Functions
+---------
+
+- `web3.utils.isBloom <https://github.com/joshstevens19/ethereum-bloom-filters/blob/master/README.md#isbloom>`_
+- `web3.utils.isUserEthereumAddressInBloom <https://github.com/joshstevens19/ethereum-bloom-filters/blob/master/README.md#isuserethereumaddressinbloom>`_
+- `web3.utils.isContractAddressInBloom <https://github.com/joshstevens19/ethereum-bloom-filters/blob/master/README.md#iscontractaddressinbloom>`_
+- `web3.utils.isTopic <https://github.com/joshstevens19/ethereum-bloom-filters/blob/master/README.md#istopic>`_
+- `web3.utils.isTopicInBloom <https://github.com/joshstevens19/ethereum-bloom-filters/blob/master/README.md#istopicinbloom>`_
+- `web3.utils.isInBloom <https://github.com/joshstevens19/ethereum-bloom-filters/blob/master/README.md#isinbloom>`_
+
+
+.. note:: Please raise any issues `here <https://github.com/joshstevens19/ethereum-bloom-filters/issues>`_
+
+
+------------------------------------------------------------------------------
+
 randomHex
 =====================
 
