@@ -12,6 +12,6 @@ npx istanbul-combine-updated \
   ./.cov_ganache.json \
   ./.cov_geth_insta.json \
   ./.cov_geth_auto.json \
-  ./coverage/coverage.json
+  ./coverage/coverage.raw.json
 
   cat coverage/lcov.info | ./node_modules/.bin/coveralls

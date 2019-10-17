@@ -36,5 +36,5 @@ GANACHE=true istanbul cover _mocha -- \
 
 # Copy cov for this run to a temp file we can combine later and send to coveralls
 if [ "$CI" = true ]; then
-  cp coverage/coverage.json .cov_ganache.json
+  cp coverage/coverage.raw.json .cov_ganache.json
 fi
