@@ -38,6 +38,7 @@ Returns
     - ``on("data")`` returns ``Object``: Fires on each incoming log with the log object as argument.
     - ``on("changed")`` returns ``Object``: Fires on each log which was removed from the blockchain. The log will have the additional property ``"removed: true"``.
     - ``on("error")`` returns ``Object``: Fires when an error in the subscription occurs.
+    - ``on("connected")`` returns ``Number``: Fires once after the subscription successfully connected. Returns the subscription id.
 
 ----------------
 Notification returns
@@ -189,6 +190,7 @@ Returns
 
 - ``"data"`` returns ``Object``: Fires on each incoming block header.
 - ``"error"`` returns ``Object``: Fires when an error in the subscription occurs.
+- ``"connected"`` returns ``Number``: Fires once after the subscription successfully connected. Returns the subscription id.
 
 The structure of a returned block header is as follows:
 
@@ -229,6 +231,9 @@ Example
         }
 
         console.error(error);
+    })
+    .on("connected", function(subscriptionId){
+        console.log(subscriptionId);
     })
     .on("data", function(blockHeader){
         console.log(blockHeader);
@@ -340,6 +345,7 @@ Returns
 - ``"data"`` returns ``Object``: Fires on each incoming log with the log object as argument.
 - ``"changed"`` returns ``Object``: Fires on each log which was removed from the blockchain. The log will have the additional property ``"removed: true"``.
 - ``"error"`` returns ``Object``: Fires when an error in the subscription occurs.
+- ``"connected"`` returns ``Number``: Fires once after the subscription successfully connected. Returns the subscription id.
 
 For the structure of a returned event ``Object`` see :ref:`web3.eth.getPastEvents return values <eth-getpastlogs-return>`.
 
@@ -363,6 +369,9 @@ Example
     }, function(error, result){
         if (!error)
             console.log(result);
+    })
+    .on("connected", function(subscriptionId){
+        console.log(subscriptionId);
     })
     .on("data", function(log){
         console.log(log);

@@ -43,7 +43,7 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 
 - ``websocket`` dependency fixed (#2971, #2976)
-- ``requestOptions`` added to ``WebsocketProvider`` (#2979) 
+- ``requestOptions`` added to ``WebsocketProvider`` (#2979)
 - Node >= v8.0.0 support (#2938)
 
 ## [Unreleased]
@@ -74,3 +74,9 @@ Released with 1.0.0-beta.37 code base.
 - Gas check fixed (#2381)
 - Signing issues #1998, #2033, and #1074 fixed (#3125)
 - Fix hexToNumber and hexToNumberString prefix validation (#3086)
+
+## [1.2.2]
+
+### Added
+
+- Emit `connected` event on subscription creation (#3028)
