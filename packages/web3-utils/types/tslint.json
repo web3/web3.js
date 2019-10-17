@@ -4,6 +4,7 @@
         "semicolon": false,
         "no-import-default-of-export-equals": false,
         "file-name-casing": [true, "kebab-case"],
-        "whitespace": false
+        "whitespace": false,
+        "no-redundant-jsdoc": false
     }
 }

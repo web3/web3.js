@@ -2219,39 +2219,40 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
 
             var count = 0;
-            contract.methods.mySend(address, 10).send({from: address2, gasPrice: '21345678654321'})
-            .on('confirmation', function (confirmationNumber, receipt) {
-                count++;
-                if(count === 1) {
-                    assert.deepEqual(receipt, {
-                        contractAddress: null,
-                        cumulativeGasUsed: 10,
-                        transactionIndex: 3,
-                        transactionHash: '0x1234',
-                        blockNumber: 10,
-                        blockHash: '0x1234',
-                        gasUsed: 0,
-                        events: {}
-                    });
+            contract.methods.mySend(address, 10)
+                .send({from: address2, gasPrice: '21345678654321'})
+                .on('confirmation', function (confirmationNumber, receipt) {
+                    count++;
+                    if(count === 1) {
+                        assert.deepEqual(receipt, {
+                            contractAddress: null,
+                            cumulativeGasUsed: 10,
+                            transactionIndex: 3,
+                            transactionHash: '0x1234',
+                            blockNumber: 10,
+                            blockHash: '0x1234',
+                            gasUsed: 0,
+                            events: {}
+                        });
 
-                    assert.equal(confirmationNumber, 0)
-                }
-                if(count === 2) {
-                    assert.deepEqual(receipt, {
-                        contractAddress: null,
-                        cumulativeGasUsed: 10,
-                        transactionIndex: 3,
-                        transactionHash: '0x1234',
-                        blockNumber: 10,
-                        blockHash: '0x1234',
-                        gasUsed: 0,
-                        events: {}
-                    });
+                        assert.equal(confirmationNumber, 0);
+                    }
+                    if(count === 2) {
+                        assert.deepEqual(receipt, {
+                            contractAddress: null,
+                            cumulativeGasUsed: 10,
+                            transactionIndex: 3,
+                            transactionHash: '0x1234',
+                            blockNumber: 10,
+                            blockHash: '0x1234',
+                            gasUsed: 0,
+                            events: {}
+                        });
 
-                    assert.equal(confirmationNumber, 1)
-                    done();
-                };
-            });
+                        assert.equal(confirmationNumber, 1);
+                        done();
+                    }
+                });
 
             // fake newBlocks
             provider.injectNotification({
