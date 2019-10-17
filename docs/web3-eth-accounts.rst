@@ -209,6 +209,29 @@ Example
         transactionHash: '0xd8f64a42b57be0d565f385378db2f6bf324ce14a594afc05de90436e9ce01f60'
     }
 
+    // or with a common
+
+    var Common = require('ethereumjs-common').default;
+
+    var customCommon = Common.forCustomChain(
+        'mainnet',
+        {
+            name: 'my-network',
+            networkId: 1,
+            chainId: 1337,
+        },
+        'petersburg',
+    );
+
+    web3.eth.accounts.signTransaction({
+        to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+        value: '1000000000',
+        gas: 2000000
+        common: customCommon
+    }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
+    .then(console.log);
+
+
 
 
 ------------------------------------------------------------------------------
