@@ -38,7 +38,7 @@ Returns
     - ``on("data")`` returns ``Object``: Fires on each incoming log with the log object as argument.
     - ``on("changed")`` returns ``Object``: Fires on each log which was removed from the blockchain. The log will have the additional property ``"removed: true"``.
     - ``on("error")`` returns ``Object``: Fires when an error in the subscription occurs.
-    - ``on("connected")`` returns ``Number``: Fires once after the subscription successfully connected. Returns the subscription id.
+    - ``on("connected")`` returns ``String``: Fires once after the subscription successfully connected. Returns the subscription id.
 
 ----------------
 Notification returns
