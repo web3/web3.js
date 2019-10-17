@@ -8,6 +8,7 @@
         "node": ">=8.0.0"
     },
     "main": "src/index.js",
+    "browser": "dist/web3.min.js",
     "bugs": {
         "url": "https://github.com/ethereum/web3.js/issues"
     },
@@ -17,6 +18,11 @@
         "API"
     ],
     "author": "ethereum.org",
+    "types": "types/index.d.ts",
+    "scripts": {
+        "dtslint": "dtslint types --onlyTestTsNext",
+        "postinstall": "node angular-patch.js"
+    },
     "authors": [
         {
             "name": "Fabian Vogelsteller",
@@ -44,6 +50,7 @@
         }
     ],
     "dependencies": {
+        "@types/node": "^12.6.1",
         "web3-bzz": "1.2.1",
         "web3-core": "1.2.1",
         "web3-eth": "1.2.1",
@@ -51,5 +58,9 @@
         "web3-net": "1.2.1",
         "web3-shh": "1.2.1",
         "web3-utils": "1.2.1"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     }
 }

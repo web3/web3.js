@@ -20,6 +20,7 @@ var replace = require('gulp-replace');
 var exec = require('child_process').exec;
 
 var DEST = path.join(__dirname, 'dist/');
+var WEB3_PACKAGE_DEST = path.join(__dirname, 'packages/web3/dist');
 
 var packages = [{
     fileName: 'web3',
@@ -189,6 +190,7 @@ packages.forEach(function (pckg, i) {
             .pipe(streamify(uglify(ugliyOptions)))
             .on('error', function (err) { console.error(err); })
             .pipe(rename(pckg.fileName + '.min.js'))
+            .pipe(gulp.dest(WEB3_PACKAGE_DEST))
             .pipe(gulp.dest(DEST));
     }));
 });

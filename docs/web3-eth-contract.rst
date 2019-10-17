@@ -77,6 +77,154 @@ Example
 = Properties =
 =========
 
+------------------------------------------------------------------------------
+
+.. _eth-contract-defaultaccount
+
+defaultAccount
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.defaultAccount
+    contract.defaultAccount // on contract instance
+
+This default address is used as the default ``"from"`` property, if no ``"from"`` property is specified in for the following methods:
+
+- :ref:`web3.eth.sendTransaction() <eth-sendtransaction>`
+- :ref:`web3.eth.call() <eth-call>`
+- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().call() <eth-contract-call>`
+- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().send() <eth-contract-send>`
+
+--------
+Property
+--------
+
+
+``String`` - 20 Bytes: Any ethereum address. You should have the private key for that address in your node or keystore. (Default is ``undefined``)
+
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.defaultAccount;
+    > undefined
+
+    // set the default account
+    web3.eth.defaultAccount = '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe';
+
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-defaultblock:
+
+defaultBlock
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.defaultBlock
+    contract.defaultBlock // on contract instance
+
+The default block is used for certain methods. You can override it by passing in the defaultBlock as last parameter.
+The default value of it is "latest".
+
+----------
+Property
+----------
+
+
+Default block parameters can be one of the following:
+
+- ``Number``: A block number
+- ``"genesis"`` - ``String``: The genesis block
+- ``"latest"`` - ``String``: The latest block (current head of the blockchain)
+- ``"pending"`` - ``String``: The currently mined block (including pending transactions)
+
+Default is ``"latest"``
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    contract.defaultBlock;
+    > "latest"
+
+    // set the default block
+    contract.defaultBlock = 231;
+
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-transactionblocktimeout:
+
+transactionBlockTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.transcationBlockTimeout
+    contract.transactionBlockTimeout // on contract instance
+
+The ``transactionBlockTimeout`` will be used over a socket based connection. This option does define the amount of new blocks it should wait until the first confirmation happens.
+This means the PromiEvent rejects with a timeout error when the timeout got exceeded.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionBlockTimeout (default: 50)
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-module-transactionconfirmationblocks:
+
+transactionConfirmationBlocks
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.transactionConfirmationBlocks
+    contract.transactionConfirmationBlocks // on contract instance
+
+This defines the number of blocks it requires until a transaction will be handled as confirmed.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionConfirmationBlocks (default: 24)
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-module-transactionpollingtimeout:
+
+transactionPollingTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.transactionPollingTimeout
+    contract.transactionPollingTimeout // on contract instance
+
+The ``transactionPollingTimeout``  will be used over a HTTP connection.
+This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. NB: If this method times out, the transaction may still be pending.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionPollingTimeout (default: 750)
 
 ------------------------------------------------------------------------------
 
@@ -543,7 +691,7 @@ The **callback** will return the 32 bytes transaction hash.
 - ``"transactionHash"`` returns ``String``: is fired right after the transaction is sent and a transaction hash is available.
 - ``"receipt"`` returns ``Object``: is fired when the transaction *receipt* is available. Receipts from contracts will have no ``logs`` property, but instead an ``events`` property with event names as keys and events as properties. See :ref:`getPastEvents return values <contract-events-return>` for details about the returned event object.
 - ``"confirmation"`` returns ``Number``, ``Object``: is fired for every confirmation up to the 24th confirmation. Receives the confirmation number as the first and the receipt as the second argument. Fired from confirmation 1 on, which is the block where it's minded.
-- ``"error"`` returns ``Error``: is fired if an error occurs during sending. If a out of gas error, the second parameter is the receipt.
+``"error"`` returns ``Error`` and ``Object|undefined``: Is fired if an error occurs during sending. If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
 
 
 -------
