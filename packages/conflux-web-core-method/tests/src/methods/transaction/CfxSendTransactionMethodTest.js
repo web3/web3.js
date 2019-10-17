@@ -268,7 +268,7 @@ describe('CfxSendTransactionMethodTest', () => {
             gas: 1,
             gasPrice: 1,
             nonce: 1,
-            chainId: 0
+            // chainId: 0
         };
 
         method.parameters = [transaction];
@@ -278,7 +278,7 @@ describe('CfxSendTransactionMethodTest', () => {
             gas: 1,
             gasPrice: 1,
             nonce: 1,
-            chainId: 0
+            // chainId: 0
         };
 
         Utils.numberToHex.mockReturnValueOnce(1);
@@ -295,7 +295,7 @@ describe('CfxSendTransactionMethodTest', () => {
                     gas: 1,
                     gasPrice: 1,
                     nonce: 1,
-                    chainId: 1,
+                    // chainId: 0,
                     to: '0x',
                     data: '0x',
                     value: '0x'
@@ -303,13 +303,13 @@ describe('CfxSendTransactionMethodTest', () => {
                 '0x0'
             );
 
-            expect(chainIdMethodMock.execute).toHaveBeenCalled();
+            // expect(chainIdMethodMock.execute).toHaveBeenCalled(); // for chainId
 
             expect(method.rpcMethod).toEqual('cfx_sendRawTransaction');
 
             expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
-            expect(Utils.numberToHex).toHaveBeenCalledWith(1);
+            // expect(Utils.numberToHex).toHaveBeenCalledWith(1); // for chainId
 
             done();
         };
@@ -331,7 +331,6 @@ describe('CfxSendTransactionMethodTest', () => {
             from: 0,
             gas: 1,
             gasPrice: 1,
-            chainId: 1,
             nonce: false
         };
 
@@ -344,7 +343,7 @@ describe('CfxSendTransactionMethodTest', () => {
             gas: 1,
             gasPrice: 1,
             nonce: false,
-            chainId: 1
+            // chainId: 1
         };
 
         formatters.inputTransactionFormatter.mockReturnValueOnce(mappedTransaction);
@@ -359,7 +358,6 @@ describe('CfxSendTransactionMethodTest', () => {
                     gas: 1,
                     gasPrice: 1,
                     nonce: 1,
-                    chainId: 1,
                     to: '0x',
                     data: '0x',
                     value: '0x'
@@ -375,7 +373,7 @@ describe('CfxSendTransactionMethodTest', () => {
 
             expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
-            expect(Utils.numberToHex).toHaveBeenCalledWith(1);
+            // expect(Utils.numberToHex).toHaveBeenCalledWith(1); // for chainId
 
             done();
         };
@@ -406,7 +404,7 @@ describe('CfxSendTransactionMethodTest', () => {
             gas: 10,
             gasPrice: 1,
             nonce: 1,
-            chainId: 1
+            // chainId: 1
         };
 
         Utils.numberToHex.mockReturnValueOnce(1);
@@ -423,7 +421,7 @@ describe('CfxSendTransactionMethodTest', () => {
                     gas: 10,
                     gasPrice: 1,
                     nonce: 1,
-                    chainId: 1,
+                    // chainId: 1,
                     to: '0x',
                     data: '0x',
                     value: '0x'
@@ -435,7 +433,7 @@ describe('CfxSendTransactionMethodTest', () => {
 
             expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
-            expect(Utils.numberToHex).toHaveBeenCalledWith(1);
+            // expect(Utils.numberToHex).toHaveBeenCalledWith(1); // for chainId
 
             done();
         };
@@ -466,7 +464,7 @@ describe('CfxSendTransactionMethodTest', () => {
             gas: 1,
             gasPrice: 10,
             nonce: 1,
-            chainId: 1
+            // chainId: 1
         };
 
         Utils.numberToHex.mockReturnValueOnce(1);
@@ -483,7 +481,7 @@ describe('CfxSendTransactionMethodTest', () => {
                     gas: 1,
                     gasPrice: 10,
                     nonce: 1,
-                    chainId: 1,
+                    // chainId: 1,
                     to: '0x',
                     data: '0x',
                     value: '0x'
@@ -495,7 +493,7 @@ describe('CfxSendTransactionMethodTest', () => {
 
             expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
-            expect(Utils.numberToHex).toHaveBeenCalledWith(1);
+            // expect(Utils.numberToHex).toHaveBeenCalledWith(1); // for chainId
 
             done();
         };
@@ -527,7 +525,7 @@ describe('CfxSendTransactionMethodTest', () => {
             gas: 1,
             gasPrice: 10,
             nonce: 1,
-            chainId: 1
+            // chainId: 1
         };
 
         Utils.numberToHex.mockReturnValueOnce(1);
@@ -544,7 +542,7 @@ describe('CfxSendTransactionMethodTest', () => {
                     gas: 1,
                     gasPrice: 10,
                     nonce: 1,
-                    chainId: 1,
+                    // chainId: 1,
                     to: '0x',
                     data: '0x',
                     value: '0x'
@@ -556,7 +554,7 @@ describe('CfxSendTransactionMethodTest', () => {
 
             expect(formatters.inputTransactionFormatter).toHaveBeenCalledWith(transaction, moduleInstanceMock);
 
-            expect(Utils.numberToHex).toHaveBeenCalledWith(1);
+            // expect(Utils.numberToHex).toHaveBeenCalledWith(1); // for chainId
 
             done();
         };
