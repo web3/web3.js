@@ -132,7 +132,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
     function signed (tx) {
 
-        if (tx.common && (tx.chain && tx.hardfork)) {
+        if (tx.common && (tx.chain || tx.hardfork)) {
             error = new Error(
                 'Please provide the ethereumjs-common object or the chain and hardfork property but not all together.'
             );
