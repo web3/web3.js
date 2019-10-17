@@ -101,7 +101,7 @@
         "gulp-replace": "^1.0.0",
         "gulp-streamify": "^1.0.2",
         "gulp-uglify": "^3.0.2",
-        "istanbul": "^0.4.5",
+        "istanbul": "^1.1.0-alpha.1",
         "istanbul-combine-updated": "^0.3.0",
         "jshint": "^2.10.2",
         "lerna": "^2.5.1",

@@ -288,33 +288,32 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
 
                     // check if confirmation listener exists
                     if (defer.eventEmitter.listeners('confirmation').length > 0) {
+                        var block;
 
                         // If there was an immediately retrieved receipt, it's already
                         // been confirmed by the direct call to checkConfirmation needed
                         // for parity instant-seal
                         if (existingReceipt === undefined || confirmationCount !== 0) {
                             if (isPolling) { // Check if actually a new block is existing on polling
-                                var block;
-
                                 if (lastBlock) {
                                     block = await _ethereumCall.getBlockByNumber(lastBlock.number + 1);
                                     if (block) {
                                         lastBlock = block;
                                         defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
-                                        confirmationCount++;
                                     }
                                 } else {
                                     block = await _ethereumCall.getBlockByNumber(receipt.blockNumber);
                                     lastBlock = block;
                                     defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
-                                    confirmationCount++;
                                 }
                             } else {
                                 defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
-                                confirmationCount++;
                             }
                         }
 
+                        if ((isPolling && block) || !isPolling) {
+                            confirmationCount++;
+                        }
                         canUnsubscribe = false;
 
                         if (confirmationCount === method.transactionConfirmationBlocks + 1) { // add 1 so we account for conf 0
