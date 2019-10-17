@@ -77,3 +77,4 @@ Released with 1.0.0-beta.37 code base.
 - Signing issues #1998, #2033, and #1074 fixed (#3125)
 - Fix hexToNumber and hexToNumberString prefix validation (#3086)
 - The receipt will now returned on a EVM error (this got removed on beta.18) (#3129)
+- Fixes transaction confirmations with the HttpProvider (#3140)
