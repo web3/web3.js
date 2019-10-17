@@ -15,6 +15,7 @@
     "dependencies": {
         "bn.js": "4.11.8",
         "eth-lib": "0.2.7",
+        "ethereum-bloom-filters": "^1.0.6",
         "ethjs-unit": "0.1.6",
         "number-to-bn": "1.7.0",
         "randombytes": "^2.1.0",

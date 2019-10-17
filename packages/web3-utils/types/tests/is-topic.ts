@@ -15,30 +15,12 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file is-bloom-tests.ts
+ * @file is-user-ethereum-address-in-bloom.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2019
  */
 
-import BN = require('bn.js');
-import { isBloom } from 'web3-utils';
+import { isTopic } from 'web3-utils';
 
 // $ExpectType boolean
-isBloom('0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef');
-
-// $ExpectError
-isBloom(656);
-// $ExpectError
-isBloom(new BN(3));
-// $ExpectError
-isBloom(['string']);
-// $ExpectError
-isBloom([4]);
-// $ExpectError
-isBloom({});
-// $ExpectError
-isBloom(true);
-// $ExpectError
-isBloom(null);
-// $ExpectError
-isBloom(undefined);
+isTopic('0x000000000000000000000000b3bb037d2f2341a1c2775d51909a3d944597987d');
