@@ -1056,9 +1056,13 @@ Parameters
   - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to :ref:`web3.eth.gasPrice <eth-gasprice>`.
   - ``data`` - ``String``: (optional) Either a `ABI byte string <http://solidity.readthedocs.io/en/latest/abi-spec.html>`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
   - ``nonce`` - ``Number``: (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
+  - ``chain`` - ``String``: (optional) Defaults to ``mainnet``.
+  - ``hardfork`` - ``String``: (optional) Defaults to ``petersburg``.
+  - ``common`` - ``String``: (optional) The initiated common object of the `ethereumjs-common <https://www.npmjs.com/package/ethereumjs-common>`_ package. `(Example) <https://github.com/ethereumjs/ethereumjs-tx#chain-and-hardfork-support>`_
+
 2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
-.. note:: The ``from`` property can also be an address or index from the :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`. It will then sign locally using the private key of that account, and send the transaction via :ref:`web3.eth.sendSignedTransaction() <eth-sendsignedtransaction>`.
+.. note:: The ``from`` property can also be an address or index from the :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`. It will then sign locally using the private key of that account, and send the transaction via :ref:`web3.eth.sendSignedTransaction() <eth-sendsignedtransaction>`. The properties ``chain`` and ``hardfork`` or ``common`` are required if you are not connected to the ``mainnet``.
 
 .. _eth-sendtransaction-return:
 
