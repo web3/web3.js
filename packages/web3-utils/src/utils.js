@@ -25,6 +25,8 @@ var BN = require('bn.js');
 var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
 var Hash = require("eth-lib/lib/hash");
+var ethereumBloomFilters = require('ethereum-bloom-filters');
+
 
 
 /**
@@ -390,39 +392,76 @@ var isHex = function (hex) {
 /**
  * Returns true if given string is a valid Ethereum block header bloom.
  *
- * TODO UNDOCUMENTED
- *
  * @method isBloom
  * @param {String} hex encoded bloom filter
  * @return {Boolean}
  */
 var isBloom = function (bloom) {
-    if (!/^(0x)?[0-9a-f]{512}$/i.test(bloom)) {
-        return false;
-    } else if (/^(0x)?[0-9a-f]{512}$/.test(bloom) || /^(0x)?[0-9A-F]{512}$/.test(bloom)) {
-        return true;
-    }
-    return false;
+    return ethereumBloomFilters.isBloom(bloom);
+};
+
+/**
+ * Returns true if the ethereum users address is part of the given bloom 
+ * note: false positives are possible.
+ *
+ * @method isUserEthereumAddressInBloom
+ * @param {String} hex encoded bloom filter
+ * @param {String} hex ethereum addresss
+ * @return {Boolean}
+ */
+var isUserEthereumAddressInBloom = function (bloom, ethereumAddress) {
+    return ethereumBloomFilters.isUserEthereumAddressInBloom(bloom, ethereumAddress);
+};
+
+/**
+ * Returns true if the contract address is part of the given bloom 
+ * note: false positives are possible.
+ *
+ * @method isUserEthereumAddressInBloom
+ * @param {String} hex encoded bloom filter
+ * @param {String} hex contract addresss
+ * @return {Boolean}
+ */
+var isContractAddressInBloom = function (bloom, contractAddress) {
+    return ethereumBloomFilters.isContractAddressInBloom(bloom, contractAddress);
 };
 
 /**
  * Returns true if given string is a valid log topic.
- *
- * TODO UNDOCUMENTED
  *
  * @method isTopic
  * @param {String} hex encoded topic
  * @return {Boolean}
  */
 var isTopic = function (topic) {
-    if (!/^(0x)?[0-9a-f]{64}$/i.test(topic)) {
-        return false;
-    } else if (/^(0x)?[0-9a-f]{64}$/.test(topic) || /^(0x)?[0-9A-F]{64}$/.test(topic)) {
-        return true;
-    }
-    return false;
+    return ethereumBloomFilters.isTopic(topic);
 };
 
+/**
+ * Returns true if the topic is part of the given bloom
+ * note: false positives are possible.
+ *
+ * @method isTopicInBloom
+ * @param {String} hex encoded bloom filter
+ * @param {String} hex encoded topic
+ * @return {Boolean}
+ */
+var isTopicInBloom = function (bloom, topic) {
+    return ethereumBloomFilters.isTopicInBloom(bloom, topic);
+};
+
+/**
+ * Returns true if the value is part of the given bloom
+ * note: false positives are possible.
+ *
+ * @method isInBloom
+ * @param {String} hex encoded bloom filter
+ * @param {String | Uint8Array} topic encoded value
+ * @return {Boolean}
+ */
+var isInBloom = function (bloom, topic) {
+    return ethereumBloomFilters.isInBloom(bloom, topic);
+};
 
 /**
  * Hashes values to a sha3 hash using keccak 256
@@ -461,8 +500,12 @@ module.exports = {
     isBigNumber: isBigNumber,
     toBN: toBN,
     isAddress: isAddress,
-    isBloom: isBloom, // TODO UNDOCUMENTED
-    isTopic: isTopic, // TODO UNDOCUMENTED
+    isBloom: isBloom,
+    isUserEthereumAddressInBloom: isUserEthereumAddressInBloom,
+    isContractAddressInBloom: isContractAddressInBloom,
+    isTopic: isTopic,
+    isTopicInBloom: isTopicInBloom,
+    isInBloom: isInBloom,
     checkAddressChecksum: checkAddressChecksum,
     utf8ToHex: utf8ToHex,
     hexToUtf8: hexToUtf8,

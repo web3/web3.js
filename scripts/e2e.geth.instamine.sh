@@ -30,11 +30,11 @@ geth-dev-assistant --accounts 1 --tag 'stable'
 GETH_INSTAMINE=true istanbul cover _mocha -- \
   --reporter spec \
   --grep 'E2E' \
-  --timeout 10000 \
+  --timeout 15000 \
   --exit
 
 # Copy cov for this run to a temp file we can combine later and send to coveralls
 if [ "$CI" = true ]; then
-  cp coverage/coverage.json .cov_geth_insta.json
+  cp coverage/coverage.raw.json .cov_geth_insta.json
 fi
 
