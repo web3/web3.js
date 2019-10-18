@@ -3,9 +3,22 @@ var Web3 = require('../packages/web3');
 var Accounts = require("./../packages/web3-eth-accounts");
 var ethjsSigner = require("ethjs-signer");
 var chai = require('chai');
+var _ = require('underscore');
 var assert = chai.assert;
 
-var clone = function (object) { return object ? JSON.parse(JSON.stringify(object)) : []; };
+var Common = require('ethereumjs-common').default;
+
+var common = Common.forCustomChain(
+    'mainnet',
+    {
+        name: 'custom-network',
+        networkId: 1,
+        chainId: 1,
+    },
+    'petersburg',
+);
+
+var clone = function (object) { return object ? _.clone(object) : []; };
 
 var tests = [
     {
@@ -20,7 +33,8 @@ var tests = [
             to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
             toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
             value: "1000000000",
-            data: ""
+            data: "",
+            common: common
         },
         // signature from eth_signTransaction
         rawTransaction: "0xf868808504a817c80082520894f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008026a0afa02d193471bb974081585daabf8a751d4decbb519604ac7df612cc11e9226da04bf1bd55e82cebb2b09ed39bbffe35107ea611fa212c2d9a1f1ada4952077118",
@@ -40,7 +54,8 @@ var tests = [
                 to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
                 toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
                 value: "0",
-                data: ""
+                data: "",
+                common: common
             },
             // expected r and s values from signature
             r: "0x22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd9",
@@ -63,7 +78,8 @@ var tests = [
             to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
             toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
             value: "1000000000",
-            data: ""
+            data: "",
+            common: common
         },
         // expected r and s values from signature
         r: "0x9ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9c",
@@ -86,7 +102,8 @@ var tests = [
             to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
             toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
             value: "0",
-            data: ""
+            data: "",
+            common: common
         },
         // expected r and s values from signature
         r: "0x22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd9",
@@ -109,7 +126,8 @@ var tests = [
             to: '0x3535353535353535353535353535353535353535',
             toIban: 'XE4967QZMA14MI680T89KSPPJEJMU68MEYD', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: ""
+            data: "",
+            common: common
         },
         // signature from eth_signTransaction
         rawTransaction: "0xf86c808504a817c800825208943535353535353535353535353535353535353535880de0b6b3a76400008025a04f4c17305743700648bc4f6cd3038ec6f6af0df73e31757007b7f59df7bee88da07e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0",
@@ -128,7 +146,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         // web3.eth.signTransaction({from: "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0", gasPrice: "230000000000", gas: "50000", to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c', value: "1000000000000000000", data: "0x0123abcd"}).then(console.log);
         // signature from eth_signTransaction
@@ -148,7 +167,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         // web3.eth.signTransaction({from: "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0", gasPrice: "230000000000", gas: "50000", to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c', value: "1000000000000000000", data: "0x0123abcd"}).then(console.log);
         // signature from eth_signTransaction
@@ -168,7 +188,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         // web3.eth.signTransaction({from: "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0", gasPrice: "230000000000", gas: "50000", to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c', value: "1000000000000000000", data: "0x0123abcd"}).then(console.log);
         // signature from eth_signTransaction
@@ -188,7 +209,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         // web3.eth.signTransaction({from: "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0", gasPrice: "230000000000", gas: "50000", to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c', value: "1000000000000000000", data: "0x0123abcd"}).then(console.log);
         // signature from eth_signTransaction
@@ -208,7 +230,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         // web3.eth.signTransaction({from: "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0", gasPrice: "230000000000", gas: "50000", to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c', value: "1000000000000000000", data: "0x0123abcd"}).then(console.log);
         // signature from eth_signTransaction
@@ -228,7 +251,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         // web3.eth.signTransaction({from: "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0", gasPrice: "230000000000", gas: "50000", to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c', value: "1000000000000000000", data: "0x0123abcd"}).then(console.log);
         // signature from eth_signTransaction
@@ -248,7 +272,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            input: "0x0123abcd"
+            input: "0x0123abcd",
+            common: common
         },
         // web3.eth.signTransaction({from: "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0", gasPrice: "230000000000", gas: "50000", to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c', value: "1000000000000000000", data: "0x0123abcd"}).then(console.log);
         // signature from eth_signTransaction
@@ -269,7 +294,8 @@ var tests = [
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
             data: "0x0123abcd",
-            input: "0x0123abcd"
+            input: "0x0123abcd",
+            common: common
         },
         error: true
     },
@@ -285,7 +311,8 @@ var tests = [
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
             data: "0x0123abcd",
-            input: "0x0123abcd"
+            input: "0x0123abcd",
+            common: common
         },
         error: true
     },
@@ -300,7 +327,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         error: true
     },
@@ -315,7 +343,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "test"
+            data: "test",
+            common: common
         },
         error: true
     },
@@ -330,7 +359,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         error: true
     },
@@ -345,7 +375,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         error: true
     },
@@ -360,7 +391,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         error: true
     },
@@ -375,7 +407,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         error: true
     },
@@ -390,7 +423,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         error: true
     },
@@ -405,7 +439,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         error: true
     },
@@ -420,7 +455,8 @@ var tests = [
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
-            data: "0x0123abcd"
+            data: "0x0123abcd",
+            common: common
         },
         error: true
     },

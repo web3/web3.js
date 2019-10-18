@@ -185,7 +185,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                         networkId: transaction.networkId,
                         chainId: transaction.chainId,
                     },
-                    'petersburg',
+                    'petersburg'
                 );
                 delete transaction.networkId;
             } else {
@@ -241,7 +241,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         return result;
     }
 
-    var hasTxSigningOptions = (tx.chain && tx.hardfork) || tx.common;
+    var hasTxSigningOptions = ((tx.chain && tx.hardfork) || tx.common) ? true : false;
 
     // Resolve immediately if nonce, chainId, price and signing options are provided
     if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined && hasTxSigningOptions) {
@@ -253,7 +253,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId,
         isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
         isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
-        isNot(tx.common) ? _this._ethereumCall.getNetworkId() : tx.common,
+        isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1,
     ]).then(function (args) {
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3]) ) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: '+ JSON.stringify(args));
