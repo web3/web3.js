@@ -15,7 +15,7 @@ describe('EventFilterEncoderTest', () => {
     beforeEach(() => {
         new AbiCoder();
         abiCoderMock = AbiCoder.mock.instances[0];
-        abiCoderMock.encodeParameter = jest.fn();
+        abiCoderMock.encodeTopic = jest.fn();
 
         new AbiItemModel({});
         abiItemModelMock = AbiItemModel.mock.instances[0];
@@ -44,48 +44,16 @@ describe('EventFilterEncoderTest', () => {
             }
         ]);
 
-        abiCoderMock.encodeParameter.mockReturnValue('0x0');
+        abiCoderMock.encodeTopic.mockReturnValue('0x0');
 
         const topics = eventFilterEncoder.encode(abiItemModelMock, filter);
 
         expect(topics).toEqual(['0x0', ['0x0', '0x0']]);
 
-        expect(abiCoderMock.encodeParameter).toHaveBeenNthCalledWith(1, 'bytes32', filter.myName);
+        expect(abiCoderMock.encodeTopic).toHaveBeenNthCalledWith(1, 'bytes32', filter.myName);
 
-        expect(abiCoderMock.encodeParameter).toHaveBeenNthCalledWith(2, 'uint256[]', filter.arrayItem[0]);
+        expect(abiCoderMock.encodeTopic).toHaveBeenNthCalledWith(2, 'uint256[]', filter.arrayItem[0]);
 
-        expect(abiCoderMock.encodeParameter).toHaveBeenNthCalledWith(3, 'uint256[]', filter.arrayItem[1]);
-    });
-
-    it('calls encode with string type and returns the expected value', () => {
-        const filter = {
-            myString: 'theValue',
-            stringArrayItem: ['array1', 'array2']
-        };
-
-        abiItemModelMock.getIndexedInputs.mockReturnValueOnce([
-            {
-                type: 'string',
-                name: 'myString'
-            },
-            {
-                type: 'string[]',
-                name: 'stringArrayItem'
-            }
-        ]);
-
-        abiCoderMock.utils = {
-            keccak256: jest.fn().mockReturnValue('0x0')
-        };
-
-        const topics = eventFilterEncoder.encode(abiItemModelMock, filter);
-
-        expect(topics).toEqual(['0x0', ['0x0', '0x0']]);
-
-        expect(abiCoderMock.utils.keccak256).toHaveBeenNthCalledWith(1, filter.myString);
-
-        expect(abiCoderMock.utils.keccak256).toHaveBeenNthCalledWith(2, filter.stringArrayItem[0]);
-
-        expect(abiCoderMock.utils.keccak256).toHaveBeenNthCalledWith(3, filter.stringArrayItem[1]);
+        expect(abiCoderMock.encodeTopic).toHaveBeenNthCalledWith(3, 'uint256[]', filter.arrayItem[1]);
     });
 });

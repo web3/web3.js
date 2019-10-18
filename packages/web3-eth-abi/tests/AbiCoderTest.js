@@ -186,4 +186,28 @@ describe('AbiCoderTest', () => {
 
         expect(ethersAbiCoderMock.decode).toHaveBeenNthCalledWith(3, [inputs[2], inputs[3]], '0x0');
     });
+
+    it('calls encodeTopic with with a string as parameter', () => {
+        Utils.keccak256.mockReturnValueOnce('0x0');
+
+        expect(abiCoder.encodeTopic('string', 'theValue')).toEqual('0x0');
+
+        expect(Utils.keccak256).toHaveBeenNthCalledWith(1, 'theValue');
+    });
+
+    it('calls encodeTopic with with a string[] as parameter', () => {
+        Utils.keccak256.mockReturnValueOnce('0x0');
+
+        expect(abiCoder.encodeTopic('string[]', 'theValue')).toEqual('0x0');
+
+        expect(Utils.keccak256).toHaveBeenNthCalledWith(1, 'theValue');
+    });
+
+    it('calls encodeTopic with a bytes32 as parameter', () => {
+        ethersAbiCoderMock.encode.mockReturnValueOnce('0x0');
+
+        expect(abiCoder.encodeTopic('bytes32', 'theValue')).toEqual('0x0');
+
+        expect(ethersAbiCoderMock.encode).toHaveBeenNthCalledWith(1, ['bytes32'], ['theValue']);
+    });
 });

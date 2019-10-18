@@ -268,4 +268,22 @@ export default class AbiCoder {
 
         return true;
     }
+
+    /**
+     * Should be used to encode dynamically allocated types
+     *
+     * @method encodeTopic
+     *
+     * @param {String} type
+     * @param {String | Number} param
+     *
+     * @returns {String} encoded plain param
+     */
+    encodeTopic(type, param) {
+        if (type === 'string' || type === 'string[]') {
+            return this.utils.keccak256(param);
+        }
+
+        return this.encodeParameter(type, param);
+    }
 }

@@ -17,7 +17,7 @@ describe('AllEventsFilterEncoderTest', () => {
     beforeEach(() => {
         new AbiCoder();
         abiCoderMock = AbiCoder.mock.instances[0];
-        abiCoderMock.encodeParameter = jest.fn();
+        abiCoderMock.encodeTopic = jest.fn();
 
         new AbiModel({});
         abiModelMock = AbiModel.mock.instances[0];
@@ -42,7 +42,7 @@ describe('AllEventsFilterEncoderTest', () => {
             }
         ]);
 
-        abiCoderMock.encodeParameter.mockReturnValue('0x0');
+        abiCoderMock.encodeTopic.mockReturnValue('0x0');
 
         const filter = {
             myName: 'theValue',
@@ -53,10 +53,10 @@ describe('AllEventsFilterEncoderTest', () => {
 
         expect(topics).toEqual([['0x0', ['0x0', '0x0']]]);
 
-        expect(abiCoderMock.encodeParameter).toHaveBeenNthCalledWith(1, 'bytes32', filter.myName);
+        expect(abiCoderMock.encodeTopic).toHaveBeenNthCalledWith(1, 'bytes32', filter.myName);
 
-        expect(abiCoderMock.encodeParameter).toHaveBeenNthCalledWith(2, 'uint256[]', filter.arrayItem[0]);
+        expect(abiCoderMock.encodeTopic).toHaveBeenNthCalledWith(2, 'uint256[]', filter.arrayItem[0]);
 
-        expect(abiCoderMock.encodeParameter).toHaveBeenNthCalledWith(3, 'uint256[]', filter.arrayItem[1]);
+        expect(abiCoderMock.encodeTopic).toHaveBeenNthCalledWith(3, 'uint256[]', filter.arrayItem[1]);
     });
 });
