@@ -3,7 +3,7 @@ var Web3 = require('../packages/web3');
 var Basic = require('./sources/Basic');
 var utils = require('./helpers/test.utils');
 
-describe('method.send [ @E2E ]', function() {
+describe('method.send / sendTransaction [ @E2E ]', function() {
     var web3;
     var accounts;
     var basic;
@@ -189,5 +189,39 @@ describe('method.send [ @E2E ]', function() {
                 })
         })
     });
+
+    describe('sendTransaction', function() {
+        before(async function(){
+            web3 = new Web3('http://localhost:8545');
+            accounts = await web3.eth.getAccounts();
+        });
+
+        it('sends a transaction (with gas price)', async function(){
+            const gasPrice = "1";
+
+            const receipt = await web3.eth.sendTransaction({
+                from: accounts[0],
+                to: accounts[1],
+                value: '1234567654321',
+                gasPrice: gasPrice
+            });
+
+            const tx = await web3.eth.getTransaction(receipt.transactionHash)
+            assert.equal(tx.gasPrice, gasPrice);
+        });
+
+        it('sends a transaction (without gas price)', async function(){
+            const networkGasPrice = await web3.eth.getGasPrice();
+
+            const receipt = await web3.eth.sendTransaction({
+                from: accounts[0],
+                to: accounts[1],
+                value: '1234567654321'
+            });
+
+            const tx = await web3.eth.getTransaction(receipt.transactionHash)
+            assert.equal(tx.gasPrice, networkGasPrice);
+        });
+    })
 });
 

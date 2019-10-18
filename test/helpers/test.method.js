@@ -3,7 +3,6 @@ var chai = require('chai');
 var assert = chai.assert;
 var FakeIpcProvider = require('./FakeIpcProvider');
 var Web3 = require('../../packages/web3');
-var _ = require('underscore');
 
 var clone = function (object) { return object ? _.clone(object) : []; };
 
