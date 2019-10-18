@@ -46,7 +46,7 @@ describe('transaction and message signing [ @E2E ]', function() {
         assert(receipt.status === true);
     });
 
-    it('sendSignedTransaction (with eth.accounts.signTransaction)', async function(){
+    it('sendSignedTransaction (accounts.signTransaction with signing options)', async function(){
         const source = wallet[0].address;
         const destination = wallet[1].address;
 
@@ -78,6 +78,97 @@ describe('transaction and message signing [ @E2E ]', function() {
         const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
 
         assert(receipt.status === true);
+    });
+
+    it('sendSignedTransaction (accounts.signTransaction / without signing options)', async function(){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txCount = await web3.eth.getTransactionCount(source);
+
+        const txObject = {
+            nonce:    web3.utils.toHex(txCount),
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gasLimit: web3.utils.toHex(21000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+        };
+
+        const signed = await web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey);
+        const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+
+        assert(receipt.status === true);
+    });
+
+    it('accounts.signTransaction errors when common, chain and hardfork all defined', async function(){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txCount = await web3.eth.getTransactionCount(source);
+
+        const txObject = {
+            nonce:    web3.utils.toHex(txCount),
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gasLimit: web3.utils.toHex(21000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+            chain: "ropsten",
+            common: {},
+            hardfork: "istanbul"
+        };
+
+        try {
+            await web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey);
+            assert.fail()
+        } catch (err) {
+            assert(err.message.includes('common object or the chain and hardfork'));
+        }
+    });
+
+    it('accounts.signTransaction errors when chain specified without hardfork', async function(){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txCount = await web3.eth.getTransactionCount(source);
+
+        const txObject = {
+            nonce:    web3.utils.toHex(txCount),
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gasLimit: web3.utils.toHex(21000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+            chain: "ropsten"
+        };
+
+        try {
+            await web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey);
+            assert.fail()
+        } catch (err) {
+            assert(err.message.includes('both values must be defined'));
+        }
+    });
+
+    it('accounts.signTransaction errors when hardfork specified without chain', async function(){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txCount = await web3.eth.getTransactionCount(source);
+
+        const txObject = {
+            nonce:    web3.utils.toHex(txCount),
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gasLimit: web3.utils.toHex(21000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+            hardfork: "istanbul"
+        };
+
+        try {
+            await web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey);
+            assert.fail()
+        } catch (err) {
+            assert(err.message.includes('both values must be defined'));
+        }
     });
 
     it('eth.personal.sign', async function(){

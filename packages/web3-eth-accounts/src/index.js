@@ -36,6 +36,7 @@ var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
 var Transaction = require('ethereumjs-tx').Transaction;
+var Common = require('ethereumjs-common').default;
 
 
 var isNot = function(value) {
@@ -54,7 +55,13 @@ var Accounts = function Accounts() {
 
     var _ethereumCall = [
         new Method({
-            name: 'getId',
+            name: 'getNetworkId',
+            call: 'net_version',
+            params: 0,
+            outputFormatter: parseInt
+        }),
+        new Method({
+            name: 'getChainId',
             call: 'eth_chainId',
             params: 0,
             outputFormatter: utils.hexToNumber
@@ -138,6 +145,13 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             );
         }
 
+        if ((tx.chain && !tx.hardfork) || (tx.hardfork && !tx.chain)){
+            error = new Error(
+                'When specifying chain and hardfork, both values must be defined. ' +
+                'Received "chain": ' + tx.chain + ', "hardfork": ' + tx.hardfork
+            );
+        }
+
         if (!tx.gas && !tx.gasLimit) {
             error = new Error('"gas" is missing');
         }
@@ -156,24 +170,39 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
         try {
             var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
+
             transaction.to = transaction.to || '0x';
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
             transaction.chainId = utils.numberToHex(transaction.chainId);
 
-            if (transaction.common) {
-                transactionOptions['common'] = transaction.common;
-                delete transaction.common;
-            }
+            // Because tx has no ethereumjs-tx signing options we use fetched vals.
+            if (!(tx.chain && tx.hardfork) && !tx.common){
+                transactionOptions['common'] = Common.forCustomChain(
+                    'mainnet',
+                    {
+                        name: 'custom-network',
+                        networkId: transaction.networkId,
+                        chainId: transaction.chainId,
+                    },
+                    'petersburg',
+                );
+                delete transaction.networkId;
+            } else {
+                if (transaction.common) {
+                    transactionOptions['common'] = transaction.common;
+                    delete transaction.common;
+                }
 
-            if (transaction.chain) {
-                transactionOptions['chain'] = transaction.chain;
-                delete transaction.chain;
-            }
+                if (transaction.chain) {
+                    transactionOptions['chain'] = transaction.chain;
+                    delete transaction.chain;
+                }
 
-            if (transaction.hardfork) {
-                transactionOptions['hardfork'] = transaction.hardfork;
-                delete transaction.hardfork;
+                if (transaction.hardfork) {
+                    transactionOptions['hardfork'] = transaction.hardfork;
+                    delete transaction.hardfork;
+                }
             }
 
             if (privateKey.startsWith('0x')) {
@@ -212,22 +241,24 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         return result;
     }
 
-    // Resolve immediately if nonce, chainId and price are provided
-    if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
+    var hasTxSigningOptions = (tx.chain && tx.hardfork) || tx.common;
+
+    // Resolve immediately if nonce, chainId, price and signing options are provided
+    if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined && hasTxSigningOptions) {
         return Promise.resolve(signed(tx));
     }
 
-
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        isNot(tx.chainId) ? _this._ethereumCall.getId() : tx.chainId,
+        isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId,
         isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
-        isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
+        isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
+        isNot(tx.common) ? _this._ethereumCall.getNetworkId() : tx.common,
     ]).then(function (args) {
-        if (isNot(args[0]) || isNot(args[1]) || isNot(args[2])) {
-            throw new Error('One of the values "chainId", "gasPrice", or "nonce" couldn\'t be fetched: '+ JSON.stringify(args));
+        if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3]) ) {
+            throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: '+ JSON.stringify(args));
         }
-        return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2]}));
+        return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2], networkId: args[3]}));
     });
 };
 
