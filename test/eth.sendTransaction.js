@@ -3,11 +3,12 @@ var chai = require('chai');
 var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var Web3 = require('../packages/web3');
-var _ = require('underscore');
 
 var clone = function (object) { return object ? JSON.parse(JSON.stringify(object)) : []; };
 
+
 var method = 'sendTransaction';
+
 
 var tests = [{
     args: [{
@@ -57,6 +58,7 @@ var tests = [{
     formattedArgs: [],
     result: '0x1234567',
     formattedResult: '0x1234567',
+
     call2: 'eth_'+ method,
     formattedArgs2: [{
         from: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
@@ -208,7 +210,7 @@ var tests = [{
     args: [{
         from: 'XE81ETHXREGGAVOFYORK', // iban address
         to: '0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6',
-        value: '1234567654321',
+        value: '1234567654321'
     }],
     call: 'eth_'+ method
 }];
