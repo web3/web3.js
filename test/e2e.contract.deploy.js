@@ -1,8 +1,8 @@
 var assert = require('assert');
-var Web3 = require('../packages/web3');
 var Basic = require('./sources/Basic');
 var Reverts = require('./sources/Reverts');
 var utils = require('./helpers/test.utils');
+var Web3 = (global.window) ? require('../packages/web3/dist/web3.min') : require('../packages/web3');
 
 describe('contract.deploy [ @E2E ]', function() {
     var web3;
@@ -78,7 +78,8 @@ describe('contract.deploy [ @E2E ]', function() {
 
         before(async function(){
             // Ganache runs ws and http over the same port
-            var port = process.env.GANACHE ?  8545 : 8546;
+            // & we use it in headless browser tests
+            var port = ( process.env.GANACHE || global.window ) ?  8545 : 8546;
 
             web3 = new Web3('ws://localhost:' + port);
             accounts = await web3.eth.getAccounts();
