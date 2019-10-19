@@ -37,8 +37,6 @@ var tests = [{
     call: 'eth_'+ method
 },
 // test with gasPrice missing
-// This test is broken but very difficult to diagnose cause....
-// behavior is correct (see sendTransaction E2E)
 {
     args: [{
         from: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
@@ -216,6 +214,7 @@ var tests = [{
 }];
 
 testMethod.runTests('eth', method, tests);
+
 
 // Test HTTPProvider with interval
 describe(method, function () {

@@ -3,7 +3,7 @@ var Web3 = require('../packages/web3');
 var Basic = require('./sources/Basic');
 var utils = require('./helpers/test.utils');
 
-describe('method.send / sendTransaction [ @E2E ]', function() {
+describe('method.send [ @E2E ]', function() {
     var web3;
     var accounts;
     var basic;
