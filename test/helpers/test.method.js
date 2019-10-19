@@ -54,7 +54,7 @@ var runTests = function (obj, method, tests) {
                         useLocalWallet(test, provider, web3);
                     }
 
-                    
+
                     provider.injectResult(clone(test.result));
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
