@@ -126,7 +126,8 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     var _this = this,
         error = false,
         transactionOptions = {},
-        result;
+        result,
+        hasTxSigningOptions = ((tx.chain && tx.hardfork) || tx.common) ? true : false;
 
     callback = callback || function () {};
 
@@ -176,7 +177,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             transaction.chainId = utils.numberToHex(transaction.chainId);
 
             // Because tx has no ethereumjs-tx signing options we use fetched vals.
-            if (!(tx.chain && tx.hardfork) && !tx.common){
+            if (!hasTxSigningOptions){
                 transactionOptions['common'] = Common.forCustomChain(
                     'mainnet',
                     {
@@ -240,7 +241,6 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         return result;
     }
 
-    var hasTxSigningOptions = ((tx.chain && tx.hardfork) || tx.common) ? true : false;
 
     // Resolve immediately if nonce, chainId, price and signing options are provided
     if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined && hasTxSigningOptions) {

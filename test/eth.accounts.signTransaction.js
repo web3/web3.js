@@ -593,7 +593,34 @@ describe("eth", function () {
                     });
                 });
 
-                it("signTransaction will call for nonce, gasPrice and chainId", function(done) {
+                it("signTransaction will call for networkId", function(done) {
+                    var provider = new FakeHttpProvider();
+                    var web3 = new Web3(provider);
+
+                    provider.injectResult(1);
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_networkId');
+                        assert.deepEqual(payload.params, []);
+                    });
+
+                    var ethAccounts = new Accounts(web3);
+
+                    var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
+                    assert.equal(testAccount.address, test.address);
+
+                    var transaction = clone(test.transaction);
+                    delete transaction.common;
+                    testAccount.signTransaction(transaction)
+                    .then(function (tx) {
+                        assert.isObject(tx);
+                        assert.isString(tx.rawTransaction);
+
+                        done();
+                    });
+                });
+
+                it("signTransaction will call for nonce, gasPrice, chainId and networkId", function(done) {
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
 
@@ -615,6 +642,12 @@ describe("eth", function () {
                         assert.equal(payload.method, 'eth_getTransactionCount');
                         assert.deepEqual(payload.params, [test.address, "latest"]);
                     });
+                    provider.injectResult(1);
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_networkId');
+                        assert.deepEqual(payload.params, []);
+                    });
 
                     var ethAccounts = new Accounts(web3);
 
@@ -625,6 +658,7 @@ describe("eth", function () {
                     delete transaction.chainId;
                     delete transaction.gasPrice;
                     delete transaction.nonce;
+                    delete transaction.common;
                     testAccount.signTransaction(transaction)
                     .then(function (tx) {
                         assert.isObject(tx);
