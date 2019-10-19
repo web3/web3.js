@@ -4,7 +4,7 @@ var assert = chai.assert;
 var FakeIpcProvider = require('./FakeIpcProvider');
 var Web3 = require('../../packages/web3');
 
-var clone = function (object) { return object ? _.clone(object) : []; };
+var clone = function (object) { return object ? JSON.parse(JSON.stringify(object)) : []; };
 
 var useLocalWallet = function (test, provider, web3) {
 
@@ -52,7 +52,6 @@ var runTests = function (obj, method, tests) {
                     if(test.useLocalWallet) {
                         useLocalWallet(test, provider, web3);
                     }
-
 
                     provider.injectResult(clone(test.result));
                     provider.injectValidation(function (payload) {
