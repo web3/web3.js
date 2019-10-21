@@ -3,7 +3,7 @@ var EJSCommon = require('ethereumjs-common');
 var EJSTx = require('ethereumjs-tx');
 var Basic = require('./sources/Basic');
 var utils = require('./helpers/test.utils');
-var Web3 = (global.window) ? require('../packages/web3/dist/web3.min') : require('../packages/web3');
+var Web3 = utils.getWeb3();
 
 describe('transaction and message signing [ @E2E ]', function() {
     let web3;

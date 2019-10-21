@@ -37,10 +37,19 @@ var extractReceipt = function(message){
     return JSON.parse(receiptString);
 }
 
+// Conditionally requires web3:
+// loads web3.min when running headless browser tests, the unbuilt web3 otherwise.
+var getWeb3 = function(){
+    return (global.window)
+        ? require('../../packages/web3/dist/web3.min')
+        : require('../../packages/web3');
+}
+
 module.exports = {
     methodExists: methodExists,
     propertyExists: propertyExists,
     mine: mine,
     extractReceipt: extractReceipt,
+    getWeb3: getWeb3
 };
 
