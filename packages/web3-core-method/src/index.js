@@ -602,15 +602,15 @@ Method.prototype.buildCall = function() {
                     if (wallet && wallet.privateKey) {
                         var txOptions = _.omit(tx, 'from');
 
-                        if (method.defaultChain) {
+                        if (method.defaultChain && !txOptions.chain) {
                             txOptions.chain = method.defaultChain;
                         }
 
-                        if (method.defaultHardfork) {
+                        if (method.defaultHardfork && !txOptions.hardfork) {
                             txOptions.hardfork = method.defaultHardfork;
                         }
 
-                        if (method.defaultCommon) {
+                        if (method.defaultCommon && !txOptions.common) {
                             txOptions.common = method.defaultCommon;
                         }
 

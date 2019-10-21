@@ -138,7 +138,7 @@ Property
 ----------
 
 
-Default block parameters can be one of the following:
+The default block parameters can be one of the following:
 
 - ``Number``: A block number
 - ``"genesis"`` - ``String``: The genesis block
@@ -180,7 +180,7 @@ Property
 ----------
 
 
-Default hardfork property can be one of the following:
+The default hardfork property can be one of the following:
 
 - ``"chainstart"`` - ``String``
 - ``"homestead"`` - ``String``
@@ -226,7 +226,7 @@ Property
 ----------
 
 
-Default chain property can be one of the following:
+The default chain property can be one of the following:
 
 - ``"mainnet"`` - ``String``
 - ``"goerli"`` - ``String``
@@ -268,7 +268,7 @@ Property
 ----------
 
 
-Default chain property does contain the following ``Common`` object:
+The default common property does contain the following ``Common`` object:
 
 - ``customChain`` - ``Object``: The custom chain properties
     - ``name`` - ``string``: (optional) The name of the chain
