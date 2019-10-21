@@ -11,7 +11,7 @@ if [ "$TEST" = "unit" ]; then
 
   npm run test:unit
 
-if [ "$TEST" = "build_and_lint" ]; then
+elif [ "$TEST" = "build_and_lint" ]; then
 
   npm run build
   npm run dtslint
