@@ -18,7 +18,7 @@
  */
 
 import BN = require('bn.js');
-import {PromiEvent, provider} from 'web3-core';
+import {Common, PromiEvent, provider, hardfork, chain} from 'web3-core';
 import {AbiItem} from 'web3-utils';
 
 export class Contract {
@@ -31,6 +31,14 @@ export class Contract {
 
     private _address: string;
     private _jsonInterface: AbiItem[];
+    defaultAccount: string | null;
+    defaultBlock: string | number;
+    defaultCommon: Common;
+    defaultHardfork: hardfork;
+    defaultChain: chain;
+    transactionPollingTimeout: number;
+    transactionConfirmationBlocks: number;
+    transactionBlockTimeout: number;
 
     options: Options;
 
