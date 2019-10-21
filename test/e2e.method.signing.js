@@ -1,12 +1,10 @@
 let assert = require('assert');
-let EJSCommon = require('ethereumjs-common');
 let Web3 = require('../packages/web3');
 
 describe('transaction and message signing [ @E2E ]', function() {
     let web3;
     let accounts;
     let wallet;
-    let Common = EJSCommon.default;
 
     before(async function(){
         web3 = new Web3('http://localhost:8545');
@@ -55,15 +53,15 @@ describe('transaction and message signing [ @E2E ]', function() {
         const chainId = await web3.eth.getChainId();
 
 
-        const customCommon = Common.forCustomChain(
-            'mainnet',
-            {
-                name: 'my-network',
+        const customCommon = {
+            baseChain: 'mainnet',
+            customChain: {
+                name: 'custom-network',
                 networkId: networkId,
                 chainId: chainId,
             },
-            'petersburg',
-        );
+            harfork: 'petersburg',
+        };
 
         const txObject = {
             nonce:    web3.utils.toHex(txCount),

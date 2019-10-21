@@ -124,9 +124,21 @@ export interface TransactionConfig {
     data?: string;
     nonce?: number;
     chainId?: number;
-    common?: any; // ethereumjs-common
+    common?: Common;
     chain?: string;
     hardfork?: string;
+}
+
+export interface Common {
+    customChain: CustomChainParams;
+    baseChain?: string;
+    hardfork?: string;
+}
+
+export interface CustomChainParams {
+    name?: string;
+    networkId: number;
+    chainId: number;
 }
 
 export interface RLPEncodedTransaction {

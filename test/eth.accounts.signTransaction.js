@@ -6,17 +6,15 @@ var chai = require('chai');
 var _ = require('underscore');
 var assert = chai.assert;
 
-var Common = require('ethereumjs-common').default;
-
-var common = Common.forCustomChain(
-    'mainnet',
-    {
+var common = {
+    baseChain: 'mainnet',
+    customChain: {
         name: 'custom-network',
         networkId: 1,
         chainId: 1,
     },
-    'petersburg',
-);
+    harfork: 'petersburg',
+};
 
 var clone = function (object) { return object ? _.clone(object) : []; };
 
