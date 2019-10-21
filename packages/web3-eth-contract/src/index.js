@@ -183,6 +183,9 @@ var Contract = function Contract(jsonInterface, address, options) {
     this.transactionBlockTimeout = this.constructor.transactionBlockTimeout;
     this.transactionConfirmationBlocks = this.constructor.transactionConfirmationBlocks;
     this.transactionPollingTimeout = this.constructor.transactionPollingTimeout;
+    this.defaultChain = this.constructor.defaultChain;
+    this.defaultHardfork = this.constructor.defaultHardfork;
+    this.defaultCommon = this.constructor.defaultCommon;
 
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
