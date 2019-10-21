@@ -1,5 +1,5 @@
-const fs = require('fs');
-const f = '../../node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/webpack-configs/browser.js';
+var fs = require('fs');
+var f = '../../node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/webpack-configs/browser.js';
 
 // This is because we have to replace the `node:false` in the `/angular-cli-files/models/webpack-configs/browser.js`
 // with `node: {crypto: true, stream: true}` to allow web3 to work with angular (as they enforce node: false.)

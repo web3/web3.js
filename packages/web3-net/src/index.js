@@ -39,7 +39,7 @@ var Net = function () {
             name: 'getId',
             call: 'net_version',
             params: 0,
-            outputFormatter: utils.hexToNumber
+            outputFormatter: parseInt
         }),
         new Method({
             name: 'isListening',

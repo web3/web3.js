@@ -7,6 +7,7 @@
         "whitespace": false,
         "no-unnecessary-class": false,
         "no-empty-interface": false,
-        "unified-signatures": false
+        "unified-signatures": false,
+        "no-redundant-jsdoc": false
     }
 }

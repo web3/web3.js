@@ -150,6 +150,15 @@ Parameters
     - ``value`` - ``String``: (optional) The value of the transaction in wei.
     - ``gasPrice`` - ``String``: (optional) The gas price set by this transaction, if empty, it will use :ref:`web3.eth.gasPrice() <eth-gasprice>`
     - ``gas`` - ``String``: The gas provided by the transaction.
+    - ``chain`` - ``String``: (optional) Defaults to ``mainnet``.
+    - ``hardfork`` - ``String``: (optional) Defaults to ``petersburg``.
+    - ``common`` - ``Object``: (optional) The common object
+        - ``customChain`` - ``Object``: The custom chain properties
+            - ``name`` - ``string``: (optional) The name of the chain
+            - ``networkId`` - ``number``: Network ID of the custom chain
+            - ``chainId`` - ``number``: Chain ID of the custom chain
+        - ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
+        - ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
 2. ``privateKey`` - ``String``: The private key to sign with.
 3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
@@ -205,6 +214,24 @@ Example
         rawTransaction: '0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428'
         transactionHash: '0xd8f64a42b57be0d565f385378db2f6bf324ce14a594afc05de90436e9ce01f60'
     }
+
+    // or with a common
+    web3.eth.accounts.signTransaction({
+        to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+        value: '1000000000',
+        gas: 2000000
+        common: {
+          baseChain: 'mainnet',
+          hardfork: 'petersburg',
+          customChain: {
+            name: 'custom-chain',
+            chainId: 1,
+            networkId: 1
+          }
+        }
+    }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
+    .then(console.log);
+
 
 
 

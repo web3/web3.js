@@ -28,6 +28,30 @@ import { Block, BlockHeader, Eth, GetProof, Syncing } from 'web3-eth';
 
 const eth = new Eth('http://localhost:8545');
 
+// $ExpectType string | null
+eth.defaultAccount;
+
+// $ExpectType string | number
+eth.defaultBlock;
+
+// $ExpectType Common
+eth.defaultCommon;
+
+// $ExpectType hardfork
+eth.defaultHardfork;
+
+// $ExpectType chain
+eth.defaultChain;
+
+// $ExpectType number
+eth.transactionPollingTimeout;
+
+// $ExpectType number
+eth.transactionConfirmationBlocks;
+
+// $ExpectType number
+eth.transactionBlockTimeout;
+
 // $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => Contract
 eth.Contract;
 

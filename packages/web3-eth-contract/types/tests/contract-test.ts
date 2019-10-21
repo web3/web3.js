@@ -13,13 +13,38 @@
 */
 /**
  * @file contract-tests.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>, Samuel Furter <samuel@ethereum.org>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import { Contract } from 'web3-eth-contract';
 
 const contract = new Contract('http://localhost:500', []);
+
+// $ExpectType string | null
+contract.defaultAccount;
+
+// $ExpectType string | number
+contract.defaultBlock;
+
+// $ExpectType Common
+contract.defaultCommon;
+
+// $ExpectType hardfork
+contract.defaultHardfork;
+
+// $ExpectType chain
+contract.defaultChain;
+
+// $ExpectType number
+contract.transactionPollingTimeout;
+
+// $ExpectType number
+contract.transactionConfirmationBlocks;
+
+// $ExpectType number
+contract.transactionBlockTimeout;
 
 // $ExpectType string
 contract.options.address;

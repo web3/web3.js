@@ -54,6 +54,9 @@ var Method = function Method(options) {
     this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
     this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
     this.transactionPollingTimeout = options.transactionPollingTimeout || 750;
+    this.defaultCommon = options.defaultCommon;
+    this.defaultChain = options.defaultChain;
+    this.defaultHardfork = options.defaultHardfork;
 };
 
 Method.prototype.setRequestManager = function(requestManager, accounts) {
@@ -597,7 +600,21 @@ Method.prototype.buildCall = function() {
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
-                        return method.accounts.signTransaction(_.omit(tx, 'from'), wallet.privateKey)
+                        var txOptions = _.omit(tx, 'from');
+
+                        if (method.defaultChain && !txOptions.chain) {
+                            txOptions.chain = method.defaultChain;
+                        }
+
+                        if (method.defaultHardfork && !txOptions.hardfork) {
+                            txOptions.hardfork = method.defaultHardfork;
+                        }
+
+                        if (method.defaultCommon && !txOptions.common) {
+                            txOptions.common = method.defaultCommon;
+                        }
+
+                        return method.accounts.signTransaction(txOptions, wallet.privateKey)
                             .then(sendSignedTx)
                             .catch(function(err) {
                                 if (_.isFunction(defer.eventEmitter.listeners) && defer.eventEmitter.listeners('error').length) {

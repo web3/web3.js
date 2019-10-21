@@ -124,6 +124,39 @@ export interface TransactionConfig {
     data?: string;
     nonce?: number;
     chainId?: number;
+    common?: Common;
+    chain?: string;
+    hardfork?: string;
+}
+
+export type chain =
+    | 'mainnet'
+    | 'goerli'
+    | 'kovan'
+    | 'rinkeby'
+    | 'ropsten';
+
+export type hardfork =
+    | 'chainstart'
+    | 'homestead'
+    | 'dao'
+    | 'tangerineWhistle'
+    | 'spuriousDragon'
+    | 'byzantium'
+    | 'constantinople'
+    | 'petersburg'
+    | 'istanbul';
+
+export interface Common {
+    customChain: CustomChainParams;
+    baseChain?: chain;
+    hardfork?: hardfork;
+}
+
+export interface CustomChainParams {
+    name?: string;
+    networkId: number;
+    chainId: number;
 }
 
 export interface RLPEncodedTransaction {

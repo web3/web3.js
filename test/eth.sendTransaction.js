@@ -129,7 +129,9 @@ var tests = [{
         to: '0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6',
         value: '1234567654321',
         gasPrice: '324234234234',
-        gas: 500000
+        gas: 500000,
+        chain: 'mainnet',
+        hardfork: 'petersburg'
     }],
     formattedArgs: ['0xf86b0a854b7dddc97a8307a12094dbdbdb2cbd23b783741e8d7fcf51e459b497e4a686011f71f76bb18026a0ce66ccabda889012314677073ded7bec9f763e564dfcff1135e7c6a3c5b89353a07bfa06fe1ba3f1804e4677295a5147e6c8b2224647cc2b7b62063081f6490bd3'],
     result: '0x12345678976543213456786543212345675432',
@@ -154,7 +156,9 @@ var tests = [{
         to: '0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6',
         value: '1234567654321',
         gasPrice: '324234234234',
-        gas: 500000
+        gas: 500000,
+        chain: 'mainnet',
+        hardfork: 'petersburg'
     }],
     formattedArgs: ['0xf86b0a854b7dddc97a8307a12094dbdbdb2cbd23b783741e8d7fcf51e459b497e4a686011f71f76bb18026a0fe620c94cc14fdcdef494a40caf9e2860d1a5929d95730e1b7a6a2041c9c507fa01d3d22e7ab1010fa95a357322ad14a8ce1b1b631d3bb9c123922ff8042c8fc8b'],
     result: '0x12345678976543213456786543212345675432',
@@ -182,7 +186,9 @@ var tests = [{
         to: '0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6',
         value: '1234567654321',
         gasPrice: '324234234234',
-        gas: 500000
+        gas: 500000,
+        chain: 'mainnet',
+        hardfork: 'petersburg'
     }],
     formattedArgs: ['0xf86b0a854b7dddc97a8307a12094dbdbdb2cbd23b783741e8d7fcf51e459b497e4a686011f71f76bb18026a016a5bc4e1808e60a5d370f6b335be158673bd95c457ee7925dc8ae1bec69647fa03831c5e0a966a0aad0c67d6ddea55288f76ae1d73dfe11c6174a8682c2ec165d'],
     result: '0x12345678976543213456786543212345675432',

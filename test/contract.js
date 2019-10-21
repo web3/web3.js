@@ -3031,6 +3031,8 @@ describe('typical usage', function() {
                 gasPrice: '0xbb8',
                 chainId: '0x1',
                 nonce: '0x1',
+                chain: 'mainnet',
+                hardfork: 'petersburg'
             }).then(function (tx) {
                 const expected = tx.rawTransaction;
                 assert.equal(payload.method, 'eth_sendRawTransaction');
@@ -3090,6 +3092,8 @@ describe('typical usage', function() {
             gasPrice: 3000,
             chainId: 1,
             nonce: 1,
+            chain: 'mainnet',
+            hardfork: 'petersburg'
         })
             .on('transactionHash', function (value) {
                 assert.equal('0x5550000000000000000000000000000000000000000000000000000000000032', value);
