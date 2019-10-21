@@ -393,7 +393,7 @@ var isHex = function (hex) {
  * Returns true if given string is a valid Ethereum block header bloom.
  *
  * @method isBloom
- * @param {String} hex encoded bloom filter
+ * @param {String} bloom encoded bloom filter
  * @return {Boolean}
  */
 var isBloom = function (bloom) {
@@ -405,8 +405,8 @@ var isBloom = function (bloom) {
  * note: false positives are possible.
  *
  * @method isUserEthereumAddressInBloom
- * @param {String} hex encoded bloom filter
- * @param {String} hex ethereum addresss
+ * @param {String} ethereumAddress encoded bloom filter
+ * @param {String} bloom ethereum addresss
  * @return {Boolean}
  */
 var isUserEthereumAddressInBloom = function (bloom, ethereumAddress) {
@@ -418,8 +418,8 @@ var isUserEthereumAddressInBloom = function (bloom, ethereumAddress) {
  * note: false positives are possible.
  *
  * @method isUserEthereumAddressInBloom
- * @param {String} hex encoded bloom filter
- * @param {String} hex contract addresss
+ * @param {String} bloom encoded bloom filter
+ * @param {String} contractAddress contract addresss
  * @return {Boolean}
  */
 var isContractAddressInBloom = function (bloom, contractAddress) {
@@ -430,7 +430,7 @@ var isContractAddressInBloom = function (bloom, contractAddress) {
  * Returns true if given string is a valid log topic.
  *
  * @method isTopic
- * @param {String} hex encoded topic
+ * @param {String} topic encoded topic
  * @return {Boolean}
  */
 var isTopic = function (topic) {
@@ -442,8 +442,8 @@ var isTopic = function (topic) {
  * note: false positives are possible.
  *
  * @method isTopicInBloom
- * @param {String} hex encoded bloom filter
- * @param {String} hex encoded topic
+ * @param {String} bloom encoded bloom filter
+ * @param {String} topic encoded topic
  * @return {Boolean}
  */
 var isTopicInBloom = function (bloom, topic) {
@@ -455,7 +455,7 @@ var isTopicInBloom = function (bloom, topic) {
  * note: false positives are possible.
  *
  * @method isInBloom
- * @param {String} hex encoded bloom filter
+ * @param {String} bloom encoded bloom filter
  * @param {String | Uint8Array} topic encoded value
  * @return {Boolean}
  */

@@ -29,7 +29,10 @@ import {
     RLPEncodedTransaction,
     Transaction,
     TransactionConfig,
-    TransactionReceipt
+    TransactionReceipt,
+    Common,
+    hardfork,
+    chain
 } from 'web3-core';
 import { Subscription } from 'web3-core-subscriptions';
 import { AbiCoder } from 'web3-eth-abi';
@@ -59,6 +62,12 @@ export class Eth {
     readonly givenProvider: any;
     defaultAccount: string | null;
     defaultBlock: string | number;
+    defaultCommon: Common;
+    defaultHardfork: hardfork;
+    defaultChain: chain;
+    transactionPollingTimeout: number;
+    transactionConfirmationBlocks: number;
+    transactionBlockTimeout: number;
     readonly currentProvider: provider;
     setProvider(provider: provider): boolean;
     BatchRequest: new () => BatchRequest;
