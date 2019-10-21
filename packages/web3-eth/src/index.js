@@ -86,7 +86,7 @@ var Eth = function Eth() {
     var transactionPollingTimeout = 750;
     var defaultChain, defaultHardfork, defaultCommon;
 
-    Object.defineProperty(this, '≈', {
+    Object.defineProperty(this, 'defaultCommon', {
         get: function () {
             return defaultCommon;
         },
