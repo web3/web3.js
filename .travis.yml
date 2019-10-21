@@ -10,6 +10,8 @@ matrix:
     - node_js: 12
       env: TEST=unit
     - node_js: 10
+      env: TEST=build_and_lint
+    - node_js: 10
       env: TEST=unit_and_e2e_clients
     - node_js: 10
       env: TEST=e2e_browsers
