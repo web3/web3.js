@@ -72,9 +72,7 @@ describe('method.send [ @E2E ]', function() {
         if (process.env.GETH_INSTAMINE) return;
 
         before(async function(){
-            // Ganache runs ws and http over the same port
-            // & we use it in headless browser tests
-            var port = ( process.env.GANACHE || global.window ) ?  8545 : 8546;
+            var port = utils.getWebsocketPort();
 
             web3 = new Web3('ws://localhost:' + port);
             accounts = await web3.eth.getAccounts();
