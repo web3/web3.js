@@ -209,6 +209,135 @@ Example
 
 
 ------------------------------------------------------------------------------
+.. _eth-defaulthardfork:
+
+defaultHardfork
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.defaultHardfork
+
+The default hardfork property is used for signing transactions locally.
+
+----------
+Property
+----------
+
+
+Default hardfork property can be one of the following:
+
+- ``"chainstart"`` - ``String``
+- ``"homestead"`` - ``String``
+- ``"dao"`` - ``String``
+- ``"tangerineWhistle"`` - ``String``
+- ``"spuriousDragon"`` - ``String``
+- ``"byzantium"`` - ``String``
+- ``"constantinople"`` - ``String``
+- ``"petersburg"`` - ``String``
+- ``"istanbul"`` - ``String``
+
+Default is ``"petersburg"``
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.defaultHardfork;
+    > "petersburg"
+
+    // set the default block
+    web3.eth.defaultHardfork = 'istanbul';
+
+
+------------------------------------------------------------------------------
+.. _eth-defaultchain:
+
+defaultChain
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.defaultChain
+
+The default chain property is used for signing transactions locally.
+
+----------
+Property
+----------
+
+
+Default chain property can be one of the following:
+
+- ``"mainnet"`` - ``String``
+- ``"goerli"`` - ``String``
+- ``"kovan"`` - ``String``
+- ``"rinkeby"`` - ``String``
+- ``"ropsten"`` - ``String``
+
+Default is ``"mainnet"``
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.defaultChain;
+    > "mainnet"
+
+    // set the default chain
+    web3.eth.defaultChain = 'goerli';
+
+
+------------------------------------------------------------------------------
+.. _eth-defaultcommon:
+
+defaultCommon
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.defaultCommon
+
+The default common property is used for signing transactions locally.
+
+----------
+Property
+----------
+
+
+Default chain property does contain the following ``Common`` object:
+
+- ``customChain`` - ``Object``: The custom chain properties
+    - ``name`` - ``string``: (optional) The name of the chain
+    - ``networkId`` - ``number``: Network ID of the custom chain
+    - ``chainId`` - ``number``: Chain ID of the custom chain
+- ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
+- ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
+
+
+Default is ``undefined``.
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.defaultCommon;
+    > {customChain: {name: 'custom-network', chainId: 1, networkId: 1}, baseChain: 'mainnet', hardfork: 'petersburg'}
+
+    // set the default common
+    web3.eth.defaultCommon = {customChain: {name: 'custom-network', chainId: 1, networkId: 1}, baseChain: 'mainnet', hardfork: 'petersburg'};
+
+
+------------------------------------------------------------------------------
 
 .. _web3-module-transactionblocktimeout:
 
@@ -1049,16 +1178,22 @@ Parameters
 
 
 1. ``Object`` - The transaction object to send:
-  - ``from`` - ``String|Number``: The address for the sending account. Uses the :ref:`web3.eth.defaultAccount <eth-defaultaccount>` property, if not specified. Or an address or index of a local wallet in :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`.
-  - ``to`` - ``String``: (optional) The destination address of the message, left undefined for a contract-creation transaction.
-  - ``value`` - ``Number|String|BN|BigNumber``: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
-  - ``gas``  - ``Number``: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
-  - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to :ref:`web3.eth.gasPrice <eth-gasprice>`.
-  - ``data`` - ``String``: (optional) Either a `ABI byte string <http://solidity.readthedocs.io/en/latest/abi-spec.html>`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
-  - ``nonce`` - ``Number``: (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
-  - ``chain`` - ``String``: (optional) Defaults to ``mainnet``.
-  - ``hardfork`` - ``String``: (optional) Defaults to ``petersburg``.
-  - ``common`` - ``String``: (optional) The initiated common object of the `ethereumjs-common <https://www.npmjs.com/package/ethereumjs-common>`_ package. `(Example) <https://github.com/ethereumjs/ethereumjs-tx#chain-and-hardfork-support>`_
+    - ``from`` - ``String|Number``: The address for the sending account. Uses the :ref:`web3.eth.defaultAccount <eth-defaultaccount>` property, if not specified. Or an address or index of a local wallet in :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`.
+    - ``to`` - ``String``: (optional) The destination address of the message, left undefined for a contract-creation transaction.
+    - ``value`` - ``Number|String|BN|BigNumber``: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
+    - ``gas``  - ``Number``: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
+    - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to :ref:`web3.eth.gasPrice <eth-gasprice>`.
+    - ``data`` - ``String``: (optional) Either a `ABI byte string <http://solidity.readthedocs.io/en/latest/abi-spec.html>`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
+    - ``nonce`` - ``Number``: (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
+    - ``chain`` - ``String``: (optional) Defaults to ``mainnet``.
+    - ``hardfork`` - ``String``: (optional) Defaults to ``petersburg``.
+    - ``common`` - ``Object``: (optional) The common object
+        - ``customChain`` - ``Object``: The custom chain properties
+            - ``name`` - ``string``: (optional) The name of the chain
+            - ``networkId`` - ``number``: Network ID of the custom chain
+            - ``chainId`` - ``number``: Chain ID of the custom chain
+        - ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
+        - ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
 
 2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 

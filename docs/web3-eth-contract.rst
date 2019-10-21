@@ -161,6 +161,139 @@ Example
     contract.defaultBlock = 231;
 
 
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-defaulthardfork:
+
+defaultHardfork
+=====================
+
+.. code-block:: javascript
+
+    contract.defaultHardfork
+
+The default hardfork property is used for signing transactions locally.
+
+----------
+Property
+----------
+
+
+Default hardfork property can be one of the following:
+
+- ``"chainstart"`` - ``String``
+- ``"homestead"`` - ``String``
+- ``"dao"`` - ``String``
+- ``"tangerineWhistle"`` - ``String``
+- ``"spuriousDragon"`` - ``String``
+- ``"byzantium"`` - ``String``
+- ``"constantinople"`` - ``String``
+- ``"petersburg"`` - ``String``
+- ``"istanbul"`` - ``String``
+
+Default is ``"petersburg"``
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    contract.defaultHardfork;
+    > "petersburg"
+
+    // set the default block
+    contract.defaultHardfork = 'istanbul';
+
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-defaultchain:
+
+defaultChain
+=====================
+
+.. code-block:: javascript
+
+    contract.defaultChain
+
+The default chain property is used for signing transactions locally.
+
+----------
+Property
+----------
+
+
+Default chain property can be one of the following:
+
+- ``"mainnet"`` - ``String``
+- ``"goerli"`` - ``String``
+- ``"kovan"`` - ``String``
+- ``"rinkeby"`` - ``String``
+- ``"ropsten"`` - ``String``
+
+Default is ``"mainnet"``
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    contract.defaultChain;
+    > "mainnet"
+
+    // set the default chain
+    contract.defaultChain = 'goerli';
+
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-defaultcommon:
+
+defaultCommon
+=====================
+
+.. code-block:: javascript
+
+    contract.defaultCommon
+
+The default common property is used for signing transactions locally.
+
+----------
+Property
+----------
+
+
+Default chain property does contain the following ``Common`` object:
+
+- ``customChain`` - ``Object``: The custom chain properties
+    - ``name`` - ``string``: (optional) The name of the chain
+    - ``networkId`` - ``number``: Network ID of the custom chain
+    - ``chainId`` - ``number``: Chain ID of the custom chain
+- ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
+- ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
+
+
+Default is ``undefined``.
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    contract.defaultCommon;
+    > {customChain: {name: 'custom-network', chainId: 1, networkId: 1}, baseChain: 'mainnet', hardfork: 'petersburg'}
+
+    // set the default common
+    contract.defaultCommon = {customChain: {name: 'custom-network', chainId: 1, networkId: 1}, baseChain: 'mainnet', hardfork: 'petersburg'};
+
+
 ------------------------------------------------------------------------------
 
 .. _eth-contract-transactionblocktimeout:
