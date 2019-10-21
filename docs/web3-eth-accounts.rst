@@ -210,24 +210,19 @@ Example
     }
 
     // or with a common
-
-    var Common = require('ethereumjs-common').default;
-
-    var customCommon = Common.forCustomChain(
-        'mainnet',
-        {
-            name: 'my-network',
-            networkId: 1,
-            chainId: 1337,
-        },
-        'petersburg',
-    );
-
     web3.eth.accounts.signTransaction({
         to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
         value: '1000000000',
         gas: 2000000
-        common: customCommon
+        common: {
+          baseChain: 'mainnet',
+          hardfork: 'petersburg',
+          customChain: {
+            name: 'custom-chain',
+            chainId: 1,
+            networkId: 1
+          }
+        }
     }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
     .then(console.log);
 

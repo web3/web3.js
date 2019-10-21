@@ -84,7 +84,59 @@ var Eth = function Eth() {
     var transactionBlockTimeout = 50;
     var transactionConfirmationBlocks = 24;
     var transactionPollingTimeout = 750;
+    var defaultChain, defaultHardfork, defaultCommon;
 
+    Object.defineProperty(this, '≈', {
+        get: function () {
+            return defaultCommon;
+        },
+        set: function (val) {
+            defaultCommon = val;
+
+            // also set on the Contract object
+            _this.Contract.defaultCommon = defaultCommon;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.defaultCommon = defaultCommon;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultHardfork', {
+        get: function () {
+            return defaultHardfork;
+        },
+        set: function (val) {
+            defaultHardfork = val;
+
+            // also set on the Contract object
+            _this.Contract.defaultHardfork = defaultHardfork;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.defaultHardfork = defaultHardfork;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultChain', {
+        get: function () {
+            return defaultChain;
+        },
+        set: function (val) {
+            defaultChain = val;
+
+            // also set on the Contract object
+            _this.Contract.defaultChain = defaultChain;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.defaultChain = defaultChain;
+            });
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, 'transactionPollingTimeout', {
         get: function () {
             return transactionPollingTimeout;

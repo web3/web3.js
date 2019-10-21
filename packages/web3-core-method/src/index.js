@@ -21,7 +21,7 @@
  * @date 2017
  */
 
-"use strict";
+'use strict';
 
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
@@ -32,7 +32,7 @@ var Subscriptions = require('web3-core-subscriptions').subscriptions;
 
 var Method = function Method(options) {
 
-    if(!options.call || !options.name) {
+    if (!options.call || !options.name) {
         throw new Error('When creating a method you need to provide at least the "name" and "call" property.');
     }
 
@@ -54,9 +54,12 @@ var Method = function Method(options) {
     this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
     this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
     this.transactionPollingTimeout = options.transactionPollingTimeout || 750;
+    this.defaultCommon = options.defaultCommon;
+    this.defaultChain = options.defaultChain;
+    this.defaultHardfork = options.defaultHardfork;
 };
 
-Method.prototype.setRequestManager = function (requestManager, accounts) {
+Method.prototype.setRequestManager = function(requestManager, accounts) {
     this.requestManager = requestManager;
 
     // reference to eth.accounts
@@ -66,7 +69,7 @@ Method.prototype.setRequestManager = function (requestManager, accounts) {
 
 };
 
-Method.prototype.createFunction = function (requestManager, accounts) {
+Method.prototype.createFunction = function(requestManager, accounts) {
     var func = this.buildCall();
     func.call = this.call;
 
@@ -75,7 +78,7 @@ Method.prototype.createFunction = function (requestManager, accounts) {
     return func;
 };
 
-Method.prototype.attachToObject = function (obj) {
+Method.prototype.attachToObject = function(obj) {
     var func = this.buildCall();
     func.call = this.call;
     var name = this.name.split('.');
@@ -94,7 +97,7 @@ Method.prototype.attachToObject = function (obj) {
  * @param {Array} arguments
  * @return {String} name of jsonrpc method
  */
-Method.prototype.getCall = function (args) {
+Method.prototype.getCall = function(args) {
     return _.isFunction(this.call) ? this.call(args) : this.call;
 };
 
@@ -105,7 +108,7 @@ Method.prototype.getCall = function (args) {
  * @param {Array} arguments
  * @return {Function|Null} callback, if exists
  */
-Method.prototype.extractCallback = function (args) {
+Method.prototype.extractCallback = function(args) {
     if (_.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
     }
@@ -118,7 +121,7 @@ Method.prototype.extractCallback = function (args) {
  * @param {Array} arguments
  * @throws {Error} if it is not
  */
-Method.prototype.validateArgs = function (args) {
+Method.prototype.validateArgs = function(args) {
     if (args.length !== this.params) {
         throw errors.InvalidNumberOfParams(args.length, this.params, this.name);
     }
@@ -131,14 +134,14 @@ Method.prototype.validateArgs = function (args) {
  * @param {Array}
  * @return {Array}
  */
-Method.prototype.formatInput = function (args) {
+Method.prototype.formatInput = function(args) {
     var _this = this;
 
     if (!this.inputFormatter) {
         return args;
     }
 
-    return this.inputFormatter.map(function (formatter, index) {
+    return this.inputFormatter.map(function(formatter, index) {
         // bind this for defaultBlock, and defaultAccount
         return formatter ? formatter.call(_this, args[index]) : args[index];
     });
@@ -151,11 +154,11 @@ Method.prototype.formatInput = function (args) {
  * @param {Object}
  * @return {Object}
  */
-Method.prototype.formatOutput = function (result) {
+Method.prototype.formatOutput = function(result) {
     var _this = this;
 
-    if(_.isArray(result)) {
-        return result.map(function(res){
+    if (_.isArray(result)) {
+        return result.map(function(res) {
             return _this.outputFormatter && res ? _this.outputFormatter(res) : res;
         });
     } else {
@@ -170,7 +173,7 @@ Method.prototype.formatOutput = function (result) {
  * @param {Array} args
  * @return {Object}
  */
-Method.prototype.toPayload = function (args) {
+Method.prototype.toPayload = function(args) {
     var call = this.getCall(args);
     var callback = this.extractCallback(args);
     var params = this.formatInput(args);
@@ -190,13 +193,14 @@ Method.prototype.toPayload = function (args) {
 };
 
 
-Method.prototype._confirmTransaction = function (defer, result, payload) {
+Method.prototype._confirmTransaction = function(defer, result, payload) {
     var method = this,
         promiseResolved = false,
         canUnsubscribe = true,
         timeoutCount = 0,
         confirmationCount = 0,
         intervalId = null,
+        lastBlock = null,
         receiptJSON = '',
         gasProvided = (_.isObject(payload.params[0]) && payload.params[0].gas) ? payload.params[0].gas : null,
         isContractDeployment = _.isObject(payload.params[0]) &&
@@ -206,6 +210,15 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
     // add custom send Methods
     var _ethereumCalls = [
+        new Method({
+            name: 'getBlockByNumber',
+            call: 'eth_getBlockByNumber',
+            params: 2,
+            inputFormatter: [formatters.inputBlockNumberFormatter, function(val) {
+                return !!val;
+            }],
+            outputFormatter: formatters.outputBlockFormatter
+        }),
         new Method({
             name: 'getTransactionReceipt',
             call: 'eth_getTransactionReceipt',
@@ -233,19 +246,19 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
     ];
     // attach methods to this._ethereumCall
     var _ethereumCall = {};
-    _.each(_ethereumCalls, function (mthd) {
+    _.each(_ethereumCalls, function(mthd) {
         mthd.attachToObject(_ethereumCall);
         mthd.requestManager = method.requestManager; // assign rather than call setRequestManager()
     });
 
 
     // fire "receipt" and confirmation events and resolve after
-    var checkConfirmation = function (existingReceipt, isPolling, err, blockHeader, sub) {
+    var checkConfirmation = function(existingReceipt, isPolling, err, blockHeader, sub) {
         if (!err) {
             // create fake unsubscribe
             if (!sub) {
                 sub = {
-                    unsubscribe: function () {
+                    unsubscribe: function() {
                         clearInterval(intervalId);
                     }
                 };
@@ -253,88 +266,138 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             // if we have a valid receipt we don't need to send a request
             return (existingReceipt ? promiEvent.resolve(existingReceipt) : _ethereumCall.getTransactionReceipt(result))
             // catch error from requesting receipt
-            .catch(function (err) {
-                sub.unsubscribe();
-                promiseResolved = true;
-                utils._fireError(
-                    {
-                        message: 'Failed to check for transaction receipt:',
-                        data: err
-                    },
-                    defer.eventEmitter,
-                    defer.reject
-                );
-            })
-            // if CONFIRMATION listener exists check for confirmations, by setting canUnsubscribe = false
-            .then(function(receipt) {
-                if (!receipt || !receipt.blockHash) {
-                    throw new Error('Receipt missing or blockHash null');
-                }
-
-                // apply extra formatters
-                if (method.extraFormatters && method.extraFormatters.receiptFormatter) {
-                    receipt = method.extraFormatters.receiptFormatter(receipt);
-                }
-
-                // check if confirmation listener exists
-                if (defer.eventEmitter.listeners('confirmation').length > 0) {
-
-                    // If there was an immediately retrieved receipt, it's already
-                    // been confirmed by the direct call to checkConfirmation needed
-                    // for parity instant-seal
-                    if (existingReceipt === undefined || confirmationCount !== 0){
-                        defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                .catch(function(err) {
+                    sub.unsubscribe();
+                    promiseResolved = true;
+                    utils._fireError(
+                        {
+                            message: 'Failed to check for transaction receipt:',
+                            data: err
+                        },
+                        defer.eventEmitter,
+                        defer.reject
+                    );
+                })
+                // if CONFIRMATION listener exists check for confirmations, by setting canUnsubscribe = false
+                .then(async function(receipt) {
+                    if (!receipt || !receipt.blockHash) {
+                        throw new Error('Receipt missing or blockHash null');
                     }
 
-                    canUnsubscribe = false;
-                    confirmationCount++;
-
-                    if (confirmationCount === method.transactionConfirmationBlocks + 1) { // add 1 so we account for conf 0
-                        sub.unsubscribe();
-                        defer.eventEmitter.removeAllListeners();
+                    // apply extra formatters
+                    if (method.extraFormatters && method.extraFormatters.receiptFormatter) {
+                        receipt = method.extraFormatters.receiptFormatter(receipt);
                     }
-                }
 
-                return receipt;
-            })
-            // CHECK for CONTRACT DEPLOYMENT
-            .then(function(receipt) {
+                    // check if confirmation listener exists
+                    if (defer.eventEmitter.listeners('confirmation').length > 0) {
+                        var block;
 
-                if (isContractDeployment && !promiseResolved) {
-
-                    if (!receipt.contractAddress) {
-
-                        if (canUnsubscribe) {
-                            sub.unsubscribe();
-                            promiseResolved = true;
+                        // If there was an immediately retrieved receipt, it's already
+                        // been confirmed by the direct call to checkConfirmation needed
+                        // for parity instant-seal
+                        if (existingReceipt === undefined || confirmationCount !== 0) {
+                            if (isPolling) { // Check if actually a new block is existing on polling
+                                if (lastBlock) {
+                                    block = await _ethereumCall.getBlockByNumber(lastBlock.number + 1);
+                                    if (block) {
+                                        lastBlock = block;
+                                        defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                    }
+                                } else {
+                                    block = await _ethereumCall.getBlockByNumber(receipt.blockNumber);
+                                    lastBlock = block;
+                                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                }
+                            } else {
+                                defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                            }
                         }
 
-                        utils._fireError(
-                            new Error('The transaction receipt didn\'t contain a contract address.'), 
-                            defer.eventEmitter, 
-                            defer.reject, 
-                            null,
-                            receipt
-                        );
-                        return;
+                        if ((isPolling && block) || !isPolling) {
+                            confirmationCount++;
+                        }
+                        canUnsubscribe = false;
+
+                        if (confirmationCount === method.transactionConfirmationBlocks + 1) { // add 1 so we account for conf 0
+                            sub.unsubscribe();
+                            defer.eventEmitter.removeAllListeners();
+                        }
                     }
 
-                    _ethereumCall.getCode(receipt.contractAddress, function (e, code) {
+                    return receipt;
+                })
+                // CHECK for CONTRACT DEPLOYMENT
+                .then(function(receipt) {
 
-                        if (!code) {
+                    if (isContractDeployment && !promiseResolved) {
+
+                        if (!receipt.contractAddress) {
+
+                            if (canUnsubscribe) {
+                                sub.unsubscribe();
+                                promiseResolved = true;
+                            }
+
+                            utils._fireError(
+                                new Error('The transaction receipt didn\'t contain a contract address.'),
+                                defer.eventEmitter,
+                                defer.reject,
+                                null,
+                                receipt
+                            );
                             return;
                         }
 
+                        _ethereumCall.getCode(receipt.contractAddress, function(e, code) {
 
-                        if (code.length > 2) {
-                            defer.eventEmitter.emit('receipt', receipt);
-
-                            // if contract, return instance instead of receipt
-                            if (method.extraFormatters && method.extraFormatters.contractDeployFormatter) {
-                                defer.resolve(method.extraFormatters.contractDeployFormatter(receipt));
-                            } else {
-                                defer.resolve(receipt);
+                            if (!code) {
+                                return;
                             }
+
+
+                            if (code.length > 2) {
+                                defer.eventEmitter.emit('receipt', receipt);
+
+                                // if contract, return instance instead of receipt
+                                if (method.extraFormatters && method.extraFormatters.contractDeployFormatter) {
+                                    defer.resolve(method.extraFormatters.contractDeployFormatter(receipt));
+                                } else {
+                                    defer.resolve(receipt);
+                                }
+
+                                // need to remove listeners, as they aren't removed automatically when succesfull
+                                if (canUnsubscribe) {
+                                    defer.eventEmitter.removeAllListeners();
+                                }
+
+                            } else {
+                                utils._fireError(
+                                    new Error('The contract code couldn\'t be stored, please check your gas limit.'),
+                                    defer.eventEmitter,
+                                    defer.reject,
+                                    null,
+                                    receipt
+                                );
+                            }
+
+                            if (canUnsubscribe) {
+                                sub.unsubscribe();
+                            }
+                            promiseResolved = true;
+                        });
+                    }
+
+                    return receipt;
+                })
+                // CHECK for normal tx check for receipt only
+                .then(function(receipt) {
+                    if (!isContractDeployment && !promiseResolved) {
+                        if (!receipt.outOfGas &&
+                            (!gasProvided || gasProvided !== utils.numberToHex(receipt.gasUsed)) &&
+                            (receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined')) {
+                            defer.eventEmitter.emit('receipt', receipt);
+                            defer.resolve(receipt);
 
                             // need to remove listeners, as they aren't removed automatically when succesfull
                             if (canUnsubscribe) {
@@ -342,101 +405,71 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                             }
 
                         } else {
-                            utils._fireError(
-                                new Error('The contract code couldn\'t be stored, please check your gas limit.'),
-                                defer.eventEmitter,
-                                defer.reject,
-                                null,
-                                receipt
-                            );
+                            receiptJSON = JSON.stringify(receipt, null, 2);
+
+                            if (receipt.status === false || receipt.status === '0x0') {
+                                utils._fireError(
+                                    new Error('Transaction has been reverted by the EVM:\n' + receiptJSON),
+                                    defer.eventEmitter,
+                                    defer.reject,
+                                    null,
+                                    receipt
+                                );
+                            } else {
+                                utils._fireError(
+                                    new Error('Transaction ran out of gas. Please provide more gas:\n' + receiptJSON),
+                                    defer.eventEmitter,
+                                    defer.reject,
+                                    null,
+                                    receipt
+                                );
+                            }
                         }
 
                         if (canUnsubscribe) {
                             sub.unsubscribe();
                         }
                         promiseResolved = true;
-                    });
-                }
+                    }
 
-                return receipt;
-            })
-            // CHECK for normal tx check for receipt only
-            .then(function(receipt) {
-                if (!isContractDeployment && !promiseResolved) {
-                    if(!receipt.outOfGas &&
-                        (!gasProvided || gasProvided !== utils.numberToHex(receipt.gasUsed)) &&
-                        (receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined')) {
-                        defer.eventEmitter.emit('receipt', receipt);
-                        defer.resolve(receipt);
+                })
+                // time out the transaction if not mined after 50 blocks
+                .catch(function() {
+                    timeoutCount++;
 
-                        // need to remove listeners, as they aren't removed automatically when succesfull
-                        if (canUnsubscribe) {
-                            defer.eventEmitter.removeAllListeners();
+                    // check to see if we are http polling
+                    if (!!isPolling) {
+                        // polling timeout is different than transactionBlockTimeout blocks since we are triggering every second
+                        if (timeoutCount - 1 >= method.transactionPollingTimeout) {
+                            sub.unsubscribe();
+                            promiseResolved = true;
+                            utils._fireError(
+                                new Error('Transaction was not mined within ' + method.transactionPollingTimeout + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
+                                defer.eventEmitter,
+                                defer.reject
+                            );
                         }
-
                     } else {
-                        receiptJSON = JSON.stringify(receipt, null, 2);
-
-                        if (receipt.status === false || receipt.status === '0x0') {
+                        if (timeoutCount - 1 >= method.transactionBlockTimeout) {
+                            sub.unsubscribe();
+                            promiseResolved = true;
                             utils._fireError(
-                                new Error("Transaction has been reverted by the EVM:\n" + receiptJSON),
+                                new Error('Transaction was not mined within ' + method.transactionBlockTimeout + ' blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
                                 defer.eventEmitter,
-                                defer.reject,
-                                null,
-                                receipt
-                            );
-                        } else {
-                            utils._fireError(
-                                new Error("Transaction ran out of gas. Please provide more gas:\n" + receiptJSON),
-                                defer.eventEmitter,
-                                defer.reject,
-                                null,
-                                receipt
+                                defer.reject
                             );
                         }
                     }
-
-                    if (canUnsubscribe) {
-                        sub.unsubscribe();
-                    }
-                    promiseResolved = true;
-                }
-
-            })
-            // time out the transaction if not mined after 50 blocks
-            .catch(function () {
-                timeoutCount++;
-
-                // check to see if we are http polling
-                if(!!isPolling) {
-                    // polling timeout is different than transactionBlockTimeout blocks since we are triggering every second
-                    if (timeoutCount - 1 >= method.transactionPollingTimeout) {
-                        sub.unsubscribe();
-                        promiseResolved = true;
-                        utils._fireError(
-                            new Error('Transaction was not mined within ' + method.transactionPollingTimeout + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'), 
-                            defer.eventEmitter, 
-                            defer.reject
-                        );
-                    }
-                } else {
-                    if (timeoutCount - 1 >= method.transactionBlockTimeout) {
-                        sub.unsubscribe();
-                        promiseResolved = true;
-                        utils._fireError(
-                            new Error('Transaction was not mined within ' + method.transactionBlockTimeout + ' blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
-                            defer.eventEmitter,
-                            defer.reject
-                        );
-                    }
-                }
-            });
+                });
 
 
         } else {
             sub.unsubscribe();
             promiseResolved = true;
-            utils._fireError({message: 'Failed to subscribe to new newBlockHeaders to confirm the transaction receipts.', data: err}, defer.eventEmitter, defer.reject);
+            utils._fireError({
+                message: 'Failed to subscribe to new newBlockHeaders to confirm the transaction receipts.',
+                data: err
+            }, defer.eventEmitter, defer.reject);
         }
     };
 
@@ -453,21 +486,21 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
     // first check if we already have a confirmed transaction
     _ethereumCall.getTransactionReceipt(result)
-    .then(function(receipt) {
-        if (receipt && receipt.blockHash) {
-            if (defer.eventEmitter.listeners('confirmation').length > 0) {
-                // We must keep on watching for new Blocks, if a confirmation listener is present
-                startWatching(receipt);
-            }
-            checkConfirmation(receipt, false);
+        .then(function(receipt) {
+            if (receipt && receipt.blockHash) {
+                if (defer.eventEmitter.listeners('confirmation').length > 0) {
+                    // We must keep on watching for new Blocks, if a confirmation listener is present
+                    startWatching(receipt);
+                }
+                checkConfirmation(receipt, false);
 
-        } else if (!promiseResolved) {
-            startWatching();
-        }
-    })
-    .catch(function(){
-        if (!promiseResolved) startWatching();
-    });
+            } else if (!promiseResolved) {
+                startWatching();
+            }
+        })
+        .catch(function() {
+            if (!promiseResolved) startWatching();
+        });
 
 };
 
@@ -496,16 +529,16 @@ Method.prototype.buildCall = function() {
         isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'); // || method.call === 'personal_sendTransaction'
 
     // actual send function
-    var send = function () {
+    var send = function() {
         var defer = promiEvent(!isSendTx),
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
 
         // CALLBACK function
-        var sendTxCallback = function (err, result) {
+        var sendTxCallback = function(err, result) {
             try {
                 result = method.formatOutput(result);
-            } catch(e) {
+            } catch (e) {
                 err = e;
             }
 
@@ -518,7 +551,7 @@ Method.prototype.buildCall = function() {
                     payload.callback(null, result);
                 }
             } else {
-                if(err.error) {
+                if (err.error) {
                     err = err.error;
                 }
 
@@ -543,7 +576,7 @@ Method.prototype.buildCall = function() {
         };
 
         // SENDS the SIGNED SIGNATURE
-        var sendSignedTx = function(sign){
+        var sendSignedTx = function(sign) {
 
             var signedPayload = _.extend({}, payload, {
                 method: 'eth_sendRawTransaction',
@@ -567,13 +600,28 @@ Method.prototype.buildCall = function() {
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
-                        return method.accounts.signTransaction(_.omit(tx, 'from'), wallet.privateKey)
+                        var txOptions = _.omit(tx, 'from');
+
+                        if (method.defaultChain) {
+                            txOptions.chain = method.defaultChain;
+                        }
+
+                        if (method.defaultHardfork) {
+                            txOptions.hardfork = method.defaultHardfork;
+                        }
+
+                        if (method.defaultCommon) {
+                            txOptions.common = method.defaultCommon;
+                        }
+
+                        return method.accounts.signTransaction(txOptions, wallet.privateKey)
                             .then(sendSignedTx)
-                            .catch(function (err) {
+                            .catch(function(err) {
                                 if (_.isFunction(defer.eventEmitter.listeners) && defer.eventEmitter.listeners('error').length) {
                                     defer.eventEmitter.emit('error', err);
                                     defer.eventEmitter.removeAllListeners();
-                                    defer.eventEmitter.catch(function () {});
+                                    defer.eventEmitter.catch(function() {
+                                    });
                                 }
                                 defer.reject(err);
                             });
@@ -604,7 +652,7 @@ Method.prototype.buildCall = function() {
         };
 
         // Send the actual transaction
-        if(isSendTx && _.isObject(payload.params[0]) && typeof payload.params[0].gasPrice === 'undefined') {
+        if (isSendTx && _.isObject(payload.params[0]) && typeof payload.params[0].gasPrice === 'undefined') {
 
             var getGasPrice = (new Method({
                 name: 'getGasPrice',
@@ -612,7 +660,7 @@ Method.prototype.buildCall = function() {
                 params: 0
             })).createFunction(method.requestManager);
 
-            getGasPrice(function (err, gasPrice) {
+            getGasPrice(function(err, gasPrice) {
 
                 if (gasPrice) {
                     payload.params[0].gasPrice = gasPrice;
@@ -641,7 +689,7 @@ Method.prototype.buildCall = function() {
  * @method request
  * @return {Object} jsonrpc request
  */
-Method.prototype.request = function () {
+Method.prototype.request = function() {
     var payload = this.toPayload(Array.prototype.slice.call(arguments));
     payload.format = this.formatOutput.bind(this);
     return payload;
