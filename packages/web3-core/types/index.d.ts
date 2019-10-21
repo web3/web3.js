@@ -129,10 +129,28 @@ export interface TransactionConfig {
     hardfork?: string;
 }
 
+export type chain =
+    | 'mainnet'
+    | 'goerli'
+    | 'kovan'
+    | 'rinkeby'
+    | 'ropsten';
+
+export type hardfork =
+    | 'chainstart'
+    | 'homestead'
+    | 'dao'
+    | 'tangerineWhistle'
+    | 'spuriousDragon'
+    | 'byzantium'
+    | 'constantinople'
+    | 'petersburg'
+    | 'istanbul';
+
 export interface Common {
     customChain: CustomChainParams;
-    baseChain?: string;
-    hardfork?: string;
+    baseChain?: chain;
+    hardfork?: hardfork;
 }
 
 export interface CustomChainParams {
