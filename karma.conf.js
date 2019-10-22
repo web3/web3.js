@@ -1,8 +1,11 @@
-process.env.CHROME_BIN = require('puppeteer').executablePath();
 process.env.MOZ_HEADLESS = 1;
 
+if (!process.env.TRAVIS){
+    process.env.CHROME_BIN = require('puppeteer').executablePath();
+}
+
 module.exports = function (config) {
-    config.set({
+    var configuration = {
         frameworks: [
             'mocha',
             'browserify'
@@ -35,6 +38,19 @@ module.exports = function (config) {
                 base: 'Firefox',
                 flags: ['-headless'],
             },
+            Chrome_travis_ci: {
+                base: 'Chrome',
+                flags: ['--no-sandbox']
+            }
         },
-    });
+    };
+
+    if(process.env.TRAVIS) {
+        configuration.browsers = [
+            'Chrome_travis_ci',
+            'FirefoxHeadless'
+        ];
+    }
+
+    config.set(configuration);
 };
