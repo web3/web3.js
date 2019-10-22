@@ -1,5 +1,9 @@
-let assert = require('assert');
-let Web3 = require('../packages/web3');
+var assert = require('assert');
+var EJSCommon = require('ethereumjs-common');
+var EJSTx = require('ethereumjs-tx');
+var Basic = require('./sources/Basic');
+var utils = require('./helpers/test.utils');
+var Web3 = utils.getWeb3();
 
 describe('transaction and message signing [ @E2E ]', function() {
     let web3;
@@ -22,7 +26,7 @@ describe('transaction and message signing [ @E2E ]', function() {
 
     it('sendSignedTransaction (with eth.signTransaction)', async function(){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE) return;
+        if (process.env.GANACHE || global.window ) return
 
         const destination = wallet[1].address;
         const source = accounts[0]; // Unlocked geth-dev account
@@ -171,7 +175,7 @@ describe('transaction and message signing [ @E2E ]', function() {
 
     it('eth.personal.sign', async function(){
         // ganache does not support eth_sign
-        if (process.env.GANACHE) return;
+        if (process.env.GANACHE || global.window ) return
 
         const message = 'hello';
 
@@ -186,8 +190,7 @@ describe('transaction and message signing [ @E2E ]', function() {
     });
 
     it('eth.accounts.sign', async function(){
-        // ganache does not support eth_sign
-        if (process.env.GANACHE) return;
+        if (process.env.GANACHE || global.window ) return
 
         const message = 'hello';
 
