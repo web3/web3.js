@@ -1,9 +1,12 @@
 var assert = require('assert');
-var Web3 = require('../packages/web3');
 var Basic = require('./sources/Basic');
 var utils = require('./helpers/test.utils');
+var Web3 = utils.getWeb3();
 
 describe('contract.events [ @E2E ]', function() {
+    // `getPastEvents` not working with Geth instamine over websockets.
+    if (process.env.GETH_INSTAMINE) return;
+
     var web3;
     var accounts;
     var basic;
@@ -16,8 +19,7 @@ describe('contract.events [ @E2E ]', function() {
     };
 
     before(async function(){
-        // Ganache runs ws and http over the same port
-        var port = process.env.GANACHE ?  8545 : 8546;
+        var port = utils.getWebsocketPort();
 
         web3 = new Web3('ws://localhost:' + port);
         accounts = await web3.eth.getAccounts();

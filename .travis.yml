@@ -10,7 +10,14 @@ matrix:
     - node_js: 12
       env: TEST=unit
     - node_js: 10
-      env: TEST=unit_and_e2e
+      env: TEST=build_and_lint
+    - node_js: 10
+      env: TEST=unit_and_e2e_clients
+    - node_js: 10
+      env: TEST=e2e_browsers
+      addons:
+        chrome: stable
+        firefox: latest
 addons:
   apt:
     sources:
@@ -26,6 +33,8 @@ before_install:
       export LINK="gcc-5";
       export LINKXX="g++-5";
     fi
+  - export DISPLAY=:99.0
+  - export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 install:
     - npm install
 script:

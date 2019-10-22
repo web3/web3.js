@@ -1,7 +1,7 @@
 var assert = require('assert');
-var Web3 = require('../packages/web3');
 var Basic = require('./sources/Basic');
 var utils = require('./helpers/test.utils');
+var Web3 = utils.getWeb3();
 
 describe('method.send [ @E2E ]', function() {
     var web3;
@@ -72,8 +72,7 @@ describe('method.send [ @E2E ]', function() {
         if (process.env.GETH_INSTAMINE) return;
 
         before(async function(){
-            // Ganache runs ws and http over the same port
-            var port = process.env.GANACHE ?  8545 : 8546;
+            var port = utils.getWebsocketPort();
 
             web3 = new Web3('ws://localhost:' + port);
             accounts = await web3.eth.getAccounts();
