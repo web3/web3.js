@@ -37,10 +37,26 @@ var extractReceipt = function(message){
     return JSON.parse(receiptString);
 }
 
+// Conditionally requires web3:
+// loads web3.min when running headless browser tests, the unbuilt web3 otherwise.
+var getWeb3 = function(){
+    return (global.window)
+        ? require('../../packages/web3/dist/web3.min')
+        : require('../../packages/web3');
+}
+
+// Gets correct websocket port for client. Ganache uses 8545 for both
+// http and ws. It's run in e2e.ganache.sh and for all the headless browser tests
+var getWebsocketPort = function(){
+    return ( process.env.GANACHE || global.window ) ?  8545 : 8546;
+}
+
 module.exports = {
     methodExists: methodExists,
     propertyExists: propertyExists,
     mine: mine,
     extractReceipt: extractReceipt,
+    getWeb3: getWeb3,
+    getWebsocketPort: getWebsocketPort,
 };
 
