@@ -250,7 +250,7 @@ WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
                 // try to reconnect
                 if (_this.connection.reconnect) {
                     _this.connection.reconnect();
-            }
+                }
             }
         }, this._customTimeout);
     }
