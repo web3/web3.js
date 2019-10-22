@@ -33,7 +33,8 @@ before_install:
       export LINK="gcc-5";
       export LINKXX="g++-5";
     fi
-  - "export DISPLAY=:99.0"
+  - export DISPLAY=:99.0
+  - export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 install:
     - npm install
 script:
