@@ -55,11 +55,11 @@ var packages = [{
     fileName: 'web3-eth-abi',
     expose: 'Web3EthAbi',
     src: './packages/web3-eth-abi/src/index.js'
-},{
+}, {
     fileName: 'web3-eth-ens',
     expose: 'EthEns',
     src: './packages/web3-eth-ens/src/index.js'
-},{
+}, {
     fileName: 'web3-net',
     expose: 'Web3Net',
     src: './packages/web3-net/src/index.js'
@@ -83,7 +83,7 @@ var packages = [{
 }, {
     fileName: 'web3-providers-ws',
     expose: 'Web3WsProvider',
-    src: './packages/web3-providers-ws/src/index.js',
+    src: './packages/web3-providers-ws/src/index.js'
 }, {
     fileName: 'web3-core-subscriptions',
     expose: 'Web3Subscriptions',
@@ -116,14 +116,14 @@ var ugliyOptions = {
         dead_code: true,  // jshint ignore:line
         drop_debugger: true,  // jshint ignore:line
         global_defs: {      // jshint ignore:line
-            "DEBUG": false      // matters for some libraries
+            'DEBUG': false      // matters for some libraries
         }
     }
 };
 
-gulp.task('version', function () {
+gulp.task('version', function() {
     if (!lernaJSON.version) {
-        throw new Error("version property is missing from lerna.json");
+        throw new Error('version property is missing from lerna.json');
     }
 
     var version = lernaJSON.version;
@@ -137,69 +137,88 @@ gulp.task('version', function () {
 
     return gulp.src(glob, {base: './'})
         .pipe(replace(jsonPattern, '"version": "' + version + '"'))
-        .pipe(replace(jsPattern, "version: '" + version + "'"))
+        .pipe(replace(jsPattern, 'version: \'' + version + '\''))
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('bower', gulp.series('version', function (cb) {
-    bower.commands.install().on('end', function (installed) {
+gulp.task('bower', gulp.series('version', function(cb) {
+    bower.commands.install().on('end', function(installed) {
         console.log(installed);
         cb();
     });
 }));
 
-gulp.task('lint', function () {
+gulp.task('lint', function() {
     return gulp.src(['./*.js', './lib/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('clean', gulp.series('lint', function (cb) {
+gulp.task('clean', gulp.series('lint', function(cb) {
     del([DEST]).then(cb.bind(null, null));
 }));
 
-packages.forEach(function (pckg, i) {
+packages.forEach(function(pckg, i) {
     var prevPckg = (!i) ? 'clean' : packages[i - 1].fileName;
 
-    gulp.task(pckg.fileName, gulp.series(prevPckg, function () {
+    gulp.task(pckg.fileName, gulp.series(prevPckg, function() {
         browserifyOptions.standalone = pckg.expose;
 
-        var pipe = browserify(browserifyOptions)
-            .require(pckg.src, { expose: pckg.expose })
-            .require('bn.js', { expose: 'BN' }) // expose it to dapp developers
+        var stream = browserify(browserifyOptions)
+            .require(pckg.src, {expose: pckg.expose})
+            .require('bn.js', {expose: 'BN'}) // expose it to dapp developers
             .add(pckg.src);
 
         if (pckg.ignore) {
-            pckg.ignore.forEach(function (ignore) {
-                pipe.ignore(ignore);
+            pckg.ignore.forEach(function(ignore) {
+                stream.ignore(ignore);
             });
         }
 
-        return pipe.bundle()
-            .pipe(exorcist(path.join(DEST, pckg.fileName + '.js.map')))
-            .pipe(source(pckg.fileName + '.js'))
+        var bundle = stream.bundle();
+
+        stream = bundle
+            .pipe(exorcist(path.join(DEST, pckg.fileName + '.js.map')));
+
+        if (pckg.fileName === 'web3') {
+            bundle
+                .pipe(exorcist(path.join(WEB3_PACKAGE_DEST, pckg.fileName + '.js.map')));
+        }
+
+        stream = stream.pipe(source(pckg.fileName + '.js'))
             .pipe(streamify(babel({
                 compact: false,
                 presets: ['@babel/preset-env']
-            })))
+            })));
+
+        if (pckg.fileName === 'web3') {
+            stream = stream
+                .pipe(gulp.dest(WEB3_PACKAGE_DEST));
+        }
+
+        stream = stream
             .pipe(gulp.dest(DEST))
-            .pipe(streamify(babel({
-                compact: true,
-                presets: ['@babel/preset-env']
-            })))
             .pipe(streamify(uglify(ugliyOptions)))
-            .on('error', function (err) { console.error(err); })
-            .pipe(rename(pckg.fileName + '.min.js'))
-            .pipe(gulp.dest(WEB3_PACKAGE_DEST))
+            .on('error', function(err) {
+                console.error(err);
+            })
+            .pipe(rename(pckg.fileName + '.min.js'));
+
+        if (pckg.fileName === 'web3') {
+            stream = stream
+                .pipe(gulp.dest(WEB3_PACKAGE_DEST));
+        }
+
+        return stream
             .pipe(gulp.dest(DEST));
     }));
 });
 
-gulp.task('publishTag', function () {
-    exec("git commit -am \"add tag v"+ lernaJSON.version +"\"; git tag v"+ lernaJSON.version +"; git push origin v"+ lernaJSON.version +";");
+gulp.task('publishTag', function() {
+    exec('git commit -am "add tag v' + lernaJSON.version + '"; git tag v' + lernaJSON.version + '; git push origin v' + lernaJSON.version + ';');
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', function() {
     gulp.watch(['./packages/web3/src/*.js'], gulp.series('lint', 'default'));
 });
 
