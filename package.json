@@ -16,7 +16,7 @@
         "postinstall": "lerna bootstrap",
         "build": "gulp",
         "build-all": "gulp all",
-        "release": "lerna bootstrap; lerna publish",
+        "release": "lerna bootstrap; lerna publish from-package",
         "bootstrap": "lerna bootstrap",
         "watch": "gulp watch",
         "docs": "cd docs; make html;",
