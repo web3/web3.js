@@ -3,9 +3,7 @@
 Web3
 ====
 
-    Class
-
-This's main class of anything related Ethereum.
+This is the main or also called umbrella class of the web3.js library.
 
 .. code-block:: javascript
 
@@ -22,8 +20,6 @@ This's main class of anything related Ethereum.
 Web3.modules
 =====================
 
-    Property of Web3 class
-
 .. code-block:: javascript
 
     Web3.modules
@@ -34,12 +30,12 @@ Will return an object with the classes of all major sub modules, to be able to i
 Returns
 -------
 
-``Object``: A list of modules:
-    - ``Eth`` - ``Function``: the Eth module for interacting with the Ethereum network see :ref:`web3.eth <eth>` for more.
-    - ``Net`` - ``Function``: the Net module for interacting with network properties see :ref:`web3.eth.net <eth-net>` for more.
-    - ``Personal`` - ``Function``: the Personal module for interacting with the Ethereum accounts see :ref:`web3.eth.personal <personal>` for more.
-    - ``Shh`` - ``Function``: the Shh module for interacting with the whisper protocol see :ref:`web3.shh <shh>` for more.
-    - ``Bzz`` - ``Function``: the Bzz module for interacting with the swarm network see :ref:`web3.bzz <bzz>` for more.
+``Object``: A list of module constructors:
+    - ``Eth`` - ``Constructor``: The Eth module for interacting with the Ethereum network see :ref:`web3.eth <eth>` for more.
+    - ``Net`` - ``Constructor``: The Net module for interacting with network properties see :ref:`web3.eth.net <eth-net>` for more.
+    - ``Personal`` - ``Constructor``: The Personal module for interacting with the Ethereum accounts see :ref:`web3.eth.personal <personal>` for more.
+    - ``Shh`` - ``Constructor``: The Shh module for interacting with the whisper protocol see :ref:`web3.shh <shh>` for more.
+    - ``Bzz`` - ``Constructor``: The Bzz module for interacting with the swarm network see :ref:`web3.bzz <bzz>` for more.
 
 -------
 Example
@@ -49,22 +45,20 @@ Example
 
     Web3.modules
     > {
-        Eth: Eth function(provider),
-        Net: Net function(provider),
-        Personal: Personal function(provider),
-        Shh: Shh function(provider),
-        Bzz: Bzz function(provider),
+        Eth: Eth(provider),
+        Net: Net(provider),
+        Personal: Personal(provider),
+        Shh: Shh(provider),
+        Bzz: Bzz(provider),
     }
 
 
 ------------------------------------------------------------------------------
 
-web3 object
-============
+Web3 Instance
+=============
 
-    The instance of Web3
-
-The web3.js object is an umbrella package to house all Ethereum related modules.
+The Web3 class is an umbrella package to house all Ethereum related modules.
 
 .. code-block:: javascript
 
@@ -85,14 +79,14 @@ The web3.js object is an umbrella package to house all Ethereum related modules.
 version
 ============
 
-    Property of Web3 class and instance of Web3
+    Static accessible property of the Web3 class and property of the instance as well.
 
 .. code-block:: javascript
 
     Web3.version
     web3.version
 
-Contains the version of the ``web3`` container object.
+Contains the current package version of the web3.js library.
 
 -------
 Returns
@@ -107,7 +101,7 @@ Example
 .. code-block:: javascript
 
     web3.version;
-    > "1.0.0"
+    > "1.2.3"
 
 
 
@@ -117,7 +111,7 @@ Example
 utils
 =====================
 
-    Property of Web3 class and instance of Web3
+    Static accessible property of the Web3 class and property of the instance as well.
 
 .. code-block:: javascript
 
