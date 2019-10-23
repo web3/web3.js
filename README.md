@@ -139,7 +139,7 @@ npm test
 
 ### Contributing
 
--   All contributions have to go into develop, or the 1.0 branch
+-   All contributions have to go into 1.x, or the 2.x branch
 -   Please follow the code style of the other files, we use 4 spaces as tabs.
 
 ### Community
