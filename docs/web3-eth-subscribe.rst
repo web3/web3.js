@@ -324,6 +324,7 @@ subscribe("logs")
     web3.eth.subscribe('logs', options [, callback]);
 
 Subscribes to incoming logs, filtered by the given options.
+If the starting block got defined with the ``fromBlock`` options property and is a valid number will a second JSON-RPC request get executed to get them as first.
 
 ----------
 Parameters
