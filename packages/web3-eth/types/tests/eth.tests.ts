@@ -24,7 +24,7 @@ import {
     Transaction,
     TransactionReceipt
 } from 'web3-core';
-import { Block, BlockHeader, Eth, GetProof, Syncing } from 'web3-eth';
+import { BlockTransactionObject, BlockTransactionString, BlockHeader, Eth, GetProof, Syncing } from 'web3-eth';
 
 const eth = new Eth('http://localhost:8545');
 
@@ -237,42 +237,30 @@ eth.getCode(
     (error: Error, balance: string) => {}
 );
 
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionString>
 eth.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionString>
 eth.getBlock(345);
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionObject>
 eth.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', true);
-// $ExpectType Promise<Block>
-eth.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', false);
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionString>
 eth.getBlock(345);
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionObject>
 eth.getBlock(345, true);
-// $ExpectType Promise<Block>
-eth.getBlock(345, false);
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionString>
 eth.getBlock(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-    (error: Error, block: Block) => {}
+    (error: Error, block: BlockTransactionString) => {}
 );
-// $ExpectType Promise<Block>
-eth.getBlock(345, (error: Error, block: Block) => {});
-// $ExpectType Promise<Block>
-eth.getBlock(345, true, (error: Error, block: Block) => {});
-// $ExpectType Promise<Block>
-eth.getBlock(345, false, (error: Error, block: Block) => {});
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionString>
+eth.getBlock(345, (error: Error, block: BlockTransactionString) => {});
+// $ExpectType Promise<BlockTransactionObject>
+eth.getBlock(345, true, (error: Error, block: BlockTransactionObject) => {});
+// $ExpectType Promise<BlockTransactionObject>
 eth.getBlock(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
     true,
-    (error: Error, block: Block) => {}
-);
-// $ExpectType Promise<Block>
-eth.getBlock(
-    '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-    false,
-    (error: Error, block: Block) => {}
+    (error: Error, block: BlockTransactionObject) => {}
 );
 
 // $ExpectType Promise<number>
@@ -290,44 +278,31 @@ eth.getBlockTransactionCount(
 // $ExpectType Promise<number>
 eth.getBlockTransactionCount(345);
 
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionString>
 eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4);
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionString>
 eth.getUncle(345, 4);
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionObject>
 eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, true);
-// $ExpectType Promise<Block>
-eth.getUncle('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 4, false);
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionString>
 eth.getUncle(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
     4,
     (error: Error, uncle: {}) => {}
 );
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionString>
 eth.getUncle(345, 4, (error: Error, uncle: {}) => {});
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionObject>
 eth.getUncle(345, 4, true);
-// $ExpectType Promise<Block>
-eth.getUncle(345, 4, false);
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionObject>
 eth.getUncle(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
     4,
     true,
     (error: Error, uncle: {}) => {}
 );
-// $ExpectType Promise<Block>
-eth.getUncle(
-    '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-    4,
-    false,
-    (error: Error, uncle: {}) => {}
-);
-// $ExpectType Promise<Block>
+// $ExpectType Promise<BlockTransactionObject>
 eth.getUncle(345, 4, true, (error: Error, uncle: {}) => {});
-// $ExpectType Promise<Block>
-eth.getUncle(345, 4, false, (error: Error, uncle: {}) => {});
 
 // $ExpectType Promise<Transaction>
 eth.getTransaction('0x407d73d8a49eeb85d32cf465507dd71d507100c1');

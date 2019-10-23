@@ -187,20 +187,20 @@ export class Eth {
         callback?: (error: Error, code: string) => void
     ): Promise<string>;
 
-    getBlock(blockHashOrBlockNumber: string | number): Promise<Block>;
+    getBlock(blockHashOrBlockNumber: string | number): Promise<BlockTransactionString>;
     getBlock(
         blockHashOrBlockNumber: string | number,
-        returnTransactionObjects: boolean
-    ): Promise<Block>;
+        returnTransactionObjects: true
+    ): Promise<BlockTransactionObject>;
     getBlock(
         blockHashOrBlockNumber: string | number,
-        callback?: (error: Error, block: Block) => void
-    ): Promise<Block>;
+        callback?: (error: Error, block: BlockTransactionString) => void
+    ): Promise<BlockTransactionString>;
     getBlock(
         blockHashOrBlockNumber: string | number,
-        returnTransactionObjects: boolean,
-        callback?: (error: Error, block: Block) => void
-    ): Promise<Block>;
+        returnTransactionObjects: true,
+        callback?: (error: Error, block: BlockTransactionObject) => void
+    ): Promise<BlockTransactionObject>;
 
     getBlockTransactionCount(
         blockHashOrBlockNumber: string | number,
@@ -210,23 +210,23 @@ export class Eth {
     getUncle(
         blockHashOrBlockNumber: string | number,
         uncleIndex: number
-    ): Promise<Block>;
+    ): Promise<BlockTransactionString>;
     getUncle(
         blockHashOrBlockNumber: string | number,
         uncleIndex: number,
-        returnTransactionObjects: boolean
-    ): Promise<Block>;
+        returnTransactionObjects: true
+    ): Promise<BlockTransactionObject>;
     getUncle(
         blockHashOrBlockNumber: string | number,
         uncleIndex: number,
         callback?: (error: Error, uncle: any) => void
-    ): Promise<Block>;
+    ): Promise<BlockTransactionString>;
     getUncle(
         blockHashOrBlockNumber: string | number,
         uncleIndex: number,
-        returnTransactionObjects: boolean,
+        returnTransactionObjects: true,
         callback?: (error: Error, uncle: any) => void
-    ): Promise<Block>;
+    ): Promise<BlockTransactionObject>;
 
     getTransaction(
         transactionHash: string,
@@ -369,8 +369,16 @@ export interface BlockHeader {
     timestamp: number | string;
 }
 
-export interface Block extends BlockHeader {
-    transactions: Transaction[] | string[];
+export interface BlockTransactionObject extends BlockHeader {
+    transactions: Transaction[];
+    size: number;
+    difficulty: number;
+    totalDifficulty: number;
+    uncles: string[];
+}
+
+export interface BlockTransactionString extends BlockHeader {
+    transactions: string[];
     size: number;
     difficulty: number;
     totalDifficulty: number;
