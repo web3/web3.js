@@ -34,7 +34,6 @@ module.exports = {
             throw new Error('You need to instantiate using the "new" keyword.');
         }
 
-
         // make property of pkg._provider, which can properly set providers
         Object.defineProperty(pkg, 'currentProvider', {
             get: function () {
@@ -50,7 +49,6 @@ module.exports = {
         // inherit from web3 umbrella package
         if (args[0] && args[0]._requestManager) {
             pkg._requestManager = new requestManager.Manager(args[0].currentProvider);
-
         // set requestmanager on package
         } else {
             pkg._requestManager = new requestManager.Manager();
