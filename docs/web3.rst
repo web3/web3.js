@@ -3,7 +3,7 @@
 Web3
 ====
 
-This is the main or also called umbrella class of the web3.js library.
+This is the main (or 'umbrella') class of the web3.js library.
 
 .. code-block:: javascript
 
