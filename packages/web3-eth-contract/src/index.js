@@ -60,7 +60,7 @@ var Contract = function Contract(jsonInterface, address, options) {
     }
 
     // sets _requestmanager
-    core.packageInit(this, [this.constructor.currentProvider]);
+    core.packageInit(this, [this.constructor]);
 
     this.clearSubscriptions = this._requestManager.clearSubscriptions;
 
@@ -225,6 +225,17 @@ var Contract = function Contract(jsonInterface, address, options) {
 
 };
 
+/**
+ * Sets the new provider, creates a new requestManager, registers the "data" listener on the provider and sets the
+ * accounts module for the Contract class.
+ *
+ * @method setProvider
+ *
+ * @param {string|provider} provider
+ * @param {Accounts} accounts
+ *
+ * @returns void
+ */
 Contract.setProvider = function(provider, accounts) {
     // Contract.currentProvider = provider;
     core.packageInit(this, [provider]);

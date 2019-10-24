@@ -41,7 +41,7 @@ var RequestManager = function RequestManager(provider) {
     this.provider = null;
     this.providers = RequestManager.providers;
 
-    this.setProvider(provider);
+    this.setProvider(provider, null, false);
     this.subscriptions = {};
 };
 
@@ -61,9 +61,14 @@ RequestManager.providers = {
  * Should be used to set provider of request manager
  *
  * @method setProvider
+ *
  * @param {Object} p
+ * @param {net.Socket} net
+ * @param {boolean} registerDataListener - default true
+ *
+ * @returns void
  */
-RequestManager.prototype.setProvider = function (p, net) {
+RequestManager.prototype.setProvider = function (p, net, registerDataListener) {
     var _this = this;
 
     // autodetect provider
@@ -94,7 +99,7 @@ RequestManager.prototype.setProvider = function (p, net) {
     this.provider = p || null;
 
     // listen to incoming notifications
-    if(this.provider && this.provider.on) {
+    if(this.provider && this.provider.on && registerDataListener !== false) {
         this.provider.on('data', function requestManagerNotification(result, deprecatedResult){
             result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
