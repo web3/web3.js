@@ -330,7 +330,7 @@ Parameters
 1. ``data`` - ``String``: The data to sign.
 2. ``privateKey`` - ``String``: The private key to sign with.
 
-.. note:: The passed string of data is before UTF-8 HEX decoded and enveloped as follows: ``"\x19Ethereum Signed Message:\n" + message.length + message``.
+.. note:: The value passed as  the `data` parameter will be UTF-8 HEX decoded and wrapped as follows: ``"\x19Ethereum Signed Message:\n" + message.length + message``.
 
 -------
 Returns
