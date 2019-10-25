@@ -17,8 +17,8 @@
     "unpkg": "dist/web3-eth-ens.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
-        "eth-ens-namehash": "2.0.8",
-        "underscore": "1.9.1",
+        "eth-ens-namehash": "^2.0.8",
+        "underscore": "^1.9.1",
         "web3-core": "1.2.2",
         "web3-core-helpers": "1.2.2",
         "web3-core-promievent": "1.2.2",
