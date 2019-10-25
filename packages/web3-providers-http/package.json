@@ -11,8 +11,11 @@
         "dtslint": "dtslint types --onlyTestTsNext"
     },
     "types": "types/index.d.ts",
-    "main": "src/index.js",
+    "main": "dist/web3-providers-http.cjs.js",
+    "module": "dist/web3-providers-http.esm.js",
+    "browser": "dist/web3-providers-http.min.js",
     "dependencies": {
+        "@babel/runtime": "^7.6.3",
         "web3-core-helpers": "1.2.2",
         "xhr2-cookies": "1.1.0"
     },

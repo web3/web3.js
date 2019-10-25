@@ -7,8 +7,11 @@
     "engines": {
         "node": ">=8.0.0"
     },
-    "main": "src/index.js",
+    "main": "dist/web3-core-promievent.cjs.js",
+    "module": "dist/web3-core-promievent.esm.js",
+    "browser": "dist/web3-core-promievent.min.js",
     "dependencies": {
+        "@babel/runtime": "^7.6.3",
         "any-promise": "1.3.0",
         "eventemitter3": "3.1.2"
     }

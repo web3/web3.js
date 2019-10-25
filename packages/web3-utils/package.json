@@ -11,9 +11,12 @@
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext"
     },
-    "main": "src/index.js",
+    "main": "dist/web3-utils.cjs.js",
+    "module": "dist/web3-utils.esm.js",
+    "browser": "dist/web3-utils.min.js",
     "dependencies": {
-        "bn.js": "4.11.8",
+        "@babel/runtime": "^7.6.3",
+        "bn.js": "^4.11.6",
         "eth-lib": "0.2.7",
         "ethereum-bloom-filters": "^1.0.6",
         "ethjs-unit": "0.1.6",

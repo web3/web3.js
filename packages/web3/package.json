@@ -7,7 +7,8 @@
     "engines": {
         "node": ">=8.0.0"
     },
-    "main": "src/index.js",
+    "main": "dist/web3.cjs.js",
+    "module": "dist/web3.esm.js",
     "browser": "dist/web3.min.js",
     "bugs": {
         "url": "https://github.com/ethereum/web3.js/issues"
@@ -50,6 +51,7 @@
         }
     ],
     "dependencies": {
+        "@babel/runtime": "^7.6.3",
         "@types/node": "^12.6.1",
         "web3-bzz": "1.2.2",
         "web3-core": "1.2.2",

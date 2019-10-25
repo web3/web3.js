@@ -11,9 +11,12 @@
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext"
     },
-    "main": "src/index.js",
+    "main": "dist/web3-eth-iban.cjs.js",
+    "module": "dist/web3-eth-iban.esm.js",
+    "browser": "dist/web3-eth-iban.min.js",
     "dependencies": {
-        "bn.js": "4.11.8",
+        "@babel/runtime": "^7.6.3",
+        "bn.js": "^4.11.6",
         "web3-utils": "1.2.2"
     },
     "devDependencies": {

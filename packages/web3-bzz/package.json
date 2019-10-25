@@ -11,8 +11,11 @@
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext"
     },
-    "main": "src/index.js",
+    "main": "dist/web3-bzz.cjs.js",
+    "module": "dist/web3-bzz.esm.js",
+    "browser": "dist/web3-bzz.min.js",
     "dependencies": {
+        "@babel/runtime": "^7.6.3",
         "@types/node": "^10.12.18",
         "got": "9.6.0",
         "swarm-js": "0.1.39",

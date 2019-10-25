@@ -7,12 +7,14 @@
     "engines": {
         "node": ">=8.0.0"
     },
-    "types": "types/index.d.ts",
+    "main": "dist/web3-core-subscriptions.cjs.js",
+    "module": "dist/web3-core-subscriptions.esm.js",
+    "browser": "dist/web3-core-subscriptions.min.js",
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext"
     },
-    "main": "src/index.js",
     "dependencies": {
+        "@babel/runtime": "^7.6.3",
         "eventemitter3": "3.1.2",
         "underscore": "1.9.1",
         "web3-core-helpers": "1.2.2"

@@ -7,12 +7,14 @@
     "engines": {
         "node": ">=8.0.0"
     },
-    "types": "types/index.d.ts",
+    "main": "dist/web3-eth-contract.cjs.js",
+    "module": "dist/web3-eth-contract.esm.js",
+    "browser": "dist/web3-eth-contract.min.js",
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext"
     },
-    "main": "src/index.js",
     "dependencies": {
+        "@babel/runtime": "^7.6.3",
         "@types/bn.js": "^4.11.4",
         "underscore": "1.9.1",
         "web3-core": "1.2.2",

@@ -20,7 +20,7 @@
  * @date 2017
  */
 
-"use strict";
+'use strict';
 
 
 var _ = require('underscore');
@@ -30,8 +30,7 @@ var BatchManager = require('./batch.js');
 var givenProvider = require('./givenProvider.js');
 
 
-
-    /**
+/**
  * It's responsible for passing messages to providers
  * It's also responsible for polling the ethereum node for incoming messages
  * Default poll timeout is 1 second
@@ -46,7 +45,6 @@ var RequestManager = function RequestManager(provider) {
 };
 
 
-
 RequestManager.givenProvider = givenProvider;
 
 RequestManager.providers = {
@@ -56,50 +54,49 @@ RequestManager.providers = {
 };
 
 
-
 /**
  * Should be used to set provider of request manager
  *
  * @method setProvider
  * @param {Object} p
  */
-RequestManager.prototype.setProvider = function (p, net) {
+RequestManager.prototype.setProvider = function(p, net) {
     var _this = this;
 
     // autodetect provider
-    if(p && typeof p === 'string' && this.providers) {
+    if (p && typeof p === 'string' && this.providers) {
 
         // HTTP
-        if(/^http(s)?:\/\//i.test(p)) {
+        if (/^http(s)?:\/\//i.test(p)) {
             p = new this.providers.HttpProvider(p);
 
             // WS
-        } else if(/^ws(s)?:\/\//i.test(p)) {
+        } else if (/^ws(s)?:\/\//i.test(p)) {
             p = new this.providers.WebsocketProvider(p);
 
             // IPC
-        } else if(p && typeof net === 'object'  && typeof net.connect === 'function') {
+        } else if (p && typeof net === 'object' && typeof net.connect === 'function') {
             p = new this.providers.IpcProvider(p, net);
 
-        } else if(p) {
-            throw new Error('Can\'t autodetect provider for "'+ p +'"');
+        } else if (p) {
+            throw new Error('Can\'t autodetect provider for "' + p + '"');
         }
     }
 
     // reset the old one before changing, if still connected
-    if(this.provider && this.provider.connected)
+    if (this.provider && this.provider.connected)
         this.clearSubscriptions();
 
 
     this.provider = p || null;
 
     // listen to incoming notifications
-    if(this.provider && this.provider.on) {
-        this.provider.on('data', function requestManagerNotification(result, deprecatedResult){
+    if (this.provider && this.provider.on) {
+        this.provider.on('data', function requestManagerNotification(result, deprecatedResult) {
             result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
             // check for result.method, to prevent old providers errors to pass as result
-            if(result.method && _this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) {
+            if (result.method && _this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) {
                 _this.subscriptions[result.params.subscription].callback(null, result.params.result);
             }
         });
@@ -121,16 +118,17 @@ RequestManager.prototype.setProvider = function (p, net) {
  * @param {Object} data
  * @param {Function} callback
  */
-RequestManager.prototype.send = function (data, callback) {
-    callback = callback || function(){};
+RequestManager.prototype.send = function(data, callback) {
+    callback = callback || function() {
+    };
 
     if (!this.provider) {
         return callback(errors.InvalidProvider());
     }
 
     var payload = Jsonrpc.toPayload(data.method, data.params);
-    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, result) {
-        if(result && result.id && payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));
+    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function(err, result) {
+        if (result && result.id && payload.id !== result.id) return callback(new Error('Wrong response id "' + result.id + '" (expected: "' + payload.id + '") in ' + JSON.stringify(payload)));
 
         if (err) {
             return callback(err);
@@ -155,13 +153,13 @@ RequestManager.prototype.send = function (data, callback) {
  * @param {Array} batch data
  * @param {Function} callback
  */
-RequestManager.prototype.sendBatch = function (data, callback) {
+RequestManager.prototype.sendBatch = function(data, callback) {
     if (!this.provider) {
         return callback(errors.InvalidProvider());
     }
 
     var payload = Jsonrpc.toBatchPayload(data);
-    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, results) {
+    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function(err, results) {
         if (err) {
             return callback(err);
         }
@@ -184,8 +182,8 @@ RequestManager.prototype.sendBatch = function (data, callback) {
  * @param {String} type         the subscription namespace (eth, personal, etc)
  * @param {Function} callback   the callback to call for incoming notifications
  */
-RequestManager.prototype.addSubscription = function (id, name, type, callback) {
-    if(this.provider.on) {
+RequestManager.prototype.addSubscription = function(id, name, type, callback) {
+    if (this.provider.on) {
         this.subscriptions[id] = {
             callback: callback,
             type: type,
@@ -193,7 +191,7 @@ RequestManager.prototype.addSubscription = function (id, name, type, callback) {
         };
 
     } else {
-        throw new Error('The provider doesn\'t support subscriptions: '+ this.provider.constructor.name);
+        throw new Error('The provider doesn\'t support subscriptions: ' + this.provider.constructor.name);
     }
 };
 
@@ -204,10 +202,10 @@ RequestManager.prototype.addSubscription = function (id, name, type, callback) {
  * @param {String} id           the subscription id
  * @param {Function} callback   fired once the subscription is removed
  */
-RequestManager.prototype.removeSubscription = function (id, callback) {
+RequestManager.prototype.removeSubscription = function(id, callback) {
     var _this = this;
 
-    if(this.subscriptions[id]) {
+    if (this.subscriptions[id]) {
 
         this.send({
             method: this.subscriptions[id].type + '_unsubscribe',
@@ -224,19 +222,19 @@ RequestManager.prototype.removeSubscription = function (id, callback) {
  *
  * @method reset
  */
-RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
+RequestManager.prototype.clearSubscriptions = function(keepIsSyncing) {
     var _this = this;
 
 
     // uninstall all subscriptions
-    Object.keys(this.subscriptions).forEach(function(id){
-        if(!keepIsSyncing || _this.subscriptions[id].name !== 'syncing')
+    Object.keys(this.subscriptions).forEach(function(id) {
+        if (!keepIsSyncing || _this.subscriptions[id].name !== 'syncing')
             _this.removeSubscription(id);
     });
 
 
     //  reset notification callbacks etc.
-    if(this.provider.reset)
+    if (this.provider.reset)
         this.provider.reset();
 };
 

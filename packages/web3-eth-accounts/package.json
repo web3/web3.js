@@ -11,10 +11,12 @@
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext"
     },
-    "main": "src/index.js",
+    "main": "dist/web3-eth-accounts.cjs.js",
+    "module": "dist/web3-eth-accounts.esm.js",
+    "browser": "dist/web3-eth-accounts.min.js",
     "dependencies": {
+        "@babel/runtime": "^7.6.3",
         "any-promise": "1.3.0",
-        "crypto-browserify": "3.12.0",
         "eth-lib": "0.2.7",
         "ethereumjs-common": "^1.3.2",
         "ethereumjs-tx": "^2.1.1",

@@ -11,8 +11,11 @@
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext"
     },
-    "main": "src/index.js",
+    "main": "dist/web3-core-method.cjs.js",
+    "module": "dist/web3-core-method.esm.js",
+    "browser": "dist/web3-core-method.min.js",
     "dependencies": {
+        "@babel/runtime": "^7.6.3",
         "underscore": "1.9.1",
         "web3-core-helpers": "1.2.2",
         "web3-core-promievent": "1.2.2",

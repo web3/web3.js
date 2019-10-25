@@ -11,8 +11,11 @@
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext"
     },
-    "main": "src/index.js",
+    "main": "dist/web3-eth-personal.cjs.js",
+    "module": "dist/web3-eth-personal.esm.js",
+    "browser": "dist/web3-eth-personal.min.js",
     "dependencies": {
+        "@babel/runtime": "^7.6.3",
         "@types/node": "^12.6.1",
         "web3-core": "1.2.2",
         "web3-core-helpers": "1.2.2",
