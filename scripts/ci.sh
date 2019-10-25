@@ -30,4 +30,9 @@ elif [ "$TEST" = "e2e_browsers" ]; then
   npm run test:e2e:chrome
   npm run test:e2e:firefox
 
+elif [ "$TEST" = "e2e_truffle" ]; then
+
+  npm run test:e2e:publish
+  npm run test:e2e:truffle
+
 fi
