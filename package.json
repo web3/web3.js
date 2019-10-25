@@ -121,5 +121,8 @@
         "sandboxed-module": "^2.0.3",
         "typescript": "next",
         "wait-port": "^0.2.6"
+    },
+    "dependencies": {
+        "rollup-plugin-node-resolve-next": "^0.3.0"
     }
 }

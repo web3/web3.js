@@ -13,7 +13,8 @@
     },
     "main": "dist/web3-net.cjs.js",
     "module": "dist/web3-net.esm.js",
-    "browser": "dist/web3-net.min.js",
+    "browser": "dist/web3-net.umd.js",
+    "unpkg": "dist/web3-net.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "web3-core": "1.2.2",

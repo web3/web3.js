@@ -13,7 +13,8 @@
     "types": "types/index.d.ts",
     "main": "dist/web3-providers-ws.cjs.js",
     "module": "dist/web3-providers-ws.esm.js",
-    "browser": "dist/web3-providers-ws.min.js",
+    "browser": "dist/web3-providers-ws.umd.js",
+    "unpkg": "dist/web3-providers-ws.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "underscore": "1.9.1",

@@ -9,10 +9,10 @@
     },
     "main": "dist/web3-core-promievent.cjs.js",
     "module": "dist/web3-core-promievent.esm.js",
-    "browser": "dist/web3-core-promievent.min.js",
+    "browser": "dist/web3-core-promievent.umd.js",
+    "unpkg": "dist/web3-core-promievent.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
-        "any-promise": "1.3.0",
-        "eventemitter3": "3.1.2"
+        "eventemitter3": "^4.0.0"
     }
 }

@@ -25,11 +25,10 @@
 var _ = require('underscore');
 var core = require('web3-core');
 var Method = require('web3-core-method');
-var Promise = require('any-promise');
-var Account = require('eth-lib/lib/account');
-var Hash = require('eth-lib/lib/hash');
-var RLP = require('eth-lib/lib/rlp');// jshint ignore:line
-var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
+var Account = require('eth-lib').account;
+var Hash = require('eth-lib').hash;
+var RLP = require('eth-lib').rlp;// jshint ignore:line
+var Bytes = require('eth-lib').bytes;// jshint ignore:line
 var cryp = require('crypto');
 var scrypt = require('scrypt-shim');
 var uuid = require('uuid');

@@ -23,7 +23,9 @@
 
 
 var _ = require('underscore');
-var ethjsUnit = require('ethjs-unit');
+var unitMap = require('ethjs-unit').unitMap;
+var fromWei = require('ethjs-unit').fromWei;
+var toWei = require('ethjs-unit').toWei;
 var utils = require('./utils.js');
 var soliditySha3 = require('./soliditySha3.js');
 var randombytes = require('randombytes');
@@ -212,8 +214,8 @@ var asciiToHex = function(str) {
  */
 var getUnitValue = function (unit) {
     unit = unit ? unit.toLowerCase() : 'ether';
-    if (!ethjsUnit.unitMap[unit]) {
-        throw new Error('This unit "'+ unit +'" doesn\'t exist, please use the one of the following units' + JSON.stringify(ethjsUnit.unitMap, null, 2));
+    if (!unitMap[unit]) {
+        throw new Error('This unit "'+ unit +'" doesn\'t exist, please use the one of the following units' + JSON.stringify(unitMap, null, 2));
     }
     return unit;
 };
@@ -246,7 +248,7 @@ var fromWei = function(number, unit) {
         throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
-    return utils.isBN(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
+    return utils.isBN(number) ? fromWei(number, unit) : fromWei(number, unit).toString(10);
 };
 
 /**
@@ -278,7 +280,7 @@ var toWei = function(number, unit) {
         throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
-    return utils.isBN(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
+    return utils.isBN(number) ? toWei(number, unit) : toWei(number, unit).toString(10);
 };
 
 
@@ -362,7 +364,7 @@ module.exports = {
     asciiToHex: asciiToHex,
     fromAscii: asciiToHex,
 
-    unitMap: ethjsUnit.unitMap,
+    unitMap: unitMap,
     toWei: toWei,
     fromWei: fromWei,
 

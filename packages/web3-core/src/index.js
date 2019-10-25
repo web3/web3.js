@@ -22,11 +22,10 @@
 
 "use strict";
 
-
 var requestManager = require('web3-core-requestmanager');
 var extend = require('./extend.js');
 
-module.exports = {
+var core = {
     packageInit: function (pkg, args) {
         args = Array.prototype.slice.call(args);
 
@@ -51,7 +50,7 @@ module.exports = {
         if (args[0] && args[0]._requestManager) {
             pkg._requestManager = new requestManager.Manager(args[0].currentProvider);
 
-        // set requestmanager on package
+            // set requestmanager on package
         } else {
             pkg._requestManager = new requestManager.Manager();
             pkg._requestManager.setProvider(args[0], args[1]);
@@ -61,7 +60,7 @@ module.exports = {
         pkg.givenProvider = requestManager.Manager.givenProvider;
         pkg.providers = requestManager.Manager.providers;
 
-         pkg._provider =  pkg._requestManager.provider;
+        pkg._provider =  pkg._requestManager.provider;
 
         // add SETPROVIDER function (don't overwrite if already existing)
         if (!pkg.setProvider) {
@@ -84,3 +83,4 @@ module.exports = {
     }
 };
 
+module.exports = core;

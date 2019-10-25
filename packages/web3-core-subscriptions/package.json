@@ -9,15 +9,16 @@
     },
     "main": "dist/web3-core-subscriptions.cjs.js",
     "module": "dist/web3-core-subscriptions.esm.js",
-    "browser": "dist/web3-core-subscriptions.min.js",
+    "browser": "dist/web3-core-subscriptions.umd.js",
+    "unpkg": "dist/web3-core-subscriptions.min.js",
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext"
     },
     "dependencies": {
         "@babel/runtime": "^7.6.3",
-        "eventemitter3": "3.1.2",
         "underscore": "1.9.1",
-        "web3-core-helpers": "1.2.2"
+        "web3-core-helpers": "1.2.2",
+        "eventemitter3": "^4.0.0"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",

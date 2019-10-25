@@ -13,7 +13,8 @@
     },
     "main": "dist/web3-bzz.cjs.js",
     "module": "dist/web3-bzz.esm.js",
-    "browser": "dist/web3-bzz.min.js",
+    "browser": "dist/web3-bzz.umd.js",
+    "unpkg": "dist/web3-bzz.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "@types/node": "^10.12.18",

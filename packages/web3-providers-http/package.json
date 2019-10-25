@@ -13,7 +13,8 @@
     "types": "types/index.d.ts",
     "main": "dist/web3-providers-http.cjs.js",
     "module": "dist/web3-providers-http.esm.js",
-    "browser": "dist/web3-providers-http.min.js",
+    "browser": "dist/web3-providers-http.umd.js",
+    "unpkg": "dist/web3-providers-http.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "web3-core-helpers": "1.2.2",

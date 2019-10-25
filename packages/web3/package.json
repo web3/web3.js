@@ -9,7 +9,8 @@
     },
     "main": "dist/web3.cjs.js",
     "module": "dist/web3.esm.js",
-    "browser": "dist/web3.min.js",
+    "browser": "dist/web3.umd.js",
+    "unpkg": "dist/web3.min.js",
     "bugs": {
         "url": "https://github.com/ethereum/web3.js/issues"
     },
