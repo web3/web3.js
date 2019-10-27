@@ -129,7 +129,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         error = false,
         transactionOptions = {},
         result,
-        hasTxSigningOptions = !!((tx.chain && tx.hardfork) || tx.common);
+        hasTxSigningOptions = !!(tx && ((tx.chain && tx.hardfork) || tx.common));
 
     callback = callback || function() {
     };
