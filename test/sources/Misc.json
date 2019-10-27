@@ -1,0 +1,15 @@
+{
+  "contractName": "Misc",
+  "abi": [
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3fe6080604052600080fdfea165627a7a723058205b81906cade92d8eeda5d0627076490bd44b563a504fe790edbcd6afadbe359d0029",
+  "deployedBytecode": "0x6080604052600080fdfea165627a7a723058205b81906cade92d8eeda5d0627076490bd44b563a504fe790edbcd6afadbe359d0029",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
