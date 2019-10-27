@@ -223,7 +223,11 @@ ABICoder.prototype.decodeParameter = function (type, bytes) {
  */
 ABICoder.prototype.decodeParameters = function (outputs, bytes) {
     if (outputs.length > 0 && (!bytes || bytes === '0x' || bytes === '0X')) {
-        throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
+        throw new Error(
+            'Returned values aren\'t valid, did it run Out of Gas? ' +
+            'Are you using the correct ABI for the contract you are ' +
+            'retrieving data from?'
+        );
     }
 
     var res = ethersAbiCoder.decode(this.mapTypes(outputs), '0x' + bytes.replace(/0x/i, ''));
