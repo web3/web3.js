@@ -80,9 +80,6 @@ eth.net;
 eth.clearSubscriptions(() => {});
 
 // $ExpectType Subscription<Log>
-eth.subscribe('logs');
-
-// $ExpectType Subscription<Log>
 eth.subscribe('logs', {});
 // $ExpectType Subscription<Log>
 eth.subscribe('logs', {}, (error: Error, log: Log) => {});
@@ -90,14 +87,16 @@ eth.subscribe('logs', {}, (error: Error, log: Log) => {});
 // $ExpectType Subscription<Syncing>
 eth.subscribe('syncing');
 // $ExpectType Subscription<Syncing>
-eth.subscribe('syncing', null, (error: Error, result: Syncing) => {});
+eth.subscribe(
+    'syncing',
+    (error: Error, result: Syncing) => {}
+);
 
 // $ExpectType Subscription<BlockHeader>
 eth.subscribe('newBlockHeaders');
 // $ExpectType Subscription<BlockHeader>
 eth.subscribe(
     'newBlockHeaders',
-    null,
     (error: Error, blockHeader: BlockHeader) => {}
 );
 
@@ -106,7 +105,6 @@ eth.subscribe('pendingTransactions');
 // $ExpectType Subscription<string>
 eth.subscribe(
     'pendingTransactions',
-    null,
     (error: Error, transactionHash: string) => {}
 );
 
