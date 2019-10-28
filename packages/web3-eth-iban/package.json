@@ -13,7 +13,6 @@
     },
     "main": "dist/web3-eth-iban.cjs.js",
     "module": "dist/web3-eth-iban.esm.js",
-    "browser": "dist/web3-eth-iban.umd.js",
     "unpkg": "dist/web3-eth-iban.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",

@@ -10,82 +10,67 @@ import builtins from 'rollup-plugin-node-builtins';
 import bundleSize from 'rollup-plugin-bundle-size';
 
 const config = [
-    // {
-    //     input: 'src/index.js',
-    //     output: [
-    //         {
-    //             file: '',
-    //             format: 'cjs',
-    //             sourcemap: true
-    //         },
-    //         {
-    //             name: '',
-    //             file: '',
-    //             format: 'umd',
-    //             globals: {},
-    //             sourcemap: true
-    //         }
-    //     ],
-    //     plugins: [
-    //         commonjs(),
-    //         babel({
-    //             exclude: 'node_modules/**',
-    //             babelrc: false,
-    //             runtimeHelpers: true,
-    //             presets: [
-    //                 [
-    //                     '@babel/env',
-    //                     {
-    //                         modules: false,
-    //                         targets: {
-    //                             node: '8',
-    //                             browsers: 'last 2 versions'
-    //                         }
-    //                     }
-    //                 ]
-    //             ],
-    //             plugins: [
-    //                 ['@babel/plugin-transform-runtime', {
-    //                     'helpers': true,
-    //                     'regenerator': true
-    //                 }]
-    //             ]
-    //         }),
-    //         json(),
-    //         autoExternal(),
-    //         cleanup(),
-    //         sourcemaps()
-    //     ]
-    // },
-    // {
-    //     input: 'src/index.js',
-    //     output: [
-    //         {
-    //             file: '',
-    //             format: 'es',
-    //             sourcemap: true
-    //         }
-    //     ],
-    //     plugins: [
-    //         commonjs(),
-    //         babel({
-    //             exclude: 'node_modules/**'
-    //         }),
-    //         json(),
-    //         autoExternal(),
-    //         cleanup(),
-    //         sourcemaps()
-    //     ]
-    // },
     {
-        inlineDynamicImports: true,
-        strictDeprecations: true,
-        preserveSymlinks: true,
-        treeshake: {
-            moduleSideEffects: false,
-            propertyReadSideEffects: false,
-            unknownGlobalSideEffects: false
-        },
+        input: 'src/index.js',
+        output: [
+            {
+                file: '',
+                format: 'cjs',
+                sourcemap: true,
+                exports: 'named'
+            }
+        ],
+        plugins: [
+            commonjs(),
+            babel({
+                exclude: 'node_modules/**',
+                babelrc: false,
+                runtimeHelpers: true,
+                presets: [
+                    [
+                        '@babel/env',
+                        {
+                            modules: false,
+                            targets: {
+                                node: '8'
+                            }
+                        }
+                    ]
+                ],
+                plugins: [
+                    ['@babel/plugin-transform-runtime', {
+                        'helpers': true,
+                        'regenerator': true
+                    }]
+                ]
+            }),
+            json(),
+            autoExternal(),
+            cleanup(),
+            sourcemaps()
+        ]
+    },
+    {
+        input: 'src/index.js',
+        output: [
+            {
+                file: '',
+                format: 'es',
+                sourcemap: true
+            }
+        ],
+        plugins: [
+            commonjs(),
+            babel({
+                exclude: 'node_modules/**'
+            }),
+            json(),
+            autoExternal(),
+            cleanup(),
+            sourcemaps()
+        ]
+    },
+    {
         input: 'src/index.js',
         output: [
             {
@@ -101,16 +86,34 @@ const config = [
             resolve({
                 browser: true,
                 preferBuiltins: true,
-                customResolveOptions: {
-                    moduleDirectory: ['../../node_modules', 'node_modules']
-                }
+                dedupe: [
+                    '@babel/runtime',
+                    'underscore',
+                    'bn.js',
+                    'elliptic',
+                    'js-sha3',
+                    'secp256k1',
+                    'es-abstract'
+                ]
             }),
             commonjs(),
             babel(
                 {
                     babelrc: false,
+                    runtimeHelpers: true,
                     presets: [
-                        ['@babel/preset-env', {modules: false}]
+                        [
+                            '@babel/preset-env',
+                            {
+                                modules: false,
+                                targets: {
+                                    browsers: 'last 2 versions'
+                                }
+                            }
+                        ]
+                    ],
+                    plugins: [
+                        ['@babel/plugin-transform-runtime', {'regenerator': true}]
                     ]
                 }
             ),
@@ -121,7 +124,12 @@ const config = [
                 comments: false
             }),
             bundleSize()
-        ]
+        ],
+        onwarn: (warning) => {
+            if (warning.code === 'UNRESOLVED_IMPORT') {
+                console.log(warning.importer, warning.source);
+            }
+        }
     }
 ];
 
@@ -135,21 +143,16 @@ const config = [
  * @returns {Array}
  */
 export default (name, outputFileName, globals) => {
-    // // CJS
-    // config[0].output[0].file = 'dist/' + outputFileName + '.cjs.js';
-    //
-    // // UMD
-    // config[0].output[1].name = name;
-    // config[0].output[1].file = 'dist/' + outputFileName + '.umd.js';
-    // config[0].output[1].globals = globals;
-    //
-    // // ESM
-    // config[1].output[0].file = 'dist/' + outputFileName + '.esm.js';
+    // CJS
+    config[0].output[0].file = 'dist/' + outputFileName + '.cjs.js';
+
+    // ESM
+    config[1].output[0].file = 'dist/' + outputFileName + '.esm.js';
 
     // Minified UMD
-    config[0].output[0].name = name;
-    config[0].output[0].file = 'dist/' + outputFileName + '.min.js';
-    config[0].output[0].globals = globals;
+    config[2].output[0].name = name;
+    config[2].output[0].file = 'dist/' + outputFileName + '.min.js';
+    config[2].output[0].globals = globals;
 
     return config;
 };

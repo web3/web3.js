@@ -9,7 +9,6 @@
     },
     "main": "dist/web3-core-subscriptions.cjs.js",
     "module": "dist/web3-core-subscriptions.esm.js",
-    "browser": "dist/web3-core-subscriptions.umd.js",
     "unpkg": "dist/web3-core-subscriptions.min.js",
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext"

@@ -9,7 +9,6 @@
     },
     "main": "dist/web3.cjs.js",
     "module": "dist/web3.esm.js",
-    "browser": "dist/web3.umd.js",
     "unpkg": "dist/web3.min.js",
     "bugs": {
         "url": "https://github.com/ethereum/web3.js/issues"
@@ -63,7 +62,12 @@
         "web3-utils": "1.2.2"
     },
     "devDependencies": {
+        "bn.js": "^5.0.0",
         "definitelytyped-header-parser": "^1.0.1",
-        "dtslint": "0.4.2"
+        "dtslint": "0.4.2",
+        "elliptic": "^6.5.1",
+        "es-abstract": "^1.16.0",
+        "js-sha3": "^0.8.0",
+        "secp256k1": "^3.7.1"
     }
 }

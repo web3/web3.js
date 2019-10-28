@@ -9,7 +9,6 @@
     },
     "main": "dist/web3-eth-contract.cjs.js",
     "module": "dist/web3-eth-contract.esm.js",
-    "browser": "dist/web3-eth-contract.umd.js",
     "unpkg": "dist/web3-eth-contract.min.js",
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext"

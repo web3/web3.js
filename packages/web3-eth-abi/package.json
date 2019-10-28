@@ -13,13 +13,14 @@
     },
     "main": "dist/web3-eth-abi.cjs.js",
     "module": "dist/web3-eth-abi.esm.js",
-    "browser": "dist/web3-eth-abi.umd.js",
     "unpkg": "dist/web3-eth-abi.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "ethers": "4.0.0-beta.3",
         "underscore": "1.9.1",
-        "web3-utils": "1.2.2"
+        "web3-utils": "1.2.2",
+        "bn.js": "^5.0.0",
+        "js-sha3": "^0.8.0"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",

@@ -13,12 +13,11 @@
     },
     "main": "dist/web3-core.cjs.js",
     "module": "dist/web3-core.esm.js",
-    "browser": "dist/web3-core.umd.js",
     "unpkg": "dist/web3-core.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "@types/bn.js": "^4.11.4",
-        "@types/node": "^12.6.1",
+        "@types/node": "^12.11.7",
         "web3-core-helpers": "1.2.2",
         "web3-core-method": "1.2.2",
         "web3-core-requestmanager": "1.2.2",

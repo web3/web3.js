@@ -13,7 +13,6 @@
     },
     "main": "dist/web3-eth-ens.cjs.js",
     "module": "dist/web3-eth-ens.esm.js",
-    "browser": "dist/web3-eth-ens.umd.js",
     "unpkg": "dist/web3-eth-ens.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",

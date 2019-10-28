@@ -13,7 +13,6 @@
     },
     "main": "dist/web3-shh.cjs.js",
     "module": "dist/web3-shh.esm.js",
-    "browser": "dist/web3-shh.umd.js",
     "unpkg": "dist/web3-shh.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",

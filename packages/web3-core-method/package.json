@@ -13,7 +13,6 @@
     },
     "main": "dist/web3-core-method.cjs.js",
     "module": "dist/web3-core-method.esm.js",
-    "browser": "dist/web3-core-method.umd.js",
     "unpkg": "dist/web3-core-method.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
