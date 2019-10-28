@@ -14,7 +14,9 @@
     },
     "scripts": {
         "postinstall": "lerna bootstrap",
-        "build:minified": "lerna exec -- MINIFIED_BUNDLES=true rollup -c",
+        "build:web3": "lerna exec --scope web3 -- MINIFIED_BUNDLES=false rollup -c",
+        "build:web3:minified": "lerna exec --scope web3 -- MINIFIED_BUNDLES=true rollup -c",
+        "build:all:minified": "lerna exec -- MINIFIED_BUNDLES=true rollup -c",
         "build": "lerna exec -- MINIFIED_BUNDLES=false rollup -c",
         "release": "lerna bootstrap; lerna publish from-package",
         "install:all": "lerna exec -- npm install",
@@ -31,7 +33,7 @@
         "test:e2e:clients": "npm run test:e2e:ganache; npm run test:e2e:geth:insta; npm run test:e2e:geth:auto",
         "test:e2e:chrome": "./scripts/e2e.chrome.sh",
         "test:e2e:firefox": "./scripts/e2e.firefox.sh",
-        "test:e2e:browsers": "npm run build; npm run test:e2e:chrome; npm run test:e2e:firefox",
+        "test:e2e:browsers": "npm run build:web3:minified; npm run test:e2e:chrome; npm run test:e2e:firefox",
         "ci": "./scripts/ci.sh",
         "coveralls": "./scripts/coveralls.sh"
     },
