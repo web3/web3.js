@@ -32,6 +32,9 @@
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
-        "dtslint": "0.4.2"
+        "dtslint": "0.4.2",
+        "bn.js": "^5.0.0",
+        "elliptic": "^6.5.1",
+        "js-sha3": "^0.8.0"
     }
 }

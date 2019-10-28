@@ -7,5 +7,6 @@ export default rollupConfig(
     {
         'web3-utils': 'Web3Utils',
         'underscore': '_'
-    }
+    },
+    ['js-sha3']
 );

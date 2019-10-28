@@ -83,19 +83,6 @@ const config = [
             }
         ],
         plugins: [
-            resolve({
-                browser: true,
-                preferBuiltins: true,
-                dedupe: [
-                    '@babel/runtime',
-                    'underscore',
-                    'bn.js',
-                    'elliptic',
-                    'js-sha3',
-                    'secp256k1',
-                    'es-abstract'
-                ]
-            }),
             commonjs(),
             babel(
                 {
@@ -124,12 +111,7 @@ const config = [
                 comments: false
             }),
             bundleSize()
-        ],
-        onwarn: (warning) => {
-            if (warning.code === 'UNRESOLVED_IMPORT') {
-                console.log(warning.importer, warning.source);
-            }
-        }
+        ]
     }
 ];
 
@@ -139,10 +121,11 @@ const config = [
  * @param {String} name
  * @param {String} outputFileName
  * @param {Object} globals
+ * @param {Array} dedupe
  *
  * @returns {Array}
  */
-export default (name, outputFileName, globals) => {
+export default (name, outputFileName, globals, dedupe) => {
     // CJS
     config[0].output[0].file = 'dist/' + outputFileName + '.cjs.js';
 
@@ -153,6 +136,13 @@ export default (name, outputFileName, globals) => {
     config[2].output[0].name = name;
     config[2].output[0].file = 'dist/' + outputFileName + '.min.js';
     config[2].output[0].globals = globals;
+    config[2].plugins = [
+        resolve({
+            browser: true,
+            preferBuiltins: true,
+            dedupe: ['@babel/runtime'].concat(dedupe)
+        })
+    ].concat(config[2].plugins);
 
     return config;
 };

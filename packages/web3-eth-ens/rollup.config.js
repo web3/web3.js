@@ -13,5 +13,6 @@ export default rollupConfig(
         'web3-utils': 'Web3Utils',
         'underscore': '_',
         'eth-ens-namehash': 'namehash'
-    }
+    },
+    ['underscore']
 );
