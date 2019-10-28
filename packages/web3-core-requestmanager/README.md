@@ -31,8 +31,11 @@ This will expose the `Web3RequestManager` object on the window object.
 // in node.js
 var Web3WsProvider = require('web3-providers-ws');
 var Web3RequestManager = require('web3-core-requestmanager');
+var RequestManager = Web3RequestManager.RequestManager;
+var BatchManager = Web3RequestManager.BatchManager;
 
-var requestManager = new Web3RequestManager(new Web3WsProvider('ws://localhost:8546'));
+var requestManager = new RequestManager(new Web3WsProvider('ws://localhost:8546'));
+var batchManager = new BatchManager(requestManager);
 ```
 
 

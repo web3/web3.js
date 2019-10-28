@@ -10,5 +10,7 @@ export default rollupConfig(
         'web3-providers-ipc': 'Web3IpcProvider',
         'web3-providers-ws': 'Web3WsProvider',
         'underscore': '_'
-    }
+    },
+    false,
+    true
 );

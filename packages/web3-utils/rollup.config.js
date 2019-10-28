@@ -7,5 +7,7 @@ export default rollupConfig(
     {
         'underscore': '_',
         'bn.js': 'BN'
-    }
+    },
+    false,
+    true
 );

@@ -16,7 +16,7 @@
         "postinstall": "lerna bootstrap",
         "build:web3": "lerna exec --scope web3 -- MINIFIED_BUNDLES=false rollup -c",
         "build:web3:minified": "lerna exec --scope web3 -- MINIFIED_BUNDLES=true rollup -c",
-        "build:all:minified": "lerna exec -- MINIFIED_BUNDLES=true rollup -c",
+        "build:minified": "lerna exec -- MINIFIED_BUNDLES=true rollup -c",
         "build": "lerna exec -- MINIFIED_BUNDLES=false rollup -c",
         "release": "lerna bootstrap; lerna publish from-package",
         "install:all": "lerna exec -- npm install",
@@ -82,7 +82,7 @@
         "@babel/plugin-transform-runtime": "^7.4.0",
         "@babel/polyfill": "^7.6.0",
         "@babel/preset-env": "^7.6.3",
-        "@babel/runtime": "^7.4.2",
+        "@babel/runtime": "^7.6.3",
         "@types/bn.js": "^4.11.5",
         "@types/node": "^12.6.1",
         "@types/underscore": "^1.9.3",
@@ -113,19 +113,15 @@
         "rollup": "^1.25.2",
         "rollup-plugin-auto-external": "^2.0.0",
         "rollup-plugin-babel": "^4.3.3",
-        "rollup-plugin-babel-minify": "^9.1.0",
         "rollup-plugin-bundle-size": "^1.0.3",
         "rollup-plugin-cleanup": "^3.1.1",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-json": "^4.0.0",
         "rollup-plugin-node-builtins": "^2.1.2",
         "rollup-plugin-node-resolve": "^5.2.0",
-        "rollup-plugin-sourcemaps": "^0.4.2",
+        "rollup-plugin-terser": "^5.1.2",
         "sandboxed-module": "^2.0.3",
         "typescript": "next",
         "wait-port": "^0.2.6"
-    },
-    "dependencies": {
-        "rollup-plugin-node-resolve-next": "^0.3.0"
     }
 }

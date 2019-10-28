@@ -2,11 +2,10 @@ import babel from 'rollup-plugin-babel';
 import json from 'rollup-plugin-json';
 import autoExternal from 'rollup-plugin-auto-external';
 import cleanup from 'rollup-plugin-cleanup';
-import sourcemaps from 'rollup-plugin-sourcemaps';
 import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
-import minify from 'rollup-plugin-babel-minify';
 import builtins from 'rollup-plugin-node-builtins';
+import {terser} from 'rollup-plugin-terser';
 import bundleSize from 'rollup-plugin-bundle-size';
 
 const config = [
@@ -16,8 +15,7 @@ const config = [
             {
                 file: '',
                 format: 'cjs',
-                sourcemap: true,
-                exports: 'named'
+                sourcemap: true
             }
         ],
         plugins: [
@@ -38,16 +36,12 @@ const config = [
                     ]
                 ],
                 plugins: [
-                    ['@babel/plugin-transform-runtime', {
-                        'helpers': true,
-                        'regenerator': true
-                    }]
+                    ['@babel/plugin-transform-runtime']
                 ]
             }),
             json(),
             autoExternal(),
-            cleanup(),
-            sourcemaps()
+            cleanup()
         ]
     },
     {
@@ -66,8 +60,7 @@ const config = [
             }),
             json(),
             autoExternal(),
-            cleanup(),
-            sourcemaps()
+            cleanup()
         ]
     },
     {
@@ -76,9 +69,9 @@ const config = [
             {
                 name: '',
                 file: '',
-                format: 'iife',
-                sourcemap: true,
+                format: 'umd',
                 exports: 'named',
+                sourcemap: true,
                 globals: {}
             }
         ],
@@ -100,16 +93,13 @@ const config = [
                         ]
                     ],
                     plugins: [
-                        ['@babel/plugin-transform-runtime', {'regenerator': true}]
+                        ['@babel/plugin-transform-runtime', {useESModules: true}]
                     ]
                 }
             ),
-            builtins(),
             json(),
-            cleanup(),
-            minify({
-                comments: false
-            }),
+            builtins(),
+            terser({sourcemap: true}),
             bundleSize()
         ]
     }
@@ -122,12 +112,17 @@ const config = [
  * @param {String} outputFileName
  * @param {Object} globals
  * @param {Array} dedupe
+ * @param {boolean} cjsNamedExports
  *
  * @returns {Array}
  */
-export default (name, outputFileName, globals, dedupe) => {
+export default (name, outputFileName, globals, dedupe, cjsNamedExports) => {
     // CJS
     config[0].output[0].file = 'dist/' + outputFileName + '.cjs.js';
+
+    if (cjsNamedExports) {
+        config[0].output[0].exports = 'named';
+    }
 
     // ESM
     config[1].output[0].file = 'dist/' + outputFileName + '.esm.js';
@@ -137,11 +132,12 @@ export default (name, outputFileName, globals, dedupe) => {
         config[2].output[0].name = name;
         config[2].output[0].file = 'dist/' + outputFileName + '.min.js';
         config[2].output[0].globals = globals;
+
         config[2].plugins = [
             resolve({
                 browser: true,
                 preferBuiltins: true,
-                dedupe: ['@babel/runtime'].concat(dedupe)
+                dedupe: dedupe
             })
         ].concat(config[2].plugins);
     } else {

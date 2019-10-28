@@ -8,5 +8,7 @@ export default rollupConfig(
         'web3-core-helpers': 'Web3CoreHelpers',
         'underscore': '_',
         'eventemitter3': 'EventEmitter'
-    }
+    },
+    false,
+    true
 );

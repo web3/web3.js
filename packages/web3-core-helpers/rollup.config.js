@@ -8,5 +8,7 @@ export default rollupConfig(
         'web3-eth-iban': 'Web3EthIban',
         'web3-utils': 'Web3Utils',
         'underscore': '_'
-    }
+    },
+    false,
+    true
 );
