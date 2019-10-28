@@ -132,17 +132,21 @@ export default (name, outputFileName, globals, dedupe) => {
     // ESM
     config[1].output[0].file = 'dist/' + outputFileName + '.esm.js';
 
-    // Minified UMD
-    config[2].output[0].name = name;
-    config[2].output[0].file = 'dist/' + outputFileName + '.min.js';
-    config[2].output[0].globals = globals;
-    config[2].plugins = [
-        resolve({
-            browser: true,
-            preferBuiltins: true,
-            dedupe: ['@babel/runtime'].concat(dedupe)
-        })
-    ].concat(config[2].plugins);
+    if (process.env.MINIFIED_BUNDLES === 'true') {
+        // Minified UMD
+        config[2].output[0].name = name;
+        config[2].output[0].file = 'dist/' + outputFileName + '.min.js';
+        config[2].output[0].globals = globals;
+        config[2].plugins = [
+            resolve({
+                browser: true,
+                preferBuiltins: true,
+                dedupe: ['@babel/runtime'].concat(dedupe)
+            })
+        ].concat(config[2].plugins);
+    } else {
+        config.pop();
+    }
 
     return config;
 };

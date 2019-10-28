@@ -14,7 +14,8 @@
     },
     "scripts": {
         "postinstall": "lerna bootstrap",
-        "build:all": "lerna exec -- rollup -c",
+        "build:minified": "lerna exec -- MINIFIED_BUNDLES=true rollup -c",
+        "build": "lerna exec -- MINIFIED_BUNDLES=false rollup -c",
         "release": "lerna bootstrap; lerna publish from-package",
         "install:all": "lerna exec -- npm install",
         "dedupe:all": "lerna exec -- sudo npm dedupe",
