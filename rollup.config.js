@@ -85,6 +85,7 @@ const config = [
                         [
                             '@babel/preset-env',
                             {
+                                forceAllTransforms: true,
                                 modules: false,
                                 targets: {
                                     browsers: 'last 2 versions'
