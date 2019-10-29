@@ -117,23 +117,27 @@ const config = [
  * @param {String} outputFileName
  * @param {Object} globals
  * @param {Array} dedupe
- * @param {boolean} cjsNamedExports
+ * @param {boolean} namedExports
  *
  * @returns {Array}
  */
-export default (name, outputFileName, globals, dedupe, cjsNamedExports) => {
+export default (name, outputFileName, globals, dedupe, namedExports) => {
     // CJS
     config[0].output[0].file = 'dist/' + outputFileName + '.cjs.js';
 
-    if (cjsNamedExports) {
+    if (namedExports) {
         config[0].output[0].exports = 'named';
     }
 
     // ESM
     config[1].output[0].file = 'dist/' + outputFileName + '.esm.js';
 
+    // Minified UMD
     if (process.env.MINIFIED_BUNDLES === 'true') {
-        // Minified UMD
+        if (namedExports) {
+            config[2].output[0].exports = 'named';
+        }
+
         config[2].output[0].name = name;
         config[2].output[0].file = 'dist/' + outputFileName + '.min.js';
         config[2].output[0].globals = globals;

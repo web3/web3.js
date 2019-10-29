@@ -6,5 +6,6 @@ export default rollupConfig(
     pkg.name,
     {
         'web3-core-helpers': 'Web3CoreHelpers'
-    }
+    },
+    ['bn.js', 'elliptic', 'js-sha3', 'underscore']
 );

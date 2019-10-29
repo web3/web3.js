@@ -7,5 +7,6 @@ export default rollupConfig(
     {
         'web3-utils': 'Web3Utils',
         'bn.js': 'BN'
-    }
+    },
+    ['bn.js', 'elliptic', 'js-sha3', 'underscore']
 );

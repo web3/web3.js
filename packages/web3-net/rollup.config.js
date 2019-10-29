@@ -8,5 +8,6 @@ export default rollupConfig(
         'web3-core': 'Web3Core',
         'web3-core-method': 'Web3CoreMethod',
         'web3-utils': 'Web3Utils'
-    }
+    },
+    ['bn.js', 'elliptic', 'js-sha3', 'underscore']
 );
