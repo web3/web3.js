@@ -79,8 +79,7 @@
     ],
     "devDependencies": {
         "@babel/core": "^7.6.4",
-        "@babel/plugin-transform-runtime": "^7.4.0",
-        "@babel/polyfill": "^7.6.0",
+        "@babel/plugin-transform-runtime": "^7.6.2",
         "@babel/preset-env": "^7.6.3",
         "@babel/runtime": "^7.6.3",
         "@types/bn.js": "^4.11.5",
@@ -118,6 +117,7 @@
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-json": "^4.0.0",
         "rollup-plugin-node-builtins": "^2.1.2",
+        "rollup-plugin-node-globals": "^1.4.0",
         "rollup-plugin-node-resolve": "^5.2.0",
         "rollup-plugin-terser": "^5.1.2",
         "sandboxed-module": "^2.0.3",

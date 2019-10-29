@@ -5,6 +5,7 @@ import cleanup from 'rollup-plugin-cleanup';
 import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import builtins from 'rollup-plugin-node-builtins';
+import nodeGlobals from 'rollup-plugin-node-globals';
 import {terser} from 'rollup-plugin-terser';
 import bundleSize from 'rollup-plugin-bundle-size';
 
@@ -79,8 +80,10 @@ const config = [
             commonjs(),
             babel(
                 {
+                    exclude: ['node_modules/@babel/runtime/**'],
                     babelrc: false,
                     runtimeHelpers: true,
+                    minified: true,
                     presets: [
                         [
                             '@babel/preset-env',
@@ -94,10 +97,11 @@ const config = [
                         ]
                     ],
                     plugins: [
-                        ['@babel/plugin-transform-runtime', {useESModules: true}]
+                        ['@babel/plugin-transform-runtime', {useESModules: true, absoluteRuntime: true}]
                     ]
                 }
             ),
+            nodeGlobals(),
             json(),
             builtins(),
             terser({sourcemap: true}),
