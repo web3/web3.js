@@ -35,7 +35,7 @@ var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
 var Transaction = require('ethereumjs-tx').Transaction;
-var Common = require('ethereumjs-common').default;
+var Common = require('ethereumjs-common');
 
 
 var isNot = function(value) {
