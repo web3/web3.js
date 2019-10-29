@@ -68,10 +68,10 @@ const config = [
         input: 'src/index.js',
         output: [
             {
+                exports: 'default',
                 name: '',
                 file: '',
                 format: 'umd',
-                exports: 'named',
                 sourcemap: true,
                 globals: {}
             }
