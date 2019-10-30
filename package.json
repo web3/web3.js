@@ -27,7 +27,7 @@
         "docs": "cd docs; make html;",
         "lint": "jshint *.js packages",
         "test": "mocha --grep E2E --invert; jshint *.js packages",
-        "test:unit": "npm run build; istanbul cover _mocha -- -R spec --grep E2E --invert",
+        "test:unit": "npm run build:all:cjs; istanbul cover _mocha -- -R spec --grep E2E --invert",
         "dtslint": "lerna run dtslint",
         "test:e2e:ganache": "./scripts/e2e.ganache.sh",
         "test:e2e:geth:auto": "./scripts/e2e.geth.automine.sh",
