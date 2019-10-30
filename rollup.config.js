@@ -123,14 +123,22 @@ const config = [
  */
 export default (name, outputFileName, globals, dedupe, namedExports) => {
     // CJS
-    config[0].output[0].file = 'dist/' + outputFileName + '.cjs.js';
+    if (process.env.CJS === 'true') {
+        config[0].output[0].file = 'dist/' + outputFileName + '.cjs.js';
 
-    if (namedExports) {
-        config[0].output[0].exports = 'named';
+        if (namedExports) {
+            config[0].output[0].exports = 'named';
+        }
+    } else {
+        delete config[0];
     }
 
     // ESM
-    config[1].output[0].file = 'dist/' + outputFileName + '.esm.js';
+    if (process.env.ESM === 'true') {
+        config[1].output[0].file = 'dist/' + outputFileName + '.esm.js';
+    } else {
+        delete config[1];
+    }
 
     // Minified UMD
     if (process.env.MINIFIED_BUNDLES === 'true') {
@@ -150,7 +158,7 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
             })
         ].concat(config[2].plugins);
     } else {
-        config.pop();
+        delete config[2];
     }
 
     return config;

@@ -13,11 +13,13 @@ if [ "$TEST" = "unit" ]; then
 
 elif [ "$TEST" = "build_and_lint" ]; then
 
-  npm run build
+  npm run build:all
+  npm run build:all:minified
   npm run dtslint
 
 elif [ "$TEST" = "unit_and_e2e_clients" ]; then
 
+  npm run build:cjs
   npm run test:e2e:ganache
   npm run test:e2e:geth:insta
   npm run test:e2e:geth:auto
