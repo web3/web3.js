@@ -37,7 +37,7 @@ const config = [
                     ]
                 ],
                 plugins: [
-                    ['@babel/plugin-transform-runtime']
+                    ['@babel/plugin-transform-runtime', {useESModules: true, absoluteRuntime: true}]
                 ]
             }),
             json(),
@@ -57,7 +57,23 @@ const config = [
         plugins: [
             commonjs(),
             babel({
-                exclude: 'node_modules/**'
+                exclude: 'node_modules/**',
+                babelrc: false,
+                runtimeHelpers: true,
+                presets: [
+                    [
+                        '@babel/env',
+                        {
+                            modules: false,
+                            targets: {
+                                node: '8'
+                            }
+                        }
+                    ]
+                ],
+                plugins: [
+                    ['@babel/plugin-transform-runtime', {useESModules: true, absoluteRuntime: true}]
+                ]
             }),
             json(),
             autoExternal(),
