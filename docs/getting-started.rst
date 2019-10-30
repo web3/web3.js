@@ -24,7 +24,7 @@ First you need to get web3.js into your project. This can be done using the foll
 
 - npm: ``npm install web3``
 - meteor: ``meteor add ethereum:web3``
-- pure js: link the ``dist/web3.min.js``
+- browser (without bundler): link the ``dist/web3.min.js`` from your ``node_modules`` folder or use the ``unpkg`` or ``jsdelivr`` CDN.
 
 After that you need to create a web3 instance and set a provider.
 Ethereum supported Browsers like Mist or MetaMask will have a ``ethereumProvider`` or ``web3.currentProvider`` available. For  web3.js, check ``Web3.givenProvider``.
