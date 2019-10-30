@@ -1,8 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-//var web3 = require('../../index');
 
-var FakeHttpProvider = require('./FakeIpcProvider');
 
 var methodExists = function(object, method) {
     it('should have method ' + method + ' implemented', function() {
@@ -40,11 +38,11 @@ var extractReceipt = function(message) {
 // Conditionally requires web3:
 // loads web3.min when running headless browser tests, the unbuilt web3 otherwise.
 var getWeb3 = function() {
-    if (window.Web3) {
+    if (typeof window !== 'undefined') {
         return window.Web3;
     }
 
-    // return require('../../packages/web3');
+    return require('web3');
 };
 
 // Gets correct websocket port for client. Ganache uses 8545 for both

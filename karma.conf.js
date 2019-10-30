@@ -1,10 +1,10 @@
 process.env.MOZ_HEADLESS = 1;
 
-if (!process.env.TRAVIS){
+if (!process.env.TRAVIS) {
     process.env.CHROME_BIN = require('puppeteer').executablePath();
 }
 
-module.exports = function (config) {
+module.exports = function(config) {
     var configuration = {
         frameworks: [
             'mocha',
@@ -16,7 +16,7 @@ module.exports = function (config) {
             'test/**/e2e*.js'
         ],
         preprocessors: {
-            'test/**/e2e*.js': [ 'browserify' ]
+            'test/**/e2e*.js': ['browserify']
         },
         plugins: [
             'karma-chrome-launcher',
@@ -30,6 +30,7 @@ module.exports = function (config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: false,
+        exclude: ['web3'],
         browsers: [
             'ChromeHeadless',
             'FirefoxHeadless'
@@ -37,16 +38,16 @@ module.exports = function (config) {
         customLaunchers: {
             FirefoxHeadless: {
                 base: 'Firefox',
-                flags: ['-headless'],
+                flags: ['-headless']
             },
             Chrome_travis_ci: {
                 base: 'Chrome',
                 flags: ['--no-sandbox']
             }
-        },
+        }
     };
 
-    if(process.env.TRAVIS) {
+    if (process.env.TRAVIS) {
         configuration.browsers = [
             'Chrome_travis_ci',
             'FirefoxHeadless'
