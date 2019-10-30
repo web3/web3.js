@@ -1,15 +1,34 @@
-var chai = require('chai');
-var assert = chai.assert;
+const chai = require('chai');
+const assert = chai.assert;
 
-
-var methodExists = function(object, method) {
+/**
+ * Checks if a method does exists on a object by the given method name.
+ *
+ * @method methodExists
+ *
+ * @param {Object} object
+ * @param {String} method
+ *
+ * @returns {void}
+ */
+const methodExists = function(object, method) {
     it('should have method ' + method + ' implemented', function() {
         //web3.setProvider(null);
         assert.equal('function', typeof object[method], 'method ' + method + ' is not implemented');
     });
 };
 
-var propertyExists = function(object, property) {
+/**
+ * Checks if a property does exists on a given object.
+ *
+ * @method propertyExists
+ *
+ * @param {Object} object
+ * @param {String} property
+ *
+ * @returns {void}
+ */
+const propertyExists = function(object, property) {
     it('should have property ' + property + ' implemented', function() {
         // set dummy providor, to prevent error
         // web3.setProvider(new FakeHttpProvider());
@@ -17,9 +36,17 @@ var propertyExists = function(object, property) {
     });
 };
 
-// Runs a noop transaction to move instamine forward
-// Useful for confirmation handler testing.
-var mine = async function(web3, account) {
+/**
+ * Runs a noop transaction to move instamine forward. Useful for confirmation handler testing.
+ *
+ * @method mine
+ *
+ * @param {Web3} web3
+ * @param {Account|string|number} account
+ *
+ * @returns {Promise<Object>}
+ */
+const mine = async function(web3, account) {
     await web3.eth.sendTransaction({
         from: account,
         to: account,
@@ -29,15 +56,29 @@ var mine = async function(web3, account) {
     });
 };
 
-// Extracts a receipt object from 1.x error message
-var extractReceipt = function(message) {
+/**
+ * Extracts a receipt object from 1.x error message
+ *
+ * @method extractReceipt
+ *
+ * @param {string} message
+ *
+ * @returns {Object}
+ */
+const extractReceipt = function(message) {
     const receiptString = message.split('the EVM:')[1].trim();
     return JSON.parse(receiptString);
 };
 
-// Conditionally requires web3:
-// loads web3.min when running headless browser tests, the unbuilt web3 otherwise.
-var getWeb3 = function() {
+/**
+ * Conditionally requires web3. Loads the injected web3.min.js file when running headless browser tests,
+ * the commonjs bundle of web3 otherwise.
+ *
+ * @method getWeb3
+ *
+ * @returns {Web3}
+ */
+const getWeb3 = function() {
     if (typeof window !== 'undefined') {
         return window.Web3;
     }
@@ -45,9 +86,15 @@ var getWeb3 = function() {
     return require('web3');
 };
 
-// Gets correct websocket port for client. Ganache uses 8545 for both
-// http and ws. It's run in e2e.ganache.sh and for all the headless browser tests
-var getWebsocketPort = function() {
+/**
+ * Gets correct websocket port for client. Ganache uses 8545 for both http and ws. It's run in e2e.ganache.sh
+ * and for all the headless browser tests
+ *
+ * @method getWebsocketPort
+ *
+ * @returns {number}
+ */
+const getWebsocketPort = function() {
     return (process.env.GANACHE || global.window) ? 8545 : 8546;
 };
 

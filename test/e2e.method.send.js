@@ -1,32 +1,31 @@
-var assert = require('assert');
-var Basic = require('./sources/Basic');
-var utils = require('./helpers/test.utils');
-var Web3 = utils.getWeb3();
+const assert = require('assert');
+const Basic = require('./sources/Basic');
+const utils = require('./helpers/test.utils');
+const Web3 = utils.getWeb3();
 
 describe('method.send [ @E2E ]', function() {
-    var web3;
-    var accounts;
-    var basic;
-    var instance;
-    var options;
+    let web3;
+    let accounts;
+    let basic;
+    let instance;
 
-    var basicOptions = {
+    let basicOptions = {
         data: Basic.bytecode,
         gasPrice: '1',
         gas: 4000000
     };
 
     describe('http', function() {
-        before(async function(){
+        before(async function() {
             web3 = new Web3('http://localhost:8545');
             accounts = await web3.eth.getAccounts();
 
             basic = new web3.eth.Contract(Basic.abi, basicOptions);
             instance = await basic.deploy().send({from: accounts[0]});
-        })
+        });
 
-        it('returns a receipt', async function(){
-            var receipt = await instance
+        it('returns a receipt', async function() {
+            const receipt = await instance
                 .methods
                 .setValue('1')
                 .send({from: accounts[0]});
@@ -35,7 +34,7 @@ describe('method.send [ @E2E ]', function() {
             assert(web3.utils.isHexStrict(receipt.transactionHash));
         });
 
-        it('errors on OOG', async function(){
+        it('errors on OOG', async function() {
             try {
                 await instance
                     .methods
@@ -44,12 +43,12 @@ describe('method.send [ @E2E ]', function() {
 
                 assert.fail();
 
-            } catch(err){
-                assert(err.message.includes('gas'))
+            } catch (err) {
+                assert(err.message.includes('gas'));
             }
         });
 
-        it('errors on revert', async function(){
+        it('errors on revert', async function() {
             try {
                 await instance
                     .methods
@@ -58,10 +57,10 @@ describe('method.send [ @E2E ]', function() {
 
                 assert.fail();
 
-            } catch(err){
-                var receipt = utils.extractReceipt(err.message);
+            } catch (err) {
+                const receipt = utils.extractReceipt(err.message);
 
-                assert(err.message.includes('revert'))
+                assert(err.message.includes('revert'));
                 assert(receipt.status === false);
             }
         });
@@ -71,18 +70,18 @@ describe('method.send [ @E2E ]', function() {
         // Websockets extremely erratic for geth instamine...
         if (process.env.GETH_INSTAMINE) return;
 
-        before(async function(){
-            var port = utils.getWebsocketPort();
+        before(async function() {
+            const port = utils.getWebsocketPort();
 
             web3 = new Web3('ws://localhost:' + port);
             accounts = await web3.eth.getAccounts();
 
             basic = new web3.eth.Contract(Basic.abi, basicOptions);
             instance = await basic.deploy().send({from: accounts[0]});
-        })
+        });
 
-        it('returns a receipt', async function(){
-            var receipt = await instance
+        it('returns a receipt', async function() {
+            const receipt = await instance
                 .methods
                 .setValue('1')
                 .send({from: accounts[0]});
@@ -91,7 +90,7 @@ describe('method.send [ @E2E ]', function() {
             assert(web3.utils.isHexStrict(receipt.transactionHash));
         });
 
-        it('errors on OOG', async function(){
+        it('errors on OOG', async function() {
             try {
                 await instance
                     .methods
@@ -100,12 +99,12 @@ describe('method.send [ @E2E ]', function() {
 
                 assert.fail();
 
-            } catch(err){
-                assert(err.message.includes('gas'))
+            } catch (err) {
+                assert(err.message.includes('gas'));
             }
         });
 
-        it('errors on revert', async function(){
+        it('errors on revert', async function() {
             try {
                 await instance
                     .methods
@@ -114,70 +113,69 @@ describe('method.send [ @E2E ]', function() {
 
                 assert.fail();
 
-            } catch(err){
-                var receipt = utils.extractReceipt(err.message);
+            } catch (err) {
+                const receipt = utils.extractReceipt(err.message);
 
-                assert(err.message.includes('revert'))
+                assert(err.message.includes('revert'));
                 assert(receipt.status === false);
             }
         });
 
-        it('fires the transactionHash event', function(done){
+        it('fires the transactionHash event', function(done) {
             instance
                 .methods
                 .setValue('1')
                 .send({from: accounts[0]})
                 .on('transactionHash', hash => {
-                    assert(web3.utils.isHex(hash))
+                    assert(web3.utils.isHex(hash));
                     done();
-                })
+                });
         });
 
-        it('fires the receipt event', function(done){
+        it('fires the receipt event', function(done) {
             instance
                 .methods
                 .setValue('1')
                 .send({from: accounts[0]})
                 .on('receipt', receipt => {
-                    assert(receipt.status === true)
+                    assert(receipt.status === true);
                     done();
-                })
-        })
+                });
+        });
 
-        it('fires the confirmation handler', function(){
-            return new Promise(async (resolve, reject) => {
-
-                var startBlock = await web3.eth.getBlockNumber();
+        it('fires the confirmation handler', function() {
+            return new Promise(async function(resolve) {
+                const startBlock = await web3.eth.getBlockNumber();
 
                 await instance
                     .methods
                     .setValue('1')
                     .send({from: accounts[0]})
-                    .on('confirmation', async (number, receipt) => {
+                    .on('confirmation', async function(number) {
                         if (number === 1) { // Confirmation numbers are zero indexed
-                            var endBlock = await web3.eth.getBlockNumber();
+                            const endBlock = await web3.eth.getBlockNumber();
                             assert(endBlock >= (startBlock + 2));
                             resolve();
                         }
-                    })
+                    });
 
                 // Necessary for instamine, should not interfere with automine.
                 await utils.mine(web3, accounts[0]);
             });
         });
 
-        it('fires the error handler on OOG', function(done){
+        it('fires the error handler on OOG', function(done) {
             instance
                 .methods
                 .setValue('1')
                 .send({from: accounts[0], gas: 100})
                 .on('error', err => {
-                    assert(err.message.includes('gas'))
+                    assert(err.message.includes('gas'));
                     done();
-                })
-        })
+                });
+        });
 
-        it('fires the error handler on revert', function(done){
+        it('fires the error handler on revert', function(done) {
             instance
                 .methods
                 .reverts()
@@ -185,8 +183,8 @@ describe('method.send [ @E2E ]', function() {
                 .on('error', err => {
                     assert(err.message.includes('revert'));
                     done();
-                })
-        })
+                });
+        });
     });
 });
 

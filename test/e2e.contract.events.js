@@ -1,34 +1,34 @@
-var assert = require('assert');
-var Basic = require('./sources/Basic');
-var utils = require('./helpers/test.utils');
-var Web3 = utils.getWeb3();
+const assert = require('assert');
+const Basic = require('./sources/Basic');
+const utils = require('./helpers/test.utils');
+const Web3 = utils.getWeb3();
 
 describe('contract.events [ @E2E ]', function() {
     // `getPastEvents` not working with Geth instamine over websockets.
     if (process.env.GETH_INSTAMINE) return;
 
-    var web3;
-    var accounts;
-    var basic;
-    var instance;
+    let web3;
+    let accounts;
+    let basic;
+    let instance;
 
-    var basicOptions = {
+    let basicOptions = {
         data: Basic.bytecode,
         gasPrice: '1',
         gas: 4000000
     };
 
-    before(async function(){
-        var port = utils.getWebsocketPort();
+    before(async function() {
+        const port = utils.getWebsocketPort();
 
         web3 = new Web3('ws://localhost:' + port);
         accounts = await web3.eth.getAccounts();
 
         basic = new web3.eth.Contract(Basic.abi, basicOptions);
         instance = await basic.deploy().send({from: accounts[0]});
-    })
+    });
 
-    it('contract.getPastEvents', async function(){
+    it('contract.getPastEvents', async function() {
         await instance
             .methods
             .firesEvent(accounts[0], 1)
@@ -50,8 +50,8 @@ describe('contract.events [ @E2E ]', function() {
         assert.notEqual(events[0].id, events[1].id);
     });
 
-    it('contract.events.<eventName>', function(){
-        return new Promise(async resolve => {
+    it('contract.events.<eventName>', function() {
+        return new Promise(async function(resolve) {
             instance
                 .events
                 .BasicEvent({
