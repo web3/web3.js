@@ -80,6 +80,7 @@
     "devDependencies": {
         "@babel/core": "^7.6.4",
         "@babel/plugin-transform-runtime": "^7.6.2",
+        "@babel/polyfill": "^7.6.0",
         "@babel/preset-env": "^7.6.3",
         "@babel/runtime": "^7.6.3",
         "@types/bn.js": "^4.11.5",
@@ -87,7 +88,6 @@
         "@types/underscore": "^1.9.3",
         "bluebird": "3.3.1",
         "bn.js": "^4.11.6",
-        "browserify": "^16.5.0",
         "chai": "^4.2.0",
         "coveralls": "^3.0.7",
         "crypto-js": "^3.1.9-1",
