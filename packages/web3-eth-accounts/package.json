@@ -14,6 +14,7 @@
     "main": "dist/web3-eth-accounts.cjs.js",
     "module": "dist/web3-eth-accounts.esm.js",
     "unpkg": "dist/web3-eth-accounts.min.js",
+    "jsdelivr": "dist/web3-eth-accounts.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "eth-lib": "^0.2.8",

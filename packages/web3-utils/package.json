@@ -14,6 +14,7 @@
     "main": "dist/web3-utils.cjs.js",
     "module": "dist/web3-utils.esm.js",
     "unpkg": "dist/web3-utils.min.js",
+    "jsdelivr": "dist/web3-utils.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "bn.js": "^4.11.8",

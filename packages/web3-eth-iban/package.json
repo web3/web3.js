@@ -14,6 +14,7 @@
     "main": "dist/web3-eth-iban.cjs.js",
     "module": "dist/web3-eth-iban.esm.js",
     "unpkg": "dist/web3-eth-iban.min.js",
+    "jsdelivr": "dist/web3-eth-iban.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "bn.js": "^4.11.8",

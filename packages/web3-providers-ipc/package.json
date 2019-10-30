@@ -14,6 +14,7 @@
     "main": "dist/web3-providers-ipc.cjs.js",
     "module": "dist/web3-providers-ipc.esm.js",
     "unpkg": "dist/web3-providers-ipc.min.js",
+    "jsdelivr": "dist/web3-providers-ipc.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "oboe": "2.1.4",

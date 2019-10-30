@@ -14,6 +14,7 @@
     "main": "dist/web3-core-method.cjs.js",
     "module": "dist/web3-core-method.esm.js",
     "unpkg": "dist/web3-core-method.min.js",
+    "jsdelivr": "dist/web3-core-method.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "underscore": "1.9.1",

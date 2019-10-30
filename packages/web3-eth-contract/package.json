@@ -10,6 +10,7 @@
     "main": "dist/web3-eth-contract.cjs.js",
     "module": "dist/web3-eth-contract.esm.js",
     "unpkg": "dist/web3-eth-contract.min.js",
+    "jsdelivr": "dist/web3-eth-contract.min.js",
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext"
     },

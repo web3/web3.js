@@ -14,6 +14,7 @@
     "main": "dist/web3-eth-ens.cjs.js",
     "module": "dist/web3-eth-ens.esm.js",
     "unpkg": "dist/web3-eth-ens.min.js",
+    "jsdelivr": "dist/web3-eth-ens.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "eth-ens-namehash": "^2.0.8",

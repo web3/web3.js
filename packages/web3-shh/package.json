@@ -13,7 +13,7 @@
     },
     "main": "dist/web3-shh.cjs.js",
     "module": "dist/web3-shh.esm.js",
-    "unpkg": "dist/web3-shh.min.js",
+    "jsdelivr": "dist/web3-shh.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "web3-core": "1.2.2",

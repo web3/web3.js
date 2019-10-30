@@ -10,6 +10,7 @@
     "main": "dist/web3-core-requestmanager.cjs.js",
     "module": "dist/web3-core-requestmanager.esm.js",
     "unpkg": "dist/web3-core-requestmanager.min.js",
+    "jsdelivr": "dist/web3-core-requestmanager.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
         "underscore": "1.9.1",

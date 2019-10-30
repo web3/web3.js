@@ -10,6 +10,7 @@
     "main": "dist/web3.cjs.js",
     "module": "dist/web3.esm.js",
     "unpkg": "dist/web3.min.js",
+    "jsdelivr": "dist/web3.min.js",
     "bugs": {
         "url": "https://github.com/ethereum/web3.js/issues"
     },
