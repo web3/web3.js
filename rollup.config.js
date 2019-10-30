@@ -27,7 +27,7 @@ const config = [
                 runtimeHelpers: true,
                 presets: [
                     [
-                        '@babel/env',
+                        '@babel/preset-env',
                         {
                             modules: false,
                             targets: {
@@ -37,7 +37,7 @@ const config = [
                     ]
                 ],
                 plugins: [
-                    ['@babel/plugin-transform-runtime', {useESModules: true, absoluteRuntime: true}]
+                    ['@babel/plugin-transform-runtime', {useESModules: true}]
                 ]
             }),
             json(),
@@ -62,7 +62,7 @@ const config = [
                 runtimeHelpers: true,
                 presets: [
                     [
-                        '@babel/env',
+                        '@babel/preset-env',
                         {
                             modules: false,
                             targets: {
@@ -72,7 +72,7 @@ const config = [
                     ]
                 ],
                 plugins: [
-                    ['@babel/plugin-transform-runtime', {useESModules: true, absoluteRuntime: true}]
+                    ['@babel/plugin-transform-runtime', {useESModules: true}]
                 ]
             }),
             json(),
