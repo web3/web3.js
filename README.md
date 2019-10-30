@@ -44,7 +44,7 @@ There are three ways to use this package in the browser:
 - Use the ``unpkg`` or ``jsdelivr`` CDN.
 - Install it with ``npm`` and load the minified file from the ``node_modules`` folder.
 
-If you use the CDN or minified version from the ``node_modules`` folder will a ``window.Web3`` property exists in your browser.
+If you use the CDN or minified version from the ``node_modules`` folder, a ``Web3`` property will be exposed on the ``window`` object in your browser.
 
 ## Usage
 
