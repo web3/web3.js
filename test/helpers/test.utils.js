@@ -99,7 +99,7 @@ const getWebsocketPort = function() {
         return 8545;
     }
 
-    return 8545;
+    return 8546;
 };
 
 module.exports = {
