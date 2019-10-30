@@ -13,5 +13,11 @@ export default rollupConfig(
         'web3-shh': 'Web3Shh',
         'web3-utils': 'Web3Utils',
     },
-    ['bn.js', 'elliptic', 'js-sha3', 'underscore', 'asn1.js']
+    [
+        'bn.js',
+        'elliptic',
+        'js-sha3',
+        'underscore',
+        'asn1.js'
+    ]
 );

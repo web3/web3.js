@@ -8,5 +8,10 @@ export default rollupConfig(
         'web3-core-helpers': 'Web3CoreHelpers',
         'underscore': '_'
     },
-    ['bn.js', 'elliptic', 'js-sha3', 'underscore']
+    [
+        'bn.js',
+        'elliptic',
+        'js-sha3',
+        'underscore'
+    ]
 );

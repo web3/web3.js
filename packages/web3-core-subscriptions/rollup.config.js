@@ -9,6 +9,11 @@ export default rollupConfig(
         'underscore': '_',
         'eventemitter3': 'EventEmitter'
     },
-    ['bn.js', 'elliptic', 'js-sha3', 'underscore'],
+    [
+        'bn.js',
+        'elliptic',
+        'js-sha3',
+        'underscore'
+    ],
     true
 );

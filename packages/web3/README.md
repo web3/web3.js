@@ -11,6 +11,15 @@ Please read the main [readme](https://github.com/ethereum/web3.js) and [document
 ```bash
 npm install web3
 ```
+### Browser
+
+There are three ways to use this package in the browser:
+
+- Install it with ``npm`` and bundle it with the preferred bundler.
+- Use the ``unpkg`` or ``jsdelivr`` CDN.
+- Install it with ``npm`` and load the minified file from the ``node_modules`` folder.
+
+This injected object is called `Web3`.
 
 ## Types
 

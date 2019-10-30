@@ -14,5 +14,10 @@ export default rollupConfig(
         'underscore': '_',
         'eth-ens-namehash': 'namehash'
     },
-    ['bn.js', 'elliptic', 'js-sha3', 'underscore']
+    [
+        'bn.js',
+        'elliptic',
+        'js-sha3',
+        'underscore'
+    ]
 );

@@ -11,6 +11,11 @@ export default rollupConfig(
         'web3-providers-ws': 'Web3WsProvider',
         'underscore': '_'
     },
-    ['bn.js', 'elliptic', 'js-sha3', 'underscore'],
+    [
+        'bn.js',
+        'elliptic',
+        'js-sha3',
+        'underscore'
+    ],
     true
 );

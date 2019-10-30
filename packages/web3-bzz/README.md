@@ -13,16 +13,16 @@ Please read the [documentation][docs] for more.
 npm install web3-bzz
 ```
 
-### In the Browser
 
-Build running the following in the [web3.js][repo] repository:
+### Browser
 
-```bash
-npm run-script build-all
-```
+There are three ways to use this package in the browser:
 
-Then include `dist/web3-bzz.js` in your html file.
-This will expose the `Web3Personal` object on the window object.
+- Install it with ``npm`` and bundle it with the preferred bundler.
+- Use the ``unpkg`` or ``jsdelivr`` CDN.
+- Install it with ``npm`` and load the minified file from the ``node_modules`` folder.
+
+This injected object is called `Web3Bzz`.
 
 ## Usage
 

@@ -10,5 +10,10 @@ export default rollupConfig(
         'web3-core-subscriptions': 'Web3CoreSubscriptions',
         'web3-net': 'Web3Net'
     },
-    ['bn.js', 'elliptic', 'js-sha3', 'underscore']
+    [
+        'bn.js',
+        'elliptic',
+        'js-sha3',
+        'underscore'
+    ]
 );

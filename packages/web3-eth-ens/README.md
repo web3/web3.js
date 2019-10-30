@@ -13,22 +13,21 @@ Please read the [documentation][docs] for more.
 npm install web3-eth-ens
 ```
 
-### In the Browser
+### Browser
 
-Build running the following in the [web3.js][repo] repository:
+There are three ways to use this package in the browser:
 
-```bash
-npm run-script build-all
-```
+- Install it with ``npm`` and bundle it with the preferred bundler.
+- Use the ``unpkg`` or ``jsdelivr`` CDN.
+- Install it with ``npm`` and load the minified file from the ``node_modules`` folder.
 
-Then include `dist/web3-eth-ens.js` and `dist/web3-eth.js` in your html file.
-This will expose the `EthEns` object on the window object.
+This injected object is called `Web3EthEns`.
 
 ## Usage
 
 ```js
 var eth = new Web3Eth(web3.currentProvider);
-var ens = new EthEns(eth);
+var ens = new Web3EthEns(eth);
 
 ens.getAddress('ethereum.eth').then(function(result) {
     console.log(result);

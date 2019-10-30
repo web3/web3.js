@@ -36,17 +36,15 @@ _Note_: works only in the Browser for now. (PR welcome).
 meteor add ethereum:web3
 ```
 
-### In the Browser
+### Browser
 
-Use the prebuild `dist/web3.min.js`, or
-build using the [web3.js][repo] repository:
+There are three ways to use this package in the browser:
 
-```bash
-npm run-script build
-```
+- Install it with ``npm`` and bundle it with the preferred bundler (rollup, webpack, or parcel).
+- Use the ``unpkg`` or ``jsdelivr`` CDN.
+- Install it with ``npm`` and load the minified file from the ``node_modules`` folder.
 
-Then include `dist/web3.js` in your html file.
-This will expose `Web3` on the window object.
+If you use the CDN or minified version from the ``node_modules`` folder will a ``window.Web3`` property exists in your browser.
 
 ## Usage
 
