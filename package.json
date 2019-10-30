@@ -14,7 +14,7 @@
     },
     "scripts": {
         "postinstall": "lerna bootstrap",
-        "build:web3": "lerna exec --scope web3 -- MINIFIED_BUNDLES=false rollup -c",
+        "build:web3": "lerna exec --scope web3 -- MINIFIED_BUNDLES=false CJS=true ESM=true rollup -c",
         "build:web3:minified": "npm run build:all; lerna exec --scope web3 -- MINIFIED_BUNDLES=true rollup -c",
         "build:all:minified": "lerna exec -- MINIFIED_BUNDLES=true rollup -c",
         "build:all": "lerna exec -- CJS=true ESM=true rollup -c",

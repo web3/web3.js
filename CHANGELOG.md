@@ -46,8 +46,6 @@ Released with 1.0.0-beta.37 code base.
 - ``requestOptions`` added to ``WebsocketProvider`` (#2979)
 - Node >= v8.0.0 support (#2938)
 
-## [Unreleased]
-
 ## [1.2.2]
 
 ### Added
@@ -82,3 +80,15 @@ Released with 1.0.0-beta.37 code base.
 - Fix hexToNumber and hexToNumberString prefix validation (#3086)
 - The receipt will now returned on a EVM error (this got removed on beta.18) (#3129)
 - Fixes transaction confirmations with the HttpProvider (#3140)
+
+## [Unreleased]
+
+## [1.2.3]
+
+### Added
+
+- New build pipeline (#3160)
+
+## Fixed
+
+- ``regeneratorRuntime`` error fixed (#3155)
