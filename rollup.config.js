@@ -122,6 +122,8 @@ const config = [
  * @returns {Array}
  */
 export default (name, outputFileName, globals, dedupe, namedExports) => {
+    var mappedConfig = [];
+
     // CJS
     if (process.env.CJS === 'true') {
         config[0].output[0].file = 'dist/' + outputFileName + '.cjs.js';
@@ -129,15 +131,15 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
         if (namedExports) {
             config[0].output[0].exports = 'named';
         }
-    } else {
-        delete config[0];
+
+        mappedConfig.push(config[0]);
     }
 
     // ESM
     if (process.env.ESM === 'true') {
         config[1].output[0].file = 'dist/' + outputFileName + '.esm.js';
-    } else {
-        delete config[1];
+
+        mappedConfig.push(config[1]);
     }
 
     // Minified UMD
@@ -157,9 +159,9 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
                 dedupe: dedupe
             })
         ].concat(config[2].plugins);
-    } else {
-        delete config[2];
+
+        mappedConfig.push(config[2]);
     }
 
-    return config;
+    return mappedConfig;
 };
