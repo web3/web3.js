@@ -95,7 +95,11 @@ const getWeb3 = function() {
  * @returns {number}
  */
 const getWebsocketPort = function() {
-    return (process.env.GANACHE || global.window) ? 8545 : 8546;
+    if (typeof window !== 'undefined' || process.env.GANACHE) {
+        return 8545;
+    }
+
+    return 8545;
 };
 
 module.exports = {
