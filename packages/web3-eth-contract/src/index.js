@@ -56,7 +56,7 @@ var Contract = function Contract(jsonInterface, address, options) {
         args = Array.prototype.slice.call(arguments);
 
     if(!(this instanceof Contract)) {
-        throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
+        throw new Error('Please use the "new" keyword to instantiate a web3.eth.Contract() object!');
     }
 
     // sets _requestmanager
@@ -64,13 +64,9 @@ var Contract = function Contract(jsonInterface, address, options) {
 
     this.clearSubscriptions = this._requestManager.clearSubscriptions;
 
-
-
     if(!jsonInterface || !(Array.isArray(jsonInterface))) {
         throw new Error('You must provide the json interface of the contract when instantiating a contract object.');
     }
-
-
 
     // create the options object
     this.options = {};
@@ -617,18 +613,20 @@ Contract.prototype.once = function(event, options, callback) {
  * Adds event listeners and creates a subscription.
  *
  * @method _on
+ *
  * @param {String} event
  * @param {Object} options
  * @param {Function} callback
+ *
  * @return {Object} the event subscription
  */
-Contract.prototype._on = function(){
+Contract.prototype._on = function(event, options, callback){
     var subOptions = this._generateEventOptions.apply(this, arguments);
 
 
     // prevent the event "newListener" and "removeListener" from being overwritten
-    this._checkListener('newListener', subOptions.event.name, subOptions.callback);
-    this._checkListener('removeListener', subOptions.event.name, subOptions.callback);
+    this._checkListener('newListener', subOptions.event.name);
+    this._checkListener('removeListener', subOptions.event.name);
 
     // TODO check if listener already exists? and reuse subscription if options are the same.
 
@@ -654,6 +652,7 @@ Contract.prototype._on = function(){
         type: 'eth',
         requestManager: this._requestManager
     });
+
     subscription.subscribe('logs', subOptions.params, subOptions.callback || function () {});
 
     return subscription;

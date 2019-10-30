@@ -68,15 +68,26 @@ var Eth = function Eth() {
     // sets _requestmanager
     core.packageInit(this, arguments);
 
+    // overwrite package setRequestManager
+    var setRequestManager = this.setRequestManager;
+    this.setRequestManager = function (manager) {
+        setRequestManager(manager);
+
+        _this.net.setRequestManager(manager);
+        _this.personal.setRequestManager(manager);
+        _this.accounts.setRequestManager(manager);
+        _this.Contract._requestManager = _this._requestManager;
+        _this.Contract.currentProvider = _this._provider;
+
+        return true;
+    };
+
     // overwrite setProvider
     var setProvider = this.setProvider;
     this.setProvider = function () {
         setProvider.apply(_this, arguments);
-        _this.net.setProvider.apply(_this, arguments);
-        _this.personal.setProvider.apply(_this, arguments);
-        _this.accounts.setProvider.apply(_this, arguments);
-        _this.Contract._requestManager = _this._requestManager;
-        _this.Contract.accounts = _this.accounts;
+
+        _this.setRequestManager(_this._requestManager);
     };
 
 

@@ -225,7 +225,9 @@ var getStandAloneContractInstance = function(abi, address, provider, options) {
  */
 var getEthContractInstance = function(abi, address, provider, options) {
     var eth = new Eth(provider);
-    return new eth.Contract(abi, address, options);
+    const contract = new eth.Contract(abi, address, options);
+
+    return contract;
 };
 
 /**
@@ -695,9 +697,15 @@ var runTests = function(contractFactory) {
             txObject.encodeABI = contract._encodeMethodABI.bind(txObject);
             txObject.arguments = [address];
 
-            var deploy = contract._executeMethod.call(txObject, 'call', {from: address2}, function(err, result) {
-                assert.equal(result, '10');
-            })
+            contract._executeMethod.call(
+                txObject,
+                'call',
+                {
+                    from: address2
+                },
+                function(err, result) {
+                    assert.equal(result, '10');
+                })
                 .then(function(result) {
                     assert.equal(result, '10');
                     done();
@@ -753,14 +761,20 @@ var runTests = function(contractFactory) {
 
             var contract = contractFactory(abi, address, provider);
 
-            var event = contract.events.Changed({filter: {from: address}}, function(err, result, sub) {
-                assert.equal(result.returnValues.from, address);
-                assert.equal(result.returnValues.amount, 1);
-                assert.equal(result.returnValues.t1, 1);
-                assert.equal(result.returnValues.t2, 8);
+            contract.events.Changed(
+                {
+                    filter: {
+                        from: address
+                    }
+                },
+                function(err, result, sub) {
+                    assert.equal(result.returnValues.from, address);
+                    assert.equal(result.returnValues.amount, 1);
+                    assert.equal(result.returnValues.t1, 1);
+                    assert.equal(result.returnValues.t2, 8);
 
-                sub.unsubscribe();
-            });
+                    sub.unsubscribe();
+                });
 
         });
 
