@@ -92,3 +92,4 @@ Released with 1.0.0-beta.37 code base.
 ## Fixed
 
 - ``regeneratorRuntime`` error fixed (#3155)
+- Fix TS types for eth.subscribe syncing, newBlockHeaders, pendingTransactions (#3159)
