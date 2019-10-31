@@ -16,13 +16,32 @@ git clone https://github.com/trufflesuite/truffle.git
 cd truffle
 yarn bootstrap
 
-# @truffle/contract
-cd packages/contract
+yarn config set registry http://localhost:4873
 
-# Uninstall / re-install web3
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+echo "Updating @truffle/interface-adapter"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+
+# @truffle/interface-adapter
+cd packages/interface-adapter
 yarn remove web3
 
-npm install web3@e2e \
+yarn add web3@e2e \
+  --registry http://localhost:4873 \
+  --force
+
+# @truffle/contract
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>>"
+echo "Updating @truffle/contract"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>>"
+
+cd ../contract
+yarn remove web3
+yarn remove web3-core-promievent
+yarn remove web3-eth-abi
+yarn remove web3-utils
+
+yarn add web3@e2e \
   --registry http://localhost:4873 \
   --force
 

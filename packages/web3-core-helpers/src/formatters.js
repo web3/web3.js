@@ -219,6 +219,7 @@ var outputTransactionReceiptFormatter = function (receipt){
     if(typeof receipt.status !== 'undefined' && receipt.status !== null) {
         receipt.status = Boolean(parseInt(receipt.status));
     }
+    console.log('using new web3 at to format transaction receipt')
 
     return receipt;
 };
