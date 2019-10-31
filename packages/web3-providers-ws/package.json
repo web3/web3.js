@@ -15,7 +15,7 @@
   "dependencies": {
     "underscore": "1.9.1",
     "web3-core-helpers": "1.2.2",
-    "websocket": "@web3-js/WebSocket-Node"
+    "@web3-js/WebSocket-Node": "1.0.29"
   },
   "devDependencies": {
     "definitelytyped-header-parser": "^1.0.1",
