@@ -34,11 +34,30 @@ npx npm-auth-to-token \
   -e test@test.com \
   -r http://localhost:4873
 
-# `npm version patch`
-npx lerna exec -- npm version patch
+# Prep branch for Lerna's git-checks
+BRANCH=$TRAVIS_PULL_REQUEST_BRANCH
+if [ -z "$BRANCH" ]; then
 
-# `npm publish`
-npx lerna exec --concurrency 1 -- npm publish \
-  --tag e2e \
+  BRANCH=$TRAVIS_BRANCH
+
+fi
+
+git checkout $BRANCH --
+
+# Lerna version
+npx lerna version patch \
+  --force-publish=* \
+  --no-git-tag-version \
+  --no-push \
+  --allow-branch $BRANCH \
+  --yes
+
+# Commit changes because lerna checks git before
+git commit -a -m 'virtual-version-bump'
+
+# Lerna publish to e2e tag
+npx lerna publish from-package \
+  --dist-tag e2e \
   --registry http://localhost:4873 \
+  --yes
 
