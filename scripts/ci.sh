@@ -9,7 +9,7 @@ set -o errexit
 
 if [ "$TEST" = "unit" ]; then
 
-  npm run build:all:cjs;
+  npm run build:all:cjs
   npm run test:unit
 
 elif [ "$TEST" = "build_and_lint" ]; then
@@ -20,7 +20,7 @@ elif [ "$TEST" = "build_and_lint" ]; then
 
 elif [ "$TEST" = "unit_and_e2e_clients" ]; then
 
-  npm run build:all:cjs;
+  npm run build:all:cjs
   npm run test:e2e:ganache
   npm run test:e2e:geth:insta
   npm run test:e2e:geth:auto
