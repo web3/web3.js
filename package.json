@@ -26,7 +26,7 @@
         "bootstrap": "lerna bootstrap",
         "docs": "cd docs; make html;",
         "lint": "jshint *.js packages",
-        "test": "npm run build:all:cjs; mocha --grep E2E --invert",
+        "test": "mocha --grep E2E --invert",
         "dtslint": "lerna run dtslint",
         "geth": "geth-dev-assistant --accounts 5 --tag stable",
         "test:unit": "nyc npm run test",
