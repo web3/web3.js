@@ -13,6 +13,7 @@
     "jsdelivr": "dist/web3-core-promievent.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
-        "eventemitter3": "^4.0.0"
+        "eventemitter3": "^4.0.0",
+        "any-promise": "^1.3.0"
     }
 }

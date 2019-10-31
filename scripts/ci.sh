@@ -9,6 +9,7 @@ set -o errexit
 
 if [ "$TEST" = "unit" ]; then
 
+  npm run build:all:cjs;
   npm run test:unit
 
 elif [ "$TEST" = "build_and_lint" ]; then
