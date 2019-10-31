@@ -35,6 +35,7 @@ npx npm-auth-to-token \
   -r http://localhost:4873
 
 # Prep branch for Lerna's git-checks
+git commit -a -m 'install'
 git checkout $TRAVIS_BRANCH --
 
 # Lerna version
