@@ -35,21 +35,14 @@ npx npm-auth-to-token \
   -r http://localhost:4873
 
 # Prep branch for Lerna's git-checks
-BRANCH=$TRAVIS_PULL_REQUEST_BRANCH
-if [ -z "$BRANCH" ]; then
-
-  BRANCH=$TRAVIS_BRANCH
-
-fi
-
-git checkout $BRANCH --
+git checkout $TRAVIS_BRANCH --
 
 # Lerna version
 npx lerna version patch \
   --force-publish=* \
   --no-git-tag-version \
   --no-push \
-  --allow-branch $BRANCH \
+  --allow-branch $TRAVIS_BRANCH \
   --yes
 
 # Commit changes because lerna checks git before
