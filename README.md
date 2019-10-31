@@ -113,27 +113,77 @@ sudo apt-get install nodejs
 sudo apt-get install npm
 ```
 
-### Building (gulp)
+### Build Pipeline
 
-Build only the web3.js package
+**Scripts**
 
-```bash
-npm run-script build
+- ``build:all`` - Creates CJS and ESM bundles for all packages
+- ``build:all:cjs`` - Creates CJS bundles for all packages
+- ``build:all:esm`` - Creates ESM bundles for all packages
+- ``build:web3`` - Creates just the CJS and ESM bundle of the web3 umbrella package
+- ``build:web3:minified`` - Creates all CJS and ESM bundles of all packages and creates a web3.min after
+
+**Generated Bundles**
+
+- ``main`` 
+  + Will be used in nodejs on a normal ``require(...)`` and does have the CJS module format.
+- ``module``
+  + Will be used for ESM-ready tools and does have the ES format.
+- ``unpkg`` 
+  + Will be used from the ``unpkg`` CDN and does contain the minified UMD formatted bundle.
+- ``jsdelivr``
+  + Will be used from the ``jsdelivr`` CDN and does contain the minified UMD formatted bundle.
+  
+**Configuration**
+
+The base configuration is located in the root folder of this repository and does return the configuration function which will be used in each package of this project. 
+
+Properties of the [config function](https://github.com/ethereum/web3.js/tree/1.x/rollup.config.js): 
+
+- ``name: string``
+  + Will be used for named exports
+- ``outputFileName: string``
+  + Name of the output file
+- ``globals: {[key: string]: string}``
+  + pre-defined names for the globally available packages (used in CJS and ESM)
+- ``dedupe: string[]``
+  + Will be used to remove duplicated modules in the minified UMD bundles.
+- ``namedExports: boolean``
+  + Simple config to activate named exports for the bundles of a package
+  
+Example Usage:
+``` javascript
+import pkg from './package.json';
+import rollupConfig from '../../rollup.config';
+
+export default rollupConfig(
+    'Web3Net',
+    pkg.name,
+    {
+        'web3-core': 'Web3Core',
+        'web3-core-method': 'Web3CoreMethod',
+        'web3-utils': 'Web3Utils'
+    },
+    ['bn.js', 'elliptic', 'js-sha3', 'underscore']
+);
 ```
 
-Or build all sub packages as well:
 
-```bash
-npm run-script build-all
-```
+### Testing 
 
-This will put all the browser build files into the `dist` folder.
+**Scripts**
 
-### Testing (mocha)
+- ``test:unit`` - Runs just the unit tests
+- ``test:e2e:ganache`` - Runs the e2e tests with ganache
+- ``test:e2e:geth:auto`` - Runs the e2e tests with geth automine
+- ``test:e2e:geth:insta`` - Runs the e2e tests with geth instaseal
+- ``test:e2e:clients`` - Runs the e2e tests with geth and ganache
+- ``test:e2e:chrome`` - Runs the e2e tests in Chrome
+- ``test:e2e:firefox`` - Runs the e2e tests in Firefox
+- ``test:e2e:browsers`` - Runs the e2e tests in Chrome and Firefox
+- ``test:e2e:publish`` - Creates a virtual npm registry for running third party tests
+- ``test:e2e:truffle`` - Runs the truffle tests with the current working state of web3
 
-```bash
-npm test
-```
 
 ### Contributing
 
