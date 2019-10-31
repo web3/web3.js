@@ -1,6 +1,8 @@
 services:
     - xvfb
 language: node_js
+git:
+  depth: false
 matrix:
   fast_finish: true
   include:
