@@ -37,7 +37,8 @@ const config = [
                     ]
                 ],
                 plugins: [
-                    ['@babel/plugin-transform-runtime', {useESModules: true}]
+                    ['@babel/plugin-transform-runtime', {useESModules: true}],
+                    'istanbul'
                 ]
             }),
             json(),
