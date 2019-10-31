@@ -1,3 +1,5 @@
 {
-    "extends": "@istanbuljs/nyc-config-babel"
+    "extends": "@istanbuljs/nyc-config-babel",
+    "check-coverage": true,
+    "reporter": ["text", "html", "lcov"]
 }
