@@ -218,7 +218,7 @@ describe('transaction and message signing [ @E2E ]', function() {
         }
     });
 
-    it('transactions sent with wallet error correctly (with receipt)', async function(){
+    it('transactions sent with wallet throws error correctly (with receipt)', async function(){
         const data = instance
             .methods
             .reverts()
