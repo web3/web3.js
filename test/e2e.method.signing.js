@@ -12,7 +12,7 @@ describe('transaction and message signing [ @E2E ]', function() {
     let basic;
     let instance;
 
-    var basicOptions = {
+    const basicOptions = {
         data: Basic.bytecode,
         gasPrice: '1',
         gas: 4000000
@@ -219,12 +219,12 @@ describe('transaction and message signing [ @E2E ]', function() {
     });
 
     it('transactions sent with wallet error correctly (with receipt)', async function(){
-        var data = instance
+        const data = instance
             .methods
             .reverts()
             .encodeABI();
 
-        var tx = {
+        const tx = {
             from: wallet[0],
             to: instance.options.address,
             data: data,
@@ -235,7 +235,6 @@ describe('transaction and message signing [ @E2E ]', function() {
         try {
             await web3.eth.sendTransaction(tx);
             assert.fail();
-
         } catch(err){
             var receipt = utils.extractReceipt(err.message);
 
@@ -245,12 +244,12 @@ describe('transaction and message signing [ @E2E ]', function() {
     });
 
     it('transactions sent with wallet error correctly (OOG)', function(done){
-        var data = instance
+        const data = instance
             .methods
             .reverts()
             .encodeABI();
 
-        var tx = {
+        const tx = {
             from: wallet[0],
             to: instance.options.address,
             data: data,
