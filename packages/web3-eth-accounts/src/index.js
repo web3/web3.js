@@ -30,7 +30,7 @@ var Hash = require('eth-lib').hash;
 var RLP = require('eth-lib').RLP;// jshint ignore:line
 var Bytes = require('eth-lib').bytes;// jshint ignore:line
 var cryp = require('crypto');
-var scrypt = require('scrypt-shim');
+var scrypt = require('@web3-js/scrypt-shim');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
@@ -128,7 +128,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         error = false,
         transactionOptions = {},
         result,
-        hasTxSigningOptions = !!((tx.chain && tx.hardfork) || tx.common);
+        hasTxSigningOptions = !!(tx && ((tx.chain && tx.hardfork) || tx.common));
 
     callback = callback || function() {
     };

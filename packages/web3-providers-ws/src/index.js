@@ -24,7 +24,7 @@
 
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
-var Ws = require('websocket').w3cwebsocket;
+var Ws = require('@web3-js/websocket').w3cwebsocket;
 
 var isNode = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
 
