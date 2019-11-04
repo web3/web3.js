@@ -83,7 +83,7 @@ const getWeb3 = function() {
         return window.Web3;
     }
 
-    return require('web3');
+    return require('../../packages/web3');
 };
 
 /**
