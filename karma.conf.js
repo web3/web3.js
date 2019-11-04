@@ -34,6 +34,13 @@ module.exports = function(config) {
             'ChromeHeadless',
             'FirefoxHeadless'
         ],
+        browserify: {
+            configure: function(bundle) {
+                bundle.on('prebundle', function() {
+                    bundle.external('../../packages/web3');
+                });
+            }
+        },
         customLaunchers: {
             FirefoxHeadless: {
                 base: 'Firefox',
