@@ -23,8 +23,9 @@
 
 var _ = require('underscore');
 var utils = require('web3-utils');
-
+// Note: We require the AbiCoder from ethers directly from the node_modules to not bundle the whole ethers.js lib into web3.js
 var EthersAbi = require('../node_modules/ethers/utils/abi-coder').AbiCoder;
+
 var ethersAbiCoder = new EthersAbi(function (type, value) {
     if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) {
         return value.toString();

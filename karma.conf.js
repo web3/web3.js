@@ -12,7 +12,6 @@ module.exports = function(config) {
         ],
         files: [
             'packages/web3/dist/web3.min.js',
-            'node_modules/@babel/polyfill/dist/polyfill.js',
             'test/**/e2e*.js'
         ],
         preprocessors: {
