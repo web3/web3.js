@@ -35,6 +35,6 @@ GETH_INSTAMINE=true nyc _mocha -- \
 
 # Copy cov for this run to a temp file we can combine later and send to coveralls
 if [ "$CI" = true ]; then
-  cp coverage/coverage.raw.json .cov_geth_insta.json
+  cp coverage/coverage-final.json .cov_geth_insta.json
 fi
 
