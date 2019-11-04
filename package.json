@@ -29,7 +29,7 @@
         "test": "_mocha --grep E2E --invert",
         "dtslint": "lerna run dtslint",
         "geth": "geth-dev-assistant --accounts 5 --tag stable",
-        "test:unit": "nyc npm run test && nyc report",
+        "test:unit": "nyc npm run test",
         "test:e2e:ganache": "./scripts/e2e.ganache.sh",
         "test:e2e:geth:auto": "./scripts/e2e.geth.automine.sh",
         "test:e2e:geth:insta": "./scripts/e2e.geth.instamine.sh",
