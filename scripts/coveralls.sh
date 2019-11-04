@@ -5,13 +5,12 @@
 # ----------------------------------------------------------------------------------
 
 npx istanbul-combine-updated \
-  -d coverage \
+  -d ./coverage \
   -p summary  \
-  -r lcov \
-  -r html \
+  -r lcovonly \
   ./.cov_ganache.json \
   ./.cov_geth_insta.json \
   ./.cov_geth_auto.json \
   ./coverage/coverage-final.json
 
-  cat coverage/lcov.info | ./node_modules/.bin/coveralls
+cat ./coverage/lcov.info | ./node_modules/.bin/coveralls

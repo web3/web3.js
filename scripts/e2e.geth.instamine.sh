@@ -27,7 +27,7 @@ echo " "
 geth-dev-assistant --accounts 1 --tag 'stable'
 
 # Test
-GETH_INSTAMINE=true istanbul cover _mocha -- \
+GETH_INSTAMINE=true nyc _mocha -- \
   --reporter spec \
   --grep 'E2E' \
   --timeout 15000 \
