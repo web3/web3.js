@@ -35,10 +35,10 @@ const httpProvider = new HttpProvider('http://localhost:8545', {
 });
 
 // $ExpectType void
-httpProvider.send({} as any, (error: Error) => {});
+httpProvider.send({} as any, (error: Error | null) => {});
 
 // $ExpectType void
-httpProvider.send({} as any, (error: Error, result: JsonRpcResponse) => {});
+httpProvider.send({} as any, (error: Error | null, result: JsonRpcResponse | undefined) => {});
 
 // $ExpectType boolean
 httpProvider.disconnect();

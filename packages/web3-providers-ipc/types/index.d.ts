@@ -20,35 +20,6 @@
  * @date 2018
  */
 
-import * as net from 'net';
-import { IpcProviderBase, JsonRpcPayload } from 'web3-core-helpers';
+import { IpcProviderBase } from 'web3-core-helpers';
 
-export class IpcProvider extends IpcProviderBase {
-    constructor(path: string, net: net.Server);
-
-    responseCallbacks: any;
-    notificationCallbacks: any;
-    connected: boolean;
-    connection: any;
-
-    addDefaultEvents(): void;
-
-    supportsSubscriptions(): boolean;
-
-    send(
-        payload: JsonRpcPayload,
-        callback: (error: Error, result: any) => void
-    ): void;
-
-    on(type: string, callback: () => void): void;
-
-    once(type: string, callback: () => void): void;
-
-    removeListener(type: string, callback: () => void): void;
-
-    removeAllListeners(type: string): void;
-
-    reset(): void;
-
-    reconnect(): void;
-}
+export class IpcProvider extends IpcProviderBase { }

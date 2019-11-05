@@ -60,10 +60,10 @@ wsProvider.addDefaultEvents();
 wsProvider.supportsSubscriptions();
 
 // $ExpectType void
-wsProvider.send({} as any, (error: Error) => {});
+wsProvider.send({} as any, (error: Error | null) => {});
 
 // $ExpectType void
-wsProvider.send({} as any, (error: Error, result: JsonRpcResponse) => {});
+wsProvider.send({} as any, (error: Error | null, result: JsonRpcResponse | undefined) => {});
 
 // $ExpectType void
 wsProvider.on('type', () => {});
