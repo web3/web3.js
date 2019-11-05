@@ -85,7 +85,7 @@ export class WebsocketProviderBase {
     send(
         payload: JsonRpcPayload,
         callback: Callback<JsonRpcResponse>
-    ): any;
+    ): void;
 
     on(type: string, callback: () => void): void;
 
