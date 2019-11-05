@@ -34,7 +34,10 @@ const httpProvider = new HttpProvider('http://localhost:8545', {
 });
 
 // $ExpectType void
-httpProvider.send({} as any, () => {});
+httpProvider.send({} as any, (error) => {});
+
+// $ExpectType void
+httpProvider.send({} as any, (error, result) => {});
 
 // $ExpectType boolean
 httpProvider.disconnect();

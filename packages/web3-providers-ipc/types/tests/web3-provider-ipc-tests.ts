@@ -47,7 +47,10 @@ ipcProvider.addDefaultEvents();
 ipcProvider.supportsSubscriptions();
 
 // $ExpectType void
-ipcProvider.send({} as any, () => {});
+ipcProvider.send({} as any, (error) => {});
+
+// $ExpectType void
+ipcProvider.send({} as any, (error, result) => {});
 
 // $ExpectType void
 ipcProvider.on('type', () => {});

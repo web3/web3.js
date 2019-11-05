@@ -60,7 +60,10 @@ wsProvider.addDefaultEvents();
 wsProvider.supportsSubscriptions();
 
 // $ExpectType void
-wsProvider.send({} as any, () => {});
+wsProvider.send({} as any, (error) => {});
+
+// $ExpectType void
+wsProvider.send({} as any, (error, result) => {});
 
 // $ExpectType void
 wsProvider.on('type', () => {});
