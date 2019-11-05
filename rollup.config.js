@@ -139,7 +139,7 @@ function getOutput(file, type, name, exports, globals) {
         name: name,
         file: file,
         sourcemap: true,
-        format: type,
+        format: type
     };
 
     if (type === 'umd') {
