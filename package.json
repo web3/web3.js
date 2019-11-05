@@ -16,7 +16,7 @@
         "postinstall": "lerna bootstrap; npm run build:all",
         "build:web3": "lerna exec --scope web3 -- CJS=true ESM=true rollup -c",
         "build:web3:minified": "npm run build:all; lerna exec --scope web3 -- MIN=true rollup -c",
-        "build:all": "npm run build:all:cjs; npm run build:all:esm;",
+        "build:all": "npm run build:all:cjs; npm run build:all:esm; npm run build:all:minified",
         "build:all:cjs": "lerna exec -- ISTANBUL=true CJS=true rollup -c",
         "build:all:esm": "lerna exec -- ESM=true rollup -c",
         "build:all:minified": "lerna exec -- MIN=true rollup -c",
