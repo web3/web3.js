@@ -120,6 +120,8 @@ sudo apt-get install npm
 - ``build:all`` - Creates CJS and ESM bundles for all packages
 - ``build:all:cjs`` - Creates CJS bundles for all packages
 - ``build:all:esm`` - Creates ESM bundles for all packages
+- ``build:all:minified`` - Creates minified UMD bundles with the cjs bundles as the source for all packages
+- ``build:all:release`` - Creates CJS, ESM, and minified UMD bundles for all packages.
 - ``build:web3`` - Creates just the CJS and ESM bundle of the web3 umbrella package
 - ``build:web3:minified`` - Creates all CJS and ESM bundles of all packages and creates a web3.min after
 
