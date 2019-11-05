@@ -20,24 +20,6 @@
  * @date 2018
  */
 
-import {
-    HttpProviderBase,
-    HttpProviderOptions,
-    JsonRpcPayload
-} from 'web3-core-helpers';
+import { HttpProviderBase } from 'web3-core-helpers';
 
-export class HttpProvider extends HttpProviderBase {
-    constructor(host: string, options?: HttpProviderOptions);
-
-    host: string;
-    connected: boolean;
-
-    supportsSubscriptions(): boolean;
-
-    send(
-        payload: JsonRpcPayload,
-        callback: (error: Error, result: any) => void
-    ): void;
-
-    disconnect(): boolean;
-}
+export class HttpProvider extends HttpProviderBase {}
