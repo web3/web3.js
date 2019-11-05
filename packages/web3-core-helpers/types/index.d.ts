@@ -141,7 +141,7 @@ export class HttpProviderBase {
     send(
         payload: JsonRpcPayload,
         callback: Callback<JsonRpcResponse>
-    ): any;
+    ): void;
 
     disconnect(): boolean;
 }
