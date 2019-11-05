@@ -5,6 +5,7 @@
 
 [![npm](https://img.shields.io/npm/dm/web3.svg)](https://www.npmjs.com/package/web3) [![Build Status][travis-image]][travis-url] ![Coverage Status](https://coveralls.io/repos/github/ethereum/web3.js/badge.svg?branch=2.x&kill_cache=1)
 [![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
 This is the Ethereum [JavaScript API][docs]
 which connects to the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
@@ -119,7 +120,7 @@ npm run clean # removes all the node_modules folders in all modules
 
 
 ### Similar libraries in other languages
- - Python [Web3.py](https://github.com/pipermerriam/web3.py)
+ - Python [Web3.py](https://github.com/ethereum/web3.py)
  - Haskell [hs-web3](https://github.com/airalab/hs-web3)
  - Java [web3j](https://github.com/web3j/web3j)
  - Scala [web3j-scala](https://github.com/mslinn/web3j-scala)

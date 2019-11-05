@@ -358,11 +358,11 @@ export const inputLogFormatter = (options) => {
         return Utils.fromUtf8(value);
     };
 
-    if (options.fromBlock) {
+    if (options.fromBlock || options.fromBlock === 0) {
         options.fromBlock = inputBlockNumberFormatter(options.fromBlock);
     }
 
-    if (options.toBlock) {
+    if (options.toBlock || options.toBlock === 0) {
         options.toBlock = inputBlockNumberFormatter(options.toBlock);
     }
 

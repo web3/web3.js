@@ -207,7 +207,7 @@ export interface PastLogsOptions {
 export interface LogsOptions {
     fromBlock?: number | string;
     address?: string | string[];
-    topics?: Array<string | string[]>
+    topics?: Array<string | string[] | null>
 }
 
 export interface Subscription<T> {
