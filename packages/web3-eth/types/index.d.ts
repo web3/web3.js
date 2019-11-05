@@ -158,21 +158,21 @@ export class Eth {
         callback?: (error: Error, balance: string) => void
     ): Promise<string>;
 
-    getStorageAt(address: string, position: number): Promise<string>;
+    getStorageAt(address: string, position: number | string): Promise<string>;
     getStorageAt(
         address: string,
-        position: number,
-        defaultBlock: BlockNumber
+        position: number | string,
+        defaultBlock: number | string
     ): Promise<string>;
     getStorageAt(
         address: string,
-        position: number,
+        position: number | string,
         callback?: (error: Error, storageAt: string) => void
     ): Promise<string>;
     getStorageAt(
         address: string,
-        position: number,
-        defaultBlock: BlockNumber,
+        position: number | string,
+        defaultBlock: number | string,
         callback?: (error: Error, storageAt: string) => void
     ): Promise<string>;
 
