@@ -1,4 +1,4 @@
 {
     "extends": "@istanbuljs/nyc-config-babel",
-    "reporter": ["json"]
+    "reporter": ["json", "html"]
 }

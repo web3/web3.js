@@ -222,12 +222,11 @@ function getBabelConfig(exclude, targets, forceAllTransforms = false, transformR
         [
             '@babel/plugin-transform-runtime',
             Object.assign({useESModules: true}, transformRuntimeOptions)
-        ],
-        ['istanbul']
+        ]
     ];
 
-    if (process.env.ISTANBUL === 'false') {
-        plugins.pop();
+    if (process.env.ISTANBUL === 'true') {
+        plugins.push('istanbul');
     }
 
     return {
