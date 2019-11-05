@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import { WebsocketProviderOptions } from 'web3-core-helpers';
+import { WebsocketProviderOptions, JsonRpcResponse } from 'web3-core-helpers';
 import { WebsocketProvider } from 'web3-providers';
 
 const options: WebsocketProviderOptions = {
@@ -60,10 +60,10 @@ wsProvider.addDefaultEvents();
 wsProvider.supportsSubscriptions();
 
 // $ExpectType void
-wsProvider.send({} as any, (error) => {});
+wsProvider.send({} as any, (error: Error) => {});
 
 // $ExpectType void
-wsProvider.send({} as any, (error, result) => {});
+wsProvider.send({} as any, (error: Error, result: JsonRpcResponse) => {});
 
 // $ExpectType void
 wsProvider.on('type', () => {});

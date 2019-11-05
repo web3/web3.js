@@ -21,6 +21,7 @@
  */
 
 import { HttpProvider } from 'web3-providers';
+import { JsonRpcResponse } from 'web3-core-helpers';
 
 const httpProvider = new HttpProvider('http://localhost:8545', {
     timeout: 20000,
@@ -34,10 +35,10 @@ const httpProvider = new HttpProvider('http://localhost:8545', {
 });
 
 // $ExpectType void
-httpProvider.send({} as any, (error) => {});
+httpProvider.send({} as any, (error: Error) => {});
 
 // $ExpectType void
-httpProvider.send({} as any, (error, result) => {});
+httpProvider.send({} as any, (error: Error, result: JsonRpcResponse) => {});
 
 // $ExpectType boolean
 httpProvider.disconnect();

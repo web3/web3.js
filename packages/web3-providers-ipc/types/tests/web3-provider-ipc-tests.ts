@@ -22,6 +22,7 @@
 
 import * as net from 'net';
 import { IpcProvider } from 'web3-providers';
+import { JsonRpcResponse } from 'web3-core-helpers';
 
 const ipcProvider = new IpcProvider(
     '/Users/myuser/Library/Ethereum/geth.ipc',
@@ -47,10 +48,10 @@ ipcProvider.addDefaultEvents();
 ipcProvider.supportsSubscriptions();
 
 // $ExpectType void
-ipcProvider.send({} as any, (error) => {});
+ipcProvider.send({} as any, (error: Error) => {});
 
 // $ExpectType void
-ipcProvider.send({} as any, (error, result) => {});
+ipcProvider.send({} as any, (error: Error, result: JsonRpcResponse) => {});
 
 // $ExpectType void
 ipcProvider.on('type', () => {});
