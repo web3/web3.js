@@ -369,20 +369,19 @@ export interface BlockHeader {
     timestamp: number | string;
 }
 
-export interface BlockTransactionObject extends BlockHeader {
-    transactions: Transaction[];
+interface BlockTransactionBase extends BlockHeader {
     size: number;
     difficulty: number;
     totalDifficulty: number;
     uncles: string[];
 }
 
-export interface BlockTransactionString extends BlockHeader {
+export interface BlockTransactionObject extends BlockTransactionBase {
+    transactions: Transaction[];
+}
+
+export interface BlockTransactionString extends BlockTransactionBase {
     transactions: string[];
-    size: number;
-    difficulty: number;
-    totalDifficulty: number;
-    uncles: string[];
 }
 
 export interface PastLogsOptions {
