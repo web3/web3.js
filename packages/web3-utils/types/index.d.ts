@@ -223,4 +223,5 @@ export interface AbiOutput {
     name: string;
     type: string;
 	components?: AbiOutput[];
+    internalType?: 'address' | 'string' | 'uint256';
 }
