@@ -43,6 +43,7 @@ import { Iban } from 'web3-eth-iban';
 import { Personal } from 'web3-eth-personal';
 import { Network } from 'web3-net';
 import { AbiItem } from 'web3-utils';
+import { BigNumber } from 'bignumber.js';
 
 export class Eth {
     constructor(currentProvider: provider);
@@ -146,20 +147,20 @@ export class Eth {
         callback?: (error: Error, balance: string) => void
     ): Promise<string>;
 
-    getStorageAt(address: string, position: number | string): Promise<string>;
+    getStorageAt(address: string, position: number | BigNumber | string): Promise<string>;
     getStorageAt(
         address: string,
-        position: number | string,
+        position: number | BigNumber | string,
         defaultBlock: number | string
     ): Promise<string>;
     getStorageAt(
         address: string,
-        position: number | string,
+        position: number | BigNumber | string,
         callback?: (error: Error, storageAt: string) => void
     ): Promise<string>;
     getStorageAt(
         address: string,
-        position: number | string,
+        position: number | BigNumber | string,
         defaultBlock: number | string,
         callback?: (error: Error, storageAt: string) => void
     ): Promise<string>;
