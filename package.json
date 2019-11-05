@@ -13,7 +13,7 @@
         "test": "./test"
     },
     "scripts": {
-        "postinstall": "lerna bootstrap",
+        "postinstall": "lerna bootstrap; npm run build:all",
         "build:web3": "lerna exec --scope web3 -- MINIFIED_BUNDLES=false CJS=true ESM=true rollup -c",
         "build:web3:minified": "npm run build:all; lerna exec --scope web3 -- MINIFIED_BUNDLES=true rollup -c",
         "build:all": "lerna exec -- CJS=true ESM=true MIN=true rollup -c",
