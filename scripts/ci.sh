@@ -15,7 +15,6 @@ if [ "$TEST" = "unit" ]; then
 elif [ "$TEST" = "build_and_lint" ]; then
 
   npm run build:all
-  npm run build:all:minified
   npm run dtslint
 
 elif [ "$TEST" = "unit_and_e2e_clients" ]; then

@@ -7,7 +7,7 @@ import nodeGlobals from 'rollup-plugin-node-globals';
 import builtins from 'rollup-plugin-node-builtins';
 import {terser} from 'rollup-plugin-terser';
 import bundleSize from 'rollup-plugin-bundle-size';
-import resolve from 'path';
+import resolve from 'rollup-plugin-node-resolve';
 
 /**
  * Returns the rollup configuration with globals and names set.
@@ -64,14 +64,14 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
     }
 
     // Minified UMD
-    if (process.env.MINIFIED_BUNDLES === 'true') {
+    if (process.env.MIN === 'true') {
         mappedConfig.push(
             rollupConfig(
                 'src/index.js',
                 'dist/' + outputFileName + '.min.js',
                 name,
-                'min',
-                namedExports ? 'named' : 'auto',
+                'umd',
+                namedExports ? 'named' : 'default',
                 globals,
                 {
                     forceAllTransforms: true,
@@ -130,26 +130,19 @@ function rollupConfig(input, outputFile, outputName, outputType, exports = 'auto
  * @returns {{file: *, sourcemap: boolean, exports, format: *}|{file: *, sourcemap: boolean, exports: string, globals: *, name: *, format: string}}
  */
 function getOutput(file, type, name, exports, globals) {
-    switch (type) {
-        case 'min':
-            return {
-                exports: 'default',
-                name: name,
-                file: file,
-                format: 'umd',
-                sourcemap: true,
-                globals: globals
-            };
-        case 'es':
-        case 'cjs':
-            return {
-                exports: exports,
-                name: name,
-                file: file,
-                format: type,
-                sourcemap: true
-            };
+    let config = {
+        exports: exports,
+        name: name,
+        file: file,
+        sourcemap: true,
+        format: type,
+    };
+
+    if (type === 'umd') {
+        config.globals = globals;
     }
+
+    return config;
 }
 
 /**
@@ -175,13 +168,16 @@ function getPlugins(type, babelOptions, resolverOptions) {
     );
 
     switch (type) {
-        case 'min':
+        case 'umd':
             return [
                 resolve(
-                    {
-                        browser: true,
-                        preferBuiltins: true
-                    }.assign(resolverOptions)
+                    Object.assign(
+                        {
+                            browser: true,
+                            preferBuiltins: true
+                        },
+                        resolverOptions
+                    )
                 ),
                 commonjs(),
                 babelPlugin,
@@ -222,11 +218,12 @@ function getBabelConfig(exclude, targets, forceAllTransforms = false, transformR
         [
             '@babel/plugin-transform-runtime',
             Object.assign({useESModules: true}, transformRuntimeOptions)
-        ]
+        ],
+        ['istanbul']
     ];
 
-    if (process.env.TEST) {
-        plugins.push('istanbul');
+    if (process.env.ISTANBUL === 'false') {
+        plugins.pop();
     }
 
     return {
