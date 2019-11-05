@@ -9,6 +9,12 @@ import {terser} from 'rollup-plugin-terser';
 import bundleSize from 'rollup-plugin-bundle-size';
 import resolve from 'rollup-plugin-node-resolve';
 
+
+const DEFAULT_INPUT = 'src/index.js';
+const NODE_TARGET = '8';
+const BROWSER_TARGET = 'last 2 versions';
+
+
 /**
  * Returns the rollup configuration with globals and names set.
  *
@@ -27,7 +33,7 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
     if (process.env.CJS === 'true') {
         mappedConfig.push(
             rollupConfig(
-                'src/index.js',
+                DEFAULT_INPUT,
                 'dist/' + outputFileName + '.cjs.js',
                 name,
                 'cjs',
@@ -36,7 +42,7 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
                 {
                     exclude: 'node_modules/**',
                     targets: {
-                        node: '8'
+                        node: NODE_TARGET
                     }
                 }
             )
@@ -47,7 +53,7 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
     if (process.env.ESM === 'true') {
         mappedConfig.push(
             rollupConfig(
-                'src/index.js',
+                DEFAULT_INPUT,
                 'dist/' + outputFileName + '.esm.js',
                 name,
                 'es',
@@ -56,7 +62,7 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
                 {
                     exclude: 'node_modules/**',
                     targets: {
-                        node: '8'
+                        node: NODE_TARGET
                     }
                 }
             )
@@ -67,7 +73,7 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
     if (process.env.MIN === 'true') {
         mappedConfig.push(
             rollupConfig(
-                'src/index.js',
+                DEFAULT_INPUT,
                 'dist/' + outputFileName + '.min.js',
                 name,
                 'umd',
@@ -78,7 +84,7 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
                     exclude: 'node_modules/@babel/runtime/**',
                     minified: true,
                     targets: {
-                        browsers: 'last 2 versions'
+                        browsers: BROWSER_TARGET
                     },
                     transformRuntimeOptions: {absoluteRuntime: true}
                 },
