@@ -18,7 +18,7 @@
         "eth-lib": "0.2.7",
         "ethereumjs-common": "^1.3.2",
         "ethereumjs-tx": "^2.1.1",
-        "scrypt-shim": "github:web3-js/scrypt-shim",
+        "@web3-js/scrypt-shim": "^0.1.0",
         "underscore": "1.9.1",
         "uuid": "3.3.2",
         "web3-core": "1.2.2",

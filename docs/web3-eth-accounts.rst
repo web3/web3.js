@@ -321,21 +321,22 @@ sign
 
     web3.eth.accounts.sign(data, privateKey);
 
-Signs arbitrary data. This data is before UTF-8 HEX decoded and enveloped as follows: ``"\x19Ethereum Signed Message:\n" + message.length + message``.
+Signs arbitrary data.
 
 ----------
 Parameters
 ----------
 
-1. ``data`` - ``String``: The data to sign. If its a string it will be
+1. ``data`` - ``String``: The data to sign.
 2. ``privateKey`` - ``String``: The private key to sign with.
 
+.. note:: The value passed as  the `data` parameter will be UTF-8 HEX decoded and wrapped as follows: ``"\x19Ethereum Signed Message:\n" + message.length + message``.
 
 -------
 Returns
 -------
 
-``String|Object``: The signed data RLP encoded signature, or if ``returnSignature`` is ``true`` the signature values as follows:
+``Object``: The signature object
     - ``message`` - ``String``: The the given message.
     - ``messageHash`` - ``String``: The hash of the given message.
     - ``r`` - ``String``: First 32 bytes of the signature

@@ -82,3 +82,12 @@ Released with 1.0.0-beta.37 code base.
 - Fix hexToNumber and hexToNumberString prefix validation (#3086)
 - The receipt will now returned on a EVM error (this got removed on beta.18) (#3129)
 - Fixes transaction confirmations with the HttpProvider (#3140)
+
+## [1.2.3]
+
+### Added
+
+### Fixed
+
+- Fix TS types for eth.subscribe syncing, newBlockHeaders, pendingTransactions (#3159)
+- Improve web3-eth-abi decodeParameters error message (#3134)

@@ -78,32 +78,21 @@ export class Eth {
 
     subscribe(
         type: 'logs',
-        options?: LogsOptions,
+        options: LogsOptions,
         callback?: (error: Error, log: Log) => void
     ): Subscription<Log>;
     subscribe(
         type: 'syncing',
-        options?: null,
         callback?: (error: Error, result: Syncing) => void
     ): Subscription<Syncing>;
     subscribe(
         type: 'newBlockHeaders',
-        options?: null,
         callback?: (error: Error, blockHeader: BlockHeader) => void
     ): Subscription<BlockHeader>;
     subscribe(
         type: 'pendingTransactions',
-        options?: null,
         callback?: (error: Error, transactionHash: string) => void
     ): Subscription<string>;
-    subscribe(
-        type: 'pendingTransactions' | 'logs' | 'syncing' | 'newBlockHeaders',
-        options?: null | LogsOptions,
-        callback?: (
-            error: Error,
-            item: Log | Syncing | BlockHeader | string
-        ) => void
-    ): Subscription<Log | BlockHeader | Syncing | string>;
 
     getProtocolVersion(
         callback?: (error: Error, protocolVersion: string) => void

@@ -324,6 +324,7 @@ subscribe("logs")
     web3.eth.subscribe('logs', options [, callback]);
 
 Subscribes to incoming logs, filtered by the given options.
+If a valid numerical ``fromBlock`` options property is set, Web3 will retrieve logs beginning from this point, backfilling the response as necessary.
 
 ----------
 Parameters
