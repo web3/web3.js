@@ -1,5 +1,6 @@
 var testMethod = require('./helpers/test.method.js');
 var Eth = require('../packages/web3-eth');
+var BN = require('bignumber.js');
 
 var eth = new Eth();
 
@@ -38,6 +39,12 @@ var tests = [{
     call: 'eth_'+ method
 }, {
     args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', '11', 'latest'],
+    formattedArgs: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', '0xb', 'latest'],
+    result: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
+    formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
+    call: 'eth_'+ method
+}, {
+    args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', new BN('11'), 'latest'],
     formattedArgs: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', '0xb', 'latest'],
     result: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
     formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
