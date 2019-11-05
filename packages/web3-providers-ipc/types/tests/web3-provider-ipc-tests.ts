@@ -48,10 +48,10 @@ ipcProvider.addDefaultEvents();
 ipcProvider.supportsSubscriptions();
 
 // $ExpectType void
-ipcProvider.send({} as any, (error: Error) => {});
+ipcProvider.send({} as any, (error: Error | null) => {});
 
 // $ExpectType void
-ipcProvider.send({} as any, (error: Error, result: JsonRpcResponse) => {});
+ipcProvider.send({} as any, (error: Error | null, result: JsonRpcResponse | undefined) => {});
 
 // $ExpectType void
 ipcProvider.on('type', () => {});
