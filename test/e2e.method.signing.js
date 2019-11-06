@@ -9,6 +9,14 @@ describe('transaction and message signing [ @E2E ]', function() {
     let web3;
     let accounts;
     let wallet;
+    let basic;
+    let instance;
+
+    const basicOptions = {
+        data: Basic.bytecode,
+        gasPrice: '1',
+        gas: 4000000
+    };
 
     before(async function(){
         web3 = new Web3('http://localhost:8545');
@@ -22,6 +30,9 @@ describe('transaction and message signing [ @E2E ]', function() {
             to: wallet[0].address,
             value: web3.utils.toWei('50', 'ether'),
         });
+
+        basic = new web3.eth.Contract(Basic.abi, basicOptions);
+        instance = await basic.deploy().send({from: accounts[0]});
     });
 
     it('sendSignedTransaction (with eth.signTransaction)', async function(){
@@ -171,6 +182,88 @@ describe('transaction and message signing [ @E2E ]', function() {
         } catch (err) {
             assert(err.message.includes('both values must be defined'));
         }
+    });
+
+    it('accounts.signTransaction errors when tx signing is invalid', async function(){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txCount = await web3.eth.getTransactionCount(source);
+
+        // Using gas === 0 / ethereumjs-tx checks this wrt common baseFee
+        const txObject = {
+            nonce:    web3.utils.toHex(txCount),
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gasLimit: web3.utils.toHex(0),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+            hardfork: "istanbul",
+            chain:    "ropsten",
+        };
+
+        try {
+            await web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey);
+            assert.fail()
+        } catch (err) {
+            assert(err.message.includes('gas limit is too low'));
+        }
+    })
+
+    it('accounts.signTransaction errors when no transaction is passed', async function(){
+        try {
+            await web3.eth.accounts.signTransaction(undefined, wallet[0].privateKey);
+            assert.fail()
+        } catch (err) {
+            assert(err.message.includes('No transaction object'));
+        }
+    });
+
+    it('transactions sent with wallet throws error correctly (with receipt)', async function(){
+        const data = instance
+            .methods
+            .reverts()
+            .encodeABI();
+
+        const tx = {
+            from: wallet[0],
+            to: instance.options.address,
+            data: data,
+            gasPrice: '1',
+            gas: 4000000
+        }
+
+        try {
+            await web3.eth.sendTransaction(tx);
+            assert.fail();
+        } catch(err){
+            var receipt = utils.extractReceipt(err.message);
+
+            assert(err.message.includes('revert'))
+            assert(receipt.status === false);
+        }
+    });
+
+    it('transactions sent with wallet error correctly (OOG)', function(done){
+        const data = instance
+            .methods
+            .reverts()
+            .encodeABI();
+
+        const tx = {
+            from: wallet[0],
+            to: instance.options.address,
+            data: data,
+            gasPrice: '1',
+            gas: 10
+        }
+
+        web3
+            .eth
+            .sendTransaction(tx)
+            .on('error', function(err){
+                assert(err.message.includes('gas'))
+                done();
+            })
     });
 
     it('eth.personal.sign', async function(){
