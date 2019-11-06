@@ -39,7 +39,6 @@ function Registry(ens) {
     this.ens = ens;
     this.contract = ens.checkNetwork().then(function (address) {
         return new self.ens.eth.Contract(REGISTRY_ABI, address);
-        // contract.setProvider(self.ens.eth.currentProvider);
     });
 }
 
