@@ -358,7 +358,7 @@ export interface BlockHeader {
     timestamp: number | string;
 }
 
-interface BlockTransactionBase extends BlockHeader {
+export interface BlockTransactionBase extends BlockHeader {
     size: number;
     difficulty: number;
     totalDifficulty: number;
