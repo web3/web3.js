@@ -18,6 +18,7 @@
  */
 
 import Web3 from 'web3';
+import * as net from 'net';
 
 // $ExpectType Utils
 Web3.utils;
@@ -31,7 +32,13 @@ Web3.modules;
 // $ExpectType Providers
 Web3.providers;
 
-const web3 = new Web3('https://localhost:5000/');
+let web3 = new Web3('https://localhost:5000/');
+
+const netSocket = new net.Socket();
+
+web3 = new Web3('https://localhost:5000/', netSocket);
+
+web3 = new Web3();
 
 // $ExpectType provider
 web3.currentProvider;
