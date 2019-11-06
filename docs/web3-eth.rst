@@ -796,7 +796,7 @@ Parameters
 ----------
 
 1. ``String|Number`` - The block number or block hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
-2. ``Boolean`` - (optional, default ``false``) If ``true``, the returned block will contain all transactions as objects, if ``false`` it will only contains the transaction hashes.
+2. ``Boolean`` - (optional, default ``false``) If specified ``true``, the returned block will contain all transactions as objects. By default it is ``false`` so, there is no need to explictly specify false. And, if ``false`` it will only contains the transaction hashes.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -915,7 +915,7 @@ Parameters
 
 1. ``String|Number`` - The block number or hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Number`` - The index position of the uncle.
-3. ``Boolean`` - (optional, default ``false``) If ``true``, the returned block will contain all transactions as objects, if ``false`` it will only contains the transaction hashes.
+3. ``Boolean`` - (optional, default ``false``) If specified ``true``, the returned block will contain all transactions as objects. By default it is ``false`` so, there is no need to explictly specify false. And, if ``false`` it will only contains the transaction hashes.
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
