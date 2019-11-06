@@ -27,7 +27,7 @@ import { Shh } from 'web3-shh';
 import { Utils } from 'web3-utils';
 
 export default class Web3 {
-    constructor(provider: provider, net?: net.Socket);
+    constructor(provider?: provider, net?: net.Socket);
 
     static modules: Modules;
     readonly givenProvider: any;
