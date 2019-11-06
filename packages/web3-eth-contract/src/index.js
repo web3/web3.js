@@ -620,7 +620,7 @@ Contract.prototype.once = function(event, options, callback) {
  *
  * @return {Object} the event subscription
  */
-Contract.prototype._on = function(event, options, callback){
+Contract.prototype._on = function(){
     var subOptions = this._generateEventOptions.apply(this, arguments);
 
 
