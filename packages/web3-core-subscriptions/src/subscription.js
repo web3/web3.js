@@ -249,12 +249,12 @@ Subscription.prototype.subscribe = function() {
     this.options.requestManager.send(payload, function (err, result) {
         if(!err && result) {
             _this.id = result;
+            _this.method = payload.params[0];
             _this.emit('connected', result);
 
             // call callback on notifications
-            _this.options.requestManager.addSubscription(_this.id, payload.params[0] , _this.options.type, function(err, result) {
-
-                if (!err) {
+            _this.options.requestManager.addSubscription(_this, function(error, result) {
+                if (!error) {
                     if (!_.isArray(result)) {
                         result = [result];
                     }
@@ -272,18 +272,10 @@ Subscription.prototype.subscribe = function() {
                         _this.callback(null, output, _this);
                     });
                 } else {
-                    _this._resubscribe(err);
+                    _this.callback(error);
+                    _this.emit('error', error);
                 }
             });
-
-            // just in case the provider reconnects silently, resubscribe over the new connection
-            if (_this.options.requestManager.provider.once) {
-                _this.options.requestManager.provider.once('connect', function () {
-                    _this._resubscribe();
-                });
-            }
-        } else {
-            _this._resubscribe(err);
         }
     });
 
@@ -291,38 +283,14 @@ Subscription.prototype.subscribe = function() {
     return this;
 };
 
-Subscription.prototype._resubscribe = function (err) {
-    var _this = this;
-
+Subscription.prototype.resubscribe = function () {
     // unsubscribe
     this.options.requestManager.removeSubscription(this.id);
 
-    // re-subscribe, if connection fails
-    if(this.options.requestManager.provider.once && !_this._reconnectIntervalId) {
-        this._reconnectIntervalId = setInterval(function () {
-            // TODO check if that makes sense!
-            if (_this.options.requestManager.provider.reconnect) {
-                _this.options.requestManager.provider.reconnect();
-            }
-        }, 500);
+    // delete id to keep the listeners on subscribe
+    this.id = null;
 
-        this.options.requestManager.provider.once('connect', function () {
-            clearInterval(_this._reconnectIntervalId);
-            _this._reconnectIntervalId = null;
-
-            // delete id to keep the listeners on subscribe
-            _this.id = null;
-
-            _this.subscribe(_this.callback);
-        });
-    }
-
-    if (err) {
-        this.emit('error', err);
-    }
-
-    // call the callback, last so that unsubscribe there won't affect the emit above
-    this.callback(err, null, this);
+    this.subscribe(this.callback);
 };
 
 module.exports = Subscription;
