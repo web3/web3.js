@@ -35,6 +35,20 @@ describe('method.send [ @E2E ]', function() {
             assert(web3.utils.isHexStrict(receipt.transactionHash));
         });
 
+        it('succeeds when using a perfect estimate', async function(){
+            var estimate = await instance
+                .methods
+                .setValue('1')
+                .estimateGas();
+
+            var receipt = await instance
+                .methods
+                .setValue('1')
+                .send({from: accounts[0], gas: estimate});
+
+            assert(receipt.status === true);
+        });
+
         it('errors on OOG', async function(){
             try {
                 await instance
@@ -64,6 +78,29 @@ describe('method.send [ @E2E ]', function() {
                 assert(err.message.includes('revert'))
                 assert(receipt.status === false);
             }
+        });
+
+        it('errors on revert using a perfect estimate', async function(){
+            var estimate = await instance
+                .methods
+                .setValue('1')
+                .estimateGas();
+
+            try {
+                await instance
+                    .methods
+                    .reverts()
+                    .send({from: accounts[0], gas: estimate});
+
+                assert.fail();
+
+            } catch(err){
+                var receipt = utils.extractReceipt(err.message);
+
+                assert(err.message.includes('revert'))
+                assert(receipt.status === false);
+            }
+
         });
     });
 

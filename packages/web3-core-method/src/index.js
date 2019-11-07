@@ -393,8 +393,12 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                 // CHECK for normal tx check for receipt only
                 .then(function(receipt) {
                     if (!isContractDeployment && !promiseResolved) {
+
+                        var hasStatus = receipt.status === false || receipt.status === true;
+                        var isOOG = !hasStatus && gasProvided === utils.numberToHex(receipt.gasUsed);
+
                         if (!receipt.outOfGas &&
-                            (!gasProvided || gasProvided !== utils.numberToHex(receipt.gasUsed)) &&
+                            (!gasProvided || !isOOG) &&
                             (receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined')) {
                             defer.eventEmitter.emit('receipt', receipt);
                             defer.resolve(receipt);
