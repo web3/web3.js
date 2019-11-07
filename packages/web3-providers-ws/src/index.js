@@ -276,7 +276,7 @@ WebsocketProvider.prototype.send = function(payload, callback) {
     //     this.connection.connect({url: this.url});
     if (this.connection.readyState !== this.connection.OPEN) {
         if (typeof this.connection.onerror === 'function') {
-            this.connection.onerror(new Error('connection not open'));
+            this.connection.onerror(new Error('connection not open on send()'));
         } else {
             console.error('no error callback');
         }
