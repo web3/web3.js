@@ -139,9 +139,9 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
         if (_this.requestQueue.size > 0) {
             _this.requestQueue.forEach((request) => {
                 request.callback(new Error('Connection closed before the request got executed.'));
+               _this.requestQueue.delete(request);
             });
 
-            _this.requestQueue.clear();
         }
     });
 
@@ -149,9 +149,8 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
         if (_this.requestQueue.size > 0) {
             _this.requestQueue.forEach((request) => {
                 _this.send(request.payload, request.callback);
+                _this.requestQueue.delete(request);
             });
-
-            _this.requestQueue.clear();
         }
     });
 
