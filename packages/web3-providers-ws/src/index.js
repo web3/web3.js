@@ -161,29 +161,16 @@ WebsocketProvider.prototype.onMessage = function(e) {
     var data = (typeof e.data === 'string') ? e.data : '';
 
     this._parseResponse(data).forEach(function(result) {
-
         var id = null;
 
         // get the id which matches the returned id
-        if (_.isArray(result)) {
-            result.forEach(function(load) {
-                if (_this.responseCallbacks[load.id])
-                    id = load.id;
-            });
+        if (isArray(response)) {
+            id = response[0].id;
         } else {
-            id = result.id;
+            id = response.id;
         }
 
-        // notification
-        if (!id && result && result.method && result.method.indexOf('_subscription') !== -1) {
-            _this.emit(_this.DATA, result);
-
-            // fire the callback
-        } else if (_this.responseCallbacks[id]) {
-            _this.responseCallbacks[id](null, result);
-            delete _this.responseCallbacks[id];
-        }
-
+        _this.emit(id, result);
         _this.emit(_this.SOCKET_DATA, result);
     });
 
@@ -210,16 +197,20 @@ WebsocketProvider.prototype.onError = function(error) {
  * @returns {void}
  */
 WebsocketProvider.prototype.onConnect = function() {
-    var _this = this;
     this.reconnecting = false;
 
     if (this.requestQueue.size > 0) {
+        var _this = this;
+
         this.requestQueue.forEach(function(request) {
             _this.send(request.payload, request.callback);
             _this.removeListener('error', request.callback);
             _this.requestQueue.delete(request);
         });
     }
+
+    this.emit(this.OPEN);
+    this.emit(this.SOCKET_OPEN);
 };
 
 /**
@@ -230,8 +221,6 @@ WebsocketProvider.prototype.onConnect = function() {
  * @returns {void}
  */
 WebsocketProvider.prototype.onClose = function(event) {
-    var _this = this;
-
     if (this.autoReconnect && (event.code !== 1000 || event.wasClean === false)) {
         this.reconnect();
 
@@ -239,6 +228,8 @@ WebsocketProvider.prototype.onClose = function(event) {
     }
 
     if (this.requestQueue.size > 0) {
+        var _this = this;
+
         this.requestQueue.forEach(function(request) {
             request.callback(new Error('connection not open on send()'));
             _this.requestQueue.delete(request);
