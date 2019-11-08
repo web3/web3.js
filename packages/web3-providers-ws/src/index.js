@@ -69,7 +69,7 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.headers = options.headers || {};
     this.protocol = options.protocol || undefined;
     this.autoReconnect = options.autoReconnect;
-    this.reconnectDelay = options.reconnectDelay;
+    this.reconnectDelay = options.reconnectDelay || 5000;
     this.maxReconnectAttempts = options.maxReconnectAttempts || false;
 
     this.DATA = 'data';
@@ -188,6 +188,7 @@ WebsocketProvider.prototype.onMessage = function(e) {
 WebsocketProvider.prototype.onError = function(error) {
     this.emit(this.ERROR, error);
     this.emit(this.SOCKET_ERROR, error);
+
     this.removeAllSocketListeners();
 };
 
@@ -223,15 +224,7 @@ WebsocketProvider.prototype.onConnect = function() {
  */
 WebsocketProvider.prototype.onClose = function(event) {
     if (this.autoReconnect && (event.code !== 1000 || event.wasClean === false)) {
-        try {
-            this.reconnect();
-        } catch (error) {
-            this.emit(this.CLOSE, error);
-            this.emit(this.SOCKET_CLOSE, error);
-
-            this.emit(this.ERROR, error);
-            this.emit(this.SOCKET_ERROR, error);
-        }
+        this.reconnect();
 
         return;
     }
@@ -244,6 +237,7 @@ WebsocketProvider.prototype.onClose = function(event) {
 
         this.requestQueue.forEach(function(request) {
             request.callback(new Error('connection not open on send()'));
+            _this.removeListener('error', request.callback);
             _this.requestQueue.delete(request);
         });
     }
@@ -465,7 +459,10 @@ WebsocketProvider.prototype.reconnect = function() {
         return;
     }
 
-    throw new Error('Maximum number of reconnect attempts reached!');
+    var error = new Error('Maximum number of reconnect attempts reached!');
+
+    this.emit(this.ERROR, error);
+    this.emit(this.SOCKET_ERROR, error);
 };
 
 module.exports = WebsocketProvider;
