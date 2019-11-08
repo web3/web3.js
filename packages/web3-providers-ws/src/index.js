@@ -22,7 +22,6 @@
 
 'use strict';
 
-var _ = require('underscore');
 var Ws = require('websocket').w3cwebsocket;
 var EventEmitter = require('eventemitter3');
 var helpers = require('./helpers.js');
