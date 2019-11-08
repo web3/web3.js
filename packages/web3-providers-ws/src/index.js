@@ -63,9 +63,11 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     var _this = this;
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
+    this.requestQueue = new Set();
 
     options = options || {};
     this._customTimeout = options.timeout;
+    this._connectTimeout = options.connectTimeout;
 
     // The w3cwebsocket implementation does not support Basic Auth
     // username/password in the URL. So generate the basic auth header, and
@@ -132,6 +134,26 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
             }
         });
     };
+
+    this.on('close', () => {
+        if (_this.requestQueue.size > 0) {
+            _this.requestQueue.forEach((request) => {
+                request.callback(new Error('Connection closed before the request got executed.'));
+            });
+
+            _this.requestQueue.clear();
+        }
+    });
+
+    this.on('connect', () => {
+        if (_this.requestQueue.size > 0) {
+            _this.requestQueue.forEach((request) => {
+                _this.send(request.payload, request.callback);
+            });
+
+            _this.requestQueue.clear();
+        }
+    });
 
     // make property `connected` which will return the current connection status
     Object.defineProperty(this, 'connected', {
@@ -278,12 +300,8 @@ WebsocketProvider.prototype._timeout = function() {
  * @returns {void}
  */
 WebsocketProvider.prototype.send = function(payload, callback) {
-    var _this = this;
-
     if (this.connection.readyState === this.connection.CONNECTING) {
-        this.once('connect', function() {
-            _this.send(payload, callback);
-        });
+        this.requestQueue.add({payload: payload, callback: callback});
 
         return;
     }
@@ -327,7 +345,7 @@ WebsocketProvider.prototype.on = function(type, callback, once) {
         case 'data':
             if (once) {
                 this.notificationCallbacks.push(function onceCallback(event) {
-                    setTimeout(function () {
+                    setTimeout(function() {
                         _this.removeListener(type, onceCallback);
                     }, 0);
 
@@ -363,7 +381,7 @@ WebsocketProvider.prototype.on = function(type, callback, once) {
  @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
  @param {Function} callback   the callback to call
  */
-WebsocketProvider.prototype.once = function (type, callback) {
+WebsocketProvider.prototype.once = function(type, callback) {
     this.on(type, callback, true);
 };
 
