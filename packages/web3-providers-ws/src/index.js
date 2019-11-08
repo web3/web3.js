@@ -97,7 +97,7 @@ WebsocketProvider.prototype = new EventEmitter();
  */
 WebsocketProvider.prototype.connect = function() {
     this.connection = new Ws(this.url, this.protocol, undefined, this.headers, this.requestOptions, this.clientConfig);
-    this.addSocketListeners();
+    this._addSocketListeners();
 };
 
 /**
@@ -196,7 +196,7 @@ WebsocketProvider.prototype.onClose = function(event) {
 /**
  * Will add the required socket listeners
  *
- * @method addSocketListeners
+ * @method _addSocketListeners
  *
  * @returns {void}
  */
@@ -354,7 +354,7 @@ WebsocketProvider.prototype.send = function(payload, callback) {
  */
 WebsocketProvider.prototype.reset = function() {
     this.removeAllListeners();
-    this.addSocketListeners();
+    this._addSocketListeners();
 };
 
 /**
