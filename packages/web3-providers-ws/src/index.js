@@ -47,8 +47,8 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.CLOSE = 'close';
     this.ERROR = 'error';
     this.OPEN = 'open';
+    this.RECONNECT = 'reconnect';
 
-    this.reconnecting = false;
     this.connection = null;
     this.requestQueue = new Set();
     this.reconnectAttempts = 0;
@@ -149,7 +149,6 @@ WebsocketProvider.prototype.onError = function(error) {
  * @returns {void}
  */
 WebsocketProvider.prototype.onConnect = function() {
-    this.reconnecting = false;
     this.emit(this.OPEN);
 
     if (this.requestQueue.size > 0) {
@@ -394,12 +393,12 @@ WebsocketProvider.prototype.supportsSubscriptions = function() {
 WebsocketProvider.prototype.reconnect = function() {
     var _this = this;
 
-    this.reconnecting = true;
 
     if (!this.maxReconnectAttempts || this.reconnectAttempts < this.maxReconnectAttempts) {
         setTimeout(function() {
             _this.reconnectAttempts++;
             _this._removeSocketListeners();
+            _this.emit(this.RECONNECT, _this.reconnectAttempts);
             _this.connect();
         }, this.reconnectDelay);
 
@@ -408,7 +407,6 @@ WebsocketProvider.prototype.reconnect = function() {
 
     var error = new Error('Maximum number of reconnect attempts reached!');
 
-    this.reconnecting = false;
     this.emit(this.ERROR, error);
 };
 
