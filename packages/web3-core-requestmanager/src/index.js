@@ -134,6 +134,8 @@ RequestManager.prototype.setProvider = function(provider, net) {
 };
 
 /**
+ * TODO: This method should be implemented with a Promise instead of a callback
+ *
  * Should be used to asynchronously send request
  *
  * @method sendAsync
@@ -169,6 +171,8 @@ RequestManager.prototype.send = function(data, callback) {
 };
 
 /**
+ * TODO: This method should be implemented with a Promise instead of a callback
+ *
  * Should be called to asynchronously send batch request
  *
  * @method sendBatch

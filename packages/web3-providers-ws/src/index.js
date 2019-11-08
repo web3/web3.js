@@ -129,18 +129,27 @@ WebsocketProvider.prototype._onMessage = function(e) {
  * @returns {void}
  */
 WebsocketProvider.prototype._onError = function(error) {
-    this.emit(this.ERROR, error);
+    if (error.message.indexOf('Timeout exceeded') > -1) {
+        this.reconnect();
 
-    if (this.requestQueue.size > 0) {
-        var _this = this;
-
-        this.requestQueue.forEach(function(request) {
-            request.callback(error);
-            _this.requestQueue.delete(request);
-        });
+        return;
     }
 
-    this._removeSocketListeners();
+    if (!error.code) {
+        this.emit(this.ERROR, error);
+
+        // TODO: Check closer if calling of the callbacks does make sense here
+        if (this.requestQueue.size > 0) {
+            var _this = this;
+
+            this.requestQueue.forEach(function(request) {
+                request.callback(error);
+                _this.requestQueue.delete(request);
+            });
+        }
+
+        this._removeSocketListeners();
+    }
 };
 
 /**
@@ -152,6 +161,7 @@ WebsocketProvider.prototype._onError = function(error) {
  */
 WebsocketProvider.prototype._onConnect = function() {
     this.emit(this.OPEN);
+    this.reconnectAttempts = 0;
 
     if (this.requestQueue.size > 0) {
         var _this = this;
@@ -307,14 +317,6 @@ WebsocketProvider.prototype.send = function(payload, callback) {
         return;
     }
 
-    try {
-        this.connection.send(JSON.stringify(payload));
-    } catch (error) {
-        callback(error);
-
-        return;
-    }
-
     var id = payload.id;
 
     if (Array.isArray(payload)) {
@@ -332,6 +334,12 @@ WebsocketProvider.prototype.send = function(payload, callback) {
 
             callback(null, response);
         });
+
+    try {
+        this.connection.send(JSON.stringify(payload));
+    } catch (error) {
+        callback(error);
+    }
 };
 
 /**
