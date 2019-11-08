@@ -120,6 +120,7 @@
         "lerna": "^3.18.3",
         "mocha": "^6.2.1",
         "npm-auth-to-token": "^1.0.0",
+        "pify": "^4.0.1",
         "puppeteer": "^1.20.0",
         "sandboxed-module": "^2.0.3",
         "typescript": "next",

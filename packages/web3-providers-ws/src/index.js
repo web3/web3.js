@@ -25,6 +25,7 @@
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var Ws = require('websocket').w3cwebsocket;
+var WsReconnector = require('websocket-reconnector');
 
 var isNode = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
 
@@ -82,6 +83,11 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     // Allow a custom request options
     // https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketClient.md#connectrequesturl-requestedprotocols-origin-headers-requestoptions
     var requestOptions = options.requestOptions || undefined;
+
+    // Enable automatic reconnection wrapping `Ws` with reconnector
+    if (options.autoReconnect) {
+        Ws = WsReconnector(Ws);
+    }
 
     // When all node core implementations that do not have the
     // WHATWG compatible URL parser go out of service this line can be removed.
@@ -235,7 +241,13 @@ WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
         setTimeout(function() {
             if (_this.responseCallbacks[id]) {
                 _this.responseCallbacks[id](errors.ConnectionTimeout(_this._customTimeout));
+
                 delete _this.responseCallbacks[id];
+
+                // try to reconnect
+                if (_this.connection.reconnect) {
+                    _this.connection.reconnect();
+                }
             }
         }, this._customTimeout);
     }
@@ -308,15 +320,15 @@ WebsocketProvider.prototype.on = function(type, callback) {
             break;
 
         case 'connect':
-            this.connection.onopen = callback;
+            this.connection.addEventListener('open', callback);
             break;
 
         case 'end':
-            this.connection.onclose = callback;
+            this.connection.addEventListener('close', callback);
             break;
 
         case 'error':
-            this.connection.onerror = callback;
+            this.connection.addEventListener('error', callback);
             break;
 
         // default:
@@ -325,7 +337,26 @@ WebsocketProvider.prototype.on = function(type, callback) {
     }
 };
 
-// TODO add once
+/**
+ Subscribes to provider only once
+
+ @method once
+ @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+ @param {Function} callback   the callback to call
+ */
+WebsocketProvider.prototype.once = function (type, callback) {
+    var _this = this;
+
+    function onceCallback(event) {
+        setTimeout(function () {
+            _this.removeListener(type, onceCallback);
+        }, 0);
+
+        callback(event);
+    }
+
+    this.on(type, onceCallback);
+};
 
 /**
  Removes event listener
@@ -345,7 +376,17 @@ WebsocketProvider.prototype.removeListener = function(type, callback) {
             });
             break;
 
-        // TODO remvoving connect missing
+        case 'connect':
+            this.connection.removeEventListener('open', callback);
+            break;
+
+        case 'end':
+            this.connection.removeEventListener('close', callback);
+            break;
+
+        case 'error':
+            this.connection.removeEventListener('error', callback);
+            break;
 
         // default:
         //     this.connection.removeListener(type, callback);
