@@ -222,20 +222,6 @@ WebsocketProvider.prototype._removeAllSocketListeners = function() {
 };
 
 /**
- * Will add the error and end event to timeout existing calls
- *
- * @deprecated
- * @method addDefaultEvents
- *
- * @returns {void}
- */
-WebsocketProvider.prototype.addDefaultEvents = function() {
-    console.warn('Method addDefaultEvents is deprecated please use addSocketListeners');
-
-    this._addSocketListeners();
-};
-
-/**
  * Will parse the response and make an array out of it.
  *
  * @method _parseResponse
