@@ -70,7 +70,7 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.protocol = options.protocol || undefined;
     this.autoReconnect = options.autoReconnect;
     this.reconnectDelay = options.reconnectDelay;
-    this.maxReconnectAttempts = options.maxReconnectAttempts;
+    this.maxReconnectAttempts = options.maxReconnectAttempts || false;
 
     this.DATA = 'data';
     this.CLOSE = 'close';
@@ -455,7 +455,7 @@ WebsocketProvider.prototype.reconnect = function() {
 
     this.reconnecting = true;
 
-    if (this.maxReconnectAttempts && this.reconnectAttempts < this.maxReconnectAttempts) {
+    if (!this.maxReconnectAttempts || this.reconnectAttempts < this.maxReconnectAttempts) {
         setTimeout(function() {
             _this.reconnectAttempts++;
             _this.removeAllSocketListeners();
