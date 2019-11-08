@@ -101,6 +101,8 @@ WebsocketProvider.prototype = new EventEmitter();
  * @returns {void}
  */
 WebsocketProvider.prototype.removeAllSocketListeners = function() {
+    this.connection.removeEventListener();
+
     this.removeAllListeners(this.SOCKET_DATA);
     this.removeAllListeners(this.SOCKET_CLOSE);
     this.removeAllListeners(this.SOCKET_ERROR);
@@ -132,7 +134,6 @@ WebsocketProvider.prototype.onMessage = function(e) {
     this._parseResponse((typeof e.data === 'string') ? e.data : '').forEach(function(result) {
         if (result.method && result.method.indexOf('_subscription') !== -1) {
             _this.emit('data', result);
-            _this.emit(_this.SOCKET_DATA, result);
 
             return;
         }
@@ -145,7 +146,6 @@ WebsocketProvider.prototype.onMessage = function(e) {
         }
 
         _this.emit(id, result);
-        _this.emit(_this.SOCKET_DATA, result);
     });
 };
 
@@ -158,7 +158,6 @@ WebsocketProvider.prototype.onMessage = function(e) {
  */
 WebsocketProvider.prototype.onError = function(error) {
     this.emit(this.ERROR, error);
-    this.emit(this.SOCKET_ERROR, error);
 
     this.removeAllSocketListeners();
 };
@@ -173,7 +172,6 @@ WebsocketProvider.prototype.onError = function(error) {
 WebsocketProvider.prototype.onConnect = function() {
     this.reconnecting = false;
     this.emit(this.OPEN);
-    this.emit(this.SOCKET_OPEN);
 
     if (this.requestQueue.size > 0) {
         var _this = this;
@@ -201,7 +199,6 @@ WebsocketProvider.prototype.onClose = function(event) {
     }
 
     this.emit(this.CLOSE, error);
-    this.emit(this.SOCKET_CLOSE, error);
 
     if (this.requestQueue.size > 0) {
         var _this = this;
@@ -218,7 +215,7 @@ WebsocketProvider.prototype.onClose = function(event) {
 };
 
 /**
- * Will add the error and end event to timeout existing calls
+ * Will add the required socket listeners
  *
  * @method addSocketListeners
  *
@@ -229,6 +226,20 @@ WebsocketProvider.prototype.addSocketListeners = function() {
     this.connection.addEventListener('open', this.onConnect.bind(this));
     this.connection.addEventListener('close', this.onClose.bind(this));
     this.connection.addEventListener('error', this.onError.bind(this));
+};
+
+/**
+ * Will remove all socket listeners
+ *
+ * @method addSocketListeners
+ *
+ * @returns {void}
+ */
+WebsocketProvider.prototype.removeAllSocketListeners = function() {
+    this.connection.removeEventListener('message', this.onMessage);
+    this.connection.removeEventListener('open', this.onConnect);
+    this.connection.removeEventListener('close', this.onClose);
+    this.connection.removeEventListener('error', this.onError);
 };
 
 /**
@@ -434,7 +445,6 @@ WebsocketProvider.prototype.reconnect = function() {
 
     this.reconnecting = false;
     this.emit(this.ERROR, error);
-    this.emit(this.SOCKET_ERROR, error);
 };
 
 module.exports = WebsocketProvider;
