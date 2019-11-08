@@ -113,7 +113,7 @@ WebsocketProvider.prototype.onMessage = function(e) {
         var id = result.id;
 
         // get the id which matches the returned id
-        if (isArray(result)) {
+        if (Array.isArray(result)) {
             id = result[0].id;
         }
 
@@ -243,7 +243,6 @@ WebsocketProvider.prototype._parseResponse = function(data) {
 
         try {
             result = JSON.parse(data);
-
         } catch (e) {
             _this.lastChunk = data;
 
@@ -303,7 +302,7 @@ WebsocketProvider.prototype.send = function(payload, callback) {
 
     var id = payload.id;
 
-    if (isArray(payload)) {
+    if (Array.isArray(payload)) {
         id = payload[0].id;
     }
 
