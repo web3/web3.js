@@ -131,6 +131,15 @@ WebsocketProvider.prototype.onMessage = function(e) {
 WebsocketProvider.prototype.onError = function(error) {
     this.emit(this.ERROR, error);
 
+    if (this.requestQueue.size > 0) {
+        var _this = this;
+
+        this.requestQueue.forEach(function(request) {
+            request.callback(error);
+            _this.requestQueue.delete(request);
+        });
+    }
+
     this._removeSocketListeners();
 };
 
@@ -149,7 +158,6 @@ WebsocketProvider.prototype.onConnect = function() {
 
         this.requestQueue.forEach(function(request) {
             _this.send(request.payload, request.callback);
-            _this.removeListener('error', request.callback);
             _this.requestQueue.delete(request);
         });
     }
@@ -176,7 +184,6 @@ WebsocketProvider.prototype.onClose = function(event) {
 
         this.requestQueue.forEach(function(request) {
             request.callback(new Error('connection not open on send()'));
-            _this.removeListener('error', request.callback);
             _this.requestQueue.delete(request);
         });
     }
@@ -269,8 +276,6 @@ WebsocketProvider.prototype._parseResponse = function(data) {
  * @returns {void}
  */
 WebsocketProvider.prototype.send = function(payload, callback) {
-    this.once('error', callback);
-
     if (this.connection.readyState === this.connection.CONNECTING) {
         this.requestQueue.add({payload: payload, callback: callback});
 
@@ -278,8 +283,6 @@ WebsocketProvider.prototype.send = function(payload, callback) {
     }
 
     if (this.connection.readyState !== this.connection.OPEN) {
-        this.removeListener('error', callback);
-
         if (typeof this.connection.onerror === 'function') {
             this.connection.onerror(new Error('connection not open on send()'));
         } else {
@@ -294,9 +297,8 @@ WebsocketProvider.prototype.send = function(payload, callback) {
     try {
         this.connection.send(JSON.stringify(payload));
     } catch (error) {
-        this.removeListener('error', callback);
-
         callback(error);
+
         return;
     }
 
@@ -308,7 +310,6 @@ WebsocketProvider.prototype.send = function(payload, callback) {
 
     if (this._customTimeout) {
         var timeout = setTimeout(() => {
-            this.removeListener('error', callback);
             this.removeAllListeners(id);
 
             callback(new Error('Connection error: Timeout exceeded'));
@@ -319,8 +320,6 @@ WebsocketProvider.prototype.send = function(payload, callback) {
         if (timeout) {
             clearTimeout(timeout);
         }
-
-        this.removeListener('error', callback);
 
         callback(response);
     });
