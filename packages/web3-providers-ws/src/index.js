@@ -272,13 +272,9 @@ WebsocketProvider.prototype.send = function(payload, callback) {
     var _this = this;
 
     if (this.connection.readyState === this.connection.CONNECTING) {
-        this.connection.addEventListener(
-            'open',
-            function() {
-                _this.send(payload, callback);
-            },
-            {once: true}
-        );
+        this.once('connect', function() {
+            _this.send(payload, callback);
+        });
 
         return;
     }
