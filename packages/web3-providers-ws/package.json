@@ -13,7 +13,6 @@
   "types": "types/index.d.ts",
   "main": "src/index.js",
   "dependencies": {
-    "underscore": "1.9.1",
     "@web3-js/websocket": "^1.0.29",
     "eventemitter3": "^4.0.0"
   },
