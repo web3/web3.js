@@ -235,30 +235,41 @@ WebsocketProvider.prototype._parseResponse = function(data) {
 
     // DE-CHUNKER
     var dechunkedData = data
-        .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
-        .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
-        .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
-        .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
+        .replace(/\}[\n\r]?\{/g,'}|--|{') // }{
+        .replace(/\}\][\n\r]?\[\{/g,'}]|--|[{') // }][{
+        .replace(/\}[\n\r]?\[\{/g,'}|--|[{') // }[{
+        .replace(/\}\][\n\r]?\{/g,'}]|--|{') // }]{
         .split('|--|');
 
-    dechunkedData.forEach(function(data) {
+    dechunkedData.forEach(function(data){
+
         // prepend the last chunk
-        if (_this.lastChunk)
+        if(_this.lastChunk)
             data = _this.lastChunk + data;
 
         var result = null;
 
         try {
             result = JSON.parse(data);
-        } catch (e) {
+
+        } catch(e) {
+
             _this.lastChunk = data;
+
+            // start timeout to cancel all requests
+            clearTimeout(_this.lastChunkTimeout);
+            _this.lastChunkTimeout = setTimeout(function(){
+                _this.emit('timeout');
+            }, _this._customTimeout);
 
             return;
         }
 
+        // cancel timeout and set chunk to null
+        clearTimeout(_this.lastChunkTimeout);
         _this.lastChunk = null;
 
-        if (result)
+        if(result)
             returnValues.push(result);
     });
 
@@ -276,6 +287,8 @@ WebsocketProvider.prototype._parseResponse = function(data) {
  * @returns {void}
  */
 WebsocketProvider.prototype.send = function(payload, callback) {
+    var _this = this;
+
     if (this.connection.readyState === this.connection.CONNECTING) {
         this.requestQueue.add({payload: payload, callback: callback});
 
@@ -308,21 +321,18 @@ WebsocketProvider.prototype.send = function(payload, callback) {
         id = payload[0].id;
     }
 
-    if (this._customTimeout) {
-        var timeout = setTimeout(() => {
-            this.removeAllListeners(id);
+    const timeout = function() {
+        _this.removeAllListeners(id);
 
-            callback(new Error('Connection error: Timeout exceeded'));
-        }, this._customTimeout);
-    }
+        callback(new Error('Connection error: Timeout exceeded'));
+    };
 
-    this.once(id, (response) => {
-        if (timeout) {
-            clearTimeout(timeout);
-        }
+    this.once('timeout', timeout)
+        .once(id, function(response) {
+            _this.removeListener('timeout', timeout);
 
-        callback(response);
-    });
+            callback(response);
+        });
 };
 
 /**
