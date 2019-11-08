@@ -263,13 +263,22 @@ WebsocketProvider.prototype._parseResponse = function(data) {
             // start timeout to cancel all requests
             clearTimeout(_this.lastChunkTimeout);
             _this.lastChunkTimeout = setTimeout(function(){
-                if(_this.requestOptions && _this.requestOptions.onTimeout) {
+                if(_this.reconnectOptions && _this.reconnectOptions.onTimeout) {
                     _this.reconnect();
 
                     return;
                 }
 
-                _this.emit(_this.ERROR, new Error('Connection error: Timeout exceeded'));
+                var error = new Error('Connection error: Timeout exceeded');
+
+                _this.emit(_this.ERROR, error);
+
+                if (_this.requestQueue.size > 0) {
+                    _this.requestQueue.forEach(function(request) {
+                        request.callback(error);
+                        _this.requestQueue.delete(request);
+                    });
+                }
             }, _this._customTimeout);
 
             return;
