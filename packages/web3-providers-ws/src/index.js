@@ -37,9 +37,10 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this._customTimeout = options.timeout || 1000 * 15;
     this.headers = options.headers || {};
     this.protocol = options.protocol || undefined;
-    this.autoReconnect = options.autoReconnect;
-    this.reconnectDelay = options.reconnectDelay || 5000;
-    this.maxReconnectAttempts = options.maxReconnectAttempts || false;
+    this.reconnectOptions = options.reconnect || false;
+    this.reconnectOptions.delay = this.reconnectOptions.delay || 5000;
+    this.reconnectOptions.maxAttempts = this.reconnectOptions.maxAttempts || false;
+    this.reconnectOptions.onTimeout = this.reconnectOptions.onTimeout || false;
     this.clientConfig = options.clientConfig || undefined; // Allow a custom client configuration
     this.requestOptions = options.requestOptions || undefined; // Allow a custom request options (https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketClient.md#connectrequesturl-requestedprotocols-origin-headers-requestoptions)
 
@@ -129,16 +130,9 @@ WebsocketProvider.prototype._onMessage = function(e) {
  * @returns {void}
  */
 WebsocketProvider.prototype._onError = function(error) {
-    if (error.message.indexOf('Timeout exceeded') > -1) {
-        this.reconnect();
-
-        return;
-    }
-
     if (!error.code) {
         this.emit(this.ERROR, error);
 
-        // TODO: Check closer if calling of the callbacks does make sense here
         if (this.requestQueue.size > 0) {
             var _this = this;
 
@@ -181,7 +175,7 @@ WebsocketProvider.prototype._onConnect = function() {
  * @returns {void}
  */
 WebsocketProvider.prototype._onClose = function(event) {
-    if (this.autoReconnect && (event.code !== 1000 || event.wasClean === false)) {
+    if (this.reconnectOptions && (![1000, 1001].includes(event.code) || event.wasClean === false)) {
         this.reconnect();
 
         return;
@@ -269,6 +263,12 @@ WebsocketProvider.prototype._parseResponse = function(data) {
             // start timeout to cancel all requests
             clearTimeout(_this.lastChunkTimeout);
             _this.lastChunkTimeout = setTimeout(function(){
+                if(_this.requestOptions && _this.requestOptions.onTimeout) {
+                    _this.reconnect();
+
+                    return;
+                }
+
                 _this.emit(_this.ERROR, new Error('Connection error: Timeout exceeded'));
             }, _this._customTimeout);
 
@@ -393,13 +393,16 @@ WebsocketProvider.prototype.supportsSubscriptions = function() {
 WebsocketProvider.prototype.reconnect = function() {
     var _this = this;
 
-    if (!this.maxReconnectAttempts || this.reconnectAttempts < this.maxReconnectAttempts) {
+    if (
+        !this.reconnectOptions.maxAttempts ||
+        this.reconnectAttempts < this.reconnectOptions.maxAttempts
+    ) {
         setTimeout(function() {
             _this.reconnectAttempts++;
             _this._removeSocketListeners();
             _this.emit(_this.RECONNECT, _this.reconnectAttempts);
             _this.connect();
-        }, this.reconnectDelay);
+        }, this.reconnectOptions.delay);
 
         return;
     }
