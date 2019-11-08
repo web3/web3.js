@@ -156,11 +156,8 @@ WebsocketProvider.prototype.connect = function() {
  */
 WebsocketProvider.prototype.onMessage = function(e) {
     var _this = this;
-    var data = (typeof e.data === 'string') ? e.data : '';
 
-    this._parseResponse(data).forEach(function(result) {
-        var id = null;
-
+    this._parseResponse((typeof e.data === 'string') ? e.data : '').forEach(function(result) {
         if (result.method && result.method.indexOf('_subscription') !== -1) {
             _this.emit('data', result);
             _this.emit(_this.SOCKET_DATA, result);
@@ -168,17 +165,16 @@ WebsocketProvider.prototype.onMessage = function(e) {
             return;
         }
 
+        var id = result.id;
+
         // get the id which matches the returned id
         if (isArray(result)) {
             id = result[0].id;
-        } else {
-            id = result.id;
         }
 
         _this.emit(id, result);
         _this.emit(_this.SOCKET_DATA, result);
     });
-
 };
 
 /**
@@ -203,6 +199,8 @@ WebsocketProvider.prototype.onError = function(error) {
  */
 WebsocketProvider.prototype.onConnect = function() {
     this.reconnecting = false;
+    this.emit(this.OPEN);
+    this.emit(this.SOCKET_OPEN);
 
     if (this.requestQueue.size > 0) {
         var _this = this;
@@ -213,9 +211,6 @@ WebsocketProvider.prototype.onConnect = function() {
             _this.requestQueue.delete(request);
         });
     }
-
-    this.emit(this.OPEN);
-    this.emit(this.SOCKET_OPEN);
 };
 
 /**
@@ -232,6 +227,9 @@ WebsocketProvider.prototype.onClose = function(event) {
         return;
     }
 
+    this.emit(this.CLOSE, error);
+    this.emit(this.SOCKET_CLOSE, error);
+
     if (this.requestQueue.size > 0) {
         var _this = this;
 
@@ -241,8 +239,6 @@ WebsocketProvider.prototype.onClose = function(event) {
         });
     }
 
-    this.emit(this.CLOSE, error);
-    this.emit(this.SOCKET_CLOSE, error);
     this.removeAllSocketListeners();
     this.removeAllListeners();
 };
