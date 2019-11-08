@@ -290,8 +290,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
             // start timeout to cancel all requests
             clearTimeout(_this.lastChunkTimeout);
             _this.lastChunkTimeout = setTimeout(function() {
-                _this._timeout();
-                throw errors.InvalidResponse(data);
+                _this.emit('error', errors.InvalidResponse(data));
             }, 1000 * 15);
 
             return;
@@ -306,53 +305,6 @@ WebsocketProvider.prototype._parseResponse = function(data) {
     });
 
     return returnValues;
-};
-
-
-/**
- Adds a callback to the responseCallbacks object,
- which will be called if a response matching the response Id will arrive.
-
- @method _addResponseCallback
- */
-WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
-    var id = payload.id || payload[0].id;
-    var method = payload.method || payload[0].method;
-
-    this.responseCallbacks[id] = callback;
-    this.responseCallbacks[id].method = method;
-
-    var _this = this;
-
-    // schedule triggering the error response if a custom timeout is set
-    if (this._customTimeout) {
-        setTimeout(function() {
-            if (_this.responseCallbacks[id]) {
-                _this.responseCallbacks[id](errors.ConnectionTimeout(_this._customTimeout));
-
-                delete _this.responseCallbacks[id];
-
-                // try to reconnect
-                if (_this.connection.reconnect) {
-                    _this.connection.reconnect();
-                }
-            }
-        }, this._customTimeout);
-    }
-};
-
-/**
- Timeout all requests when the end/error event is fired
-
- @method _timeout
- */
-WebsocketProvider.prototype._timeout = function() {
-    for (var key in this.responseCallbacks) {
-        if (this.responseCallbacks.hasOwnProperty(key)) {
-            this.responseCallbacks[key](errors.InvalidConnection('on WS'));
-            delete this.responseCallbacks[key];
-        }
-    }
 };
 
 /**
@@ -443,7 +395,6 @@ WebsocketProvider.prototype.once = function(type, callback) {
  @method reset
  */
 WebsocketProvider.prototype.reset = function() {
-    this._timeout();
     this.removeAllListeners();
     this.addSocketListeners();
 };
