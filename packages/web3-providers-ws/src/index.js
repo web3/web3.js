@@ -178,6 +178,8 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
                     }
                 });
             }
+
+            _this.removeListener('close', closeListener);
         } catch(error) {
         }
     });
