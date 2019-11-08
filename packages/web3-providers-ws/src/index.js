@@ -48,7 +48,6 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.ERROR = 'error';
     this.OPEN = 'open';
     this.RECONNECT = 'reconnect';
-    this.TIMEOUT = 'timeout';
 
     this.connection = null;
     this.requestQueue = new Set();
@@ -260,7 +259,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
             // start timeout to cancel all requests
             clearTimeout(_this.lastChunkTimeout);
             _this.lastChunkTimeout = setTimeout(function(){
-                _this.emit(_this.TIMEOUT);
+                _this.emit(_this.ERROR, new Error('Connection error: Timeout exceeded'));
             }, _this._customTimeout);
 
             return;
@@ -322,15 +321,14 @@ WebsocketProvider.prototype.send = function(payload, callback) {
         id = payload[0].id;
     }
 
-    const timeout = function() {
+    const errorCallback = function(error) {
         _this.removeAllListeners(id);
-
-        callback(new Error('Connection error: Timeout exceeded'));
+        callback(error);
     };
 
-    this.once(this.TIMEOUT, timeout)
+    this.once(this.ERROR, errorCallback)
         .once(id, function(response) {
-            _this.removeListener(_this.TIMEOUT, timeout);
+            _this.removeListener(_this.ERROR, errorCallback);
 
             callback(null, response);
         });
