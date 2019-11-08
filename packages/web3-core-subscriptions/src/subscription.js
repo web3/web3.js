@@ -32,7 +32,6 @@ function Subscription(options) {
     this.id = null;
     this.callback = _.identity;
     this.arguments = null;
-    this._reconnectIntervalId = null;
 
     this.options = {
         subscription: options.subscription,
@@ -174,7 +173,6 @@ Subscription.prototype.unsubscribe = function(callback) {
     this.options.requestManager.removeSubscription(this.id, callback);
     this.id = null;
     this.removeAllListeners();
-    clearInterval(this._reconnectIntervalId);
 };
 
 /**
@@ -287,7 +285,7 @@ Subscription.prototype.resubscribe = function () {
     // unsubscribe
     this.options.requestManager.removeSubscription(this.id);
 
-    // delete id to keep the listeners on subscribe
+    // set id to null
     this.id = null;
 
     this.subscribe(this.callback);
