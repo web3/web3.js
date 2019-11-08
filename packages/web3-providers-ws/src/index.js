@@ -71,6 +71,7 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.reconnectDelay = options.reconnectDelay;
     this.headers = options.headers || {};
     this.protocol = options.protocol || undefined;
+    this.autoReconnect = options.autoReconnect;
 
     this.DATA = 'data';
     this.CLOSE = 'close';
@@ -83,6 +84,7 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.SOCKET_OPEN = 'socket_open';
 
     this.reconnecting = false;
+    this.connection = null;
 
     // The w3cwebsocket implementation does not support Basic Auth
     // username/password in the URL. So generate the basic auth header, and
@@ -123,6 +125,8 @@ WebsocketProvider.prototype = new EventEmitter();
  * Removes all socket listeners
  *
  * @method removeAllSocketListeners
+ *
+ * @returns {void}
  */
 WebsocketProvider.prototype.removeAllSocketListeners = function() {
     this.removeAllListeners(this.SOCKET_DATA);
@@ -228,7 +232,7 @@ WebsocketProvider.prototype.onConnect = function() {
 WebsocketProvider.prototype.onClose = function(event) {
     var _this = this;
 
-    if (options.autoReconnect && (event.code !== 1000 || event.wasClean === false)) {
+    if (this.autoReconnect && (event.code !== 1000 || event.wasClean === false)) {
         this.reconnect();
 
         return;
