@@ -65,13 +65,12 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     }
 
     options = options || {};
-    this.responseCallbacks = {};
-    this.requestQueue = new Set();
     this._customTimeout = options.timeout;
-    this.reconnectDelay = options.reconnectDelay;
     this.headers = options.headers || {};
     this.protocol = options.protocol || undefined;
     this.autoReconnect = options.autoReconnect;
+    this.reconnectDelay = options.reconnectDelay;
+    this.maxReconnectAttempts = options.maxReconnectAttempts;
 
     this.DATA = 'data';
     this.CLOSE = 'close';
@@ -85,6 +84,8 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
 
     this.reconnecting = false;
     this.connection = null;
+    this.requestQueue = new Set();
+    this.reconnectAttempts = 0;
 
     // The w3cwebsocket implementation does not support Basic Auth
     // username/password in the URL. So generate the basic auth header, and
@@ -222,7 +223,15 @@ WebsocketProvider.prototype.onConnect = function() {
  */
 WebsocketProvider.prototype.onClose = function(event) {
     if (this.autoReconnect && (event.code !== 1000 || event.wasClean === false)) {
-        this.reconnect();
+        try {
+            this.reconnect();
+        } catch (error) {
+            this.emit(this.CLOSE, error);
+            this.emit(this.SOCKET_CLOSE, error);
+
+            this.emit(this.ERROR, error);
+            this.emit(this.SOCKET_ERROR, error);
+        }
 
         return;
     }
@@ -369,12 +378,10 @@ WebsocketProvider.prototype.send = function(payload, callback) {
         return;
     }
 
-    var id;
+    var id = payload.id;
 
     if (isArray(payload)) {
         id = payload[0].id;
-    } else {
-        id = payload.id;
     }
 
     if (this._customTimeout) {
@@ -444,12 +451,21 @@ WebsocketProvider.prototype.supportsSubscriptions = function() {
  * @returns {void}
  */
 WebsocketProvider.prototype.reconnect = function() {
+    var _this = this;
+
     this.reconnecting = true;
 
-    setTimeout(() => {
-        this.removeAllSocketListeners();
-        this.connect();
-    }, this.reconnectDelay);
+    if (this.maxReconnectAttempts && this.reconnectAttempts < this.maxReconnectAttempts) {
+        setTimeout(function() {
+            _this.reconnectAttempts++;
+            _this.removeAllSocketListeners();
+            _this.connect();
+        }, this.reconnectDelay);
+
+        return;
+    }
+
+    throw new Error('Maximum number of reconnect attempts reached!');
 };
 
 module.exports = WebsocketProvider;
