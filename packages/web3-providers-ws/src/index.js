@@ -183,7 +183,7 @@ WebsocketProvider.prototype.onClose = function(event) {
         var _this = this;
 
         this.requestQueue.forEach(function(request) {
-            request.callback(new Error('connection not open on send()'));
+            request.callback(new Error('The current connection got closed before the request got executed.'));
             _this.requestQueue.delete(request);
         });
     }
