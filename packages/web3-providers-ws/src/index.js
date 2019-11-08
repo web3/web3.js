@@ -25,7 +25,7 @@
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var Ws = require('websocket').w3cwebsocket;
-var WsReconnector = require('websocket-reconnector');
+var EventEmitter = require('eventemitter3');
 
 var isNode = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
 
@@ -60,129 +60,46 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
         throw new Error('websocket is not available');
     }
 
-    var _this = this;
-    this.responseCallbacks = {};
-    this.notificationCallbacks = [];
-    this.requestQueue = new Set();
-
     options = options || {};
+    this.responseCallbacks = {};
+    this.requestQueue = new Set();
     this._customTimeout = options.timeout;
+    this.reconnectDelay = options.reconnectDelay;
+    this.headers = options.headers || {};
+    this.protocol = options.protocol || undefined;
+
+    this.DATA = 'data';
+    this.CLOSE = 'close';
+    this.ERROR = 'error';
+    this.OPEN = 'open';
+
+    this.SOCKET_DATA = 'socket_data';
+    this.SOCKET_CLOSE = 'socket_close';
+    this.SOCKET_ERROR = 'socket_error';
+    this.SOCKET_OPEN = 'socket_open';
+
+    this.reconnecting = false;
 
     // The w3cwebsocket implementation does not support Basic Auth
     // username/password in the URL. So generate the basic auth header, and
     // pass through with any additional headers supplied in constructor
     var parsedURL = parseURL(url);
-    var headers = options.headers || {};
-    var protocol = options.protocol || undefined;
     if (parsedURL.username && parsedURL.password) {
-        headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
+        this.headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
     }
 
     // Allow a custom client configuration
-    var clientConfig = options.clientConfig || undefined;
+    this.clientConfig = options.clientConfig || undefined;
 
     // Allow a custom request options
     // https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketClient.md#connectrequesturl-requestedprotocols-origin-headers-requestoptions
-    var requestOptions = options.requestOptions || undefined;
-
-    // Enable automatic reconnection wrapping `Ws` with reconnector
-    if (options.autoReconnect) {
-        Ws = WsReconnector(Ws);
-    }
+    this.requestOptions = options.requestOptions || undefined;
 
     // When all node core implementations that do not have the
     // WHATWG compatible URL parser go out of service this line can be removed.
     if (parsedURL.auth) {
-        headers.authorization = 'Basic ' + _btoa(parsedURL.auth);
+        this.headers.authorization = 'Basic ' + _btoa(parsedURL.auth);
     }
-    this.connection = new Ws(url, protocol, undefined, headers, requestOptions, clientConfig);
-
-    this.addDefaultEvents();
-
-
-    // LISTEN FOR CONNECTION RESPONSES
-    this.connection.onmessage = function(e) {
-        /*jshint maxcomplexity: 6 */
-        var data = (typeof e.data === 'string') ? e.data : '';
-
-        _this._parseResponse(data).forEach(function(result) {
-
-            var id = null;
-
-            // get the id which matches the returned id
-            if (_.isArray(result)) {
-                result.forEach(function(load) {
-                    if (_this.responseCallbacks[load.id])
-                        id = load.id;
-                });
-            } else {
-                id = result.id;
-            }
-
-            // notification
-            if (!id && result && result.method && result.method.indexOf('_subscription') !== -1) {
-                _this.notificationCallbacks.forEach(function(callback) {
-                    if (_.isFunction(callback))
-                        callback(result);
-                });
-
-                // fire the callback
-            } else if (_this.responseCallbacks[id]) {
-                _this.responseCallbacks[id](null, result);
-                delete _this.responseCallbacks[id];
-            }
-        });
-    };
-
-    this.on('close', function() {
-        var connectTriggered = false;
-        var connectListener = function() {
-            connectTriggered = true;
-        };
-
-        _this.once('connect', connectListener);
-
-        try {
-            if (_this.requestQueue.size > 0) {
-                _this.requestQueue.forEach(function(request) {
-                    if (!connectTriggered) {
-                        request.callback(new Error('connection not open on send()'));
-                        _this.requestQueue.delete(request);
-                    } else {
-                        throw false;
-                    }
-                });
-            }
-        } catch (error) {
-        }
-
-        _this.removeListener('connect', connectListener);
-    });
-
-    this.on('connect', () => {
-        var closeTriggered = false;
-        var closeListener = function() {
-            closeTriggered = true;
-        };
-
-        _this.once('close', closeListener);
-
-        try {
-            if (_this.requestQueue.size > 0) {
-                _this.requestQueue.forEach(function(request) {
-                    if (!closeTriggered) {
-                        _this.send(request.payload, request.callback);
-                        _this.requestQueue.delete(request);
-                    } else {
-                        throw false;
-                    }
-                });
-            }
-        } catch(error) {
-        }
-
-        _this.removeListener('close', closeListener);
-    });
 
     // make property `connected` which will return the current connection status
     Object.defineProperty(this, 'connected', {
@@ -191,30 +108,150 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
         },
         enumerable: true
     });
+
+    this.connect();
+};
+
+WebsocketProvider.prototype = new EventEmitter();
+
+/**
+ * Removes all socket listeners
+ *
+ * @method removeAllSocketListeners
+ */
+WebsocketProvider.prototype.removeAllSocketListeners = function() {
+    this.removeAllListeners(this.SOCKET_DATA);
+    this.removeAllListeners(this.SOCKET_CLOSE);
+    this.removeAllListeners(this.SOCKET_ERROR);
+    this.removeAllListeners(this.SOCKET_OPEN);
+};
+
+/**
+ *
+ */
+WebsocketProvider.prototype.connect = function() {
+    this.connection = new Ws(this.url, this.protocol, undefined, this.headers, this.requestOptions, this.clientConfig);
+    this.addSocketListeners();
+};
+
+/**
+ * Listener for the `data` event of the underlying WebSocket object
+ *
+ * @method onMessage
+ */
+WebsocketProvider.prototype.onMessage = function(e) {
+    var _this = this;
+
+    /*jshint maxcomplexity: 6 */
+    var data = (typeof e.data === 'string') ? e.data : '';
+
+    this._parseResponse(data).forEach(function(result) {
+
+        var id = null;
+
+        // get the id which matches the returned id
+        if (_.isArray(result)) {
+            result.forEach(function(load) {
+                if (_this.responseCallbacks[load.id])
+                    id = load.id;
+            });
+        } else {
+            id = result.id;
+        }
+
+        // notification
+        if (!id && result && result.method && result.method.indexOf('_subscription') !== -1) {
+            _this.emit(_this.DATA, result);
+
+            // fire the callback
+        } else if (_this.responseCallbacks[id]) {
+            _this.responseCallbacks[id](null, result);
+            delete _this.responseCallbacks[id];
+        }
+
+        _this.emit(_this.SOCKET_DATA, result);
+    });
+
+};
+
+/**
+ * Listener for the `error` event of the underlying WebSocket object
+ *
+ * @method onError
+ */
+WebsocketProvider.prototype.onError = function(error) {
+    this.emit(this.ERROR, error);
+    this.emit(this.SOCKET_ERROR, error);
+    this.removeAllSocketListeners();
+};
+
+/**
+ * Listener for the `open` event of the underlying WebSocket object
+ *
+ * @method onConnect
+ */
+WebsocketProvider.prototype.onConnect = function() {
+    var _this = this;
+    this.reconnecting = false;
+
+    if (this.requestQueue.size > 0) {
+        this.requestQueue.forEach(function(request) {
+            _this.send(request.payload, request.callback);
+            _this.removeListener('error', request.callback);
+            _this.requestQueue.delete(request);
+        });
+    }
+};
+
+/**
+ * Listener for the `close` event of the underlying WebSocket object
+ *
+ * @method onClose
+ */
+WebsocketProvider.prototype.onClose = function(event) {
+    var _this = this;
+
+    if (options.autoReconnect && (event.code !== 1000 || event.wasClean === false)) {
+        this.reconnect();
+
+        return;
+    }
+
+    if (this.requestQueue.size > 0) {
+        this.requestQueue.forEach(function(request) {
+            request.callback(new Error('connection not open on send()'));
+            _this.requestQueue.delete(request);
+        });
+    }
+
+    this.emit(this.CLOSE, error);
+    this.emit(this.SOCKET_CLOSE, error);
+    this.removeAllSocketListeners();
+    this.removeAllListeners();
 };
 
 /**
  Will add the error and end event to timeout existing calls
 
+ @method addSocketListeners
+ */
+WebsocketProvider.prototype.addSocketListeners = function() {
+    this.connection.addEventListener('message', this.onMessage.bind(this));
+    this.connection.addEventListener('open', this.onConnect.bind(this));
+    this.connection.addEventListener('close', this.onClose.bind(this));
+    this.connection.addEventListener('error', this.onError.bind(this));
+};
+
+/**
+ Will add the error and end event to timeout existing calls
+
+ @deprecated
  @method addDefaultEvents
  */
 WebsocketProvider.prototype.addDefaultEvents = function() {
-    var _this = this;
+    console.warn('Method addDefaultEvents is deprecated please use addSocketListeners');
 
-    this.connection.onerror = function() {
-        _this._timeout();
-    };
-
-    this.connection.onclose = function() {
-        _this._timeout();
-
-        // reset all requests and callbacks
-        _this.reset();
-    };
-
-    // this.connection.on('timeout', function(){
-    //     _this._timeout();
-    // });
+    this.addSocketListeners();
 };
 
 /**
@@ -329,16 +366,17 @@ WebsocketProvider.prototype._timeout = function() {
  * @returns {void}
  */
 WebsocketProvider.prototype.send = function(payload, callback) {
+    this.once('error', callback);
+
     if (this.connection.readyState === this.connection.CONNECTING) {
         this.requestQueue.add({payload: payload, callback: callback});
 
         return;
     }
 
-    // try reconnect, when connection is gone
-    // if(!this.connection.writable)
-    //     this.connection.connect({url: this.url});
     if (this.connection.readyState !== this.connection.OPEN) {
+        this.removeListener('error', callback);
+
         if (typeof this.connection.onerror === 'function') {
             this.connection.onerror(new Error('connection not open on send()'));
         } else {
@@ -350,57 +388,41 @@ WebsocketProvider.prototype.send = function(payload, callback) {
         return;
     }
 
-    this.connection.send(JSON.stringify(payload));
-    this._addResponseCallback(payload, callback);
-};
+    try {
+        this.connection.send(JSON.stringify(payload));
+    } catch (error) {
+        this.removeListener('error', callback);
 
-/**
- Subscribes to provider events.provider
-
- @method on
- @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
- @param {Function} callback   the callback to call
- @param {Boolean} once
-
- */
-WebsocketProvider.prototype.on = function(type, callback, once) {
-    var _this = this;
-
-    if (typeof callback !== 'function') {
-        throw new Error('The second parameter callback must be a function.');
+        callback(error);
+        return;
     }
 
-    switch (type) {
-        case 'data':
-            if (once) {
-                this.notificationCallbacks.push(function onceCallback(event) {
-                    setTimeout(function() {
-                        _this.removeListener(type, onceCallback);
-                    }, 0);
+    var id;
 
-                    callback(event);
-                });
-            } else {
-                this.notificationCallbacks.push(callback);
-            }
-            break;
-
-        case 'connect':
-            this.connection.addEventListener('open', callback, {once: once});
-            break;
-
-        case 'end':
-            this.connection.addEventListener('close', callback, {once: once});
-            break;
-
-        case 'error':
-            this.connection.addEventListener('error', callback, {once: once});
-            break;
-
-        // default:
-        //     this.connection.on(type, callback);
-        //     break;
+    if (isArray(payload)) {
+        id = payload[0].id;
+    } else {
+        id = payload.id;
     }
+
+    if (this._customTimeout) {
+        var timeout = setTimeout(() => {
+            this.removeListener('error', callback);
+            this.removeAllListeners(id);
+
+            callback(new Error('Connection error: Timeout exceeded'));
+        }, this._customTimeout);
+    }
+
+    this.once(id, (response) => {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+
+        this.removeListener('error', callback);
+
+        callback(response);
+    });
 };
 
 /**
@@ -414,73 +436,6 @@ WebsocketProvider.prototype.once = function(type, callback) {
     this.on(type, callback, true);
 };
 
-/**
- Removes event listener
-
- @method removeListener
- @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
- @param {Function} callback   the callback to call
- */
-WebsocketProvider.prototype.removeListener = function(type, callback) {
-    var _this = this;
-
-    switch (type) {
-        case 'data':
-            this.notificationCallbacks.forEach(function(cb, index) {
-                if (cb === callback)
-                    _this.notificationCallbacks.splice(index, 1);
-            });
-            break;
-
-        case 'connect':
-            this.connection.removeEventListener('open', callback);
-            break;
-
-        case 'end':
-            this.connection.removeEventListener('close', callback);
-            break;
-
-        case 'error':
-            this.connection.removeEventListener('error', callback);
-            break;
-
-        // default:
-        //     this.connection.removeListener(type, callback);
-        //     break;
-    }
-};
-
-/**
- Removes all event listeners
-
- @method removeAllListeners
- @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
- */
-WebsocketProvider.prototype.removeAllListeners = function(type) {
-    switch (type) {
-        case 'data':
-            this.notificationCallbacks = [];
-            break;
-
-        // TODO remvoving connect properly missing
-
-        case 'connect':
-            this.connection.onopen = null;
-            break;
-
-        case 'end':
-            this.connection.onclose = null;
-            break;
-
-        case 'error':
-            this.connection.onerror = null;
-            break;
-
-        default:
-            // this.connection.removeAllListeners(type);
-            break;
-    }
-};
 
 /**
  Resets the providers, clears all callbacks
@@ -489,18 +444,23 @@ WebsocketProvider.prototype.removeAllListeners = function(type) {
  */
 WebsocketProvider.prototype.reset = function() {
     this._timeout();
-    this.notificationCallbacks = [];
-
-    // this.connection.removeAllListeners('error');
-    // this.connection.removeAllListeners('end');
-    // this.connection.removeAllListeners('timeout');
-
-    this.addDefaultEvents();
+    this.removeAllListeners();
+    this.addSocketListeners();
 };
 
-WebsocketProvider.prototype.disconnect = function() {
+/**
+ * Closes the current connection with the given code and reason arguments
+ *
+ * @method disconnect
+ *
+ * @param {number} code
+ * @param {string} reason
+ *
+ * @returns {void}
+ */
+WebsocketProvider.prototype.disconnect = function(code, reason) {
     if (this.connection) {
-        this.connection.close();
+        this.connection.close(code, reason);
     }
 };
 
@@ -512,6 +472,20 @@ WebsocketProvider.prototype.disconnect = function() {
  */
 WebsocketProvider.prototype.supportsSubscriptions = function() {
     return true;
+};
+
+/**
+ * Removes the listeners and reconnects to the socket.
+ *
+ * @method reconnect
+ */
+WebsocketProvider.prototype.reconnect = function() {
+    this.reconnecting = true;
+
+    setTimeout(() => {
+        this.removeAllSocketListeners();
+        this.connect();
+    }, this.reconnectDelay);
 };
 
 module.exports = WebsocketProvider;
