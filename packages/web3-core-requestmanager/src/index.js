@@ -218,12 +218,14 @@ RequestManager.prototype.addSubscription = function (subscription, callback) {
  */
 RequestManager.prototype.removeSubscription = function (id, callback) {
     if(this.subscriptions.has(id)) {
+        var type = this.subscriptions.get(id).subscription.type;
+
         // remove subscription first to avoid reentry
         this.subscriptions.delete(id);
 
         // then, try to actually unsubscribe
         this.send({
-            method: this.subscriptions.get(id).subscription.type + '_unsubscribe',
+            method: type + '_unsubscribe',
             params: [id]
         }, callback);
 
@@ -247,7 +249,7 @@ RequestManager.prototype.clearSubscriptions = function(keepIsSyncing) {
 
     // uninstall all subscriptions
     this.subscriptions.forEach(function(value, id){
-        if(!keepIsSyncing || _this.subscriptions.get(id).name !== 'syncing')
+        if(!keepIsSyncing || value.name !== 'syncing')
             _this.removeSubscription(id);
     });
 
