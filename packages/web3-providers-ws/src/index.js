@@ -52,9 +52,13 @@ if (isNode) {
         return new URL(url);
     };
 }
-// Default connection ws://localhost:8546
 
-
+/**
+ * @param {string} url
+ * @param {Object} options
+ *
+ * @constructor
+ */
 var WebsocketProvider = function WebsocketProvider(url, options) {
     if (!Ws) {
         throw new Error('websocket is not available');
@@ -112,6 +116,7 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.connect();
 };
 
+// Inherit from EventEmitter
 WebsocketProvider.prototype = new EventEmitter();
 
 /**
@@ -127,7 +132,11 @@ WebsocketProvider.prototype.removeAllSocketListeners = function() {
 };
 
 /**
+ * Connects to the configured node
  *
+ * @method connect
+ *
+ * @returns {void}
  */
 WebsocketProvider.prototype.connect = function() {
     this.connection = new Ws(this.url, this.protocol, undefined, this.headers, this.requestOptions, this.clientConfig);
@@ -138,6 +147,8 @@ WebsocketProvider.prototype.connect = function() {
  * Listener for the `data` event of the underlying WebSocket object
  *
  * @method onMessage
+ *
+ * @returns {void}
  */
 WebsocketProvider.prototype.onMessage = function(e) {
     var _this = this;
@@ -178,6 +189,8 @@ WebsocketProvider.prototype.onMessage = function(e) {
  * Listener for the `error` event of the underlying WebSocket object
  *
  * @method onError
+ *
+ * @returns {void}
  */
 WebsocketProvider.prototype.onError = function(error) {
     this.emit(this.ERROR, error);
@@ -189,6 +202,8 @@ WebsocketProvider.prototype.onError = function(error) {
  * Listener for the `open` event of the underlying WebSocket object
  *
  * @method onConnect
+ *
+ * @returns {void}
  */
 WebsocketProvider.prototype.onConnect = function() {
     var _this = this;
@@ -207,6 +222,8 @@ WebsocketProvider.prototype.onConnect = function() {
  * Listener for the `close` event of the underlying WebSocket object
  *
  * @method onClose
+ *
+ * @returns {void}
  */
 WebsocketProvider.prototype.onClose = function(event) {
     var _this = this;
@@ -231,9 +248,11 @@ WebsocketProvider.prototype.onClose = function(event) {
 };
 
 /**
- Will add the error and end event to timeout existing calls
-
- @method addSocketListeners
+ * Will add the error and end event to timeout existing calls
+ *
+ * @method addSocketListeners
+ *
+ * @returns {void}
  */
 WebsocketProvider.prototype.addSocketListeners = function() {
     this.connection.addEventListener('message', this.onMessage.bind(this));
@@ -243,10 +262,12 @@ WebsocketProvider.prototype.addSocketListeners = function() {
 };
 
 /**
- Will add the error and end event to timeout existing calls
-
- @deprecated
- @method addDefaultEvents
+ * Will add the error and end event to timeout existing calls
+ *
+ * @deprecated
+ * @method addDefaultEvents
+ *
+ * @returns {void}
  */
 WebsocketProvider.prototype.addDefaultEvents = function() {
     console.warn('Method addDefaultEvents is deprecated please use addSocketListeners');
@@ -255,10 +276,13 @@ WebsocketProvider.prototype.addDefaultEvents = function() {
 };
 
 /**
- Will parse the response and make an array out of it.
-
- @method _parseResponse
- @param {String} data
+ * Will parse the response and make an array out of it.
+ *
+ * @method _parseResponse
+ *
+ * @param {String} data
+ *
+ * @returns {Array}
  */
 WebsocketProvider.prototype._parseResponse = function(data) {
     var _this = this,
@@ -378,21 +402,11 @@ WebsocketProvider.prototype.send = function(payload, callback) {
 };
 
 /**
- Subscribes to provider only once
-
- @method once
- @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
- @param {Function} callback   the callback to call
- */
-WebsocketProvider.prototype.once = function(type, callback) {
-    this.on(type, callback, true);
-};
-
-
-/**
- Resets the providers, clears all callbacks
-
- @method reset
+ * Resets the providers, clears all callbacks
+ *
+ * @method reset
+ *
+ * @returns {void}
  */
 WebsocketProvider.prototype.reset = function() {
     this.removeAllListeners();
@@ -419,6 +433,7 @@ WebsocketProvider.prototype.disconnect = function(code, reason) {
  * Returns the desired boolean.
  *
  * @method supportsSubscriptions
+ *
  * @returns {boolean}
  */
 WebsocketProvider.prototype.supportsSubscriptions = function() {
@@ -429,6 +444,8 @@ WebsocketProvider.prototype.supportsSubscriptions = function() {
  * Removes the listeners and reconnects to the socket.
  *
  * @method reconnect
+ *
+ * @returns {void}
  */
 WebsocketProvider.prototype.reconnect = function() {
     this.reconnecting = true;
