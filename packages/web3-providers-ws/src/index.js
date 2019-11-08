@@ -146,17 +146,17 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
             if (_this.requestQueue.size > 0) {
                 _this.requestQueue.forEach(function(request) {
                     if (!connectTriggered) {
-                        request.callback(new Error('Connection closed before the request got executed.'));
+                        request.callback(new Error('connection not open on send()'));
                         _this.requestQueue.delete(request);
                     } else {
                         throw false;
                     }
                 });
             }
-
-            _this.removeListener('connect', connectListener);
         } catch (error) {
         }
+
+        _this.removeListener('connect', connectListener);
     });
 
     this.on('connect', () => {
@@ -178,10 +178,10 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
                     }
                 });
             }
-
-            _this.removeListener('close', closeListener);
         } catch(error) {
         }
+
+        _this.removeListener('close', closeListener);
     });
 
     // make property `connected` which will return the current connection status
