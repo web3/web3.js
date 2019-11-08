@@ -312,9 +312,11 @@ WebsocketProvider.prototype.send = function(payload, callback) {
 
  */
 WebsocketProvider.prototype.on = function(type, callback, once) {
+    var _this = this;
 
-    if (typeof callback !== 'function')
+    if (typeof callback !== 'function') {
         throw new Error('The second parameter callback must be a function.');
+    }
 
     switch (type) {
         case 'data':
