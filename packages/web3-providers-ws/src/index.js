@@ -97,11 +97,11 @@ WebsocketProvider.prototype.connect = function() {
 /**
  * Listener for the `data` event of the underlying WebSocket object
  *
- * @method onMessage
+ * @method _onMessage
  *
  * @returns {void}
  */
-WebsocketProvider.prototype.onMessage = function(e) {
+WebsocketProvider.prototype._onMessage = function(e) {
     var _this = this;
 
     this._parseResponse((typeof e.data === 'string') ? e.data : '').forEach(function(result) {
@@ -125,11 +125,11 @@ WebsocketProvider.prototype.onMessage = function(e) {
 /**
  * Listener for the `error` event of the underlying WebSocket object
  *
- * @method onError
+ * @method _onError
  *
  * @returns {void}
  */
-WebsocketProvider.prototype.onError = function(error) {
+WebsocketProvider.prototype._onError = function(error) {
     this.emit(this.ERROR, error);
 
     if (this.requestQueue.size > 0) {
@@ -147,11 +147,11 @@ WebsocketProvider.prototype.onError = function(error) {
 /**
  * Listener for the `open` event of the underlying WebSocket object
  *
- * @method onConnect
+ * @method _onConnect
  *
  * @returns {void}
  */
-WebsocketProvider.prototype.onConnect = function() {
+WebsocketProvider.prototype._onConnect = function() {
     this.emit(this.OPEN);
 
     if (this.requestQueue.size > 0) {
@@ -167,11 +167,11 @@ WebsocketProvider.prototype.onConnect = function() {
 /**
  * Listener for the `close` event of the underlying WebSocket object
  *
- * @method onClose
+ * @method _onClose
  *
  * @returns {void}
  */
-WebsocketProvider.prototype.onClose = function(event) {
+WebsocketProvider.prototype._onClose = function(event) {
     if (this.autoReconnect && (event.code !== 1000 || event.wasClean === false)) {
         this.reconnect();
 
@@ -201,10 +201,10 @@ WebsocketProvider.prototype.onClose = function(event) {
  * @returns {void}
  */
 WebsocketProvider.prototype._addSocketListeners = function() {
-    this.connection.addEventListener('message', this.onMessage.bind(this));
-    this.connection.addEventListener('open', this.onConnect.bind(this));
-    this.connection.addEventListener('close', this.onClose.bind(this));
-    this.connection.addEventListener('error', this.onError.bind(this));
+    this.connection.addEventListener('message', this._onMessage.bind(this));
+    this.connection.addEventListener('open', this._onConnect.bind(this));
+    this.connection.addEventListener('close', this._onClose.bind(this));
+    this.connection.addEventListener('error', this._onError.bind(this));
 };
 
 /**
@@ -215,10 +215,10 @@ WebsocketProvider.prototype._addSocketListeners = function() {
  * @returns {void}
  */
 WebsocketProvider.prototype._removeSocketListeners = function() {
-    this.connection.removeEventListener('message', this.onMessage);
-    this.connection.removeEventListener('open', this.onConnect);
-    this.connection.removeEventListener('close', this.onClose);
-    this.connection.removeEventListener('error', this.onError);
+    this.connection.removeEventListener('message', this._onMessage);
+    this.connection.removeEventListener('open', this._onConnect);
+    this.connection.removeEventListener('close', this._onClose);
+    this.connection.removeEventListener('error', this._onError);
 };
 
 /**
@@ -359,6 +359,8 @@ WebsocketProvider.prototype.reset = function() {
  * @returns {void}
  */
 WebsocketProvider.prototype.disconnect = function(code, reason) {
+    code = code || 1000;
+
     if (this.connection) {
         this.connection.close(code, reason);
     }
