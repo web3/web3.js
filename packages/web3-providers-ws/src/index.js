@@ -37,10 +37,19 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this._customTimeout = options.timeout || 1000 * 15;
     this.headers = options.headers || {};
     this.protocol = options.protocol || undefined;
-    this.reconnectOptions = options.reconnect || false;
-    this.reconnectOptions.delay = this.reconnectOptions.delay || 5000;
-    this.reconnectOptions.maxAttempts = this.reconnectOptions.maxAttempts || false;
-    this.reconnectOptions.onTimeout = this.reconnectOptions.onTimeout || false;
+
+    this.reconnectOptions = false;
+    if (options.reconnect) {
+        this.reconnectOptions = Object.assign({
+                delay: 5000,
+                maxAttempts: false,
+                onTimeout: false
+            },
+            options.reconnect
+        );
+
+    }
+
     this.clientConfig = options.clientConfig || undefined; // Allow a custom client configuration
     this.requestOptions = options.requestOptions || undefined; // Allow a custom request options (https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketClient.md#connectrequesturl-requestedprotocols-origin-headers-requestoptions)
 
@@ -239,16 +248,16 @@ WebsocketProvider.prototype._parseResponse = function(data) {
 
     // DE-CHUNKER
     var dechunkedData = data
-        .replace(/\}[\n\r]?\{/g,'}|--|{') // }{
-        .replace(/\}\][\n\r]?\[\{/g,'}]|--|[{') // }][{
-        .replace(/\}[\n\r]?\[\{/g,'}|--|[{') // }[{
-        .replace(/\}\][\n\r]?\{/g,'}]|--|{') // }]{
+        .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
+        .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
+        .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
+        .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
         .split('|--|');
 
-    dechunkedData.forEach(function(data){
+    dechunkedData.forEach(function(data) {
 
         // prepend the last chunk
-        if(_this.lastChunk)
+        if (_this.lastChunk)
             data = _this.lastChunk + data;
 
         var result = null;
@@ -256,14 +265,14 @@ WebsocketProvider.prototype._parseResponse = function(data) {
         try {
             result = JSON.parse(data);
 
-        } catch(e) {
+        } catch (e) {
 
             _this.lastChunk = data;
 
             // start timeout to cancel all requests
             clearTimeout(_this.lastChunkTimeout);
-            _this.lastChunkTimeout = setTimeout(function(){
-                if(_this.reconnectOptions && _this.reconnectOptions.onTimeout) {
+            _this.lastChunkTimeout = setTimeout(function() {
+                if (_this.reconnectOptions && _this.reconnectOptions.onTimeout) {
                     _this.reconnect();
 
                     return;
@@ -288,7 +297,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
         clearTimeout(_this.lastChunkTimeout);
         _this.lastChunk = null;
 
-        if(result)
+        if (result)
             returnValues.push(result);
     });
 
