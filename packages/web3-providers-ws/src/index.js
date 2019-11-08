@@ -26,7 +26,7 @@ var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var Ws = require('websocket').w3cwebsocket;
 var EventEmitter = require('eventemitter3');
-var parseURL = require('./parse-url.js');
+var helpers = require('./helpers.js');
 
 /**
  * @param {string} url
@@ -56,9 +56,9 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     // The w3cwebsocket implementation does not support Basic Auth
     // username/password in the URL. So generate the basic auth header, and
     // pass through with any additional headers supplied in constructor
-    var parsedURL = parseURL(url);
+    var parsedURL = helpers.parseURL(url);
     if (parsedURL.username && parsedURL.password) {
-        this.headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
+        this.headers.authorization = 'Basic ' + helpers.btoa(parsedURL.username + ':' + parsedURL.password);
     }
 
     // Allow a custom client configuration
@@ -71,7 +71,7 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     // When all node core implementations that do not have the
     // WHATWG compatible URL parser go out of service this line can be removed.
     if (parsedURL.auth) {
-        this.headers.authorization = 'Basic ' + _btoa(parsedURL.auth);
+        this.headers.authorization = 'Basic ' + helpers.btoa(parsedURL.auth);
     }
 
     // make property `connected` which will return the current connection status
