@@ -94,22 +94,6 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
 WebsocketProvider.prototype = new EventEmitter();
 
 /**
- * Removes all socket listeners
- *
- * @method removeAllSocketListeners
- *
- * @returns {void}
- */
-WebsocketProvider.prototype.removeAllSocketListeners = function() {
-    this.connection.removeEventListener();
-
-    this.removeAllListeners(this.SOCKET_DATA);
-    this.removeAllListeners(this.SOCKET_CLOSE);
-    this.removeAllListeners(this.SOCKET_ERROR);
-    this.removeAllListeners(this.SOCKET_OPEN);
-};
-
-/**
  * Connects to the configured node
  *
  * @method connect
@@ -231,7 +215,7 @@ WebsocketProvider.prototype.addSocketListeners = function() {
 /**
  * Will remove all socket listeners
  *
- * @method addSocketListeners
+ * @method removeAllSocketListeners
  *
  * @returns {void}
  */
