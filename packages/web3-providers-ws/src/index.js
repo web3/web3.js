@@ -14,10 +14,10 @@
  You should have received a copy of the GNU Lesser General Public License
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
-/** @file WebsocketProvider.js
- * @authors:
- *   Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2017
+/**
+ * @file WebsocketProvider.js
+ * @authors: Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2019
  */
 
 'use strict';
@@ -26,32 +26,7 @@ var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var Ws = require('websocket').w3cwebsocket;
 var EventEmitter = require('eventemitter3');
-
-var isNode = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
-
-var _btoa = null;
-var parseURL = null;
-if (isNode) {
-    _btoa = function(str) {
-        return Buffer.from(str).toString('base64');
-    };
-    var url = require('url');
-    if (url.URL) {
-        // Use the new Node 6+ API for parsing URLs that supports username/password
-        var newURL = url.URL;
-        parseURL = function(url) {
-            return new newURL(url);
-        };
-    } else {
-        // Web3 supports Node.js 5, so fall back to the legacy URL API if necessary
-        parseURL = require('url').parse;
-    }
-} else {
-    _btoa = btoa;
-    parseURL = function(url) {
-        return new URL(url);
-    };
-}
+var parseURL = require('./parse-url.js');
 
 /**
  * @param {string} url
@@ -461,6 +436,7 @@ WebsocketProvider.prototype.reconnect = function() {
 
     var error = new Error('Maximum number of reconnect attempts reached!');
 
+    this.reconnecting = false;
     this.emit(this.ERROR, error);
     this.emit(this.SOCKET_ERROR, error);
 };
