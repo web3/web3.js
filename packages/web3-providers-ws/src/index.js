@@ -67,7 +67,6 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
 
     options = options || {};
     this._customTimeout = options.timeout;
-    this._connectTimeout = options.connectTimeout;
 
     // The w3cwebsocket implementation does not support Basic Auth
     // username/password in the URL. So generate the basic auth header, and
@@ -135,22 +134,51 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
         });
     };
 
-    this.on('close', () => {
-        if (_this.requestQueue.size > 0) {
-            _this.requestQueue.forEach((request) => {
-                request.callback(new Error('Connection closed before the request got executed.'));
-               _this.requestQueue.delete(request);
-            });
+    this.on('close', function() {
+        var connectTriggered = false;
+        var connectListener = function() {
+            connectTriggered = true;
+        };
 
+        _this.once('connect', connectListener);
+
+        try {
+            if (_this.requestQueue.size > 0) {
+                _this.requestQueue.forEach(function(request) {
+                    if (!connectTriggered) {
+                        request.callback(new Error('Connection closed before the request got executed.'));
+                        _this.requestQueue.delete(request);
+                    } else {
+                        throw false;
+                    }
+                });
+            }
+
+            _this.removeListener('connect', connectListener);
+        } catch (error) {
         }
     });
 
     this.on('connect', () => {
-        if (_this.requestQueue.size > 0) {
-            _this.requestQueue.forEach((request) => {
-                _this.send(request.payload, request.callback);
-                _this.requestQueue.delete(request);
-            });
+        var closeTriggered = false;
+        var closeListener = function() {
+            closeTriggered = true;
+        };
+
+        _this.once('close', closeListener);
+
+        try {
+            if (_this.requestQueue.size > 0) {
+                _this.requestQueue.forEach(function(request) {
+                    if (!closeTriggered) {
+                        _this.send(request.payload, request.callback);
+                        _this.requestQueue.delete(request);
+                    } else {
+                        throw false;
+                    }
+                });
+            }
+        } catch(error) {
         }
     });
 
