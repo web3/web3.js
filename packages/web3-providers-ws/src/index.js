@@ -35,10 +35,6 @@ var parseURL = require('./parse-url.js');
  * @constructor
  */
 var WebsocketProvider = function WebsocketProvider(url, options) {
-    if (!Ws) {
-        throw new Error('websocket is not available');
-    }
-
     options = options || {};
     this._customTimeout = options.timeout;
     this.headers = options.headers || {};
