@@ -115,9 +115,16 @@ RequestManager.prototype.setProvider = function(provider, net) {
         });
 
         // notify all subscriptions about the error condition
-        this.provider.on('error', function (event) {
+        this.provider.on('error', function (error) {
             _this.subscriptions.forEach(function(subscription) {
-                subscription.callback(event.code || new Error('Provider error'));
+                subscription.callback(error);
+            });
+        });
+
+        // notify all subscriptions about the close condition
+        this.provider.on('close', function (event) {
+            _this.subscriptions.forEach(function(subscription) {
+                subscription.callback(event);
             });
         });
 
