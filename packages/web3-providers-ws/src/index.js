@@ -156,18 +156,23 @@ WebsocketProvider.prototype.connect = function() {
  */
 WebsocketProvider.prototype.onMessage = function(e) {
     var _this = this;
-
-    /*jshint maxcomplexity: 6 */
     var data = (typeof e.data === 'string') ? e.data : '';
 
     this._parseResponse(data).forEach(function(result) {
         var id = null;
 
+        if (result.method && result.method.indexOf('_subscription') !== -1) {
+            _this.emit('data', result);
+            _this.emit(_this.SOCKET_DATA, result);
+
+            return;
+        }
+
         // get the id which matches the returned id
-        if (isArray(response)) {
-            id = response[0].id;
+        if (isArray(result)) {
+            id = result[0].id;
         } else {
-            id = response.id;
+            id = result.id;
         }
 
         _this.emit(id, result);
