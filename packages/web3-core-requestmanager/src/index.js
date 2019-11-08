@@ -45,7 +45,7 @@ var RequestManager = function RequestManager(provider, net) {
     this.providers = RequestManager.providers;
 
     this.setProvider(provider, net);
-    this.subscriptions = {};
+    this.subscriptions = new Map();
 };
 
 
@@ -95,7 +95,6 @@ RequestManager.prototype.setProvider = function(provider, net) {
     if (this.provider && this.provider.connected)
         this.clearSubscriptions();
 
-
     this.provider = provider || null;
 
     // listen to incoming notifications
@@ -104,21 +103,25 @@ RequestManager.prototype.setProvider = function(provider, net) {
             result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
             // check for result.method, to prevent old providers errors to pass as result
-            if (
-                result.method &&
-                _this.subscriptions[result.params.subscription] &&
-                _this.subscriptions[result.params.subscription].callback
-            ) {
-                _this.subscriptions[result.params.subscription].callback(null, result.params.result);
+            if(result.method && _this.subscriptions.has(result.params.subscription)) {
+                _this.subscriptions.get(result.params.subscription).callback(null, result.params.result);
             }
         });
-        // TODO add error, end, timeout, connect??
-        // this.provider.on('error', function requestManagerNotification(result){
-        //     Object.keys(_this.subscriptions).forEach(function(id){
-        //         if(_this.subscriptions[id].callback)
-        //             _this.subscriptions[id].callback(err);
-        //     });
-        // }
+
+        this.provider.on('connect', function () {
+            _this.subscriptions.forEach(function(subscription) {
+                subscription.resubscribe();
+            });
+        });
+
+        // notify all subscriptions about the error condition
+        this.provider.on('error', function (event) {
+            _this.subscriptions.forEach(function(subscription) {
+                subscription.callback(event.code || new Error('Provider error'));
+            });
+        });
+
+        // TODO add end, timeout??
     }
 };
 
@@ -161,7 +164,7 @@ RequestManager.prototype.send = function(data, callback) {
  * Should be called to asynchronously send batch request
  *
  * @method sendBatch
- * @param {Array} batch data
+ * @param {Array} data - array of payload objects
  * @param {Function} callback
  */
 RequestManager.prototype.sendBatch = function(data, callback) {
@@ -188,18 +191,19 @@ RequestManager.prototype.sendBatch = function(data, callback) {
  * Waits for notifications
  *
  * @method addSubscription
- * @param {String} id           the subscription id
- * @param {String} name         the subscription name
+ * @param {Subscription} subscription         the subscription
  * @param {String} type         the subscription namespace (eth, personal, etc)
  * @param {Function} callback   the callback to call for incoming notifications
  */
-RequestManager.prototype.addSubscription = function(id, name, type, callback) {
-    if (this.provider.on) {
-        this.subscriptions[id] = {
-            callback: callback,
-            type: type,
-            name: name
-        };
+RequestManager.prototype.addSubscription = function (subscription, callback) {
+    if(this.provider.on) {
+        this.subscriptions.set(
+            subscription.id,
+            {
+                callback: callback,
+                subscription: subscription
+            }
+        );
     } else {
         throw new Error('The provider doesn\'t support subscriptions: ' + this.provider.constructor.name);
     }
@@ -212,18 +216,23 @@ RequestManager.prototype.addSubscription = function(id, name, type, callback) {
  * @param {String} id           the subscription id
  * @param {Function} callback   fired once the subscription is removed
  */
-RequestManager.prototype.removeSubscription = function(id, callback) {
-    var _this = this;
+RequestManager.prototype.removeSubscription = function (id, callback) {
+    if(this.subscriptions.has(id)) {
+        // remove subscription first to avoid reentry
+        this.subscriptions.delete(id);
 
-    if (this.subscriptions[id]) {
-
+        // then, try to actually unsubscribe
         this.send({
-            method: this.subscriptions[id].type + '_unsubscribe',
+            method: this.subscriptions.get(id).subscription.type + '_unsubscribe',
             params: [id]
         }, callback);
 
-        // remove subscription
-        delete _this.subscriptions[id];
+        return;
+    }
+
+    if (typeof callback === 'function') {
+        // call the callback if the subscription was already removed
+        callback(null);
     }
 };
 
@@ -237,8 +246,8 @@ RequestManager.prototype.clearSubscriptions = function(keepIsSyncing) {
 
 
     // uninstall all subscriptions
-    Object.keys(this.subscriptions).forEach(function(id) {
-        if (!keepIsSyncing || _this.subscriptions[id].name !== 'syncing')
+    this.subscriptions.forEach(function(value, id){
+        if(!keepIsSyncing || _this.subscriptions.get(id).name !== 'syncing')
             _this.removeSubscription(id);
     });
 
