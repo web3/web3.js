@@ -35,7 +35,7 @@ var helpers = require('./helpers.js');
  */
 var WebsocketProvider = function WebsocketProvider(url, options) {
     options = options || {};
-    this._customTimeout = options.timeout | 1000 * 15;
+    this._customTimeout = options.timeout || 1000 * 15;
     this.headers = options.headers || {};
     this.protocol = options.protocol || undefined;
     this.autoReconnect = options.autoReconnect;
@@ -388,9 +388,7 @@ WebsocketProvider.prototype.reconnect = function() {
         return;
     }
 
-    var error = new Error('Maximum number of reconnect attempts reached!');
-
-    this.emit(this.ERROR, error);
+    this.emit(this.ERROR, new Error('Maximum number of reconnect attempts reached!'));
 };
 
 module.exports = WebsocketProvider;
