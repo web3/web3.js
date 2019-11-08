@@ -138,7 +138,7 @@ WebsocketProvider.prototype.onMessage = function(e) {
 WebsocketProvider.prototype.onError = function(error) {
     this.emit(this.ERROR, error);
 
-    this._removeAllSocketListeners();
+    this._removeSocketListeners();
 };
 
 /**
@@ -189,7 +189,7 @@ WebsocketProvider.prototype.onClose = function(event) {
         });
     }
 
-    this._removeAllSocketListeners();
+    this._removeSocketListeners();
     this.removeAllListeners();
 };
 
@@ -210,11 +210,11 @@ WebsocketProvider.prototype._addSocketListeners = function() {
 /**
  * Will remove all socket listeners
  *
- * @method _removeAllSocketListeners
+ * @method _removeSocketListeners
  *
  * @returns {void}
  */
-WebsocketProvider.prototype._removeAllSocketListeners = function() {
+WebsocketProvider.prototype._removeSocketListeners = function() {
     this.connection.removeEventListener('message', this.onMessage);
     this.connection.removeEventListener('open', this.onConnect);
     this.connection.removeEventListener('close', this.onClose);
@@ -399,7 +399,7 @@ WebsocketProvider.prototype.reconnect = function() {
     if (!this.maxReconnectAttempts || this.reconnectAttempts < this.maxReconnectAttempts) {
         setTimeout(function() {
             _this.reconnectAttempts++;
-            _this._removeAllSocketListeners();
+            _this._removeSocketListeners();
             _this.connect();
         }, this.reconnectDelay);
 
