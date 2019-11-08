@@ -308,27 +308,39 @@ WebsocketProvider.prototype.send = function(payload, callback) {
  @method on
  @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
  @param {Function} callback   the callback to call
+ @param {Boolean} once
+
  */
-WebsocketProvider.prototype.on = function(type, callback) {
+WebsocketProvider.prototype.on = function(type, callback, once) {
 
     if (typeof callback !== 'function')
         throw new Error('The second parameter callback must be a function.');
 
     switch (type) {
         case 'data':
-            this.notificationCallbacks.push(callback);
+            if (once) {
+                this.notificationCallbacks.push(function onceCallback(event) {
+                    setTimeout(function () {
+                        _this.removeListener(type, onceCallback);
+                    }, 0);
+
+                    callback(event);
+                });
+            } else {
+                this.notificationCallbacks.push(callback);
+            }
             break;
 
         case 'connect':
-            this.connection.addEventListener('open', callback);
+            this.connection.addEventListener('open', callback, {once: once});
             break;
 
         case 'end':
-            this.connection.addEventListener('close', callback);
+            this.connection.addEventListener('close', callback, {once: once});
             break;
 
         case 'error':
-            this.connection.addEventListener('error', callback);
+            this.connection.addEventListener('error', callback, {once: once});
             break;
 
         // default:
@@ -345,17 +357,7 @@ WebsocketProvider.prototype.on = function(type, callback) {
  @param {Function} callback   the callback to call
  */
 WebsocketProvider.prototype.once = function (type, callback) {
-    var _this = this;
-
-    function onceCallback(event) {
-        setTimeout(function () {
-            _this.removeListener(type, onceCallback);
-        }, 0);
-
-        callback(event);
-    }
-
-    this.on(type, onceCallback);
+    this.on(type, callback, true);
 };
 
 /**
