@@ -36,12 +36,14 @@ var helpers = require('./helpers.js');
  */
 var WebsocketProvider = function WebsocketProvider(url, options) {
     options = options || {};
-    this._customTimeout = options.timeout;
+    this._customTimeout = options.timeout | 1000 * 15;
     this.headers = options.headers || {};
     this.protocol = options.protocol || undefined;
     this.autoReconnect = options.autoReconnect;
     this.reconnectDelay = options.reconnectDelay || 5000;
     this.maxReconnectAttempts = options.maxReconnectAttempts || false;
+    this.clientConfig = options.clientConfig || undefined; // Allow a custom client configuration
+    this.requestOptions = options.requestOptions || undefined; // Allow a custom request options (https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketClient.md#connectrequesturl-requestedprotocols-origin-headers-requestoptions)
 
     this.DATA = 'data';
     this.CLOSE = 'close';
@@ -60,13 +62,6 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     if (parsedURL.username && parsedURL.password) {
         this.headers.authorization = 'Basic ' + helpers.btoa(parsedURL.username + ':' + parsedURL.password);
     }
-
-    // Allow a custom client configuration
-    this.clientConfig = options.clientConfig || undefined;
-
-    // Allow a custom request options
-    // https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketClient.md#connectrequesturl-requestedprotocols-origin-headers-requestoptions
-    this.requestOptions = options.requestOptions || undefined;
 
     // When all node core implementations that do not have the
     // WHATWG compatible URL parser go out of service this line can be removed.
@@ -242,7 +237,6 @@ WebsocketProvider.prototype._parseResponse = function(data) {
         .split('|--|');
 
     dechunkedData.forEach(function(data) {
-
         // prepend the last chunk
         if (_this.lastChunk)
             data = _this.lastChunk + data;
@@ -253,20 +247,11 @@ WebsocketProvider.prototype._parseResponse = function(data) {
             result = JSON.parse(data);
 
         } catch (e) {
-
             _this.lastChunk = data;
-
-            // start timeout to cancel all requests
-            clearTimeout(_this.lastChunkTimeout);
-            _this.lastChunkTimeout = setTimeout(function() {
-                _this.emit('error', errors.InvalidResponse(data));
-            }, 1000 * 15);
 
             return;
         }
 
-        // cancel timeout and set chunk to null
-        clearTimeout(_this.lastChunkTimeout);
         _this.lastChunk = null;
 
         if (result)
@@ -392,7 +377,6 @@ WebsocketProvider.prototype.supportsSubscriptions = function() {
  */
 WebsocketProvider.prototype.reconnect = function() {
     var _this = this;
-
 
     if (!this.maxReconnectAttempts || this.reconnectAttempts < this.maxReconnectAttempts) {
         setTimeout(function() {
