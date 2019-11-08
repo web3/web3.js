@@ -399,7 +399,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
 
                         if (!receipt.outOfGas &&
                             (!gasProvided || !isOOG) &&
-                            (receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined')) {
+                            (receipt.status === true || typeof receipt.status === 'undefined')) {
                             defer.eventEmitter.emit('receipt', receipt);
                             defer.resolve(receipt);
 
