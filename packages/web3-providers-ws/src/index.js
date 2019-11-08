@@ -48,11 +48,6 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.ERROR = 'error';
     this.OPEN = 'open';
 
-    this.SOCKET_DATA = 'socket_data';
-    this.SOCKET_CLOSE = 'socket_close';
-    this.SOCKET_ERROR = 'socket_error';
-    this.SOCKET_OPEN = 'socket_open';
-
     this.reconnecting = false;
     this.connection = null;
     this.requestQueue = new Set();
@@ -143,7 +138,7 @@ WebsocketProvider.prototype.onMessage = function(e) {
 WebsocketProvider.prototype.onError = function(error) {
     this.emit(this.ERROR, error);
 
-    this.removeAllSocketListeners();
+    this._removeAllSocketListeners();
 };
 
 /**
@@ -194,7 +189,7 @@ WebsocketProvider.prototype.onClose = function(event) {
         });
     }
 
-    this.removeAllSocketListeners();
+    this._removeAllSocketListeners();
     this.removeAllListeners();
 };
 
@@ -205,7 +200,7 @@ WebsocketProvider.prototype.onClose = function(event) {
  *
  * @returns {void}
  */
-WebsocketProvider.prototype.addSocketListeners = function() {
+WebsocketProvider.prototype._addSocketListeners = function() {
     this.connection.addEventListener('message', this.onMessage.bind(this));
     this.connection.addEventListener('open', this.onConnect.bind(this));
     this.connection.addEventListener('close', this.onClose.bind(this));
@@ -215,11 +210,11 @@ WebsocketProvider.prototype.addSocketListeners = function() {
 /**
  * Will remove all socket listeners
  *
- * @method removeAllSocketListeners
+ * @method _removeAllSocketListeners
  *
  * @returns {void}
  */
-WebsocketProvider.prototype.removeAllSocketListeners = function() {
+WebsocketProvider.prototype._removeAllSocketListeners = function() {
     this.connection.removeEventListener('message', this.onMessage);
     this.connection.removeEventListener('open', this.onConnect);
     this.connection.removeEventListener('close', this.onClose);
@@ -237,7 +232,7 @@ WebsocketProvider.prototype.removeAllSocketListeners = function() {
 WebsocketProvider.prototype.addDefaultEvents = function() {
     console.warn('Method addDefaultEvents is deprecated please use addSocketListeners');
 
-    this.addSocketListeners();
+    this._addSocketListeners();
 };
 
 /**
@@ -418,7 +413,7 @@ WebsocketProvider.prototype.reconnect = function() {
     if (!this.maxReconnectAttempts || this.reconnectAttempts < this.maxReconnectAttempts) {
         setTimeout(function() {
             _this.reconnectAttempts++;
-            _this.removeAllSocketListeners();
+            _this._removeAllSocketListeners();
             _this.connect();
         }, this.reconnectDelay);
 
