@@ -267,7 +267,16 @@ WebsocketProvider.prototype._timeout = function() {
     }
 };
 
-
+/**
+ * Does check if the provider is connecting and will add it to the queue or will send it directly
+ *
+ * @method send
+ *
+ * @param {Object} payload
+ * @param {Function} callback
+ *
+ * @returns {void}
+ */
 WebsocketProvider.prototype.send = function(payload, callback) {
     var _this = this;
 
