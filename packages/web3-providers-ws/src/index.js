@@ -106,7 +106,7 @@ WebsocketProvider.prototype.onMessage = function(e) {
 
     this._parseResponse((typeof e.data === 'string') ? e.data : '').forEach(function(result) {
         if (result.method && result.method.indexOf('_subscription') !== -1) {
-            _this.emit('data', result);
+            _this.emit(this.DATA, result);
 
             return;
         }
@@ -260,7 +260,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
             // start timeout to cancel all requests
             clearTimeout(_this.lastChunkTimeout);
             _this.lastChunkTimeout = setTimeout(function(){
-                _this.emit(this.TIMEOUT);
+                _this.emit(_this.TIMEOUT);
             }, _this._customTimeout);
 
             return;
@@ -330,7 +330,7 @@ WebsocketProvider.prototype.send = function(payload, callback) {
 
     this.once(this.TIMEOUT, timeout)
         .once(id, function(response) {
-            _this.removeListener(this.TIMEOUT, timeout);
+            _this.removeListener(_this.TIMEOUT, timeout);
 
             callback(null, response);
         });
@@ -389,7 +389,7 @@ WebsocketProvider.prototype.reconnect = function() {
         setTimeout(function() {
             _this.reconnectAttempts++;
             _this._removeSocketListeners();
-            _this.emit(this.RECONNECT, _this.reconnectAttempts);
+            _this.emit(_this.RECONNECT, _this.reconnectAttempts);
             _this.connect();
         }, this.reconnectDelay);
 
