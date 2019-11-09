@@ -88,7 +88,8 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
                 },
                 {
                     dedupe: dedupe
-                }
+                },
+                ['xhr2-cookies'] // web3-providers-ipc?
             )
         );
     }
@@ -112,9 +113,10 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
  *
  * @returns {{output: ({file, sourcemap, exports, globals, name, format}|{file, sourcemap, exports, format}), input: *, plugins: *[]}}
  */
-function rollupConfig(input, outputFile, outputName, outputType, exports = 'auto', globals = {}, babelOptions = {}, resolverOptions = {}) {
+function rollupConfig(input, outputFile, outputName, outputType, exports = 'auto', globals = {}, babelOptions = {}, resolverOptions = {}, external) {
     return {
         input: input,
+        external: external,
         output: getOutput(outputFile, outputType, outputName, exports, globals),
         plugins: getPlugins(outputType, babelOptions, resolverOptions)
     };
