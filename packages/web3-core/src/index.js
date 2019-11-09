@@ -22,7 +22,7 @@
 
 "use strict";
 
-import {Manager} from 'web3-core-requestmanager';
+import {Manager, BatchManager} from 'web3-core-requestmanager';
 import extend from './extend.js';
 
 export default {
@@ -57,8 +57,8 @@ export default {
         }
 
         // add givenProvider
-        pkg.givenProvider = requestManager.Manager.givenProvider;
-        pkg.providers = requestManager.Manager.providers;
+        pkg.givenProvider = Manager.givenProvider;
+        pkg.providers = Manager.providers;
 
         pkg._provider =  pkg._requestManager.provider;
 
@@ -72,13 +72,13 @@ export default {
         }
 
         // attach batch request creation
-        pkg.BatchRequest = requestManager.BatchManager.bind(null, pkg._requestManager);
+        pkg.BatchRequest = BatchManager.bind(null, pkg._requestManager);
 
         // attach extend function
         pkg.extend = extend(pkg);
     },
     addProviders: function (pkg) {
-        pkg.givenProvider = requestManager.Manager.givenProvider;
-        pkg.providers = requestManager.Manager.providers;
+        pkg.givenProvider = Manager.givenProvider;
+        pkg.providers = Manager.providers;
     }
 };
