@@ -22,20 +22,17 @@
 
 'use strict';
 
-var _ = require('underscore');
-var core = require('web3-core');
-var Method = require('web3-core-method');
-var Account = require('eth-lib').account;
-var Hash = require('eth-lib').hash;
-var RLP = require('eth-lib').RLP;// jshint ignore:line
-var Bytes = require('eth-lib').bytes;// jshint ignore:line
-var cryp = require('crypto');
-var scrypt = require('@web3-js/scrypt-shim');
-var uuid = require('uuid');
-var utils = require('web3-utils');
-var helpers = require('web3-core-helpers');
-var Transaction = require('ethereumjs-tx').Transaction;
-var Common = require('ethereumjs-common');
+import _ from 'underscore';
+import core from 'web3-core';
+import Method from 'web3-core-method';
+import {RLP, bytes, hash, account} from 'eth-lib';// jshint ignore:line
+import cryp from 'crypto';
+import scrypt from '@web3-js/scrypt-shim';
+import uuid from 'uuid';
+import {hexToBytes, hexToNumber, isAddress, isHexStrict, numberToHex, sha3, randomHex, keccak256} from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import {Transaction} from 'ethereumjs-tx';
+import Common from 'ethereumjs-common';
 
 
 var isNot = function(value) {
@@ -63,7 +60,7 @@ var Accounts = function Accounts() {
             name: 'getChainId',
             call: 'eth_chainId',
             params: 0,
-            outputFormatter: utils.hexToNumber
+            outputFormatter: hexToNumber
         }),
         new Method({
             name: 'getGasPrice',
@@ -75,7 +72,7 @@ var Accounts = function Accounts() {
             call: 'eth_getTransactionCount',
             params: 2,
             inputFormatter: [function(address) {
-                if (utils.isAddress(address)) {
+                if (isAddress(address)) {
                     return address;
                 } else {
                     throw new Error('Address ' + address + ' is not a valid address to get the "transactionCount".');
@@ -116,11 +113,11 @@ Accounts.prototype._addAccountFunctions = function(account) {
 };
 
 Accounts.prototype.create = function create(entropy) {
-    return this._addAccountFunctions(Account.create(entropy || utils.randomHex(32)));
+    return this._addAccountFunctions(account.create(entropy || randomHex(32)));
 };
 
 Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey) {
-    return this._addAccountFunctions(Account.fromPrivate(privateKey));
+    return this._addAccountFunctions(account.fromPrivate(privateKey));
 };
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
@@ -171,11 +168,11 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         }
 
         try {
-            var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
+            var transaction = formatters.inputCallFormatter(_.clone(tx));
             transaction.to = transaction.to || '0x';
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
-            transaction.chainId = utils.numberToHex(transaction.chainId);
+            transaction.chainId = numberToHex(transaction.chainId);
 
             // Because tx has no ethereumjs-tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
@@ -232,7 +229,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
             var rlpEncoded = ethTx.serialize().toString('hex');
             var rawTransaction = '0x' + rlpEncoded;
-            var transactionHash = utils.keccak256(rawTransaction);
+            var transactionHash = keccak256(rawTransaction);
 
             return {
                 messageHash: '0x' + Buffer.from(ethTx.hash(false)).toString('hex'),
@@ -275,28 +272,28 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 /* jshint ignore:start */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
     var values = RLP.decode(rawTx);
-    var signature = Account.encodeSignature(values.slice(6, 9));
-    var recovery = Bytes.toNumber(values[6]);
-    var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
+    var signature = account.encodeSignature(values.slice(6, 9));
+    var recovery = bytes.toNumber(values[6]);
+    var extraData = recovery < 35 ? [] : [bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
     var signingData = values.slice(0, 6).concat(extraData);
     var signingDataHex = RLP.encode(signingData);
-    return Account.recover(Hash.keccak256(signingDataHex), signature);
+    return account.recover(hash.keccak256(signingDataHex), signature);
 };
 /* jshint ignore:end */
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
-    var message = utils.isHexStrict(data) ? utils.hexToBytes(data) : data;
+    var message = isHexStrict(data) ? hexToBytes(data) : data;
     var messageBuffer = Buffer.from(message);
     var preamble = '\x19Ethereum Signed Message:\n' + message.length;
     var preambleBuffer = Buffer.from(preamble);
     var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
-    return Hash.keccak256s(ethMessage);
+    return hash.keccak256s(ethMessage);
 };
 
 Accounts.prototype.sign = function sign(data, privateKey) {
     var hash = this.hashMessage(data);
-    var signature = Account.sign(hash, privateKey);
-    var vrs = Account.decodeSignature(signature);
+    var signature = account.sign(hash, privateKey);
+    var vrs = account.decodeSignature(signature);
     return {
         message: data,
         messageHash: hash,
@@ -312,7 +309,7 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
 
 
     if (_.isObject(message)) {
-        return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
+        return this.recover(message.messageHash, account.encodeSignature([message.v, message.r, message.s]), true);
     }
 
     if (!preFixed) {
@@ -323,9 +320,9 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
         preFixed = args.slice(-1)[0];
         preFixed = _.isBoolean(preFixed) ? !!preFixed : false;
 
-        return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
+        return this.recover(message, account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
     }
-    return Account.recover(message, signature);
+    return account.recover(message, signature);
 };
 
 // Taken from https://github.com/ethereumjs/ethereumjs-wallet
@@ -363,7 +360,7 @@ Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
 
     var ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
 
-    var mac = utils.sha3(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
+    var mac = sha3(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
     if (mac !== json.crypto.mac) {
         throw new Error('Key derivation failed - possibly wrong password');
     }
@@ -410,7 +407,7 @@ Accounts.prototype.encrypt = function(privateKey, password, options) {
 
     var ciphertext = Buffer.concat([cipher.update(Buffer.from(account.privateKey.replace('0x', ''), 'hex')), cipher.final()]);
 
-    var mac = utils.sha3(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')])).replace('0x', '');
+    var mac = sha3(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')])).replace('0x', '');
 
     return {
         version: 3,
@@ -609,4 +606,4 @@ function storageAvailable(type) {
 }
 
 
-module.exports = Accounts;
+export default Accounts;

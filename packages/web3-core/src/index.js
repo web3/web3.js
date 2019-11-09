@@ -22,10 +22,10 @@
 
 "use strict";
 
-var requestManager = require('web3-core-requestmanager');
-var extend = require('./extend.js');
+import requestManager from 'web3-core-requestmanager';
+import extend from './extend.js';
 
-var core = {
+export default {
     packageInit: function (pkg, args) {
         args = Array.prototype.slice.call(args);
 
@@ -82,5 +82,3 @@ var core = {
         pkg.providers = requestManager.Manager.providers;
     }
 };
-
-module.exports = core;

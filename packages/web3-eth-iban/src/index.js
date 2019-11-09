@@ -25,8 +25,8 @@
 
 "use strict";
 
-var utils = require('web3-utils');
-var BigNumber = require('bn.js');
+import {isAddress, toChecksumAddress} from 'web3-utils';
+import BigNumber from 'bn.js';
 
 
 var leftPad = function (string, bytes) {
@@ -127,7 +127,7 @@ Iban.toIban = function (address) {
  * @return {Iban} the IBAN object
  */
 Iban.fromAddress = function (address) {
-    if(!utils.isAddress(address)){
+    if(!isAddress(address)){
         throw new Error('Provided address is not a valid address: '+ address);
     }
 
@@ -254,7 +254,7 @@ Iban.prototype.toAddress = function () {
     if (this.isDirect()) {
         var base36 = this._iban.substr(4);
         var asBn = new BigNumber(base36, 36);
-        return utils.toChecksumAddress(asBn.toString(16, 20));
+        return toChecksumAddress(asBn.toString(16, 20));
     }
 
     return '';
@@ -264,4 +264,4 @@ Iban.prototype.toString = function () {
     return this._iban;
 };
 
-module.exports = Iban;
+export default Iban;

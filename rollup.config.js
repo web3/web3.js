@@ -194,7 +194,6 @@ function getPlugins(type, babelOptions, resolverOptions) {
         case 'cjs':
         case 'es':
             return [
-                commonjs(),
                 babelPlugin,
                 json(),
                 autoExternal(),
@@ -219,6 +218,8 @@ function getPlugins(type, babelOptions, resolverOptions) {
  */
 function getBabelConfig(exclude, targets, forceAllTransforms = false, transformRuntimeOptions = {}, minified = false) {
     let plugins = [
+        '@babel/plugin-proposal-export-default-from',
+        '@babel/plugin-proposal-export-namespace-from',
         [
             '@babel/plugin-transform-runtime',
             Object.assign({useESModules: true}, transformRuntimeOptions)

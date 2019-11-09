@@ -23,11 +23,13 @@
 'use strict';
 
 
-var _ = require('underscore');
-var errors = require('web3-core-helpers').errors;
-var Jsonrpc = require('./jsonrpc.js');
-var BatchManager = require('./batch.js');
-var givenProvider = require('./givenProvider.js');
+import _ from 'underscore';
+import {errors} from 'web3-core-helpers';
+import Jsonrpc from './jsonrpc.js';
+import BatchManager from './batch.js';
+import givenProvider from './givenProvider.js';
+
+export Jsonrpc from './jsonrpc.js';
 
 
 /**
@@ -36,13 +38,13 @@ var givenProvider = require('./givenProvider.js');
  * Default poll timeout is 1 second
  * Singleton
  */
-var RequestManager = function RequestManager(provider) {
+function RequestManager(provider) {
     this.provider = null;
     this.providers = RequestManager.providers;
 
     this.setProvider(provider);
     this.subscriptions = {};
-};
+}
 
 
 RequestManager.givenProvider = givenProvider;
@@ -238,7 +240,7 @@ RequestManager.prototype.clearSubscriptions = function(keepIsSyncing) {
         this.provider.reset();
 };
 
-module.exports = {
+export default {
     Manager: RequestManager,
     BatchManager: BatchManager
 };

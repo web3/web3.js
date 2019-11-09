@@ -20,9 +20,9 @@
 
 "use strict";
 
-var config = require('./config');
-var Registry = require('./contracts/Registry');
-var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
+import config from './config';
+import Registry from './contracts/Registry';
+import ResolverMethodHandler from './lib/ResolverMethodHandler';
 
 /**
  * Constructs a new instance of ENS
@@ -186,4 +186,4 @@ ENS.prototype.checkNetwork = function () {
     });
 };
 
-module.exports = ENS;
+export default ENS;

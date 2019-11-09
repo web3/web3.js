@@ -31,15 +31,14 @@
 "use strict";
 
 
-var _ = require('underscore');
-var core = require('web3-core');
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
-var Subscription = require('web3-core-subscriptions').subscription;
-var formatters = require('web3-core-helpers').formatters;
-var errors = require('web3-core-helpers').errors;
-var promiEvent = require('web3-core-promievent');
-var abi = require('web3-eth-abi');
+import _ from 'underscore';
+import core from 'web3-core';
+import Method from 'web3-core-method';
+import {_fireError, _jsonInterfaceMethodToString, hexToNumber, isAddress, toChecksumAddress} from 'web3-utils';
+import {Subscription} from 'web3-core-subscriptions';
+import {formatters, errors} from 'web3-core-helpers';
+import promiEvent from 'web3-core-promievent';
+import abi from 'web3-eth-abi';
 
 
 /**
@@ -89,7 +88,7 @@ var Contract = function Contract(jsonInterface, address, options) {
     Object.defineProperty(this.options, 'address', {
         set: function(value){
             if(value) {
-                _this._address = utils.toChecksumAddress(formatters.inputAddressFormatter(value));
+                _this._address = toChecksumAddress(formatters.inputAddressFormatter(value));
             }
         },
         get: function(){
@@ -114,7 +113,7 @@ var Contract = function Contract(jsonInterface, address, options) {
 
 
                 if (method.name) {
-                    funcName = utils._jsonInterfaceMethodToString(method);
+                    funcName = _jsonInterfaceMethodToString(method);
                 }
 
 
@@ -193,7 +192,7 @@ var Contract = function Contract(jsonInterface, address, options) {
         },
         set: function (val) {
             if(val) {
-                defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
+                defaultAccount = toChecksumAddress(formatters.inputAddressFormatter(val));
             }
 
             return val;
@@ -270,7 +269,7 @@ Contract.prototype._checkListener = function(type, event){
  */
 Contract.prototype._getOrSetDefaultOptions = function getOrSetDefaultOptions(options) {
     var gasPrice = options.gasPrice ? String(options.gasPrice): null;
-    var from = options.from ? utils.toChecksumAddress(formatters.inputAddressFormatter(options.from)) : null;
+    var from = options.from ? toChecksumAddress(formatters.inputAddressFormatter(options.from)) : null;
 
     options.data = options.data || this.options.data;
 
@@ -499,7 +498,7 @@ Contract.prototype.deploy = function(options, callback){
 
     // return error, if no "data" is specified
     if(!options.data) {
-        return utils._fireError(new Error('No "data" specified in neither the given options, nor the default options.'), null, null, callback);
+        return _fireError(new Error('No "data" specified in neither the given options, nor the default options.'), null, null, callback);
     }
 
     var constructor = _.find(this.options.jsonInterface, function (method) {
@@ -546,7 +545,7 @@ Contract.prototype._generateEventOptions = function() {
         throw new Error('Event "' + eventName + '" doesn\'t exist in this contract.');
     }
 
-    if (!utils.isAddress(this.options.address)) {
+    if (!isAddress(this.options.address)) {
         throw new Error('This contract object doesn\'t have address set yet, please set an address first.');
     }
 
@@ -747,7 +746,7 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
     processedArgs.options.data = this.encodeABI();
 
     // add contract address
-    if(!this._deployData && !utils.isAddress(this._parent.options.address))
+    if(!this._deployData && !isAddress(this._parent.options.address))
         throw new Error('This contract object doesn\'t have address set yet, please set an address first.');
 
     if(!this._deployData)
@@ -755,7 +754,7 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
 
     // return error, if no "data" is specified
     if(!processedArgs.options.data)
-        return utils._fireError(new Error('Couldn\'t find a matching contract method, or the number of parameters is wrong.'), defer.eventEmitter, defer.reject, processedArgs.callback);
+        return _fireError(new Error('Couldn\'t find a matching contract method, or the number of parameters is wrong.'), defer.eventEmitter, defer.reject, processedArgs.callback);
 
     return processedArgs;
 };
@@ -801,7 +800,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     call: 'eth_estimateGas',
                     params: 1,
                     inputFormatter: [formatters.inputCallFormatter],
-                    outputFormatter: utils.hexToNumber,
+                    outputFormatter: hexToNumber,
                     requestManager: _this._parent._requestManager,
                     accounts: ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,
@@ -834,12 +833,12 @@ Contract.prototype._executeMethod = function _executeMethod(){
             case 'send':
 
                 // return error, if no "from" is specified
-                if(!utils.isAddress(args.options.from)) {
-                    return utils._fireError(new Error('No "from" address specified in neither the given options, nor the default options.'), defer.eventEmitter, defer.reject, args.callback);
+                if(!isAddress(args.options.from)) {
+                    return _fireError(new Error('No "from" address specified in neither the given options, nor the default options.'), defer.eventEmitter, defer.reject, args.callback);
                 }
 
                 if (_.isBoolean(this._method.payable) && !this._method.payable && args.options.value && args.options.value > 0) {
-                    return utils._fireError(new Error('Can not send value to non-payable contract method or constructor'), defer.eventEmitter, defer.reject, args.callback);
+                    return _fireError(new Error('Can not send value to non-payable contract method or constructor'), defer.eventEmitter, defer.reject, args.callback);
                 }
 
 
@@ -914,4 +913,4 @@ Contract.prototype._executeMethod = function _executeMethod(){
 
 };
 
-module.exports = Contract;
+export default Contract;

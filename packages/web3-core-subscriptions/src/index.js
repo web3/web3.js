@@ -22,10 +22,11 @@
 
 "use strict";
 
-var Subscription = require('./subscription.js');
+import Subscription from './subscription.js';
 
+export Subscription from './subscription.js';
 
-var Subscriptions = function Subscriptions(options) {
+export var Subscriptions = function Subscriptions(options) {
     this.name = options.name;
     this.type = options.type;
     this.subscriptions = options.subscriptions || {};
@@ -66,10 +67,4 @@ Subscriptions.prototype.buildCall = function() {
 
         return subscription.subscribe.apply(subscription, arguments);
     };
-};
-
-
-module.exports = {
-    subscriptions: Subscriptions,
-    subscription: Subscription
 };

@@ -22,8 +22,8 @@
 
 "use strict";
 
-var _ = require('underscore');
-var swarm = require("swarm-js");
+import _ from 'underscore';
+import swarm from "swarm-js";
 
 
 var Bzz = function Bzz(provider) {
@@ -84,5 +84,5 @@ Bzz.prototype.setProvider = function(provider) {
 };
 
 
-module.exports = Bzz;
+export default Bzz;
 

@@ -1,5 +1,5 @@
 var assert = require('assert');
-var Jsonrpc = require('../packages/web3-core-requestmanager/src/jsonrpc');
+var Jsonrpc = require('../packages/web3-core-requestmanager').Jsonrpc;
 
 describe('jsonrpc', function () {
     describe('toBatchPayload', function () {

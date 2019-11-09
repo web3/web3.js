@@ -22,8 +22,8 @@
 
 "use strict";
 
-var Jsonrpc = require('./jsonrpc');
-var errors = require('web3-core-helpers').errors;
+import Jsonrpc from './jsonrpc';
+import {errors} from 'web3-core-helpers';
 
 var Batch = function (requestManager) {
     this.requestManager = requestManager;
@@ -34,7 +34,7 @@ var Batch = function (requestManager) {
  * Should be called to add create new request to batch request
  *
  * @method add
- * @param {Object} jsonrpc requet object
+ * @param {Object} request - jsonrpc request object
  */
 Batch.prototype.add = function (request) {
     this.requests.push(request);
@@ -71,5 +71,5 @@ Batch.prototype.execute = function () {
     });
 };
 
-module.exports = Batch;
+export default Batch;
 

@@ -22,11 +22,11 @@
 
 "use strict";
 
-var core = require('web3-core');
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
-var Net = require('web3-net');
-var formatters = require('web3-core-helpers').formatters;
+import core from 'web3-core';
+import Method from 'web3-core-method';
+import {toChecksumAddress} from 'web3-utils';
+import Net from 'web3-net';
+import {formatters} from 'web3-core-helpers';
 
 var Personal = function Personal() {
     var _this = this;
@@ -45,7 +45,7 @@ var Personal = function Personal() {
         },
         set: function (val) {
             if(val) {
-                defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
+                defaultAccount = toChecksumAddress(formatters.inputAddressFormatter(val));
             }
 
             // update defaultBlock
@@ -80,14 +80,14 @@ var Personal = function Personal() {
             name: 'getAccounts',
             call: 'personal_listAccounts',
             params: 0,
-            outputFormatter: utils.toChecksumAddress
+            outputFormatter: toChecksumAddress
         }),
         new Method({
             name: 'newAccount',
             call: 'personal_newAccount',
             params: 1,
             inputFormatter: [null],
-            outputFormatter: utils.toChecksumAddress
+            outputFormatter: toChecksumAddress
         }),
         new Method({
             name: 'unlockAccount',
@@ -143,6 +143,6 @@ core.addProviders(Personal);
 
 
 
-module.exports = Personal;
+export default Personal;
 
 
