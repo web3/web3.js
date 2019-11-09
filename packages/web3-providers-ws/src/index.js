@@ -24,8 +24,9 @@
 
 import _ from 'underscore';
 import {errors} from 'web3-core-helpers';
-import {w3cwebsocket as Ws} from '@web3-js/websocket';
+import w3cwebsocket from '@web3-js/websocket';
 
+var Ws = w3cwebsocket;
 var isNode = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
 
 var _btoa = null;
