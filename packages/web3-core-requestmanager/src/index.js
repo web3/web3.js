@@ -26,12 +26,13 @@
 import _ from 'underscore';
 import {errors} from 'web3-core-helpers';
 import Jsonrpc from './jsonrpc.js';
-import BatchManager from './batch.js';
 import givenProvider from './givenProvider.js';
 import WebsocketProvider from 'web3-providers-ws';
 import HttpProvider from 'web3-providers-http';
+import IpcProvider from 'web3-providers-ipc';
 
 export Jsonrpc from './jsonrpc.js';
+export BatchManager from './batch.js'
 
 
 /**
@@ -40,13 +41,13 @@ export Jsonrpc from './jsonrpc.js';
  * Default poll timeout is 1 second
  * Singleton
  */
-function RequestManager(provider) {
+var RequestManager = function RequestManager(provider) {
     this.provider = null;
     this.providers = RequestManager.providers;
 
     this.setProvider(provider);
     this.subscriptions = {};
-}
+};
 
 
 RequestManager.givenProvider = givenProvider;
@@ -56,7 +57,6 @@ RequestManager.providers = {
     HttpProvider: HttpProvider,
     IpcProvider: IpcProvider
 };
-
 
 /**
  * Should be used to set provider of request manager
@@ -242,7 +242,4 @@ RequestManager.prototype.clearSubscriptions = function(keepIsSyncing) {
         this.provider.reset();
 };
 
-export default {
-    Manager: RequestManager,
-    BatchManager: BatchManager
-};
+export {RequestManager as Manager};
