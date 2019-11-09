@@ -89,7 +89,7 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
                 {
                     dedupe: dedupe
                 },
-                ['xhr2-cookies'] // web3-providers-ipc?
+                ['xhr2-cookies', 'web3-providers-ipc']
             )
         );
     }
