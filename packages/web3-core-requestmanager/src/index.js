@@ -28,6 +28,8 @@ import {errors} from 'web3-core-helpers';
 import Jsonrpc from './jsonrpc.js';
 import BatchManager from './batch.js';
 import givenProvider from './givenProvider.js';
+import WebsocketProvider from 'web3-providers-ws';
+import HttpProvider from 'web3-providers-http';
 
 export Jsonrpc from './jsonrpc.js';
 
@@ -50,9 +52,9 @@ function RequestManager(provider) {
 RequestManager.givenProvider = givenProvider;
 
 RequestManager.providers = {
-    WebsocketProvider: require('web3-providers-ws'),
-    HttpProvider: require('web3-providers-http'),
-    IpcProvider: require('web3-providers-ipc')
+    WebsocketProvider: WebsocketProvider,
+    HttpProvider: HttpProvider,
+    IpcProvider: IpcProvider
 };
 
 
