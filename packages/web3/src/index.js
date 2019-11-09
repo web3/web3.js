@@ -28,14 +28,14 @@
 "use strict";
 
 
-var version = require('../package.json').version;
-var core = require('web3-core');
-var Eth = require('web3-eth');
-var Net = require('web3-net');
-var Personal = require('web3-eth-personal');
-var Shh = require('web3-shh');
-var Bzz = require('web3-bzz');
-var utils = require('web3-utils');
+import {version} from '../package.json';
+import core from 'web3-core';
+import Eth from 'web3-eth';
+import Net from 'web3-net';
+import Personal from 'web3-eth-personal';
+import Shh from 'web3-shh';
+import Bzz from 'web3-bzz';
+import * as utils from 'web3-utils';
 
 var Web3 = function Web3() {
     var _this = this;
@@ -75,5 +75,5 @@ Web3.modules = {
 
 core.addProviders(Web3);
 
-module.exports = Web3;
+export default Web3;
 

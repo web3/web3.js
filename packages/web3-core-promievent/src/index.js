@@ -22,7 +22,7 @@
 
 "use strict";
 
-var EventEmitter = require('eventemitter3');
+import EventEmitter from 'eventemitter3';
 
 /**
  * This function generates a defer promise and adds eventEmitter functionality to it
@@ -71,4 +71,4 @@ PromiEvent.resolve = function(value) {
     return promise.eventEmitter;
 };
 
-module.exports = PromiEvent;
+export default PromiEvent;

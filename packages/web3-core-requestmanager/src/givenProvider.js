@@ -85,7 +85,8 @@ if(typeof global.ethereumProvider !== 'undefined') {
 
     givenProvider = global.web3.currentProvider;
 }
+
 /* jshint ignore:end */
 
 
-module.exports = givenProvider;
+export default givenProvider;

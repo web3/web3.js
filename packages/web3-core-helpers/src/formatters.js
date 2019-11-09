@@ -24,26 +24,37 @@
 "use strict";
 
 
-var _ = require('underscore');
-var utils = require('web3-utils');
-var Iban = require('web3-eth-iban');
+import _ from 'underscore';
+import {
+    fromUtf8,
+    hexToNumber,
+    isAddress,
+    isHex,
+    isHexStrict,
+    numberToHex, sha3,
+    toBN,
+    toChecksumAddress,
+    toUtf8,
+    utf8ToHex
+} from 'web3-utils';
+import Iban from 'web3-eth-iban';
 
 /**
  * Should the format output to a big number
  *
  * @method outputBigNumberFormatter
  * @param {String|Number|BigNumber} number
- * @returns {BigNumber} object
+ * @returns {String} object
  */
-var outputBigNumberFormatter = function (number) {
-    return utils.toBN(number).toString(10);
+export var outputBigNumberFormatter = function (number) {
+    return toBN(number).toString(10);
 };
 
-var isPredefinedBlockNumber = function (blockNumber) {
+export var isPredefinedBlockNumber = function (blockNumber) {
     return blockNumber === 'latest' || blockNumber === 'pending' || blockNumber === 'earliest';
 };
 
-var inputDefaultBlockNumberFormatter = function (blockNumber) {
+export var inputDefaultBlockNumberFormatter = function (blockNumber) {
     if (this && (blockNumber === undefined || blockNumber === null)) {
         return this.defaultBlock;
     }
@@ -53,13 +64,13 @@ var inputDefaultBlockNumberFormatter = function (blockNumber) {
     return inputBlockNumberFormatter(blockNumber);
 };
 
-var inputBlockNumberFormatter = function (blockNumber) {
+export var inputBlockNumberFormatter = function (blockNumber) {
     if (blockNumber === undefined) {
         return undefined;
     } else if (isPredefinedBlockNumber(blockNumber)) {
         return blockNumber;
     }
-    return (utils.isHexStrict(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : utils.numberToHex(blockNumber);
+    return (isHexStrict(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : numberToHex(blockNumber);
 };
 
 /**
@@ -69,7 +80,7 @@ var inputBlockNumberFormatter = function (blockNumber) {
  * @param {Object} transaction options
  * @returns object
  */
-var _txInputFormatter = function (options){
+export var _txInputFormatter = function (options){
 
     if (options.to) { // it might be contract creation
         options.to = inputAddressFormatter(options.to);
@@ -84,7 +95,7 @@ var _txInputFormatter = function (options){
         delete options.input;
     }
 
-    if(options.data && !utils.isHex(options.data)) {
+    if(options.data && !isHex(options.data)) {
         throw new Error('The data field must be HEX encoded data.');
     }
 
@@ -96,7 +107,7 @@ var _txInputFormatter = function (options){
     ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
         return options[key] !== undefined;
     }).forEach(function(key){
-        options[key] = utils.numberToHex(options[key]);
+        options[key] = numberToHex(options[key]);
     });
 
     return options;
@@ -109,7 +120,7 @@ var _txInputFormatter = function (options){
  * @param {Object} transaction options
  * @returns object
 */
-var inputCallFormatter = function (options){
+export var inputCallFormatter = function (options){
 
     options = _txInputFormatter(options);
 
@@ -130,7 +141,7 @@ var inputCallFormatter = function (options){
  * @param {Object} options
  * @returns object
 */
-var inputTransactionFormatter = function (options) {
+export var inputTransactionFormatter = function (options) {
 
     options = _txInputFormatter(options);
 
@@ -155,8 +166,8 @@ var inputTransactionFormatter = function (options) {
  * @param {String} data
  * @returns {String}
  */
-var inputSignFormatter = function (data) {
-    return (utils.isHexStrict(data)) ? data : utils.utf8ToHex(data);
+export var inputSignFormatter = function (data) {
+    return (isHexStrict(data)) ? data : utf8ToHex(data);
 };
 
 /**
@@ -166,24 +177,24 @@ var inputSignFormatter = function (data) {
  * @param {Object} tx
  * @returns {Object}
 */
-var outputTransactionFormatter = function (tx){
+export var outputTransactionFormatter = function (tx){
     if(tx.blockNumber !== null)
-        tx.blockNumber = utils.hexToNumber(tx.blockNumber);
+        tx.blockNumber = hexToNumber(tx.blockNumber);
     if(tx.transactionIndex !== null)
-        tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
-    tx.nonce = utils.hexToNumber(tx.nonce);
-    tx.gas = utils.hexToNumber(tx.gas);
+        tx.transactionIndex = hexToNumber(tx.transactionIndex);
+    tx.nonce = hexToNumber(tx.nonce);
+    tx.gas = hexToNumber(tx.gas);
     tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
     tx.value = outputBigNumberFormatter(tx.value);
 
-    if(tx.to && utils.isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
-        tx.to = utils.toChecksumAddress(tx.to);
+    if(tx.to && isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
+        tx.to = toChecksumAddress(tx.to);
     } else {
         tx.to = null; // set to `null` if invalid address
     }
 
     if(tx.from) {
-        tx.from = utils.toChecksumAddress(tx.from);
+        tx.from = toChecksumAddress(tx.from);
     }
 
     return tx;
@@ -196,24 +207,24 @@ var outputTransactionFormatter = function (tx){
  * @param {Object} receipt
  * @returns {Object}
 */
-var outputTransactionReceiptFormatter = function (receipt){
+export var outputTransactionReceiptFormatter = function (receipt){
     if(typeof receipt !== 'object') {
         throw new Error('Received receipt is invalid: '+ receipt);
     }
 
     if(receipt.blockNumber !== null)
-        receipt.blockNumber = utils.hexToNumber(receipt.blockNumber);
+        receipt.blockNumber = hexToNumber(receipt.blockNumber);
     if(receipt.transactionIndex !== null)
-        receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
-    receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
-    receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
+        receipt.transactionIndex = hexToNumber(receipt.transactionIndex);
+    receipt.cumulativeGasUsed = hexToNumber(receipt.cumulativeGasUsed);
+    receipt.gasUsed = hexToNumber(receipt.gasUsed);
 
     if(_.isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
     }
 
     if(receipt.contractAddress) {
-        receipt.contractAddress = utils.toChecksumAddress(receipt.contractAddress);
+        receipt.contractAddress = toChecksumAddress(receipt.contractAddress);
     }
 
     if(typeof receipt.status !== 'undefined' && receipt.status !== null) {
@@ -230,15 +241,15 @@ var outputTransactionReceiptFormatter = function (receipt){
  * @param {Object} block
  * @returns {Object}
 */
-var outputBlockFormatter = function(block) {
+export var outputBlockFormatter = function(block) {
 
     // transform to number
-    block.gasLimit = utils.hexToNumber(block.gasLimit);
-    block.gasUsed = utils.hexToNumber(block.gasUsed);
-    block.size = utils.hexToNumber(block.size);
-    block.timestamp = utils.hexToNumber(block.timestamp);
+    block.gasLimit = hexToNumber(block.gasLimit);
+    block.gasUsed = hexToNumber(block.gasUsed);
+    block.size = hexToNumber(block.size);
+    block.timestamp = hexToNumber(block.timestamp);
     if (block.number !== null)
-        block.number = utils.hexToNumber(block.number);
+        block.number = hexToNumber(block.number);
 
     if(block.difficulty)
         block.difficulty = outputBigNumberFormatter(block.difficulty);
@@ -253,7 +264,7 @@ var outputBlockFormatter = function(block) {
     }
 
     if (block.miner)
-        block.miner = utils.toChecksumAddress(block.miner);
+        block.miner = toChecksumAddress(block.miner);
 
     return block;
 };
@@ -265,7 +276,7 @@ var outputBlockFormatter = function(block) {
  * @param {Object} log object
  * @returns {Object} log
 */
-var inputLogFormatter = function(options) {
+export var inputLogFormatter = function(options) {
     var toTopic = function(value){
 
         if(value === null || typeof value === 'undefined')
@@ -276,7 +287,7 @@ var inputLogFormatter = function(options) {
         if(value.indexOf('0x') === 0)
             return value;
         else
-            return utils.fromUtf8(value);
+            return fromUtf8(value);
     };
 
     if (options.fromBlock || options.fromBlock === 0)
@@ -310,27 +321,27 @@ var inputLogFormatter = function(options) {
  * @param {Object} log object
  * @returns {Object} log
 */
-var outputLogFormatter = function(log) {
+export var outputLogFormatter = function(log) {
 
     // generate a custom log id
     if(typeof log.blockHash === 'string' &&
        typeof log.transactionHash === 'string' &&
        typeof log.logIndex === 'string') {
-        var shaId = utils.sha3(log.blockHash.replace('0x','') + log.transactionHash.replace('0x','') + log.logIndex.replace('0x',''));
+        var shaId = sha3(log.blockHash.replace('0x','') + log.transactionHash.replace('0x','') + log.logIndex.replace('0x',''));
         log.id = 'log_'+ shaId.replace('0x','').substr(0,8);
     } else if(!log.id) {
         log.id = null;
     }
 
     if (log.blockNumber !== null)
-        log.blockNumber = utils.hexToNumber(log.blockNumber);
+        log.blockNumber = hexToNumber(log.blockNumber);
     if (log.transactionIndex !== null)
-        log.transactionIndex = utils.hexToNumber(log.transactionIndex);
+        log.transactionIndex = hexToNumber(log.transactionIndex);
     if (log.logIndex !== null)
-        log.logIndex = utils.hexToNumber(log.logIndex);
+        log.logIndex = hexToNumber(log.logIndex);
 
     if (log.address) {
-        log.address = utils.toChecksumAddress(log.address);
+        log.address = toChecksumAddress(log.address);
     }
 
     return log;
@@ -343,16 +354,16 @@ var outputLogFormatter = function(log) {
  * @param {Object} transaction object
  * @returns {Object}
 */
-var inputPostFormatter = function(post) {
+export var inputPostFormatter = function(post) {
 
     // post.payload = utils.toHex(post.payload);
 
     if (post.ttl)
-        post.ttl = utils.numberToHex(post.ttl);
+        post.ttl = numberToHex(post.ttl);
     if (post.workToProve)
-        post.workToProve = utils.numberToHex(post.workToProve);
+        post.workToProve = numberToHex(post.workToProve);
     if (post.priority)
-        post.priority = utils.numberToHex(post.priority);
+        post.priority = numberToHex(post.priority);
 
     // fallback
     if (!_.isArray(post.topics)) {
@@ -362,7 +373,7 @@ var inputPostFormatter = function(post) {
     // format the following options
     post.topics = post.topics.map(function(topic){
         // convert only if not hex
-        return (topic.indexOf('0x') === 0) ? topic : utils.fromUtf8(topic);
+        return (topic.indexOf('0x') === 0) ? topic : fromUtf8(topic);
     });
 
     return post;
@@ -375,12 +386,12 @@ var inputPostFormatter = function(post) {
  * @param {Object}
  * @returns {Object}
  */
-var outputPostFormatter = function(post){
+export var outputPostFormatter = function(post){
 
-    post.expiry = utils.hexToNumber(post.expiry);
-    post.sent = utils.hexToNumber(post.sent);
-    post.ttl = utils.hexToNumber(post.ttl);
-    post.workProved = utils.hexToNumber(post.workProved);
+    post.expiry = hexToNumber(post.expiry);
+    post.sent = hexToNumber(post.sent);
+    post.ttl = hexToNumber(post.ttl);
+    post.workProved = hexToNumber(post.workProved);
     // post.payloadRaw = post.payload;
     // post.payload = utils.hexToAscii(post.payload);
 
@@ -393,51 +404,32 @@ var outputPostFormatter = function(post){
         post.topics = [];
     }
     post.topics = post.topics.map(function(topic){
-        return utils.toUtf8(topic);
+        return toUtf8(topic);
     });
 
     return post;
 };
 
-var inputAddressFormatter = function (address) {
+export var inputAddressFormatter = function (address) {
     var iban = new Iban(address);
     if (iban.isValid() && iban.isDirect()) {
         return iban.toAddress().toLowerCase();
-    } else if (utils.isAddress(address)) {
+    } else if (isAddress(address)) {
         return '0x' + address.toLowerCase().replace('0x','');
     }
     throw new Error('Provided address "'+ address +'" is invalid, the capitalization checksum test failed, or its an indrect IBAN address which can\'t be converted.');
 };
 
 
-var outputSyncingFormatter = function(result) {
+export var outputSyncingFormatter = function(result) {
 
-    result.startingBlock = utils.hexToNumber(result.startingBlock);
-    result.currentBlock = utils.hexToNumber(result.currentBlock);
-    result.highestBlock = utils.hexToNumber(result.highestBlock);
+    result.startingBlock = hexToNumber(result.startingBlock);
+    result.currentBlock = hexToNumber(result.currentBlock);
+    result.highestBlock = hexToNumber(result.highestBlock);
     if (result.knownStates) {
-        result.knownStates = utils.hexToNumber(result.knownStates);
-        result.pulledStates = utils.hexToNumber(result.pulledStates);
+        result.knownStates = hexToNumber(result.knownStates);
+        result.pulledStates = hexToNumber(result.pulledStates);
     }
 
     return result;
 };
-
-module.exports = {
-    inputDefaultBlockNumberFormatter: inputDefaultBlockNumberFormatter,
-    inputBlockNumberFormatter: inputBlockNumberFormatter,
-    inputCallFormatter: inputCallFormatter,
-    inputTransactionFormatter: inputTransactionFormatter,
-    inputAddressFormatter: inputAddressFormatter,
-    inputPostFormatter: inputPostFormatter,
-    inputLogFormatter: inputLogFormatter,
-    inputSignFormatter: inputSignFormatter,
-    outputBigNumberFormatter: outputBigNumberFormatter,
-    outputTransactionFormatter: outputTransactionFormatter,
-    outputTransactionReceiptFormatter: outputTransactionReceiptFormatter,
-    outputBlockFormatter: outputBlockFormatter,
-    outputLogFormatter: outputLogFormatter,
-    outputPostFormatter: outputPostFormatter,
-    outputSyncingFormatter: outputSyncingFormatter
-};
-
