@@ -9,7 +9,6 @@ var Manager = require('../packages/web3-core-requestmanager').Manager;
 describe('lib/web3/requestmanager', function () {
     describe('send', function () {
         it('should return expected result asynchronously', function (done) {
-            console.log(RequestManager);
             var provider = new FakeHttpProvider();
             var manager = new Manager(provider);
             var expected = 'hello_world';
