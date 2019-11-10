@@ -99,7 +99,7 @@ RequestManager.prototype.setProvider = function(provider, net) {
 
     // listen to incoming notifications
     if (this.provider && this.provider.on) {
-        this.provider.on(this.provider.DATA, function(result, deprecatedResult) {
+        this.provider.on('data', function(result, deprecatedResult) {
             result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
             // check for result.method, to prevent old providers errors to pass as result
@@ -109,21 +109,23 @@ RequestManager.prototype.setProvider = function(provider, net) {
         });
 
         // resubscribe if the provider has reconnected
-        this.provider.on(this.provider.CONNECT, function () {
-            _this.subscriptions.forEach(function(subscription) {
-                subscription.resubscribe();
-            });
+        this.provider.on('connect', function () {
+            if (_this.subscriptions.size > 0) {
+                _this.subscriptions.forEach(function(subscription) {
+                    subscription.resubscribe();
+                });
+            }
         });
 
         // notify all subscriptions about the error condition
-        this.provider.on(this.provider.ERROR, function (error) {
+        this.provider.on('error', function (error) {
             _this.subscriptions.forEach(function(subscription) {
                 subscription.callback(error);
             });
         });
 
         // notify all subscriptions about the close condition
-        this.provider.on(this.provider.CLOSE, function (event) {
+        this.provider.on('close', function (event) {
             _this.subscriptions.forEach(function(subscription) {
                 subscription.callback(event);
             });
