@@ -37,20 +37,14 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this._customTimeout = options.timeout || 1000 * 15;
     this.headers = options.headers || {};
     this.protocol = options.protocol || undefined;
-
-    this.reconnectOptions = false;
-    if (options.reconnect) {
-        this.reconnectOptions = Object.assign({
-                auto: false,
-                delay: 5000,
-                maxAttempts: false,
-                onTimeout: false
-            },
-            options.reconnect
-        );
-
-    }
-
+    this.reconnectOptions = Object.assign({
+            auto: false,
+            delay: 5000,
+            maxAttempts: false,
+            onTimeout: false
+        },
+        options.reconnect
+    );
     this.clientConfig = options.clientConfig || undefined; // Allow a custom client configuration
     this.requestOptions = options.requestOptions || undefined; // Allow a custom request options (https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketClient.md#connectrequesturl-requestedprotocols-origin-headers-requestoptions)
 
