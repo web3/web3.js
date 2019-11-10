@@ -41,6 +41,7 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.reconnectOptions = false;
     if (options.reconnect) {
         this.reconnectOptions = Object.assign({
+                auto: false,
                 delay: 5000,
                 maxAttempts: false,
                 onTimeout: false
@@ -184,7 +185,7 @@ WebsocketProvider.prototype._onConnect = function() {
  * @returns {void}
  */
 WebsocketProvider.prototype._onClose = function(event) {
-    if (this.reconnectOptions && (![1000, 1001].includes(event.code) || event.wasClean === false)) {
+    if (this.reconnectOptions.auto && (![1000, 1001].includes(event.code) || event.wasClean === false)) {
         this.reconnect();
 
         return;
@@ -272,7 +273,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
             // start timeout to cancel all requests
             clearTimeout(_this.lastChunkTimeout);
             _this.lastChunkTimeout = setTimeout(function() {
-                if (_this.reconnectOptions && _this.reconnectOptions.onTimeout) {
+                if (_this.reconnectOptions.auto && _this.reconnectOptions.onTimeout) {
                     _this.reconnect();
 
                     return;

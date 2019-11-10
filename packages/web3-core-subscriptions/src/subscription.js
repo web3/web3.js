@@ -281,11 +281,15 @@ Subscription.prototype.subscribe = function() {
     return this;
 };
 
+/**
+ * Resubscribe
+ *
+ * @method resubscribe
+ *
+ * @returns {void}
+ */
 Subscription.prototype.resubscribe = function () {
-    // unsubscribe
-    this.options.requestManager.removeSubscription(this.id);
-
-    // set id to null
+    this.options.requestManager.removeSubscription(this.id); // unsubscribe
     this.id = null;
 
     this.subscribe(this.callback);

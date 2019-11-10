@@ -46,10 +46,9 @@ module.exports = {
             configurable: true
         });
 
-        // inherit from web3 umbrella package
+        // inherit from parent package or create a new RequestManager
         if (args[0] && args[0]._requestManager) {
             pkg._requestManager = args[0]._requestManager;
-            // set requestmanager on package
         } else {
             pkg._requestManager = new requestManager.Manager(args[0], args[1]);
         }
