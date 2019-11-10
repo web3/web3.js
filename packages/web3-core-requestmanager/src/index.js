@@ -110,11 +110,9 @@ RequestManager.prototype.setProvider = function(provider, net) {
 
         // resubscribe if the provider has reconnected
         this.provider.on('connect', function () {
-            if (_this.subscriptions.size > 0) {
-                _this.subscriptions.forEach(function(subscription) {
-                    subscription.resubscribe();
-                });
-            }
+            _this.subscriptions.forEach(function(subscription) {
+                subscription.resubscribe();
+            });
         });
 
         // notify all subscriptions about the error condition
