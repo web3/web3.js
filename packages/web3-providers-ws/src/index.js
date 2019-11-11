@@ -33,7 +33,10 @@ var helpers = require('./helpers.js');
  * @constructor
  */
 var WebsocketProvider = function WebsocketProvider(url, options) {
+    EventEmitter.call(this);
+
     options = options || {};
+    this.url = url;
     this._customTimeout = options.timeout || 1000 * 15;
     this.headers = options.headers || {};
     this.protocol = options.protocol || undefined;
@@ -84,7 +87,8 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
 };
 
 // Inherit from EventEmitter
-WebsocketProvider.prototype = new EventEmitter();
+WebsocketProvider.prototype = EventEmitter.prototype;
+WebsocketProvider.prototype.constructor = WebsocketProvider;
 
 /**
  * Connects to the configured node
@@ -185,7 +189,7 @@ WebsocketProvider.prototype._onClose = function(event) {
         return;
     }
 
-    this.emit(this.CLOSE, error);
+    this.emit(this.CLOSE, event);
 
     if (this.requestQueue.size > 0) {
         var _this = this;
