@@ -230,7 +230,7 @@ RequestManager.prototype.addSubscription = function (subscription, callback) {
  */
 RequestManager.prototype.removeSubscription = function (id, callback) {
     if(this.subscriptions.has(id)) {
-        var type = this.subscriptions.get(id).subscription.type;
+        var type = this.subscriptions.get(id).subscription.options.type;
 
         // remove subscription first to avoid reentry
         this.subscriptions.delete(id);
