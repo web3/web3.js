@@ -275,8 +275,8 @@ Subscription.prototype.subscribe = function() {
                 }
             });
         } else {
-            _this.callback(error, false, _this);
-            _this.emit('error', error);
+            _this.callback(err, false, _this);
+            _this.emit('error', err);
         }
     });
 
