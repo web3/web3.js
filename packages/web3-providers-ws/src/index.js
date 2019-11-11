@@ -381,11 +381,7 @@ WebsocketProvider.prototype.reset = function() {
  * @returns {void}
  */
 WebsocketProvider.prototype.disconnect = function(code, reason) {
-    code = code || 1000;
-
-    if (this.connection) {
-        this.connection.close(code, reason);
-    }
+    this.connection.close(code || 1000, reason);
 };
 
 /**
