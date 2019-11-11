@@ -1077,7 +1077,7 @@ var runTests = function(contractFactory) {
                 assert.equal(result.returnValues.amount, 1);
                 assert.equal(result.returnValues.t1, 1);
                 assert.equal(result.returnValues.t2, 8);
-                assert.deepEqual(sub.options.requestManager.subscriptions, {});
+                assert.deepEqual(sub.options.requestManager.subscriptions, new Map());
 
                 assert.equal(count, 1);
                 count++;
@@ -1159,7 +1159,7 @@ var runTests = function(contractFactory) {
                 assert.equal(result.returnValues.amount, 1);
                 assert.equal(result.returnValues.t1, 1);
                 assert.equal(result.returnValues.t2, 8);
-                assert.deepEqual(sub.options.requestManager.subscriptions, {});
+                assert.deepEqual(sub.options.requestManager.subscriptions, new Map());
 
                 assert.equal(count, 1);
                 count++;
