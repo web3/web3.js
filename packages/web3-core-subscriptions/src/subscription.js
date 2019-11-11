@@ -270,10 +270,13 @@ Subscription.prototype.subscribe = function() {
                         _this.callback(null, output, _this);
                     });
                 } else {
-                    _this.callback(error);
+                    _this.callback(error, false, _this);
                     _this.emit('error', error);
                 }
             });
+        } else {
+            _this.callback(error, false, _this);
+            _this.emit('error', error);
         }
     });
 
