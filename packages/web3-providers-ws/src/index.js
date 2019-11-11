@@ -54,12 +54,13 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.DATA = 'data';
     this.CLOSE = 'close';
     this.ERROR = 'error';
-    this.OPEN = 'open';
+    this.CONNECT = 'connect';
     this.RECONNECT = 'reconnect';
 
     this.connection = null;
     this.requestQueue = new Set();
     this.reconnectAttempts = 0;
+    this.reconnecting = false;
 
     // The w3cwebsocket implementation does not support Basic Auth
     // username/password in the URL. So generate the basic auth header, and
@@ -114,7 +115,7 @@ WebsocketProvider.prototype._onMessage = function(e) {
 
     this._parseResponse((typeof e.data === 'string') ? e.data : '').forEach(function(result) {
         if (result.method && result.method.indexOf('_subscription') !== -1) {
-            _this.emit(this.DATA, result);
+            _this.emit(_this.DATA, result);
 
             return;
         }
@@ -162,8 +163,9 @@ WebsocketProvider.prototype._onError = function(error) {
  * @returns {void}
  */
 WebsocketProvider.prototype._onConnect = function() {
-    this.emit(this.OPEN);
+    this.emit(this.CONNECT);
     this.reconnectAttempts = 0;
+    this.reconnecting = false;
 
     if (this.requestQueue.size > 0) {
         var _this = this;
@@ -316,20 +318,17 @@ WebsocketProvider.prototype._parseResponse = function(data) {
 WebsocketProvider.prototype.send = function(payload, callback) {
     var _this = this;
 
-    if (this.connection.readyState === this.connection.CONNECTING) {
+    if (this.connection.readyState === this.connection.CONNECTING || this.reconnecting) {
         this.requestQueue.add({payload: payload, callback: callback});
 
         return;
     }
 
     if (this.connection.readyState !== this.connection.OPEN) {
-        if (typeof this.connection.onerror === 'function') {
-            this.connection.onerror(new Error('connection not open on send()'));
-        } else {
-            console.error('no error callback');
-        }
+        const error = new Error('connection not open on send()');
 
-        callback(new Error('connection not open on send()'));
+        this.emit(this.ERROR, error);
+        callback(error);
 
         return;
     }
@@ -409,6 +408,7 @@ WebsocketProvider.prototype.supportsSubscriptions = function() {
  */
 WebsocketProvider.prototype.reconnect = function() {
     var _this = this;
+    this.reconnecting = true;
 
     if (
         !this.reconnectOptions.maxAttempts ||
