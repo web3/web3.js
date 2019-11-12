@@ -23,8 +23,7 @@ import {AbiItem} from 'web3-utils';
 
 export class Contract {
     constructor(
-        provider: provider,
-        abi: AbiItem[],
+        jsonInterface: AbiItem[],
         address?: string,
         options?: ContractOptions
     );

@@ -18,10 +18,11 @@
  */
 
 import { PromiEvent, TransactionConfig } from 'web3-core';
+import { Eth } from 'web3-eth';
 import { Contract } from 'web3-eth-contract';
 
 export class Ens {
-    constructor(eth: any);
+    constructor(eth: Eth);
 
     registry: Registry;
 
