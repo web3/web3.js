@@ -33,17 +33,8 @@ bzz.currentProvider;
 // $ExpectType any
 bzz.givenProvider;
 
-// $ExpectType string | null
-bzz.defaultAccount;
-
-// $ExpectType string | number
-bzz.defaultBlock;
-
 // $ExpectType boolean
 bzz.setProvider('https://localhost:2100');
-
-// $ExpectType any
-new bzz.BatchRequest();
 
 // $ExpectType Promise<string>
 bzz.upload('test file');
@@ -61,6 +52,12 @@ bzz.upload({
     kind: 'directory',
     defaultFile: '/index.html'
 });
+
+// ExpectType Promise<any>;
+bzz.download('hash');
+
+// ExpectType Promise<any>;
+bzz.download('hash', 'path');
 
 // $ExpectType Promise<any>
 bzz.pick.file();

@@ -22,12 +22,8 @@ export class Bzz {
 
     readonly givenProvider: any;
     static readonly givenProvider: any;
-    defaultAccount: string | null;
-    defaultBlock: string | number;
     readonly currentProvider: any;
     setProvider(provider: any): boolean;
-    BatchRequest: new () => any;
-    static readonly providers: any;
 
     upload(data: any): Promise<string>;
 
