@@ -21,7 +21,6 @@
  * @date 2017
  */
 
-
 import _ from 'underscore';
 import ethjsUnit from 'ethjs-unit';
 import randombytes from 'randombytes';
