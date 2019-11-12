@@ -219,14 +219,14 @@ export interface Log {
 // had to move `web3-net` due to other modules in `1.x` not referencing
 
 export class NetworkBase {
+    constructor();
     constructor(provider: provider);
     constructor(provider: provider, net: net.Socket);
-    constructor();
 
     readonly givenProvider: any;
+    readonly currentProvider: provider;
     static readonly givenProvider: any;
     static readonly providers: Providers;
-    readonly currentProvider: provider;
     BatchRequest: new () => BatchRequest;
 
     setProvider(provider: provider): boolean;
