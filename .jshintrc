@@ -15,5 +15,6 @@
     "undef": true,
     "predef": [
         "console"
-    ]
+    ],
+    "esversion": "6"
 }
