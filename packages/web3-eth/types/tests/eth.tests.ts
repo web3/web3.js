@@ -26,6 +26,10 @@ import {
 } from 'web3-core';
 import { BlockTransactionObject, BlockTransactionString, BlockHeader, Eth, GetProof, Syncing } from 'web3-eth';
 
+// $ExpectType Eth
+const eth_empty = new Eth();
+
+// $ExpectType Eth
 const eth = new Eth('http://localhost:8545');
 
 // $ExpectType string | null

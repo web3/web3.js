@@ -19,6 +19,10 @@
 
 import { Network } from 'web3-net';
 
+// $ExpectType Network
+const network_empty = new Network();
+
+// $ExpectType Network
 const network = new Network('http://localhost:5000');
 
 // $ExpectType provider

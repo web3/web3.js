@@ -46,7 +46,7 @@ import { Network } from 'web3-net';
 import { AbiItem } from 'web3-utils';
 
 export class Eth {
-    constructor(provider: provider, net?: net.Socket);
+    constructor(provider?: provider, net?: net.Socket);
 
     Contract: new (
         jsonInterface: AbiItem[] | AbiItem,

@@ -22,7 +22,7 @@ import { BatchRequest, provider, Providers, Extension } from 'web3-core';
 import { Network } from 'web3-net';
 
 export class Shh {
-    constructor(provider: provider, net?: net.Socket);
+    constructor(provider?: provider, net?: net.Socket);
 
     readonly givenProvider: any;
     static readonly givenProvider: any;
