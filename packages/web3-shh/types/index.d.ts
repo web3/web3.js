@@ -38,8 +38,6 @@ export class Shh {
 
     net: Network;
 
-    setProvider(provider: provider): boolean;
-
     getVersion(
         callback?: (error: Error, version: string) => void
     ): Promise<string>;

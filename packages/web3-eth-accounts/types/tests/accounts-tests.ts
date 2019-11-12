@@ -29,15 +29,6 @@ accounts.givenProvider;
 // $ExpectType boolean
 accounts.setProvider('https://localhost:2100');
 
-// $ExpectType any
-accounts.extend({
-    property: 'test',
-    methods: [{ name: 'method', call: 'method' }]
-});
-
-// $ExpectType BatchRequest
-new accounts.BatchRequest();
-
 // $ExpectType Account
 accounts.create();
 // $ExpectType Account
