@@ -32,7 +32,7 @@ import {
     TransactionReceipt,
     Common,
     hardfork,
-    chain
+    chain, BlockNumber
 } from 'web3-core';
 import { Subscription } from 'web3-core-subscriptions';
 import { AbiCoder } from 'web3-eth-abi';
@@ -43,6 +43,7 @@ import { Iban } from 'web3-eth-iban';
 import { Personal } from 'web3-eth-personal';
 import { Network } from 'web3-net';
 import { AbiItem } from 'web3-utils';
+import BN = require('bn.js');
 
 export class Eth {
     constructor(currentProvider: provider);
@@ -134,15 +135,19 @@ export class Eth {
         callback?: (error: Error, blockNumber: number) => void
     ): Promise<number>;
 
-    getBalance(address: string): Promise<string>;
-    getBalance(address: string, defaultBlock: string | number): Promise<string>;
+    getBalance(
+        address: string
+    ): Promise<string>;
+    getBalance(
+        address: string,
+        defaultBlock: BlockNumber): Promise<string>;
     getBalance(
         address: string,
         callback?: (error: Error, balance: string) => void
     ): Promise<string>;
     getBalance(
         address: string,
-        defaultBlock: string | number,
+        defaultBlock: BlockNumber,
         callback?: (error: Error, balance: string) => void
     ): Promise<string>;
 
@@ -150,7 +155,7 @@ export class Eth {
     getStorageAt(
         address: string,
         position: number,
-        defaultBlock: number | string
+        defaultBlock: BlockNumber
     ): Promise<string>;
     getStorageAt(
         address: string,
@@ -160,59 +165,69 @@ export class Eth {
     getStorageAt(
         address: string,
         position: number,
-        defaultBlock: number | string,
+        defaultBlock: BlockNumber,
         callback?: (error: Error, storageAt: string) => void
     ): Promise<string>;
 
-    getCode(address: string): Promise<string>;
-    getCode(address: string, defaultBlock: string | number): Promise<string>;
+    getCode(
+        address: string
+    ): Promise<string>;
+    getCode(
+        address: string,
+        defaultBlock: BlockNumber
+    ): Promise<string>;
     getCode(
         address: string,
         callback?: (error: Error, code: string) => void
     ): Promise<string>;
     getCode(
         address: string,
-        defaultBlock: string | number,
+        defaultBlock: BlockNumber,
         callback?: (error: Error, code: string) => void
     ): Promise<string>;
 
-    getBlock(blockHashOrBlockNumber: string | number): Promise<BlockTransactionString>;
+    getBlock(blockHashOrBlockNumber: BlockNumber | string): Promise<BlockTransactionString>;
     getBlock(
-        blockHashOrBlockNumber: string | number,
+        blockHashOrBlockNumber: BlockNumber | string,
         returnTransactionObjects: true
     ): Promise<BlockTransactionObject>;
     getBlock(
-        blockHashOrBlockNumber: string | number,
+        blockHashOrBlockNumber: BlockNumber | string,
         callback?: (error: Error, block: BlockTransactionString) => void
     ): Promise<BlockTransactionString>;
     getBlock(
-        blockHashOrBlockNumber: string | number,
+        blockHashOrBlockNumber: BlockNumber | string,
         returnTransactionObjects: true,
         callback?: (error: Error, block: BlockTransactionObject) => void
     ): Promise<BlockTransactionObject>;
 
     getBlockTransactionCount(
-        blockHashOrBlockNumber: string | number,
+        blockHashOrBlockNumber: BlockNumber | string,
+        callback?: (error: Error, numberOfTransactions: number) => void
+    ): Promise<number>;
+
+    getBlockUncleCount(
+        blockHashOrBlockNumber: BlockNumber | string,
         callback?: (error: Error, numberOfTransactions: number) => void
     ): Promise<number>;
 
     getUncle(
-        blockHashOrBlockNumber: string | number,
-        uncleIndex: number
+        blockHashOrBlockNumber: BlockNumber | string,
+        uncleIndex: number | string | BN
     ): Promise<BlockTransactionString>;
     getUncle(
-        blockHashOrBlockNumber: string | number,
-        uncleIndex: number,
+        blockHashOrBlockNumber: BlockNumber | string,
+        uncleIndex: number | string | BN,
         returnTransactionObjects: true
     ): Promise<BlockTransactionObject>;
     getUncle(
-        blockHashOrBlockNumber: string | number,
-        uncleIndex: number,
+        blockHashOrBlockNumber: BlockNumber | string,
+        uncleIndex: number | string | BN,
         callback?: (error: Error, uncle: any) => void
     ): Promise<BlockTransactionString>;
     getUncle(
-        blockHashOrBlockNumber: string | number,
-        uncleIndex: number,
+        blockHashOrBlockNumber: BlockNumber | string,
+        uncleIndex: number | string | BN,
         returnTransactionObjects: true,
         callback?: (error: Error, uncle: any) => void
     ): Promise<BlockTransactionObject>;
@@ -227,8 +242,8 @@ export class Eth {
     ): Promise<Transaction[]>;
 
     getTransactionFromBlock(
-        hashStringOrNumber: string | number,
-        indexNumber: number,
+        blockHashOrBlockNumber: BlockNumber | string,
+        indexNumber: number | string | BN,
         callback?: (error: Error, transaction: Transaction) => void
     ): Promise<Transaction>;
 
@@ -243,7 +258,7 @@ export class Eth {
     getTransactionCount(address: string): Promise<number>;
     getTransactionCount(
         address: string,
-        defaultBlock: number | string
+        defaultBlock: BlockNumber
     ): Promise<number>;
     getTransactionCount(
         address: string,
@@ -251,7 +266,7 @@ export class Eth {
     ): Promise<number>;
     getTransactionCount(
         address: string,
-        defaultBlock: number | string,
+        defaultBlock: BlockNumber,
         callback?: (error: Error, count: number) => void
     ): Promise<number>;
 
@@ -294,7 +309,7 @@ export class Eth {
     call(transactionConfig: TransactionConfig): Promise<string>;
     call(
         transactionConfig: TransactionConfig,
-        defaultBlock?: number | string
+        defaultBlock?: BlockNumber
     ): Promise<string>;
     call(
         transactionConfig: TransactionConfig,
@@ -302,7 +317,7 @@ export class Eth {
     ): Promise<string>;
     call(
         transactionConfig: TransactionConfig,
-        defaultBlock: number | string,
+        defaultBlock: BlockNumber,
         callback: (error: Error, data: string) => void
     ): Promise<string>;
 
@@ -328,7 +343,7 @@ export class Eth {
     getProof(
         address: string,
         storageKey: string[],
-        blockNumber: number | string | 'latest' | 'earliest',
+        blockNumber: BlockNumber,
         callback?: (error: Error, result: GetProof) => void
     ): Promise<GetProof>;
 }
@@ -373,15 +388,12 @@ export interface BlockTransactionString extends BlockTransactionBase {
     transactions: string[];
 }
 
-export interface PastLogsOptions {
-    fromBlock?: number | string;
-    toBlock?: number | string;
-    address?: string | string[];
-    topics?: Array<string | string[]>;
+export interface PastLogsOptions extends LogsOptions {
+    toBlock?: number | 'latest' | 'pending' | 'earliest';
 }
 
 export interface LogsOptions {
-    fromBlock?: number | string;
+    fromBlock?: number | 'latest' | 'pending' | 'earliest';
     address?: string | string[];
     topics?: Array<string | string[] | null>;
 }

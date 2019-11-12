@@ -18,8 +18,10 @@
  */
 
 import BN = require('bn.js');
-import {Common, PromiEvent, provider, hardfork, chain} from 'web3-core';
+import {Common, PromiEvent, provider, hardfork, chain, BlockNumber} from 'web3-core';
 import {AbiItem} from 'web3-utils';
+import {Block} from 'ethers/providers';
+import {LogsOptions} from '../../web3-eth/types';
 
 export class Contract {
     constructor(
@@ -132,11 +134,12 @@ export interface ContractOptions {
     data?: string;
 }
 
-export interface EventOptions {
-    filter?: any;
-    fromBlock?: number;
-    toBlock?: string | number;
-    topics?: any[];
+export interface EventOptions extends LogsOptions {
+    filter?: Filter;
+}
+
+export interface Filter {
+    [key: string]: any | Array<any>
 }
 
 export interface EventData {
