@@ -22,10 +22,10 @@
 
 "use strict";
 
-var requestManager = require('web3-core-requestmanager');
-var extend = require('./extend.js');
+import {Manager, BatchManager} from 'web3-core-requestmanager';
+import extend from './extend.js';
 
-var core = {
+export default {
     packageInit: function (pkg, args) {
         args = Array.prototype.slice.call(args);
 
@@ -48,17 +48,17 @@ var core = {
 
         // inherit from web3 umbrella package
         if (args[0] && args[0]._requestManager) {
-            pkg._requestManager = new requestManager.Manager(args[0].currentProvider);
+            pkg._requestManager = new Manager(args[0].currentProvider);
 
             // set requestmanager on package
         } else {
-            pkg._requestManager = new requestManager.Manager();
+            pkg._requestManager = new Manager();
             pkg._requestManager.setProvider(args[0], args[1]);
         }
 
         // add givenProvider
-        pkg.givenProvider = requestManager.Manager.givenProvider;
-        pkg.providers = requestManager.Manager.providers;
+        pkg.givenProvider = Manager.givenProvider;
+        pkg.providers = Manager.providers;
 
         pkg._provider =  pkg._requestManager.provider;
 
@@ -72,15 +72,13 @@ var core = {
         }
 
         // attach batch request creation
-        pkg.BatchRequest = requestManager.BatchManager.bind(null, pkg._requestManager);
+        pkg.BatchRequest = BatchManager.bind(null, pkg._requestManager);
 
         // attach extend function
         pkg.extend = extend(pkg);
     },
     addProviders: function (pkg) {
-        pkg.givenProvider = requestManager.Manager.givenProvider;
-        pkg.providers = requestManager.Manager.providers;
+        pkg.givenProvider = Manager.givenProvider;
+        pkg.providers = Manager.providers;
     }
 };
-
-module.exports = core;

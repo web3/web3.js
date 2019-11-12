@@ -20,14 +20,14 @@
  * @date 2017
  */
 
-var _ = require('underscore');
-var BN = require('bn.js');
-var numberToBN = require('number-to-bn');
-var utf8 = require('utf8');
-var Hash = require("eth-lib").hash;
-var ethereumBloomFilters = require('ethereum-bloom-filters');
+import _ from 'underscore';
+import BN from 'bn.js';
+import numberToBN from 'number-to-bn';
+import utf8 from 'utf8';
+import {hash as Hash} from "eth-lib";
+import ethereumBloomFilters from 'ethereum-bloom-filters';
 
-
+export BN from 'bn.js';
 
 /**
  * Returns true if object is BN, otherwise false
@@ -36,7 +36,7 @@ var ethereumBloomFilters = require('ethereum-bloom-filters');
  * @param {Object} object
  * @return {Boolean}
  */
-var isBN = function (object) {
+export var isBN = function (object) {
     return BN.isBN(object);
 };
 
@@ -47,7 +47,7 @@ var isBN = function (object) {
  * @param {Object} object
  * @return {Boolean}
  */
-var isBigNumber = function (object) {
+export var isBigNumber = function (object) {
     return object && object.constructor && object.constructor.name === 'BigNumber';
 };
 
@@ -58,7 +58,7 @@ var isBigNumber = function (object) {
  * @param {Number|String|BN} number, string, HEX string or BN
  * @return {BN} BN
  */
-var toBN = function(number){
+export var toBN = function(number){
     try {
         return numberToBN.apply(null, arguments);
     } catch(e) {
@@ -74,7 +74,7 @@ var toBN = function(number){
  * @param {Number|String|BN} number
  * @return {String}
  */
-var toTwosComplement = function (number) {
+export var toTwosComplement = function (number) {
     return '0x'+ toBN(number).toTwos(256).toString(16, 64);
 };
 
@@ -85,7 +85,7 @@ var toTwosComplement = function (number) {
  * @param {String} address the given HEX address
  * @return {Boolean}
  */
-var isAddress = function (address) {
+export var isAddress = function (address) {
     // check if it has the basic requirements of an address
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
         return false;
@@ -107,7 +107,7 @@ var isAddress = function (address) {
  * @param {String} address the given HEX address
  * @return {Boolean}
  */
-var checkAddressChecksum = function (address) {
+export var checkAddressChecksum = function (address) {
     // Check each case
     address = address.replace(/^0x/i,'');
     var addressHash = sha3(address.toLowerCase()).replace(/^0x/i,'');
@@ -130,7 +130,7 @@ var checkAddressChecksum = function (address) {
  * @param {String} sign, by default 0
  * @returns {String} right aligned string
  */
-var leftPad = function (string, chars, sign) {
+export var leftPad = function (string, chars, sign) {
     var hasPrefix = /^0x/i.test(string) || typeof string === 'number';
     string = string.toString(16).replace(/^0x/i,'');
 
@@ -148,7 +148,7 @@ var leftPad = function (string, chars, sign) {
  * @param {String} sign, by default 0
  * @returns {String} right aligned string
  */
-var rightPad = function (string, chars, sign) {
+export var rightPad = function (string, chars, sign) {
     var hasPrefix = /^0x/i.test(string) || typeof string === 'number';
     string = string.toString(16).replace(/^0x/i,'');
 
@@ -165,7 +165,7 @@ var rightPad = function (string, chars, sign) {
  * @param {String} str
  * @returns {String} hex representation of input string
  */
-var utf8ToHex = function(str) {
+export var utf8ToHex = function(str) {
     str = utf8.encode(str);
     var hex = "";
 
@@ -193,7 +193,7 @@ var utf8ToHex = function(str) {
  * @param {String} hex
  * @returns {String} ascii string representation of hex value
  */
-var hexToUtf8 = function(hex) {
+export var hexToUtf8 = function(hex) {
     if (!isHexStrict(hex))
         throw new Error('The parameter "'+ hex +'" must be a valid HEX string.');
 
@@ -227,7 +227,7 @@ var hexToUtf8 = function(hex) {
  * @param {String|Number|BN} value
  * @return {String}
  */
-var hexToNumber = function (value) {
+export var hexToNumber = function (value) {
     if (!value) {
         return value;
     }
@@ -246,7 +246,7 @@ var hexToNumber = function (value) {
  * @param {String|Number|BN} value
  * @return {String}
  */
-var hexToNumberString = function (value) {
+export var hexToNumberString = function (value) {
     if (!value) return value;
 
     if (_.isString(value) && !isHexStrict(value)) {
@@ -264,7 +264,7 @@ var hexToNumberString = function (value) {
  * @param {String|Number|BN} value
  * @return {String}
  */
-var numberToHex = function (value) {
+export var numberToHex = function (value) {
     if (_.isNull(value) || _.isUndefined(value)) {
         return value;
     }
@@ -289,7 +289,7 @@ var numberToHex = function (value) {
  * @param {Array} bytes
  * @return {String} the hex string
  */
-var bytesToHex = function(bytes) {
+export var bytesToHex = function(bytes) {
     for (var hex = [], i = 0; i < bytes.length; i++) {
         /* jshint ignore:start */
         hex.push((bytes[i] >>> 4).toString(16));
@@ -308,7 +308,7 @@ var bytesToHex = function(bytes) {
  * @param {string} hex
  * @return {Array} the byte array
  */
-var hexToBytes = function(hex) {
+export var hexToBytes = function(hex) {
     hex = hex.toString(16);
 
     if (!isHexStrict(hex)) {
@@ -332,7 +332,7 @@ var hexToBytes = function(hex) {
  * @param {Boolean} returnType
  * @return {String}
  */
-var toHex = function (value, returnType) {
+export var toHex = function (value, returnType) {
     /*jshint maxcomplexity: false */
 
     if (isAddress(value)) {
@@ -373,7 +373,7 @@ var toHex = function (value, returnType) {
  * @param {String} hex to be checked
  * @returns {Boolean}
  */
-var isHexStrict = function (hex) {
+export var isHexStrict = function (hex) {
     return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex));
 };
 
@@ -384,7 +384,7 @@ var isHexStrict = function (hex) {
  * @param {String} hex to be checked
  * @returns {Boolean}
  */
-var isHex = function (hex) {
+export var isHex = function (hex) {
     return ((_.isString(hex) || _.isNumber(hex)) && /^(-0x|0x)?[0-9a-f]*$/i.test(hex));
 };
 
@@ -396,7 +396,7 @@ var isHex = function (hex) {
  * @param {String} bloom encoded bloom filter
  * @return {Boolean}
  */
-var isBloom = function (bloom) {
+export var isBloom = function (bloom) {
     return ethereumBloomFilters.isBloom(bloom);
 };
 
@@ -409,7 +409,7 @@ var isBloom = function (bloom) {
  * @param {String} bloom ethereum addresss
  * @return {Boolean}
  */
-var isUserEthereumAddressInBloom = function (bloom, ethereumAddress) {
+export var isUserEthereumAddressInBloom = function (bloom, ethereumAddress) {
     return ethereumBloomFilters.isUserEthereumAddressInBloom(bloom, ethereumAddress);
 };
 
@@ -422,7 +422,7 @@ var isUserEthereumAddressInBloom = function (bloom, ethereumAddress) {
  * @param {String} contractAddress contract addresss
  * @return {Boolean}
  */
-var isContractAddressInBloom = function (bloom, contractAddress) {
+export var isContractAddressInBloom = function (bloom, contractAddress) {
     return ethereumBloomFilters.isContractAddressInBloom(bloom, contractAddress);
 };
 
@@ -433,7 +433,7 @@ var isContractAddressInBloom = function (bloom, contractAddress) {
  * @param {String} topic encoded topic
  * @return {Boolean}
  */
-var isTopic = function (topic) {
+export var isTopic = function (topic) {
     return ethereumBloomFilters.isTopic(topic);
 };
 
@@ -446,7 +446,7 @@ var isTopic = function (topic) {
  * @param {String} topic encoded topic
  * @return {Boolean}
  */
-var isTopicInBloom = function (bloom, topic) {
+export var isTopicInBloom = function (bloom, topic) {
     return ethereumBloomFilters.isTopicInBloom(bloom, topic);
 };
 
@@ -459,7 +459,7 @@ var isTopicInBloom = function (bloom, topic) {
  * @param {String | Uint8Array} topic encoded value
  * @return {Boolean}
  */
-var isInBloom = function (bloom, topic) {
+export var isInBloom = function (bloom, topic) {
     return ethereumBloomFilters.isInBloom(bloom, topic);
 };
 
@@ -473,7 +473,7 @@ var isInBloom = function (bloom, topic) {
  */
 var SHA3_NULL_S = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
-var sha3 = function (value) {
+export var sha3 = function (value) {
     if (isBN(value)) {
         value = value.toString();
     }
@@ -492,33 +492,3 @@ var sha3 = function (value) {
 };
 // expose the under the hood keccak256
 sha3._Hash = Hash;
-
-
-module.exports = {
-    BN: BN,
-    isBN: isBN,
-    isBigNumber: isBigNumber,
-    toBN: toBN,
-    isAddress: isAddress,
-    isBloom: isBloom,
-    isUserEthereumAddressInBloom: isUserEthereumAddressInBloom,
-    isContractAddressInBloom: isContractAddressInBloom,
-    isTopic: isTopic,
-    isTopicInBloom: isTopicInBloom,
-    isInBloom: isInBloom,
-    checkAddressChecksum: checkAddressChecksum,
-    utf8ToHex: utf8ToHex,
-    hexToUtf8: hexToUtf8,
-    hexToNumber: hexToNumber,
-    hexToNumberString: hexToNumberString,
-    numberToHex: numberToHex,
-    toHex: toHex,
-    hexToBytes: hexToBytes,
-    bytesToHex: bytesToHex,
-    isHex: isHex,
-    isHexStrict: isHexStrict,
-    leftPad: leftPad,
-    rightPad: rightPad,
-    toTwosComplement: toTwosComplement,
-    sha3: sha3
-};

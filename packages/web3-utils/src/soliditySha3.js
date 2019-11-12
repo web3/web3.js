@@ -20,9 +20,9 @@
  * @date 2017
  */
 
-var _ = require('underscore');
-var BN = require('bn.js');
-var utils = require('./utils.js');
+import BN from 'bn.js';
+import _ from 'underscore';
+import {isHexStrict, isBigNumber, isBN, utf8ToHex, isAddress, leftPad, rightPad, toHex, sha3} from './utils.js';
 
 
 var _elementaryName = function (name) {
@@ -63,16 +63,16 @@ var _parseTypeNArray = function (type) {
 var _parseNumber = function (arg) {
     var type = typeof arg;
     if (type === 'string') {
-        if (utils.isHexStrict(arg)) {
+        if (isHexStrict(arg)) {
             return new BN(arg.replace(/0x/i,''), 16);
         } else {
             return new BN(arg, 10);
         }
     } else if (type === 'number') {
         return new BN(arg);
-    } else if (utils.isBigNumber(arg)) {
+    } else if (isBigNumber(arg)) {
         return new BN(arg.toString(10));
-    } else if (utils.isBN(arg)) {
+    } else if (isBN(arg)) {
         return arg;
     } else {
         throw new Error(arg +' is not a number');
@@ -94,7 +94,7 @@ var _solidityPack = function (type, value, arraySize) {
 
         return value;
     } else if (type === 'string') {
-        return utils.utf8ToHex(value);
+        return utf8ToHex(value);
     } else if (type === 'bool') {
         return value ? '01' : '00';
     } else if (type.startsWith('address')) {
@@ -104,11 +104,11 @@ var _solidityPack = function (type, value, arraySize) {
             size = 40;
         }
 
-        if(!utils.isAddress(value)) {
+        if(!isAddress(value)) {
             throw new Error(value +' is not a valid address, or the checksum is invalid.');
         }
 
-        return utils.leftPad(value.toLowerCase(), size);
+        return leftPad(value.toLowerCase(), size);
     }
 
     size = _parseTypeN(type);
@@ -128,7 +128,7 @@ var _solidityPack = function (type, value, arraySize) {
             throw new Error('Invalid bytes' + size +' for '+ value);
         }
 
-        return utils.rightPad(value, size * 2);
+        return rightPad(value, size * 2);
     } else if (type.startsWith('uint')) {
 
         if ((size % 8) || (size < 8) || (size > 256)) {
@@ -144,7 +144,7 @@ var _solidityPack = function (type, value, arraySize) {
             throw new Error('Supplied uint '+ num.toString() +' is negative');
         }
 
-        return size ? utils.leftPad(num.toString('hex'), size/8 * 2) : num;
+        return size ? leftPad(num.toString('hex'), size/8 * 2) : num;
     } else if (type.startsWith('int')) {
 
         if ((size % 8) || (size < 8) || (size > 256)) {
@@ -159,7 +159,7 @@ var _solidityPack = function (type, value, arraySize) {
         if(num.lt(new BN(0))) {
             return num.toTwos(size).toString('hex');
         } else {
-            return size ? utils.leftPad(num.toString('hex'), size/8 * 2) : num;
+            return size ? leftPad(num.toString('hex'), size/8 * 2) : num;
         }
 
     } else {
@@ -187,8 +187,8 @@ var _processSoliditySha3Args = function (arg) {
     // otherwise try to guess the type
     } else {
 
-        type = utils.toHex(arg, true);
-        value = utils.toHex(arg);
+        type = toHex(arg, true);
+        value = toHex(arg);
 
         if (!type.startsWith('int') && !type.startsWith('uint')) {
             type = 'bytes';
@@ -238,8 +238,8 @@ var soliditySha3 = function () {
     // console.log(args, hexArgs);
     // console.log('0x'+ hexArgs.join(''));
 
-    return utils.sha3('0x'+ hexArgs.join(''));
+    return sha3('0x'+ hexArgs.join(''));
 };
 
 
-module.exports = soliditySha3;
+export default soliditySha3;

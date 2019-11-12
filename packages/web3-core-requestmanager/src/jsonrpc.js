@@ -85,5 +85,5 @@ Jsonrpc.toBatchPayload = function (messages) {
     });
 };
 
-module.exports = Jsonrpc;
+export default Jsonrpc;
 

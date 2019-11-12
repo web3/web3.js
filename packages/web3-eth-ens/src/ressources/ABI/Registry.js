@@ -202,4 +202,4 @@ var REGISTRY = [
     }
 ];
 
-module.exports = REGISTRY;
+export default REGISTRY;

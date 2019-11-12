@@ -22,11 +22,10 @@
 
 "use strict";
 
-var core = require('web3-core');
-var Subscriptions = require('web3-core-subscriptions').subscriptions;
-var Method = require('web3-core-method');
-// var formatters = require('web3-core-helpers').formatters;
-var Net = require('web3-net');
+import core from 'web3-core';
+import {Subscriptions} from 'web3-core-subscriptions';
+import Method from 'web3-core-method';
+import Net from 'web3-net';
 
 
 var Shh = function Shh() {
@@ -185,6 +184,6 @@ core.addProviders(Shh);
 
 
 
-module.exports = Shh;
+export default Shh;
 
 

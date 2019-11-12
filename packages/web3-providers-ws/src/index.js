@@ -22,9 +22,9 @@
 
 "use strict";
 
-var _ = require('underscore');
-var errors = require('web3-core-helpers').errors;
-var Ws = require('@web3-js/websocket').w3cwebsocket;
+import _ from 'underscore';
+import {errors} from 'web3-core-helpers';
+import {w3cwebsocket as Ws} from '@web3-js/websocket';
 
 var isNode = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
 
@@ -414,4 +414,4 @@ WebsocketProvider.prototype.supportsSubscriptions = function () {
     return true;
 };
 
-module.exports = WebsocketProvider;
+export default WebsocketProvider;

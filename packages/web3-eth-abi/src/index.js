@@ -21,12 +21,11 @@
  * @date 2018
  */
 
-var _ = require('underscore');
-var utils = require('web3-utils');
-// Note: We require the AbiCoder from ethers directly from the node_modules to not bundle the whole ethers.js lib into web3.js
-var EthersAbi = require('../node_modules/ethers/utils/abi-coder').AbiCoder;
+import _ from 'underscore';
+import {_jsonInterfaceMethodToString, sha3} from 'web3-utils';
+import {AbiCoder as EthersAbiCoder} from 'ethers/utils/abi-coder';
 
-var ethersAbiCoder = new EthersAbi(function (type, value) {
+var ethersAbiCoder = new EthersAbiCoder(function (type, value) {
     if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) {
         return value.toString();
     }
@@ -52,10 +51,10 @@ var ABICoder = function () {
  */
 ABICoder.prototype.encodeFunctionSignature = function (functionName) {
     if (_.isObject(functionName)) {
-        functionName = utils._jsonInterfaceMethodToString(functionName);
+        functionName = _jsonInterfaceMethodToString(functionName);
     }
 
-    return utils.sha3(functionName).slice(0, 10);
+    return sha3(functionName).slice(0, 10);
 };
 
 /**
@@ -67,10 +66,10 @@ ABICoder.prototype.encodeFunctionSignature = function (functionName) {
  */
 ABICoder.prototype.encodeEventSignature = function (functionName) {
     if (_.isObject(functionName)) {
-        functionName = utils._jsonInterfaceMethodToString(functionName);
+        functionName = _jsonInterfaceMethodToString(functionName);
     }
 
-    return utils.sha3(functionName);
+    return sha3(functionName);
 };
 
 /**
@@ -315,4 +314,4 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
 
 var coder = new ABICoder();
 
-module.exports = coder;
+export default coder;

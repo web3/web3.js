@@ -22,11 +22,11 @@
 
 "use strict";
 
-var _ = require('underscore');
-var errors = require('web3-core-helpers').errors;
-var EventEmitter = require('eventemitter3');
+import _ from 'underscore';
+import {errors} from 'web3-core-helpers';
+import EventEmitter from 'eventemitter3';
 
-function Subscription(options) {
+export default function Subscription(options) {
     EventEmitter.call(this);
 
     this.id = null;
@@ -304,5 +304,3 @@ Subscription.prototype.subscribe = function() {
     // return an object to cancel the subscription
     return this;
 };
-
-module.exports = Subscription;

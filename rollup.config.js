@@ -88,7 +88,8 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
                 },
                 {
                     dedupe: dedupe
-                }
+                },
+                ['xhr2-cookies', 'web3-providers-ipc']
             )
         );
     }
@@ -112,9 +113,10 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
  *
  * @returns {{output: ({file, sourcemap, exports, globals, name, format}|{file, sourcemap, exports, format}), input: *, plugins: *[]}}
  */
-function rollupConfig(input, outputFile, outputName, outputType, exports = 'auto', globals = {}, babelOptions = {}, resolverOptions = {}) {
+function rollupConfig(input, outputFile, outputName, outputType, exports = 'auto', globals = {}, babelOptions = {}, resolverOptions = {}, external) {
     return {
         input: input,
+        external: external,
         output: getOutput(outputFile, outputType, outputName, exports, globals),
         plugins: getPlugins(outputType, babelOptions, resolverOptions)
     };
@@ -194,7 +196,6 @@ function getPlugins(type, babelOptions, resolverOptions) {
         case 'cjs':
         case 'es':
             return [
-                commonjs(),
                 babelPlugin,
                 json(),
                 autoExternal(),
@@ -219,6 +220,8 @@ function getPlugins(type, babelOptions, resolverOptions) {
  */
 function getBabelConfig(exclude, targets, forceAllTransforms = false, transformRuntimeOptions = {}, minified = false) {
     let plugins = [
+        '@babel/plugin-proposal-export-default-from',
+        '@babel/plugin-proposal-export-namespace-from',
         [
             '@babel/plugin-transform-runtime',
             Object.assign({useESModules: true}, transformRuntimeOptions)

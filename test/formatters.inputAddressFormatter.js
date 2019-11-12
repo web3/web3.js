@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var formatters = require('../packages/web3-core-helpers/src/formatters.js');
+var formatters = require('../packages/web3-core-helpers').formatters;
 
 var tests = [
     { input: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS', result: '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8' },

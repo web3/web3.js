@@ -1,5 +1,5 @@
 var assert = require('assert');
-var formatters = require('../packages/web3-core-helpers/src/formatters.js');
+var formatters = require('../packages/web3-core-helpers').formatters;
 
 describe('formatters', function () {
     describe('outputTransactionFormatter', function () {

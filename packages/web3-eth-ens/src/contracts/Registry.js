@@ -20,12 +20,12 @@
 
 "use strict";
 
-var _ = require('underscore');
-var Contract = require('web3-eth-contract');
-var namehash = require('eth-ens-namehash');
-var PromiEvent = require('web3-core-promievent');
-var REGISTRY_ABI = require('../ressources/ABI/Registry');
-var RESOLVER_ABI = require('../ressources/ABI/Resolver');
+import _ from 'underscore';
+import Contract from 'web3-eth-contract';
+import namehash from 'eth-ens-namehash';
+import PromiEvent from 'web3-core-promievent';
+import REGISTRY_ABI from '../ressources/ABI/Registry';
+import RESOLVER_ABI from '../ressources/ABI/Resolver';
 
 
 /**
@@ -97,4 +97,4 @@ Registry.prototype.resolver = function (name) {
     });
 };
 
-module.exports = Registry;
+export default Registry;

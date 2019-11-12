@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var formatters = require('../packages/web3-core-helpers/src/formatters.js');
+var formatters = require('../packages/web3-core-helpers').formatters;
 var FakeHttpProvider = require('./helpers/FakeIpcProvider');
 var Eth = require('../packages/web3-eth');
 var Method = require('../packages/web3-core-method');

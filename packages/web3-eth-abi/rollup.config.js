@@ -6,7 +6,7 @@ export default rollupConfig(
     pkg.name,
     {
         'web3-utils': 'Web3Utils',
-        'underscore': '_'
+        'underscore': '_',
     },
     [
         'bn.js',
