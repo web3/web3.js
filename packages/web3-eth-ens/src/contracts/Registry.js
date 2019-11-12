@@ -18,15 +18,13 @@
  * @date 2018
  */
 
-"use strict";
+'use strict';
 
 import _ from 'underscore';
-import Contract from 'web3-eth-contract';
 import namehash from 'eth-ens-namehash';
 import PromiEvent from 'web3-core-promievent';
 import REGISTRY_ABI from '../ressources/ABI/Registry';
 import RESOLVER_ABI from '../ressources/ABI/Resolver';
-
 
 /**
  * A wrapper around the ENS registry contract.
@@ -36,13 +34,9 @@ import RESOLVER_ABI from '../ressources/ABI/Resolver';
  * @constructor
  */
 function Registry(ens) {
-    var self = this;
     this.ens = ens;
-    this.contract = ens.checkNetwork().then(function (address) {
-        var contract = new Contract(REGISTRY_ABI, address);
-        contract.setProvider(self.ens.eth.currentProvider);
-
-        return contract;
+    this.contract = ens.checkNetwork().then(function(address) {
+        return new ens.eth.Contract(REGISTRY_ABI, address);
     });
 }
 
@@ -54,19 +48,19 @@ function Registry(ens) {
  * @param {function} callback
  * @return {Promise<any>}
  */
-Registry.prototype.owner = function (name, callback) {
+Registry.prototype.owner = function(name, callback) {
     var promiEvent = new PromiEvent(true);
 
-    this.contract.then(function (contract) {
+    this.contract.then(function(contract) {
         contract.methods.owner(namehash.hash(name)).call()
-            .then(function (receipt) {
+            .then(function(receipt) {
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
                     callback(receipt);
                 }
             })
-            .catch(function (error) {
+            .catch(function(error) {
                 promiEvent.reject(error);
 
                 if (_.isFunction(callback)) {
@@ -85,15 +79,13 @@ Registry.prototype.owner = function (name, callback) {
  * @param {string} name
  * @return {Promise<Contract>}
  */
-Registry.prototype.resolver = function (name) {
+Registry.prototype.resolver = function(name) {
     var self = this;
 
-    return this.contract.then(function (contract) {
+    return this.contract.then(function(contract) {
         return contract.methods.resolver(namehash.hash(name)).call();
-    }).then(function (address) {
-        var contract = new Contract(RESOLVER_ABI, address);
-        contract.setProvider(self.ens.eth.currentProvider);
-        return contract;
+    }).then(function(address) {
+        return new self.ens.eth.Contract(RESOLVER_ABI, address);
     });
 };
 
