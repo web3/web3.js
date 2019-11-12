@@ -219,12 +219,19 @@ export interface Log {
 // had to move `web3-net` due to other modules in `1.x` not referencing
 
 export class NetworkBase {
-    constructor(provider: provider, net?: net.Socket | null);
+    constructor(provider: provider);
+    constructor(provider: provider, net: net.Socket);
+    constructor();
 
     readonly givenProvider: any;
+    static readonly givenProvider: any;
+    static readonly providers: Providers;
     readonly currentProvider: provider;
     BatchRequest: new () => BatchRequest;
-    static readonly providers: Providers;
+
+    setProvider(provider: provider): boolean;
+
+    extend(extension: Extension): any;
 
     setProvider(provider: provider): boolean;
 
@@ -248,16 +255,14 @@ export class NetworkBase {
 // had to move accounts from web3-eth-accounts due to other modules in 1.x not referencing
 
 export class AccountsBase {
-    constructor(provider: provider, net?: net.Socket | null);
+    constructor(provider: provider);
+    constructor(provider: provider, net: net.Socket);
+    constructor();
 
     readonly givenProvider: any;
     readonly currentProvider: provider;
-    BatchRequest: new () => BatchRequest;
-    static readonly providers: Providers;
 
     setProvider(provider: provider): boolean;
-
-    extend(extension: Extension): any;
 
     create(entropy?: string): Account;
 

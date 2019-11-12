@@ -33,6 +33,7 @@ export default class Web3 {
 
     static modules: Modules;
     readonly givenProvider: any;
+    static readonly givenProvider: any;
     defaultAccount: string | null;
     defaultBlock: string | number;
     readonly currentProvider: provider;

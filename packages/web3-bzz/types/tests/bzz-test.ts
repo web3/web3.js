@@ -21,6 +21,9 @@ import { Bzz } from 'web3-bzz';
 
 const bzz = new Bzz('http://swarm-gateways.net');
 
+// $ExpectType any
+Bzz.givenProvider;
+
 // $ExpectType boolean
 bzz.setProvider('test.com');
 

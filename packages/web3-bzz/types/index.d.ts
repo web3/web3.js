@@ -21,6 +21,7 @@ export class Bzz {
     constructor(provider: any);
 
     readonly givenProvider: any;
+    static readonly givenProvider: any;
     defaultAccount: string | null;
     defaultBlock: string | number;
     readonly currentProvider: any;
