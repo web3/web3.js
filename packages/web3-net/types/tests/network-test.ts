@@ -25,6 +25,9 @@ const network = new Network('http://localhost:5000');
 network.currentProvider;
 
 // $ExpectType any
+Network.givenProvider;
+
+// $ExpectType any
 network.givenProvider;
 
 // $ExpectType boolean
