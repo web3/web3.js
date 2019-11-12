@@ -34,7 +34,7 @@ personal.defaultBlock;
 personal.currentProvider;
 
 // $ExpectType any
-personal.givenProvider;
+Personal.givenProvider;
 
 // $ExpectType any
 personal.givenProvider;
