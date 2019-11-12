@@ -32,7 +32,8 @@ import {
     TransactionReceipt,
     Common,
     hardfork,
-    chain, BlockNumber
+    chain,
+    BlockNumber
 } from 'web3-core';
 import { Subscription } from 'web3-core-subscriptions';
 import { AbiCoder } from 'web3-eth-abi';
@@ -389,11 +390,11 @@ export interface BlockTransactionString extends BlockTransactionBase {
 }
 
 export interface PastLogsOptions extends LogsOptions {
-    toBlock?: number | 'latest' | 'pending' | 'earliest';
+    toBlock?: BlockNumber;
 }
 
 export interface LogsOptions {
-    fromBlock?: number | 'latest' | 'pending' | 'earliest';
+    fromBlock?: BlockNumber;
     address?: string | string[];
     topics?: Array<string | string[] | null>;
 }
