@@ -34,7 +34,9 @@ import {
     Common,
     hardfork,
     chain,
-    BlockNumber
+    BlockNumber,
+    LogsOptions,
+    PastLogsOptions
 } from 'web3-core';
 import { Subscription } from 'web3-core-subscriptions';
 import { AbiCoder } from 'web3-eth-abi';
@@ -396,16 +398,6 @@ export interface BlockTransactionObject extends BlockTransactionBase {
 
 export interface BlockTransactionString extends BlockTransactionBase {
     transactions: string[];
-}
-
-export interface PastLogsOptions extends LogsOptions {
-    toBlock?: BlockNumber;
-}
-
-export interface LogsOptions {
-    fromBlock?: BlockNumber;
-    address?: string | string[];
-    topics?: Array<string | string[] | null>;
 }
 
 export interface GetProof {
