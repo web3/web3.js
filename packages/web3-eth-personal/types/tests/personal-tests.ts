@@ -24,6 +24,30 @@ import { Personal } from 'web3-eth-personal';
 
 const personal = new Personal('http://localhost:7545');
 
+// $ExpectType string | null
+personal.defaultAccount;
+
+// $ExpectType string | number
+personal.defaultBlock;
+
+// $ExpectType provider
+personal.currentProvider;
+
+// $ExpectType any
+personal.givenProvider;
+
+// $ExpectType any
+personal.givenProvider;
+
+// $ExpectType boolean
+personal.setProvider('https://localhost:2100');
+
+// $ExpectType BatchRequest
+new personal.BatchRequest();
+
+// $ExpectType any
+personal.extend({property: 'test', methods: [{name: 'method', call: 'method'}]});
+
 // $ExpectType Promise<string>
 personal.newAccount('test password');
 // $ExpectType Promise<string>
