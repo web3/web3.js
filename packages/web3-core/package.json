@@ -31,6 +31,7 @@
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
-        "dtslint": "0.4.2"
+        "dtslint": "0.4.2",
+        "rollup": "^1.26.5"
     }
 }

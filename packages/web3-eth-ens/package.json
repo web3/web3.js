@@ -27,10 +27,11 @@
         "web3-core-promievent": "1.2.2"
     },
     "devDependencies": {
+        "bn.js": "^4.11.8",
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2",
-        "bn.js": "^4.11.8",
+        "elliptic": "^6.4.1",
         "js-sha3": "^0.8.0",
-        "elliptic": "^6.4.1"
+        "rollup": "^1.26.5"
     }
 }
