@@ -16,5 +16,5 @@
     "predef": [
         "console"
     ],
-    "esversion": "6"
+    "esversion": 6
 }
