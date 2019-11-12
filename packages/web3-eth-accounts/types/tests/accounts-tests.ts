@@ -18,6 +18,10 @@
  */
 import { Accounts } from 'web3-eth-accounts';
 
+// $ExpectType Accounts
+const accounts_empty = new Accounts();
+
+// $ExpectType Accounts
 const accounts = new Accounts('http://localhost:8545');
 
 // $ExpectType provider

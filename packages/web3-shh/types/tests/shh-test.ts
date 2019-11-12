@@ -19,6 +19,10 @@
 
 import { Info, Notification, Shh } from 'web3-shh';
 
+// $ExpectType Shh
+const shh_empty = new Shh();
+
+// $ExpectType Shh
 const shh = new Shh('https://localhost:5000');
 
 // $ExpectType provider
