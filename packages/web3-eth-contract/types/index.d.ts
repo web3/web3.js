@@ -18,10 +18,8 @@
  */
 
 import BN = require('bn.js');
-import {Common, PromiEvent, provider, hardfork, chain, BlockNumber} from 'web3-core';
+import {Common, PromiEvent, provider, hardfork, chain, BlockNumber, PastLogsOptions, LogsOptions} from 'web3-core';
 import {AbiItem} from 'web3-utils';
-import {Block} from 'ethers/providers';
-import {LogsOptions} from '../../web3-eth/types';
 
 export class Contract {
     constructor(
@@ -65,10 +63,10 @@ export class Contract {
     getPastEvents(event: string): Promise<EventData[]>;
     getPastEvents(
         event: string,
-        options: EventOptions,
+        options: PastEventOptions,
         callback: (error: Error, event: EventData) => void
     ): Promise<EventData[]>;
-    getPastEvents(event: string, options: EventOptions): Promise<EventData[]>;
+    getPastEvents(event: string, options: PastEventOptions): Promise<EventData[]>;
     getPastEvents(
         event: string,
         callback: (error: Error, event: EventData) => void
@@ -134,12 +132,16 @@ export interface ContractOptions {
     data?: string;
 }
 
+export interface PastEventOptions extends PastLogsOptions {
+    filter?: Filter;
+}
+
 export interface EventOptions extends LogsOptions {
     filter?: Filter;
 }
 
 export interface Filter {
-    [key: string]: any | Array<any>
+    [key: string]: number | string | string[] | number[];
 }
 
 export interface EventData {
