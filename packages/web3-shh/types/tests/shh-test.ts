@@ -25,6 +25,9 @@ const shh = new Shh('https://localhost:5000');
 shh.currentProvider;
 
 // $ExpectType any
+Shh.givenProvider;
+
+// $ExpectType any
 shh.givenProvider;
 
 // $ExpectType boolean
@@ -32,6 +35,9 @@ shh.setProvider('https://localhost:2100');
 
 // $ExpectType BatchRequest
 new shh.BatchRequest();
+
+// $ExpectType any
+shh.extend({property: 'test', methods: [{name: 'method', call: 'method'}]});
 
 // $ExpectType Promise<number>
 shh.net.getId();
