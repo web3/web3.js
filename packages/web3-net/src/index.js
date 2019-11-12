@@ -22,10 +22,9 @@
 
 "use strict";
 
-var core = require('web3-core');
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
-
+import core from 'web3-core';
+import Method from 'web3-core-method';
+import {hexToNumber} from 'web3-utils';
 
 var Net = function () {
     var _this = this;
@@ -50,7 +49,7 @@ var Net = function () {
             name: 'getPeerCount',
             call: 'net_peerCount',
             params: 0,
-            outputFormatter: utils.hexToNumber
+            outputFormatter: hexToNumber
         })
     ].forEach(function(method) {
         method.attachToObject(_this);
@@ -62,6 +61,6 @@ var Net = function () {
 core.addProviders(Net);
 
 
-module.exports = Net;
+export default Net;
 
 

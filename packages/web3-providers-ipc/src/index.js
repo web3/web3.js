@@ -22,9 +22,9 @@
 
 "use strict";
 
-var _ = require('underscore');
-var errors = require('web3-core-helpers').errors;
-var oboe = require('oboe');
+import _ from 'underscore';
+import {errors} from 'web3-core-helpers';
+import oboe from 'oboe';
 
 
 var IpcProvider = function IpcProvider(path, net) {
@@ -321,5 +321,5 @@ IpcProvider.prototype.supportsSubscriptions = function () {
     return true;
 };
 
-module.exports = IpcProvider;
+export default IpcProvider;
 

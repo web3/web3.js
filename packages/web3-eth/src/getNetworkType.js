@@ -22,7 +22,7 @@
 
 "use strict";
 
-var _ = require('underscore');
+import _ from 'underscore';
 
 var getNetworkType = function (callback) {
     var _this = this,
@@ -79,4 +79,4 @@ var getNetworkType = function (callback) {
         });
 };
 
-module.exports = getNetworkType;
+export default getNetworkType;

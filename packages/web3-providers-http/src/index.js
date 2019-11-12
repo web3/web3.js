@@ -22,10 +22,10 @@
  * @date 2015
  */
 
-var errors = require('web3-core-helpers').errors;
-var XHR2 = require('xhr2-cookies').XMLHttpRequest; // jshint ignore: line
-var http = require('http');
-var https = require('https');
+import {errors} from 'web3-core-helpers';
+import {XMLHttpRequest as XHR2} from 'xhr2-cookies'; // jshint ignore: line
+import http from 'http';
+import https from 'https';
 
 
 /**
@@ -130,4 +130,4 @@ HttpProvider.prototype.supportsSubscriptions = function () {
     return false;
 };
 
-module.exports = HttpProvider;
+export default HttpProvider;

@@ -23,11 +23,16 @@
 'use strict';
 
 
-var _ = require('underscore');
-var errors = require('web3-core-helpers').errors;
-var Jsonrpc = require('./jsonrpc.js');
-var BatchManager = require('./batch.js');
-var givenProvider = require('./givenProvider.js');
+import _ from 'underscore';
+import {errors} from 'web3-core-helpers';
+import Jsonrpc from './jsonrpc.js';
+import givenProvider from './givenProvider.js';
+import WebsocketProvider from 'web3-providers-ws';
+import HttpProvider from 'web3-providers-http';
+import IpcProvider from 'web3-providers-ipc';
+
+export Jsonrpc from './jsonrpc.js';
+export BatchManager from './batch.js'
 
 
 /**
@@ -48,11 +53,10 @@ var RequestManager = function RequestManager(provider) {
 RequestManager.givenProvider = givenProvider;
 
 RequestManager.providers = {
-    WebsocketProvider: require('web3-providers-ws'),
-    HttpProvider: require('web3-providers-http'),
-    IpcProvider: require('web3-providers-ipc')
+    WebsocketProvider: WebsocketProvider,
+    HttpProvider: HttpProvider,
+    IpcProvider: IpcProvider
 };
-
 
 /**
  * Should be used to set provider of request manager
@@ -238,7 +242,4 @@ RequestManager.prototype.clearSubscriptions = function(keepIsSyncing) {
         this.provider.reset();
 };
 
-module.exports = {
-    Manager: RequestManager,
-    BatchManager: BatchManager
-};
+export {RequestManager as Manager};

@@ -23,9 +23,9 @@
 "use strict";
 
 
-var formatters = require('web3-core-helpers').formatters;
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
+import {formatters} from 'web3-core-helpers';
+import Method from 'web3-core-method';
+import * as utils from 'web3-utils';
 
 
 var extend = function (pckg) {
@@ -65,5 +65,5 @@ var extend = function (pckg) {
 
 
 
-module.exports = extend;
+export default extend;
 

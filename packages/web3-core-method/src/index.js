@@ -23,12 +23,11 @@
 
 'use strict';
 
-var _ = require('underscore');
-var errors = require('web3-core-helpers').errors;
-var formatters = require('web3-core-helpers').formatters;
-var utils = require('web3-utils');
-var promiEvent = require('web3-core-promievent');
-var Subscriptions = require('web3-core-subscriptions').subscriptions;
+import _ from 'underscore';
+import {errors, formatters} from 'web3-core-helpers';
+import {_fireError, numberToHex} from 'web3-utils';
+import promiEvent from 'web3-core-promievent';
+import {Subscriptions} from 'web3-core-subscriptions';
 
 var Method = function Method(options) {
 
@@ -269,7 +268,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                 .catch(function(err) {
                     sub.unsubscribe();
                     promiseResolved = true;
-                    utils._fireError(
+                    _fireError(
                         {
                             message: 'Failed to check for transaction receipt:',
                             data: err
@@ -339,7 +338,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                                 promiseResolved = true;
                             }
 
-                            utils._fireError(
+                            _fireError(
                                 new Error('The transaction receipt didn\'t contain a contract address.'),
                                 defer.eventEmitter,
                                 defer.reject,
@@ -372,7 +371,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                                 }
 
                             } else {
-                                utils._fireError(
+                                _fireError(
                                     new Error('The contract code couldn\'t be stored, please check your gas limit.'),
                                     defer.eventEmitter,
                                     defer.reject,
@@ -394,7 +393,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                 .then(function(receipt) {
                     if (!isContractDeployment && !promiseResolved) {
                         if (!receipt.outOfGas &&
-                            (!gasProvided || gasProvided !== utils.numberToHex(receipt.gasUsed)) &&
+                            (!gasProvided || gasProvided !== numberToHex(receipt.gasUsed)) &&
                             (receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined')) {
                             defer.eventEmitter.emit('receipt', receipt);
                             defer.resolve(receipt);
@@ -408,7 +407,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                             receiptJSON = JSON.stringify(receipt, null, 2);
 
                             if (receipt.status === false || receipt.status === '0x0') {
-                                utils._fireError(
+                                _fireError(
                                     new Error('Transaction has been reverted by the EVM:\n' + receiptJSON),
                                     defer.eventEmitter,
                                     defer.reject,
@@ -416,7 +415,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                                     receipt
                                 );
                             } else {
-                                utils._fireError(
+                                _fireError(
                                     new Error('Transaction ran out of gas. Please provide more gas:\n' + receiptJSON),
                                     defer.eventEmitter,
                                     defer.reject,
@@ -443,7 +442,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                         if (timeoutCount - 1 >= method.transactionPollingTimeout) {
                             sub.unsubscribe();
                             promiseResolved = true;
-                            utils._fireError(
+                            _fireError(
                                 new Error('Transaction was not mined within ' + method.transactionPollingTimeout + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
                                 defer.eventEmitter,
                                 defer.reject
@@ -453,7 +452,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                         if (timeoutCount - 1 >= method.transactionBlockTimeout) {
                             sub.unsubscribe();
                             promiseResolved = true;
-                            utils._fireError(
+                            _fireError(
                                 new Error('Transaction was not mined within ' + method.transactionBlockTimeout + ' blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
                                 defer.eventEmitter,
                                 defer.reject
@@ -466,7 +465,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
         } else {
             sub.unsubscribe();
             promiseResolved = true;
-            utils._fireError({
+            _fireError({
                 message: 'Failed to subscribe to new newBlockHeaders to confirm the transaction receipts.',
                 data: err
             }, defer.eventEmitter, defer.reject);
@@ -555,7 +554,7 @@ Method.prototype.buildCall = function() {
                     err = err.error;
                 }
 
-                return utils._fireError(err, defer.eventEmitter, defer.reject, payload.callback);
+                return _fireError(err, defer.eventEmitter, defer.reject, payload.callback);
             }
 
             // return PROMISE
@@ -695,4 +694,4 @@ Method.prototype.request = function() {
     return payload;
 };
 
-module.exports = Method;
+export default Method;

@@ -22,13 +22,15 @@
  */
 
 
-var _ = require('underscore');
-var ethjsUnit = require('ethjs-unit');
-var utils = require('./utils.js');
-var soliditySha3 = require('./soliditySha3.js');
-var randombytes = require('randombytes');
+import _ from 'underscore';
+import ethjsUnit from 'ethjs-unit';
+import randombytes from 'randombytes';
+import {hexToNumber, hexToUtf8, leftPad, numberToHex, rightPad, utf8ToHex, sha3, isHexStrict, isBN} from './utils';
 
-
+export soliditySha3 from './soliditySha3.js';
+export {_} from 'underscore';
+export * from './utils.js'
+export var unitMap = ethjsUnit.unitMap;
 
 /**
  * Fires an error in an event emitter and callback and returns the eventemitter
@@ -41,7 +43,7 @@ var randombytes = require('randombytes');
  * @param {any} optionalData
  * @return {Object} the emitter
  */
-var _fireError = function (error, emitter, reject, callback, optionalData) {
+export var _fireError = function (error, emitter, reject, callback, optionalData) {
     /*jshint maxcomplexity: 10 */
 
     // add data if given
@@ -92,7 +94,7 @@ var _fireError = function (error, emitter, reject, callback, optionalData) {
  * @param {Object} json
  * @return {String} full function/event name
  */
-var _jsonInterfaceMethodToString = function (json) {
+export var _jsonInterfaceMethodToString = function (json) {
     if (_.isObject(json) && json.name && json.name.indexOf('(') !== -1) {
         return json.name;
     }
@@ -109,7 +111,7 @@ var _jsonInterfaceMethodToString = function (json) {
  * @param {Object} puts
  * @return {Array} parameters as strings
  */
-var _flattenTypes = function(includeTuple, puts)
+export var _flattenTypes = function(includeTuple, puts)
 {
     // console.log("entered _flattenTypes. inputs/outputs: " + puts)
     var types = [];
@@ -152,7 +154,7 @@ var _flattenTypes = function(includeTuple, puts)
  * @param {Number} size
  * @returns {string}
  */
-var randomHex = function(size) {
+export var randomHex = function(size) {
     return '0x' + randombytes(size).toString('hex');
 };
 
@@ -163,8 +165,8 @@ var randomHex = function(size) {
  * @param {String} hex
  * @returns {String} ascii string representation of hex value
  */
-var hexToAscii = function(hex) {
-    if (!utils.isHexStrict(hex))
+export var hexToAscii = function(hex) {
+    if (!isHexStrict(hex))
         throw new Error('The parameter must be a valid HEX string.');
 
     var str = "";
@@ -187,7 +189,7 @@ var hexToAscii = function(hex) {
  * @param {String} str
  * @returns {String} hex representation of input string
  */
-var asciiToHex = function(str) {
+export var asciiToHex = function(str) {
     if(!str)
         return "0x00";
     var hex = "";
@@ -210,7 +212,7 @@ var asciiToHex = function(str) {
  * @returns {BN} value of the unit (in Wei)
  * @throws error if the unit is not correct:w
  */
-var getUnitValue = function (unit) {
+export var getUnitValue = function (unit) {
     unit = unit ? unit.toLowerCase() : 'ether';
     if (!ethjsUnit.unitMap[unit]) {
         throw new Error('This unit "'+ unit +'" doesn\'t exist, please use the one of the following units' + JSON.stringify(ethjsUnit.unitMap, null, 2));
@@ -239,14 +241,14 @@ var getUnitValue = function (unit) {
  * @param {String} unit the unit to convert to, default ether
  * @return {String|Object} When given a BN object it returns one as well, otherwise a number
  */
-var fromWei = function(number, unit) {
+export var fromWei = function(number, unit) {
     unit = getUnitValue(unit);
 
-    if(!utils.isBN(number) && !_.isString(number)) {
+    if(!isBN(number) && !_.isString(number)) {
         throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
-    return utils.isBN(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
+    return isBN(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
 };
 
 /**
@@ -271,14 +273,14 @@ var fromWei = function(number, unit) {
  * @param {String} unit the unit to convert from, default ether
  * @return {String|Object} When given a BN object it returns one as well, otherwise a number
  */
-var toWei = function(number, unit) {
+export var toWei = function(number, unit) {
     unit = getUnitValue(unit);
 
-    if(!utils.isBN(number) && !_.isString(number)) {
+    if(!isBN(number) && !_.isString(number)) {
         throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
-    return utils.isBN(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
+    return isBN(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
 };
 
 
@@ -291,7 +293,7 @@ var toWei = function(number, unit) {
  * @param {String} address the given HEX address
  * @return {String}
  */
-var toChecksumAddress = function (address) {
+export var toChecksumAddress = function (address) {
     if (typeof address === 'undefined') return '';
 
     if(!/^(0x)?[0-9a-f]{40}$/i.test(address))
@@ -300,7 +302,7 @@ var toChecksumAddress = function (address) {
 
 
     address = address.toLowerCase().replace(/^0x/i,'');
-    var addressHash = utils.sha3(address).replace(/^0x/i,'');
+    var addressHash = sha3(address).replace(/^0x/i,'');
     var checksumAddress = '0x';
 
     for (var i = 0; i < address.length; i++ ) {
@@ -314,62 +316,15 @@ var toChecksumAddress = function (address) {
     return checksumAddress;
 };
 
-
-
-module.exports = {
-    _fireError: _fireError,
-    _jsonInterfaceMethodToString: _jsonInterfaceMethodToString,
-    _flattenTypes: _flattenTypes,
-    // extractDisplayName: extractDisplayName,
-    // extractTypeName: extractTypeName,
-    randomHex: randomHex,
-    _: _,
-    BN: utils.BN,
-    isBN: utils.isBN,
-    isBigNumber: utils.isBigNumber,
-    isHex: utils.isHex,
-    isHexStrict: utils.isHexStrict,
-    sha3: utils.sha3,
-    keccak256: utils.sha3,
-    soliditySha3: soliditySha3,
-    isAddress: utils.isAddress,
-    checkAddressChecksum: utils.checkAddressChecksum,
-    toChecksumAddress: toChecksumAddress,
-    toHex: utils.toHex,
-    toBN: utils.toBN,
-
-    bytesToHex: utils.bytesToHex,
-    hexToBytes: utils.hexToBytes,
-
-    hexToNumberString: utils.hexToNumberString,
-
-    hexToNumber: utils.hexToNumber,
-    toDecimal: utils.hexToNumber, // alias
-
-    numberToHex: utils.numberToHex,
-    fromDecimal: utils.numberToHex, // alias
-
-    hexToUtf8: utils.hexToUtf8,
-    hexToString: utils.hexToUtf8,
-    toUtf8: utils.hexToUtf8,
-
-    utf8ToHex: utils.utf8ToHex,
-    stringToHex: utils.utf8ToHex,
-    fromUtf8: utils.utf8ToHex,
-
-    hexToAscii: hexToAscii,
-    toAscii: hexToAscii,
-    asciiToHex: asciiToHex,
-    fromAscii: asciiToHex,
-
-    unitMap: ethjsUnit.unitMap,
-    toWei: toWei,
-    fromWei: fromWei,
-
-    padLeft: utils.leftPad,
-    leftPad: utils.leftPad,
-    padRight: utils.rightPad,
-    rightPad: utils.rightPad,
-    toTwosComplement: utils.toTwosComplement
-};
-
+// alias
+export var keccak256 = sha3;
+export var toDecimal = hexToNumber;
+export var fromDecimal = numberToHex;
+export var hexToString = hexToUtf8;
+export var toUtf8 = hexToUtf8;
+export var stringToHex = utf8ToHex;
+export var fromUtf8 = utf8ToHex;
+export var toAscii = hexToAscii;
+export var fromAscii = asciiToHex;
+export var padLeft = leftPad;
+export var padRight = rightPad;

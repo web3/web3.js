@@ -22,11 +22,9 @@
 
 "use strict";
 
-var errors = require('./errors');
-var formatters = require('./formatters');
+export * as errors from './errors';
+export * as formatters from './formatters';
 
-module.exports = {
-    errors: errors,
-    formatters: formatters
-};
-
+// Added to have the possibility to import single functions
+export * from './errors';
+export * from './formatters';
