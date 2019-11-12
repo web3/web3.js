@@ -23,7 +23,12 @@
     "types": "types/index.d.ts",
     "scripts": {
         "dtslint": "dtslint types --onlyTestTsNext",
-        "postinstall": "node angular-patch.js"
+        "postinstall": "node angular-patch.js",
+        "build:dev": "../../scripts/build/build.dev.sh",
+        "build:cjs": "../../scripts/build/build.cjs.sh",
+        "build:esm": "../../scripts/build/build.esm.sh",
+        "build:minified": "../../scripts/build/build.min.sh",
+        "watch": "../../scripts/build/watch.dev.sh"
     },
     "authors": [
         {

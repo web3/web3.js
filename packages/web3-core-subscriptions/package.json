@@ -12,7 +12,12 @@
     "unpkg": "dist/web3-core-subscriptions.min.js",
     "jsdelivr": "dist/web3-core-subscriptions.min.js",
     "scripts": {
-        "dtslint": "dtslint types --onlyTestTsNext"
+        "dtslint": "dtslint types --onlyTestTsNext",
+        "build:dev": "../../scripts/build/build.dev.sh",
+        "build:cjs": "../../scripts/build/build.cjs.sh",
+        "build:esm": "../../scripts/build/build.esm.sh",
+        "build:minified": "../../scripts/build/build.min.sh",
+        "watch": "../../scripts/build/watch.dev.sh"
     },
     "dependencies": {
         "@babel/runtime": "^7.6.3",

@@ -8,7 +8,12 @@
         "node": ">=8.0.0"
     },
     "scripts": {
-        "dtslint": "dtslint types --onlyTestTsNext"
+        "dtslint": "dtslint types --onlyTestTsNext",
+        "build:dev": "../../scripts/build/build.dev.sh",
+        "build:cjs": "../../scripts/build/build.cjs.sh",
+        "build:esm": "../../scripts/build/build.esm.sh",
+        "build:minified": "../../scripts/build/build.min.sh",
+        "watch": "../../scripts/build/watch.dev.sh"
     },
     "types": "types/index.d.ts",
     "main": "dist/web3-providers-ws.cjs.js",
