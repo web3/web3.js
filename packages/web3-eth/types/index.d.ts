@@ -19,6 +19,7 @@
  * @date 2018
  */
 
+import * as net from 'net';
 import {
     BatchRequest,
     Extension,
@@ -45,7 +46,9 @@ import { Network } from 'web3-net';
 import { AbiItem } from 'web3-utils';
 
 export class Eth {
-    constructor(currentProvider: provider);
+    constructor(provider: provider);
+    constructor(provider: provider, net: net.Socket);
+    constructor();
 
     Contract: new (
         jsonInterface: AbiItem[] | AbiItem,
@@ -60,6 +63,7 @@ export class Eth {
     net: Network;
 
     readonly givenProvider: any;
+    static readonly givenProvider: any;
     defaultAccount: string | null;
     defaultBlock: string | number;
     defaultCommon: Common;
