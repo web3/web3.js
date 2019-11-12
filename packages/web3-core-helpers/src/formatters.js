@@ -39,10 +39,28 @@ var outputBigNumberFormatter = function (number) {
     return utils.toBN(number).toString(10);
 };
 
+/**
+ * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
+ *
+ * @method isPredefinedBlockNumber
+ *
+ * @param {String} blockNumber
+ *
+ * @returns {Boolean}
+ */
 var isPredefinedBlockNumber = function (blockNumber) {
     return blockNumber === 'latest' || blockNumber === 'pending' || blockNumber === 'earliest';
 };
 
+/**
+ * Returns the given block number as hex string or does return the defaultBlock property of the current module
+ *
+ * @method inputDefaultBlockNumberFormatter
+ *
+ * @param {String|Number} blockNumber
+ *
+ * @returns {String}
+ */
 var inputDefaultBlockNumberFormatter = function (blockNumber) {
     if (this && (blockNumber === undefined || blockNumber === null)) {
         return this.defaultBlock;
@@ -53,6 +71,13 @@ var inputDefaultBlockNumberFormatter = function (blockNumber) {
     return inputBlockNumberFormatter(blockNumber);
 };
 
+/**
+ * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest'
+ *
+ * @param {String|Number|undefined} blockNumber
+ *
+ * @returns {String|undefined}
+ */
 var inputBlockNumberFormatter = function (blockNumber) {
     if (blockNumber === undefined) {
         return undefined;
