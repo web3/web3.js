@@ -208,7 +208,7 @@ export interface EventLog {
 export interface Log {
     address: string;
     data: string;
-    topics: Array<string>;
+    topics: string[];
     logIndex: number;
     transactionIndex: number;
     transactionHash: string;
@@ -394,6 +394,16 @@ export class WebsocketProvider extends WebsocketProviderBase {
     constructor(host: string, options?: WebsocketProviderOptions);
 
     isConnecting(): boolean;
+}
+
+export interface PastLogsOptions extends LogsOptions {
+    toBlock?: BlockNumber;
+}
+
+export interface LogsOptions {
+    fromBlock?: BlockNumber;
+    address?: string | string[];
+    topics?: Array<string | string[] | null>;
 }
 
 export type BlockNumber = string | number | BN | 'latest' | 'pending' | 'earliest';
