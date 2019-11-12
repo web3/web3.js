@@ -71,7 +71,7 @@ export default (name, outputFileName, globals, dedupe, namedExports) => {
     if (process.env.MIN === 'true') {
         mappedConfig.push(
             rollupConfig(
-                DEFAULT_INPUT,
+                'dist/' + outputFileName + '.esm.js',
                 'dist/' + outputFileName + '.min.js',
                 name,
                 'umd',
