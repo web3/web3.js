@@ -84,7 +84,7 @@ export class WebsocketProviderBase {
 
     send(
         payload: JsonRpcPayload,
-        callback: (error: Error, result: any) => void
+        callback: (error: Error | null, result?: JsonRpcResponse) => void
     ): void;
 
     on(type: string, callback: () => void): void;
@@ -114,7 +114,7 @@ export class IpcProviderBase {
 
     send(
         payload: JsonRpcPayload,
-        callback: (error: Error, result: any) => void
+        callback: (error: Error | null, result?: JsonRpcResponse) => void
     ): void;
 
     on(type: string, callback: () => void): void;
@@ -140,7 +140,7 @@ export class HttpProviderBase {
 
     send(
         payload: JsonRpcPayload,
-        callback: (error: Error, result: any) => void
+        callback: (error: Error | null, result?: JsonRpcResponse) => void
     ): void;
 
     disconnect(): boolean;
@@ -174,4 +174,11 @@ export interface JsonRpcPayload {
     method: string;
     params: any[];
     id?: string | number;
+}
+
+export interface JsonRpcResponse {
+    jsonrpc: string;
+    id: number;
+    result?: any;
+    error?: string;
 }
