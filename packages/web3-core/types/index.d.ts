@@ -28,6 +28,7 @@ import {
 } from 'web3-core-helpers';
 import { Method } from 'web3-core-method';
 import BN = require('bn.js');
+import BigNumber from 'bignumber.js';
 
 export interface SignedTransaction {
     messageHash?: string;
@@ -406,7 +407,7 @@ export interface LogsOptions {
     topics?: Array<string | string[] | null>;
 }
 
-export type BlockNumber = string | number | BN | 'latest' | 'pending' | 'earliest';
+export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest';
 
 export type provider =
     | HttpProvider
