@@ -188,7 +188,9 @@ packages.forEach(function(pckg, i) {
         stream = stream.pipe(source(pckg.fileName + '.js'))
             .pipe(streamify(babel({
                 compact: false,
-                presets: ['@babel/preset-env']
+                [
+                    [ '@babel/preset-env', { "useBuiltIns": "usage" } ]
+                ]
             })));
 
         if (pckg.fileName === 'web3') {

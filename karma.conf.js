@@ -11,7 +11,6 @@ module.exports = function (config) {
             'browserify'
         ],
         files: [
-            'node_modules/@babel/polyfill/dist/polyfill.js', // For async/await in tests
             'test/**/e2e*.js'
         ],
         preprocessors: {
