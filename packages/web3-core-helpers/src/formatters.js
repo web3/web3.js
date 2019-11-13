@@ -32,8 +32,10 @@ var Iban = require('web3-eth-iban');
  * Should the format output to a big number
  *
  * @method outputBigNumberFormatter
- * @param {String|Number|BigNumber} number
- * @returns {BigNumber} object
+ *
+ * @param {String|Number|BigNumber|BN} number
+ *
+ * @returns {BN} object
  */
 var outputBigNumberFormatter = function (number) {
     return utils.toBN(number).toString(10);
@@ -57,7 +59,7 @@ var isPredefinedBlockNumber = function (blockNumber) {
  *
  * @method inputDefaultBlockNumberFormatter
  *
- * @param {String|Number} blockNumber
+ * @param {String|Number|BN|BigNumber} blockNumber
  *
  * @returns {String}
  */
@@ -72,11 +74,11 @@ var inputDefaultBlockNumberFormatter = function (blockNumber) {
 };
 
 /**
- * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest'
+ * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest', 'genesis'
  *
  * @param {String|Number|undefined} blockNumber
  *
- * @returns {String|undefined}
+ * @returns {String|Number|BN|BigNumber}
  */
 var inputBlockNumberFormatter = function (blockNumber) {
     if (blockNumber === undefined) {
