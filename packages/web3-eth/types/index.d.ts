@@ -43,6 +43,15 @@ import { Iban } from 'web3-eth-iban';
 import { Personal } from 'web3-eth-personal';
 import { Network } from 'web3-net';
 import { AbiItem } from 'web3-utils';
+export {
+    TransactionConfig,
+    RLPEncodedTransaction,
+    Transaction,
+    TransactionReceipt,
+    hardfork,
+    Common,
+    chain
+} from 'web3-core';
 
 export class Eth {
     constructor(currentProvider: provider);
