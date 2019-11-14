@@ -518,7 +518,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the storage from.
-2. ``Number|String`` - The index position of the storage.
+2. ``Number`` - The index position of the storage.
 3. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
