@@ -677,7 +677,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the balance of.
-2. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -718,7 +718,7 @@ Parameters
 
 1. ``String`` - The address to get the storage from.
 2. ``Number`` - The index position of the storage.
-3. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+3. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -756,7 +756,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the code from.
-2. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -795,7 +795,7 @@ Returns a block matching the block number or block hash.
 Parameters
 ----------
 
-1. ``String|Number`` - The block number or block hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number|BN|BigNumber`` - The block number or block hash. Or the string ``"genesis"``, ``"latest"``, ``"earliest"``, or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Boolean`` - (optional, default ``false``) If specified ``true``, the returned block will contain all transactions as objects. By default it is ``false`` so, there is no need to explictly specify false. And, if ``false`` it will only contains the transaction hashes.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
@@ -876,7 +876,7 @@ Parameters
 ----------
 
 
-1. ``String|Number`` - The block number or hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"genesis"``, ``"latest"``, ``"earliest"``, or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -898,6 +898,46 @@ Example
     > 1
 
 
+
+------------------------------------------------------------------------------
+
+
+getBlockUncleCount
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.getBlockUncleCount(blockHashOrBlockNumber [, callback])
+
+Returns the number of uncles in a block from a block matching the given block hash.
+
+----------
+Parameters
+----------
+
+
+1. ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"genesis"``, ``"latest"``, ``"earliest"``, or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+
+``Promise`` returns ``Number`` - The number of transactions in the given block.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.getBlockUncleCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1")
+    .then(console.log);
+    > 1
+
+
 ------------------------------------------------------------------------------
 
 getUncle
@@ -913,7 +953,7 @@ Returns a blocks uncle by a given uncle index position.
 Parameters
 ----------
 
-1. ``String|Number`` - The block number or hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"genesis"``, ``"latest"``, ``"earliest"``, or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Number`` - The index position of the uncle.
 3. ``Boolean`` - (optional, default ``false``) If specified ``true``, the returned block will contain all transactions as objects. By default it is ``false`` so, there is no need to explictly specify false. And, if ``false`` it will only contains the transaction hashes.
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
@@ -1025,7 +1065,7 @@ Parameters
 ----------
 
 
-1. ``String`` - A block number or hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number|BN|BigNumber`` - A block number or hash. Or the string ``"genesis"``, ``"latest"``, ``"earliest"``, or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Number`` - The transactions index position.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
@@ -1137,7 +1177,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the numbers of transactions from.
-2. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -1452,7 +1492,7 @@ Parameters
 ----------
 
 1. ``Object`` - A transaction object see :ref:`web3.eth.sendTransaction <eth-sendtransaction-return>`, with the difference that for calls the ``from`` property is optional as well.
-2. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------

@@ -55,7 +55,9 @@ export {
 } from 'web3-core';
 
 export class Eth {
-    constructor(provider?: provider, net?: net.Socket);
+    constructor();
+    constructor(provider: provider);
+    constructor(provider: provider, net: net.Socket);
 
     Contract: new (
         jsonInterface: AbiItem[] | AbiItem,

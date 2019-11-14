@@ -22,7 +22,9 @@ import * as net from 'net';
 import { provider, RLPEncodedTransaction, TransactionConfig, BatchRequest, Providers, Extension } from 'web3-core';
 
 export class Personal {
-    constructor(provider?: provider, net?: net.Socket);
+    constructor();
+    constructor(provider: provider);
+    constructor(provider: provider, net: net.Socket);
 
     readonly givenProvider: any;
     static readonly givenProvider: any;

@@ -19,6 +19,10 @@
 
 import { Bzz } from 'web3-bzz';
 
+// $ExpectType Bzz
+const bzz_empty = new Bzz();
+
+// $ExpectType Bzz
 const bzz = new Bzz('http://swarm-gateways.net');
 
 // $ExpectType any
