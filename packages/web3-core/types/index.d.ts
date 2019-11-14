@@ -219,7 +219,9 @@ export interface Log {
 // had to move `web3-net` due to other modules in `1.x` not referencing
 
 export class NetworkBase {
-    constructor(provider?: provider, net?: net.Socket);
+    constructor();
+    constructor(provider: provider);
+    constructor(provider: provider, net: net.Socket);
 
     readonly givenProvider: any;
     readonly currentProvider: provider;
@@ -249,7 +251,9 @@ export class NetworkBase {
 // had to move accounts from web3-eth-accounts due to other modules in 1.x not referencing
 
 export class AccountsBase {
-    constructor(provider?: provider, net?: net.Socket);
+    constructor();
+    constructor(provider: provider);
+    constructor(provider: provider, net: net.Socket);
 
     readonly givenProvider: any;
     readonly currentProvider: provider;
