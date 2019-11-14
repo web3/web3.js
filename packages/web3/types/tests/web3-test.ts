@@ -32,6 +32,12 @@ Web3.modules;
 // $ExpectType Providers
 Web3.providers;
 
+// $ExpectType any
+Web3.givenProvider;
+
+// $ExpectType Web3
+const web3_empty = new Web3();
+
 // $ExpectType Web3
 let web3 = new Web3('https://localhost:5000/');
 

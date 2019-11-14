@@ -37,6 +37,10 @@ import {
 import BN = require('bn.js');
 import BigNumber from 'bignumber.js';
 
+// $ExpectType Eth
+const eth_empty = new Eth();
+
+// $ExpectType Eth
 const eth = new Eth('http://localhost:8545');
 
 // $ExpectType string | null
