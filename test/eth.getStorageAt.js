@@ -1,11 +1,10 @@
 var testMethod = require('./helpers/test.method.js');
 var Eth = require('../packages/web3-eth');
-var BN = require('bignumber.js');
+var BigNumber = require('bignumber.js');
 
 var eth = new Eth();
 
 var method = 'getStorageAt';
-
 
 var tests = [{
     args: ['0x4E65FDa2159562a496F9f3522f89122A3088497a', 2], // checksum address
@@ -44,12 +43,21 @@ var tests = [{
     formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
     call: 'eth_'+ method
 }, {
-    args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', new BN('11'), 'latest'],
+    args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', new BigNumber('11'), 'latest'],
     formattedArgs: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', '0xb', 'latest'],
     result: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
     formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
     call: 'eth_'+ method
-}];
+}
+// TODO: Fixing of test.method.js cloning of the arguments does destroy the BN object. Manually calling of utils.numberToHex with new BN('11'); does work.
+// ,  {
+//     args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', new BN('11'), 'latest'],
+//     formattedArgs: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', '0xb', 'latest'],
+//     result: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
+//     formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
+//     call: 'eth_'+ method
+// }
+];
 
 testMethod.runTests('eth', method, tests);
 
