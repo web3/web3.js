@@ -18,20 +18,25 @@
  */
 
 import * as net from 'net';
-import { BatchRequest, provider, Providers } from 'web3-core';
+import { BatchRequest, provider, Providers, Extension } from 'web3-core';
 import { Network } from 'web3-net';
 
 export class Shh {
-    constructor(provider: provider, net?: net.Socket | null);
-
-    net: Network;
+    constructor();
+    constructor(provider: provider);
+    constructor(provider: provider, net: net.Socket);
 
     readonly givenProvider: any;
-    readonly currentProvider: provider;
+    static readonly givenProvider: any;
     static readonly providers: Providers;
+    readonly currentProvider: provider;
     BatchRequest: new () => BatchRequest;
 
     setProvider(provider: provider): boolean;
+
+    extend(extension: Extension): any;
+
+    net: Network;
 
     getVersion(
         callback?: (error: Error, version: string) => void

@@ -18,10 +18,25 @@
  * @date 2018
  */
 
-import { provider, RLPEncodedTransaction, TransactionConfig } from 'web3-core';
+import * as net from 'net';
+import { provider, RLPEncodedTransaction, TransactionConfig, BatchRequest, Providers, Extension } from 'web3-core';
 
 export class Personal {
+    constructor();
     constructor(provider: provider);
+    constructor(provider: provider, net: net.Socket);
+
+    readonly givenProvider: any;
+    static readonly givenProvider: any;
+    static readonly providers: Providers;
+    readonly currentProvider: provider;
+    defaultAccount: string | null;
+    defaultBlock: string | number;
+    BatchRequest: new () => BatchRequest;
+
+    setProvider(provider: provider): boolean;
+
+    extend(extension: Extension): any;
 
     newAccount(
         password: string,
