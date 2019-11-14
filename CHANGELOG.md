@@ -46,8 +46,6 @@ Released with 1.0.0-beta.37 code base.
 - ``requestOptions`` added to ``WebsocketProvider`` (#2979)
 - Node >= v8.0.0 support (#2938)
 
-## [Unreleased]
-
 ## [1.2.2]
 
 ### Added
@@ -85,10 +83,16 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.2.3]
 
-### Added
-
 ### Fixed
 
 - Fix regenerator runtime error in web3.min.js (#3155)
 - Fix TS types for eth.subscribe syncing, newBlockHeaders, pendingTransactions (#3159)
 - Improve web3-eth-abi decodeParameters error message (#3134)
+
+## [Unreleased]
+
+## [1.2.4]
+
+### Added
+
+### Fixed
