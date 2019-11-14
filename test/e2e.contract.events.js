@@ -3,7 +3,7 @@ var Basic = require('./sources/Basic');
 var utils = require('./helpers/test.utils');
 var Web3 = utils.getWeb3();
 
-describe('contract.events [ @E2E ]', function() {
+describe('contract.events [ @E2E ]', function () {
     // `getPastEvents` not working with Geth instamine over websockets.
     if (process.env.GETH_INSTAMINE) return;
 
@@ -18,26 +18,26 @@ describe('contract.events [ @E2E ]', function() {
         gas: 4000000
     };
 
-    before(async function(){
+    before(async function () {
         var port = utils.getWebsocketPort();
 
         web3 = new Web3('ws://localhost:' + port);
         accounts = await web3.eth.getAccounts();
 
         basic = new web3.eth.Contract(Basic.abi, basicOptions);
-        instance = await basic.deploy().send({from: accounts[0]});
+        instance = await basic.deploy().send({ from: accounts[0] });
     })
 
-    it('contract.getPastEvents', async function(){
+    it('contract.getPastEvents', async function () {
         await instance
             .methods
             .firesEvent(accounts[0], 1)
-            .send({from: accounts[0]});
+            .send({ from: accounts[0] });
 
         await instance
             .methods
             .firesEvent(accounts[0], 2)
-            .send({from: accounts[0]});
+            .send({ from: accounts[0] });
 
         const events = await instance.getPastEvents({
             fromBlock: 0,
@@ -50,15 +50,14 @@ describe('contract.events [ @E2E ]', function() {
         assert.notEqual(events[0].id, events[1].id);
     });
 
-    it('contract.events.<eventName>', function(){
+    it('contract.events.<eventName>', function () {
         return new Promise(async resolve => {
             instance
                 .events
                 .BasicEvent({
-                    fromBlock: 0,
-                    toBlock: 'latest'
+                    fromBlock: 0
                 })
-                .on('data', function(event) {
+                .on('data', function (event) {
                     assert.equal(event.event, 'BasicEvent');
                     this.removeAllListeners();
                     resolve();
@@ -67,7 +66,55 @@ describe('contract.events [ @E2E ]', function() {
             await instance
                 .methods
                 .firesEvent(accounts[0], 1)
-                .send({from: accounts[0]});
+                .send({ from: accounts[0] });
+        });
+    });
+
+    it('errors when toBlock is passed to contract.events.<eventName>', function () {
+        return new Promise(async resolve => {
+            try {
+                instance
+                    .events
+                    .BasicEvent({
+                        fromBlock: 0,
+                        toBlock: 'latest'
+                    })
+
+                await instance
+                    .methods
+                    .firesEvent(accounts[0], 1)
+                    .send({ from: accounts[0] });
+
+                // assert.fail();
+
+            } catch (err) {
+                assert(err.message === 'Invalid option: toBlock. Use getPastEvents for specific range.');
+                resolve()
+            }
+        });
+    });
+
+    it('errors when toBlock is passed to contract.events.allEvents', function () {
+        return new Promise(async (resolve, reject) => {
+            try {
+                instance
+                    .events
+                    .allEvents({
+                        fromBlock: 0,
+                        toBlock: 'latest'
+                    })
+
+                await instance
+                    .methods
+                    .firesEvent(accounts[0], 1)
+                    .send({ from: accounts[0] });
+
+                // assert.fail();
+
+            } catch (err) {
+                assert(err.message === 'Invalid option: toBlock. Use getPastEvents for specific range.');
+                resolve()
+            }
         });
     });
 });
