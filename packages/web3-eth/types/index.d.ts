@@ -367,6 +367,11 @@ export interface BlockHeader {
     timestamp: number | string;
 }
 
+// TODO: This interface does exist to provide backwards-compatibility and can get removed on a minor release
+export interface Block extends BlockTransactionBase {
+    transactions: Transaction[] | string[];
+}
+
 export interface BlockTransactionBase extends BlockHeader {
     size: number;
     difficulty: number;
