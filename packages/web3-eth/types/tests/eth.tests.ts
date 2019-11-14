@@ -18,13 +18,22 @@
  * @date 2018
  */
 
+import {Log} from 'web3-core';
 import {
-    Log,
+    BlockTransactionObject,
+    BlockTransactionString,
+    BlockHeader,
+    Eth,
+    GetProof,
+    Syncing,
     RLPEncodedTransaction,
     Transaction,
-    TransactionReceipt
-} from 'web3-core';
-import { BlockTransactionObject, BlockTransactionString, BlockHeader, Eth, GetProof, Syncing } from 'web3-eth';
+    TransactionReceipt,
+    TransactionConfig,
+    hardfork,
+    Common,
+    chain
+} from 'web3-eth';
 import BN = require('bn.js');
 import BigNumber from 'bignumber.js';
 
