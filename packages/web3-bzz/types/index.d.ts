@@ -18,6 +18,7 @@
  */
 
 export class Bzz {
+    constructor();
     constructor(provider: any);
 
     readonly givenProvider: any;
