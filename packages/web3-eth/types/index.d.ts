@@ -46,7 +46,18 @@ import { Iban } from 'web3-eth-iban';
 import { Personal } from 'web3-eth-personal';
 import { Network } from 'web3-net';
 import { AbiItem } from 'web3-utils';
+import { BigNumber } from 'bignumber.js';
 import BN = require('bn.js');
+
+export {
+    TransactionConfig,
+    RLPEncodedTransaction,
+    Transaction,
+    TransactionReceipt,
+    hardfork,
+    Common,
+    chain
+} from 'web3-core';
 
 export class Eth {
     constructor(currentProvider: provider);
@@ -154,20 +165,20 @@ export class Eth {
         callback?: (error: Error, balance: string) => void
     ): Promise<string>;
 
-    getStorageAt(address: string, position: number): Promise<string>;
+    getStorageAt(address: string, position: number | BigNumber | BN | string): Promise<string>;
     getStorageAt(
         address: string,
-        position: number,
+        position: number | BigNumber | BN | string,
         defaultBlock: BlockNumber
     ): Promise<string>;
     getStorageAt(
         address: string,
-        position: number,
+        position: number | BigNumber | BN | string,
         callback?: (error: Error, storageAt: string) => void
     ): Promise<string>;
     getStorageAt(
         address: string,
-        position: number,
+        position: number | BigNumber | BN | string,
         defaultBlock: BlockNumber,
         callback?: (error: Error, storageAt: string) => void
     ): Promise<string>;
@@ -374,6 +385,11 @@ export interface BlockHeader {
     gasLimit: number;
     gasUsed: number;
     timestamp: number | string;
+}
+
+// TODO: This interface does exist to provide backwards-compatibility and can get removed on a minor release
+export interface Block extends BlockTransactionBase {
+    transactions: Transaction[] | string[];
 }
 
 export interface BlockTransactionBase extends BlockHeader {

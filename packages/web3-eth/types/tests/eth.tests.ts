@@ -18,13 +18,24 @@
  * @date 2018
  */
 
+import {Log} from 'web3-core';
 import {
-    Log,
+    BlockTransactionObject,
+    BlockTransactionString,
+    BlockHeader,
+    Eth,
+    GetProof,
+    Syncing,
     RLPEncodedTransaction,
     Transaction,
-    TransactionReceipt
-} from 'web3-core';
-import { BlockTransactionObject, BlockTransactionString, BlockHeader, Eth, GetProof, Syncing } from 'web3-eth';
+    TransactionReceipt,
+    TransactionConfig,
+    hardfork,
+    Common,
+    chain
+} from 'web3-eth';
+import BN = require('bn.js');
+import BigNumber from 'bignumber.js';
 
 const eth = new Eth('http://localhost:8545');
 
@@ -197,6 +208,10 @@ eth.getBalance(
 
 // $ExpectType Promise<string>
 eth.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2);
+// $ExpectType Promise<string>
+eth.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', new BN(2));
+// $ExpectType Promise<string>
+eth.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', new BigNumber(2));
 // $ExpectType Promise<string>
 eth.getStorageAt('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 2, '1000');
 // $ExpectType Promise<string>
