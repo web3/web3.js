@@ -24,11 +24,12 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 
 # @truffle/interface-adapter
 cd packages/interface-adapter
-#yarn remove web3
+yarn remove web3
 
 yarn add web3@e2e \
   --registry http://localhost:4873 \
   --force
+  --flat
 
 # @truffle/contract
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>"
