@@ -24,7 +24,7 @@
 
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
-var Ws = require('websocket').w3cwebsocket;
+var Ws = require('@web3-js/websocket').w3cwebsocket;
 
 var isNode = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
 
@@ -81,7 +81,7 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
 
     // Allow a custom client configuration
     var clientConfig = options.clientConfig || undefined;
-    
+
     // Allow a custom request options
     // https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketClient.md#connectrequesturl-requestedprotocols-origin-headers-requestoptions
     var requestOptions = options.requestOptions || undefined;
