@@ -97,3 +97,5 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 ### Fixed
+
+- Fix npm installation error for scrypt-shim and websocket (#3210)
