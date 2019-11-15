@@ -57,7 +57,10 @@ export {
     TransactionReceipt,
     hardfork,
     Common,
-    chain
+    chain,
+    BlockNumber,
+    PastLogsOptions,
+    LogsOptions
 } from 'web3-core';
 
 export class Eth {
