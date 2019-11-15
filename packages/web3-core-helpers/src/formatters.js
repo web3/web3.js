@@ -277,7 +277,6 @@ var outputTransactionReceiptFormatter = function (receipt) {
         receipt.status = Boolean(parseInt(receipt.status));
     }
 
-    console.log('In web3 1.2.4!!')
     return receipt;
 };
 
