@@ -58,7 +58,7 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.RECONNECT = 'reconnect';
 
     this.connection = null;
-    this.requestQueue = new Set();
+    this.requestQueue = new Map();
     this.reconnectAttempts = 0;
     this.reconnecting = false;
 
@@ -145,9 +145,9 @@ WebsocketProvider.prototype._onError = function(error) {
         if (this.requestQueue.size > 0) {
             var _this = this;
 
-            this.requestQueue.forEach(function(request) {
+            this.requestQueue.forEach(function(request, key) {
                 request.callback(error);
-                _this.requestQueue.delete(request);
+                _this.requestQueue.delete(key);
             });
         }
 
@@ -170,9 +170,9 @@ WebsocketProvider.prototype._onConnect = function() {
     if (this.requestQueue.size > 0) {
         var _this = this;
 
-        this.requestQueue.forEach(function(request) {
+        this.requestQueue.forEach(function(request, key) {
             _this.send(request.payload, request.callback);
-            _this.requestQueue.delete(request);
+            _this.requestQueue.delete(key);
         });
     }
 };
@@ -196,9 +196,9 @@ WebsocketProvider.prototype._onClose = function(event) {
     if (this.requestQueue.size > 0) {
         var _this = this;
 
-        this.requestQueue.forEach(function(request) {
-            request.callback(new Error('The current connection got closed before the request got executed.'));
-            _this.requestQueue.delete(request);
+        this.requestQueue.forEach(function(request, key) {
+            request.callback(new Error('CONNECTION ERROR: The connection got closed during execution of `'+ request.payload.method + '` with the close code `' + event.code  + '` and the following reason string `'+ event.reason + '`'));
+            _this.requestQueue.delete(key);
         });
     }
 
@@ -284,9 +284,9 @@ WebsocketProvider.prototype._parseResponse = function(data) {
                 _this.emit(_this.ERROR, error);
 
                 if (_this.requestQueue.size > 0) {
-                    _this.requestQueue.forEach(function(request) {
+                    _this.requestQueue.forEach(function(request, key) {
                         request.callback(error);
-                        _this.requestQueue.delete(request);
+                        _this.requestQueue.delete(key);
                     });
                 }
             }, _this._customTimeout);
@@ -319,7 +319,7 @@ WebsocketProvider.prototype.send = function(payload, callback) {
     var _this = this;
 
     if (this.connection.readyState === this.connection.CONNECTING || this.reconnecting) {
-        this.requestQueue.add({payload: payload, callback: callback});
+        this.requestQueue.set(payload.id, {payload: payload, callback: callback});
 
         return;
     }
@@ -339,25 +339,14 @@ WebsocketProvider.prototype.send = function(payload, callback) {
         id = payload[0].id;
     }
 
-    const errorCallback = function(error) {
-        _this.removeListener(_this.CLOSE, closeCallback);
-        _this.removeAllListeners(id);
-        callback(error);
-    };
+    if (!this.requestQueue.has(payload.id)) {
+        this.requestQueue.set(payload.id, {payload: payload, callback: callback});
+    }
 
-    const closeCallback = function(event) {
-        _this.removeAllListeners(id);
-        _this.removeListener(_this.ERROR, errorCallback);
-        callback(new Error('CONNECTION ERROR: The connection got closed during execution of `'+ payload.method + '` with the close code `' + event.code  + '` and the following reason string `'+ event.reason + '`'));
-    };
-
-    this.once(this.ERROR, errorCallback)
-        .once(this.CLOSE, closeCallback)
-        .once(id, function(response) {
-            _this.removeListener(_this.ERROR, errorCallback);
-            _this.removeListener(_this.CLOSE, closeCallback);
-            callback(null, response);
-        });
+    this.once(id, function(response) {
+        callback(null, response);
+        _this.requestQueue.delete(payload.id);
+    });
 
     try {
         this.connection.send(JSON.stringify(payload));
