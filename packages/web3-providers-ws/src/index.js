@@ -324,7 +324,9 @@ WebsocketProvider.prototype.send = function(payload, callback) {
         id = payload[0].id;
     }
 
-    this.requestQueue.set(id, {payload: payload, callback: callback});
+    if (!this.requestQueue.has(id)) {
+        this.requestQueue.set(id, {payload: payload, callback: callback});
+    }
 
     if (this.connection.readyState === this.connection.CONNECTING || this.reconnecting) {
         return;
