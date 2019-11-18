@@ -152,6 +152,7 @@ WebsocketProvider.prototype._onError = function(error) {
         }
 
         this._removeSocketListeners();
+        this.removeAllListeners();
     }
 };
 
@@ -318,9 +319,9 @@ WebsocketProvider.prototype._parseResponse = function(data) {
 WebsocketProvider.prototype.send = function(payload, callback) {
     var _this = this;
 
-    if (this.connection.readyState === this.connection.CONNECTING || this.reconnecting) {
-        this.requestQueue.set(payload.id, {payload: payload, callback: callback});
+    this.requestQueue.set(payload.id, {payload: payload, callback: callback});
 
+    if (this.connection.readyState === this.connection.CONNECTING || this.reconnecting) {
         return;
     }
 
@@ -337,10 +338,6 @@ WebsocketProvider.prototype.send = function(payload, callback) {
 
     if (Array.isArray(payload)) {
         id = payload[0].id;
-    }
-
-    if (!this.requestQueue.has(payload.id)) {
-        this.requestQueue.set(payload.id, {payload: payload, callback: callback});
     }
 
     this.once(id, function(response) {
