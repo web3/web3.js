@@ -13,7 +13,6 @@ export default rollupConfig(
     [
         'bn.js',
         'elliptic',
-        'js-sha3',
         'underscore'
     ]
 );

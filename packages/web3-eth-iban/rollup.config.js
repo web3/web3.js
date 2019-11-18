@@ -9,9 +9,6 @@ export default rollupConfig(
         'bn.js': 'BN'
     },
     [
-        'bn.js',
-        'elliptic',
-        'js-sha3',
-        'underscore'
+        'bn.js'
     ]
 );
