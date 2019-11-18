@@ -62,7 +62,6 @@ module.exports = {
         // add SETPROVIDER function (don't overwrite if already existing)
         if (!pkg.setProvider) {
             pkg.setProvider = function(provider, net) {
-
                 pkg._requestManager.setProvider(provider, net);
                 pkg._provider = pkg._requestManager.provider;
                 return true;

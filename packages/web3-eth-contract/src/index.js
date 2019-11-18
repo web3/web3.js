@@ -59,6 +59,10 @@ var Contract = function Contract(jsonInterface, address, options) {
         throw new Error('Please use the "new" keyword to instantiate a web3.eth.Contract() object!');
     }
 
+    this.setProvider = function () {
+        core.packageInit(this, arguments);
+    };
+
     // sets _requestmanager
     core.packageInit(this, [this.constructor]);
 
