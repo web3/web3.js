@@ -85,12 +85,25 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.2.3]
 
+### Fixed
+
+- Fix perfect gas usage causes tx to error (#3175)
+- Fix regenerator runtime error in web3.min.js (#3155)
+- Fix TS types for eth.subscribe syncing, newBlockHeaders, pendingTransactions (#3159)
+- Improve web3-eth-abi decodeParameters error message (#3134)
+
+## [1.2.4]
+
+### Fixed
+
+- Fix npm installation error for scrypt-shim and websocket (#3210)
+
+## [Unreleased]
+
+## [1.2.5]
+
 ### Added
 
 - New build pipeline (#3160)
 
-## Fixed
-
-- ``regeneratorRuntime`` error fixed (#3155)
-- Fix TS types for eth.subscribe syncing, newBlockHeaders, pendingTransactions (#3159)
-- Improve web3-eth-abi decodeParameters error message (#3134)
+### Fixed

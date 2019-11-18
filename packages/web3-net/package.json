@@ -1,6 +1,6 @@
 {
     "name": "web3-net",
-    "version": "1.2.2",
+    "version": "1.2.4",
     "description": "Web3 module to interact with the Ethereum nodes networking properties.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-net",
     "license": "LGPL-3.0",
@@ -22,9 +22,9 @@
     "jsdelivr": "dist/web3-net.min.js",
     "dependencies": {
         "@babel/runtime": "^7.6.3",
-        "web3-core": "1.2.2",
-        "web3-core-method": "1.2.2",
-        "web3-utils": "1.2.2"
+        "web3-core": "1.2.4",
+        "web3-core-method": "1.2.4",
+        "web3-utils": "1.2.4"
     },
     "devDependencies": {
         "bn.js": "^4.11.8",

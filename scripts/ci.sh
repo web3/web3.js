@@ -16,6 +16,7 @@ elif [ "$TEST" = "build_and_lint" ]; then
 
   npm run build:all:release
   npm run dtslint
+  npm run depcheck
 
 elif [ "$TEST" = "unit_and_e2e_clients" ]; then
 

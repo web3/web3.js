@@ -34,7 +34,6 @@ import {formatters} from 'web3-core-helpers';
 import {Transaction} from 'ethereumjs-tx';
 import Common from 'ethereumjs-common';
 
-
 var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
 };

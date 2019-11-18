@@ -1,6 +1,6 @@
 {
     "name": "web3-core",
-    "version": "1.2.2",
+    "version": "1.2.4",
     "description": "Web3 core tools for sub packages. This is an internal package.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-core",
     "license": "LGPL-3.0",
@@ -24,10 +24,11 @@
         "@babel/runtime": "^7.6.3",
         "@types/bn.js": "^4.11.4",
         "@types/node": "^12.11.7",
-        "web3-core-helpers": "1.2.2",
-        "web3-core-method": "1.2.2",
-        "web3-core-requestmanager": "1.2.2",
-        "web3-utils": "1.2.2"
+        "@types/bignumber.js": "^5.0.0",
+        "web3-core-helpers": "1.2.4",
+        "web3-core-method": "1.2.4",
+        "web3-core-requestmanager": "1.2.4",
+        "web3-utils": "1.2.4"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
