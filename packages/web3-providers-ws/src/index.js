@@ -58,8 +58,8 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.RECONNECT = 'reconnect';
 
     this.connection = null;
-    this.requestQueue = new Set();
-    this.errorQueue = new Set();
+    this.requestQueue = new Map();
+    this.responseQueue = new Map();
     this.reconnectAttempts = 0;
     this.reconnecting = false;
 
@@ -128,7 +128,10 @@ WebsocketProvider.prototype._onMessage = function(e) {
             id = result[0].id;
         }
 
-        _this.emit(id, result);
+        if (_this.responseQueue.has(id)) {
+            _this.responseQueue.get(id).callback(false, result);
+            _this.responseQueue.delete(id);
+        }
     });
 };
 
@@ -146,16 +149,16 @@ WebsocketProvider.prototype._onError = function(error) {
         this.emit(this.ERROR, error);
 
         if (this.requestQueue.size > 0) {
-            this.requestQueue.forEach(function(request) {
+            this.requestQueue.forEach(function(request, key) {
                 request.callback(error);
-                _this.requestQueue.delete(request);
+                _this.requestQueue.delete(key);
             });
         }
 
-        if (this.errorQueue.size > 0) {
-            this.errorQueue.forEach(function (request) {
+        if (this.responseQueue.size > 0) {
+            this.responseQueue.forEach(function (request, key) {
                 request.callback(error);
-                _this.errorQueue.delete(request);
+                _this.responseQueue.delete(key);
             });
         }
 
@@ -179,9 +182,9 @@ WebsocketProvider.prototype._onConnect = function() {
     if (this.requestQueue.size > 0) {
         var _this = this;
 
-        this.requestQueue.forEach(function(request) {
+        this.requestQueue.forEach(function(request, key) {
             _this.send(request.payload, request.callback);
-            _this.requestQueue.delete(request);
+            _this.requestQueue.delete(key);
         });
     }
 };
@@ -205,16 +208,16 @@ WebsocketProvider.prototype._onClose = function(event) {
     this.emit(this.CLOSE, event);
 
     if (this.requestQueue.size > 0) {
-        this.requestQueue.forEach(function(request) {
+        this.requestQueue.forEach(function(request, key) {
             request.callback(new Error('CONNECTION ERROR: The connection got closed with close code `' + event.code  + '` and the following reason string `'+ event.reason + '`'));
-            _this.requestQueue.delete(request);
+            _this.requestQueue.delete(key);
         });
     }
 
-    if (this.errorQueue.size > 0) {
-        this.errorQueue.forEach(function (request) {
+    if (this.responseQueue.size > 0) {
+        this.responseQueue.forEach(function (request, key) {
             request.callback(new Error('CONNECTION ERROR: The connection got closed with close code `' + event.code  + '` and the following reason string `'+ event.reason + '`'));
-            _this.errorQueue.delete(request);
+            _this.responseQueue.delete(key);
         });
     }
 
@@ -341,44 +344,30 @@ WebsocketProvider.prototype.send = function(payload, callback) {
     }
 
     if (this.connection.readyState === this.connection.CONNECTING || this.reconnecting) {
-        this.requestQueue.add(request);
+        this.requestQueue.set(id, request);
 
         return;
     }
 
     if (this.connection.readyState !== this.connection.OPEN) {
-        if (this.requestQueue.has(request)) {
-            this.requestQueue.delete(request);
-        }
+        this.requestQueue.delete(id);
 
         var error = new Error('connection not open on send()');
 
         this.emit(this.ERROR, error);
-        callback(error);
+        request.callback(error);
 
         return;
     }
 
-    this.errorQueue.add(request);
-
-    if (this.reconnectOptions.auto || this.reconnecting) {
-        var timeout = setTimeout(function () {
-            callback(new Error('Connection error: Timeout exceeded'));
-            _this.errorQueue.delete(request);
-            _this.removeAllListeners(id);
-        }, this._customTimeout);
-    }
-
-    this.once(id, function(response) {
-        callback(null, response);
-        _this.errorQueue.delete(request);
-        clearTimeout(timeout);
-    });
+    this.requestQueue.delete(id);
+    this.responseQueue.set(id, request);
 
     try {
-        this.connection.send(JSON.stringify(payload));
+        this.connection.send(JSON.stringify(request.payload));
     } catch (error) {
-        callback(error);
+        request.callback(error);
+        _this.responseQueue.delete(id);
     }
 };
 
@@ -431,6 +420,13 @@ WebsocketProvider.prototype.supportsSubscriptions = function() {
 WebsocketProvider.prototype.reconnect = function() {
     var _this = this;
     this.reconnecting = true;
+
+    if (this.responseQueue.size > 0) {
+        this.responseQueue.forEach(function (request, key) {
+            request.callback(new Error('CONNECTION ERROR: Provider started to reconnect before the response got received!'));
+            _this.responseQueue.delete(key);
+        });
+    }
 
     if (
         !this.reconnectOptions.maxAttempts ||
