@@ -340,12 +340,14 @@ WebsocketProvider.prototype.send = function(payload, callback) {
     }
 
     const errorCallback = function(error) {
+        _this.removeListener(_this.CLOSE, closeCallback);
         _this.removeAllListeners(id);
         callback(error);
     };
 
     const closeCallback = function(event) {
         _this.removeAllListeners(id);
+        _this.removeListener(_this.ERROR, errorCallback);
         callback(new Error('CONNECTION ERROR: The connection got closed during execution of `'+ payload.method + '` with the close code `' + event.code  + '` and the following reason string `'+ event.reason + '`'));
     };
 
