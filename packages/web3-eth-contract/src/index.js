@@ -60,7 +60,9 @@ var Contract = function Contract(jsonInterface, address, options) {
     }
 
     this.setProvider = function () {
-        core.packageInit(this, arguments);
+        core.packageInit(_this, arguments);
+
+        _this.clearSubscriptions = _this._requestManager.clearSubscriptions;
     };
 
     // sets _requestmanager
