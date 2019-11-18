@@ -318,8 +318,13 @@ WebsocketProvider.prototype._parseResponse = function(data) {
  */
 WebsocketProvider.prototype.send = function(payload, callback) {
     var _this = this;
+    var id = payload.id;
 
-    this.requestQueue.set(payload.id, {payload: payload, callback: callback});
+    if (Array.isArray(payload)) {
+        id = payload[0].id;
+    }
+
+    this.requestQueue.set(id, {payload: payload, callback: callback});
 
     if (this.connection.readyState === this.connection.CONNECTING || this.reconnecting) {
         return;
@@ -327,6 +332,7 @@ WebsocketProvider.prototype.send = function(payload, callback) {
 
     if (this.connection.readyState !== this.connection.OPEN) {
         const error = new Error('connection not open on send()');
+        this.requestQueue.delete(id);
 
         this.emit(this.ERROR, error);
         callback(error);
@@ -334,15 +340,9 @@ WebsocketProvider.prototype.send = function(payload, callback) {
         return;
     }
 
-    var id = payload.id;
-
-    if (Array.isArray(payload)) {
-        id = payload[0].id;
-    }
-
     this.once(id, function(response) {
         callback(null, response);
-        _this.requestQueue.delete(payload.id);
+        _this.requestQueue.delete(id);
     });
 
     try {
