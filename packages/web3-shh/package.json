@@ -33,7 +33,6 @@
         "dtslint": "0.4.2",
         "elliptic": "^6.4.1",
         "js-sha3": "^0.8.0",
-        "rollup": "^1.26.5",
         "underscore": "^1.9.1"
     }
 }

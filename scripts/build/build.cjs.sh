@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-CJS=true rollup -c
+CJS=true ../../node_modules/rollup/dist/bin/rollup -c

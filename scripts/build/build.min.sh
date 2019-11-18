@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-MIN=true rollup -c
+MIN=true ../../node_modules/rollup/dist/bin/rollup -c

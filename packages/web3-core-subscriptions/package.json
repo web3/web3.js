@@ -30,7 +30,6 @@
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2",
         "elliptic": "^6.4.1",
-        "js-sha3": "^0.8.0",
-        "rollup": "^1.26.5"
+        "js-sha3": "^0.8.0"
     }
 }
