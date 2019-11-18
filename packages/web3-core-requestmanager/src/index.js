@@ -125,7 +125,7 @@ RequestManager.prototype.setProvider = function(provider, net) {
         // notify all subscriptions about the close condition
         this.provider.on('close', function close(event) {
             _this.subscriptions.forEach(function(subscription) {
-                subscription.callback(event);
+                subscription.callback(new Error('CONNECTION ERROR: The connection got closed with the close code `' + event.code  + '` and the following reason string `'+ event.reason + '`'));
             });
         });
 

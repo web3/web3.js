@@ -35,12 +35,31 @@ describe('subscription connect/reconnect', function() {
         });
     });
 
-    it('errors when there is no client to connect to (baseline)', async function() {
+    it('errors when the `eth_subscribe` request got send, the reponse isnt returned from the node, and the connection does get closed in the mean time', async function() {
         await pify(server.close)();
 
         return new Promise(async function (resolve) {
             web3.eth
                 .subscribe('newBlockHeaders')
+                .on('error', function(err) {
+                    assert(err.message.includes('CONNECTION ERROR'));
+                    resolve();
+                });
+        });
+    });
+
+    it('errors when the subscription got established and the connection closed during the subscription is running', async function() {
+        let stage = 0; // Required to not trigger server.close a second time
+
+        return new Promise(async function (resolve) {
+            web3.eth
+                .subscribe('newBlockHeaders')
+                .on('data', async function() {
+                    if (stage === 0) {
+                        stage = 1;
+                        await pify(server.close)();
+                    }
+                })
                 .on('error', function(err) {
                     assert(err.message.includes('CONNECTION ERROR'));
                     resolve();
@@ -73,7 +92,6 @@ describe('subscription connect/reconnect', function() {
                     // Exit point, flag set below
                     if (stage === 1) {
                         web3.currentProvider.disconnect();
-                        await pify(server.close)();
 
                         resolve();
                     }
