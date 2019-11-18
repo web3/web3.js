@@ -344,10 +344,16 @@ WebsocketProvider.prototype.send = function(payload, callback) {
         callback(error);
     };
 
+    const closeCallback = function(event) {
+        _this.removeAllListeners(id);
+        callback(new Error('CONNECTION ERROR: The connection got closed during execution of `'+ payload.method + '` with the close code `' + event.code  + '` and the following reason string `'+ event.reason + '`'));
+    };
+
     this.once(this.ERROR, errorCallback)
+        .once(this.CLOSE, closeCallback)
         .once(id, function(response) {
             _this.removeListener(_this.ERROR, errorCallback);
-
+            _this.removeListener(_this.CLOSE, closeCallback);
             callback(null, response);
         });
 
@@ -367,6 +373,7 @@ WebsocketProvider.prototype.send = function(payload, callback) {
  */
 WebsocketProvider.prototype.reset = function() {
     this.removeAllListeners();
+    this._removeSocketListeners();
     this._addSocketListeners();
 };
 
@@ -381,6 +388,7 @@ WebsocketProvider.prototype.reset = function() {
  * @returns {void}
  */
 WebsocketProvider.prototype.disconnect = function(code, reason) {
+    this._removeSocketListeners();
     this.connection.close(code || 1000, reason);
 };
 
