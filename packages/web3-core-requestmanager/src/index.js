@@ -91,6 +91,7 @@ RequestManager.prototype.setProvider = function(provider, net) {
         }
     }
 
+
     // reset the old one before changing, if still connected
     if (this.provider && this.provider.connected)
         this.clearSubscriptions();
