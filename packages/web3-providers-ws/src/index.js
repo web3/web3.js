@@ -361,11 +361,13 @@ WebsocketProvider.prototype.send = function(payload, callback) {
 
     this.errorQueue.add(request);
 
-    var timeout = setTimeout(function () {
-        callback(new Error('Connection error: Timeout exceeded'));
-        _this.errorQueue.delete(request);
-        _this.removeAllListeners(id);
-    }, this._customTimeout);
+    if (this.reconnectOptions.auto || this.reconnecting) {
+        var timeout = setTimeout(function () {
+            callback(new Error('Connection error: Timeout exceeded'));
+            _this.errorQueue.delete(request);
+            _this.removeAllListeners(id);
+        }, this._customTimeout);
+    }
 
     this.once(id, function(response) {
         callback(null, response);
