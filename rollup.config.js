@@ -11,7 +11,7 @@ import resolve from 'rollup-plugin-node-resolve';
 
 const DEFAULT_INPUT = 'src/index.js';
 const NODE_TARGET = '8';
-const BROWSER_TARGET = 'last 2 versions';
+const BROWSER_TARGET = 'last 1 version, > 1%, not dead';
 
 /**
  * Returns the rollup configuration with globals and names set.
