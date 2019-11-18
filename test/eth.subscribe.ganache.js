@@ -48,7 +48,7 @@ describe('subscription connect/reconnect', function() {
         });
     });
 
-    it('errors when the subscription got established and the connection closed during the subscription is running', async function() {
+    it('errors when the subscription got established (is running) and the connection does get closed', function() {
         let stage = 0; // Required to not trigger server.close a second time
 
         return new Promise(async function (resolve) {
@@ -67,18 +67,10 @@ describe('subscription connect/reconnect', function() {
         });
     });
 
-    // This test failing....
-    it('auto reconnects', function() {
+    it('auto reconnects and keeps the subscription running', function() {
         this.timeout(6000);
 
-        const ws = new Web3
-            .providers
-            .WebsocketProvider(
-                'ws://localhost:' + port,
-                {reconnect: {auto: true}}
-            );
-
-        web3.setProvider(ws);
+        web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:' + port, {reconnect: {auto: true}}));
 
         return new Promise(async function (resolve) {
             // Stage 0: trigger a new Block
@@ -86,8 +78,38 @@ describe('subscription connect/reconnect', function() {
 
             web3.eth
                 .subscribe('newBlockHeaders')
-                .on('data', async function(result) {
+                .on('data', function(result) {
                     assert(result.parentHash);
+
+                    // Exit point, flag set below
+                    if (stage === 1) {
+                        web3.currentProvider.disconnect();
+
+                        resolve();
+                    }
+                });
+
+            // Stage 1: Close & re-open server, trigger a new block
+            await pify(server.close)();
+            server = ganache.server({port: port, blockTime: 1});
+            await pify(server.listen)(port);
+            stage = 1;
+        });
+    });
+
+    it('auto reconnects, keeps the subscription running and triggers the `connected` event listener twice', function() {
+        this.timeout(6000);
+
+        web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:' + port, {reconnect: {auto: true}}));
+
+        return new Promise(async function (resolve) {
+            // Stage 0: trigger a new Block
+            let stage = 0;
+
+            web3.eth
+                .subscribe('newBlockHeaders')
+                .on('connected', function(result) {
+                    assert(result);
 
                     // Exit point, flag set below
                     if (stage === 1) {
