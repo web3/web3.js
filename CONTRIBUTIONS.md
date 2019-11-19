@@ -6,8 +6,8 @@ that **Web3 not break**.
 
 ## Pull Requests for substantive changes (e.g. everything except comments and docs)
 
-1. Any PR that introduces a logic change should include tests. (In many cases, the tests will need
-to be longer than the proposed code changes).
+1. Any PR that introduces a logic change should include tests. (In many cases, the tests will take
+more time to write than the actual code).
 
 2. All PRs should sit for 48 hours with the `pleasereview` tag in order to garner feedback.
 
@@ -22,7 +22,7 @@ seems better but introduces uncertainty - prefer the conservative change.
 
 ## Reviews
 
-The end-goal of review is to suggest useful changes to the author. Reviews should finish with
+The end-goal of review is to suggest useful improvements to the author. Reviews should finish with
 approval unless there are issues that would result in:
 
 1. Buggy behaviour.
