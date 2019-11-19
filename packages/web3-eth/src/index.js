@@ -483,6 +483,13 @@ var Eth = function Eth() {
             params: 0,
             outputFormatter: utils.hexToNumber
         }),
+        new Method({
+            name: 'getProof',
+            call: 'eth_getProof',
+            params: 3,
+            inputFormatter: [formatter.inputAddressFormatter, function(keys) {keys.map(function(value) {return utils.numberToHex(value);});}, formatter.inputDefaultBlockNumberFormatter],
+            outputFormatter: formatter.outputProofFormatter
+        }),
 
         // subscriptions
         new Subscriptions({
