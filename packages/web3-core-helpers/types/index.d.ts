@@ -97,7 +97,7 @@ export class WebsocketProviderBase {
 
     reset(): void;
 
-    disconnect(code: number, reason: string): void;
+    disconnect(code?: number, reason?: string): void;
 }
 
 export class IpcProviderBase {
