@@ -1711,6 +1711,45 @@ Example
 
 ------------------------------------------------------------------------------
 
+.. _eth-requestaccounts:
+
+requestAccounts
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.requestAccounts([callback])
+
+This method will request/enable the accounts from the current environment it is running (Metamask, Status or Mist).
+It doesn't work if you're connected to a node with a default Web3.js provider. (WebsocketProvider, HttpProvidder and IpcProvider)
+This method will only work if you're using the injected provider from a application like Status, Mist or Metamask.
+
+For further information about the behavior of this method please read the EIP of it: `EIP-1102 <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md>`_
+
+----------
+Parameters
+----------
+
+1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+``Promise<Array>`` - Returns an array of enabled accounts.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.requestAccounts().then(console.log);
+    > ['0aae0B295369a9FD31d5F28D9Ec85E40f4cb692BAf', 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe]
+
+------------------------------------------------------------------------------
+
 .. _eth-chainId:
 
 getChainId
