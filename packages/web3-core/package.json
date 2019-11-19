@@ -13,7 +13,6 @@
     },
     "main": "src/index.js",
     "dependencies": {
-        "@types/bignumber.js": "^5.0.0",
         "@types/bn.js": "^4.11.4",
         "@types/node": "^12.6.1",
         "web3-core-helpers": "1.2.4",
