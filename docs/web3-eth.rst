@@ -1746,7 +1746,7 @@ Example
 .. code-block:: javascript
 
     web3.eth.requestAccounts().then(console.log);
-    > ['0aae0B295369a9FD31d5F28D9Ec85E40f4cb692BAf', 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe]
+    > ['0aae0B295369a9FD31d5F28D9Ec85E40f4cb692BAf', '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe']
 
 ------------------------------------------------------------------------------
 
