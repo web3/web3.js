@@ -360,8 +360,8 @@ WebsocketProvider.prototype.send = function(payload, callback) {
         return;
     }
 
-    this.requestQueue.delete(id);
     this.responseQueue.set(id, request);
+    this.requestQueue.delete(id);
 
     try {
         this.connection.send(JSON.stringify(request.payload));
