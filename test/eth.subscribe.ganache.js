@@ -73,7 +73,7 @@ describe('subscription connect/reconnect', function() {
         web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:' + port, {reconnect: {auto: true}}));
 
         return new Promise(async function (resolve) {
-            // Stage 0: trigger a new Block
+            // Stage 0:
             let stage = 0;
 
             web3.eth
@@ -89,7 +89,7 @@ describe('subscription connect/reconnect', function() {
                     }
                 });
 
-            // Stage 1: Close & re-open server, trigger a new block
+            // Stage 1: Close & re-open server
             await pify(server.close)();
             server = ganache.server({port: port, blockTime: 1});
             await pify(server.listen)(port);
@@ -103,7 +103,7 @@ describe('subscription connect/reconnect', function() {
         web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:' + port, {reconnect: {auto: true}}));
 
         return new Promise(async function (resolve) {
-            // Stage 0: trigger a new Block
+            // Stage 0:
             let stage = 0;
 
             web3.eth
@@ -119,7 +119,7 @@ describe('subscription connect/reconnect', function() {
                     }
                 });
 
-            // Stage 1: Close & re-open server, trigger a new block
+            // Stage 1: Close & re-open server
             await pify(server.close)();
             server = ganache.server({port: port, blockTime: 1});
             await pify(server.listen)(port);
