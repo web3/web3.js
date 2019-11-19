@@ -360,9 +360,15 @@ export class Eth {
 
     getProof(
         address: string,
-        storageKey: string[],
+        storageKey: number[] | BigNumber[] | BN[] | string[],
         blockNumber: BlockNumber,
         callback?: (error: Error, result: GetProof) => void
+    ): Promise<GetProof>;
+
+    getProof(
+        address: string,
+        storageKey: number[] | BigNumber[] | BN[] | string[],
+        blockNumber: BlockNumber,
     ): Promise<GetProof>;
 }
 
