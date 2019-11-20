@@ -23,11 +23,23 @@
 
 "use strict";
 
-
 var _ = require('underscore');
 var utils = require('web3-utils');
 var Iban = require('web3-eth-iban');
 
+
+/**
+ * Will format the given proof response from the node.
+ *
+ * @method inputStorageKeysFormatter
+ *
+ * @param {Array<Number|String|BN|BigNumber>} keys
+ *
+ * @returns {Array<String>}
+ */
+var inputStorageKeysFormatter = function (keys) {
+    return keys.map(utils.numberToHex);
+};
 
 /**
  * Will format the given proof response from the node.
@@ -39,12 +51,8 @@ var Iban = require('web3-eth-iban');
  * @returns {object}
  */
 var outputProofFormatter = function (proof) {
-    proof.nonce = utils.toBN(proof.nonce).toString(10);
-    proof.balance = utils.toBN(proof.balance).toString(10);
-
-    proof.storageProof.forEach(function(item) {
-        item.value = utils.toBN(item.value).toString(10);
-    });
+    proof.nonce = utils.hexToNumberString(proof.nonce);
+    proof.balance = utils.hexToNumberString(proof.balance);
 
     return proof;
 };
@@ -472,7 +480,6 @@ var outputSyncingFormatter = function (result) {
 };
 
 module.exports = {
-    outputProofFormatter: outputProofFormatter,
     inputDefaultBlockNumberFormatter: inputDefaultBlockNumberFormatter,
     inputBlockNumberFormatter: inputBlockNumberFormatter,
     inputCallFormatter: inputCallFormatter,
@@ -481,6 +488,8 @@ module.exports = {
     inputPostFormatter: inputPostFormatter,
     inputLogFormatter: inputLogFormatter,
     inputSignFormatter: inputSignFormatter,
+    inputStorageKeysFormatter: inputStorageKeysFormatter,
+    outputProofFormatter: outputProofFormatter,
     outputBigNumberFormatter: outputBigNumberFormatter,
     outputTransactionFormatter: outputTransactionFormatter,
     outputTransactionReceiptFormatter: outputTransactionReceiptFormatter,
