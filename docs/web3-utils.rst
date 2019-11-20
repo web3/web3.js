@@ -241,6 +241,8 @@ Example
 
 ------------------------------------------------------------------------------
 
+.. _utils-sha3:
+
 sha3
 =====================
 
@@ -289,7 +291,23 @@ Example
 
 ------------------------------------------------------------------------------
 
+
+sha3Raw
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.sha3Raw(string)
+
+Will calculate the sha3 of the input but does return the hash of the ``null`` value instead of ``null``.
+
+.. note::  Further details about this function can be seen here :ref:`sha3 <utils-sha3>`
+
+
+------------------------------------------------------------------------------
+
 .. _utils-soliditysha3:
+
 
 soliditySha3
 =====================
@@ -369,6 +387,26 @@ Example
     web3.utils.soliditySha3({t: 'string', v: 'Hello!%'}, {t: 'int8', v:-23}, {t: 'address', v: '0x85F43D8a49eeB85d32Cf465507DD71d507100C1d'});
     > "0xa13b31627c1ed7aaded5aecec71baf02fe123797fffd45e662eac8e06fbe4955"
 
+
+
+------------------------------------------------------------------------------
+
+.. _utils-soliditysha3Raw:
+
+
+soliditySha3Raw
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.soliditySha3Raw(param1 [, param2, ...])
+
+Will calculate the sha3 of given input parameters in the same way solidity would.
+This means arguments will be ABI converted and tightly packed before being hashed.
+The difference between this function and the ``soliditySha3`` function is that it will return the hash value of ``null`` instead of ``null``.
+
+
+.. note::  Further details about this function can be seen here :ref:`soliditySha3 <utils-soliditysha3>`
 
 
 ------------------------------------------------------------------------------
