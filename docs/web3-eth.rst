@@ -1792,6 +1792,7 @@ Returns
 
 ``Promise<Object>`` - A account object.
 
+    - ``address`` - ``String``: The address of the account.
     - ``balance`` - ``String``: The balance of the account. See :ref:`web3.eth.getBalance <eth-getBalance>`.
     - ``codeHash`` - ``String``: hash of the code of the account. For a simple Account without code it will return "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
     - ``nonce`` -  ``String``: Nonce of the account.
