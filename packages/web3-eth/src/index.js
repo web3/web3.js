@@ -486,7 +486,8 @@ var Eth = function Eth() {
         new Method({
             name: 'requestAccounts',
             call: 'eth_requestAccounts',
-            params: 0
+            params: 0,
+            outputFormatter: utils.toChecksumAddress
         }),
 
         // subscriptions
