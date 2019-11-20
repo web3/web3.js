@@ -421,6 +421,7 @@ export interface BlockTransactionString extends BlockTransactionBase {
 }
 
 export interface GetProof {
+    address: string;
     balance: string;
     codeHash: string;
     nonce: string;
