@@ -299,7 +299,7 @@ sha3Raw
 
     web3.utils.sha3Raw(string)
 
-Will calculate the sha3 of the input but does return the hash of the ``null`` value instead of ``null``.
+Will calculate the sha3 of the input but does return the hash value instead of ``null`` if for example a empty string is passed.
 
 .. note::  Further details about this function can be seen here :ref:`sha3 <utils-sha3>`
 
@@ -403,7 +403,7 @@ soliditySha3Raw
 
 Will calculate the sha3 of given input parameters in the same way solidity would.
 This means arguments will be ABI converted and tightly packed before being hashed.
-The difference between this function and the ``soliditySha3`` function is that it will return the hash value of ``null`` instead of ``null``.
+The difference between this function and the ``soliditySha3`` function is that it will return the hash value instead of ``null`` if for example a empty string is given.
 
 
 .. note::  Further details about this function can be seen here :ref:`soliditySha3 <utils-soliditysha3>`
