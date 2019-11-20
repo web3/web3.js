@@ -487,7 +487,7 @@ var Eth = function Eth() {
             name: 'getProof',
             call: 'eth_getProof',
             params: 3,
-            inputFormatter: [formatter.inputAddressFormatter, function(keys) {keys.map(function(value) {return utils.numberToHex(value);});}, formatter.inputDefaultBlockNumberFormatter],
+            inputFormatter: [formatter.inputAddressFormatter, formatter.inputStorageKeysFormatter, formatter.inputDefaultBlockNumberFormatter],
             outputFormatter: formatter.outputProofFormatter
         }),
 
