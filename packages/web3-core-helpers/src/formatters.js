@@ -51,6 +51,7 @@ var inputStorageKeysFormatter = function (keys) {
  * @returns {object}
  */
 var outputProofFormatter = function (proof) {
+    proof.address = utils.toChecksumAddress(proof.address);
     proof.nonce = utils.hexToNumberString(proof.nonce);
     proof.balance = utils.hexToNumberString(proof.balance);
 
