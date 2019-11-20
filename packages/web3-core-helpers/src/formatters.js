@@ -29,7 +29,7 @@ var Iban = require('web3-eth-iban');
 
 
 /**
- * Will format the given proof response from the node.
+ * Will format the given storage key array values to hex strings.
  *
  * @method inputStorageKeysFormatter
  *
