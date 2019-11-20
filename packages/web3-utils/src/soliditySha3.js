@@ -241,5 +241,18 @@ var soliditySha3 = function () {
     return utils.sha3('0x'+ hexArgs.join(''));
 };
 
+/**
+ * Hashes solidity values to a sha3 hash using keccak 256 but does return the hash of value `null` instead of `null`
+ *
+ * @method soliditySha3
+ * @return {Object} the sha3
+ */
+var soliditySha3Raw = function () {
+    return utils.sha3Raw('0x'+ _.map(Array.prototype.slice.call(arguments), _processSoliditySha3Args).join(''));
+};
 
-module.exports = soliditySha3;
+
+module.exports = {
+    soliditySha3: soliditySha3,
+    soliditySha3Raw: soliditySha3Raw
+};
