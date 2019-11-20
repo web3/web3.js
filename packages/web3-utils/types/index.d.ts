@@ -95,7 +95,8 @@ export function padLeft(value: string | number, characterAmount: number, sign?: 
 export function leftPad(string: string | number, characterAmount: number, sign?: string): string;
 export function rightPad(string: string | number, characterAmount: number, sign?: string): string;
 export function padRight(string: string | number, characterAmount: number, sign?: string): string;
-export function sha3(value: string | BN): string;
+export function sha3(value: string | BN): string | null;
+export function sha3Raw(value: string | BN): string;
 export function randomHex(bytesSize: number): string;
 export function utf8ToHex(string: string): string;
 export function stringToHex(string: string): string;
@@ -112,7 +113,8 @@ export function isContractAddressInBloom(bloom: string, contractAddress: string)
 export function isTopicInBloom(bloom: string, topic: string): boolean;
 export function isTopic(topic: string): boolean;
 export function jsonInterfaceMethodToString(abiItem: AbiItem): string;
-export function soliditySha3(...val: Mixed[]): string;
+export function soliditySha3(...val: Mixed[]): string | null;
+export function soliditySha3Raw(...val: Mixed[]): string;
 export function getUnitValue(unit: Unit): string;
 export function unitMap(): Units;
 export function testAddress(bloom: string, address: string): boolean;
@@ -149,7 +151,7 @@ export interface Utils {
     leftPad(string: string | number, characterAmount: number, sign?: string): string;
     rightPad(string: string | number, characterAmount: number, sign?: string): string;
     padRight(string: string | number, characterAmount: number, sign?: string): string;
-    sha3(value: string | BN): string;
+    sha3(value: string | BN): string | null;
     randomHex(bytesSize: number): string;
     utf8ToHex(string: string): string;
     stringToHex(string: string): string;
@@ -166,7 +168,8 @@ export interface Utils {
     isTopicInBloom(bloom: string, topic: string): boolean;
     isTopic(topic: string): boolean;
     jsonInterfaceMethodToString(abiItem: AbiItem): string;
-    soliditySha3(...val: Mixed[]): string;
+    soliditySha3(...val: Mixed[]): string | null;
+    soliditySha3Raw(...val: Mixed[]): string;
     getUnitValue(unit: Unit): string;
     unitMap(): Units;
     testAddress(bloom: string, address: string): boolean;
