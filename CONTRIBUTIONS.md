@@ -14,8 +14,7 @@ more time to write than the actual code).
 3. No PR should be merged until it has been reviewed, passes CI, and all reviews' comments are
 addressed.
 
-4. PRs should have a narrow, well-defined focus and make the smallest set of changes possible to achieve
-their goal.
+4. PRs should have a narrow, well-defined focus and make the smallest set of changes possible to achieve their goal. They should include a clear description in the opening comment.
 
 5. Given the choice between a conservative change that mostly works and an adventurous change which
 seems better but introduces uncertainty - prefer the conservative change.
