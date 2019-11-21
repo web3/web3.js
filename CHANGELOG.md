@@ -98,8 +98,10 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
-## [1.2.4]
+## [1.2.5]
 
 ### Added
+
+- ``eth_requestAccounts`` as ``requestAccounts`` added to web3-eth package (#3219)
 
 ### Fixed
