@@ -38,16 +38,16 @@ import {
     LogsOptions,
     PastLogsOptions
 } from 'web3-core';
-import { Subscription } from 'web3-core-subscriptions';
-import { AbiCoder } from 'web3-eth-abi';
-import { Accounts } from 'web3-eth-accounts';
-import { Contract, ContractOptions } from 'web3-eth-contract';
-import { Ens } from 'web3-eth-ens';
-import { Iban } from 'web3-eth-iban';
-import { Personal } from 'web3-eth-personal';
-import { Network } from 'web3-net';
-import { AbiItem } from 'web3-utils';
-import { BigNumber } from 'bignumber.js';
+import {Subscription} from 'web3-core-subscriptions';
+import {AbiCoder} from 'web3-eth-abi';
+import {Accounts} from 'web3-eth-accounts';
+import {Contract, ContractOptions} from 'web3-eth-contract';
+import {Ens} from 'web3-eth-ens';
+import {Iban} from 'web3-eth-iban';
+import {Personal} from 'web3-eth-personal';
+import {Network} from 'web3-net';
+import {AbiItem} from 'web3-utils';
+import {BigNumber} from 'bignumber.js';
 import BN = require('bn.js');
 
 export {
@@ -88,9 +88,12 @@ export class Eth {
     transactionConfirmationBlocks: number;
     transactionBlockTimeout: number;
     readonly currentProvider: provider;
+
     setProvider(provider: provider): boolean;
+
     BatchRequest: new () => BatchRequest;
     static readonly providers: Providers;
+
     extend(extension: Extension): any;
 
     clearSubscriptions(callback: (error: Error, result: boolean) => void): void;
@@ -360,9 +363,15 @@ export class Eth {
 
     getProof(
         address: string,
-        storageKey: string[],
+        storageKey: number[] | BigNumber[] | BN[] | string[],
         blockNumber: BlockNumber,
         callback?: (error: Error, result: GetProof) => void
+    ): Promise<GetProof>;
+
+    getProof(
+        address: string,
+        storageKey: number[] | BigNumber[] | BN[] | string[],
+        blockNumber: BlockNumber,
     ): Promise<GetProof>;
 
     requestAccounts(): Promise<string[]>
@@ -415,17 +424,13 @@ export interface BlockTransactionString extends BlockTransactionBase {
 }
 
 export interface GetProof {
-    jsonrpc: string;
-    id: number;
-    result: {
-        address: string;
-        accountProof: string[];
-        balance: string;
-        codeHash: string;
-        nonce: string;
-        storageHash: string;
-        storageProof: StorageProof[];
-    };
+    address: string;
+    balance: string;
+    codeHash: string;
+    nonce: string;
+    storageHash: string;
+    accountProof: string[];
+    storageProof: StorageProof[];
 }
 
 export interface StorageProof {
