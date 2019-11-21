@@ -15,30 +15,30 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file sha3-tests.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
- * @date 2018
+ * @file sha3Raw-tests.ts
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @date 2019
  */
 
 import BN = require('bn.js');
-import {sha3} from 'web3-utils';
+import {sha3Raw} from 'web3-utils';
 
-// $ExpectType string | null
-sha3('234');
-// $ExpectType string | null
-sha3(new BN(3));
+// $ExpectType string
+sha3Raw('234');
+// $ExpectType string
+sha3Raw(new BN(3));
 
 // $ExpectError
-sha3(['string']);
+sha3Raw(['string']);
 // $ExpectError
-sha3(234);
+sha3Raw(234);
 // $ExpectError
-sha3([4]);
+sha3Raw([4]);
 // $ExpectError
-sha3({});
+sha3Raw({});
 // $ExpectError
-sha3(true);
+sha3Raw(true);
 // $ExpectError
-sha3(null);
+sha3Raw(null);
 // $ExpectError
-sha3(undefined);
+sha3Raw(undefined);
