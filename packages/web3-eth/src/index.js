@@ -484,6 +484,12 @@ var Eth = function Eth() {
             outputFormatter: utils.hexToNumber
         }),
         new Method({
+            name: 'requestAccounts',
+            call: 'eth_requestAccounts',
+            params: 0,
+            outputFormatter: utils.toChecksumAddress
+        }),
+        new Method({
             name: 'getProof',
             call: 'eth_getProof',
             params: 3,

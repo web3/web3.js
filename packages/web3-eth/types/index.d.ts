@@ -373,6 +373,9 @@ export class Eth {
         storageKey: number[] | BigNumber[] | BN[] | string[],
         blockNumber: BlockNumber,
     ): Promise<GetProof>;
+
+    requestAccounts(): Promise<string[]>
+    requestAccounts(callback: (error: Error, result: string[]) => void): Promise<string[]>
 }
 
 export interface Syncing {
