@@ -677,7 +677,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the balance of.
-2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -718,7 +718,7 @@ Parameters
 
 1. ``String`` - The address to get the storage from.
 2. ``Number|String|BN|BigNumber`` - The index position of the storage.
-3. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
+3. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -756,7 +756,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the code from.
-2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -1177,7 +1177,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the numbers of transactions from.
-2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -1492,7 +1492,7 @@ Parameters
 ----------
 
 1. ``Object`` - A transaction object see :ref:`web3.eth.sendTransaction <eth-sendtransaction-return>`, with the difference that for calls the ``from`` property is optional as well.
-2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -1783,7 +1783,7 @@ Parameters
 
 1. ``String`` 20 Bytes:  The Address of the account or contract.
 2. ``Number[] | BigNumber[] | BN[] | String[]`` 32 Bytes: Array of storage-keys which should be proofed and included. See :ref:`web3.eth.getStorageAt <eth-getStorageAt>`.
-3. ``Number | String | BN | BigNumber``: Integer block number. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
+3. ``Number | String | BN | BigNumber``: Integer block number. Pre-defined block numbers as ``"latest"``, ``"earliest"``, and ``"genesis"`` can also be used.
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
