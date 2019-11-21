@@ -483,6 +483,12 @@ var Eth = function Eth() {
             params: 0,
             outputFormatter: utils.hexToNumber
         }),
+        new Method({
+            name: 'requestAccounts',
+            call: 'eth_requestAccounts',
+            params: 0,
+            outputFormatter: utils.toChecksumAddress
+        }),
 
         // subscriptions
         new Subscriptions({
