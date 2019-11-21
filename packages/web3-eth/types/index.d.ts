@@ -364,6 +364,9 @@ export class Eth {
         blockNumber: BlockNumber,
         callback?: (error: Error, result: GetProof) => void
     ): Promise<GetProof>;
+
+    requestAccounts(): Promise<string[]>
+    requestAccounts(callback: (error: Error, result: string[]) => void): Promise<string[]>
 }
 
 export interface Syncing {
