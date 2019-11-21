@@ -489,6 +489,13 @@ var Eth = function Eth() {
             params: 0,
             outputFormatter: utils.toChecksumAddress
         }),
+        new Method({
+            name: 'getProof',
+            call: 'eth_getProof',
+            params: 3,
+            inputFormatter: [formatter.inputAddressFormatter, formatter.inputStorageKeysFormatter, formatter.inputDefaultBlockNumberFormatter],
+            outputFormatter: formatter.outputProofFormatter
+        }),
 
         // subscriptions
         new Subscriptions({
