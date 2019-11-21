@@ -244,7 +244,7 @@ var soliditySha3 = function () {
 /**
  * Hashes solidity values to a sha3 hash using keccak 256 but does return the hash of value `null` instead of `null`
  *
- * @method soliditySha3
+ * @method soliditySha3Raw
  * @return {Object} the sha3
  */
 var soliditySha3Raw = function () {
