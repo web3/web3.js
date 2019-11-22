@@ -98,16 +98,16 @@ var isPredefinedBlockNumber = function (blockNumber) {
  * @returns {String}
  */
 var inputDefaultBlockNumberFormatter = function (blockNumber) {
-    if (blockNumber === 'genesis') {
-        return 'earliest';
-    }
-
-    if (isPredefinedBlockNumber(blockNumber)) {
-        return blockNumber;
-    }
-
     if (this && (blockNumber === undefined || blockNumber === null)) {
+        if (isPredefinedBlockNumber(this.defaultBlock)) {
+            return this.defaultBlock;
+        }
+
         return utils.numberToHex(this.defaultBlock);
+    }
+
+    if (blockNumber === 'genesis' || blockNumber === 'earliest') {
+        return '0x0';
     }
 
     return inputBlockNumberFormatter(blockNumber);
