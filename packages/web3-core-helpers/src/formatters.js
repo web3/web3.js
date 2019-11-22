@@ -98,6 +98,10 @@ var isPredefinedBlockNumber = function (blockNumber) {
  * @returns {String}
  */
 var inputDefaultBlockNumberFormatter = function (blockNumber) {
+    if (isPredefinedBlockNumber(blockNumber)) {
+        return blockNumber;
+    }
+
     if (this && (blockNumber === undefined || blockNumber === null)) {
         return utils.numberToHex(this.defaultBlock);
     }
