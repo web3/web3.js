@@ -341,7 +341,7 @@ var Eth = function Eth() {
             name: 'getBlockNumber',
             call: 'eth_blockNumber',
             params: 0,
-            outputFormatter: utils.hexToNumber
+            outputFormatter: formatter.outputBigNumberFormatter
         }),
         new Method({
             name: 'getBalance',
