@@ -103,6 +103,10 @@ var inputDefaultBlockNumberFormatter = function (blockNumber) {
             return this.defaultBlock;
         }
 
+        if (this.defaultBlock === 'genesis') {
+            return '0x0';
+        }
+
         return utils.numberToHex(this.defaultBlock);
     }
 
@@ -125,6 +129,8 @@ var inputBlockNumberFormatter = function (blockNumber) {
         return undefined;
     } else if (isPredefinedBlockNumber(blockNumber)) {
         return blockNumber;
+    } else if (blockNumber === 'genesis') {
+        return '0x0';
     }
     return (utils.isHexStrict(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : utils.numberToHex(blockNumber);
 };
