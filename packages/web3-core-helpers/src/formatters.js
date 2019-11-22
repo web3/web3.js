@@ -99,7 +99,7 @@ var isPredefinedBlockNumber = function (blockNumber) {
  */
 var inputDefaultBlockNumberFormatter = function (blockNumber) {
     if (this && (blockNumber === undefined || blockNumber === null)) {
-        return this.defaultBlock;
+        return utils.numberToHex(this.defaultBlock);
     }
     if (blockNumber === 'genesis' || blockNumber === 'earliest') {
         return '0x0';
