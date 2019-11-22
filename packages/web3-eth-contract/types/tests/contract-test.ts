@@ -25,7 +25,7 @@ const contract = new Contract([]);
 // $ExpectType string | null
 contract.defaultAccount;
 
-// $ExpectType string | number
+// $ExpectType BlockNumber
 contract.defaultBlock;
 
 // $ExpectType Common
@@ -119,7 +119,7 @@ contract.getPastEvents(
 // $ExpectType Promise<EventData[]>
 contract.getPastEvents('MyEvent', (error, events) => {});
 
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 contract
     .deploy({
         data: '0x12345...',
@@ -127,7 +127,7 @@ contract
     })
     .estimateGas();
 
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 contract
     .deploy({
         data: '0x12345...',
@@ -135,7 +135,7 @@ contract
     })
     .estimateGas({ from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe' });
 
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 contract
     .deploy({
         data: '0x12345...',

@@ -31,7 +31,7 @@ export class Contract {
     private _address: string;
     private _jsonInterface: AbiItem[];
     defaultAccount: string | null;
-    defaultBlock: string | number;
+    defaultBlock: BlockNumber;
     defaultCommon: Common;
     defaultHardfork: hardfork;
     defaultChain: chain;

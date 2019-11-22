@@ -46,7 +46,7 @@ const eth = new Eth('http://localhost:8545');
 // $ExpectType string | null
 eth.defaultAccount;
 
-// $ExpectType string | number
+// $ExpectType BlockNumber
 eth.defaultBlock;
 
 // $ExpectType Common
@@ -132,7 +132,7 @@ eth.givenProvider;
 // $ExpectType string | null
 eth.defaultAccount;
 
-// $ExpectType string | number
+// $ExpectType BlockNumber
 eth.defaultBlock;
 
 // $ExpectType boolean
@@ -186,9 +186,9 @@ eth.getAccounts();
 // $ExpectType Promise<string[]>
 eth.getAccounts((error: Error, accounts: string[]) => {});
 
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.getBlockNumber();
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.getBlockNumber((error: Error, blockNumber: number) => {});
 
 // $ExpectType Promise<string>
@@ -354,29 +354,29 @@ eth.getTransactionReceipt(
     (error: Error, transactionReceipt: TransactionReceipt) => {}
 );
 
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000);
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.getTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000');
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.getTransactionCount(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
     (error: Error, count: number) => {}
 );
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.getTransactionCount(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
     (error: Error, count: number) => {}
 );
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.getTransactionCount(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
     1000,
     (error: Error, count: number) => {}
 );
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.getTransactionCount(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
     '1000',
@@ -532,13 +532,13 @@ eth.call(
     (error: Error, data: string) => {}
 );
 
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.estimateGas({
     to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
     data:
         '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003'
 });
-// $ExpectType Promise<number>
+// $ExpectType Promise<string>
 eth.estimateGas(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',

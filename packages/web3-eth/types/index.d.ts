@@ -80,7 +80,7 @@ export class Eth {
     readonly givenProvider: any;
     static readonly givenProvider: any;
     defaultAccount: string | null;
-    defaultBlock: string | number;
+    defaultBlock: BlockNumber;
     defaultCommon: Common;
     defaultHardfork: hardfork;
     defaultChain: chain;
