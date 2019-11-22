@@ -122,7 +122,7 @@ export class Eth {
 
     isSyncing(
         callback?: (error: Error, syncing: Syncing) => void
-    ): Promise<Syncing | boolean>;
+    ): Promise<Syncing>;
 
     getCoinbase(
         callback?: (error: Error, coinbaseAddress: string) => void
@@ -257,10 +257,6 @@ export class Eth {
         transactionHash: string,
         callback?: (error: Error, transaction: Transaction) => void
     ): Promise<Transaction>;
-
-    getPendingTransactions(
-        callback?: (error: Error, result: Transaction[]) => void
-    ): Promise<Transaction[]>;
 
     getTransactionFromBlock(
         blockHashOrBlockNumber: BlockNumber | string,

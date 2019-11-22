@@ -146,9 +146,9 @@ eth.getProtocolVersion();
 // $ExpectType Promise<string>
 eth.getProtocolVersion((error: Error, protocolVersion: string) => {});
 
-// $ExpectType Promise<boolean | Syncing>
+// $ExpectType Promise<Syncing>
 eth.isSyncing();
-// $ExpectType Promise<boolean | Syncing>
+// $ExpectType Promise<Syncing>
 eth.isSyncing((error: Error, syncing: Syncing) => {});
 
 // $ExpectType Promise<string>
