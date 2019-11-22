@@ -586,12 +586,6 @@ eth.submitWork(
     (error: Error, result: boolean) => {}
 );
 
-// $ExpectType Promise<Transaction[]>
-eth.getPendingTransactions();
-
-// $ExpectType Promise<Transaction[]>
-eth.getPendingTransactions((error: Error, result: Transaction[]) => {});
-
 // $ExpectType Promise<GetProof>
 eth.getProof(
     '0x1234567890123456789012345678901234567890',
