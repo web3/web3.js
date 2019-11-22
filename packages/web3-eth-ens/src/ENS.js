@@ -173,13 +173,13 @@ ENS.prototype.checkNetwork = function () {
     var self = this;
     return self.eth.getBlock('latest').then(function (block) {
         var headAge;
-        var now = utils.toBN((Math.floor(new Date() / 1000)));
+        var now = utils.toBN((Math.floor(new Date().getTime() / 1000)));
         var timestamp = utils.toBN(block.timestamp);
 
         if (timestamp.bitLength() <= 53) {
             headAge = now.sub(timestamp);
         } else {
-            headAge = now.sub(timestamp.divn(1000000));
+            headAge = now.sub(timestamp.divn(1000000000));
         }
 
         if (headAge.gtn(3600)) {
