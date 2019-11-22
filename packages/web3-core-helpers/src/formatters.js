@@ -298,9 +298,9 @@ var outputBlockFormatter = function (block) {
         block.number = utils.hexToNumberString(block.number);
 
     if (block.difficulty)
-        block.difficulty = utils.hexToNumber(block.difficulty);
+        block.difficulty = utils.hexToNumberString(block.difficulty);
     if (block.totalDifficulty)
-        block.totalDifficulty = utils.hexToNumber(block.totalDifficulty);
+        block.totalDifficulty = utils.hexToNumberString(block.totalDifficulty);
 
     if (_.isArray(block.transactions)) {
         block.transactions.forEach(function (item) {
