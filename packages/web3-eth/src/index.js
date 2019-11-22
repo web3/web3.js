@@ -417,7 +417,7 @@ var Eth = function Eth() {
             call: 'eth_getTransactionCount',
             params: 2,
             inputFormatter: [formatter.inputAddressFormatter, formatter.inputDefaultBlockNumberFormatter],
-            outputFormatter: utils.hexToNumber
+            outputFormatter: formatter.outputBigNumberFormatter
         }),
         new Method({
             name: 'sendSignedTransaction',

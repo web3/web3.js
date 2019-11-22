@@ -17,7 +17,7 @@ describe('formatters', function () {
             }), {
                 transactionIndex: 1000,
                 logIndex: 1000,
-                blockNumber: 1000,
+                blockNumber: '1000',
                 transactionHash: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 blockHash: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 data: '0x7b2274657374223a2274657374227',

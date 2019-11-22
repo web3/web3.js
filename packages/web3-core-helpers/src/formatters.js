@@ -68,6 +68,10 @@ var outputProofFormatter = function (proof) {
  * @returns {BN} object
  */
 var outputBigNumberFormatter = function (number) {
+    if (!number) {
+        return number;
+    }
+
     return utils.toBN(number).toString(10);
 };
 

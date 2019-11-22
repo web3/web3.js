@@ -23,6 +23,7 @@
 var config = require('./config');
 var Registry = require('./contracts/Registry');
 var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
+var utils = require('web3-utils');
 
 /**
  * Constructs a new instance of ENS
@@ -171,8 +172,9 @@ ENS.prototype.setMultihash = function (name, hash, sendOptions, callback) {
 ENS.prototype.checkNetwork = function () {
     var self = this;
     return self.eth.getBlock('latest').then(function (block) {
-        var headAge = new Date() / 1000 - block.timestamp;
-        if (headAge > 3600) {
+        // TODO: Check with Quorum timestamp
+        var headAge = utils.toBN((Math.floor(new Date() / 1000))).sub(utils.toBN(block.timestamp));
+        if (headAge.gtn(3600)) {
             throw new Error("Network not synced; last block was " + headAge + " seconds ago");
         }
         return self.eth.net.getNetworkType();

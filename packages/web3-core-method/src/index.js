@@ -299,7 +299,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                         if (existingReceipt === undefined || confirmationCount !== 0) {
                             if (isPolling) { // Check if actually a new block is existing on polling
                                 if (lastBlock) {
-                                    block = await _ethereumCall.getBlockByNumber(lastBlock.number + 1);
+                                    block = await _ethereumCall.getBlockByNumber(parseInt(lastBlock.number) + 1);
                                     if (block) {
                                         lastBlock = block;
                                         defer.eventEmitter.emit('confirmation', confirmationCount, receipt);

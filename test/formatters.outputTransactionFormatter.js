@@ -23,8 +23,8 @@ describe('formatters', function () {
                 value: '1000',
                 gas: 1000,
                 gasPrice: '1000',
-                nonce: 11,
-                blockNumber: 1000,
+                nonce: '11',
+                blockNumber: '1000',
                 blockHash: '0xc9b9cdc2092a9d6589d96662b1fd6949611163fb3910cf8a173cd060f17702f9',
                 transactionIndex: 1
             });
@@ -47,10 +47,10 @@ describe('formatters', function () {
                 input: '0x3454645634534',
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
                 to: null,
-                value: 1000,
+                value: '1000',
                 gas: 1000,
                 gasPrice: '1000',
-                nonce: 11,
+                nonce: '11',
                 blockNumber: null,
                 blockHash: null,
                 transactionIndex: null

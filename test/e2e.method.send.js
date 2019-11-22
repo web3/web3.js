@@ -156,7 +156,7 @@ describe('method.send [ @E2E ]', function() {
                     .on('confirmation', async (number, receipt) => {
                         if (number === 1) { // Confirmation numbers are zero indexed
                             var endBlock = await web3.eth.getBlockNumber();
-                            assert(endBlock >= (startBlock + 2));
+                            assert(parseInt(endBlock) >= (parseInt(startBlock) + 2));
                             resolve();
                         }
                     })

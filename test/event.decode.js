@@ -30,7 +30,7 @@ var tests = [{
         transactionHash: '0x1234567890',
         address: resultAddress,
         blockHash: '0x1234567890',
-        blockNumber: 1,
+        blockNumber: '1',
         id: "log_c71f2e84",
         raw: {
             topics: [],
@@ -67,7 +67,7 @@ var tests = [{
         transactionHash: '0x1234567890',
         address: resultAddress,
         blockHash: '0x1234567890',
-        blockNumber: 1,
+        blockNumber: '1',
         id: "log_c71f2e84",
         raw: {
             data: "0x0000000000000000000000000000000000000000000000000000000000000001",
@@ -129,7 +129,7 @@ var tests = [{
         transactionHash: '0x1234567890',
         address: resultAddress,
         blockHash: '0x1234567890',
-        blockNumber: 1,
+        blockNumber: '1',
         id: "log_c71f2e84",
         raw: {
             data: '0x' +
@@ -197,7 +197,7 @@ var tests = [{
         transactionHash: '0x1234567890',
         address: resultAddress,
         blockHash: '0x1234567890',
-        blockNumber: 1,
+        blockNumber: '1',
         id: "log_c71f2e84",
         raw: {
             data: '0x' +

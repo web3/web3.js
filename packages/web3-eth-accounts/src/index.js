@@ -159,7 +159,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             error = new Error('"gas" is missing');
         }
 
-        if (tx.nonce < 0 ||
+        if (utils.toBN(tx.nonce).ltn(0) ||
             tx.gas < 0 ||
             tx.gasPrice < 0 ||
             tx.chainId < 0) {

@@ -306,7 +306,7 @@ describe('lib/web3/method', function () {
                     contractAddress: address,
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
-                    blockNumber: 10,
+                    blockNumber: '10',
                     blockHash: '0xafff',
                     gasUsed: 0
                 });
@@ -331,7 +331,7 @@ describe('lib/web3/method', function () {
                     contractAddress: address,
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
-                    blockNumber: 10,
+                    blockNumber: '10',
                     blockHash: '0xafff',
                     gasUsed: 0
                 });
@@ -426,7 +426,7 @@ describe('lib/web3/method', function () {
                     contractAddress: address,
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
-                    blockNumber: 10,
+                    blockNumber: '10',
                     blockHash: '0xafff',
                     gasUsed: 0
                 });
@@ -450,7 +450,7 @@ describe('lib/web3/method', function () {
                     contractAddress: address,
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
-                    blockNumber: 10,
+                    blockNumber: '10',
                     blockHash: '0xafff',
                     gasUsed: 0
                 });
@@ -833,7 +833,7 @@ describe('lib/web3/method', function () {
                     contractAddress: null,
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
-                    blockNumber: 10,
+                    blockNumber: '10',
                     blockHash: '0xafff',
                     gasUsed: 0
                 });
@@ -845,7 +845,7 @@ describe('lib/web3/method', function () {
                     contractAddress: null,
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
-                    blockNumber: 10,
+                    blockNumber: '10',
                     blockHash: '0xafff',
                     gasUsed: 0
                 });

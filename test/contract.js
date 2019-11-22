@@ -461,7 +461,7 @@ var runTests = function(contractFactory) {
                 '0000000000000000000000000000000000000000000000000000000000000008'
             });
 
-            assert.equal(result.blockNumber, 3);
+            assert.equal(result.blockNumber, '3');
             assert.equal(result.blockHash, '0x1345');
             assert.equal(result.logIndex, 4);
             assert.equal(result.id, 'log_9ff24cb4');
@@ -567,7 +567,7 @@ var runTests = function(contractFactory) {
                     contractAddress: address,
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
-                    blockNumber: 10,
+                    blockNumber: '10',
                     blockHash: '0xbf1234',
                     gasUsed: 0
                 });
@@ -661,7 +661,7 @@ var runTests = function(contractFactory) {
                     contractAddress: address,
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
-                    blockNumber: 10,
+                    blockNumber: '10',
                     blockHash: '0xbf1234',
                     gasUsed: 0
                 });
@@ -1799,13 +1799,13 @@ var runTests = function(contractFactory) {
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
                     transactionHash: '0x1234',
-                    blockNumber: 10,
+                    blockNumber: '10',
                     blockHash: '0x1234',
                     gasUsed: 0,
                     events: {
                         Unchanged: {
                             address: address,
-                            blockNumber: 10,
+                            blockNumber: '10',
                             transactionHash: '0x1234',
                             blockHash: '0x1345',
                             logIndex: 4,
@@ -1830,7 +1830,7 @@ var runTests = function(contractFactory) {
                         },
                         Changed: {
                             address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                            blockNumber: 10,
+                            blockNumber: '10',
                             transactionHash: '0x1234',
                             blockHash: '0x1345',
                             logIndex: 4,
@@ -1962,14 +1962,14 @@ var runTests = function(contractFactory) {
                         cumulativeGasUsed: 10,
                         transactionIndex: 3,
                         transactionHash: '0x1234',
-                        blockNumber: 10,
+                        blockNumber: '10',
                         blockHash: '0x1234',
                         gasUsed: 0,
                         events: {
                             Changed: [
                                 {
                                     address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                                    blockNumber: 10,
+                                    blockNumber: '10',
                                     transactionHash: '0x1234',
                                     blockHash: '0x1345',
                                     logIndex: 4,
@@ -1995,7 +1995,7 @@ var runTests = function(contractFactory) {
                                     }
                                 }, {
                                     address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                                    blockNumber: 10,
+                                    blockNumber: '10',
                                     transactionHash: '0x1234',
                                     blockHash: '0x1345',
                                     logIndex: 5,
@@ -2114,13 +2114,13 @@ var runTests = function(contractFactory) {
                         cumulativeGasUsed: 10,
                         transactionIndex: 3,
                         transactionHash: '0x1234',
-                        blockNumber: 10,
+                        blockNumber: '10',
                         blockHash: '0x43ffdd',
                         gasUsed: 0,
                         events: {
                             Unchanged: {
                                 address: address,
-                                blockNumber: 10,
+                                blockNumber: '10',
                                 transactionHash: '0x1234',
                                 blockHash: '0x1345',
                                 logIndex: 4,
@@ -2145,7 +2145,7 @@ var runTests = function(contractFactory) {
                             },
                             Changed: {
                                 address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                                blockNumber: 10,
+                                blockNumber: '10',
                                 transactionHash: '0x1234',
                                 blockHash: '0x1345',
                                 logIndex: 4,
@@ -2229,7 +2229,7 @@ var runTests = function(contractFactory) {
                             cumulativeGasUsed: 10,
                             transactionIndex: 3,
                             transactionHash: '0x1234',
-                            blockNumber: 10,
+                            blockNumber: '10',
                             blockHash: '0x1234',
                             gasUsed: 0,
                             events: {}
@@ -2243,7 +2243,7 @@ var runTests = function(contractFactory) {
                             cumulativeGasUsed: 10,
                             transactionIndex: 3,
                             transactionHash: '0x1234',
-                            blockNumber: 10,
+                            blockNumber: '10',
                             blockHash: '0x1234',
                             gasUsed: 0,
                             events: {}
@@ -2693,7 +2693,7 @@ var runTests = function(contractFactory) {
                     signature: "0xc00c1c37cc8b83163fb4fddc06c74d1d5c00d74648e7cb28c0ebada3e32fd62c",
                     id: "log_9ff24cb4",
                     address: address,
-                    blockNumber: 3,
+                    blockNumber: '3',
                     transactionHash: '0x1234',
                     blockHash: '0x1345',
                     logIndex: 4,
@@ -2719,7 +2719,7 @@ var runTests = function(contractFactory) {
                         signature: "0xc00c1c37cc8b83163fb4fddc06c74d1d5c00d74648e7cb28c0ebada3e32fd62c",
                         id: "log_29c93e15",
                         address: address,
-                        blockNumber: 4,
+                        blockNumber: '4',
                         transactionHash: '0x1235',
                         blockHash: '0x1346',
                         logIndex: 1,
@@ -3091,7 +3091,7 @@ describe('typical usage', function() {
             gas: 54872,
             gasPrice: 3000,
             chainId: 1,
-            nonce: 1,
+            nonce: '1',
             chain: 'mainnet',
             hardfork: 'petersburg'
         })
