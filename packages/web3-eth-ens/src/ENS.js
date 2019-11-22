@@ -172,11 +172,20 @@ ENS.prototype.setMultihash = function (name, hash, sendOptions, callback) {
 ENS.prototype.checkNetwork = function () {
     var self = this;
     return self.eth.getBlock('latest').then(function (block) {
-        // TODO: Check with Quorum timestamp
-        var headAge = utils.toBN((Math.floor(new Date() / 1000))).sub(utils.toBN(block.timestamp));
+        var headAge;
+        var now = utils.toBN((Math.floor(new Date() / 1000)));
+        var timestamp = utils.toBN(block.timestamp);
+
+        if (timestamp.bitLength() <= 53) {
+            headAge = now.sub(timestamp);
+        } else {
+            headAge = now.sub(timestamp.divn(1000000));
+        }
+
         if (headAge.gtn(3600)) {
             throw new Error("Network not synced; last block was " + headAge + " seconds ago");
         }
+
         return self.eth.net.getNetworkType();
     }).then(function (networkType) {
         var addr = config.addresses[networkType];
