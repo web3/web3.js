@@ -16,7 +16,7 @@ var tests = [{
         gasPrice: '0xb'
     }],
     result: '0x31981',
-    formattedResult: 203137,
+    formattedResult: '203137',
     call: 'eth_'+ method
 }];
 

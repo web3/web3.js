@@ -118,8 +118,8 @@ Parameters
 2. ``address`` - ``String``: The address to set.
 3. ``options`` - ``Object``: The options used for sending.
     * ``from`` - ``String``: The address the transaction should be sent from.
-    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
-    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+    * ``gasPrice`` - ``Number|String|BN|BigNumber`` (optional): The gas price in wei to use for this transaction.
+    * ``gas`` - ``Number|String|BN|BigNumber`` (optional): The maximum gas provided for this transaction (gas limit).
 
 Emits an ``AddrChanged`` event.
 
@@ -237,8 +237,8 @@ Parameters
 3. ``y`` - ``String``: The Y coordinate of the public key.
 4. ``options`` - ``Object``: The options used for sending.
     * ``from`` - ``String``: The address the transaction should be sent from.
-    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
-    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+    * ``gasPrice`` - ``Number|String|BN|BigNumber`` (optional): The gas price in wei to use for this transaction.
+    * ``gas`` - ``Number|String|BN|BigNumber`` (optional): The maximum gas provided for this transaction (gas limit).
 
 
 Emits an ``PubkeyChanged`` event.
@@ -353,8 +353,8 @@ Parameters
 2. ``hash`` - ``String``: The content hash to set.
 3. ``options`` - ``Object``: The options used for sending.
     * ``from`` - ``String``: The address the transaction should be sent from.
-    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
-    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+    * ``gasPrice`` - ``Number|String|BN|BigNumber`` (optional): The gas price in wei to use for this transaction.
+    * ``gas`` - ``Number|String|BN|BigNumber`` (optional): The maximum gas provided for this transaction (gas limit).
 
 
 Emits an ``ContentChanged`` event.
@@ -467,8 +467,8 @@ Parameters
 2. ``hash`` - ``String``: The multihash to set.
 3. ``options`` - ``Object``: The options used for sending.
     * ``from`` - ``String``: The address the transaction should be sent from.
-    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
-    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+    * ``gasPrice`` - ``Number|String|BN|BigNumber`` (optional): The gas price in wei to use for this transaction.
+    * ``gas`` - ``Number|String|BN|BigNumber`` (optional): The maximum gas provided for this transaction (gas limit).
 
 
 Emits an ``MultihashChanged``event.
@@ -566,7 +566,7 @@ Example
         transactionIndex: 0,
         transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
         blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
-        blockNumber: 1234,
+        blockNumber: '1234',
         address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
     }
 
@@ -615,7 +615,7 @@ Example
         transactionIndex: 0,
         transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
         blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
-        blockNumber: 1234,
+        blockNumber: '1234',
         address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
     }
 

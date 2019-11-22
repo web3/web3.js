@@ -1477,7 +1477,7 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
 
             contract.methods.balance(address).estimateGas(function (err, res) {
-                assert.deepEqual(res, 50);
+                assert.deepEqual(res, '50');
                 done();
             });
         });
@@ -1499,7 +1499,7 @@ var runTests = function(contractFactory) {
             contract.deploy({
                 arguments: [address, 50]
             }).estimateGas(function (err, res) {
-                assert.deepEqual(res, 10);
+                assert.deepEqual(res, '10');
                 done();
             });
         });

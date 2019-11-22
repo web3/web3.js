@@ -48,8 +48,8 @@ Parameters
 2. ``address`` - ``String`` (optional): The address of the smart contract to call.
 3. ``options`` - ``Object`` (optional): The options of the contract. Some are used as fallbacks for calls and transactions:
     * ``from`` - ``String``: The address transactions should be made from.
-    * ``gasPrice`` - ``String``: The gas price in wei to use for transactions.
-    * ``gas`` - ``Number``: The maximum gas provided for a transaction (gas limit).
+    * ``gasPrice`` - ``Number|String|BN|BigNumber``: The gas price in wei to use for transactions.
+    * ``gas`` - ``Number|String|BN|BigNumber``: The maximum gas provided for a transaction (gas limit).
     * ``data`` - ``String``: The byte code of the contract. Used when the contract gets :ref:`deployed <contract-deploy>`.
 
 -------
@@ -140,7 +140,7 @@ Property
 
 The default block parameters can be one of the following:
 
-- ``Number``: A block number
+- ``Number|String|BN|BigNumber``: A block number
 - ``"genesis"`` - ``String``: The genesis block
 - ``"latest"`` - ``String``: The latest block (current head of the blockchain)
 - ``"pending"`` - ``String``: The currently mined block (including pending transactions)
@@ -380,8 +380,8 @@ Properties
 - ``jsonInterface`` - ``Array``: The json interface of the contract. See :ref:`options.jsonInterface <contract-json-interface>`.
 - ``data`` - ``String``: The byte code of the contract. Used when the contract gets :ref:`deployed <contract-deploy>`.
 - ``from`` - ``String``: The address transactions should be made from.
-- ``gasPrice`` - ``String``: The gas price in wei to use for transactions.
-- ``gas`` - ``Number``: The maximum gas provided for a transaction (gas limit).
+- ``gasPrice`` - ``Number|String|BN|BigNumber``: The gas price in wei to use for transactions.
+- ``gas`` - ``Number|String|BN|BigNumber``: The maximum gas provided for a transaction (gas limit).
 
 
 -------
@@ -723,8 +723,8 @@ Parameters
 
 1. ``options`` - ``Object`` (optional): The options used for calling.
     * ``from`` - ``String`` (optional): The address the call "transaction" should be made from.
-    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this call "transaction".
-    * ``gas`` - ``Number`` (optional): The maximum gas provided for this call "transaction" (gas limit).
+    * ``gasPrice`` - ``Number|String|BN|BigNumber`` (optional): The gas price in wei to use for this call "transaction".
+    * ``gas`` - ``Number|String|BN|BigNumber`` (optional): The maximum gas provided for this call "transaction" (gas limit).
 2. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the smart contract method execution as the second argument, or with an error object as the first argument.
 
 -------
@@ -810,8 +810,8 @@ Parameters
 
 1. ``options`` - ``Object``: The options used for sending.
     * ``from`` - ``String``: The address the transaction should be sent from.
-    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
-    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+    * ``gasPrice`` - ``Number|String|BN|BigNumber`` (optional): The gas price in wei to use for this transaction.
+    * ``gas`` - ``Number|String|BN|BigNumber`` (optional): The maximum gas provided for this transaction (gas limit).
     * ``value`` - ``Number|String|BN|BigNumber``(optional): The value transferred for the transaction in wei.
 2. ``callback`` - ``Function`` (optional): This callback will be fired first with the "transactionHash", or with an error object as the first argument.
 
@@ -862,10 +862,10 @@ Example
             "transactionHash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
             "transactionIndex": 0,
             "blockHash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
-            "blockNumber": 3,
+            "blockNumber": '3',
             "contractAddress": "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
-            "cumulativeGasUsed": 314159,
-            "gasUsed": 30234,
+            "cumulativeGasUsed": '314159',
+            "gasUsed": '30234',
             "events": {
                 "MyEvent": {
                     returnValues: {
@@ -883,7 +883,7 @@ Example
                     transactionIndex: 0,
                     transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
                     blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
-                    blockNumber: 1234,
+                    blockNumber: '1234',
                     address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
                 },
                 "MyOtherEvent": {
@@ -918,7 +918,7 @@ Parameters
 
 1. ``options`` - ``Object`` (optional): The options used for calling.
     * ``from`` - ``String`` (optional): The address the call "transaction" should be made from.
-    * ``gas`` - ``Number`` (optional): The maximum gas provided for this call "transaction" (gas limit). Setting a specific value helps to detect out of gas errors. If all gas is used it will return the same number.
+    * ``gas`` - ``Number|String|BN|BigNumber`` (optional): The maximum gas provided for this call "transaction" (gas limit). Setting a specific value helps to detect out of gas errors. If all gas is used it will return the same number.
     * ``value`` - ``Number|String|BN|BigNumber``(optional): The value transferred for the call "transaction" in wei.
 2. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the gas estimation as the second argument, or with an error object as the first argument.
 
@@ -926,7 +926,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``Number``: The gas amount estimated.
+``Promise`` returns ``String``: The gas amount estimated.
 
 -------
 Example
@@ -1050,7 +1050,7 @@ Example
         transactionIndex: 0,
         transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
         blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
-        blockNumber: 1234,
+        blockNumber: '1234',
         address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
     }
 
@@ -1074,7 +1074,7 @@ Parameters
 
 1. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
+    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
     * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
 2. ``callback`` - ``Function`` (optional): This callback will be fired for each *event* as the second argument, or an error as the first argument.
 
@@ -1102,7 +1102,7 @@ The structure of the returned event ``Object`` looks as follows:
 - ``transactionIndex`` - ``Number``: Integer of the transaction's index position the event was created in.
 - ``transactionHash`` 32 Bytes - ``String``: Hash of the transaction this event was created in.
 - ``blockHash`` 32 Bytes - ``String``: Hash of the block this event was created in. ``null`` when it's still pending.
-- ``blockNumber`` - ``Number``: The block number this log was created in. ``null`` when still pending.
+- ``blockNumber`` - ``String``: The block number this log was created in. ``null`` when still pending.
 - ``raw.data`` - ``String``: The data containing non-indexed log parameter.
 - ``raw.topics`` - ``Array``: An array with max 4 32 Byte topics, topic 1-3 contains indexed parameters of the event.
 
@@ -1146,7 +1146,7 @@ Example
         transactionIndex: 0,
         transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
         blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
-        blockNumber: 1234,
+        blockNumber: '1234',
         address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
     }
 
@@ -1183,7 +1183,7 @@ Parameters
 1. ``event`` - ``String``: The name of the event in the contract, or ``"allEvents"`` to get all events.
 2. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Lets you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
+    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
     * ``toBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (less than or equal to) to get events up to (Defaults to ``"latest"``). Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
     * ``topics`` - ``Array`` (optional): This allows manually setting the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
 3. ``callback`` - ``Function`` (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
@@ -1228,7 +1228,7 @@ Example
         transactionIndex: 0,
         transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
         blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
-        blockNumber: 1234,
+        blockNumber: '1234',
         address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
     },{
         ...

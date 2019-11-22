@@ -91,18 +91,18 @@ export interface ContractSendMethod {
     estimateGas(
         options: EstimateGasOptions,
         callback?: (err: Error, gas: number) => void
-    ): Promise<number>;
+    ): Promise<string>;
 
-    estimateGas(callback: (err: Error, gas: number) => void): Promise<number>;
+    estimateGas(callback: (err: Error, gas: number) => void): Promise<string>;
 
     estimateGas(
         options: EstimateGasOptions,
         callback: (err: Error, gas: number) => void
-    ): Promise<number>;
+    ): Promise<string>;
 
-    estimateGas(options: EstimateGasOptions): Promise<number>;
+    estimateGas(options: EstimateGasOptions): Promise<string>;
 
-    estimateGas(): Promise<number>;
+    estimateGas(): Promise<string>;
 
     encodeABI(): string;
 }
@@ -157,6 +157,6 @@ export interface EventData {
     transactionIndex: number;
     transactionHash: string;
     blockHash: string;
-    blockNumber: number;
+    blockNumber: string;
     address: string;
 }

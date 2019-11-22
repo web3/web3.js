@@ -801,7 +801,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     call: 'eth_estimateGas',
                     params: 1,
                     inputFormatter: [formatters.inputCallFormatter],
-                    outputFormatter: utils.hexToNumber,
+                    outputFormatter: formatters.outputBigNumberFormatter,
                     requestManager: _this._parent._requestManager,
                     accounts: ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,

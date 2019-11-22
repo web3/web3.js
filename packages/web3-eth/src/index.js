@@ -458,7 +458,7 @@ var Eth = function Eth() {
             call: 'eth_estimateGas',
             params: 1,
             inputFormatter: [formatter.inputCallFormatter],
-            outputFormatter: utils.hexToNumber
+            outputFormatter: formatter.outputBigNumberFormatter
         }),
         new Method({
             name: 'submitWork',

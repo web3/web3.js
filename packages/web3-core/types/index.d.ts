@@ -104,15 +104,15 @@ export interface PromiEvent<T> extends Promise<T> {
 
 export interface Transaction {
     hash: string;
-    nonce: number;
+    nonce: string;
     blockHash: string | null;
-    blockNumber: number | null;
+    blockNumber: string | null;
     transactionIndex: number | null;
     from: string;
     to: string | null;
     value: string;
     gasPrice: string;
-    gas: number;
+    gas: string;
     input: string;
 }
 
@@ -181,12 +181,12 @@ export interface TransactionReceipt {
     transactionHash: string;
     transactionIndex: number;
     blockHash: string;
-    blockNumber: number;
+    blockNumber: string;
     from: string;
     to: string;
     contractAddress?: string;
-    cumulativeGasUsed: number;
-    gasUsed: number;
+    cumulativeGasUsed: string;
+    gasUsed: string;
     logs: Log[];
     logsBloom: string;
     events?: {
@@ -202,7 +202,7 @@ export interface EventLog {
     transactionIndex: number;
     transactionHash: string;
     blockHash: string;
-    blockNumber: number;
+    blockNumber: string;
     raw?: {data: string; topics: any[]};
 }
 
@@ -214,7 +214,7 @@ export interface Log {
     transactionIndex: number;
     transactionHash: string;
     blockHash: string;
-    blockNumber: number;
+    blockNumber: string;
 }
 
 // had to move `web3-net` due to other modules in `1.x` not referencing

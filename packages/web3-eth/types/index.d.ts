@@ -154,7 +154,7 @@ export class Eth {
 
     getBlockNumber(
         callback?: (error: Error, blockNumber: number) => void
-    ): Promise<number>;
+    ): Promise<string>;
 
     getBalance(
         address: string
@@ -276,20 +276,20 @@ export class Eth {
         ) => void
     ): Promise<TransactionReceipt>;
 
-    getTransactionCount(address: string): Promise<number>;
+    getTransactionCount(address: string): Promise<string>;
     getTransactionCount(
         address: string,
         defaultBlock: BlockNumber
-    ): Promise<number>;
+    ): Promise<string>;
     getTransactionCount(
         address: string,
         callback?: (error: Error, count: number) => void
-    ): Promise<number>;
+    ): Promise<string>;
     getTransactionCount(
         address: string,
         defaultBlock: BlockNumber,
         callback?: (error: Error, count: number) => void
-    ): Promise<number>;
+    ): Promise<string>;
 
     sendTransaction(
         transactionConfig: TransactionConfig,
@@ -345,7 +345,7 @@ export class Eth {
     estimateGas(
         transactionConfig: TransactionConfig,
         callback?: (error: Error, gas: number) => void
-    ): Promise<number>;
+    ): Promise<string>;
 
     getPastLogs(
         options: PastLogsOptions,
@@ -379,15 +379,15 @@ export class Eth {
 }
 
 export interface Syncing {
-    StartingBlock: number;
-    CurrentBlock: number;
-    HighestBlock: number;
-    KnownStates: number;
-    PulledStates: number;
+    startingBlock: string;
+    currentBlock: string;
+    highestBlock: string;
+    knownStates: string;
+    pulledStates: string;
 }
 
 export interface BlockHeader {
-    number: number;
+    number: string;
     hash: string;
     parentHash: string;
     nonce: string;
@@ -398,9 +398,9 @@ export interface BlockHeader {
     receiptRoot: string;
     miner: string;
     extraData: string;
-    gasLimit: number;
-    gasUsed: number;
-    timestamp: number | string;
+    gasLimit: string;
+    gasUsed: string;
+    timestamp: string;
 }
 
 // TODO: This interface does exist to provide backwards-compatibility and can get removed on a minor release
@@ -409,9 +409,9 @@ export interface Block extends BlockTransactionBase {
 }
 
 export interface BlockTransactionBase extends BlockHeader {
-    size: number;
-    difficulty: number;
-    totalDifficulty: number;
+    size: string;
+    difficulty: string;
+    totalDifficulty: string;
     uncles: string[];
 }
 
