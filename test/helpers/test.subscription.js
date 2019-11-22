@@ -6,7 +6,7 @@ var Web3 = require('../../packages/web3');
 
 var runTests = function (protocol, tests) {
 
-    describe('web3.shh.subscribe', function () {
+    describe('web3.' + protocol + '.subscribe', function () {
         tests.forEach(function (test, index) {
             it('should create a subscription for "'+ test.args[0] +'"', function (done) {
 

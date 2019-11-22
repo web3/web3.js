@@ -33,12 +33,12 @@ describe('formatters', function () {
                 difficulty: '1000',
                 totalDifficulty: '1000',
                 number: '1000',
-                gasLimit: 1000,
-                gasUsed: 1000,
+                gasLimit: '1000',
+                gasUsed: '1000',
                 timestamp: '1000',
                 extraData: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 nonce: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
-                size: 1000
+                size: '1000'
             });
         });
         it('should return the correct value, when null values are present', function () {
@@ -69,12 +69,12 @@ describe('formatters', function () {
                 difficulty: '1000',
                 totalDifficulty: '1000',
                 number: null,
-                gasLimit: 1000,
-                gasUsed: 1000,
+                gasLimit: '1000',
+                gasUsed: '1000',
                 timestamp: '1000',
                 extraData: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 nonce: null,
-                size: 1000
+                size: '1000'
             });
         });
     });

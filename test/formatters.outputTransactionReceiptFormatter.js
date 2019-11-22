@@ -17,8 +17,8 @@ describe('outputTransactionReceiptFormatter', function() {
 
         assert.deepEqual(formatters.outputTransactionReceiptFormatter(receipt), {
             status: false,
-            cumulativeGasUsed: 256,
-            gasUsed: 256,
+            cumulativeGasUsed: '256',
+            gasUsed: '256',
             blockNumber: '256',
             transactionIndex: 10,
             to: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',
@@ -42,8 +42,8 @@ describe('outputTransactionReceiptFormatter', function() {
 
         assert.deepEqual(formatters.outputTransactionReceiptFormatter(receipt), {
             status: false,
-            cumulativeGasUsed: 256,
-            gasUsed: 256,
+            cumulativeGasUsed: '256',
+            gasUsed: '256',
             blockNumber: '256',
             transactionIndex: 10,
             to: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078',

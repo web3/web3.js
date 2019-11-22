@@ -134,8 +134,8 @@ var runTests = function (obj, method, tests) {
                                     "transactionHash":"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
                                     "transactionIndex":  1,
                                     "contractAddress":"0x407D73d8a49eeb85D32Cf465507dd71d507100c1", // checksum address
-                                    "cumulativeGasUsed": 520464,
-                                    "gasUsed": 520464
+                                    "cumulativeGasUsed": '520464',
+                                    "gasUsed": '520464'
                                 });
                             } else {
                                 assert.deepEqual(result, test.formattedResult);

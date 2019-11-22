@@ -304,11 +304,11 @@ describe('lib/web3/method', function () {
 
                 assert.deepEqual(result, {
                     contractAddress: address,
-                    cumulativeGasUsed: 10,
+                    cumulativeGasUsed: '10',
                     transactionIndex: 3,
                     blockNumber: '10',
                     blockHash: '0xafff',
-                    gasUsed: 0
+                    gasUsed: '0'
                 });
 
                 done();
@@ -329,11 +329,11 @@ describe('lib/web3/method', function () {
 
                 assert.deepEqual(result, {
                     contractAddress: address,
-                    cumulativeGasUsed: 10,
+                    cumulativeGasUsed: '10',
                     transactionIndex: 3,
                     blockNumber: '10',
                     blockHash: '0xafff',
-                    gasUsed: 0
+                    gasUsed: '0'
                 });
 
                 done();
@@ -424,11 +424,11 @@ describe('lib/web3/method', function () {
 
                 assert.deepEqual(result, {
                     contractAddress: address,
-                    cumulativeGasUsed: 10,
+                    cumulativeGasUsed: '10',
                     transactionIndex: 3,
                     blockNumber: '10',
                     blockHash: '0xafff',
-                    gasUsed: 0
+                    gasUsed: '0'
                 });
 
                 done();
@@ -448,11 +448,11 @@ describe('lib/web3/method', function () {
 
                 assert.deepEqual(result, {
                     contractAddress: address,
-                    cumulativeGasUsed: 10,
+                    cumulativeGasUsed: '10',
                     transactionIndex: 3,
                     blockNumber: '10',
                     blockHash: '0xafff',
-                    gasUsed: 0
+                    gasUsed: '0'
                 });
 
                 done();
@@ -831,11 +831,11 @@ describe('lib/web3/method', function () {
 
                 assert.deepEqual(result, {
                     contractAddress: null,
-                    cumulativeGasUsed: 10,
+                    cumulativeGasUsed: '10',
                     transactionIndex: 3,
                     blockNumber: '10',
                     blockHash: '0xafff',
-                    gasUsed: 0
+                    gasUsed: '0'
                 });
 
             })
@@ -843,11 +843,11 @@ describe('lib/web3/method', function () {
 
                 assert.deepEqual(receipt, {
                     contractAddress: null,
-                    cumulativeGasUsed: 10,
+                    cumulativeGasUsed: '10',
                     transactionIndex: 3,
                     blockNumber: '10',
                     blockHash: '0xafff',
-                    gasUsed: 0
+                    gasUsed: '0'
                 });
 
                 assert.deepEqual(conf, countConf);

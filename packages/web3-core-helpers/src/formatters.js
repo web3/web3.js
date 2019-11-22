@@ -228,14 +228,12 @@ var inputSignFormatter = function (data) {
  * @returns {Object}
  */
 var outputTransactionFormatter = function (tx) {
-    if (tx.blockNumber !== null)
-        tx.blockNumber = outputBigNumberFormatter(tx.blockNumber);
-    if (tx.transactionIndex !== null)
-        tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
+    tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
+    tx.blockNumber = outputBigNumberFormatter(tx.blockNumber);
     tx.nonce = outputBigNumberFormatter(tx.nonce);
     tx.value = outputBigNumberFormatter(tx.value);
     tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
-    tx.gas = utils.hexToNumber(tx.gas);
+    tx.gas = outputBigNumberFormatter(tx.gas);
 
     if (tx.to && utils.isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
         tx.to = utils.toChecksumAddress(tx.to);
@@ -262,12 +260,10 @@ var outputTransactionReceiptFormatter = function (receipt) {
         throw new Error('Received receipt is invalid: ' + receipt);
     }
 
-    if (receipt.blockNumber !== null)
-        receipt.blockNumber = outputBigNumberFormatter(receipt.blockNumber);
-    if (receipt.transactionIndex !== null)
-        receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
-    receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
-    receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
+    receipt.blockNumber = outputBigNumberFormatter(receipt.blockNumber);
+    receipt.cumulativeGasUsed = outputBigNumberFormatter(receipt.cumulativeGasUsed);
+    receipt.gasUsed = outputBigNumberFormatter(receipt.gasUsed);
+    receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
 
     if (_.isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
@@ -292,19 +288,20 @@ var outputTransactionReceiptFormatter = function (receipt) {
  * @returns {Object}
  */
 var outputBlockFormatter = function (block) {
-
     // transform to number
-    block.gasLimit = utils.hexToNumber(block.gasLimit);
-    block.gasUsed = utils.hexToNumber(block.gasUsed);
-    block.size = utils.hexToNumber(block.size);
+    block.gasLimit = outputBigNumberFormatter(block.gasLimit);
+    block.gasUsed = outputBigNumberFormatter(block.gasUsed);
+    block.size = outputBigNumberFormatter(block.size);
     block.timestamp = outputBigNumberFormatter(block.timestamp);
-    if (block.number !== null)
-        block.number = outputBigNumberFormatter(block.number);
+    block.number = outputBigNumberFormatter(block.number);
 
-    if (block.difficulty)
+    if (block.difficulty) {
         block.difficulty = outputBigNumberFormatter(block.difficulty);
-    if (block.totalDifficulty)
+    }
+
+    if (block.totalDifficulty) {
         block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
+    }
 
     if (_.isArray(block.transactions)) {
         block.transactions.forEach(function (item) {
@@ -372,7 +369,6 @@ var inputLogFormatter = function (options) {
  * @returns {Object} log
  */
 var outputLogFormatter = function (log) {
-
     // generate a custom log id
     if (typeof log.blockHash === 'string' &&
         typeof log.transactionHash === 'string' &&
@@ -383,12 +379,9 @@ var outputLogFormatter = function (log) {
         log.id = null;
     }
 
-    if (log.blockNumber !== null)
-        log.blockNumber = outputBigNumberFormatter(log.blockNumber);
-    if (log.transactionIndex !== null)
-        log.transactionIndex = utils.hexToNumber(log.transactionIndex);
-    if (log.logIndex !== null)
-        log.logIndex = utils.hexToNumber(log.logIndex);
+    log.blockNumber = outputBigNumberFormatter(log.blockNumber);
+    log.transactionIndex = utils.hexToNumber(log.transactionIndex);
+    log.logIndex = utils.hexToNumber(log.logIndex);
 
     if (log.address) {
         log.address = utils.toChecksumAddress(log.address);
@@ -477,8 +470,8 @@ var outputSyncingFormatter = function (result) {
     result.currentBlock = outputBigNumberFormatter(result.currentBlock);
     result.highestBlock = outputBigNumberFormatter(result.highestBlock);
     if (result.knownStates) {
-        result.knownStates = utils.hexToNumber(result.knownStates);
-        result.pulledStates = utils.hexToNumber(result.pulledStates);
+        result.knownStates = outputBigNumberFormatter(result.knownStates);
+        result.pulledStates = outputBigNumberFormatter(result.pulledStates);
     }
 
     return result;

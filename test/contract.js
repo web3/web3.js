@@ -565,11 +565,11 @@ var runTests = function(contractFactory) {
 
                 assert.deepEqual(result, {
                     contractAddress: address,
-                    cumulativeGasUsed: 10,
+                    cumulativeGasUsed: '10',
                     transactionIndex: 3,
                     blockNumber: '10',
                     blockHash: '0xbf1234',
-                    gasUsed: 0
+                    gasUsed: '0'
                 });
                 done();
             });
@@ -659,11 +659,11 @@ var runTests = function(contractFactory) {
             .on('receipt', function(result){
                 assert.deepEqual(result, {
                     contractAddress: address,
-                    cumulativeGasUsed: 10,
+                    cumulativeGasUsed: '10',
                     transactionIndex: 3,
                     blockNumber: '10',
                     blockHash: '0xbf1234',
-                    gasUsed: 0
+                    gasUsed: '0'
                 });
                 done();
             }).catch(console.log);
@@ -1796,12 +1796,12 @@ var runTests = function(contractFactory) {
                 // wont throw if it errors ?!
                 assert.deepEqual(receipt, {
                     contractAddress: null,
-                    cumulativeGasUsed: 10,
+                    cumulativeGasUsed: '10',
                     transactionIndex: 3,
                     transactionHash: '0x1234',
                     blockNumber: '10',
                     blockHash: '0x1234',
-                    gasUsed: 0,
+                    gasUsed: '0',
                     events: {
                         Unchanged: {
                             address: address,
@@ -1959,12 +1959,12 @@ var runTests = function(contractFactory) {
                     // wont throw if it errors ?! nope: causes a timeout
                     assert.deepEqual(receipt, {
                         contractAddress: null,
-                        cumulativeGasUsed: 10,
+                        cumulativeGasUsed: '10',
                         transactionIndex: 3,
                         transactionHash: '0x1234',
                         blockNumber: '10',
                         blockHash: '0x1234',
-                        gasUsed: 0,
+                        gasUsed: '0',
                         events: {
                             Changed: [
                                 {
@@ -2111,12 +2111,12 @@ var runTests = function(contractFactory) {
                     // wont throw if it errors ?!
                     assert.deepEqual(receipt, {
                         contractAddress: null,
-                        cumulativeGasUsed: 10,
+                        cumulativeGasUsed: '10',
                         transactionIndex: 3,
                         transactionHash: '0x1234',
                         blockNumber: '10',
                         blockHash: '0x43ffdd',
-                        gasUsed: 0,
+                        gasUsed: '0',
                         events: {
                             Unchanged: {
                                 address: address,
@@ -2226,12 +2226,12 @@ var runTests = function(contractFactory) {
                     if(count === 1) {
                         assert.deepEqual(receipt, {
                             contractAddress: null,
-                            cumulativeGasUsed: 10,
+                            cumulativeGasUsed: '10',
                             transactionIndex: 3,
                             transactionHash: '0x1234',
                             blockNumber: '10',
                             blockHash: '0x1234',
-                            gasUsed: 0,
+                            gasUsed: '0',
                             events: {}
                         });
 
@@ -2240,12 +2240,12 @@ var runTests = function(contractFactory) {
                     if(count === 2) {
                         assert.deepEqual(receipt, {
                             contractAddress: null,
-                            cumulativeGasUsed: 10,
+                            cumulativeGasUsed: '10',
                             transactionIndex: 3,
                             transactionHash: '0x1234',
                             blockNumber: '10',
                             blockHash: '0x1234',
-                            gasUsed: 0,
+                            gasUsed: '0',
                             events: {}
                         });
 
@@ -3088,8 +3088,8 @@ describe('typical usage', function() {
             arguments: [account.address, 200]
         }).send({
             from: account.address,
-            gas: 54872,
-            gasPrice: 3000,
+            gas: '54872',
+            gasPrice: '3000',
             chainId: 1,
             nonce: '1',
             chain: 'mainnet',
