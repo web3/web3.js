@@ -18,10 +18,10 @@ var txResult = {
 };
 var formattedTxResult = {
     "status": "mined",
-    "hash":"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
-    "nonce":11,
+    "hash": "0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
+    "nonce": '11',
     "blockHash": "0x6fd9e2a26ab",
-    "blockNumber": 5599,
+    "blockNumber": '5599',
     "transactionIndex":  1,
     "from":"0x407D73d8a49eeb85D32Cf465507dd71d507100c1", // checksum address
     "to":"0x85F43D8a49eeB85d32Cf465507DD71d507100C1d", // checksum address

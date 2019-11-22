@@ -230,8 +230,8 @@ var outputTransactionFormatter = function (tx) {
         tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
     tx.nonce = outputBigNumberFormatter(tx.nonce);
     tx.value = outputBigNumberFormatter(tx.value);
+    tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
     tx.gas = utils.hexToNumber(tx.gas);
-    tx.gasPrice = utils.hexToNumber(tx.gasPrice);
 
     if (tx.to && utils.isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
         tx.to = utils.toChecksumAddress(tx.to);
@@ -292,7 +292,7 @@ var outputBlockFormatter = function (block) {
     // transform to number
     block.gasLimit = utils.hexToNumber(block.gasLimit);
     block.gasUsed = utils.hexToNumber(block.gasUsed);
-    block.size = outputBigNumberFormatter(block.size);
+    block.size = utils.hexToNumber(block.size);
     block.timestamp = outputBigNumberFormatter(block.timestamp);
     if (block.number !== null)
         block.number = outputBigNumberFormatter(block.number);

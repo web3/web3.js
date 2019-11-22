@@ -46,12 +46,12 @@ var tests = [{
         logsBloom: "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         miner: "0xf8b483DbA2c3B7176a3Da549ad41A48BB3121069", // checksum address
         nonce: "0x084149998194cc5f",
-        number: 1263817,
+        number: '1263817',
         parentHash: "0x7736fab79e05dc611604d22470dadad26f56fe494421b5b333de816ce1f25701",
         receiptRoot: "0x2fab35823ad00c7bb388595cb46652fe7886e00660a01e867824d3dceb1c8d36",
         sha3Uncles: "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
         stateRoot: "0xb3346685172db67de536d8765c43c31009d0eb3bd9c501c9be3229203f15f378",
-        timestamp: 1459613688,
+        timestamp: '1459613688',
         transactionsRoot: "0x0167ffa60e3ebc0b080cdb95f7c0087dd6c0e61413140e39d94d3468d7c9689f",
         size: 0
     }]
@@ -108,7 +108,7 @@ var tests = [{
     subscriptionResults: [{
         id: "log_d43624aa",
         blockHash: "0x43534ffddd",
-        blockNumber: 12834,
+        blockNumber: '12834',
         logIndex: 35,
         transactionHash: '0x2345fdfdf',
         transactionIndex: 1,
@@ -151,7 +151,7 @@ var tests = [{
     subscriptionResults: [{
         id: "log_d43624aa",
         blockHash: "0x43534ffddd",
-        blockNumber: 12834,
+        blockNumber: '12834',
         logIndex: 35,
         transactionHash: '0x2345fdfdf',
         transactionIndex: 1,
@@ -206,7 +206,7 @@ var tests = [{
         subscriptionResults: [{
             id: "log_d43624aa",
             blockHash: "0x43534ffddd",
-            blockNumber: 12834,
+            blockNumber: '12834',
             logIndex: 35,
             transactionHash: '0x2345fdfdf',
             transactionIndex: 1,
@@ -219,7 +219,7 @@ var tests = [{
         },{
             id: "log_b20551f9",
             blockHash: "0x43534ffddd",
-            blockNumber: 12834,
+            blockNumber: '12834',
             logIndex: 35,
             transactionHash: '0x2345fdfdd',
             transactionIndex: 1,
@@ -274,7 +274,7 @@ var tests = [{
     subscriptionResults: [{
         id: "log_d43624aa",
         blockHash: "0x43534ffddd",
-        blockNumber: 12834,
+        blockNumber: '12834',
         logIndex: 35,
         transactionHash: '0x2345fdfdf',
         transactionIndex: 1,
@@ -287,7 +287,7 @@ var tests = [{
     },{
         id: "log_b20551f9",
         blockHash: "0x43534ffddd",
-        blockNumber: 12834,
+        blockNumber: '12834',
         logIndex: 35,
         transactionHash: '0x2345fdfdd',
         transactionIndex: 1,
@@ -331,7 +331,7 @@ var tests = [{
     subscriptionResults: [{
         id: "log_d43624aa",
         blockHash: "0x43534ffddd",
-        blockNumber: 12834,
+        blockNumber: '12834',
         logIndex: 35,
         transactionHash: '0x2345fdfdf',
         transactionIndex: 1,
@@ -392,7 +392,7 @@ var tests = [{
     subscriptionResults: [{
         id: "log_d43624aa",
         blockHash: "0x43534ffddd",
-        blockNumber: 12834,
+        blockNumber: '12834',
         logIndex: 35,
         transactionHash: '0x2345fdfdf',
         transactionIndex: 1,
@@ -405,7 +405,7 @@ var tests = [{
     },{
         id: "log_d43624aa",
         blockHash: "0x43534ffddd",
-        blockNumber: 12834,
+        blockNumber: '12834',
         removed: true,
         logIndex: 35,
         transactionHash: '0x2345fdfdf',
@@ -456,16 +456,16 @@ var tests = [{
     subscriptionResults: [
         true,
         {
-            startingBlock: 786211,
-            currentBlock: 786193,
-            highestBlock: 712483,
+            startingBlock: '786211',
+            currentBlock: '786193',
+            highestBlock: '712483',
             knownStates: 698915,
             pulledStates: 35
         },
         {
-            startingBlock: 786211,
-            currentBlock: 786193,
-            highestBlock: 786193,
+            startingBlock: '786211',
+            currentBlock: '786193',
+            highestBlock: '786193',
             knownStates: 698915,
             pulledStates: 35
         },

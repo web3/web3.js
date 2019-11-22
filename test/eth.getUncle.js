@@ -23,7 +23,7 @@ var blockResult = {
     "uncles": ["0x460cfb8472af2c5fd05b5a2", "0xd5460cfb8472af2c5fd05b5a2"]
 };
 var formattedBlockResult = {
-    "number": 436,
+    "number": '436',
     "hash": "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
     "parentHash": "0x9646252be9520f6e71339a8df9c55e4d7619deeb018d2a3f2d21fc165dde5eb5",
     "nonce": "0xe04d296d2460cfb8472af2c5fd05b5a214109c25688d3704aed5484f9a7792f2",
@@ -38,7 +38,7 @@ var formattedBlockResult = {
     "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
     "gasLimit": 653145,
     "gasUsed": 653145,
-    "timestamp": 1424182926,
+    "timestamp": '1424182926',
     "transactions": ['0x460cfb8472af2c5fd05b5a2','0x460cfb8472af2c5fd05b5a2'],
     "uncles": ["0x460cfb8472af2c5fd05b5a2", "0xd5460cfb8472af2c5fd05b5a2"]
 };
@@ -76,7 +76,7 @@ var blockResultWithTx = {
     "uncles": ["0x460cfb8472af2c5fd05b5a2", "0xd5460cfb8472af2c5fd05b5a2"]
 };
 var formattedBlockResultWithTx = {
-    "number": 436,
+    "number": '436',
     "hash": "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
     "parentHash": "0x9646252be9520f6e71339a8df9c55e4d7619deeb018d2a3f2d21fc165dde5eb5",
     "nonce": "0xe04d296d2460cfb8472af2c5fd05b5a214109c25688d3704aed5484f9a7792f2",
@@ -91,13 +91,13 @@ var formattedBlockResultWithTx = {
     "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
     "gasLimit": 653145,
     "gasUsed": 653145,
-    "timestamp": 1424182926,
+    "timestamp": '1424182926',
     "transactions": [{
         // "status": "mined",
         "hash":"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
-        "nonce": 2,
+        "nonce": '2',
         "blockHash": "0x6fd9e2a26ab",
-        "blockNumber": 5599,
+        "blockNumber": '5599',
         "transactionIndex":  1,
         "from":"0x407D73d8a49eeb85D32Cf465507dd71d507100c1", // checksum address
         "to":"0x85F43D8a49eeB85d32Cf465507DD71d507100C1d", // checksum address
