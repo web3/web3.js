@@ -18,7 +18,7 @@
  */
 
 import {keccak256} from 'js-sha3';
-import scrypt from '../crypto/Scrypt';
+import scrypt from '@web3-js/scrypt-shim';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
 import * as EthLibAccount from 'eth-lib/lib/account'; // TODO: Remove this dependency

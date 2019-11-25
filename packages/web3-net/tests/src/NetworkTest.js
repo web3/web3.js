@@ -22,7 +22,7 @@ describe('NetworkTest', () => {
         expect(network).toBeInstanceOf(AbstractWeb3Module);
     });
 
-    it('calls getNetworkType and resolves to the network name "private', async () => {
+    it('calls getNetworkType and resolves to the network name "private"', async () => {
         const callback = jest.fn();
 
         network.getId = jest.fn(() => {
@@ -36,7 +36,7 @@ describe('NetworkTest', () => {
         expect(network.getId).toHaveBeenCalled();
     });
 
-    it('calls getNetworkType and resolves to the network name "main', async () => {
+    it('calls getNetworkType and resolves to the network name "main"', async () => {
         const callback = jest.fn();
 
         network.getId = jest.fn(() => {
@@ -50,7 +50,7 @@ describe('NetworkTest', () => {
         expect(network.getId).toHaveBeenCalled();
     });
 
-    it('calls getNetworkType and resolves to the network name "morden', async () => {
+    it('calls getNetworkType and resolves to the network name "morden"', async () => {
         const callback = jest.fn();
 
         network.getId = jest.fn(() => {
@@ -64,7 +64,7 @@ describe('NetworkTest', () => {
         expect(network.getId).toHaveBeenCalled();
     });
 
-    it('calls getNetworkType and resolves to the network name "ropsten', async () => {
+    it('calls getNetworkType and resolves to the network name "ropsten"', async () => {
         const callback = jest.fn();
 
         network.getId = jest.fn(() => {
@@ -78,7 +78,7 @@ describe('NetworkTest', () => {
         expect(network.getId).toHaveBeenCalled();
     });
 
-    it('calls getNetworkType and resolves to the network name "rinkeby', async () => {
+    it('calls getNetworkType and resolves to the network name "rinkeby"', async () => {
         const callback = jest.fn();
 
         network.getId = jest.fn(() => {
@@ -92,7 +92,21 @@ describe('NetworkTest', () => {
         expect(network.getId).toHaveBeenCalled();
     });
 
-    it('calls getNetworkType and resolves to the network name "kovan', async () => {
+    it('calls getNetworkType and resolves to the network name "goerli"', async () => {
+        const callback = jest.fn();
+
+        network.getId = jest.fn(() => {
+            return Promise.resolve(5);
+        });
+
+        await expect(network.getNetworkType(callback)).resolves.toEqual('goerli');
+
+        expect(callback).toHaveBeenCalledWith(null, 'goerli');
+
+        expect(network.getId).toHaveBeenCalled();
+    });
+
+    it('calls getNetworkType and resolves to the network name "kovan"', async () => {
         const callback = jest.fn();
 
         network.getId = jest.fn(() => {

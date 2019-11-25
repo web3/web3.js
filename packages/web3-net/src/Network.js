@@ -64,6 +64,9 @@ export default class Network extends AbstractWeb3Module {
                 case 4:
                     networkType = 'rinkeby';
                     break;
+                case 5:
+                    networkType = 'goerli';
+                    break;
                 case 42:
                     networkType = 'kovan';
                     break;
