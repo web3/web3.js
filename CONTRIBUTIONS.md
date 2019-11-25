@@ -37,7 +37,7 @@ being strictly necessary to fix something broken).
 
 ## Releases
 
-1. All releases should be proposed in a PR and subject to community review for [SOME_AMOUNT_OF_TIME].
+All releases should be proposed in a PR and subject to community review for a minimum of 72 hours (3 days). 
 
 2. Release review periods should be accompanied by a published `rc` version which can be used for
 sanity checks / additional testing.
@@ -55,7 +55,6 @@ minified bundle in a browser context. An external reviewer should verify they've
 (Much of the above is borrowed from Openish, Parity and Ethers contributions docs. It's meant
 to establish clear, egalitarian criteria for making changes to the code while prioritizing the
 safety of Web3's users.)
-
 
 
 
