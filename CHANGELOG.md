@@ -105,6 +105,8 @@ Released with 1.0.0-beta.37 code base.
 - ``eth_requestAccounts`` as ``requestAccounts`` added to web3-eth package (#3219)
 - ``sha3Raw`` and ``soliditySha3Raw`` added to web3-utils package (#3226)
 - ``eth_getProof`` as ``getProof`` added to web3-eth package (#3220)
+- ``BN`` and ``BigNumber`` objects are now supported by the ``abi.encodeParameter(s)`` method (#3238) 
+- ``getPendingTransactions`` added to web3-eth package (#3239)
 
 ### Changed
 
