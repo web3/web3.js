@@ -108,6 +108,6 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 
-- ``eth-lib`` dependency updated (0.2.7 => 0.2.8) (#3239)
+- ``eth-lib`` dependency updated (0.2.7 => 0.2.8) (#3242)
 
 ### Fixed
