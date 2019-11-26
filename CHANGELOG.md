@@ -106,4 +106,8 @@ Released with 1.0.0-beta.37 code base.
 - ``sha3Raw`` and ``soliditySha3Raw`` added to web3-utils package (#3226)
 - ``eth_getProof`` as ``getProof`` added to web3-eth package (#3220)
 
+### Changed
+
+- ``eth-lib`` dependency updated (0.2.7 => 0.2.8) (#3239)
+
 ### Fixed
