@@ -496,6 +496,12 @@ var Eth = function Eth() {
             inputFormatter: [formatter.inputAddressFormatter, formatter.inputStorageKeysFormatter, formatter.inputDefaultBlockNumberFormatter],
             outputFormatter: formatter.outputProofFormatter
         }),
+        new Method({
+            name: 'getPendingTransactions',
+            call: 'eth_pendingTransactions',
+            params: 0,
+            outputFormatter: formatter.outputTransactionFormatter
+        }),
 
         // subscriptions
         new Subscriptions({
