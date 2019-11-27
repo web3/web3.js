@@ -43,5 +43,12 @@ module.exports = {
     },
     ConnectionTimeout: function (ms){
         return new Error('CONNECTION TIMEOUT: timeout of ' + ms + ' ms achived');
+    },
+    RevertInstructionError: function(reason, signature) {
+        var error = new Error('Your request got reverted with the following reason string: ' + reason);
+        error.reason = reason;
+        error.signature = signature;
+
+        return error;
     }
 };

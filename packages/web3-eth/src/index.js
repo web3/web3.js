@@ -423,7 +423,8 @@ var Eth = function Eth() {
             name: 'sendSignedTransaction',
             call: 'eth_sendRawTransaction',
             params: 1,
-            inputFormatter: [null]
+            inputFormatter: [null],
+            abiCoder: abi
         }),
         new Method({
             name: 'signTransaction',
@@ -435,7 +436,8 @@ var Eth = function Eth() {
             name: 'sendTransaction',
             call: 'eth_sendTransaction',
             params: 1,
-            inputFormatter: [formatter.inputTransactionFormatter]
+            inputFormatter: [formatter.inputTransactionFormatter],
+            abiCoder: abi
         }),
         new Method({
             name: 'sign',
@@ -451,7 +453,8 @@ var Eth = function Eth() {
             name: 'call',
             call: 'eth_call',
             params: 2,
-            inputFormatter: [formatter.inputCallFormatter, formatter.inputDefaultBlockNumberFormatter]
+            inputFormatter: [formatter.inputCallFormatter, formatter.inputDefaultBlockNumberFormatter],
+            abiCoder: abi
         }),
         new Method({
             name: 'estimateGas',
