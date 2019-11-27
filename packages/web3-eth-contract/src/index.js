@@ -826,7 +826,8 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     requestManager: _this._parent._requestManager,
                     accounts: ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,
-                    defaultBlock: _this._parent.defaultBlock
+                    defaultBlock: _this._parent.defaultBlock,
+                    abiCoder: abi
                 })).createFunction();
 
                 return call(args.options, args.defaultBlock, args.callback);
@@ -903,7 +904,8 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     defaultCommon: _this._parent.defaultCommon,
                     defaultChain: _this._parent.defaultChain,
                     defaultHardfork: _this._parent.defaultHardfork,
-                    extraFormatters: extraFormatters
+                    extraFormatters: extraFormatters,
+                    abiCoder: abi
                 })).createFunction();
 
                 return sendTransaction(args.options, args.callback);

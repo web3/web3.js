@@ -43,6 +43,7 @@ var Method = function Method(options) {
     this.outputFormatter = options.outputFormatter;
     this.transformPayload = options.transformPayload;
     this.extraFormatters = options.extraFormatters;
+    this.abiCoder = options.abiCoder; // Will be used to encode the revert reason string
 
     this.requestManager = options.requestManager;
 
@@ -391,7 +392,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                     return receipt;
                 })
                 // CHECK for normal tx check for receipt only
-                .then(function(receipt) {
+                .then(async function(receipt) {
                     if (!isContractDeployment && !promiseResolved) {
                         if (!receipt.outOfGas &&
                             (!gasProvided || gasProvided !== receipt.gasUsed) &&
@@ -408,13 +409,36 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                             receiptJSON = JSON.stringify(receipt, null, 2);
 
                             if (receipt.status === false || receipt.status === '0x0') {
-                                utils._fireError(
-                                    new Error('Transaction has been reverted by the EVM:\n' + receiptJSON),
-                                    defer.eventEmitter,
-                                    defer.reject,
-                                    null,
-                                    receipt
-                                );
+                                try {
+                                    var revertMessage = await method.getRevertReason(payload.params[0], receipt.blockNumber);
+
+                                    if (revertMessage.reason) {
+                                        utils._fireError(
+                                            errors.RevertInstructionError(revertMessage.reason, revertMessage.signature),
+                                            defer.eventEmitter,
+                                            defer.reject,
+                                            payload.callback,
+                                            receipt
+                                        );
+                                    } else {
+                                        utils._fireError(
+                                            new Error('Transaction has been reverted by the EVM:\n' + receiptJSON),
+                                            defer.eventEmitter,
+                                            defer.reject,
+                                            null,
+                                            receipt
+                                        );
+                                    }
+                                } catch (error) {
+                                    utils._fireError(
+                                        new Error('Transaction has been reverted by the EVM:\n' + receiptJSON),
+                                        defer.eventEmitter,
+                                        defer.reject,
+                                        null,
+                                        receipt
+                                    );
+                                }
+
                             } else {
                                 utils._fireError(
                                     new Error('Transaction ran out of gas. Please provide more gas:\n' + receiptJSON),
@@ -526,16 +550,34 @@ var getWallet = function(from, accounts) {
 
 Method.prototype.buildCall = function() {
     var method = this,
-        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'); // || method.call === 'personal_sendTransaction'
+        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'), // || method.call === 'personal_sendTransaction'
+        isCall = (method.call === 'eth_call');
 
     // actual send function
     var send = function() {
         var defer = promiEvent(!isSendTx),
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
-
         // CALLBACK function
         var sendTxCallback = function(err, result) {
+            if (isCall && (method.isRevertReasonString(result) && method.abiCoder)) {
+                var reason = method.abiCoder.decodeParameter('string', '0x' + result.substring(10));
+                var signature = 'Error(String)';
+
+                utils._fireError(
+                    errors.RevertInstructionError(reason, signature),
+                    defer.eventEmitter,
+                    defer.reject,
+                    payload.callback,
+                    {
+                        reason: reason,
+                        signature: signature
+                    }
+                );
+
+                return;
+            }
+
             try {
                 result = method.formatOutput(result);
             } catch (e) {
@@ -560,10 +602,8 @@ Method.prototype.buildCall = function() {
 
             // return PROMISE
             if (!isSendTx) {
-
                 if (!err) {
                     defer.resolve(result);
-
                 }
 
                 // return PROMIEVENT
@@ -620,8 +660,7 @@ Method.prototype.buildCall = function() {
                                 if (_.isFunction(defer.eventEmitter.listeners) && defer.eventEmitter.listeners('error').length) {
                                     defer.eventEmitter.emit('error', err);
                                     defer.eventEmitter.removeAllListeners();
-                                    defer.eventEmitter.catch(function() {
-                                    });
+                                    defer.eventEmitter.catch(function() {});
                                 }
                                 defer.reject(err);
                             });
@@ -681,6 +720,59 @@ Method.prototype.buildCall = function() {
     // necessary for batch requests
     send.request = this.request.bind(this);
     return send;
+};
+
+/**
+ *
+ * @param txOptions
+ * @param revertedReceipt
+ * @param abiCoder
+ * @returns {Promise<*>}
+ */
+Method.prototype.getRevertReason = function(txOptions, blockNumber) {
+    var self = this;
+
+    return new Promise(function(resolve, reject) {
+        (new Method({
+            name: 'call',
+            call: 'eth_call',
+            params: 2,
+            abiCoder: self.abiCoder
+        }))
+            .createFunction(self.requestManager)(txOptions, utils.numberToHex(blockNumber))
+            .then(function() {
+                resolve({reason: false});
+            })
+            .catch(function(error) {
+                if (error.reason) {
+                    resolve({
+                        reason: error.reason,
+                        signature: error.signature
+                    });
+                } else {
+                    reject(error);
+                }
+            });
+    });
+};
+
+/**
+ * Checks if the given hex string is a revert message from the EVM
+ *
+ * @method isRevertReasonString
+ *
+ * @param {String} data - Hex string prefixed with 0x
+ *
+ * @returns {Boolean}
+ */
+Method.prototype.isRevertReasonString = function (data) {
+    if (data.substring(0, 2) !== '0x') {
+        throw new Error('Hex prefix "0x" is missing.');
+    }
+
+    var length = (data.length - 2) / 2;
+
+    return length % 32 === 4 && data.substring(0, 10) === '0x08c379a0';
 };
 
 /**
