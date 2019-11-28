@@ -385,12 +385,12 @@ eth.getTransactionCount(
 
 const code = '603d80600c6000396000f3007c0';
 
-// $ExpectType PromiEvent<TransactionReceipt>
+// $ExpectType PromiEvent<TransactionReceipt | RevertInstructionError>
 eth.sendTransaction({
     from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
     data: 'code'
 });
-// $ExpectType PromiEvent<TransactionReceipt>
+// $ExpectType PromiEvent<TransactionReceipt | RevertInstructionError>
 eth.sendTransaction(
     {
         from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
@@ -399,9 +399,9 @@ eth.sendTransaction(
     (error: Error, hash: string) => {}
 );
 
-// $ExpectType PromiEvent<TransactionReceipt>
+// $ExpectType PromiEvent<TransactionReceipt | RevertInstructionError>
 eth.sendSignedTransaction('0xf889808609184e72a0008227109');
-// $ExpectType PromiEvent<TransactionReceipt>
+// $ExpectType PromiEvent<TransactionReceipt | RevertInstructionError>
 eth.sendSignedTransaction(
     '0xf889808609184e72a0008227109',
     (error: Error, hash: string) => {}
@@ -467,13 +467,13 @@ eth.signTransaction(
     (error: Error, signedTransaction: RLPEncodedTransaction) => {}
 );
 
-// $ExpectType Promise<string>
+// $ExpectType Promise<string | RevertInstructionError>
 eth.call({
     to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
     data:
         '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003'
 });
-// $ExpectType Promise<string>
+// $ExpectType Promise<string | RevertInstructionError>
 eth.call(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
@@ -482,7 +482,7 @@ eth.call(
     },
     100
 );
-// $ExpectType Promise<string>
+// $ExpectType Promise<string | RevertInstructionError>
 eth.call(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
@@ -491,7 +491,7 @@ eth.call(
     },
     '100'
 );
-// $ExpectType Promise<string>
+// $ExpectType Promise<string | RevertInstructionError>
 eth.call(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
@@ -500,7 +500,7 @@ eth.call(
     },
     (error: Error, data: string) => {}
 );
-// $ExpectType Promise<string>
+// $ExpectType Promise<string | RevertInstructionError>
 eth.call(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
@@ -510,7 +510,7 @@ eth.call(
     '100',
     (error: Error, data: string) => {}
 );
-// $ExpectType Promise<string>
+// $ExpectType Promise<string | RevertInstructionError>
 eth.call(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
@@ -521,7 +521,7 @@ eth.call(
     (error: Error, data: string) => {}
 );
 
-// $ExpectType Promise<string>
+// $ExpectType Promise<string | RevertInstructionError>
 eth.call(
     {
         to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // contract address
