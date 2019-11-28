@@ -1,4 +1,4 @@
-### Guidelines for Pull Requests and Releases (Web3 1.x)
+## Guidelines for Pull Requests and Releases (Web3 1.x)
 
 This document provides some ground rules for contributors (including the maintainer(s) of
 the project) about how to make, review and publish changes to 1.x. The most basic requirement is
@@ -56,4 +56,3 @@ This topic is under org-wide discussion at https://github.com/ethereum/js-organi
 (Much of the above is borrowed from Openish, Parity and Ethers contributions docs. It's meant
 to establish clear, egalitarian criteria for making changes to the code while prioritizing the
 safety of Web3's users.)
-
