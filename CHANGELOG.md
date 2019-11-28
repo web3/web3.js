@@ -109,3 +109,5 @@ Released with 1.0.0-beta.37 code base.
 - ``getPendingTransactions`` added to web3-eth package (#3239)
 
 ### Fixed
+
+- ``clearSubscriptions`` does no longer throw an error if no running subscriptions do exist (#3246) 
