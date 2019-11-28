@@ -109,3 +109,5 @@ Released with 1.0.0-beta.37 code base.
 - ``getPendingTransactions`` added to web3-eth package (#3239)
 
 ### Fixed
+
+- ``defaultBlock`` property handling fixed (#3247)
