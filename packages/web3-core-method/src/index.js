@@ -410,9 +410,12 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
 
                             if (receipt.status === false || receipt.status === '0x0') {
                                 try {
-                                    var revertMessage = await method.getRevertReason(payload.params[0], receipt.blockNumber);
+                                    var revertMessage = await method.getRevertReason(
+                                        payload.params[0],
+                                        receipt.blockNumber
+                                    );
 
-                                    if (revertMessage.reason) {
+                                    if (revertMessage) {
                                         utils._fireError(
                                             errors.RevertInstructionError(revertMessage.reason, revertMessage.signature),
                                             defer.eventEmitter,
@@ -723,11 +726,14 @@ Method.prototype.buildCall = function() {
 };
 
 /**
+ * Returns the revert reason string if existing or otherwise false.
  *
- * @param txOptions
- * @param revertedReceipt
- * @param abiCoder
- * @returns {Promise<*>}
+ * @method getRevertReason
+ *
+ * @param {Object} txOptions
+ * @param {Number} blockNumber
+ *
+ * @returns {Promise<Boolean|String>}
  */
 Method.prototype.getRevertReason = function(txOptions, blockNumber) {
     var self = this;
@@ -741,7 +747,7 @@ Method.prototype.getRevertReason = function(txOptions, blockNumber) {
         }))
             .createFunction(self.requestManager)(txOptions, utils.numberToHex(blockNumber))
             .then(function() {
-                resolve({reason: false});
+                resolve(false);
             })
             .catch(function(error) {
                 if (error.reason) {
