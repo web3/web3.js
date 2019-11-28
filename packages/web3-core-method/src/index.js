@@ -563,7 +563,7 @@ Method.prototype.buildCall = function() {
 
         // CALLBACK function
         var sendTxCallback = function(err, result) {
-            if (isCall && (method.isRevertReasonString(result) && method.abiCoder)) {
+            if (!err && isCall && (method.isRevertReasonString(result) && method.abiCoder)) {
                 var reason = method.abiCoder.decodeParameter('string', '0x' + result.substring(10));
                 var signature = 'Error(String)';
 
