@@ -9,7 +9,7 @@ that **Web3 not break**.
 1. Any PR that introduces a logic change should include tests. (In many cases, the tests will take
 more time to write than the actual code).
 
-2. All PRs should sit for 48 hours with the `pleasereview` tag in order to garner feedback.
+2. All PRs should sit for 72 hours with the `pleasereview` tag in order to garner feedback.
 
 3. No PR should be merged until it has been reviewed, passes CI, and all reviews' comments are
 addressed.
@@ -55,7 +55,6 @@ minified bundle in a browser context. An external reviewer should verify they've
 (Much of the above is borrowed from Openish, Parity and Ethers contributions docs. It's meant
 to establish clear, egalitarian criteria for making changes to the code while prioritizing the
 safety of Web3's users.)
-
 
 
 
