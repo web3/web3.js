@@ -48,6 +48,7 @@ Changes reset the release clock and should trigger a new `rc` release.
 4. Regular maintainers should manually test the `rc` against a Node project and the published
 minified bundle in a browser context. An external reviewer should verify they've done the same.
 5. A release PR does have to be approved at least by two known contributors of the web3.js project
+5. A release PR does have to be approved at least by two known contributors of the web3.js project
 
 ### Emergencies
 
