@@ -36,3 +36,6 @@ errors.InvalidResponse(new Error('hey'));
 
 // $ExpectType Error
 errors.ConnectionTimeout('timeout');
+
+// $ExpectType RevertInstructionError
+errors.RevertInstructionError('reason', 'signature');
