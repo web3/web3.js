@@ -66,6 +66,7 @@ export class errors {
     static InvalidProvider(): Error;
     static InvalidResponse(result: Error): Error;
     static ConnectionTimeout(ms: string): Error;
+    static RevertInstructionError(reason: string, signature: string): RevertInstructionError
 }
 
 export class WebsocketProviderBase {
@@ -181,4 +182,9 @@ export interface JsonRpcResponse {
     id: number;
     result?: any;
     error?: string;
+}
+
+export interface RevertInstructionError extends Error {
+    reason: string;
+    signature: string;
 }
