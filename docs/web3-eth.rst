@@ -187,10 +187,11 @@ Property
 
 Default block parameters can be one of the following:
 
-- ``Number``: A block number
+- ``Number|BN|BigNumber``: A block number
 - ``"genesis"`` - ``String``: The genesis block
 - ``"latest"`` - ``String``: The latest block (current head of the blockchain)
 - ``"pending"`` - ``String``: The currently mined block (including pending transactions)
+- ``"earliest"`` - ``String``: The genesis block
 
 Default is ``"latest"``
 
