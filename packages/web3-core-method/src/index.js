@@ -766,13 +766,7 @@ Method.prototype.getRevertReason = function(txOptions, blockNumber) {
  * @returns {Boolean}
  */
 Method.prototype.isRevertReasonString = function (data) {
-    if (data.substring(0, 2) !== '0x') {
-        throw new Error('Hex prefix "0x" is missing.');
-    }
-
-    var length = (data.length - 2) / 2;
-
-    return length % 32 === 4 && data.substring(0, 10) === '0x08c379a0';
+    return ((data.length - 2) / 2) % 32 === 4 && data.substring(0, 10) === '0x08c379a0';
 };
 
 /**
