@@ -51,10 +51,9 @@ minified bundle in a browser context. An external reviewer should verify they've
 
 ### Emergencies
 
-[THIS SECTION NEEDS WORK after discussing the release procedure more...]
+This topic is under org-wide discussion at https://github.com/ethereum/js-organization/issues/6
 
 (Much of the above is borrowed from Openish, Parity and Ethers contributions docs. It's meant
 to establish clear, egalitarian criteria for making changes to the code while prioritizing the
 safety of Web3's users.)
-
 
