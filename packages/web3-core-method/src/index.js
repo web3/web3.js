@@ -772,7 +772,7 @@ Method.prototype.getRevertReason = function(txOptions, blockNumber) {
  * @returns {Boolean}
  */
 Method.prototype.isRevertReasonString = function (data) {
-    return ((data.length - 2) / 2) % 32 === 4 && data.substring(0, 10) === '0x08c379a0';
+    return _.isString(data) && ((data.length - 2) / 2) % 32 === 4 && data.substring(0, 10) === '0x08c379a0';
 };
 
 /**
