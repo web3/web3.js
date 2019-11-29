@@ -25,7 +25,7 @@ const contract = new Contract([]);
 // $ExpectType string | null
 contract.defaultAccount;
 
-// $ExpectType string | number
+// $ExpectType BlockNumber
 contract.defaultBlock;
 
 // $ExpectType Common
