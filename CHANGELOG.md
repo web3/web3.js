@@ -110,8 +110,9 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 
-- ``eth-lib`` dependency updated (0.2.7 => 0.2.8) (#3242)
+- ``eth-lib`` dependency updated (0.2.7 => ^0.2.8) (#3242)
 
 ### Fixed
 
+- ``defaultBlock`` property handling fixed (#3247)
 - ``clearSubscriptions`` does no longer throw an error if no running subscriptions do exist (#3246) 
