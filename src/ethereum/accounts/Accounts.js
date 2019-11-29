@@ -30,7 +30,7 @@ import {AbstractWeb3Module} from 'web3-core';
 import Account from './models/Account';
 import Wallet from './models/Wallet';
 
-// TODO: Rename Accounts module to Wallet and move the Wallet class to the eth module.
+// TODO: Use ethers wallet
 export default class Accounts extends AbstractWeb3Module {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
