@@ -113,3 +113,5 @@ Released with 1.0.0-beta.37 code base.
 - ``eth-lib`` dependency updated (0.2.7 => 0.2.8) (#3242)
 
 ### Fixed
+
+- ``clearSubscriptions`` does no longer throw an error if no running subscriptions do exist (#3246) 
