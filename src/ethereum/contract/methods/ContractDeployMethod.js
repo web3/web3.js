@@ -26,7 +26,7 @@ export default class ContractDeployMethod extends EthSendTransactionMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Configuration} moduleInstance
      * @param {AbstractTransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod
@@ -42,7 +42,7 @@ export default class ContractDeployMethod extends EthSendTransactionMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance - The module where the method is called from for example Eth.
+     * @param {Configuration} moduleInstance - The module where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
         if (this.rpcMethod !== 'eth_sendRawTransaction') {

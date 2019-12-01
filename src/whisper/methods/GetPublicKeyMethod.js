@@ -26,7 +26,7 @@ export default class GetPublicKeyMethod extends AbstractMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Configuration} moduleInstance
      *
      * @constructor
      */

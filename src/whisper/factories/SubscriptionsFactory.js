@@ -36,7 +36,7 @@ export default class SubscriptionsFactory {
      *
      * @method getSubscription
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Configuration} moduleInstance
      * @param {String} type
      * @param {Object} options
      *

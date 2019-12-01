@@ -26,7 +26,7 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Configuration} moduleInstance
      * @param {EventLogDecoder} eventLogDecoder
      * @param {AbiItemModel} abiItemModel
      * @param {EventOptionsMapper} eventOptionsMapper
@@ -45,7 +45,7 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
         super.beforeExecution(moduleInstance);

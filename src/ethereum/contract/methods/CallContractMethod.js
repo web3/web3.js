@@ -27,7 +27,7 @@ export default class CallContractMethod extends CallMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Configuration} moduleInstance
      * @param {AbiCoder} abiCoder
      * @param {AbiItemModel} abiItemModel
      *

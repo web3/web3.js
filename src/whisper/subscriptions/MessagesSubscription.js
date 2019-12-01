@@ -27,7 +27,7 @@ export default class MessagesSubscription extends AbstractSubscription {
      * @param {Object} options
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Configuration} moduleInstance
      *
      * @constructor
      */
