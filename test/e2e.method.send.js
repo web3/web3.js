@@ -224,8 +224,8 @@ describe('method.send [ @E2E ]', function () {
                 assert.fail();
 
             } catch (err) {
-                assert(err.signature === 'Error(String)');
-                assert(err.reason === 'REVERTED WITH REVERT');
+                assert.equal(err.signature, 'Error(String)');
+                assert.equal(err.reason, 'REVERTED WITH REVERT');
                 assert(err.message.includes('reverted'));
             }
         });
@@ -240,8 +240,8 @@ describe('method.send [ @E2E ]', function () {
                 assert.fail();
 
             } catch (err) {
-                assert(err.signature === 'Error(String)');
-                assert(err.reason === 'REVERTED WITH REQUIRE');
+                assert.equal(err.signature, 'Error(String)');
+                assert.equal(err.reason, 'REVERTED WITH REQUIRE');
                 assert(err.message.includes('reverted'));
             }
         });
@@ -258,9 +258,9 @@ describe('method.send [ @E2E ]', function () {
             } catch (err) {
                 var receipt = utils.extractReceipt(err.message);
 
-                assert(receipt.status === false);
-                assert(err.signature === undefined);
-                assert(err.reason === undefined);
+                assert.equal(receipt.status, false);
+                assert.equal(err.signature, undefined);
+                assert.equal(err.reason, undefined);
                 assert(err.message.includes('EVM'));
             }
         });
@@ -282,9 +282,9 @@ describe('method.send [ @E2E ]', function () {
                 .requireWithoutReason()
                 .send({from: accounts[0]})
                 .on('error', (err, receipt) => {
-                    assert(receipt.status === false);
-                    assert(err.signature === undefined);
-                    assert(err.reason === undefined);
+                    assert.equal(receipt.status, false);
+                    assert.equal(err.signature, undefined);
+                    assert.equal(err.reason, undefined);
                     assert(err.message.includes('EVM'));
 
                     done();
@@ -297,9 +297,9 @@ describe('method.send [ @E2E ]', function () {
                 .requireWithReason()
                 .send({from: accounts[0]})
                 .on('error', (err, receipt) => {
-                    assert(receipt.status === false);
-                    assert(err.signature === 'Error(String)');
-                    assert(err.reason === 'REVERTED WITH REQUIRE');
+                    assert.equal(receipt.status, false);
+                    assert.equal(err.signature, 'Error(String)');
+                    assert.equal(err.reason, 'REVERTED WITH REQUIRE');
                     assert(err.message.includes('reverted'));
 
                     done();
@@ -312,9 +312,9 @@ describe('method.send [ @E2E ]', function () {
                 .reverts()
                 .send({from: accounts[0]})
                 .on('error', (err, receipt) => {
-                    assert(receipt.status === false);
-                    assert(err.signature === 'Error(String)');
-                    assert(err.reason === 'REVERTED WITH REVERT');
+                    assert.equal(receipt.status, false);
+                    assert.equal(err.signature, 'Error(String)');
+                    assert.equal(err.reason, 'REVERTED WITH REVERT');
                     assert(err.message.includes('reverted'));
 
                     done();
