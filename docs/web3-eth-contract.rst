@@ -362,6 +362,26 @@ Returns
 
 ------------------------------------------------------------------------------
 
+.. _eth-contract-module-handlerevert:
+
+handleRevert
+============
+
+.. code-block:: javascript
+
+    web3.eth.Contract.handleRevert
+    contract.handleRevert // on contract instance
+
+The ``handleRevert`` options property does default to ``false`` and will return the revert reason string if enabled on :ref:`send <contract-send>` or :ref:`call <contract-call>` of a contract method.
+
+-------
+Returns
+-------
+
+``boolean``: The current value of ``handleRevert`` (default: false)
+
+------------------------------------------------------------------------------
+
 options
 =========
 
