@@ -414,12 +414,13 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                     var revertMessage = null;
 
                                     if (method.handleRevert) {
+                                        // Get revert reason string with eth_call
                                         revertMessage = await method.getRevertReason(
                                             payload.params[0],
                                             receipt.blockNumber
                                         );
 
-                                        if (revertMessage) {
+                                        if (revertMessage) { // Only throw a revert error if a revert reason is existing
                                             utils._fireError(
                                                 errors.RevertInstructionError(revertMessage.reason, revertMessage.signature),
                                                 defer.eventEmitter,
@@ -428,12 +429,13 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                                 receipt
                                             );
                                         } else {
-                                            throw false;
+                                            throw false; // Throw false and let the try/catch statement handle the error correctly after
                                         }
                                     } else {
-                                        throw false;
+                                        throw false; // Throw false and let the try/catch statement handle the error correctly after
                                     }
                                 } catch (error) {
+                                    // Throw an normal revert error if no revert reason is given or the detection of it is disabled
                                     utils._fireError(
                                         new Error('Transaction has been reverted by the EVM:\n' + receiptJSON),
                                         defer.eventEmitter,
@@ -443,6 +445,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                     );
                                 }
                             } else {
+                                // Throw OOG if status is true and provided gas and used gas are equal
                                 utils._fireError(
                                     new Error('Transaction ran out of gas. Please provide more gas:\n' + receiptJSON),
                                     defer.eventEmitter,
