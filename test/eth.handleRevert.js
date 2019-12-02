@@ -13,7 +13,8 @@ describe('web3.eth', function () {
             assert.equal(eth.Contract.handleRevert, false);
             assert.equal(eth.getCode.method.handleRevert, false);
         });
-        it('should set handleRevert for all sub packages is set to proper value, if Eth package is changed', function () {
+
+        it('should set handleRevert for all sub packages', function () {
             eth.handleRevert = setValue;
 
             assert.equal(eth.handleRevert, setValue);
