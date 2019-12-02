@@ -497,6 +497,25 @@ var Eth = function Eth() {
             params: 0,
             outputFormatter: utils.hexToNumber
         }),
+        new Method({
+            name: 'requestAccounts',
+            call: 'eth_requestAccounts',
+            params: 0,
+            outputFormatter: utils.toChecksumAddress
+        }),
+        new Method({
+            name: 'getProof',
+            call: 'eth_getProof',
+            params: 3,
+            inputFormatter: [formatter.inputAddressFormatter, formatter.inputStorageKeysFormatter, formatter.inputDefaultBlockNumberFormatter],
+            outputFormatter: formatter.outputProofFormatter
+        }),
+        new Method({
+            name: 'getPendingTransactions',
+            call: 'eth_pendingTransactions',
+            params: 0,
+            outputFormatter: formatter.outputTransactionFormatter
+        }),
 
         // subscriptions
         new Subscriptions({

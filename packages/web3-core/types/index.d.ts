@@ -28,6 +28,7 @@ import {
 } from 'web3-core-helpers';
 import { Method } from 'web3-core-method';
 import BN = require('bn.js');
+import BigNumber from 'bignumber.js';
 
 export interface SignedTransaction {
     messageHash?: string;
@@ -208,7 +209,7 @@ export interface EventLog {
 export interface Log {
     address: string;
     data: string;
-    topics: Array<string | string[]>;
+    topics: string[];
     logIndex: number;
     transactionIndex: number;
     transactionHash: string;
@@ -219,12 +220,15 @@ export interface Log {
 // had to move `web3-net` due to other modules in `1.x` not referencing
 
 export class NetworkBase {
-    constructor(provider: provider, net?: net.Socket | null);
+    constructor();
+    constructor(provider: provider);
+    constructor(provider: provider, net: net.Socket);
 
     readonly givenProvider: any;
     readonly currentProvider: provider;
-    BatchRequest: new () => BatchRequest;
+    static readonly givenProvider: any;
     static readonly providers: Providers;
+    BatchRequest: new () => BatchRequest;
 
     setProvider(provider: provider): boolean;
 
@@ -248,16 +252,14 @@ export class NetworkBase {
 // had to move accounts from web3-eth-accounts due to other modules in 1.x not referencing
 
 export class AccountsBase {
-    constructor(provider: provider, net?: net.Socket | null);
+    constructor();
+    constructor(provider: provider);
+    constructor(provider: provider, net: net.Socket);
 
     readonly givenProvider: any;
     readonly currentProvider: provider;
-    BatchRequest: new () => BatchRequest;
-    static readonly providers: Providers;
 
     setProvider(provider: provider): boolean;
-
-    extend(extension: Extension): any;
 
     create(entropy?: string): Account;
 
@@ -395,6 +397,18 @@ export class WebsocketProvider extends WebsocketProviderBase {
 
     isConnecting(): boolean;
 }
+
+export interface PastLogsOptions extends LogsOptions {
+    toBlock?: BlockNumber;
+}
+
+export interface LogsOptions {
+    fromBlock?: BlockNumber;
+    address?: string | string[];
+    topics?: Array<string | string[] | null>;
+}
+
+export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest' | 'genesis';
 
 export type provider =
     | HttpProvider

@@ -15,30 +15,38 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file sha3-tests.ts
+ * @file solidity-sha3-raw-test.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
 
 import BN = require('bn.js');
-import {sha3} from 'web3-utils';
+import {soliditySha3Raw} from 'web3-utils';
 
-// $ExpectType string | null
-sha3('234');
-// $ExpectType string | null
-sha3(new BN(3));
+// $ExpectType string
+soliditySha3Raw('234564535', '0xfff23243', true, -10);
+// $ExpectType string
+soliditySha3Raw('Hello!%');
+// $ExpectType string
+soliditySha3Raw('234');
+// $ExpectType string
+soliditySha3Raw(0xea);
+// $ExpectType string
+soliditySha3Raw(new BN(3));
+// $ExpectType string
+soliditySha3Raw({type: 'uint256', value: '234'});
+// $ExpectType string
+soliditySha3Raw({t: 'uint', v: new BN('234')});
+// $ExpectType string
+soliditySha3Raw({t: 'string', v: 'Hello!%'}, {t: 'int8', v: -23}, {t: 'address', v: '0x85F43D8a49eeB85d32Cf465507DD71d507100C1d'});
+// $ExpectType string
+soliditySha3Raw('0x407D73d8a49eeb85D32Cf465507dd71d507100c1');
 
 // $ExpectError
-sha3(['string']);
+soliditySha3Raw(['hey']);
 // $ExpectError
-sha3(234);
+soliditySha3Raw([34]);
 // $ExpectError
-sha3([4]);
+soliditySha3Raw(null);
 // $ExpectError
-sha3({});
-// $ExpectError
-sha3(true);
-// $ExpectError
-sha3(null);
-// $ExpectError
-sha3(undefined);
+soliditySha3Raw(undefined);

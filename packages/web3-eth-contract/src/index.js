@@ -247,7 +247,7 @@ Contract.setProvider = function(provider, accounts) {
 
 
 /**
- * Get the callback and modiufy the array if necessary
+ * Get the callback and modify the array if necessary
  *
  * @method _getCallback
  * @param {Array} args

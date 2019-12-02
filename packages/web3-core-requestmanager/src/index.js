@@ -68,7 +68,7 @@ RequestManager.providers = {
  *
  * @returns void
  */
-RequestManager.prototype.setProvider = function(provider, net) {
+RequestManager.prototype.setProvider = function (provider, net) {
     var _this = this;
 
     // autodetect provider
@@ -104,29 +104,29 @@ RequestManager.prototype.setProvider = function(provider, net) {
             result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
             // check for result.method, to prevent old providers errors to pass as result
-            if(result.method && _this.subscriptions.has(result.params.subscription)) {
+            if (result.method && _this.subscriptions.has(result.params.subscription)) {
                 _this.subscriptions.get(result.params.subscription).callback(null, result.params.result);
             }
         });
 
         // resubscribe if the provider has reconnected
         this.provider.on('connect', function connect() {
-            _this.subscriptions.forEach(function(subscription) {
+            _this.subscriptions.forEach(function (subscription) {
                 subscription.subscription.resubscribe();
             });
         });
 
         // notify all subscriptions about the error condition
         this.provider.on('error', function error(error) {
-            _this.subscriptions.forEach(function(subscription) {
+            _this.subscriptions.forEach(function (subscription) {
                 subscription.callback(error);
             });
         });
 
         // notify all subscriptions about the close condition
         this.provider.on('close', function close(event) {
-            _this.subscriptions.forEach(function(subscription) {
-                subscription.callback(new Error('CONNECTION ERROR: The connection got closed with the close code `' + event.code  + '` and the following reason string `'+ event.reason + '`'));
+            _this.subscriptions.forEach(function (subscription) {
+                subscription.callback(new Error('CONNECTION ERROR: The connection got closed with the close code `' + event.code + '` and the following reason string `' + event.reason + '`'));
             });
         });
 
@@ -143,8 +143,8 @@ RequestManager.prototype.setProvider = function(provider, net) {
  * @param {Object} data
  * @param {Function} callback
  */
-RequestManager.prototype.send = function(data, callback) {
-    callback = callback || function() {
+RequestManager.prototype.send = function (data, callback) {
+    callback = callback || function () {
     };
 
     if (!this.provider) {
@@ -152,7 +152,7 @@ RequestManager.prototype.send = function(data, callback) {
     }
 
     var payload = Jsonrpc.toPayload(data.method, data.params);
-    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function(err, result) {
+    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, result) {
         if (result && result.id && payload.id !== result.id) return callback(new Error('Wrong response id "' + result.id + '" (expected: "' + payload.id + '") in ' + JSON.stringify(payload)));
 
         if (err) {
@@ -180,13 +180,13 @@ RequestManager.prototype.send = function(data, callback) {
  * @param {Array} data - array of payload objects
  * @param {Function} callback
  */
-RequestManager.prototype.sendBatch = function(data, callback) {
+RequestManager.prototype.sendBatch = function (data, callback) {
     if (!this.provider) {
         return callback(errors.InvalidProvider());
     }
 
     var payload = Jsonrpc.toBatchPayload(data);
-    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function(err, results) {
+    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, results) {
         if (err) {
             return callback(err);
         }
@@ -209,7 +209,7 @@ RequestManager.prototype.sendBatch = function(data, callback) {
  * @param {Function} callback   the callback to call for incoming notifications
  */
 RequestManager.prototype.addSubscription = function (subscription, callback) {
-    if(this.provider.on) {
+    if (this.provider.on) {
         this.subscriptions.set(
             subscription.id,
             {
@@ -230,7 +230,7 @@ RequestManager.prototype.addSubscription = function (subscription, callback) {
  * @param {Function} callback   fired once the subscription is removed
  */
 RequestManager.prototype.removeSubscription = function (id, callback) {
-    if(this.subscriptions.has(id)) {
+    if (this.subscriptions.has(id)) {
         var type = this.subscriptions.get(id).subscription.options.type;
 
         // remove subscription first to avoid reentry
@@ -256,16 +256,16 @@ RequestManager.prototype.removeSubscription = function (id, callback) {
  *
  * @method reset
  */
-RequestManager.prototype.clearSubscriptions = function(keepIsSyncing) {
+RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
     var _this = this;
 
-
     // uninstall all subscriptions
-    this.subscriptions.forEach(function(value, id){
-        if(!keepIsSyncing || value.name !== 'syncing')
-            _this.removeSubscription(id);
-    });
-
+    if (this.subscriptions) {
+        this.subscriptions.forEach(function (value, id) {
+            if (!keepIsSyncing || value.name !== 'syncing')
+                _this.removeSubscription(id);
+        });
+    }
 
     //  reset notification callbacks etc.
     if (this.provider.reset)
