@@ -186,6 +186,7 @@ var Contract = function Contract(jsonInterface, address, options) {
     this.defaultChain = this.constructor.defaultChain;
     this.defaultHardfork = this.constructor.defaultHardfork;
     this.defaultCommon = this.constructor.defaultCommon;
+    this.handleRevert = this.constructor.handleRevert;
 
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
@@ -827,6 +828,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     accounts: ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,
                     defaultBlock: _this._parent.defaultBlock,
+                    handleRevert: _this._parent.handleRevert,
                     abiCoder: abi
                 })).createFunction();
 
@@ -904,6 +906,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     defaultCommon: _this._parent.defaultCommon,
                     defaultChain: _this._parent.defaultChain,
                     defaultHardfork: _this._parent.defaultHardfork,
+                    handleRevert: _this._parent.handleRevert,
                     extraFormatters: extraFormatters,
                     abiCoder: abi
                 })).createFunction();

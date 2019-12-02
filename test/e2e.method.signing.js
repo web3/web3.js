@@ -261,8 +261,6 @@ describe('transaction and message signing [ @E2E ]', function() {
             .eth
             .sendTransaction(tx)
             .on('error', function(err){
-                console.log(err);
-                
                 assert(err.message.includes('gas'))
                 done();
             })
