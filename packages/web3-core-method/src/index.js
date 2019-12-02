@@ -58,6 +58,7 @@ var Method = function Method(options) {
     this.defaultCommon = options.defaultCommon;
     this.defaultChain = options.defaultChain;
     this.defaultHardfork = options.defaultHardfork;
+    this.handleRevert = options.handleRevert;
 };
 
 Method.prototype.setRequestManager = function(requestManager, accounts) {
@@ -409,21 +410,30 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                             receiptJSON = JSON.stringify(receipt, null, 2);
 
                             if (receipt.status === false || receipt.status === '0x0') {
-                                try {
-                                    var revertMessage = await method.getRevertReason(
-                                        payload.params[0],
-                                        receipt.blockNumber
-                                    );
+                                    try {
+                                        var revertMessage = null;
 
-                                    if (revertMessage) {
-                                        utils._fireError(
-                                            errors.RevertInstructionError(revertMessage.reason, revertMessage.signature),
-                                            defer.eventEmitter,
-                                            defer.reject,
-                                            payload.callback,
-                                            receipt
-                                        );
-                                    } else {
+                                        if (method.handleRevert) {
+                                                revertMessage = await method.getRevertReason(
+                                                    payload.params[0],
+                                                    receipt.blockNumber
+                                                );
+
+                                                if (revertMessage) {
+                                                    utils._fireError(
+                                                        errors.RevertInstructionError(revertMessage.reason, revertMessage.signature),
+                                                        defer.eventEmitter,
+                                                        defer.reject,
+                                                        payload.callback,
+                                                        receipt
+                                                    );
+                                                } else {
+                                                    throw false;
+                                                }
+                                        } else {
+                                            throw false;
+                                        }
+                                    } catch (error) {
                                         utils._fireError(
                                             new Error('Transaction has been reverted by the EVM:\n' + receiptJSON),
                                             defer.eventEmitter,
@@ -432,16 +442,6 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                                             receipt
                                         );
                                     }
-                                } catch (error) {
-                                    utils._fireError(
-                                        new Error('Transaction has been reverted by the EVM:\n' + receiptJSON),
-                                        defer.eventEmitter,
-                                        defer.reject,
-                                        null,
-                                        receipt
-                                    );
-                                }
-
                             } else {
                                 utils._fireError(
                                     new Error('Transaction ran out of gas. Please provide more gas:\n' + receiptJSON),
@@ -563,7 +563,7 @@ Method.prototype.buildCall = function() {
 
         // CALLBACK function
         var sendTxCallback = function(err, result) {
-            if (!err && isCall && (method.isRevertReasonString(result) && method.abiCoder)) {
+            if (method.handleRevert && !err && isCall && (method.isRevertReasonString(result) && method.abiCoder)) {
                 var reason = method.abiCoder.decodeParameter('string', '0x' + result.substring(10));
                 var signature = 'Error(String)';
 
