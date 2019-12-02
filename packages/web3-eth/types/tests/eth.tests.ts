@@ -43,10 +43,16 @@ const eth_empty = new Eth();
 // $ExpectType Eth
 const eth = new Eth('http://localhost:8545');
 
+// $ExpectType provider
+eth.currentProvider;
+
+// $ExpectType any
+eth.givenProvider;
+
 // $ExpectType string | null
 eth.defaultAccount;
 
-// $ExpectType string | number
+// $ExpectType BlockNumber
 eth.defaultBlock;
 
 // $ExpectType Common
@@ -122,18 +128,6 @@ eth.subscribe(
     'pendingTransactions',
     (error: Error, transactionHash: string) => {}
 );
-
-// $ExpectType provider
-eth.currentProvider;
-
-// $ExpectType any
-eth.givenProvider;
-
-// $ExpectType string | null
-eth.defaultAccount;
-
-// $ExpectType string | number
-eth.defaultBlock;
 
 // $ExpectType boolean
 eth.setProvider('https://localhost:2100');

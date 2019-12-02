@@ -18,8 +18,16 @@ if [ -z "$CI" ]; then
 
 fi
 
+# To model publication correctly, this script needs to run
+# without web3's dev deps being installed. It installs
+# what it needs here.
+npm install -g verdaccio@4.3.4
+npm install -g npm-auth-to-token@1.0.0
+npm install -g geth-dev-assistant@0.1.3
+npm install -g lerna@3.18.3
+
 # Launch npm proxy registry
-npx verdaccio --config verdaccio.yml & npx wait-port 4873
+verdaccio --config verdaccio.yml & npx wait-port 4873
 
 # `npm add user`
 curl -XPUT \
@@ -28,7 +36,7 @@ curl -XPUT \
    'http://localhost:4873/-/user/org.couchdb.user:test'
 
 # `npm login`
-npx npm-auth-to-token \
+npm-auth-to-token \
   -u test \
   -p test \
   -e test@test.com \
@@ -45,7 +53,7 @@ fi
 git checkout $BRANCH --
 
 # Lerna version
-npx lerna version patch \
+lerna version patch \
   --force-publish=* \
   --no-git-tag-version \
   --no-push \
@@ -56,7 +64,7 @@ npx lerna version patch \
 git commit -a -m 'virtual-version-bump'
 
 # Lerna publish to e2e tag
-npx lerna publish from-package \
+lerna publish from-package \
   --dist-tag e2e \
   --registry http://localhost:4873 \
   --yes
