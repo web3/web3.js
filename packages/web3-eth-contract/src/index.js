@@ -180,13 +180,13 @@ var Contract = function Contract(jsonInterface, address, options) {
     // get default account from the Class
     var defaultAccount = this.constructor.defaultAccount;
     var defaultBlock = this.constructor.defaultBlock || 'latest';
-    this.transactionBlockTimeout = this.constructor.transactionBlockTimeout;
-    this.transactionConfirmationBlocks = this.constructor.transactionConfirmationBlocks;
-    this.transactionPollingTimeout = this.constructor.transactionPollingTimeout;
-    this.defaultChain = this.constructor.defaultChain;
-    this.defaultHardfork = this.constructor.defaultHardfork;
-    this.defaultCommon = this.constructor.defaultCommon;
-    this.handleRevert = this.constructor.handleRevert;
+    this.transactionBlockTimeout = this.options.transactionBlockTimeout || this.constructor.transactionBlockTimeout;
+    this.transactionConfirmationBlocks = this.options.transactionConfirmationBlocks || this.constructor.transactionConfirmationBlocks;
+    this.transactionPollingTimeout = this.options.transactionPollingTimeout || this.constructor.transactionPollingTimeout;
+    this.defaultChain = this.options.defaultChain || this.constructor.defaultChain;
+    this.defaultHardfork = this.options.defaultHardfork || this.constructor.defaultHardfork;
+    this.defaultCommon = this.options.defaultCommon || this.constructor.defaultCommon;
+    this.handleRevert = this.options.handleRevert || this.constructor.handleRevert;
 
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
