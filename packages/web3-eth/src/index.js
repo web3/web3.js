@@ -95,7 +95,7 @@ var Eth = function Eth() {
             handleRevert = val;
 
             // also set on the Contract object
-            _this.Contract.handleRevert = defaultCommon;
+            _this.Contract.handleRevert = handleRevert;
 
             // update handleRevert
             methods.forEach(function(method) {
