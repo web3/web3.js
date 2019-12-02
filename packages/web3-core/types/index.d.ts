@@ -408,7 +408,7 @@ export interface LogsOptions {
     topics?: Array<string | string[] | null>;
 }
 
-export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest';
+export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest' | 'genesis';
 
 export type provider =
     | HttpProvider

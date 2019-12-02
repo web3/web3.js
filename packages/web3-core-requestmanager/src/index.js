@@ -228,11 +228,13 @@ RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
     var _this = this;
 
 
-    // uninstall all subscriptions
-    Object.keys(this.subscriptions).forEach(function(id){
-        if(!keepIsSyncing || _this.subscriptions[id].name !== 'syncing')
-            _this.removeSubscription(id);
-    });
+    if (this.subscriptions) {
+        // uninstall all subscriptions
+        Object.keys(this.subscriptions).forEach(function(id){
+            if(!keepIsSyncing || _this.subscriptions[id].name !== 'syncing')
+                _this.removeSubscription(id);
+        });
+    }
 
 
     //  reset notification callbacks etc.

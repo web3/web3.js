@@ -95,27 +95,32 @@ var isPredefinedBlockNumber = function (blockNumber) {
  */
 var inputDefaultBlockNumberFormatter = function (blockNumber) {
     if (this && (blockNumber === undefined || blockNumber === null)) {
-        return this.defaultBlock;
+        return inputBlockNumberFormatter(this.defaultBlock);
     }
-    if (blockNumber === 'genesis' || blockNumber === 'earliest') {
-        return '0x0';
-    }
+
     return inputBlockNumberFormatter(blockNumber);
 };
 
 /**
  * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest', 'genesis'
  *
- * @param {String|Number|undefined} blockNumber
+ * @param {String|Number|BN|BigNumber} blockNumber
  *
- * @returns {String|Number|BN|BigNumber}
+ * @returns {String}
  */
 var inputBlockNumberFormatter = function (blockNumber) {
     if (blockNumber === undefined) {
         return undefined;
-    } else if (isPredefinedBlockNumber(blockNumber)) {
+    }
+
+    if (isPredefinedBlockNumber(blockNumber)) {
         return blockNumber;
     }
+
+    if (blockNumber === 'genesis') {
+        return '0x0';
+    }
+
     return (utils.isHexStrict(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : utils.numberToHex(blockNumber);
 };
 
