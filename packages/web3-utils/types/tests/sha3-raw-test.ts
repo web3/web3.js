@@ -1,40 +1,44 @@
 /*
     This file is part of web3.js.
+
     web3.js is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
+
     web3.js is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Lesser General Public License for more details.
+
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file index.d.ts
- * @author Josh Stevens <joshstevens19@hotmail.co.uk>
- * @date 2018
+ * @file sha3Raw-tests.ts
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @date 2019
  */
 
-export class Bzz {
-    constructor();
-    constructor(provider: any);
+import BN = require('bn.js');
+import {sha3Raw} from 'web3-utils';
 
-    readonly givenProvider: any;
-    static readonly givenProvider: any;
-    readonly currentProvider: any;
-    setProvider(provider: any): boolean;
+// $ExpectType string
+sha3Raw('234');
+// $ExpectType string
+sha3Raw(new BN(3));
 
-    upload(data: any): Promise<string>;
-
-    download(bzzHash: string, localPath?: string): Promise<any>;
-
-    pick: Pick;
-}
-
-export interface Pick {
-    file: () => Promise<any>;
-    directory: () => Promise<any>;
-    data: () => Promise<any>;
-}
+// $ExpectError
+sha3Raw(['string']);
+// $ExpectError
+sha3Raw(234);
+// $ExpectError
+sha3Raw([4]);
+// $ExpectError
+sha3Raw({});
+// $ExpectError
+sha3Raw(true);
+// $ExpectError
+sha3Raw(null);
+// $ExpectError
+sha3Raw(undefined);

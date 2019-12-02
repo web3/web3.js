@@ -18,8 +18,9 @@
  */
 
 import { Ens } from 'web3-eth-ens';
+import { Eth } from 'web3-eth';
 
-const ens = new Ens('http://localhost:7545');
+const ens = new Ens(new Eth('http://localhost:8545'));
 
 // $ExpectType Registry
 ens.registry;

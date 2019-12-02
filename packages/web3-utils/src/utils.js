@@ -493,6 +493,23 @@ var sha3 = function (value) {
 // expose the under the hood keccak256
 sha3._Hash = Hash;
 
+/**
+ * @method sha3Raw
+ *
+ * @param value
+ *
+ * @returns {string}
+ */
+var sha3Raw = function(value) {
+    value = sha3(value);
+
+    if (value === null) {
+        return SHA3_NULL_S;
+    }
+
+    return value;
+};
+
 
 module.exports = {
     BN: BN,
@@ -520,5 +537,6 @@ module.exports = {
     leftPad: leftPad,
     rightPad: rightPad,
     toTwosComplement: toTwosComplement,
-    sha3: sha3
+    sha3: sha3,
+    sha3Raw: sha3Raw
 };

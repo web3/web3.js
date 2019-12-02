@@ -20,12 +20,12 @@
 
 import { Contract } from 'web3-eth-contract';
 
-const contract = new Contract('http://localhost:500', []);
+const contract = new Contract([]);
 
 // $ExpectType string | null
 contract.defaultAccount;
 
-// $ExpectType string | number
+// $ExpectType BlockNumber
 contract.defaultBlock;
 
 // $ExpectType Common

@@ -22,7 +22,35 @@
 import { RLPEncodedTransaction } from 'web3-core';
 import { Personal } from 'web3-eth-personal';
 
+// $ExpectType Personal
+const personal_empty = new Personal();
+
+// $ExpectType Personal
 const personal = new Personal('http://localhost:7545');
+
+// $ExpectType string | null
+personal.defaultAccount;
+
+// $ExpectType string | number
+personal.defaultBlock;
+
+// $ExpectType provider
+personal.currentProvider;
+
+// $ExpectType any
+Personal.givenProvider;
+
+// $ExpectType any
+personal.givenProvider;
+
+// $ExpectType boolean
+personal.setProvider('https://localhost:2100');
+
+// $ExpectType BatchRequest
+new personal.BatchRequest();
+
+// $ExpectType any
+personal.extend({property: 'test', methods: [{name: 'method', call: 'method'}]});
 
 // $ExpectType Promise<string>
 personal.newAccount('test password');
