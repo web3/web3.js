@@ -34,6 +34,6 @@ import SendTransactionMethod from '../src/ethereum/methods/eth/transaction/EthSe
  *
  * @returns {Transaction}
  */
-export function sendTransaction(txOptions, config = web3.default.ethereum) {
+export function sendTransaction(txOptions, config = web3.config.ethereum) {
     return new SendTransactionMethod([txOptions], config).execute();
 }
