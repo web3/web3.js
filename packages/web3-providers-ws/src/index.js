@@ -79,7 +79,7 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
 
     // make property `connected` which will return the current connection status
     Object.defineProperty(this, 'connected', {
-        get: function() {
+        get: function () {
             return this.connection && this.connection.readyState === this.connection.OPEN;
         },
         enumerable: true
@@ -99,7 +99,7 @@ WebsocketProvider.prototype.constructor = WebsocketProvider;
  *
  * @returns {void}
  */
-WebsocketProvider.prototype.connect = function() {
+WebsocketProvider.prototype.connect = function () {
     this.connection = new Ws(this.url, this.protocol, undefined, this.headers, this.requestOptions, this.clientConfig);
     this._addSocketListeners();
 };
@@ -111,10 +111,10 @@ WebsocketProvider.prototype.connect = function() {
  *
  * @returns {void}
  */
-WebsocketProvider.prototype._onMessage = function(e) {
+WebsocketProvider.prototype._onMessage = function (e) {
     var _this = this;
 
-    this._parseResponse((typeof e.data === 'string') ? e.data : '').forEach(function(result) {
+    this._parseResponse((typeof e.data === 'string') ? e.data : '').forEach(function (result) {
         if (result.method && result.method.indexOf('_subscription') !== -1) {
             _this.emit(_this.DATA, result);
 
@@ -142,14 +142,14 @@ WebsocketProvider.prototype._onMessage = function(e) {
  *
  * @returns {void}
  */
-WebsocketProvider.prototype._onError = function(error) {
-    if (!error.code) {
+WebsocketProvider.prototype._onError = function (error) {
+    if (!error.code && !this.reconnecting) {
         var _this = this;
 
         this.emit(this.ERROR, error);
 
         if (this.requestQueue.size > 0) {
-            this.requestQueue.forEach(function(request, key) {
+            this.requestQueue.forEach(function (request, key) {
                 request.callback(error);
                 _this.requestQueue.delete(key);
             });
@@ -174,7 +174,7 @@ WebsocketProvider.prototype._onError = function(error) {
  *
  * @returns {void}
  */
-WebsocketProvider.prototype._onConnect = function() {
+WebsocketProvider.prototype._onConnect = function () {
     this.emit(this.CONNECT);
     this.reconnectAttempts = 0;
     this.reconnecting = false;
@@ -182,7 +182,7 @@ WebsocketProvider.prototype._onConnect = function() {
     if (this.requestQueue.size > 0) {
         var _this = this;
 
-        this.requestQueue.forEach(function(request, key) {
+        this.requestQueue.forEach(function (request, key) {
             _this.send(request.payload, request.callback);
             _this.requestQueue.delete(key);
         });
@@ -196,7 +196,7 @@ WebsocketProvider.prototype._onConnect = function() {
  *
  * @returns {void}
  */
-WebsocketProvider.prototype._onClose = function(event) {
+WebsocketProvider.prototype._onClose = function (event) {
     var _this = this;
 
     if (this.reconnectOptions.auto && (![1000, 1001].includes(event.code) || event.wasClean === false)) {
@@ -208,15 +208,15 @@ WebsocketProvider.prototype._onClose = function(event) {
     this.emit(this.CLOSE, event);
 
     if (this.requestQueue.size > 0) {
-        this.requestQueue.forEach(function(request, key) {
-            request.callback(new Error('CONNECTION ERROR: The connection got closed with close code `' + event.code  + '` and the following reason string `'+ event.reason + '`'));
+        this.requestQueue.forEach(function (request, key) {
+            request.callback(new Error('CONNECTION ERROR: The connection got closed with close code `' + event.code + '` and the following reason string `' + event.reason + '`'));
             _this.requestQueue.delete(key);
         });
     }
 
     if (this.responseQueue.size > 0) {
         this.responseQueue.forEach(function (request, key) {
-            request.callback(new Error('CONNECTION ERROR: The connection got closed with close code `' + event.code  + '` and the following reason string `'+ event.reason + '`'));
+            request.callback(new Error('CONNECTION ERROR: The connection got closed with close code `' + event.code + '` and the following reason string `' + event.reason + '`'));
             _this.responseQueue.delete(key);
         });
     }
@@ -232,7 +232,7 @@ WebsocketProvider.prototype._onClose = function(event) {
  *
  * @returns {void}
  */
-WebsocketProvider.prototype._addSocketListeners = function() {
+WebsocketProvider.prototype._addSocketListeners = function () {
     this.connection.addEventListener('message', this._onMessage.bind(this));
     this.connection.addEventListener('open', this._onConnect.bind(this));
     this.connection.addEventListener('close', this._onClose.bind(this));
@@ -246,7 +246,7 @@ WebsocketProvider.prototype._addSocketListeners = function() {
  *
  * @returns {void}
  */
-WebsocketProvider.prototype._removeSocketListeners = function() {
+WebsocketProvider.prototype._removeSocketListeners = function () {
     this.connection.removeEventListener('message', this._onMessage);
     this.connection.removeEventListener('open', this._onConnect);
     this.connection.removeEventListener('close', this._onClose);
@@ -262,7 +262,7 @@ WebsocketProvider.prototype._removeSocketListeners = function() {
  *
  * @returns {Array}
  */
-WebsocketProvider.prototype._parseResponse = function(data) {
+WebsocketProvider.prototype._parseResponse = function (data) {
     var _this = this,
         returnValues = [];
 
@@ -274,7 +274,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
         .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
         .split('|--|');
 
-    dechunkedData.forEach(function(data) {
+    dechunkedData.forEach(function (data) {
 
         // prepend the last chunk
         if (_this.lastChunk)
@@ -291,7 +291,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
 
             // start timeout to cancel all requests
             clearTimeout(_this.lastChunkTimeout);
-            _this.lastChunkTimeout = setTimeout(function() {
+            _this.lastChunkTimeout = setTimeout(function () {
                 if (_this.reconnectOptions.auto && _this.reconnectOptions.onTimeout) {
                     _this.reconnect();
 
@@ -303,7 +303,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
                 _this.emit(_this.ERROR, error);
 
                 if (_this.requestQueue.size > 0) {
-                    _this.requestQueue.forEach(function(request) {
+                    _this.requestQueue.forEach(function (request) {
                         request.callback(error);
                         _this.requestQueue.delete(request);
                     });
@@ -334,7 +334,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
  *
  * @returns {void}
  */
-WebsocketProvider.prototype.send = function(payload, callback) {
+WebsocketProvider.prototype.send = function (payload, callback) {
     var _this = this;
     var id = payload.id;
     var request = {payload: payload, callback: callback};
@@ -378,7 +378,7 @@ WebsocketProvider.prototype.send = function(payload, callback) {
  *
  * @returns {void}
  */
-WebsocketProvider.prototype.reset = function() {
+WebsocketProvider.prototype.reset = function () {
     this.removeAllListeners();
     this._removeSocketListeners();
     this._addSocketListeners();
@@ -394,7 +394,7 @@ WebsocketProvider.prototype.reset = function() {
  *
  * @returns {void}
  */
-WebsocketProvider.prototype.disconnect = function(code, reason) {
+WebsocketProvider.prototype.disconnect = function (code, reason) {
     this._removeSocketListeners();
     this.connection.close(code || 1000, reason);
 };
@@ -406,7 +406,7 @@ WebsocketProvider.prototype.disconnect = function(code, reason) {
  *
  * @returns {boolean}
  */
-WebsocketProvider.prototype.supportsSubscriptions = function() {
+WebsocketProvider.prototype.supportsSubscriptions = function () {
     return true;
 };
 
@@ -417,7 +417,7 @@ WebsocketProvider.prototype.supportsSubscriptions = function() {
  *
  * @returns {void}
  */
-WebsocketProvider.prototype.reconnect = function() {
+WebsocketProvider.prototype.reconnect = function () {
     var _this = this;
     this.reconnecting = true;
 
@@ -432,7 +432,7 @@ WebsocketProvider.prototype.reconnect = function() {
         !this.reconnectOptions.maxAttempts ||
         this.reconnectAttempts < this.reconnectOptions.maxAttempts
     ) {
-        setTimeout(function() {
+        setTimeout(function () {
             _this.reconnectAttempts++;
             _this._removeSocketListeners();
             _this.emit(_this.RECONNECT, _this.reconnectAttempts);
