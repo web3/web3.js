@@ -20,6 +20,74 @@
  * @date 2018
  */
 
-import { WebsocketProviderBase } from 'web3-core-helpers';
+export class WebsocketProvider {
+    constructor(host: string, options?: WebsocketProviderOptions);
 
-export class WebsocketProvider extends WebsocketProviderBase { }
+    requestQueue: Map<string, RequestItem>;
+    responseQueue: Map<string, RequestItem>;
+    connected: boolean;
+    connection: any;
+
+    supportsSubscriptions(): boolean;
+
+    send(
+        payload: JsonRpcPayload,
+        callback: (error: Error | null, result?: JsonRpcResponse) => void
+    ): void;
+
+    on(type: string, callback: () => void): void;
+
+    once(type: string, callback: () => void): void;
+
+    removeListener(type: string, callback: () => void): void;
+
+    removeAllListeners(type: string): void;
+
+    reset(): void;
+
+    disconnect(code: number, reason: string): void;
+
+    connect(): void;
+
+    reconnect(): void;
+}
+
+export interface WebsocketProviderOptions {
+    host?: string;
+    timeout?: number;
+    reconnectDelay?: number;
+    headers?: any;
+    protocol?: string;
+    clientConfig?: string;
+    requestOptions?: any;
+    origin?: string;
+    reconnect?: ReconnectOptions;
+}
+
+export interface ReconnectOptions {
+    auto?: boolean;
+    delay?: number;
+    maxAttempts?: boolean;
+    onTimeout?: boolean;
+}
+
+// Duplicated in ws, ipc, and http provider package
+export interface JsonRpcPayload {
+    jsonrpc: string;
+    method: string;
+    params: any[];
+    id?: string | number;
+}
+
+// Duplicated in ws, ipc, and http provider package
+export interface JsonRpcResponse {
+    jsonrpc: string;
+    id: number;
+    result?: any;
+    error?: string;
+}
+
+export interface RequestItem {
+    payload: JsonRpcPayload;
+    callback: (error: any, result: any) => void;
+}

@@ -20,8 +20,7 @@
  * @date 2018
  */
 
-import { HttpProvider } from 'web3-providers';
-import { JsonRpcResponse } from 'web3-core-helpers';
+import { HttpProvider, JsonRpcResponse } from 'web3-providers-http';
 
 const httpProvider = new HttpProvider('http://localhost:8545', {
     timeout: 20000,
