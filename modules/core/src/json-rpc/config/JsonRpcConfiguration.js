@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-export default class AbstractJsonRpcConfiguration {
+export default class JsonRpcConfiguration {
     /**
      * @param {Object} options
      *

@@ -22,12 +22,12 @@
 
 import isString from 'lodash/isString';
 
-export default class AbstractMethod {
+export default class Method {
     /**
      * @param {String} rpcMethod
      * @param {Number} parametersAmount
      * @param {Array} parameters
-     * @param {AbstractJsonRpcConfiguration} config
+     * @param {JsonRpcConfiguration} config
      *
      * @constructor
      */

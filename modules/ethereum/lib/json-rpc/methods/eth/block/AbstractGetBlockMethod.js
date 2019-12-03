@@ -27,7 +27,7 @@ export default class AbstractGetBlockMethod extends AbstractMethod {
     /**
      * @param {String} rpcMethod
      * @param {Array} parameters
-     * @param {AbstractJsonRpcConfiguration} config
+     * @param {JsonRpcConfiguration} config
      *
      * @constructor
      */

@@ -25,12 +25,12 @@ import EventEmitter from 'eventemitter3';
 /**
  * TODO: Implement it with https://github.com/tc39/proposal-observable/blob/master/src/Observable.js
  */
-export default class AbstractSubscription extends EventEmitter {
+export default class Subscription extends EventEmitter {
     /**
      * @param {String} type
      * @param {String} method
      * @param {Object} options
-     * @param {AbstractJsonRpcConfiguration} config
+     * @param {JsonRpcConfiguration} config
      *
      * @constructor
      */
@@ -75,7 +75,7 @@ export default class AbstractSubscription extends EventEmitter {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {AbstractSubscription}
+     * @returns {Subscription}
      */
     subscribe(callback = null) {
         this.callback = callback;

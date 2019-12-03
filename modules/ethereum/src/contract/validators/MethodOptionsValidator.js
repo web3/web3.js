@@ -38,7 +38,7 @@ export default class MethodOptionsValidator {
      * @method validate
      *
      * @param {AbiItemModel} abiItemModel
-     * @param {AbstractMethod} method
+     * @param {Method} method
      *
      * @returns {Error|Boolean}
      */
@@ -64,7 +64,7 @@ export default class MethodOptionsValidator {
      * @method isToSet
      *
      * @param {AbiItemModel} abiItemModel
-     * @param {AbstractMethod} method
+     * @param {Method} method
      *
      * @returns {Boolean}
      */
@@ -81,7 +81,7 @@ export default class MethodOptionsValidator {
      *
      * @method isFromSet
      *
-     * @param {AbstractMethod} method
+     * @param {Method} method
      *
      * @returns {Boolean}
      */
@@ -95,7 +95,7 @@ export default class MethodOptionsValidator {
      * @method isValueValid
      *
      * @param {AbiItemModel} abiItemModel
-     * @param {AbstractMethod} method
+     * @param {Method} method
      *
      * @returns {Boolean}
      */

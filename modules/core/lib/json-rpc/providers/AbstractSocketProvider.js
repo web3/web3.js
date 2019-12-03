@@ -126,7 +126,7 @@ export default class AbstractSocketProvider extends AbstractProvider {
      *
      * @method sendBatch
      *
-     * @param {AbstractMethod[]} methods
+     * @param {Method[]} methods
      * @param {Configuration} moduleInstance
      *
      * @returns Promise<Object|Error>

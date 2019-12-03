@@ -61,7 +61,7 @@ export default class MethodFactory {
      * @param {AbstractContract} contract
      * @param {String} requestType
      *
-     * @returns {AbstractMethod}
+     * @returns {Method}
      */
     createMethodByRequestType(abiItem, contract, requestType) {
         let rpcMethod;

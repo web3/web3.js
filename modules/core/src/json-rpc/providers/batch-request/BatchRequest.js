@@ -46,7 +46,7 @@ export default class BatchRequest {
      *
      * @method add
      *
-     * @param {AbstractMethod} method
+     * @param {Method} method
      */
     add(method) {
         if (!isObject(method) && method) {

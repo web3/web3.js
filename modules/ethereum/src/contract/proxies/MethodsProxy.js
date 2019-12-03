@@ -173,7 +173,7 @@ export default class MethodsProxy {
      * @param {IArguments} methodArguments
      * @param {String} requestType
      *
-     * @returns {AbstractMethod}
+     * @returns {Method}
      */
     createMethod(abiItemModel, methodArguments, requestType) {
         // Get correct method class

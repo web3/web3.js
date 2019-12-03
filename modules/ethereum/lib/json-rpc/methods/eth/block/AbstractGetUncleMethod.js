@@ -26,7 +26,7 @@ export default class AbstractGetUncleMethod extends AbstractMethod {
     /**
      * @param {String} rpcMethod
      * @param {Array} parameters
-     * @param {AbstractJsonRpcConfiguration} config
+     * @param {JsonRpcConfiguration} config
      *
      * @constructor
      */
