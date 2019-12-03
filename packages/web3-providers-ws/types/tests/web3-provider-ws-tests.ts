@@ -15,13 +15,12 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file web3-provider-ws-tests.ts
+ * @file web3-provider-ws-tests.js
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
 
-import { WebsocketProviderOptions, JsonRpcResponse } from 'web3-core-helpers';
-import { WebsocketProvider } from 'web3-providers';
+import { WebsocketProvider, WebsocketProviderOptions, JsonRpcResponse  } from 'web3-providers-ws';
 
 const options: WebsocketProviderOptions = {
     timeout: 30000,
@@ -33,28 +32,22 @@ const options: WebsocketProviderOptions = {
 const wsProvider = new WebsocketProvider('ws://localhost:8545', options);
 
 // $ExpectType boolean
-wsProvider.isConnecting();
-
-// $ExpectType boolean
 wsProvider.connected;
 
 // $ExpectType void
 wsProvider.disconnect(100, 'reason');
 
-// $ExpectType any
-wsProvider.responseCallbacks;
+// $ExpectType Map<string, RequestItem>
+wsProvider.requestQueue;
 
-// $ExpectType any
-wsProvider.notificationCallbacks;
+// $ExpectType Map<string, RequestItem>
+wsProvider.responseQueue;
 
 // $ExpectType any
 wsProvider.connection;
 
 // $ExpectType boolean
 wsProvider.connected;
-
-// $ExpectType void
-wsProvider.addDefaultEvents();
 
 // $ExpectType boolean
 wsProvider.supportsSubscriptions();

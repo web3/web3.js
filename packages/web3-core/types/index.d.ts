@@ -20,12 +20,12 @@
 
 import * as net from 'net';
 import {
-    HttpProviderBase,
+    HttpProvider,
     HttpProviderOptions,
-    IpcProviderBase,
-    WebsocketProviderBase,
+    IpcProvider,
+    WebsocketProvider,
     WebsocketProviderOptions
-} from 'web3-core-helpers';
+} from 'web3-core-requestmanager';
 import { Method } from 'web3-core-method';
 import BN = require('bn.js');
 import BigNumber from 'bignumber.js';
@@ -382,20 +382,6 @@ export class BatchRequest {
     add(method: Method): void;
 
     execute(): void;
-}
-
-export class HttpProvider extends HttpProviderBase {
-    constructor(host: string, options?: HttpProviderOptions);
-}
-
-export class IpcProvider extends IpcProviderBase {
-    constructor(path: string, net: net.Server);
-}
-
-export class WebsocketProvider extends WebsocketProviderBase {
-    constructor(host: string, options?: WebsocketProviderOptions);
-
-    isConnecting(): boolean;
 }
 
 export interface PastLogsOptions extends LogsOptions {

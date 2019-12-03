@@ -14,17 +14,13 @@
 /**
  * @file index.d.ts
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
-export interface Method {
-    name: string;
-    call: string;
-    params?: number;
-    inputFormatter?: Array<(() => void) | null>;
-    outputFormatter?: () => void;
-    transformPayload?: () => void;
-    extraFormatters?: any;
-    defaultBlock?: string;
-    defaultAccount?: string | null;
-}
+export {HttpProvider, HttpProviderOptions} from 'web3-providers-http';
+
+export {IpcProvider} from 'web3-providers-ipc';
+
+export {WebsocketProvider, WebsocketProviderOptions} from 'web3-providers-ws';
+
+
