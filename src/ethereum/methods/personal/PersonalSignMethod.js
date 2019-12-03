@@ -45,10 +45,5 @@ export default class PersonalSignMethod extends AbstractMethod {
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
         this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
-
-        if (isFunction(this.parameters[2])) {
-            this.callback = this.parameters[2];
-            delete this.parameters[2];
-        }
     }
 }

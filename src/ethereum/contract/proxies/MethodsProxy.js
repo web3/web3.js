@@ -157,14 +157,6 @@ export default class MethodsProxy {
             method = this.createMethod(abiItemModel, methodArguments, requestType);
         } catch (error) {
             const promiEvent = new PromiEvent();
-
-            method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract, requestType);
-            method.setArguments(methodArguments);
-
-            if (isFunction(method.callback)) {
-                method.callback(error, null);
-            }
-
             promiEvent.reject(error);
             promiEvent.emit('error', error);
 

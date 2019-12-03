@@ -138,46 +138,28 @@ export default class Accounts extends AbstractWeb3Module {
      *
      * @param {Object} tx
      * @param {String} privateKey
-     * @param {Function} callback
      *
-     * @callback callback callback(error, result)
      * @returns {Promise<Object>}
      */
-    async signTransaction(tx, privateKey, callback) {
-        try {
-            const account = Account.fromPrivateKey(privateKey, this);
+    async signTransaction(tx, privateKey) {
+        const account = Account.fromPrivateKey(privateKey, this);
 
-            if (!tx.chainId) {
-                tx.chainId = await this.getChainId();
-            }
-
-            if (!tx.gasPrice) {
-                tx.gasPrice = await this.getGasPrice();
-            }
-
-            if (!tx.nonce && tx.nonce !== 0) {
-                tx.nonce = await this.getTransactionCount(account.address);
-            }
-
-            const signedTransaction = await this.transactionSigner.sign(
-                this.formatters.inputCallFormatter(tx, this),
-                account.privateKey
-            );
-
-            if (isFunction(callback)) {
-                callback(false, signedTransaction);
-            }
-
-            return signedTransaction;
-        } catch (error) {
-            if (isFunction(callback)) {
-                callback(error, null);
-
-                return;
-            }
-
-            throw error;
+        if (!tx.chainId) {
+            tx.chainId = await this.getChainId();
         }
+
+        if (!tx.gasPrice) {
+            tx.gasPrice = await this.getGasPrice();
+        }
+
+        if (!tx.nonce && tx.nonce !== 0) {
+            tx.nonce = await this.getTransactionCount(account.address);
+        }
+
+        return await this.transactionSigner.sign(
+            this.formatters.inputCallFormatter(tx, this),
+            account.privateKey
+        );
     }
 
     /**

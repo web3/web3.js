@@ -274,31 +274,15 @@ export default class Registry extends AbstractContract {
      * @method owner
      *
      * @param {String} name
-     * @param {Function} callback
      *
-     * @callback callback callback(error, result)
      * @returns {Promise<String>}
      */
-    async owner(name, callback) {
+    async owner(name) {
         if (!this.address) {
             this.address = await this.checkNetwork();
         }
 
-        try {
-            const owner = await this.methods.owner(namehash.hash(name)).call();
-
-            if (isFunction(callback)) {
-                callback(false, owner);
-            }
-
-            return owner;
-        } catch (error) {
-            if (isFunction(callback)) {
-                callback(error, null);
-            }
-
-            throw error;
-        }
+        return this.methods.owner(namehash.hash(name)).call();
     }
 
     /**

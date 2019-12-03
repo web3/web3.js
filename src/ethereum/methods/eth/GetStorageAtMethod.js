@@ -45,13 +45,6 @@ export default class GetStorageAtMethod extends AbstractMethod {
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
         this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
-
-        // Optional second parameter 'defaultBlock' could also be the callback
-        if (isFunction(this.parameters[2])) {
-            this.callback = this.parameters[2];
-            this.parameters[2] = moduleInstance.defaultBlock;
-        }
-
         this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], moduleInstance);
     }
 }
