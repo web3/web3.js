@@ -32,4 +32,28 @@ export default class web3 {
             configList.set(name, config);
         }
     }
+
+    /**
+     * TODO: update detection
+     *
+     * Returns the injected EthereumProvider
+     *
+     * @property ethereumProvider
+     *
+     * @returns {AbstractProvider}
+     */
+    static get ethereumProvider() {
+        if (
+            typeof global.ethereumProvider !== 'undefined' &&
+            global.ethereumProvider.constructor.name === 'EthereumProvider'
+        ) {
+            return global.ethereumProvider;
+        }
+
+        if (typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
+            return global.web3.currentProvider;
+        }
+
+        return null;
+    }
 }
