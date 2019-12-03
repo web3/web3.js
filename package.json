@@ -22,7 +22,7 @@
         "docs": "cd docs; make html;",
         "lint": "jshint *.js packages",
         "test": "mocha --grep E2E --invert; jshint *.js packages",
-        "test:unit": "istanbul cover _mocha -- -R spec --grep E2E --invert",
+        "test:unit": "istanbul cover _mocha -- -R spec --grep E2E --invert --exit",
         "dtslint": "lerna run dtslint",
         "depcheck": "lerna exec dependency-check -- --missing --verbose .",
         "geth": "geth-dev-assistant --accounts 5 --tag stable --gasLimit 7000000",
