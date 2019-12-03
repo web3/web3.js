@@ -45,7 +45,9 @@ before_install:
   - export DISPLAY=:99.0
   - export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 install:
-    - npm install
+  - if [ $TEST != "e2e_truffle" ]; then
+      npm install;
+    fi
 script:
     - npm run ci
 

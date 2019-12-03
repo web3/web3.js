@@ -122,13 +122,11 @@
         "karma-spec-reporter": "0.0.32",
         "lerna": "^3.18.3",
         "mocha": "^6.2.1",
-        "npm-auth-to-token": "^1.0.0",
         "pify": "^4.0.1",
         "puppeteer": "^1.20.0",
         "sandboxed-module": "^2.0.3",
         "typescript": "next",
         "underscore": "^1.9.1",
-        "verdaccio": "^4.3.4",
         "vinyl-source-stream": "^2.0.0",
         "wait-port": "^0.2.6"
     }
