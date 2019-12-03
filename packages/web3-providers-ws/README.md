@@ -33,7 +33,12 @@ var Web3WsProvider = require('web3-providers-ws');
 var options = {
     timeout: 30000,
     headers: { authorization: 'Basic username:password' },
-    autoReconnect: true
+    reconnect: {
+        auto: false,
+        delay: 5000,
+        maxAttempts: false,
+        onTimeout: false
+    }
 }; // set a custom timeout at 30 seconds, credentials (you can also add the credentials to the URL: ws://username:password@localhost:8546), and enable WebSocket auto-reconnection
 var ws = new Web3WsProvider('ws://localhost:8546', options);
 ```
