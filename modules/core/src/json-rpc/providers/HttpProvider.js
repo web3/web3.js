@@ -17,7 +17,7 @@
 /**
  * @file HttpProvider.js
  * @authors: Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';

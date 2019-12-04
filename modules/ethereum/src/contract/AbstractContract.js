@@ -17,7 +17,7 @@
 /**
  * @file AbstractContract.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import {AbstractWeb3Module} from 'web3-core';

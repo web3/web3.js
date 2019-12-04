@@ -22,15 +22,14 @@
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class StopMiningMethod extends AbstractMethod {
+export default class StopMiningMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('miner_stop', 0, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('miner_stop', 0, parameters, config);
     }
 }

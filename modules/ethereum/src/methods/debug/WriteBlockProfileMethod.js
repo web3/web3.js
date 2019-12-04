@@ -20,17 +20,16 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
 
-export default class WriteBlockProfileMethod extends AbstractMethod {
+export default class WriteBlockProfileMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {Configuration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('debug_writeBlockProfile', 1, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('debug_writeBlockProfile', 1, parameters, config);
     }
 }

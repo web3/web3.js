@@ -17,21 +17,20 @@
 /**
  * @file PersonalSignTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class PersonalSignTransactionMethod extends AbstractMethod {
+export default class PersonalSignTransactionMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('personal_signTransaction', 2, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('personal_signTransaction', 2, parameters, config);
     }
 
     /**

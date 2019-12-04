@@ -17,7 +17,7 @@
 /**
  * @file SignTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import isString from 'lodash/isString';
@@ -25,13 +25,12 @@ import {SignTransactionMethod} from 'web3-core-method';
 
 export default class EthSignTransactionMethod extends SignTransactionMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
+    constructor(parameters, config) {
         super(utils, formatters, moduleInstance);
     }
 

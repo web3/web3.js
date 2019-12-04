@@ -18,7 +18,7 @@
  * @file index.js
  * @author Marek Kotewicz <marek@parity.io>
  * @author Fabian Vogelsteller <fabian@frozeman.de>
- * @date 2018
+ * @date 2019
  */
 
 import isArray from 'lodash/isArray';

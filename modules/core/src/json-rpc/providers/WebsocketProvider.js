@@ -17,7 +17,7 @@
 /**
  * @file WebsocketProvider.js
  * @authors: Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';

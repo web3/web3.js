@@ -17,21 +17,20 @@
 /**
  * @file GetBlockMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import {AbstractGetBlockMethod} from 'web3-core-method';
 
 export default class GetBlockMethod extends AbstractGetBlockMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getBlockByNumber', utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('eth_getBlockByNumber', parameters, config);
     }
 
     /**

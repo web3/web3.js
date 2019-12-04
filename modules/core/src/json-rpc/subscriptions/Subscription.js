@@ -17,7 +17,7 @@
 /**
  * @file AbstractSubscription.js
  * @authors: Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import EventEmitter from 'eventemitter3';

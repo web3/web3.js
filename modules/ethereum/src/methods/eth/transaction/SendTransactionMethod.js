@@ -17,16 +17,15 @@
 /**
  * @file SendTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
 
 export default class SendTransactionMethod extends AbstractObservedTransactionMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      * @param {AbstractTransactionObserver} transactionObserver
      *
      * @constructor

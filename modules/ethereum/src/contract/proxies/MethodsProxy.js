@@ -17,7 +17,7 @@
 /**
  * @file MethodsProxy.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import {PromiEvent} from 'web3-core-method';

@@ -17,7 +17,7 @@
 /**
  * @file MessagesSubscription.js
  * @authors: Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';

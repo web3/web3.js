@@ -17,7 +17,7 @@
 /**
  * @file AllEventsLogSubscription.js
  * @authors: Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import {LogSubscription} from 'web3-core-subscriptions';

@@ -20,18 +20,17 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
 
-export default class GoTraceMethod extends AbstractMethod {
+export default class GoTraceMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameterss
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('debug_goTrace', 2, utils, formatters, moduleInstance);
+    constructor(parameterss, config) {
+        super('debug_goTrace', 2, parameterss, config);
     }
 
     /**

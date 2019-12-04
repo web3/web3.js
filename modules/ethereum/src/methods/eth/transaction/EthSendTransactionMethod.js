@@ -17,16 +17,15 @@
 /**
  * @file EthSendTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import SendTransactionMethod from './SendTransactionMethod';
 
 export default class EthSendTransactionMethod extends SendTransactionMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      * @param {AbstractTransactionObserver} transactionObserver
      * @param {ChainIdMethod} chainIdMethod
      * @param {GetTransactionCountMethod} getTransactionCountMethod

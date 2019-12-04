@@ -17,21 +17,20 @@
 /**
  * @file GetTransactionFromBlockMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import {AbstractGetTransactionFromBlockMethod} from 'web3-core-method';
 
 export default class GetTransactionFromBlockMethod extends AbstractGetTransactionFromBlockMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getTransactionByBlockNumberAndIndex', utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('eth_getTransactionByBlockNumberAndIndex', parameters, config);
     }
 
     /**

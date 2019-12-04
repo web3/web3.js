@@ -22,15 +22,14 @@
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class WriteMemProfileMethod extends AbstractMethod {
+export default class WriteMemProfileMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('debug_writeMemProfile', 1, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('debug_writeMemProfile', 1, parameters, config);
     }
 }

@@ -17,21 +17,20 @@
 /**
  * @file GetPendingTransactionsMethod.js
  * @author Prince Sinha <sinhaprince013@gmail.com>
- * @date 2018
+ * @date 2019
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetPendingTransactionsMethod extends AbstractMethod {
+export default class GetPendingTransactionsMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_pendingTransactions', 0, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('eth_pendingTransactions', 0, parameters, config);
     }
 
     /**

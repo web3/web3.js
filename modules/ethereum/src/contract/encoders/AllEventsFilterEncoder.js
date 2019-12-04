@@ -17,7 +17,7 @@
 /**
  * @file AllEventsFilterEncoder.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import EventFilterEncoder from './EventFilterEncoder';

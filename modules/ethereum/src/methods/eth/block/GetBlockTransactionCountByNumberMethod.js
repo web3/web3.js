@@ -17,20 +17,19 @@
 /**
  * @file GetBlockTransactionCountByNumberMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import AbstractGetBlockTransactionCountMethod from '../../../lib/methods/block/AbstractGetBlockTransactionCountMethod';
 
 export default class GetBlockTransactionCountByNumberMethod extends AbstractGetBlockTransactionCountMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getBlockTransactionCountByNumber', utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('eth_getBlockTransactionCountByNumber', parameters, config);
     }
 }

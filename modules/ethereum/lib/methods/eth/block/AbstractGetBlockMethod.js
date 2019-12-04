@@ -18,7 +18,7 @@
 /**
  * @file AbstractGetBlockMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import Method from "../../../../../core/src/json-rpc/methods/Method";

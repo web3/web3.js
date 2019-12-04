@@ -17,7 +17,7 @@
 /**
  * @file SyncingSubscription.js
  * @authors: Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
@@ -35,7 +35,7 @@ export default class SyncingSubscription extends Subscription {
 
     /**
      * TODO: Return consistent value types
-     * 
+     *
      * This method will be executed on each new subscription item.
      *
      * @method onNewSubscriptionItem

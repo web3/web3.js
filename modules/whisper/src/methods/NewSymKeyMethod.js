@@ -17,20 +17,19 @@
 /**
  * @file NewSymKeyMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../core/src/json-rpc/methods/Method";
 
-export default class NewSymKeyMethod extends AbstractMethod {
+export default class NewSymKeyMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('shh_newSymKey', 0, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('shh_newSymKey', 0, parameters, config);
     }
 }

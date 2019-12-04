@@ -20,18 +20,17 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
 
-export default class StartRpcMethod extends AbstractMethod {
+export default class StartRpcMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {Configuration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('admin_startRPC', 4, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('admin_startRPC', 4, parameters, config);
     }
 
     /**

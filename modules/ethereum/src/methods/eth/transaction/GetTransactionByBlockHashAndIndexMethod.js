@@ -17,20 +17,19 @@
 /**
  * @file GetTransactionByBlockHashAndIndexMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import AbstractGetTransactionFromBlockMethod from '../../../lib/methods/transaction/AbstractGetTransactionFromBlockMethod';
 
 export default class GetTransactionByBlockHashAndIndexMethod extends AbstractGetTransactionFromBlockMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getTransactionByBlockHashAndIndex', utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('eth_getTransactionByBlockHashAndIndex', parameters, config);
     }
 }

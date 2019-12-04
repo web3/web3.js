@@ -17,20 +17,19 @@
 /**
  * @file EthGetAccountsMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import {GetAccountsMethod} from 'web3-core-method';
 
 export default class EthGetAccountsMethod extends GetAccountsMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
+    constructor(parameters, config) {
         super(utils, formatters, moduleInstance);
     }
 

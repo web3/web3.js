@@ -17,7 +17,7 @@
 /**
  * @file BatchRequest.js
  * @author Samuel Furter <samuel@ethereum.org>, Marek Kotewicz <marek@ethdev.com>
- * @date 2018
+ * @date 2019
  */
 
 import isArray from 'lodash/isArray';

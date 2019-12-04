@@ -17,21 +17,20 @@
 /**
  * @file GetTransactionReceiptMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetTransactionReceiptMethod extends AbstractMethod {
+export default class GetTransactionReceiptMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getTransactionReceipt', 1, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('eth_getTransactionReceipt', 1, parameters, config);
     }
 
     /**

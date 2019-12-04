@@ -22,16 +22,15 @@
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetProofMethod extends AbstractMethod {
+export default class GetProofMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getProof', 3, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('eth_getProof', 3, parameters, config);
     }
 
     /**

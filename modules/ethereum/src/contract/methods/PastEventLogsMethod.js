@@ -17,7 +17,7 @@
 /**
  * @file PastEventLogsMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import {GetPastLogsMethod} from 'web3-core-method';

@@ -22,15 +22,14 @@
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class InspectMethod extends AbstractMethod {
+export default class InspectMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('txpool_inspect', 0, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('txpool_inspect', 0, parameters, config);
     }
 }

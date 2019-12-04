@@ -17,20 +17,19 @@
 /**
  * @file GetPublicKeyMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../core/src/json-rpc/methods/Method";
 
-export default class GetPublicKeyMethod extends AbstractMethod {
+export default class GetPublicKeyMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('shh_getPublicKey', 1, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('shh_getPublicKey', 1, parameters, config);
     }
 }

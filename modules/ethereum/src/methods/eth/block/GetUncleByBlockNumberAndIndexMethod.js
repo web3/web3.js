@@ -17,20 +17,19 @@
 /**
  * @file GetUncleByBlockNumberAndIndexMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @date 2019
  */
 
 import AbstractGetUncleMethod from '../../../lib/methods/block/AbstractGetUncleMethod';
 
 export default class GetUncleByBlockNumberAndIndexMethod extends AbstractGetUncleMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_getUncleByBlockNumberAndIndex', utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('eth_getUncleByBlockNumberAndIndex', parameters, config);
     }
 }

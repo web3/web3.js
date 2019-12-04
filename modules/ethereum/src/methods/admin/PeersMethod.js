@@ -20,17 +20,16 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
 
-export default class PeersMethod extends AbstractMethod {
+export default class PeersMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('admin_peers', 0, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('admin_peers', 0, parameters, config);
     }
 }

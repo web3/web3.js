@@ -20,17 +20,16 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
 
-export default class TraceBlockMethod extends AbstractMethod {
+export default class TraceBlockMethod extends Method {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {Array} parameters
+     * @param {Configuration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('debug_traceBlock', 2, utils, formatters, moduleInstance);
+    constructor(parameters, config) {
+        super('debug_traceBlock', 2, parameters, config);
     }
 }
