@@ -20,22 +20,23 @@
  * @date 2018
  */
 
-import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
 import isFunction from 'lodash/isFunction';
+import LogOptions from "../../lib/types/input/LogOptions";
+import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
+import Log from "../../lib/types/output/Log";
 
 // TODO: Move the past logs logic to the eth module
-export default class LogSubscription extends AbstractSubscription {
+export default class LogSubscription extends Subscription {
     /**
+     * @param {EthereumConfiguration} config
      * @param {Object} options
-     * @param {Utils} utils
-     * @param {Object} formatters
      * @param {GetPastLogsMethod} getPastLogsMethod
-     * @param {Configuration} moduleInstance
      *
      * @constructor
      */
-    constructor(options, utils, formatters, moduleInstance, getPastLogsMethod) {
-        super('eth_subscribe', 'logs', options, utils, formatters, moduleInstance);
+    constructor(config, options, getPastLogsMethod) {
+        super('eth_subscribe', 'logs', config);
+        this.options = options;
         this.getPastLogsMethod = getPastLogsMethod;
     }
 
@@ -51,7 +52,7 @@ export default class LogSubscription extends AbstractSubscription {
      */
     subscribe(callback) {
         if ((this.options.fromBlock && this.options.fromBlock !== 'latest') || this.options.fromBlock === 0) {
-            this.getPastLogsMethod.parameters = [this.formatters.inputLogFormatter(this.options)];
+            this.getPastLogsMethod.parameters = [new LogOptions(this.options)];
             this.getPastLogsMethod
                 .execute()
                 .then((logs) => {
@@ -94,7 +95,7 @@ export default class LogSubscription extends AbstractSubscription {
      * @returns {Object}
      */
     onNewSubscriptionItem(subscriptionItem) {
-        const log = this.formatters.outputLogFormatter(subscriptionItem);
+        const log = new Log(subscriptionItem);
 
         if (log.removed) {
             this.emit('changed', log);

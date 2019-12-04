@@ -14,17 +14,18 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 /**
- * @file AbstractGetBlockUncleCountMethod.js
+ * @file AbstractGetBlockMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import Method from "../../../../../../core/src/json-rpc/methods/Method";
-import BlockNumber from "../../../../types/input/BlockNumber";
-import Hex from "../../../../../../core/src/utility/Hex";
+import Method from "../../../../../core/src/json-rpc/methods/Method";
+import BlockNumber from "../../../../../ethereum/lib/types/input/BlockNumber";
+import Block from "../../../../../ethereum/lib/types/output/Block";
 
-export default class AbstractGetBlockUncleCountMethod extends Method {
+export default class AbstractGetBlockMethod extends Method {
     /**
      * @param {String} rpcMethod
      * @param {Array} parameters
@@ -33,7 +34,7 @@ export default class AbstractGetBlockUncleCountMethod extends Method {
      * @constructor
      */
     constructor(rpcMethod, parameters, config) {
-        super(rpcMethod, 1, parameters, config);
+        super(rpcMethod, 2, parameters, config);
     }
 
     /**
@@ -41,10 +42,11 @@ export default class AbstractGetBlockUncleCountMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance
+     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
         this.parameters[0] = new BlockNumber(this.parameters[0]).toString();
+        this.parameters[1] = !!this.parameters[1];
     }
 
     /**
@@ -52,11 +54,11 @@ export default class AbstractGetBlockUncleCountMethod extends Method {
      *
      * @method afterExecution
      *
-     * @param {String} response
+     * @param {Object} response
      *
-     * @returns {Number}
+     * @returns {Block}
      */
     afterExecution(response) {
-        return new Hex(response).toNumber();
+        return new Block(response);
     }
 }

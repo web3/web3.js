@@ -20,17 +20,15 @@
  * @date 2018
  */
 
-import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
+import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
 
-export default class NewPendingTransactionsSubscription extends AbstractSubscription {
+export default class NewPendingTransactionsSubscription extends Subscription {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_subscribe', 'newPendingTransactions', null, utils, formatters, moduleInstance);
+    constructor(config) {
+        super('eth_subscribe', 'newPendingTransactions', config);
     }
 }

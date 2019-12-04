@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import {toChecksumAddress} from 'web3-utils';
 import AbstractJsonRpcConfiguration from "../../../lib/config/AbstractJsonRpcConfiguration";
 
 export default class EthereumConfiguration extends AbstractJsonRpcConfiguration {
@@ -53,9 +52,6 @@ export default class EthereumConfiguration extends AbstractJsonRpcConfiguration 
     }
 
     /**
-     * TODO: Add utils and formatters as dependency or create the core-types module and pass the factory to the
-     * TODO: AbstractWeb3Module (factory.createAddress())
-     *
      * Sets the defaultAccount of the current object
      *
      * @property defaultAccount
@@ -64,7 +60,7 @@ export default class EthereumConfiguration extends AbstractJsonRpcConfiguration 
      */
     set defaultAccount(value) {
         if (value) {
-            this._defaultAccount = toChecksumAddress(value);
+            this._defaultAccount = Address.isValid((value));
         }
 
         this._defaultAccount = undefined;

@@ -15,16 +15,16 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file AbstractGetBlockTransactionCountMethod.js
+ * @file AbstractGetBlockUncleCountMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import Method from "../../../../../../core/src/json-rpc/methods/Method";
-import BlockNumber from "../../../../../../ethereum/lib/types/input/BlockNumber";
-import Hex from "../../../../../../core/src/utility/Hex";
+import Method from "../../../../../core/src/json-rpc/methods/Method";
+import BlockNumber from "../../../types/input/BlockNumber";
+import Hex from "../../../../../core/src/utility/Hex";
 
-export default class AbstractGetBlockTransactionCountMethod extends Method {
+export default class AbstractGetBlockUncleCountMethod extends Method {
     /**
      * @param {String} rpcMethod
      * @param {Array} parameters

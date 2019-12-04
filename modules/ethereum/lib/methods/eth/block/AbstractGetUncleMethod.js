@@ -20,10 +20,10 @@
  * @date 2018
  */
 
-import Method from "../../../../../../core/src/json-rpc/methods/Method";
-import Block from "../../../../types/output/Block";
-import BlockNumber from "../../../../types/input/BlockNumber";
-import Hex from "../../../../../../core/src/utility/Hex";
+import Method from "../../../../../core/src/json-rpc/methods/Method";
+import Block from "../../../types/output/Block";
+import BlockNumber from "../../../types/input/BlockNumber";
+import Hex from "../../../../../core/src/utility/Hex";
 
 export default class AbstractGetUncleMethod extends Method {
     /**

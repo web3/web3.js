@@ -24,18 +24,16 @@ import {LogSubscription} from 'web3-core-subscriptions';
 
 export default class AllEventsLogSubscription extends LogSubscription {
     /**
+     * @param {EthereumConfiguration} config
      * @param {Object} options
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {AbstractContract} contract
      * @param {GetPastLogsMethod} getPastLogsMethod
      * @param {EventLogDecoder} allEventsLogDecoder
      * @param {AbiModel} abiModel
      *
      * @constructor
      */
-    constructor(options, utils, formatters, contract, getPastLogsMethod, allEventsLogDecoder, abiModel) {
-        super(options, utils, formatters, contract, getPastLogsMethod);
+    constructor(config, options, getPastLogsMethod, allEventsLogDecoder, abiModel) {
+        super(config, options, getPastLogsMethod);
 
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.abiModel = abiModel;

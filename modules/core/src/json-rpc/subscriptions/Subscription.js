@@ -29,18 +29,14 @@ export default class Subscription extends EventEmitter {
     /**
      * @param {String} type
      * @param {String} method
-     * @param {Object} options
      * @param {JsonRpcConfiguration} config
      *
      * @constructor
      */
-    constructor(type, method, options = null, config) {
+    constructor(type, method, config) {
         super();
         this.type = type;
         this.method = method;
-        this.options = options;
-        this.utils = utils;
-        this.formatters = formatters;
         this.config = config;
         this.id = null;
     }

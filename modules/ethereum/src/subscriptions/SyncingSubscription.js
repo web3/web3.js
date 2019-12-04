@@ -20,22 +20,22 @@
  * @date 2018
  */
 
-import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
+import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
 
-export default class SyncingSubscription extends AbstractSubscription {
+export default class SyncingSubscription extends Subscription {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_subscribe', 'syncing', null, utils, formatters, moduleInstance);
+    constructor(config) {
+        super('eth_subscribe', 'syncing', config);
         this.isSyncing = null;
     }
 
     /**
+     * TODO: Return consistent value types
+     * 
      * This method will be executed on each new subscription item.
      *
      * @method onNewSubscriptionItem

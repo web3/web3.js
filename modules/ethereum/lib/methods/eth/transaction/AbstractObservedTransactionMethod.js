@@ -21,8 +21,8 @@
  */
 
 import PromiEvent from '../../PromiEvent';
-import Method from "../../../../../../core/src/json-rpc/methods/Method";
-import TransactionReceipt from "../../../../types/output/TransactionReceipt";
+import Method from "../../../../../core/src/json-rpc/methods/Method";
+import TransactionReceipt from "../../../types/output/TransactionReceipt";
 
 export default class AbstractObservedTransactionMethod extends Method {
     /**

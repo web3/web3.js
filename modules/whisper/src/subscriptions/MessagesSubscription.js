@@ -24,14 +24,11 @@ import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscriptio
 
 export default class MessagesSubscription extends AbstractSubscription {
     /**
-     * @param {Object} options
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(options, utils, formatters, moduleInstance) {
-        super('shh_subscribe', 'messages', options, utils, formatters, moduleInstance);
+    constructor(config) {
+        super('shh_subscribe', 'messages', config);
     }
 }

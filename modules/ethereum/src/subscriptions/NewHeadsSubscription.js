@@ -20,18 +20,17 @@
  * @date 2018
  */
 
-import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
+import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
+import Block from "../../lib/types/output/Block";
 
-export default class NewHeadsSubscription extends AbstractSubscription {
+export default class NewHeadsSubscription extends Subscription {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {Configuration} moduleInstance
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance) {
-        super('eth_subscribe', 'newHeads', null, utils, formatters, moduleInstance);
+    constructor(config) {
+        super('eth_subscribe', 'newHeads', config);
     }
 
     /**
@@ -39,11 +38,11 @@ export default class NewHeadsSubscription extends AbstractSubscription {
      *
      * @method onNewSubscriptionItem
      *
-     * @param {any} subscriptionItem
+     * @param {Object} subscriptionItem
      *
-     * @returns {Object}
+     * @returns {Block}
      */
     onNewSubscriptionItem(subscriptionItem) {
-        return this.formatters.outputBlockFormatter(subscriptionItem);
+        return new Block(subscriptionItem);
     }
 }

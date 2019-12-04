@@ -24,6 +24,7 @@ import {GetPastLogsMethod} from 'web3-core-method';
 import EventLogSubscription from '../subscriptions/EventLogSubscription';
 import AllEventsLogSubscription from '../subscriptions/AllEventsLogSubscription';
 
+// TODO: Remove all factories. The factory pattern isn't the right thing here for us and with JS.
 export default class EventSubscriptionFactory {
     /**
      * @param {Utils} utils
