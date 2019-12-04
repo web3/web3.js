@@ -38,7 +38,7 @@ import {
     LogsOptions,
     PastLogsOptions
 } from 'web3-core';
-import {RevertInstructionError} from 'web3-core-helpers';
+import {RevertInstructionError, TransactionRevertInstructionError} from 'web3-core-helpers';
 import {Subscription} from 'web3-core-subscriptions';
 import {AbiCoder} from 'web3-eth-abi';
 import {Accounts} from 'web3-eth-accounts';
@@ -295,12 +295,12 @@ export class Eth {
     sendTransaction(
         transactionConfig: TransactionConfig,
         callback?: (error: Error, hash: string) => void
-    ): PromiEvent<TransactionReceipt | RevertInstructionError>;
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
     sendSignedTransaction(
         signedTransactionData: string,
         callback?: (error: Error, hash: string) => void
-    ): PromiEvent<TransactionReceipt | RevertInstructionError>;
+    ): PromiEvent<TransactionReceipt>;
 
     sign(
         dataToSign: string,
