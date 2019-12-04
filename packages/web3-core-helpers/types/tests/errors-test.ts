@@ -39,3 +39,6 @@ errors.ConnectionTimeout('timeout');
 
 // $ExpectType RevertInstructionError
 errors.RevertInstructionError('reason', 'signature');
+
+// $ExpectType TransactionRevertInstructionError
+errors.TransactionRevertInstructionError('reason', 'signature', {});

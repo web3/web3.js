@@ -422,7 +422,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
                                         if (revertMessage) { // Only throw a revert error if a revert reason is existing
                                             utils._fireError(
-                                                errors.RevertInstructionError(revertMessage.reason, revertMessage.signature),
+                                                errors.TransactionRevertInstructionError(revertMessage.reason, revertMessage.signature, receipt),
                                                 defer.eventEmitter,
                                                 defer.reject,
                                                 null,
