@@ -413,7 +413,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                 try {
                                     var revertMessage = null;
 
-                                    if (method.handleRevert) {
+                                    if (method.handleRevert && method.call === 'eth_sendTransaction') {
                                         // Get revert reason string with eth_call
                                         revertMessage = await method.getRevertReason(
                                             payload.params[0],
@@ -425,7 +425,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                                 errors.RevertInstructionError(revertMessage.reason, revertMessage.signature),
                                                 defer.eventEmitter,
                                                 defer.reject,
-                                                payload.callback,
+                                                null,
                                                 receipt
                                             );
                                         } else {
@@ -445,7 +445,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                     );
                                 }
                             } else {
-                                // Throw OOG if status is true and provided gas and used gas are equal
+                                // Throw OOG if status is not existing and provided gas and used gas are equal
                                 utils._fireError(
                                     new Error('Transaction ran out of gas. Please provide more gas:\n' + receiptJSON),
                                     defer.eventEmitter,
