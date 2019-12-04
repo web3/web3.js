@@ -19,31 +19,20 @@ yarn bootstrap
 yarn config set registry http://localhost:4873
 
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-echo "Updating @truffle/interface-adapter"
+echo "Updating Web3 across all @truffle  "
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 
-# @truffle/interface-adapter
-cd packages/interface-adapter
-yarn remove web3
+lerna add web3@e2e --registry http://localhost:4873
 
-yarn add web3@e2e \
-  --registry http://localhost:4873 \
-  --force
-
-# @truffle/contract
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>"
 echo "Updating @truffle/contract"
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>"
 
-cd ../contract
-yarn remove web3
+cd packages/contract
+
 yarn remove web3-core-promievent
 yarn remove web3-eth-abi
 yarn remove web3-utils
-
-yarn add web3@e2e \
-  --registry http://localhost:4873 \
-  --force
 
 # Geth tests
 GETH=true npm test
