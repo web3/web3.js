@@ -329,7 +329,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                 })
                 // CHECK for CONTRACT DEPLOYMENT
                 .then(function(receipt) {
-                    
+
                     if (isContractDeployment && !promiseResolved) {
 
                         if (!receipt.contractAddress) {
