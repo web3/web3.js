@@ -180,14 +180,86 @@ var Contract = function Contract(jsonInterface, address, options) {
     // get default account from the Class
     var defaultAccount = this.constructor.defaultAccount;
     var defaultBlock = this.constructor.defaultBlock || 'latest';
-    this.transactionBlockTimeout = this.options.transactionBlockTimeout || this.constructor.transactionBlockTimeout;
-    this.transactionConfirmationBlocks = this.options.transactionConfirmationBlocks || this.constructor.transactionConfirmationBlocks;
-    this.transactionPollingTimeout = this.options.transactionPollingTimeout || this.constructor.transactionPollingTimeout;
-    this.defaultChain = this.options.defaultChain || this.constructor.defaultChain;
-    this.defaultHardfork = this.options.defaultHardfork || this.constructor.defaultHardfork;
-    this.defaultCommon = this.options.defaultCommon || this.constructor.defaultCommon;
-    this.handleRevert = this.options.handleRevert || this.constructor.handleRevert;
 
+    Object.defineProperty(this, 'handleRevert', {
+        get: function () {
+            if (_this.options.handleRevert === false || _this.options.handleRevert === true) {
+                return _this.options.handleRevert;
+            }
+
+            return this.constructor.handleRevert;
+        },
+        set: function (val) {
+            _this.options.handleRevert = val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultCommon', {
+        get: function () {
+            return _this.options.common || this.constructor.defaultCommon;
+        },
+        set: function (val) {
+            _this.options.common = val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultHardfork', {
+        get: function () {
+            return _this.options.hardfork || this.constructor.defaultHardfork;
+        },
+        set: function (val) {
+            _this.options.hardfork = val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultChain', {
+        get: function () {
+            return _this.options.chain || this.constructor.defaultChain;
+        },
+        set: function (val) {
+            _this.options.chain = val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'transactionPollingTimeout', {
+        get: function () {
+            if (_this.options.transactionPollingTimeout === 0) {
+                return _this.options.transactionPollingTimeout;
+            }
+
+            return _this.options.transactionPollingTimeout || this.constructor.transactionPollingTimeout;
+        },
+        set: function (val) {
+            _this.options.transactionPollingTimeout = val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'transactionConfirmationBlocks', {
+        get: function () {
+            if (_this.options.transactionConfirmationBlocks === 0) {
+                return _this.options.transactionConfirmationBlocks;
+            }
+
+            return _this.options.transactionConfirmationBlocks || this.constructor.transactionConfirmationBlocks;
+        },
+        set: function (val) {
+            _this.options.transactionConfirmationBlocks = val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'transactionBlockTimeout', {
+        get: function () {
+            if (_this.options.transactionBlockTimeout === 0) {
+                return _this.options.transactionBlockTimeout;
+            }
+
+            return _this.options.transactionBlockTimeout || this.constructor.transactionBlockTimeout;
+        },
+        set: function (val) {
+            _this.options.transactionBlockTimeout = val;
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
             return defaultAccount;
