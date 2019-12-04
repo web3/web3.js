@@ -578,7 +578,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.toChecksumAddress('0xc1912fee45d61c87cc5ea59dae31190fffff2323');
+    web3.utils.toChecksumAddress('0xc1912fee45d61c87cc5ea59dae31190fffff232d');
     > "0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d"
 
     web3.utils.toChecksumAddress('0XC1912FEE45D61C87CC5EA59DAE31190FFFFF232D');
