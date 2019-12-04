@@ -442,8 +442,7 @@ var Eth = function Eth() {
             name: 'sendSignedTransaction',
             call: 'eth_sendRawTransaction',
             params: 1,
-            inputFormatter: [null],
-            abiCoder: abi
+            inputFormatter: [null]
         }),
         new Method({
             name: 'signTransaction',
