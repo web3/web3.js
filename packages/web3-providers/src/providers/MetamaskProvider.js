@@ -139,8 +139,11 @@ export default class MetamaskProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     sendPayload(payload) {
+        const method = Array.isArray(payload)
+            ? 'sendAsync'
+            : 'send';
         return new Promise((resolve, reject) => {
-            this.connection.send(payload, (error, response) => {
+            this.connection[method](payload, (error, response) => {
                 if (!error) {
                     return resolve(response);
                 }
