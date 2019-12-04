@@ -21,9 +21,10 @@
  */
 
 import PromiEvent from '../../PromiEvent';
-import AbstractMethod from '../AbstractMethod';
+import Method from "../../../../../../core/src/json-rpc/methods/Method";
+import TransactionReceipt from "../../../../types/output/TransactionReceipt";
 
-export default class AbstractObservedTransactionMethod extends AbstractMethod {
+export default class AbstractObservedTransactionMethod extends Method {
     /**
      * @param {String} rpcMethod
      * @param {Number} parametersAmount
@@ -113,11 +114,7 @@ export default class AbstractObservedTransactionMethod extends AbstractMethod {
                             return;
                         }
 
-                        this.promiEvent.emit(
-                            'confirmation',
-                            confirmations,
-                            this.formatters.outputTransactionFormatter(receipt)
-                        );
+                        this.promiEvent.emit('confirmation', confirmations, new TransactionReceipt(receipt));
                     },
                     (error) => {
                         this.handleError(error, receipt, confirmations);

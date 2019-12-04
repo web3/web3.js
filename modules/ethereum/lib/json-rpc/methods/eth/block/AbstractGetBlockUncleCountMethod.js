@@ -20,9 +20,11 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../../../core/src/json-rpc/methods/Method";
+import BlockNumber from "../../../../types/input/BlockNumber";
+import Hex from "../../../../../../core/src/utility/Hex";
 
-export default class AbstractGetBlockUncleCountMethod extends AbstractMethod {
+export default class AbstractGetBlockUncleCountMethod extends Method {
     /**
      * @param {String} rpcMethod
      * @param {Array} parameters
@@ -42,7 +44,7 @@ export default class AbstractGetBlockUncleCountMethod extends AbstractMethod {
      * @param {Configuration} moduleInstance
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+        this.parameters[0] = new BlockNumber(this.parameters[0]).toString();
     }
 
     /**
@@ -50,11 +52,11 @@ export default class AbstractGetBlockUncleCountMethod extends AbstractMethod {
      *
      * @method afterExecution
      *
-     * @param {Object} response
+     * @param {String} response
      *
      * @returns {Number}
      */
     afterExecution(response) {
-        return this.utils.hexToNumber(response);
+        return new Hex(response).toNumber();
     }
 }

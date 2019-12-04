@@ -20,9 +20,12 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../../../core/src/json-rpc/methods/Method";
+import Transaction from "../../../../types/output/Transaction";
+import BlockNumber from "../../../../types/input/BlockNumber";
+import Hex from "../../../../../../core/src/utility/Hex";
 
-export default class AbstractGetTransactionFromBlockMethod extends AbstractMethod {
+export default class AbstractGetTransactionFromBlockMethod extends Method {
     /**
      * @param {String} rpcMethod
      * @param {Array} parameters
@@ -42,8 +45,8 @@ export default class AbstractGetTransactionFromBlockMethod extends AbstractMetho
      * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]); // TODO: Use type objects
-        this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+        this.parameters[0] = new BlockNumber(this.parameters[0]).toString();
+        this.parameters[1] = Hex.fromNumber(this.parameters[1]).toString();
     }
 
     /**
@@ -56,6 +59,6 @@ export default class AbstractGetTransactionFromBlockMethod extends AbstractMetho
      * @returns {Object}
      */
     afterExecution(response) {
-        return this.formatters.outputTransactionFormatter(response);
+        return new Transaction(response);
     }
 }

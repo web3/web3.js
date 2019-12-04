@@ -23,67 +23,9 @@
  * @date 2015
  */
 
-'use strict';
-
-import * as Utils from 'web3-utils';
-import BigNumber from 'bn.js';
-
-const leftPad = (string, bytes) => {
-    let result = string;
-    while (result.length < bytes * 2) {
-        result = `0${result}`;
-    }
-    return result;
-};
-
-/**
- * Prepare an IBAN for mod 97 computation by moving the first 4 chars to the end and transforming the letters to
- * numbers (A = 10, B = 11, ..., Z = 35), as specified in ISO13616.
- *
- * @method iso13616Prepare
- * @param {String} iban the IBAN
- * @returns {String} the prepared IBAN
- */
-const iso13616Prepare = (iban) => {
-    const A = 'A'.charCodeAt(0);
-    const Z = 'Z'.charCodeAt(0);
-
-    iban = iban.toUpperCase();
-    iban = iban.substr(4) + iban.substr(0, 4);
-
-    return iban
-        .split('')
-        .map((n) => {
-            const code = n.charCodeAt(0);
-            if (code >= A && code <= Z) {
-                // A = 10, B = 11, ... Z = 35
-                return code - A + 10;
-            } else {
-                return n;
-            }
-        })
-        .join('');
-};
-
-/**
- * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
- *
- * @method mod9710
- * @param {String} iban
- * @returns {Number}
- */
-const module9710 = (iban) => {
-    let remainder = iban;
-
-    let block;
-
-    while (remainder.length > 2) {
-        block = remainder.slice(0, 9);
-        remainder = (parseInt(block, 10) % 97) + remainder.slice(block.length);
-    }
-
-    return parseInt(remainder, 10) % 97;
-};
+import Hex from './Hex';
+import Address from './Address';
+import BN from 'bn.js';
 
 export default class Iban {
     /**
@@ -137,17 +79,11 @@ export default class Iban {
      * @returns {Iban} the IBAN object
      */
     static fromAddress(address) {
-        if (!Utils.isAddress(address)) {
-            throw new Error(`Provided address is not a valid address: ${address}`);
+        let padded = new BN(Hex.stripPrefix(new Address(address).toString()), 16).toString(36);
+
+        while (padded.length < 15 * 2) {
+            padded = `0${padded}`;
         }
-
-        address = address.replace('0x', '').replace('0X', '');
-
-        const asBn = new BigNumber(address, 16);
-
-        const base36 = asBn.toString(36);
-
-        const padded = leftPad(base36, 15);
 
         return Iban.fromBban(padded.toUpperCase());
     }
@@ -166,7 +102,7 @@ export default class Iban {
     static fromBban(bban) {
         const countryCode = 'XE';
 
-        const remainder = module9710(iso13616Prepare(`${countryCode}00${bban}`));
+        const remainder = Iban.module9710(Iban.iso13616Prepare(`${countryCode}00${bban}`));
         const checkDigit = `0${98 - remainder}`.slice(-2);
 
         return new Iban(countryCode + checkDigit + bban);
@@ -209,7 +145,7 @@ export default class Iban {
     isValid() {
         return (
             /^XE\d{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
-            module9710(iso13616Prepare(this._iban)) === 1
+            Iban.module9710(Iban.iso13616Prepare(this._iban)) === 1
         );
     }
 
@@ -280,15 +216,99 @@ export default class Iban {
      */
     toAddress() {
         if (this.isDirect()) {
-            const base36 = this._iban.substr(4);
-            const asBn = new BigNumber(base36, 36);
-            return Utils.toChecksumAddress(asBn.toString(16, 20));
+            return Address.toChecksum(new BN(this._iban.substr(4), 36).toString(16));
         }
 
         return '';
     }
 
+    /**
+     * Returns the Iban address as normal string.
+     *
+     * @method toString
+     *
+     * @returns {String}
+     */
     toString() {
         return this._iban;
+    }
+
+    /**
+     * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
+     *
+     * @method mod9710
+     *
+     * @param {String} iban
+     *
+     * @returns {Number}
+     */
+    static module9710(iban) {
+        let remainder = iban;
+        let block;
+
+        while (remainder.length > 2) {
+            block = remainder.slice(0, 9);
+            remainder = (parseInt(block, 10) % 97) + remainder.slice(block.length);
+        }
+
+        return parseInt(remainder, 10) % 97;
+    }
+
+    /**
+     * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
+     *
+     * @method mod9710
+     *
+     * @param {String} iban
+     *
+     * @returns {Number}
+     */
+    module9710(iban) {
+        return Iban.module9710(iban);
+    }
+
+    /**
+     * Prepare an IBAN for mod 97 computation by moving the first 4 chars to the end and transforming the letters to
+     * numbers (A = 10, B = 11, ..., Z = 35), as specified in ISO13616.
+     *
+     * @method iso13616Prepare
+     *
+     * @param {String} iban the IBAN
+     *
+     * @returns {String} the prepared IBAN
+     */
+    static iso13616Prepare(iban) {
+        const A = 'A'.charCodeAt(0);
+        const Z = 'Z'.charCodeAt(0);
+
+        iban = iban.toUpperCase();
+        iban = iban.substr(4) + iban.substr(0, 4);
+
+        return iban
+            .split('')
+            .map((n) => {
+                const code = n.charCodeAt(0);
+                if (code >= A && code <= Z) {
+                    // A = 10, B = 11, ... Z = 35
+                    return code - A + 10;
+                } else {
+                    return n;
+                }
+            })
+            .join('');
+    }
+
+    /**
+     * Prepare an IBAN for mod 97 computation by moving the first 4 chars to the end and transforming the letters to
+     * numbers (A = 10, B = 11, ..., Z = 35), as specified in ISO13616.
+     *
+     * @method iso13616Prepare
+     *
+     * @param {String} iban the IBAN
+     *
+     * @returns {String} the prepared IBAN
+     */
+    iso13616Prepare(iban) {
+        return Iban.iso13616Prepare(iban);
     }
 }

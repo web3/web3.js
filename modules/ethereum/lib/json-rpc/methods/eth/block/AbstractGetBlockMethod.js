@@ -14,16 +14,18 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 /**
  * @file AbstractGetBlockMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import isFunction from 'lodash/isFunction';
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../../../core/src/json-rpc/methods/Method";
+import BlockNumber from "../../../../../../ethereum/lib/types/input/BlockNumber";
+import Block from "../../../../../../ethereum/lib/types/output/Block";
 
-export default class AbstractGetBlockMethod extends AbstractMethod {
+export default class AbstractGetBlockMethod extends Method {
     /**
      * @param {String} rpcMethod
      * @param {Array} parameters
@@ -43,7 +45,7 @@ export default class AbstractGetBlockMethod extends AbstractMethod {
      * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+        this.parameters[0] = new BlockNumber(this.parameters[0]).toString();
         this.parameters[1] = !!this.parameters[1];
     }
 
@@ -54,9 +56,9 @@ export default class AbstractGetBlockMethod extends AbstractMethod {
      *
      * @param {Object} response
      *
-     * @returns {Object}
+     * @returns {Block}
      */
     afterExecution(response) {
-        return this.formatters.outputBlockFormatter(response);
+        return new Block(response);
     }
 }
