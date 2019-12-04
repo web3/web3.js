@@ -57,6 +57,6 @@ module.exports = {
     mine: mine,
     extractReceipt: extractReceipt,
     getWeb3: getWeb3,
-    getWebsocketPort: getWebsocketPort
+    getWebsocketPort: getWebsocketPort,
 };
 

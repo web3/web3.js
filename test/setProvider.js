@@ -22,6 +22,7 @@ var Eth = require('../packages/web3-eth');
 var Shh = require('../packages/web3-shh');
 var Personal = require('../packages/web3-eth-personal');
 var Accounts = require('../packages/web3-eth-accounts');
+var Contract = require('../packages/web3-eth-contract');
 var Net = require('../packages/web3-net');
 var Bzz = require('../packages/web3-bzz');
 
