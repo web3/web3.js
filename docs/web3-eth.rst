@@ -415,7 +415,6 @@ The ``handleRevert`` options property does default to ``false`` and will return 
 
 - :ref:`web3.eth.call() <eth-call>`
 - :ref:`web3.eth.sendTransaction() <eth-sendtransaction>`
-- :ref:`web3.eth.sendSignedTransaction() <eth-sendsignedtransaction>`
 - :ref:`contract.methods.myMethod(...).send(...) <contract-send>`
 - :ref:`contract.methods.myMethod(...).call(...) <contract-call>`
 
