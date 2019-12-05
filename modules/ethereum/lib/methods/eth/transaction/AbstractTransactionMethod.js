@@ -15,25 +15,25 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file Method.js
+ * @file EthSendTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
 
-export default class Method {
+import Method from "../../../../../core/src/json-rpc/methods/Method";
+import TransactionOptions from "../../../../lib/types/input/TransactionOptions";
+
+export default class AbstractTransactionMethod extends Method {
     /**
      * @param {String} rpcMethod
-     * @param {Number} parametersAmount
+     * @param {Number} parametersAmmount
      * @param {Array} parameters
-     * @param {JsonRpcConfiguration} config
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(rpcMethod, parametersAmount, parameters, config) {
-        this.config = config;
-        this.parameters = parameters;
-        this.rpcMethod = rpcMethod;
-        this.parametersAmount = parametersAmount;
+    constructor(rpcMethod, parametersAmmount, parameters, config) {
+        super(rpcMethod, parametersAmmount, parameters, config);
     }
 
     /**
@@ -41,41 +41,25 @@ export default class Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    async beforeExecution(moduleInstance) {}
+    async beforeExecution() {
+        if (this.rpcMethod !== 'eth_sendRawTransaction') {
+            this.parameters[0] = new TransactionOptions(this.parameters[0]);
+        }
+    }
 
     /**
+     * TODO: Create a Transaction object with all required methods (mined, confirmations, etc.) could probably also be created and handled on the public_api layer
      * This method will be executed after the RPC request.
      *
      * @method afterExecution
      *
-     * @param {*} response
+     * @param {String} response
      *
-     * @returns {*}
+     * @returns {Promise<Transaction>}
      */
     async afterExecution(response) {
-        return response;
-    }
-
-    /**
-     * Sends a JSON-RPC call request
-     *
-     * @method execute
-     *
-     * @returns {Promise<Object|String>}
-     */
-    async execute() {
-        await this.beforeExecution();
-
-        if (this.parameters.length !== this.parametersAmount) {
-            throw new Error(
-                `Invalid Arguments length: expected: ${this.parametersAmount}, given: ${this.parameters.length}`
-            );
-        }
-
-        let response = await this.config.provider.send(this.rpcMethod, this.parameters);
-
-        return this.afterExecution(response);
+        return new Transaction(response);
     }
 }

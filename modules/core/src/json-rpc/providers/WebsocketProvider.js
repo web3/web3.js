@@ -20,12 +20,12 @@
  * @date 2019
  */
 
-import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
+import AbstractSocketProvider from "../../../lib/json-rpc/providers/AbstractSocketProvider";
 import isArray from 'lodash/isArray';
 
 export default class WebsocketProvider extends AbstractSocketProvider {
     /**
-     * TODO: Copy constructor from 1.x
+     * TODO: Copy WebsocketProvider from 1.x after the related PR got merged
      *
      * @param {WebSocket} connection
      * @param {Number} timeout

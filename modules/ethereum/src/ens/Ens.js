@@ -318,7 +318,7 @@ export default class Ens extends AbstractWeb3Module {
      *
      * @param {String} name
      *
-     * @returns {Promise<AbstractContract>}
+     * @returns {Promise<Contract>}
      */
     resolver(name) {
         return this.registry.resolver(name);

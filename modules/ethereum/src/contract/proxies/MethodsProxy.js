@@ -26,7 +26,7 @@ import isFunction from 'lodash/isFunction';
 
 export default class MethodsProxy {
     /**
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      * @param {MethodFactory} methodFactory
      * @param {MethodEncoder} methodEncoder
      * @param {MethodOptionsValidator} methodOptionsValidator

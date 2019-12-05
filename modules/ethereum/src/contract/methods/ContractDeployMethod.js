@@ -58,7 +58,7 @@ export default class ContractDeployMethod extends EthSendTransactionMethod {
      *
      * @param {Object} response
      *
-     * @returns {AbstractContract}
+     * @returns {Contract}
      */
     afterExecution(response) {
         const clonedContract = this.moduleInstance.clone();

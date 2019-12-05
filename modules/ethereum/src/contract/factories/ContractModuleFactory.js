@@ -36,7 +36,7 @@ import EventSubscriptionsProxy from '../proxies/EventSubscriptionsProxy';
 import MethodOptionsValidator from '../validators/MethodOptionsValidator';
 import MethodFactory from '../factories/MethodFactory';
 import EventSubscriptionFactory from '../factories/EventSubscriptionFactory';
-import AbstractContract from '../AbstractContract';
+import Contract from '../AbstractContract';
 
 export default class ContractModuleFactory {
     /**
@@ -63,10 +63,10 @@ export default class ContractModuleFactory {
      * @param {String} address
      * @param {Object} options
      *
-     * @returns {AbstractContract}
+     * @returns {Contract}
      */
     createContract(provider, accounts, abi, address, options) {
-        return new AbstractContract(
+        return new Contract(
             provider,
             this,
             accounts,
@@ -231,7 +231,7 @@ export default class ContractModuleFactory {
      *
      * @method createMethodsProxy
      *
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      *
      * @returns {MethodsProxy}
      */
@@ -250,7 +250,7 @@ export default class ContractModuleFactory {
      *
      * @method createEventSubscriptionsProxy
      *
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      *
      * @returns {EventSubscriptionsProxy}
      */

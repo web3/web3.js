@@ -15,46 +15,158 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file SendTransactionMethod.js
+ * @file EthSendTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
 
-import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
+import AbstractTransactionMethod from "../../../../lib/methods/eth/transaction/AbstractTransactionMethod";
+import GetTransactionCountMethod from "../account/GetTransactionCountMethod";
+import ChainIdMethod from "../../net/ChainIdMethod";
+import GetGasPriceMethod from "../node/GetGasPriceMethod";
 
-export default class SendTransactionMethod extends AbstractObservedTransactionMethod {
+export default class SendTransactionMethod extends AbstractTransactionMethod {
     /**
      * @param {Array} parameters
      * @param {EthereumConfiguration} config
-     * @param {AbstractTransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance, transactionObserver) {
-        super('eth_sendTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
+    constructor(parameters, config) {
+        super('eth_sendTransaction', 1, parameters, config);
     }
 
     /**
-     * This method will be executed before the RPC request.
+     * Checks if gasPrice is set, sends the request and returns a PromiEvent Object
      *
-     * @method beforeExecution
+     * @method execute
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @callback callback callback(error, result)
+     * @returns {Promise<Transaction>}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
+    async execute() {
+        // TODO: Use estimate gas to set the gas value here if not defined by the consumer
+        // if (!this.parameters[0].gas) {
+        //     this.parameters[0]['gas'] = this.config.transaction.gas;
+        // }
+
+        if (!this.parameters[0].gasPrice && this.parameters[0].gasPrice !== 0) {
+            if (!this.config.transaction.gasPrice) {
+                this.parameters[0].gasPrice = await new GetGasPriceMethod(this.config).execute()
+            }
+
+            this.parameters[0].gasPrice = this.config.transaction.gasPrice;
+        }
+
+        if (this.hasAccounts() && this.isDefaultSigner()) {
+            // TODO: Create new wallet. Probably a user password should get passed here to unlock the specific account.
+            const account = this.config.wallet.getAccount(this.parameters[0].from);
+
+            if (account) {
+                return this.sendRawTransaction(account);
+            }
+        }
+
+        if (this.hasCustomSigner()) {
+            return this.sendRawTransaction();
+        }
+
+        return super.execute();
     }
 
     /**
-     * This method will be executed after the RPC request.
+     * Signs the transaction and executes the SendRawTransaction method.
      *
-     * @method afterExecution
+     * @method sendRawTransaction
      *
-     * @param {Object} response
+     * @param {Account} account
      *
-     * @returns {Object}
+     * @returns {Promise<Transaction>}
      */
-    afterExecution(response) {
-        return this.formatters.outputTransactionFormatter(response);
+    async sendRawTransaction(account = {}) {
+        const response = await this.signTransaction(account);
+
+        this.parameters = [response.rawTransaction];
+        this.rpcMethod = 'eth_sendRawTransaction';
+
+        return super.execute();
+    }
+
+    /**
+     * Signs the transaction locally
+     *
+     * @method signTransaction
+     *
+     * @param {Account} account
+     *
+     * @returns {Promise<void>}
+     */
+    async signTransaction(account = {}) {
+        await this.beforeExecution();
+
+        if (!this.parameters[0].chainId) {
+            this.parameters[0].chainId = await new ChainIdMethod().execute();
+        }
+
+        if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {
+            let nonce;
+
+            if (account.nonce) {
+                account.nonce = account.nonce + 1;
+                nonce = account.nonce;
+            }
+
+            if (!nonce) {
+                nonce = await new GetTransactionCountMethod([this.parameters[0].from, 'latest'], this.config).execute();
+                account.nonce = nonce;
+            }
+
+            this.parameters[0].nonce = nonce;
+        }
+
+        let transaction = this.parameters[0];
+        transaction.to = transaction.to || '0x';
+        transaction.data = transaction.data || '0x';
+        transaction.value = transaction.value || '0x';
+        transaction.chainId = Hex.fromNumber(transaction.chainId).toString();
+
+        delete transaction.from;
+
+        return this.moduleInstance.transactionSigner.sign(transaction, account.privateKey);
+    }
+
+    /**
+     * TODO: Find a good concept to define a custom transaction or message signer. Should this be just one Signer? Do we pass a private key to a custom signer?
+     *
+     * Checks if the current module has decrypted accounts
+     *
+     * @method isDefaultSigner
+     *
+     * @returns {Boolean}
+     */
+    isDefaultSigner() {
+        return (this.config.transaction.signer instanceof Web3TransactionSigner);
+    }
+
+    /**
+     * Checks if the current module has decrypted accounts
+     *
+     * @method hasAccounts
+     *
+     * @returns {Boolean}
+     */
+    hasAccounts() {
+        return this.config.wallet && this.config.wallet.accountsCounter > 0;
+    }
+
+    /**
+     * Checks if a custom signer is given.
+     *
+     * @method hasCustomerSigner
+     *
+     * @returns {Boolean}
+     */
+    hasCustomSigner() {
+        return !(this.config.transaction.signer instanceof Web3TransactionSigner);
     }
 }

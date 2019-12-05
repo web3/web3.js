@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file AbstractJsonRpcConfiguration.js
+ * @file JsonRpcConfiguration.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */

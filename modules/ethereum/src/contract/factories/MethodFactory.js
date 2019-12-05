@@ -58,7 +58,7 @@ export default class MethodFactory {
      * @method createMethod
      *
      * @param {AbiItemModel} abiItem
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      * @param {String} requestType
      *
      * @returns {Method}
@@ -94,7 +94,7 @@ export default class MethodFactory {
      * @method createPastEventLogsMethod
      *
      * @param {AbiItemModel} abiItem
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      *
      * @returns {PastEventLogsMethod}
      */
@@ -115,7 +115,7 @@ export default class MethodFactory {
      * @method createPastEventLogsMethod
      *
      * @param {AbiModel} abiModel
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      *
      * @returns {AllPastEventLogsMethod}
      */
@@ -136,7 +136,7 @@ export default class MethodFactory {
      * @method createCallContractMethod
      *
      * @param {AbiItemModel} abiItem
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      *
      * @returns {CallContractMethod}
      */
@@ -149,7 +149,7 @@ export default class MethodFactory {
      *
      * @method createSendContractMethod
      *
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      *
      * @returns {SendContractMethod}
      */
@@ -171,7 +171,7 @@ export default class MethodFactory {
      *
      * @method createContractDeployMethod
      *
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      *
      * @returns {ContractDeployMethod}
      */
@@ -191,7 +191,7 @@ export default class MethodFactory {
      *
      * @method createEstimateGasMethod
      *
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      *
      * @returns {EstimateGasMethod}
      */
@@ -204,7 +204,7 @@ export default class MethodFactory {
      *
      * @method getTimeout
      *
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      *
      * @returns {Number}
      */

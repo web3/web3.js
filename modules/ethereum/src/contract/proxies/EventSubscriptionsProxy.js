@@ -26,7 +26,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default class EventSubscriptionsProxy {
     /**
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      * @param {EventSubscriptionFactory} eventSubscriptionFactory
      * @param {EventOptionsMapper} eventOptionsMapper
      * @param {EventLogDecoder} eventLogDecoder

@@ -20,30 +20,16 @@
  * @date 2019
  */
 
-import AbstractObservedTransactionMethod from '../../../lib/methods/transaction/AbstractObservedTransactionMethod';
+import AbstractTransactionMethod from "../../../../lib/methods/eth/transaction/AbstractTransactionMethod";
 
-export default class SendRawTransactionMethod extends AbstractObservedTransactionMethod {
+export default class SendRawTransactionMethod extends AbstractTransactionMethod {
     /**
      * @param {Array} parameters
      * @param {EthereumConfiguration} config
-     * @param {AbstractTransactionObserver} transactionObserver
      *
      * @constructor
      */
-    constructor(utils, formatters, moduleInstance, transactionObserver) {
-        super('eth_sendRawTransaction', 1, utils, formatters, moduleInstance, transactionObserver);
-    }
-
-    /**
-     * This method will be executed after the RPC request.
-     *
-     * @method afterExecution
-     *
-     * @param {Object} response
-     *
-     * @returns {Object}
-     */
-    afterExecution(response) {
-        return this.formatters.outputTransactionFormatter(response);
+    constructor(parameters, config) {
+        super('eth_sendRawTransaction', 1, parameters, config);
     }
 }

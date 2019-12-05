@@ -41,7 +41,7 @@ export default class EventSubscriptionFactory {
      * Returns an event log subscription
      *
      * @param {EventLogDecoder} eventLogDecoder
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      * @param {Object} options
      * @param {AbiItemModel} abiItemModel
      *
@@ -63,7 +63,7 @@ export default class EventSubscriptionFactory {
      * Returns an log subscription for all events
      *
      * @param {AllEventsLogDecoder} allEventsLogDecoder
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      * @param {Object} options
      *
      * @returns {AllEventsLogSubscription}

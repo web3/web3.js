@@ -20,8 +20,8 @@
  * @date 2019
  */
 
+import AbstractSocketProvider from "../../../lib/json-rpc/providers/AbstractSocketProvider";
 import isArray from 'lodash/isArray';
-import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 
 export default class IpcProvider extends AbstractSocketProvider {
     /**

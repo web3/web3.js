@@ -22,7 +22,7 @@
 
 import {AbstractWeb3Module} from 'web3-core';
 
-export default class AbstractContract extends AbstractWeb3Module {
+export default class Contract extends AbstractWeb3Module {
     /**
      * @param {Web3EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ContractModuleFactory} contractModuleFactory
@@ -236,7 +236,7 @@ export default class AbstractContract extends AbstractWeb3Module {
      *
      * @method clone
      *
-     * @returns {AbstractContract}
+     * @returns {Contract}
      */
     clone() {
         const clone = this.contractModuleFactory.createContract(this.currentProvider, this.accounts, [], '', {

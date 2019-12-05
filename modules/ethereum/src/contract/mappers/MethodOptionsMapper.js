@@ -35,7 +35,7 @@ export default class MethodOptionsMapper {
     /**
      * Sets the default options where it is required
      *
-     * @param {AbstractContract} contract
+     * @param {Contract} contract
      * @param {Object} options
      *
      * @returns {Object}
