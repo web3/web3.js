@@ -44,22 +44,6 @@ export default class AbstractTransactionMethod extends Method {
      * @returns {Promise}
      */
     async beforeExecution() {
-        if (this.rpcMethod !== 'eth_sendRawTransaction') {
-            this.parameters[0] = new TransactionOptions(this.parameters[0]);
-        }
-    }
-
-    /**
-     * TODO: Create a Transaction object with all required methods (mined, confirmations, etc.) could probably also be created and handled on the public_api layer
-     * This method will be executed after the RPC request.
-     *
-     * @method afterExecution
-     *
-     * @param {String} response
-     *
-     * @returns {Promise<Transaction>}
-     */
-    async afterExecution(response) {
-        return new Transaction(response);
+        this.parameters[0] = new TransactionOptions(this.parameters[0]);
     }
 }

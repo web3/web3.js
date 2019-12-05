@@ -17,8 +17,15 @@
  * @date 2019
  */
 
+import {interval} from 'rxjs'
+import {map, filter} from 'rxjs/operators'
 import web3 from "../index.js";
 import SendTransactionMethod from "../../modules/ethereum/src/methods/eth/transaction/SendTransactionMethod";
+import GetGasPriceMethod from "../../modules/ethereum/src/methods/eth/node/GetGasPriceMethod";
+import EstimateGasMethod from "../../modules/ethereum/src/methods/eth/EstimateGasMethod";
+import NewHeadsSubscription from "../../modules/ethereum/src/subscriptions/NewHeadsSubscription";
+import GetTransactionReceiptMethod from "../../modules/ethereum/src/methods/eth/transaction/GetTransactionReceiptMethod";
+import GetBlockByNumberMethod from "../../modules/ethereum/src/methods/eth/block/GetBlockByNumberMethod";
 
 /**
  * POC
@@ -42,8 +49,33 @@ export default class Transaction {
      * @returns {Promise<Transaction>}
      */
     async send() {
-        // TODO: Move options property checks and pre filling of them to this object on the public_api layer
-        this.hash = new SendTransactionMethod(this.config, [this.options]).execute();
+        if (!this.options.gasPrice && this.options.gasPrice !== 0) {
+            if (!this.config.transaction.gasPrice) {
+                this.options.gasPrice = await new GetGasPriceMethod(this.config).execute()
+            }
+
+            this.options.gasPrice = this.config.transaction.gasPrice;
+        }
+
+        if (!this.options.gas) {
+            this.options.gas = await new EstimateGasMethod(this.config, this.options).execute();
+        }
+
+        // TODO: Create new wallet. Probably a user password should get passed here to unlock the specific account.
+        // if (this.hasAccounts() && this.isDefaultSigner()) {
+        //     const account = this.config.wallet.getAccount(this.options.from);
+        //
+        //     if (account) {
+        //         return this.sendRawTransaction(account);
+        //     }
+        // }
+        //
+        // if (this.hasCustomSigner()) {
+        //     return this.sendRawTransaction();
+        // }
+
+
+        this.hash = await new SendTransactionMethod(this.config, [this.options]).execute();
 
         return this;
     }
@@ -62,13 +94,69 @@ export default class Transaction {
     }
 
     /**
-     * Resolves with the transaction receipt if the configured requirements are here.
+     * Returns a Observable which does trigger the next listener on each confirmation
      *
      * @method confirmations
      *
      * @returns {Observable}
      */
     confirmations() {
-        // Resolve if enough confirmations did happen (can be configured with the passed config object)
+        const getTransactionReceiptMethod = new GetTransactionReceiptMethod(this.config, [this.hash]);
+
+        // on parity nodes you can get the receipt without it being mined
+        // so the receipt may not have a block number at this point
+        if (this.config.provider.supportsSubscriptions()) {
+            let blockNumbers = [];
+
+            return new NewHeadsSubscription(this.config).pipe(
+                map(async (newHead) => {
+                    return {newHeadNumber: newHead.number, receipt: await getTransactionReceiptMethod.execute()};
+                }),
+                filter((value) => {
+                    if (
+                        value.receipt &&
+                        (value.receipt.blockNumber === 0 || value.receipt.blockNumber) &&
+                        !blockNumbers.includes(value.newHeadNumber)
+                    ) {
+                        blockNumbers.push(value.newHeadNumber);
+
+                        return true;
+                    }
+
+                    return false;
+                }),
+                map(value => value.receipt)
+            );
+        } else {
+            let lastBlock;
+            let getBlockByNumber = new GetBlockByNumberMethod(this.config, []);
+
+            return interval(1000).pipe(
+                map(async () => {
+                    return await getTransactionReceiptMethod.execute()
+                }),
+                filter(async (value) => {
+                    if (value && (value.blockNumber === 0 || value.blockNumber)) {
+                        if (lastBlock) {
+                            getBlockByNumber.parameters = [lastBlock.number + 1];
+                            const block = await getBlockByNumber.execute();
+
+                            if (block) {
+                                lastBlock = block;
+
+                                return true;
+                            }
+                        } else {
+                            getBlockByNumber.parameters = [lastBlock.number + 1];
+                            lastBlock = await getBlockByNumber.execute();
+
+                            return true;
+                        }
+                    }
+
+                    return false;
+                })
+            );
+        }
     }
 }
