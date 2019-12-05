@@ -52,9 +52,9 @@ export default class Transaction {
         if (!this.options.gasPrice && this.options.gasPrice !== 0) {
             if (!this.config.transaction.gasPrice) {
                 this.options.gasPrice = await new GetGasPriceMethod(this.config).execute()
+            } else {
+                this.options.gasPrice = this.config.transaction.gasPrice;
             }
-
-            this.options.gasPrice = this.config.transaction.gasPrice;
         }
 
         if (!this.options.gas) {
@@ -81,16 +81,32 @@ export default class Transaction {
     }
 
     /**
-     * Resolves with the transaction receipt if the configured requirements are here.
+     * Resolves with the transaction receipt if the configured amount of confirmations is reached
      *
      * @method mined
      *
-     * @param {TransactionConfirmationConfig} config
+     * @param {Number} confirmations
      *
      * @returns {Promise<TransactionReceipt>}
      */
-    async mined(config) {
-        // Resolve if enough confirmations did happen (can be configured with the passed config object)
+    mined(confirmations = web3.config.ethereum.transaction.confirmations) {
+        return new Promise((resolve, reject) => {
+            let counter = 0;
+
+            const subscription = this.confirmations().subscribe(
+                (confirmation) => {
+                    if (counter === confirmations) {
+                        subscription.unsubscribe();
+                        resolve(confirmation);
+                    } else {
+                        counter++;
+                    }
+                },
+                (error) => {
+                    reject(error);
+                }
+            );
+        });
     }
 
     /**
