@@ -32,8 +32,8 @@ export default class AbstractGetBlockUncleCountMethod extends Method {
      *
      * @constructor
      */
-    constructor(rpcMethod, parameters, config) {
-        super(rpcMethod, 1, parameters, config);
+    constructor(rpcMethod, config, parameters) {
+        super(rpcMethod, 1, config, parameters);
     }
 
     /**

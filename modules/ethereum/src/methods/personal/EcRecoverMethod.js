@@ -20,17 +20,18 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class EcRecoverMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('personal_ecRecover', 2, parameters, config);
+    constructor(config, parameters) {
+        super('personal_ecRecover', 2, config, parameters);
     }
 
     /**
@@ -38,9 +39,9 @@ export default class EcRecoverMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
+    async beforeExecution() {
+        this.parameters[0] = Hex.isValid(this.parameters[0]) ? this.parameters[0] : Hex.fromUTF8(this.parameters[0]).toString();
     }
 }

@@ -29,7 +29,7 @@ export default class WriteBlockProfileMethod extends Method {
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('debug_writeBlockProfile', 1, parameters, config);
+    constructor(config, parameters) {
+        super('debug_writeBlockProfile', 1, config, parameters);
     }
 }

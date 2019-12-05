@@ -24,12 +24,12 @@ import Method from "../../../../core/src/json-rpc/methods/Method";
 
 export default class AddPeerMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('admin_addPeer', 1, parameters, config);
+    constructor(config, parameters) {
+        super('admin_addPeer', 1, config, parameters);
     }
 }

@@ -29,8 +29,8 @@ export default class StartRpcMethod extends Method {
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('admin_startRPC', 4, parameters, config);
+    constructor(config, parameters) {
+        super('admin_startRPC', 4, config, parameters);
     }
 
     /**
@@ -38,11 +38,11 @@ export default class StartRpcMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
+    async beforeExecution() {
         if (this.parameters[1]) {
-            this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+            this.parameters[1] = Hex.fromNumber(this.parameters[1]).toString();
         }
     }
 }

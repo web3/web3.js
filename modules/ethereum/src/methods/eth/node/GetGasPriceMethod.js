@@ -21,6 +21,7 @@
  */
 
 import Method from "../../../../../core/src/json-rpc/methods/Method";
+import Hex from "../../../../../core/src/utility/Hex";
 
 export default class GetGasPriceMethod extends Method {
     /**
@@ -29,7 +30,7 @@ export default class GetGasPriceMethod extends Method {
      * @constructor
      */
     constructor(config) {
-        super('eth_gasPrice', 0, [], config);
+        super('eth_gasPrice', 0, config, []);
     }
 
     /**
@@ -37,11 +38,11 @@ export default class GetGasPriceMethod extends Method {
      *
      * @method afterExecution
      *
-     * @param {Object} response
+     * @param {String} response
      *
-     * @returns {BigNumber}
+     * @returns {Promise<BigNumber>}
      */
-    afterExecution(response) {
-        return this.formatters.outputBigNumberFormatter(response);
+    async afterExecution(response) {
+        return new Hex(response).toBigNumber();
     }
 }

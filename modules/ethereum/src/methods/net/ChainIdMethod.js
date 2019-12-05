@@ -21,6 +21,7 @@
  */
 
 import Method from "../../../../core/src/json-rpc/methods/Method";
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class ChainIdMethod extends Method {
     /**
@@ -29,7 +30,7 @@ export default class ChainIdMethod extends Method {
      * @constructor
      */
     constructor(config) {
-        super('eth_chainId', 0, [], config);
+        super('eth_chainId', 0, config, []);
     }
 
     /**
@@ -37,11 +38,11 @@ export default class ChainIdMethod extends Method {
      *
      * @method afterExecution
      *
-     * @param {Object} response
+     * @param {String} response
      *
-     * @returns {Number}
+     * @returns {Promise<Number>}
      */
-    afterExecution(response) {
-        return this.utils.hexToNumber(response);
+    async afterExecution(response) {
+        return new Hex(response).toNumber();
     }
 }

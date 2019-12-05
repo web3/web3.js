@@ -20,18 +20,19 @@
  * @date 2019
  */
 
-import isFunction from 'lodash/isFunction';
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
+import Address from "../../../lib/types/input/Address";
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class PersonalSignMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('personal_sign', 3, parameters, config);
+    constructor(config, parameters) {
+        super('personal_sign', 3, config, parameters);
     }
 
     /**
@@ -39,10 +40,10 @@ export default class PersonalSignMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
-        this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
+    async beforeExecution() {
+        this.parameters[0] = Hex.isValid(this.parameters[0]) ? this.parameters[0] : Hex.fromUTF8(this.parameters[0]).toString();
+        this.parameters[1] = new Address(this.parameters[1]).toString();
     }
 }

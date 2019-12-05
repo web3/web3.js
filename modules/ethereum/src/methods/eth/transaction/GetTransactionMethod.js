@@ -20,17 +20,17 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../../core/src/json-rpc/methods/Method";
 
 export default class GetTransactionMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_getTransactionByHash', 1, parameters, config);
+    constructor(config, parameters) {
+        super('eth_getTransactionByHash', 1, config, parameters);
     }
 
     /**
@@ -40,9 +40,9 @@ export default class GetTransactionMethod extends Method {
      *
      * @param {Object} response
      *
-     * @returns {Object}
+     * @returns {Promise<Transaction>}
      */
-    afterExecution(response) {
-        return this.formatters.outputTransactionFormatter(response);
+    async afterExecution(response) {
+        return new Transaction(response);
     }
 }

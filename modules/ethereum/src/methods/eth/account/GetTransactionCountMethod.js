@@ -20,18 +20,20 @@
  * @date 2019
  */
 
-import isFunction from 'lodash/isFunction';
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../../core/src/json-rpc/methods/Method";
+import Address from "../../../../lib/types/input/Address";
+import BlockNumber from "../../../../lib/types/input/BlockNumber";
+import Hex from "../../../../../core/src/utility/Hex";
 
 export default class GetTransactionCountMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_getTransactionCount', 2, parameters, config);
+    constructor(config, parameters) {
+        super('eth_getTransactionCount', 2, config, parameters);
     }
 
     /**
@@ -39,11 +41,11 @@ export default class GetTransactionCountMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
-        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
+    async beforeExecution() {
+        this.parameters[0] = new Address(this.parameters[0]).toString();
+        this.parameters[1] = new BlockNumber(this.parameters[1]).toString();
     }
 
     /**
@@ -51,11 +53,11 @@ export default class GetTransactionCountMethod extends Method {
      *
      * @method afterExecution
      *
-     * @param {Object} response
+     * @param {String} response
      *
-     * @returns {Number}
+     * @returns {Promise<Number>}
      */
-    afterExecution(response) {
-        return this.utils.hexToNumber(response);
+    async afterExecution(response) {
+        return new Hex(response).toNumber();
     }
 }

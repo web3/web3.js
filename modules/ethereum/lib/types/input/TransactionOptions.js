@@ -26,6 +26,8 @@ import Hex from './Hex';
 
 export default class TransactionOptions {
     /**
+     * TODO: Add optional config parameter and handle default values
+     *
      * @param {Object} options
      *
      * @constructor

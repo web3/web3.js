@@ -20,16 +20,17 @@
  * @date 2019
  */
 
-import AbstractGetTransactionFromBlockMethod from '../../../lib/methods/transaction/AbstractGetTransactionFromBlockMethod';
+import AbstractGetTransactionFromBlockMethod
+    from "../../../../lib/methods/eth/transaction/AbstractGetTransactionFromBlockMethod";
 
 export default class GetTransactionByBlockNumberAndIndexMethod extends AbstractGetTransactionFromBlockMethod {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_getTransactionByBlockNumberAndIndex', parameters, config);
+    constructor(config, parameters) {
+        super('eth_getTransactionByBlockNumberAndIndex', config, parameters);
     }
 }

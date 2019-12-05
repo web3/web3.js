@@ -33,8 +33,8 @@ export default class AbstractGetTransactionFromBlockMethod extends Method {
      *
      * @constructor
      */
-    constructor(rpcMethod, parameters, config) {
-        super(rpcMethod, 2, parameters, config);
+    constructor(rpcMethod, config, parameters) {
+        super(rpcMethod, 2, config, parameters);
     }
 
     /**

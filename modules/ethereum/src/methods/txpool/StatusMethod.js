@@ -20,17 +20,17 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class StatusMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('txpool_status', 0, parameters, config);
+    constructor(config) {
+        super('txpool_status', 0, config, []);
     }
 
     /**
@@ -40,12 +40,12 @@ export default class StatusMethod extends Method {
      *
      * @param {Object} response
      *
-     * @returns {Object}
+     * @returns {Promise<Object>}
      */
-    afterExecution(response) {
+    async afterExecution(response) {
         if (response) {
-            response.pending = this.utils.hexToNumber(response.pending);
-            response.queued = this.utils.hexToNumber(response.queued);
+            response.pending = new Hex(response.pending).toNumber();
+            response.queued = new Hex(response.queued).toNumber();
         }
 
         return response;

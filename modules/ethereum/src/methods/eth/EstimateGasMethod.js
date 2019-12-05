@@ -21,16 +21,18 @@
  */
 
 import Method from '../../../../core/src/json-rpc/methods/Method';
+import TransactionOptions from "../../../lib/types/input/TransactionOptions";
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class EstimateGasMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_estimateGas', 1, parameters, config);
+    constructor(config, parameters) {
+        super('eth_estimateGas', 1, config, parameters);
     }
 
     /**
@@ -38,10 +40,10 @@ export default class EstimateGasMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
+    async beforeExecution() {
+        this.parameters[0] = new TransactionOptions(this.parameters[0]);
     }
 
     /**
@@ -49,11 +51,11 @@ export default class EstimateGasMethod extends Method {
      *
      * @method afterExecution
      *
-     * @param {string} response
+     * @param {String} response
      *
-     * @returns {Number}
+     * @returns {Promise<Number>}
      */
-    afterExecution(response) {
-        return this.utils.hexToNumber(response);
+    async afterExecution(response) {
+        return new Hex(response).toNumber();
     }
 }

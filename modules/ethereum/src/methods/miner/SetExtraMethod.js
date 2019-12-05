@@ -20,16 +20,16 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
 
 export default class SetExtraMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('miner_setExtra', 1, parameters, config);
+    constructor(config, parameters) {
+        super('miner_setExtra', 1, config, parameters);
     }
 }

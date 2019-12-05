@@ -20,17 +20,18 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../../core/src/json-rpc/methods/Method";
+import Hex from "../../../../../core/src/utility/Hex";
 
 export default class GetBlockNumberMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_blockNumber', 0, parameters, config);
+    constructor(config, parameters) {
+        super('eth_blockNumber', 0, config, parameters);
     }
 
     /**
@@ -38,11 +39,11 @@ export default class GetBlockNumberMethod extends Method {
      *
      * @method afterExecution
      *
-     * @param {Object} response
+     * @param {String} response
      *
      * @returns {Number}
      */
-    afterExecution(response) {
-        return this.utils.hexToNumber(response);
+    async afterExecution(response) {
+        return new Hex(response).toNumber();
     }
 }

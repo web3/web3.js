@@ -24,12 +24,12 @@ import Method from "../../../../core/src/json-rpc/methods/Method";
 
 export default class BackTraceAtMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('debug_backtraceAt', 1, parameters, config);
+    constructor(config, parameters) {
+        super('debug_backtraceAt', 1, config, parameters);
     }
 }

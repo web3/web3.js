@@ -20,16 +20,15 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../../core/src/json-rpc/methods/Method";
 
 export default class GetCoinbaseMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_coinbase', 0, parameters, config);
+    constructor(config) {
+        super('eth_coinbase', 0, config, []);
     }
 }

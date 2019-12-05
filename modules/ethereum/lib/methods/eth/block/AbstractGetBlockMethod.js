@@ -28,13 +28,13 @@ import Block from "../../../../../ethereum/lib/types/output/Block";
 export default class AbstractGetBlockMethod extends Method {
     /**
      * @param {String} rpcMethod
+     * @param {EthereumConfiguration} config
      * @param {Array} parameters
-     * @param {JsonRpcConfiguration} config
      *
      * @constructor
      */
-    constructor(rpcMethod, parameters, config) {
-        super(rpcMethod, 2, parameters, config);
+    constructor(rpcMethod, config, parameters) {
+        super(rpcMethod, 2, config, parameters);
     }
 
     /**

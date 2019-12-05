@@ -21,16 +21,17 @@
  */
 
 import Method from "../../../../core/src/json-rpc/methods/Method";
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class GoTraceMethod extends Method {
     /**
-     * @param {Array} parameterss
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameterss, config) {
-        super('debug_goTrace', 2, parameterss, config);
+    constructor(config, parameters) {
+        super('debug_goTrace', 2, config, parameters);
     }
 
     /**
@@ -38,9 +39,9 @@ export default class GoTraceMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+    async beforeExecution() {
+        this.parameters[1] = Hex.fromNumber(this.parameters[0]).toString();
     }
 }

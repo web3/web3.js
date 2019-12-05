@@ -24,13 +24,13 @@ import Method from "../../../../core/src/json-rpc/methods/Method";
 
 export default class StartWsMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('admin_startWS', 4, parameters, config);
+    constructor(config, parameters) {
+        super('admin_startWS', 4, config, parameters);
     }
 
     /**
@@ -38,11 +38,11 @@ export default class StartWsMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
+    async beforeExecution() {
         if (this.parameters[1]) {
-            this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+            this.parameters[1] = Hex.fromNumber(this.parameters[1]).toString();
         }
     }
 }

@@ -27,13 +27,13 @@ import GetGasPriceMethod from "../node/GetGasPriceMethod";
 
 export default class SendTransactionMethod extends AbstractTransactionMethod {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_sendTransaction', 1, parameters, config);
+    constructor(config, parameters) {
+        super('eth_sendTransaction', 1, config, parameters);
     }
 
     /**
@@ -105,7 +105,7 @@ export default class SendTransactionMethod extends AbstractTransactionMethod {
         await this.beforeExecution();
 
         if (!this.parameters[0].chainId) {
-            this.parameters[0].chainId = await new ChainIdMethod().execute();
+            this.parameters[0].chainId = await new ChainIdMethod(this.config).execute();
         }
 
         if (!this.parameters[0].nonce && this.parameters[0].nonce !== 0) {

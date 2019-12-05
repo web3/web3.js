@@ -20,16 +20,16 @@
  * @date 2019
  */
 
-import AbstractGetBlockMethod from '../../../lib/methods/block/AbstractGetBlockMethod';
+import AbstractGetBlockMethod from "../../../../lib/methods/eth/block/AbstractGetBlockMethod";
 
 export default class GetBlockByHashMethod extends AbstractGetBlockMethod {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_getBlockByHash', parameters, config);
+    constructor(config, parameters) {
+        super('eth_getBlockByHash', config, parameters);
     }
 }

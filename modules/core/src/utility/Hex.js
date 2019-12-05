@@ -31,6 +31,7 @@ import {BigNumber} from '@ethersproject/bignumber';
 
 export default class Hex {
     /**
+     * TODO: Use the new ethers utility functions here because Richard was already going through anything and has them implemented dependency less and based on existing code.
      * @param {String} value
      *
      * @constructor

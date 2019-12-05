@@ -20,31 +20,33 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../../core/src/json-rpc/methods/Method";
+import SyncState from "../../../../lib/types/output/SyncState";
 
 export default class IsSyncingMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_syncing', 0, parameters, config);
+    constructor(config) {
+        super('eth_syncing', 0, config, []);
     }
 
     /**
+     * TODO: This should always return a consistency return value type
+     *
      * This method will be executed after the RPC request.
      *
      * @method afterExecution
      *
      * @param {Object} response
      *
-     * @returns {Object|Boolean}
+     * @returns {Promise<SyncState|Boolean>}
      */
-    afterExecution(response) {
+    async afterExecution(response) {
         if (typeof response !== 'boolean') {
-            return this.formatters.outputSyncingFormatter(response);
+            return new SyncState(response);
         }
 
         return response;

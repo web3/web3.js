@@ -20,17 +20,17 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
+import Address from "../../../lib/types/input/Address";
 
 export default class ListAccountsMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('personal_listAccounts', 0, parameters, config);
+    constructor(config) {
+        super('personal_listAccounts', 0, config, []);
     }
 
     /**
@@ -38,13 +38,13 @@ export default class ListAccountsMethod extends Method {
      *
      * @method afterExecution
      *
-     * @param {Object} response
+     * @param {String[]} response
      *
-     * @returns {Array}
+     * @returns {Promise<String[]>}
      */
-    afterExecution(response) {
+    async afterExecution(response) {
         return response.map((responseItem) => {
-            return this.utils.toChecksumAddress(responseItem);
+            return Address.toChecksum(responseItem);
         });
     }
 }

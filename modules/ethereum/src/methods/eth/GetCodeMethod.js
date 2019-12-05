@@ -20,18 +20,19 @@
  * @date 2019
  */
 
-import isFunction from 'lodash/isFunction';
 import Method from '../../../../core/src/json-rpc/methods/Method';
+import BlockNumber from "../../../lib/types/input/BlockNumber";
+import Address from "../../../lib/types/input/Address";
 
 export default class GetCodeMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_getCode', 2, parameters, config);
+    constructor(config, parameters) {
+        super('eth_getCode', 2, config, parameters);
     }
 
     /**
@@ -39,10 +40,10 @@ export default class GetCodeMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
-        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
+    async beforeExecution() {
+        this.parameters[0] = new Address(this.parameters[0]).toString();
+        this.parameters[1] = new BlockNumber(this.parameters[1]).toString();
     }
 }

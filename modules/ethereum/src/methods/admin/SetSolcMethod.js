@@ -24,12 +24,12 @@ import Method from "../../../../core/src/json-rpc/methods/Method";
 
 export default class SetSolcMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('admin_setSolc', 1, parameters, config);
+    constructor(config, parameters) {
+        super('admin_setSolc', 1, config, parameters);
     }
 }

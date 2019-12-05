@@ -20,16 +20,16 @@
  * @date 2019
  */
 
-import AbstractGetUncleMethod from '../../../lib/methods/block/AbstractGetUncleMethod';
+import AbstractGetUncleMethod from "../../../../lib/methods/eth/block/AbstractGetUncleMethod";
 
 export default class GetUncleByBlockHashAndIndexMethod extends AbstractGetUncleMethod {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_getUncleByBlockHashAndIndex', parameters, config);
+    constructor(config, parameters) {
+        super('eth_getUncleByBlockHashAndIndex', config, parameters);
     }
 }

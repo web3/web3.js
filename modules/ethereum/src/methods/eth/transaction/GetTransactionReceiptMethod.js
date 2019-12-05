@@ -20,17 +20,18 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../../core/src/json-rpc/methods/Method";
+import TransactionReceipt from "../../../../lib/types/output/TransactionReceipt";
 
 export default class GetTransactionReceiptMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_getTransactionReceipt', 1, parameters, config);
+    constructor(config, parameters) {
+        super('eth_getTransactionReceipt', 1, config, parameters);
     }
 
     /**
@@ -40,11 +41,11 @@ export default class GetTransactionReceiptMethod extends Method {
      *
      * @param {Object|null} response
      *
-     * @returns {Object|null}
+     * @returns {Promise<TransactionReceipt|null>}
      */
-    afterExecution(response) {
+    async afterExecution(response) {
         if (response !== null) {
-            return this.formatters.outputTransactionReceiptFormatter(response);
+            return new TransactionReceipt(response);
         }
 
         return response;

@@ -21,16 +21,17 @@
  */
 
 import Method from "../../../../core/src/json-rpc/methods/Method";
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class DumpBlockMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('debug_dumpBlock', 1, parameters, config);
+    constructor(config, parameters) {
+        super('debug_dumpBlock', 1, config, parameters);
     }
 
     /**
@@ -41,6 +42,6 @@ export default class DumpBlockMethod extends Method {
      * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.utils.numberToHex(this.parameters[0]);
+        this.parameters[0] = Hex.fromNumber(this.parameters[0]).toString();
     }
 }

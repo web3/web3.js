@@ -27,13 +27,13 @@ export default class AbstractTransactionMethod extends Method {
     /**
      * @param {String} rpcMethod
      * @param {Number} parametersAmmount
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(rpcMethod, parametersAmmount, parameters, config) {
-        super(rpcMethod, parametersAmmount, parameters, config);
+    constructor(rpcMethod, parametersAmmount, config, parameters) {
+        super(rpcMethod, parametersAmmount, config, parameters);
     }
 
     /**

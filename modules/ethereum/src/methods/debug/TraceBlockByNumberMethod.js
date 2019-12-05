@@ -21,16 +21,17 @@
  */
 
 import Method from "../../../../core/src/json-rpc/methods/Method";
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class TraceBlockByNumberMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('debug_traceBlockByNumber', 2, parameters, config);
+    constructor(config, parameters) {
+        super('debug_traceBlockByNumber', 2, config, parameters);
     }
 
     /**
@@ -38,9 +39,9 @@ export default class TraceBlockByNumberMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.utils.numberToHex(this.parameters[0]);
+    async beforeExecution() {
+        this.parameters[0] = Hex.fromNumber(this.parameters[0]).toString();
     }
 }

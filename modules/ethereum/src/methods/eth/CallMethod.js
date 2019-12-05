@@ -21,16 +21,18 @@
  */
 
 import Method from '../../../../core/src/json-rpc/methods/Method';
+import TransactionOptions from "../../../lib/types/input/TransactionOptions";
+import BlockNumber from "../../../lib/types/input/BlockNumber";
 
 export default class CallMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_call', 2, parameters, config);
+    constructor(config, parameters) {
+        super('eth_call', 2, config, parameters);
     }
 
     /**
@@ -38,10 +40,10 @@ export default class CallMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
-        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
+    async beforeExecution() {
+        this.parameters[0] = new TransactionOptions(this.parameters[0]);
+        this.parameters[1] = new BlockNumber(this.parameters[1]);
     }
 }

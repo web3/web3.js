@@ -20,17 +20,20 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../../core/src/json-rpc/methods/Method";
+import Address from "../../../../lib/types/input/Address";
+import BlockNumber from "../../../../lib/types/input/BlockNumber";
+import Hex from "../../../../../core/src/utility/Hex";
 
 export default class GetProofMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_getProof', 3, parameters, config);
+    constructor(config, parameters) {
+        super('eth_getProof', 3, config, parameters);
     }
 
     /**
@@ -38,28 +41,30 @@ export default class GetProofMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
-        this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], moduleInstance);
+    async beforeExecution() {
+        this.parameters[0] = new Address(this.parameters[0]).toString();
+        this.parameters[2] = new BlockNumber(this.parameters[2]).toString();
     }
 
     /**
+     * TODO: This should be handled with a output Proof type object
+     *
      * This method will be executed after the RPC request.
      *
      * @method afterExecution
      *
      * @param {Object} response
      *
-     * @returns {Object}
+     * @returns {Promise<Proof>}
      */
-    afterExecution(response) {
-        response.nonce = this.utils.toBN(response.nonce).toString(10);
-        response.balance = this.utils.toBN(response.balance).toString(10);
+    async afterExecution(response) {
+        response.nonce = new Hex(response.nonce).toNumberString();
+        response.balance = new Hex(response.balance).toNumberString();
 
         for (let i = 0; i < response.storageProof.length; i++) {
-            response.storageProof[i].value = this.utils.toBN(response.storageProof[i].value).toString(10);
+            response.storageProof[i].value = new Hex(response.storageProof[i].value).toNumberString();
         }
 
         return response;

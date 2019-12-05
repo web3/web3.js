@@ -24,13 +24,13 @@ import Method from '../../../../core/src/json-rpc/methods/Method';
 
 export default class SignMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_sign', 2, parameters, config);
+    constructor(config, parameters) {
+        super('eth_sign', 2, config, parameters);
     }
 
     /**
@@ -38,11 +38,11 @@ export default class SignMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
-        this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
+    async beforeExecution() {
+        this.parameters[0] = Hex.isValid(this.parameters[0]) ? this.parameters[0] : Hex.fromUTF8(this.parameters[0]).toString();
+        this.parameters[1] = new Address(this.parameters[1]).toString();
         this.parameters.reverse();
     }
 }

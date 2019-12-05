@@ -20,16 +20,15 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
 
 export default class InspectMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('txpool_inspect', 0, parameters, config);
+    constructor(config) {
+        super('txpool_inspect', 0, config, []);
     }
 }

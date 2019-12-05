@@ -25,6 +25,8 @@ import Iban from './Iban';
 
 export default class Address {
     /**
+     * TODO: Add IBAN compatibility
+     *
      * @param {String} address
      *
      * @constructor

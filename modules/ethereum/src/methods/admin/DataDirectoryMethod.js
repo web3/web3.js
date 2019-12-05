@@ -24,12 +24,11 @@ import Method from "../../../../core/src/json-rpc/methods/Method";
 
 export default class DataDirectoryMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('admin_datadir', 0, parameters, config);
+    constructor(config) {
+        super('admin_datadir', 0, config, []);
     }
 }

@@ -20,18 +20,20 @@
  * @date 2019
  */
 
-import isFunction from 'lodash/isFunction';
 import Method from '../../../../core/src/json-rpc/methods/Method';
+import Address from "../../../lib/types/input/Address";
+import Hex from "../../../../core/src/utility/Hex";
+import BlockNumber from "../../../lib/types/input/BlockNumber";
 
 export default class GetStorageAtMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_getStorageAt', 3, parameters, config);
+    constructor(config, parameters) {
+        super('eth_getStorageAt', 3, config, parameters);
     }
 
     /**
@@ -39,11 +41,11 @@ export default class GetStorageAtMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
-        this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
-        this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], moduleInstance);
+    async beforeExecution() {
+        this.parameters[0] = new Address(this.parameters[0]).toString();
+        this.parameters[1] = Hex.fromNumber(this.parameters[1]).toString();
+        this.parameters[2] = new BlockNumber(this.parameters[2]).toString();
     }
 }

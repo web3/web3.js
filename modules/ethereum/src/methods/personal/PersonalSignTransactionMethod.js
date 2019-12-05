@@ -20,17 +20,18 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
+import TransactionOptions from "../../../lib/types/input/TransactionOptions";
 
 export default class PersonalSignTransactionMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('personal_signTransaction', 2, parameters, config);
+    constructor(config, parameters) {
+        super('personal_signTransaction', 2, config, parameters);
     }
 
     /**
@@ -38,9 +39,9 @@ export default class PersonalSignTransactionMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
+    async beforeExecution() {
+        this.parameters[0] = new TransactionOptions(this.parameters[0]);
     }
 }

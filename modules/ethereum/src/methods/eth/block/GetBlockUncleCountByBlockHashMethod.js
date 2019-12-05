@@ -20,16 +20,16 @@
  * @date 2019
  */
 
-import AbstractGetBlockUncleCountMethod from '../../../lib/methods/block/AbstractGetBlockUncleCountMethod';
+import AbstractGetBlockUncleCountMethod from "../../../../lib/methods/eth/block/AbstractGetBlockUncleCountMethod";
 
 export default class GetBlockUncleCountByBlockHashMethod extends AbstractGetBlockUncleCountMethod {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_getUncleCountByBlockHash', parameters, config);
+    constructor(config, parameters) {
+        super('eth_getUncleCountByBlockHash', config, parameters);
     }
 }

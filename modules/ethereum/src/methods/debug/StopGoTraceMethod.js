@@ -24,12 +24,11 @@ import Method from "../../../../core/src/json-rpc/methods/Method";
 
 export default class StopGoTraceMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('debug_stopGoTrace', 0, parameters, config);
+    constructor(config) {
+        super('debug_stopGoTrace', 0, config, []);
     }
 }

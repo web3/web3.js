@@ -24,12 +24,11 @@ import Method from "../../../../core/src/json-rpc/methods/Method";
 
 export default class StopCpuProfileMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {Configuration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('debug_stopCPUProfile', 0, parameters, config);
+    constructor(config) {
+        super('debug_stopCPUProfile', 0, config, []);
     }
 }

@@ -20,17 +20,17 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from '../../../../../core/src/json-rpc/methods/Method';
+import Address from '../../../../lib/types/input/Address';
 
 export default class GetAccountsMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_accounts', 0, parameters, config);
+    constructor(config) {
+        super('eth_accounts', 0, config, []);
     }
 
     /**
@@ -40,11 +40,11 @@ export default class GetAccountsMethod extends Method {
      *
      * @param {Object} response
      *
-     * @returns {Array}
+     * @returns {Promise<Array<string>>}
      */
-    afterExecution(response) {
+    async afterExecution(response) {
         return response.map((responseItem) => {
-            return this.utils.toChecksumAddress(responseItem);
+            return Address.toChecksum(responseItem);
         });
     }
 }

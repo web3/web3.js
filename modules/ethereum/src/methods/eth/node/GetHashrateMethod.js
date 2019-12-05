@@ -20,17 +20,17 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../../core/src/json-rpc/methods/Method";
+import Hex from "../../../../../core/src/utility/Hex";
 
 export default class GetHashrateMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_hashrate', 0, parameters, config);
+    constructor(config) {
+        super('eth_hashrate', 0, config, []);
     }
 
     /**
@@ -38,11 +38,11 @@ export default class GetHashrateMethod extends Method {
      *
      * @method afterExecution
      *
-     * @param {Object} response
+     * @param {String} response
      *
-     * @returns {Number}
+     * @returns {Promise<Number>}
      */
-    afterExecution(response) {
-        return this.utils.hexToNumber(response);
+    async afterExecution(response) {
+        return new Hex(response).toNumber();
     }
 }

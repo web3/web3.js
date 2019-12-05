@@ -21,6 +21,7 @@
  */
 
 import Method from "../../../../core/src/json-rpc/methods/Method";
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class SetBlockProfileRateMethod extends Method {
     /**
@@ -29,8 +30,8 @@ export default class SetBlockProfileRateMethod extends Method {
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('debug_setBlockProfileRate', 1, parameters, config);
+    constructor(config, parameters) {
+        super('debug_setBlockProfileRate', 1, config, parameters);
     }
 
     /**
@@ -38,9 +39,9 @@ export default class SetBlockProfileRateMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.utils.numberToHex(this.parameters[0]);
+    async beforeExecution() {
+        this.parameters[0] = Hex.fromNumber(this.parameters[0]).toString();
     }
 }

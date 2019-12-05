@@ -20,16 +20,15 @@
  * @date 2019
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import Method from "../../../../core/src/json-rpc/methods/Method";
 
 export default class ListeningMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('net_listening', 0, parameters, config);
+    constructor(config) {
+        super('net_listening', 0, config, []);
     }
 }

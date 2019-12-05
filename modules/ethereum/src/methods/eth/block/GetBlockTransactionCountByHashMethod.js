@@ -20,16 +20,17 @@
  * @date 2019
  */
 
-import AbstractGetBlockTransactionCountMethod from '../../../lib/methods/block/AbstractGetBlockTransactionCountMethod';
+import AbstractGetBlockTransactionCountMethod
+    from "../../../../lib/methods/eth/block/AbstractGetBlockTransactionCountMethod";
 
 export default class GetBlockTransactionCountByHashMethod extends AbstractGetBlockTransactionCountMethod {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_getBlockTransactionCountByHash', parameters, config);
+    constructor(config, parameters) {
+        super('eth_getBlockTransactionCountByHash', config, parameters);
     }
 }

@@ -24,6 +24,8 @@ import Hex from './Hex';
 
 export default class BlockNumber {
     /**
+     * TODO: Add optional config parameter for fallback solutions
+     *
      * @param {String|Number} blockNumber
      *
      * @constructor

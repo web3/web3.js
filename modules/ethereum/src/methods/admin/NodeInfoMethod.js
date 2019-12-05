@@ -21,16 +21,16 @@
  */
 
 import Method from "../../../../core/src/json-rpc/methods/Method";
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class NodeInfoMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('admin_nodeInfo', 0, parameters, config);
+    constructor(config) {
+        super('admin_nodeInfo', 0, config, []);
     }
 
     /**
@@ -40,12 +40,12 @@ export default class NodeInfoMethod extends Method {
      *
      * @param {Object} response
      *
-     * @returns {Object}
+     * @returns {Promise<Object>}
      */
-    afterExecution(response) {
+    async afterExecution(response) {
         if (response) {
-            response.ports.discovery = this.utils.hexToNumber(response.ports.discovery);
-            response.ports.listener = this.utils.hexToNumber(response.ports.listener);
+            response.ports.discovery = new Hex(response.ports.discovery).toNumber();
+            response.ports.listener = new Hex(response.ports.listener).toNumber();
         }
 
         return response;

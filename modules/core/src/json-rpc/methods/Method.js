@@ -24,16 +24,16 @@ export default class Method {
     /**
      * @param {String} rpcMethod
      * @param {Number} parametersAmount
-     * @param {Array} parameters
      * @param {JsonRpcConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(rpcMethod, parametersAmount, parameters, config) {
-        this.config = config;
-        this.parameters = parameters;
+    constructor(rpcMethod, parametersAmount, config, parameters) {
         this.rpcMethod = rpcMethod;
         this.parametersAmount = parametersAmount;
+        this.config = config;
+        this.parameters = parameters;
     }
 
     /**

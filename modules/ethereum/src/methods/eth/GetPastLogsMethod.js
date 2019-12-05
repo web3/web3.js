@@ -21,16 +21,18 @@
  */
 
 import Method from '../../../../core/src/json-rpc/methods/Method';
+import LogOptions from "../../../lib/types/input/LogOptions";
+import Log from "../../../lib/types/output/Log";
 
 export default class GetPastLogsMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_getLogs', 1, parameters, config);
+    constructor(config, parameters) {
+        super('eth_getLogs', 1, config, parameters);
     }
 
     /**
@@ -38,10 +40,10 @@ export default class GetPastLogsMethod extends Method {
      *
      * @method beforeExecution
      *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
+     * @returns {Promise}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputLogFormatter(this.parameters[0]);
+    async beforeExecution() {
+        this.parameters[0] = new LogOptions(this.parameters[0]);
     }
 
     /**
@@ -51,11 +53,11 @@ export default class GetPastLogsMethod extends Method {
      *
      * @param {Array} response
      *
-     * @returns {Array}
+     * @returns {Promise<Log[]>}
      */
-    afterExecution(response) {
+    async afterExecution(response) {
         return response.map((responseItem) => {
-            return this.formatters.outputLogFormatter(responseItem);
+            return new Log(responseItem);
         });
     }
 }

@@ -29,7 +29,7 @@ export default class TraceBlockMethod extends Method {
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('debug_traceBlock', 2, parameters, config);
+    constructor(config, parameters) {
+        super('debug_traceBlock', 2, config, parameters);
     }
 }

@@ -24,12 +24,12 @@ import AbstractTransactionMethod from "../../../../lib/methods/eth/transaction/A
 
 export default class SendRawTransactionMethod extends AbstractTransactionMethod {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('eth_sendRawTransaction', 1, parameters, config);
+    constructor(config, parameters) {
+        super('eth_sendRawTransaction', 1, config, parameters);
     }
 }
