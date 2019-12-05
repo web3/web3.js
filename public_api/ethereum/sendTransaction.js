@@ -20,8 +20,8 @@
  * @date 2018
  */
 
-import web3 from './web3.js';
-import SendTransactionMethod from "../../modules/ethereum/src/methods/eth/transaction/SendTransactionMethod";
+import web3 from '../index.js';
+import Transaction from "./Transaction";
 
 /**
  * POC
@@ -32,11 +32,5 @@ import SendTransactionMethod from "../../modules/ethereum/src/methods/eth/transa
  * @returns {Promise<Transaction>}
  */
 export async function sendTransaction(txOptions, config = web3.config.ethereum) {
-    return new Transaction(
-        await new SendTransactionMethod(
-            config,
-            [txOptions]
-        ).execute(),
-        config
-    );
+    return new Transaction(txOptions, config).send();
 }
