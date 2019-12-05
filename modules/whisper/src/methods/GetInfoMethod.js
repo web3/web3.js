@@ -24,12 +24,11 @@ import Method from "../../../core/src/json-rpc/methods/Method";
 
 export default class GetInfoMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('shh_info', 0, parameters, config);
+    constructor(config) {
+        super('shh_info', 0, config, []);
     }
 }

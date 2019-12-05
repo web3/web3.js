@@ -24,12 +24,11 @@ import Method from "../../../core/src/json-rpc/methods/Method";
 
 export default class ShhVersionMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('shh_version', 0, parameters, config);
+    constructor(config) {
+        super('shh_version', 0, config, []);
     }
 }

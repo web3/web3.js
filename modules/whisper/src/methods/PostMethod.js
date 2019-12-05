@@ -24,12 +24,12 @@ import Method from "../../../core/src/json-rpc/methods/Method";
 
 export default class PostMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('shh_post', 1, parameters, config);
+    constructor(config, parameters) {
+        super('shh_post', 1, config, parameters);
     }
 }

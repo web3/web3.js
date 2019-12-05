@@ -24,12 +24,11 @@ import Method from "../../../core/src/json-rpc/methods/Method";
 
 export default class NewKeyPairMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('shh_newKeyPair', 0, parameters, config);
+    constructor(config) {
+        super('shh_newKeyPair', 0, config, []);
     }
 }

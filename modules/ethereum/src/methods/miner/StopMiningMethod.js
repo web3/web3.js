@@ -25,11 +25,10 @@ import Method from "../../../../core/src/json-rpc/methods/Method";
 export default class StopMiningMethod extends Method {
     /**
      * @param {EthereumConfiguration} config
-     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(config, parameters) {
-        super('miner_stop', 0, config, parameters);
+    constructor(config) {
+        super('miner_stop', 0, config, []);
     }
 }

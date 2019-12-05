@@ -24,7 +24,7 @@ import Method from "../../../../core/src/json-rpc/methods/Method";
 
 export default class StopCpuProfileMethod extends Method {
     /**
-     * @param {Configuration} config
+     * @param {EthereumConfiguration} config
      *
      * @constructor
      */

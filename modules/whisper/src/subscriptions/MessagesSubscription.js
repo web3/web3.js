@@ -16,13 +16,13 @@
 */
 /**
  * @file MessagesSubscription.js
- * @authors: Samuel Furter <samuel@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
 
-import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
+import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
 
-export default class MessagesSubscription extends AbstractSubscription {
+export default class MessagesSubscription extends Subscription {
     /**
      * @param {EthereumConfiguration} config
      *

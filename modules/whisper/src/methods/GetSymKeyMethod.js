@@ -24,12 +24,12 @@ import Method from "../../../core/src/json-rpc/methods/Method";
 
 export default class GetSymKeyMethod extends Method {
     /**
-     * @param {Array} parameters
      * @param {EthereumConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(parameters, config) {
-        super('shh_getSymKey', 1, parameters, config);
+    constructor(config, parameters) {
+        super('shh_getSymKey', 1, config, parameters);
     }
 }
