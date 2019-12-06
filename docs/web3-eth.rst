@@ -418,6 +418,7 @@ The ``handleRevert`` options property does default to ``false`` and will return 
 - :ref:`contract.methods.myMethod(...).send(...) <contract-send>`
 - :ref:`contract.methods.myMethod(...).call(...) <contract-call>`
 
+.. note:: The revert reason string and the signature does exist as property on the returned error.
 
 -------
 Returns
