@@ -283,6 +283,111 @@ var runTests = function(contractFactory) {
 
             assert.throws(test);
         });
+        it('should define the handleRevert object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {handleRevert: true}, provider);
+
+            assert.equal(contract.handleRevert, true);
+            assert.equal(contract.options.handleRevert, true);
+        });
+        it('should update the handleRevert property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {handleRevert: false}, provider);
+
+            contract.handleRevert = true;
+
+            assert.equal(contract.options.handleRevert, true);
+        });
+        it('should define the defaultCommon object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {common: true}, provider);
+
+            assert.equal(contract.defaultCommon, true);
+            assert.equal(contract.options.common, true);
+        });
+        it('should update the defaultCommon property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {common: false}, provider);
+
+            contract.defaultCommon = true;
+
+            assert.equal(contract.options.common, true);
+        });
+        it('should define the defaultHardfork object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {hardfork: 'istanbul'}, provider);
+
+            assert.equal(contract.defaultHardfork, 'istanbul');
+            assert.equal(contract.options.hardfork, 'istanbul');
+        });
+        it('should update the defaultHardfork property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {hardfork: false}, provider);
+
+            contract.defaultHardfork = true;
+
+            assert.equal(contract.options.hardfork, true);
+        });
+        it('should define the defaultChain object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {chain: 'mainnet'}, provider);
+
+            assert.equal(contract.defaultChain, 'mainnet');
+            assert.equal(contract.options.chain, 'mainnet');
+        });
+        it('should update the defaultChain property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {chain: false}, provider);
+
+            contract.defaultChain = true;
+
+            assert.equal(contract.options.chain, true);
+        });
+        it('should define the transactionPollingTimeout object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionPollingTimeout: 0}, provider);
+
+            assert.equal(contract.transactionPollingTimeout, 0);
+            assert.equal(contract.options.transactionPollingTimeout, 0);
+        });
+        it('should update the transactionPollingTimeout property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionPollingTimeout: 1}, provider);
+
+            contract.transactionPollingTimeout = 0;
+
+            assert.equal(contract.options.transactionPollingTimeout, 0);
+        });
+        it('should define the transactionConfirmationBlocks object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionConfirmationBlocks: 0}, provider);
+
+            assert.equal(contract.transactionConfirmationBlocks, 0);
+            assert.equal(contract.options.transactionConfirmationBlocks, 0);
+        });
+        it('should update the transactionConfirmationBlocks property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionConfirmationBlocks: 1}, provider);
+
+            contract.transactionConfirmationBlocks = 0;
+
+            assert.equal(contract.options.transactionConfirmationBlocks, 0);
+        });
+        it('should define the transactionBlockTimeout object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionBlockTimeout: 0}, provider);
+
+            assert.equal(contract.transactionBlockTimeout, 0);
+            assert.equal(contract.options.transactionBlockTimeout, 0);
+        });
+        it('should update the transactionBlockTimeout property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionBlockTimeout: 1}, provider);
+
+            contract.transactionBlockTimeout = 0;
+
+            assert.equal(contract.options.transactionBlockTimeout, 0);
+        });
         it('.clone() should properly clone the contract instance', function () {
             var provider = new FakeIpcProvider();
 

@@ -43,5 +43,19 @@ module.exports = {
     },
     ConnectionTimeout: function (ms){
         return new Error('CONNECTION TIMEOUT: timeout of ' + ms + ' ms achived');
+    },
+    RevertInstructionError: function(reason, signature) {
+        var error = new Error('Your request got reverted with the following reason string: ' + reason);
+        error.reason = reason;
+        error.signature = signature;
+
+        return error;
+    },
+    TransactionRevertInstructionError: function(reason, signature, receipt) {
+        var error = new Error('Transaction has been reverted by the EVM:\n' + JSON.stringify(receipt, null, 2));
+        error.reason = reason;
+        error.signature = signature;
+
+        return error;
     }
 };
