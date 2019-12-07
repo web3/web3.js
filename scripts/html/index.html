@@ -1,0 +1,28 @@
+<!-- Loads repository dist build into browser -->
+<html>
+<head>
+  <script src="./web3.min.js"></script>
+</head>
+<body>
+  <h1> Web3.js! </h1>
+  <h2 id="today"></h2>
+  <h2> Latest Block </h2>
+
+  <p id="blockNumber"></p>
+  <p id="timestamp"></p>
+  <p id="gasLimit"></p>
+
+  <script>
+    var web3 = new Web3('https://mainnet.infura.io/v3/1d13168ffb894ad2827f2152620bd27c');
+    async function writeBlock(){
+      var block = await web3.eth.getBlock('latest');
+      document.getElementById("blockNumber").innerHTML = "block.number: " + block.number;
+      document.getElementById("timestamp").innerHTML = "block.timestamp: " + block.timestamp;
+      document.getElementById("gasLimit").innerHTML = "block.gasLimit: " + block.gasLimit;
+      document.getElementById("today").innerHTML = "Today is " + Date(block.timestamp);
+    }
+    writeBlock();
+  </script>
+</body>
+</html>
+
