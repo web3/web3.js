@@ -167,7 +167,8 @@ packages.forEach(function(pckg, i) {
         var stream = browserify(browserifyOptions)
             .require(pckg.src, {expose: pckg.expose})
             .require('bn.js', {expose: 'BN'}) // expose it to dapp developers
-            .add(pckg.src);
+            .add(pckg.src)
+            .add(require.resolve("@babel/polyfill"));
 
         if (pckg.ignore) {
             pckg.ignore.forEach(function(ignore) {
