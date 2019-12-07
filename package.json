@@ -14,9 +14,9 @@
     },
     "bundlesize": [
         {
-            "path": "./packages/web3/dist/web3.min.js",
-            "maxSize": "1.5 mB",
-            "compression": "none"
+          "path": "./packages/web3/dist/web3.min.js",
+          "maxSize": "1.5 mB",
+          "compression": "none"
         }
     ],
     "scripts": {
