@@ -13,6 +13,11 @@ if [ "$TEST" = "unit" ]; then
 
 elif [ "$TEST" = "build_and_lint" ]; then
 
+  cd packages/web3
+  npm install --save bn.js@4.11.8
+  npm install --save underscore@1.9.1
+  cd ../..
+
   npm run build
   npm run dtslint
   npm run depcheck
