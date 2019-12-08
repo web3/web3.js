@@ -23,7 +23,7 @@
 
 
 var _ = require('underscore');
-var ethjsUnit = require('ethjs-unit');
+var ethjsUnit = require('./ethjsUnit');
 var utils = require('./utils.js');
 var soliditySha3 = require('./soliditySha3.js');
 var randombytes = require('randombytes');
