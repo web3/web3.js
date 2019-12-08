@@ -16,9 +16,8 @@
         "bn.js": "4.11.8",
         "eth-lib": "0.2.7",
         "ethereum-bloom-filters": "^1.0.6",
-        "ethjs-unit": "0.1.6",
-        "number-to-bn": "1.7.0",
         "randombytes": "^2.1.0",
+        "strip-hex-prefix": "1.0.0",
         "underscore": "1.9.1",
         "utf8": "3.0.0"
     },
