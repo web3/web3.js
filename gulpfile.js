@@ -17,7 +17,7 @@ var exorcist = require('exorcist');
 var bower = require('bower');
 var streamify = require('gulp-streamify');
 var replace = require('gulp-replace');
-var shakeify = require('common-shakeify');
+//var shakeify = require('common-shakeify');
 var exec = require('child_process').exec;
 
 var DEST = path.join(__dirname, 'dist/');
@@ -166,7 +166,7 @@ packages.forEach(function(pckg, i) {
         browserifyOptions.standalone = pckg.expose;
 
         var stream = browserify(browserifyOptions)
-            .plugin(shakeify)
+            //.plugin(shakeify)
             .require(pckg.src, {expose: pckg.expose})
             .require('bn.js', {expose: 'BN'}) // expose it to dapp developers
             .add(pckg.src);
