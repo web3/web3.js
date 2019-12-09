@@ -342,7 +342,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                             }
 
                             utils._fireError(
-                                new Error('The transaction receipt didn\'t contain a contract address.'),
+                                errors.NoContractAddressFoundError(receipt),
                                 defer.eventEmitter,
                                 defer.reject,
                                 null,
@@ -375,7 +375,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
                             } else {
                                 utils._fireError(
-                                    new Error('The contract code couldn\'t be stored, please check your gas limit.'),
+                                    errors.ContractCodeNotStoredError(receipt),
                                     defer.eventEmitter,
                                     defer.reject,
                                     null,
@@ -437,7 +437,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                 } catch (error) {
                                     // Throw an normal revert error if no revert reason is given or the detection of it is disabled
                                     utils._fireError(
-                                        new Error('Transaction has been reverted by the EVM:\n' + receiptJSON),
+                                        errors.TransactionRevertedWithoutReasonError(receipt),
                                         defer.eventEmitter,
                                         defer.reject,
                                         null,
@@ -447,7 +447,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                             } else {
                                 // Throw OOG if status is not existing and provided gas and used gas are equal
                                 utils._fireError(
-                                    new Error('Transaction ran out of gas. Please provide more gas:\n' + receiptJSON),
+                                    errors.TransactionOutOfGasError(receipt),
                                     defer.eventEmitter,
                                     defer.reject,
                                     null,
@@ -474,7 +474,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                             sub.unsubscribe();
                             promiseResolved = true;
                             utils._fireError(
-                                new Error('Transaction was not mined within ' + method.transactionPollingTimeout + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
+                                errors.TransactionError('Transaction was not mined within ' + method.transactionPollingTimeout + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
                                 defer.eventEmitter,
                                 defer.reject
                             );
@@ -484,7 +484,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                             sub.unsubscribe();
                             promiseResolved = true;
                             utils._fireError(
-                                new Error('Transaction was not mined within ' + method.transactionBlockTimeout + ' blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
+                                errors.TransactionError('Transaction was not mined within ' + method.transactionBlockTimeout + ' blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
                                 defer.eventEmitter,
                                 defer.reject
                             );
