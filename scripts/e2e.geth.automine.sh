@@ -27,13 +27,8 @@ echo " "
 geth-dev-assistant --period 2 --accounts 1 --tag 'stable'
 
 # Test
-istanbul cover _mocha -- \
+nyc --no-clean --silent _mocha -- \
   --reporter spec \
   --grep 'E2E' \
   --timeout 15000 \
   --exit
-
-# Copy cov for this run to a temp file we can combine later and send to coveralls
-if [ "$CI" = true ]; then
-  cp coverage/coverage.raw.json .cov_geth_auto.json
-fi
