@@ -32,7 +32,7 @@
         "test:unit": "istanbul cover _mocha -- -R spec --grep E2E --invert",
         "dtslint": "lerna run dtslint",
         "depcheck": "lerna exec dependency-check -- --missing --verbose .",
-        "bundlesize": "npx bundlesize",
+        "bundlesize": "bundlesize",
         "geth": "geth-dev-assistant --accounts 5 --tag stable --gasLimit 7000000",
         "test:e2e:ganache": "./scripts/e2e.ganache.sh",
         "test:e2e:geth:auto": "./scripts/e2e.geth.automine.sh",
