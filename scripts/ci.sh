@@ -16,7 +16,7 @@ elif [ "$TEST" = "build_and_lint" ]; then
   npm run build
   npm run dtslint
   npm run depcheck
-npm run bundlesize
+  npm run bundlesize
 
 elif [ "$TEST" = "unit_and_e2e_clients" ]; then
 
