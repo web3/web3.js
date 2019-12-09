@@ -4,6 +4,8 @@ if (!process.env.TRAVIS){
     process.env.CHROME_BIN = require('puppeteer').executablePath();
 }
 
+// BROWSER_BUNDLE_TEST is set for an un-browserified check that both bundles load correctly.
+// BROWSER_BUNDLE_TEST is not set for the e2e unit tests, which check that bundle internals are ok.
 function getTestFiles(){
     switch (process.env.BROWSER_BUNDLE_TEST){
         case 'publishedDist': return ["packages/web3/dist/web3.min.js", "test/e2e.minified.js"]
@@ -12,7 +14,7 @@ function getTestFiles(){
     }
 }
 
-// Only loads preprocessor for the logic unit tests
+// Only loads browserified preprocessor for the logic unit tests so we can `require` stuff.
 function getPreprocessors(){
     if (!process.env.BROWSER_BUNDLE_TEST){
         return { 'test/**/e2e*.js': [ 'browserify' ] }
@@ -27,7 +29,6 @@ module.exports = function (config) {
         ],
         files: getTestFiles(),
         preprocessors: getPreprocessors(),
-        failOnEmptyTestSuite: false,
         plugins: [
             'karma-chrome-launcher',
             'karma-firefox-launcher',
