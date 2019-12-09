@@ -41,7 +41,7 @@
         "test:e2e:chrome": "./scripts/e2e.chrome.sh",
         "test:e2e:firefox": "./scripts/e2e.firefox.sh",
         "test:e2e:min": "./scripts/e2e.min.sh",
-        "test:e2e:surge": "./scripts/e2e.surge.sh",
+        "test:e2e:cdn": "./scripts/e2e.cdn.sh",
         "test:e2e:browsers": "npm run build; npm run test:e2e:chrome; npm run test:e2e:firefox",
         "test:e2e:publish": "./scripts/e2e.npm.publish.sh",
         "test:e2e:truffle": "./scripts/e2e.truffle.sh",
