@@ -25,5 +25,7 @@ cd scripts
 # Might be running locally in development
 rm html/web3.min.js
 
-# Script doesn't always work...
+# Sometimes surge.sh fails with an auth error because it's generated a name which
+# is already taken (or something?) This test is just meant to be a visual
+# inspection check if/when there are doubts - we don't want it crash CI alot.
 exit 0

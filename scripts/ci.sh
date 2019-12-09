@@ -32,7 +32,7 @@ elif [ "$TEST" = "e2e_browsers" ]; then
   npm run test:e2e:chrome
   npm run test:e2e:firefox
   npm run test:e2e:min
-  npm run test:e2e:surge
+  npm run test:e2e:cdn
 
 elif [ "$TEST" = "e2e_truffle" ]; then
 
