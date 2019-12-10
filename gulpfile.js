@@ -120,7 +120,7 @@ var ugliyOptions = {
     }
 };
 
-gulp.task('version', function() {
+gulp.task('version', function () {
     if (!lernaJSON.version) {
         throw new Error('version property is missing from lerna.json');
     }
@@ -140,36 +140,37 @@ gulp.task('version', function() {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('bower', gulp.series('version', function(cb) {
-    bower.commands.install().on('end', function(installed) {
+gulp.task('bower', gulp.series('version', function (cb) {
+    bower.commands.install().on('end', function (installed) {
         console.log(installed);
         cb();
     });
 }));
 
-gulp.task('lint', function() {
+gulp.task('lint', function () {
     return gulp.src(['./*.js', './lib/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('clean', gulp.series('lint', function(cb) {
+gulp.task('clean', gulp.series('lint', function (cb) {
     del([DEST]).then(cb.bind(null, null));
 }));
 
-packages.forEach(function(pckg, i) {
+packages.forEach(function (pckg, i) {
     var prevPckg = (!i) ? 'clean' : packages[i - 1].fileName;
 
-    gulp.task(pckg.fileName, gulp.series(prevPckg, function() {
+    gulp.task(pckg.fileName, gulp.series(prevPckg, function () {
         browserifyOptions.standalone = pckg.expose;
 
         var stream = browserify(browserifyOptions)
             .require(pckg.src, {expose: pckg.expose})
             .require('bn.js', {expose: 'BN'}) // expose it to dapp developers
+            .add('./node_modules/regenerator-runtime')
             .add(pckg.src);
 
         if (pckg.ignore) {
-            pckg.ignore.forEach(function(ignore) {
+            pckg.ignore.forEach(function (ignore) {
                 stream.ignore(ignore);
             });
         }
@@ -184,9 +185,7 @@ packages.forEach(function(pckg, i) {
                         {
                             useBuiltIns: 'entry',
                             corejs: 3,
-                            forceAllTransforms: true,
                             targets: {
-                                node: 8,
                                 ie: 10
                             }
                         }
@@ -213,7 +212,7 @@ packages.forEach(function(pckg, i) {
         stream = stream
             .pipe(gulp.dest(DEST))
             .pipe(streamify(uglify(ugliyOptions)))
-            .on('error', function(err) {
+            .on('error', function (err) {
                 console.error(err);
             })
             .pipe(rename(pckg.fileName + '.min.js'));
@@ -228,11 +227,11 @@ packages.forEach(function(pckg, i) {
     }));
 });
 
-gulp.task('publishTag', function() {
+gulp.task('publishTag', function () {
     exec('git commit -am "add tag v' + lernaJSON.version + '"; git tag v' + lernaJSON.version + '; git push origin v' + lernaJSON.version + ';');
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', function () {
     gulp.watch(['./packages/web3/src/*.js'], gulp.series('lint', 'default'));
 });
 
