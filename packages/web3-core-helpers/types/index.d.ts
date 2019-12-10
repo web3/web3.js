@@ -68,6 +68,11 @@ export class errors {
     static ConnectionTimeout(ms: string): Error;
     static RevertInstructionError(reason: string, signature: string): RevertInstructionError
     static TransactionRevertInstructionError(reason: string, signature: string, receipt: object): TransactionRevertInstructionError
+    static TransactionError(message: string, receipt: object): TransactionError
+    static NoContractAddressFoundError(receipt: object): TransactionError
+    static ContractCodeNotStoredError(receipt: object): TransactionError
+    static TransactionRevertedWithoutReasonError(receipt: object): TransactionError
+    static TransactionOutOfGasError(receipt: object): TransactionError
 }
 
 export class WebsocketProviderBase {
@@ -193,4 +198,8 @@ export interface RevertInstructionError extends Error {
 export interface TransactionRevertInstructionError extends Error {
     reason: string;
     signature: string;
+}
+
+export interface TransactionError extends Error {
+    receipt: object;
 }
