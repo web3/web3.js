@@ -10,7 +10,6 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
-var babel = require('gulp-babel');
 var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
 var exorcist = require('exorcist');
@@ -167,8 +166,7 @@ packages.forEach(function(pckg, i) {
         var stream = browserify(browserifyOptions)
             .require(pckg.src, {expose: pckg.expose})
             .require('bn.js', {expose: 'BN'}) // expose it to dapp developers
-            .add(pckg.src)
-            .add(require.resolve("@babel/polyfill"));
+            .add(pckg.src);
 
         if (pckg.ignore) {
             pckg.ignore.forEach(function(ignore) {
@@ -176,7 +174,26 @@ packages.forEach(function(pckg, i) {
             });
         }
 
-        var bundle = stream.bundle();
+        var bundle = stream.transform(
+            "babelify",
+            {
+                global: true,
+                presets: [
+                    [
+                        "@babel/preset-env",
+                        {
+                            useBuiltIns: 'entry',
+                            corejs: 3,
+                            forceAllTransforms: true,
+                            targets: {
+                                node: 8,
+                                ie: 10
+                            }
+                        }
+                    ]
+                ]
+            }
+        ).bundle();
 
         stream = bundle
             .pipe(exorcist(path.join(DEST, pckg.fileName + '.js.map')));
@@ -186,11 +203,7 @@ packages.forEach(function(pckg, i) {
                 .pipe(exorcist(path.join(WEB3_PACKAGE_DEST, pckg.fileName + '.js.map')));
         }
 
-        stream = stream.pipe(source(pckg.fileName + '.js'))
-            .pipe(streamify(babel({
-                compact: false,
-                presets: [[ '@babel/preset-env', { "useBuiltIns": "entry", "corejs": 2 } ]]
-            })));
+        stream = stream.pipe(source(pckg.fileName + '.js'));
 
         if (pckg.fileName === 'web3') {
             stream = stream
