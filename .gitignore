@@ -17,3 +17,4 @@ dist/
 packages/web3/dist/
 lerna-debug.log
 !./dist/web3.min.js
+.nyc_output/
