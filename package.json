@@ -101,7 +101,6 @@
         "browserify": "^16.5.0",
         "bundlesize": "^0.18.0",
         "chai": "^4.2.0",
-        "common-shakeify": "^0.6.2",
         "core-js": "^2.6.10",
         "coveralls": "^3.0.7",
         "crypto-js": "^3.1.9-1",
