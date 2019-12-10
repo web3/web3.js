@@ -20,7 +20,7 @@ echo "======================================================================"
 
 cp packages/web3/dist/web3.min.js scripts/html
 cd scripts
-(echo "" && exit && cat ) | npx surge html
+(echo "" && exit && cat ) | npx surge --domain sudden-playground.surge.sh html
 
 # Might be running locally in development
 rm html/web3.min.js
