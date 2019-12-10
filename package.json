@@ -12,6 +12,13 @@
         "doc": "./doc",
         "test": "./test"
     },
+    "bundlesize": [
+        {
+            "path": "./packages/web3/dist/web3.min.js",
+            "maxSize": "1.5 mB",
+            "compression": "none"
+        }
+    ],
     "scripts": {
         "postinstall": "lerna bootstrap",
         "build": "gulp",
@@ -25,6 +32,7 @@
         "test:unit": "nyc --no-clean --silent _mocha -- -R spec --grep E2E --invert",
         "dtslint": "lerna run dtslint",
         "depcheck": "lerna exec dependency-check -- --missing --verbose .",
+        "bundlesize": "bundlesize",
         "geth": "geth-dev-assistant --accounts 5 --tag stable --gasLimit 7000000",
         "test:e2e:ganache": "./scripts/e2e.ganache.sh",
         "test:e2e:geth:auto": "./scripts/e2e.geth.automine.sh",
@@ -91,6 +99,7 @@
         "bn.js": "^4.11.8",
         "bower": "1.8.8",
         "browserify": "^16.5.0",
+        "bundlesize": "^0.18.0",
         "chai": "^4.2.0",
         "core-js": "^2.6.10",
         "coveralls": "^3.0.7",
