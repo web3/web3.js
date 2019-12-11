@@ -20,72 +20,24 @@
  * @date 2019
  */
 
-import isFunction from 'lodash/isFunction';
 import LogOptions from "../../lib/types/input/LogOptions";
 import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
 import Log from "../../lib/types/output/Log";
 
-// TODO: Move the past logs logic to the eth module
 export default class LogSubscription extends Subscription {
     /**
      * @param {EthereumConfiguration} config
-     * @param {Object} options
-     * @param {GetPastLogsMethod} getPastLogsMethod
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(config, options, getPastLogsMethod) {
-        super('eth_subscribe', 'logs', config);
-        this.options = options;
-        this.getPastLogsMethod = getPastLogsMethod;
+    constructor(config, parameters) {
+        super('eth_subscribe', 'logs', config, [new LogOptions(parameters[0])]);
     }
 
     /**
-     * Sends the JSON-RPC request, emits the required events and executes the callback method.
+     * TODO: Remove this method and handle it with a operator!
      *
-     * @method subscribe
-     *
-     * @param {Function} callback
-     *
-     * @callback callback callback(error, result)
-     * @returns {Subscription} Subscription
-     */
-    subscribe(callback) {
-        if ((this.options.fromBlock && this.options.fromBlock !== 'latest') || this.options.fromBlock === 0) {
-            this.getPastLogsMethod.parameters = [new LogOptions(this.options)];
-            this.getPastLogsMethod
-                .execute()
-                .then((logs) => {
-                    logs.forEach((log) => {
-                        const formattedLog = this.onNewSubscriptionItem(log);
-
-                        if (isFunction(callback)) {
-                            callback(false, formattedLog);
-                        }
-
-                        this.emit('data', formattedLog);
-                    });
-
-                    delete this.options.fromBlock;
-                    super.subscribe(callback);
-                })
-                .catch((error) => {
-                    if (isFunction(callback)) {
-                        callback(error, null);
-                    }
-
-                    this.emit('error', error);
-                });
-
-            return this;
-        }
-
-        super.subscribe(callback);
-
-        return this;
-    }
-
-    /**
      * This method will be executed on each new subscription item.
      *
      * @method onNewSubscriptionItem

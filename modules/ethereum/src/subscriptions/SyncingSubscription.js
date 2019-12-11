@@ -34,7 +34,7 @@ export default class SyncingSubscription extends Subscription {
     }
 
     /**
-     * TODO: Return consistent value types
+     * TODO: Remove this method and handle it with a operator!
      *
      * This method will be executed on each new subscription item.
      *

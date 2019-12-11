@@ -20,162 +20,91 @@
  * @date 2019
  */
 
-import EventEmitter from 'eventemitter3';
+import {Observable} from 'rxjs';
 
 /**
- * TODO: Implement it with https://github.com/tc39/proposal-observable/blob/master/src/Observable.js
+ * POC RxJs based Subscription object
  */
-export default class Subscription extends EventEmitter {
+export default class Subscription extends Observable {
     /**
      * @param {String} type
      * @param {String} method
      * @param {JsonRpcConfiguration} config
+     * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(type, method, config) {
+    constructor(type, method, config, parameters = []) {
         super();
         this.type = type;
         this.method = method;
         this.config = config;
+        this.parameters = parameters;
         this.id = null;
     }
 
     /**
-     * This method will be executed before the subscription starts.
-     *
-     * @method beforeSubscription
-     *
-     * @param {Configuration} moduleInstance
-     */
-    beforeSubscription(moduleInstance) {}
-
-    /**
-     * This method will be executed on each new subscription item.
-     *
-     * @method onNewSubscriptionItem
-     *
-     * @param {*} subscriptionItem
-     *
-     * @returns {*}
-     */
-    onNewSubscriptionItem(subscriptionItem) {
-        return subscriptionItem;
-    }
-
-    /**
-     * Sends the JSON-RPC request, emits the required events and executes the callback method.
+     * Sends the JSON-RPC request and returns a RxJs Subscription object
      *
      * @method subscribe
      *
-     * @param {Function} callback
+     * @param {Function} observerOrNext
+     * @param {Function} error
+     * @param {Function} complete
      *
-     * @callback callback callback(error, result)
      * @returns {Subscription}
      */
-    subscribe(callback = null) {
-        this.callback = callback;
+    subscribe(observerOrNext, error, complete) {
+        this.observer = this.getObserver(observerOrNext, error, complete);
 
-        this.beforeSubscription(this.config);
-        let subscriptionParameters = [];
+        this.config.provider.subscribe(this.type, this.method, this.parameters)
+            .then((id) => {
+                this.id = id;
+                this.config.provider.on('error', this.observer.error);
+                this.config.provider.on(this.id, this.observer.next);
+            }).catch((error) => {
+            this.observer.error(error);
+            this.observer.complete();
+        });
 
-        if (this.options !== null) {
-            subscriptionParameters = [this.options];
-        }
+        const subscription = super.subscribe(this.observer);
 
-        this.config.provider
-            .subscribe(this.type, this.method, subscriptionParameters)
-            .then((subscriptionId) => {
-                this.id = subscriptionId;
-
-                // TODO: Improve listener handling for subscriptions
-                this.config.provider.on('error', this.errorListener.bind(this));
-                this.config.provider.on(this.id, this.subscriptionListener.bind(this));
-            })
-            .catch((error) => {
-                if (this.callback) {
-                    this.callback(error, null);
-
-                    return;
-                }
-
-                this.emit('error', error);
-                this.removeAllListeners();
-            });
-
-        return this;
-    }
-
-    /**
-     * Listens to the provider errors
-     *
-     * @method errorListener
-     *
-     * @param {Error} error
-     */
-    errorListener(error) {
-        if (this.callback) {
-            this.callback(error, false);
-
-            return;
-        }
-
-        this.emit('error', error);
-    }
-
-    /**
-     * Listens to the subscription
-     *
-     * @method subscriptionListener
-     *
-     * @param {Object} response
-     */
-    subscriptionListener(response) {
-        const formattedOutput = this.onNewSubscriptionItem(response.result);
-
-        if (this.callback) {
-            this.callback(false, formattedOutput);
-
-            return;
-        }
-
-        this.emit('data', formattedOutput);
-    }
-
-    /**
-     * Unsubscribes subscription
-     *
-     * @method unsubscribe
-     *
-     * @param {Function} callback
-     *
-     * @callback callback callback(error, result)
-     * @returns {Promise<Boolean|Error>}
-     */
-    unsubscribe(callback) {
-        return this.config.provider
-            .unsubscribe(this.id, this.type.slice(0, 3) + '_unsubscribe')
-            .then((response) => {
-                if (!response) {
-                    const error = new Error('Error on unsubscribe!');
-                    if (callback) {
-                        callback(error, null);
+        subscription._unsubscribe = () => {
+            this.config.provider.unsubscribe(this.id, this.type.slice(0, 3) + '_unsubscribe')
+                .then((response) => {
+                    if (!response) {
+                        throw new Error('Error on unsubscribe!');
                     }
 
-                    throw error;
-                }
+                    this.config.provider.removeListener('error', this.observer.error);
+                    this.config.provider.removeListener(this.id, this.observer.next);
+                    this.id = null;
+                });
+        };
 
-                this.config.provider.removeListener('error', this.errorListener);
-                this.config.provider.removeListener(this.id, this.subscriptionListener);
+        return subscription;
+    }
 
-                this.id = null;
-                this.removeAllListeners();
+    /**
+     * Returns a observer object by the given values
+     *
+     * @method getObserver
+     *
+     * @param {Function} observerOrNext
+     * @param {Function} error
+     * @param {Function} complete
+     *
+     * @returns {{next: *, error: *, complete: *}|*}
+     */
+    getObserver(observerOrNext, error, complete) {
+        if (typeof observerOrNext !== 'function') {
+            return observerOrNext;
+        }
 
-                if (callback) {
-                    callback(false, true);
-                }
-
-                return true;
-            });
+        return {
+            next: observerOrNext,
+            error: error,
+            complete: complete
+        }
     }
 }
