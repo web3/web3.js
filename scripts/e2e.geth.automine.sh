@@ -27,7 +27,7 @@ echo " "
 geth-dev-assistant --period 2 --accounts 1 --tag 'stable'
 
 # Test
-istanbul cover _mocha -- \
+GETH_AUTOMINE=true istanbul cover _mocha -- \
   --reporter spec \
   --grep 'E2E' \
   --timeout 15000 \
