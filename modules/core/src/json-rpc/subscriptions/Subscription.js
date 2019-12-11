@@ -57,6 +57,8 @@ export default class Subscription extends Observable {
     subscribe(observerOrNext, error, complete) {
         this.observer = this.getObserver(observerOrNext, error, complete);
 
+        const subscription = super.subscribe(this.observer);
+
         this.config.provider.subscribe(this.type, this.method, this.parameters)
             .then((id) => {
                 this.id = id;
@@ -68,23 +70,28 @@ export default class Subscription extends Observable {
                 this.observer.complete();
             });
 
-        const subscription = super.subscribe(this.observer);
-
-        // TODO: Check for an alternative solution to overwrite the default unsubscribe method of the given Subscription class from RxJs
-        subscription._unsubscribe = () => {
-            this.config.provider.unsubscribe(this.id, this.type.slice(0, 3) + '_unsubscribe')
-                .then((response) => {
-                    if (!response) {
-                        throw new Error('Error on unsubscribe!');
-                    }
-
-                    this.config.provider.removeListener('error', this.observer.error);
-                    this.config.provider.removeListener(this.id, this.observer.next);
-                    this.id = null;
-                });
-        };
+        subscription.add(this._unsubscribe.bind(this));
 
         return subscription;
+    }
+
+    /**
+     * Unsubscribes the subscription from the given JSON-RPC provider
+     *
+     * @method _unsubscribe
+     *
+     * @private
+     */
+    _unsubscribe() {
+        this.config.provider.unsubscribe(this.id, this.type.slice(0, 3) + '_unsubscribe').then((response) => {
+            if (!response) {
+                throw new Error('Error on unsubscribe!');
+            }
+
+            this.config.provider.removeListener('error', this.observer.error);
+            this.config.provider.removeListener(this.id, this.observer.next);
+            this.id = null;
+        });
     }
 
     /**
