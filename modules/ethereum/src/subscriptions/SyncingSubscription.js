@@ -20,6 +20,7 @@
  * @date 2019
  */
 
+import {Observable} from 'rxjs';
 import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
 
 export default class SyncingSubscription extends Subscription {
@@ -34,38 +35,51 @@ export default class SyncingSubscription extends Subscription {
     }
 
     /**
-     * TODO: Remove this method and handle it with a operator!
+     * Sends the JSON-RPC request and returns a RxJs Subscription object
      *
-     * This method will be executed on each new subscription item.
+     * @method subscribe
      *
-     * @method onNewSubscriptionItem
+     * @param {Function} observerOrNext
+     * @param {Function} error
+     * @param {Function} complete
      *
-     * @param {any} subscriptionItem
-     *
-     * @returns {Object}
+     * @returns {Subscription}
      */
-    onNewSubscriptionItem(subscriptionItem) {
-        if (typeof subscriptionItem !== 'boolean') {
-            const isSyncing = subscriptionItem.syncing;
+    subscribe(observerOrNext, error, complete) {
+        return new Observable((observer) => {
+            return super.subscribe({
+                next(sync) {
+                    // TODO: Create operator for the 'changed' event and return consistent value types here!
+                    if (typeof sync !== 'boolean') {
+                        const isSyncing = sync.syncing;
 
-            if (this.isSyncing === null) {
-                this.isSyncing = isSyncing;
-                this.emit('changed', this.isSyncing);
+                        if (this.isSyncing === null) {
+                            this.isSyncing = isSyncing;
+                            // this.emit('changed', this.isSyncing);
 
-                return subscriptionItem.status;
-            }
+                            return sync.status;
+                        }
 
-            if (this.isSyncing !== isSyncing) {
-                this.isSyncing = isSyncing;
-                this.emit('changed', this.isSyncing);
-            }
+                        if (this.isSyncing !== isSyncing) {
+                            this.isSyncing = isSyncing;
+                            // this.emit('changed', this.isSyncing);
+                        }
 
-            return subscriptionItem.status;
-        }
+                        return sync.status;
+                    }
 
-        this.isSyncing = subscriptionItem;
-        this.emit('changed', subscriptionItem);
+                    this.isSyncing = sync;
+                    // this.emit('changed', sync);
 
-        return subscriptionItem;
+                    observer.next(sync);
+                },
+                error(error) {
+                    observer.error(error);
+                },
+                complete() {
+                    observer.complete();
+                }
+            });
+        })
     }
 }

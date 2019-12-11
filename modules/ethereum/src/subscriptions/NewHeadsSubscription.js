@@ -20,6 +20,7 @@
  * @date 2019
  */
 
+import {Observable} from 'rxjs';
 import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
 import Block from "../../lib/types/output/Block";
 
@@ -34,17 +35,29 @@ export default class NewHeadsSubscription extends Subscription {
     }
 
     /**
-     * TODO: Remove this method and handle it with a operator!
+     * Sends the JSON-RPC request and returns a RxJs Subscription object
      *
-     * This method will be executed on each new subscription item.
+     * @method subscribe
      *
-     * @method onNewSubscriptionItem
+     * @param {Function} observerOrNext
+     * @param {Function} error
+     * @param {Function} complete
      *
-     * @param {Object} subscriptionItem
-     *
-     * @returns {Block}
+     * @returns {Subscription}
      */
-    onNewSubscriptionItem(subscriptionItem) {
-        return new Block(subscriptionItem);
+    subscribe(observerOrNext, error, complete) {
+        return new Observable((observer) => {
+            return super.subscribe({
+                next(block) {
+                    observer.next(new Block(block))
+                },
+                error(error) {
+                    observer.error(error);
+                },
+                complete() {
+                    observer.complete();
+                }
+            });
+        })
     }
 }

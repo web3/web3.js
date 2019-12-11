@@ -62,13 +62,15 @@ export default class Subscription extends Observable {
                 this.id = id;
                 this.config.provider.on('error', this.observer.error);
                 this.config.provider.on(this.id, this.observer.next);
-            }).catch((error) => {
-            this.observer.error(error);
-            this.observer.complete();
-        });
+            })
+            .catch((error) => {
+                this.observer.error(error);
+                this.observer.complete();
+            });
 
         const subscription = super.subscribe(this.observer);
 
+        // TODO: Check for an alternative solution to overwrite the default unsubscribe method of the given Subscription class from RxJs
         subscription._unsubscribe = () => {
             this.config.provider.unsubscribe(this.id, this.type.slice(0, 3) + '_unsubscribe')
                 .then((response) => {

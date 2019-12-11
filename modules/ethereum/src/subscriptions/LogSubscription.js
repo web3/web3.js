@@ -20,6 +20,7 @@
  * @date 2019
  */
 
+import {Observable} from 'rxjs';
 import LogOptions from "../../lib/types/input/LogOptions";
 import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
 import Log from "../../lib/types/output/Log";
@@ -36,23 +37,31 @@ export default class LogSubscription extends Subscription {
     }
 
     /**
-     * TODO: Remove this method and handle it with a operator!
+     * TODO: create operator for this: log.removed ? this.emit('changed', log);
      *
-     * This method will be executed on each new subscription item.
+     * Sends the JSON-RPC request and returns a RxJs Subscription object
      *
-     * @method onNewSubscriptionItem
+     * @method subscribe
      *
-     * @param {Object} subscriptionItem
+     * @param {Function} observerOrNext
+     * @param {Function} error
+     * @param {Function} complete
      *
-     * @returns {Object}
+     * @returns {Subscription}
      */
-    onNewSubscriptionItem(subscriptionItem) {
-        const log = new Log(subscriptionItem);
-
-        if (log.removed) {
-            this.emit('changed', log);
-        }
-
-        return log;
+    subscribe(observerOrNext, error, complete) {
+        return new Observable((observer) => {
+            return super.subscribe({
+                next(log) {
+                    observer.next(new Log(log))
+                },
+                error(error) {
+                    observer.error(error);
+                },
+                complete() {
+                    observer.complete();
+                }
+            });
+        })
     }
 }
