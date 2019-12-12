@@ -17,6 +17,7 @@
  * @date 2019
  */
 
+import isObject from 'lodash/isObject.js';
 import EventEmitter from "eventemitter3";
 
 export default class AbstractProvider extends EventEmitter {

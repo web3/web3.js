@@ -20,9 +20,8 @@
  * @date 2019
  */
 
-import isNumber from 'lodash/isNumber';
-import Address from './Address';
-import Hex from './Hex';
+import Address from './Address.js';
+import Hex from "../../../../core/src/utility/Hex.js";
 
 export default class TransactionOptions {
     /**
@@ -33,7 +32,7 @@ export default class TransactionOptions {
      * @constructor
      */
     constructor(options) {
-        if (!options.from && !isNumber(options.from)) {
+        if (!options.from) {
             throw new Error('The send transactions "from" field must be defined!');
         }
 
@@ -113,6 +112,10 @@ export default class TransactionOptions {
      * @param {String} data
      */
     set data(data) {
+        if (!data) {
+            return;
+        }
+
         if (Hex.isValid(data)) {
             this.properties.data = data;
 
@@ -216,5 +219,16 @@ export default class TransactionOptions {
         if (nonce || nonce === 0) {
             this.properties.nonce = Hex.fromNumber(nonce).toString();
         }
+    }
+
+    /**
+     * Returns the options as JSON serializable object.
+     *
+     * @method toJSON
+     *
+     * @returns {Object}
+     */
+    toJSON() {
+        return this.properties;
     }
 }

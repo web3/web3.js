@@ -20,9 +20,9 @@
  * @date 2019
  */
 
-import Method from '../../../../core/src/json-rpc/methods/Method';
-import TransactionOptions from "../../../lib/types/input/TransactionOptions";
-import Hex from "../../../../core/src/utility/Hex";
+import Method from '../../../../core/src/json-rpc/methods/Method.js';
+import TransactionOptions from "../../../lib/types/input/TransactionOptions.js";
+import Hex from "../../../../core/src/utility/Hex.js";
 
 export default class EstimateGasMethod extends Method {
     /**

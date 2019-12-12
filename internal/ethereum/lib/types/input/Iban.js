@@ -23,8 +23,8 @@
  * @date 2015
  */
 
-import Hex from './Hex';
-import Address from './Address';
+import Hex from "../../../../core/src/utility/Hex.js";
+import Address from './Address.js';
 import BN from 'bn.js';
 
 export default class Iban {

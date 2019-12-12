@@ -21,6 +21,7 @@
  */
 
 import JsonRpcConfiguration from "../../../core/src/json-rpc/config/JsonRpcConfiguration.js";
+import Address from "../../lib/types/input/Address.js";
 
 export default class EthereumConfiguration extends JsonRpcConfiguration {
     /**
@@ -31,13 +32,13 @@ export default class EthereumConfiguration extends JsonRpcConfiguration {
     constructor(options = {}) {
         super(options);
 
-        this.defaultAccount = options.defaultAccount;
-        this.defaultBlock = options.defaultBlock || 'latest';
-        this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
-        this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 0;
-        this.transactionPollingTimeout = options.transactionPollingTimeout || 750;
-        this.defaultGasPrice = options.defaultGasPrice;
-        this.defaultGas = options.defaultGas;
+        this.account = options.account;
+        this.block = options.block || 'latest';
+
+        this.transaction = options.transaction || {};
+        this.transaction.blockTimeout = this.transaction.blockTimeout || 50;
+        this.transaction.confirmationBlocks = this.transaction.confirmationBlocks || 0;
+        this.transaction.pollingTimeout = this.transaction.pollingTimeout || 750;
     }
 
     /**
@@ -47,8 +48,8 @@ export default class EthereumConfiguration extends JsonRpcConfiguration {
      *
      * @returns {null|String}
      */
-    get defaultAccount() {
-        return this._defaultAccount;
+    get account() {
+        return this._account;
     }
 
     /**
@@ -58,11 +59,11 @@ export default class EthereumConfiguration extends JsonRpcConfiguration {
      *
      * @param {String} value
      */
-    set defaultAccount(value) {
+    set account(value) {
         if (value) {
-            this._defaultAccount = Address.isValid((value));
+            this._account = Address.isValid((value));
         }
 
-        this._defaultAccount = undefined;
+        this._account = undefined;
     }
 }

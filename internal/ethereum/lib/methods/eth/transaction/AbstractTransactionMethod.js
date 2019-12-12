@@ -20,8 +20,8 @@
  * @date 2019
  */
 
-import Method from "../../../../../core/src/json-rpc/methods/Method";
-import TransactionOptions from "../../../../lib/types/input/TransactionOptions";
+import Method from "../../../../../core/src/json-rpc/methods/Method.js";
+import TransactionOptions from "../../../../lib/types/input/TransactionOptions.js";
 
 export default class AbstractTransactionMethod extends Method {
     /**

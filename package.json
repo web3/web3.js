@@ -114,6 +114,14 @@
         "typescript": "^3.4.1"
     },
     "dependencies": {
-        "rxjs": "^6.5.3"
+        "@ethersproject/bignumber": "^5.0.0-beta.135",
+        "bn.js": "^5.0.0",
+        "eth-lib": "^0.1.29",
+        "eventemitter3": "^4.0.0",
+        "lodash": "^4.17.15",
+        "randombytes": "^2.1.0",
+        "rxjs": "^6.5.3",
+        "utf8": "^3.0.0",
+        "xhr2-cookies": "^1.1.0"
     }
 }

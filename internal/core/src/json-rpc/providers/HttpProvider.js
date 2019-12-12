@@ -20,10 +20,15 @@
  * @date 2019
  */
 
-import {XMLHttpRequest as XHR} from 'xhr2-cookies';
+// FOR TESTING (the nodejs esm loader can't resolve it)
+import * as xhr2 from 'xhr2-cookies';
+
+const XHR = xhr2.default.XMLHttpRequest;
+
 import http from 'http';
 import https from 'https';
-import AbstractProvider from "../AbstractProvider";
+import AbstractProvider from "../../../lib/json-rpc/providers/AbstractProvider.js";
+
 
 export default class HttpProvider extends AbstractProvider {
     /**

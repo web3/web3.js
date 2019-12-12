@@ -18,7 +18,7 @@
  */
 
 import web3 from '../../index.js';
-import confirmations from './confirmations';
+import confirmations from './confirmations.js';
 
 /**
  * POC

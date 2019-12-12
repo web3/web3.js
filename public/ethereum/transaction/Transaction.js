@@ -18,9 +18,9 @@
  */
 
 import web3 from "../../index.js";
-import send from "./send";
-import confirmations from "./confirmations";
-import mined from "./mined";
+import send from "./send.js";
+import confirmations from "./confirmations.js";
+import mined from "./mined.js";
 
 /**
  * POC

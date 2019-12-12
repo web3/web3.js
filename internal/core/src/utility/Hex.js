@@ -21,17 +21,20 @@
 
 import utf8 from 'utf8';
 import BN from 'bn.js';
-import isBoolean from 'lodash/isBoolean';
-import isObject from 'lodash/isObject';
-import isString from 'lodash/isString';
-import isNumber from 'lodash/isNumber';
+// TODO: Remove lodash
+import isBoolean from 'lodash/isBoolean.js';
+import isObject from 'lodash/isObject.js';
+import isString from 'lodash/isString.js';
+import isNumber from 'lodash/isNumber.js';
 import randombytes from 'randombytes';
-import Address from './Address';
-import {BigNumber} from '@ethersproject/bignumber';
 
+// FOR TESTING (the nodejs esm loader can't resolve it)
+import * as number from '@ethersproject/bignumber';
+const BigNumber = number.default.BigNumber;
+
+// TODO: Remove this draft object and use the ethers utility functions directly
 export default class Hex {
     /**
-     * TODO: Use the new ethers utility functions here because Richard was already going through anything and has them implemented dependency less and based on existing code.
      * @param {String} value
      *
      * @constructor
@@ -348,10 +351,6 @@ export default class Hex {
      * @returns {Hex}
      */
     static from(value) {
-        if (Address.isValid(value)) {
-            throw new Error('Please use the Address type object to interact with a Ethereum Address.');
-        }
-
         if (isBoolean(value)) {
             if (value === true) {
                 return new Hex('0x01');

@@ -19,9 +19,9 @@
  * @date 2019
  */
 
-import Hash from 'eth-lib/lib/hash';
-import Hex from './Hex';
-import Iban from './Iban';
+import Hex from "../../../../core/src/utility/Hex.js";
+import Hash from 'eth-lib/lib/hash.js';
+import Iban from './Iban.js';
 
 export default class Address {
     /**

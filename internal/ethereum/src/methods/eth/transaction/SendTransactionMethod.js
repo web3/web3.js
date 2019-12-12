@@ -20,10 +20,7 @@
  * @date 2019
  */
 
-import AbstractTransactionMethod from "../../../../lib/methods/eth/transaction/AbstractTransactionMethod";
-import GetTransactionCountMethod from "../account/GetTransactionCountMethod";
-import ChainIdMethod from "../../net/ChainIdMethod";
-import GetGasPriceMethod from "../node/GetGasPriceMethod";
+import AbstractTransactionMethod from "../../../../lib/methods/eth/transaction/AbstractTransactionMethod.js";
 
 export default class SendTransactionMethod extends AbstractTransactionMethod {
     /**

@@ -18,9 +18,9 @@
  */
 
 import web3 from '../../index.js';
-import GetGasPriceMethod from "../../../internal/ethereum/src/methods/eth/node/GetGasPriceMethod";
-import EstimateGasMethod from "../../../internal/ethereum/src/methods/eth/EstimateGasMethod";
-import SendTransactionMethod from "../../../internal/ethereum/src/methods/eth/transaction/SendTransactionMethod";
+import GetGasPriceMethod from "../../../internal/ethereum/src/methods/eth/node/GetGasPriceMethod.js";
+import EstimateGasMethod from "../../../internal/ethereum/src/methods/eth/EstimateGasMethod.js";
+import SendTransactionMethod from "../../../internal/ethereum/src/methods/eth/transaction/SendTransactionMethod.js";
 
 /**
  * POC
@@ -55,7 +55,6 @@ export default async function send(txOptions, config = web3.config.ethereum) {
     // if (this.hasCustomSigner()) {
     //     return this.sendRawTransaction();
     // }
-
 
     return new SendTransactionMethod(config, [txOptions]).execute();
 }
