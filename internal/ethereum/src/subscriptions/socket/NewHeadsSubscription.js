@@ -21,10 +21,10 @@
  */
 
 import {Observable} from 'rxjs';
-import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
+import SocketSubscription from "../../../../core/src/json-rpc/subscriptions/socket/SocketSubscription";
 import Block from "../../lib/types/output/Block";
 
-export default class NewHeadsSubscription extends Subscription {
+export default class NewHeadsSubscription extends SocketSubscription {
     /**
      * @param {EthereumConfiguration} config
      *

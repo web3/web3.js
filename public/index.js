@@ -20,6 +20,16 @@
  * @date 2019
  */
 
+/**
+ *  TODO: It should place the dist files in the root folder of the published package to have cleaner import statements on the consumer side
+ *
+ * e.g.:
+ *
+ * import {web3} from 'web3';
+ * import {send, mined} from 'web3/ethereum/transaction';
+ * import {HttpProvider} from 'web3/core';
+ */
+
 import Configuration from "./config/Configuration.js";
 
 const throwError = () => {

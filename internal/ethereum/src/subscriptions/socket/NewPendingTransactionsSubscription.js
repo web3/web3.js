@@ -20,9 +20,9 @@
  * @date 2019
  */
 
-import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
+import SocketSubscription from "../../../../core/src/json-rpc/subscriptions/socket/SocketSubscription";
 
-export default class NewPendingTransactionsSubscription extends Subscription {
+export default class NewPendingTransactionsSubscription extends SocketSubscription {
     /**
      * @param {EthereumConfiguration} config
      *

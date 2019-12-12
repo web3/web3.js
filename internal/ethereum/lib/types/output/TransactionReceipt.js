@@ -19,10 +19,7 @@
  * @date 2019
  */
 
-// FOR TESTING (the nodejs esm loader can't resolve it)
-import * as number from '@ethersproject/bignumber';
-const BigNumber = number.default.BigNumber;
-
+import {BigNumber} from '@ethersproject/bignumber';
 import isArray from 'lodash/isArray.js';
 import Log from './Log.js';
 import Address from "../input/Address.js";

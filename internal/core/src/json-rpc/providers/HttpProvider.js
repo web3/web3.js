@@ -20,11 +20,8 @@
  * @date 2019
  */
 
-// FOR TESTING (the nodejs esm loader can't resolve it)
-import * as xhr2 from 'xhr2-cookies';
-
-const XHR = xhr2.default.XMLHttpRequest;
-
+// TODO: Remove XHR dependency
+import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import http from 'http';
 import https from 'https';
 import AbstractProvider from "../../../lib/json-rpc/providers/AbstractProvider.js";

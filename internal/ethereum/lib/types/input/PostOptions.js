@@ -20,7 +20,7 @@
  */
 
 import isArray from 'lodash/isArray';
-import Hex from './Hex';
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class PostOptions {
     /**

@@ -15,32 +15,22 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file AbstractSubscription.js
+ * @file PollingSubscription.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
 
-import {Observable} from 'rxjs';
+import {Observable, interval} from 'rxjs';
 
-/**
- * POC RxJs based Subscription object
- */
-export default class Subscription extends Observable {
+export default class PollingSubscription extends Observable {
     /**
-     * @param {String} type
-     * @param {String} method
-     * @param {JsonRpcConfiguration} config
-     * @param {Array} parameters
+     * @param {Method} method
      *
      * @constructor
      */
-    constructor(type, method, config, parameters = []) {
+    constructor(method) {
         super();
-        this.type = type;
         this.method = method;
-        this.config = config;
-        this.parameters = parameters;
-        this.id = null;
     }
 
     /**
@@ -55,43 +45,26 @@ export default class Subscription extends Observable {
      * @returns {Subscription}
      */
     subscribe(observerOrNext, error, complete) {
-        this.observer = this.getObserver(observerOrNext, error, complete);
+        const observer = this.getObserver(observerOrNext, error, complete);
 
-        const subscription = super.subscribe(this.observer);
+        const subscription = super.subscribe(observer);
 
-        this.config.provider.subscribe(this.type, this.method, this.parameters)
-            .then((id) => {
-                this.id = id;
-                this.config.provider.on('error', this.observer.error);
-                this.config.provider.on(this.id, this.observer.next);
-            })
-            .catch((error) => {
-                this.observer.error(error);
-                this.observer.complete();
-            });
+        const intervalSub = interval(this.config.pollingInterval).subscribe({
+            async next() {
+                observer.next(await this.method.execute());
+            },
+            error(error) {
+                observer.error(error);
+            },
+            complete() {
+                observer.complete();
+            }
+        });
 
-        subscription.add(this._unsubscribe.bind(this));
+
+        subscription.add(intervalSub.unsubscribe.bind(intervalSub));
 
         return subscription;
-    }
-
-    /**
-     * Unsubscribes the subscription from the given JSON-RPC provider
-     *
-     * @method _unsubscribe
-     *
-     * @private
-     */
-    _unsubscribe() {
-        this.config.provider.unsubscribe(this.id, this.type.slice(0, 3) + '_unsubscribe').then((response) => {
-            if (!response) {
-                throw new Error('Error on unsubscribe!');
-            }
-
-            this.config.provider.removeListener('error', this.observer.error);
-            this.config.provider.removeListener(this.id, this.observer.next);
-            this.id = null;
-        });
     }
 
     /**

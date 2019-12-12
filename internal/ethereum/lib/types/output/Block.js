@@ -19,10 +19,7 @@
  * @date 2019
  */
 
-// FOR TESTING (the nodejs esm loader can't resolve it)
-import * as number from '@ethersproject/bignumber';
-const BigNumber = number.default.BigNumber;
-
+import {BigNumber} from '@ethersproject/bignumber';
 import isArray from 'lodash/isArray.js';
 import isString from 'lodash/isString.js';
 import Transaction from './Transaction.js';
@@ -142,7 +139,7 @@ export default class Block {
      *
      * @property number
      *
-     * @returns {Number|null}
+     * @returns {Number}
      */
     get number() {
         return this.properties.number;

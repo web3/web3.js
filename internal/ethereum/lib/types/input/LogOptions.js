@@ -22,7 +22,7 @@
 import isArray from 'lodash/isArray';
 import Address from './Address';
 import BlockNumber from './BlockNumber';
-import Hex from './Hex';
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class LogOptions {
     /**

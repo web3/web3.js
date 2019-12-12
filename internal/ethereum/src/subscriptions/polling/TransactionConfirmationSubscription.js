@@ -17,11 +17,11 @@
  * @date 2019
  */
 
-import Subscription from "../../../../core/src/json-rpc/subscriptions/polling/Subscription";
+import PollingSubscription from "../../../../core/src/json-rpc/subscriptions/polling/PollingSubscription";
 import GetBlockByNumberMethod from "../../methods/eth/block/GetBlockByNumberMethod";
 import GetTransactionReceiptMethod from "../../methods/eth/transaction/GetTransactionReceiptMethod";
 
-export default class TransactionConfirmationSubscription extends Subscription {
+export default class TransactionConfirmationSubscription extends PollingSubscription {
   /**
    * @param {Object} config
    * @param {string} txHash

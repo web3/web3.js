@@ -21,9 +21,9 @@
  */
 
 import {Observable} from 'rxjs';
-import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
+import SocketSubscription from "../../../../core/src/json-rpc/subscriptions/socket/SocketSubscription";
 
-export default class SyncingSubscription extends Subscription {
+export default class SyncingSubscription extends SocketSubscription {
     /**
      * @param {EthereumConfiguration} config
      *

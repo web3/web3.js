@@ -19,7 +19,7 @@
  * @date 2019
  */
 
-import Hex from './Hex';
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class Post {
     /**

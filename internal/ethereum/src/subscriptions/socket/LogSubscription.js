@@ -22,10 +22,10 @@
 
 import {Observable} from 'rxjs';
 import LogOptions from "../../../lib/types/input/LogOptions";
-import Subscription from "../../../../core/src/json-rpc/subscriptions/socket/Subscription";
+import SocketSubscription from "../../../../core/src/json-rpc/subscriptions/socket/SocketSubscription";
 import Log from "../../../lib/types/output/Log";
 
-export default class LogSubscription extends Subscription {
+export default class LogSubscription extends SocketSubscription {
     /**
      * @param {EthereumConfiguration} config
      * @param {Array} parameters
