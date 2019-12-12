@@ -3,8 +3,7 @@
     "namespace": "ethereum",
     "version": "2.0.0-beta",
     "description": "Ethereum JavaScript API wrapper repository",
-    "license": "LGPL-3.0",
-    "type": "module",
+    "license": "MIT",
     "engines": {
         "node": ">=10.0.0"
     },

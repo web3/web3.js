@@ -4,5 +4,8 @@
     "outDir": "./dist",
     "allowJs": true
   },
-  "include": ["./internal/**/*", "./public/**/*"]
+  "include": [
+    "./internal/**/*",
+    "./public/**/*"
+  ]
 }
