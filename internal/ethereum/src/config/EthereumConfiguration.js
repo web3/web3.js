@@ -20,9 +20,9 @@
  * @date 2019
  */
 
-import AbstractJsonRpcConfiguration from "../../../lib/config/AbstractJsonRpcConfiguration";
+import JsonRpcConfiguration from "../../../core/src/json-rpc/config/JsonRpcConfiguration.js";
 
-export default class EthereumConfiguration extends AbstractJsonRpcConfiguration {
+export default class EthereumConfiguration extends JsonRpcConfiguration {
     /**
      * @param {Object} options
      *

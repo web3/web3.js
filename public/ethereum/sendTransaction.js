@@ -21,7 +21,7 @@
  */
 
 import web3 from '../index.js';
-import Transaction from "./Transaction";
+// import Transaction from "./Transaction";
 
 /**
  * POC
@@ -31,6 +31,7 @@ import Transaction from "./Transaction";
  *
  * @returns {Promise<Transaction>}
  */
-export async function sendTransaction(txOptions, config = web3.config.ethereum) {
-    return new Transaction(txOptions, config).send();
+export default async function sendTransaction(txOptions, config = web3.config.ethereum) {
+    console.log(config);
+    // return new Transaction(txOptions, config).send();
 }

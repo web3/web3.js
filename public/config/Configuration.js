@@ -20,7 +20,7 @@
  * @date 2019
  */
 
-import EthereumConfiguration from "./ethereum/EthereumConfiguration";
+import EthereumConfiguration from "../../internal/ethereum/src/config/EthereumConfiguration.js";
 
 export default class Configuration {
     /**

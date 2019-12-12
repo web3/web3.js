@@ -20,7 +20,7 @@
  * @date 2019
  */
 
-import Configuration from "./config/Configuration";
+import Configuration from "./config/Configuration.js";
 
 let config = null;
 
@@ -51,9 +51,13 @@ export default class web3 {
      * @returns {Boolean}
      */
     static init(name, conf) {
-        if (!config) {
+        if (config !== null) {
             config = new Configuration(conf);
+
+            return;
         }
+
+        throw new Error('Init can only be called once. Please pass your custom options directly to the related web3.js function or class.');
     }
 
     /**

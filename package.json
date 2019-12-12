@@ -4,6 +4,7 @@
     "version": "2.0.0-alpha.1",
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
+    "type": "module",
     "engines": {
         "node": ">=8.0.0"
     },
