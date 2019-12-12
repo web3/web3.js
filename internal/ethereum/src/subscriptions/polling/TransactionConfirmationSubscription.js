@@ -17,12 +17,11 @@
  * @date 2019
  */
 
-import {Observable} from 'rxjs';
-import PollingSubscription from "../../../core/src/json-rpc/subscriptions/PollingSubscription";
-import GetBlockByNumberMethod from "../methods/eth/block/GetBlockByNumberMethod";
-import GetTransactionReceiptMethod from "../methods/eth/transaction/GetTransactionReceiptMethod";
+import Subscription from "../../../../core/src/json-rpc/subscriptions/polling/Subscription";
+import GetBlockByNumberMethod from "../../methods/eth/block/GetBlockByNumberMethod";
+import GetTransactionReceiptMethod from "../../methods/eth/transaction/GetTransactionReceiptMethod";
 
-export default class PollingTransactionConfirmationSubscription extends PollingSubscription {
+export default class TransactionConfirmationSubscription extends Subscription {
   /**
    * @param {Object} config
    * @param {string} txHash
@@ -50,7 +49,7 @@ export default class PollingTransactionConfirmationSubscription extends PollingS
     const observer = this.getObserver(observerOrNext, error, complete);
 
     return super.subscribe({
-      next: (receipt) => {
+      next: async (receipt) => {
         try {
           let getBlockByNumber = new GetBlockByNumberMethod(this.config, []);
 

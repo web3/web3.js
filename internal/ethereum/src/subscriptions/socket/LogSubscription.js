@@ -21,9 +21,9 @@
  */
 
 import {Observable} from 'rxjs';
-import LogOptions from "../../lib/types/input/LogOptions";
-import Subscription from "../../../core/src/json-rpc/subscriptions/Subscription";
-import Log from "../../lib/types/output/Log";
+import LogOptions from "../../../lib/types/input/LogOptions";
+import Subscription from "../../../../core/src/json-rpc/subscriptions/socket/Subscription";
+import Log from "../../../lib/types/output/Log";
 
 export default class LogSubscription extends Subscription {
     /**

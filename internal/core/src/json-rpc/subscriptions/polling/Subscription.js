@@ -25,7 +25,7 @@ import {Observable, interval} from 'rxjs';
 /**
  * POC RxJs based Subscription object
  */
-export default class PollingSubscription extends Observable {
+export default class Subscription extends Observable {
     /**
      * @param {Method} method
      *
