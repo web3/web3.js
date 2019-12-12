@@ -22,6 +22,10 @@
 
 import Configuration from "./config/Configuration.js";
 
+const throwError = () => {
+    throw new Error('Not allowed action!');
+};
+
 let config = null;
 
 export default class web3 {
@@ -37,7 +41,19 @@ export default class web3 {
             throw new Error('No Configuration defined!');
         }
 
-        return config;
+        // Return deep clone or this proxy. The actual config object will only get returned from the web3.init method.
+        // If this actually does make sense is questionable because the Proxy object or the functions used to deep clone the object
+        // could get hijacked anyways from another dependency if sesify isn't in usage.
+        return new Proxy(
+            config,
+            {
+                set: throwError,
+                defineProperty: throwError,
+                deleteProperty: throwError,
+                preventExtensions: throwError,
+                setPrototypeOf: throwError
+            }
+        );
     }
 
     /**
@@ -48,16 +64,16 @@ export default class web3 {
      * @param {String} name
      * @param {Object} conf
      *
-     * @returns {Boolean}
+     * @returns {Configuration}
      */
     static init(name, conf) {
         if (config !== null) {
-            config = new Configuration(conf);
-
-            return;
+            throw new Error('Init can only be called once. Please pass your custom options directly to the related web3.js function or class.');
         }
 
-        throw new Error('Init can only be called once. Please pass your custom options directly to the related web3.js function or class.');
+        config = new Configuration(conf);
+
+        return config;
     }
 
     /**
