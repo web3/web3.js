@@ -18,7 +18,6 @@
  */
 
 import web3 from "../../index.js";
-import {interval} from 'rxjs'
 import {transactionConfirmations} from "../../../internal/ethereum/src/subscriptions/operators/transactionConfirmations";
 import PollingTransactionConfirmationSubscription
   from "../../../internal/ethereum/src/subscriptions/PollingTransactionConfirmationSubscription";
@@ -38,5 +37,5 @@ export default function confirmations(txHash, config = web3.config.ethereum) {
     return new NewHeadsSubscription(config).pipe(transactionConfirmations(config, txHash));
   }
 
-  return new PollingTransactionConfirmationSubscription(config, [txHash]);
+  return new PollingTransactionConfirmationSubscription(config, txHash);
 }

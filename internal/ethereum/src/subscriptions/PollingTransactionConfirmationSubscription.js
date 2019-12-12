@@ -20,16 +20,18 @@
 import {Observable} from 'rxjs';
 import PollingSubscription from "../../../core/src/json-rpc/subscriptions/PollingSubscription";
 import GetBlockByNumberMethod from "../methods/eth/block/GetBlockByNumberMethod";
+import GetTransactionReceiptMethod from "../methods/eth/transaction/GetTransactionReceiptMethod";
 
 export default class PollingTransactionConfirmationSubscription extends PollingSubscription {
   /**
-   * @param {EthereumConfiguration} config
-   * @param {Array} parameters
+   * @param {Object} config
+   * @param {string} txHash
    *
    * @constructor
    */
-  constructor(config, parameters) {
-    super('eth_getTransactionReceipt', config, parameters)
+  constructor(config, txHash) {
+    super(new GetTransactionReceiptMethod(config, [txHash]));
+    this.config = config;
   }
 
   /**
@@ -44,41 +46,41 @@ export default class PollingTransactionConfirmationSubscription extends PollingS
    * @returns {Subscription}
    */
   subscribe(observerOrNext, error, complete) {
-    return new Observable((observer) => {
-      return super.subscribe({
-        async next(receipt) {
-          try {
-            let lastBlock;
-            let getBlockByNumber = new GetBlockByNumberMethod(this.config, []);
+    let lastBlock;
+    const observer = this.getObserver(observerOrNext, error, complete);
 
-            if (receipt && (receipt.blockNumber === 0 || receipt.blockNumber)) {
-              if (lastBlock) {
-                getBlockByNumber.parameters = [lastBlock.number + 1];
-                const block = await getBlockByNumber.execute();
+    return super.subscribe({
+      next: (receipt) => {
+        try {
+          let getBlockByNumber = new GetBlockByNumberMethod(this.config, []);
 
-                if (block) {
-                  lastBlock = block;
+          if (receipt && (receipt.blockNumber === 0 || receipt.blockNumber)) {
+            if (lastBlock) {
+              getBlockByNumber.parameters = [lastBlock.number + 1];
+              const block = await getBlockByNumber.execute();
 
-                  observer.next(receipt);
-                }
-              } else {
-                getBlockByNumber.parameters = [receipt.blockNumber];
-                lastBlock = await getBlockByNumber.execute();
+              if (block) {
+                lastBlock = block;
 
                 observer.next(receipt);
               }
+            } else {
+              getBlockByNumber.parameters = [receipt.blockNumber];
+              lastBlock = await getBlockByNumber.execute();
+
+              observer.next(receipt);
             }
-          } catch (error) {
-            observer.error(error);
           }
-        },
-        error(error) {
+        } catch (error) {
           observer.error(error);
-        },
-        complete() {
-          observer.complete();
         }
-      });
+      },
+      error: (error) => {
+        observer.error(error);
+      },
+      complete: () => {
+        observer.complete();
+      }
     });
   }
 }

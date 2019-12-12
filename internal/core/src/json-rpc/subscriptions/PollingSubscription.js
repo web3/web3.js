@@ -27,17 +27,13 @@ import {Observable, interval} from 'rxjs';
  */
 export default class PollingSubscription extends Observable {
     /**
-     * @param {String} method
-     * @param {JsonRpcConfiguration} config
-     * @param {Array} parameters
+     * @param {Method} method
      *
      * @constructor
      */
-    constructor(method, config, parameters = []) {
+    constructor(method) {
         super();
         this.method = method;
-        this.config = config;
-        this.parameters = parameters;
     }
 
     /**
@@ -58,7 +54,7 @@ export default class PollingSubscription extends Observable {
 
         const intervalSub = interval(this.config.pollingInterval).subscribe({
             async next() {
-                observer.next(await this.config.provider.send(this.method, this.parameters));
+                observer.next(await this.method.execute());
             },
             error(error) {
                 observer.error(error);
