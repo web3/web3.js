@@ -17,20 +17,12 @@
  * @date 2019
  */
 
-// FOR TESTING (the nodejs esm loader can't resolve it)
-import * as rxjs from 'rxjs'
-const interval = rxjs.default.interval;
-const from = rxjs.default.from;
-
-import mergeMap from 'rxjs/operators/mergeMap.js'
-const mergeMapTest = mergeMap.mergeMap;
-
-import filterByPromise from 'filter-async-rxjs-pipe';
-const filterTest = filterByPromise.filterByPromise;
+import {interval, from} from 'rxjs'
 
 import web3 from "../../index.js";
 import GetTransactionReceiptMethod from "../../../internal/ethereum/src/methods/eth/transaction/GetTransactionReceiptMethod.js";
 import GetBlockByNumberMethod from "../../../internal/ethereum/src/methods/eth/block/GetBlockByNumberMethod.js";
+import {transactionConfirmations} from "../../../internal/ethereum/src/subscriptions/operators/transactionConfirmations";
 
 /**
  * POC
@@ -48,27 +40,7 @@ export default function confirmations(txHash, config = web3.config.ethereum) {
     // on parity nodes you can get the receipt without it being mined
     // so the receipt may not have a block number at this point
     if (config.provider.supportsSubscriptions()) {
-        let blockNumbers = [];
-
-        return new NewHeadsSubscription(config).pipe(
-            mapTest(async (newHead) => {
-                return {newHeadNumber: newHead.number, receipt: await getTransactionReceiptMethod.execute()};
-            }),
-            filterTest((value) => {
-                if (
-                    value.receipt &&
-                    (value.receipt.blockNumber === 0 || value.receipt.blockNumber) &&
-                    !blockNumbers.includes(value.newHeadNumber)
-                ) {
-                    blockNumbers.push(value.newHeadNumber);
-
-                    return true;
-                }
-
-                return false;
-            }),
-            mapTest(value => value.receipt)
-        );
+        return new NewHeadsSubscription(config).pipe(transactionConfirmations(config, txHash));
     } else {
         let lastBlock;
         let getBlockByNumber = new GetBlockByNumberMethod(config, []);

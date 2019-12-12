@@ -63,7 +63,7 @@ export default class Method {
      *
      * @method execute
      *
-     * @returns {Promise<Object|String>}
+     * @returns {Promise<any>}
      */
     async execute() {
         await this.beforeExecution();

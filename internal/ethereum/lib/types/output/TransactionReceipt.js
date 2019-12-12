@@ -53,7 +53,7 @@ export default class TransactionReceipt {
      *
      * @property blockNumber
      *
-     * @returns {String}
+     * @returns {Number}
      */
     get blockNumber() {
         return this.properties.blockNumber;
@@ -68,7 +68,7 @@ export default class TransactionReceipt {
      */
     set blockNumber(blockNumber) {
         if (blockNumber || blockNumber === 0) {
-            this.properties.blockNumber = BigNumber.from(blockNumber).toString();
+            this.properties.blockNumber = BigNumber.from(blockNumber).toNumber();
 
             return;
         }
