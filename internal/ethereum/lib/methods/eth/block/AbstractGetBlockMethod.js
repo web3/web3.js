@@ -21,9 +21,9 @@
  * @date 2019
  */
 
-import Method from "../../../../../core/src/json-rpc/methods/Method";
-import BlockNumber from "../../../../../ethereum/lib/types/input/BlockNumber";
-import Block from "../../../../../ethereum/lib/types/output/Block";
+import Method from "../../../../../core/src/json-rpc/methods/Method.js";
+import BlockNumber from "../../../../../ethereum/lib/types/input/BlockNumber.js";
+import Block from "../../../../../ethereum/lib/types/output/Block.js";
 
 export default class AbstractGetBlockMethod extends Method {
     /**

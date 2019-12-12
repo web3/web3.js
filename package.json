@@ -118,9 +118,11 @@
         "bn.js": "^5.0.0",
         "eth-lib": "^0.1.29",
         "eventemitter3": "^4.0.0",
+        "filter-async-rxjs-pipe": "^0.1.5",
         "lodash": "^4.17.15",
         "randombytes": "^2.1.0",
         "rxjs": "^6.5.3",
+        "rxjs-compat": "^6.5.3",
         "utf8": "^3.0.0",
         "xhr2-cookies": "^1.1.0"
     }

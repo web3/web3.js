@@ -17,8 +17,12 @@
  * @date 2019
  */
 
-import {BigNumber} from '@ethersproject/bignumber';
-import TransactionReceipt from './TransactionReceipt';
+
+// FOR TESTING (the nodejs esm loader can't resolve it)
+import * as number from '@ethersproject/bignumber';
+const BigNumber = number.default.BigNumber;
+
+import TransactionReceipt from './TransactionReceipt.js';
 
 export default class Transaction extends TransactionReceipt {
     /**

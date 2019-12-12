@@ -19,12 +19,15 @@
  * @date 2019
  */
 
-import isArray from 'lodash/isArray';
-import isString from 'lodash/isString';
-import Hex from './Hex';
-import Address from './Address';
-import Transaction from './Transaction';
-import {BigNumber} from '@ethersproject/bignumber';
+// FOR TESTING (the nodejs esm loader can't resolve it)
+import * as number from '@ethersproject/bignumber';
+const BigNumber = number.default.BigNumber;
+
+import isArray from 'lodash/isArray.js';
+import isString from 'lodash/isString.js';
+import Transaction from './Transaction.js';
+import Hex from "../../../../core/src/utility/Hex.js";
+import Address from "../input/Address.js";
 
 export default class Block {
     /**

@@ -19,10 +19,13 @@
  * @date 2019
  */
 
-import {BigNumber} from '@ethersproject/bignumber';
-import isArray from 'lodash/isArray';
-import Address from './Address';
-import Log from './Log';
+// FOR TESTING (the nodejs esm loader can't resolve it)
+import * as number from '@ethersproject/bignumber';
+const BigNumber = number.default.BigNumber;
+
+import isArray from 'lodash/isArray.js';
+import Log from './Log.js';
+import Address from "../input/Address.js";
 
 export default class TransactionReceipt {
     /**
@@ -198,7 +201,11 @@ export default class TransactionReceipt {
      * @param {String} gas
      */
     set gas(gas) {
-        this.properties.gas = BigNumber.from(gas).toString();
+        if (gas) {
+            this.properties.gas = BigNumber.from(gas).toString();
+        }
+
+        this.properties.gas = gas;
     }
 
     /**
@@ -242,7 +249,11 @@ export default class TransactionReceipt {
      * @param {String} gasUsed
      */
     set gasUsed(gasUsed) {
-        this.properties.gasUsed = BigNumber.from(gasUsed).toString();
+        if (gasUsed) {
+            this.properties.gasUsed = BigNumber.from(gasUsed).toString();
+        }
+
+        this.properties.gasUsed = gasUsed;
     }
 
     /**

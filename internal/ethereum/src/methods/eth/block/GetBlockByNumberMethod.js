@@ -20,7 +20,7 @@
  * @date 2019
  */
 
-import AbstractGetBlockMethod from "../../../../lib/methods/eth/block/AbstractGetBlockMethod";
+import AbstractGetBlockMethod from "../../../../lib/methods/eth/block/AbstractGetBlockMethod.js";
 
 export default class GetBlockByNumberMethod extends AbstractGetBlockMethod {
     /**

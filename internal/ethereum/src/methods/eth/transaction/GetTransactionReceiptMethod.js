@@ -20,8 +20,8 @@
  * @date 2019
  */
 
-import Method from "../../../../../core/src/json-rpc/methods/Method";
-import TransactionReceipt from "../../../../lib/types/output/TransactionReceipt";
+import Method from "../../../../../core/src/json-rpc/methods/Method.js";
+import TransactionReceipt from "../../../../lib/types/output/TransactionReceipt.js";
 
 export default class GetTransactionReceiptMethod extends Method {
     /**

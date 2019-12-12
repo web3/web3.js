@@ -19,9 +19,9 @@
  * @date 2019
  */
 
-import Hex from './Hex';
-import Address from './Address';
-import Hash from 'eth-lib/lib/hash';
+import Hash from 'eth-lib/lib/hash.js';
+import Address from "../input/Address.js";
+import Hex from "../../../../core/src/utility/Hex.js";
 
 export default class Log {
     /**

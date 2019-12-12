@@ -17,8 +17,17 @@
  * @date 2019
  */
 
-import {interval} from 'rxjs'
-import {map, filter} from 'rxjs/operators'
+// FOR TESTING (the nodejs esm loader can't resolve it)
+import * as rxjs from 'rxjs'
+const interval = rxjs.default.interval;
+const from = rxjs.default.from;
+
+import mergeMap from 'rxjs/operators/mergeMap.js'
+const mergeMapTest = mergeMap.mergeMap;
+
+import filterByPromise from 'filter-async-rxjs-pipe';
+const filterTest = filterByPromise.filterByPromise;
+
 import web3 from "../../index.js";
 import GetTransactionReceiptMethod from "../../../internal/ethereum/src/methods/eth/transaction/GetTransactionReceiptMethod.js";
 import GetBlockByNumberMethod from "../../../internal/ethereum/src/methods/eth/block/GetBlockByNumberMethod.js";
@@ -42,10 +51,10 @@ export default function confirmations(txHash, config = web3.config.ethereum) {
         let blockNumbers = [];
 
         return new NewHeadsSubscription(config).pipe(
-            map(async (newHead) => {
+            mapTest(async (newHead) => {
                 return {newHeadNumber: newHead.number, receipt: await getTransactionReceiptMethod.execute()};
             }),
-            filter((value) => {
+            filterTest((value) => {
                 if (
                     value.receipt &&
                     (value.receipt.blockNumber === 0 || value.receipt.blockNumber) &&
@@ -58,18 +67,18 @@ export default function confirmations(txHash, config = web3.config.ethereum) {
 
                 return false;
             }),
-            map(value => value.receipt)
+            mapTest(value => value.receipt)
         );
     } else {
         let lastBlock;
         let getBlockByNumber = new GetBlockByNumberMethod(config, []);
 
         return interval(1000).pipe(
-            map(async () => {
-                return await getTransactionReceiptMethod.execute()
+            mergeMapTest(() => {
+                return from(getTransactionReceiptMethod.execute());
             }),
-            filter(async (value) => {
-                if (value && (value.blockNumber === 0 || value.blockNumber)) {
+            filterTest(async (receipt) => {
+                if (receipt && (receipt.blockNumber === 0 || receipt.blockNumber)) {
                     if (lastBlock) {
                         getBlockByNumber.parameters = [lastBlock.number + 1];
                         const block = await getBlockByNumber.execute();
@@ -80,7 +89,7 @@ export default function confirmations(txHash, config = web3.config.ethereum) {
                             return true;
                         }
                     } else {
-                        getBlockByNumber.parameters = [lastBlock.number + 1];
+                        getBlockByNumber.parameters = [receipt.blockNumber];
                         lastBlock = await getBlockByNumber.execute();
 
                         return true;
