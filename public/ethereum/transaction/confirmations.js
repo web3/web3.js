@@ -20,6 +20,8 @@
 import web3 from "../../index.js";
 import {interval} from 'rxjs'
 import {transactionConfirmations} from "../../../internal/ethereum/src/subscriptions/operators/transactionConfirmations";
+import PollingTransactionConfirmationSubscription
+  from "../../../internal/ethereum/src/subscriptions/PollingTransactionConfirmationSubscription";
 
 /**
  * POC
@@ -32,9 +34,9 @@ import {transactionConfirmations} from "../../../internal/ethereum/src/subscript
  * @returns {Observable}
  */
 export default function confirmations(txHash, config = web3.config.ethereum) {
-    if (config.provider.supportsSubscriptions()) {
-        return new NewHeadsSubscription(config).pipe(transactionConfirmations(config, txHash));
-    }
+  if (config.provider.supportsSubscriptions()) {
+    return new NewHeadsSubscription(config).pipe(transactionConfirmations(config, txHash));
+  }
 
-    return interval(1000).pipe(transactionConfirmations(config, txHash));
+  return new PollingTransactionConfirmationSubscription(config, [txHash]);
 }
