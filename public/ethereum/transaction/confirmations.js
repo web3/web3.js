@@ -17,11 +17,8 @@
  * @date 2019
  */
 
-import {interval, from} from 'rxjs'
-
 import web3 from "../../index.js";
-import GetTransactionReceiptMethod from "../../../internal/ethereum/src/methods/eth/transaction/GetTransactionReceiptMethod.js";
-import GetBlockByNumberMethod from "../../../internal/ethereum/src/methods/eth/block/GetBlockByNumberMethod.js";
+import {interval} from 'rxjs'
 import {transactionConfirmations} from "../../../internal/ethereum/src/subscriptions/operators/transactionConfirmations";
 
 /**
@@ -35,42 +32,9 @@ import {transactionConfirmations} from "../../../internal/ethereum/src/subscript
  * @returns {Observable}
  */
 export default function confirmations(txHash, config = web3.config.ethereum) {
-    const getTransactionReceiptMethod = new GetTransactionReceiptMethod(config, [txHash]);
-
-    // on parity nodes you can get the receipt without it being mined
-    // so the receipt may not have a block number at this point
     if (config.provider.supportsSubscriptions()) {
         return new NewHeadsSubscription(config).pipe(transactionConfirmations(config, txHash));
-    } else {
-        let lastBlock;
-        let getBlockByNumber = new GetBlockByNumberMethod(config, []);
-
-        return interval(1000).pipe(
-            mergeMapTest(() => {
-                return from(getTransactionReceiptMethod.execute());
-            }),
-            filterTest(async (receipt) => {
-                if (receipt && (receipt.blockNumber === 0 || receipt.blockNumber)) {
-                    if (lastBlock) {
-                        getBlockByNumber.parameters = [lastBlock.number + 1];
-                        const block = await getBlockByNumber.execute();
-
-                        if (block) {
-                            lastBlock = block;
-
-                            return true;
-                        }
-                    } else {
-                        getBlockByNumber.parameters = [receipt.blockNumber];
-                        lastBlock = await getBlockByNumber.execute();
-
-                        return true;
-                    }
-                }
-
-                return false;
-            })
-        );
     }
-}
 
+    return interval(1000).pipe(transactionConfirmations(config, txHash));
+}
