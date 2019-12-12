@@ -6,7 +6,7 @@
     "license": "LGPL-3.0",
     "type": "module",
     "engines": {
-        "node": ">=8.0.0"
+        "node": ">=10.0.0"
     },
     "main": "./dist/public/",
     "directories": {
@@ -46,30 +46,6 @@
             "name": "Samuel Furter",
             "email": "samuel@ethereum.org",
             "homepage": "https://github.com/nivida"
-        },
-        {
-            "name": "Fabian Vogelsteller",
-            "email": "fabian@ethereum.org",
-            "homepage": "https://github.com/frozeman"
-        },
-        {
-            "name": "Marek Kotewicz",
-            "email": "marek@parity.io",
-            "url": "https://github.com/debris"
-        },
-        {
-            "name": "Marian Oancea",
-            "url": "https://github.com/cubedro"
-        },
-        {
-            "name": "Gav Wood",
-            "email": "g@parity.io",
-            "homepage": "http://gavwood.com"
-        },
-        {
-            "name": "Jeffery Wilcke",
-            "email": "jeffrey.wilcke@ethereum.org",
-            "url": "https://github.com/obscuren"
         }
     ],
     "devDependencies": {

@@ -1,8 +1,11 @@
 {
   "extends": "@ethereumjs/config-tsc",
   "compilerOptions": {
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "allowJs": true
   },
-  "include": ["./internal/**/*", "./public/**/*"],
-  "allowJs": true
+  "include": [
+    "./internal/**/*",
+    "./public/**/*"
+  ]
 }
