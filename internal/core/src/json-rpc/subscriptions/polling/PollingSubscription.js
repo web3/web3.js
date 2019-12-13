@@ -50,13 +50,13 @@ export default class PollingSubscription extends Observable {
         const subscription = super.subscribe(observer);
 
         const intervalSub = interval(this.config.pollingInterval).subscribe({
-            async next() {
+            next: async () => {
                 observer.next(await this.method.execute());
             },
-            error(error) {
+            error: (error) => {
                 observer.error(error);
             },
-            complete() {
+            complete: () => {
                 observer.complete();
             }
         });

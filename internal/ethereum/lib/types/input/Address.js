@@ -19,9 +19,9 @@
  * @date 2019
  */
 
-import Hex from "../../../../core/src/utility/Hex.js";
-import Hash from 'eth-lib/lib/hash.js';
-import Iban from './Iban.js';
+import Hex from "../../../../core/src/utility/Hex";
+import {keccak256} from 'eth-lib/lib/hash';
+import Iban from './Iban';
 
 export default class Address {
     /**
@@ -115,7 +115,7 @@ export default class Address {
             prefix = chainId.toString() + '0x';
         }
 
-        const keccakHash = Hash.keccak256(prefix + stripAddress)
+        const keccakHash = keccak256(prefix + stripAddress)
             .toString('hex')
             .replace(/^0x/i, '');
 

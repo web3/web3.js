@@ -19,8 +19,8 @@
  * @date 2019
  */
 
-import isString from 'lodash/isString.js';
-import Hex from "../../../../core/src/utility/Hex.js";
+import {isString} from 'lodash';
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class BlockNumber {
     /**

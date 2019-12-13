@@ -22,15 +22,9 @@
 import utf8 from 'utf8';
 import BN from 'bn.js';
 // TODO: Remove lodash
-import isBoolean from 'lodash/isBoolean.js';
-import isObject from 'lodash/isObject.js';
-import isString from 'lodash/isString.js';
-import isNumber from 'lodash/isNumber.js';
+import {isBoolean, isObject, isString, isNumber} from 'lodash';
 import randombytes from 'randombytes';
-
-// FOR TESTING (the nodejs esm loader can't resolve it)
-import * as number from '@ethersproject/bignumber';
-const BigNumber = number.default.BigNumber;
+import {BigNumber} from '@ethersproject/bignumber';
 
 // TODO: Remove this draft object and use the ethers utility functions directly
 export default class Hex {

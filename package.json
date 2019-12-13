@@ -11,10 +11,10 @@
     "exports": {
         "./ethereum": "./dist/public/ethereum/",
         "./core": "./dist/public/core/",
-        "./ens": "./dist/public/core/",
-        "./swarm": "./dist/public/core/",
-        "./wallet": "./dist/public/core/",
-        "./whisper": "./dist/public/core/"
+        "./ens": "./dist/public/ens/",
+        "./swarm": "./dist/public/swarm/",
+        "./wallet": "./dist/public/wallet/",
+        "./whisper": "./dist/public/whisper/"
     },
     "scripts": {
         "build": "ethereumjs-config-build",
@@ -56,20 +56,20 @@
         "@ethereumjs/config-prettier": "^1.1.1",
         "@ethereumjs/config-tsc": "^1.1.1",
         "@ethereumjs/config-tslint": "^1.1.1",
+        "@types/bn.js": "^4.11.5",
+        "@types/lodash": "^4.14.149",
+        "@types/node": "^12.0.10",
         "coveralls": "^3.0.3",
         "jest": "^24.8.0",
-        "typescript": "^3.7.3",
-        "tslint": "^5.20.1",
         "prettier": "^1.15.3",
-        "@types/bn.js": "^4.11.5",
-        "@types/node": "^12.0.10"
+        "tslint": "^5.20.1",
+        "typescript": "^3.7.3"
     },
     "dependencies": {
         "@ethersproject/bignumber": "^5.0.0-beta.135",
         "bn.js": "^5.0.0",
         "eth-lib": "^0.1.29",
         "eventemitter3": "^4.0.0",
-        "filter-async-rxjs-pipe": "^0.1.5",
         "lodash": "^4.17.15",
         "randombytes": "^2.1.0",
         "rxjs": "^6.5.3",

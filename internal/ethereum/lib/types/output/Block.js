@@ -20,11 +20,10 @@
  */
 
 import {BigNumber} from '@ethersproject/bignumber';
-import isArray from 'lodash/isArray.js';
-import isString from 'lodash/isString.js';
-import Transaction from './Transaction.js';
-import Hex from "../../../../core/src/utility/Hex.js";
-import Address from "../input/Address.js";
+import {isArray, isString} from 'lodash';
+import Transaction from './Transaction';
+import Hex from "../../../../core/src/utility/Hex";
+import Address from "../input/Address";
 
 export default class Block {
     /**

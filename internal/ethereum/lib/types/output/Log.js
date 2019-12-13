@@ -19,9 +19,9 @@
  * @date 2019
  */
 
-import Hash from 'eth-lib/lib/hash.js';
-import Address from "../input/Address.js";
-import Hex from "../../../../core/src/utility/Hex.js";
+import {keccak256} from 'eth-lib/lib/hash';
+import Address from "../input/Address";
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class Log {
     /**
@@ -269,7 +269,7 @@ export default class Log {
             typeof this.properties.transactionHash === 'string' &&
             typeof this.properties.logIndex === 'string'
         ) {
-            const shaId = Hash.keccak256(
+            const shaId = keccak256(
                 this.properties.blockHash.replace('0x', '') +
                     this.properties.transactionHash.replace('0x', '') +
                     this.properties.logIndex.replace('0x', '')

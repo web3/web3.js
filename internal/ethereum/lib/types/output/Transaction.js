@@ -18,7 +18,7 @@
  */
 
 import {BigNumber} from '@ethersproject/bignumber';
-import TransactionReceipt from './TransactionReceipt.js';
+import TransactionReceipt from './TransactionReceipt';
 
 export default class Transaction extends TransactionReceipt {
     /**

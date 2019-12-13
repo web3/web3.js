@@ -20,9 +20,9 @@
  */
 
 import {BigNumber} from '@ethersproject/bignumber';
-import isArray from 'lodash/isArray.js';
-import Log from './Log.js';
-import Address from "../input/Address.js";
+import {isArray} from 'lodash';
+import Log from './Log';
+import Address from "../input/Address";
 
 export default class TransactionReceipt {
     /**

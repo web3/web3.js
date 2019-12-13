@@ -22,10 +22,9 @@
 
 // TODO: Remove XHR dependency
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
-import http from 'http';
-import https from 'https';
+import * as http from 'http';
+import * as https from 'https';
 import AbstractProvider from "../../../lib/json-rpc/providers/AbstractProvider.js";
-
 
 export default class HttpProvider extends AbstractProvider {
     /**

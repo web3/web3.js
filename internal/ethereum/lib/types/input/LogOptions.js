@@ -19,7 +19,7 @@
  * @date 2019
  */
 
-import isArray from 'lodash/isArray';
+import {isArray} from 'lodash';
 import Address from './Address';
 import BlockNumber from './BlockNumber';
 import Hex from "../../../../core/src/utility/Hex";

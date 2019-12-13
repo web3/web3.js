@@ -19,7 +19,6 @@
  * @date 2019
  */
 
-
 import Hex from "../../../../core/src/utility/Hex";
 
 export default class SyncState {

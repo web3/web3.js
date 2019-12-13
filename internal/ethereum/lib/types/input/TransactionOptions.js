@@ -20,8 +20,8 @@
  * @date 2019
  */
 
-import Address from './Address.js';
-import Hex from "../../../../core/src/utility/Hex.js";
+import Address from './Address';
+import Hex from "../../../../core/src/utility/Hex";
 
 export default class TransactionOptions {
     /**
