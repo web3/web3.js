@@ -25,6 +25,7 @@ import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import * as http from 'http';
 import * as https from 'https';
 import AbstractProvider from "../../../lib/json-rpc/providers/AbstractProvider.js";
+import ProviderError from "../../errors/json-rpc/ProviderError";
 
 export default class HttpProvider extends AbstractProvider {
     /**
@@ -70,14 +71,14 @@ export default class HttpProvider extends AbstractProvider {
      * Added this method to have a better error message if someone is trying to create a subscription with this provider.
      */
     subscribe() {
-        throw new Error('Subscriptions are not supported with the HttpProvider.');
+        throw new ProviderError('Subscriptions are not supported with the HttpProvider.', this.host);
     }
 
     /**
      * Added this method to have a better error message if someone is trying to unsubscribe with this provider.
      */
     unsubscribe() {
-        throw new Error('Subscriptions are not supported with the HttpProvider.');
+        throw new ProviderError('Subscriptions are not supported with the HttpProvider.', this.host);
     }
 
     /**
@@ -178,16 +179,16 @@ export default class HttpProvider extends AbstractProvider {
                         try {
                             return resolve(JSON.parse(request.responseText));
                         } catch (error) {
-                            reject(new Error(`Invalid JSON as response: ${request.responseText}`));
+                            reject(new ProviderError(`Invalid JSON as response: ${request.responseText}`, this.host, payload, request.responseText));
                         }
                     }
 
                     if (this.isInvalidHttpEndpoint(request)) {
-                        reject(new Error(`Connection refused or URL couldn't be resolved: ${this.host}`));
+                        reject(new ProviderError(`Connection refused or URL couldn't be resolved: ${this.host}`, this.host, payload, request.responseText));
                     }
 
                     if (request.status >= 400 && request.status <= 499) {
-                        reject(new Error(`HttpProvider ERROR: ${request.responseText} (code: ${request.status})`));
+                        reject(new ProviderError(`${request.responseText} (code: ${request.status})`, this.host, payload, request.responseText));
                     }
                 }
             };
@@ -195,13 +196,13 @@ export default class HttpProvider extends AbstractProvider {
             request.addEventListener('timeout', () => {
                 this.connected = false;
 
-                reject(new Error(`Connection error: Timeout exceeded after ${this.timeout}ms`));
+                reject(new ProviderError(`Timeout exceeded after ${this.timeout}ms`, this.host, payload, request.responseText));
             });
 
-            request.addEventListener('error', () => {
+            request.addEventListener('error', (event) => {
                 this.connected = false;
 
-                reject(new Error(`Network error ${JSON.stringify(payload)}`));
+                reject(new ProviderError(event.message, this.host, payload));
             });
 
             try {

@@ -22,6 +22,7 @@
 
 import AbstractSocketProvider from "../../../lib/json-rpc/providers/AbstractSocketProvider";
 import isArray from 'lodash/isArray';
+import ProviderError from "../../errors/json-rpc/ProviderError";
 
 export default class IpcProvider extends AbstractSocketProvider {
     /**
@@ -185,7 +186,7 @@ export default class IpcProvider extends AbstractSocketProvider {
 
             this.removeListener('error', reject);
 
-            return reject(new Error("Connection error: Couldn't write on the socket with Socket.write(payload)"));
+            return reject(new ProviderError('Couldn\'t write on the socket with Socket.write(payload)', this.host, payload));
         });
     }
 }

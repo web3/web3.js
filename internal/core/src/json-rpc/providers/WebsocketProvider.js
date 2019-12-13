@@ -22,6 +22,7 @@
 
 import AbstractSocketProvider from "../../../lib/json-rpc/providers/AbstractSocketProvider";
 import isArray from 'lodash/isArray';
+import ProviderError from "../../errors/json-rpc/ProviderError";
 
 export default class WebsocketProvider extends AbstractSocketProvider {
     /**
@@ -228,7 +229,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 if (this.connection.readyState !== this.connection.OPEN) {
                     this.removeListener('error', reject);
 
-                    return reject(new Error('Connection error: Connection is not open on send()'));
+                    return reject(new ProviderError('Connection is not open on send()', this.host, payload));
                 }
 
                 try {
@@ -250,7 +251,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                         this.removeListener('error', reject);
                         this.removeAllListeners(id);
 
-                        reject(new Error('Connection error: Timeout exceeded'));
+                        reject(new ProviderError('Timeout exceeded', this.host, payload));
                     }, this.timeout);
                 }
 

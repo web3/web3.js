@@ -19,6 +19,8 @@
 
 import {isObject} from 'lodash';
 import {EventEmitter} from "eventemitter3";
+import ValidationError from "../../../src/errors/json-rpc/ValidationError";
+import NodeError from "../../../src/errors/json-rpc/NodeError";
 
 export default class AbstractProvider extends EventEmitter {
     /**
@@ -41,10 +43,6 @@ export default class AbstractProvider extends EventEmitter {
      * @returns {{method: *, id: number, jsonrpc: string, params: (*|Array)}}
      */
     toPayload(method, params) {
-        if (!method) {
-            throw new Error(`JSONRPC method should be specified for params: "${JSON.stringify(params)}"!`);
-        }
-
         const id = this.messageId;
         this.messageId++;
 
@@ -64,31 +62,29 @@ export default class AbstractProvider extends EventEmitter {
      * @param {Object} response
      * @param {Object|Array} payload
      *
-     * @returns {Boolean}
+     * @returns {Boolean | Error}
      */
     validate(response, payload = false) {
         if (isObject(response)) {
             if (response.error) {
                 if (response.error instanceof Error) {
-                    return new Error(`Node error: ${response.error.message}`);
+                    return new NodeError(response.error.message, this.host, payload, response);
                 }
 
-                return new Error(`Node error: ${JSON.stringify(response.error)}`);
+                return new NodeError(JSON.stringify(response.error), this.host, payload, response);
             }
 
             if (payload && response.id !== payload.id) {
-                return new Error(
-                    `Validation error: Invalid JSON-RPC response ID (request: ${payload.id} / response: ${response.id})`
-                );
+                return new ValidationError(`Invalid JSON-RPC response ID (request: ${payload.id} / response: ${response.id})`, this.host, payload, response);
             }
 
             if (response.result === undefined) {
-                return new Error('Validation error: Undefined JSON-RPC result');
+                return new ValidationError('Undefined JSON-RPC result', this.host, payload, response);
             }
 
             return true;
         }
 
-        return new Error('Validation error: Response should be of type Object');
+        return new ValidationError('Response should be of type Object', this.host, payload, response);
     }
 }
