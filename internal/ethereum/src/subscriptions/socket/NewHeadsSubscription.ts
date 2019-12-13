@@ -20,17 +20,19 @@
  * @date 2019
  */
 
-import {Observable} from 'rxjs';
+import {PartialObserver, Subscription, Subscriber} from 'rxjs';
 import SocketSubscription from "../../../../core/src/json-rpc/subscriptions/socket/SocketSubscription";
-import Block from "../../lib/types/output/Block";
+import Block from "../../../lib/types/output/Block";
+import EthereumConfiguration from "../../config/EthereumConfiguration";
+import BlockProperties from "../../../lib/types/output/interfaces/block/BlockProperties";
 
-export default class NewHeadsSubscription extends SocketSubscription {
+export default class NewHeadsSubscription extends SocketSubscription<Block> {
     /**
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(config) {
+    public constructor(config: EthereumConfiguration) {
         super('eth_subscribe', 'newHeads', config);
     }
 
@@ -39,25 +41,29 @@ export default class NewHeadsSubscription extends SocketSubscription {
      *
      * @method subscribe
      *
-     * @param {Function} observerOrNext
+     * @param {Observer|Function} observerOrNext
      * @param {Function} error
      * @param {Function} complete
      *
      * @returns {Subscription}
      */
-    subscribe(observerOrNext, error, complete) {
-        return new Observable((observer) => {
-            return super.subscribe({
-                next(block) {
-                    observer.next(new Block(block))
-                },
-                error(error) {
-                    observer.error(error);
-                },
-                complete() {
-                    observer.complete();
-                }
-            });
-        })
+    public subscribe(
+        observerOrNext?: PartialObserver<Block> | ((value: Block) => void),
+        error?: (error: any) => void,
+        complete?: () => void
+    ): Subscription {
+        const subscriber: Subscriber<Block> = new Subscriber(observerOrNext, error, complete);
+
+        return super.subscribe({
+            next: (blockProperties: BlockProperties): void => {
+                subscriber.next(new Block(blockProperties));
+            },
+            error: (error: Error): void => {
+                subscriber.error(error);
+            },
+            complete: (): void => {
+                subscriber.complete();
+            }
+        });
     }
 }

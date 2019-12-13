@@ -21,7 +21,7 @@ import web3 from '../../index.js';
 import confirmations from './confirmations.js';
 
 /**
- * POC
+ * Returns the receipt if the amount of configured confirmations is reached.
  *
  * @method mined
  *

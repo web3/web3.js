@@ -22,12 +22,9 @@ import send from "./send.js";
 import confirmations from "./confirmations.js";
 import mined from "./mined.js";
 
-/**
- * POC
- */
 export default class Transaction {
     /**
-     * @param {Object} options
+     * @param {TransactionOptions} options
      * @param {EthereumConfiguration} config
      *
      * @constructor
@@ -61,7 +58,7 @@ export default class Transaction {
     }
 
     /**
-     * Returns a Observable which does trigger the next listener on each confirmation
+     * Returns a Observable which does trigger the next listener on each valid confirmation
      *
      * @method confirmations
      *

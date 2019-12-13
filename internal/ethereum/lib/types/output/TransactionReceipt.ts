@@ -26,11 +26,16 @@ import Address from "../input/Address";
 
 export default class TransactionReceipt {
     /**
+     * @property properties
+     */
+    private properties: any;
+
+    /**
      * @param {Object} receipt
      *
      * @constructor
      */
-    constructor(receipt) {
+    constructor(receipt: any) {
         this.properties = receipt;
 
         this.blockNumber = receipt.blockNumber;
@@ -52,7 +57,7 @@ export default class TransactionReceipt {
      *
      * @returns {Number}
      */
-    get blockNumber() {
+    public get blockNumber() {
         return this.properties.blockNumber;
     }
 
@@ -63,7 +68,7 @@ export default class TransactionReceipt {
      *
      * @param {Number|null} blockNumber
      */
-    set blockNumber(blockNumber) {
+    public set blockNumber(blockNumber: number | null) {
         if (blockNumber || blockNumber === 0) {
             this.properties.blockNumber = BigNumber.from(blockNumber).toNumber();
 
@@ -80,7 +85,7 @@ export default class TransactionReceipt {
      *
      * @returns {Number}
      */
-    get transactionIndex() {
+    public get transactionIndex() {
         return this.properties.transactionIndex;
     }
 
@@ -91,7 +96,7 @@ export default class TransactionReceipt {
      *
      * @param {String|null} transactionIndex
      */
-    set transactionIndex(transactionIndex) {
+    public set transactionIndex(transactionIndex) {
         if (transactionIndex || transactionIndex === 0) {
             this.properties.transactionIndex = BigNumber.from(transactionIndex).toString();
 
@@ -108,7 +113,7 @@ export default class TransactionReceipt {
      *
      * @returns {Number}
      */
-    get gasPrice() {
+    public get gasPrice() {
         return this.properties.gasPrice;
     }
 
@@ -119,7 +124,7 @@ export default class TransactionReceipt {
      *
      * @param {String} gasPrice
      */
-    set gasPrice(gasPrice) {
+    public set gasPrice(gasPrice) {
         if (gasPrice) {
             this.properties.gasPrice = BigNumber.from(gasPrice).toString();
 
@@ -136,7 +141,7 @@ export default class TransactionReceipt {
      *
      * @returns {String}
      */
-    get value() {
+    public get value() {
         return this.properties.value;
     }
 
@@ -147,7 +152,7 @@ export default class TransactionReceipt {
      *
      * @param {String} value
      */
-    set value(value) {
+    public set value(value) {
         if (value) {
             this.properties.value = BigNumber.from(value).toString();
 
@@ -164,7 +169,7 @@ export default class TransactionReceipt {
      *
      * @returns {Number}
      */
-    get nonce() {
+    public get nonce() {
         return this.properties.nonce;
     }
 
@@ -175,7 +180,7 @@ export default class TransactionReceipt {
      *
      * @param {String} nonce
      */
-    set nonce(nonce) {
+    public set nonce(nonce) {
         this.properties.nonce = BigNumber.from(nonce).toString();
     }
 
@@ -186,7 +191,7 @@ export default class TransactionReceipt {
      *
      * @returns {Number}
      */
-    get gas() {
+    public get gas() {
         return this.properties.gas;
     }
 
@@ -197,7 +202,7 @@ export default class TransactionReceipt {
      *
      * @param {String} gas
      */
-    set gas(gas) {
+    public set gas(gas) {
         if (gas) {
             this.properties.gas = BigNumber.from(gas).toString();
         }
@@ -212,7 +217,7 @@ export default class TransactionReceipt {
      *
      * @returns {Number}
      */
-    get cumulativeGasUsed() {
+    public get cumulativeGasUsed() {
         return this.properties.cumulativeGasUsed;
     }
 
@@ -223,7 +228,7 @@ export default class TransactionReceipt {
      *
      * @param cumulativeGasUsed
      */
-    set cumulativeGasUsed(cumulativeGasUsed) {
+    public set cumulativeGasUsed(cumulativeGasUsed) {
         this.properties.cumulativeGasUsed = BigNumber.from(cumulativeGasUsed).toString();
     }
 
@@ -234,7 +239,7 @@ export default class TransactionReceipt {
      *
      * @returns {Number}
      */
-    get gasUsed() {
+    public get gasUsed() {
         return this.properties.gasUsed;
     }
 
@@ -245,7 +250,7 @@ export default class TransactionReceipt {
      *
      * @param {String} gasUsed
      */
-    set gasUsed(gasUsed) {
+    public set gasUsed(gasUsed) {
         if (gasUsed) {
             this.properties.gasUsed = BigNumber.from(gasUsed).toString();
         }
@@ -260,7 +265,7 @@ export default class TransactionReceipt {
      *
      * @returns {String|null}
      */
-    get to() {
+    public get to() {
         return this.properties.to;
     }
 
@@ -271,7 +276,7 @@ export default class TransactionReceipt {
      *
      * @param {String} to
      */
-    set to(to) {
+    public set to(to) {
         if (to && Address.isValid(to)) {
             // tx.to could be `0x0` or `null` while contract creation
             this.properties.to = Address.toChecksum(to);
@@ -289,7 +294,7 @@ export default class TransactionReceipt {
      *
      * @returns {String}
      */
-    get from() {
+    public get from() {
         return this.properties.from;
     }
 
@@ -300,7 +305,7 @@ export default class TransactionReceipt {
      *
      * @param {String} from
      */
-    set from(from) {
+    public set from(from) {
         if (from) {
             this.properties.from = Address.toChecksum(from);
         }
@@ -313,7 +318,7 @@ export default class TransactionReceipt {
      *
      * @returns {Array<Log>}
      */
-    get logs() {
+    public get logs() {
         return this.properties.logs;
     }
 
@@ -324,7 +329,7 @@ export default class TransactionReceipt {
      *
      * @param {Log} logs
      */
-    set logs(logs) {
+    public set logs(logs) {
         if (isArray(logs)) {
             this.properties.logs = logs.map((log) => {
                 return new Log(log);
@@ -339,7 +344,7 @@ export default class TransactionReceipt {
      *
      * @returns {Array<Log>}
      */
-    get contractAddress() {
+    public get contractAddress() {
         return this.properties.contractAddress;
     }
 
@@ -350,7 +355,7 @@ export default class TransactionReceipt {
      *
      * @param {String} contractAddress
      */
-    set contractAddress(contractAddress) {
+    public set contractAddress(contractAddress) {
         if (contractAddress) {
             this.properties.contractAddress = Address.toChecksum(contractAddress);
         }
@@ -363,7 +368,7 @@ export default class TransactionReceipt {
      *
      * @returns {Array<Log>}
      */
-    get status() {
+    public get status() {
         return this.properties.status;
     }
 
@@ -374,7 +379,7 @@ export default class TransactionReceipt {
      *
      * @param {String} status
      */
-    set status(status) {
+    public set status(status) {
         if (typeof status !== 'undefined' && status !== null) {
             this.properties.status = Boolean(parseInt(status));
 
@@ -391,7 +396,7 @@ export default class TransactionReceipt {
      *
      * @returns {String}
      */
-    get transactionHash() {
+    public get transactionHash() {
         return this.properties.transactionHash;
     }
 
@@ -402,7 +407,7 @@ export default class TransactionReceipt {
      *
      * @param {String} transactionHash
      */
-    set transactionHash(transactionHash) {
+    public set transactionHash(transactionHash) {
         this.properties.transactionHash = transactionHash;
     }
 
@@ -413,7 +418,7 @@ export default class TransactionReceipt {
      *
      * @returns {String}
      */
-    get logsBloom() {
+    public get logsBloom() {
         return this.properties.logsBloom;
     }
 
@@ -424,7 +429,7 @@ export default class TransactionReceipt {
      *
      * @param {String} logsBloom
      */
-    set logsBloom(logsBloom) {
+    public set logsBloom(logsBloom) {
         this.properties.logsBloom = logsBloom;
     }
 
@@ -435,7 +440,7 @@ export default class TransactionReceipt {
      *
      * @param {String} root
      */
-    set root(root) {
+    public set root(root) {
         this.properties.root = root;
     }
 
@@ -446,7 +451,7 @@ export default class TransactionReceipt {
      *
      * @returns {String}
      */
-    get root() {
+    public get root() {
         return this.properties.root;
     }
 
@@ -457,7 +462,7 @@ export default class TransactionReceipt {
      *
      * @returns {String}
      */
-    get blockHash() {
+    public get blockHash() {
         return this.properties.blockHash;
     }
 
@@ -468,7 +473,7 @@ export default class TransactionReceipt {
      *
      * @param {String} blockHash
      */
-    set blockHash(blockHash) {
+    public set blockHash(blockHash) {
         this.properties.blockHash = blockHash;
     }
 }

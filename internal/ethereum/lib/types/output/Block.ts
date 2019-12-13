@@ -24,14 +24,20 @@ import {isArray, isString} from 'lodash';
 import Transaction from './Transaction';
 import Hex from "../../../../core/src/utility/Hex";
 import Address from "../input/Address";
+import BlockProperties from './interfaces/block/BlockProperties';
 
 export default class Block {
+    /**
+     * @property properties
+     */
+    private properties: any;
+
     /**
      * @param {Object} block
      *
      * @constructor
      */
-    constructor(block) {
+    public constructor(block: BlockProperties) {
         this.properties = block;
 
         this.gasLimit = block.gasLimit;
@@ -52,16 +58,18 @@ export default class Block {
      *
      * @returns {Number}
      */
-    get gasLimit() {
+    public get gasLimit() {
         return this.properties.gasLimit;
     }
 
     /**
      * Setter for the gasLimit property.
      *
+     * @param {String} gasLimit
+     *
      * @property gasLimit
      */
-    set gasLimit(gasLimit) {
+    public set gasLimit(gasLimit) {
         this.properties.gasLimit = new Hex(gasLimit).toNumber();
     }
 
@@ -72,7 +80,7 @@ export default class Block {
      *
      * @returns {Number}
      */
-    get gasUsed() {
+    public get gasUsed() {
         return this.properties.gasUsed;
     }
 
@@ -81,7 +89,7 @@ export default class Block {
      *
      * @property gasUsed
      */
-    set gasUsed(gasUsed) {
+    public set gasUsed(gasUsed) {
         this.properties.gasUsed = new Hex(gasUsed).toNumber();
     }
 
@@ -92,7 +100,7 @@ export default class Block {
      *
      * @returns {Number}
      */
-    get size() {
+    public get size() {
         return this.properties.size;
     }
 
@@ -101,7 +109,7 @@ export default class Block {
      *
      * @property size
      */
-    set size(size) {
+    public set size(size) {
         this.properties.size = new Hex(size).toNumber();
     }
 
@@ -112,7 +120,7 @@ export default class Block {
      *
      * @returns {String|Number}
      */
-    get timestamp() {
+    public get timestamp() {
         return this.properties.timestamp;
     }
 
@@ -121,7 +129,7 @@ export default class Block {
      *
      * @property timestamp
      */
-    set timestamp(timestamp) {
+    public set timestamp(timestamp) {
         timestamp = BigNumber.from(timestamp);
 
         try {
@@ -140,16 +148,16 @@ export default class Block {
      *
      * @returns {Number}
      */
-    get number() {
+    public get number() {
         return this.properties.number;
     }
 
     /**
-     * Getter for the number property.
+     * Setter for the number property.
      *
      * @property number
      */
-    set number(number) {
+    public set number(number) {
         if (number) {
             this.properties.number = new Hex(number).toNumber();
 
@@ -166,7 +174,7 @@ export default class Block {
      *
      * @returns {String}
      */
-    get difficulty() {
+    public get difficulty() {
         return this.properties.difficulty;
     }
 
@@ -175,7 +183,7 @@ export default class Block {
      *
      * @property difficulty
      */
-    set difficulty(difficulty) {
+    public set difficulty(difficulty) {
         if (difficulty) {
             this.properties.difficulty = BigNumber.from(difficulty).toString();
         }
@@ -188,16 +196,16 @@ export default class Block {
      *
      * @returns {String}
      */
-    get totalDifficulty() {
+    public get totalDifficulty() {
         return this.properties.totalDifficulty;
     }
 
     /**
-     * Getter for the totalDifficulty property.
+     * Setter for the totalDifficulty property.
      *
      * @property totalDifficulty
      */
-    set totalDifficulty(totalDifficulty) {
+    public set totalDifficulty(totalDifficulty) {
         if (totalDifficulty) {
             this.properties.totalDifficulty = BigNumber.from(totalDifficulty).toString();
         }
@@ -210,16 +218,16 @@ export default class Block {
      *
      * @returns {Array<Transaction>}
      */
-    get transactions() {
+    public get transactions() {
         return this.properties.transactions;
     }
 
     /**
-     * Getter for the transactions property.
+     * Setter for the transactions property.
      *
      * @property transactions
      */
-    set transactions(transactions) {
+    public set transactions(transactions) {
         if (isArray(transactions)) {
             this.properties.transactions = transactions.map((item) => {
                 if (!isString(item)) {
@@ -238,7 +246,7 @@ export default class Block {
      *
      * @returns {String}
      */
-    get miner() {
+    public get miner() {
         return this.properties.miner;
     }
 
@@ -249,7 +257,7 @@ export default class Block {
      *
      * @param {String} miner
      */
-    set miner(miner) {
+    public set miner(miner) {
         if (miner) {
             this.properties.miner = Address.toChecksum(miner);
         }

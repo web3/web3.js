@@ -29,7 +29,7 @@ import {BigNumber} from '@ethersproject/bignumber';
 // TODO: Remove this draft object and use the ethers utility functions directly
 export default class Hex {
     /**
-     * @param {String} value
+     * @param {String | Number} value
      *
      * @constructor
      */

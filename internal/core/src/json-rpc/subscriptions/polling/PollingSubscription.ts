@@ -20,44 +20,51 @@
  * @date 2019
  */
 
-import {Observable, interval} from 'rxjs';
+import {Observable, interval, PartialObserver, Subscription, Subscriber} from 'rxjs';
+import Method from '../../methods/Method';
+import JsonRpcConfiguration from "../../config/JsonRpcConfiguration";
 
-export default class PollingSubscription extends Observable {
+export default class PollingSubscription<T> extends Observable<T> {
     /**
+     * @param {JsonRpcConfiguration} config
      * @param {Method} method
      *
      * @constructor
      */
-    constructor(method) {
+    constructor(public config: JsonRpcConfiguration, public method: Method) {
         super();
-        this.method = method;
     }
 
     /**
-     * Sends the JSON-RPC request and returns a RxJs Subscription object
+     * TODO: Remove ts-ignore as soon as RxJs has removed the deprecated method signatures
+     * Polls the given Method and returns a RxJs Subscription object
      *
      * @method subscribe
      *
-     * @param {Function} observerOrNext
+     * @param {Observer|Function} observerOrNext
      * @param {Function} error
      * @param {Function} complete
      *
      * @returns {Subscription}
      */
-    subscribe(observerOrNext, error, complete) {
-        const observer = this.getObserver(observerOrNext, error, complete);
-
-        const subscription = super.subscribe(observer);
+    // @ts-ignore
+    subscribe(
+        observerOrNext?: PartialObserver<T> | ((value: T) => void),
+        error?: (error: any) => void,
+        complete?: () => void
+    ): Subscription {
+        // @ts-ignore
+        const subscription: Subscriber<T> = super.subscribe(observerOrNext, error, complete);
 
         const intervalSub = interval(this.config.pollingInterval).subscribe({
             next: async () => {
-                observer.next(await this.method.execute());
+                subscription.next(await this.method.execute());
             },
-            error: (error) => {
-                observer.error(error);
+            error: (error: Error) => {
+                subscription.error(error);
             },
             complete: () => {
-                observer.complete();
+                subscription.complete();
             }
         });
 
@@ -65,28 +72,5 @@ export default class PollingSubscription extends Observable {
         subscription.add(intervalSub.unsubscribe.bind(intervalSub));
 
         return subscription;
-    }
-
-    /**
-     * Returns a observer object by the given values
-     *
-     * @method getObserver
-     *
-     * @param {Function} observerOrNext
-     * @param {Function} error
-     * @param {Function} complete
-     *
-     * @returns {{next: *, error: *, complete: *}|*}
-     */
-    getObserver(observerOrNext, error, complete) {
-        if (typeof observerOrNext !== 'function') {
-            return observerOrNext;
-        }
-
-        return {
-            next: observerOrNext,
-            error: error,
-            complete: complete
-        }
     }
 }

@@ -21,7 +21,7 @@ import JsonRpcError from "./JsonRpcError";
 
 export default class ValidationError extends JsonRpcError {
     /**
-     * @property host
+     * @property prefix
      */
     protected prefix: string = 'VALIDATION ERROR: ';
 

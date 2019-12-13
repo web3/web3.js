@@ -12,10 +12,10 @@ import Block from "../../../lib/types/output/Block";
  * @param {EthereumConfiguration} config
  * @param {String} txHash
  */
-export const transactionConfirmations = (config: EthereumConfiguration, txHash: string) => (source: Observable<any>) =>
+export const transactionConfirmations = (config: EthereumConfiguration, txHash: string) => (source: Observable<Block>) =>
     new Observable(observer => {
         return source.subscribe({
-            async next(newHead: Block) {
+            async next(block: Block) {
                 let blockNumbers: number[] = [];
                 const getTransactionReceiptMethod = new GetTransactionReceiptMethod(config, [txHash]);
                 const receipt: TransactionReceipt = await getTransactionReceiptMethod.execute();
@@ -23,9 +23,9 @@ export const transactionConfirmations = (config: EthereumConfiguration, txHash: 
                 if (
                     receipt &&
                     (receipt.blockNumber === 0 || receipt.blockNumber) &&
-                    !blockNumbers.includes(newHead.number)
+                    !blockNumbers.includes(block.number)
                 ) {
-                    blockNumbers.push(newHead.number);
+                    blockNumbers.push(block.number);
 
                     observer.next(receipt);
                 }

@@ -23,7 +23,7 @@ import EstimateGasMethod from "../../../internal/ethereum/src/methods/eth/Estima
 import SendTransactionMethod from "../../../internal/ethereum/src/methods/eth/transaction/SendTransactionMethod.js";
 
 /**
- * POC
+ * Returns the transaction hash and pre-fills missing properties if possible.
  *
  * @param {TransactionOptions} txOptions
  * @param {EthereumConfiguration} config

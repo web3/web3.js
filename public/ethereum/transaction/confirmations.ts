@@ -17,12 +17,18 @@
  * @date 2019
  */
 
+import {Observable} from 'rxjs';
 import web3 from "../../index.js";
 import {transactionConfirmations} from "../../../internal/ethereum/src/subscriptions/operators/transactionConfirmations";
 import TransactionConfirmationSubscription from "../../../internal/ethereum/src/subscriptions/polling/TransactionConfirmationSubscription";
+import NewHeadsSubscription from "../../../internal/ethereum/src/subscriptions/socket/NewHeadsSubscription";
+import EthereumConfiguration from "../../../internal/ethereum/src/config/EthereumConfiguration";
+import TransactionReceipt from "../../../internal/ethereum/lib/types/output/TransactionReceipt";
+import SocketSubscription from "../../../internal/core/src/json-rpc/subscriptions/socket/SocketSubscription";
+import PollingSubscription from "../../../internal/core/src/json-rpc/subscriptions/polling/PollingSubscription";
 
 /**
- * POC
+ * Starts a newHeads subscription or polls for the transaction receipt and emits if a valid confirmation happened.
  *
  * @method confirmations
  *
@@ -31,10 +37,15 @@ import TransactionConfirmationSubscription from "../../../internal/ethereum/src/
  *
  * @returns {Observable}
  */
-export default function confirmations(txHash, config = web3.config.ethereum) {
-  if (config.provider.supportsSubscriptions()) {
-    return new NewHeadsSubscription(config).pipe(transactionConfirmations(config, txHash));
-  }
+export default function confirmations(
+    txHash: string,
+    config: EthereumConfiguration = web3.config.ethereum
+): SocketSubscription<TransactionReceipt> | PollingSubscription<TransactionReceipt> {
+    if (config.provider.supportsSubscriptions()) {
+        return new NewHeadsSubscription(config).pipe(
+            transactionConfirmations(config, txHash)
+        ) as SocketSubscription<TransactionReceipt>;
+    }
 
-  return new TransactionConfirmationSubscription(config, txHash);
+    return new TransactionConfirmationSubscription(config, txHash);
 }

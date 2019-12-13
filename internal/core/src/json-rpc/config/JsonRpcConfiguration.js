@@ -47,5 +47,6 @@ export default class JsonRpcConfiguration {
         }
 
         this.provider = options.provider;
+        this.pollingInterval = options.pollingInterval || 1000;
     }
 }
