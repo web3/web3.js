@@ -12,10 +12,8 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file Block.js
+ * @file Block.ts
  * @author Samuel Furter <samuel@ethereum.org>
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @author Marek Kotewicz <marek@parity.io>
  * @date 2019
  */
 
@@ -28,238 +26,111 @@ import BlockProperties from './interfaces/block/BlockProperties';
 
 export default class Block {
     /**
-     * @property properties
+     * @property gasLimit
      */
-    private properties: any;
+    public gasLimit: number;
 
     /**
-     * @param {Object} block
+     * @property gasUsed
+     */
+    public gasUsed: number;
+
+    /**
+     * @property size
+     */
+    public size: number;
+
+    /**
+     * @property timestamp
+     */
+    public timestamp: string | number;
+
+    /**
+     * @property number
+     */
+    public number: number | null = null;
+
+    /**
+     * @property difficulty
+     */
+    public difficulty: string = '';
+
+    /**
+     * @property totalDifficulty
+     */
+    public totalDifficulty: string = '';
+
+    /**
+     * @property transactions
+     */
+    public transactions: Transaction[] | string[] = [];
+
+    /**
+     * @property miner
+     */
+    public miner: string = '';
+
+    /**
+     * @param {BlockProperties} block
      *
      * @constructor
      */
     public constructor(block: BlockProperties) {
-        this.properties = block;
+        this.gasLimit = new Hex(block.gasLimit).toNumber();
+        this.gasUsed = new Hex(block.gasUsed).toNumber();
+        this.size = new Hex(block.size).toNumber();
 
-        this.gasLimit = block.gasLimit;
-        this.gasUsed = block.gasUsed;
-        this.size = block.size;
-        this.timestamp = block.timestamp;
-        this.number = block.number;
-        this.difficulty = block.difficulty;
-        this.totalDifficulty = block.totalDifficulty;
-        this.transactions = block.transactions;
-        this.miner = block.miner;
-    }
-
-    /**
-     * Getter for the gasLimit property.
-     *
-     * @property gasLimit
-     *
-     * @returns {Number}
-     */
-    public get gasLimit() {
-        return this.properties.gasLimit;
-    }
-
-    /**
-     * Setter for the gasLimit property.
-     *
-     * @param {String} gasLimit
-     *
-     * @property gasLimit
-     */
-    public set gasLimit(gasLimit) {
-        this.properties.gasLimit = new Hex(gasLimit).toNumber();
-    }
-
-    /**
-     * Getter for the gasUsed property.
-     *
-     * @property gasUsed
-     *
-     * @returns {Number}
-     */
-    public get gasUsed() {
-        return this.properties.gasUsed;
-    }
-
-    /**
-     * Setter for the gasUsed property.
-     *
-     * @property gasUsed
-     */
-    public set gasUsed(gasUsed) {
-        this.properties.gasUsed = new Hex(gasUsed).toNumber();
-    }
-
-    /**
-     * Getter for the size property.
-     *
-     * @property size
-     *
-     * @returns {Number}
-     */
-    public get size() {
-        return this.properties.size;
-    }
-
-    /**
-     * Setter for the size property.
-     *
-     * @property size
-     */
-    public set size(size) {
-        this.properties.size = new Hex(size).toNumber();
-    }
-
-    /**
-     * Getter for the timestamp property.
-     *
-     * @property timestamp
-     *
-     * @returns {String|Number}
-     */
-    public get timestamp() {
-        return this.properties.timestamp;
-    }
-
-    /**
-     * Setter for the timestamp property.
-     *
-     * @property timestamp
-     */
-    public set timestamp(timestamp) {
-        timestamp = BigNumber.from(timestamp);
+        const value = BigNumber.from(block.timestamp);
 
         try {
-            timestamp = timestamp.toNumber();
+            this.timestamp = value.toNumber();
         } catch (error) {
-            timestamp = timestamp.toString();
+            this.timestamp = value.toString();
         }
 
-        this.properties.timestamp = timestamp;
-    }
-
-    /**
-     * Getter for the number property.
-     *
-     * @property number
-     *
-     * @returns {Number}
-     */
-    public get number() {
-        return this.properties.number;
-    }
-
-    /**
-     * Setter for the number property.
-     *
-     * @property number
-     */
-    public set number(number) {
-        if (number) {
-            this.properties.number = new Hex(number).toNumber();
-
-            return;
+        if (block.number) {
+            this.number = new Hex(block.number).toNumber();
         }
 
-        this.properties.number = number;
-    }
-
-    /**
-     * Getter for the difficulty property.
-     *
-     * @property difficulty
-     *
-     * @returns {String}
-     */
-    public get difficulty() {
-        return this.properties.difficulty;
-    }
-
-    /**
-     * Setter for the difficulty property.
-     *
-     * @property difficulty
-     */
-    public set difficulty(difficulty) {
-        if (difficulty) {
-            this.properties.difficulty = BigNumber.from(difficulty).toString();
+        if (block.difficulty) {
+            this.difficulty = BigNumber.from(block.difficulty).toString();
         }
-    }
 
-    /**
-     * Getter for the totalDifficulty property.
-     *
-     * @property totalDifficulty
-     *
-     * @returns {String}
-     */
-    public get totalDifficulty() {
-        return this.properties.totalDifficulty;
-    }
-
-    /**
-     * Setter for the totalDifficulty property.
-     *
-     * @property totalDifficulty
-     */
-    public set totalDifficulty(totalDifficulty) {
-        if (totalDifficulty) {
-            this.properties.totalDifficulty = BigNumber.from(totalDifficulty).toString();
+        if (block.totalDifficulty) {
+            this.totalDifficulty = BigNumber.from(block.totalDifficulty).toString();
         }
-    }
 
-    /**
-     * Getter for the transactions property.
-     *
-     * @property transactions
-     *
-     * @returns {Array<Transaction>}
-     */
-    public get transactions() {
-        return this.properties.transactions;
-    }
+        if (isArray(block.transactions)) {
+            this.transactions = <Transaction[] | string[]>block.transactions.map(
+                (item: object | string): Transaction | string => {
+                    if (!isString(item)) {
+                        return new Transaction(item);
+                    }
 
-    /**
-     * Setter for the transactions property.
-     *
-     * @property transactions
-     */
-    public set transactions(transactions) {
-        if (isArray(transactions)) {
-            this.properties.transactions = transactions.map((item) => {
-                if (!isString(item)) {
-                    return new Transaction(item);
+                    return item;
                 }
+            );
+        }
 
-                return item;
-            });
+        if (block.miner) {
+            this.miner = Address.toChecksum(block.miner);
         }
     }
 
     /**
-     * Getter for the miner property.
-     *
-     * @property miner
-     *
-     * @returns {String}
+     * @method toJSON
      */
-    public get miner() {
-        return this.properties.miner;
-    }
-
-    /**
-     * Setter for the miner property.
-     *
-     * @property miner
-     *
-     * @param {String} miner
-     */
-    public set miner(miner) {
-        if (miner) {
-            this.properties.miner = Address.toChecksum(miner);
-        }
+    toJSON() {
+        return {
+          gasLimit: this.gasLimit,
+          gasUsed: this.gasUsed,
+          size: this.size,
+          timestamp: this.timestamp,
+          number: this.number,
+          difficulty: this.difficulty,
+          totalDifficulty: this.totalDifficulty,
+          transactions: this.transactions,
+          miner: this.miner
+        };
     }
 }

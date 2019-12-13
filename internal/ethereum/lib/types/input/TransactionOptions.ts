@@ -22,29 +22,35 @@
 
 import Address from './Address';
 import Hex from "../../../../core/src/utility/Hex";
+import TransactionOptionsProperties from "./interfaces/TransactionOptionsProperties";
 
 export default class TransactionOptions {
     /**
+     * @property properties
+     */
+    private properties: any;
+
+    /**
      * TODO: Add optional config parameter and handle default values
      *
-     * @param {Object} options
+     * @param {TransactionOptionsProperties} txOptions
      *
      * @constructor
      */
-    constructor(options) {
-        if (!options.from) {
+    public constructor(txOptions: TransactionOptionsProperties) {
+        if (!txOptions.from) {
             throw new Error('The send transactions "from" field must be defined!');
         }
 
-        this.properties = options;
+        this.properties = txOptions;
 
-        this.from = options.from;
-        this.to = options.to;
-        this.data = options.data;
-        this.gas = options.gas;
-        this.gasPrice = options.gasPrice;
-        this.value = options.value;
-        this.nonce = options.nonce;
+        this.from = txOptions.from;
+        this.to = txOptions.to;
+        this.data = txOptions.data;
+        this.gas = txOptions.gas;
+        this.gasPrice = txOptions.gasPrice;
+        this.value = txOptions.value;
+        this.nonce = txOptions.nonce;
     }
 
     /**
@@ -54,7 +60,7 @@ export default class TransactionOptions {
      *
      * @returns {String}
      */
-    get from() {
+    public get from() {
         return this.properties.from;
     }
 
@@ -65,7 +71,7 @@ export default class TransactionOptions {
      *
      * @param {String} from
      */
-    set from(from) {
+    public set from(from: string) {
         if (from) {
             this.properties.from = Address.toChecksum(from);
         }
@@ -78,7 +84,7 @@ export default class TransactionOptions {
      *
      * @returns {String}
      */
-    get to() {
+    public get to() {
         return this.properties.to;
     }
 
@@ -89,7 +95,7 @@ export default class TransactionOptions {
      *
      * @param {String} to
      */
-    set to(to) {
+    public set to(to: string) {
         this.properties.to = new Address(to).toString();
     }
 
@@ -100,7 +106,7 @@ export default class TransactionOptions {
      *
      * @returns {String}
      */
-    get data() {
+    public get data() {
         return this.properties.data;
     }
 
@@ -111,7 +117,7 @@ export default class TransactionOptions {
      *
      * @param {String} data
      */
-    set data(data) {
+    public set data(data: string) {
         if (!data) {
             return;
         }
@@ -132,7 +138,7 @@ export default class TransactionOptions {
      *
      * @returns {String}
      */
-    get gas() {
+    public get gas() {
         return this.properties.gas;
     }
 
@@ -143,7 +149,7 @@ export default class TransactionOptions {
      *
      * @param {Number} gas
      */
-    set gas(gas) {
+    public set gas(gas: number) {
         if (gas || gas === 0) {
             this.properties.gas = Hex.fromNumber(gas).toString();
         }
@@ -156,7 +162,7 @@ export default class TransactionOptions {
      *
      * @returns {String}
      */
-    get gasPrice() {
+    public get gasPrice() {
         return this.properties.gasPrice;
     }
 
@@ -167,7 +173,7 @@ export default class TransactionOptions {
      *
      * @param {Number} gasPrice
      */
-    set gasPrice(gasPrice) {
+    public set gasPrice(gasPrice: number) {
         if (gasPrice || gasPrice === 0) {
             this.properties.gasPrice = Hex.fromNumber(gasPrice).toString();
         }
@@ -180,7 +186,7 @@ export default class TransactionOptions {
      *
      * @returns {String}
      */
-    get value() {
+    public get value() {
         return this.properties.value;
     }
 
@@ -191,7 +197,7 @@ export default class TransactionOptions {
      *
      * @param {Number} value
      */
-    set value(value) {
+    public set value(value: number) {
         if (value || value === 0) {
             this.properties.value = Hex.fromNumber(value).toString();
         }
@@ -204,7 +210,7 @@ export default class TransactionOptions {
      *
      * @returns {String}
      */
-    get nonce() {
+    public get nonce() {
         return this.properties.nonce;
     }
 
@@ -215,7 +221,7 @@ export default class TransactionOptions {
      *
      * @param {Number} nonce
      */
-    set nonce(nonce) {
+    public set nonce(nonce: number) {
         if (nonce || nonce === 0) {
             this.properties.nonce = Hex.fromNumber(nonce).toString();
         }
@@ -228,7 +234,7 @@ export default class TransactionOptions {
      *
      * @returns {Object}
      */
-    toJSON() {
+    public toJSON() {
         return this.properties;
     }
 }

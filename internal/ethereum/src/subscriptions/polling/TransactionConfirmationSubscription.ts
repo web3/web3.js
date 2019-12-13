@@ -62,7 +62,7 @@ export default class TransactionConfirmationSubscription extends PollingSubscrip
 
                     if (receipt && (receipt.blockNumber === 0 || receipt.blockNumber)) {
                         if (lastBlock) {
-                            getBlockByNumber.parameters = [lastBlock.number + 1];
+                            getBlockByNumber.parameters = [lastBlock.number as number + 1];
                             const block = await getBlockByNumber.execute();
 
                             if (block) {

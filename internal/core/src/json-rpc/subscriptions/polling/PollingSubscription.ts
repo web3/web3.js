@@ -31,7 +31,7 @@ export default class PollingSubscription<T> extends Observable<T> {
      *
      * @constructor
      */
-    constructor(public config: JsonRpcConfiguration, public method: Method) {
+    public constructor(public config: JsonRpcConfiguration, public method: Method) {
         super();
     }
 
@@ -48,7 +48,7 @@ export default class PollingSubscription<T> extends Observable<T> {
      * @returns {Subscription}
      */
     // @ts-ignore
-    subscribe(
+    public subscribe(
         observerOrNext?: PartialObserver<T> | ((value: T) => void),
         error?: (error: any) => void,
         complete?: () => void

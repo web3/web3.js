@@ -17,30 +17,39 @@
  * @date 2019
  */
 
-import web3 from "../../index.js";
-import send from "./send.js";
-import confirmations from "./confirmations.js";
-import mined from "./mined.js";
+import TransactionOptionsProperties from "../../../internal/ethereum/lib/types/input/interfaces/TransactionOptionsProperties";
+import TransactionReceipt from "../../../internal/ethereum/lib/types/output/TransactionReceipt";
+import EthereumConfiguration from "../../../internal/ethereum/src/config/EthereumConfiguration";
+import SocketSubscription from "../../../internal/core/src/json-rpc/subscriptions/socket/SocketSubscription";
+import PollingSubscription from "../../../internal/core/src/json-rpc/subscriptions/polling/PollingSubscription";
+import web3 from "../../index";
+import send from "./send";
+import confirmations from "./confirmations";
+import mined from "./mined";
 
 export default class Transaction {
     /**
-     * @param {TransactionOptions} options
+     * @property hash
+     */
+    public hash: string = '';
+
+    /**
+     * @param {TransactionOptionsProperties} options
      * @param {EthereumConfiguration} config
      *
      * @constructor
      */
-    constructor(options, config = web3.config.ethereum) {
-        this.options = options;
-        this.config = config;
-        this.hash = null;
-    }
+    constructor(
+        public options: TransactionOptionsProperties,
+        public config: EthereumConfiguration = web3.config.ethereum
+    ) {}
 
     /**
      * Executes the transaction and returns itself with the hash property set
      *
      * @returns {Promise<Transaction>}
      */
-    async send() {
+    async send(): Promise<Transaction> {
         this.hash = await send(this.options, this.config);
 
         return this;
@@ -53,7 +62,7 @@ export default class Transaction {
      *
      * @returns {Promise<TransactionReceipt>}
      */
-    mined() {
+    mined(): Promise<TransactionReceipt> {
         return mined(this.hash, this.config)
     }
 
@@ -62,9 +71,9 @@ export default class Transaction {
      *
      * @method confirmations
      *
-     * @returns {Observable}
+     * @returns {SocketSubscription<TransactionReceipt> | PollingSubscription<TransactionReceipt>}
      */
-    confirmations() {
+    confirmations(): SocketSubscription<TransactionReceipt> | PollingSubscription<TransactionReceipt> {
         return confirmations(this.hash, this.config);
     }
 }

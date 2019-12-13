@@ -18,7 +18,9 @@
  */
 
 import web3 from '../../index.js';
-import confirmations from './confirmations.js';
+import confirmations from './confirmations';
+import EthereumConfiguration from "../../../internal/ethereum/src/config/EthereumConfiguration";
+import TransactionReceipt from "../../../internal/ethereum/lib/types/output/TransactionReceipt";
 
 /**
  * Returns the receipt if the amount of configured confirmations is reached.
@@ -30,12 +32,15 @@ import confirmations from './confirmations.js';
  *
  * @returns {Promise<TransactionReceipt>}
  */
-export default function mined(txHash, config = web3.config.ethereum) {
+export default function mined(
+    txHash: string,
+    config: EthereumConfiguration = web3.config.ethereum
+): Promise<TransactionReceipt> {
     return new Promise((resolve, reject) => {
-        let counter = 0;
+        let counter: number = 0;
 
         const subscription = confirmations(txHash, config).subscribe(
-            (confirmation) => {
+            (confirmation: TransactionReceipt) => {
                 if (counter === config.transaction.confirmations) {
                     subscription.unsubscribe();
                     resolve(confirmation);
@@ -43,7 +48,7 @@ export default function mined(txHash, config = web3.config.ethereum) {
                     counter++;
                 }
             },
-            (error) => {
+            (error: Error) => {
                 reject(error);
             }
         );

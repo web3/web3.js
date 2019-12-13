@@ -33,7 +33,7 @@ export default class NodeError extends JsonRpcError {
      *
      * @constructor
      */
-    constructor(message: string, host: string, payload?: object, response?: any) {
+    public constructor(message: string, host: string, payload?: object, response?: any) {
         super(message, host, payload, response);
     }
 }

@@ -21,16 +21,17 @@ import web3 from '../../index.js';
 import GetGasPriceMethod from "../../../internal/ethereum/src/methods/eth/node/GetGasPriceMethod.js";
 import EstimateGasMethod from "../../../internal/ethereum/src/methods/eth/EstimateGasMethod.js";
 import SendTransactionMethod from "../../../internal/ethereum/src/methods/eth/transaction/SendTransactionMethod.js";
+import TransactionOptionsProperties from "../../../internal/ethereum/lib/types/input/interfaces/TransactionOptionsProperties";
 
 /**
  * Returns the transaction hash and pre-fills missing properties if possible.
  *
- * @param {TransactionOptions} txOptions
+ * @param {TransactionOptionsProperties} txOptions
  * @param {EthereumConfiguration} config
  *
  * @returns {Promise<String>}
  */
-export default async function send(txOptions, config = web3.config.ethereum) {
+export default async function send(txOptions: TransactionOptionsProperties, config = web3.config.ethereum): Promise<string> {
     if (!txOptions.gasPrice && txOptions.gasPrice !== 0) {
         if (!config.transaction.gasPrice) {
             txOptions.gasPrice = await new GetGasPriceMethod(config).execute()

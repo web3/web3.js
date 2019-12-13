@@ -22,9 +22,9 @@
 
 import {PartialObserver, Subscription, Subscriber} from 'rxjs';
 import SocketSubscription from "../../../../core/src/json-rpc/subscriptions/socket/SocketSubscription";
-import Block from "../../../lib/types/output/Block";
 import EthereumConfiguration from "../../config/EthereumConfiguration";
 import BlockProperties from "../../../lib/types/output/interfaces/block/BlockProperties";
+import Block from '../../../lib/types/output/Block';
 
 export default class NewHeadsSubscription extends SocketSubscription<Block> {
     /**
@@ -55,8 +55,8 @@ export default class NewHeadsSubscription extends SocketSubscription<Block> {
         const subscriber: Subscriber<Block> = new Subscriber(observerOrNext, error, complete);
 
         return super.subscribe({
-            next: (blockProperties: BlockProperties): void => {
-                subscriber.next(new Block(blockProperties));
+            next: (blockProperties): void => {
+                subscriber.next(new Block(blockProperties as unknown as BlockProperties));
             },
             error: (error: Error): void => {
                 subscriber.error(error);

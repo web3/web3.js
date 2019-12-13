@@ -27,7 +27,7 @@ export default class SocketSubscription<T> extends Observable<T> {
     /**
      * @property id
      */
-    public id: string | null = null;
+    public id: string = '';
 
     /**
      * @param {String} type
@@ -104,7 +104,7 @@ export default class SocketSubscription<T> extends Observable<T> {
 
             this.config.provider.removeListener('error', subscription.error);
             this.config.provider.removeListener(this.id, subscription.next);
-            this.id = null;
+            this.id = '';
         });
     }
 }

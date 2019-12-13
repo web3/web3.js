@@ -7,6 +7,6 @@ export default interface BlockProperties {
     number: string;
     difficulty: string;
     totalDifficulty: string;
-    transactions: string;
+    transactions: any[];
     miner: string;
 }

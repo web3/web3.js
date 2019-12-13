@@ -23,9 +23,10 @@ export const transactionConfirmations = (config: EthereumConfiguration, txHash: 
                 if (
                     receipt &&
                     (receipt.blockNumber === 0 || receipt.blockNumber) &&
-                    !blockNumbers.includes(block.number)
+                    !blockNumbers.includes(block.number as number)
                 ) {
-                    blockNumbers.push(block.number);
+                    // TODO: Because accessors can't have a different parameter an return types is this required
+                    blockNumbers.push(block.number as number);
 
                     observer.next(receipt);
                 }

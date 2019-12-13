@@ -48,7 +48,7 @@ export default class JsonRpcError extends Error {
      *
      * @constructor
      */
-    constructor(message: string, host: string, payload?: object, response?: any) {
+    public constructor(message: string, host: string, payload?: object, response?: any) {
         super();
         this.message = this.prefix + message;
         this.host = host;
