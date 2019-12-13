@@ -61,12 +61,12 @@ export default class SocketSubscription<T> extends Observable<T> {
      */
     // @ts-ignore
     public subscribe(
-        observerOrNext?: PartialObserver<T> | ((value: T) => void),
+        observerOrNext?: PartialObserver<any> | ((value: any) => void),
         error?: (error: any) => void,
         complete?: () => void
     ): Subscription {
         // @ts-ignore
-        const subscription: Subscriber<T> = super.subscribe(observerOrNext, error, complete);
+        const subscription: Subscriber<any> = super.subscribe(observerOrNext, error, complete);
 
         this.config.provider.subscribe(this.type, this.method, this.parameters)
             .then((id: string) => {

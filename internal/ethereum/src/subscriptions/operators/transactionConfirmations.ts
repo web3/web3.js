@@ -1,4 +1,4 @@
-import {Observable} from 'rxjs';
+import {Observable, Observer} from 'rxjs';
 import EthereumConfiguration from "../../config/EthereumConfiguration";
 import GetTransactionReceiptMethod from "../../methods/eth/transaction/GetTransactionReceiptMethod";
 import TransactionReceipt from "../../../lib/types/output/TransactionReceipt";
@@ -13,7 +13,7 @@ import Block from "../../../lib/types/output/Block";
  * @param {String} txHash
  */
 export const transactionConfirmations = (config: EthereumConfiguration, txHash: string) => (source: Observable<Block>) =>
-    new Observable(observer => {
+    new Observable((observer: Observer<TransactionReceipt>) => {
         return source.subscribe({
             async next(block: Block) {
                 let blockNumbers: number[] = [];

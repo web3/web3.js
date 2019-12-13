@@ -55,8 +55,8 @@ export default class NewHeadsSubscription extends SocketSubscription<Block> {
         const subscriber: Subscriber<Block> = new Subscriber(observerOrNext, error, complete);
 
         return super.subscribe({
-            next: (blockProperties): void => {
-                subscriber.next(new Block(blockProperties as unknown as BlockProperties));
+            next: (blockProperties: BlockProperties): void => {
+                subscriber.next(new Block(blockProperties) as unknown as Block);
             },
             error: (error: Error): void => {
                 subscriber.error(error);
