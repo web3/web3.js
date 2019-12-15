@@ -39,4 +39,9 @@ elif [ "$TEST" = "e2e_truffle" ]; then
   npm run test:e2e:publish
   npm run test:e2e:truffle
 
+elif [ "$TEST" = "e2e_mosaic" ]; then
+
+  npm run test:e2e:publish
+  npm run test:e2e:mosaic
+
 fi
