@@ -65,6 +65,7 @@ RequestManager.providers = {
  */
 RequestManager.prototype.setProvider = function (p, net) {
     var _this = this;
+    console.log('Using published Web3 @ RequestManager.setProvider')
 
     // autodetect provider
     if(p && typeof p === 'string' && this.providers) {
@@ -144,7 +145,6 @@ RequestManager.prototype.send = function (data, callback) {
             return callback(errors.InvalidResponse(result));
         }
 
-        console.log('In published web3 @ requestManager.send');
         callback(null, result.result);
     });
 };
