@@ -8,6 +8,9 @@
 # Exit immediately on error
 set -o errexit
 
+# Install test specific dependencies
+npm install -g geth-dev-assistant@0.1.3
+
 # Launch geth
 npm run geth
 
