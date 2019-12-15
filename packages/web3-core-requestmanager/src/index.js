@@ -144,6 +144,7 @@ RequestManager.prototype.send = function (data, callback) {
             return callback(errors.InvalidResponse(result));
         }
 
+        console.log('In published web3 @ requestManager.send');
         callback(null, result.result);
     });
 };
