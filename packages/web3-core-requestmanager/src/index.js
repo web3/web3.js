@@ -65,7 +65,6 @@ RequestManager.providers = {
  */
 RequestManager.prototype.setProvider = function (p, net) {
     var _this = this;
-    console.log('Using published Web3 @ RequestManager.setProvider')
 
     // autodetect provider
     if(p && typeof p === 'string' && this.providers) {
