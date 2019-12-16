@@ -303,9 +303,9 @@ WebsocketProvider.prototype._parseResponse = function (data) {
                 _this.emit(_this.ERROR, error);
 
                 if (_this.requestQueue.size > 0) {
-                    _this.requestQueue.forEach(function (request) {
+                    _this.requestQueue.forEach(function (request, key) {
                         request.callback(error);
-                        _this.requestQueue.delete(request);
+                        _this.requestQueue.delete(key);
                     });
                 }
             }, _this._customTimeout);
