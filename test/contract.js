@@ -3219,7 +3219,7 @@ describe('typical usage', function() {
         //     done();
         // });
 
-    }).timeout(6000);
+    }).timeout(10000);
         // TODO add error check
 });
 
