@@ -238,14 +238,21 @@ export default abstract class AbstractSocketProvider extends AbstractProvider {
      * @param {Object} response
      */
     protected emitMessage(response: JsonRpcResponse) {
-        let event: string | number | undefined = this.getPayloadId(response);
+        let item: RequestItem | undefined;
+        let id: string | number | undefined = this.getPayloadId(response);
 
-        if (typeof event === 'undefined') {
-            event = this.getSubscriptionEvent(response.params.subscription);
-            response = response.params;
+        if (id) {
+            item = this.responseQueue.get(id);
+
+            if (item) {
+                item.resolve(response);
+                this.responseQueue.delete(id);
+            }
+
+            return;
         }
 
-        this.emit(<string> event, response);
+        this.emit(<string>this.getSubscriptionEvent(response.params.subscription), response.params);
     }
 
     /**

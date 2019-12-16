@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file WebsocketProvider.js
+ * @file WebsocketProvider.ts
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
@@ -145,6 +145,8 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     }
 
     /**
+     * TODO: This was only required for IPC the native WebSocket should be able to handle those chunks on his own.
+     *
      * Will parse the response and make an array out of it.
      *
      * @method parseResponse
@@ -240,21 +242,11 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @param {MessageEvent} messageEvent
      */
     protected onMessage(messageEvent: any): void {
-        let item: RequestItem | undefined;
-        this.parseResponse((typeof messageEvent.data === 'string') ? messageEvent.data : '').forEach((response) => {
-            this.emit(this.DATA, response);
-
-            super.onMessage(response);
-
-            const id = this.getPayloadId(response);
-            if (id) {
-                item = this.responseQueue.get(id);
-                if (item) {
-                    item.resolve(response);
-                    this.responseQueue.delete(id);
-                }
-            }
-        });
+        this.parseResponse((typeof messageEvent.data === 'string') ? messageEvent.data : '')
+            .forEach((response: JsonRpcResponse) => {
+                this.emit(this.DATA, response);
+                super.onMessage(response);
+            });
     }
 
     /**
@@ -373,7 +365,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 this.removeSocketListeners();
                 this.emit(this.RECONNECT, this.reconnectAttempts);
                 this.connect();
-            }, <number> this.reconnectOptions.delay);
+            }, <number>this.reconnectOptions.delay);
 
             return;
         }
