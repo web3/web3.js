@@ -4,7 +4,7 @@ var Misc = require('./sources/Misc');
 var utils = require('./helpers/test.utils');
 var Web3 = utils.getWeb3();
 
-describe('method.call [ @E2E ]', function() {
+describe('method.call [ @E2E ]', function () {
     var web3;
     var accounts;
     var basic;
@@ -23,46 +23,74 @@ describe('method.call [ @E2E ]', function() {
         gas: 4000000
     };
 
-    before(async function(){
-        web3 = new Web3('http://localhost:8545');
-        accounts = await web3.eth.getAccounts();
+    describe('http', function () {
+        before(async function () {
+            web3 = new Web3('http://localhost:8545');
+            accounts = await web3.eth.getAccounts();
 
-        basic = new web3.eth.Contract(Basic.abi, basicOptions);
-        instance = await basic.deploy().send({from: accounts[0]});
-    })
+            basic = new web3.eth.Contract(Basic.abi, basicOptions);
+            instance = await basic.deploy().send({from: accounts[0]});
+        })
 
-    it('retrieves a uint value', async function(){
-        var expected = '1';
+        it('retrieves a uint value', async function () {
+            var expected = '1';
 
-        await instance
-            .methods
-            .setValue(expected)
-            .send({from: accounts[0]});
+            await instance
+                .methods
+                .setValue(expected)
+                .send({from: accounts[0]});
 
-        var value = await instance
-            .methods
-            .getValue()
-            .call({from: accounts[0]});
-
-        assert.equal(value, expected);
-    });
-
-    it('errors correctly when abi and bytecode do not match', async function(){
-        // Misc n.eq Basic
-        var wrong = new web3.eth.Contract(Basic.abi, miscOptions);
-        var wrongInstance = await wrong.deploy().send({from: accounts[0]});
-
-        try {
-            await wrongInstance
+            var value = await instance
                 .methods
                 .getValue()
-                .call();
+                .call({from: accounts[0]});
 
-            assert.fail();
+            assert.equal(value, expected);
+        });
 
-        } catch(err){
-            assert(err.message.includes("Returned values aren't valid"));
-            assert(err.message.includes('the correct ABI'));
-        }
-    })
+        it('errors correctly when abi and bytecode do not match', async function () {
+            // Misc n.eq Basic
+            var wrong = new web3.eth.Contract(Basic.abi, miscOptions);
+            var wrongInstance = await wrong.deploy().send({from: accounts[0]});
+
+            try {
+                await wrongInstance
+                    .methods
+                    .getValue()
+                    .call();
+
+                assert.fail();
+
+            } catch (err) {
+                assert(err.message.includes("Returned values aren't valid"));
+                assert(err.message.includes('the correct ABI'));
+            }
+        })
+    });
+
+    describe('revert handling', function () {
+        before(async function () {
+            web3 = new Web3('http://localhost:8545');
+            accounts = await web3.eth.getAccounts();
+
+            web3.eth.handleRevert = true;
+            basic = new web3.eth.Contract(Basic.abi, basicOptions);
+            instance = await basic.deploy().send({from: accounts[0]});
+        });
+
+        it('returns the expected revert reason string', async function () {
+            try {
+                await instance
+                    .methods
+                    .reverts()
+                    .call({from: accounts[0]});
+
+                assert.fail();
+            } catch(error) {
+                assert(error.message.includes('reverted'));
+                assert.equal(error.reason, 'REVERTED WITH REVERT');
+                assert.equal(error.signature, 'Error(String)');
+            }
+        });
+    });
 });
