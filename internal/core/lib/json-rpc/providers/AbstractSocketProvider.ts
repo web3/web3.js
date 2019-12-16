@@ -241,7 +241,7 @@ export default abstract class AbstractSocketProvider extends AbstractProvider {
         let item: RequestItem | undefined;
         let id: string | number | undefined = this.getPayloadId(response);
 
-        if (id) {
+        if (typeof id !== 'undefined') {
             item = this.responseQueue.get(id);
 
             if (item) {

@@ -24,26 +24,27 @@ import Hex from "../../../../core/src/utility/Hex";
 import Address from "../input/Address";
 import BlockProperties from './interfaces/block/BlockProperties';
 
+// TODO: Create BlockHeader and Block type model
 export default class Block {
     /**
      * @property gasLimit
      */
-    public gasLimit: number;
+    public gasLimit: number | undefined;
 
     /**
      * @property gasUsed
      */
-    public gasUsed: number;
+    public gasUsed: number | undefined;
 
     /**
      * @property size
      */
-    public size: number;
+    public size: number | undefined;
 
     /**
      * @property timestamp
      */
-    public timestamp: string | number;
+    public timestamp: string | number | undefined;
 
     /**
      * @property number
@@ -76,16 +77,26 @@ export default class Block {
      * @constructor
      */
     public constructor(block: BlockProperties) {
-        this.gasLimit = new Hex(block.gasLimit).toNumber();
-        this.gasUsed = new Hex(block.gasUsed).toNumber();
-        this.size = new Hex(block.size).toNumber();
+        if (block.timestamp) {
+            const value = BigNumber.from(block.timestamp);
 
-        const value = BigNumber.from(block.timestamp);
+            try {
+                this.timestamp = value.toNumber();
+            } catch (error) {
+                this.timestamp = value.toString();
+            }
+        }
 
-        try {
-            this.timestamp = value.toNumber();
-        } catch (error) {
-            this.timestamp = value.toString();
+        if (block.size) {
+            this.size = new Hex(block.size).toNumber();
+        }
+
+        if (block.gasLimit) {
+            this.gasLimit = new Hex(block.gasLimit).toNumber();
+        }
+
+        if (block.gasUsed) {
+            this.gasUsed = new Hex(block.gasUsed).toNumber();
         }
 
         if (block.number) {
@@ -122,15 +133,15 @@ export default class Block {
      */
     toJSON() {
         return {
-          gasLimit: this.gasLimit,
-          gasUsed: this.gasUsed,
-          size: this.size,
-          timestamp: this.timestamp,
-          number: this.number,
-          difficulty: this.difficulty,
-          totalDifficulty: this.totalDifficulty,
-          transactions: this.transactions,
-          miner: this.miner
+            gasLimit: this.gasLimit,
+            gasUsed: this.gasUsed,
+            size: this.size,
+            timestamp: this.timestamp,
+            number: this.number,
+            difficulty: this.difficulty,
+            totalDifficulty: this.totalDifficulty,
+            transactions: this.transactions,
+            miner: this.miner
         };
     }
 }

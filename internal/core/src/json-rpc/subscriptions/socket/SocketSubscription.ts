@@ -71,8 +71,8 @@ export default class SocketSubscription<T> extends Observable<T> {
         this.config.provider.subscribe(this.type, this.method, this.parameters)
             .then((id: string) => {
                 this.id = id;
-                this.config.provider.on('error', subscription.error);
-                this.config.provider.on(this.id, subscription.next);
+                this.config.provider.on('error', subscription.error.bind(subscription));
+                this.config.provider.on(this.id, subscription.next.bind(subscription));
             })
             .catch((error: Error) => {
                 subscription.error(error);
