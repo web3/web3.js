@@ -43,5 +43,38 @@ module.exports = {
     },
     ConnectionTimeout: function (ms){
         return new Error('CONNECTION TIMEOUT: timeout of ' + ms + ' ms achived');
+    },
+    RevertInstructionError: function(reason, signature) {
+        var error = new Error('Your request got reverted with the following reason string: ' + reason);
+        error.reason = reason;
+        error.signature = signature;
+
+        return error;
+    },
+    TransactionRevertInstructionError: function(reason, signature, receipt) {
+        var error = new Error('Transaction has been reverted by the EVM:\n' + JSON.stringify(receipt, null, 2));
+        error.reason = reason;
+        error.signature = signature;
+        error.receipt = receipt;
+
+        return error;
+    },
+    TransactionError: function(message, receipt) {
+        var error = new Error(message);
+        error.receipt = receipt;
+
+        return error;
+    },
+    NoContractAddressFoundError: function(receipt) {
+       return this.TransactionError('The transaction receipt didn\'t contain a contract address.', receipt);
+    },
+    ContractCodeNotStoredError: function(receipt) {
+        return this.TransactionError('The contract code couldn\'t be stored, please check your gas limit.', receipt);
+    },
+    TransactionRevertedWithoutReasonError: function(receipt) {
+        return this.TransactionError('Transaction has been reverted by the EVM:\n' + JSON.stringify(receipt, null, 2), receipt);
+    },
+    TransactionOutOfGasError: function(receipt) {
+        return this.TransactionError('Transaction ran out of gas. Please provide more gas:\n' + JSON.stringify(receipt, null, 2), receipt);
     }
 };

@@ -29,4 +29,5 @@ export interface Method {
     extraFormatters?: any;
     defaultBlock?: string;
     defaultAccount?: string | null;
+    abiCoder?: any
 }
