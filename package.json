@@ -67,6 +67,7 @@
     },
     "dependencies": {
         "@ethersproject/bignumber": "^5.0.0-beta.135",
+        "@web3-js/websocket": "^1.0.30",
         "bn.js": "^5.0.0",
         "eth-lib": "^0.1.29",
         "eventemitter3": "^4.0.0",

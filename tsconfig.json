@@ -2,7 +2,10 @@
   "extends": "@ethereumjs/config-tsc",
   "compilerOptions": {
     "outDir": "./dist",
-    "allowJs": true
+    "allowJs": true,
+    "lib": [
+      "dom"
+    ]
   },
   "include": [
     "./internal/**/*",
