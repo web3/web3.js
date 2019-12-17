@@ -8,14 +8,6 @@
         "node": ">=10.0.0"
     },
     "main": "./index.js",
-    "exports": {
-        "./ethereum": "./dist/public/ethereum/",
-        "./core": "./dist/public/core/",
-        "./ens": "./dist/public/ens/",
-        "./swarm": "./dist/public/swarm/",
-        "./wallet": "./dist/public/wallet/",
-        "./whisper": "./dist/public/whisper/"
-    },
     "scripts": {
         "build": "ttsc -p ./tsconfig.json",
         "build:prod": "ttsc -p ./tsconfig.prod.json",

@@ -1,2 +1,2 @@
 
-export * from "../../internal/core/src/json-rpc/providers/WebsocketProvider";
+export * from "internal/core/src/json-rpc/providers/WebsocketProvider";

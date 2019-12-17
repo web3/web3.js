@@ -20,43 +20,20 @@
  * @date 2019
  */
 
-import EthereumConfiguration from "../../internal/ethereum/src/config/EthereumConfiguration.js";
+import EthereumConfiguration from "internal/ethereum/src/config/EthereumConfiguration.js";
 
 export default class Configuration {
+    /**
+     * @property ethereum
+     */
+    public ethereum: EthereumConfiguration;
+
     /**
      * @param {Object} options
      *
      * @constructor
      */
-    constructor(options = {}) {
-        this.ethereum = options.ethereum;
-    }
-
-    /**
-     * Getter for the ethereum property
-     *
-     * @property ethereum
-     *
-     * @returns {EthereumConfiguration}
-     */
-    get ethereum() {
-        if (!this._ethereum) {
-            throw new Error('No EthereumConfiguration defined!');
-        }
-
-        return this._ethereum;
-    }
-
-    /**
-     * Setter for the ethereum property
-     *
-     * @property ethereum
-     *
-     * @param {EthereumConfiguration} value
-     */
-    set ethereum(value) {
-        if (value) {
-            this._ethereum = new EthereumConfiguration(value);
-        }
+    constructor(options: any = {}) {
+        this.ethereum = new EthereumConfiguration(options.ethereum);
     }
 }
