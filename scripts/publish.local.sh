@@ -41,12 +41,8 @@ cp ./README.md package/README.md
 # Go to package directory
 cd ./package
 
-# Add module-alias dependency
-npm i module-alias --save
-rm package-lock.json
-
-# Add module alias config to package.json
-npx json -I -f package.json -e 'this._moduleAliases={"internal": "./internal"}'
+# Unpublish the local web3 package
+npm unpublish web3@$(node -p "require('./package.json').version") --registry=http://localhost:4873
 
 # Publish package to local verdaccio registry
 npm publish --registry=http://localhost:4873

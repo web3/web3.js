@@ -7,7 +7,7 @@
     "engines": {
         "node": ">=10.0.0"
     },
-    "main": "./dist/public/index.js",
+    "main": "./index.js",
     "exports": {
         "./ethereum": "./dist/public/ethereum/",
         "./core": "./dist/public/core/",
@@ -17,7 +17,7 @@
         "./whisper": "./dist/public/whisper/"
     },
     "scripts": {
-        "build": "ethereumjs-config-build",
+        "build": "ttsc -p ./tsconfig.prod.json",
         "publish:local": "./scripts/publish.local.sh",
         "coverage": "ethereumjs-config-coverage",
         "coveralls": "ethereumjs-config-coveralls",
@@ -64,7 +64,9 @@
         "npm-auth-to-token": "^1.0.0",
         "prettier": "^1.15.3",
         "tslint": "^5.20.1",
+        "ttypescript": "^1.5.8",
         "typescript": "^3.7.3",
+        "typescript-transform-paths": "^1.1.13",
         "verdaccio": "^4.4.0"
     },
     "dependencies": {
