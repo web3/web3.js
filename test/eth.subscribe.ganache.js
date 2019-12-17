@@ -44,15 +44,28 @@ describe('subscription connect/reconnect', function() {
     });
 
     it('resubscribes', function(done){
-        subscription = web3.eth.subscribe('newBlockHeaders')
-        subscription.unsubscribe();
-        subscription.resubscribe()
+        let stage = 0;
 
-        subscription.on('data', function(result){
-            assert(result.parentHash);
-            subscription.unsubscribe(); // Stop listening..
-            done();
-        })
+        subscription = web3.eth
+            .subscribe('newBlockHeaders')
+            .on('data', function(result) {
+                assert(result.parentHash);
+                subscription.unsubscribe();
+                stage = 1;
+            });
+
+        // Resubscribe from outside
+        interval = setInterval(async function(){
+            if (stage === 1){
+                clearInterval(interval);
+                subscription.resubscribe();
+                subscription.on('data', function(result){
+                    assert(result.parentHash);
+                    subscription.unsubscribe(); // Stop listening..
+                    done();
+                })
+            }
+        }, 500)
     });
 
     it('allows a subscription which does not exist', function(){
