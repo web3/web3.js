@@ -17,7 +17,8 @@
         "./whisper": "./dist/public/whisper/"
     },
     "scripts": {
-        "build": "ttsc -p ./tsconfig.prod.json",
+        "build": "ttsc -p ./tsconfig.json",
+        "build:prod": "ttsc -p ./tsconfig.prod.json",
         "publish:local": "./scripts/publish.local.sh",
         "coverage": "ethereumjs-config-coverage",
         "coveralls": "ethereumjs-config-coveralls",

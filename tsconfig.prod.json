@@ -5,7 +5,7 @@
     "allowJs": true,
     "baseUrl": "./",
     "paths": {
-      "internal": ["internal/"]
+      "internal": ["./internal/"]
     },
     "plugins": [
       { "transform": "typescript-transform-paths" },
@@ -13,7 +13,6 @@
     ]
   },
   "include": [
-    "./internal/**/*",
-    "./public/**/*"
+    "./**/*"
   ]
 }
