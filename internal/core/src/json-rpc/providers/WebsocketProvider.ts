@@ -384,8 +384,8 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @param {String} reason
      */
     public disconnect(code: number = 1000, reason?: string): void {
-        this.removeSocketListeners();
         this.connection.close(code, reason);
+        this.removeSocketListeners();
     }
 
     /**

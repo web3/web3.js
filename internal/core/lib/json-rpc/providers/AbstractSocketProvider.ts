@@ -235,7 +235,7 @@ export default abstract class AbstractSocketProvider extends AbstractProvider {
      *
      * @method emitMessage
      *
-     * @param {Object} response
+     * @param {JsonRpcResponse} response
      */
     protected emitMessage(response: JsonRpcResponse) {
         let item: RequestItem | undefined;
@@ -346,7 +346,7 @@ export default abstract class AbstractSocketProvider extends AbstractProvider {
      *
      * @returns {Promise<Boolean|Error>}
      */
-    public clearSubscriptions(unsubscribeMethod: string = '') {
+    public clearSubscriptions(unsubscribeMethod: string = ''): Promise<boolean> {
         if (this.subscriptions.size > 0) {
             let unsubscribePromises: Promise<boolean>[] = [];
             const type = unsubscribeMethod.slice(0, 3);
