@@ -7,6 +7,7 @@ describe('subscription connect/reconnect', function() {
     let server;
     let web3;
     let accounts;
+    let subscription;
     const port = 8545;
 
     beforeEach(async function() {
@@ -24,44 +25,34 @@ describe('subscription connect/reconnect', function() {
         }
     });
 
-    it('subscribes (baseline)', function() {
-        return new Promise(async function (resolve) {
-            web3.eth
-                .subscribe('newBlockHeaders')
-                .on('data', function(result) {
-                    assert(result.parentHash);
-                    resolve();
-                });
-        });
-    });
-
-    it('subscribes with a callback', function(){
-        let subscription;
-
-        return new Promise(async function (resolve) {
-            subscription = web3.eth
-                .subscribe('newBlockHeaders', function(err, result){
-                    assert(result.parentHash);
-                    subscription.unsubscribe(); // Stop listening..
-                    resolve();
+    it('subscribes (baseline)', function(done) {
+        web3.eth
+            .subscribe('newBlockHeaders')
+            .on('data', function(result) {
+                assert(result.parentHash);
+                done();
             });
-         })
     });
 
-    it('resubscribes', function(){
-        let subscription;
-
-        return new Promise(async function (resolve) {
-            subscription = web3.eth.subscribe('newBlockHeaders');
-            subscription.unsubscribe();
-            subscription.resubscribe()
-
-            subscription.on('data', function(result){
+    it('subscribes with a callback', function(done){
+        subscription = web3.eth
+            .subscribe('newBlockHeaders', function(err, result){
                 assert(result.parentHash);
                 subscription.unsubscribe(); // Stop listening..
-                resolve();
-            })
-         })
+                done();
+            });
+    });
+
+    it('resubscribes', function(done){
+        subscription = web3.eth.subscribe('newBlockHeaders')
+        subscription.unsubscribe();
+        subscription.resubscribe()
+
+        subscription.on('data', function(result){
+            assert(result.parentHash);
+            subscription.unsubscribe(); // Stop listening..
+            done();
+        })
     });
 
     it('allows a subscription which does not exist', function(){
@@ -70,7 +61,7 @@ describe('subscription connect/reconnect', function() {
 
     it('errors when zero params subscrip. is called with the wrong arguments', function(){
         try {
-            web3.eth.subscribe('newBlockHeaders', 5);
+            web3.eth.subscribe('newBlockHeaders', 5)
             assert.fail();
         } catch (err) {
             assert(err.message.includes('Invalid number of parameters for "newHeads"'))
@@ -79,15 +70,13 @@ describe('subscription connect/reconnect', function() {
     });
 
     // Could not get the .on('error') version of this to work - maybe a race condition setting it up.
-    it('errors when the provider is not set', function(){
+    it('errors when the provider is not set', function(done){
         web3 = new Web3();
 
-        return new Promise(async function (resolve) {
-            web3.eth.subscribe('newBlockHeaders', function(err, result){
-                assert(err.message.includes('No provider set'));
-                resolve()
-            })
-        });
+        web3.eth.subscribe('newBlockHeaders', function(err, result){
+            assert(err.message.includes('No provider set'));
+            done();
+        })
     });
 
     it('errors when the `eth_subscribe` request got send, the reponse isnt returned from the node, and the connection does get closed in the mean time', async function() {
