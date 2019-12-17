@@ -3,7 +3,7 @@ const ganache = require('ganache-cli');
 const pify = require('pify');
 const Web3 = require('./helpers/test.utils').getWeb3();
 
-describe.only('subscription connect/reconnect', function() {
+describe('subscription connect/reconnect', function() {
     let server;
     let web3;
     let accounts;
