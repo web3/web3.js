@@ -43,7 +43,27 @@ describe('subscription connect/reconnect', function() {
             });
     });
 
-    it('resubscribes', function(done){
+    it('resubscribes to an existing subscription', function(done){
+        this.timeout(5000);
+
+        let stage = 0;
+
+        subscription = web3.eth.subscribe('newBlockHeaders');
+
+        subscription.on('data', function(result){
+            if (stage === 0) {
+              subscription.resubscribe();
+              stage = 1;
+              return;
+            }
+
+            assert(result.parentHash);
+            subscription.unsubscribe(); // Stop listening..
+            done();
+        });
+    });
+
+    it('resubscribes after being unsubscribed', function(done){
         this.timeout(5000);
 
         let stage = 0;
