@@ -57,7 +57,6 @@ describe('subscription connect/reconnect', function() {
             subscription.resubscribe()
 
             subscription.on('data', function(result){
-                console.log(result.parentHash)
                 assert(result.parentHash);
                 subscription.unsubscribe(); // Stop listening..
                 resolve();
