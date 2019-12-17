@@ -77,7 +77,11 @@ Subscription.prototype._validateArgs = function (args) {
         subscription.params = 0;
 
     if (args.length !== subscription.params) {
-        throw errors.InvalidNumberOfParams(args.length, subscription.params + 1, args[0]);
+        throw errors.InvalidNumberOfParams(
+            args.length,
+            subscription.params,
+            subscription.subscriptionName
+        );
     }
 };
 

@@ -35,6 +35,62 @@ describe('subscription connect/reconnect', function() {
         });
     });
 
+    it('subscribes with a callback', function(){
+        let subscription;
+
+        return new Promise(async function (resolve) {
+            subscription = web3.eth
+                .subscribe('newBlockHeaders', function(err, result){
+                    assert(result.parentHash);
+                    subscription.unsubscribe(); // Stop listening..
+                    resolve();
+            });
+         })
+    });
+
+    it('resubscribes', function(){
+        let subscription;
+
+        return new Promise(async function (resolve) {
+            subscription = web3.eth.subscribe('newBlockHeaders');
+            subscription.unsubscribe();
+            subscription.resubscribe()
+
+            subscription.on('data', function(result){
+                console.log(result.parentHash)
+                assert(result.parentHash);
+                subscription.unsubscribe(); // Stop listening..
+                resolve();
+            })
+         })
+    });
+
+    it('allows a subscription which does not exist', function(){
+        web3.eth.subscribe('subscription-does-not-exists');
+    });
+
+    it('errors when zero params subscrip. is called with the wrong arguments', function(){
+        try {
+            web3.eth.subscribe('newBlockHeaders', 5);
+            assert.fail();
+        } catch (err) {
+            assert(err.message.includes('Invalid number of parameters for "newHeads"'))
+            assert(err.message.includes('Got 1 expected 0'));
+        }
+    });
+
+    // Could not get the .on('error') version of this to work - maybe a race condition setting it up.
+    it('errors when the provider is not set', function(){
+        web3 = new Web3();
+
+        return new Promise(async function (resolve) {
+            web3.eth.subscribe('newBlockHeaders', function(err, result){
+                assert(err.message.includes('No provider set'));
+                resolve()
+            })
+        });
+    });
+
     it('errors when the `eth_subscribe` request got send, the reponse isnt returned from the node, and the connection does get closed in the mean time', async function() {
         await pify(server.close)();
 
