@@ -16,3 +16,6 @@ coverage/
 lerna-debug.log
 .eslintcache
 docs/_build
+htpasswd
+package/
+storage/

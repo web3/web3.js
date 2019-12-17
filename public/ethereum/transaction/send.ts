@@ -18,10 +18,10 @@
  */
 
 import web3 from '../../index.js';
-import GetGasPriceMethod from "../../../internal/ethereum/src/methods/eth/node/GetGasPriceMethod.js";
-import EstimateGasMethod from "../../../internal/ethereum/src/methods/eth/EstimateGasMethod.js";
-import SendTransactionMethod from "../../../internal/ethereum/src/methods/eth/transaction/SendTransactionMethod.js";
-import TransactionOptionsProperties from "../../../internal/ethereum/lib/types/input/interfaces/TransactionOptionsProperties";
+import GetGasPriceMethod from "internal/ethereum/src/methods/eth/node/GetGasPriceMethod.js";
+import EstimateGasMethod from "internal/ethereum/src/methods/eth/EstimateGasMethod.js";
+import SendTransactionMethod from "internal/ethereum/src/methods/eth/transaction/SendTransactionMethod.js";
+import TransactionOptionsProperties from "internal/ethereum/lib/types/input/interfaces/TransactionOptionsProperties";
 
 /**
  * Returns the transaction hash and pre-fills missing properties if possible.

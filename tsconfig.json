@@ -5,7 +5,11 @@
     "allowJs": true,
     "lib": [
       "dom"
-    ]
+    ],
+    "baseUrl": "./",
+    "paths": {
+      "internal": ["internal/"]
+    }
   },
   "include": [
     "./internal/**/*",

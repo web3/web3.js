@@ -19,8 +19,8 @@
 
 import web3 from '../../index.js';
 import confirmations from './confirmations';
-import EthereumConfiguration from "../../../internal/ethereum/src/config/EthereumConfiguration";
-import TransactionReceipt from "../../../internal/ethereum/lib/types/output/TransactionReceipt";
+import EthereumConfiguration from "internal/ethereum/src/config/EthereumConfiguration";
+import TransactionReceipt from "internal/ethereum/lib/types/output/TransactionReceipt";
 
 /**
  * Returns the receipt if the amount of configured confirmations is reached.
@@ -32,7 +32,7 @@ import TransactionReceipt from "../../../internal/ethereum/lib/types/output/Tran
  *
  * @returns {Promise<TransactionReceipt>}
  */
-export default function mined(
+export default function receipt(
     txHash: string,
     config: EthereumConfiguration = web3.config.ethereum
 ): Promise<TransactionReceipt> {

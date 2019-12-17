@@ -17,15 +17,15 @@
  * @date 2019
  */
 
-import TransactionOptionsProperties from "../../../internal/ethereum/lib/types/input/interfaces/TransactionOptionsProperties";
-import TransactionReceipt from "../../../internal/ethereum/lib/types/output/TransactionReceipt";
-import EthereumConfiguration from "../../../internal/ethereum/src/config/EthereumConfiguration";
-import SocketSubscription from "../../../internal/core/src/json-rpc/subscriptions/socket/SocketSubscription";
-import PollingSubscription from "../../../internal/core/src/json-rpc/subscriptions/polling/PollingSubscription";
+import TransactionOptionsProperties from "internal/ethereum/lib/types/input/interfaces/TransactionOptionsProperties";
+import TransactionReceipt from "internal/ethereum/lib/types/output/TransactionReceipt";
+import EthereumConfiguration from "internal/ethereum/src/config/EthereumConfiguration";
+import SocketSubscription from "internal/core/src/json-rpc/subscriptions/socket/SocketSubscription";
+import PollingSubscription from "internal/core/src/json-rpc/subscriptions/polling/PollingSubscription";
 import web3 from "../../index";
 import send from "./send";
 import confirmations from "./confirmations";
-import mined from "./mined";
+import receipt from "./receipt";
 
 export default class Transaction {
     /**
@@ -62,8 +62,8 @@ export default class Transaction {
      *
      * @returns {Promise<TransactionReceipt>}
      */
-    mined(): Promise<TransactionReceipt> {
-        return mined(this.hash, this.config)
+    receipt(): Promise<TransactionReceipt> {
+        return receipt(this.hash, this.config)
     }
 
     /**
