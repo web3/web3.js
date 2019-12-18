@@ -20,9 +20,11 @@
  * @date 2018
  */
 
-import { HttpProvider, JsonRpcResponse } from 'web3-providers-http';
+import { HttpProvider, JsonRpcResponse, JsonRpcPayload, HttpProviderOptions } from 'web3-providers-http';
 
-const httpProvider = new HttpProvider('http://localhost:8545', {
+const payload: JsonRpcPayload = {jsonrpc: '', id: 0, method: '', params: []};
+
+const options: HttpProviderOptions = {
     timeout: 20000,
     headers: [
         {
@@ -31,13 +33,15 @@ const httpProvider = new HttpProvider('http://localhost:8545', {
         }
     ],
     withCredentials: false
-});
+};
+
+const httpProvider = new HttpProvider('http://localhost:8545', options);
 
 // $ExpectType void
-httpProvider.send({} as any, (error: Error | null) => {});
+httpProvider.send(payload, (error: Error | null) => {});
 
 // $ExpectType void
-httpProvider.send({} as any, (error: Error | null, result: JsonRpcResponse | undefined) => {});
+httpProvider.send(payload, (error: Error | null, result: JsonRpcResponse | undefined) => {});
 
 // $ExpectType boolean
 httpProvider.disconnect();
