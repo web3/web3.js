@@ -1,6 +1,7 @@
 {
   "extends": "@ethereumjs/config-tsc",
   "compilerOptions": {
+    "sourceRoot": "./",
     "outDir": "./dist",
     "allowJs": true,
     "baseUrl": "./",

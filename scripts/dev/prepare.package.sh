@@ -1,5 +1,7 @@
+#!/usr/bin/env bash
+
 # --------------------------------------------------------------------
-# 1# Prepares package folder
+# Prepares package folder
 # --------------------------------------------------------------------
 
 # Creates temporary package folder

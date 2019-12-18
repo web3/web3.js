@@ -9,7 +9,8 @@
     },
     "main": "./index.js",
     "scripts": {
-        "postinstall": "./scripts/dev/dev.setup.sh",
+        "start:registry": "./scripts/dev/start.registry.sh",
+        "stop:registry": "./scripts/dev/stop.registry.sh",
         "build": "ttsc -p ./tsconfig.json",
         "build:prod": "ttsc -p ./tsconfig.prod.json",
         "publish:local": "npm run publish:prepare && ./scripts/dev/publish.package.local.sh",
