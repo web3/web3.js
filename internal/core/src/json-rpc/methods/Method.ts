@@ -43,8 +43,10 @@ export default class Method<T> {
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
+     *
+     * @returns {Promise<void>}
      */
-    public async beforeExecution() {}
+    public async beforeExecution(): Promise<void> {}
 
     /**
      * This method will be executed after the RPC request.

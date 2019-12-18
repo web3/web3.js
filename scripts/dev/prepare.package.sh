@@ -40,3 +40,5 @@ rm -rf ./tsconfig.prod.json
 # Move `dist` files to root folder and delete the `dist` folder
 mv ./dist/package/* ./
 rm -rf ./dist
+
+echo -e "\033[0;32mPackage successfully prepared!\033[0m"

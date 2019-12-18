@@ -9,11 +9,12 @@
     },
     "main": "./index.js",
     "scripts": {
+        "setup:registry": "./scripts/dev/setup.registry.sh",
         "start:registry": "./scripts/dev/start.registry.sh",
         "stop:registry": "./scripts/dev/stop.registry.sh",
         "build": "ttsc -p ./tsconfig.json",
         "build:prod": "ttsc -p ./tsconfig.prod.json",
-        "publish:local": "npm run publish:prepare && ./scripts/dev/publish.package.local.sh",
+        "publish:local": "./scripts/dev/publish.package.local.sh",
         "publish:prepare": "./scripts/dev/prepare.package.sh",
         "coverage": "ethereumjs-config-coverage",
         "coveralls": "ethereumjs-config-coveralls",
@@ -56,6 +57,7 @@
         "@types/lodash": "^4.14.149",
         "@types/node": "^12.0.10",
         "coveralls": "^3.0.3",
+        "forever": "^1.0.0",
         "jest": "^24.8.0",
         "npm-auth-to-token": "^1.0.0",
         "prettier": "^1.15.3",
@@ -73,8 +75,7 @@
         "eventemitter3": "^4.0.0",
         "lodash": "^4.17.15",
         "randombytes": "^2.1.0",
-        "rxjs": "^6.5.3",
-        "rxjs-compat": "^6.5.3",
+        "rxjs": "7.0.0-alpha.0",
         "utf8": "^3.0.0",
         "xhr2-cookies": "^1.1.0"
     }
