@@ -22,12 +22,18 @@ import TransactionReceipt from "internal/ethereum/lib/types/output/TransactionRe
 import EthereumConfiguration from "internal/ethereum/src/config/EthereumConfiguration";
 import SocketSubscription from "internal/core/src/json-rpc/subscriptions/socket/SocketSubscription";
 import PollingSubscription from "internal/core/src/json-rpc/subscriptions/polling/PollingSubscription";
-import web3 from "../../index";
 import send from "./send";
 import confirmations from "./confirmations";
 import receipt from "./receipt";
+import getConfig from "../../config/getConfig";
+import ConfigurationTypes from "../../config/ConfigurationTypes";
 
 export default class Transaction {
+    /**
+     * @property config
+     */
+    public config: EthereumConfiguration;
+
     /**
      * @property hash
      */
@@ -41,8 +47,10 @@ export default class Transaction {
      */
     constructor(
         public options: TransactionOptionsProperties,
-        public config: EthereumConfiguration = web3.config.ethereum
-    ) {}
+        config?: EthereumConfiguration
+    ) {
+        this.config = getConfig(ConfigurationTypes.ETHEREUM, config);
+    }
 
     /**
      * Executes the transaction and returns itself with the hash property set

@@ -21,12 +21,13 @@
  */
 
 import EthereumConfiguration from "internal/ethereum/src/config/EthereumConfiguration.js";
+import ConfigurationTypes from "./ConfigurationTypes";
 
 export default class Configuration {
     /**
      * @property ethereum
      */
-    public ethereum: EthereumConfiguration;
+    public [ConfigurationTypes.ETHEREUM]: EthereumConfiguration;
 
     /**
      * @param {Object} options

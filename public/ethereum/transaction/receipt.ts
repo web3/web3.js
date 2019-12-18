@@ -17,10 +17,11 @@
  * @date 2019
  */
 
-import web3 from '../../index.js';
 import confirmations from './confirmations';
 import EthereumConfiguration from "internal/ethereum/src/config/EthereumConfiguration";
 import TransactionReceipt from "internal/ethereum/lib/types/output/TransactionReceipt";
+import getConfig from "../../config/getConfig";
+import ConfigurationTypes from "../../config/ConfigurationTypes";
 
 /**
  * Returns the receipt if the amount of configured confirmations is reached.
@@ -34,14 +35,16 @@ import TransactionReceipt from "internal/ethereum/lib/types/output/TransactionRe
  */
 export default function receipt(
     txHash: string,
-    config: EthereumConfiguration = web3.config.ethereum
+    config?: EthereumConfiguration
 ): Promise<TransactionReceipt> {
+    const mappedConfig = getConfig(ConfigurationTypes.ETHEREUM, config);
+
     return new Promise((resolve, reject) => {
         let counter: number = 0;
 
         const subscription = confirmations(txHash, config).subscribe(
             (confirmation: TransactionReceipt) => {
-                if (counter === config.transaction.confirmations) {
+                if (counter === mappedConfig.transaction.confirmations) {
                     subscription.unsubscribe();
                     resolve(confirmation);
                 } else {

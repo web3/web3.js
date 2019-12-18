@@ -44,26 +44,14 @@ export default class web3 {
      *
      * @property current
      *
-     * @returns {Configuration}
+     * @returns {IConfiguration}
      */
     static get config() {
         if (!config) {
             throw new Error('No Configuration defined!');
         }
 
-        // Return deep clone or this proxy. The actual config object will only get returned from the web3.init method.
-        // If this actually does make sense is questionable because the Proxy object or the functions used to deep clone the object
-        // could get hijacked anyways from another dependency if sesify isn't in usage.
-        return new Proxy(
-            config,
-            {
-                set: throwError,
-                defineProperty: throwError,
-                deleteProperty: throwError,
-                preventExtensions: throwError,
-                setPrototypeOf: throwError
-            }
-        );
+        return config;
     }
 
     /**

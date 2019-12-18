@@ -17,12 +17,13 @@
  * @date 2019
  */
 
-import web3 from '../../index.js';
 import GetGasPriceMethod from "internal/ethereum/src/methods/eth/node/GetGasPriceMethod.js";
 import EstimateGasMethod from "internal/ethereum/src/methods/eth/EstimateGasMethod.js";
 import SendTransactionMethod from "internal/ethereum/src/methods/eth/transaction/SendTransactionMethod.js";
 import TransactionOptionsProperties from "internal/ethereum/lib/types/input/interfaces/TransactionOptionsProperties";
 import EthereumConfiguration from 'internal/ethereum/src/config/EthereumConfiguration.js';
+import ConfigurationTypes from "../../config/ConfigurationTypes";
+import getConfig from "public/config/getConfig";
 
 /**
  * Returns the transaction hash and pre-fills missing properties if possible.
@@ -32,12 +33,14 @@ import EthereumConfiguration from 'internal/ethereum/src/config/EthereumConfigur
  *
  * @returns {Promise<String>}
  */
-export default async function send(txOptions: TransactionOptionsProperties, config: EthereumConfiguration = web3.config.ethereum): Promise<string> {
+export default async function send(txOptions: TransactionOptionsProperties, config?: EthereumConfiguration): Promise<string> {
+    const mappedConfig = getConfig(ConfigurationTypes.ETHEREUM, config);
+
     if (!txOptions.gasPrice && txOptions.gasPrice !== 0) {
-        if (!config.transaction.gasPrice) {
+        if (!mappedConfig.transaction.gasPrice) {
             txOptions.gasPrice = await new GetGasPriceMethod(config).execute()
         } else {
-            txOptions.gasPrice = config.transaction.gasPrice;
+            txOptions.gasPrice = mappedConfig.transaction.gasPrice;
         }
     }
 
