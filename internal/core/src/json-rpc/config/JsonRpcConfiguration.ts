@@ -15,18 +15,30 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file JsonRpcConfiguration.js
+ * @file JsonRpcConfiguration.ts
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2019
  */
 
+import AbstractProvider from "../../../lib/json-rpc/providers/AbstractProvider";
+
 export default class JsonRpcConfiguration {
+    /**
+     * @property provider
+     */
+    public provider: AbstractProvider;
+
+    /**
+     * @property pollingInterval
+     */
+    public pollingInterval: number = 1000;
+
     /**
      * @param {Object} options
      *
      * @constructor
      */
-    constructor(options = {}) {
+    public constructor(options: any = {}) {
         // TODO: allow url as provider
         // // HTTP
         // if (/^http(s)?:\/\//i.test(provider)) {
@@ -47,6 +59,6 @@ export default class JsonRpcConfiguration {
         }
 
         this.provider = options.provider;
-        this.pollingInterval = options.pollingInterval || 1000;
+        this.pollingInterval = options.pollingInterval;
     }
 }

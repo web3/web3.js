@@ -18,6 +18,8 @@
  */
 
 import JsonRpcError from "./JsonRpcError";
+import JsonRpcPayload from "../../../lib/json-rpc/providers/interfaces/JsonRpcPayload";
+import JsonRpcResponse from "../../../lib/json-rpc/providers/interfaces/JsonRpcResponse";
 
 export default class NodeError extends JsonRpcError {
     /**
@@ -28,12 +30,12 @@ export default class NodeError extends JsonRpcError {
     /**
      * @param {String} message
      * @param {String} host
-     * @param {Object} payload
-     * @param {any} response
+     * @param {JsonRpcPayload} payload
+     * @param {JsonRpcResponse} response
      *
      * @constructor
      */
-    public constructor(message: string, host: string, payload?: object, response?: any) {
+    public constructor(message: string, host: string, payload?: JsonRpcPayload, response?: JsonRpcResponse) {
         super(message, host, payload, response);
     }
 }

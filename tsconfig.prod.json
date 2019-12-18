@@ -1,6 +1,7 @@
 {
   "extends": "@ethereumjs/config-tsc",
   "compilerOptions": {
+    "strictPropertyInitialization": false,
     "sourceRoot": "./",
     "outDir": "./dist",
     "allowJs": true,
@@ -11,6 +12,9 @@
     "plugins": [
       { "transform": "typescript-transform-paths" },
       { "transform": "typescript-transform-paths", "afterDeclarations": true }
+    ],
+    "lib": [
+      "dom"
     ]
   },
   "include": [

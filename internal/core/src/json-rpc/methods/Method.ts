@@ -20,7 +20,9 @@
  * @date 2019
  */
 
-export default class Method {
+import JsonRpcConfiguration from "../config/JsonRpcConfiguration";
+
+export default class Method<T> {
     /**
      * @param {String} rpcMethod
      * @param {Number} parametersAmount
@@ -29,32 +31,31 @@ export default class Method {
      *
      * @constructor
      */
-    constructor(rpcMethod, parametersAmount, config, parameters) {
-        this.rpcMethod = rpcMethod;
-        this.parametersAmount = parametersAmount;
-        this.config = config;
-        this.parameters = parameters;
+    public constructor(
+        public rpcMethod: string,
+        public parametersAmount: number,
+        public config: JsonRpcConfiguration,
+        public parameters: any[]
+    ) {
     }
 
     /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
-     *
-     * @param {Configuration} moduleInstance - The package where the method is called from for example Eth.
      */
-    async beforeExecution(moduleInstance) {}
+    public async beforeExecution() {}
 
     /**
      * This method will be executed after the RPC request.
      *
      * @method afterExecution
      *
-     * @param {*} response
+     * @param {any} response
      *
-     * @returns {*}
+     * @returns {any}
      */
-    async afterExecution(response) {
+    public async afterExecution(response: any): Promise<T> {
         return response;
     }
 
@@ -63,9 +64,9 @@ export default class Method {
      *
      * @method execute
      *
-     * @returns {Promise<any>}
+     * @returns {Promise<T>}
      */
-    async execute() {
+    public async execute(): Promise<T> {
         await this.beforeExecution();
 
         if (this.parameters.length !== this.parametersAmount) {

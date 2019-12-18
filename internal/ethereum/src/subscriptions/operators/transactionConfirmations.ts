@@ -18,7 +18,7 @@ export const transactionConfirmations = (config: EthereumConfiguration, txHash: 
             async next(block: Block) {
                 let blockNumbers: number[] = [];
                 const getTransactionReceiptMethod = new GetTransactionReceiptMethod(config, [txHash]);
-                const receipt: TransactionReceipt = await getTransactionReceiptMethod.execute();
+                const receipt: TransactionReceipt = <TransactionReceipt> await getTransactionReceiptMethod.execute();
 
                 if (
                     receipt &&

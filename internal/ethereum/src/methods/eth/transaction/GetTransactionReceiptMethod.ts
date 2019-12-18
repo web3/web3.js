@@ -20,17 +20,18 @@
  * @date 2019
  */
 
-import Method from "../../../../../core/src/json-rpc/methods/Method.js";
+import Method from "internal/core/src/json-rpc/methods/Method.js";
 import TransactionReceipt from "../../../../lib/types/output/TransactionReceipt.js";
+import EthereumConfiguration from "../../../config/EthereumConfiguration";
 
-export default class GetTransactionReceiptMethod extends Method {
+export default class GetTransactionReceiptMethod<TransactionReceipt> extends Method<TransactionReceipt> {
     /**
      * @param {EthereumConfiguration} config
      * @param {Array} parameters
      *
      * @constructor
      */
-    constructor(config, parameters) {
+    constructor(config: EthereumConfiguration, parameters: any[]) {
         super('eth_getTransactionReceipt', 1, config, parameters);
     }
 
@@ -39,11 +40,11 @@ export default class GetTransactionReceiptMethod extends Method {
      *
      * @method afterExecution
      *
-     * @param {Object|null} response
+     * @param {any} response
      *
      * @returns {Promise<TransactionReceipt|null>}
      */
-    async afterExecution(response) {
+    async afterExecution(response: any) {
         if (response !== null) {
             return new TransactionReceipt(response);
         }

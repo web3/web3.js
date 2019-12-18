@@ -39,7 +39,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     /**
      * @property connection
      */
-    public connection: Ws | null = null;
+    public connection: Ws;
 
     /**
      * @property headers

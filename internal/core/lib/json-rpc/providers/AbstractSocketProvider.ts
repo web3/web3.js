@@ -115,7 +115,7 @@ export default abstract class AbstractSocketProvider extends AbstractProvider {
     /**
      * Registers all the required listeners.
      *
-     * @method registerEventListeners
+     * @method removeSocketListeners
      */
     protected abstract removeSocketListeners(): void;
 
@@ -144,12 +144,12 @@ export default abstract class AbstractSocketProvider extends AbstractProvider {
      * @method sendPayload
      *
      * @param payload
+     *
+     * @returns {JsonRpcResponse | JsonRpcResponse[]}
      */
-    protected abstract sendPayload(payload: JsonRpcPayload): Promise<JsonRpcResponse>;
+    protected abstract sendPayload(payload: JsonRpcPayload): Promise<JsonRpcResponse | JsonRpcResponse[]>;
 
     /**
-     * TODO: Add the correct method to determine the capabilities of a provider as soon as EIP-1193 is finalized.
-     *
      * Method for checking subscriptions support of a internal provider
      *
      * @method supportsSubscriptions
@@ -171,8 +171,8 @@ export default abstract class AbstractSocketProvider extends AbstractProvider {
      * @returns {Promise<any>}
      */
     public async send(method: string, parameters: any[]): Promise<any> {
-        const response = await this.sendPayload(this.toPayload(method, parameters));
-        const validationResult = this.validate(response);
+        const response: JsonRpcResponse = <JsonRpcResponse> await this.sendPayload(this.toPayload(method, parameters));
+        const validationResult: boolean | Error = this.validate(response);
 
         if (validationResult instanceof Error) {
             throw validationResult;

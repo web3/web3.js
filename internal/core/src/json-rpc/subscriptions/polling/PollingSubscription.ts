@@ -31,7 +31,7 @@ export default class PollingSubscription<T> extends Observable<T> {
      *
      * @constructor
      */
-    public constructor(public config: JsonRpcConfiguration, public method: Method) {
+    public constructor(public config: JsonRpcConfiguration, public method: Method<T>) {
         super();
     }
 

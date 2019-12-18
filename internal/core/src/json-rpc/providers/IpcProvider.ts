@@ -21,23 +21,47 @@
  */
 
 import AbstractSocketProvider from "../../../lib/json-rpc/providers/AbstractSocketProvider";
-import isArray from 'lodash/isArray';
+import * as net from 'net';
+import {isArray} from 'lodash';
 import ProviderError from "../../errors/json-rpc/ProviderError";
+import JsonRpcPayload from "../../../lib/json-rpc/providers/interfaces/JsonRpcPayload";
+import JsonRpcResponse from "../../../lib/json-rpc/providers/interfaces/JsonRpcResponse";
 
 export default class IpcProvider extends AbstractSocketProvider {
     /**
-     * TODO: Copy constructor from 1.x
-     * TODO: Add timeout to constructor
+     * @property connection
+     */
+    public connection: net.Socket;
+
+    /**
+     * @property lastChunk
+     */
+    private lastChunk: string | null = '';
+
+    /**
+     * TODO: It should be possible to remove the net or at least to define it as optional constructor param
      *
-     * @param {Socket} connection
-     * @param {String} path
+     * @param {String} host
+     * @param {net.Server} net
      *
      * @constructor
      */
-    constructor(connection, path) {
-        super(connection, null);
-        this.host = path;
-        this.lastChunk = '';
+    constructor(public host: string = '', net: any) {
+        super();
+
+        this.connect();
+    }
+
+    /**
+     * Connects to the configured node
+     *
+     * @method connect
+     *
+     * @returns {void}
+     */
+    public connect(): void {
+        this.connection = net.connect({path: this.host});
+        this.addSocketListeners();
     }
 
     /**
@@ -45,7 +69,7 @@ export default class IpcProvider extends AbstractSocketProvider {
      *
      * @method disconnect
      */
-    disconnect() {
+    public disconnect(): void {
         this.connection.destroy();
     }
 
@@ -56,8 +80,8 @@ export default class IpcProvider extends AbstractSocketProvider {
      *
      * @returns {Boolean}
      */
-    get connected() {
-        return !this.connection.pending;
+    public get connected(): boolean {
+        return !this.connection.connecting;
     }
 
     /**
@@ -65,16 +89,18 @@ export default class IpcProvider extends AbstractSocketProvider {
      *
      * @method reconnect
      */
-    reconnect() {
-        this.connection.connect({path: this.path});
+    public reconnect(): void {
+        if (this.connection) {
+            this.connection.connect({path: this.host});
+        }
     }
 
     /**
      * @param {String|Buffer} message
      */
-    onMessage(message) {
+    protected onMessage(message: String | Buffer): void {
         let result = null;
-        let returnValues = [];
+        let returnValues: string[] = [];
         let dechunkedData = message
             .toString()
             .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
@@ -109,44 +135,26 @@ export default class IpcProvider extends AbstractSocketProvider {
     /**
      * Registers all the required listeners.
      *
-     * @method registerEventListeners
+     * @method addSocketListeners
      */
-    registerEventListeners() {
+    protected addSocketListeners(): void {
         this.connection.on('data', this.onMessage.bind(this));
         this.connection.on('connect', this.onConnect.bind(this));
         this.connection.on('error', this.onError.bind(this));
         this.connection.on('close', this.onClose.bind(this));
         this.connection.on('timeout', this.onClose.bind(this));
-        this.connection.on('ready', this.onReady.bind(this));
     }
 
     /**
      * Removes all listeners on the EventEmitter and the socket object.
      *
      * @method removeAllListeners
-     *
-     * @param {String} event
      */
-    removeAllListeners(event) {
-        switch (event) {
-            case this.SOCKET_MESSAGE:
-                this.connection.removeListener('data', this.onMessage);
-                break;
-            case this.SOCKET_READY:
-                this.connection.removeListener('ready', this.onReady);
-                break;
-            case this.SOCKET_CLOSE:
-                this.connection.removeListener('close', this.onClose);
-                break;
-            case this.SOCKET_ERROR:
-                this.connection.removeListener('error', this.onError);
-                break;
-            case this.SOCKET_CONNECT:
-                this.connection.removeListener('connect', this.onConnect);
-                break;
-        }
-
-        super.removeAllListeners(event);
+    protected removeSocketListeners(): void {
+        this.connection.removeListener('data', this.onMessage);
+        this.connection.removeListener('close', this.onClose);
+        this.connection.removeListener('error', this.onError);
+        this.connection.removeListener('connect', this.onConnect);
     }
 
     /**
@@ -156,14 +164,14 @@ export default class IpcProvider extends AbstractSocketProvider {
      *
      * @param {Object} payload
      *
-     * @returns {Promise<any>}
+     * @returns {Promise<JsonRpcResponse | JsonRpcResponse[]>}
      */
-    sendPayload(payload) {
+    protected sendPayload(payload: JsonRpcPayload): Promise<JsonRpcResponse | JsonRpcResponse[]> {
         return new Promise((resolve, reject) => {
             this.once('error', reject);
 
             if (!this.connection.writable) {
-                this.connection.connect({path: this.path});
+                this.connection.connect({path: this.host});
             }
 
             if (this.connection.write(JSON.stringify(payload))) {

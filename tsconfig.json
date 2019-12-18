@@ -1,6 +1,7 @@
 {
   "extends": "@ethereumjs/config-tsc",
   "compilerOptions": {
+    "strictPropertyInitialization": false,
     "outDir": "./dist",
     "allowJs": true,
     "lib": [

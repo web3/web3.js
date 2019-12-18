@@ -24,35 +24,62 @@
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import * as http from 'http';
 import * as https from 'https';
-import AbstractProvider from "../../../lib/json-rpc/providers/AbstractProvider.js";
+import Method from '../methods/Method.js';
 import ProviderError from "../../errors/json-rpc/ProviderError";
+import AbstractProvider from "../../../lib/json-rpc/providers/AbstractProvider.js";
+import JsonRpcResponse from "../../../lib/json-rpc/providers/interfaces/JsonRpcResponse";
+import JsonRpcPayload from "../../../lib/json-rpc/providers/interfaces/JsonRpcPayload";
+import {HttpHeader} from "../../../lib/json-rpc/providers/interfaces/HttpHeader";
 
 export default class HttpProvider extends AbstractProvider {
+    /**
+     * @property headers
+     */
+    public headers: HttpHeader[];
+
+    /**
+     * @property withCredentials
+     */
+    public withCredentials: boolean = false;
+
+    /**
+     * @property connected
+     */
+    public connected: boolean = true;
+
+    /**
+     * @property httpsAgent
+     */
+    public httpsAgent: https.Agent | undefined = undefined;
+
+    /**
+     * @property httpAgent
+     */
+    public httpAgent: http.Agent | undefined = undefined;
+
     /**
      * @param {String} host
      * @param {Object} options
      *
      * @constructor
      */
-    constructor(host = 'http://localhost:8545', options = {}) {
+    public constructor(public host = 'http://localhost:8545', options: any = {}) {
         super();
 
-        this.host = host;
-        this.timeout = options.timeout || 0;
+        this.timeout = options.timeout;
         this.headers = options.headers;
         this.withCredentials = options.withCredentials || false;
         this.connected = true;
-        this.agent = {};
 
         let keepAlive = false;
-        if (options.keepAlive === true || options.keepAlive !== false) {
+        if (options.keepAlive === true) {
             keepAlive = true;
         }
 
         if (host.substring(0, 5) === 'https') {
-            this.agent['httpsAgent'] = new https.Agent({keepAlive});
+            this.httpsAgent = new https.Agent({keepAlive});
         } else {
-            this.agent['httpAgent'] = new http.Agent({keepAlive});
+            this.httpAgent = new http.Agent({keepAlive});
         }
     }
 
@@ -63,22 +90,8 @@ export default class HttpProvider extends AbstractProvider {
      *
      * @returns {Boolean}
      */
-    supportsSubscriptions() {
+    public supportsSubscriptions(): boolean {
         return false;
-    }
-
-    /**
-     * Added this method to have a better error message if someone is trying to create a subscription with this provider.
-     */
-    subscribe() {
-        throw new ProviderError('Subscriptions are not supported with the HttpProvider.', this.host);
-    }
-
-    /**
-     * Added this method to have a better error message if someone is trying to unsubscribe with this provider.
-     */
-    unsubscribe() {
-        throw new ProviderError('Subscriptions are not supported with the HttpProvider.', this.host);
     }
 
     /**
@@ -88,7 +101,7 @@ export default class HttpProvider extends AbstractProvider {
      *
      * @returns {Boolean}
      */
-    disconnect() {
+    public disconnect(): boolean {
         return true;
     }
 
@@ -102,8 +115,8 @@ export default class HttpProvider extends AbstractProvider {
      *
      * @returns {Promise<any>}
      */
-    async send(method, parameters) {
-        const response = await this.sendPayload(this.toPayload(method, parameters));
+    async send(method: string, parameters: any[]): Promise<any> {
+        const response: JsonRpcResponse = <JsonRpcResponse> await this.sendPayload(this.toPayload(method, parameters));
         const validationResult = this.validate(response);
 
         if (validationResult instanceof Error) {
@@ -119,19 +132,17 @@ export default class HttpProvider extends AbstractProvider {
      * @method sendBatch
      *
      * @param {Method[]} methods
-     * @param {Configuration} moduleInstance
      *
-     * @returns Promise<Object|Error>
+     * @returns Promise<JsonRpcResponse[]>
      */
-    sendBatch(methods, moduleInstance) {
-        let payload = [];
+    public sendBatch(methods: Method<any>[]): Promise<JsonRpcResponse[]> {
+        let payload: JsonRpcPayload[] = [];
 
         methods.forEach((method) => {
-            method.beforeExecution(moduleInstance);
             payload.push(this.toPayload(method.rpcMethod, method.parameters));
         });
 
-        return this.sendPayload(payload);
+        return <Promise<JsonRpcResponse[]>> this.sendPayload(payload);
     }
 
     /**
@@ -139,13 +150,13 @@ export default class HttpProvider extends AbstractProvider {
      *
      * @method sendPayload
      *
-     * @param {Object} payload
+     * @param {JsonRpcPayload} payload
      *
-     * @returns {Promise<any>}
+     * @returns {Promise<JsonRpcResponse>}
      */
-    sendPayload(payload) {
+    public sendPayload(payload: JsonRpcPayload | JsonRpcPayload[]): Promise<JsonRpcResponse | JsonRpcResponse[]> {
         return new Promise((resolve, reject) => {
-            let request;
+            let request: XHR | XMLHttpRequest;
 
             // the current runtime is a browser
             if (typeof XMLHttpRequest !== 'undefined') {
@@ -164,7 +175,7 @@ export default class HttpProvider extends AbstractProvider {
             request.withCredentials = this.withCredentials;
 
             if(this.headers) {
-                this.headers.forEach(function(header) {
+                this.headers.forEach(function(header: HttpHeader) {
                     request.setRequestHeader(header.name, header.value);
                 });
             }
@@ -199,7 +210,7 @@ export default class HttpProvider extends AbstractProvider {
                 reject(new ProviderError(`Timeout exceeded after ${this.timeout}ms`, this.host, payload, request.responseText));
             });
 
-            request.addEventListener('error', (event) => {
+            request.addEventListener('error', (event: any) => {
                 this.connected = false;
 
                 reject(new ProviderError(event.message, this.host, payload));
@@ -220,11 +231,11 @@ export default class HttpProvider extends AbstractProvider {
      *
      * @method isInvalidHttpEndpoint
      *
-     * @param {Object} request
+     * @param {XHR | XMLHttpRequest} request
      *
      * @returns {Boolean}
      */
-    isInvalidHttpEndpoint(request) {
+    public isInvalidHttpEndpoint(request: XHR | XMLHttpRequest): boolean {
         return request.response === null && request.status === 0;
     }
 }
