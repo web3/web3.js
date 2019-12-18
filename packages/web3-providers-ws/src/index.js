@@ -379,7 +379,11 @@ WebsocketProvider.prototype.send = function (payload, callback) {
  * @returns {void}
  */
 WebsocketProvider.prototype.reset = function () {
+    this.responseQueue.clear();
+    this.requestQueue.clear();
+    
     this.removeAllListeners();
+
     this._removeSocketListeners();
     this._addSocketListeners();
 };
