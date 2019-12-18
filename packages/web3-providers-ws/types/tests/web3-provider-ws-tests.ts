@@ -20,7 +20,9 @@
  * @date 2018
  */
 
-import { WebsocketProvider, WebsocketProviderOptions, JsonRpcResponse  } from 'web3-providers-ws';
+import { WebsocketProvider, WebsocketProviderOptions, JsonRpcResponse, JsonRpcPayload  } from 'web3-providers-ws';
+
+const payload: JsonRpcPayload = {jsonrpc: '', id: 0, method: '', params: []};
 
 const options: WebsocketProviderOptions = {
     timeout: 30000,
@@ -53,10 +55,10 @@ wsProvider.connected;
 wsProvider.supportsSubscriptions();
 
 // $ExpectType void
-wsProvider.send({} as any, (error: Error | null) => {});
+wsProvider.send(payload, (error: Error | null) => {});
 
 // $ExpectType void
-wsProvider.send({} as any, (error: Error | null, result: JsonRpcResponse | undefined) => {});
+wsProvider.send(payload, (error: Error | null, result: JsonRpcResponse | undefined) => {});
 
 // $ExpectType void
 wsProvider.on('type', () => {});

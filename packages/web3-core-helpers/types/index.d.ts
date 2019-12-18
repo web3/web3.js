@@ -11,6 +11,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import * as net from "net";
+
 /**
  * @file index.d.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
@@ -64,4 +66,132 @@ export class errors {
     static InvalidProvider(): Error;
     static InvalidResponse(result: Error): Error;
     static ConnectionTimeout(ms: string): Error;
+}
+
+export class IpcProviderBase {
+    constructor(path: string, net: net.Server);
+
+    responseCallbacks: any;
+    notificationCallbacks: any;
+    connected: boolean;
+    connection: any;
+
+    addDefaultEvents(): void;
+
+    supportsSubscriptions(): boolean;
+
+    send(
+        payload: JsonRpcPayload,
+        callback: (error: Error | null, result?: JsonRpcResponse) => void
+    ): void;
+
+    on(type: string, callback: () => void): void;
+
+    once(type: string, callback: () => void): void;
+
+    removeListener(type: string, callback: () => void): void;
+
+    removeAllListeners(type: string): void;
+
+    reset(): void;
+
+    reconnect(): void;
+}
+
+export class WebsocketProviderBase {
+    constructor(host: string, options?: WebsocketProviderOptions);
+
+    requestQueue: Map<string, RequestItem>;
+    responseQueue: Map<string, RequestItem>;
+    connected: boolean;
+    connection: any;
+
+    supportsSubscriptions(): boolean;
+
+    send(
+        payload: JsonRpcPayload,
+        callback: (error: Error | null, result?: JsonRpcResponse) => void
+    ): void;
+
+    on(type: string, callback: () => void): void;
+
+    once(type: string, callback: () => void): void;
+
+    removeListener(type: string, callback: () => void): void;
+
+    removeAllListeners(type: string): void;
+
+    reset(): void;
+
+    disconnect(code: number, reason: string): void;
+
+    connect(): void;
+
+    reconnect(): void;
+}
+
+export class HttpProviderBase {
+    constructor(host: string, options?: HttpProviderOptions);
+
+    host: string;
+    connected: boolean;
+
+    supportsSubscriptions(): boolean;
+
+    send(
+        payload: JsonRpcPayload,
+        callback: (error: Error | null, result?: JsonRpcResponse) => void
+    ): void;
+
+    disconnect(): boolean;
+}
+
+export interface HttpProviderOptions {
+    keepAlive?: boolean;
+    timeout?: number;
+    headers?: HttpHeader[];
+    withCredentials?: boolean;
+}
+
+export interface HttpHeader {
+    name: string;
+    value: string;
+}
+
+export interface WebsocketProviderOptions {
+    host?: string;
+    timeout?: number;
+    reconnectDelay?: number;
+    headers?: any;
+    protocol?: string;
+    clientConfig?: string;
+    requestOptions?: any;
+    origin?: string;
+    reconnect?: ReconnectOptions;
+}
+
+export interface ReconnectOptions {
+    auto?: boolean;
+    delay?: number;
+    maxAttempts?: boolean;
+    onTimeout?: boolean;
+}
+
+export interface RequestItem {
+    payload: JsonRpcPayload;
+    callback: (error: any, result: any) => void;
+}
+
+export interface JsonRpcPayload {
+    jsonrpc: string;
+    method: string;
+    params: any[];
+    id?: string | number;
+}
+
+export interface JsonRpcResponse {
+    jsonrpc: string;
+    id: number;
+    result?: any;
+    error?: string;
 }
