@@ -227,6 +227,7 @@ export interface AbiInput {
     type: string;
     indexed?: boolean;
 	components?: AbiInput[];
+    internalType?: string;
 }
 
 export interface AbiOutput {
