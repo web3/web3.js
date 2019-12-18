@@ -2,7 +2,6 @@
 # Does set local registry up for the dev-environment
 # --------------------------------------------------
 
-
 # Launch local registry
 verdaccio --config verdaccio.yml & npx wait-port 4873
 
