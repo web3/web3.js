@@ -109,6 +109,7 @@ Released with 1.0.0-beta.37 code base.
 - ``getPendingTransactions`` added to web3-eth package (#3239)
 - Revert instruction handling added which can get activated with the ``handleRevert`` module property (#3248)
 - The ``receipt`` does now exist as property on the error object for transaction related errors (#3259)
+- ``internalType`` added to ``AbiInput`` TS interface in ``web3-utils`` (#3279)
 
 ### Changed
 
