@@ -51,7 +51,7 @@ This will expose `Web3` on the window object.
 Or via jsDelivr CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.x/dist/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 ```
 UNPKG
 
