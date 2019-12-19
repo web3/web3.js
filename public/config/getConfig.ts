@@ -1,6 +1,6 @@
 import ConfigurationTypes from "./ConfigurationTypes";
 import Configuration from "./Configuration";
-import EthereumConfiguration from "../../internal/ethereum/src/config/EthereumConfiguration";
+import EthereumConfiguration from "internal/ethereum/src/config/EthereumConfiguration";
 import web3 from "../index";
 
 const ConfigurationMap = {
@@ -17,7 +17,7 @@ const ConfigurationMap = {
  */
 export default function (type?: ConfigurationTypes, config?: any): any {
     // If config is defined and inheritance from the default config disabled should it directly return the config
-    if (config && !config.default) {
+    if (config && config.default === false) {
         return config;
     }
 

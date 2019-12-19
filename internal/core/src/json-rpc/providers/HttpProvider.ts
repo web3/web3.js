@@ -26,7 +26,7 @@ import * as http from 'http';
 import * as https from 'https';
 import Method from '../methods/Method.js';
 import ProviderError from "../../errors/json-rpc/ProviderError";
-import AbstractProvider from "../../../lib/json-rpc/providers/AbstractProvider.js";
+import AbstractProvider from "../../../lib/json-rpc/providers/AbstractProvider";
 import JsonRpcResponse from "../../../lib/json-rpc/providers/interfaces/JsonRpcResponse";
 import JsonRpcPayload from "../../../lib/json-rpc/providers/interfaces/JsonRpcPayload";
 import {HttpHeader} from "../../../lib/json-rpc/providers/interfaces/HttpHeader";

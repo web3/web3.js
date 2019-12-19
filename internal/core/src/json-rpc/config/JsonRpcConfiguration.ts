@@ -22,7 +22,6 @@
 
 import AbstractProvider from "../../../lib/json-rpc/providers/AbstractProvider";
 import HttpProvider from "../providers/HttpProvider";
-import IpcProvider from "../providers/IpcProvider";
 import WebsocketProvider from "../providers/WebsocketProvider";
 
 export default class JsonRpcConfiguration {
@@ -34,7 +33,7 @@ export default class JsonRpcConfiguration {
     /**
      * @property pollingInterval
      */
-    public pollingInterval: number = 1000;
+    public pollingInterval: number;
 
     /**
      * @param {Object} options
@@ -43,10 +42,6 @@ export default class JsonRpcConfiguration {
      * @constructor
      */
     public constructor(options: any = {}, parent?: any) {
-        if (!options.provider && !parent.provider) {
-            throw new Error('No JSON-RPC Provider given!');
-        }
-
         let host: string | undefined;
         let providerOptions;
         let provider;
@@ -60,17 +55,24 @@ export default class JsonRpcConfiguration {
 
         if (host) {
             const ProviderConstructor = this.getProviderFromString(host);
+
             if (ProviderConstructor) {
                 provider = new ProviderConstructor(host, providerOptions);
             }
+        }
 
-            if (parent.provider instanceof Map) {
+        if (parent && parent.provider instanceof Map) {
+            if (host) {
                 provider = parent.provider.get(host);
+            } else {
+                provider = parent.provider.get('default');
             }
         }
 
+        parent = parent || {};
+
         this.provider = provider || options.provider || parent.provider;
-        this.pollingInterval = options.pollingInterval || parent.pollingInterval;
+        this.pollingInterval = options.pollingInterval || parent.pollingInterval || 1000;
     }
 
     /**

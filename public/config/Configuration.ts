@@ -20,7 +20,7 @@
  * @date 2019
  */
 
-import EthereumConfiguration from "internal/ethereum/src/config/EthereumConfiguration.js";
+import EthereumConfiguration from "internal/ethereum/src/config/EthereumConfiguration";
 import ConfigurationTypes from "./ConfigurationTypes";
 import IConfiguration from "./IConfiguration";
 

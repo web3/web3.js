@@ -20,7 +20,7 @@
  * @date 2019
  */
 
-import JsonRpcConfiguration from "../../../core/src/json-rpc/config/JsonRpcConfiguration.js";
+import JsonRpcConfiguration from "../../../core/src/json-rpc/config/JsonRpcConfiguration";
 import Address from "../../lib/types/input/Address.js";
 import TransactionConfiguration from "internal/ethereum/lib/config/interfaces/TransactionConfiguration";
 
@@ -52,10 +52,13 @@ export default class EthereumConfiguration extends JsonRpcConfiguration {
     ) {
         super(options, parent);
 
-        this.block = options.block || parent.block || "latest";
+        this.block = options.block || parent ? parent.block : 'latest';
+
+        const parentTransaction = parent ? parent.transaction : false;
+
         this.transaction = Object.assign(
             {timeout: 50, confirmations: 0},
-            parent.transaction ? Object.assign(parent.transaction, options.transaction) : options.transaction
+            parentTransaction ? Object.assign(parentTransaction, options.transaction) : options.transaction
         );
         this.account = options.account;
     }

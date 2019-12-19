@@ -20,8 +20,8 @@
  * @date 2019
  */
 
-import Method from "internal/core/src/json-rpc/methods/Method.js";
-import TransactionReceipt from "../../../../lib/types/output/TransactionReceipt.js";
+import Method from "internal/core/src/json-rpc/methods/Method";
+import TransactionReceipt from "../../../../lib/types/output/TransactionReceipt";
 import EthereumConfiguration from "../../../config/EthereumConfiguration";
 
 export default class GetTransactionReceiptMethod<TransactionReceipt> extends Method<TransactionReceipt> {

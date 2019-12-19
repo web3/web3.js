@@ -42,7 +42,7 @@ export default function receipt(
     return new Promise((resolve, reject) => {
         let counter: number = 0;
 
-        const subscription = confirmations(txHash, config).subscribe(
+        const subscription = confirmations(txHash, mappedConfig).subscribe(
             (confirmation: TransactionReceipt) => {
                 if (counter === mappedConfig.transaction.confirmations) {
                     subscription.unsubscribe();
