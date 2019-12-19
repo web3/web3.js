@@ -21,6 +21,9 @@
  */
 
 import AbstractProvider from "../../../lib/json-rpc/providers/AbstractProvider";
+import HttpProvider from "../providers/HttpProvider";
+import IpcProvider from "../providers/IpcProvider";
+import WebsocketProvider from "../providers/WebsocketProvider";
 
 export default class JsonRpcConfiguration {
     /**
@@ -35,30 +38,57 @@ export default class JsonRpcConfiguration {
 
     /**
      * @param {Object} options
+     * @param {Object} parent
      *
      * @constructor
      */
-    public constructor(options: any = {}, parent?) {
-        // TODO: allow url as provider
-        // // HTTP
-        // if (/^http(s)?:\/\//i.test(provider)) {
-        //     return this.providersModuleFactory.createHttpProvider(provider);
-        // }
-        // // WS
-        // if (/^ws(s)?:\/\//i.test(provider)) {
-        //     return this.providersModuleFactory.createWebsocketProvider(provider);
-        // }
-        //
-        // // IPC
-        // if (provider && isObject(net) && isFunction(net.connect)) {
-        //     return this.providersModuleFactory.createIpcProvider(provider, net);
-        // }
-
-        if (!options.provider) {
+    public constructor(options: any = {}, parent?: any) {
+        if (!options.provider && !parent.provider) {
             throw new Error('No JSON-RPC Provider given!');
         }
 
-        this.provider = options.provider;
-        this.pollingInterval = options.pollingInterval;
+        let host: string | undefined;
+        let providerOptions;
+        let provider;
+
+        if (Array.isArray(options.provider)) {
+            host = options.provider[0];
+            providerOptions = options.provider[1];
+        } else if (typeof options.provider === 'string') {
+            host = options.provider;
+        }
+
+        if (host) {
+            const ProviderConstructor = this.getProviderFromString(host);
+            if (ProviderConstructor) {
+                provider = new ProviderConstructor(host, providerOptions);
+            }
+
+            if (parent.provider instanceof Map) {
+                provider = parent.provider.get(host);
+            }
+        }
+
+        this.provider = provider || options.provider || parent.provider;
+        this.pollingInterval = options.pollingInterval || parent.pollingInterval;
+    }
+
+    /**
+     * @method getProviderFromString
+     *
+     * @param {String} provider
+     */
+    private getProviderFromString(provider: string) {
+        if (/^http(s)?:\/\//i.test(provider)) {
+            return HttpProvider;
+        }
+
+        if (/^ws(s)?:\/\//i.test(provider)) {
+            return WebsocketProvider;
+        }
+
+        // if (provider && net) {
+        //     return IpcProvider
+        // }
     }
 }
