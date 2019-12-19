@@ -17,7 +17,7 @@ const ConfigurationMap = {
  */
 export default function (type?: ConfigurationTypes, config?: any): any {
     // If config is defined and inheritance from the default config disabled should it directly return the config
-    if (config && config.default === false) {
+    if (config && config.useDefault === false) {
         return config;
     }
 

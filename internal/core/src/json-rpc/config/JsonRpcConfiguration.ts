@@ -26,6 +26,11 @@ import WebsocketProvider from "../providers/WebsocketProvider";
 
 export default class JsonRpcConfiguration {
     /**
+     * @property useDefault
+     */
+    public useDefault: boolean = true;
+
+    /**
      * @property provider
      */
     public provider: AbstractProvider;

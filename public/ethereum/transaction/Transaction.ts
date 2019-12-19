@@ -50,6 +50,7 @@ export default class Transaction {
         config?: EthereumConfiguration
     ) {
         this.config = getConfig(ConfigurationTypes.ETHEREUM, config);
+        this.config.useDefault = false; // Prevent re-merging of config
     }
 
     /**
