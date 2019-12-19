@@ -32,11 +32,12 @@ export default class Configuration {
 
     /**
      * @param {Object} options
+     * @param {Object} parent
      *
      * @constructor
      */
-    public constructor(options: any = {}) {
-        this[ConfigurationTypes.ETHEREUM] = new EthereumConfiguration(options.ethereum);
+    public constructor(options: any = {}, parent?: any) {
+        this[ConfigurationTypes.ETHEREUM] = new EthereumConfiguration(options.ethereum, parent);
     }
 
     /**
@@ -46,7 +47,7 @@ export default class Configuration {
      */
     public toJSON(): IConfiguration {
         return {
-            [ConfigurationTypes.ETHEREUM]: this[ConfigurationTypes.ETHEREUM]
+            [ConfigurationTypes.ETHEREUM]: this[ConfigurationTypes.ETHEREUM].toJSON()
         }
     }
 }

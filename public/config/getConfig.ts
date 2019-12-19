@@ -20,7 +20,7 @@ export default function (type?: ConfigurationTypes, config?: any): any {
     if (!type) {
         // Overwrite properties from Configuration class with the passed config params
         if (config) {
-            return new Configuration(Object.assign(web3.config.toJSON(), config))
+            return new Configuration(config, web3.config.toJSON());
         }
 
         // Return default Configuration
@@ -45,5 +45,5 @@ export default function (type?: ConfigurationTypes, config?: any): any {
     }
 
     // Get default config by type and apply passed overwrites
-    return new ConfigurationMap[type](Object.assign(web3.config[type].toJSON(), config))
+    return new ConfigurationMap[type](config, web3.config[type].toJSON());
 }

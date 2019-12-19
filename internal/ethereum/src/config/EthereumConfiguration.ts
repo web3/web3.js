@@ -42,16 +42,21 @@ export default class EthereumConfiguration extends JsonRpcConfiguration {
 
     /**
      * @param {Object} options
+     * @param {Object} parent
      *
      * @constructor
      */
     public constructor(
-        options: any = {}
+        options: any = {},
+        parent?: any
     ) {
-        super(options);
+        super(options, parent);
 
-        this.block = options.block || "latest";
-        this.transaction = Object.assign({timeout: 50, confirmations: 0}, options.transaction);
+        this.block = options.block || parent.block || "latest";
+        this.transaction = Object.assign(
+            {timeout: 50, confirmations: 0},
+            parent.transaction ? Object.assign(parent.transaction, options.transaction) : options.transaction
+        );
         this.account = options.account;
     }
 

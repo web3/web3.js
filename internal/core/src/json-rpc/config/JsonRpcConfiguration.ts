@@ -38,7 +38,7 @@ export default class JsonRpcConfiguration {
      *
      * @constructor
      */
-    public constructor(options: any = {}) {
+    public constructor(options: any = {}, parent?) {
         // TODO: allow url as provider
         // // HTTP
         // if (/^http(s)?:\/\//i.test(provider)) {
