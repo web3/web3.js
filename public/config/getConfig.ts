@@ -16,6 +16,11 @@ const ConfigurationMap = {
  * @param {any} config
  */
 export default function (type?: ConfigurationTypes, config?: any): any {
+    // If config is defined and inheritance from the default config disabled should it directly return the config
+    if (config && !config.default) {
+        return config;
+    }
+
     // No configuration type
     if (!type) {
         // Overwrite properties from Configuration class with the passed config params
