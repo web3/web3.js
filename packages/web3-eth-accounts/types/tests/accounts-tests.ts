@@ -16,7 +16,7 @@
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
-import { Accounts } from 'web3-eth-accounts';
+import { Accounts, SignedTransaction } from 'web3-eth-accounts';
 
 // $ExpectType Accounts
 const accounts_empty = new Accounts();
@@ -63,7 +63,7 @@ accounts.signTransaction(
         gas: 2000000
     },
     '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
-    () => {
+    (error: Error, signedTransaction: SignedTransaction) => {
         console.log('hey');
     }
 );

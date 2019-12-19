@@ -120,3 +120,4 @@ Released with 1.0.0-beta.37 code base.
 - Fix minified bundle (#3256)
 - ``defaultBlock`` property handling fixed (#3247)
 - ``clearSubscriptions`` does no longer throw an error if no running subscriptions do exist (#3246) 
+- callback type definition for ``Accounts.signTransaction`` fixed (#3280)
