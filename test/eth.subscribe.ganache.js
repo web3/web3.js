@@ -104,14 +104,44 @@ describe('subscription connect/reconnect', function() {
         }
     });
 
-    // Could not get the .on('error') version of this to work - maybe a race condition setting it up.
-    it('errors when the provider is not set', function(done){
+    it('errors when the provider is not set (callback)', function(done){
         web3 = new Web3();
 
         web3.eth.subscribe('newBlockHeaders', function(err, result){
             assert(err.message.includes('No provider set'));
             done();
         })
+    });
+
+    it('errors when the provider is not set (.on("error"))', function(done){
+        web3 = new Web3();
+
+        web3.eth
+            .subscribe('newBlockHeaders')
+            .on("error", function(err){
+                assert(err.message.includes('No provider set'));
+                done();
+            })
+    });
+
+    it('errors when the provider does not support subscriptions (callback)', function(done){
+        web3 = new Web3('http://localhost:' + port);
+
+        web3.eth.subscribe('newBlockHeaders', function(err, result){
+            assert(err.message.includes("provider doesn't support subscriptions: HttpProvider"));
+            done();
+        });
+    });
+
+    it('errors when the provider is not set (.on("error"))', function(done){
+        web3 = new Web3('http://localhost:' + port);
+
+        web3.eth
+            .subscribe('newBlockHeaders')
+            .on("error", function(err){
+                assert(err.message.includes("provider doesn't support subscriptions: HttpProvider"));
+                done();
+            })
     });
 
     it('errors when the `eth_subscribe` request got send, the reponse isnt returned from the node, and the connection does get closed in the mean time', async function() {
