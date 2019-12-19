@@ -22,6 +22,7 @@
 
 import EthereumConfiguration from "internal/ethereum/src/config/EthereumConfiguration.js";
 import ConfigurationTypes from "./ConfigurationTypes";
+import IConfiguration from "./IConfiguration";
 
 export default class Configuration {
     /**
@@ -34,7 +35,18 @@ export default class Configuration {
      *
      * @constructor
      */
-    constructor(options: any = {}) {
-        this.ethereum = new EthereumConfiguration(options.ethereum);
+    public constructor(options: any = {}) {
+        this[ConfigurationTypes.ETHEREUM] = new EthereumConfiguration(options.ethereum);
+    }
+
+    /**
+     * @method toJSON
+     *
+     * @returns {IConfiguration}
+     */
+    public toJSON(): IConfiguration {
+        return {
+            [ConfigurationTypes.ETHEREUM]: this[ConfigurationTypes.ETHEREUM]
+        }
     }
 }

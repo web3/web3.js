@@ -22,23 +22,37 @@
 
 import JsonRpcConfiguration from "../../../core/src/json-rpc/config/JsonRpcConfiguration.js";
 import Address from "../../lib/types/input/Address.js";
+import TransactionConfiguration from "internal/ethereum/lib/config/interfaces/TransactionConfiguration";
 
 export default class EthereumConfiguration extends JsonRpcConfiguration {
+    /**
+     * @property block
+     */
+    public block: string | number | undefined;
+
+    /**
+     * @property transaction
+     */
+    public transaction: TransactionConfiguration;
+
+    /**
+     * @property _account
+     */
+    private _account: string | undefined;
+
     /**
      * @param {Object} options
      *
      * @constructor
      */
-    constructor(options = {}) {
+    public constructor(
+        options: any = {}
+    ) {
         super(options);
 
+        this.block = options.block || "latest";
+        this.transaction = Object.assign({timeout: 50, confirmations: 0}, options.transaction);
         this.account = options.account;
-        this.block = options.block || 'latest';
-
-        this.transaction = options.transaction || {};
-        this.transaction.blockTimeout = this.transaction.blockTimeout || 50;
-        this.transaction.confirmationBlocks = this.transaction.confirmationBlocks || 0;
-        this.transaction.pollingTimeout = this.transaction.pollingTimeout || 750;
     }
 
     /**
@@ -48,7 +62,7 @@ export default class EthereumConfiguration extends JsonRpcConfiguration {
      *
      * @returns {null|String}
      */
-    get account() {
+    public get account() {
         return this._account;
     }
 
@@ -59,11 +73,19 @@ export default class EthereumConfiguration extends JsonRpcConfiguration {
      *
      * @param {String} value
      */
-    set account(value) {
+    public set account(value) {
         if (value) {
-            this._account = Address.isValid((value));
+            this._account = Address.toChecksum((value));
         }
 
         this._account = undefined;
+    }
+
+    public toJSON() {
+        return {
+            account: this.account,
+            block: this.block,
+            transaction: this.transaction
+        }
     }
 }
