@@ -67,7 +67,6 @@ describe('transaction and message signing [ @E2E ]', function() {
         const networkId = await web3.eth.net.getId();
         const chainId = await web3.eth.getChainId();
 
-
         const customCommon = {
             baseChain: 'mainnet',
             customChain: {
@@ -101,6 +100,45 @@ describe('transaction and message signing [ @E2E ]', function() {
 
         const txObject = {
             nonce:    web3.utils.toHex(txCount),
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gasLimit: web3.utils.toHex(21000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+        };
+
+        const signed = await web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey);
+        const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+
+        assert(receipt.status === true);
+    });
+
+    it('accounts.signTransaction, (nonce not specified)', async function(){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txObject = {
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gasLimit: web3.utils.toHex(21000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+        };
+
+        const signed = await web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey);
+        const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+
+        assert(receipt.status === true);
+    });
+
+    it('accounts.signTransaction, (nonce formatted as number)', async function(){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txCount = await web3.eth.getTransactionCount(source);
+
+        assert(typeof txCount === 'number');
+
+        const txObject = {
+            nonce:    txCount,
             to:       destination,
             value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
             gasLimit: web3.utils.toHex(21000),
