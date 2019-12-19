@@ -25,11 +25,14 @@ export default function (type?: ConfigurationTypes, config?: any): any {
     if (!type) {
         // Overwrite properties from Configuration class with the passed config params
         if (config) {
-            return new Configuration(config, web3.config.toJSON());
+            config = new Configuration(config, web3.config.toJSON());
         }
 
         // Return default Configuration
-        return web3.config;
+        config = web3.config;
+        config.useDefault = false;
+
+        return;
     }
 
     // No overwrites
@@ -40,15 +43,16 @@ export default function (type?: ConfigurationTypes, config?: any): any {
         if (!config) {
             throw new Error("Configuration with type '" + type + "' doesn't exist.");
         }
-
-        return config;
     }
 
     // Return default config if passed config is identical to it
     if (config === web3.config[type]) {
-        return web3.config[type];
+        config = web3.config[type];
+    } else { // Get default config by type and apply passed overwrites
+        config = new ConfigurationMap[type](config, web3.config[type].toJSON());
     }
 
-    // Get default config by type and apply passed overwrites
-    return new ConfigurationMap[type](config, web3.config[type].toJSON());
+    config.useDefault = false;
+
+    return config;
 }

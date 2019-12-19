@@ -98,4 +98,18 @@ export default class JsonRpcConfiguration {
         //     return IpcProvider
         // }
     }
+
+    /**
+     * Returns a JSON compatible object
+     *
+     * @method toJSON
+     *
+     * @returns {Object}
+     */
+    toJSON(): any {
+        return {
+            provider: this.provider,
+            pollingInterval: this.pollingInterval
+        }
+    }
 }

@@ -89,11 +89,19 @@ export default class EthereumConfiguration extends JsonRpcConfiguration {
         this._account = undefined;
     }
 
-    public toJSON() {
+    /**
+     * Returns a JSON compatible object
+     *
+     * @method toJSON
+     *
+     * @returns {Object}
+     */
+    public toJSON(): any {
         return {
             account: this.account,
             block: this.block,
-            transaction: this.transaction
+            transaction: this.transaction,
+            ... super.toJSON()
         }
     }
 }
