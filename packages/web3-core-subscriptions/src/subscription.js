@@ -196,18 +196,28 @@ Subscription.prototype.subscribe = function() {
         return this;
     }
 
+    // throw error, if provider is not set
     if(!this.options.requestManager.provider) {
-        var err1 = new Error('No provider set.');
-        this.callback(err1, null, this);
-        this.emit('error', err1);
+        setTimeout(function(){
+            var err1 = new Error('No provider set.');
+            _this.callback(err1, null, _this);
+            _this.emit('error', err1);
+        },0);
+
         return this;
     }
 
     // throw error, if provider doesnt support subscriptions
     if(!this.options.requestManager.provider.on) {
-        var err2 = new Error('The current provider doesn\'t support subscriptions: '+ this.options.requestManager.provider.constructor.name);
-        this.callback(err2, null, this);
-        this.emit('error', err2);
+        setTimeout(function(){
+            var err2 = new Error(
+                'The current provider doesn\'t support subscriptions: ' +
+                _this.options.requestManager.provider.constructor.name
+            );
+            _this.callback(err2, null, _this);
+            _this.emit('error', err2);
+        },0);
+
         return this;
     }
 
