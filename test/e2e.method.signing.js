@@ -113,6 +113,24 @@ describe('transaction and message signing [ @E2E ]', function() {
         assert(receipt.status === true);
     });
 
+    it('accounts.signTransaction, (with callback, nonce not specified)', function(done){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txObject = {
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gasLimit: web3.utils.toHex(21000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+        };
+
+        web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey, async function(err, signed){
+            const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+            assert(receipt.status === true);
+            done();
+        });
+    });
+
     it('accounts.signTransaction errors when common, chain and hardfork all defined', async function(){
         const source = wallet[0].address;
         const destination = wallet[1].address;
