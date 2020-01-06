@@ -43,6 +43,16 @@ describe('subscription connect/reconnect', function() {
             });
     });
 
+    it('subscription emits a connected event', function(done){
+        subscription = web3.eth
+            .subscribe('newBlockHeaders')
+            .on('connected', function(result){
+                assert(result)              // First subscription
+                subscription.unsubscribe(); // Stop listening..
+                done();
+            });
+    });
+
     it('resubscribes to an existing subscription', function(done){
         this.timeout(5000);
 
