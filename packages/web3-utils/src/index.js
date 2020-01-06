@@ -372,6 +372,12 @@ module.exports = {
     leftPad: utils.leftPad,
     padRight: utils.rightPad,
     rightPad: utils.rightPad,
-    toTwosComplement: utils.toTwosComplement
-};
+    toTwosComplement: utils.toTwosComplement,
 
+    isBloom: utils.isBloom,
+    isUserEthereumAddressInBloom: utils.isUserEthereumAddressInBloom,
+    isContractAddressInBloom: utils.isContractAddressInBloom,
+    isTopic: utils.isTopic,
+    isTopicInBloom: utils.isTopicInBloom,
+    isInBloom: utils.isInBloom
+};
