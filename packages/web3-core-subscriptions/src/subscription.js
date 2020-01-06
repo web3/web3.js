@@ -246,8 +246,10 @@ Subscription.prototype.subscribe = function() {
                 // TODO subscribe here? after the past logs?
 
             } else {
-                _this.callback(err, null, _this);
-                _this.emit('error', err);
+                setTimeout(function(){
+                    _this.callback(err, null, _this);
+                    _this.emit('error', err);
+                },0);
             }
         });
     }
@@ -289,8 +291,10 @@ Subscription.prototype.subscribe = function() {
                 }
             });
         } else {
-            _this.callback(err, false, _this);
-            _this.emit('error', err);
+            setTimeout(function(){
+                _this.callback(err, false, _this);
+                _this.emit('error', err);
+            },0);
         }
     });
 
