@@ -122,3 +122,4 @@ Released with 1.0.0-beta.37 code base.
 - ``defaultBlock`` property handling fixed (#3247)
 - ``clearSubscriptions`` does no longer throw an error if no running subscriptions do exist (#3246)
 - callback type definition for ``Accounts.signTransaction`` fixed (#3280)
+- fix: export bloom functions on the index.js
