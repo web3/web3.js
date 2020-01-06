@@ -1,21 +1,29 @@
 {
     "name": "web3-eth-ens",
-    "version": "1.2.1",
+    "version": "1.2.4",
     "description": "ENS support for web3.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth-ens",
     "license": "LGPL-3.0",
     "engines": {
         "node": ">=8.0.0"
     },
+    "types": "types/index.d.ts",
+    "scripts": {
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
     "main": "src/index.js",
     "dependencies": {
         "eth-ens-namehash": "2.0.8",
         "underscore": "1.9.1",
-        "web3-core": "1.2.1",
-        "web3-core-helpers": "1.2.1",
-        "web3-core-promievent": "1.2.1",
-        "web3-eth-abi": "1.2.1",
-        "web3-eth-contract": "1.2.1",
-        "web3-utils": "1.2.1"
+        "web3-core": "1.2.4",
+        "web3-core-helpers": "1.2.4",
+        "web3-core-promievent": "1.2.4",
+        "web3-eth-abi": "1.2.4",
+        "web3-eth-contract": "1.2.4",
+        "web3-utils": "1.2.4"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     }
 }

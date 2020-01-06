@@ -1,23 +1,57 @@
 services:
     - xvfb
 language: node_js
-node_js:
-    - "8"
-    - "10"
-    - "11"
-    - "12"
-env:
-    - CXX=g++-4.8
+git:
+  depth: false
+matrix:
+  fast_finish: true
+  include:
+    - node_js: 8
+      env: TEST=unit
+    - node_js: 11
+      env: TEST=unit
+    - node_js: 12
+      env: TEST=unit
+    - node_js: 10
+      env: TEST=build_and_lint
+    - node_js: 10
+      env: TEST=unit_and_e2e_clients
+    - node_js: 10
+      env: TEST=e2e_truffle
+    - node_js: 10
+      env: TEST=e2e_mosaic
+    - node_js: 10
+      env: TEST=e2e_browsers
+      addons:
+        chrome: stable
+        firefox: latest
+  allow_failures:
+    - node_js: 10
+      env: TEST=e2e_truffle
+    - node_js: 10
+      env: TEST=e2e_mosaic
+
 addons:
   apt:
     sources:
-    - ubuntu-toolchain-r-test
+      - ubuntu-toolchain-r-test
     packages:
-    - g++-4.8
-    install:
-    - npm install
+      - gcc-5
+      - g++-5
+
+before_install:
+  - if [ $TRAVIS_OS_NAME == "linux" ]; then
+      export CC="gcc-5";
+      export CXX="g++-5";
+      export LINK="gcc-5";
+      export LINKXX="g++-5";
+    fi
+  - export DISPLAY=:99.0
+  - export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+install:
+  - if [[ $TEST != "e2e_truffle" ]] && [[ $TEST != "e2e_mosaic" ]]; then
+      npm install;
+    fi
 script:
-    - npm run-script build
-    - npm run-script test-coveralls
-after_script:
-    - cd test/node && npm install && node app.js
+    - npm run ci
+

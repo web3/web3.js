@@ -283,6 +283,111 @@ var runTests = function(contractFactory) {
 
             assert.throws(test);
         });
+        it('should define the handleRevert object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {handleRevert: true}, provider);
+
+            assert.equal(contract.handleRevert, true);
+            assert.equal(contract.options.handleRevert, true);
+        });
+        it('should update the handleRevert property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {handleRevert: false}, provider);
+
+            contract.handleRevert = true;
+
+            assert.equal(contract.options.handleRevert, true);
+        });
+        it('should define the defaultCommon object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {common: true}, provider);
+
+            assert.equal(contract.defaultCommon, true);
+            assert.equal(contract.options.common, true);
+        });
+        it('should update the defaultCommon property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {common: false}, provider);
+
+            contract.defaultCommon = true;
+
+            assert.equal(contract.options.common, true);
+        });
+        it('should define the defaultHardfork object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {hardfork: 'istanbul'}, provider);
+
+            assert.equal(contract.defaultHardfork, 'istanbul');
+            assert.equal(contract.options.hardfork, 'istanbul');
+        });
+        it('should update the defaultHardfork property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {hardfork: false}, provider);
+
+            contract.defaultHardfork = true;
+
+            assert.equal(contract.options.hardfork, true);
+        });
+        it('should define the defaultChain object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {chain: 'mainnet'}, provider);
+
+            assert.equal(contract.defaultChain, 'mainnet');
+            assert.equal(contract.options.chain, 'mainnet');
+        });
+        it('should update the defaultChain property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {chain: false}, provider);
+
+            contract.defaultChain = true;
+
+            assert.equal(contract.options.chain, true);
+        });
+        it('should define the transactionPollingTimeout object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionPollingTimeout: 0}, provider);
+
+            assert.equal(contract.transactionPollingTimeout, 0);
+            assert.equal(contract.options.transactionPollingTimeout, 0);
+        });
+        it('should update the transactionPollingTimeout property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionPollingTimeout: 1}, provider);
+
+            contract.transactionPollingTimeout = 0;
+
+            assert.equal(contract.options.transactionPollingTimeout, 0);
+        });
+        it('should define the transactionConfirmationBlocks object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionConfirmationBlocks: 0}, provider);
+
+            assert.equal(contract.transactionConfirmationBlocks, 0);
+            assert.equal(contract.options.transactionConfirmationBlocks, 0);
+        });
+        it('should update the transactionConfirmationBlocks property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionConfirmationBlocks: 1}, provider);
+
+            contract.transactionConfirmationBlocks = 0;
+
+            assert.equal(contract.options.transactionConfirmationBlocks, 0);
+        });
+        it('should define the transactionBlockTimeout object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionBlockTimeout: 0}, provider);
+
+            assert.equal(contract.transactionBlockTimeout, 0);
+            assert.equal(contract.options.transactionBlockTimeout, 0);
+        });
+        it('should update the transactionBlockTimeout property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionBlockTimeout: 1}, provider);
+
+            contract.transactionBlockTimeout = 0;
+
+            assert.equal(contract.options.transactionBlockTimeout, 0);
+        });
         it('.clone() should properly clone the contract instance', function () {
             var provider = new FakeIpcProvider();
 
@@ -2219,39 +2324,40 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
 
             var count = 0;
-            contract.methods.mySend(address, 10).send({from: address2, gasPrice: '21345678654321'})
-            .on('confirmation', function (confirmationNumber, receipt) {
-                count++;
-                if(count === 1) {
-                    assert.deepEqual(receipt, {
-                        contractAddress: null,
-                        cumulativeGasUsed: 10,
-                        transactionIndex: 3,
-                        transactionHash: '0x1234',
-                        blockNumber: 10,
-                        blockHash: '0x1234',
-                        gasUsed: 0,
-                        events: {}
-                    });
+            contract.methods.mySend(address, 10)
+                .send({from: address2, gasPrice: '21345678654321'})
+                .on('confirmation', function (confirmationNumber, receipt) {
+                    count++;
+                    if(count === 1) {
+                        assert.deepEqual(receipt, {
+                            contractAddress: null,
+                            cumulativeGasUsed: 10,
+                            transactionIndex: 3,
+                            transactionHash: '0x1234',
+                            blockNumber: 10,
+                            blockHash: '0x1234',
+                            gasUsed: 0,
+                            events: {}
+                        });
 
-                    assert.equal(confirmationNumber, 0)
-                }
-                if(count === 2) {
-                    assert.deepEqual(receipt, {
-                        contractAddress: null,
-                        cumulativeGasUsed: 10,
-                        transactionIndex: 3,
-                        transactionHash: '0x1234',
-                        blockNumber: 10,
-                        blockHash: '0x1234',
-                        gasUsed: 0,
-                        events: {}
-                    });
+                        assert.equal(confirmationNumber, 0);
+                    }
+                    if(count === 2) {
+                        assert.deepEqual(receipt, {
+                            contractAddress: null,
+                            cumulativeGasUsed: 10,
+                            transactionIndex: 3,
+                            transactionHash: '0x1234',
+                            blockNumber: 10,
+                            blockHash: '0x1234',
+                            gasUsed: 0,
+                            events: {}
+                        });
 
-                    assert.equal(confirmationNumber, 1)
-                    done();
-                };
-            });
+                        assert.equal(confirmationNumber, 1);
+                        done();
+                    }
+                });
 
             // fake newBlocks
             provider.injectNotification({
@@ -3026,10 +3132,12 @@ describe('typical usage', function() {
             var expected = eth.accounts.wallet[0].signTransaction({
                 data: '0x1234567000000000000000000000000' + account.address.toLowerCase().replace('0x', '') + '00000000000000000000000000000000000000000000000000000000000000c8',
                 from: account.address.toLowerCase(),
-                gas: '0xc350',
+                gas: '0xd658',
                 gasPrice: '0xbb8',
                 chainId: '0x1',
                 nonce: '0x1',
+                chain: 'mainnet',
+                hardfork: 'petersburg'
             }).then(function (tx) {
                 const expected = tx.rawTransaction;
                 assert.equal(payload.method, 'eth_sendRawTransaction');
@@ -3085,10 +3193,12 @@ describe('typical usage', function() {
             arguments: [account.address, 200]
         }).send({
             from: account.address,
-            gas: 50000,
+            gas: 54872,
             gasPrice: 3000,
             chainId: 1,
             nonce: 1,
+            chain: 'mainnet',
+            hardfork: 'petersburg'
         })
             .on('transactionHash', function (value) {
                 assert.equal('0x5550000000000000000000000000000000000000000000000000000000000032', value);
@@ -3109,7 +3219,7 @@ describe('typical usage', function() {
         //     done();
         // });
 
-    }).timeout(6000);
+    }).timeout(10000);
         // TODO add error check
 });
 

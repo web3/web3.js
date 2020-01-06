@@ -79,9 +79,133 @@ var Eth = function Eth() {
     };
 
 
+    var handleRevert = false;
     var defaultAccount = null;
     var defaultBlock = 'latest';
+    var transactionBlockTimeout = 50;
+    var transactionConfirmationBlocks = 24;
+    var transactionPollingTimeout = 750;
+    var defaultChain, defaultHardfork, defaultCommon;
 
+    Object.defineProperty(this, 'handleRevert', {
+        get: function () {
+            return handleRevert;
+        },
+        set: function (val) {
+            handleRevert = val;
+
+            // also set on the Contract object
+            _this.Contract.handleRevert = handleRevert;
+
+            // update handleRevert
+            methods.forEach(function(method) {
+                method.handleRevert = handleRevert;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultCommon', {
+        get: function () {
+            return defaultCommon;
+        },
+        set: function (val) {
+            defaultCommon = val;
+
+            // also set on the Contract object
+            _this.Contract.defaultCommon = defaultCommon;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.defaultCommon = defaultCommon;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultHardfork', {
+        get: function () {
+            return defaultHardfork;
+        },
+        set: function (val) {
+            defaultHardfork = val;
+
+            // also set on the Contract object
+            _this.Contract.defaultHardfork = defaultHardfork;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.defaultHardfork = defaultHardfork;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultChain', {
+        get: function () {
+            return defaultChain;
+        },
+        set: function (val) {
+            defaultChain = val;
+
+            // also set on the Contract object
+            _this.Contract.defaultChain = defaultChain;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.defaultChain = defaultChain;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'transactionPollingTimeout', {
+        get: function () {
+            return transactionPollingTimeout;
+        },
+        set: function (val) {
+            transactionPollingTimeout = val;
+
+            // also set on the Contract object
+            _this.Contract.transactionPollingTimeout = transactionPollingTimeout;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.transactionPollingTimeout = transactionPollingTimeout;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'transactionConfirmationBlocks', {
+        get: function () {
+            return transactionConfirmationBlocks;
+        },
+        set: function (val) {
+            transactionConfirmationBlocks = val;
+
+            // also set on the Contract object
+            _this.Contract.transactionConfirmationBlocks = transactionConfirmationBlocks;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.transactionConfirmationBlocks = transactionConfirmationBlocks;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'transactionBlockTimeout', {
+        get: function () {
+            return transactionBlockTimeout;
+        },
+        set: function (val) {
+            transactionBlockTimeout = val;
+
+            // also set on the Contract object
+            _this.Contract.transactionBlockTimeout = transactionBlockTimeout;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.transactionBlockTimeout = transactionBlockTimeout;
+            });
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
             return defaultAccount;
@@ -173,6 +297,10 @@ var Eth = function Eth() {
     this.Contract = Contract;
     this.Contract.defaultAccount = this.defaultAccount;
     this.Contract.defaultBlock = this.defaultBlock;
+    this.Contract.transactionBlockTimeout = this.transactionBlockTimeout;
+    this.Contract.transactionConfirmationBlocks = this.transactionConfirmationBlocks;
+    this.Contract.transactionPollingTimeout = this.transactionPollingTimeout;
+    this.Contract.handleRevert = this.handleRevert;
     this.Contract.setProvider(this.currentProvider, this.accounts);
 
     // add IBAN
@@ -326,7 +454,8 @@ var Eth = function Eth() {
             name: 'sendTransaction',
             call: 'eth_sendTransaction',
             params: 1,
-            inputFormatter: [formatter.inputTransactionFormatter]
+            inputFormatter: [formatter.inputTransactionFormatter],
+            abiCoder: abi
         }),
         new Method({
             name: 'sign',
@@ -342,7 +471,8 @@ var Eth = function Eth() {
             name: 'call',
             call: 'eth_call',
             params: 2,
-            inputFormatter: [formatter.inputCallFormatter, formatter.inputDefaultBlockNumberFormatter]
+            inputFormatter: [formatter.inputCallFormatter, formatter.inputDefaultBlockNumberFormatter],
+            abiCoder: abi
         }),
         new Method({
             name: 'estimateGas',
@@ -373,6 +503,25 @@ var Eth = function Eth() {
             call: 'eth_chainId',
             params: 0,
             outputFormatter: utils.hexToNumber
+        }),
+        new Method({
+            name: 'requestAccounts',
+            call: 'eth_requestAccounts',
+            params: 0,
+            outputFormatter: utils.toChecksumAddress
+        }),
+        new Method({
+            name: 'getProof',
+            call: 'eth_getProof',
+            params: 3,
+            inputFormatter: [formatter.inputAddressFormatter, formatter.inputStorageKeysFormatter, formatter.inputDefaultBlockNumberFormatter],
+            outputFormatter: formatter.outputProofFormatter
+        }),
+        new Method({
+            name: 'getPendingTransactions',
+            call: 'eth_pendingTransactions',
+            params: 0,
+            outputFormatter: formatter.outputTransactionFormatter
         }),
 
         // subscriptions
@@ -461,6 +610,10 @@ var Eth = function Eth() {
         method.setRequestManager(_this._requestManager, _this.accounts); // second param means is eth.accounts (necessary for wallet signing)
         method.defaultBlock = _this.defaultBlock;
         method.defaultAccount = _this.defaultAccount;
+        method.transactionBlockTimeout = _this.transactionBlockTimeout;
+        method.transactionConfirmationBlocks = _this.transactionConfirmationBlocks;
+        method.transactionPollingTimeout = _this.transactionPollingTimeout;
+        method.handleRevert = _this.handleRevert;
     });
 
 };

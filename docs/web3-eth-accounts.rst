@@ -150,6 +150,15 @@ Parameters
     - ``value`` - ``String``: (optional) The value of the transaction in wei.
     - ``gasPrice`` - ``String``: (optional) The gas price set by this transaction, if empty, it will use :ref:`web3.eth.gasPrice() <eth-gasprice>`
     - ``gas`` - ``String``: The gas provided by the transaction.
+    - ``chain`` - ``String``: (optional) Defaults to ``mainnet``.
+    - ``hardfork`` - ``String``: (optional) Defaults to ``petersburg``.
+    - ``common`` - ``Object``: (optional) The common object
+        - ``customChain`` - ``Object``: The custom chain properties
+            - ``name`` - ``string``: (optional) The name of the chain
+            - ``networkId`` - ``number``: Network ID of the custom chain
+            - ``chainId`` - ``number``: Chain ID of the custom chain
+        - ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
+        - ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
 2. ``privateKey`` - ``String``: The private key to sign with.
 3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
@@ -164,6 +173,7 @@ Returns
     - ``s`` - ``String``: Next 32 bytes of the signature
     - ``v`` - ``String``: Recovery value + 27
     - ``rawTransaction`` - ``String``: The RLP encoded transaction, ready to be send using :ref:`web3.eth.sendSignedTransaction <eth-sendsignedtransaction>`.
+    - ``transactionHash`` - ``String``: The transaction hash for the RLP encoded transaction.
 
 
 -------
@@ -179,11 +189,12 @@ Example
     }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
     .then(console.log);
     > {
-        messageHash: '0x88cfbd7e51c7a40540b233cf68b62ad1df3e92462f1c6018d6d67eae0f3b08f5',
+        messageHash: '0x31c2f03766b36f0346a850e78d4f7db2d9f4d7d54d5f272a750ba44271e370b1',
         v: '0x25',
         r: '0xc9cf86333bcb065d140032ecaab5d9281bde80f21b9687b3e94161de42d51895',
         s: '0x727a108a0b8d101465414033c3f705a9c7b826e596766046ee1183dbc8aeaa68',
         rawTransaction: '0xf869808504e3b29200831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a0c9cf86333bcb065d140032ecaab5d9281bde80f21b9687b3e94161de42d51895a0727a108a0b8d101465414033c3f705a9c7b826e596766046ee1183dbc8aeaa68'
+        transactionHash: '0xde8db924885b0803d2edc335f745b2b8750c8848744905684c20b987443a9593'
     }
 
     web3.eth.accounts.signTransaction({
@@ -201,7 +212,26 @@ Example
         s: '0x440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428',
         v: '0x25',
         rawTransaction: '0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428'
+        transactionHash: '0xd8f64a42b57be0d565f385378db2f6bf324ce14a594afc05de90436e9ce01f60'
     }
+
+    // or with a common
+    web3.eth.accounts.signTransaction({
+        to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+        value: '1000000000',
+        gas: 2000000
+        common: {
+          baseChain: 'mainnet',
+          hardfork: 'petersburg',
+          customChain: {
+            name: 'custom-chain',
+            chainId: 1,
+            networkId: 1
+          }
+        }
+    }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
+    .then(console.log);
+
 
 
 
@@ -291,21 +321,22 @@ sign
 
     web3.eth.accounts.sign(data, privateKey);
 
-Signs arbitrary data. This data is before UTF-8 HEX decoded and enveloped as follows: ``"\x19Ethereum Signed Message:\n" + message.length + message``.
+Signs arbitrary data.
 
 ----------
 Parameters
 ----------
 
-1. ``data`` - ``String``: The data to sign. If its a string it will be
+1. ``data`` - ``String``: The data to sign.
 2. ``privateKey`` - ``String``: The private key to sign with.
 
+.. note:: The value passed as  the `data` parameter will be UTF-8 HEX decoded and wrapped as follows: ``"\x19Ethereum Signed Message:\n" + message.length + message``.
 
 -------
 Returns
 -------
 
-``String|Object``: The signed data RLP encoded signature, or if ``returnSignature`` is ``true`` the signature values as follows:
+``Object``: The signature object
     - ``message`` - ``String``: The the given message.
     - ``messageHash`` - ``String``: The hash of the given message.
     - ``r`` - ``String``: First 32 bytes of the signature

@@ -181,6 +181,85 @@ var Contract = function Contract(jsonInterface, address, options) {
     var defaultAccount = this.constructor.defaultAccount;
     var defaultBlock = this.constructor.defaultBlock || 'latest';
 
+    Object.defineProperty(this, 'handleRevert', {
+        get: function () {
+            if (_this.options.handleRevert === false || _this.options.handleRevert === true) {
+                return _this.options.handleRevert;
+            }
+
+            return this.constructor.handleRevert;
+        },
+        set: function (val) {
+            _this.options.handleRevert = val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultCommon', {
+        get: function () {
+            return _this.options.common || this.constructor.defaultCommon;
+        },
+        set: function (val) {
+            _this.options.common = val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultHardfork', {
+        get: function () {
+            return _this.options.hardfork || this.constructor.defaultHardfork;
+        },
+        set: function (val) {
+            _this.options.hardfork = val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultChain', {
+        get: function () {
+            return _this.options.chain || this.constructor.defaultChain;
+        },
+        set: function (val) {
+            _this.options.chain = val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'transactionPollingTimeout', {
+        get: function () {
+            if (_this.options.transactionPollingTimeout === 0) {
+                return _this.options.transactionPollingTimeout;
+            }
+
+            return _this.options.transactionPollingTimeout || this.constructor.transactionPollingTimeout;
+        },
+        set: function (val) {
+            _this.options.transactionPollingTimeout = val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'transactionConfirmationBlocks', {
+        get: function () {
+            if (_this.options.transactionConfirmationBlocks === 0) {
+                return _this.options.transactionConfirmationBlocks;
+            }
+
+            return _this.options.transactionConfirmationBlocks || this.constructor.transactionConfirmationBlocks;
+        },
+        set: function (val) {
+            _this.options.transactionConfirmationBlocks = val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'transactionBlockTimeout', {
+        get: function () {
+            if (_this.options.transactionBlockTimeout === 0) {
+                return _this.options.transactionBlockTimeout;
+            }
+
+            return _this.options.transactionBlockTimeout || this.constructor.transactionBlockTimeout;
+        },
+        set: function (val) {
+            _this.options.transactionBlockTimeout = val;
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
             return defaultAccount;
@@ -228,7 +307,7 @@ Contract.setProvider = function(provider, accounts) {
 
 
 /**
- * Get the callback and modiufy the array if necessary
+ * Get the callback and modify the array if necessary
  *
  * @method _getCallback
  * @param {Array} args
@@ -820,7 +899,9 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     requestManager: _this._parent._requestManager,
                     accounts: ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,
-                    defaultBlock: _this._parent.defaultBlock
+                    defaultBlock: _this._parent.defaultBlock,
+                    handleRevert: _this._parent.handleRevert,
+                    abiCoder: abi
                 })).createFunction();
 
                 return call(args.options, args.defaultBlock, args.callback);
@@ -891,7 +972,15 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     accounts: _this.constructor._ethAccounts || _this._ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,
                     defaultBlock: _this._parent.defaultBlock,
-                    extraFormatters: extraFormatters
+                    transactionBlockTimeout: _this._parent.transactionBlockTimeout,
+                    transactionConfirmationBlocks: _this._parent.transactionConfirmationBlocks,
+                    transactionPollingTimeout: _this._parent.transactionPollingTimeout,
+                    defaultCommon: _this._parent.defaultCommon,
+                    defaultChain: _this._parent.defaultChain,
+                    defaultHardfork: _this._parent.defaultHardfork,
+                    handleRevert: _this._parent.handleRevert,
+                    extraFormatters: extraFormatters,
+                    abiCoder: abi
                 })).createFunction();
 
                 return sendTransaction(args.options, args.callback);
