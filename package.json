@@ -45,6 +45,7 @@
         "test:e2e:browsers": "npm run build; npm run test:e2e:chrome; npm run test:e2e:firefox",
         "test:e2e:publish": "./scripts/e2e.npm.publish.sh",
         "test:e2e:truffle": "./scripts/e2e.truffle.sh",
+        "test:e2e:mosaic": "./scripts/e2e.mosaic.sh",
         "ci": "./scripts/ci.sh",
         "coveralls": "./scripts/coveralls.sh"
     },

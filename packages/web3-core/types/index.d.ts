@@ -268,7 +268,7 @@ export class AccountsBase {
     signTransaction(
         transactionConfig: TransactionConfig,
         privateKey: string,
-        callback?: () => void
+        callback?: (error: Error, signedTransaction: SignedTransaction) => void
     ): Promise<SignedTransaction>;
 
     recoverTransaction(signature: string): string;
