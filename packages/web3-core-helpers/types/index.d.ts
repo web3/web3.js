@@ -18,6 +18,8 @@
  */
 
 import * as net from 'net';
+import * as http from 'http';
+import * as https from 'https';
 
 export class formatters {
     static outputBigNumberFormatter(number: number): number;
@@ -158,6 +160,13 @@ export interface HttpProviderOptions {
     timeout?: number;
     headers?: HttpHeader[];
     withCredentials?: boolean;
+    agent?: HttpAgent
+}
+
+export interface HttpAgent {
+    http?: http.Agent;
+    https?: https.Agent;
+    baseUrl?: string;
 }
 
 export interface HttpHeader {
