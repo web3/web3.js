@@ -45,7 +45,7 @@ Parameters
 ----------
 
 1. ``jsonInterface`` - ``Object``: The json interface for the contract to instantiate
-2. ``address`` - ``String`` (optional): The address of the smart contract to call, can be added later using ``myContract.options.address = '0x1234..'``
+2. ``address`` - ``String`` (optional): The address of the smart contract to call.
 3. ``options`` - ``Object`` (optional): The options of the contract. Some are used as fallbacks for calls and transactions:
     * ``from`` - ``String``: The address transactions should be made from.
     * ``gasPrice`` - ``String``: The gas price in wei to use for transactions.
@@ -77,6 +77,310 @@ Example
 = Properties =
 =========
 
+------------------------------------------------------------------------------
+
+.. _eth-contract-defaultaccount
+
+defaultAccount
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.defaultAccount
+    contract.defaultAccount // on contract instance
+
+This default address is used as the default ``"from"`` property, if no ``"from"`` property is specified in for the following methods:
+
+- :ref:`web3.eth.sendTransaction() <eth-sendtransaction>`
+- :ref:`web3.eth.call() <eth-call>`
+- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().call() <eth-contract-call>`
+- :ref:`new web3.eth.Contract() -> myContract.methods.myMethod().send() <eth-contract-send>`
+
+--------
+Property
+--------
+
+
+``String`` - 20 Bytes: Any ethereum address. You should have the private key for that address in your node or keystore. (Default is ``undefined``)
+
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.defaultAccount;
+    > undefined
+
+    // set the default account
+    web3.eth.defaultAccount = '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe';
+
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-defaultblock:
+
+defaultBlock
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.defaultBlock
+    contract.defaultBlock // on contract instance
+
+The default block is used for certain methods. You can override it by passing in the defaultBlock as last parameter.
+The default value of it is "latest".
+
+----------
+Property
+----------
+
+
+The default block parameters can be one of the following:
+
+- ``Number|BN|BigNumber``: A block number
+- ``"genesis"`` - ``String``: The genesis block
+- ``"latest"`` - ``String``: The latest block (current head of the blockchain)
+- ``"pending"`` - ``String``: The currently mined block (including pending transactions)
+- ``"earliest"`` - ``String``: The genesis block
+
+Default is ``"latest"``
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    contract.defaultBlock;
+    > "latest"
+
+    // set the default block
+    contract.defaultBlock = 231;
+
+
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-defaulthardfork:
+
+defaultHardfork
+=====================
+
+.. code-block:: javascript
+
+    contract.defaultHardfork
+
+The default hardfork property is used for signing transactions locally.
+
+----------
+Property
+----------
+
+
+The default hardfork property can be one of the following:
+
+- ``"chainstart"`` - ``String``
+- ``"homestead"`` - ``String``
+- ``"dao"`` - ``String``
+- ``"tangerineWhistle"`` - ``String``
+- ``"spuriousDragon"`` - ``String``
+- ``"byzantium"`` - ``String``
+- ``"constantinople"`` - ``String``
+- ``"petersburg"`` - ``String``
+- ``"istanbul"`` - ``String``
+
+Default is ``"petersburg"``
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    contract.defaultHardfork;
+    > "petersburg"
+
+    // set the default block
+    contract.defaultHardfork = 'istanbul';
+
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-defaultchain:
+
+defaultChain
+=====================
+
+.. code-block:: javascript
+
+    contract.defaultChain
+
+The default chain property is used for signing transactions locally.
+
+----------
+Property
+----------
+
+
+The default chain property can be one of the following:
+
+- ``"mainnet"`` - ``String``
+- ``"goerli"`` - ``String``
+- ``"kovan"`` - ``String``
+- ``"rinkeby"`` - ``String``
+- ``"ropsten"`` - ``String``
+
+Default is ``"mainnet"``
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    contract.defaultChain;
+    > "mainnet"
+
+    // set the default chain
+    contract.defaultChain = 'goerli';
+
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-defaultcommon:
+
+defaultCommon
+=====================
+
+.. code-block:: javascript
+
+    contract.defaultCommon
+
+The default common property is used for signing transactions locally.
+
+----------
+Property
+----------
+
+
+The default common property does contain the following ``Common`` object:
+
+- ``customChain`` - ``Object``: The custom chain properties
+    - ``name`` - ``string``: (optional) The name of the chain
+    - ``networkId`` - ``number``: Network ID of the custom chain
+    - ``chainId`` - ``number``: Chain ID of the custom chain
+- ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
+- ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
+
+
+Default is ``undefined``.
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    contract.defaultCommon;
+    > {customChain: {name: 'custom-network', chainId: 1, networkId: 1}, baseChain: 'mainnet', hardfork: 'petersburg'}
+
+    // set the default common
+    contract.defaultCommon = {customChain: {name: 'custom-network', chainId: 1, networkId: 1}, baseChain: 'mainnet', hardfork: 'petersburg'};
+
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-transactionblocktimeout:
+
+transactionBlockTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.transcationBlockTimeout
+    contract.transactionBlockTimeout // on contract instance
+
+The ``transactionBlockTimeout`` will be used over a socket based connection. This option does define the amount of new blocks it should wait until the first confirmation happens.
+This means the PromiEvent rejects with a timeout error when the timeout got exceeded.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionBlockTimeout (default: 50)
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-module-transactionconfirmationblocks:
+
+transactionConfirmationBlocks
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.transactionConfirmationBlocks
+    contract.transactionConfirmationBlocks // on contract instance
+
+This defines the number of blocks it requires until a transaction will be handled as confirmed.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionConfirmationBlocks (default: 24)
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-module-transactionpollingtimeout:
+
+transactionPollingTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.transactionPollingTimeout
+    contract.transactionPollingTimeout // on contract instance
+
+The ``transactionPollingTimeout``  will be used over a HTTP connection.
+This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. NB: If this method times out, the transaction may still be pending.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionPollingTimeout (default: 750)
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-module-handlerevert:
+
+handleRevert
+============
+
+.. code-block:: javascript
+
+    web3.eth.Contract.handleRevert
+    contract.handleRevert // on contract instance
+
+The ``handleRevert`` options property does default to ``false`` and will return the revert reason string if enabled on :ref:`send <contract-send>` or :ref:`call <contract-call>` of a contract method.
+
+.. note:: The revert reason string and the signature does exist as property on the returned error.
+
+-------
+Returns
+-------
+
+``boolean``: The current value of ``handleRevert`` (default: false)
 
 ------------------------------------------------------------------------------
 
@@ -101,6 +405,13 @@ Properties
 - ``from`` - ``String``: The address transactions should be made from.
 - ``gasPrice`` - ``String``: The gas price in wei to use for transactions.
 - ``gas`` - ``Number``: The maximum gas provided for a transaction (gas limit).
+- ``handleRevert`` - ``Boolean``: It will otherwise use the default value provided from the Eth module. See :ref:`handleRevert <eth-contract-module-handlerevert>`.
+- ``transactionBlockTimeout`` - ``Number``: It will otherwise use the default value provided from the Eth module. See :ref:`transactionBlockTimeout <eth-contract-transactionblocktimeout>`.
+- ``transactionConfirmationBlocks`` - ``Number``: It will otherwise use the default value provided from the Eth module. See :ref:`transactionConfirmationBlocks <eth-contract-module-transactionconfirmationblocks>`.
+- ``transactionPollingTimeout`` - ``Number``: It will otherwise use the default value provided from the Eth module. See :ref:`transactionPollingTimeout <eth-contract-module-transactionpollingtimeout>`.
+- ``chain`` - ``Number``: It will otherwise use the default value provided from the Eth module. See :ref:`defaultChain <eth-contract-defaultchain>`.
+- ``hardfork`` - ``Number``: It will otherwise use the default value provided from the Eth module. See :ref:`defaultHardfork <eth-contract-defaulthardfork>`.
+- ``common`` - ``Number``: It will otherwise use the default value provided from the Eth module. See :ref:`defaultCommon <eth-contract-defaultcommon>`.
 
 
 -------
@@ -417,7 +728,9 @@ Example
     .on('confirmation', function(confirmationNumber, receipt){
         ...
     })
-    .on('error', console.error);
+    .on('error', function(error, receipt) {
+        ...
+    });
 
 
 ------------------------------------------------------------------------------
@@ -543,7 +856,7 @@ The **callback** will return the 32 bytes transaction hash.
 - ``"transactionHash"`` returns ``String``: is fired right after the transaction is sent and a transaction hash is available.
 - ``"receipt"`` returns ``Object``: is fired when the transaction *receipt* is available. Receipts from contracts will have no ``logs`` property, but instead an ``events`` property with event names as keys and events as properties. See :ref:`getPastEvents return values <contract-events-return>` for details about the returned event object.
 - ``"confirmation"`` returns ``Number``, ``Object``: is fired for every confirmation up to the 24th confirmation. Receives the confirmation number as the first and the receipt as the second argument. Fired from confirmation 1 on, which is the block where it's minded.
-- ``"error"`` returns ``Error``: is fired if an error occurs during sending. If a out of gas error, the second parameter is the receipt.
+- ``"error"`` returns ``Error`` and ``Object|undefined``: Is fired if an error occurs during sending. If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
 
 
 -------
@@ -610,8 +923,9 @@ Example
             }
         }
     })
-    .on('error', console.error); // If there's an out of gas error the second parameter is the receipt.
-
+    .on('error', function(error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+        ...
+    });
 
 ------------------------------------------------------------------------------
 
@@ -790,7 +1104,7 @@ Parameters
 
 1. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``fromBlock`` - ``Number`` (optional): The block number (greater than or equal to) from which to get events on.
+    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
     * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
 2. ``callback`` - ``Function`` (optional): This callback will be fired for each *event* as the second argument, or an error as the first argument.
 
@@ -805,6 +1119,7 @@ Returns
 - ``"data"`` returns ``Object``: Fires on each incoming event with the event object as argument.
 - ``"changed"`` returns ``Object``: Fires on each event which was removed from the blockchain. The event will have the additional property ``"removed: true"``.
 - ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
+- ``"connected"`` returns ``String``: Fires once after the subscription successfully connected. Returns the subscription id.
 
 
 The structure of the returned event ``Object`` looks as follows:
@@ -831,13 +1146,18 @@ Example
         filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
         fromBlock: 0
     }, function(error, event){ console.log(event); })
+    .on("connected", function(subscriptionId){
+        console.log(subscriptionId);
+    })
     .on('data', function(event){
         console.log(event); // same results as the optional callback above
     })
     .on('changed', function(event){
         // remove event from local database
     })
-    .on('error', console.error);
+    .on('error', function(error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+        ...
+    });
 
     // event output example
     > {
@@ -893,8 +1213,8 @@ Parameters
 1. ``event`` - ``String``: The name of the event in the contract, or ``"allEvents"`` to get all events.
 2. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Lets you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``fromBlock`` - ``Number`` (optional): The block number (greater than or equal to) from which to get events on.
-    * ``toBlock`` - ``Number`` (optional): The block number (less than or equal to) to get events up to (Defaults to ``"latest"``).
+    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
+    * ``toBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (less than or equal to) to get events up to (Defaults to ``"latest"``). Pre-defined block numbers as ``"latest"``, ``"earlist"``, ``"pending"``, and ``"genesis"`` can also be used.
     * ``topics`` - ``Array`` (optional): This allows manually setting the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
 3. ``callback`` - ``Function`` (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
 

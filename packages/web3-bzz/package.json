@@ -1,16 +1,25 @@
 {
     "name": "web3-bzz",
-    "version": "1.2.1",
+    "version": "1.2.4",
     "description": "Web3 module to interact with the Swarm network.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-bzz",
     "license": "LGPL-3.0",
     "engines": {
         "node": ">=8.0.0"
     },
+    "types": "types/index.d.ts",
+    "scripts": {
+        "dtslint": "dtslint types --onlyTestTsNext"
+    },
     "main": "src/index.js",
     "dependencies": {
+        "@types/node": "^10.12.18",
         "got": "9.6.0",
         "swarm-js": "0.1.39",
         "underscore": "1.9.1"
+    },
+    "devDependencies": {
+        "definitelytyped-header-parser": "^1.0.1",
+        "dtslint": "0.4.2"
     }
 }

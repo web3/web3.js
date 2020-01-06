@@ -121,6 +121,7 @@ For ``web3.eth.net`` see the :ref:`net reference documentation <eth-net>`
 
 ------------------------------------------------------------------------------
 
+.. _eth-defaultaccount
 
 defaultAccount
 =====================
@@ -186,10 +187,11 @@ Property
 
 Default block parameters can be one of the following:
 
-- ``Number``: A block number
+- ``Number|BN|BigNumber``: A block number
 - ``"genesis"`` - ``String``: The genesis block
 - ``"latest"`` - ``String``: The latest block (current head of the blockchain)
 - ``"pending"`` - ``String``: The currently mined block (including pending transactions)
+- ``"earliest"`` - ``String``: The genesis block
 
 Default is ``"latest"``
 
@@ -206,6 +208,223 @@ Example
     // set the default block
     web3.eth.defaultBlock = 231;
 
+
+------------------------------------------------------------------------------
+.. _eth-defaulthardfork:
+
+defaultHardfork
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.defaultHardfork
+
+The default hardfork property is used for signing transactions locally.
+
+----------
+Property
+----------
+
+
+The default hardfork property can be one of the following:
+
+- ``"chainstart"`` - ``String``
+- ``"homestead"`` - ``String``
+- ``"dao"`` - ``String``
+- ``"tangerineWhistle"`` - ``String``
+- ``"spuriousDragon"`` - ``String``
+- ``"byzantium"`` - ``String``
+- ``"constantinople"`` - ``String``
+- ``"petersburg"`` - ``String``
+- ``"istanbul"`` - ``String``
+
+Default is ``"petersburg"``
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.defaultHardfork;
+    > "petersburg"
+
+    // set the default block
+    web3.eth.defaultHardfork = 'istanbul';
+
+
+------------------------------------------------------------------------------
+.. _eth-defaultchain:
+
+defaultChain
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.defaultChain
+
+The default chain property is used for signing transactions locally.
+
+----------
+Property
+----------
+
+
+The default chain property can be one of the following:
+
+- ``"mainnet"`` - ``String``
+- ``"goerli"`` - ``String``
+- ``"kovan"`` - ``String``
+- ``"rinkeby"`` - ``String``
+- ``"ropsten"`` - ``String``
+
+Default is ``"mainnet"``
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.defaultChain;
+    > "mainnet"
+
+    // set the default chain
+    web3.eth.defaultChain = 'goerli';
+
+
+------------------------------------------------------------------------------
+.. _eth-defaultcommon:
+
+defaultCommon
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.defaultCommon
+
+The default common property is used for signing transactions locally.
+
+----------
+Property
+----------
+
+
+The default common property does contain the following ``Common`` object:
+
+- ``customChain`` - ``Object``: The custom chain properties
+    - ``name`` - ``string``: (optional) The name of the chain
+    - ``networkId`` - ``number``: Network ID of the custom chain
+    - ``chainId`` - ``number``: Chain ID of the custom chain
+- ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
+- ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
+
+
+Default is ``undefined``.
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.defaultCommon;
+    > {customChain: {name: 'custom-network', chainId: 1, networkId: 1}, baseChain: 'mainnet', hardfork: 'petersburg'}
+
+    // set the default common
+    web3.eth.defaultCommon = {customChain: {name: 'custom-network', chainId: 1, networkId: 1}, baseChain: 'mainnet', hardfork: 'petersburg'};
+
+
+------------------------------------------------------------------------------
+
+.. _web3-module-transactionblocktimeout:
+
+transactionBlockTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.transactionBlockTimeout
+
+The ``transactionBlockTimeout`` will be used over a socket based connection. This option does define the amount of new blocks it should wait until the first confirmation happens.
+This means the PromiEvent rejects with a timeout error when the timeout got exceeded.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionBlockTimeout (default: 50)
+
+------------------------------------------------------------------------------
+
+.. _web3-module-transactionconfirmationblocks:
+
+transactionConfirmationBlocks
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.transactionConfirmationBlocks
+
+This defines the number of blocks it requires until a transaction will be handled as confirmed.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionConfirmationBlocks (default: 24)
+
+------------------------------------------------------------------------------
+
+.. _web3-module-transactionpollingtimeout:
+
+transactionPollingTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.transactionPollingTimeout
+
+The ``transactionPollingTimeout``  will be used over a HTTP connection.
+This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. NB: If this method times out, the transaction may still be pending.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionPollingTimeout (default: 750)
+
+------------------------------------------------------------------------------
+
+.. _web3-module-handlerevert:
+
+handleRevert
+============
+
+.. code-block:: javascript
+
+    web3.eth.handleRevert
+
+The ``handleRevert`` options property does default to ``false`` and will return the revert reason string if enabled for the following methods:
+
+- :ref:`web3.eth.call() <eth-call>`
+- :ref:`web3.eth.sendTransaction() <eth-sendtransaction>`
+- :ref:`contract.methods.myMethod(...).send(...) <contract-send>`
+- :ref:`contract.methods.myMethod(...).call(...) <contract-call>`
+
+.. note:: The revert reason string and the signature does exist as property on the returned error.
+
+-------
+Returns
+-------
+
+``boolean``: The current value of ``handleRevert`` (default: false)
 
 ------------------------------------------------------------------------------
 
@@ -485,7 +704,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the balance of.
-2. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -525,8 +744,8 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the storage from.
-2. ``Number`` - The index position of the storage.
-3. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+2. ``Number|String|BN|BigNumber`` - The index position of the storage.
+3. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -564,7 +783,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the code from.
-2. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -603,8 +822,8 @@ Returns a block matching the block number or block hash.
 Parameters
 ----------
 
-1. ``String|Number`` - The block number or block hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
-2. ``Boolean`` - (optional, default ``false``) If ``true``, the returned block will contain all transactions as objects, if ``false`` it will only contains the transaction hashes.
+1. ``String|Number|BN|BigNumber`` - The block number or block hash. Or the string ``"genesis"``, ``"latest"``, ``"earliest"``, or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+2. ``Boolean`` - (optional, default ``false``) If specified ``true``, the returned block will contain all transactions as objects. By default it is ``false`` so, there is no need to explictly specify false. And, if ``false`` it will only contains the transaction hashes.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -684,7 +903,7 @@ Parameters
 ----------
 
 
-1. ``String|Number`` - The block number or hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"genesis"``, ``"latest"``, ``"earliest"``, or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -706,6 +925,46 @@ Example
     > 1
 
 
+
+------------------------------------------------------------------------------
+
+
+getBlockUncleCount
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.getBlockUncleCount(blockHashOrBlockNumber [, callback])
+
+Returns the number of uncles in a block from a block matching the given block hash.
+
+----------
+Parameters
+----------
+
+
+1. ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"genesis"``, ``"latest"``, ``"earliest"``, or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+
+``Promise`` returns ``Number`` - The number of transactions in the given block.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.getBlockUncleCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1")
+    .then(console.log);
+    > 1
+
+
 ------------------------------------------------------------------------------
 
 getUncle
@@ -721,9 +980,9 @@ Returns a blocks uncle by a given uncle index position.
 Parameters
 ----------
 
-1. ``String|Number`` - The block number or hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"genesis"``, ``"latest"``, ``"earliest"``, or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Number`` - The index position of the uncle.
-3. ``Boolean`` - (optional, default ``false``) If ``true``, the returned block will contain all transactions as objects, if ``false`` it will only contains the transaction hashes.
+3. ``Boolean`` - (optional, default ``false``) If specified ``true``, the returned block will contain all transactions as objects. By default it is ``false`` so, there is no need to explictly specify false. And, if ``false`` it will only contains the transaction hashes.
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -815,7 +1074,89 @@ Example
         "input": "0x57cb2fc4"
     }
 
+------------------------------------------------------------------------------
 
+.. _eth-getpendingtransactions:
+
+getPendingTransactions
+======================
+
+.. code-block:: javascript
+
+    web3.eth.getPendingTransactions([, callback])
+
+Returns a list of pending transactions.
+
+----------
+Parameters
+----------
+
+1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+
+.. _eth-getpendingtransactions-return:
+
+-------
+Returns
+-------
+
+
+``Promise<object[]>`` - Array of pending transactions:
+
+  - ``hash`` 32 Bytes - ``String``: Hash of the transaction.
+  - ``nonce`` - ``Number``: The number of transactions made by the sender prior to this one.
+  - ``blockHash`` 32 Bytes - ``String``: Hash of the block where this transaction was in. ``null`` when its pending.
+  - ``blockNumber`` - ``Number``: Block number where this transaction was in. ``null`` when its pending.
+  - ``transactionIndex`` - ``Number``: Integer of the transactions index position in the block. ``null`` when its pending.
+  - ``from`` - ``String``: Address of the sender.
+  - ``to`` - ``String``: Address of the receiver. ``null`` when its a contract creation transaction.
+  - ``value`` - ``String``: Value transferred in :ref:`wei <what-is-wei>`.
+  - ``gasPrice`` - ``String``: The wei per unit of gas provided by the sender in :ref:`wei <what-is-wei>`.
+  - ``gas`` - ``Number``: Gas provided by the sender.
+  - ``input`` - ``String``: The data sent along with the transaction.
+
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.getPendingTransactions().then(console.log);
+    >  [
+        {
+            hash: '0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b',
+            nonce: 2,
+            blockHash: '0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46',
+            blockNumber: 3,
+            transactionIndex: 0,
+            from: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+            to: '0x6295ee1b4f6dd65047762f924ecd367c17eabf8f',
+            value: '123450000000000000',
+            gas: 314159,
+            gasPrice: '2000000000000',
+            input: '0x57cb2fc4'
+            v: '0x3d',
+            r: '0xaabc9ddafffb2ae0bac4107697547d22d9383667d9e97f5409dd6881ce08f13f',
+            s: '0x69e43116be8f842dcd4a0b2f760043737a59534430b762317db21d9ac8c5034'
+        },....,{
+            hash: '0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b',
+            nonce: 3,
+            blockHash: '0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46',
+            blockNumber: 4,
+            transactionIndex: 0,
+            from: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+            to: '0x6295ee1b4f6dd65047762f924ecd367c17eabf8f',
+            value: '123450000000000000',
+            gas: 314159,
+            gasPrice: '2000000000000',
+            input: '0x57cb2fc4'
+            v: '0x3d',
+            r: '0xaabc9ddafffb2ae0bac4107697547d22d9383667d9e97f5409dd6881ce08f13f',
+            s: '0x69e43116be8f842dcd4a0b2f760043737a59534430b762317db21d9ac8c5034'
+        }
+   ]
 
 ------------------------------------------------------------------------------
 
@@ -833,7 +1174,7 @@ Parameters
 ----------
 
 
-1. ``String`` - A block number or hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number|BN|BigNumber`` - A block number or hash. Or the string ``"genesis"``, ``"latest"``, ``"earliest"``, or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Number`` - The transactions index position.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
@@ -945,7 +1286,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the numbers of transactions from.
-2. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -986,16 +1327,27 @@ Parameters
 
 
 1. ``Object`` - The transaction object to send:
-  - ``from`` - ``String|Number``: The address for the sending account. Uses the :ref:`web3.eth.defaultAccount <eth-defaultaccount>` property, if not specified. Or an address or index of a local wallet in :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`.
-  - ``to`` - ``String``: (optional) The destination address of the message, left undefined for a contract-creation transaction.
-  - ``value`` - ``Number|String|BN|BigNumber``: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
-  - ``gas``  - ``Number``: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
-  - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to :ref:`web3.eth.gasPrice <eth-gasprice>`.
-  - ``data`` - ``String``: (optional) Either a `ABI byte string <http://solidity.readthedocs.io/en/latest/abi-spec.html>`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
-  - ``nonce`` - ``Number``: (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
+    - ``from`` - ``String|Number``: The address for the sending account. Uses the :ref:`web3.eth.defaultAccount <eth-defaultaccount>` property, if not specified. Or an address or index of a local wallet in :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`.
+    - ``to`` - ``String``: (optional) The destination address of the message, left undefined for a contract-creation transaction.
+    - ``value`` - ``Number|String|BN|BigNumber``: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
+    - ``gas``  - ``Number``: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
+    - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to :ref:`web3.eth.gasPrice <eth-gasprice>`.
+    - ``data`` - ``String``: (optional) Either a `ABI byte string <http://solidity.readthedocs.io/en/latest/abi-spec.html>`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
+    - ``nonce`` - ``Number``: (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
+    - ``chain`` - ``String``: (optional) Defaults to ``mainnet``.
+    - ``hardfork`` - ``String``: (optional) Defaults to ``petersburg``.
+    - ``common`` - ``Object``: (optional) The common object
+        - ``customChain`` - ``Object``: The custom chain properties
+            - ``name`` - ``string``: (optional) The name of the chain
+            - ``networkId`` - ``number``: Network ID of the custom chain
+            - ``chainId`` - ``number``: Chain ID of the custom chain
+        - ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
+        - ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
+
 2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
-.. note:: The ``from`` property can also be an address or index from the :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`. It will then sign locally using the private key of that account, and send the transaction via :ref:`web3.eth.sendSignedTransaction() <eth-sendsignedtransaction>`.
+.. note:: The ``from`` property can also be an address or index from the :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`. It will then sign locally using the private key of that account, and send the transaction via :ref:`web3.eth.sendSignedTransaction() <eth-sendsignedtransaction>`. If the properties ``chain`` and ``hardfork`` or ``common`` are not set, Web3 will try to set appropriate values by
+querying the network for its chainId and networkId.
 
 .. _eth-sendtransaction-return:
 
@@ -1010,7 +1362,7 @@ The **callback** will return the 32 bytes transaction hash.
 - ``"transactionHash"`` returns ``String``: Is fired right after the transaction is sent and a transaction hash is available.
 - ``"receipt"`` returns ``Object``: Is fired when the transaction receipt is available.
 - ``"confirmation"`` returns ``Number``, ``Object``: Is fired for every confirmation up to the 12th confirmation. Receives the confirmation number as the first and the :ref:`receipt <eth-gettransactionreceipt-return>` as the second argument. Fired from confirmation 0 on, which is the block where its minded.
-- ``"error"`` returns ``Error``: Is fired if an error occurs during sending. If a out of gas error, the second parameter is the receipt.
+``"error"`` returns ``Error`` and ``Object|undefined``: Is fired if an error occurs during sending. If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
 
 
 -------
@@ -1249,7 +1601,7 @@ Parameters
 ----------
 
 1. ``Object`` - A transaction object see :ref:`web3.eth.sendTransaction <eth-sendtransaction-return>`, with the difference that for calls the ``from`` property is optional as well.
-2. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -1468,6 +1820,45 @@ Example
 
 ------------------------------------------------------------------------------
 
+.. _eth-requestaccounts:
+
+requestAccounts
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.requestAccounts([callback])
+
+This method will request/enable the accounts from the current environment it is running (Metamask, Status or Mist).
+It doesn't work if you're connected to a node with a default Web3.js provider. (WebsocketProvider, HttpProvidder and IpcProvider)
+This method will only work if you're using the injected provider from a application like Status, Mist or Metamask.
+
+For further information about the behavior of this method please read the EIP of it: `EIP-1102 <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md>`_
+
+----------
+Parameters
+----------
+
+1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+``Promise<Array>`` - Returns an array of enabled accounts.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.requestAccounts().then(console.log);
+    > ['0aae0B295369a9FD31d5F28D9Ec85E40f4cb692BAf', '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe']
+
+------------------------------------------------------------------------------
+
 .. _eth-chainId:
 
 getChainId
@@ -1493,5 +1884,108 @@ Example
 
     web3.eth.getChainId().then(console.log);
     > 61
+
+------------------------------------------------------------------------------
+
+.. _eth-getNodeInfo:
+
+getNodeInfo
+===========
+
+.. code-block:: javascript
+
+    web3.eth.getNodeInfo([callback])
+
+-------
+Returns
+-------
+
+``Promise<String>`` - The current client version.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.getNodeInfo().then(console.log);
+    > "Mist/v0.9.3/darwin/go1.4.1"
+
+------------------------------------------------------------------------------
+
+.. _eth-getProof:
+
+getProof
+========
+
+.. code-block:: javascript
+
+    web3.eth.getProof(address, storageKey, blockNumber, [callback])
+
+Returns the account and storage-values of the specified account including the Merkle-proof as described in `EIP-1186 <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1186.md>`_.
+
+----------
+Parameters
+----------
+
+1. ``String`` 20 Bytes:  The Address of the account or contract.
+2. ``Number[] | BigNumber[] | BN[] | String[]`` 32 Bytes: Array of storage-keys which should be proofed and included. See :ref:`web3.eth.getStorageAt <eth-getStorageAt>`.
+3. ``Number | String | BN | BigNumber``: Integer block number. Pre-defined block numbers as ``"latest"``, ``"earliest"``, and ``"genesis"`` can also be used.
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+``Promise<Object>`` - A account object.
+
+    - ``address`` - ``String``: The address of the account.
+    - ``balance`` - ``String``: The balance of the account. See :ref:`web3.eth.getBalance <eth-getBalance>`.
+    - ``codeHash`` - ``String``: hash of the code of the account. For a simple Account without code it will return "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+    - ``nonce`` -  ``String``: Nonce of the account.
+    - ``storageHash`` - ``String``: SHA3 of the StorageRoot. All storage will deliver a MerkleProof starting with this rootHash.
+    - ``accountProof`` - ``String[]``:Array of rlp-serialized MerkleTree-Nodes, starting with the stateRoot-Node, following the path of the SHA3 (address) as key.
+    - ``storageProof`` - ``Object[]`` Array of storage-entries as requested.
+        - ``key`` - ``String``  The requested storage key.
+        - ``value`` - ``String``  The storage value.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.getProof(
+        "0x1234567890123456789012345678901234567890",
+        ["0x0000000000000000000000000000000000000000000000000000000000000000","0x0000000000000000000000000000000000000000000000000000000000000001"],
+        "latest"
+    ).then(console.log);
+    > {
+        "address": "0x1234567890123456789012345678901234567890",
+        "accountProof": [
+            "0xf90211a090dcaf88c40c7bbc95a912cbdde67c175767b31173df9ee4b0d733bfdd511c43a0babe369f6b12092f49181ae04ca173fb68d1a5456f18d20fa32cba73954052bda0473ecf8a7e36a829e75039a3b055e51b8332cbf03324ab4af2066bbd6fbf0021a0bbda34753d7aa6c38e603f360244e8f59611921d9e1f128372fec0d586d4f9e0a04e44caecff45c9891f74f6a2156735886eedf6f1a733628ebc802ec79d844648a0a5f3f2f7542148c973977c8a1e154c4300fec92f755f7846f1b734d3ab1d90e7a0e823850f50bf72baae9d1733a36a444ab65d0a6faaba404f0583ce0ca4dad92da0f7a00cbe7d4b30b11faea3ae61b7f1f2b315b61d9f6bd68bfe587ad0eeceb721a07117ef9fc932f1a88e908eaead8565c19b5645dc9e5b1b6e841c5edbdfd71681a069eb2de283f32c11f859d7bcf93da23990d3e662935ed4d6b39ce3673ec84472a0203d26456312bbc4da5cd293b75b840fc5045e493d6f904d180823ec22bfed8ea09287b5c21f2254af4e64fca76acc5cd87399c7f1ede818db4326c98ce2dc2208a06fc2d754e304c48ce6a517753c62b1a9c1d5925b89707486d7fc08919e0a94eca07b1c54f15e299bd58bdfef9741538c7828b5d7d11a489f9c20d052b3471df475a051f9dd3739a927c89e357580a4c97b40234aa01ed3d5e0390dc982a7975880a0a089d613f26159af43616fd9455bb461f4869bfede26f2130835ed067a8b967bfb80",
+            "0xf90211a0395d87a95873cd98c21cf1df9421af03f7247880a2554e20738eec2c7507a494a0bcf6546339a1e7e14eb8fb572a968d217d2a0d1f3bc4257b22ef5333e9e4433ca012ae12498af8b2752c99efce07f3feef8ec910493be749acd63822c3558e6671a0dbf51303afdc36fc0c2d68a9bb05dab4f4917e7531e4a37ab0a153472d1b86e2a0ae90b50f067d9a2244e3d975233c0a0558c39ee152969f6678790abf773a9621a01d65cd682cc1be7c5e38d8da5c942e0a73eeaef10f387340a40a106699d494c3a06163b53d956c55544390c13634ea9aa75309f4fd866f312586942daf0f60fb37a058a52c1e858b1382a8893eb9c1f111f266eb9e21e6137aff0dddea243a567000a037b4b100761e02de63ea5f1fcfcf43e81a372dafb4419d126342136d329b7a7ba032472415864b08f808ba4374092003c8d7c40a9f7f9fe9cc8291f62538e1cc14a074e238ff5ec96b810364515551344100138916594d6af966170ff326a092fab0a0d31ac4eef14a79845200a496662e92186ca8b55e29ed0f9f59dbc6b521b116fea090607784fe738458b63c1942bba7c0321ae77e18df4961b2bc66727ea996464ea078f757653c1b63f72aff3dcc3f2a2e4c8cb4a9d36d1117c742833c84e20de994a0f78407de07f4b4cb4f899dfb95eedeb4049aeb5fc1635d65cf2f2f4dfd25d1d7a0862037513ba9d45354dd3e36264aceb2b862ac79d2050f14c95657e43a51b85c80",
+            "0xf90171a04ad705ea7bf04339fa36b124fa221379bd5a38ffe9a6112cb2d94be3a437b879a08e45b5f72e8149c01efcb71429841d6a8879d4bbe27335604a5bff8dfdf85dcea00313d9b2f7c03733d6549ea3b810e5262ed844ea12f70993d87d3e0f04e3979ea0b59e3cdd6750fa8b15164612a5cb6567cdfb386d4e0137fccee5f35ab55d0efda0fe6db56e42f2057a071c980a778d9a0b61038f269dd74a0e90155b3f40f14364a08538587f2378a0849f9608942cf481da4120c360f8391bbcc225d811823c6432a026eac94e755534e16f9552e73025d6d9c30d1d7682a4cb5bd7741ddabfd48c50a041557da9a74ca68da793e743e81e2029b2835e1cc16e9e25bd0c1e89d4ccad6980a041dda0a40a21ade3a20fcd1a4abb2a42b74e9a32b02424ff8db4ea708a5e0fb9a09aaf8326a51f613607a8685f57458329b41e938bb761131a5747e066b81a0a16808080a022e6cef138e16d2272ef58434ddf49260dc1de1f8ad6dfca3da5d2a92aaaadc58080",
+            "0xf851808080a009833150c367df138f1538689984b8a84fc55692d3d41fe4d1e5720ff5483a6980808080808080808080a0a319c1c415b271afc0adcb664e67738d103ac168e0bc0b7bd2da7966165cb9518080"
+            ],
+            "balance": 0,
+            "codeHash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+            "nonce": 0,
+            "storageHash": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+            "storageProof": [
+            {
+                "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "value": '0',
+                "proof": []
+            },
+            {
+                "key": "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "value": '0',
+                "proof": []
+            }
+        ]
+    }
 
 ------------------------------------------------------------------------------

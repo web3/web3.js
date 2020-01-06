@@ -76,8 +76,10 @@ ABICoder.prototype.encodeEventSignature = function (functionName) {
  * Should be used to encode plain param
  *
  * @method encodeParameter
- * @param {String} type
- * @param {Object} param
+ *
+ * @param {String|Object} type
+ * @param {any} param
+ *
  * @return {String} encoded plain param
  */
 ABICoder.prototype.encodeParameter = function (type, param) {
@@ -88,12 +90,23 @@ ABICoder.prototype.encodeParameter = function (type, param) {
  * Should be used to encode list of params
  *
  * @method encodeParameters
- * @param {Array} types
- * @param {Array} params
+ *
+ * @param {Array<String|Object>} types
+ * @param {Array<any>} params
+ *
  * @return {String} encoded list of params
  */
 ABICoder.prototype.encodeParameters = function (types, params) {
-    return ethersAbiCoder.encode(this.mapTypes(types), params);
+    return ethersAbiCoder.encode(
+        this.mapTypes(types),
+        params.map(function (param) {
+            if (utils.isBN(param) || utils.isBigNumber(param)) {
+                return param.toString(10);
+            }
+
+            return param;
+        })
+    );
 };
 
 /**
@@ -223,7 +236,13 @@ ABICoder.prototype.decodeParameter = function (type, bytes) {
  */
 ABICoder.prototype.decodeParameters = function (outputs, bytes) {
     if (outputs.length > 0 && (!bytes || bytes === '0x' || bytes === '0X')) {
-        throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
+        throw new Error(
+            'Returned values aren\'t valid, did it run Out of Gas? ' +
+            'You might also see this error if you are not using the ' +
+            'correct ABI for the contract you are retrieving data from, ' +
+            'requesting data from a block number that does not exist, ' +
+            'or querying a node which is not fully synced.'
+        );
     }
 
     var res = ethersAbiCoder.decode(this.mapTypes(outputs), '0x' + bytes.replace(/0x/i, ''));

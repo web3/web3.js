@@ -20,41 +20,28 @@
  * @date 2017
  */
 
-"use strict";
+'use strict';
 
-var _ = require("underscore");
+var _ = require('underscore');
 var core = require('web3-core');
 var Method = require('web3-core-method');
 var Promise = require('any-promise');
-var Account = require("eth-lib/lib/account");
-var Hash = require("eth-lib/lib/hash");
-var RLP = require("eth-lib/lib/rlp");
-var Nat = require("eth-lib/lib/nat");
-var Bytes = require("eth-lib/lib/bytes");
+var Account = require('eth-lib/lib/account');
+var Hash = require('eth-lib/lib/hash');
+var RLP = require('eth-lib/lib/rlp');// jshint ignore:line
+var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
-var scrypt = require('scrypt-shim');
+var scrypt = require('@web3-js/scrypt-shim');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
+var Transaction = require('ethereumjs-tx').Transaction;
+var Common = require('ethereumjs-common').default;
+
 
 var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
 };
-
-var trimLeadingZero = function (hex) {
-    while (hex && hex.startsWith('0x0')) {
-        hex = '0x' + hex.slice(3);
-    }
-    return hex;
-};
-
-var makeEven = function (hex) {
-    if(hex.length % 2 === 1) {
-        hex = hex.replace('0x', '0x0');
-    }
-    return hex;
-};
-
 
 var Accounts = function Accounts() {
     var _this = this;
@@ -68,7 +55,13 @@ var Accounts = function Accounts() {
 
     var _ethereumCall = [
         new Method({
-            name: 'getId',
+            name: 'getNetworkId',
+            call: 'net_version',
+            params: 0,
+            outputFormatter: parseInt
+        }),
+        new Method({
+            name: 'getChainId',
             call: 'eth_chainId',
             params: 0,
             outputFormatter: utils.hexToNumber
@@ -82,18 +75,20 @@ var Accounts = function Accounts() {
             name: 'getTransactionCount',
             call: 'eth_getTransactionCount',
             params: 2,
-            inputFormatter: [function (address) {
+            inputFormatter: [function(address) {
                 if (utils.isAddress(address)) {
                     return address;
                 } else {
-                    throw new Error('Address '+ address +' is not a valid address to get the "transactionCount".');
+                    throw new Error('Address ' + address + ' is not a valid address to get the "transactionCount".');
                 }
-            }, function () { return 'latest'; }]
+            }, function() {
+                return 'latest';
+            }]
         })
     ];
     // attach methods to this._ethereumCall
     this._ethereumCall = {};
-    _.each(_ethereumCall, function (method) {
+    _.each(_ethereumCall, function(method) {
         method.attachToObject(_this._ethereumCall);
         method.setRequestManager(_this._requestManager);
     });
@@ -102,7 +97,7 @@ var Accounts = function Accounts() {
     this.wallet = new Wallet(this);
 };
 
-Accounts.prototype._addAccountFunctions = function (account) {
+Accounts.prototype._addAccountFunctions = function(account) {
     var _this = this;
 
     // add sign functions
@@ -132,9 +127,11 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
     var _this = this,
         error = false,
-        result;
+        transactionOptions = {},
+        hasTxSigningOptions = !!(tx && ((tx.chain && tx.hardfork) || tx.common));
 
-    callback = callback || function () {};
+    callback = callback || function() {
+    };
 
     if (!tx) {
         error = new Error('No transaction object given!');
@@ -143,16 +140,28 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         return Promise.reject(error);
     }
 
-    function signed (tx) {
+    function signed(tx) {
+        if (tx.common && (tx.chain && tx.hardfork)) {
+            error = new Error(
+                'Please provide the ethereumjs-common object or the chain and hardfork property but not all together.'
+            );
+        }
+
+        if ((tx.chain && !tx.hardfork) || (tx.hardfork && !tx.chain)) {
+            error = new Error(
+                'When specifying chain and hardfork, both values must be defined. ' +
+                'Received "chain": ' + tx.chain + ', "hardfork": ' + tx.hardfork
+            );
+        }
 
         if (!tx.gas && !tx.gasLimit) {
             error = new Error('"gas" is missing');
         }
 
-        if (tx.nonce  < 0 ||
-            tx.gas  < 0 ||
-            tx.gasPrice  < 0 ||
-            tx.chainId  < 0) {
+        if (tx.nonce < 0 ||
+            tx.gas < 0 ||
+            tx.gasPrice < 0 ||
+            tx.chainId < 0) {
             error = new Error('Gas, gasPrice, nonce or chainId is lower than 0');
         }
 
@@ -162,82 +171,114 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         }
 
         try {
-            tx = helpers.formatters.inputCallFormatter(tx);
+            var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
+            transaction.to = transaction.to || '0x';
+            transaction.data = transaction.data || '0x';
+            transaction.value = transaction.value || '0x';
+            transaction.chainId = utils.numberToHex(transaction.chainId);
 
-            var transaction = tx;
-            transaction.to = tx.to || '0x';
-            transaction.data = tx.data || '0x';
-            transaction.value = tx.value || '0x';
-            transaction.chainId = utils.numberToHex(tx.chainId);
+            // Because tx has no ethereumjs-tx signing options we use fetched vals.
+            if (!hasTxSigningOptions) {
+                transactionOptions.common = Common.forCustomChain(
+                    'mainnet',
+                    {
+                        name: 'custom-network',
+                        networkId: transaction.networkId,
+                        chainId: transaction.chainId
+                    },
+                    'petersburg'
+                );
 
-            var rlpEncoded = RLP.encode([
-                Bytes.fromNat(transaction.nonce),
-                Bytes.fromNat(transaction.gasPrice),
-                Bytes.fromNat(transaction.gas),
-                transaction.to.toLowerCase(),
-                Bytes.fromNat(transaction.value),
-                transaction.data,
-                Bytes.fromNat(transaction.chainId || "0x1"),
-                "0x",
-                "0x"]);
+                delete transaction.networkId;
+            } else {
+                if (transaction.common) {
+                    transactionOptions.common = Common.forCustomChain(
+                        transaction.common.baseChain || 'mainnet',
+                        {
+                            name: transaction.common.customChain.name || 'custom-network',
+                            networkId: transaction.common.customChain.networkId,
+                            chainId: transaction.common.customChain.chainId
+                        },
+                        transaction.common.hardfork || 'petersburg'
+                    );
 
+                    delete transaction.common;
+                }
 
-            var hash = Hash.keccak256(rlpEncoded);
+                if (transaction.chain) {
+                    transactionOptions.chain = transaction.chain;
+                    delete transaction.chain;
+                }
 
-            var signature = Account.makeSigner(Nat.toNumber(transaction.chainId || "0x1") * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
+                if (transaction.hardfork) {
+                    transactionOptions.hardfork = transaction.hardfork;
+                    delete transaction.hardfork;
+                }
+            }
 
-            var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
+            if (privateKey.startsWith('0x')) {
+                privateKey = privateKey.substring(2);
+            }
 
-            rawTx[6] = makeEven(trimLeadingZero(rawTx[6]));
-            rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
-            rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
+            var ethTx = new Transaction(transaction, transactionOptions);
 
-            var rawTransaction = RLP.encode(rawTx);
+            ethTx.sign(Buffer.from(privateKey, 'hex'));
 
-            var values = RLP.decode(rawTransaction);
-            result = {
-                messageHash: hash,
-                v: trimLeadingZero(values[6]),
-                r: trimLeadingZero(values[7]),
-                s: trimLeadingZero(values[8]),
-                rawTransaction: rawTransaction
+            var validationResult = ethTx.validate(true);
+
+            if (validationResult !== '') {
+                throw new Error('Signer Error: ' + validationResult);
+            }
+
+            var rlpEncoded = ethTx.serialize().toString('hex');
+            var rawTransaction = '0x' + rlpEncoded;
+            var transactionHash = utils.keccak256(rawTransaction);
+
+            var result = {
+                messageHash: '0x' + Buffer.from(ethTx.hash(false)).toString('hex'),
+                v: '0x' + Buffer.from(ethTx.v).toString('hex'),
+                r: '0x' + Buffer.from(ethTx.r).toString('hex'),
+                s: '0x' + Buffer.from(ethTx.s).toString('hex'),
+                rawTransaction: rawTransaction,
+                transactionHash: transactionHash
             };
 
-        } catch(e) {
+            callback(null, result);
+            return result;
+
+        } catch (e) {
             callback(e);
             return Promise.reject(e);
         }
-
-        callback(null, result);
-        return result;
     }
 
-    // Resolve immediately if nonce, chainId and price are provided
-    if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
+
+    // Resolve immediately if nonce, chainId, price and signing options are provided
+    if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined && hasTxSigningOptions) {
         return Promise.resolve(signed(tx));
     }
 
-
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        isNot(tx.chainId) ? _this._ethereumCall.getId() : tx.chainId,
+        isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId,
         isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
-        isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
-    ]).then(function (args) {
-        if (isNot(args[0]) || isNot(args[1]) || isNot(args[2])) {
-            throw new Error('One of the values "chainId", "gasPrice", or "nonce" couldn\'t be fetched: '+ JSON.stringify(args));
+        isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
+        isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1
+    ]).then(function(args) {
+        if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
+            throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
-        return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2]}));
+        return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2], networkId: args[3]}));
     });
 };
 
 /* jshint ignore:start */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
     var values = RLP.decode(rawTx);
-    var signature = Account.encodeSignature(values.slice(6,9));
+    var signature = Account.encodeSignature(values.slice(6, 9));
     var recovery = Bytes.toNumber(values[6]);
-    var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), "0x", "0x"];
-    var signingData = values.slice(0,6).concat(extraData);
+    var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
+    var signingData = values.slice(0, 6).concat(extraData);
     var signingDataHex = RLP.encode(signingData);
     return Account.recover(Hash.keccak256(signingDataHex), signature);
 };
@@ -246,7 +287,7 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
 Accounts.prototype.hashMessage = function hashMessage(data) {
     var message = utils.isHexStrict(data) ? utils.hexToBytes(data) : data;
     var messageBuffer = Buffer.from(message);
-    var preamble = "\x19Ethereum Signed Message:\n" + message.length;
+    var preamble = '\x19Ethereum Signed Message:\n' + message.length;
     var preambleBuffer = Buffer.from(preamble);
     var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return Hash.keccak256s(ethMessage);
@@ -288,10 +329,10 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
 };
 
 // Taken from https://github.com/ethereumjs/ethereumjs-wallet
-Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
+Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
     /* jshint maxcomplexity: 10 */
 
-    if(!_.isString(password)) {
+    if (!_.isString(password)) {
         throw new Error('No password given.');
     }
 
@@ -322,18 +363,18 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
 
     var ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
 
-    var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), ciphertext ])).replace('0x','');
+    var mac = utils.sha3(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
     if (mac !== json.crypto.mac) {
         throw new Error('Key derivation failed - possibly wrong password');
     }
 
     var decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, 'hex'));
-    var seed = '0x'+ Buffer.concat([ decipher.update(ciphertext), decipher.final() ]).toString('hex');
+    var seed = '0x' + Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex');
 
     return this.privateKeyToAccount(seed);
 };
 
-Accounts.prototype.encrypt = function (privateKey, password, options) {
+Accounts.prototype.encrypt = function(privateKey, password, options) {
     /* jshint maxcomplexity: 20 */
     var account = this.privateKeyToAccount(privateKey);
 
@@ -367,14 +408,14 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
         throw new Error('Unsupported cipher');
     }
 
-    var ciphertext = Buffer.concat([ cipher.update(Buffer.from(account.privateKey.replace('0x',''), 'hex')), cipher.final() ]);
+    var ciphertext = Buffer.concat([cipher.update(Buffer.from(account.privateKey.replace('0x', ''), 'hex')), cipher.final()]);
 
-    var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex') ])).replace('0x','');
+    var mac = utils.sha3(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')])).replace('0x', '');
 
     return {
         version: 3,
-        id: uuid.v4({ random: options.uuid || cryp.randomBytes(16) }),
-        address: account.address.toLowerCase().replace('0x',''),
+        id: uuid.v4({random: options.uuid || cryp.randomBytes(16)}),
+        address: account.address.toLowerCase().replace('0x', ''),
         crypto: {
             ciphertext: ciphertext.toString('hex'),
             cipherparams: {
@@ -395,10 +436,10 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
 function Wallet(accounts) {
     this._accounts = accounts;
     this.length = 0;
-    this.defaultKeyName = "web3js_wallet";
+    this.defaultKeyName = 'web3js_wallet';
 }
 
-Wallet.prototype._findSafeIndex = function (pointer) {
+Wallet.prototype._findSafeIndex = function(pointer) {
     pointer = pointer || 0;
     if (_.has(this, pointer)) {
         return this._findSafeIndex(pointer + 1);
@@ -407,23 +448,27 @@ Wallet.prototype._findSafeIndex = function (pointer) {
     }
 };
 
-Wallet.prototype._currentIndexes = function () {
+Wallet.prototype._currentIndexes = function() {
     var keys = Object.keys(this);
     var indexes = keys
-        .map(function(key) { return parseInt(key); })
-        .filter(function(n) { return (n < 9e20); });
+        .map(function(key) {
+            return parseInt(key);
+        })
+        .filter(function(n) {
+            return (n < 9e20);
+        });
 
     return indexes;
 };
 
-Wallet.prototype.create = function (numberOfAccounts, entropy) {
+Wallet.prototype.create = function(numberOfAccounts, entropy) {
     for (var i = 0; i < numberOfAccounts; ++i) {
         this.add(this._accounts.create(entropy).privateKey);
     }
     return this;
 };
 
-Wallet.prototype.add = function (account) {
+Wallet.prototype.add = function(account) {
 
     if (_.isString(account)) {
         account = this._accounts.privateKeyToAccount(account);
@@ -444,7 +489,7 @@ Wallet.prototype.add = function (account) {
     }
 };
 
-Wallet.prototype.remove = function (addressOrIndex) {
+Wallet.prototype.remove = function(addressOrIndex) {
     var account = this[addressOrIndex];
 
     if (account && account.address) {
@@ -466,7 +511,7 @@ Wallet.prototype.remove = function (addressOrIndex) {
     }
 };
 
-Wallet.prototype.clear = function () {
+Wallet.prototype.clear = function() {
     var _this = this;
     var indexes = this._currentIndexes();
 
@@ -477,7 +522,7 @@ Wallet.prototype.clear = function () {
     return this;
 };
 
-Wallet.prototype.encrypt = function (password, options) {
+Wallet.prototype.encrypt = function(password, options) {
     var _this = this;
     var indexes = this._currentIndexes();
 
@@ -489,10 +534,10 @@ Wallet.prototype.encrypt = function (password, options) {
 };
 
 
-Wallet.prototype.decrypt = function (encryptedWallet, password) {
+Wallet.prototype.decrypt = function(encryptedWallet, password) {
     var _this = this;
 
-    encryptedWallet.forEach(function (keystore) {
+    encryptedWallet.forEach(function(keystore) {
         var account = _this._accounts.decrypt(keystore, password);
 
         if (account) {
@@ -505,19 +550,19 @@ Wallet.prototype.decrypt = function (encryptedWallet, password) {
     return this;
 };
 
-Wallet.prototype.save = function (password, keyName) {
+Wallet.prototype.save = function(password, keyName) {
     localStorage.setItem(keyName || this.defaultKeyName, JSON.stringify(this.encrypt(password)));
 
     return true;
 };
 
-Wallet.prototype.load = function (password, keyName) {
+Wallet.prototype.load = function(password, keyName) {
     var keystore = localStorage.getItem(keyName || this.defaultKeyName);
 
     if (keystore) {
         try {
             keystore = JSON.parse(keystore);
-        } catch(e) {
+        } catch (e) {
 
         }
     }
@@ -547,10 +592,9 @@ function storageAvailable(type) {
         storage.setItem(x, x);
         storage.removeItem(x);
         return true;
-    }
-    catch(e) {
+    } catch (e) {
         return e && (
-            // everything except Firefox
+                // everything except Firefox
             e.code === 22 ||
             // Firefox
             e.code === 1014 ||
