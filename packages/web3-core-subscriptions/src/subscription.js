@@ -77,7 +77,11 @@ Subscription.prototype._validateArgs = function (args) {
         subscription.params = 0;
 
     if (args.length !== subscription.params) {
-        throw errors.InvalidNumberOfParams(args.length, subscription.params + 1, args[0]);
+        throw errors.InvalidNumberOfParams(
+            args.length,
+            subscription.params,
+            subscription.subscriptionName
+        );
     }
 };
 
@@ -192,18 +196,28 @@ Subscription.prototype.subscribe = function() {
         return this;
     }
 
+    // throw error, if provider is not set
     if(!this.options.requestManager.provider) {
-        var err1 = new Error('No provider set.');
-        this.callback(err1, null, this);
-        this.emit('error', err1);
+        setTimeout(function(){
+            var err1 = new Error('No provider set.');
+            _this.callback(err1, null, _this);
+            _this.emit('error', err1);
+        },0);
+
         return this;
     }
 
     // throw error, if provider doesnt support subscriptions
     if(!this.options.requestManager.provider.on) {
-        var err2 = new Error('The current provider doesn\'t support subscriptions: '+ this.options.requestManager.provider.constructor.name);
-        this.callback(err2, null, this);
-        this.emit('error', err2);
+        setTimeout(function(){
+            var err2 = new Error(
+                'The current provider doesn\'t support subscriptions: ' +
+                _this.options.requestManager.provider.constructor.name
+            );
+            _this.callback(err2, null, _this);
+            _this.emit('error', err2);
+        },0);
+
         return this;
     }
 
@@ -232,8 +246,10 @@ Subscription.prototype.subscribe = function() {
                 // TODO subscribe here? after the past logs?
 
             } else {
-                _this.callback(err, null, _this);
-                _this.emit('error', err);
+                setTimeout(function(){
+                    _this.callback(err, null, _this);
+                    _this.emit('error', err);
+                },0);
             }
         });
     }
@@ -275,8 +291,10 @@ Subscription.prototype.subscribe = function() {
                 }
             });
         } else {
-            _this.callback(err, false, _this);
-            _this.emit('error', err);
+            setTimeout(function(){
+                _this.callback(err, false, _this);
+                _this.emit('error', err);
+            },0);
         }
     });
 
