@@ -1,6 +1,6 @@
 ## Description
 
-Please include a summary of the change.
+Please include a summary of the change and be sure you follow the contributions rules we do provide [here](./CONTRIBUTIONS.md)
 
 <!--- 
 Optional if an issue is fixed:
