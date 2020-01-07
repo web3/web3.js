@@ -450,6 +450,19 @@ Contract.prototype._decodeEventABI = function (data) {
     // create empty inputs if none are present (e.g. anonymous events on allEvents)
     event.inputs = event.inputs || [];
 
+    // Handle case where an event signature shadows the current ABI with non-identical
+    // arg indexing. If # of topics doesn't match, event is anon.
+    if (!event.anonymous){
+        let indexedInputs = 0;
+        event.inputs.forEach(input => input.indexed ? indexedInputs++ : null);
+
+        if (indexedInputs > 0 && (data.topics.length !== indexedInputs + 1)){
+            event = {
+                anonymous: true,
+                inputs: []
+            }
+        }
+    }
 
     var argTopics = event.anonymous ? data.topics : data.topics.slice(1);
 
