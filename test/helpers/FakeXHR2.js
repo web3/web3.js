@@ -7,9 +7,14 @@ var FakeXHR2 = function () {
     this.readyState = 4;
     this.onreadystatechange = null;
     this.async = true;
+    this.agents = {};
     this.headers = {
         'Content-Type': 'text/plain'
     };
+};
+
+FakeXHR2.prototype.nodejsSet = function (agents) {
+    this.agents = agents;
 };
 
 FakeXHR2.prototype.open = function (method, host, async) {
@@ -32,7 +37,5 @@ FakeXHR2.prototype.send = function (payload) {
         this.onreadystatechange();
     }
 };
-
-FakeXHR2.prototype.nodejsSet = Function.prototype;
 
 module.exports = {XMLHttpRequest: FakeXHR2};
