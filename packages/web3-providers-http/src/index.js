@@ -42,10 +42,12 @@ var HttpProvider = function HttpProvider(host, options) {
 
     var keepAlive = (options.keepAlive === true || options.keepAlive !== false) ? true : false;
     this.host = host || 'http://localhost:8545';
-    if (!this.agent && this.host.substring(0,5) === "https") {
-        this.httpsAgent = new https.Agent({ keepAlive: keepAlive });
-    } else {
-        this.httpAgent = new http.Agent({ keepAlive: keepAlive });
+    if (!this.agent) {
+        if (this.host.substring(0,5) === "https") {
+            this.httpsAgent = new https.Agent({ keepAlive: keepAlive });
+        } else {
+            this.httpAgent = new http.Agent({ keepAlive: keepAlive });
+        }
     }
 };
 
