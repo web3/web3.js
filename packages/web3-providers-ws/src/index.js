@@ -303,9 +303,9 @@ WebsocketProvider.prototype._parseResponse = function (data) {
                 _this.emit(_this.ERROR, error);
 
                 if (_this.requestQueue.size > 0) {
-                    _this.requestQueue.forEach(function (request) {
+                    _this.requestQueue.forEach(function (request, key) {
                         request.callback(error);
-                        _this.requestQueue.delete(request);
+                        _this.requestQueue.delete(key);
                     });
                 }
             }, _this._customTimeout);
@@ -379,7 +379,11 @@ WebsocketProvider.prototype.send = function (payload, callback) {
  * @returns {void}
  */
 WebsocketProvider.prototype.reset = function () {
+    this.responseQueue.clear();
+    this.requestQueue.clear();
+    
     this.removeAllListeners();
+
     this._removeSocketListeners();
     this._addSocketListeners();
 };

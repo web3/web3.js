@@ -20,46 +20,8 @@
  * @date 2018
  */
 
-export class HttpProvider {
-    constructor(host: string, options?: HttpProviderOptions);
+import {HttpProviderBase} from 'web3-core-helpers';
 
-    host: string;
-    connected: boolean;
+export {HttpProviderOptions, HttpHeader, JsonRpcPayload, JsonRpcResponse} from 'web3-core-helpers';
 
-    supportsSubscriptions(): boolean;
-
-    send(
-        payload: JsonRpcPayload,
-        callback: (error: Error | null, result?: JsonRpcResponse) => void
-    ): void;
-
-    disconnect(): boolean;
-}
-
-export interface HttpProviderOptions {
-    keepAlive?: boolean;
-    timeout?: number;
-    headers?: HttpHeader[];
-    withCredentials?: boolean;
-}
-
-export interface HttpHeader {
-    name: string;
-    value: string;
-}
-
-// Duplicated in ws, ipc, and http provider package
-export interface JsonRpcPayload {
-    jsonrpc: string;
-    method: string;
-    params: any[];
-    id?: string | number;
-}
-
-// Duplicated in ws, ipc, and http provider package
-export interface JsonRpcResponse {
-    jsonrpc: string;
-    id: number;
-    result?: any;
-    error?: string;
-}
+export class HttpProvider extends HttpProviderBase { }
