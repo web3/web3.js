@@ -77,6 +77,8 @@ describe('contract.events [ @E2E ]', function() {
     // Child and parent contracts have an event named `similar` which has the same
     // function signature but indexes arguments differently.
     it('handles child events with shadowed signatures', async function(){
+        this.timeout(25000);
+
         let contract;
 
         const options = {
