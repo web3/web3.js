@@ -208,7 +208,8 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         isContractDeployment = _.isObject(payload.params[0]) &&
             payload.params[0].data &&
             payload.params[0].from &&
-            !payload.params[0].to;
+            !payload.params[0].to,
+        hasBytecode = isContractDeployment && payload.params[0].data.length > 2;
 
     // add custom send Methods
     var _ethereumCalls = [
@@ -330,7 +331,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                     return receipt;
                 })
                 // CHECK for CONTRACT DEPLOYMENT
-                .then(function (receipt) {
+                .then(async function (receipt) {
 
                     if (isContractDeployment && !promiseResolved) {
 
@@ -351,43 +352,50 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                             return;
                         }
 
-                        _ethereumCall.getCode(receipt.contractAddress, function (e, code) {
+                        var code;
+                        try {
+                            code = await _ethereumCall.getCode(receipt.contractAddress);
+                        } catch(err){
+                            // ignore;
+                        }
 
-                            if (!code) {
-                                return;
-                            }
+                        if (!code) {
+                            return;
+                        }
 
+                        // If deployment is status.true and there was a real
+                        // bytecode string, assume it was successful.
+                        var deploymentSuccess = receipt.status === true && hasBytecode;
 
-                            if (code.length > 2) {
-                                defer.eventEmitter.emit('receipt', receipt);
+                        if (deploymentSuccess || code.length > 2) {
+                            defer.eventEmitter.emit('receipt', receipt);
 
-                                // if contract, return instance instead of receipt
-                                if (method.extraFormatters && method.extraFormatters.contractDeployFormatter) {
-                                    defer.resolve(method.extraFormatters.contractDeployFormatter(receipt));
-                                } else {
-                                    defer.resolve(receipt);
-                                }
-
-                                // need to remove listeners, as they aren't removed automatically when succesfull
-                                if (canUnsubscribe) {
-                                    defer.eventEmitter.removeAllListeners();
-                                }
-
+                            // if contract, return instance instead of receipt
+                            if (method.extraFormatters && method.extraFormatters.contractDeployFormatter) {
+                                defer.resolve(method.extraFormatters.contractDeployFormatter(receipt));
                             } else {
-                                utils._fireError(
-                                    errors.ContractCodeNotStoredError(receipt),
-                                    defer.eventEmitter,
-                                    defer.reject,
-                                    null,
-                                    receipt
-                                );
+                                defer.resolve(receipt);
                             }
 
+                            // need to remove listeners, as they aren't removed automatically when succesfull
                             if (canUnsubscribe) {
-                                sub.unsubscribe();
+                                defer.eventEmitter.removeAllListeners();
                             }
-                            promiseResolved = true;
-                        });
+
+                        } else {
+                            utils._fireError(
+                                errors.ContractCodeNotStoredError(receipt),
+                                defer.eventEmitter,
+                                defer.reject,
+                                null,
+                                receipt
+                            );
+                        }
+
+                        if (canUnsubscribe) {
+                            sub.unsubscribe();
+                        }
+                        promiseResolved = true;
                     }
 
                     return receipt;
