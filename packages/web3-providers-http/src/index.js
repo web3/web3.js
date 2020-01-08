@@ -34,18 +34,21 @@ var https = require('https');
 var HttpProvider = function HttpProvider(host, options) {
     options = options || {};
 
-    var keepAlive = (options.keepAlive === true || options.keepAlive !== false) ? true : false;
-    this.host = host || 'http://localhost:8545';
-    if (this.host.substring(0,5) === "https") {
-        this.httpsAgent = new https.Agent({ keepAlive: keepAlive });
-    } else {
-        this.httpAgent = new http.Agent({ keepAlive: keepAlive });
-    }
-
     this.withCredentials = options.withCredentials || false;
     this.timeout = options.timeout || 0;
     this.headers = options.headers;
+    this.agent = options.agent;
     this.connected = false;
+
+    var keepAlive = (options.keepAlive === true || options.keepAlive !== false) ? true : false;
+    this.host = host || 'http://localhost:8545';
+    if (!this.agent) {
+        if (this.host.substring(0,5) === "https") {
+            this.httpsAgent = new https.Agent({ keepAlive: keepAlive });
+        } else {
+            this.httpAgent = new http.Agent({ keepAlive: keepAlive });
+        }
+    }
 };
 
 HttpProvider.prototype._prepareRequest = function(){
@@ -56,10 +59,15 @@ HttpProvider.prototype._prepareRequest = function(){
         request = new XMLHttpRequest();
     } else {
         request = new XHR2();
-        request.nodejsSet({
-            httpsAgent:this.httpsAgent,
-            httpAgent:this.httpAgent
-        });
+        var agents = {httpsAgent: this.httpsAgent, httpAgent: this.httpAgent, baseUrl: this.baseUrl};
+
+        if (this.agent) {
+            agents.httpsAgent = this.agent.https;
+            agents.httpAgent = this.agent.http;
+            agents.baseUrl = this.agent.baseUrl;
+        }
+
+        request.nodejsSet(agents);
     }
 
     request.open('POST', this.host, true);
