@@ -28,13 +28,18 @@ This will expose the `Web3HttpProvider` object on the window object.
 
 ```js
 // in node.js
+var http = require('http');
 var Web3HttpProvider = require('web3-providers-http');
 
 var options = {
+    keepAlive: true,
     timeout: 20000, // milliseconds,
-    headers: [{name: 'Access-Control-Allow-Origin', value: '*'},{...}]
+    headers: [{name: 'Access-Control-Allow-Origin', value: '*'},{...}],
+    withCredentials: false,
+    agent: {http: http.Agent(...), baseUrl: ''}
 };
-var http = new Web3HttpProvider('http://localhost:8545', options);
+
+var provider = new Web3HttpProvider('http://localhost:8545', options);
 ```
 
 ## Types
