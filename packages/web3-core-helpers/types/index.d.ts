@@ -173,7 +173,7 @@ export interface WebsocketProviderOptions {
 export interface ReconnectOptions {
     auto?: boolean;
     delay?: number;
-    maxAttempts?: boolean;
+    maxAttempts?: number;
     onTimeout?: boolean;
 }
 
