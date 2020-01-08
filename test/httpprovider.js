@@ -13,7 +13,7 @@ var HttpProvider = SandboxedModule.require('../packages/web3-providers-http', {
     singleOnly: true
 });
 
-describe.only('web3-providers-http', function () {
+describe('web3-providers-http', function () {
     describe('prepareRequest', function () {
         let provider;
         let result;
