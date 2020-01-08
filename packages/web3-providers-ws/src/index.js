@@ -89,7 +89,7 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
 };
 
 // Inherit from EventEmitter
-WebsocketProvider.prototype = EventEmitter.prototype;
+WebsocketProvider.prototype = Object.create(EventEmitter.prototype);
 WebsocketProvider.prototype.constructor = WebsocketProvider;
 
 /**
