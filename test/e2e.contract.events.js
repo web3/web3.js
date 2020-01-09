@@ -28,7 +28,7 @@ describe('contract.events [ @E2E ]', function() {
 
         basic = new web3.eth.Contract(Basic.abi, basicOptions);
         instance = await basic.deploy().send({from: accounts[0]});
-    })
+    });
 
     it('contract.getPastEvents', async function(){
         await instance
@@ -84,7 +84,7 @@ describe('contract.events [ @E2E ]', function() {
         const options = {
             gasPrice: '1',
             gas: 4000000
-        }
+        };
 
         options.data = Child.bytecode;
         contract = new web3.eth.Contract(Child.abi, options);
@@ -97,12 +97,12 @@ describe('contract.events [ @E2E ]', function() {
         await parent
             .methods
             .fireChildSimilarEvent(child.options.address)
-            .send({from: accounts[0]})
+            .send({from: accounts[0]});
 
         await parent
             .methods
             .fireChildIdenticalEvent(child.options.address)
-            .send({from: accounts[0]})
+            .send({from: accounts[0]});
 
         const childEvents = await child.getPastEvents({
             fromBlock: 0,
