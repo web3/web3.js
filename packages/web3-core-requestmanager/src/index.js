@@ -116,6 +116,13 @@ RequestManager.prototype.setProvider = function (provider, net) {
             });
         });
 
+        // notify all subscriptions about the error condition
+        this.provider.on('error', function error(error) {
+            _this.subscriptions.forEach(function (subscription) {
+                subscription.callback(error);
+            });
+        });
+
         // notify all subscriptions about the close condition
         this.provider.on('close', function close(event) {
             _this.subscriptions.forEach(function (subscription) {

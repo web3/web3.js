@@ -411,6 +411,13 @@ WebsocketProvider.prototype.reconnect = function () {
     }
 
     this.emit(this.ERROR, errors.MaxAttemptsReachedOnReconnectingError());
+
+    if (this.requestQueue.size > 0) {
+        this.requestQueue.forEach(function (request, key) {
+            request.callback(errors.MaxAttemptsReachedOnReconnectingError());
+            _this.requestQueue.delete(key);
+        });
+    }
 };
 
 module.exports = WebsocketProvider;
