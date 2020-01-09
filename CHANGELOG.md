@@ -125,3 +125,4 @@ Released with 1.0.0-beta.37 code base.
 - ``clearSubscriptions`` does no longer throw an error if no running subscriptions do exist (#3246)
 - callback type definition for ``Accounts.signTransaction`` fixed (#3280)
 - fix: export bloom functions on the index.js
+- Prefer receipt status to code availability on contract deployment (#3298)
