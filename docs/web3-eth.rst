@@ -402,6 +402,32 @@ Returns
 
 ------------------------------------------------------------------------------
 
+.. _web3-module-handlerevert:
+
+handleRevert
+============
+
+.. code-block:: javascript
+
+    web3.eth.handleRevert
+
+The ``handleRevert`` options property does default to ``false`` and will return the revert reason string if enabled for the following methods:
+
+- :ref:`web3.eth.call() <eth-call>`
+- :ref:`web3.eth.sendTransaction() <eth-sendtransaction>`
+- :ref:`contract.methods.myMethod(...).send(...) <contract-send>`
+- :ref:`contract.methods.myMethod(...).call(...) <contract-call>`
+
+.. note:: The revert reason string and the signature does exist as property on the returned error.
+
+-------
+Returns
+-------
+
+``boolean``: The current value of ``handleRevert`` (default: false)
+
+------------------------------------------------------------------------------
+
 getProtocolVersion
 =====================
 

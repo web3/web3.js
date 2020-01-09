@@ -4,7 +4,7 @@ const pify = require('pify');
 const utils = require('./helpers/test.utils');
 const Web3 = utils.getWeb3();
 
-describe.only('WebsocketProvider reconnecting', function () {
+describe('WebsocketProvider reconnecting', function () {
     let web3;
     let server;
     const port = 8545;

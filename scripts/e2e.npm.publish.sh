@@ -23,7 +23,6 @@ fi
 # what it needs here.
 npm install -g verdaccio@4.3.4
 npm install -g npm-auth-to-token@1.0.0
-npm install -g geth-dev-assistant@0.1.3
 npm install -g lerna@3.18.3
 
 # Launch npm proxy registry

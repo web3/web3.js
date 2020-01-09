@@ -91,6 +91,7 @@ var Eth = function Eth() {
     };
 
 
+    var handleRevert = false;
     var defaultAccount = null;
     var defaultBlock = 'latest';
     var transactionBlockTimeout = 50;
@@ -98,6 +99,23 @@ var Eth = function Eth() {
     var transactionPollingTimeout = 750;
     var defaultChain, defaultHardfork, defaultCommon;
 
+    Object.defineProperty(this, 'handleRevert', {
+        get: function () {
+            return handleRevert;
+        },
+        set: function (val) {
+            handleRevert = val;
+
+            // also set on the Contract object
+            _this.Contract.handleRevert = handleRevert;
+
+            // update handleRevert
+            methods.forEach(function(method) {
+                method.handleRevert = handleRevert;
+            });
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, 'defaultCommon', {
         get: function () {
             return defaultCommon;
@@ -294,6 +312,7 @@ var Eth = function Eth() {
     this.Contract.transactionBlockTimeout = this.transactionBlockTimeout;
     this.Contract.transactionConfirmationBlocks = this.transactionConfirmationBlocks;
     this.Contract.transactionPollingTimeout = this.transactionPollingTimeout;
+    this.Contract.handleRevert = this.handleRevert;
     this.Contract._requestManager = this._requestManager;
     this.Contract._ethAccounts = this.accounts;
     this.Contract.currentProvider = this._requestManager.provider;
@@ -449,7 +468,8 @@ var Eth = function Eth() {
             name: 'sendTransaction',
             call: 'eth_sendTransaction',
             params: 1,
-            inputFormatter: [formatter.inputTransactionFormatter]
+            inputFormatter: [formatter.inputTransactionFormatter],
+            abiCoder: abi
         }),
         new Method({
             name: 'sign',
@@ -465,7 +485,8 @@ var Eth = function Eth() {
             name: 'call',
             call: 'eth_call',
             params: 2,
-            inputFormatter: [formatter.inputCallFormatter, formatter.inputDefaultBlockNumberFormatter]
+            inputFormatter: [formatter.inputCallFormatter, formatter.inputDefaultBlockNumberFormatter],
+            abiCoder: abi
         }),
         new Method({
             name: 'estimateGas',
@@ -606,6 +627,7 @@ var Eth = function Eth() {
         method.transactionBlockTimeout = _this.transactionBlockTimeout;
         method.transactionConfirmationBlocks = _this.transactionConfirmationBlocks;
         method.transactionPollingTimeout = _this.transactionPollingTimeout;
+        method.handleRevert = _this.handleRevert;
     });
 
 };

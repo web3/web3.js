@@ -128,7 +128,6 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     var _this = this,
         error = false,
         transactionOptions = {},
-        result,
         hasTxSigningOptions = !!(tx && ((tx.chain && tx.hardfork) || tx.common));
 
     callback = callback || function() {
@@ -235,7 +234,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             var rawTransaction = '0x' + rlpEncoded;
             var transactionHash = utils.keccak256(rawTransaction);
 
-            return {
+            var result = {
                 messageHash: '0x' + Buffer.from(ethTx.hash(false)).toString('hex'),
                 v: '0x' + Buffer.from(ethTx.v).toString('hex'),
                 r: '0x' + Buffer.from(ethTx.r).toString('hex'),
@@ -244,13 +243,13 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                 transactionHash: transactionHash
             };
 
+            callback(null, result);
+            return result;
+
         } catch (e) {
             callback(e);
             return Promise.reject(e);
         }
-
-        callback(null, result);
-        return result;
     }
 
 

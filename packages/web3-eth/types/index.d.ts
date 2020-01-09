@@ -38,6 +38,7 @@ import {
     LogsOptions,
     PastLogsOptions
 } from 'web3-core';
+import {RevertInstructionError, TransactionRevertInstructionError} from 'web3-core-helpers';
 import {Subscription} from 'web3-core-subscriptions';
 import {AbiCoder} from 'web3-eth-abi';
 import {Accounts} from 'web3-eth-accounts';
@@ -294,7 +295,7 @@ export class Eth {
     sendTransaction(
         transactionConfig: TransactionConfig,
         callback?: (error: Error, hash: string) => void
-    ): PromiEvent<TransactionReceipt>;
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
     sendSignedTransaction(
         signedTransactionData: string,
@@ -327,20 +328,20 @@ export class Eth {
         ) => void
     ): Promise<RLPEncodedTransaction>;
 
-    call(transactionConfig: TransactionConfig): Promise<string>;
+    call(transactionConfig: TransactionConfig): Promise<string | RevertInstructionError>;
     call(
         transactionConfig: TransactionConfig,
         defaultBlock?: BlockNumber
-    ): Promise<string>;
+    ): Promise<string | RevertInstructionError>;
     call(
         transactionConfig: TransactionConfig,
         callback?: (error: Error, data: string) => void
-    ): Promise<string>;
+    ): Promise<string | RevertInstructionError>;
     call(
         transactionConfig: TransactionConfig,
         defaultBlock: BlockNumber,
         callback: (error: Error, data: string) => void
-    ): Promise<string>;
+    ): Promise<string | RevertInstructionError>;
 
     estimateGas(
         transactionConfig: TransactionConfig,

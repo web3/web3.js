@@ -19,6 +19,8 @@ matrix:
     - node_js: 10
       env: TEST=e2e_truffle
     - node_js: 10
+      env: TEST=e2e_mosaic
+    - node_js: 10
       env: TEST=e2e_browsers
       addons:
         chrome: stable
@@ -26,6 +28,8 @@ matrix:
   allow_failures:
     - node_js: 10
       env: TEST=e2e_truffle
+    - node_js: 10
+      env: TEST=e2e_mosaic
 
 addons:
   apt:
@@ -45,7 +49,7 @@ before_install:
   - export DISPLAY=:99.0
   - export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 install:
-  - if [ $TEST != "e2e_truffle" ]; then
+  - if [[ $TEST != "e2e_truffle" ]] && [[ $TEST != "e2e_mosaic" ]]; then
       npm install;
     fi
 script:
