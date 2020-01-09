@@ -118,6 +118,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 
+- Fix crash when decoding events with identical signatures, differently indexed args (#3272)
 - Fix user supplied callback not fired in eth.accounts.signTransaction (#3283)
 - Fix minified bundle (#3256)
 - ``defaultBlock`` property handling fixed (#3247)
