@@ -460,7 +460,7 @@ Contract.prototype._decodeEventABI = function (data) {
             event = {
                 anonymous: true,
                 inputs: []
-            }
+            };
         }
     }
 
