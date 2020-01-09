@@ -68,6 +68,10 @@ export class errors {
     static InvalidProvider(): Error;
     static InvalidResponse(result: Error): Error;
     static ConnectionTimeout(ms: string): Error;
+    static ConnectionNotOpenError(): Error;
+    static MaxAttemptsReachedOnReconnectingError(): Error;
+    static PendingRequestsOnReconnectingError(): Error;
+    static ConnectionClosedError(event: {code: number, reason: string}): Error;
     static RevertInstructionError(reason: string, signature: string): RevertInstructionError
     static TransactionRevertInstructionError(reason: string, signature: string, receipt: object): TransactionRevertInstructionError
     static TransactionError(message: string, receipt: object): TransactionError
