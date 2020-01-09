@@ -266,11 +266,11 @@ WebsocketProvider.prototype._parseResponse = function (data) {
                     return;
                 }
 
-                _this.emit(_this.ERROR, errors.ConnectionTimeoutError(_this._customTimeout));
+                _this.emit(_this.ERROR, errors.ConnectionTimeout(_this._customTimeout));
 
                 if (_this.requestQueue.size > 0) {
                     _this.requestQueue.forEach(function (request, key) {
-                        request.callback(errors.ConnectionTimeoutError(_this._customTimeout));
+                        request.callback(errors.ConnectionTimeout(_this._customTimeout));
                         _this.requestQueue.delete(key);
                     });
                 }

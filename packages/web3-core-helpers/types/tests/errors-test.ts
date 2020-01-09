@@ -37,8 +37,35 @@ errors.InvalidResponse(new Error('hey'));
 // $ExpectType Error
 errors.ConnectionTimeout('timeout');
 
+// $ExpectType Error
+errors.ConnectionNotOpenError();
+
+// $ExpectType Error
+errors.MaxAttemptsReachedOnReconnectingError();
+
+// $ExpectType Error
+errors.PendingRequestsOnReconnectingError();
+
+// $ExpectType Error
+errors.ConnectionClosedError({code: 100, reason: 'reason'});
+
 // $ExpectType RevertInstructionError
 errors.RevertInstructionError('reason', 'signature');
 
 // $ExpectType TransactionRevertInstructionError
 errors.TransactionRevertInstructionError('reason', 'signature', {});
+
+// $ExpectType TransactionError
+errors.TransactionError('reason', {});
+
+// $ExpectType TransactionError
+errors.NoContractAddressFoundError({});
+
+// $ExpectType TransactionError
+errors.ContractCodeNotStoredError({});
+
+// $ExpectType TransactionError
+errors.TransactionRevertedWithoutReasonError({});
+
+// $ExpectType TransactionError
+errors.TransactionOutOfGasError({});
