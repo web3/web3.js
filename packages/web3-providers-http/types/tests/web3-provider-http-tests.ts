@@ -21,6 +21,8 @@
  */
 
 import { HttpProvider, JsonRpcResponse, JsonRpcPayload, HttpProviderOptions } from 'web3-providers-http';
+import * as http from 'http';
+import * as https from 'https';
 
 const payload: JsonRpcPayload = {jsonrpc: '', id: 0, method: '', params: []};
 
@@ -32,7 +34,12 @@ const options: HttpProviderOptions = {
             value: '*'
         }
     ],
-    withCredentials: false
+    withCredentials: false,
+    agent: {
+        baseUrl: 'base',
+        http: new http.Agent({}),
+        https: new https.Agent({})
+    }
 };
 
 const httpProvider = new HttpProvider('http://localhost:8545', options);

@@ -202,11 +202,11 @@ var account = {
  * @param {Array} abi
  * @param {String} address
  * @param {providers} provider
- * @param {Object}options
+ * @param {Object} options
  *
  * @returns {Contract}
  */
-var getStandAloneContractInstance = function(abi, address, provider, options) {
+var getStandAloneContractInstance = function (abi, address, provider, options) {
     StandAloneContract.setProvider(provider);
     return new StandAloneContract(abi, address, options);
 };
@@ -219,11 +219,11 @@ var getStandAloneContractInstance = function(abi, address, provider, options) {
  * @param {Array} abi
  * @param {String} address
  * @param {providers} provider
- * @param {Object}options
+ * @param {Object} options
  *
  * @returns {Contract}
  */
-var getEthContractInstance = function(abi, address, provider, options) {
+var getEthContractInstance = function (abi, address, provider, options) {
     var eth = new Eth(provider);
     const contract = new eth.Contract(abi, address, options);
 
@@ -233,41 +233,146 @@ var getEthContractInstance = function(abi, address, provider, options) {
 /**
  * @param {getEthContractInstance|getStandAloneContractInstance} contractFactory
  */
-var runTests = function(contractFactory) {
-    describe('instantiation', function() {
-        it('should transform address from checksum addressess', function() {
+var runTests = function (contractFactory) {
+    describe('instantiation', function () {
+        it('should transform address from checksum addressess', function () {
             var provider = new FakeIpcProvider();
 
             var contract = contractFactory(abi, address, provider);
 
             assert.equal(contract.options.address, address);
         });
-        it('should transform address to checksum address', function() {
+        it('should transform address to checksum address', function () {
             var provider = new FakeIpcProvider();
 
             var contract = contractFactory(abi, address, provider);
 
             assert.equal(contract.options.address, address);
         });
-        it('should fail on invalid address', function() {
+        it('should fail on invalid address', function () {
             var provider = new FakeIpcProvider();
 
-            var test = function() {
+            var test = function () {
                 contractFactory(abi, '0x11F4D0A3c12e86B4b5F39B213F7E19D048276DAe', provider);
             };
 
             assert.throws(test);
         });
-        it('should fail on invalid address as options.from', function() {
+        it('should fail on invalid address as options.from', function () {
             var provider = new FakeIpcProvider();
 
-            var test = function() {
+            var test = function () {
                 contractFactory(abi, address, provider, {from: '0x11F4D0A3c12e86B4b5F39B213F7E19D048276DAe'});
             };
 
             assert.throws(test);
         });
-        it('.clone() should properly clone the contract instance', function() {
+        it('should define the handleRevert object property if passed over the options', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {handleRevert: true});
+
+            assert.equal(contract.handleRevert, true);
+            assert.equal(contract.options.handleRevert, true);
+        });
+        it('should update the handleRevert property in the options object', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {handleRevert: false});
+
+            contract.handleRevert = true;
+
+            assert.equal(contract.options.handleRevert, true);
+        });
+        it('should define the defaultCommon object property if passed over the options', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {common: true});
+
+            assert.equal(contract.defaultCommon, true);
+            assert.equal(contract.options.common, true);
+        });
+        it('should update the defaultCommon property in the options object', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {common: false});
+
+            contract.defaultCommon = true;
+
+            assert.equal(contract.options.common, true);
+        });
+        it('should define the defaultHardfork object property if passed over the options', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {hardfork: 'istanbul'});
+
+            assert.equal(contract.defaultHardfork, 'istanbul');
+            assert.equal(contract.options.hardfork, 'istanbul');
+        });
+        it('should update the defaultHardfork property in the options object', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {hardfork: false});
+
+            contract.defaultHardfork = true;
+
+            assert.equal(contract.options.hardfork, true);
+        });
+        it('should define the defaultChain object property if passed over the options', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {chain: 'mainnet'});
+
+            assert.equal(contract.defaultChain, 'mainnet');
+            assert.equal(contract.options.chain, 'mainnet');
+        });
+        it('should update the defaultChain property in the options object', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {chain: false});
+
+            contract.defaultChain = true;
+
+            assert.equal(contract.options.chain, true);
+        });
+        it('should define the transactionPollingTimeout object property if passed over the options', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {transactionPollingTimeout: 0});
+
+            assert.equal(contract.transactionPollingTimeout, 0);
+            assert.equal(contract.options.transactionPollingTimeout, 0);
+        });
+        it('should update the transactionPollingTimeout property in the options object', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {transactionPollingTimeout: 1});
+
+            contract.transactionPollingTimeout = 0;
+
+            assert.equal(contract.options.transactionPollingTimeout, 0);
+        });
+        it('should define the transactionConfirmationBlocks object property if passed over the options', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {transactionConfirmationBlocks: 0});
+
+            assert.equal(contract.transactionConfirmationBlocks, 0);
+            assert.equal(contract.options.transactionConfirmationBlocks, 0);
+        });
+        it('should update the transactionConfirmationBlocks property in the options object', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {transactionConfirmationBlocks: 1});
+
+            contract.transactionConfirmationBlocks = 0;
+
+            assert.equal(contract.options.transactionConfirmationBlocks, 0);
+        });
+        it('should define the transactionBlockTimeout object property if passed over the options', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {transactionBlockTimeout: 0});
+
+            assert.equal(contract.transactionBlockTimeout, 0);
+            assert.equal(contract.options.transactionBlockTimeout, 0);
+        });
+        it('should update the transactionBlockTimeout property in the options object', function () {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, provider, {transactionBlockTimeout: 1});
+
+            contract.transactionBlockTimeout = 0;
+
+            assert.equal(contract.options.transactionBlockTimeout, 0);
+        });
+        it('.clone() should properly clone the contract instance', function () {
             var provider = new FakeIpcProvider();
 
             var fromAddress = '0xDDfFD0A3C12e86b4b5f39B213f7e19d048276daE';
@@ -317,8 +422,8 @@ var runTests = function(contractFactory) {
         });
     });
 
-    describe('provider assignment', function() {
-        it('should assign a provider to a new instance without modifying old instance', function() {
+    describe('provider assignment', function () {
+        it('should assign a provider to a new instance without modifying old instance', function () {
             var provider1 = new FakeIpcProvider();
             var provider2 = new FakeHttpProvider();
 
@@ -330,8 +435,8 @@ var runTests = function(contractFactory) {
         });
     });
 
-    describe('internal method', function() {
-        it('_encodeEventABI should return the encoded event object without topics', function() {
+    describe('internal method', function () {
+        it('_encodeEventABI should return the encoded event object without topics', function () {
             var provider = new FakeIpcProvider();
 
             var contract = contractFactory(abi, address, provider);
@@ -358,7 +463,7 @@ var runTests = function(contractFactory) {
             });
 
         });
-        it('_encodeEventABI should return the encoded event object with topics', function() {
+        it('_encodeEventABI should return the encoded event object with topics', function () {
             var provider = new FakeIpcProvider();
 
             var contract = contractFactory(abi, address, provider);
@@ -386,7 +491,7 @@ var runTests = function(contractFactory) {
             });
 
         });
-        it('_encodeEventABI should return the encoded event object with topics and multiple choices', function() {
+        it('_encodeEventABI should return the encoded event object with topics and multiple choices', function () {
             var provider = new FakeIpcProvider();
             var contract = contractFactory(abi, address, provider);
 
@@ -415,7 +520,7 @@ var runTests = function(contractFactory) {
             });
 
         });
-        it('_decodeEventABI should return the decoded event object with topics', function() {
+        it('_decodeEventABI should return the decoded event object with topics', function () {
             var provider = new FakeIpcProvider();
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
@@ -458,7 +563,7 @@ var runTests = function(contractFactory) {
             assert.equal(result.returnValues.t2, 8);
 
         });
-        it('_decodeMethodReturn should return the decoded values', function() {
+        it('_decodeMethodReturn should return the decoded values', function () {
             var provider = new FakeIpcProvider();
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
@@ -480,7 +585,7 @@ var runTests = function(contractFactory) {
             assert.equal(result.value, 10);
 
         });
-        it('_decodeMethodReturn should return a single decoded value', function() {
+        it('_decodeMethodReturn should return a single decoded value', function () {
             var provider = new FakeIpcProvider();
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
@@ -494,11 +599,11 @@ var runTests = function(contractFactory) {
             assert.equal(result, address);
 
         });
-        it('_executeMethod as instantSealEngine should sendTransaction and check for receipts', function(done) {
+        it('_executeMethod as instantSealEngine should sendTransaction and check for receipts', function (done) {
             var provider = new FakeIpcProvider();
             var signature = sha3('mySend(address,uint256)').slice(0, 10);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: signature + '000000000000000000000000' + addressLowercase.replace('0x', '') + '000000000000000000000000000000000000000000000000000000000000000a',
@@ -509,7 +614,7 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
             });
@@ -546,11 +651,11 @@ var runTests = function(contractFactory) {
             var deploy = contract._executeMethod.call(txObject, 'send', {
                 from: address2,
                 gasPrice: '100000000000000'
-            }, function(err, result) {
+            }, function (err, result) {
                 // tx hash
                 assert.equal(result, '0x1234000000000000000000000000000000000000000000000000000000056789');
             })
-                .on('receipt', function(result) {
+                .on('receipt', function (result) {
 
                     assert.deepEqual(result, {
                         contractAddress: address,
@@ -564,11 +669,11 @@ var runTests = function(contractFactory) {
                 });
 
         });
-        it('_executeMethod should sendTransaction and check for receipts', function(done) {
+        it('_executeMethod should sendTransaction and check for receipts', function (done) {
             var provider = new FakeIpcProvider();
             var signature = sha3('mySend(address,uint256)').slice(0, 10);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: signature + '000000000000000000000000' + addressLowercase.replace('0x', '') + '000000000000000000000000000000000000000000000000000000000000000a',
@@ -579,13 +684,13 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
             });
             provider.injectResult(null);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params, ['newHeads']);
             });
@@ -602,7 +707,7 @@ var runTests = function(contractFactory) {
                 }
             });
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
             });
@@ -614,7 +719,7 @@ var runTests = function(contractFactory) {
                 blockHash: '0xbf1234',
                 gasUsed: '0x0'
             });
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_unsubscribe');
                 assert.deepEqual(payload.params, ['0x1234567']);
             });
@@ -644,11 +749,11 @@ var runTests = function(contractFactory) {
             var deploy = contract._executeMethod.call(txObject, 'send', {
                 from: address2,
                 gasPrice: '100000000000000'
-            }, function(err, result) {
+            }, function (err, result) {
                 // tx hash
                 assert.equal(result, '0x1234000000000000000000000000000000000000000000000000000000056789');
             })
-                .on('receipt', function(result) {
+                .on('receipt', function (result) {
                     assert.deepEqual(result, {
                         contractAddress: address,
                         cumulativeGasUsed: 10,
@@ -661,11 +766,11 @@ var runTests = function(contractFactory) {
                 }).catch(console.log);
 
         });
-        it('_executeMethod should call and return values', function(done) {
+        it('_executeMethod should call and return values', function (done) {
             var provider = new FakeIpcProvider();
             var signature = sha3('balance(address)').slice(0, 10);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: signature + '000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -703,10 +808,10 @@ var runTests = function(contractFactory) {
                 {
                     from: address2
                 },
-                function(err, result) {
+                function (err, result) {
                     assert.equal(result, '10');
                 })
-                .then(function(result) {
+                .then(function (result) {
                     assert.equal(result, '10');
                     done();
                 });
@@ -714,11 +819,11 @@ var runTests = function(contractFactory) {
         });
     });
 
-    describe('event', function() {
-        it('should create event subscription', function(done) {
+    describe('event', function () {
+        it('should create event subscription', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'Changed(address,uint256,uint256,uint256)';
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
@@ -731,7 +836,7 @@ var runTests = function(contractFactory) {
                 });
             });
             provider.injectResult('0x123');
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_unsubscribe');
                 done();
@@ -767,7 +872,7 @@ var runTests = function(contractFactory) {
                         from: address
                     }
                 },
-                function(err, result, sub) {
+                function (err, result, sub) {
                     assert.equal(result.returnValues.from, address);
                     assert.equal(result.returnValues.amount, 1);
                     assert.equal(result.returnValues.t1, 1);
@@ -778,11 +883,11 @@ var runTests = function(contractFactory) {
 
         });
 
-        it('should create event from the events object and use the fromBlock option', function(done) {
+        it('should create event from the events object and use the fromBlock option', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_getLogs');
             });
@@ -815,7 +920,7 @@ var runTests = function(contractFactory) {
                         '0000000000000000000000000000000000000000000000000000000000000005'
                 }]);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
@@ -829,7 +934,7 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x321');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_unsubscribe');
                 done();
@@ -860,7 +965,7 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
             var count = 0;
             var event = contract.events.Changed({fromBlock: 0, filter: {from: address}})
-                .on('data', function(result) {
+                .on('data', function (result) {
                     count++;
 
                     if (count === 1) {
@@ -890,11 +995,11 @@ var runTests = function(contractFactory) {
         });
 
 
-        it('should create event from the events object using a signature and callback', function(done) {
+        it('should create event from the events object using a signature and callback', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
@@ -908,7 +1013,7 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x321');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_unsubscribe');
                 done();
@@ -937,7 +1042,7 @@ var runTests = function(contractFactory) {
             });
 
             var contract = contractFactory(abi, address, provider);
-            var event = contract.events['0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651']({filter: {from: address}}, function(err, result) {
+            var event = contract.events['0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651']({filter: {from: address}}, function (err, result) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
                 assert.equal(result.returnValues.t1, 1);
@@ -947,11 +1052,11 @@ var runTests = function(contractFactory) {
             });
         });
 
-        it('should create event from the events object using event name and parameters', function(done) {
+        it('should create event from the events object using event name and parameters', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
@@ -965,7 +1070,7 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x321');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_unsubscribe');
                 done();
@@ -994,7 +1099,7 @@ var runTests = function(contractFactory) {
             });
 
             var contract = contractFactory(abi, address, provider);
-            var event = contract.events[signature]({filter: {from: address}}, function(err, result) {
+            var event = contract.events[signature]({filter: {from: address}}, function (err, result) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
                 assert.equal(result.returnValues.t1, 1);
@@ -1004,11 +1109,11 @@ var runTests = function(contractFactory) {
             });
         });
 
-        it('should create event using the  function and unsubscribe after one log received', function(done) {
+        it('should create event using the  function and unsubscribe after one log received', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
@@ -1022,7 +1127,7 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x321');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_unsubscribe');
             });
@@ -1072,7 +1177,7 @@ var runTests = function(contractFactory) {
 
             var count = 1;
             var contract = contractFactory(abi, address, provider);
-            contract.once('Changed', {filter: {from: address}}, function(err, result, sub) {
+            contract.once('Changed', {filter: {from: address}}, function (err, result, sub) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
                 assert.equal(result.returnValues.t1, 1);
@@ -1086,11 +1191,11 @@ var runTests = function(contractFactory) {
             });
         });
 
-        it('should create event using the  function and unsubscribe after one log received when no options are provided', function(done) {
+        it('should create event using the  function and unsubscribe after one log received when no options are provided', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
@@ -1104,7 +1209,7 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x321');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_unsubscribe');
             });
@@ -1154,7 +1259,7 @@ var runTests = function(contractFactory) {
 
             var count = 1;
             var contract = contractFactory(abi, address, provider);
-            contract.once('Changed', function(err, result, sub) {
+            contract.once('Changed', function (err, result, sub) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
                 assert.equal(result.returnValues.t1, 1);
@@ -1168,18 +1273,18 @@ var runTests = function(contractFactory) {
             });
         });
 
-        it('should throw an error when using the once() function and no callback is provided', function() {
+        it('should throw an error when using the once() function and no callback is provided', function () {
             var provider = new FakeIpcProvider();
 
             var contract = contractFactory(abi, address, provider);
             assert.throws(contract.once.bind(contract, 'Changed', {filter: {from: address}}));
         });
 
-        it('should create event subscription and fire the changed event, if log.removed = true', function(done) {
+        it('should create event subscription and fire the changed event, if log.removed = true', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
@@ -1193,7 +1298,7 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x321');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_unsubscribe');
             });
@@ -1245,7 +1350,7 @@ var runTests = function(contractFactory) {
             var count = 1;
             var contract = contractFactory(abi, address, provider);
             contract.events.Changed({filter: {from: address}})
-                .on('data', function(result) {
+                .on('data', function (result) {
                     assert.equal(result.returnValues.from, address);
                     assert.equal(result.returnValues.amount, 1);
                     assert.equal(result.returnValues.t1, 1);
@@ -1255,7 +1360,7 @@ var runTests = function(contractFactory) {
                     count++;
 
                 })
-                .on('changed', function(result) {
+                .on('changed', function (result) {
                     assert.equal(result.returnValues.from, address);
                     assert.equal(result.returnValues.amount, 1);
                     assert.equal(result.returnValues.t1, 1);
@@ -1269,11 +1374,11 @@ var runTests = function(contractFactory) {
 
         });
 
-        it('should create all event filter and receive two logs', function(done) {
+        it('should create all event filter and receive two logs', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
@@ -1283,7 +1388,7 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x333');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_unsubscribe');
                 done();
@@ -1294,7 +1399,7 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
 
             var count = 0;
-            var event = contract.events.allEvents(function(err, result) {
+            var event = contract.events.allEvents(function (err, result) {
                 count++;
 
                 if (count === 1) {
@@ -1357,14 +1462,14 @@ var runTests = function(contractFactory) {
             });
         });
     });
-    describe('with methods', function() {
-        it('should change the address', function() {
+    describe('with methods', function () {
+        it('should change the address', function () {
             var provider = new FakeIpcProvider();
             var signature = 'balance(address)';
 
             var contract = contractFactory(abi, address, provider);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -1378,7 +1483,7 @@ var runTests = function(contractFactory) {
             // change address
             contract.options.address = address2;
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -1390,7 +1495,7 @@ var runTests = function(contractFactory) {
             contract.methods.balance(address).call({from: address});
         });
 
-        it('should reset functions when resetting json interface', function() {
+        it('should reset functions when resetting json interface', function () {
             var provider = new FakeIpcProvider();
 
             var contract = contractFactory(abi, '', provider);
@@ -1426,7 +1531,7 @@ var runTests = function(contractFactory) {
             assert.isUndefined(contract.events.Changed);
         });
 
-        it('should encode a function call', function() {
+        it('should encode a function call', function () {
             var provider = new FakeIpcProvider();
             var signature = 'balance(address)';
 
@@ -1437,7 +1542,7 @@ var runTests = function(contractFactory) {
             assert.equal(result, sha3(signature).slice(0, 10) + '000000000000000000000000' + addressLowercase.replace('0x', ''));
         });
 
-        it('should encode a constructor call with pre set data', function() {
+        it('should encode a constructor call with pre set data', function () {
             var provider = new FakeIpcProvider();
 
             var contract = contractFactory(abi, '', provider, {data: '0x1234'});
@@ -1449,7 +1554,7 @@ var runTests = function(contractFactory) {
             assert.equal(result, '0x1234' + '000000000000000000000000' + addressLowercase.replace('0x', '') + '000000000000000000000000000000000000000000000000000000000000000a');
         });
 
-        it('should encode a constructor call with passed data', function() {
+        it('should encode a constructor call with passed data', function () {
             var provider = new FakeIpcProvider();
 
             var contract = contractFactory(abi, '', provider);
@@ -1463,11 +1568,11 @@ var runTests = function(contractFactory) {
         });
 
 
-        it('should estimate a function', function(done) {
+        it('should estimate a function', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'balance(address)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_estimateGas');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -1478,17 +1583,17 @@ var runTests = function(contractFactory) {
 
             var contract = contractFactory(abi, address, provider);
 
-            contract.methods.balance(address).estimateGas(function(err, res) {
+            contract.methods.balance(address).estimateGas(function (err, res) {
                 assert.deepEqual(res, 50);
                 done();
             });
         });
 
-        it('should estimate the constructor', function(done) {
+        it('should estimate the constructor', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'balance(address)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_estimateGas');
                 assert.deepEqual(payload.params, [{
                     data: '0x1234000000000000000000000000' + addressLowercase.replace('0x', '') + '0000000000000000000000000000000000000000000000000000000000000032'
@@ -1500,16 +1605,16 @@ var runTests = function(contractFactory) {
 
             contract.deploy({
                 arguments: [address, 50]
-            }).estimateGas(function(err, res) {
+            }).estimateGas(function (err, res) {
                 assert.deepEqual(res, 10);
                 done();
             });
         });
 
-        it('should send with many parameters', function(done) {
+        it('should send with many parameters', function (done) {
             var provider = new FakeIpcProvider();
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: '0x8708f4a12454534500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000000c30786666323435343533343500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004ff24545345000000000000000000000000000000000000000000000000000000534500000000000000000000000000000000000000000000000000000000000045450000000000000000000000000000000000000000000000000000000000004533450000000000000000000000000000000000000000000000000000000000',
@@ -1520,16 +1625,16 @@ var runTests = function(contractFactory) {
 
             var contract = contractFactory(abi, address, provider);
 
-            contract.methods.hasALotOfParams('0x24545345', '0xff24545345', ['0xff24545345', '0x5345', '0x4545', '0x453345']).call(function(err, res) {
+            contract.methods.hasALotOfParams('0x24545345', '0xff24545345', ['0xff24545345', '0x5345', '0x4545', '0x453345']).call(function (err, res) {
                 assert.deepEqual(res, address);
                 done();
             });
         });
 
-        it('should send overload functions with zero parameters', function(done) {
+        it('should send overload functions with zero parameters', function (done) {
             var provider = new FakeIpcProvider();
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: '0xbb853481',
@@ -1539,16 +1644,16 @@ var runTests = function(contractFactory) {
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000005');
 
             var contract = contractFactory(abi, address, provider);
-            contract.methods.overloadedFunction().call(function(err, res) {
+            contract.methods.overloadedFunction().call(function (err, res) {
                 assert.equal(res, 5);
                 done();
             });
         });
 
-        it('should send overload functions with one parameters', function(done) {
+        it('should send overload functions with one parameters', function (done) {
             var provider = new FakeIpcProvider();
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: '0x533678270000000000000000000000000000000000000000000000000000000000000006',
@@ -1559,17 +1664,17 @@ var runTests = function(contractFactory) {
 
             var contract = contractFactory(abi, address, provider);
 
-            contract.methods.overloadedFunction(6).call(function(err, res) {
+            contract.methods.overloadedFunction(6).call(function (err, res) {
                 assert.equal(res, 6);
                 done();
             });
         });
 
-        it('should call constant function', function(done) {
+        it('should call constant function', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'balance(address)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -1580,17 +1685,17 @@ var runTests = function(contractFactory) {
 
             var contract = contractFactory(abi, address, provider);
 
-            contract.methods.balance(address).call(function(err, res) {
+            contract.methods.balance(address).call(function (err, res) {
                 assert.deepEqual(res, '50');
                 done();
             });
         });
 
-        it('should call constant function with default block', function(done) {
+        it('should call constant function with default block', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'balance(address)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -1602,16 +1707,16 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
 
             contract.methods.balance(address).call(11)
-                .then(function(r) {
+                .then(function (r) {
                     assert.deepEqual(r, '50');
                     done();
                 });
         });
 
-        it('should call constant concurrently', function(done) {
+        it('should call constant concurrently', function (done) {
             var provider = new FakeIpcProvider();
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3('balance(address)').slice(0, 10) + '000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -1619,7 +1724,7 @@ var runTests = function(contractFactory) {
                 }, 'latest']);
             });
             provider.injectResult('0x000000000000000000000000000000000000000000000000000000000000000a');
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3('owner()').slice(0, 10),
@@ -1627,7 +1732,7 @@ var runTests = function(contractFactory) {
                 }, 'latest']);
             });
             provider.injectResult('0x00000000000000000000000011f4d0a3c12e86b4b5f39b213f7e19d048276dae');
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3('getStr()').slice(0, 10),
@@ -1643,7 +1748,7 @@ var runTests = function(contractFactory) {
                 contract.methods.balance(address).call(),
                 contract.methods.owner().call(),
                 contract.methods.getStr().call()
-            ).spread(function(m1, m2, m3) {
+            ).spread(function (m1, m2, m3) {
                 assert.deepEqual(m1, '10');
                 assert.deepEqual(m2, '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe');
                 assert.deepEqual(m3, 'Hello!%!');
@@ -1652,13 +1757,13 @@ var runTests = function(contractFactory) {
             });
         });
 
-        it('should return an error when returned string is 0x', function(done) {
+        it('should return an error when returned string is 0x', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'getStr()';
 
             var contract = contractFactory(abi, address, provider);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10),
@@ -1669,7 +1774,7 @@ var runTests = function(contractFactory) {
 
             provider.injectResult('0x');
 
-            contract.methods.getStr().call({from: address2}, function(err, result) {
+            contract.methods.getStr().call({from: address2}, function (err, result) {
                 // console.log(err, result)
                 assert.isTrue(err instanceof Error);
                 done();
@@ -1677,13 +1782,13 @@ var runTests = function(contractFactory) {
 
         });
 
-        it('should return an empty string when 0x0', function(done) {
+        it('should return an empty string when 0x0', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'getStr()';
 
             var contract = contractFactory(abi, address, provider);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10),
@@ -1694,18 +1799,18 @@ var runTests = function(contractFactory) {
 
             provider.injectResult('0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000');
 
-            contract.methods.getStr().call({from: address2}, function(err, result) {
+            contract.methods.getStr().call({from: address2}, function (err, result) {
                 assert.equal(result, '');
                 done();
             });
 
         });
 
-        it('should sendTransaction and check for receipts with formatted logs', function(done) {
+        it('should sendTransaction and check for receipts with formatted logs', function (done) {
             var provider = new FakeIpcProvider();
             var signature = sha3('mySend(address,uint256)').slice(0, 10);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: signature + '000000000000000000000000' + addressLowercase.replace('0x', '') + '000000000000000000000000000000000000000000000000000000000000000a',
@@ -1716,13 +1821,13 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
             });
             provider.injectResult(null);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params, ['newHeads']);
             });
@@ -1739,7 +1844,7 @@ var runTests = function(contractFactory) {
                 }
             });
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
             });
@@ -1780,7 +1885,7 @@ var runTests = function(contractFactory) {
                         '0000000000000000000000000000000000000000000000000000000000000008'
                 }]
             });
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_unsubscribe');
                 assert.deepEqual(payload.params, ['0x1234567']);
             });
@@ -1790,7 +1895,7 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
 
             contract.methods.mySend(address, 10).send({from: address2, gasPrice: '21345678654321'})
-                .on('receipt', function(receipt) {
+                .on('receipt', function (receipt) {
                     // console.log(receipt);
                     // console.log(receipt.events[0].raw);
                     // console.log(receipt.events[1].raw);
@@ -1866,11 +1971,11 @@ var runTests = function(contractFactory) {
 
         });
 
-        it('should sendTransaction and check for receipts with formatted logs when multiple of same event', function(done) {
+        it('should sendTransaction and check for receipts with formatted logs when multiple of same event', function (done) {
             var provider = new FakeIpcProvider();
             var signature = sha3('mySend(address,uint256)').slice(0, 10);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: signature + '000000000000000000000000' + addressLowercase.replace('0x', '') + '000000000000000000000000000000000000000000000000000000000000000a',
@@ -1881,13 +1986,13 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
             });
             provider.injectResult(null);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params, ['newHeads']);
             });
@@ -1904,7 +2009,7 @@ var runTests = function(contractFactory) {
                 }
             });
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
             });
@@ -1946,7 +2051,7 @@ var runTests = function(contractFactory) {
                         '0000000000000000000000000000000000000000000000000000000000000008'
                 }]
             });
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_unsubscribe');
                 assert.deepEqual(payload.params, ['0x1234567']);
             });
@@ -1956,7 +2061,7 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
 
             contract.methods.mySend(address, 10).send({from: address2, gasPrice: '21345678654321'})
-                .on('receipt', function(receipt) {
+                .on('receipt', function (receipt) {
 
                     // wont throw if it errors ?! nope: causes a timeout
                     assert.deepEqual(receipt, {
@@ -2032,11 +2137,11 @@ var runTests = function(contractFactory) {
 
         });
 
-        it('should sendTransaction and check for receipts with formatted logs using the HTTP provider', function(done) {
+        it('should sendTransaction and check for receipts with formatted logs using the HTTP provider', function (done) {
             var provider = new FakeHttpProvider();
             var signature = sha3('mySend(address,uint256)').slice(0, 10);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: signature + '000000000000000000000000' + addressLowercase.replace('0x', '') + '000000000000000000000000000000000000000000000000000000000000000a',
@@ -2047,14 +2152,14 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
             });
             provider.injectResult(null);
 
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
             });
@@ -2095,7 +2200,7 @@ var runTests = function(contractFactory) {
                         '0000000000000000000000000000000000000000000000000000000000000008'
                 }]
             });
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_unsubscribe');
                 assert.deepEqual(payload.params, ['0x1234567']);
             });
@@ -2105,7 +2210,7 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
 
             contract.methods.mySend(address, 10).send({from: address2, gasPrice: '21345678654321'})
-                .on('receipt', function(receipt) {
+                .on('receipt', function (receipt) {
                     // console.log(receipt);
                     // console.log(receipt.events[0].raw);
                     // console.log(receipt.events[1].raw);
@@ -2181,11 +2286,11 @@ var runTests = function(contractFactory) {
 
         });
 
-        it('should sendTransaction and receive multiple confirmations', function(done) {
+        it('should sendTransaction and receive multiple confirmations', function (done) {
             var provider = new FakeIpcProvider();
             var signature = sha3('mySend(address,uint256)').slice(0, 10);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: signature + '000000000000000000000000' + addressLowercase.replace('0x', '') + '000000000000000000000000000000000000000000000000000000000000000a',
@@ -2196,7 +2301,7 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
             });
@@ -2212,7 +2317,7 @@ var runTests = function(contractFactory) {
                 logs: []
             });
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params, ['newHeads']);
             });
@@ -2223,7 +2328,7 @@ var runTests = function(contractFactory) {
             var count = 0;
             contract.methods.mySend(address, 10)
                 .send({from: address2, gasPrice: '21345678654321'})
-                .on('confirmation', function(confirmationNumber, receipt) {
+                .on('confirmation', function (confirmationNumber, receipt) {
                     count++;
                     if (count === 1) {
                         assert.deepEqual(receipt, {
@@ -2278,11 +2383,11 @@ var runTests = function(contractFactory) {
             });
         });
 
-        it('should sendTransaction to contract function', function() {
+        it('should sendTransaction to contract function', function () {
             var provider = new FakeIpcProvider();
             var signature = 'mySend(address,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
@@ -2299,17 +2404,17 @@ var runTests = function(contractFactory) {
             contract.methods.mySend(address, 17).send({from: address, gasPrice: '234564321234'});
         });
 
-        it('should throw error when trying to send ether to a non payable contract function', function() {
+        it('should throw error when trying to send ether to a non payable contract function', function () {
             var provider = new FakeIpcProvider();
 
             var contract = contractFactory(abi, address, provider);
 
             try {
                 contract.methods.myDisallowedSend(address, 17).send({from: address, value: 123})
-                    .on('error', function(e) {
+                    .on('error', function (e) {
                         assert.isTrue(e instanceof Error, 'Should throw error');
                     })
-                    .catch(function(e) {
+                    .catch(function (e) {
                         assert.isTrue(e instanceof Error, 'Should throw error');
                     });
 
@@ -2318,11 +2423,11 @@ var runTests = function(contractFactory) {
             }
         });
 
-        it('should not throw error when trying to not send ether to a non payable contract function', function(done) {
+        it('should not throw error when trying to not send ether to a non payable contract function', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'myDisallowedSend(address,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
@@ -2340,10 +2445,10 @@ var runTests = function(contractFactory) {
 
             try {
                 contract.methods.myDisallowedSend(address, 17).send({from: address, gasPrice: '23456787654321'})
-                    .on('error', function(e) {
+                    .on('error', function (e) {
                         assert.isFalse(e instanceof Error, 'Should not throw error');
                     })
-                    .catch(function(e) {
+                    .catch(function (e) {
                         assert.isFalse(e instanceof Error, 'Should not throw error');
                     });
 
@@ -2353,11 +2458,11 @@ var runTests = function(contractFactory) {
         });
 
 
-        it('should sendTransaction to contract function using the function namen incl. parameters', function() {
+        it('should sendTransaction to contract function using the function namen incl. parameters', function () {
             var provider = new FakeIpcProvider();
             var signature = sha3('mySend(address,uint256)').slice(0, 10);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: signature +
@@ -2374,11 +2479,11 @@ var runTests = function(contractFactory) {
             contract.methods['mySend(address,uint256)'](address, 17).send({from: address, gasPrice: '23456787654321'});
         });
 
-        it('should sendTransaction to contract function using the signature', function() {
+        it('should sendTransaction to contract function using the signature', function () {
             var provider = new FakeIpcProvider();
             var signature = sha3('mySend(address,uint256)').slice(0, 10);
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: signature +
@@ -2395,11 +2500,11 @@ var runTests = function(contractFactory) {
             contract.methods[signature](address, 17).send({from: address, gasPrice: '1230000000'});
         });
 
-        it('should throw when trying to create a tx object and wrong amount of params', function(done) {
+        it('should throw when trying to create a tx object and wrong amount of params', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'mySend(address,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
@@ -2417,20 +2522,20 @@ var runTests = function(contractFactory) {
 
             var contract = contractFactory(abi, address, provider);
 
-            assert.throws(function() {
+            assert.throws(function () {
                 contract.methods.mySend(address);
             });
 
             setTimeout(done, 1);
         });
 
-        it('should make a call with optional params', function(done) {
+        it('should make a call with optional params', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'balance(address)';
             var count = 0;
 
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 count++;
                 if (count > 1) return;
 
@@ -2448,17 +2553,17 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
 
             contract.methods.balance(address).call({from: address, gas: 50000})
-                .then(function(r) {
+                .then(function (r) {
                     assert.deepEqual(r, '50');
                     done();
                 });
         });
 
-        it('should explicitly make a call with optional params', function(done) {
+        it('should explicitly make a call with optional params', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'balance(address)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -2472,18 +2577,18 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
 
             contract.methods.balance(address).call({from: address, gas: 50000})
-                .then(function(r) {
+                .then(function (r) {
                     assert.deepEqual(r, '50');
                     done();
                 });
 
         });
 
-        it('should explicitly make a call with optional params and defaultBlock', function(done) {
+        it('should explicitly make a call with optional params and defaultBlock', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'balance(address)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -2497,18 +2602,18 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
 
             contract.methods.balance(address).call({from: address, gas: 50000}, 11)
-                .then(function(r) {
+                .then(function (r) {
                     assert.deepEqual(r, '50');
                     done();
                 });
 
         });
 
-        it('should sendTransaction with optional params', function(done) {
+        it('should sendTransaction with optional params', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'mySend(address,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
@@ -2529,11 +2634,11 @@ var runTests = function(contractFactory) {
             contract.methods.mySend(address, 17).send({from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
 
-        it('should sendTransaction and fill in default gasPrice', function(done) {
+        it('should sendTransaction and fill in default gasPrice', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'mySend(address,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_gasPrice');
                 assert.deepEqual(payload.params, []);
             });
@@ -2541,7 +2646,7 @@ var runTests = function(contractFactory) {
             provider.injectResult('0x45656456456456');
 
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
@@ -2560,11 +2665,11 @@ var runTests = function(contractFactory) {
             contract.methods.mySend(address, 17).send({from: address});
         });
 
-        it('should explicitly sendTransaction with optional params', function(done) {
+        it('should explicitly sendTransaction with optional params', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'mySend(address,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
@@ -2586,11 +2691,11 @@ var runTests = function(contractFactory) {
         });
 
 
-        it('should explicitly call sendTransaction with optional params and call callback without error', function(done) {
+        it('should explicitly call sendTransaction with optional params and call callback without error', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'mySend(address,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
 
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
@@ -2612,17 +2717,17 @@ var runTests = function(contractFactory) {
                 gas: 50000,
                 gasPrice: 3000,
                 value: 10000
-            }, function(err) {
+            }, function (err) {
                 assert.equal(err, null);
                 done();
             });
         });
 
-        it('should explicitly estimateGas with optional params', function() {
+        it('should explicitly estimateGas with optional params', function () {
             var provider = new FakeIpcProvider();
             var signature = 'mySend(address,uint256)';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_estimateGas');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
@@ -2641,11 +2746,11 @@ var runTests = function(contractFactory) {
             contract.methods.mySend(address, 17).estimateGas({from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
 
-        it('getPastEvents should get past events and format them correctly', function(done) {
+        it('getPastEvents should get past events and format them correctly', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'testArr(int[])';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getLogs');
                 assert.deepEqual(payload.params, [{
                     address: addressLowercase,
@@ -2693,7 +2798,7 @@ var runTests = function(contractFactory) {
 
             var contract = contractFactory(abi, address, provider);
             contract.getPastEvents('Changed', {filter: {from: address2}})
-                .then(function(result) {
+                .then(function (result) {
 
                     assert.deepEqual(result, [{
                         event: 'Changed',
@@ -2753,11 +2858,11 @@ var runTests = function(contractFactory) {
 
         });
 
-        it('should call testArr method and properly parse result', function(done) {
+        it('should call testArr method and properly parse result', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'testArr(int[])';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
@@ -2774,18 +2879,18 @@ var runTests = function(contractFactory) {
 
             var contract = contractFactory(abi, address, provider);
             contract.methods.testArr([3]).call()
-                .then(function(result) {
+                .then(function (result) {
                     assert.deepEqual(result, '5');
                     done();
                 });
 
         });
 
-        it('should call testArr method, properly parse result and return the result in a callback', function(done) {
+        it('should call testArr method, properly parse result and return the result in a callback', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'testArr(int[])';
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
@@ -2801,19 +2906,19 @@ var runTests = function(contractFactory) {
 
             var contract = contractFactory(abi, address, provider);
 
-            contract.methods.testArr([3]).call(function(err, result) {
+            contract.methods.testArr([3]).call(function (err, result) {
                 assert.deepEqual(result, '5');
                 done();
             });
 
         });
 
-        it('should call owner method, properly', function(done) {
+        it('should call owner method, properly', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'owner()';
 
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10),
@@ -2826,7 +2931,7 @@ var runTests = function(contractFactory) {
 
             var contract = contractFactory(abi, address, provider);
 
-            contract.methods.owner().call(function(err, result) {
+            contract.methods.owner().call(function (err, result) {
                 assert.deepEqual(result, address);
                 done();
             });
@@ -2834,10 +2939,10 @@ var runTests = function(contractFactory) {
         });
 
 
-        it('should decode an struct correctly', function(done) {
+        it('should decode an struct correctly', function (done) {
             var provider = new FakeIpcProvider();
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: '0x2a4aedd50000000000000000000000009cc9a2c777605af16872e0997b3aeb91d96d5d8c',
@@ -2851,7 +2956,7 @@ var runTests = function(contractFactory) {
 
             var contract = contractFactory(abi, address, provider);
 
-            contract.methods.listOfNestedStructs('0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c').call().then(function(result) {
+            contract.methods.listOfNestedStructs('0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c').call().then(function (result) {
                 var expectedArray = [];
                 expectedArray[0] = true;
                 expectedArray['status'] = true;
@@ -2861,10 +2966,10 @@ var runTests = function(contractFactory) {
             });
         });
 
-        it('should call an contract method with an struct as parameter', function(done) {
+        it('should call an contract method with an struct as parameter', function (done) {
             var provider = new FakeIpcProvider();
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: '0x814a4d160000000000000000000000000000000000000000000000000000000000000001',
@@ -2886,13 +2991,13 @@ var runTests = function(contractFactory) {
             });
         });
     });
-    describe('with data', function() {
-        it('should deploy a contract and use callback', function(done) {
+    describe('with data', function () {
+        it('should deploy a contract and use callback', function (done) {
             var provider = new FakeIpcProvider();
 
             provider.injectResult('0x1234567');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: '0x1234567000000000000000000000000555456789012345678901234567890123456789100000000000000000000000000000000000000000000000000000000000000c8',
@@ -2911,17 +3016,17 @@ var runTests = function(contractFactory) {
                 from: address,
                 gas: 50000,
                 gasPrice: 3000
-            }, function(err, result) {
+            }, function (err, result) {
                 assert.equal(err, null);
                 assert.equal(result, '0x1234567');
                 done();
             });
         });
 
-        it('should deploy a contract and use all promise steps', function(done) {
+        it('should deploy a contract and use all promise steps', function (done) {
             var provider = new FakeIpcProvider();
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
 
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
@@ -2934,14 +3039,14 @@ var runTests = function(contractFactory) {
             });
             provider.injectResult('0x5550000000000000000000000000000000000000000000000000000000000032');
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x5550000000000000000000000000000000000000000000000000000000000032']);
             });
             provider.injectResult(null);
 
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params, ['newHeads']);
             });
@@ -2958,7 +3063,7 @@ var runTests = function(contractFactory) {
                 }
             });
 
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x5550000000000000000000000000000000000000000000000000000000000032']);
             });
@@ -2966,7 +3071,7 @@ var runTests = function(contractFactory) {
                 contractAddress: addressLowercase,
                 blockHash: '0xffdd'
             });
-            provider.injectValidation(function(payload) {
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getCode');
                 assert.deepEqual(payload.params, [addressLowercase, 'latest']);
             });
@@ -2983,18 +3088,18 @@ var runTests = function(contractFactory) {
                 gas: 50000,
                 gasPrice: 3000
             })
-                .on('transactionHash', function(value) {
+                .on('transactionHash', function (value) {
                     assert.equal('0x5550000000000000000000000000000000000000000000000000000000000032', value);
                 })
-                .on('receipt', function(receipt) {
+                .on('receipt', function (receipt) {
                     assert.equal(address, receipt.contractAddress);
                     assert.isNull(contract.options.address);
                 })
-                .then(function(newContract) {
+                .then(function (newContract) {
                     assert.equal(newContract.options.address, address);
                     assert.isTrue(newContract !== contract, 'contract objects shouldn\'t the same');
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         done();
                     }, 1);
                 });
@@ -3008,10 +3113,10 @@ var runTests = function(contractFactory) {
     });
 };
 
-describe('typical usage', function() {
+describe('typical usage', function () {
     runTests(getEthContractInstance);
 
-    it('should update contract instance provider when assigned a provider to eth instance that contract instance came from', function() {
+    it('should update contract instance provider when assigned a provider to eth instance that contract instance came from', function () {
         var provider1 = new FakeIpcProvider();
         var provider2 = new FakeHttpProvider();
 
@@ -3025,13 +3130,13 @@ describe('typical usage', function() {
         assert.deepEqual(eth.currentProvider, provider2);
     });
 
-    it('should deploy a contract, sign transaction, and return contract instance', function(done) {
+    it('should deploy a contract, sign transaction, and return contract instance', function (done) {
         var provider = new FakeIpcProvider();
         var eth = new Eth(provider);
 
         eth.accounts.wallet.add(account.privateKey);
 
-        provider.injectValidation(function(payload) {
+        provider.injectValidation(function (payload) {
             var expected = eth.accounts.wallet[0].signTransaction({
                 data: '0x1234567000000000000000000000000' + account.address.toLowerCase().replace('0x', '') + '00000000000000000000000000000000000000000000000000000000000000c8',
                 from: account.address.toLowerCase(),
@@ -3041,7 +3146,7 @@ describe('typical usage', function() {
                 nonce: '0x1',
                 chain: 'mainnet',
                 hardfork: 'petersburg'
-            }).then(function(tx) {
+            }).then(function (tx) {
                 const expected = tx.rawTransaction;
                 assert.equal(payload.method, 'eth_sendRawTransaction');
                 assert.deepEqual(payload.params, [expected]);
@@ -3050,13 +3155,13 @@ describe('typical usage', function() {
 
         provider.injectResult('0x5550000000000000000000000000000000000000000000000000000000000032');
 
-        provider.injectValidation(function(payload) {
+        provider.injectValidation(function (payload) {
             assert.equal(payload.method, 'eth_getTransactionReceipt');
             assert.deepEqual(payload.params, ['0x5550000000000000000000000000000000000000000000000000000000000032']);
         });
         provider.injectResult(null);
 
-        provider.injectValidation(function(payload) {
+        provider.injectValidation(function (payload) {
             assert.equal(payload.method, 'eth_subscribe');
             assert.deepEqual(payload.params, ['newHeads']);
         });
@@ -3073,7 +3178,7 @@ describe('typical usage', function() {
             }
         });
 
-        provider.injectValidation(function(payload) {
+        provider.injectValidation(function (payload) {
             assert.equal(payload.method, 'eth_getTransactionReceipt');
             assert.deepEqual(payload.params, ['0x5550000000000000000000000000000000000000000000000000000000000032']);
         });
@@ -3082,7 +3187,7 @@ describe('typical usage', function() {
             contractAddress: addressLowercase,
             blockHash: '0xffdd'
         });
-        provider.injectValidation(function(payload) {
+        provider.injectValidation(function (payload) {
             assert.equal(payload.method, 'eth_getCode');
             assert.deepEqual(payload.params, [addressLowercase, 'latest']);
         });
@@ -3103,14 +3208,14 @@ describe('typical usage', function() {
             chain: 'mainnet',
             hardfork: 'petersburg'
         })
-            .on('transactionHash', function(value) {
+            .on('transactionHash', function (value) {
                 assert.equal('0x5550000000000000000000000000000000000000000000000000000000000032', value);
             })
-            .on('receipt', function(receipt) {
+            .on('receipt', function (receipt) {
                 assert.equal(address, receipt.contractAddress);
                 assert.isNull(contract.options.address);
             })
-            .then(function(newContract) {
+            .then(function (newContract) {
                 // console.log(newContract);
                 assert.equal(newContract.options.address, address);
                 assert.isTrue(newContract !== contract, 'contract objects shouldn\'t the same');
@@ -3121,11 +3226,9 @@ describe('typical usage', function() {
         //     console.log('error', value);
         //     done();
         // });
-
-    }).timeout(6000);
-    // TODO add error check
+    }).timeout(10000);
 });
 
-describe('standalone usage', function() {
+describe('standalone usage', function () {
     runTests(getStandAloneContractInstance);
 });

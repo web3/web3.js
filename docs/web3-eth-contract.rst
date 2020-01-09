@@ -362,6 +362,28 @@ Returns
 
 ------------------------------------------------------------------------------
 
+.. _eth-contract-module-handlerevert:
+
+handleRevert
+============
+
+.. code-block:: javascript
+
+    web3.eth.Contract.handleRevert
+    contract.handleRevert // on contract instance
+
+The ``handleRevert`` options property does default to ``false`` and will return the revert reason string if enabled on :ref:`send <contract-send>` or :ref:`call <contract-call>` of a contract method.
+
+.. note:: The revert reason string and the signature does exist as property on the returned error.
+
+-------
+Returns
+-------
+
+``boolean``: The current value of ``handleRevert`` (default: false)
+
+------------------------------------------------------------------------------
+
 options
 =========
 
@@ -383,6 +405,13 @@ Properties
 - ``from`` - ``String``: The address transactions should be made from.
 - ``gasPrice`` - ``String``: The gas price in wei to use for transactions.
 - ``gas`` - ``Number``: The maximum gas provided for a transaction (gas limit).
+- ``handleRevert`` - ``Boolean``: It will otherwise use the default value provided from the Eth module. See :ref:`handleRevert <eth-contract-module-handlerevert>`.
+- ``transactionBlockTimeout`` - ``Number``: It will otherwise use the default value provided from the Eth module. See :ref:`transactionBlockTimeout <eth-contract-transactionblocktimeout>`.
+- ``transactionConfirmationBlocks`` - ``Number``: It will otherwise use the default value provided from the Eth module. See :ref:`transactionConfirmationBlocks <eth-contract-module-transactionconfirmationblocks>`.
+- ``transactionPollingTimeout`` - ``Number``: It will otherwise use the default value provided from the Eth module. See :ref:`transactionPollingTimeout <eth-contract-module-transactionpollingtimeout>`.
+- ``chain`` - ``Number``: It will otherwise use the default value provided from the Eth module. See :ref:`defaultChain <eth-contract-defaultchain>`.
+- ``hardfork`` - ``Number``: It will otherwise use the default value provided from the Eth module. See :ref:`defaultHardfork <eth-contract-defaulthardfork>`.
+- ``common`` - ``Number``: It will otherwise use the default value provided from the Eth module. See :ref:`defaultCommon <eth-contract-defaultcommon>`.
 
 
 -------

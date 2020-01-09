@@ -11,13 +11,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as net from "net";
-
 /**
  * @file index.d.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
+
+import * as net from 'net';
+import * as http from 'http';
+import * as https from 'https';
 
 export class formatters {
     static outputBigNumberFormatter(number: number): number;
@@ -66,6 +68,13 @@ export class errors {
     static InvalidProvider(): Error;
     static InvalidResponse(result: Error): Error;
     static ConnectionTimeout(ms: string): Error;
+    static RevertInstructionError(reason: string, signature: string): RevertInstructionError
+    static TransactionRevertInstructionError(reason: string, signature: string, receipt: object): TransactionRevertInstructionError
+    static TransactionError(message: string, receipt: object): TransactionError
+    static NoContractAddressFoundError(receipt: object): TransactionError
+    static ContractCodeNotStoredError(receipt: object): TransactionError
+    static TransactionRevertedWithoutReasonError(receipt: object): TransactionError
+    static TransactionOutOfGasError(receipt: object): TransactionError
 }
 
 export class IpcProviderBase {
@@ -151,6 +160,13 @@ export interface HttpProviderOptions {
     timeout?: number;
     headers?: HttpHeader[];
     withCredentials?: boolean;
+    agent?: HttpAgent
+}
+
+export interface HttpAgent {
+    http?: http.Agent;
+    https?: https.Agent;
+    baseUrl?: string;
 }
 
 export interface HttpHeader {
@@ -194,4 +210,18 @@ export interface JsonRpcResponse {
     id: number;
     result?: any;
     error?: string;
+}
+
+export interface RevertInstructionError extends Error {
+    reason: string;
+    signature: string;
+}
+
+export interface TransactionRevertInstructionError extends Error {
+    reason: string;
+    signature: string;
+}
+
+export interface TransactionError extends Error {
+    receipt: object;
 }
