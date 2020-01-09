@@ -41,8 +41,20 @@ module.exports = {
         var message = !!result && !!result.error && !!result.error.message ? result.error.message : 'Invalid JSON RPC response: ' + JSON.stringify(result);
         return new Error(message);
     },
-    ConnectionTimeout: function (ms){
+    ConnectionTimeoutError: function (ms){
         return new Error('CONNECTION TIMEOUT: timeout of ' + ms + ' ms achived');
+    },
+    ConnectionNotOpenError: function (){
+        return new Error('connection not open on send()');
+    },
+    MaxAttemptsReachedOnReconnectingError: function (){
+        return new Error('Maximum number of reconnect attempts reached!');
+    },
+    PendingRequestsOnReconnectingError: function (){
+        return new Error('CONNECTION ERROR: Provider started to reconnect before the response got received!');
+    },
+    ConnectionClosedError: function (event){
+        return new Error('CONNECTION ERROR: The connection got closed with close code `' + event.code + '` and the following reason string `' + event.reason + '`');
     },
     RevertInstructionError: function(reason, signature) {
         var error = new Error('Your request got reverted with the following reason string: ' + reason);

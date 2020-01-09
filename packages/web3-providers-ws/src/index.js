@@ -24,6 +24,7 @@
 
 var EventEmitter = require('eventemitter3');
 var helpers = require('./helpers.js');
+var errors = require('web3-core-helpers').errors;
 var Ws = require('@web3-js/websocket').w3cwebsocket;
 
 /**
@@ -136,38 +137,6 @@ WebsocketProvider.prototype._onMessage = function (e) {
 };
 
 /**
- * Listener for the `error` event of the underlying WebSocket object
- *
- * @method _onError
- *
- * @returns {void}
- */
-WebsocketProvider.prototype._onError = function (error) {
-    if (!error.code && !this.reconnecting) {
-        var _this = this;
-
-        this.emit(this.ERROR, error);
-
-        if (this.requestQueue.size > 0) {
-            this.requestQueue.forEach(function (request, key) {
-                request.callback(error);
-                _this.requestQueue.delete(key);
-            });
-        }
-
-        if (this.responseQueue.size > 0) {
-            this.responseQueue.forEach(function (request, key) {
-                request.callback(error);
-                _this.responseQueue.delete(key);
-            });
-        }
-
-        this._removeSocketListeners();
-        this.removeAllListeners();
-    }
-};
-
-/**
  * Listener for the `open` event of the underlying WebSocket object
  *
  * @method _onConnect
@@ -206,17 +175,18 @@ WebsocketProvider.prototype._onClose = function (event) {
     }
 
     this.emit(this.CLOSE, event);
+    this.emit(this.ERROR, event);
 
     if (this.requestQueue.size > 0) {
         this.requestQueue.forEach(function (request, key) {
-            request.callback(new Error('CONNECTION ERROR: The connection got closed with close code `' + event.code + '` and the following reason string `' + event.reason + '`'));
+            request.callback(errors.ConnectionClosedError(event));
             _this.requestQueue.delete(key);
         });
     }
 
     if (this.responseQueue.size > 0) {
         this.responseQueue.forEach(function (request, key) {
-            request.callback(new Error('CONNECTION ERROR: The connection got closed with close code `' + event.code + '` and the following reason string `' + event.reason + '`'));
+            request.callback(errors.ConnectionClosedError(event));
             _this.responseQueue.delete(key);
         });
     }
@@ -236,7 +206,6 @@ WebsocketProvider.prototype._addSocketListeners = function () {
     this.connection.addEventListener('message', this._onMessage.bind(this));
     this.connection.addEventListener('open', this._onConnect.bind(this));
     this.connection.addEventListener('close', this._onClose.bind(this));
-    this.connection.addEventListener('error', this._onError.bind(this));
 };
 
 /**
@@ -250,7 +219,6 @@ WebsocketProvider.prototype._removeSocketListeners = function () {
     this.connection.removeEventListener('message', this._onMessage);
     this.connection.removeEventListener('open', this._onConnect);
     this.connection.removeEventListener('close', this._onClose);
-    this.connection.removeEventListener('error', this._onError);
 };
 
 /**
@@ -298,13 +266,11 @@ WebsocketProvider.prototype._parseResponse = function (data) {
                     return;
                 }
 
-                var error = new Error('Connection error: Timeout exceeded');
-
-                _this.emit(_this.ERROR, error);
+                _this.emit(_this.ERROR, errors.ConnectionTimeoutError(_this._customTimeout));
 
                 if (_this.requestQueue.size > 0) {
                     _this.requestQueue.forEach(function (request, key) {
-                        request.callback(error);
+                        request.callback(errors.ConnectionTimeoutError(_this._customTimeout));
                         _this.requestQueue.delete(key);
                     });
                 }
@@ -352,10 +318,8 @@ WebsocketProvider.prototype.send = function (payload, callback) {
     if (this.connection.readyState !== this.connection.OPEN) {
         this.requestQueue.delete(id);
 
-        var error = new Error('connection not open on send()');
-
-        this.emit(this.ERROR, error);
-        request.callback(error);
+        this.emit(this.ERROR, errors.ConnectionNotOpenError());
+        request.callback(errors.ConnectionNotOpenError());
 
         return;
     }
@@ -427,7 +391,7 @@ WebsocketProvider.prototype.reconnect = function () {
 
     if (this.responseQueue.size > 0) {
         this.responseQueue.forEach(function (request, key) {
-            request.callback(new Error('CONNECTION ERROR: Provider started to reconnect before the response got received!'));
+            request.callback(errors.PendingRequestsOnReconnectingError());
             _this.responseQueue.delete(key);
         });
     }
@@ -446,7 +410,7 @@ WebsocketProvider.prototype.reconnect = function () {
         return;
     }
 
-    this.emit(this.ERROR, new Error('Maximum number of reconnect attempts reached!'));
+    this.emit(this.ERROR, errors.MaxAttemptsReachedOnReconnectingError());
 };
 
 module.exports = WebsocketProvider;
