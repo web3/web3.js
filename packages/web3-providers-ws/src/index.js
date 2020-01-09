@@ -175,7 +175,6 @@ WebsocketProvider.prototype._onClose = function (event) {
     }
 
     this.emit(this.CLOSE, event);
-    this.emit(this.ERROR, event);
 
     if (this.requestQueue.size > 0) {
         this.requestQueue.forEach(function (request, key) {
