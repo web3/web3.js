@@ -4,10 +4,57 @@ const pify = require('pify');
 const utils = require('./helpers/test.utils');
 const Web3 = utils.getWeb3();
 
-describe('WebsocketProvider reconnecting', function () {
+describe.only('WebsocketProvider reconnecting', function () {
     let web3;
     let server;
     const port = 8545;
+
+    it('manually reconnecting', function () {
+        this.timeout(6000);
+
+        return new Promise(async function (resolve) {
+            let stage = 0;
+            server = ganache.server({port: port});
+            await pify(server.listen)(port);
+
+            web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:' + port));
+
+            web3.currentProvider.on('connect', async function () {
+                if (stage === 0) {
+                    web3.currentProvider.reconnect();
+                    stage = 1;
+                } else {
+                    await pify(server.close)();
+                    resolve();
+                }
+            });
+        });
+    });
+
+    it('calling of reconnect with auto-reconnecting activated', function () {
+        this.timeout(6000);
+
+        return new Promise(async function (resolve) {
+            let stage = 0;
+            server = ganache.server({port: port});
+            await pify(server.listen)(port);
+
+            web3 = new Web3(new Web3.providers.WebsocketProvider(
+                'ws://localhost:' + port, {reconnect: {auto: true}}
+                )
+            );
+
+            web3.currentProvider.on('connect', async function () {
+                if (stage === 0) {
+                    web3.currentProvider.reconnect();
+                    stage = 1;
+                } else {
+                    await pify(server.close)();
+                    resolve();
+                }
+            });
+        });
+    });
 
     it('automatically connects as soon as the WS socket of the node is running', function () {
         return new Promise(async function (resolve) {
@@ -78,29 +125,6 @@ describe('WebsocketProvider reconnecting', function () {
             web3.currentProvider.on('reconnect', function () {
                 clearTimeout(timeout);
                 resolve();
-            });
-        });
-    });
-
-    it.skip('manually reconnecting', function () {
-        this.timeout(20000);
-
-        return new Promise(async function (resolve) {
-            let stage = 0;
-            server = ganache.server({port: port});
-            await pify(server.listen)(port);
-
-            web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:' + port));
-
-            web3.currentProvider.on('connect', function () {
-                console.log('CONNECT!');
-
-                if (stage === 0) {
-                    web3.currentProvider.reconnect();
-                    stage = 1;
-                } else {
-                    resolve();
-                }
             });
         });
     });
