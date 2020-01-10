@@ -2,10 +2,12 @@ var assert = require('assert');
 var utils = require('./helpers/test.utils');
 var Web3 = utils.getWeb3();
 
-describe('Websocket etc & errors', function () {
+describe('Websockets', function () {
     let web3;
 
-    beforeEach(() => web3 = new Web3('ws://localhost:' + 8777));
+    beforeEach(function(){
+        web3 = new Web3('ws://localhost:' + 8777);
+    });
 
     // This test's error is fired by the request queue checker in the onClose handler
     it('errors when there is no connection', async function(){
@@ -13,6 +15,7 @@ describe('Websocket etc & errors', function () {
             await web3.eth.getBlockNumber();
             assert.fail();
         } catch (err) {
+            console.log('error --> ' + err);
             assert(err.message.includes('connection not open'));
         }
     });
