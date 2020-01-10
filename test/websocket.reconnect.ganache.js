@@ -128,4 +128,35 @@ describe('WebsocketProvider reconnecting', function () {
             });
         });
     });
+
+
+    it('clears pending requests on maxAttempts failed reconnection', function () {
+        this.timeout(6000);
+
+        return new Promise(async function (resolve) {
+            server = ganache.server({port: port});
+            await pify(server.listen)(port);
+
+            web3 = new Web3(
+                new Web3.providers.WebsocketProvider(
+                    'ws://localhost:' + port,
+                    {reconnect: {auto: true, maxAttempts: 1}}
+                )
+            );
+
+            web3.currentProvider.on('connect', async function () {
+                await pify(server.close)();
+            });
+
+            web3.currentProvider.on('reconnect', async function () {
+                try {
+                    await web3.eth.getBlockNumber();
+                    assert.fail();
+                } catch (err) {
+                    assert(err.message.includes('Maximum number of reconnect attempts'))
+                    resolve();
+                }
+            });
+        });
+    });
 });
