@@ -76,6 +76,7 @@ var Eth = function Eth() {
         _this.personal.setProvider.apply(_this, arguments);
         _this.accounts.setProvider.apply(_this, arguments);
         _this.Contract.setProvider(_this.currentProvider, _this.accounts);
+        _this.ens.registryAddress = null;
     };
 
 
