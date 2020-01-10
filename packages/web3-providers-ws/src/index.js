@@ -178,7 +178,7 @@ WebsocketProvider.prototype._onClose = function (event) {
 
     if (this.requestQueue.size > 0) {
         this.requestQueue.forEach(function (request, key) {
-            request.callback(errors.ConnectionClosedError(event));
+            request.callback(errors.ConnectionNotOpenError(event));
             _this.requestQueue.delete(key);
         });
     }
@@ -344,7 +344,7 @@ WebsocketProvider.prototype.send = function (payload, callback) {
 WebsocketProvider.prototype.reset = function () {
     this.responseQueue.clear();
     this.requestQueue.clear();
-    
+
     this.removeAllListeners();
 
     this._removeSocketListeners();

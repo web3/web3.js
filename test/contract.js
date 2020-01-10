@@ -3130,6 +3130,29 @@ describe('typical usage', function () {
         assert.deepEqual(eth.currentProvider, provider2);
     });
 
+    it('should update contract instance provider when calling setProvider on itself', function () {
+        var provider1 = new FakeIpcProvider();
+        var provider2 = new FakeHttpProvider();
+
+        var eth = new Eth(provider1);
+        var contract = new eth.Contract(abi, address);
+        assert.deepEqual(contract.currentProvider, provider1);
+
+        contract.setProvider(provider2);
+        assert.deepEqual(contract.currentProvider, provider2);
+    });
+
+    it('errors when invoked without the "new" operator', function(){
+        try {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var contract = eth.Contract(abi, address);
+            assert.fail();
+        } catch(err) {
+            assert(err.message.includes('the "new" keyword'));
+        }
+    })
+
     it('should deploy a contract, sign transaction, and return contract instance', function (done) {
         var provider = new FakeIpcProvider();
         var eth = new Eth(provider);
