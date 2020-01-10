@@ -21,6 +21,7 @@
 "use strict";
 
 var config = require('./config');
+var formatters = require('web3-core-helpers').formatters;
 var Registry = require('./contracts/Registry');
 var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
 
@@ -33,24 +34,39 @@ var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
  */
 function ENS(eth) {
     this.eth = eth;
-    this.registryAddress = null;
+    var registryAddress = null;
     this._detectedAddress = null;
     this._lastSyncCheck = null;
+
+    Object.defineProperty(ENS.prototype, 'registry', {
+        get: function () {
+            return new Registry(this);
+        },
+        enumerable: true
+    });
+
+    Object.defineProperty(ENS.prototype, 'resolverMethodHandler', {
+        get: function () {
+            return new ResolverMethodHandler(this.registry);
+        },
+        enumerable: true
+    });
+
+    Object.defineProperty(ENS.prototype, 'registryAddress', {
+        get: function () {
+            return registryAddress;
+        },
+        set: function (value) {
+            if (value === null) {
+                registryAddress = value;
+
+                return;
+            }
+
+            registryAddress = formatters.inputAddressFormatter(value);
+        }
+    });
 }
-
-Object.defineProperty(ENS.prototype, 'registry', {
-    get: function () {
-        return new Registry(this);
-    },
-    enumerable: true
-});
-
-Object.defineProperty(ENS.prototype, 'resolverMethodHandler', {
-    get: function () {
-        return new ResolverMethodHandler(this.registry);
-    },
-    enumerable: true
-});
 
 /**
  * @param {string} name
