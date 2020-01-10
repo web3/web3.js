@@ -34,6 +34,7 @@ var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
 function ENS(eth) {
     this.eth = eth;
     this.registryAddress = null;
+    this._detectedAddress = null;
     this._lastSyncCheck = null;
 }
 
@@ -184,7 +185,11 @@ ENS.prototype.checkNetwork = async function () {
         this._lastSyncCheck = now;
     }
 
-    if (!this.registryAddress) {
+    if (this.registryAddress) {
+        return this.registryAddress;
+    }
+
+    if (!this._detectedAddress) {
         var networkType = await this.eth.net.getNetworkType();
         var addr = config.addresses[networkType];
 
@@ -192,12 +197,10 @@ ENS.prototype.checkNetwork = async function () {
             throw new Error("ENS is not supported on network " + networkType);
         }
 
-        this.registryAddress = addr;
+        this._detectedAddress = addr;
 
-        return addr;
+        return this._detectedAddress;
     }
-
-    return this.registryAddress;
 };
 
 module.exports = ENS;
