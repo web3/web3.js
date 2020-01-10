@@ -159,4 +159,43 @@ describe('WebsocketProvider reconnecting', function () {
             });
         });
     });
+
+    it('queues requests made while connection is lost / executes on reconnect', function () {
+        this.timeout(6000);
+        let stage = 0;
+
+        return new Promise(async function (resolve) {
+            server = ganache.server({port: port});
+            await pify(server.listen)(port);
+
+            web3 = new Web3(
+                new Web3.providers.WebsocketProvider(
+                    'ws://localhost:' + port,
+                    {reconnect: {auto: true, delay: 1000, maxAttempts: 3}}
+                )
+            );
+
+            web3.currentProvider.on('connect', async function () {
+                if (stage === 0){
+                    await pify(server.close)();
+                    stage = 1;
+                }
+            });
+
+            setTimeout(async function(){
+                assert(stage === 1);
+
+                const deferred = web3.eth.getBlockNumber();
+
+                server = ganache.server({port: port});
+                await pify(server.listen)(port);
+
+                const blockNumber = await deferred;
+                assert(blockNumber === 0);
+
+                await pify(server.close)();
+                resolve();
+            },1500);
+        });
+    });
 });
