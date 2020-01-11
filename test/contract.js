@@ -240,7 +240,7 @@ var getEthContractInstance = function(abi, address, options, provider) {
     }
 
     var eth = new Eth(provider);
-    eth.setProvider(provider);
+    //eth.setProvider(provider);
     return new eth.Contract(abi, address, options);
 }
 
