@@ -196,6 +196,7 @@ Method.prototype.toPayload = function (args) {
 
 
 Method.prototype._confirmTransaction = function (defer, result, payload) {
+    console.log('Inside web3@e2e published in Travis')
     var method = this,
         promiseResolved = false,
         canUnsubscribe = true,
