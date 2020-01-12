@@ -27,8 +27,6 @@ var helpers = require('./helpers.js');
 var errors = require('web3-core-helpers').errors;
 var Ws = require('@web3-js/websocket').w3cwebsocket;
 
-const util = require('util');
-
 /**
  * @param {string} url
  * @param {Object} options
@@ -180,7 +178,7 @@ WebsocketProvider.prototype._onClose = function (event) {
 
     if (this.requestQueue.size > 0) {
         this.requestQueue.forEach(function (request, key) {
-            request.callback(errors.ConnectionClosedError(event));
+            request.callback(errors.ConnectionNotOpenError());
             _this.requestQueue.delete(key);
         });
     }
