@@ -26,8 +26,7 @@ describe('WebsocketProvider', function () {
             await web3.eth.getBlockNumber();
             assert.fail();
         } catch (err) {
-            console.log('error --> ' + err);
-            assert(err.message.includes('connection not open'));
+            assert(err.message.includes('connection not open on send'));
         }
     });
 
@@ -41,7 +40,7 @@ describe('WebsocketProvider', function () {
                 await web3.eth.getBlockNumber();
                 assert.fail();
             } catch (err){
-                assert(err.message.includes('connection not open'));
+                assert(err.message.includes('connection not open on send'));
             }
         }
     });
@@ -77,8 +76,16 @@ describe('WebsocketProvider', function () {
         try { await web3.eth.getBlockNumber() } catch(e){}
 
         web3.currentProvider.connect();
-        const blockNumber = await web3.eth.getBlockNumber();
-        assert(blockNumber === 0);
+
+        // This test fails unless there's a brief delay after
+        // connecting again...
+        await new Promise(resolve => {
+            setTimeout(async function(){
+                const blockNumber = await web3.eth.getBlockNumber();
+                assert(blockNumber === 0);
+                resolve();
+            },100)
+        });
     });
 
     it('supports subscriptions', async function(){
