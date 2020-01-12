@@ -100,6 +100,68 @@ describe('WebsocketProvider reconnecting', function () {
         });
     });
 
+    it('allows disconnection when reconnect is enabled', function(){
+        this.timeout(6000);
+
+        return new Promise(async function (resolve, reject) {
+            server = ganache.server({port: port});
+            await pify(server.listen)(port);
+
+            web3 = new Web3(
+                new Web3.providers.WebsocketProvider(
+                    'ws://localhost:' + port,
+                    {reconnect: {auto: true, maxAttempts: 1}}
+                )
+            );
+
+            web3.currentProvider.on('connect', async function () {
+                web3.currentProvider.disconnect();
+
+                try {
+                    await web3.eth.getBlockNumber();
+                    assert.fail();
+                } catch (err) {
+                    await pify(server.close)();
+                    assert(err.message.includes('connection not open'));
+                    resolve();
+                }
+            });
+        });
+    });
+
+    // This test fails - the logic running in reconnect timeout doesn't know about the disconnect?
+    it('allows disconnection on lost connection, when reconnect is enabled', function () {
+        this.timeout(6000);
+        let stage = 0;
+
+        return new Promise(async function (resolve, reject) {
+            server = ganache.server({port: port});
+            await pify(server.listen)(port);
+
+            web3 = new Web3(
+                new Web3.providers.WebsocketProvider(
+                    'ws://localhost:' + port,
+                    {reconnect: {auto: true, maxAttempts: 1}}
+                )
+            );
+
+            //Shutdown server
+            web3.currentProvider.on('connect', async function () {
+                // Stay isolated, just in case;
+                if (stage === 0){
+                    await pify(server.close)();
+                    web3.currentProvider.disconnect();
+                    stage = 1;
+                }
+            });
+
+            web3.currentProvider.on('error', function (error) {
+                assert(error.message.includes('Maximum number of reconnect attempts reached!'));
+                reject(new Error('Could not disconnect...'));
+            });
+        });
+    });
+
     it('uses the custom configured delay on re-connect', function () {
         let timeout;
         this.timeout(4000);
