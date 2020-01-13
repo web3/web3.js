@@ -46,6 +46,7 @@
         "test:e2e:publish": "./scripts/e2e.npm.publish.sh",
         "test:e2e:truffle": "./scripts/e2e.truffle.sh",
         "test:e2e:mosaic": "./scripts/e2e.mosaic.sh",
+        "deploy:ens": "./scripts/e2e.deploy.ens.sh",
         "ci": "./scripts/ci.sh",
         "coveralls": "./scripts/coveralls.sh"
     },
@@ -92,7 +93,6 @@
     "devDependencies": {
         "@babel/core": "^7.6.4",
         "@babel/preset-env": "^7.6.3",
-        "regenerator-runtime": "^0.13.3",
         "@types/bignumber.js": "^4.0.2",
         "@types/bn.js": "^4.11.5",
         "@types/node": "^12.6.1",
@@ -141,5 +141,10 @@
         "underscore": "^1.9.1",
         "vinyl-source-stream": "^2.0.0",
         "wait-port": "^0.2.6"
+    },
+    "dependencies": {
+        "@ensdomains/ens": "^0.3.11",
+        "@ensdomains/resolver": "^0.1.13",
+        "truffle": "^5.1.8"
     }
 }

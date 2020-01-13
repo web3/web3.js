@@ -217,6 +217,8 @@ ENS.prototype.checkNetwork = async function () {
 
         return this._detectedAddress;
     }
+
+    return this._detectedAddress;
 };
 
 module.exports = ENS;

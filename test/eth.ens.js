@@ -246,4 +246,53 @@ describe('ens', function () {
             done();
         });
     });
+
+    it('should only check if the connected node is synced if at least a hour is gone', async function () {
+        await web3.eth.ens.checkNetwork();
+
+        web3.eth.ens._lastSyncCheck = (new Date() / 1000) - 3601;
+
+        try {
+            await web3.eth.ens.checkNetwork();
+
+            assert.fail();
+        } catch (error) {
+            return true;
+        }
+    });
+
+    describe('custom registry address', function () {
+        let web3;
+        let provider;
+        const address = '0x314159265dD8dbb310642f98f50C066173C1259b';
+
+        beforeEach(function () {
+            provider = new FakeHttpProvider();
+
+            // getBlock in checkNetwork
+            provider.injectResult({
+                timestamp: Math.floor(new Date() / 1000) - 60,
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_getBlockByNumber');
+                assert.deepEqual(payload.params, ['latest', false]);
+            });
+
+            web3 = new Web3(provider);
+            web3.eth.ens.registryAddress = address;
+        });
+
+        it('should use the custom defined registry address in checkNetwork', async function () {
+            assert(await web3.eth.ens.checkNetwork() === address);
+            assert(web3.eth.ens.registryAddress === address);
+        });
+
+        it('should keep the custom defined registry address if the provider changes', async function () {
+            web3.eth.setProvider(provider);
+
+            assert(await web3.eth.ens.checkNetwork() === address);
+            assert(web3.eth.ens.registryAddress === address);
+        });
+    });
 });
