@@ -251,7 +251,6 @@ WebsocketProvider.prototype._parseResponse = function (data) {
 
         try {
             result = JSON.parse(data);
-
         } catch (e) {
 
             _this.lastChunk = data;
@@ -264,6 +263,7 @@ WebsocketProvider.prototype._parseResponse = function (data) {
 
                     return;
                 }
+
 
                 _this.emit(_this.ERROR, errors.ConnectionTimeout(_this._customTimeout));
 
