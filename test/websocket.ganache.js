@@ -4,10 +4,94 @@ const pify = require('pify');
 const utils = require('./helpers/test.utils');
 const Web3 = utils.getWeb3();
 
-describe('WebsocketProvider reconnecting', function () {
+describe('WebsocketProvider (ganache)', function () {
     let web3;
     let server;
+    const host = 'ws://localhost:';
     const port = 8545;
+
+    afterEach(async function () {
+        // Might already be closed..
+        try {
+            await pify(server.close)();
+        } catch (err) {
+        }
+    });
+
+    // This test's error is fired by the request queue checker in the onClose handler
+    it('errors when there is no connection', async function(){
+        web3 = new Web3(host + 8777);
+
+        try {
+            await web3.eth.getBlockNumber();
+            assert.fail();
+        } catch (err) {
+            assert(err.message.includes('connection not open on send'));
+        }
+    });
+
+    // Here, the first error (try/caught) is fired by the request queue checker in
+    // the onClose handler. The second error is fired by the readyState check in .send
+    it('errors when requests continue after socket closed', async function(){
+        web3 = new Web3(host + 8777);
+
+        try { await web3.eth.getBlockNumber() } catch (err) {
+
+            try {
+                await web3.eth.getBlockNumber();
+                assert.fail();
+            } catch (err){
+                assert(err.message.includes('connection not open on send'));
+            }
+        }
+    });
+
+    it('errors after client has disconnected', async function(){
+        server = ganache.server({port: port});
+        await pify(server.listen)(port);
+
+        web3 = new Web3(new Web3.providers.WebsocketProvider(host + port));
+
+        // Verify connection and disconnect
+        await web3.eth.getBlockNumber();
+        web3.currentProvider.disconnect();
+
+        try {
+            await web3.eth.getBlockNumber();
+            assert.fail();
+        } catch(err){
+            assert(err.message.includes('connection not open on send'));
+        }
+    });
+
+    it('can connect after being disconnected', async function(){
+        server = ganache.server({port: port});
+        await pify(server.listen)(port);
+
+        web3 = new Web3(new Web3.providers.WebsocketProvider(host + port));
+
+        // Verify connection and disconnect
+        await web3.eth.getBlockNumber();
+        web3.currentProvider.disconnect();
+
+        try { await web3.eth.getBlockNumber() } catch(e){}
+
+        web3.currentProvider.connect();
+
+        // This test fails unless there's a brief delay after
+        // connecting again...
+        await new Promise(resolve => {
+            setTimeout(async function(){
+                const blockNumber = await web3.eth.getBlockNumber();
+                assert(blockNumber === 0);
+                resolve();
+            },100)
+        });
+    });
+
+    it('supports subscriptions', async function(){
+        assert(web3.eth.currentProvider.supportsSubscriptions());
+    });
 
     it('manually reconnecting', function () {
         this.timeout(6000);
@@ -17,7 +101,7 @@ describe('WebsocketProvider reconnecting', function () {
             server = ganache.server({port: port});
             await pify(server.listen)(port);
 
-            web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:' + port));
+            web3 = new Web3(new Web3.providers.WebsocketProvider(host + port));
 
             web3.currentProvider.on('connect', async function () {
                 if (stage === 0) {
@@ -40,7 +124,7 @@ describe('WebsocketProvider reconnecting', function () {
             await pify(server.listen)(port);
 
             web3 = new Web3(new Web3.providers.WebsocketProvider(
-                'ws://localhost:' + port, {reconnect: {auto: true}}
+                host + port, {reconnect: {auto: true}}
                 )
             );
 
@@ -60,7 +144,7 @@ describe('WebsocketProvider reconnecting', function () {
         return new Promise(async function (resolve) {
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
-                    'ws://localhost:' + port,
+                    host + port,
                     {reconnect: {auto: true}}
                 )
             );
@@ -84,7 +168,7 @@ describe('WebsocketProvider reconnecting', function () {
 
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
-                    'ws://localhost:' + port,
+                    host + port,
                     {reconnect: {auto: true, maxAttempts: 1}}
                 )
             );
@@ -109,7 +193,7 @@ describe('WebsocketProvider reconnecting', function () {
 
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
-                    'ws://localhost:' + port,
+                    host + port,
                     {reconnect: {auto: true, maxAttempts: 1}}
                 )
             );
@@ -140,7 +224,7 @@ describe('WebsocketProvider reconnecting', function () {
 
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
-                    'ws://localhost:' + port,
+                    host + port,
                     {reconnect: {auto: true, maxAttempts: 1}}
                 )
             );
@@ -172,7 +256,7 @@ describe('WebsocketProvider reconnecting', function () {
 
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
-                    'ws://localhost:' + port,
+                    host + port,
                     {reconnect: {auto: true, delay: 3000, maxAttempts: 1}}
                 )
             );
@@ -201,7 +285,7 @@ describe('WebsocketProvider reconnecting', function () {
 
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
-                    'ws://localhost:' + port,
+                    host + port,
                     {reconnect: {auto: true, maxAttempts: 1}}
                 )
             );
@@ -232,7 +316,7 @@ describe('WebsocketProvider reconnecting', function () {
 
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
-                    'ws://localhost:' + port,
+                    host + port,
                     {reconnect: {auto: true, delay: 2000, maxAttempts: 5}}
                 )
             );
@@ -254,8 +338,6 @@ describe('WebsocketProvider reconnecting', function () {
 
                 const blockNumber = await deferred;
                 assert(blockNumber === 0);
-
-                await pify(server.close)();
 
                 resolve();
             },2500);
