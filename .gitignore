@@ -22,3 +22,4 @@ build/
 contracts/
 migrations/
 truffle-config.js
+test/config/ensAddresses.json
