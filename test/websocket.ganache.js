@@ -93,6 +93,28 @@ describe('WebsocketProvider (ganache)', function () {
         assert(web3.eth.currentProvider.supportsSubscriptions());
     });
 
+    it('times out when connection is lost mid-chunk', async function(){
+        this.timeout(5000);
+        server = ganache.server({port: port});
+        await pify(server.listen)(port);
+
+        web3 = new Web3(
+                new Web3.providers.WebsocketProvider(
+                    host + port,
+                    {timeout: 1000}
+                )
+            );
+
+        await new Promise(resolve => {
+            web3.currentProvider.on('error', function(err){
+                assert(err.message.includes('CONNECTION TIMEOUT: timeout of 1000 ms achived'))
+                resolve();
+            })
+
+            web3.currentProvider._parseResponse('abc|--|dedf');
+        });
+    });
+
     it('manually reconnecting', function () {
         this.timeout(6000);
 
@@ -341,6 +363,37 @@ describe('WebsocketProvider (ganache)', function () {
 
                 resolve();
             },2500);
+        });
+    });
+
+    it('errors when failing to reconnect after data is lost mid-chunk', async function(){
+        this.timeout(7000);
+        server = ganache.server({port: port});
+        await pify(server.listen)(port);
+
+        web3 = new Web3(
+                new Web3.providers.WebsocketProvider(
+                    host + port,
+                    {
+                        timeout: 1000,
+                        reconnect: {
+                            auto: true,
+                            delay: 2000,
+                            maxAttempts: 1,
+                            onTimeout: true
+                        }
+                    }
+                )
+            );
+
+        await new Promise(async resolve => {
+            web3.currentProvider.on('error', function(err){
+                assert(err.message.includes('Maximum number of reconnect attempts reached'))
+                resolve();
+            })
+
+            await pify(server.close)();
+            web3.currentProvider._parseResponse('abc|--|dedf');
         });
     });
 });
