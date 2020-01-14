@@ -38,21 +38,21 @@ function ENS(eth) {
     this._detectedAddress = null;
     this._lastSyncCheck = null;
 
-    Object.defineProperty(ENS.prototype, 'registry', {
+    Object.defineProperty(this, 'registry', {
         get: function () {
             return new Registry(this);
         },
         enumerable: true
     });
 
-    Object.defineProperty(ENS.prototype, 'resolverMethodHandler', {
+    Object.defineProperty(this, 'resolverMethodHandler', {
         get: function () {
             return new ResolverMethodHandler(this.registry);
         },
         enumerable: true
     });
 
-    Object.defineProperty(ENS.prototype, 'registryAddress', {
+    Object.defineProperty(this, 'registryAddress', {
         get: function () {
             return registryAddress;
         },
@@ -64,7 +64,8 @@ function ENS(eth) {
             }
 
             registryAddress = formatters.inputAddressFormatter(value);
-        }
+        },
+        enumerable: true
     });
 }
 
