@@ -8,7 +8,7 @@ const fs = require('fs');
 const utils = require('web3-utils');
 const namehash = require('eth-ens-namehash');
 
-const ensConfigPath = path.resolve('../test/config/ensRegistry.json');
+const ensConfigPath = path.resolve('../test/config/ensAddresses.json');
 const tld = "test";
 
 module.exports = function (deployer, network, accounts) {
@@ -51,6 +51,7 @@ module.exports = function (deployer, network, accounts) {
 
                 let config = JSON.parse(data);
                 config.registry = ens.address;
+                config.resolver = resolver.address;
 
                 fs.writeFile(ensConfigPath, JSON.stringify(config), function(error) {
                     if (error) {
