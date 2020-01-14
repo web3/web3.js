@@ -3,9 +3,12 @@ const FIFSRegistrar = artifacts.require("@ensdomains/ens/FIFSRegistrar");
 const ReverseRegistrar = artifacts.require("@ensdomains/ens/ReverseRegistrar");
 const PublicResolver = artifacts.require("@ensdomains/resolver/PublicResolver");
 
+const path = require('path');
+const fs = require('fs');
 const utils = require('web3-utils');
 const namehash = require('eth-ens-namehash');
 
+const ensConfigPath = path.resolve('../test/config/ensRegistry.json');
 const tld = "test";
 
 module.exports = function (deployer, network, accounts) {
@@ -36,8 +39,29 @@ module.exports = function (deployer, network, accounts) {
     .then(function () {
         return deployer.deploy(ReverseRegistrar, ens.address, resolver.address);
     })
-    .then(function (reverseRegistrarInstance) {
-        return setupReverseRegistrar(ens, resolver, reverseRegistrarInstance, accounts);
+    .then(async function (reverseRegistrarInstance) {
+        await setupReverseRegistrar(ens, resolver, reverseRegistrarInstance, accounts);
+
+        return new Promise(function(resolve, reject) {
+            fs.readFile(ensConfigPath, function (error, data) {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+
+                let config = JSON.parse(data);
+                config.registry = ens.address;
+
+                fs.writeFile(ensConfigPath, JSON.stringify(config), function(error) {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+
+                    resolve();
+                });
+            });
+        });
     });
 };
 
