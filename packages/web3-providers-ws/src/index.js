@@ -178,7 +178,7 @@ WebsocketProvider.prototype._onClose = function (event) {
 
     if (this.requestQueue.size > 0) {
         this.requestQueue.forEach(function (request, key) {
-            request.callback(errors.ConnectionClosedError(event));
+            request.callback(errors.ConnectionNotOpenError());
             _this.requestQueue.delete(key);
         });
     }
@@ -251,7 +251,6 @@ WebsocketProvider.prototype._parseResponse = function (data) {
 
         try {
             result = JSON.parse(data);
-
         } catch (e) {
 
             _this.lastChunk = data;
@@ -264,6 +263,7 @@ WebsocketProvider.prototype._parseResponse = function (data) {
 
                     return;
                 }
+
 
                 _this.emit(_this.ERROR, errors.ConnectionTimeout(_this._customTimeout));
 
@@ -344,7 +344,7 @@ WebsocketProvider.prototype.send = function (payload, callback) {
 WebsocketProvider.prototype.reset = function () {
     this.responseQueue.clear();
     this.requestQueue.clear();
-    
+
     this.removeAllListeners();
 
     this._removeSocketListeners();
