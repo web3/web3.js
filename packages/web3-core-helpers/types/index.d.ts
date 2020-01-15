@@ -64,14 +64,14 @@ export class errors {
         expected: number,
         method: string
     ): Error;
-    static InvalidConnection(host: string): Error;
+    static InvalidConnection(host: string, event?: WebSocketEvent): ConnectionError;
     static InvalidProvider(): Error;
     static InvalidResponse(result: Error): Error;
     static ConnectionTimeout(ms: string): Error;
     static ConnectionNotOpenError(): Error;
     static MaxAttemptsReachedOnReconnectingError(): Error;
     static PendingRequestsOnReconnectingError(): Error;
-    static ConnectionClosedError(event: {code: number, reason: string}): Error;
+    static ConnectionError(msg: string, event?: WebSocketEvent): ConnectionError;
     static RevertInstructionError(reason: string, signature: string): RevertInstructionError
     static TransactionRevertInstructionError(reason: string, signature: string, receipt: object): TransactionRevertInstructionError
     static TransactionError(message: string, receipt: object): TransactionError
@@ -228,4 +228,14 @@ export interface TransactionRevertInstructionError extends Error {
 
 export interface TransactionError extends Error {
     receipt: object;
+}
+
+export interface ConnectionError extends Error {
+    code: string | undefined;
+    reason: string | undefined;
+}
+
+export interface WebSocketEvent {
+    code?: number;
+    reason?: string;
 }
