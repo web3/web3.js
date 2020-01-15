@@ -17,7 +17,7 @@ matrix:
     - node_js: 10
       env: TEST=unit_and_e2e_clients
     - node_js: 10
-      env: TEST=e2e_truffle
+      env: TEST=e2e_ganache
     - node_js: 10
       env: TEST=e2e_mosaic
     - node_js: 10
@@ -27,7 +27,7 @@ matrix:
         firefox: latest
   allow_failures:
     - node_js: 10
-      env: TEST=e2e_truffle
+      env: TEST=e2e_ganache
     - node_js: 10
       env: TEST=e2e_mosaic
 
@@ -49,7 +49,7 @@ before_install:
   - export DISPLAY=:99.0
   - export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 install:
-  - if [[ $TEST != "e2e_truffle" ]] && [[ $TEST != "e2e_mosaic" ]]; then
+  - if [[ $TEST != "e2e_ganache" ]] && [[ $TEST != "e2e_mosaic" ]]; then
       npm install;
     fi
 script:
