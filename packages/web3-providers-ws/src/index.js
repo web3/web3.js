@@ -185,7 +185,7 @@ WebsocketProvider.prototype._onClose = function (event) {
 
     if (this.responseQueue.size > 0) {
         this.responseQueue.forEach(function (request, key) {
-            request.callback(errors.InvalidConnection(_this.url, event));
+            request.callback(errors.InvalidConnection('on WS', event));
             _this.responseQueue.delete(key);
         });
     }
