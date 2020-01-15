@@ -123,6 +123,29 @@ describe('contract.deploy [ @E2E ]', function() {
                 assert(err.receipt.status === false);
             }
         });
+
+        it('fires the confirmation handler', function(){
+            // Http confirmations poll at 1s interval.
+            // Automine has a 2s interval.
+            if (!process.env.GETH_AUTOMINE) return;
+
+            return new Promise(async (resolve, reject) => {
+                var startBlock = await web3.eth.getBlockNumber();
+
+                await basic
+                    .deploy()
+                    .send({from: accounts[0]})
+                    .on('confirmation', async (number, receipt) => {
+                        assert(receipt.contractAddress);
+
+                        if (number === 1) { // Confirmation numbers are zero indexed
+                            var endBlock = await web3.eth.getBlockNumber();
+                            assert(endBlock >= (startBlock + 2));
+                            resolve();
+                        }
+                    })
+            });
+        });
     });
 
     describe('ws', function() {
