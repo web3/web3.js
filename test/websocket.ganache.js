@@ -19,7 +19,7 @@ describe('WebsocketProvider (ganache)', function () {
     });
 
     // This test's error is fired by the request queue checker in the onClose handler
-    it('errors when there is no connection', async function(){
+    it('errors when there is no connection', async function () {
         web3 = new Web3(host + 8777);
 
         try {
@@ -32,7 +32,7 @@ describe('WebsocketProvider (ganache)', function () {
 
     // Here, the first error (try/caught) is fired by the request queue checker in
     // the onClose handler. The second error is fired by the readyState check in .send
-    it('errors when requests continue after socket closed', async function(){
+    it('errors when requests continue after socket closed', async function () {
         web3 = new Web3(host + 8777);
 
         try { await web3.eth.getBlockNumber() } catch (err) {
@@ -46,7 +46,7 @@ describe('WebsocketProvider (ganache)', function () {
         }
     });
 
-    it('errors after client has disconnected', async function(){
+    it('errors after client has disconnected', async function () {
         server = ganache.server({port: port});
         await pify(server.listen)(port);
 
@@ -64,7 +64,7 @@ describe('WebsocketProvider (ganache)', function () {
         }
     });
 
-    it('can connect after being disconnected', async function(){
+    it('can connect after being disconnected', async function () {
         server = ganache.server({port: port});
         await pify(server.listen)(port);
 
@@ -89,11 +89,11 @@ describe('WebsocketProvider (ganache)', function () {
         });
     });
 
-    it('supports subscriptions', async function(){
+    it('supports subscriptions', async function () {
         assert(web3.eth.currentProvider.supportsSubscriptions());
     });
 
-    it('times out when connection is lost mid-chunk', async function(){
+    it('times out when connection is lost mid-chunk', async function () {
         this.timeout(5000);
         server = ganache.server({port: port});
         await pify(server.listen)(port);
@@ -109,7 +109,7 @@ describe('WebsocketProvider (ganache)', function () {
             web3.currentProvider.on('error', function(err){
                 assert(err.message.includes('CONNECTION TIMEOUT: timeout of 1000 ms achived'))
                 resolve();
-            })
+            });
 
             web3.currentProvider._parseResponse('abc|--|dedf');
         });
@@ -206,7 +206,7 @@ describe('WebsocketProvider (ganache)', function () {
         });
     });
 
-    it('allows disconnection when reconnect is enabled', function(){
+    it('allows disconnection when reconnect is enabled', function () {
         this.timeout(6000);
 
         return new Promise(async function (resolve, reject) {
@@ -366,7 +366,7 @@ describe('WebsocketProvider (ganache)', function () {
         });
     });
 
-    it('errors when failing to reconnect after data is lost mid-chunk', async function(){
+    it('errors when failing to reconnect after data is lost mid-chunk', async function () {
         this.timeout(7000);
         server = ganache.server({port: port});
         await pify(server.listen)(port);
