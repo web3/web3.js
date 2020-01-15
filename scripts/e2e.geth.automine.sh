@@ -27,7 +27,7 @@ echo " "
 geth-dev-assistant --period 2 --accounts 1 --tag 'stable'
 
 # Test
-nyc --no-clean --silent _mocha -- \
+GETH_AUTOMINE=true nyc --no-clean --silent _mocha -- \
   --reporter spec \
   --grep 'E2E' \
   --timeout 15000 \

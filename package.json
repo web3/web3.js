@@ -46,6 +46,7 @@
         "test:e2e:publish": "./scripts/e2e.npm.publish.sh",
         "test:e2e:truffle": "./scripts/e2e.truffle.sh",
         "test:e2e:mosaic": "./scripts/e2e.mosaic.sh",
+        "test:e2e:ganache:core": "./scripts/e2e.ganache.core.sh",
         "ci": "./scripts/ci.sh",
         "coveralls": "./scripts/coveralls.sh"
     },
