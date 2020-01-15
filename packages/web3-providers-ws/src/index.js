@@ -178,14 +178,14 @@ WebsocketProvider.prototype._onClose = function (event) {
 
     if (this.requestQueue.size > 0) {
         this.requestQueue.forEach(function (request, key) {
-            request.callback(errors.ConnectionNotOpenError());
+            request.callback(errors.ConnectionNotOpenError(event));
             _this.requestQueue.delete(key);
         });
     }
 
     if (this.responseQueue.size > 0) {
         this.responseQueue.forEach(function (request, key) {
-            request.callback(errors.ConnectionClosedError(event));
+            request.callback(errors.InvalidConnection(_this.url, event));
             _this.responseQueue.delete(key);
         });
     }
