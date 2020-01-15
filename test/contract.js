@@ -3142,16 +3142,18 @@ describe('typical usage', function () {
         assert.deepEqual(contract.currentProvider, provider2);
     });
 
-    it('errors when invoked without the "new" operator', function(){
+    it('errors when invoked without the "new" operator', function () {
         try {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
-            var contract = eth.Contract(abi, address);
+
+            eth.Contract(abi, address);
+
             assert.fail();
         } catch(err) {
             assert(err.message.includes('the "new" keyword'));
         }
-    })
+    });
 
     it('should deploy a contract, sign transaction, and return contract instance', function (done) {
         var provider = new FakeIpcProvider();
