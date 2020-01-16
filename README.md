@@ -48,6 +48,16 @@ npm run-script build
 Then include `dist/web3.js` in your html file.
 This will expose `Web3` on the window object.
 
+Or via jsDelivr CDN
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+```
+UNPKG
+
+```html
+<script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
+```
 ## Usage
 
 ```js
