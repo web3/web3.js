@@ -26,6 +26,8 @@ describe('WebsocketProvider (ganache)', function () {
             await web3.eth.getBlockNumber();
             assert.fail();
         } catch (err) {
+            assert(err.code, 1006);
+            assert(err.reason, 'connection failed');
             assert(err.message.includes('connection not open on send'));
         }
     });
@@ -36,12 +38,17 @@ describe('WebsocketProvider (ganache)', function () {
         web3 = new Web3(host + 8777);
 
         try { await web3.eth.getBlockNumber() } catch (err) {
+            assert(err.message.includes('connection not open on send'));
+            assert(err.code, 1006);
+            assert(err.reason, 'connection failed');
 
             try {
                 await web3.eth.getBlockNumber();
                 assert.fail();
             } catch (err){
                 assert(err.message.includes('connection not open on send'));
+                assert(typeof err.code === 'undefined');
+                assert(typeof err.reason === 'undefined');
             }
         }
     });
@@ -61,6 +68,8 @@ describe('WebsocketProvider (ganache)', function () {
             assert.fail();
         } catch(err){
             assert(err.message.includes('connection not open on send'));
+            assert(typeof err.code === 'undefined');
+            assert(typeof err.reason === 'undefined');
         }
     });
 
@@ -229,6 +238,9 @@ describe('WebsocketProvider (ganache)', function () {
                 } catch (err) {
                     await pify(server.close)();
                     assert(err.message.includes('connection not open on send'));
+                    assert(typeof err.code === 'undefined');
+                    assert(typeof err.reason === 'undefined');
+
                     resolve();
                 }
             });
