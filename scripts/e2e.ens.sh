@@ -60,4 +60,5 @@ truffle migrate
 # --------------------
 GANACHE=true nyc --no-clean --silent _mocha -- \
   --reporter spec \
-  --fgrep 'ENS [ @E2E ]'
+  --fgrep 'ENS [ @E2E ]' \
+  --exit

@@ -2,7 +2,6 @@ const ENS = artifacts.require("@ensdomains/ens/ENSRegistry");
 const FIFSRegistrar = artifacts.require("@ensdomains/ens/FIFSRegistrar");
 const ReverseRegistrar = artifacts.require("@ensdomains/ens/ReverseRegistrar");
 const PublicResolver = artifacts.require("@ensdomains/resolver/PublicResolver");
-
 const path = require('path');
 const fs = require('fs');
 const utils = require('web3-utils');
@@ -74,7 +73,7 @@ async function setupResolver(ens, resolver, accounts) {
 
     await ens.setSubnodeOwner("0x0000000000000000000000000000000000000000", resolverLabel, accounts[0]);
     await ens.setResolver(resolverNode, resolver.address);
-    await resolver.setAddr(resolverNode, resolver.address);
+    await resolver.setAddr(resolverNode, "0x0000000000000000000000000000000000000001");
 }
 
 async function setupRegistrar(ens, registrar) {

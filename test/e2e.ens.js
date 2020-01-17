@@ -39,7 +39,7 @@ describe('ENS [ @E2E ]', function () {
 
         assert.equal(
             address,
-            resolverAddr
+            '0x0000000000000000000000000000000000000001'
         );
     });
 });
