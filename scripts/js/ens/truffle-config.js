@@ -1,4 +1,4 @@
-
+/* jshint ignore:start */
 module.exports = {
   networks: {
     development: {
@@ -8,3 +8,4 @@ module.exports = {
     }
   }
 };
+/* jshint ignore:end */

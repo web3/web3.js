@@ -58,7 +58,7 @@ truffle migrate
 # --------------------
 # Start ENS e2e Tests
 # --------------------
-GANACHE=true nyc --no-clean --silent _mocha -- \
+GANACHE=true E2E_ENS=true nyc --no-clean --silent _mocha -- \
   --reporter spec \
   --fgrep 'ENS [ @E2E ]' \
   --exit
