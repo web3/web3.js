@@ -47,6 +47,7 @@
         "test:e2e:truffle": "./scripts/e2e.truffle.sh",
         "test:e2e:mosaic": "./scripts/e2e.mosaic.sh",
         "test:e2e:ens": "./scripts/e2e.ens.sh",
+        "test:e2e:ganache:core": "./scripts/e2e.ganache.core.sh",
         "ci": "./scripts/ci.sh",
         "coveralls": "./scripts/coveralls.sh"
     },

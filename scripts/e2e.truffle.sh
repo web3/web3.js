@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# --------------------------------------------------------------------------------
+# NB: This script temporarily removed from CI while truffle remains on Web3@1.2.1.
+#     To re-enable, add a `env: TEST=e2e_truffle` job to the matrix in travis.yml.
+# --------------------------------------------------------------------------------
+
 # -------------------------------------------------------------------------
 # Run @truffle/contract's unit tests using a candidate branch of web3
 # which has been published to a proxy npm registry in `e2e.npm.publish.sh`

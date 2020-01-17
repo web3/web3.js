@@ -236,6 +236,58 @@ describe('transaction and message signing [ @E2E ]', function() {
         }
     });
 
+    it('wallet executes method call using chain & hardfork options', async function(){
+        // Geth --dev errors with 'invalid sender' when using these options.
+        // Requires a custom common configuration (see next test). Ganache doesn't care
+        if(!process.env.GANACHE) return;
+
+        basic = new web3.eth.Contract(Basic.abi, basicOptions);
+        basic.defaultChain = 'mainnet';
+        basic.defaultHardfork = 'istanbul';
+
+        instance = await basic
+            .deploy()
+            .send({from: wallet[0].address});
+
+        const receipt = await instance
+            .methods
+            .setValue('1')
+            .send({from: wallet[0].address});
+
+        assert(receipt.status === true);
+        assert(web3.utils.isHexStrict(receipt.transactionHash));
+    });
+
+    it('wallet executes method call using customCommon option', async function(){
+        const networkId = await web3.eth.net.getId();
+        const chainId = await web3.eth.getChainId();
+
+        const customCommon = {
+            baseChain: 'mainnet',
+            customChain: {
+                name: 'custom-network',
+                networkId: networkId,
+                chainId: chainId,
+            },
+            harfork: 'istanbul',
+        };
+
+        basic = new web3.eth.Contract(Basic.abi, basicOptions);
+        basic.defaultCommon = customCommon;
+
+        instance = await basic
+            .deploy()
+            .send({from: wallet[0].address});
+
+        const receipt = await instance
+            .methods
+            .setValue('1')
+            .send({from: wallet[0].address});
+
+        assert(receipt.status === true);
+        assert(web3.utils.isHexStrict(receipt.transactionHash));
+    });
+
     it('transactions sent with wallet throws error correctly (with receipt)', async function(){
         const data = instance
             .methods
