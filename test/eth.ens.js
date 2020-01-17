@@ -3,6 +3,7 @@ var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var Web3 = require('../packages/web3');
 var sha3 = require('../packages/web3-utils').sha3;
+var formatters = require('web3-core-helpers').formatters;
 var asciiToHex = require('../packages/web3-utils').asciiToHex;
 
 describe('ens', function () {
@@ -248,9 +249,9 @@ describe('ens', function () {
     });
 
     it('should only check if the connected node is synced if at least a hour is gone', async function () {
-        await web3.eth.ens.checkNetwork();
-
-        web3.eth.ens._lastSyncCheck = (new Date() / 1000) - 3601;
+        provider = new FakeHttpProvider();
+        web3 = new Web3(provider);
+        web3.eth.ens._lastSyncCheck = new Date() / 1000;
 
         try {
             await web3.eth.ens.checkNetwork();
@@ -284,15 +285,18 @@ describe('ens', function () {
         });
 
         it('should use the custom defined registry address in checkNetwork', async function () {
-            assert(await web3.eth.ens.checkNetwork() === address);
-            assert(web3.eth.ens.registryAddress === address);
+            const currentRegistry = await web3.eth.ens.checkNetwork();
+
+            assert.equal(currentRegistry, formatters.inputAddressFormatter(address));
+            assert.equal(web3.eth.ens.registryAddress, formatters.inputAddressFormatter(address));
         });
 
         it('should keep the custom defined registry address if the provider changes', async function () {
             web3.eth.setProvider(provider);
+            const currentRegistry = await web3.eth.ens.checkNetwork();
 
-            assert(await web3.eth.ens.checkNetwork() === address);
-            assert(web3.eth.ens.registryAddress === address);
+            assert.equal(currentRegistry, formatters.inputAddressFormatter(address));
+            assert.equal(web3.eth.ens.registryAddress, formatters.inputAddressFormatter(address));
         });
     });
 });
