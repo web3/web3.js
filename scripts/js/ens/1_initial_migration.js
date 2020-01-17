@@ -52,6 +52,8 @@ module.exports = function (deployer, network, accounts) {
                 let config = JSON.parse(data);
                 config.registry = ens.address;
                 config.resolver = resolver.address;
+                config.fifsRegistrar = registrar.address;
+                config.reverseRegistrar = reverseRegistrarInstance.address;
 
                 fs.writeFile(ensConfigPath, JSON.stringify(config), function(error) {
                     if (error) {
