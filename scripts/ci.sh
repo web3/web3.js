@@ -44,9 +44,13 @@ elif [ "$TEST" = "e2e_mosaic" ]; then
   npm run test:e2e:publish
   npm run test:e2e:mosaic
 
-
 elif [ "$TEST" = "e2e_ens" ]; then
 
   npm run test:e2e:ens
   
+elif [ "$TEST" = "e2e_ganache" ]; then
+
+  npm run test:e2e:publish
+  npm run test:e2e:ganache:core
+
 fi
