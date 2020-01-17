@@ -9,6 +9,10 @@ describe('ENS [ @E2E ]', function () {
     let web3;
     let account;
 
+    if (!process.env.E2E_ENS) {
+        return;
+    }
+
     beforeEach(async function () {
         web3 = new Web3('ws://localhost:' + utils.getWebsocketPort());
         web3.eth.ens.registryAddress = registryAddr;
