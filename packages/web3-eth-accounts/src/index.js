@@ -121,6 +121,10 @@ Accounts.prototype.create = function create(entropy) {
 };
 
 Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey) {
+    if (!privateKey.startsWith('0x')) {
+        throw new Error('Required prefix "0x" is missing.');
+    }
+
     return this._addAccountFunctions(Account.fromPrivate(privateKey));
 };
 
@@ -294,6 +298,10 @@ Accounts.prototype.hashMessage = function hashMessage(data) {
 };
 
 Accounts.prototype.sign = function sign(data, privateKey) {
+    if (!privateKey.startsWith('0x')) {
+        throw new Error('Required prefix "0x" is missing for the given private key.');
+    }
+
     var hash = this.hashMessage(data);
     var signature = Account.sign(hash, privateKey);
     var vrs = Account.decodeSignature(signature);
