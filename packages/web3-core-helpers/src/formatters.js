@@ -146,6 +146,10 @@ var _txInputFormatter = function (options) {
         delete options.input;
     }
 
+    if (!options.data.startsWith('0x')) {
+        throw new Error('The given data doesn\'t have the required \'0x\' prefix at the beginning.');
+    }
+
     if (options.data && !utils.isHex(options.data)) {
         throw new Error('The data field must be HEX encoded data.');
     }
