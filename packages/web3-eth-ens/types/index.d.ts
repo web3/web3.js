@@ -24,6 +24,7 @@ import { Contract } from 'web3-eth-contract';
 export class Ens {
     constructor(eth: Eth);
 
+    registryAddress: string | null;
     registry: Registry;
 
     resolver(name: string): Promise<Contract>;

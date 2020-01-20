@@ -18,3 +18,8 @@ packages/web3/dist/
 lerna-debug.log
 !./dist/web3.min.js
 .nyc_output/
+build/
+contracts/
+migrations/
+truffle-config.js
+test/config/ensAddresses.json

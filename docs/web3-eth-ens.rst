@@ -8,6 +8,35 @@ The ``web3.eth.ens`` functions let you interacting with ENS.
 
 ------------------------------------------------------------------------------
 
+registryAddress
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.ens.registryAddress;
+
+The ``registryAddress`` property can be used to define a custom registry address when you are connected to an unknown chain.
+
+.. note::
+   If no address is defined will it try to detect the registry on the chain you are currently connected with and on the call of ``setProvider`` in the Eth module will it keep the defined address and use it for the ENS module.
+
+-------
+Returns
+-------
+
+``String`` - The address of the custom registry.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.registryAddress;
+    > "0x314159265dD8dbb310642f98f50C066173C1259b"
+
+------------------------------------------------------------------------------
+
 registry
 =====================
 
