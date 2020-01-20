@@ -1565,6 +1565,36 @@ var runTests = function(contractFactory) {
             assert.equal(result, '0x1234' + '000000000000000000000000'+ addressLowercase.replace('0x','')+ '000000000000000000000000000000000000000000000000000000000000000a');
         });
 
+        it('should throw an error on _encodeMethodABI if the given data string isn\'t prefixed with "0x"', function () {
+            var contract = contractFactory(abi,  new FakeIpcProvider());
+
+            try {
+                contract.deploy({
+                    arguments: [address, 10],
+                    data: '1234'
+                }).encodeABI();
+
+                assert.fail();
+            } catch (err) {
+                assert(err.message.includes('The given bytecode doesn\'t have the required \'0x\' prefix.'));
+            }
+        });
+
+        it('should throw an error on _executeMethod if the given data string isn\'t prefixed with "0x"', function () {
+            var contract = contractFactory(abi,  new FakeIpcProvider());
+
+            try {
+                contract.deploy({
+                    arguments: [address, 10],
+                    data: '1234'
+                }).estimateGas();
+
+                assert.fail();
+            } catch (err) {
+                assert(err.message.includes('The given bytecode doesn\'t have the required \'0x\' prefix.'));
+            }
+        });
+
 
         it('should estimate a function', function (done) {
             var provider = new FakeIpcProvider();

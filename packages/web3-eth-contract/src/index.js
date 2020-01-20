@@ -523,6 +523,10 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
         if(!this._deployData)
             throw new Error('The contract has no contract data option set. This is necessary to append the constructor parameters.');
 
+        if(!this._deployData.startsWith('0x')) {
+            throw new Error('The given bytecode doesn\'t have the required \'0x\' prefix.');
+        }
+
         return this._deployData + paramsABI;
 
     // return method
