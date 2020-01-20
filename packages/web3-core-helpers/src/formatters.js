@@ -147,7 +147,7 @@ var _txInputFormatter = function (options) {
     }
 
     if (!options.data.startsWith('0x')) {
-        throw new Error('The given data doesn\'t have the required \'0x\' prefix at the beginning.');
+        throw new Error('The given data doesn\'t have the required \'0x\' prefix.');
     }
 
     if (options.data && !utils.isHex(options.data)) {
