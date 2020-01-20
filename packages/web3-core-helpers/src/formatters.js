@@ -146,7 +146,7 @@ var _txInputFormatter = function (options) {
         delete options.input;
     }
 
-    if (!options.data.startsWith('0x')) {
+    if (options.data && !options.data.startsWith('0x')) {
         throw new Error('The given data doesn\'t have the required \'0x\' prefix.');
     }
 
