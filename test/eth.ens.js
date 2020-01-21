@@ -10,6 +10,18 @@ var utils = require('web3-utils');
 var namehash = require('eth-ens-namehash');
 var asciiToHex = require('../packages/web3-utils').asciiToHex;
 
+/**
+ * Injects the required validations and results for the `eth_sendTransaction` call
+ *
+ * @method prepareProviderForSetter
+ *
+ * @param {FakeIpcProvider} provider
+ * @param {String} signature
+ * @param {Array} types
+ * @param {Array} params
+ *
+ * @returns {void}
+ */
 function prepareProviderForSetter(provider, signature, types, params) {
     provider.injectValidation(function (payload) {
         assert.equal(payload.jsonrpc, '2.0');
@@ -70,6 +82,15 @@ function prepareProviderForSetter(provider, signature, types, params) {
     provider.injectResult('0x321');
 }
 
+/**
+ * Checks if the receipt got mapped as expected and not manipulated in a strange way within the ENS module
+ *
+ * @method isExpectedReceipt
+ *
+ * @param {Object} receipt
+ *
+ * @returns {void}
+ */
 function isExpectedReceipt(receipt) {
     assert.equal(receipt.contractAddress, '0x314159265dD8dbb310642f98f50C066173C1259b');
     assert.equal(receipt.cumulativeGasUsed, 10);
