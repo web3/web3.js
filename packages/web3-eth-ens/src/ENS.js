@@ -78,6 +78,70 @@ ENS.prototype.resolver = function (name) {
 };
 
 /**
+ * Does set the resolver of the given name
+ *
+ * @method setResolver
+ *
+ * @param {String} name
+ * @param {String} address
+ * @param {Object} sendOptions
+ * @param {Function} callback
+ *
+ * @returns {eventifiedPromise}
+ */
+ENS.prototype.setResolver = function (name, address, sendOptions, callback) {
+    return this.registry.setResolver(name, address, sendOptions, callback);
+};
+
+/**
+ * Returns the address of the owner of an ENS name.
+ *
+ * @method setSubnodeOwner
+ *
+ * @param {string} name
+ * @param {string} label
+ * @param {string} address
+ * @param {Object} sendOptions
+ * @param {function} callback
+ *
+ * @return {eventifiedPromise}
+ */
+ENS.prototype.setSubnodeOwner = function (name, label, address, sendOptions, callback) {
+    return this.registry.setSubnodeOwner(name, label, address, sendOptions, callback);
+};
+
+/**
+ * Returns the address of the owner of an ENS name.
+ *
+ * @method setTTL
+ *
+ * @param {string} name
+ * @param {number} ttl
+ * @param {Object} sendOptions
+ * @param {function} callback
+ *
+ * @return {eventifiedPromise}
+ */
+ENS.prototype.setTTL = function (name, ttl, sendOptions, callback) {
+    return this.registry.setTTL(name, ttl, sendOptions, callback);
+};
+
+/**
+ * Returns the address of the owner of an ENS name.
+ *
+ * @method setOwner
+ *
+ * @param {string} name
+ * @param {Object} sendOptions
+ * @param {function} callback
+ *
+ * @return {eventifiedPromise}
+ */
+ENS.prototype.setOwner = function (name, sendOptions, callback) {
+    return this.registry.setOwner(name, sendOptions, callback);
+};
+
+/**
  * Returns the address record associated with a name.
  *
  * @method getAddress
