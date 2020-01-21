@@ -206,7 +206,7 @@ Registry.prototype.setSubnodeOwner = function (name, label, address, sendOptions
     var promiEvent = new PromiEvent(true);
 
     this.contract.then(function (contract) {
-        contract.methods.setTTL(namehash.hash(name), utils.sha3(label), formatters.inputAddressFormatter(address))
+        contract.methods.setSubnodeOwner(namehash.hash(name), utils.sha3(label), formatters.inputAddressFormatter(address))
             .send(sendOptions)
             .then(function (receipt) {
                 promiEvent.resolve(receipt);

@@ -1,16 +1,230 @@
 var chai = require('chai');
 var assert = chai.assert;
+var FakeIpcProvider = require('./helpers/FakeIpcProvider');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var Web3 = require('../packages/web3');
 var sha3 = require('../packages/web3-utils').sha3;
 var formatters = require('web3-core-helpers').formatters;
+var abiCoder = require('web3-eth-abi');
+var utils = require('web3-utils');
+var namehash = require('eth-ens-namehash');
 var asciiToHex = require('../packages/web3-utils').asciiToHex;
 
-describe('ens', function () {
+function prepareProviderForSetter(provider, signature, types, params) {
+    provider.injectValidation(function (payload) {
+        assert.equal(payload.jsonrpc, '2.0');
+        assert.equal(payload.method, 'eth_sendTransaction');
+        assert.deepEqual(
+            payload.params,
+            [{
+                from: '0x0123456701234567012345670123456701234567',
+                gas: '0x64',
+                gasPrice: '0x64',
+                nonce: '0x1',
+                data: sha3(signature).slice(0, 10) + abiCoder.encodeParameters(types, params).substr(2),
+                to: '0x314159265dd8dbb310642f98f50c066173c1259b'
+            }]
+        );
+    });
+    provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
+
+    provider.injectValidation(function (payload) {
+        assert.equal(payload.method, 'eth_getTransactionReceipt');
+        assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+    });
+    provider.injectResult(null);
+
+    provider.injectValidation(function (payload) {
+        assert.equal(payload.method, 'eth_subscribe');
+        assert.deepEqual(payload.params, ['newHeads']);
+    });
+    provider.injectResult('0x1234567');
+
+    // fake newBlock
+    provider.injectNotification({
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x1234567',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    });
+
+    provider.injectValidation(function (payload) {
+        assert.equal(payload.method, 'eth_getTransactionReceipt');
+        assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+    });
+    provider.injectResult({
+        contractAddress: '0x314159265dd8dbb310642f98f50c066173c1259b',
+        cumulativeGasUsed: '0xa',
+        transactionIndex: '0x3',
+        blockNumber: '0xa',
+        blockHash: '0xbf1234',
+        gasUsed: '0x0'
+    });
+    provider.injectValidation(function (payload) {
+        assert.equal(payload.method, 'eth_unsubscribe');
+        assert.deepEqual(payload.params, ['0x1234567']);
+    });
+    provider.injectResult('0x321');
+}
+
+function isExpectedReceipt(receipt) {
+    assert.equal(receipt.contractAddress, '0x314159265dD8dbb310642f98f50C066173C1259b');
+    assert.equal(receipt.cumulativeGasUsed, 10);
+    assert.equal(receipt.transactionIndex, 3);
+    assert.equal(receipt.blockNumber, 10);
+    assert.equal(receipt.blockHash, '0xbf1234');
+    assert.equal(receipt.gasUsed, 0);
+}
+
+describe.only('ens', function () {
     var provider;
     var web3;
+    const hashedName = namehash.hash('foobar.eth');
+    const name = 'foobar.eth';
 
-    describe('in normal operation', function () {
+    describe('setters', function () {
+        beforeEach(function () {
+            provider = new FakeIpcProvider();
+            web3 = new Web3(provider);
+
+            provider.injectResult({
+                timestamp: Math.floor(new Date() / 1000) - 60,
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_getBlockByNumber');
+                assert.deepEqual(payload.params, ['latest', false]);
+            });
+
+            provider.injectResult(1);
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'net_version');
+                assert.deepEqual(payload.params, []);
+            });
+
+            provider.injectResult({
+                hash: '0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3',
+                blockNumber: '0x0'
+            });
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_getBlockByNumber');
+                assert.deepEqual(payload.params, ['0x0', false]);
+            });
+        });
+
+        it('should set the owner record for a name', function (done) {
+            const signature = 'setOwner(bytes32,address)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'address'],
+                [hashedName, '0x0123456701234567012345670123456701234567']
+            );
+
+            web3.eth.ens.registry.setOwner(
+                name,
+                '0x0123456701234567012345670123456701234567',
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                })
+                .then(function (receipt) {
+                    isExpectedReceipt(receipt);
+
+                    done();
+                });
+        });
+
+        it('should set the resolver record for a name', function (done) {
+            const signature = 'setResolver(bytes32,address)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'address'],
+                [hashedName, '0x0123456701234567012345670123456701234567']
+            );
+
+            web3.eth.ens.registry.setResolver(
+                name,
+                '0x0123456701234567012345670123456701234567',
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                })
+                .then(function (receipt) {
+                    isExpectedReceipt(receipt);
+
+                    done();
+                });
+        });
+
+        it('should set the TTL (caching time) record for a name', function (done) {
+            const signature = 'setTTL(bytes32,uint64)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'uint64'],
+                [hashedName, '1']
+            );
+
+            web3.eth.ens.registry.setTTL(
+                name,
+                '1',
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                })
+                .then(function (receipt) {
+                    isExpectedReceipt(receipt);
+
+                    done();
+                });
+        });
+
+        it('should create a new sub node with the specified label and owner', function (done) {
+            const signature = 'setSubnodeOwner(bytes32,bytes32,address)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'bytes32', 'address'],
+                [hashedName, utils.sha3('label'), '0x0123456701234567012345670123456701234567']
+            );
+
+            web3.eth.ens.registry.setSubnodeOwner(
+                name,
+                'label',
+                '0x0123456701234567012345670123456701234567',
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                })
+                .then(function (receipt) {
+                    isExpectedReceipt(receipt);
+
+                    done();
+                });
+        });
+    });
+
+    describe('getters', function () {
         beforeEach(function () {
             provider = new FakeHttpProvider();
             web3 = new Web3(provider);
