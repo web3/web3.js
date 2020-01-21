@@ -51,6 +51,8 @@ function Registry(ens) {
 /**
  * Returns the address of the owner of an ENS name.
  *
+ * @deprecated Please use the "getOwner" method instead of "owner"
+ *
  * @method owner
  *
  * @param {string} name
@@ -59,6 +61,22 @@ function Registry(ens) {
  * @return {eventifiedPromise}
  */
 Registry.prototype.owner = function (name, callback) {
+    console.warn('Deprecated: Please use the "getOwner" method instead of "owner".');
+
+    return this.getOwner(name, callback);
+};
+
+/**
+ * Returns the address of the owner of an ENS name.
+ *
+ * @method getOwner
+ *
+ * @param {string} name
+ * @param {function} callback
+ *
+ * @return {eventifiedPromise}
+ */
+Registry.prototype.getOwner = function (name, callback) {
     var promiEvent = new PromiEvent(true);
 
     this.contract.then(function (contract) {
@@ -128,7 +146,7 @@ Registry.prototype.setOwner = function (name, address, sendOptions, callback) {
  *
  * @returns {eventifiedPromise}
  */
-Registry.prototype.ttl = function (name, callback) {
+Registry.prototype.getTTL = function (name, callback) {
     var promiEvent = new PromiEvent(true);
 
     this.contract.then(function (contract) {
@@ -230,11 +248,32 @@ Registry.prototype.setSubnodeOwner = function (name, label, address, sendOptions
 /**
  * Returns the resolver contract associated with a name.
  *
+ * @deprecated Please use the "getResolver" method instead of "resolver"
+ *
  * @method resolver
+ *
  * @param {string} name
+ * @param {Function} callback
+ *
  * @return {Promise<Contract>}
  */
-Registry.prototype.resolver = function (name) {
+Registry.prototype.resolver = function (name, callback) {
+    console.warn('Deprecated: Please use the "getResolver" method instead of "resolver".');
+
+    return this.getResolver(name, callback);
+};
+
+/**
+ * Returns the resolver contract associated with a name.
+ *
+ * @method getResolver
+ *
+ * @param {string} name
+ * @param {Function} callback
+ *
+ * @return {Promise<Contract>}
+ */
+Registry.prototype.getResolver = function (name, callback) {
     var self = this;
 
     return this.contract.then(function (contract) {
@@ -242,11 +281,14 @@ Registry.prototype.resolver = function (name) {
     }).then(function (address) {
         var contract = new Contract(RESOLVER_ABI, address);
         contract.setProvider(self.ens.eth.currentProvider);
+
+        if (_.isFunction(callback)) {
+            callback(contract);
+        }
+
         return contract;
     });
 };
-
-
 
 /**
  * Returns the address of the owner of an ENS name.

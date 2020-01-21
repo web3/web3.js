@@ -70,11 +70,31 @@ function ENS(eth) {
 }
 
 /**
+ * Returns the Resolver by the given address
+ *
+ * @method resolver
+ *
  * @param {string} name
+ * @param {Function} callback
+ *
  * @returns {Promise<Contract>}
  */
-ENS.prototype.resolver = function (name) {
-    return this.registry.resolver(name);
+ENS.prototype.resolver = function (name, callback) {
+    return this.registry.resolver(name, callback);
+};
+
+/**
+ * Returns the Resolver by the given address
+ *
+ * @method getResolver
+ *
+ * @param {string} name
+ * @param {Function} callback
+ *
+ * @returns {Promise<Contract>}
+ */
+ENS.prototype.getResolver = function (name, callback) {
+    return this.registry.getResolver(name, callback);
 };
 
 /**
@@ -129,6 +149,20 @@ ENS.prototype.setTTL = function (name, ttl, sendOptions, callback) {
 /**
  * Returns the address of the owner of an ENS name.
  *
+ * @method getTTL
+ *
+ * @param {string} name
+ * @param {function} callback
+ *
+ * @return {eventifiedPromise}
+ */
+ENS.prototype.getTTL = function (name, callback) {
+    return this.registry.getTTL(name, callback);
+};
+
+/**
+ * Returns the address of the owner of an ENS name.
+ *
  * @method setOwner
  *
  * @param {string} name
@@ -139,6 +173,20 @@ ENS.prototype.setTTL = function (name, ttl, sendOptions, callback) {
  */
 ENS.prototype.setOwner = function (name, sendOptions, callback) {
     return this.registry.setOwner(name, sendOptions, callback);
+};
+
+/**
+ * Returns the owner by the given name and current configured or detected Registry
+ *
+ * @method getOwner
+ *
+ * @param {String} name
+ * @param {Function} callback
+ *
+ * @returns {eventifiedPromise}
+ */
+ENS.prototype.getOwner = function(name, callback) {
+    return this.registry.getOwner(name, callback);
 };
 
 /**
