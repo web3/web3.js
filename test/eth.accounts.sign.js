@@ -31,7 +31,7 @@ describe("eth", function () {
     describe("accounts", function () {
 
         tests.forEach(function (test, i) {
-            it("sign data using a string", function() {
+            it("sign data using a string", function () {
                 var ethAccounts = new Accounts();
 
                 var data = ethAccounts.sign(test.data, test.privateKey);
@@ -39,7 +39,7 @@ describe("eth", function () {
                 assert.equal(data.signature, test.signature);
             });
 
-            it("sign data using a utf8 encoded hex string", function() {
+            it("sign data using a utf8 encoded hex string", function () {
                 var ethAccounts = new Accounts();
 
                 var data = web3.utils.isHexStrict(test.data) ? test.data : web3.utils.utf8ToHex(test.data);
@@ -49,7 +49,7 @@ describe("eth", function () {
             });
 
 
-            it("recover signature using a string", function() {
+            it("recover signature using a string", function () {
                 var ethAccounts = new Accounts();
 
                 var address = ethAccounts.recover(test.data, test.signature);
@@ -57,7 +57,7 @@ describe("eth", function () {
                 assert.equal(address, test.address);
             });
 
-            it("recover signature using a string and preFixed", function() {
+            it("recover signature using a string and preFixed", function () {
                 var ethAccounts = new Accounts();
 
                 var address = ethAccounts.recover(ethAccounts.hashMessage(test.data), test.signature, true);
@@ -65,7 +65,7 @@ describe("eth", function () {
                 assert.equal(address, test.address);
             });
 
-            it("recover signature using a hash and r s v values and preFixed", function() {
+            it("recover signature using a hash and r s v values and preFixed", function () {
                 var ethAccounts = new Accounts();
 
                 var sig = ethAccounts.sign(test.data, test.privateKey);
@@ -74,7 +74,7 @@ describe("eth", function () {
                 assert.equal(address, test.address);
             });
 
-            it("recover signature (pre encoded) using a signature object", function() {
+            it("recover signature (pre encoded) using a signature object", function () {
                 var ethAccounts = new Accounts();
 
                 var data = web3.utils.isHexStrict(test.data) ? test.data : web3.utils.utf8ToHex(test.data);
@@ -84,7 +84,7 @@ describe("eth", function () {
                 assert.equal(address, test.address);
             });
 
-            it("recover signature using a signature object", function() {
+            it("recover signature using a signature object", function () {
                 var ethAccounts = new Accounts();
 
                 var sig = ethAccounts.sign(test.data, test.privateKey);
@@ -93,7 +93,7 @@ describe("eth", function () {
                 assert.equal(address, test.address);
             });
 
-            it("recover signature (pre encoded) using a hash and r s v values", function() {
+            it("recover signature (pre encoded) using a hash and r s v values", function () {
                 var ethAccounts = new Accounts();
 
                 var data = web3.utils.isHexStrict(test.data) ? test.data : web3.utils.utf8ToHex(test.data);
@@ -103,7 +103,7 @@ describe("eth", function () {
                 assert.equal(address, test.address);
             });
 
-            it("recover signature using a hash and r s v values", function() {
+            it("recover signature using a hash and r s v values", function () {
                 var ethAccounts = new Accounts();
 
                 var sig = ethAccounts.sign(test.data, test.privateKey);
@@ -114,21 +114,35 @@ describe("eth", function () {
         });
     });
 
-    it('should throw an error if a PK got passed to Accounts.sign without a "0x" prefix', function () {
+    it('should add the "0x" prefix and sign the given message correctly', function () {
+        assert.equal(
+            '0xa8037a6116c176a25e6fc224947fde9e79a2deaa0dd8b67b366fbdfdbffc01f953e41351267b20d4a89ebfe9c8f03c04de9b345add4a52f15bd026b63c8fb1501b',
+            new Accounts().sign('Some data', 'be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728').signature
+        );
+    });
+
+    it('should add the "0x" prefix to the privateKey', function () {
+        assert.equal(
+            '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
+            new Accounts().privateKeyToAccount('be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728').privateKey
+        );
+    });
+
+    it('should throw if a privateKey is given with a invalid length', function () {
         try {
-            new Accounts().sign('DATA', 'be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
+            new Accounts().privateKeyToAccount('0000be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
             assert.fail();
         } catch(err) {
-            assert(err.message.includes('Required prefix "0x" is missing for the given private key.'));
+            assert(err.message.includes('Private key must be 32 bytes long'));
         }
     });
 
-    it('should throw an error if a PK got passed to Accounts.privateKeyToAccount without a "0x" prefix', function () {
+    it('should throw if a privateKey is given with a invalid length', function () {
         try {
-            new Accounts().privateKeyToAccount('be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
+            new Accounts().sign('data', '00be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
             assert.fail();
         } catch(err) {
-            assert(err.message.includes('Required prefix "0x" is missing.'));
+            assert(err.message.includes('Private key must be 32 bytes long'));
         }
     });
 });
