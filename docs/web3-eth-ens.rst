@@ -38,7 +38,7 @@ Example
 ------------------------------------------------------------------------------
 
 registry
-=====================
+========
 
 .. code-block:: javascript
 
@@ -56,10 +56,10 @@ Returns
 - ``owner(name, callback): Promise`` - Deprecated please use ``getOwner``
 - ``getOwner(name, callback): Promise``
 - ``setOwner(name, address, sendOptions, callback): PromiEvent``
-- ``resolver(name): Promise`` - Deprecated please use ``getResolver``
-- ``getResolver(name): Promise``
+- ``resolver(name, callback): Promise`` - Deprecated please use ``getResolver``
+- ``getResolver(name, callback): Promise``
 - ``setResolver(name, address, sendOptions, callback): PromiEvent``
-- ``getTTL(name): Promise``
+- ``getTTL(name, callback): Promise``
 - ``setTTL(name, ttl, sendOptions, callback): PromiEvent``
 - ``setSubnodeOwner(name, label, address, sendOptions, callback): PromiEvent``
 
@@ -75,10 +75,10 @@ Example
         owner: Function(name, callback), // Deprecated
         getOwner: Function(name, callback),
         setOwner: Function(name, address, sendOptions, callback),
-        resolver: Function(name) // Deprecated
-        getResolver: Function(name)
+        resolver: Function(name, callback) // Deprecated
+        getResolver: Function(name, callback)
         setResolver: Function(name, address, sendOptions, callback)
-        getTTL: Function(name)
+        getTTL: Function(name, callback)
         setTTL: Function(name, ttl, sendOptions, callback)
         setSubnodeOwner: Function(name, label, address, sendOptions, callback)
     }
@@ -86,13 +86,23 @@ Example
 ------------------------------------------------------------------------------
 
 resolver
-=====================
+========
 
 .. code-block:: javascript
 
-    web3.eth.ens.resolver(name);
+    web3.eth.ens.resolver(name [, callback]);
 
 Returns the resolver contract to an Ethereum address.
+
+.. note::
+    This method is deprecated please use ``getResolver``
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
 Returns
@@ -110,6 +120,260 @@ Example
         console.log(contract);
     });
     > Contract<Resolver>
+
+------------------------------------------------------------------------------
+
+getResolver
+===========
+
+.. code-block:: javascript
+
+    web3.eth.ens.getResolver(name [, callback]);
+
+Returns the resolver contract to an Ethereum address.
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``Resolver`` - The ENS resolver for this name.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.resolver('ethereum.eth').then(function (contract) {
+        console.log(contract);
+    });
+    > Contract<Resolver>
+
+------------------------------------------------------------------------------
+
+setResolver
+===========
+
+.. code-block:: javascript
+
+    web3.eth.ens.setResolver(name, address, sendOptions [, callback]);
+
+Does set the resolver contract address of a name.
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``address`` - ``String``: The contract address of the deployed ``Resolver`` contract.
+3. ``sendOptions`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
+4. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt>``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.setResolver('ethereum.eth', '0x...', {...}).then(function (receipt) {
+        console.log(receipt);
+    });
+    > {...}
+
+------------------------------------------------------------------------------
+
+getOwner
+========
+
+.. code-block:: javascript
+
+    web3.eth.ens.getOwner(name [, callback]);
+
+Returns the owner of a name.
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``String`` - The address of the registrar (EOA or CA).
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.getOwner('ethereum.eth').then(function (owner) {
+        console.log(owner);
+    });
+    > '0x...'
+
+
+------------------------------------------------------------------------------
+
+setOwner
+========
+
+.. code-block:: javascript
+
+    web3.eth.ens.setOwner(name, sendOptions [, callback]);
+
+Does set the owner of the given name.
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``sendOptions`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt>``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.setOwner('ethereum.eth', {...}).then(function (receipt) {
+        console.log(receipt);
+    });
+    > {...}
+
+------------------------------------------------------------------------------
+
+getTTL
+======
+
+.. code-block:: javascript
+
+    web3.eth.ens.getTTL(name [, callback]);
+
+Returns the caching TTL (time-to-live) of a name.
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``Promise<Number>``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.getTTL('ethereum.eth').then(function (ttl) {
+        console.log(ttl);
+    });
+    > 100000
+
+------------------------------------------------------------------------------
+
+setTTL
+======
+
+.. code-block:: javascript
+
+    web3.eth.ens.setTTL(name, ttl, sendOptions [, callback]);
+
+Does set the caching TTL (time-to-live) of a name.
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``ttl`` - ``Number``: The TTL value (uint64)
+3. ``sendOptions`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
+4. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt>``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.getTTL('ethereum.eth', 10000, {...}).then(function (receipt) {
+        console.log(receipt);
+    });
+    > {...}
+
+------------------------------------------------------------------------------
+
+setSubnodeOwner
+===============
+
+.. code-block:: javascript
+
+    web3.eth.ens.setSubnodeOwner(name, label, address, sendOptions [, callback]);
+
+Does set the caching TTL (time-to-live) of a name.
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``label`` - ``String``: The name of the sub-domain
+3. ``address`` - ``String``: The registrar of this sub-domain
+4. ``sendOptions`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
+5. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt>``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.setSubnodeOwner('ethereum.eth', 'web3', '0x...', {...}).then(function (receipt) {
+        console.log(receipt); // successfully web3.ethereum.eth registered
+    });
+    > {...}
 
 ------------------------------------------------------------------------------
 
@@ -162,10 +426,7 @@ Parameters
 
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``address`` - ``String``: The address to set.
-3. ``options`` - ``Object``: The options used for sending.
-    * ``from`` - ``String``: The address the transaction should be sent from.
-    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
-    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+3. ``options`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
 
 Emits an ``AddrChanged`` event.
 
@@ -281,11 +542,7 @@ Parameters
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``x`` - ``String``: The X coordinate of the public key.
 3. ``y`` - ``String``: The Y coordinate of the public key.
-4. ``options`` - ``Object``: The options used for sending.
-    * ``from`` - ``String``: The address the transaction should be sent from.
-    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
-    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
-
+4. ``options`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
 
 Emits an ``PubkeyChanged`` event.
 
@@ -397,11 +654,7 @@ Parameters
 
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``hash`` - ``String``: The content hash to set.
-3. ``options`` - ``Object``: The options used for sending.
-    * ``from`` - ``String``: The address the transaction should be sent from.
-    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
-    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
-
+3. ``options`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
 
 Emits an ``ContentChanged`` event.
 
@@ -511,11 +764,7 @@ Parameters
 
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``hash`` - ``String``: The multihash to set.
-3. ``options`` - ``Object``: The options used for sending.
-    * ``from`` - ``String``: The address the transaction should be sent from.
-    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
-    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
-
+3. ``options`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
 
 Emits an ``MultihashChanged``event.
 
