@@ -88,16 +88,17 @@ Registry.prototype.owner = function (name, callback) {
  * @method setOwner
  *
  * @param {string} name
+ * @param {string} address
  * @param {Object} sendOptions
  * @param {function} callback
  *
  * @return {eventifiedPromise}
  */
-Registry.prototype.setOwner = function (name, sendOptions, callback) {
+Registry.prototype.setOwner = function (name, address, sendOptions, callback) {
     var promiEvent = new PromiEvent(true);
 
     this.contract.then(function (contract) {
-        contract.methods.owner(namehash.hash(name)).send(sendOptions)
+        contract.methods.setOwner(namehash.hash(name), formatters.inputAddressFormatter(address)).send(sendOptions)
             .then(function (receipt) {
                 promiEvent.resolve(receipt);
 
