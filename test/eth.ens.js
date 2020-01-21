@@ -79,7 +79,7 @@ function isExpectedReceipt(receipt) {
     assert.equal(receipt.gasUsed, 0);
 }
 
-describe.only('ens', function () {
+describe('ens', function () {
     var provider;
     var web3;
     const hashedName = namehash.hash('foobar.eth');
@@ -118,7 +118,7 @@ describe.only('ens', function () {
             });
         });
 
-        it('should set the owner record for a name', function (done) {
+        it('should set the owner record for a name', async function () {
             const signature = 'setOwner(bytes32,address)';
 
             prepareProviderForSetter(
@@ -128,7 +128,7 @@ describe.only('ens', function () {
                 [hashedName, '0x0123456701234567012345670123456701234567']
             );
 
-            web3.eth.ens.registry.setOwner(
+            const receipt = await web3.eth.ens.registry.setOwner(
                 name,
                 '0x0123456701234567012345670123456701234567',
                 {
@@ -136,15 +136,12 @@ describe.only('ens', function () {
                     gas: 100,
                     gasPrice: 100,
                     nonce: 1
-                })
-                .then(function (receipt) {
-                    isExpectedReceipt(receipt);
-
-                    done();
                 });
+
+            isExpectedReceipt(receipt);
         });
 
-        it('should set the resolver record for a name', function (done) {
+        it('should set the resolver record for a name', async function () {
             const signature = 'setResolver(bytes32,address)';
 
             prepareProviderForSetter(
@@ -154,7 +151,7 @@ describe.only('ens', function () {
                 [hashedName, '0x0123456701234567012345670123456701234567']
             );
 
-            web3.eth.ens.registry.setResolver(
+            const receipt = await web3.eth.ens.registry.setResolver(
                 name,
                 '0x0123456701234567012345670123456701234567',
                 {
@@ -162,15 +159,12 @@ describe.only('ens', function () {
                     gas: 100,
                     gasPrice: 100,
                     nonce: 1
-                })
-                .then(function (receipt) {
-                    isExpectedReceipt(receipt);
-
-                    done();
                 });
+
+            isExpectedReceipt(receipt);
         });
 
-        it('should set the TTL (caching time) record for a name', function (done) {
+        it('should set the TTL (caching time) record for a name', async function () {
             const signature = 'setTTL(bytes32,uint64)';
 
             prepareProviderForSetter(
@@ -180,7 +174,7 @@ describe.only('ens', function () {
                 [hashedName, '1']
             );
 
-            web3.eth.ens.registry.setTTL(
+            const receipt = await web3.eth.ens.registry.setTTL(
                 name,
                 '1',
                 {
@@ -188,15 +182,12 @@ describe.only('ens', function () {
                     gas: 100,
                     gasPrice: 100,
                     nonce: 1
-                })
-                .then(function (receipt) {
-                    isExpectedReceipt(receipt);
-
-                    done();
                 });
+
+            isExpectedReceipt(receipt);
         });
 
-        it('should create a new sub node with the specified label and owner', function (done) {
+        it('should create a new sub node with the specified label and owner', async function () {
             const signature = 'setSubnodeOwner(bytes32,bytes32,address)';
 
             prepareProviderForSetter(
@@ -206,7 +197,7 @@ describe.only('ens', function () {
                 [hashedName, utils.sha3('label'), '0x0123456701234567012345670123456701234567']
             );
 
-            web3.eth.ens.registry.setSubnodeOwner(
+            const receipt = await web3.eth.ens.registry.setSubnodeOwner(
                 name,
                 'label',
                 '0x0123456701234567012345670123456701234567',
@@ -215,12 +206,9 @@ describe.only('ens', function () {
                     gas: 100,
                     gasPrice: 100,
                     nonce: 1
-                })
-                .then(function (receipt) {
-                    isExpectedReceipt(receipt);
-
-                    done();
                 });
+
+            isExpectedReceipt(receipt);
         });
     });
 
@@ -257,7 +245,7 @@ describe.only('ens', function () {
             });
         });
 
-        it('should return the owner record for a name', function (done) {
+        it('should return the owner record for a name', async function () {
             var signature = 'owner(bytes32)';
 
             provider.injectValidation(function (payload) {
@@ -270,16 +258,12 @@ describe.only('ens', function () {
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
 
-            web3.eth.ens.registry.owner('foobar.eth').then(function (owner) {
-                assert.equal(owner, '0x0123456701234567012345670123456701234567');
-                done();
-            }).catch(function (err) {
-                throw err;
-            });
+            const owner = await web3.eth.ens.registry.owner('foobar.eth');
 
+            assert.equal(owner, '0x0123456701234567012345670123456701234567');
         });
 
-        it('should fetch the resolver for a name', function (done) {
+        it('should fetch the resolver for a name', async function () {
             var signature = 'resolver(bytes32)';
 
             provider.injectValidation(function (payload) {
@@ -292,15 +276,12 @@ describe.only('ens', function () {
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
 
-            web3.eth.ens.registry.resolver('foobar.eth').then(function (resolver) {
-                assert.equal(resolver.options.address, '0x0123456701234567012345670123456701234567');
-                done();
-            }).catch(function (err) {
-                throw err;
-            });
+            const resolver = await web3.eth.ens.registry.resolver('foobar.eth');
+
+            assert.equal(resolver.options.address, '0x0123456701234567012345670123456701234567');
         });
 
-        it('should return the addr record for a name', function (done) {
+        it('should return the addr record for a name', async function () {
             var resolverSig = 'resolver(bytes32)';
             var addrSig = 'addr(bytes32)';
 
@@ -324,15 +305,12 @@ describe.only('ens', function () {
             });
             provider.injectResult('0x0000000000000000000000001234567012345670123456701234567012345670');
 
-            web3.eth.ens.getAddress('foobar.eth').then(function (addr) {
-                assert.equal(addr, '0x1234567012345670123456701234567012345670');
-                done();
-            }).catch(function (err) {
-                throw err;
-            });
+            const addr = await web3.eth.ens.getAddress('foobar.eth');
+
+            assert.equal(addr, '0x1234567012345670123456701234567012345670');
         });
 
-        it('should return x and y from an public key for en specific ens name', function (done) {
+        it('should return x and y from an public key for en specific ens name', async function () {
             var resolverSignature = 'resolver(bytes32)';
             var pubkeySignature = 'pubkey(bytes32)';
 
@@ -361,14 +339,13 @@ describe.only('ens', function () {
                 pubkeyCoordinateAsHex
             ]);
 
-            web3.eth.ens.getPubkey('foobar.eth').then(function (result) {
-                assert.equal(result[0][0], '0x3078303030303030303030303030303030303030303030303030303030303030');
-                assert.equal(result[0][1], '0x3030303030303030303030303030303030303030303030303030303030303030');
-                done();
-            });
+            const result = await web3.eth.ens.getPubkey('foobar.eth');
+
+            assert.equal(result[0][0], '0x3078303030303030303030303030303030303030303030303030303030303030');
+            assert.equal(result[0][1], '0x3030303030303030303030303030303030303030303030303030303030303030');
         });
 
-        it('should get the content of an resolver', function (done) {
+        it('should get the content of an resolver', async function () {
             var resolverSignature = 'resolver(bytes32)';
             var contentSignature = 'content(bytes32)';
 
@@ -393,15 +370,14 @@ describe.only('ens', function () {
 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
-            web3.eth.ens.getContent('foobar.eth').then(function (result) {
-                assert.equal(result, '0x0000000000000000000000000000000000000000000000000000000000000000');
-                done();
-            });
+            const result = await web3.eth.ens.getContent('foobar.eth');
+
+            assert.equal(result, '0x0000000000000000000000000000000000000000000000000000000000000000');
         });
     });
 
 
-    it("won't resolve on an unknown network", function (done) {
+    it("won't resolve on an unknown network", async function () {
         provider = new FakeHttpProvider();
         web3 = new Web3(provider);
 
@@ -431,16 +407,15 @@ describe.only('ens', function () {
             assert.deepEqual(payload.params, ['0x0', false]);
         });
 
-        web3.eth.ens.getAddress('foobar.eth').then(function () {
-            assert.isTrue(false, 'Should throw error');
-            done();
-        }).catch(function (e) {
-            assert.isTrue(e instanceof Error, 'Should throw error');
-            done();
-        });
+        try {
+            await web3.eth.ens.getAddress('foobar.eth');
+            assert.fail();
+        } catch(err) {
+            assert.isTrue(err instanceof Error, 'Should throw error');
+        }
     });
 
-    it("won't resolve when out of date", function (done) {
+    it("won't resolve when out of date", async function () {
         provider = new FakeHttpProvider();
         web3 = new Web3(provider);
 
@@ -453,13 +428,12 @@ describe.only('ens', function () {
             assert.deepEqual(payload.params, ['latest', false]);
         });
 
-        web3.eth.ens.getAddress('foobar.eth').then(function () {
-            assert.isTrue(false, 'Should throw error');
-            done();
-        }).catch(function (e) {
-            assert.isTrue(e instanceof Error, 'Should throw error');
-            done();
-        });
+        try {
+            await web3.eth.ens.getAddress('foobar.eth');
+            assert.fail();
+        } catch(err) {
+            assert.isTrue(err instanceof Error, 'Should throw error');
+        }
     });
 
     it('should only check if the connected node is synced if at least a hour is gone', async function () {
