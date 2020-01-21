@@ -70,7 +70,7 @@ ResolverMethodHandler.prototype.call = function (callback) {
     var promiEvent = new PromiEvent();
     var preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
-    this.parent.registry.resolver(this.ensName).then(function (resolver) {
+    this.parent.registry.getResolver(this.ensName).then(function (resolver) {
         self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, callback);
     }).catch(function (error) {
         promiEvent.reject(error);
@@ -92,7 +92,7 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
     var promiEvent = new PromiEvent();
     var preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
-    this.parent.registry.resolver(this.ensName).then(function (resolver) {
+    this.parent.registry.getResolver(this.ensName).then(function (resolver) {
         self.parent.handleSend(promiEvent, resolver.methods[self.methodName], preparedArguments, sendOptions, callback);
     }).catch(function (error) {
         promiEvent.reject(error);
@@ -172,6 +172,7 @@ ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, prepa
  *
  * @param {string} name
  * @param {array} methodArguments
+ *
  * @returns {array}
  */
 ResolverMethodHandler.prototype.prepareArguments = function (name, methodArguments) {
