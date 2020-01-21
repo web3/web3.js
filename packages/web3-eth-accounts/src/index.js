@@ -122,7 +122,12 @@ Accounts.prototype.create = function create(entropy) {
 
 Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey) {
     if (!privateKey.startsWith('0x')) {
-        throw new Error('Required prefix "0x" is missing.');
+        privateKey = '0x' + privateKey;
+    }
+
+    // 64 hex characters + hex-prefix
+    if (privateKey.length !== 66) {
+        throw new Error("Private key must be 32 bytes long");
     }
 
     return this._addAccountFunctions(Account.fromPrivate(privateKey));
@@ -299,7 +304,12 @@ Accounts.prototype.hashMessage = function hashMessage(data) {
 
 Accounts.prototype.sign = function sign(data, privateKey) {
     if (!privateKey.startsWith('0x')) {
-        throw new Error('Required prefix "0x" is missing for the given private key.');
+        privateKey = '0x' + privateKey;
+    }
+
+    // 64 hex characters + hex-prefix
+    if (privateKey.length !== 66) {
+        throw new Error("Private key must be 32 bytes long");
     }
 
     var hash = this.hashMessage(data);
