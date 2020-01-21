@@ -37,3 +37,28 @@ If this property is ``null`` you should connect to a remote/local node.
     var web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
 That's it! now you can use the ``web3`` object.
+
+
+Usage with TypeScript
+=====================
+
+We support types within the repo itself. Please open an issue here if you find any wrong types.
+
+You can use ``web3.js`` as follows:
+
+.. code-block:: typescript
+
+    import Web3 from 'web3';
+    const web3 = new Web3('ws://localhost:8546');
+
+
+If you are using the types in a ``commonjs`` module like a Node app you need to enable
+``esModuleInterop`` in your `tsconfig` compile option. Also enable ``allowSyntheticDefaultImports``
+for typesystem compatibility:
+
+.. code-block:: javascript
+
+    "compilerOptions": {
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      ....
