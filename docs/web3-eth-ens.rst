@@ -1,8 +1,8 @@
 .. _eth-ens:
 
-=========
+============
 web3.eth.ens
-=========
+============
 
 The ``web3.eth.ens`` functions let you interacting with ENS.
 
@@ -52,6 +52,17 @@ Returns
 
 ``Registry`` - The current ENS registry.
 
+- ``contract: Contract`` - The ``Registry`` contract with the interface we know from the :ref:`Contract <eth-contract>` object.
+- ``owner(name, callback): Promise`` - Deprecated please use ``getOwner``
+- ``getOwner(name, callback): Promise``
+- ``setOwner(name, address, sendOptions, callback): PromiEvent``
+- ``resolver(name): Promise`` - Deprecated please use ``getResolver``
+- ``getResolver(name): Promise``
+- ``setResolver(name, address, sendOptions, callback): PromiEvent``
+- ``getTTL(name): Promise``
+- ``setTTL(name, ttl, sendOptions, callback): PromiEvent``
+- ``setSubnodeOwner(name, label, address, sendOptions, callback): PromiEvent``
+
 -------
 Example
 -------
@@ -60,10 +71,16 @@ Example
 
     web3.eth.ens.registry;
     > {
-        ens: ENS,
         contract: Contract,
-        owner: Function(name),
-        resolve: Function(name)
+        owner: Function(name, callback), // Deprecated
+        getOwner: Function(name, callback),
+        setOwner: Function(name, address, sendOptions, callback),
+        resolver: Function(name) // Deprecated
+        getResolver: Function(name)
+        setResolver: Function(name, address, sendOptions, callback)
+        getTTL: Function(name)
+        setTTL: Function(name, ttl, sendOptions, callback)
+        setSubnodeOwner: Function(name, label, address, sendOptions, callback)
     }
 
 ------------------------------------------------------------------------------
@@ -81,7 +98,7 @@ Returns the resolver contract to an Ethereum address.
 Returns
 -------
 
-``Reslver`` - The ENS resolver for this name.
+``Resolver`` - The ENS resolver for this name.
 
 -------
 Example
@@ -205,7 +222,7 @@ Example
     });
 
 
-    For further information on the handling of contract events please see here contract-events_.
+For further information on the handling of contract events please see :ref:`here <contract-events>`.
 
 ------------------------------------------------------------------------------
 
@@ -327,7 +344,7 @@ Example
     });
 
 
-    For further information on the handling of contract events please see here contract-events_.
+For further information on the handling of contract events please see :ref:`here <contract-events>`.
 
 ------------------------------------------------------------------------------
 
@@ -441,7 +458,7 @@ Example
     });
 
 
-    For further information on the handling of contract events please see here contract-events_.
+For further information on the handling of contract events please see :ref:`here <contract-events>`.
 
 ------------------------------------------------------------------------------
 
@@ -540,7 +557,7 @@ Example
     .on('error', console.error);
 
 
-    For further information on the handling of contract events please see here contract-events_.
+For further information on the handling of contract events please see :ref:`here <contract-events>`.
 
 ------------------------------------------------------------------------------
 
@@ -648,7 +665,7 @@ Example
         address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
     }
 
-For further information on the handling of contract events please see here contract-events_.
+
+For further information on the handling of contract events please see :ref:`here <contract-events>`.
 
 ------------------------------------------------------------------------------
-
