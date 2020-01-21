@@ -72,6 +72,8 @@ function ENS(eth) {
 /**
  * Returns the Resolver by the given address
  *
+ * @deprecated Please use the "getResolver" method instead of "resolver"
+ *
  * @method resolver
  *
  * @param {string} name
