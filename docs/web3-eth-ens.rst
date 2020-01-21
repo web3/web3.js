@@ -151,7 +151,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.resolver('ethereum.eth').then(function (contract) {
+    web3.eth.ens.getResolver('ethereum.eth').then(function (contract) {
         console.log(contract);
     });
     > Contract<Resolver>
@@ -332,7 +332,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getTTL('ethereum.eth', 10000, {...}).then(function (receipt) {
+    web3.eth.ens.setTTL('ethereum.eth', 10000, {...}).then(function (receipt) {
         console.log(receipt);
     });
     > {...}
