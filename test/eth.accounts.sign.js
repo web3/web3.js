@@ -113,4 +113,22 @@ describe("eth", function () {
             });
         });
     });
+
+    it('should throw an error if a PK got passed to Accounts.sign without a "0x" prefix', function () {
+        try {
+            new Accounts().sign('DATA', 'be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
+            assert.fail();
+        } catch(err) {
+            assert(err.message.includes('Required prefix "0x" is missing for the given private key.'));
+        }
+    });
+
+    it('should throw an error if a PK got passed to Accounts.privateKeyToAccount without a "0x" prefix', function () {
+        try {
+            new Accounts().privateKeyToAccount('be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
+            assert.fail();
+        } catch(err) {
+            assert(err.message.includes('Required prefix "0x" is missing.'));
+        }
+    });
 });
