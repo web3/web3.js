@@ -24,6 +24,8 @@ var _ = require('underscore');
 var Contract = require('web3-eth-contract');
 var namehash = require('eth-ens-namehash');
 var PromiEvent = require('web3-core-promievent');
+var formatters = require('web3-core-helpers').formatters;
+var utils = require('web3-utils');
 var REGISTRY_ABI = require('../ressources/ABI/Registry');
 var RESOLVER_ABI = require('../ressources/ABI/Resolver');
 
@@ -50,15 +52,161 @@ function Registry(ens) {
  * Returns the address of the owner of an ENS name.
  *
  * @method owner
+ *
  * @param {string} name
  * @param {function} callback
- * @return {Promise<any>}
+ *
+ * @return {eventifiedPromise}
  */
 Registry.prototype.owner = function (name, callback) {
     var promiEvent = new PromiEvent(true);
 
     this.contract.then(function (contract) {
         contract.methods.owner(namehash.hash(name)).call()
+            .then(function (receipt) {
+                promiEvent.resolve(receipt);
+
+                if (_.isFunction(callback)) {
+                    callback(receipt);
+                }
+            })
+            .catch(function (error) {
+                promiEvent.reject(error);
+
+                if (_.isFunction(callback)) {
+                    callback(error);
+                }
+            });
+    });
+
+    return promiEvent.eventEmitter;
+};
+
+/**
+ * Returns the address of the owner of an ENS name.
+ *
+ * @method setOwner
+ *
+ * @param {string} name
+ * @param {Object} sendOptions
+ * @param {function} callback
+ *
+ * @return {eventifiedPromise}
+ */
+Registry.prototype.setOwner = function (name, sendOptions, callback) {
+    var promiEvent = new PromiEvent(true);
+
+    this.contract.then(function (contract) {
+        contract.methods.owner(namehash.hash(name)).send(sendOptions)
+            .then(function (receipt) {
+                promiEvent.resolve(receipt);
+
+                if (_.isFunction(callback)) {
+                    callback(receipt);
+                }
+            })
+            .catch(function (error) {
+                promiEvent.reject(error);
+
+                if (_.isFunction(callback)) {
+                    callback(error);
+                }
+            });
+    });
+
+    return promiEvent.eventEmitter;
+};
+
+/**
+ * Returns the TTL of the given node by his name
+ *
+ * @method ttl
+ *
+ * @param {String} name
+ * @param {Function} callback
+ *
+ * @returns {eventifiedPromise}
+ */
+Registry.prototype.ttl = function (name, callback) {
+    var promiEvent = new PromiEvent(true);
+
+    this.contract.then(function (contract) {
+        contract.methods.ttl(namehash.hash(name)).call()
+            .then(function (receipt) {
+                promiEvent.resolve(receipt);
+
+                if (_.isFunction(callback)) {
+                    callback(receipt);
+                }
+            })
+            .catch(function (error) {
+                promiEvent.reject(error);
+
+                if (_.isFunction(callback)) {
+                    callback(error);
+                }
+            });
+    });
+
+    return promiEvent.eventEmitter;
+};
+
+/**
+ * Returns the address of the owner of an ENS name.
+ *
+ * @method setTTL
+ *
+ * @param {string} name
+ * @param {number} ttl
+ * @param {Object} sendOptions
+ * @param {function} callback
+ *
+ * @return {eventifiedPromise}
+ */
+Registry.prototype.setTTL = function (name, ttl, sendOptions, callback) {
+    var promiEvent = new PromiEvent(true);
+
+    this.contract.then(function (contract) {
+        contract.methods.setTTL(namehash.hash(name), ttl)
+            .send(sendOptions)
+            .then(function (receipt) {
+                promiEvent.resolve(receipt);
+
+                if (_.isFunction(callback)) {
+                    callback(receipt);
+                }
+            })
+            .catch(function (error) {
+                promiEvent.reject(error);
+
+                if (_.isFunction(callback)) {
+                    callback(error);
+                }
+            });
+    });
+
+    return promiEvent.eventEmitter;
+};
+
+/**
+ * Returns the address of the owner of an ENS name.
+ *
+ * @method setSubnodeOwner
+ *
+ * @param {string} name
+ * @param {string} label
+ * @param {string} address
+ * @param {Object} sendOptions
+ * @param {function} callback
+ *
+ * @return {eventifiedPromise}
+ */
+Registry.prototype.setSubnodeOwner = function (name, label, address, sendOptions, callback) {
+    var promiEvent = new PromiEvent(true);
+
+    this.contract.then(function (contract) {
+        contract.methods.setTTL(namehash.hash(name), utils.sha3(label), formatters.inputAddressFormatter(address))
+            .send(sendOptions)
             .then(function (receipt) {
                 promiEvent.resolve(receipt);
 
@@ -95,6 +243,45 @@ Registry.prototype.resolver = function (name) {
         contract.setProvider(self.ens.eth.currentProvider);
         return contract;
     });
+};
+
+
+
+/**
+ * Returns the address of the owner of an ENS name.
+ *
+ * @method setResolver
+ *
+ * @param {string} name
+ * @param {string} address
+ * @param {Object} sendOptions
+ * @param {function} callback
+ *
+ * @return {eventifiedPromise}
+ */
+Registry.prototype.setResolver = function (name, address, sendOptions, callback) {
+    var promiEvent = new PromiEvent(true);
+
+    this.contract.then(function (contract) {
+        contract.methods.setResolver(namehash.hash(name), formatters.inputAddressFormatter(address))
+            .send(sendOptions)
+            .then(function (receipt) {
+                promiEvent.resolve(receipt);
+
+                if (_.isFunction(callback)) {
+                    callback(receipt);
+                }
+            })
+            .catch(function (error) {
+                promiEvent.reject(error);
+
+                if (_.isFunction(callback)) {
+                    callback(error);
+                }
+            });
+    });
+
+    return promiEvent.eventEmitter;
 };
 
 module.exports = Registry;
