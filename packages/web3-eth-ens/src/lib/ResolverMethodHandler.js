@@ -112,17 +112,18 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
  */
 ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, preparedArguments, callback) {
     method.apply(this, preparedArguments).call()
-        .then(function (receipt) {
-            promiEvent.resolve(receipt);
+        .then(function (result) {
+            promiEvent.resolve(result);
 
             if (_.isFunction(callback)) {
-                callback(receipt);
+                // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                callback(result, result);
             }
         }).catch(function (error) {
             promiEvent.reject(error);
 
             if (_.isFunction(callback)) {
-                callback(error);
+                callback(error, null);
             }
         });
 
@@ -152,7 +153,8 @@ ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, prepa
             promiEvent.resolve(receipt);
 
             if (_.isFunction(callback)) {
-                callback(receipt);
+                // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                callback(receipt, receipt);
             }
         })
         .on('error', function (error) {
@@ -160,7 +162,7 @@ ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, prepa
             promiEvent.reject(error);
 
             if (_.isFunction(callback)) {
-                callback(error);
+                callback(error, null);
             }
         });
 

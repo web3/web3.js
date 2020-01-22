@@ -85,14 +85,15 @@ Registry.prototype.getOwner = function (name, callback) {
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    callback(receipt);
+                    // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                    callback(receipt, receipt);
                 }
             })
             .catch(function (error) {
                 promiEvent.reject(error);
 
                 if (_.isFunction(callback)) {
-                    callback(error);
+                    callback(error, null);
                 }
             });
     });
@@ -121,14 +122,15 @@ Registry.prototype.setOwner = function (name, address, sendOptions, callback) {
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    callback(receipt);
+                    // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                    callback(receipt, receipt);
                 }
             })
             .catch(function (error) {
                 promiEvent.reject(error);
 
                 if (_.isFunction(callback)) {
-                    callback(error);
+                    callback(error, null);
                 }
             });
     });
@@ -155,14 +157,15 @@ Registry.prototype.getTTL = function (name, callback) {
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    callback(receipt);
+                    // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                    callback(receipt, receipt);
                 }
             })
             .catch(function (error) {
                 promiEvent.reject(error);
 
                 if (_.isFunction(callback)) {
-                    callback(error);
+                    callback(error, null);
                 }
             });
     });
@@ -192,14 +195,15 @@ Registry.prototype.setTTL = function (name, ttl, sendOptions, callback) {
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    callback(receipt);
+                    // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                    callback(receipt, receipt);
                 }
             })
             .catch(function (error) {
                 promiEvent.reject(error);
 
                 if (_.isFunction(callback)) {
-                    callback(error);
+                    callback(error, null);
                 }
             });
     });
@@ -230,14 +234,15 @@ Registry.prototype.setSubnodeOwner = function (name, label, address, sendOptions
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    callback(receipt);
+                    // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                    callback(receipt, receipt);
                 }
             })
             .catch(function (error) {
                 promiEvent.reject(error);
 
                 if (_.isFunction(callback)) {
-                    callback(error);
+                    callback(error, null);
                 }
             });
     });
@@ -283,10 +288,19 @@ Registry.prototype.getResolver = function (name, callback) {
         contract.setProvider(self.ens.eth.currentProvider);
 
         if (_.isFunction(callback)) {
-            callback(contract);
+            // It's required to pass the contract to the second argument to be backwards compatible and to have the required consistency
+            callback(contract, contract);
         }
 
         return contract;
+    }).catch(function(error) {
+        if (_.isFunction(callback)) {
+            callback(error, null);
+
+            return;
+        }
+
+        throw error;
     });
 };
 
@@ -312,14 +326,15 @@ Registry.prototype.setResolver = function (name, address, sendOptions, callback)
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    callback(receipt);
+                    // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                    callback(receipt, receipt);
                 }
             })
             .catch(function (error) {
                 promiEvent.reject(error);
 
                 if (_.isFunction(callback)) {
-                    callback(error);
+                    callback(error, null);
                 }
             });
     });

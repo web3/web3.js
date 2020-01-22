@@ -17,23 +17,75 @@
  * @date 2018
  */
 
-import { PromiEvent, TransactionConfig } from 'web3-core';
+import { PromiEvent, TransactionConfig, TransactionReceipt } from 'web3-core';
+import { TransactionRevertInstructionError } from 'web3-core-helpers';
 import { Eth } from 'web3-eth';
 import { Contract } from 'web3-eth-contract';
 
+// TODO: Define as soon as implemented the generic contract
 export class Ens {
     constructor(eth: Eth);
 
     registryAddress: string | null;
     registry: Registry;
 
-    resolver(name: string): Promise<Contract>;
-
     supportsInterface(
         name: string,
         interfaceId: string,
-        callback?: (error: Error, supportsInterface: boolean) => void
+        callback?: (error: Error, supported: boolean) => void
     ): Promise<boolean>;
+
+    /**
+     * @deprecated Please use the "getResolver" method instead of "resolver"
+     */
+    resolver(
+        name: string,
+        callback?: (error: Error, contract: Contract) => void
+    ): Promise<Contract>;
+
+    getResolver(
+        name: string,
+        callback?: (error: Error, contract: Contract) => void
+    ): Promise<Contract>;
+
+    setResolver(
+        name: string,
+        address: string,
+        sendOptions?: TransactionConfig,
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+
+    setSubnodeOwner(
+        name: string,
+        label: string,
+        address: string,
+        sendOptions?: TransactionConfig,
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+
+    getTTl(
+        name: string,
+        callback?: (error: Error, ttl: string) => void
+    ): Promise<string>;
+
+    setTTL(
+        name: string,
+        ttl: string | number,
+        sendOptions?: TransactionConfig,
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
+
+    getOwner(
+        name: string,
+        callback?: (error: Error, owner: string) => void
+    ): Promise<string>;
+
+    setOwner(
+        name: string,
+        address: string,
+        sendOptions?: TransactionConfig,
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
     getAddress(
         name: string,
@@ -44,7 +96,7 @@ export class Ens {
         name: string,
         address: string,
         sendOptions: TransactionConfig,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<any>;
 
     getPubkey(
@@ -57,7 +109,7 @@ export class Ens {
         x: string,
         y: string,
         sendOptions: TransactionConfig,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<any>;
 
     getText(
@@ -71,7 +123,7 @@ export class Ens {
         key: string,
         value: string,
         sendOptions: TransactionConfig,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<any>;
 
     getContent(
@@ -83,7 +135,7 @@ export class Ens {
         name: string,
         hash: string,
         sendOptions: TransactionConfig,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<any>;
 
     getMultihash(
@@ -95,7 +147,7 @@ export class Ens {
         name: string,
         hash: string,
         sendOptions: TransactionConfig,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<any>;
 
     getContenthash(
@@ -107,7 +159,7 @@ export class Ens {
         name: string,
         hash: string,
         sendOptions: TransactionConfig,
-        callback?: (error: Error, result: any) => void
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<any>;
 }
 
