@@ -85,7 +85,14 @@ export class Ens {
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 
-    getTTl(
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    getTTL(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<string>;
+    getTTL(
         name: string,
         callback?: (error: Error, ttl: string) => void
     ): Promise<string>;
@@ -131,7 +138,7 @@ export class Ens {
     setAddress(
         name: string,
         address: string,
-        sendOptions: TransactionConfig,
+        sendOptions?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -151,7 +158,7 @@ export class Ens {
         name: string,
         x: string,
         y: string,
-        sendOptions: TransactionConfig,
+        sendOptions?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -173,7 +180,7 @@ export class Ens {
         name: string,
         key: string,
         value: string,
-        sendOptions: TransactionConfig,
+        sendOptions?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -192,7 +199,7 @@ export class Ens {
     setContent(
         name: string,
         hash: string,
-        sendOptions: TransactionConfig,
+        sendOptions?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -211,7 +218,7 @@ export class Ens {
     setMultihash(
         name: string,
         hash: string,
-        sendOptions: TransactionConfig,
+        sendOptions?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -230,7 +237,7 @@ export class Ens {
     setContenthash(
         name: string,
         hash: string,
-        sendOptions: TransactionConfig,
+        sendOptions?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 }
