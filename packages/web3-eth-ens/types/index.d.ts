@@ -97,7 +97,7 @@ export class Ens {
         address: string,
         sendOptions: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
-    ): PromiEvent<any>;
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
     getPubkey(
         name: string,
@@ -110,7 +110,7 @@ export class Ens {
         y: string,
         sendOptions: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
-    ): PromiEvent<any>;
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
     getText(
         name: string,
@@ -124,7 +124,7 @@ export class Ens {
         value: string,
         sendOptions: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
-    ): PromiEvent<any>;
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
     getContent(
         name: string,
@@ -136,7 +136,7 @@ export class Ens {
         hash: string,
         sendOptions: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
-    ): PromiEvent<any>;
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
     getMultihash(
         name: string,
@@ -148,7 +148,7 @@ export class Ens {
         hash: string,
         sendOptions: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
-    ): PromiEvent<any>;
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
     getContenthash(
         name: string,
@@ -160,7 +160,7 @@ export class Ens {
         hash: string,
         sendOptions: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
-    ): PromiEvent<any>;
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 }
 
 export class Registry {
@@ -170,10 +170,60 @@ export class Registry {
 
     contract: Contract | null;
 
+    /**
+     * @deprecated Please use the "getOwner" method instead of "owner"
+     */
     owner(
         name: string,
         callback?: (error: Error, address: string) => void
     ): Promise<string>;
 
+    getOwner(
+        name: string,
+        callback?: (error: Error, address: string) => void
+    ): Promise<string>;
+
+    setOwner(
+        name: string,
+        address: string,
+        sendOptions?: TransactionConfig,
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
+
+    getTTl(
+        name: string,
+        callback?: (error: Error, ttl: string) => void
+    ): Promise<string>;
+
+    setTTL(
+        name: string,
+        ttl: string | number,
+        sendOptions?: TransactionConfig,
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
+
+    setSubnodeOwner(
+        name: string,
+        label: string,
+        address: string,
+        sendOptions?: TransactionConfig,
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+
+    /**
+     * @deprecated Please use the "getResolver" method instead of "resolver"
+     */
     resolver(name: string): Promise<Contract>;
+
+    getResolver(
+        name: string,
+        callback?: (error: Error, contract: Contract) => void
+    ): Promise<Contract>;
+
+    setResolver(
+        name: string,
+        address: string,
+        sendOptions?: TransactionConfig,
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 }
