@@ -70,6 +70,19 @@ function ENS(eth) {
 }
 
 /**
+ * Returns true if the given interfaceId is supported and otherwise false.
+ *
+ * @param {String} name
+ * @param {String} interfaceId
+ * @param {Function} callback
+ *
+ * @returns {Promise<boolean>}
+ */
+ENS.prototype.supportsInterface = function (name, interfaceId, callback) {
+    return this.resolverMethodHandler.method(name, 'supportsInterface', [interfaceId]).call(callback);
+};
+
+/**
  * Returns the Resolver by the given address
  *
  * @deprecated Please use the "getResolver" method instead of "resolver"
@@ -82,7 +95,7 @@ function ENS(eth) {
  * @returns {Promise<Contract>}
  */
 ENS.prototype.resolver = function (name, callback) {
-    return this.registry.resolver(name, callback);
+    return this.registry.getResolver(name, callback);
 };
 
 /**
@@ -135,6 +148,20 @@ ENS.prototype.setSubnodeOwner = function (name, label, address, sendOptions, cal
 /**
  * Returns the address of the owner of an ENS name.
  *
+ * @method getTTL
+ *
+ * @param {string} name
+ * @param {function} callback
+ *
+ * @return {eventifiedPromise}
+ */
+ENS.prototype.getTTL = function (name, callback) {
+    return this.registry.getTTL(name, callback);
+};
+
+/**
+ * Returns the address of the owner of an ENS name.
+ *
  * @method setTTL
  *
  * @param {string} name
@@ -149,17 +176,17 @@ ENS.prototype.setTTL = function (name, ttl, sendOptions, callback) {
 };
 
 /**
- * Returns the address of the owner of an ENS name.
+ * Returns the owner by the given name and current configured or detected Registry
  *
- * @method getTTL
+ * @method getOwner
  *
- * @param {string} name
- * @param {function} callback
+ * @param {String} name
+ * @param {Function} callback
  *
- * @return {eventifiedPromise}
+ * @returns {eventifiedPromise}
  */
-ENS.prototype.getTTL = function (name, callback) {
-    return this.registry.getTTL(name, callback);
+ENS.prototype.getOwner = function (name, callback) {
+    return this.registry.getOwner(name, callback);
 };
 
 /**
@@ -175,20 +202,6 @@ ENS.prototype.getTTL = function (name, callback) {
  */
 ENS.prototype.setOwner = function (name, sendOptions, callback) {
     return this.registry.setOwner(name, sendOptions, callback);
-};
-
-/**
- * Returns the owner by the given name and current configured or detected Registry
- *
- * @method getOwner
- *
- * @param {String} name
- * @param {Function} callback
- *
- * @returns {eventifiedPromise}
- */
-ENS.prototype.getOwner = function(name, callback) {
-    return this.registry.getOwner(name, callback);
 };
 
 /**
