@@ -58,7 +58,8 @@ function Registry(ens) {
  * @param {string} name
  * @param {function} callback
  *
- * @return {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returns {Promise<string>}
  */
 Registry.prototype.owner = function (name, callback) {
     console.warn('Deprecated: Please use the "getOwner" method instead of "owner".');
@@ -74,7 +75,8 @@ Registry.prototype.owner = function (name, callback) {
  * @param {string} name
  * @param {function} callback
  *
- * @return {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returns {Promise<string>}
  */
 Registry.prototype.getOwner = function (name, callback) {
     var promiEvent = new PromiEvent(true);
@@ -108,10 +110,11 @@ Registry.prototype.getOwner = function (name, callback) {
  *
  * @param {string} name
  * @param {string} address
- * @param {Object} txConfig
+ * @param {TransactionConfig} txConfig
  * @param {function} callback
  *
- * @return {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 Registry.prototype.setOwner = function (name, address, txConfig, callback) {
     var promiEvent = new PromiEvent(true);
@@ -143,10 +146,11 @@ Registry.prototype.setOwner = function (name, address, txConfig, callback) {
  *
  * @method ttl
  *
- * @param {String} name
- * @param {Function} callback
+ * @param {string} name
+ * @param {function} callback
  *
- * @returns {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returnss {Promise<string>}
  */
 Registry.prototype.getTTL = function (name, callback) {
     var promiEvent = new PromiEvent(true);
@@ -180,10 +184,11 @@ Registry.prototype.getTTL = function (name, callback) {
  *
  * @param {string} name
  * @param {number} ttl
- * @param {Object} txConfig
+ * @param {TransactionConfig} txConfig
  * @param {function} callback
  *
- * @return {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 Registry.prototype.setTTL = function (name, ttl, txConfig, callback) {
     var promiEvent = new PromiEvent(true);
@@ -219,10 +224,11 @@ Registry.prototype.setTTL = function (name, ttl, txConfig, callback) {
  * @param {string} name
  * @param {string} label
  * @param {string} address
- * @param {Object} txConfig
+ * @param {TransactionConfig} txConfig
  * @param {function} callback
  *
- * @return {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 Registry.prototype.setSubnodeOwner = function (name, label, address, txConfig, callback) {
     var promiEvent = new PromiEvent(true);
@@ -258,9 +264,10 @@ Registry.prototype.setSubnodeOwner = function (name, label, address, txConfig, c
  * @method resolver
  *
  * @param {string} name
- * @param {Function} callback
+ * @param {function} callback
  *
- * @return {Promise<Contract>}
+ * @callback callback callback(error, result)
+ * @returns {Promise<Contract>}
  */
 Registry.prototype.resolver = function (name, callback) {
     console.warn('Deprecated: Please use the "getResolver" method instead of "resolver".');
@@ -274,9 +281,10 @@ Registry.prototype.resolver = function (name, callback) {
  * @method getResolver
  *
  * @param {string} name
- * @param {Function} callback
+ * @param {function} callback
  *
- * @return {Promise<Contract>}
+ * @callback callback callback(error, result)
+ * @returns {Promise<Contract>}
  */
 Registry.prototype.getResolver = function (name, callback) {
     var self = this;
@@ -311,10 +319,11 @@ Registry.prototype.getResolver = function (name, callback) {
  *
  * @param {string} name
  * @param {string} address
- * @param {Object} txConfig
+ * @param {TransactionConfig} txConfig
  * @param {function} callback
  *
- * @return {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 Registry.prototype.setResolver = function (name, address, txConfig, callback) {
     var promiEvent = new PromiEvent(true);
