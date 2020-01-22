@@ -72,6 +72,8 @@ function ENS(eth) {
 /**
  * Returns true if the given interfaceId is supported and otherwise false.
  *
+ * @method supportsInterface
+ *
  * @param {String} name
  * @param {String} interfaceId
  * @param {Function} callback
@@ -95,7 +97,7 @@ ENS.prototype.supportsInterface = function (name, interfaceId, callback) {
  * @returns {Promise<Contract>}
  */
 ENS.prototype.resolver = function (name, callback) {
-    return this.registry.getResolver(name, callback);
+    return this.registry.resolver(name, callback);
 };
 
 /**
