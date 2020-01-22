@@ -20,7 +20,7 @@ describe('contract.events [ @E2E ]', function() {
         gas: 4000000
     };
 
-    before(async function(){
+    beforeEach(async function(){
         var port = utils.getWebsocketPort();
 
         web3 = new Web3('ws://localhost:' + port);
@@ -72,6 +72,65 @@ describe('contract.events [ @E2E ]', function() {
                 .send({from: accounts[0]});
         });
     });
+
+    it('should not hear the error handler when connection.closed() called', function(){
+        let failed = false;
+
+        return new Promise(async (resolve, reject) => {
+            instance
+                .events
+                .BasicEvent({
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                })
+                .on('error', function(err) {
+                    console.log('err --> ' + err);
+                    failed = true;
+                    this.removeAllListeners();
+                    reject(new Error('err listener should not hear connection.close'));
+                });
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({from: accounts[0]});
+
+            web3.currentProvider.connection.close();
+
+            // Resolve only if we haven't already rejected
+            setTimeout(() => { if(!failed) resolve() }, 2500)
+        });
+    });
+
+    it('should not hear the error handler when provider.disconnect() called', function(){
+        let failed = false;
+
+        return new Promise(async (resolve, reject) => {
+            instance
+                .events
+                .BasicEvent({
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                })
+                .on('error', function(err) {
+                    console.log('err --> ' + err)
+                    failed = true;
+                    this.removeAllListeners();
+                    reject(new Error('err listener should not hear provider.disconnect'));
+                });
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({from: accounts[0]});
+
+            web3.currentProvider.disconnect();
+
+            // Resolve only if we haven't already rejected
+            setTimeout(() => { if(!failed) resolve() }, 2500)
+        });
+    });
+
 
     // Test models event signature shadowing when one contract calls another.
     // Child and parent contracts have an event named `similar` which has the same
