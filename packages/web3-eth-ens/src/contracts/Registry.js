@@ -108,16 +108,16 @@ Registry.prototype.getOwner = function (name, callback) {
  *
  * @param {string} name
  * @param {string} address
- * @param {Object} sendOptions
+ * @param {Object} txConfig
  * @param {function} callback
  *
  * @return {eventifiedPromise}
  */
-Registry.prototype.setOwner = function (name, address, sendOptions, callback) {
+Registry.prototype.setOwner = function (name, address, txConfig, callback) {
     var promiEvent = new PromiEvent(true);
 
     this.contract.then(function (contract) {
-        contract.methods.setOwner(namehash.hash(name), formatters.inputAddressFormatter(address)).send(sendOptions)
+        contract.methods.setOwner(namehash.hash(name), formatters.inputAddressFormatter(address)).send(txConfig)
             .then(function (receipt) {
                 promiEvent.resolve(receipt);
 
@@ -180,17 +180,17 @@ Registry.prototype.getTTL = function (name, callback) {
  *
  * @param {string} name
  * @param {number} ttl
- * @param {Object} sendOptions
+ * @param {Object} txConfig
  * @param {function} callback
  *
  * @return {eventifiedPromise}
  */
-Registry.prototype.setTTL = function (name, ttl, sendOptions, callback) {
+Registry.prototype.setTTL = function (name, ttl, txConfig, callback) {
     var promiEvent = new PromiEvent(true);
 
     this.contract.then(function (contract) {
         contract.methods.setTTL(namehash.hash(name), ttl)
-            .send(sendOptions)
+            .send(txConfig)
             .then(function (receipt) {
                 promiEvent.resolve(receipt);
 
@@ -219,17 +219,17 @@ Registry.prototype.setTTL = function (name, ttl, sendOptions, callback) {
  * @param {string} name
  * @param {string} label
  * @param {string} address
- * @param {Object} sendOptions
+ * @param {Object} txConfig
  * @param {function} callback
  *
  * @return {eventifiedPromise}
  */
-Registry.prototype.setSubnodeOwner = function (name, label, address, sendOptions, callback) {
+Registry.prototype.setSubnodeOwner = function (name, label, address, txConfig, callback) {
     var promiEvent = new PromiEvent(true);
 
     this.contract.then(function (contract) {
         contract.methods.setSubnodeOwner(namehash.hash(name), utils.sha3(label), formatters.inputAddressFormatter(address))
-            .send(sendOptions)
+            .send(txConfig)
             .then(function (receipt) {
                 promiEvent.resolve(receipt);
 
@@ -311,17 +311,17 @@ Registry.prototype.getResolver = function (name, callback) {
  *
  * @param {string} name
  * @param {string} address
- * @param {Object} sendOptions
+ * @param {Object} txConfig
  * @param {function} callback
  *
  * @return {eventifiedPromise}
  */
-Registry.prototype.setResolver = function (name, address, sendOptions, callback) {
+Registry.prototype.setResolver = function (name, address, txConfig, callback) {
     var promiEvent = new PromiEvent(true);
 
     this.contract.then(function (contract) {
         contract.methods.setResolver(namehash.hash(name), formatters.inputAddressFormatter(address))
-            .send(sendOptions)
+            .send(txConfig)
             .then(function (receipt) {
                 promiEvent.resolve(receipt);
 

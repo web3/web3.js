@@ -119,13 +119,13 @@ ENS.prototype.getResolver = function (name, callback) {
  *
  * @param {String} name
  * @param {String} address
- * @param {Object} sendOptions
+ * @param {Object} txConfig
  * @param {Function} callback
  *
  * @returns {eventifiedPromise}
  */
-ENS.prototype.setResolver = function (name, address, sendOptions, callback) {
-    return this.registry.setResolver(name, address, sendOptions, callback);
+ENS.prototype.setResolver = function (name, address, txConfig, callback) {
+    return this.registry.setResolver(name, address, txConfig, callback);
 };
 
 /**
@@ -136,13 +136,13 @@ ENS.prototype.setResolver = function (name, address, sendOptions, callback) {
  * @param {string} name
  * @param {string} label
  * @param {string} address
- * @param {Object} sendOptions
+ * @param {Object} txConfig
  * @param {function} callback
  *
  * @return {eventifiedPromise}
  */
-ENS.prototype.setSubnodeOwner = function (name, label, address, sendOptions, callback) {
-    return this.registry.setSubnodeOwner(name, label, address, sendOptions, callback);
+ENS.prototype.setSubnodeOwner = function (name, label, address, txConfig, callback) {
+    return this.registry.setSubnodeOwner(name, label, address, txConfig, callback);
 };
 
 /**
@@ -166,13 +166,13 @@ ENS.prototype.getTTL = function (name, callback) {
  *
  * @param {string} name
  * @param {number} ttl
- * @param {Object} sendOptions
+ * @param {Object} txConfig
  * @param {function} callback
  *
  * @return {eventifiedPromise}
  */
-ENS.prototype.setTTL = function (name, ttl, sendOptions, callback) {
-    return this.registry.setTTL(name, ttl, sendOptions, callback);
+ENS.prototype.setTTL = function (name, ttl, txConfig, callback) {
+    return this.registry.setTTL(name, ttl, txConfig, callback);
 };
 
 /**
@@ -195,13 +195,13 @@ ENS.prototype.getOwner = function (name, callback) {
  * @method setOwner
  *
  * @param {string} name
- * @param {Object} sendOptions
+ * @param {Object} txConfig
  * @param {function} callback
  *
  * @return {eventifiedPromise}
  */
-ENS.prototype.setOwner = function (name, sendOptions, callback) {
-    return this.registry.setOwner(name, sendOptions, callback);
+ENS.prototype.setOwner = function (name, txConfig, callback) {
+    return this.registry.setOwner(name, txConfig, callback);
 };
 
 /**
@@ -222,12 +222,12 @@ ENS.prototype.getAddress = function (name, callback) {
  * @method setAddress
  * @param {string} name
  * @param {string} address
- * @param {Object} sendOptions
+ * @param {Object} txConfig
  * @param {function} callback
  * @returns {eventifiedPromise}
  */
-ENS.prototype.setAddress = function (name, address, sendOptions, callback) {
-    return this.resolverMethodHandler.method(name, 'setAddr', [address]).send(sendOptions, callback);
+ENS.prototype.setAddress = function (name, address, txConfig, callback) {
+    return this.resolverMethodHandler.method(name, 'setAddr', [address]).send(txConfig, callback);
 };
 
 /**
@@ -249,12 +249,12 @@ ENS.prototype.getPubkey = function (name, callback) {
  * @param {string} name
  * @param {string} x
  * @param {string} y
- * @param {Object} sendOptions
+ * @param {Object} txConfig
  * @param {function} callback
  * @returns {eventifiedPromise}
  */
-ENS.prototype.setPubkey = function (name, x, y, sendOptions, callback) {
-    return this.resolverMethodHandler.method(name, 'setPubkey', [x, y]).send(sendOptions, callback);
+ENS.prototype.setPubkey = function (name, x, y, txConfig, callback) {
+    return this.resolverMethodHandler.method(name, 'setPubkey', [x, y]).send(txConfig, callback);
 };
 
 /**
@@ -276,11 +276,11 @@ ENS.prototype.getContent = function (name, callback) {
  * @param {string} name
  * @param {string} hash
  * @param {function} callback
- * @param {Object} sendOptions
+ * @param {Object} txConfig
  * @returns {eventifiedPromise}
  */
-ENS.prototype.setContent = function (name, hash, sendOptions, callback) {
-    return this.resolverMethodHandler.method(name, 'setContent', [hash]).send(sendOptions, callback);
+ENS.prototype.setContent = function (name, hash, txConfig, callback) {
+    return this.resolverMethodHandler.method(name, 'setContent', [hash]).send(txConfig, callback);
 };
 
 /**
@@ -301,12 +301,12 @@ ENS.prototype.getMultihash = function (name, callback) {
  * @method setMultihash
  * @param {string} name
  * @param {string} hash
- * @param {Object} sendOptions
+ * @param {Object} txConfig
  * @param {function} callback
  * @returns {eventifiedPromise}
  */
-ENS.prototype.setMultihash = function (name, hash, sendOptions, callback) {
-    return this.resolverMethodHandler.method(name, 'multihash', [hash]).send(sendOptions, callback);
+ENS.prototype.setMultihash = function (name, hash, txConfig, callback) {
+    return this.resolverMethodHandler.method(name, 'multihash', [hash]).send(txConfig, callback);
 };
 
 /**
