@@ -55,13 +55,13 @@ Returns
 - ``contract: Contract`` - The ``Registry`` contract with the interface we know from the :ref:`Contract <eth-contract>` object.
 - ``owner(name, callback): Promise`` - Deprecated please use ``getOwner``
 - ``getOwner(name, callback): Promise``
-- ``setOwner(name, address, sendOptions, callback): PromiEvent``
+- ``setOwner(name, address, txConfig, callback): PromiEvent``
 - ``resolver(name, callback): Promise`` - Deprecated please use ``getResolver``
 - ``getResolver(name, callback): Promise``
-- ``setResolver(name, address, sendOptions, callback): PromiEvent``
+- ``setResolver(name, address, txConfig, callback): PromiEvent``
 - ``getTTL(name, callback): Promise``
-- ``setTTL(name, ttl, sendOptions, callback): PromiEvent``
-- ``setSubnodeOwner(name, label, address, sendOptions, callback): PromiEvent``
+- ``setTTL(name, ttl, txConfig, callback): PromiEvent``
+- ``setSubnodeOwner(name, label, address, txConfig, callback): PromiEvent``
 
 -------
 Example
@@ -74,13 +74,13 @@ Example
         contract: Contract,
         owner: Function(name, callback), // Deprecated
         getOwner: Function(name, callback),
-        setOwner: Function(name, address, sendOptions, callback),
+        setOwner: Function(name, address, txConfig, callback),
         resolver: Function(name, callback) // Deprecated
         getResolver: Function(name, callback)
-        setResolver: Function(name, address, sendOptions, callback)
+        setResolver: Function(name, address, txConfig, callback)
         getTTL: Function(name, callback)
-        setTTL: Function(name, ttl, sendOptions, callback)
-        setSubnodeOwner: Function(name, label, address, sendOptions, callback)
+        setTTL: Function(name, ttl, txConfig, callback)
+        setSubnodeOwner: Function(name, label, address, txConfig, callback)
     }
 
 ------------------------------------------------------------------------------
@@ -163,7 +163,7 @@ setResolver
 
 .. code-block:: javascript
 
-    web3.eth.ens.setResolver(name, address, sendOptions [, callback]);
+    web3.eth.ens.setResolver(name, address [, txConfig ] [, callback]);
 
 Does set the resolver contract address of a name.
 
@@ -173,7 +173,7 @@ Parameters
 
 1. ``name`` - ``String``: The ENS name.
 2. ``address`` - ``String``: The contract address of the deployed ``Resolver`` contract.
-3. ``sendOptions`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
 4. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
@@ -236,7 +236,7 @@ setOwner
 
 .. code-block:: javascript
 
-    web3.eth.ens.setOwner(name, sendOptions [, callback]);
+    web3.eth.ens.setOwner(name [, txConfig ] [, callback]);
 
 Does set the owner of the given name.
 
@@ -245,7 +245,7 @@ Parameters
 ----------
 
 1. ``name`` - ``String``: The ENS name.
-2. ``sendOptions`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
+2. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
 3. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
@@ -307,7 +307,7 @@ setTTL
 
 .. code-block:: javascript
 
-    web3.eth.ens.setTTL(name, ttl, sendOptions [, callback]);
+    web3.eth.ens.setTTL(name, ttl [, txConfig ] [, callback]);
 
 Does set the caching TTL (time-to-live) of a name.
 
@@ -317,7 +317,7 @@ Parameters
 
 1. ``name`` - ``String``: The ENS name.
 2. ``ttl`` - ``Number``: The TTL value (uint64)
-3. ``sendOptions`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
 4. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
@@ -344,7 +344,7 @@ setSubnodeOwner
 
 .. code-block:: javascript
 
-    web3.eth.ens.setSubnodeOwner(name, label, address, sendOptions [, callback]);
+    web3.eth.ens.setSubnodeOwner(name, label, address [, txConfig ] [, callback]);
 
 Does set the caching TTL (time-to-live) of a name.
 
@@ -355,7 +355,7 @@ Parameters
 1. ``name`` - ``String``: The ENS name.
 2. ``label`` - ``String``: The name of the sub-domain
 3. ``address`` - ``String``: The registrar of this sub-domain
-4. ``sendOptions`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
+4. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
 5. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
@@ -416,7 +416,7 @@ setAddress
 
 .. code-block:: javascript
 
-    web3.eth.ens.setAddress(ENSName, address, options);
+    web3.eth.ens.setAddress(ENSName, address [, txConfig ] [, callback]);
 
 Sets the address of an ENS name in his resolver.
 
@@ -426,7 +426,7 @@ Parameters
 
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``address`` - ``String``: The address to set.
-3. ``options`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
 
 Emits an ``AddrChanged`` event.
 
@@ -531,7 +531,7 @@ setPubkey
 
 .. code-block:: javascript
 
-    web3.eth.ens.setPubkey(ENSName, x, y, options);
+    web3.eth.ens.setPubkey(ENSName, x, y [, txConfig ] [, callback]);
 
 Sets the SECP256k1 public key associated with an ENS node
 
@@ -542,7 +542,7 @@ Parameters
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``x`` - ``String``: The X coordinate of the public key.
 3. ``y`` - ``String``: The Y coordinate of the public key.
-4. ``options`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
+4. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
 
 Emits an ``PubkeyChanged`` event.
 
@@ -644,7 +644,7 @@ setContent
 
 .. code-block:: javascript
 
-    web3.eth.ens.setContent(ENSName, hash, options);
+    web3.eth.ens.setContent(ENSName, hash [, txConfig ] [, callback]);
 
 Sets the content hash associated with an ENS node.
 
@@ -654,7 +654,7 @@ Parameters
 
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``hash`` - ``String``: The content hash to set.
-3. ``options`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
 
 Emits an ``ContentChanged`` event.
 
@@ -754,7 +754,7 @@ setMultihash
 
 .. code-block:: javascript
 
-    web3.eth.ens.setMultihash(ENSName, hash, options);
+    web3.eth.ens.setMultihash(ENSName, hash [, txConfig ] [, callback]);
 
 Sets the multihash associated with an ENS node.
 
@@ -764,7 +764,7 @@ Parameters
 
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``hash`` - ``String``: The multihash to set.
-3. ``options`` - ``Object``: The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
 
 Emits an ``MultihashChanged``event.
 

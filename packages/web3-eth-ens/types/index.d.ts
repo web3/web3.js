@@ -73,7 +73,7 @@ export class Ens {
     setResolver(
         name: string,
         address: string,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 
@@ -81,7 +81,7 @@ export class Ens {
         name: string,
         label: string,
         address: string,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 
@@ -100,7 +100,7 @@ export class Ens {
     setTTL(
         name: string,
         ttl: string | number,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -119,7 +119,7 @@ export class Ens {
     setOwner(
         name: string,
         address: string,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -138,7 +138,7 @@ export class Ens {
     setAddress(
         name: string,
         address: string,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -158,7 +158,7 @@ export class Ens {
         name: string,
         x: string,
         y: string,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -180,7 +180,7 @@ export class Ens {
         name: string,
         key: string,
         value: string,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -199,7 +199,7 @@ export class Ens {
     setContent(
         name: string,
         hash: string,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -218,7 +218,7 @@ export class Ens {
     setMultihash(
         name: string,
         hash: string,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -237,7 +237,7 @@ export class Ens {
     setContenthash(
         name: string,
         hash: string,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 }
@@ -279,7 +279,7 @@ export class Registry {
     setOwner(
         name: string,
         address: string,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -298,7 +298,7 @@ export class Registry {
     setTTL(
         name: string,
         ttl: string | number,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
@@ -306,7 +306,7 @@ export class Registry {
         name: string,
         label: string,
         address: string,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 
@@ -340,7 +340,7 @@ export class Registry {
     setResolver(
         name: string,
         address: string,
-        sendOptions?: TransactionConfig,
+        txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 }
