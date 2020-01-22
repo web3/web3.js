@@ -29,6 +29,14 @@ export class Ens {
     registryAddress: string | null;
     registry: Registry;
 
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    supportsInterface(
+        name: string,
+        interfaceId: string,
+        callback?: (value: any) => void
+    ): Promise<boolean>;
     supportsInterface(
         name: string,
         interfaceId: string,
@@ -42,7 +50,21 @@ export class Ens {
         name: string,
         callback?: (error: Error, contract: Contract) => void
     ): Promise<Contract>;
+    /**
+     * @deprecated Please use the "getResolver" method instead of "resolver"
+     */
+    resolver(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<Contract>;
 
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    getResolver(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<Contract>;
     getResolver(
         name: string,
         callback?: (error: Error, contract: Contract) => void
@@ -75,6 +97,13 @@ export class Ens {
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    getOwner(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<string>;
     getOwner(
         name: string,
         callback?: (error: Error, owner: string) => void
@@ -87,6 +116,13 @@ export class Ens {
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    getAddress(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<string>;
     getAddress(
         name: string,
         callback?: (error: Error, address: string) => void
@@ -99,6 +135,13 @@ export class Ens {
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    getPubkey(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<{ [x: string]: string }>;
     getPubkey(
         name: string,
         callback?: (error: Error, result: { [x: string]: string }) => void
@@ -112,6 +155,14 @@ export class Ens {
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    getText(
+        name: string,
+        key: string,
+        callback?: (value: any) => void
+    ): Promise<string>;
     getText(
         name: string,
         key: string,
@@ -126,6 +177,13 @@ export class Ens {
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    getContent(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<string>;
     getContent(
         name: string,
         callback?: (error: Error, contentHash: string) => void
@@ -138,6 +196,13 @@ export class Ens {
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    getMultihash(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<string>;
     getMultihash(
         name: string,
         callback?: (error: Error, multihash: string) => void
@@ -150,6 +215,13 @@ export class Ens {
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    getContenthash(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<string>;
     getContenthash(
         name: string,
         callback?: (error: Error, contenthash: string) => void
@@ -177,7 +249,21 @@ export class Registry {
         name: string,
         callback?: (error: Error, address: string) => void
     ): Promise<string>;
+    /**
+     * @deprecated Please use the "getOwner" method instead of "owner"
+     */
+    owner(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<string>;
 
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    getOwner(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<string>;
     getOwner(
         name: string,
         callback?: (error: Error, address: string) => void
@@ -190,6 +276,13 @@ export class Registry {
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    getTTl(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<string>;
     getTTl(
         name: string,
         callback?: (error: Error, ttl: string) => void
@@ -213,8 +306,25 @@ export class Registry {
     /**
      * @deprecated Please use the "getResolver" method instead of "resolver"
      */
-    resolver(name: string): Promise<Contract>;
+    resolver(
+        name: string,
+        callback?: (error: Error, contract: Contract) => void
+    ): Promise<Contract>;
+    /**
+     * @deprecated Please use the "getResolver" method instead of "resolver"
+     */
+    resolver(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<Contract>;
 
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    getResolver(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<Contract>;
     getResolver(
         name: string,
         callback?: (error: Error, contract: Contract) => void
