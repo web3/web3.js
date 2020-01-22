@@ -28,8 +28,8 @@ var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
 /**
  * Constructs a new instance of ENS
  *
- * @method ENS
- * @param {Object} eth
+ * @param {Eth} eth
+ * 
  * @constructor
  */
 function ENS(eth) {
@@ -74,10 +74,11 @@ function ENS(eth) {
  *
  * @method supportsInterface
  *
- * @param {String} name
- * @param {String} interfaceId
- * @param {Function} callback
+ * @param {string} name
+ * @param {string} interfaceId
+ * @param {function} callback
  *
+ * @callback callback callback(error, result) 
  * @returns {Promise<boolean>}
  */
 ENS.prototype.supportsInterface = function (name, interfaceId, callback) {
@@ -92,8 +93,9 @@ ENS.prototype.supportsInterface = function (name, interfaceId, callback) {
  * @method resolver
  *
  * @param {string} name
- * @param {Function} callback
+ * @param {function} callback
  *
+ * @callback callback callback(error, result)
  * @returns {Promise<Contract>}
  */
 ENS.prototype.resolver = function (name, callback) {
@@ -106,8 +108,9 @@ ENS.prototype.resolver = function (name, callback) {
  * @method getResolver
  *
  * @param {string} name
- * @param {Function} callback
+ * @param {function} callback
  *
+ * @callback callback callback(error, result)
  * @returns {Promise<Contract>}
  */
 ENS.prototype.getResolver = function (name, callback) {
@@ -119,12 +122,13 @@ ENS.prototype.getResolver = function (name, callback) {
  *
  * @method setResolver
  *
- * @param {String} name
- * @param {String} address
- * @param {Object} txConfig
- * @param {Function} callback
+ * @param {string} name
+ * @param {string} address
+ * @param {TransactionConfig} txConfig
+ * @param {function} callback
  *
- * @returns {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.setResolver = function (name, address, txConfig, callback) {
     return this.registry.setResolver(name, address, txConfig, callback);
@@ -138,10 +142,11 @@ ENS.prototype.setResolver = function (name, address, txConfig, callback) {
  * @param {string} name
  * @param {string} label
  * @param {string} address
- * @param {Object} txConfig
+ * @param {TransactionConfig} txConfig
  * @param {function} callback
  *
- * @return {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.setSubnodeOwner = function (name, label, address, txConfig, callback) {
     return this.registry.setSubnodeOwner(name, label, address, txConfig, callback);
@@ -155,7 +160,8 @@ ENS.prototype.setSubnodeOwner = function (name, label, address, txConfig, callba
  * @param {string} name
  * @param {function} callback
  *
- * @return {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.getTTL = function (name, callback) {
     return this.registry.getTTL(name, callback);
@@ -168,10 +174,11 @@ ENS.prototype.getTTL = function (name, callback) {
  *
  * @param {string} name
  * @param {number} ttl
- * @param {Object} txConfig
+ * @param {TransactionConfig} txConfig
  * @param {function} callback
  *
- * @return {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.setTTL = function (name, ttl, txConfig, callback) {
     return this.registry.setTTL(name, ttl, txConfig, callback);
@@ -182,10 +189,11 @@ ENS.prototype.setTTL = function (name, ttl, txConfig, callback) {
  *
  * @method getOwner
  *
- * @param {String} name
- * @param {Function} callback
+ * @param {string} name
+ * @param {function} callback
  *
- * @returns {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.getOwner = function (name, callback) {
     return this.registry.getOwner(name, callback);
@@ -197,10 +205,11 @@ ENS.prototype.getOwner = function (name, callback) {
  * @method setOwner
  *
  * @param {string} name
- * @param {Object} txConfig
+ * @param {TransactionConfig} txConfig
  * @param {function} callback
  *
- * @return {eventifiedPromise}
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.setOwner = function (name, txConfig, callback) {
     return this.registry.setOwner(name, txConfig, callback);
@@ -210,9 +219,12 @@ ENS.prototype.setOwner = function (name, txConfig, callback) {
  * Returns the address record associated with a name.
  *
  * @method getAddress
+ * 
  * @param {string} name
  * @param {function} callback
- * @return {eventifiedPromise}
+ * 
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.getAddress = function (name, callback) {
     return this.resolverMethodHandler.method(name, 'addr', []).call(callback);
@@ -222,11 +234,14 @@ ENS.prototype.getAddress = function (name, callback) {
  * Sets a new address
  *
  * @method setAddress
+ * 
  * @param {string} name
  * @param {string} address
- * @param {Object} txConfig
+ * @param {TransactionConfig} txConfig
  * @param {function} callback
- * @returns {eventifiedPromise}
+ * 
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.setAddress = function (name, address, txConfig, callback) {
     return this.resolverMethodHandler.method(name, 'setAddr', [address]).send(txConfig, callback);
@@ -236,9 +251,12 @@ ENS.prototype.setAddress = function (name, address, txConfig, callback) {
  * Returns the public key
  *
  * @method getPubkey
+ * 
  * @param {string} name
  * @param {function} callback
- * @returns {eventifiedPromise}
+ * 
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.getPubkey = function (name, callback) {
     return this.resolverMethodHandler.method(name, 'pubkey', [], callback).call(callback);
@@ -248,12 +266,15 @@ ENS.prototype.getPubkey = function (name, callback) {
  * Set the new public key
  *
  * @method setPubkey
+ * 
  * @param {string} name
  * @param {string} x
  * @param {string} y
- * @param {Object} txConfig
+ * @param {TransactionConfig} txConfig
  * @param {function} callback
- * @returns {eventifiedPromise}
+ * 
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.setPubkey = function (name, x, y, txConfig, callback) {
     return this.resolverMethodHandler.method(name, 'setPubkey', [x, y]).send(txConfig, callback);
@@ -263,9 +284,12 @@ ENS.prototype.setPubkey = function (name, x, y, txConfig, callback) {
  * Returns the content
  *
  * @method getContent
+ * 
  * @param {string} name
  * @param {function} callback
- * @returns {eventifiedPromise}
+ * 
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.getContent = function (name, callback) {
     return this.resolverMethodHandler.method(name, 'content', []).call(callback);
@@ -275,11 +299,14 @@ ENS.prototype.getContent = function (name, callback) {
  * Set the content
  *
  * @method setContent
+ * 
  * @param {string} name
  * @param {string} hash
  * @param {function} callback
- * @param {Object} txConfig
- * @returns {eventifiedPromise}
+ * @param {TransactionConfig} txConfig
+ * 
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.setContent = function (name, hash, txConfig, callback) {
     return this.resolverMethodHandler.method(name, 'setContent', [hash]).send(txConfig, callback);
@@ -289,9 +316,12 @@ ENS.prototype.setContent = function (name, hash, txConfig, callback) {
  * Get the multihash
  *
  * @method getMultihash
+ * 
  * @param {string} name
  * @param {function} callback
- * @returns {eventifiedPromise}
+ * 
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.getMultihash = function (name, callback) {
     return this.resolverMethodHandler.method(name, 'multihash', []).call(callback);
@@ -301,11 +331,14 @@ ENS.prototype.getMultihash = function (name, callback) {
  * Set the multihash
  *
  * @method setMultihash
+ * 
  * @param {string} name
  * @param {string} hash
- * @param {Object} txConfig
+ * @param {TransactionConfig} txConfig
  * @param {function} callback
- * @returns {eventifiedPromise}
+ * 
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.setMultihash = function (name, hash, txConfig, callback) {
     return this.resolverMethodHandler.method(name, 'multihash', [hash]).send(txConfig, callback);
@@ -315,7 +348,7 @@ ENS.prototype.setMultihash = function (name, hash, txConfig, callback) {
  * Checks if the current used network is synced and looks for ENS support there.
  * Throws an error if not.
  *
- * @returns {Promise<String>}
+ * @returns {Promise<string>}
  */
 ENS.prototype.checkNetwork = async function () {
     var now = new Date() / 1000;
