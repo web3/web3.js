@@ -94,7 +94,7 @@ privateKeyToAccount
 
 .. code-block:: javascript
 
-    web3.eth.accounts.privateKeyToAccount(privateKey);
+    web3.eth.accounts.privateKeyToAccount(privateKey [, allowAnyKeyLength]);
 
 Creates an account object from a private key.
 
@@ -103,6 +103,7 @@ Parameters
 ----------
 
 1. ``privateKey`` - ``String``: The private key to convert.
+2. ``allowAnyKeyLength`` - ``Boolean``: When true, does not enforce 32 byte key length requirement
 
 -------
 Returns

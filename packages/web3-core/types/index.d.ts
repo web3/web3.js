@@ -263,7 +263,7 @@ export class AccountsBase {
 
     create(entropy?: string): Account;
 
-    privateKeyToAccount(privateKey: string): Account;
+    privateKeyToAccount(privateKey: string, allowAnyKeyLength?: boolean): Account;
 
     signTransaction(
         transactionConfig: TransactionConfig,
