@@ -74,6 +74,8 @@ describe('contract.events [ @E2E ]', function() {
     });
 
     it('should not hear the error handler when connection.closed() called', function(){
+        this.timeout(15000);
+
         let failed = false;
 
         return new Promise(async (resolve, reject) => {
@@ -84,7 +86,6 @@ describe('contract.events [ @E2E ]', function() {
                     toBlock: 'latest'
                 })
                 .on('error', function(err) {
-                    console.log('err --> ' + err);
                     failed = true;
                     this.removeAllListeners();
                     reject(new Error('err listener should not hear connection.close'));
@@ -103,6 +104,8 @@ describe('contract.events [ @E2E ]', function() {
     });
 
     it('should not hear the error handler when provider.disconnect() called', function(){
+        this.timeout(15000);
+
         let failed = false;
 
         return new Promise(async (resolve, reject) => {
@@ -113,7 +116,6 @@ describe('contract.events [ @E2E ]', function() {
                     toBlock: 'latest'
                 })
                 .on('error', function(err) {
-                    console.log('err --> ' + err)
                     failed = true;
                     this.removeAllListeners();
                     reject(new Error('err listener should not hear provider.disconnect'));
