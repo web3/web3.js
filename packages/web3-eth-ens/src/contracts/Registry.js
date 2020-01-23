@@ -87,7 +87,7 @@ Registry.prototype.getOwner = function (name, callback) {
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                    // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
                     callback(receipt, receipt);
                 }
             })
@@ -125,7 +125,7 @@ Registry.prototype.setOwner = function (name, address, txConfig, callback) {
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                    // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
                     callback(receipt, receipt);
                 }
             })
@@ -161,7 +161,7 @@ Registry.prototype.getTTL = function (name, callback) {
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                    // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
                     callback(receipt, receipt);
                 }
             })
@@ -200,7 +200,7 @@ Registry.prototype.setTTL = function (name, ttl, txConfig, callback) {
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                    // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
                     callback(receipt, receipt);
                 }
             })
@@ -240,7 +240,7 @@ Registry.prototype.setSubnodeOwner = function (name, label, address, txConfig, c
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                    // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
                     callback(receipt, receipt);
                 }
             })
@@ -296,7 +296,7 @@ Registry.prototype.getResolver = function (name, callback) {
         contract.setProvider(self.ens.eth.currentProvider);
 
         if (_.isFunction(callback)) {
-            // It's required to pass the contract to the second argument to be backwards compatible and to have the required consistency
+            // It's required to pass the contract to the first argument to be backward compatible and to have the required consistency
             callback(contract, contract);
         }
 
@@ -335,7 +335,7 @@ Registry.prototype.setResolver = function (name, address, txConfig, callback) {
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+                    // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
                     callback(receipt, receipt);
                 }
             })
