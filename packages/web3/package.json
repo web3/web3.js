@@ -49,7 +49,6 @@
         }
     ],
     "dependencies": {
-        "@types/node": "^12.6.1",
         "web3-bzz": "1.2.4",
         "web3-core": "1.2.4",
         "web3-eth": "1.2.4",
@@ -61,5 +60,6 @@
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2"
+ 	"@types/node": "^12.6.1",
     }
 }
