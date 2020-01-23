@@ -35,6 +35,8 @@ export class Subscription<T> {
 
     on(type: 'changed', handler: (data: T) => void): Subscription<T>;
 
+    on(type: 'connected', handler: (subscriptionId: string) => void): Subscription<T>;
+
     on(type: 'error', handler: (data: Error) => void): Subscription<T>;
 }
 
