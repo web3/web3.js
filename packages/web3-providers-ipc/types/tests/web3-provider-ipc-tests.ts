@@ -21,14 +21,13 @@
  */
 
 import * as net from 'net';
-import { IpcProvider, JsonRpcResponse, JsonRpcPayload } from 'web3-providers-ipc';
+import { IpcProvider } from 'web3-providers';
+import { JsonRpcResponse } from 'web3-core-helpers';
 
 const ipcProvider = new IpcProvider(
     '/Users/myuser/Library/Ethereum/geth.ipc',
     new net.Server()
 );
-
-const payload: JsonRpcPayload = {jsonrpc: '', id: 0, method: '', params: []};
 
 // $ExpectType any
 ipcProvider.responseCallbacks;
@@ -49,10 +48,10 @@ ipcProvider.addDefaultEvents();
 ipcProvider.supportsSubscriptions();
 
 // $ExpectType void
-ipcProvider.send(payload, (error: Error | null) => {});
+ipcProvider.send({} as any, (error: Error | null) => {});
 
 // $ExpectType void
-ipcProvider.send(payload, (error: Error | null, result: JsonRpcResponse | undefined) => {});
+ipcProvider.send({} as any, (error: Error | null, result: JsonRpcResponse | undefined) => {});
 
 // $ExpectType void
 ipcProvider.on('type', () => {});
