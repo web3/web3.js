@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-import {HttpProviderBase} from 'web3-core-helpers';
+import { HttpProviderBase } from 'web3-core-helpers';
 
-export {HttpProviderOptions, HttpHeader, JsonRpcPayload, JsonRpcResponse} from 'web3-core-helpers';
-
-export class HttpProvider extends HttpProviderBase { }
+export class HttpProvider extends HttpProviderBase {}

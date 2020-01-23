@@ -21,6 +21,7 @@
 "use strict";
 
 var _ = require('underscore');
+var Contract = require('web3-eth-contract');
 var namehash = require('eth-ens-namehash');
 var PromiEvent = require('web3-core-promievent');
 var REGISTRY_ABI = require('../ressources/ABI/Registry');
@@ -38,7 +39,10 @@ function Registry(ens) {
     var self = this;
     this.ens = ens;
     this.contract = ens.checkNetwork().then(function (address) {
-        return new self.ens.eth.Contract(REGISTRY_ABI, address);
+        var contract = new Contract(REGISTRY_ABI, address);
+        contract.setProvider(self.ens.eth.currentProvider);
+
+        return contract;
     });
 }
 
@@ -87,7 +91,9 @@ Registry.prototype.resolver = function (name) {
     return this.contract.then(function (contract) {
         return contract.methods.resolver(namehash.hash(name)).call();
     }).then(function (address) {
-        return new self.ens.eth.Contract(RESOLVER_ABI, address);
+        var contract = new Contract(RESOLVER_ABI, address);
+        contract.setProvider(self.ens.eth.currentProvider);
+        return contract;
     });
 };
 
