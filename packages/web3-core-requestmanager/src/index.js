@@ -123,11 +123,13 @@ RequestManager.prototype.setProvider = function (provider, net) {
             });
         });
 
-        // notify all subscriptions about the close condition
+        // notify all subscriptions about bad close conditions and unsubscribe
         this.provider.on('close', function close(event) {
-            _this.subscriptions.forEach(function (subscription) {
-                subscription.callback(new Error('CONNECTION ERROR: The connection got closed with the close code `' + event.code + '` and the following reason string `' + event.reason + '`'));
-            });
+            if (![1000, 1001].includes(event.code) || event.wasClean === false) {
+                _this.subscriptions.forEach(function (subscription) {
+                    subscription.callback(new Error('CONNECTION ERROR: The connection got closed with the close code `' + event.code + '` and the following reason string `' + event.reason + '`'));
+                });
+            }
         });
 
         // TODO add end, timeout??
