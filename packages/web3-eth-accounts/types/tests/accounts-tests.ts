@@ -45,6 +45,12 @@ accounts.privateKeyToAccount(
     '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709'
 );
 
+// $ExpectType Account
+accounts.privateKeyToAccount(
+    '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+    true
+);
+
 // $ExpectType Promise<SignedTransaction>
 accounts.signTransaction(
     {
