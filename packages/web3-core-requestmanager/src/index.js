@@ -123,7 +123,7 @@ RequestManager.prototype.setProvider = function (provider, net) {
             });
         });
 
-        // notify all subscriptions about bad close conditions and unsubscribe
+        // notify all subscriptions about bad close conditions
         this.provider.on('close', function close(event) {
             if (![1000, 1001].includes(event.code) || event.wasClean === false) {
                 _this.subscriptions.forEach(function (subscription) {
