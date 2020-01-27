@@ -143,6 +143,7 @@
         "wait-port": "^0.2.6",
         "@ensdomains/ens": "^0.3.11",
         "@ensdomains/resolver": "^0.1.13",
-        "truffle": "^5.1.8"
+        "truffle": "^5.1.8",
+        "regenerator-runtime": "^0.13.3"
     }
 }
