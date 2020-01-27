@@ -15,14 +15,13 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file web3-provider-ws-tests.js
+ * @file web3-provider-ws-tests.ts
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
 
-import { WebsocketProvider, WebsocketProviderOptions, JsonRpcResponse, JsonRpcPayload  } from 'web3-providers-ws';
-
-const payload: JsonRpcPayload = {jsonrpc: '', id: 0, method: '', params: []};
+import { WebsocketProviderOptions, JsonRpcResponse } from 'web3-core-helpers';
+import { WebsocketProvider } from 'web3-providers';
 
 const options: WebsocketProviderOptions = {
     timeout: 30000,
@@ -38,6 +37,9 @@ wsProvider.connected;
 
 // $ExpectType void
 wsProvider.disconnect(100, 'reason');
+
+// $ExpectType void
+wsProvider.reconnect();
 
 // $ExpectType Map<string, RequestItem>
 wsProvider.requestQueue;
@@ -55,10 +57,10 @@ wsProvider.connected;
 wsProvider.supportsSubscriptions();
 
 // $ExpectType void
-wsProvider.send(payload, (error: Error | null) => {});
+wsProvider.send({} as any, (error: Error | null) => {});
 
 // $ExpectType void
-wsProvider.send(payload, (error: Error | null, result: JsonRpcResponse | undefined) => {});
+wsProvider.send({} as any, (error: Error | null, result: JsonRpcResponse | undefined) => {});
 
 // $ExpectType void
 wsProvider.on('type', () => {});

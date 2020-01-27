@@ -20,13 +20,12 @@
  * @date 2018
  */
 
-import { HttpProvider, JsonRpcResponse, JsonRpcPayload, HttpProviderOptions } from 'web3-providers-http';
 import * as http from 'http';
 import * as https from 'https';
+import { HttpProvider } from 'web3-providers';
+import { JsonRpcResponse } from 'web3-core-helpers';
 
-const payload: JsonRpcPayload = {jsonrpc: '', id: 0, method: '', params: []};
-
-const options: HttpProviderOptions = {
+const httpProvider = new HttpProvider('http://localhost:8545', {
     timeout: 20000,
     headers: [
         {
@@ -40,15 +39,13 @@ const options: HttpProviderOptions = {
         http: new http.Agent({}),
         https: new https.Agent({})
     }
-};
-
-const httpProvider = new HttpProvider('http://localhost:8545', options);
+});
 
 // $ExpectType void
-httpProvider.send(payload, (error: Error | null) => {});
+httpProvider.send({} as any, (error: Error | null) => {});
 
 // $ExpectType void
-httpProvider.send(payload, (error: Error | null, result: JsonRpcResponse | undefined) => {});
+httpProvider.send({} as any, (error: Error | null, result: JsonRpcResponse | undefined) => {});
 
 // $ExpectType boolean
 httpProvider.disconnect();

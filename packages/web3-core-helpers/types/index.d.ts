@@ -81,38 +81,10 @@ export class errors {
     static TransactionOutOfGasError(receipt: object): TransactionError
 }
 
-export class IpcProviderBase {
-    constructor(path: string, net: net.Server);
-
-    responseCallbacks: any;
-    notificationCallbacks: any;
-    connected: boolean;
-    connection: any;
-
-    addDefaultEvents(): void;
-
-    supportsSubscriptions(): boolean;
-
-    send(
-        payload: JsonRpcPayload,
-        callback: (error: Error | null, result?: JsonRpcResponse) => void
-    ): void;
-
-    on(type: string, callback: () => void): void;
-
-    once(type: string, callback: () => void): void;
-
-    removeListener(type: string, callback: () => void): void;
-
-    removeAllListeners(type: string): void;
-
-    reset(): void;
-
-    reconnect(): void;
-}
-
 export class WebsocketProviderBase {
     constructor(host: string, options?: WebsocketProviderOptions);
+
+    isConnecting(): boolean;
 
     requestQueue: Map<string, RequestItem>;
     responseQueue: Map<string, RequestItem>;
@@ -139,6 +111,36 @@ export class WebsocketProviderBase {
     disconnect(code: number, reason: string): void;
 
     connect(): void;
+
+    reconnect(): void;
+}
+
+export class IpcProviderBase {
+    constructor(path: string, net: net.Server);
+
+    responseCallbacks: any;
+    notificationCallbacks: any;
+    connected: boolean;
+    connection: any;
+
+    addDefaultEvents(): void;
+
+    supportsSubscriptions(): boolean;
+
+    send(
+        payload: JsonRpcPayload,
+        callback: (error: Error | null, result?: JsonRpcResponse) => void
+    ): void;
+
+    on(type: string, callback: () => void): void;
+
+    once(type: string, callback: () => void): void;
+
+    removeListener(type: string, callback: () => void): void;
+
+    removeAllListeners(type: string): void;
+
+    reset(): void;
 
     reconnect(): void;
 }
