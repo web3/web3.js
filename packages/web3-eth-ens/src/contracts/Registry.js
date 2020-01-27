@@ -36,13 +36,9 @@ var RESOLVER_ABI = require('../ressources/ABI/Resolver');
  * @constructor
  */
 function Registry(ens) {
-    var self = this;
     this.ens = ens;
     this.contract = ens.checkNetwork().then(function (address) {
-        var contract = new Contract(REGISTRY_ABI, address);
-        contract.setProvider(self.ens.eth.currentProvider);
-
-        return contract;
+        return new Contract(REGISTRY_ABI, address);
     });
 }
 
@@ -86,14 +82,10 @@ Registry.prototype.owner = function (name, callback) {
  * @return {Promise<Contract>}
  */
 Registry.prototype.resolver = function (name) {
-    var self = this;
-
     return this.contract.then(function (contract) {
         return contract.methods.resolver(namehash.hash(name)).call();
     }).then(function (address) {
-        var contract = new Contract(RESOLVER_ABI, address);
-        contract.setProvider(self.ens.eth.currentProvider);
-        return contract;
+        return new Contract(RESOLVER_ABI, address);
     });
 };
 
