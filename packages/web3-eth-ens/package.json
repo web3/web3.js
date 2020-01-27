@@ -19,7 +19,6 @@
         "web3-core-helpers": "1.2.4",
         "web3-core-promievent": "1.2.4",
         "web3-eth-abi": "1.2.4",
-        "web3-eth-contract": "1.2.4",
         "web3-utils": "1.2.4"
     },
     "devDependencies": {
