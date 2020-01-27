@@ -15,7 +15,6 @@ Will change the provider for its module.
 
 .. note::
     When called on the umbrella package ``web3`` it will also set the provider for all sub modules ``web3.eth``, ``web3.shh``, etc EXCEPT ``web3.bzz`` which needs a separate provider at all times.
-    Be aware to clean up the listeners of your provider if you pass the exact same provider instance a second time to the ``setProvider`` method of any module. This because the ``setProvider`` method will register the listeners required from web3.js again.
 
 ----------
 Parameters
