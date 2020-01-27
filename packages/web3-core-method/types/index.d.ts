@@ -17,6 +17,8 @@
  * @date 2018
  */
 
+import {JsonRpcPayload} from 'web3-core-helpers';
+
 export interface Method {
     name: string;
     call: string;

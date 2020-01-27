@@ -20,14 +20,6 @@
  * @date 2018
  */
 
-import {WebsocketProviderBase} from 'web3-core-helpers';
-
-export {
-    WebsocketProviderOptions,
-    ReconnectOptions,
-    JsonRpcResponse,
-    JsonRpcPayload,
-    RequestItem
-} from 'web3-core-helpers';
+import { WebsocketProviderBase } from 'web3-core-helpers';
 
 export class WebsocketProvider extends WebsocketProviderBase { }
