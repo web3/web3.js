@@ -96,8 +96,6 @@ Released with 1.0.0-beta.37 code base.
 
 - Fix npm installation error for scrypt-shim and websocket (#3210)
 
-## [Unreleased]
-
 ## [1.2.5]
 
 ### Added
@@ -126,3 +124,5 @@ Released with 1.0.0-beta.37 code base.
 - callback type definition for ``Accounts.signTransaction`` fixed (#3280)
 - fix: export bloom functions on the index.js
 - Prefer receipt status to code availability on contract deployment (#3298)
+
+## [Unreleased]
