@@ -1565,6 +1565,7 @@ var runTests = function(contractFactory) {
             assert.equal(result, '0x1234' + '000000000000000000000000'+ addressLowercase.replace('0x','')+ '000000000000000000000000000000000000000000000000000000000000000a');
         });
 
+
         it('should estimate a function', function (done) {
             var provider = new FakeIpcProvider();
             var signature = 'balance(address)';
