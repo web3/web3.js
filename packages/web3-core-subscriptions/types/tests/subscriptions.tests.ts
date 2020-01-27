@@ -83,3 +83,6 @@ subscription.on('changed', () => {});
 
 // $ExpectType Subscription<unknown>
 subscription.on('error', () => {});
+
+// $ExpectType Subscription<unknown>
+subscription.on('connected', () => {});
