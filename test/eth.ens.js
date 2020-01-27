@@ -3,6 +3,7 @@ var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var Web3 = require('../packages/web3');
 var sha3 = require('../packages/web3-utils').sha3;
+var formatters = require('web3-core-helpers').formatters;
 var asciiToHex = require('../packages/web3-utils').asciiToHex;
 
 describe('ens', function () {
@@ -244,6 +245,58 @@ describe('ens', function () {
         }).catch(function (e) {
             assert.isTrue(e instanceof Error, 'Should throw error');
             done();
+        });
+    });
+
+    it('should only check if the connected node is synced if at least a hour is gone', async function () {
+        provider = new FakeHttpProvider();
+        web3 = new Web3(provider);
+        web3.eth.ens._lastSyncCheck = new Date() / 1000;
+
+        try {
+            await web3.eth.ens.checkNetwork();
+
+            assert.fail();
+        } catch (error) {
+            return true;
+        }
+    });
+
+    describe('custom registry address', function () {
+        let web3;
+        let provider;
+        const address = '0x314159265dD8dbb310642f98f50C066173C1259b';
+
+        beforeEach(function () {
+            provider = new FakeHttpProvider();
+
+            // getBlock in checkNetwork
+            provider.injectResult({
+                timestamp: Math.floor(new Date() / 1000) - 60,
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_getBlockByNumber');
+                assert.deepEqual(payload.params, ['latest', false]);
+            });
+
+            web3 = new Web3(provider);
+            web3.eth.ens.registryAddress = address;
+        });
+
+        it('should use the custom defined registry address in checkNetwork', async function () {
+            const currentRegistry = await web3.eth.ens.checkNetwork();
+
+            assert.equal(currentRegistry, formatters.inputAddressFormatter(address));
+            assert.equal(web3.eth.ens.registryAddress, formatters.inputAddressFormatter(address));
+        });
+
+        it('should keep the custom defined registry address if the provider changes', async function () {
+            web3.eth.setProvider(provider);
+            const currentRegistry = await web3.eth.ens.checkNetwork();
+
+            assert.equal(currentRegistry, formatters.inputAddressFormatter(address));
+            assert.equal(web3.eth.ens.registryAddress, formatters.inputAddressFormatter(address));
         });
     });
 });
