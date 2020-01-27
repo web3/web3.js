@@ -211,19 +211,6 @@ var tests = [{
         value: '1234567654321'
     }],
     call: 'eth_'+ method
-}, {
-    error: true, // fails because of the missing 0x prefix of the data property
-    args: [{
-        from: 0,
-        to: '0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6',
-        value: '1234567654321',
-        gasPrice: '324234234234',
-        gas: 500000,
-        chain: 'mainnet',
-        hardfork: 'petersburg',
-        data: '1234'
-    }],
-    call: 'eth_'+ method
 }];
 
 testMethod.runTests('eth', method, tests);
