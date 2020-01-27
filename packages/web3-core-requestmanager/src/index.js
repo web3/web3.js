@@ -260,7 +260,7 @@ RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
     var _this = this;
 
     // uninstall all subscriptions
-    if (this.subscriptions) {
+    if (this.subscriptions.size > 0) {
         this.subscriptions.forEach(function (value, id) {
             if (!keepIsSyncing || value.name !== 'syncing')
                 _this.removeSubscription(id);
