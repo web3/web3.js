@@ -117,6 +117,7 @@ describe('WebsocketProvider (ganache)', function () {
         await new Promise(resolve => {
             web3.currentProvider.on('error', function(err){
                 assert(err.message.includes('CONNECTION TIMEOUT: timeout of 1000 ms achived'))
+                this.removeAllListeners();
                 resolve();
             });
 
@@ -140,6 +141,7 @@ describe('WebsocketProvider (ganache)', function () {
                     stage = 1;
                 } else {
                     await pify(server.close)();
+                    this.removeAllListeners();
                     resolve();
                 }
             });
@@ -165,6 +167,7 @@ describe('WebsocketProvider (ganache)', function () {
                     stage = 1;
                 } else {
                     await pify(server.close)();
+                    this.removeAllListeners();
                     resolve();
                 }
             });
@@ -182,6 +185,7 @@ describe('WebsocketProvider (ganache)', function () {
 
             web3.currentProvider.on('connect', async function () {
                 await pify(server.close)();
+                this.removeAllListeners();
                 resolve();
             });
 
@@ -210,6 +214,7 @@ describe('WebsocketProvider (ganache)', function () {
 
             web3.currentProvider.on('error', function (error) {
                 assert(error.message.includes('Maximum number of reconnect attempts reached!'));
+                this.removeAllListeners();
                 resolve();
             });
         });
@@ -240,7 +245,7 @@ describe('WebsocketProvider (ganache)', function () {
                     assert(err.message.includes('connection not open on send'));
                     assert(typeof err.code === 'undefined');
                     assert(typeof err.reason === 'undefined');
-
+                    this.removeAllListeners();
                     resolve();
                 }
             });
@@ -304,6 +309,7 @@ describe('WebsocketProvider (ganache)', function () {
 
             web3.currentProvider.on('reconnect', function () {
                 clearTimeout(timeout);
+                this.removeAllListeners();
                 resolve();
             });
         });
@@ -334,6 +340,7 @@ describe('WebsocketProvider (ganache)', function () {
                     assert.fail();
                 } catch (err) {
                     assert(err.message.includes('Maximum number of reconnect attempts'))
+                    this.removeAllListeners();
                     resolve();
                 }
             });
@@ -343,6 +350,7 @@ describe('WebsocketProvider (ganache)', function () {
     it('queues requests made while connection is lost / executes on reconnect', function () {
         this.timeout(10000);
         let stage = 0;
+        let emitterInstance; // Assigned for cleanup
 
         return new Promise(async function (resolve) {
             server = ganache.server({port: port});
@@ -356,6 +364,8 @@ describe('WebsocketProvider (ganache)', function () {
             );
 
             web3.currentProvider.on('connect', async function () {
+                emitterInstance = this;
+
                 if (stage === 0){
                     await pify(server.close)();
                     stage = 1;
@@ -373,6 +383,7 @@ describe('WebsocketProvider (ganache)', function () {
                 const blockNumber = await deferred;
                 assert(blockNumber === 0);
 
+                emitterInstance.removeAllListeners();
                 resolve();
             },2500);
         });
@@ -401,6 +412,7 @@ describe('WebsocketProvider (ganache)', function () {
         await new Promise(async resolve => {
             web3.currentProvider.on('error', function(err){
                 assert(err.message.includes('Maximum number of reconnect attempts reached'))
+                this.removeAllListeners();
                 resolve();
             })
 
