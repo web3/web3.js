@@ -130,6 +130,7 @@ describe('subscription connect/reconnect', function () {
             .subscribe('newBlockHeaders')
             .on("error", function (err) {
                 assert(err.message.includes('No provider set'));
+                this.removeAllListeners();
                 done();
             });
     });
@@ -150,6 +151,7 @@ describe('subscription connect/reconnect', function () {
             .subscribe('newBlockHeaders')
             .on("error", function (err) {
                 assert(err.message.includes("provider doesn't support subscriptions: HttpProvider"));
+                this.removeAllListeners();
                 done();
             });
     });
@@ -162,6 +164,7 @@ describe('subscription connect/reconnect', function () {
                 .subscribe('newBlockHeaders')
                 .on('error', function (err) {
                     assert(err.message.includes('CONNECTION ERROR: Couldn\'t connect to node on WS'));
+                    this.removeAllListeners();
                     resolve();
                 });
         });
@@ -182,7 +185,8 @@ describe('subscription connect/reconnect', function () {
                 .on('error', function (err) {
                     assert(err.message.includes('CONNECTION ERROR'));
                     assert(err.message.includes('close code `1006`'));
-                    assert(err.message.includes('Connection dropped by remote peer.'))
+                    assert(err.message.includes('Connection dropped by remote peer.'));
+                    this.removeAllListeners();
                     resolve();
                 });
         });
@@ -205,7 +209,7 @@ describe('subscription connect/reconnect', function () {
                     // Exit point, flag set below
                     if (stage === 1) {
                         web3.currentProvider.disconnect();
-
+                        this.removeAllListeners();
                         resolve();
                     }
                 });
@@ -235,7 +239,7 @@ describe('subscription connect/reconnect', function () {
                     // Exit point, flag set below
                     if (stage === 1) {
                         web3.currentProvider.disconnect();
-
+                        this.removeAllListeners();
                         resolve();
                     }
                 });
