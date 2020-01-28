@@ -125,7 +125,6 @@ Released with 1.0.0-beta.37 code base.
 - fix: export bloom functions on the index.js
 - Prefer receipt status to code availability on contract deployment (#3298)
 
-
 ## [Unreleased]
 
 ## [1.2.6]
