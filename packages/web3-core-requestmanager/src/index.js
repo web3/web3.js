@@ -279,20 +279,21 @@ RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
  * Evaluates WS close event
  *
  * @method _isCleanClose
+ * @param event close event
  *
- * @returns {boolean}
+ * @returns boolean
  */
 RequestManager.prototype._isCleanCloseEvent = function (event) {
-    return typeof event === 'object' &&
-           ([1000].includes(event.code) || event.wasClean === true);
+    return typeof event === 'object' && ([1000].includes(event.code) || event.wasClean === true);
 };
 
 /**
  * Detects Ipc close error. The node.net module emits ('close', isException)
  *
  * @method _isIpcCloseError
+ * @param event close event
  *
- * @returns {boolean}
+ * @returns boolean
  */
 RequestManager.prototype._isIpcCloseError = function (event) {
     return typeof event === 'boolean' && event;
