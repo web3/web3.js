@@ -132,6 +132,7 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - ENS module extended with the possibility to add a custom registry (#3301)
+- Görli testnet ENS registry added to the known registries (#3338)
 
 ### Changed
 
