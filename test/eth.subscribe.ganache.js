@@ -161,7 +161,7 @@ describe('subscription connect/reconnect', function () {
             web3.eth
                 .subscribe('newBlockHeaders')
                 .on('error', function (err) {
-                    assert(err.message.includes('CONNECTION ERROR'));
+                    assert(err.message.includes('CONNECTION ERROR: Couldn\'t connect to node on WS'));
                     resolve();
                 });
         });
@@ -181,6 +181,8 @@ describe('subscription connect/reconnect', function () {
                 })
                 .on('error', function (err) {
                     assert(err.message.includes('CONNECTION ERROR'));
+                    assert(err.message.includes('close code `1006`'));
+                    assert(err.message.includes('Connection dropped by remote peer.'))
                     resolve();
                 });
         });
