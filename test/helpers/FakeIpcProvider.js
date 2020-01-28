@@ -68,7 +68,7 @@ FakeIpcProvider.prototype.on = function (type, callback) {
     }
 };
 
-FakeIpcProvider.prototype.reset = function (type, callback) {
+FakeIpcProvider.prototype.reset = function () {
     this.notificationCallbacks = [];
 };
 
