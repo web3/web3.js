@@ -115,9 +115,8 @@ describe('WebsocketProvider (ganache)', function () {
             );
 
         await new Promise(resolve => {
-            web3.currentProvider.on('error', function(err){
+            web3.currentProvider.once('error', function(err){
                 assert(err.message.includes('CONNECTION TIMEOUT: timeout of 1000 ms achived'))
-                this.removeAllListeners();
                 resolve();
             });
 
@@ -183,9 +182,8 @@ describe('WebsocketProvider (ganache)', function () {
                 )
             );
 
-            web3.currentProvider.on('connect', async function () {
+            web3.currentProvider.once('connect', async function () {
                 await pify(server.close)();
-                this.removeAllListeners();
                 resolve();
             });
 
@@ -208,13 +206,12 @@ describe('WebsocketProvider (ganache)', function () {
                 )
             );
 
-            web3.currentProvider.on('connect', async function () {
+            web3.currentProvider.once('connect', async function () {
                 await pify(server.close)();
             });
 
-            web3.currentProvider.on('error', function (error) {
+            web3.currentProvider.once('error', function (error) {
                 assert(error.message.includes('Maximum number of reconnect attempts reached!'));
-                this.removeAllListeners();
                 resolve();
             });
         });
@@ -234,7 +231,7 @@ describe('WebsocketProvider (ganache)', function () {
                 )
             );
 
-            web3.currentProvider.on('connect', async function () {
+            web3.currentProvider.once('connect', async function () {
                 web3.currentProvider.disconnect();
 
                 try {
@@ -245,7 +242,6 @@ describe('WebsocketProvider (ganache)', function () {
                     assert(err.message.includes('connection not open on send'));
                     assert(typeof err.code === 'undefined');
                     assert(typeof err.reason === 'undefined');
-                    this.removeAllListeners();
                     resolve();
                 }
             });
@@ -300,16 +296,15 @@ describe('WebsocketProvider (ganache)', function () {
                 )
             );
 
-            web3.currentProvider.on('connect', async function () {
+            web3.currentProvider.once('connect', async function () {
                 await pify(server.close)();
                 timeout = setTimeout(function () {
                     reject(new Error('Test Failed: Configured delay is not applied!'));
                 }, 3100);
             });
 
-            web3.currentProvider.on('reconnect', function () {
+            web3.currentProvider.once('reconnect', function () {
                 clearTimeout(timeout);
-                this.removeAllListeners();
                 resolve();
             });
         });
@@ -330,17 +325,16 @@ describe('WebsocketProvider (ganache)', function () {
                 )
             );
 
-            web3.currentProvider.on('connect', async function () {
+            web3.currentProvider.once('connect', async function () {
                 await pify(server.close)();
             });
 
-            web3.currentProvider.on('reconnect', async function () {
+            web3.currentProvider.once('reconnect', async function () {
                 try {
                     await web3.eth.getBlockNumber();
                     assert.fail();
                 } catch (err) {
                     assert(err.message.includes('Maximum number of reconnect attempts'))
-                    this.removeAllListeners();
                     resolve();
                 }
             });
@@ -410,9 +404,8 @@ describe('WebsocketProvider (ganache)', function () {
             );
 
         await new Promise(async resolve => {
-            web3.currentProvider.on('error', function(err){
+            web3.currentProvider.once('error', function(err){
                 assert(err.message.includes('Maximum number of reconnect attempts reached'))
-                this.removeAllListeners();
                 resolve();
             })
 

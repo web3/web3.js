@@ -28,7 +28,7 @@ describe('subscription connect/reconnect', function () {
     it('subscribes (baseline)', function (done) {
         web3.eth
             .subscribe('newBlockHeaders')
-            .on('data', function (result) {
+            .once('data', function (result) {
                 assert(result.parentHash);
                 done();
             });
@@ -128,9 +128,8 @@ describe('subscription connect/reconnect', function () {
 
         web3.eth
             .subscribe('newBlockHeaders')
-            .on("error", function (err) {
+            .once("error", function (err) {
                 assert(err.message.includes('No provider set'));
-                this.removeAllListeners();
                 done();
             });
     });
@@ -149,9 +148,8 @@ describe('subscription connect/reconnect', function () {
 
         web3.eth
             .subscribe('newBlockHeaders')
-            .on("error", function (err) {
+            .once("error", function (err) {
                 assert(err.message.includes("provider doesn't support subscriptions: HttpProvider"));
-                this.removeAllListeners();
                 done();
             });
     });
@@ -162,31 +160,24 @@ describe('subscription connect/reconnect', function () {
         return new Promise(async function (resolve) {
             web3.eth
                 .subscribe('newBlockHeaders')
-                .on('error', function (err) {
+                .once('error', function (err) {
                     assert(err.message.includes('CONNECTION ERROR: Couldn\'t connect to node on WS'));
-                    this.removeAllListeners();
                     resolve();
                 });
         });
     });
 
     it('errors when the subscription got established (is running) and the connection does get closed', function () {
-        let stage = 0; // Required to not trigger server.close a second time
-
         return new Promise(async function (resolve) {
             web3.eth
                 .subscribe('newBlockHeaders')
-                .on('data', async function () {
-                    if (stage === 0) {
-                        stage = 1;
-                        await pify(server.close)();
-                    }
+                .once('data', async function () {
+                    await pify(server.close)();
                 })
-                .on('error', function (err) {
+                .once('error', function (err) {
                     assert(err.message.includes('CONNECTION ERROR'));
                     assert(err.message.includes('close code `1006`'));
                     assert(err.message.includes('Connection dropped by remote peer.'));
-                    this.removeAllListeners();
                     resolve();
                 });
         });
