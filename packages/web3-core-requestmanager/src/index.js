@@ -125,9 +125,23 @@ RequestManager.prototype.setProvider = function (provider, net) {
 
         // notify all subscriptions about bad close conditions
         this.provider.on('close', function close(event) {
-            if (![1000, 1001].includes(event.code) || event.wasClean === false) {
+            // The node.net module emits ('close', isException)
+            const ipcCloseError = typeof event === 'boolean' && event;
+
+            // The WS package has a close event w/ codes & reasons
+            const hasErrorCode = ![1000, 1001].includes(event.code);
+
+            if (ipcCloseError || hasErrorCode || event.wasClean === false){
                 _this.subscriptions.forEach(function (subscription) {
-                    subscription.callback(new Error('CONNECTION ERROR: The connection got closed with the close code `' + event.code + '` and the following reason string `' + event.reason + '`'));
+                    const message = (hasErrorCode)
+
+                        ? 'CONNECTION ERROR: The connection got closed with ' +
+                          'the close code `' + event.code + '` and the following ' +
+                          'reason string `' + event.reason + '`'
+
+                        : 'CONNECTION ERROR: The connection closed unexpectedly';
+
+                    subscription.callback(new Error(message));
                 });
             }
         });
