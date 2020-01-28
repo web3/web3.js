@@ -47,6 +47,17 @@ module.exports = {
     ConnectionNotOpenError: function (event){
         return this.ConnectionError('connection not open on send()', event);
     },
+    ConnectionCloseError: function (event){
+        const msg = (typeof event === 'object' && event.code && event.reason)
+
+            ? 'CONNECTION ERROR: The connection got closed with ' +
+              'the close code `' + event.code + '` and the following ' +
+              'reason string `' + event.reason + '`'
+
+            : 'CONNECTION ERROR: The connection closed unexpectedly';
+
+        return new Error(msg);
+    },
     MaxAttemptsReachedOnReconnectingError: function (){
         return new Error('Maximum number of reconnect attempts reached!');
     },

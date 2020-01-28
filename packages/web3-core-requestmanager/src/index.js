@@ -125,23 +125,10 @@ RequestManager.prototype.setProvider = function (provider, net) {
 
         // notify all subscriptions about bad close conditions
         this.provider.on('close', function close(event) {
-            // The node.net module emits ('close', isException)
-            const ipcCloseError = typeof event === 'boolean' && event;
-
-            // The WS package has a close event w/ codes & reasons
-            const hasErrorCode = ![1000, 1001].includes(event.code);
-
-            if (ipcCloseError || hasErrorCode || event.wasClean === false){
+            if (!_this._isCleanCloseEvent(event) || _this._isIpcCloseError(event)){
                 _this.subscriptions.forEach(function (subscription) {
-                    const message = (hasErrorCode)
-
-                        ? 'CONNECTION ERROR: The connection got closed with ' +
-                          'the close code `' + event.code + '` and the following ' +
-                          'reason string `' + event.reason + '`'
-
-                        : 'CONNECTION ERROR: The connection closed unexpectedly';
-
-                    subscription.callback(new Error(message));
+                    subscription.callback(errors.ConnectionCloseError(event));
+                    _this.subscriptions.delete(subscription.subscription.id);
                 });
             }
         });
@@ -286,6 +273,29 @@ RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
     //  reset notification callbacks etc.
     if (this.provider.reset)
         this.provider.reset();
+};
+
+/**
+ * Evaluates WS close event
+ *
+ * @method _isCleanClose
+ *
+ * @returns {boolean}
+ */
+RequestManager.prototype._isCleanCloseEvent = function (event) {
+    return typeof event === 'object' &&
+           ([1000].includes(event.code) || event.wasClean === true);
+};
+
+/**
+ * Detects Ipc close error. The node.net module emits ('close', isException)
+ *
+ * @method _isIpcCloseError
+ *
+ * @returns {boolean}
+ */
+RequestManager.prototype._isIpcCloseError = function (event) {
+    return typeof event === 'boolean' && event;
 };
 
 module.exports = {
