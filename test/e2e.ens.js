@@ -25,7 +25,7 @@ describe('ENS [ @E2E ]', function () {
     });
 
     it('should return the subnode owner of "resolver"', async function () {
-        const owner = await web3.eth.ens.registry.owner('resolver');
+        const owner = await web3.eth.ens.registry.getOwner('resolver');
 
         assert.equal(
             owner,
@@ -34,7 +34,7 @@ describe('ENS [ @E2E ]', function () {
     });
 
     it('should fetch the registered resolver for the subnode "resolver"', async function () {
-        const resolver = await web3.eth.ens.registry.resolver('resolver');
+        const resolver = await web3.eth.ens.registry.getResolver('resolver');
         assert.equal(resolver.options.address, resolverAddr);
     });
 
