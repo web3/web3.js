@@ -918,3 +918,39 @@ Example
 For further information on the handling of contract events please see :ref:`here <contract-events>`.
 
 ------------------------------------------------------------------------------
+
+supportsInterface
+=================
+
+.. code-block:: javascript
+
+    web3.eth.ens.supportsInterface(name, interfaceId [, callback]);
+
+Returns ``true`` if the related ``Resolver`` does support the given signature or interfaceId.
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``interfaceId`` - ``String``: The signature of the function or the interfaceId as described in the ENS documentation
+2. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.supportsInterface('ethereum.eth', 'addr(bytes32').then(function (result) {
+        console.log(result);
+    });
+    > true
+
+------------------------------------------------------------------------------
