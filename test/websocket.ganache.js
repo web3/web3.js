@@ -37,7 +37,7 @@ describe('WebsocketProvider (ganache)', function () {
     it('errors when requests continue after socket closed', async function () {
         web3 = new Web3(host + 8777);
 
-        try { await web3.eth.getBlockNumber() } catch (err) {
+        try { await web3.eth.getBlockNumber(); } catch (err) {
             assert(err.message.includes('connection not open on send'));
             assert(err.code, 1006);
             assert(err.reason, 'connection failed');
@@ -116,7 +116,7 @@ describe('WebsocketProvider (ganache)', function () {
 
         await new Promise(resolve => {
             web3.currentProvider.once('error', function(err){
-                assert(err.message.includes('CONNECTION TIMEOUT: timeout of 1000 ms achived'))
+                assert(err.message.includes('CONNECTION TIMEOUT: timeout of 1000 ms achived'));
                 resolve();
             });
 
@@ -334,7 +334,7 @@ describe('WebsocketProvider (ganache)', function () {
                     await web3.eth.getBlockNumber();
                     assert.fail();
                 } catch (err) {
-                    assert(err.message.includes('Maximum number of reconnect attempts'))
+                    assert(err.message.includes('Maximum number of reconnect attempts'));
                     resolve();
                 }
             });
@@ -344,7 +344,6 @@ describe('WebsocketProvider (ganache)', function () {
     it('queues requests made while connection is lost / executes on reconnect', function () {
         this.timeout(10000);
         let stage = 0;
-        let emitterInstance; // Assigned for cleanup
 
         return new Promise(async function (resolve) {
             server = ganache.server({port: port});
@@ -358,8 +357,6 @@ describe('WebsocketProvider (ganache)', function () {
             );
 
             web3.currentProvider.on('connect', async function () {
-                emitterInstance = this;
-
                 if (stage === 0){
                     await pify(server.close)();
                     stage = 1;
@@ -377,7 +374,7 @@ describe('WebsocketProvider (ganache)', function () {
                 const blockNumber = await deferred;
                 assert(blockNumber === 0);
 
-                emitterInstance.removeAllListeners();
+                web3.currentProvider.removeAllListeners();
                 resolve();
             },2500);
         });
@@ -405,9 +402,9 @@ describe('WebsocketProvider (ganache)', function () {
 
         await new Promise(async resolve => {
             web3.currentProvider.once('error', function(err){
-                assert(err.message.includes('Maximum number of reconnect attempts reached'))
+                assert(err.message.includes('Maximum number of reconnect attempts reached'));
                 resolve();
-            })
+            });
 
             await pify(server.close)();
             web3.currentProvider._parseResponse('abc|--|dedf');

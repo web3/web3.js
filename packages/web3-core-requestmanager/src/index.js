@@ -279,7 +279,8 @@ RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
  * Evaluates WS close event
  *
  * @method _isCleanClose
- * @param {object | boolean} event WS close event or exception flag
+ *
+ * @param {CloseEvent | boolean} event WS close event or exception flag
  *
  * @returns {boolean}
  */
@@ -291,7 +292,8 @@ RequestManager.prototype._isCleanCloseEvent = function (event) {
  * Detects Ipc close error. The node.net module emits ('close', isException)
  *
  * @method _isIpcCloseError
- * @param {object | boolean} event WS close event or exception flag
+ *
+ * @param {CloseEvent | boolean} event WS close event or exception flag
  *
  * @returns {boolean}
  */
