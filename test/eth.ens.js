@@ -149,7 +149,7 @@ describe('ens', function () {
                 [hashedName, '0x0123456701234567012345670123456701234567']
             );
 
-            const receipt = await web3.eth.ens.registry.setOwner(
+            const receipt = await web3.eth.ens.setOwner(
                 name,
                 '0x0123456701234567012345670123456701234567',
                 {
@@ -172,7 +172,7 @@ describe('ens', function () {
                 [hashedName, '0x0123456701234567012345670123456701234567']
             );
 
-            const receipt = await web3.eth.ens.registry.setResolver(
+            const receipt = await web3.eth.ens.setResolver(
                 name,
                 '0x0123456701234567012345670123456701234567',
                 {
@@ -195,7 +195,7 @@ describe('ens', function () {
                 [hashedName, '1']
             );
 
-            const receipt = await web3.eth.ens.registry.setTTL(
+            const receipt = await web3.eth.ens.setTTL(
                 name,
                 '1',
                 {
@@ -218,7 +218,7 @@ describe('ens', function () {
                 [hashedName, utils.sha3('label'), '0x0123456701234567012345670123456701234567']
             );
 
-            const receipt = await web3.eth.ens.registry.setSubnodeOwner(
+            const receipt = await web3.eth.ens.setSubnodeOwner(
                 name,
                 'label',
                 '0x0123456701234567012345670123456701234567',
@@ -297,7 +297,7 @@ describe('ens', function () {
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
 
-            const owner = await web3.eth.ens.registry.getOwner('foobar.eth');
+            const owner = await web3.eth.ens.getOwner('foobar.eth');
 
             assert.equal(owner, '0x0123456701234567012345670123456701234567');
         });
@@ -315,7 +315,7 @@ describe('ens', function () {
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
 
-            const resolver = await web3.eth.ens.registry.resolver('foobar.eth');
+            const resolver = await web3.eth.ens.resolver('foobar.eth');
 
             assert.equal(resolver.options.address, '0x0123456701234567012345670123456701234567');
         });
@@ -333,7 +333,7 @@ describe('ens', function () {
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
 
-            const resolver = await web3.eth.ens.registry.getResolver('foobar.eth');
+            const resolver = await web3.eth.ens.getResolver('foobar.eth');
 
             assert.equal(resolver.options.address, '0x0123456701234567012345670123456701234567');
         });
