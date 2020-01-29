@@ -69,7 +69,7 @@ export class errors {
     static InvalidResponse(result: Error): Error;
     static ConnectionTimeout(ms: string): Error;
     static ConnectionNotOpenError(): Error;
-    static ConnectionCloseError(event: WebSocketEvent | boolean): Error;
+    static ConnectionCloseError(event: WebSocketEvent | boolean): Error | ConnectionError;
     static MaxAttemptsReachedOnReconnectingError(): Error;
     static PendingRequestsOnReconnectingError(): Error;
     static ConnectionError(msg: string, event?: WebSocketEvent): ConnectionError;
