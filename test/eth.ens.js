@@ -266,7 +266,7 @@ describe('ens', function () {
             });
         });
 
-        it('should return the owner record for a name', async function () {
+        it('should return the owner record for a name (owner)', async function () {
             var signature = 'owner(bytes32)';
 
             provider.injectValidation(function (payload) {
@@ -284,7 +284,25 @@ describe('ens', function () {
             assert.equal(owner, '0x0123456701234567012345670123456701234567');
         });
 
-        it('should fetch the resolver for a name', async function () {
+        it('should return the owner record for a name (getOwner)', async function () {
+            var signature = 'owner(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            const owner = await web3.eth.ens.registry.getOwner('foobar.eth');
+
+            assert.equal(owner, '0x0123456701234567012345670123456701234567');
+        });
+
+        it('should fetch the resolver for a name (resolver)', async function () {
             var signature = 'resolver(bytes32)';
 
             provider.injectValidation(function (payload) {
@@ -298,6 +316,24 @@ describe('ens', function () {
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
 
             const resolver = await web3.eth.ens.registry.resolver('foobar.eth');
+
+            assert.equal(resolver.options.address, '0x0123456701234567012345670123456701234567');
+        });
+
+        it('should fetch the resolver for a name (getResolver)', async function () {
+            var signature = 'resolver(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            const resolver = await web3.eth.ens.registry.getResolver('foobar.eth');
 
             assert.equal(resolver.options.address, '0x0123456701234567012345670123456701234567');
         });
