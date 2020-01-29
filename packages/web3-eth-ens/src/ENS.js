@@ -29,7 +29,7 @@ var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
  * Constructs a new instance of ENS
  *
  * @param {Eth} eth
- * 
+ *
  * @constructor
  */
 function ENS(eth) {
@@ -78,11 +78,13 @@ function ENS(eth) {
  * @param {string} interfaceId
  * @param {function} callback
  *
- * @callback callback callback(error, result) 
+ * @callback callback callback(error, result)
  * @returns {Promise<boolean>}
  */
 ENS.prototype.supportsInterface = function (name, interfaceId, callback) {
-    return this.resolverMethodHandler.method(name, 'supportsInterface', [interfaceId]).call(callback);
+    return this.getResolver(name).then(function (resolver) {
+        return resolver.methods.supportsInterface(interfaceId).call(callback);
+    });
 };
 
 /**
@@ -219,10 +221,10 @@ ENS.prototype.setOwner = function (name, txConfig, callback) {
  * Returns the address record associated with a name.
  *
  * @method getAddress
- * 
+ *
  * @param {string} name
  * @param {function} callback
- * 
+ *
  * @callback callback callback(error, result)
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
@@ -234,12 +236,12 @@ ENS.prototype.getAddress = function (name, callback) {
  * Sets a new address
  *
  * @method setAddress
- * 
+ *
  * @param {string} name
  * @param {string} address
  * @param {TransactionConfig} txConfig
  * @param {function} callback
- * 
+ *
  * @callback callback callback(error, result)
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
@@ -251,10 +253,10 @@ ENS.prototype.setAddress = function (name, address, txConfig, callback) {
  * Returns the public key
  *
  * @method getPubkey
- * 
+ *
  * @param {string} name
  * @param {function} callback
- * 
+ *
  * @callback callback callback(error, result)
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
@@ -266,13 +268,13 @@ ENS.prototype.getPubkey = function (name, callback) {
  * Set the new public key
  *
  * @method setPubkey
- * 
+ *
  * @param {string} name
  * @param {string} x
  * @param {string} y
  * @param {TransactionConfig} txConfig
  * @param {function} callback
- * 
+ *
  * @callback callback callback(error, result)
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
@@ -284,10 +286,10 @@ ENS.prototype.setPubkey = function (name, x, y, txConfig, callback) {
  * Returns the content
  *
  * @method getContent
- * 
+ *
  * @param {string} name
  * @param {function} callback
- * 
+ *
  * @callback callback callback(error, result)
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
@@ -299,12 +301,12 @@ ENS.prototype.getContent = function (name, callback) {
  * Set the content
  *
  * @method setContent
- * 
+ *
  * @param {string} name
  * @param {string} hash
  * @param {function} callback
  * @param {TransactionConfig} txConfig
- * 
+ *
  * @callback callback callback(error, result)
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
@@ -316,10 +318,10 @@ ENS.prototype.setContent = function (name, hash, txConfig, callback) {
  * Get the multihash
  *
  * @method getMultihash
- * 
+ *
  * @param {string} name
  * @param {function} callback
- * 
+ *
  * @callback callback callback(error, result)
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
@@ -331,12 +333,12 @@ ENS.prototype.getMultihash = function (name, callback) {
  * Set the multihash
  *
  * @method setMultihash
- * 
+ *
  * @param {string} name
  * @param {string} hash
  * @param {TransactionConfig} txConfig
  * @param {function} callback
- * 
+ *
  * @callback callback callback(error, result)
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
