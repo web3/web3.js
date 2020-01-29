@@ -22,6 +22,7 @@
 
 var config = require('./config');
 var formatters = require('web3-core-helpers').formatters;
+var utils = require('web3-utils');
 var Registry = require('./contracts/Registry');
 var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
 
@@ -83,6 +84,10 @@ function ENS(eth) {
  */
 ENS.prototype.supportsInterface = function (name, interfaceId, callback) {
     return this.getResolver(name).then(function (resolver) {
+        if (!utils.isHexStrict(interfaceId)) {
+            interfaceId = utils.sha3(interfaceId).slice(0,10);
+        }
+
         return resolver.methods.supportsInterface(interfaceId).call(callback);
     });
 };
