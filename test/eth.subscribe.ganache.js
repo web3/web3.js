@@ -135,7 +135,6 @@ describe('subscription connect/reconnect', function () {
             web3.eth
                 .subscribe('newBlockHeaders')
                 .on("data", function (_) {
-                    emitterInstance = this;
                     counter++;
                 });
 
