@@ -52,7 +52,7 @@ var getWebsocketPort = function(){
 }
 
 // Delay
-var waitSeconds = async function(seconds=0){
+var waitSeconds = async function(seconds = 0){
     return new Promise(resolve => setTimeout(() => resolve(), seconds * 1000))
 }
 
@@ -65,4 +65,3 @@ module.exports = {
     getWebsocketPort: getWebsocketPort,
     waitSeconds: waitSeconds
 };
-
