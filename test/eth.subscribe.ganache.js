@@ -1,7 +1,7 @@
 const assert = require('assert');
 const ganache = require('ganache-cli');
 const pify = require('pify');
-const Web3 = require('./helpers/test.utils').getWeb3();
+const { getWeb3, waitSeconds } = require('./helpers/test.utils');
 
 describe('subscription connect/reconnect', function () {
     let server;
@@ -9,6 +9,7 @@ describe('subscription connect/reconnect', function () {
     let accounts;
     let subscription;
     const port = 8545;
+    const Web3 = getWeb3();
 
     beforeEach(async function () {
         server = ganache.server({port: port, blockTime: 1});
@@ -99,6 +100,58 @@ describe('subscription connect/reconnect', function () {
             }
         }, 500);
     });
+
+    // The ganache unit tests are erroring under similar conditions -
+    // test verifies behavior is as expected.
+    it('does not error when client closes immediately after disconnect', async function(){
+        this.timeout(7000);
+
+        return new Promise(async function(resolve, reject) {
+            web3.eth
+                .subscribe('newBlockHeaders')
+                .once("error", function (err) {
+                    reject(new Error('Should not hear an error '));
+                });
+
+            // Let a couple blocks mine..
+            await waitSeconds(2)
+            web3.currentProvider.disconnect();
+            await pify(server.close)();
+            await waitSeconds(1)
+            resolve();
+        });
+    });
+
+    // Verify subscription cleanup on setProvider
+    it('does not hear old subscriptions after setting a new provider', async function(){
+        this.timeout(7000);
+        let counter = 0;
+
+        return new Promise(async function(resolve, reject) {
+            web3.eth
+                .subscribe('newBlockHeaders')
+                .on("data", function (_) {
+                    emitterInstance = this;
+                    counter++;
+                });
+
+            // Let a couple blocks mine..
+            await waitSeconds(2)
+            assert(counter >= 1);
+
+            // Connect to a different client;
+            const newServer = ganache.server({port: 8777, blockTime: 1});
+            await pify(newServer.listen)(8777);
+
+            const finalCount = counter;
+            web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8777'));
+
+            await waitSeconds(2);
+            assert.equal(counter, finalCount);
+            await pify(newServer.close)();
+            resolve();
+        });
+    })
 
     it('allows a subscription which does not exist', function () {
         web3.eth.subscribe('subscription-does-not-exists');
