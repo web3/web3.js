@@ -51,6 +51,11 @@ var getWebsocketPort = function(){
     return ( process.env.GANACHE || global.window ) ?  8545 : 8546;
 }
 
+// Delay
+var waitSeconds = async function(seconds=0){
+    return new Promise(resolve => setTimeout(() => resolve(), seconds * 1000))
+}
+
 module.exports = {
     methodExists: methodExists,
     propertyExists: propertyExists,
@@ -58,5 +63,6 @@ module.exports = {
     extractReceipt: extractReceipt,
     getWeb3: getWeb3,
     getWebsocketPort: getWebsocketPort,
+    waitSeconds: waitSeconds
 };
 
