@@ -472,7 +472,7 @@ describe('ens', function () {
         });
     });
 
-    describe.only('getters', function () {
+    describe('getters', function () {
         beforeEach(function () {
             provider = new FakeHttpProvider();
             web3 = new Web3(provider);
@@ -1002,7 +1002,7 @@ describe('ens', function () {
 
         });
 
-        it.only('should call getAddress and throw the expected error (callback)', function (done) {
+        it('should call getAddress and throw the expected error (callback)', function (done) {
             const resolverSig = 'resolver(bytes32)';
             const addrSig = 'addr(bytes32)';
 
@@ -1044,7 +1044,7 @@ describe('ens', function () {
             });
         });
 
-        it('should return x and y from an public key for en specific ens name', async function () {
+        it('should call getPubkey and return the expected X and Y value (promise)', async function () {
             const resolverSignature = 'resolver(bytes32)';
             const pubkeySignature = 'pubkey(bytes32)';
 
@@ -1079,7 +1079,150 @@ describe('ens', function () {
             assert.equal(result[0][1], '0x3030303030303030303030303030303030303030303030303030303030303030');
         });
 
-        it('should get the content of an resolver', async function () {
+        it('should call getPubkey and return the expected X and Y value (callback)', function (done) {
+            const resolverSignature = 'resolver(bytes32)';
+            const pubkeySignature = 'pubkey(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(pubkeySignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+
+            const pubkeyCoordinateAsHex = asciiToHex('0x0000000000000000000000000000000000000000000000000000000000000000');
+            provider.injectResult([
+                pubkeyCoordinateAsHex,
+                pubkeyCoordinateAsHex
+            ]);
+
+            web3.eth.ens.getPubkey(
+                'foobar.eth',
+                function (error, result) {
+                    assert.equal(result[0][0], '0x3078303030303030303030303030303030303030303030303030303030303030');
+                    assert.equal(result[0][1], '0x3030303030303030303030303030303030303030303030303030303030303030');
+                    assert.equal(error[0][0], '0x3078303030303030303030303030303030303030303030303030303030303030');
+                    assert.equal(error[0][1], '0x3030303030303030303030303030303030303030303030303030303030303030');
+
+                    done();
+                }
+            );
+
+        });
+
+        it('should call getPubkey and throw the expected error (callback)', function (done) {
+            const resolverSignature = 'resolver(bytes32)';
+            const pubkeySignature = 'pubkey(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(pubkeySignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+
+            const pubkeyCoordinateAsHex = asciiToHex('0x0000000000000000000000000000000000000000000000000000000000000000');
+            provider.injectResult([
+                pubkeyCoordinateAsHex,
+                pubkeyCoordinateAsHex
+            ]);
+
+            provider.error.push(null);
+            provider.error.push(null);
+            provider.error.push(null);
+            provider.error.push(null);
+
+            provider.injectError({
+                code: 1234,
+                message: 'ERROR'
+            });
+
+            web3.eth.ens.getPubkey(
+                'foobar.eth',
+                function (error, result) {
+                    assert.equal(error.code, 1234);
+                    assert.equal(error.message, 'ERROR');
+                    assert.equal(result, null);
+
+                    done();
+                }
+            );
+        });
+
+        it('should call getPubkey and throw the expected error (promise)', async function () {
+            const resolverSignature = 'resolver(bytes32)';
+            const pubkeySignature = 'pubkey(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(pubkeySignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+
+            const pubkeyCoordinateAsHex = asciiToHex('0x0000000000000000000000000000000000000000000000000000000000000000');
+            provider.injectResult([
+                pubkeyCoordinateAsHex,
+                pubkeyCoordinateAsHex
+            ]);
+
+            provider.error.push(null);
+            provider.error.push(null);
+            provider.error.push(null);
+            provider.error.push(null);
+
+            provider.injectError({
+                code: 1234,
+                message: 'ERROR'
+            });
+
+            try {
+                await web3.eth.ens.getPubkey('foobar.eth');
+
+                assert.fail();
+            } catch (error) {
+                assert.equal(error.code, 1234);
+                assert.equal(error.message, 'ERROR');
+            }
+        });
+
+        it('should call getContent and return the expected content of the resolver (promise)', async function () {
             const resolverSignature = 'resolver(bytes32)';
             const contentSignature = 'content(bytes32)';
 
@@ -1107,6 +1250,129 @@ describe('ens', function () {
             const result = await web3.eth.ens.getContent('foobar.eth');
 
             assert.equal(result, '0x0000000000000000000000000000000000000000000000000000000000000000');
+        });
+
+        it('should call getContent and return the expected content of the resolver (callback)', function () {
+            const resolverSignature = 'resolver(bytes32)';
+            const contentSignature = 'content(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(contentSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            web3.eth.ens.getContent(
+                'foobar.eth',
+                function (error, result) {
+                    assert.equal(result, '0x0000000000000000000000000000000000000000000000000000000000000000');
+                    assert.equal(error, '0x0000000000000000000000000000000000000000000000000000000000000000');
+
+                }
+            );
+        });
+
+        it('should call getContent and throw the expected error (promise)', async function () {
+            const resolverSignature = 'resolver(bytes32)';
+            const contentSignature = 'content(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(contentSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+
+            provider.error.push(null);
+            provider.error.push(null);
+            provider.error.push(null);
+            provider.error.push(null);
+
+            provider.injectError({
+                code: 1234,
+                message: 'ERROR'
+            });
+
+            try {
+                await web3.eth.ens.getContent('foobar.eth');
+
+                assert.fail();
+            } catch (error) {
+                assert.equal(error.code, 1234);
+                assert.equal(error.message, 'ERROR');
+            }
+        });
+
+        it('should call getContent and throw the expected error (callback)', function () {
+            const resolverSignature = 'resolver(bytes32)';
+            const contentSignature = 'content(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(contentSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.error.push(null);
+            provider.error.push(null);
+            provider.error.push(null);
+            provider.error.push(null);
+
+            provider.injectError({
+                code: 1234,
+                message: 'ERROR'
+            });
+
+            web3.eth.ens.getContent(
+                'foobar.eth',
+                function (error, result) {
+                    assert.equal(error.code, 1234);
+                    assert.equal(error.message, 'ERROR');
+                    assert.equal(result, null);
+                }
+            );
         });
     });
 
