@@ -22,7 +22,7 @@ var asciiToHex = require('../packages/web3-utils').asciiToHex;
  *
  * @returns {void}
  */
-function prepareProviderForSetter(provider, signature, types, params) {
+function prepareProviderForSetter(provider, signature, types, params, error) {
     provider.injectValidation(function (payload) {
         assert.equal(payload.jsonrpc, '2.0');
         assert.equal(payload.method, 'eth_sendTransaction');
@@ -73,7 +73,8 @@ function prepareProviderForSetter(provider, signature, types, params) {
         transactionIndex: '0x3',
         blockNumber: '0xa',
         blockHash: '0xbf1234',
-        gasUsed: '0x0'
+        gasUsed: '0x0',
+        status: error ? '0x0' : '0x1'
     });
     provider.injectValidation(function (payload) {
         assert.equal(payload.method, 'eth_unsubscribe');
@@ -146,7 +147,8 @@ describe('ens', function () {
                 provider,
                 signature,
                 ['bytes32', 'address'],
-                [hashedName, '0x0123456701234567012345670123456701234567']
+                [hashedName, '0x0123456701234567012345670123456701234567'],
+                false
             );
 
             const receipt = await web3.eth.ens.setOwner(
@@ -162,6 +164,64 @@ describe('ens', function () {
             isExpectedReceipt(receipt);
         });
 
+        it('should set the owner record for a name and throw the expected error (callback)', function (done) {
+            const signature = 'setOwner(bytes32,address)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'address'],
+                [hashedName, '0x0123456701234567012345670123456701234567'],
+                true
+            );
+
+            web3.eth.ens.setOwner(
+                name,
+                '0x0123456701234567012345670123456701234567',
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                },
+                function (error, result) {
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.equal(result, null);
+
+                    done();
+                }
+            );
+        });
+
+        it('should set the owner record for a name and throw the expected error (promise)', async function () {
+            const signature = 'setOwner(bytes32,address)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'address'],
+                [hashedName, '0x0123456701234567012345670123456701234567'],
+                true
+            );
+
+            try {
+                await web3.eth.ens.setOwner(
+                    name,
+                    '0x0123456701234567012345670123456701234567',
+                    {
+                        from: '0x0123456701234567012345670123456701234567',
+                        gas: 100,
+                        gasPrice: 100,
+                        nonce: 1
+                    }
+                );
+
+                assert.fail();
+            } catch (error) {
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
+            }
+        });
+
         it('should set the resolver record for a name', async function () {
             const signature = 'setResolver(bytes32,address)';
 
@@ -169,7 +229,8 @@ describe('ens', function () {
                 provider,
                 signature,
                 ['bytes32', 'address'],
-                [hashedName, '0x0123456701234567012345670123456701234567']
+                [hashedName, '0x0123456701234567012345670123456701234567'],
+                false
             );
 
             const receipt = await web3.eth.ens.setResolver(
@@ -185,6 +246,64 @@ describe('ens', function () {
             isExpectedReceipt(receipt);
         });
 
+        it('should set the resolver record for a name and throw the expected error (callback)', function (done) {
+            const signature = 'setResolver(bytes32,address)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'address'],
+                [hashedName, '0x0123456701234567012345670123456701234567'],
+                true
+            );
+
+            web3.eth.ens.setResolver(
+                name,
+                '0x0123456701234567012345670123456701234567',
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                },
+                function (error, result) {
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.equal(result, null);
+
+                    done();
+                }
+            );
+        });
+
+        it('should set the resolver record for a name and throw the expected error (promise)', async function () {
+            const signature = 'setResolver(bytes32,address)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'address'],
+                [hashedName, '0x0123456701234567012345670123456701234567'],
+                true
+            );
+
+            try {
+                await web3.eth.ens.setResolver(
+                    name,
+                    '0x0123456701234567012345670123456701234567',
+                    {
+                        from: '0x0123456701234567012345670123456701234567',
+                        gas: 100,
+                        gasPrice: 100,
+                        nonce: 1
+                    }
+                );
+
+                assert.fail();
+            } catch (error) {
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
+            }
+        });
+
         it('should set the TTL (caching time) record for a name', async function () {
             const signature = 'setTTL(bytes32,uint64)';
 
@@ -192,7 +311,8 @@ describe('ens', function () {
                 provider,
                 signature,
                 ['bytes32', 'uint64'],
-                [hashedName, '1']
+                [hashedName, '1'],
+                false
             );
 
             const receipt = await web3.eth.ens.setTTL(
@@ -208,6 +328,64 @@ describe('ens', function () {
             isExpectedReceipt(receipt);
         });
 
+        it('should call the TTL (caching time) record setter for a name and throw the expected error (callback)', function (done) {
+            const signature = 'setTTL(bytes32,uint64)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'uint64'],
+                [hashedName, '1'],
+                true
+            );
+
+            web3.eth.ens.setTTL(
+                name,
+                '1',
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                },
+                function (error, result) {
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.equal(result, null);
+
+                    done();
+                }
+            );
+        });
+
+        it('should call the TTL (caching time) record setter for a name and throw the expected error (promise)', async function () {
+            const signature = 'setTTL(bytes32,uint64)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'uint64'],
+                [hashedName, '1'],
+                true
+            );
+
+            try {
+                await web3.eth.ens.setTTL(
+                    name,
+                    '1',
+                    {
+                        from: '0x0123456701234567012345670123456701234567',
+                        gas: 100,
+                        gasPrice: 100,
+                        nonce: 1
+                    }
+                );
+
+                assert.fail();
+            } catch (error) {
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
+            }
+        });
+
         it('should create a new sub node with the specified label and owner', async function () {
             const signature = 'setSubnodeOwner(bytes32,bytes32,address)';
 
@@ -215,7 +393,8 @@ describe('ens', function () {
                 provider,
                 signature,
                 ['bytes32', 'bytes32', 'address'],
-                [hashedName, utils.sha3('label'), '0x0123456701234567012345670123456701234567']
+                [hashedName, utils.sha3('label'), '0x0123456701234567012345670123456701234567'],
+                false
             );
 
             const receipt = await web3.eth.ens.setSubnodeOwner(
@@ -230,6 +409,66 @@ describe('ens', function () {
                 });
 
             isExpectedReceipt(receipt);
+        });
+
+        it('should create a new sub node with the specified label and owner (callback)', function (done) {
+            const signature = 'setSubnodeOwner(bytes32,bytes32,address)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'bytes32', 'address'],
+                [hashedName, utils.sha3('label'), '0x0123456701234567012345670123456701234567'],
+                true
+            );
+
+            web3.eth.ens.setSubnodeOwner(
+                name,
+                'label',
+                '0x0123456701234567012345670123456701234567',
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                },
+                function (error, result) {
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.equal(result, null);
+
+                    done();
+                }
+            );
+        });
+
+        it('should create a new sub node with the specified label and owner (promise)', async function () {
+            const signature = 'setSubnodeOwner(bytes32,bytes32,address)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'bytes32', 'address'],
+                [hashedName, utils.sha3('label'), '0x0123456701234567012345670123456701234567'],
+                true
+            );
+
+            try {
+                await web3.eth.ens.setSubnodeOwner(
+                    name,
+                    'label',
+                    '0x0123456701234567012345670123456701234567',
+                    {
+                        from: '0x0123456701234567012345670123456701234567',
+                        gas: 100,
+                        gasPrice: 100,
+                        nonce: 1
+                    }
+                );
+
+                assert.fail();
+            } catch (error) {
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
+            }
         });
     });
 
@@ -284,7 +523,7 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(supportsInterfaceSignature).slice(0, 10) + sha3('addr(bytes32)').slice(2,10) + '00000000000000000000000000000000000000000000000000000000',
+                    data: sha3(supportsInterfaceSignature).slice(0, 10) + sha3('addr(bytes32)').slice(2, 10) + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
             });
@@ -315,7 +554,7 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(supportsInterfaceSignature).slice(0, 10) + sha3('addr(bytes32)').slice(2,10) + '00000000000000000000000000000000000000000000000000000000',
+                    data: sha3(supportsInterfaceSignature).slice(0, 10) + sha3('addr(bytes32)').slice(2, 10) + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
             });
@@ -361,6 +600,80 @@ describe('ens', function () {
             const owner = await web3.eth.ens.getOwner('foobar.eth');
 
             assert.equal(owner, '0x0123456701234567012345670123456701234567');
+        });
+
+        it('should call the callback with the owner record for a name (getOwner)', function (done) {
+            const signature = 'owner(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            web3.eth.ens.getOwner('foobar.eth', function (error, owner) {
+                assert.equal(owner, '0x0123456701234567012345670123456701234567');
+                assert.equal(error, '0x0123456701234567012345670123456701234567'); // For backward compatibility
+                done();
+            });
+        });
+
+        it('should call the callback with the error (getOwner)', function (done) {
+            const signature = 'owner(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+
+            provider.error.push(null);
+
+            provider.injectError({
+                code: 1234,
+                message: 'ERROR'
+            });
+
+            web3.eth.ens.getOwner('foobar.eth', function (error, owner) {
+                assert.equal(owner, null);
+                assert.equal(error.code, 1234);
+                assert.equal(error.message, 'ERROR');
+
+                done();
+            });
+        });
+
+        it('should call the callback with the error on requesting of registry contract (getOwner)', function (done) {
+            const signature = 'owner(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+
+            provider.injectError({
+                code: 1234,
+                message: 'ERROR'
+            });
+
+            web3.eth.ens.getOwner('foobar.eth', function (error, owner) {
+                assert.equal(owner, null);
+                assert.equal(error.code, 1234);
+                assert.equal(error.message, 'ERROR');
+
+                done();
+            });
         });
 
         it('should fetch the resolver for a name (resolver)', async function () {
@@ -528,7 +841,7 @@ describe('ens', function () {
         try {
             await web3.eth.ens.getAddress('foobar.eth');
             assert.fail();
-        } catch(err) {
+        } catch (err) {
             assert.isTrue(err instanceof Error, 'Should throw error');
         }
     });
@@ -549,7 +862,7 @@ describe('ens', function () {
         try {
             await web3.eth.ens.getAddress('foobar.eth');
             assert.fail();
-        } catch(err) {
+        } catch (err) {
             assert.isTrue(err instanceof Error, 'Should throw error');
         }
     });
@@ -605,4 +918,5 @@ describe('ens', function () {
             assert.equal(web3.eth.ens.registryAddress, formatters.inputAddressFormatter(address));
         });
     });
-});
+})
+;
