@@ -92,8 +92,7 @@ Registry.prototype.getOwner = function (name, callback) {
         }
 
         promiEvent.resolve(receipt);
-    })
-    .catch(function (error) {
+    }).catch(function (error) {
         if (_.isFunction(callback)) {
             callback(error, null);
 
@@ -171,8 +170,7 @@ Registry.prototype.getTTL = function (name, callback) {
         }
 
         promiEvent.resolve(receipt);
-    })
-    .catch(function (error) {
+    }).catch(function (error) {
         if (_.isFunction(callback)) {
             callback(error, null);
 
