@@ -1515,78 +1515,79 @@ describe('ens', function () {
         });
     });
 
+    describe('checkNetwork', function () {
+        it("won't resolve on an unknown network", async function () {
+            provider = new FakeHttpProvider();
+            web3 = new Web3(provider);
 
-    it("won't resolve on an unknown network", async function () {
-        provider = new FakeHttpProvider();
-        web3 = new Web3(provider);
+            provider.injectResult({
+                timestamp: Math.floor(new Date() / 1000) - 60,
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_getBlockByNumber');
+                assert.deepEqual(payload.params, ['latest', false]);
+            });
 
-        provider.injectResult({
-            timestamp: Math.floor(new Date() / 1000) - 60,
-        });
-        provider.injectValidation(function (payload) {
-            assert.equal(payload.jsonrpc, '2.0');
-            assert.equal(payload.method, 'eth_getBlockByNumber');
-            assert.deepEqual(payload.params, ['latest', false]);
-        });
+            provider.injectResult(1);
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'net_version');
+                assert.deepEqual(payload.params, []);
+            });
 
-        provider.injectResult(1);
-        provider.injectValidation(function (payload) {
-            assert.equal(payload.jsonrpc, '2.0');
-            assert.equal(payload.method, 'net_version');
-            assert.deepEqual(payload.params, []);
-        });
+            provider.injectResult({
+                hash: '0x0123456701234567012345670123456701234567012345670123456701234567',
+                blockNumber: '0x0'
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_getBlockByNumber');
+                assert.deepEqual(payload.params, ['0x0', false]);
+            });
 
-        provider.injectResult({
-            hash: '0x0123456701234567012345670123456701234567012345670123456701234567',
-            blockNumber: '0x0'
-        });
-        provider.injectValidation(function (payload) {
-            assert.equal(payload.jsonrpc, '2.0');
-            assert.equal(payload.method, 'eth_getBlockByNumber');
-            assert.deepEqual(payload.params, ['0x0', false]);
-        });
-
-        try {
-            await web3.eth.ens.getAddress('foobar.eth');
-            assert.fail();
-        } catch (err) {
-            assert.isTrue(err instanceof Error, 'Should throw error');
-        }
-    });
-
-    it("won't resolve when out of date", async function () {
-        provider = new FakeHttpProvider();
-        web3 = new Web3(provider);
-
-        provider.injectResult({
-            timestamp: Math.floor(new Date() / 1000) - 3660,
-        });
-        provider.injectValidation(function (payload) {
-            assert.equal(payload.jsonrpc, '2.0');
-            assert.equal(payload.method, 'eth_getBlockByNumber');
-            assert.deepEqual(payload.params, ['latest', false]);
+            try {
+                await web3.eth.ens.getAddress('foobar.eth');
+                assert.fail();
+            } catch (err) {
+                assert.isTrue(err instanceof Error, 'Should throw error');
+            }
         });
 
-        try {
-            await web3.eth.ens.getAddress('foobar.eth');
-            assert.fail();
-        } catch (err) {
-            assert.isTrue(err instanceof Error, 'Should throw error');
-        }
-    });
+        it("won't resolve when out of date", async function () {
+            provider = new FakeHttpProvider();
+            web3 = new Web3(provider);
 
-    it('should only check if the connected node is synced if at least a hour is gone', async function () {
-        provider = new FakeHttpProvider();
-        web3 = new Web3(provider);
-        web3.eth.ens._lastSyncCheck = new Date() / 1000;
+            provider.injectResult({
+                timestamp: Math.floor(new Date() / 1000) - 3660,
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_getBlockByNumber');
+                assert.deepEqual(payload.params, ['latest', false]);
+            });
 
-        try {
-            await web3.eth.ens.checkNetwork();
+            try {
+                await web3.eth.ens.getAddress('foobar.eth');
+                assert.fail();
+            } catch (err) {
+                assert.isTrue(err instanceof Error, 'Should throw error');
+            }
+        });
 
-            assert.fail();
-        } catch (error) {
-            return true;
-        }
+        it('should only check if the connected node is synced if at least a hour is gone', async function () {
+            provider = new FakeHttpProvider();
+            web3 = new Web3(provider);
+            web3.eth.ens._lastSyncCheck = new Date() / 1000;
+
+            try {
+                await web3.eth.ens.checkNetwork();
+
+                assert.fail();
+            } catch (error) {
+                return true;
+            }
+        });
     });
 
     describe('custom registry address', function () {

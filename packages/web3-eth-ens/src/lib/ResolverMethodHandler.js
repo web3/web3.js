@@ -72,6 +72,14 @@ ResolverMethodHandler.prototype.call = function (callback) {
 
     this.parent.registry.getResolver(this.ensName).then(function (resolver) {
         self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, callback);
+    }).catch(function(error) {
+        if (_.isFunction(callback)) {
+            callback(error, null);
+
+            return;
+        }
+
+        promiEvent.reject(error);
     });
 
     return promiEvent.eventEmitter;
@@ -92,6 +100,14 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
 
     this.parent.registry.getResolver(this.ensName).then(function (resolver) {
         self.parent.handleSend(promiEvent, resolver.methods[self.methodName], preparedArguments, sendOptions, callback);
+    }).catch(function(error) {
+        if (_.isFunction(callback)) {
+            callback(error, null);
+
+            return;
+        }
+
+        promiEvent.reject(error);
     });
 
     return promiEvent.eventEmitter;
