@@ -1,14 +1,15 @@
 var assert = require('assert');
-var formatters = require('../packages/web3-core-helpers/src/formatters.js');
+var formatters = require('../lib/web3/formatters.js');
+var BigNumber = require('bignumber.js');
 
 describe('formatters', function () {
     describe('outputTransactionFormatter', function () {
         it('should return the correct value', function () {
-
+            
             assert.deepEqual(formatters.outputTransactionFormatter({
                 input: '0x3454645634534',
-                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                from: '0x00000',
+                to: '0x00000',
                 value: '0x3e8',
                 gas: '0x3e8',
                 gasPrice: '0x3e8',
@@ -18,11 +19,11 @@ describe('formatters', function () {
                 blockHash: '0xc9b9cdc2092a9d6589d96662b1fd6949611163fb3910cf8a173cd060f17702f9'
             }), {
                 input: '0x3454645634534',
-                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                value: '1000',
+                from: '0x00000',
+                to: '0x00000',
+                value: new BigNumber(1000),
                 gas: 1000,
-                gasPrice: '1000',
+                gasPrice: new BigNumber(1000),
                 nonce: 11,
                 blockNumber: 1000,
                 blockHash: '0xc9b9cdc2092a9d6589d96662b1fd6949611163fb3910cf8a173cd060f17702f9',
@@ -31,10 +32,10 @@ describe('formatters', function () {
         });
 
         it('should return the correct value, when null values are present', function () {
-
+            
             assert.deepEqual(formatters.outputTransactionFormatter({
                 input: '0x3454645634534',
-                from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                from: '0x00000',
                 to: null,
                 value: '0x3e8',
                 gas: '0x3e8',
@@ -45,11 +46,11 @@ describe('formatters', function () {
                 blockHash: null
             }), {
                 input: '0x3454645634534',
-                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                from: '0x00000',
                 to: null,
-                value: 1000,
+                value: new BigNumber(1000),
                 gas: 1000,
-                gasPrice: '1000',
+                gasPrice: new BigNumber(1000),
                 nonce: 11,
                 blockNumber: null,
                 blockHash: null,

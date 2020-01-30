@@ -1,149 +1,88 @@
 {
-    "name": "web3",
-    "private": true,
-    "version": "1.2.5",
-    "description": "Ethereum JavaScript API wrapper repository",
-    "license": "LGPL-3.0",
-    "engines": {
-        "node": ">=8.0.0"
+  "name": "web3",
+  "namespace": "ethereum",
+  "version": "0.20.7",
+  "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
+  "main": "./index.js",
+  "directories": {
+    "lib": "./lib"
+  },
+  "dependencies": {
+    "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git",
+    "crypto-js": "^3.1.4",
+    "utf8": "^2.1.1",
+    "xhr2-cookies": "^1.1.0",
+    "xmlhttprequest": "*"
+  },
+  "browser": {
+    "xmlhttprequest": "./lib/utils/browser-xhr.js"
+  },
+  "devDependencies": {
+    "bower": ">=1.4.1",
+    "browserify": ">=10.0",
+    "chai": "^3.0.0",
+    "coveralls": "^2.11.2",
+    "del": ">=2.0.2",
+    "exorcist": "^0.4.0",
+    "gulp": ">=3.9.0",
+    "gulp-jshint": ">=1.5.0",
+    "gulp-rename": ">=1.2.0",
+    "gulp-replace": "^0.5.3",
+    "gulp-streamify": "0.0.5",
+    "gulp-uglify": ">=1.2.0",
+    "istanbul": "^0.4.4",
+    "jshint": ">=2.5.0",
+    "mocha": ">=2.3.3",
+    "sandboxed-module": "^2.0.2",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "scripts": {
+    "build": "gulp",
+    "watch": "gulp watch",
+    "lint": "jshint *.js lib",
+    "test": "mocha; jshint *.js lib",
+    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ethereum/web3.js.git"
+  },
+  "homepage": "https://github.com/ethereum/web3.js",
+  "bugs": {
+    "url": "https://github.com/ethereum/web3.js/issues"
+  },
+  "keywords": [
+    "ethereum",
+    "javascript",
+    "API"
+  ],
+  "author": "ethdev.com",
+  "authors": [
+    {
+      "name": "Marek Kotewicz",
+      "email": "marek@ethdev.com",
+      "url": "https://github.com/debris"
     },
-    "main": "./packages/web3/src/index.js",
-    "directories": {
-        "doc": "./doc",
-        "test": "./test"
+    {
+      "name": "Fabian Vogelsteller",
+      "email": "fabian@ethdev.com",
+      "homepage": "http://frozeman.de"
     },
-    "bundlesize": [
-        {
-            "path": "./packages/web3/dist/web3.min.js",
-            "maxSize": "1.5 mB",
-            "compression": "none"
-        }
-    ],
-    "scripts": {
-        "postinstall": "lerna bootstrap",
-        "build": "gulp",
-        "build-all": "gulp all",
-        "release": "lerna bootstrap; lerna publish",
-        "bootstrap": "lerna bootstrap",
-        "watch": "gulp watch",
-        "docs": "cd docs; make html;",
-        "lint": "jshint *.js packages",
-        "test": "mocha --grep E2E --invert; jshint *.js packages",
-        "test:unit": "nyc --no-clean --silent _mocha -- -R spec --grep E2E --invert",
-        "dtslint": "lerna run dtslint",
-        "depcheck": "lerna exec dependency-check -- --missing --verbose .",
-        "bundlesize": "bundlesize",
-        "geth": "geth-dev-assistant --accounts 5 --tag stable --gasLimit 7000000",
-        "test:e2e:ganache": "./scripts/e2e.ganache.sh",
-        "test:e2e:geth:auto": "./scripts/e2e.geth.automine.sh",
-        "test:e2e:geth:insta": "./scripts/e2e.geth.instamine.sh",
-        "test:e2e:clients": "npm run test:e2e:ganache; npm run test:e2e:geth:insta; npm run test:e2e:geth:auto",
-        "test:e2e:chrome": "./scripts/e2e.chrome.sh",
-        "test:e2e:firefox": "./scripts/e2e.firefox.sh",
-        "test:e2e:min": "./scripts/e2e.min.sh",
-        "test:e2e:cdn": "./scripts/e2e.cdn.sh",
-        "test:e2e:browsers": "npm run build; npm run test:e2e:chrome; npm run test:e2e:firefox",
-        "test:e2e:publish": "./scripts/e2e.npm.publish.sh",
-        "test:e2e:truffle": "./scripts/e2e.truffle.sh",
-        "test:e2e:mosaic": "./scripts/e2e.mosaic.sh",
-        "test:e2e:ens": "./scripts/e2e.ens.sh",
-        "test:e2e:ganache:core": "./scripts/e2e.ganache.core.sh",
-        "ci": "./scripts/ci.sh",
-        "coveralls": "./scripts/coveralls.sh"
+    {
+      "name": "Marian Oancea",
+      "email": "marian@ethdev.com",
+      "url": "https://github.com/cubedro"
     },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/ethereum/web3.js.git"
+    {
+      "name": "Gav Wood",
+      "email": "g@ethdev.com",
+      "homepage": "http://gavwood.com"
     },
-    "homepage": "https://github.com/ethereum/web3.js",
-    "bugs": {
-        "url": "https://github.com/ethereum/web3.js/issues"
-    },
-    "keywords": [
-        "Ethereum",
-        "JavaScript",
-        "API"
-    ],
-    "author": "ethereum.org",
-    "authors": [
-        {
-            "name": "Fabian Vogelsteller",
-            "email": "fabian@ethereum.org",
-            "homepage": "https://github.com/frozeman"
-        },
-        {
-            "name": "Marek Kotewicz",
-            "email": "marek@parity.io",
-            "url": "https://github.com/debris"
-        },
-        {
-            "name": "Marian Oancea",
-            "url": "https://github.com/cubedro"
-        },
-        {
-            "name": "Gav Wood",
-            "email": "g@parity.io",
-            "homepage": "http://gavwood.com"
-        },
-        {
-            "name": "Jeffery Wilcke",
-            "email": "jeffrey.wilcke@ethereum.org",
-            "url": "https://github.com/obscuren"
-        }
-    ],
-    "devDependencies": {
-        "@babel/core": "^7.6.4",
-        "@babel/preset-env": "^7.6.3",
-        "@types/bignumber.js": "^4.0.2",
-        "@types/bn.js": "^4.11.5",
-        "@types/node": "^12.6.1",
-        "@types/underscore": "^1.8.0",
-        "babelify": "^10.0.0",
-        "bignumber.js": "^4.0.0",
-        "bluebird": "3.3.1",
-        "bn.js": "^4.11.8",
-        "bower": "1.8.8",
-        "browserify": "^16.5.0",
-        "bundlesize": "^0.18.0",
-        "chai": "^4.2.0",
-        "core-js": "^3.4.8",
-        "coveralls": "^3.0.7",
-        "crypto-js": "^3.1.9-1",
-        "del": "^4.1.1",
-        "dependency-check": "^4.1.0",
-        "ethereumjs-common": "^1.3.2",
-        "ethereumjs-tx": "^2.1.1",
-        "ethers": "4.0.33",
-        "ethjs-signer": "^0.1.1",
-        "exorcist": "^1.0.1",
-        "ganache-cli": "^6.7.0",
-        "geth-dev-assistant": "^0.1.3",
-        "gulp": "^4.0.2",
-        "gulp-jshint": "^2.1.0",
-        "gulp-rename": "^1.4.0",
-        "gulp-replace": "^1.0.0",
-        "gulp-streamify": "^1.0.2",
-        "gulp-uglify": "^3.0.2",
-        "jshint": "^2.10.2",
-        "karma": "^4.4.1",
-        "karma-browserify": "^6.1.0",
-        "karma-chrome-launcher": "^3.1.0",
-        "karma-firefox-launcher": "^1.2.0",
-        "karma-mocha": "^1.3.0",
-        "karma-spec-reporter": "0.0.32",
-        "lerna": "^3.18.3",
-        "mocha": "^6.2.1",
-        "nyc": "^14.1.1",
-        "puppeteer": "^1.20.0",
-        "sandboxed-module": "^2.0.3",
-        "surge": "^0.21.3",
-        "typescript": "next",
-        "underscore": "^1.9.1",
-        "vinyl-source-stream": "^2.0.0",
-        "wait-port": "^0.2.6",
-        "@ensdomains/ens": "^0.3.11",
-        "@ensdomains/resolver": "^0.1.13",
-        "truffle": "^5.1.8",
-        "regenerator-runtime": "^0.13.3"
+    {
+      "name": "Jeffery Wilcke",
+      "email": "jeff@ethdev.com",
+      "url": "https://github.com/obscuren"
     }
+  ],
+  "license": "LGPL-3.0"
 }

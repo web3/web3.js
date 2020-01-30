@@ -1,63 +1,50 @@
 {
-  "namespace": "ethereum",
   "name": "web3",
-  "version": "1.2.5",
-  "description": "Ethereum JavaScript API",
-  "license": "LGPL-3.0",
+  "namespace": "ethereum",
+  "version": "0.17.0-alpha",
+  "description": "Ethereum Compatible JavaScript API",
   "main": [
+    "./dist/web3.js",
     "./dist/web3.min.js"
   ],
-  "moduleType": "global",
   "dependencies": {
-    "bn.js": ">=4.11.6"
+    "bignumber.js": ">=2.0.0 <=5.0.0",
+    "crypto-js": "~3.1.4"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/ethereum/web3.js.git"
+    "url": "https://github.com/ethereum/web3.js.git"
   },
   "homepage": "https://github.com/ethereum/web3.js",
   "bugs": {
     "url": "https://github.com/ethereum/web3.js/issues"
   },
   "keywords": [
-    "Ethereum",
-    "JavaScript",
-    "RPC",
-    "Swarm",
-    "Whisper",
-    "Smart Contracts",
+    "ethereum",
+    "javascript",
     "API"
   ],
   "authors": [
     {
-      "name": "Fabian Vogelsteller",
-      "email": "fabian@ethereum.org",
-      "homepage": "http://frozeman.de"
-    },
-    {
       "name": "Marek Kotewicz",
-      "email": "marek@parity.io",
-      "url": "https://github.com/debris"
+      "email": "marek@ethdev.com",
+      "homepage": "https://github.com/debris"
     },
     {
       "name": "Marian Oancea",
-      "url": "https://github.com/cubedro"
+      "email": "marian@ethdev.com",
+      "homepage": "https://github.com/cubedro"
     },
     {
-      "name": "Gav Wood",
-      "email": "g@parity.io",
-      "homepage": "http://gavwood.com"
-    },
-    {
-      "name": "Jeffery Wilcke",
-      "email": "jeffrey.wilcke@ethereum.org",
-      "url": "https://github.com/obscuren"
+      "name": "Fabian Vogelsteller",
+      "email": "fabian@ethdev.com",
+      "homepage": "https://github.com/frozeman"
     }
   ],
+  "license": "LGPL-3.0",
   "ignore": [
-    "test",
-    "packages",
-    "src",
+    "example",
+    "lib",
     "node_modules",
     "package.json",
     "package.js",

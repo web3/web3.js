@@ -1,6 +1,6 @@
 var chai = require('chai');
+var Iban = require('../lib/web3/iban.js');
 var assert = chai.assert;
-var Iban = require('../packages/web3-eth-iban');
 
 var tests = [
     { institution: 'XREG', identifier: 'GAVOFYORK', expected: 'XE81ETHXREGGAVOFYORK'}
@@ -15,7 +15,7 @@ describe('lib/web3/iban', function () {
                     identifier:  test.identifier
                 }), new Iban(test.expected));
             });
-        });
+        });   
     });
 });
 

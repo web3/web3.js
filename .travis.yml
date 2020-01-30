@@ -1,59 +1,20 @@
-services:
-    - xvfb
 language: node_js
-git:
-  depth: false
-matrix:
-  fast_finish: true
-  include:
-    - node_js: 8
-      env: TEST=unit
-    - node_js: 11
-      env: TEST=unit
-    - node_js: 12
-      env: TEST=unit
-    - node_js: 10
-      env: TEST=build_and_lint
-    - node_js: 10
-      env: TEST=unit_and_e2e_clients
-    - node_js: 10
-      env: TEST=e2e_ganache
-    - node_js: 10
-      env: TEST=e2e_mosaic
-    - node_js: 10
-      env: TEST=e2e_ens
-    - node_js: 10
-      env: TEST=e2e_browsers
-      addons:
-        chrome: stable
-        firefox: latest
-  allow_failures:
-    - node_js: 10
-      env: TEST=e2e_ganache
-    - node_js: 10
-      env: TEST=e2e_mosaic
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-5
-      - g++-5
-
-before_install:
-  - if [ $TRAVIS_OS_NAME == "linux" ]; then
-      export CC="gcc-5";
-      export CXX="g++-5";
-      export LINK="gcc-5";
-      export LINKXX="g++-5";
-    fi
-  - export DISPLAY=:99.0
-  - export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-install:
-  - if [[ $TEST != "e2e_ganache" ]] && [[ $TEST != "e2e_mosaic" ]]; then
-      npm install;
-    fi
+node_js:
+  - "4.1"
+  - "4.0"
+  - "5"
+  - "6"
+  - "7"
+  - "8"
+before_script:
+  - npm install
+  - npm install jshint
+  - export DISPLAY=:99.0 
+  - sh -e /etc/init.d/xvfb start
 script:
-    - npm run ci
+   - "jshint *.js lib"
+after_script:
+  - npm run-script build
+  - npm run-script test-coveralls
+  - cd test/node && npm install && node app.js
 

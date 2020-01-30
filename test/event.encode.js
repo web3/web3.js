@@ -1,6 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Eth = require('../packages/web3-eth');
+var SolidityEvent = require('../lib/web3/event');
+var Web3 = require('../index');
 
 
 var address = '0x1234567890123456789012345678901234567890';
@@ -9,9 +10,9 @@ var signature = '0xffff';
 var tests = [{
     abi: {
         name: 'event1',
-        inputs: [],
-        signature: signature
+        inputs: []
     },
+    indexed: {},
     options: {},
     expected: {
         address: address,
@@ -26,14 +27,12 @@ var tests = [{
             type: 'int',
             name: 'a',
             indexed: true
-        }],
-        signature: signature
+        }]
     },
-    options: {
-        filter: {
-            a: 16
-        },
+    indexed: {
+        a: 16
     },
+    options: {},
     expected: {
         address: address,
         topics: [
@@ -60,14 +59,12 @@ var tests = [{
             type: 'int',
             name: 'd',
             indexed: true
-        }],
-        signature: signature
+        }]
     },
-    options: {
-        filter: {
-            b: 4
-        }
+    indexed: {
+        b: 4
     },
+    options: {},
     expected: {
         address: address,
         topics: [
@@ -88,15 +85,13 @@ var tests = [{
             type: 'int',
             name: 'b',
             indexed: true
-        }],
-        signature: signature
+        }]
     },
-    options: {
-        filter: {
-            a: [16, 1],
-            b: 2
-        }
+    indexed: {
+        a: [16, 1],
+        b: 2
     },
+    options: {},
     expected: {
         address: address,
         topics: [
@@ -112,14 +107,12 @@ var tests = [{
             type: 'int',
             name: 'a',
             indexed: true
-        }],
-        signature: signature
+        }]
     },
-    options: {
-        filter: {
-            a: null
-        }
+    indexed: {
+        a: null
     },
+    options: {},
     expected: {
         address: address,
         topics: [
@@ -134,13 +127,12 @@ var tests = [{
             type: 'int',
             name: 'a',
             indexed: true
-        }],
-        signature: signature
+        }]
+    },
+    indexed: {
+        a: 1
     },
     options: {
-        filter: {
-            a: 1
-        },
         fromBlock: 'latest',
         toBlock: 'pending'
     },
@@ -161,13 +153,12 @@ var tests = [{
             type: 'int',
             name: 'a',
             indexed: true
-        }],
-        signature: signature
+        }]
+    },
+    indexed: {
+        a: 1
     },
     options: {
-        filter: {
-            a: 1
-        },
         fromBlock: 4,
         toBlock: 10
     },
@@ -188,14 +179,12 @@ var tests = [{
             name: 'a',
             indexed: true
         }],
-        anonymous: true,
-        signature: signature
+        anonymous: true
     },
-    options: {
-        filter: {
-            a: 1
-        }
+    indexed: {
+        a: 1
     },
+    options: {},
     expected: {
         address: address,
         topics: [
@@ -214,14 +203,12 @@ var tests = [{
             name: 'b',
             indexed: true
         }],
-        anonymous: true,
-        signature: signature
+        anonymous: true
     },
-    options: {
-        filter: {
-            b: 1
-        }
+    indexed: {
+        b: 1
     },
+    options: {},
     expected: {
         address: address,
         topics: [
@@ -235,11 +222,13 @@ describe('lib/web3/event', function () {
     describe('encode', function () {
         tests.forEach(function (test, index) {
             it('test no: ' + index, function () {
-                var eth = new Eth();
-                var contract = new eth.Contract([test.abi], address);
+                var web3 = new Web3();
+                var event = new SolidityEvent(web3, test.abi, address);
+                event.signature = function () { // inject signature
+                    return signature.slice(2);
+                };
 
-
-                var result = contract._encodeEventABI(test.abi, test.options);
+                var result = event.encode(test.indexed, test.options);
                 assert.deepEqual(result, test.expected);
             });
         });

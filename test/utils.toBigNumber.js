@@ -1,8 +1,6 @@
 var chai = require('chai');
-var utils = require('../packages/web3-utils');
-
-var BigNumber = require('bn.js');
-
+var utils = require('../lib/utils/utils.js');
+var BigNumber = require('bignumber.js');
 var assert = chai.assert;
 
 var tests = [
@@ -37,10 +35,10 @@ var tests = [
 ];
 
 describe('lib/utils/utils', function () {
-    describe('toBN', function () {
+    describe('toBigNumber', function () {
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
-                assert.equal(utils.toBN(test.value).toString(10), test.expected);
+                assert.equal(utils.toBigNumber(test.value).toString(10), test.expected);
             });
         });
     });

@@ -1,11 +1,9 @@
-*.idea
+example/js
+node_modules
 test
-dist
-docs
-coverage
-scripts
 .gitignore
 .editorconfig
 .travis.yml
 .npmignore
-.DS_Store
+component.json
+testling.html

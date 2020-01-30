@@ -1,16 +1,16 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Eth = require('../packages/web3-eth/');
+var BigNumber = require('bignumber.js');
+var SolidityEvent = require('../lib/web3/event');
+var Web3 = require('../index');
 
 
 var name = 'event1';
-var address = '0xffddb67890123456789012345678901234567890';
-var resultAddress = '0xffdDb67890123456789012345678901234567890';
+var address = '0x1234567890123456789012345678901234567890';
 
 var tests = [{
     abi: {
         name: name,
-        type: 'event',
         inputs: []
     },
     data: {
@@ -23,19 +23,13 @@ var tests = [{
     },
     expected: {
         event: name,
-        signature: null,
-        returnValues: {},
+        args: {},
         logIndex: 1,
         transactionIndex: 16,
         transactionHash: '0x1234567890',
-        address: resultAddress,
+        address: address,
         blockHash: '0x1234567890',
-        blockNumber: 1,
-        id: "log_c71f2e84",
-        raw: {
-            topics: [],
-            data: ''
-        }
+        blockNumber: 1
     }
 }, {
     abi: {
@@ -57,22 +51,15 @@ var tests = [{
     },
     expected: {
         event: name,
-        signature: null,
-        returnValues: {
-            0: '1',
-            a: '1'
+        args: {
+            a: new BigNumber(1)
         },
         logIndex: 1,
         transactionIndex: 16,
         transactionHash: '0x1234567890',
-        address: resultAddress,
+        address: address,
         blockHash: '0x1234567890',
-        blockNumber: 1,
-        id: "log_c71f2e84",
-        raw: {
-            data: "0x0000000000000000000000000000000000000000000000000000000000000001",
-            topics: []
-        }
+        blockNumber: 1
     }
 }, {
     abi: {
@@ -102,45 +89,29 @@ var tests = [{
         address: address,
         blockHash: '0x1234567890',
         blockNumber: '0x1',
-        data: '0x' +
-            '0000000000000000000000000000000000000000000000000000000000000001' +
+        data: '0x' + 
+            '0000000000000000000000000000000000000000000000000000000000000001' + 
             '0000000000000000000000000000000000000000000000000000000000000004',
         topics: [
-            address,
+            address, 
             '0x000000000000000000000000000000000000000000000000000000000000000a',
             '0x0000000000000000000000000000000000000000000000000000000000000010'
         ]
     },
     expected: {
         event: name,
-        signature: address,
-        returnValues: {
-            0: '1',
-            1: '10',
-            2: '4',
-            3: '16',
-            a: '1',
-            b: '10',
-            c: '4',
-            d: '16'
+        args: {
+            a: new BigNumber(1),
+            b: new BigNumber(10),
+            c: new BigNumber(4),
+            d: new BigNumber(16)
         },
         logIndex: 1,
         transactionIndex: 16,
         transactionHash: '0x1234567890',
-        address: resultAddress,
+        address: address,
         blockHash: '0x1234567890',
-        blockNumber: 1,
-        id: "log_c71f2e84",
-        raw: {
-            data: '0x' +
-            '0000000000000000000000000000000000000000000000000000000000000001' +
-            '0000000000000000000000000000000000000000000000000000000000000004',
-            topics: [
-                address,
-                '0x000000000000000000000000000000000000000000000000000000000000000a',
-                '0x0000000000000000000000000000000000000000000000000000000000000010'
-            ]
-        }
+        blockNumber: 1
     }
 }, {
     abi: {
@@ -168,11 +139,11 @@ var tests = [{
         logIndex: '0x1',
         transactionIndex: '0x10',
         transactionHash: '0x1234567890',
-        address: resultAddress,
+        address: address,
         blockHash: '0x1234567890',
         blockNumber: '0x1',
-        data: '0x' +
-            '0000000000000000000000000000000000000000000000000000000000000001' +
+        data: '0x' + 
+            '0000000000000000000000000000000000000000000000000000000000000001' + 
             '0000000000000000000000000000000000000000000000000000000000000004',
         topics: [
             '0x000000000000000000000000000000000000000000000000000000000000000a',
@@ -181,33 +152,18 @@ var tests = [{
     },
     expected: {
         event: name,
-        signature: null,
-        returnValues: {
-            0: '1',
-            1: '10',
-            2: '4',
-            3: '16',
-            a: '1',
-            b: '10',
-            c: '4',
-            d: '16'
+        args: {
+            a: new BigNumber(1),
+            b: new BigNumber(10),
+            c: new BigNumber(4),
+            d: new BigNumber(16)
         },
         logIndex: 1,
         transactionIndex: 16,
         transactionHash: '0x1234567890',
-        address: resultAddress,
+        address: address,
         blockHash: '0x1234567890',
-        blockNumber: 1,
-        id: "log_c71f2e84",
-        raw: {
-            data: '0x' +
-            '0000000000000000000000000000000000000000000000000000000000000001' +
-            '0000000000000000000000000000000000000000000000000000000000000004',
-            topics: [
-                '0x000000000000000000000000000000000000000000000000000000000000000a',
-                '0x0000000000000000000000000000000000000000000000000000000000000010'
-            ]
-        }
+        blockNumber: 1
     }
 }];
 
@@ -215,10 +171,10 @@ describe('lib/web3/event', function () {
     describe('decode', function () {
         tests.forEach(function (test, index) {
             it('test no: ' + index, function () {
-                var eth = new Eth();
-                var contract = new eth.Contract([test.abi], address);
+                var web3 = new Web3();
+                var event = new SolidityEvent(web3, test.abi, address);
 
-                var result = contract._decodeEventABI.call(test.abi, test.data);
+                var result = event.decode(test.data);
                 assert.deepEqual(result, test.expected);
             });
         });

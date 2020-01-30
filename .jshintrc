@@ -5,8 +5,8 @@
     "eqeqeq": true,
     "freeze": true,
     "funcscope": false,
-    "maxcomplexity": 15,
-    "maxdepth": 4,
+    "maxcomplexity": 5, /* our target is 3! */
+    "maxdepth": 3,
     "maxerr": 50,
     /*"maxlen": 80*/ /*this should be our goal*/
     /*"maxparams": 3,*/
