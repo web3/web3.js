@@ -212,14 +212,15 @@ ENS.prototype.getOwner = function (name, callback) {
  * @method setOwner
  *
  * @param {string} name
+ * @param {string} address
  * @param {TransactionConfig} txConfig
  * @param {function} callback
  *
  * @callback callback callback(error, result)
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
-ENS.prototype.setOwner = function (name, txConfig, callback) {
-    return this.registry.setOwner(name, txConfig, callback);
+ENS.prototype.setOwner = function (name, address, txConfig, callback) {
+    return this.registry.setOwner(name, address, txConfig, callback);
 };
 
 /**
