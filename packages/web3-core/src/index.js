@@ -27,7 +27,7 @@ var requestManager = require('web3-core-requestmanager');
 var extend = require('./extend.js');
 
 module.exports = {
-    packageInit: function(pkg, args) {
+    packageInit: function (pkg, args) {
         args = Array.prototype.slice.call(args);
 
         if (!pkg) {
@@ -36,10 +36,10 @@ module.exports = {
 
         // make property of pkg._provider, which can properly set providers
         Object.defineProperty(pkg, 'currentProvider', {
-            get: function() {
+            get: function () {
                 return pkg._provider;
             },
-            set: function(value) {
+            set: function (value) {
                 return pkg.setProvider(value);
             },
             enumerable: true,
@@ -61,7 +61,7 @@ module.exports = {
 
         // add SETPROVIDER function (don't overwrite if already existing)
         if (!pkg.setProvider) {
-            pkg.setProvider = function(provider, net) {
+            pkg.setProvider = function (provider, net) {
                 pkg._requestManager.setProvider(provider, net);
                 pkg._provider = pkg._requestManager.provider;
                 return true;
@@ -79,7 +79,7 @@ module.exports = {
         // attach extend function
         pkg.extend = extend(pkg);
     },
-    addProviders: function(pkg) {
+    addProviders: function (pkg) {
         pkg.givenProvider = requestManager.Manager.givenProvider;
         pkg.providers = requestManager.Manager.providers;
     }
