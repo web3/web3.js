@@ -652,6 +652,106 @@ describe('ens', function () {
             }
         });
 
+        it('should call getTTL and return the expected result (promise)', async function () {
+            const signature = 'ttl(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000001');
+
+            const ttl = await web3.eth.ens.getTTL('foobar.eth');
+
+            assert.equal(ttl, 1);
+        });
+
+        it('should call getTTL and return the expected result (callback)', function (done) {
+            const signature = 'ttl(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000001');
+
+            web3.eth.ens.getTTL('foobar.eth', function (error, ttl) {
+                assert.equal(ttl, 1);
+
+                done();
+            });
+
+        });
+
+        it('should call getTTL and throw the expected error (callback)', function (done) {
+            const signature = 'ttl(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+
+            provider.error.push(null);
+
+            provider.injectError({
+                code: 1234,
+                message: 'ERROR'
+            });
+
+            web3.eth.ens.getTTL(
+                'foobar.eth',
+                function (error, ttl) {
+                    assert.equal(ttl, null);
+                    assert.equal(error.code, 1234);
+                    assert.equal(error.message, 'ERROR');
+
+                    done();
+                });
+        });
+
+        it('should call getTTL and throw the expected error (promise)', async function () {
+            const signature = 'ttl(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+
+            provider.error.push(null);
+
+            provider.injectError({
+                code: 1234,
+                message: 'ERROR'
+            });
+
+            try {
+                await web3.eth.ens.getTTL('foobar.eth');
+
+                assert.fail();
+            } catch (error) {
+                assert.equal(error.code, 1234);
+                assert.equal(error.message, 'ERROR');
+            }
+        });
+
         it('should return the owner record for a name (owner)', async function () {
             const signature = 'owner(bytes32)';
 
