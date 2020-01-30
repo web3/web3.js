@@ -28,9 +28,9 @@
 var config = {
     addresses: {
         main: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
-        ropsten: "0x112234455c3a32fd11230c42e7bccd4a84e02010",
-        rinkeby: "0xe7410170f87102df0055eb195163a03b7f2bff4a",
-        goerli: "0x112234455C3a32FD11230C42E7Bccd4A84e02010"
+        ropsten: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+        rinkeby: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+        goerli: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
     },
 };
 
