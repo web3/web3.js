@@ -72,8 +72,6 @@ ResolverMethodHandler.prototype.call = function (callback) {
 
     this.parent.registry.getResolver(this.ensName).then(function (resolver) {
         self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, callback);
-    }).catch(function (error) {
-        promiEvent.reject(error);
     });
 
     return promiEvent.eventEmitter;
@@ -94,8 +92,6 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
 
     this.parent.registry.getResolver(this.ensName).then(function (resolver) {
         self.parent.handleSend(promiEvent, resolver.methods[self.methodName], preparedArguments, sendOptions, callback);
-    }).catch(function (error) {
-        promiEvent.reject(error);
     });
 
     return promiEvent.eventEmitter;
@@ -113,18 +109,22 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
 ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, preparedArguments, callback) {
     method.apply(this, preparedArguments).call()
         .then(function (result) {
-            promiEvent.resolve(result);
-
             if (_.isFunction(callback)) {
                 // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
                 callback(result, result);
-            }
-        }).catch(function (error) {
-            promiEvent.reject(error);
 
+                return;
+            }
+
+            promiEvent.resolve(result);
+        }).catch(function (error) {
             if (_.isFunction(callback)) {
                 callback(error, null);
+
+                return;
             }
+
+            promiEvent.reject(error);
         });
 
     return promiEvent;
@@ -159,11 +159,14 @@ ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, prepa
         })
         .on('error', function (error) {
             promiEvent.eventEmitter.emit('error', error);
-            promiEvent.reject(error);
 
             if (_.isFunction(callback)) {
                 callback(error, null);
+
+                return;
             }
+
+            promiEvent.reject(error);
         });
 
     return promiEvent;
