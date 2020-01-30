@@ -102,8 +102,7 @@ describe('subscription connect/reconnect', function () {
     });
 
     // The ganache unit tests are erroring under similar conditions -
-    // test verifies behavior is as expected.
-    it('does not error when client closes immediately after disconnect', async function(){
+    it('does not error when client closes after disconnect', async function(){
         this.timeout(7000);
 
         return new Promise(async function(resolve, reject) {
@@ -116,7 +115,12 @@ describe('subscription connect/reconnect', function () {
             // Let a couple blocks mine..
             await waitSeconds(2)
             web3.currentProvider.disconnect();
+
+            // This delay seems to be required (on Travis).
+            await waitSeconds(1);
+
             await pify(server.close)();
+
             await waitSeconds(1)
             resolve();
         });
