@@ -37,7 +37,7 @@ describe('WebsocketProvider (ganache)', function () {
     it('errors when requests continue after socket closed', async function () {
         web3 = new Web3(host + 8777);
 
-        try { await web3.eth.getBlockNumber() } catch (err) {
+        try { await web3.eth.getBlockNumber(); } catch (err) {
             assert(err.message.includes('connection not open on send'));
             assert(err.code, 1006);
             assert(err.reason, 'connection failed');
@@ -115,8 +115,8 @@ describe('WebsocketProvider (ganache)', function () {
             );
 
         await new Promise(resolve => {
-            web3.currentProvider.on('error', function(err){
-                assert(err.message.includes('CONNECTION TIMEOUT: timeout of 1000 ms achived'))
+            web3.currentProvider.once('error', function(err){
+                assert(err.message.includes('CONNECTION TIMEOUT: timeout of 1000 ms achived'));
                 resolve();
             });
 
@@ -140,6 +140,7 @@ describe('WebsocketProvider (ganache)', function () {
                     stage = 1;
                 } else {
                     await pify(server.close)();
+                    this.removeAllListeners();
                     resolve();
                 }
             });
@@ -165,6 +166,7 @@ describe('WebsocketProvider (ganache)', function () {
                     stage = 1;
                 } else {
                     await pify(server.close)();
+                    this.removeAllListeners();
                     resolve();
                 }
             });
@@ -180,7 +182,7 @@ describe('WebsocketProvider (ganache)', function () {
                 )
             );
 
-            web3.currentProvider.on('connect', async function () {
+            web3.currentProvider.once('connect', async function () {
                 await pify(server.close)();
                 resolve();
             });
@@ -204,11 +206,11 @@ describe('WebsocketProvider (ganache)', function () {
                 )
             );
 
-            web3.currentProvider.on('connect', async function () {
+            web3.currentProvider.once('connect', async function () {
                 await pify(server.close)();
             });
 
-            web3.currentProvider.on('error', function (error) {
+            web3.currentProvider.once('error', function (error) {
                 assert(error.message.includes('Maximum number of reconnect attempts reached!'));
                 resolve();
             });
@@ -229,7 +231,7 @@ describe('WebsocketProvider (ganache)', function () {
                 )
             );
 
-            web3.currentProvider.on('connect', async function () {
+            web3.currentProvider.once('connect', async function () {
                 web3.currentProvider.disconnect();
 
                 try {
@@ -240,7 +242,6 @@ describe('WebsocketProvider (ganache)', function () {
                     assert(err.message.includes('connection not open on send'));
                     assert(typeof err.code === 'undefined');
                     assert(typeof err.reason === 'undefined');
-
                     resolve();
                 }
             });
@@ -295,14 +296,14 @@ describe('WebsocketProvider (ganache)', function () {
                 )
             );
 
-            web3.currentProvider.on('connect', async function () {
+            web3.currentProvider.once('connect', async function () {
                 await pify(server.close)();
                 timeout = setTimeout(function () {
                     reject(new Error('Test Failed: Configured delay is not applied!'));
                 }, 3100);
             });
 
-            web3.currentProvider.on('reconnect', function () {
+            web3.currentProvider.once('reconnect', function () {
                 clearTimeout(timeout);
                 resolve();
             });
@@ -324,16 +325,16 @@ describe('WebsocketProvider (ganache)', function () {
                 )
             );
 
-            web3.currentProvider.on('connect', async function () {
+            web3.currentProvider.once('connect', async function () {
                 await pify(server.close)();
             });
 
-            web3.currentProvider.on('reconnect', async function () {
+            web3.currentProvider.once('reconnect', async function () {
                 try {
                     await web3.eth.getBlockNumber();
                     assert.fail();
                 } catch (err) {
-                    assert(err.message.includes('Maximum number of reconnect attempts'))
+                    assert(err.message.includes('Maximum number of reconnect attempts'));
                     resolve();
                 }
             });
@@ -373,6 +374,7 @@ describe('WebsocketProvider (ganache)', function () {
                 const blockNumber = await deferred;
                 assert(blockNumber === 0);
 
+                web3.currentProvider.removeAllListeners();
                 resolve();
             },2500);
         });
@@ -399,10 +401,10 @@ describe('WebsocketProvider (ganache)', function () {
             );
 
         await new Promise(async resolve => {
-            web3.currentProvider.on('error', function(err){
-                assert(err.message.includes('Maximum number of reconnect attempts reached'))
+            web3.currentProvider.once('error', function(err){
+                assert(err.message.includes('Maximum number of reconnect attempts reached'));
                 resolve();
-            })
+            });
 
             await pify(server.close)();
             web3.currentProvider._parseResponse('abc|--|dedf');

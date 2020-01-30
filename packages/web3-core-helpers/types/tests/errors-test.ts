@@ -50,6 +50,12 @@ const event: WebSocketEvent = {code: 100, reason: 'reason'};
 // $ExpectType ConnectionError
 errors.ConnectionError('msg', event);
 
+// $ExpectType Error | ConnectionError
+errors.ConnectionCloseError(event);
+
+// $ExpectType Error | ConnectionError
+errors.ConnectionCloseError(true);
+
 // $ExpectType RevertInstructionError
 errors.RevertInstructionError('reason', 'signature');
 
