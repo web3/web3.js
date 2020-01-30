@@ -51,7 +51,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -73,7 +73,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -91,11 +91,12 @@ describe('ens', function () {
             var addrSig = 'addr(bytes32)';
 
             provider.injectValidation(function (payload) {
+                console.log(payload.params);
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSig).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -127,7 +128,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -163,7 +164,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -265,7 +266,7 @@ describe('ens', function () {
     describe('custom registry address', function () {
         let web3;
         let provider;
-        const address = '0x314159265dD8dbb310642f98f50C066173C1259b';
+        const address = '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e';
 
         beforeEach(function () {
             provider = new FakeHttpProvider();
