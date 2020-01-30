@@ -123,11 +123,14 @@ RequestManager.prototype.setProvider = function (provider, net) {
             });
         });
 
-        // notify all subscriptions about the close condition
+        // notify all subscriptions about bad close conditions
         this.provider.on('close', function close(event) {
-            _this.subscriptions.forEach(function (subscription) {
-                subscription.callback(new Error('CONNECTION ERROR: The connection got closed with the close code `' + event.code + '` and the following reason string `' + event.reason + '`'));
-            });
+            if (!_this._isCleanCloseEvent(event) || _this._isIpcCloseError(event)){
+                _this.subscriptions.forEach(function (subscription) {
+                    subscription.callback(errors.ConnectionCloseError(event));
+                    _this.subscriptions.delete(subscription.subscription.id);
+                });
+            }
         });
 
         // TODO add end, timeout??
@@ -270,6 +273,32 @@ RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
     //  reset notification callbacks etc.
     if (this.provider.reset)
         this.provider.reset();
+};
+
+/**
+ * Evaluates WS close event
+ *
+ * @method _isCleanClose
+ *
+ * @param {CloseEvent | boolean} event WS close event or exception flag
+ *
+ * @returns {boolean}
+ */
+RequestManager.prototype._isCleanCloseEvent = function (event) {
+    return typeof event === 'object' && ([1000].includes(event.code) || event.wasClean === true);
+};
+
+/**
+ * Detects Ipc close error. The node.net module emits ('close', isException)
+ *
+ * @method _isIpcCloseError
+ *
+ * @param {CloseEvent | boolean} event WS close event or exception flag
+ *
+ * @returns {boolean}
+ */
+RequestManager.prototype._isIpcCloseError = function (event) {
+    return typeof event === 'boolean' && event;
 };
 
 module.exports = {
