@@ -135,6 +135,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - Ensure '0x' prefix is existing for Accounts.sign and Accounts.privateKeyToAccount (#3041)
+- All ENS registry addresses changed to the newly deployed Registry address
 
 ### Fixed
 
