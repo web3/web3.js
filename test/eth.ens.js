@@ -411,7 +411,7 @@ describe('ens', function () {
             isExpectedReceipt(receipt);
         });
 
-        it('should create a new sub node with the specified label and owner (callback)', function (done) {
+        it('should create a new sub node with the specified label and owner and throw the expected error (callback)', function (done) {
             const signature = 'setSubnodeOwner(bytes32,bytes32,address)';
 
             prepareProviderForSetter(
@@ -441,7 +441,7 @@ describe('ens', function () {
             );
         });
 
-        it('should create a new sub node with the specified label and owner (promise)', async function () {
+        it('should create a new sub node with the specified label and owner and throw the expected error (promise)', async function () {
             const signature = 'setSubnodeOwner(bytes32,bytes32,address)';
 
             prepareProviderForSetter(
