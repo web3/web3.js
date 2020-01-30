@@ -140,6 +140,12 @@ describe('ens', function () {
             });
         });
 
+        it('should set the property "registryAddress" to "null" and not throw any error', function() {
+            web3.eth.ens.registryAddress = null;
+
+            assert.equal(web3.eth.ens.registryAddress, null);
+        });
+
         it('should set the owner record for a name', async function () {
             const signature = 'setOwner(bytes32,address)';
 
