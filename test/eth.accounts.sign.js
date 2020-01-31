@@ -113,36 +113,4 @@ describe("eth", function () {
             });
         });
     });
-
-    it('should add the "0x" prefix and sign the given message correctly', function() {
-        assert.equal(
-            '0xa8037a6116c176a25e6fc224947fde9e79a2deaa0dd8b67b366fbdfdbffc01f953e41351267b20d4a89ebfe9c8f03c04de9b345add4a52f15bd026b63c8fb1501b',
-            new Accounts().sign('Some data', 'be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728').signature
-        );
-    });
-
-    it('should add the "0x" prefix to the privateKey', function() {
-        assert.equal(
-            '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
-            new Accounts().privateKeyToAccount('be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728').privateKey
-        );
-    });
-
-    it('should throw if a privateKey is given with a invalid length', function() {
-        try {
-            new Accounts().privateKeyToAccount('0000be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
-            assert.fail();
-        } catch(err) {
-            assert(err.message.includes('Private key must be 32 bytes long'));
-        }
-    });
-
-    it('should throw if a privateKey is given with a invalid length', function() {
-        try {
-            new Accounts().sign('data', '00be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
-            assert.fail();
-        } catch(err) {
-            assert(err.message.includes('Private key must be 32 bytes long'));
-        }
-    });
 });

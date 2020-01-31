@@ -76,10 +76,6 @@ var Eth = function Eth() {
         _this.personal.setProvider.apply(_this, arguments);
         _this.accounts.setProvider.apply(_this, arguments);
         _this.Contract.setProvider(_this.currentProvider, _this.accounts);
-
-        // Set detectedAddress/lastSyncCheck back to null because the provider could be connected to a different chain now
-        _this.ens._detectedAddress = null;
-        _this.ens._lastSyncCheck = null;
     };
 
 

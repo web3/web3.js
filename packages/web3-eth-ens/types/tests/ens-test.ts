@@ -22,9 +22,6 @@ import { Eth } from 'web3-eth';
 
 const ens = new Ens(new Eth('http://localhost:8545'));
 
-// $ExpectType string | null
-ens.registryAddress;
-
 // $ExpectType Registry
 ens.registry;
 

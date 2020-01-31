@@ -66,7 +66,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.net.isListening()
+    web3.eth.isListening()
     .then(console.log);
     > true
 
@@ -101,6 +101,6 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.net.getPeerCount()
+    web3.eth.getPeerCount()
     .then(console.log);
     > 25

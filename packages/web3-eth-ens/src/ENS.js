@@ -21,7 +21,6 @@
 "use strict";
 
 var config = require('./config');
-var formatters = require('web3-core-helpers').formatters;
 var Registry = require('./contracts/Registry');
 var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
 
@@ -34,40 +33,21 @@ var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
  */
 function ENS(eth) {
     this.eth = eth;
-    var registryAddress = null;
-    this._detectedAddress = null;
-    this._lastSyncCheck = null;
-
-    Object.defineProperty(this, 'registry', {
-        get: function () {
-            return new Registry(this);
-        },
-        enumerable: true
-    });
-
-    Object.defineProperty(this, 'resolverMethodHandler', {
-        get: function () {
-            return new ResolverMethodHandler(this.registry);
-        },
-        enumerable: true
-    });
-
-    Object.defineProperty(this, 'registryAddress', {
-        get: function () {
-            return registryAddress;
-        },
-        set: function (value) {
-            if (value === null) {
-                registryAddress = value;
-
-                return;
-            }
-
-            registryAddress = formatters.inputAddressFormatter(value);
-        },
-        enumerable: true
-    });
 }
+
+Object.defineProperty(ENS.prototype, 'registry', {
+    get: function () {
+        return new Registry(this);
+    },
+    enumerable: true
+});
+
+Object.defineProperty(ENS.prototype, 'resolverMethodHandler', {
+    get: function () {
+        return new ResolverMethodHandler(this.registry);
+    },
+    enumerable: true
+});
 
 /**
  * @param {string} name
@@ -186,40 +166,24 @@ ENS.prototype.setMultihash = function (name, hash, sendOptions, callback) {
  * Checks if the current used network is synced and looks for ENS support there.
  * Throws an error if not.
  *
- * @returns {Promise<String>}
+ * @returns {Promise<Block>}
  */
-ENS.prototype.checkNetwork = async function () {
-    var now = new Date() / 1000;
-
-    if (!this._lastSyncCheck || (now - this._lastSyncCheck) > 3600) {
-        var block = await this.eth.getBlock('latest');
-        var headAge = now - block.timestamp;
-
+ENS.prototype.checkNetwork = function () {
+    var self = this;
+    return self.eth.getBlock('latest').then(function (block) {
+        var headAge = new Date() / 1000 - block.timestamp;
         if (headAge > 3600) {
             throw new Error("Network not synced; last block was " + headAge + " seconds ago");
         }
-
-        this._lastSyncCheck = now;
-    }
-
-    if (this.registryAddress) {
-        return this.registryAddress;
-    }
-
-    if (!this._detectedAddress) {
-        var networkType = await this.eth.net.getNetworkType();
+        return self.eth.net.getNetworkType();
+    }).then(function (networkType) {
         var addr = config.addresses[networkType];
-
         if (typeof addr === 'undefined') {
             throw new Error("ENS is not supported on network " + networkType);
         }
 
-        this._detectedAddress = addr;
-
-        return this._detectedAddress;
-    }
-
-    return this._detectedAddress;
+        return addr;
+    });
 };
 
 module.exports = ENS;

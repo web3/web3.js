@@ -21,8 +21,6 @@ matrix:
     - node_js: 10
       env: TEST=e2e_mosaic
     - node_js: 10
-      env: TEST=e2e_ens
-    - node_js: 10
       env: TEST=e2e_browsers
       addons:
         chrome: stable
