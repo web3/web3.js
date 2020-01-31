@@ -125,4 +125,14 @@ Released with 1.0.0-beta.37 code base.
 - fix: export bloom functions on the index.js
 - Prefer receipt status to code availability on contract deployment (#3298)
 
+## [1.2.6]
+
+### Added
+
+- ENS Görli testnet registry added 
+
+### Changed
+
+- ENS registry addresses updated
+
 ## [Unreleased]
