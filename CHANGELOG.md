@@ -136,3 +136,18 @@ Released with 1.0.0-beta.37 code base.
 - ENS registry addresses updated (#3353, https://medium.com/the-ethereum-name-service/ens-registry-migration-bug-fix-new-features-64379193a5a)
 
 ## [Unreleased]
+
+## [1.2.6]
+
+### Added
+
+- ENS module extended with the possibility to add a custom registry (#3301)
+- Görli testnet ENS registry added to the known registries (#3338)
+
+### Changed
+
+- Ensure '0x' prefix is existing for Accounts.sign and Accounts.privateKeyToAccount (#3041)
+
+### Fixed
+
+- Add missing subscription.on('connected') TS type definition (#3319)

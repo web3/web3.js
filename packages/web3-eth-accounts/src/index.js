@@ -120,7 +120,16 @@ Accounts.prototype.create = function create(entropy) {
     return this._addAccountFunctions(Account.create(entropy || utils.randomHex(32)));
 };
 
-Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey) {
+Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey, ignoreLength) {
+    if (!privateKey.startsWith('0x')) {
+        privateKey = '0x' + privateKey;
+    }
+
+    // 64 hex characters + hex-prefix
+    if (!ignoreLength && privateKey.length !== 66) {
+        throw new Error("Private key must be 32 bytes long");
+    }
+
     return this._addAccountFunctions(Account.fromPrivate(privateKey));
 };
 
@@ -294,6 +303,15 @@ Accounts.prototype.hashMessage = function hashMessage(data) {
 };
 
 Accounts.prototype.sign = function sign(data, privateKey) {
+    if (!privateKey.startsWith('0x')) {
+        privateKey = '0x' + privateKey;
+    }
+
+    // 64 hex characters + hex-prefix
+    if (privateKey.length !== 66) {
+        throw new Error("Private key must be 32 bytes long");
+    }
+
     var hash = this.hashMessage(data);
     var signature = Account.sign(hash, privateKey);
     var vrs = Account.decodeSignature(signature);
@@ -371,12 +389,12 @@ Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
     var decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, 'hex'));
     var seed = '0x' + Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex');
 
-    return this.privateKeyToAccount(seed);
+    return this.privateKeyToAccount(seed, true);
 };
 
 Accounts.prototype.encrypt = function(privateKey, password, options) {
     /* jshint maxcomplexity: 20 */
-    var account = this.privateKeyToAccount(privateKey);
+    var account = this.privateKeyToAccount(privateKey, true);
 
     options = options || {};
     var salt = options.salt || cryp.randomBytes(32);
