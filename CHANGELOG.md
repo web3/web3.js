@@ -129,10 +129,10 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 
-- ENS Görli testnet registry added 
+- Görli testnet ENS registry added to the known registries (#3338)
 
 ### Changed
 
-- ENS registry addresses updated
+- ENS registry addresses updated (#3353, https://medium.com/the-ethereum-name-service/ens-registry-migration-bug-fix-new-features-64379193a5a)
 
 ## [Unreleased]
