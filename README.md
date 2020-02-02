@@ -175,7 +175,7 @@ The contribution guidelines are provided in [CONTRIBUTIONS](./CONTRIBUTIONS.md)
 [dep-url]: https://david-dm.org/ethereum/web3.js
 [dep-dev-image]: https://david-dm.org/ethereum/web3.js/dev-status.svg
 [dep-dev-url]: https://david-dm.org/ethereum/web3.js#info=devDependencies
-[coveralls-image]: https://coveralls.io/repos/ethereum/web3.js/badge.svg?branch=master
+[coveralls-image]: https://coveralls.io/repos/ethereum/web3.js/badge.svg?branch=1.x
 [coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=1.x
 [waffle-image]: https://badge.waffle.io/ethereum/web3.js.svg?label=ready&title=Ready
 [waffle-url]: https://waffle.io/ethereum/web3.js
