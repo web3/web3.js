@@ -19,6 +19,7 @@ var asciiToHex = require('../packages/web3-utils').asciiToHex;
  * @param {String} signature
  * @param {Array} types
  * @param {Array} params
+ * @param {Boolean} error
  *
  * @returns {void}
  */
@@ -93,7 +94,7 @@ function prepareProviderForSetter(provider, signature, types, params, error) {
  * @returns {void}
  */
 function isExpectedReceipt(receipt) {
-    assert.equal(receipt.contractAddress, '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e');
+    assert.equal(receipt.contractAddress, '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e');
     assert.equal(receipt.cumulativeGasUsed, 10);
     assert.equal(receipt.transactionIndex, 3);
     assert.equal(receipt.blockNumber, 10);
@@ -519,7 +520,7 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
                     to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
@@ -549,7 +550,7 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
                     to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
@@ -665,7 +666,7 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
                     to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
