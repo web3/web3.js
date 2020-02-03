@@ -83,18 +83,18 @@ ens.setApprovalForAll('name', false, {});
 // $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 ens.setApprovalForAll('name', true, {}, (error: Error, receipt: TransactionReceipt) => {});
 
-// $ExpectType Promise<string>
+// $ExpectType Promise<boolean>
 ens.isApprovedForAll('owner', 'operator');
-// $ExpectType Promise<string>
+// $ExpectType Promise<boolean>
 ens.isApprovedForAll('owner', 'operator', (error: Error, result: boolean) => {});
-// $ExpectType Promise<string>
+// $ExpectType Promise<boolean>
 ens.isApprovedForAll('owner', 'operator', (value: any) => {});
 
-// $ExpectType Promise<string>
+// $ExpectType Promise<boolean>
 ens.recordExists('name');
-// $ExpectType Promise<string>
+// $ExpectType Promise<boolean>
 ens.recordExists('name', (error: Error, result: boolean) => {});
-// $ExpectType Promise<string>
+// $ExpectType Promise<boolean>
 ens.recordExists('name', (value: any) => {});
 
 // $ExpectType Promise<string>

@@ -118,12 +118,12 @@ export class Ens {
         owner: string,
         operator: string,
         callback?: (value: any) => void
-    ): Promise<string>;
+    ): Promise<boolean>;
     isApprovedForAll(
         owner: string,
         operator: string,
         callback?: (error: Error, result: boolean) => void
-    ): Promise<string>;
+    ): Promise<boolean>;
 
     /**
      * @deprecated This callback signature is deprecated
@@ -131,11 +131,11 @@ export class Ens {
     recordExists(
         name: string,
         callback?: (value: any) => void
-    ): Promise<string>;
+    ): Promise<boolean>;
     recordExists(
         name: string,
         callback?: (error: Error, result: boolean) => void
-    ): Promise<string>;
+    ): Promise<boolean>;
 
     /**
      * @deprecated This callback signature is deprecated
