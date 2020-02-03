@@ -525,18 +525,16 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
 
         return this._deployData + paramsABI;
 
-    // return method
-    } else {
-
-        var returnValue = (signature) ? signature + paramsABI : paramsABI;
-
-        if(!returnValue) {
-            throw new Error('Couldn\'t find a matching contract method named "'+ this._method.name +'".');
-        } else {
-            return returnValue;
-        }
     }
 
+    // return method
+    var returnValue = (signature) ? signature + paramsABI : paramsABI;
+
+    if(!returnValue) {
+        throw new Error('Couldn\'t find a matching contract method named "'+ this._method.name +'".');
+    }
+
+    return returnValue;
 };
 
 
@@ -558,10 +556,10 @@ Contract.prototype._decodeMethodReturn = function (outputs, returnValues) {
 
     if (result.__length__ === 1) {
         return result[0];
-    } else {
-        delete result.__length__;
-        return result;
     }
+
+    delete result.__length__;
+    return result;
 };
 
 
@@ -877,130 +875,132 @@ Contract.prototype._executeMethod = function _executeMethod(){
 
         return payload;
 
-    } else {
+    }
 
-        switch (args.type) {
-            case 'estimate':
+    switch (args.type) {
+        case 'estimate':
 
-                var estimateGas = (new Method({
-                    name: 'estimateGas',
-                    call: 'eth_estimateGas',
-                    params: 1,
-                    inputFormatter: [formatters.inputCallFormatter],
-                    outputFormatter: utils.hexToNumber,
-                    requestManager: _this._parent._requestManager,
-                    accounts: ethAccounts, // is eth.accounts (necessary for wallet signing)
-                    defaultAccount: _this._parent.defaultAccount,
-                    defaultBlock: _this._parent.defaultBlock
-                })).createFunction();
+            var estimateGas = (new Method({
+                name: 'estimateGas',
+                call: 'eth_estimateGas',
+                params: 1,
+                inputFormatter: [formatters.inputCallFormatter],
+                outputFormatter: utils.hexToNumber,
+                requestManager: _this._parent._requestManager,
+                accounts: ethAccounts, // is eth.accounts (necessary for wallet signing)
+                defaultAccount: _this._parent.defaultAccount,
+                defaultBlock: _this._parent.defaultBlock
+            })).createFunction();
 
-                return estimateGas(args.options, args.callback);
+            return estimateGas(args.options, args.callback);
 
-            case 'call':
+        case 'call':
 
-                // TODO check errors: missing "from" should give error on deploy and send, call ?
+            // TODO check errors: missing "from" should give error on deploy and send, call ?
 
-                var call = (new Method({
-                    name: 'call',
-                    call: 'eth_call',
-                    params: 2,
-                    inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter],
-                    // add output formatter for decoding
-                    outputFormatter: function (result) {
-                        return _this._parent._decodeMethodReturn(_this._method.outputs, result);
-                    },
-                    requestManager: _this._parent._requestManager,
-                    accounts: ethAccounts, // is eth.accounts (necessary for wallet signing)
-                    defaultAccount: _this._parent.defaultAccount,
-                    defaultBlock: _this._parent.defaultBlock,
-                    handleRevert: _this._parent.handleRevert,
-                    abiCoder: abi
-                })).createFunction();
+            var call = (new Method({
+                name: 'call',
+                call: 'eth_call',
+                params: 2,
+                inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter],
+                // add output formatter for decoding
+                outputFormatter: function (result) {
+                    return _this._parent._decodeMethodReturn(_this._method.outputs, result);
+                },
+                requestManager: _this._parent._requestManager,
+                accounts: ethAccounts, // is eth.accounts (necessary for wallet signing)
+                defaultAccount: _this._parent.defaultAccount,
+                defaultBlock: _this._parent.defaultBlock,
+                handleRevert: _this._parent.handleRevert,
+                abiCoder: abi
+            })).createFunction();
 
-                return call(args.options, args.defaultBlock, args.callback);
+            return call(args.options, args.defaultBlock, args.callback);
 
-            case 'send':
+        case 'send':
 
-                // return error, if no "from" is specified
-                if(!utils.isAddress(args.options.from)) {
-                    return utils._fireError(new Error('No "from" address specified in neither the given options, nor the default options.'), defer.eventEmitter, defer.reject, args.callback);
-                }
+            // return error, if no "from" is specified
+            if(!utils.isAddress(args.options.from)) {
+                return utils._fireError(new Error('No "from" address specified in neither the given options, nor the default options.'), defer.eventEmitter, defer.reject, args.callback);
+            }
 
-                if (_.isBoolean(this._method.payable) && !this._method.payable && args.options.value && args.options.value > 0) {
-                    return utils._fireError(new Error('Can not send value to non-payable contract method or constructor'), defer.eventEmitter, defer.reject, args.callback);
-                }
+            if (_.isBoolean(this._method.payable) && !this._method.payable && args.options.value && args.options.value > 0) {
+                return utils._fireError(new Error('Can not send value to non-payable contract method or constructor'), defer.eventEmitter, defer.reject, args.callback);
+            }
 
 
-                // make sure receipt logs are decoded
-                var extraFormatters = {
-                    receiptFormatter: function (receipt) {
-                        if (_.isArray(receipt.logs)) {
+            // make sure receipt logs are decoded
+            var extraFormatters = {
+                receiptFormatter: function (receipt) {
+                    if (_.isArray(receipt.logs)) {
 
-                            // decode logs
-                            var events = _.map(receipt.logs, function(log) {
-                                return _this._parent._decodeEventABI.call({
-                                    name: 'ALLEVENTS',
-                                    jsonInterface: _this._parent.options.jsonInterface
-                                }, log);
-                            });
+                        // decode logs
+                        var events = _.map(receipt.logs, function(log) {
+                            return _this._parent._decodeEventABI.call({
+                                name: 'ALLEVENTS',
+                                jsonInterface: _this._parent.options.jsonInterface
+                            }, log);
+                        });
 
-                            // make log names keys
-                            receipt.events = {};
-                            var count = 0;
-                            events.forEach(function (ev) {
-                                if (ev.event) {
-                                    // if > 1 of the same event, don't overwrite any existing events
-                                    if (receipt.events[ev.event]) {
-                                        if (Array.isArray(receipt.events[ ev.event ])) {
-                                            receipt.events[ ev.event ].push(ev);
-                                        } else {
-                                            receipt.events[ev.event] = [receipt.events[ev.event], ev];
-                                        }
+                        // make log names keys
+                        receipt.events = {};
+                        var count = 0;
+                        events.forEach(function (ev) {
+                            if (ev.event) {
+                                // if > 1 of the same event, don't overwrite any existing events
+                                if (receipt.events[ev.event]) {
+                                    if (Array.isArray(receipt.events[ ev.event ])) {
+                                        receipt.events[ ev.event ].push(ev);
                                     } else {
-                                        receipt.events[ ev.event ] = ev;
+                                        receipt.events[ev.event] = [receipt.events[ev.event], ev];
                                     }
                                 } else {
-                                    receipt.events[count] = ev;
-                                    count++;
+                                    receipt.events[ ev.event ] = ev;
                                 }
-                            });
+                            } else {
+                                receipt.events[count] = ev;
+                                count++;
+                            }
+                        });
 
-                            delete receipt.logs;
-                        }
-                        return receipt;
-                    },
-                    contractDeployFormatter: function (receipt) {
-                        var newContract = _this._parent.clone();
-                        newContract.options.address = receipt.contractAddress;
-                        return newContract;
+                        delete receipt.logs;
                     }
-                };
+                    return receipt;
+                },
+                contractDeployFormatter: function (receipt) {
+                    var newContract = _this._parent.clone();
+                    newContract.options.address = receipt.contractAddress;
+                    return newContract;
+                }
+            };
 
-                var sendTransaction = (new Method({
-                    name: 'sendTransaction',
-                    call: 'eth_sendTransaction',
-                    params: 1,
-                    inputFormatter: [formatters.inputTransactionFormatter],
-                    requestManager: _this._parent._requestManager,
-                    accounts: _this.constructor._ethAccounts || _this._ethAccounts, // is eth.accounts (necessary for wallet signing)
-                    defaultAccount: _this._parent.defaultAccount,
-                    defaultBlock: _this._parent.defaultBlock,
-                    transactionBlockTimeout: _this._parent.transactionBlockTimeout,
-                    transactionConfirmationBlocks: _this._parent.transactionConfirmationBlocks,
-                    transactionPollingTimeout: _this._parent.transactionPollingTimeout,
-                    defaultCommon: _this._parent.defaultCommon,
-                    defaultChain: _this._parent.defaultChain,
-                    defaultHardfork: _this._parent.defaultHardfork,
-                    handleRevert: _this._parent.handleRevert,
-                    extraFormatters: extraFormatters,
-                    abiCoder: abi
-                })).createFunction();
+            var sendTransaction = (new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter],
+                requestManager: _this._parent._requestManager,
+                accounts: _this.constructor._ethAccounts || _this._ethAccounts, // is eth.accounts (necessary for wallet signing)
+                defaultAccount: _this._parent.defaultAccount,
+                defaultBlock: _this._parent.defaultBlock,
+                transactionBlockTimeout: _this._parent.transactionBlockTimeout,
+                transactionConfirmationBlocks: _this._parent.transactionConfirmationBlocks,
+                transactionPollingTimeout: _this._parent.transactionPollingTimeout,
+                defaultCommon: _this._parent.defaultCommon,
+                defaultChain: _this._parent.defaultChain,
+                defaultHardfork: _this._parent.defaultHardfork,
+                handleRevert: _this._parent.handleRevert,
+                extraFormatters: extraFormatters,
+                abiCoder: abi
+            })).createFunction();
 
-                return sendTransaction(args.options, args.callback);
+            return sendTransaction(args.options, args.callback);
 
-        }
+
 
     }
+
+
 
 };
 
