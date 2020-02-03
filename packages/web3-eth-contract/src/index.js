@@ -59,7 +59,7 @@ var Contract = function Contract(jsonInterface, address, options) {
         throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
     }
 
-    // sets _requestmanager
+    // sets _requestManager
     core.packageInit(this, [this.constructor.currentProvider]);
 
     this.clearSubscriptions = this._requestManager.clearSubscriptions;
@@ -997,7 +997,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
             return sendTransaction(args.options, args.callback);
 
         default:
-            throw new Error('Method \"' + args.type + '\" not implemented.');
+            throw new Error('Method "' + args.type + '" not implemented.');
 
     }
 
