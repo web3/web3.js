@@ -269,6 +269,222 @@ Registry.prototype.setSubnodeOwner = function (name, label, address, txConfig, c
 };
 
 /**
+ * Sets the owner, resolver, and TTL for an ENS record in a single operation.
+ *
+ * @method setRecord
+ *
+ * @param {string} name
+ * @param {string} owner
+ * @param {string} resolver
+ * @param {string | number} ttl
+ * @param {TransactionConfig} txConfig
+ * @param {function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
+ */
+Registry.prototype.setRecord = function (name, owner, resolver, ttl, txConfig, callback) {
+    var promiEvent = new PromiEvent(true);
+
+    this.contract.then(function (contract) {
+        return contract.methods.setRecord(
+            namehash.hash(name),
+            formatters.inputAddressFormatter(owner),
+            formatters.inputAddressFormatter(resolver),
+            ttl
+        ).send(txConfig);
+    }).then(function (receipt) {
+        if (_.isFunction(callback)) {
+            // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
+            callback(receipt, receipt);
+
+            return;
+        }
+
+        promiEvent.resolve(receipt);
+    }).catch(function (error) {
+        if (_.isFunction(callback)) {
+            callback(error, null);
+
+            return;
+        }
+
+        promiEvent.reject(error);
+    });
+
+    return promiEvent.eventEmitter;
+};
+
+/**
+ * Sets the owner, resolver and TTL for a subdomain, creating it if necessary.
+ *
+ * @method setSubnodeRecord
+ *
+ * @param {string} name
+ * @param {string} label
+ * @param {string} owner
+ * @param {string} resolver
+ * @param {string | number} ttl
+ * @param {TransactionConfig} txConfig
+ * @param {function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
+ */
+Registry.prototype.setSubnodeRecord = function (name, label, owner, resolver, ttl, txConfig, callback) {
+    var promiEvent = new PromiEvent(true);
+
+    this.contract.then(function (contract) {
+        return contract.methods.setSubnodeRecord(
+            namehash.hash(name),
+            utils.sha3(label),
+            formatters.inputAddressFormatter(owner),
+            formatters.inputAddressFormatter(resolver),
+            ttl
+        ).send(txConfig);
+    }).then(function (receipt) {
+        if (_.isFunction(callback)) {
+            // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
+            callback(receipt, receipt);
+
+            return;
+        }
+
+        promiEvent.resolve(receipt);
+    }).catch(function (error) {
+        if (_.isFunction(callback)) {
+            callback(error, null);
+
+            return;
+        }
+
+        promiEvent.reject(error);
+    });
+
+    return promiEvent.eventEmitter;
+};
+
+/**
+ * Sets or clears an approval by the given operator.
+ *
+ * @method setApprovalForAll
+ *
+ * @param {string} operator
+ * @param {boolean} approved
+ * @param {TransactionConfig} txConfig
+ * @param {function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
+ */
+Registry.prototype.setApprovalForAll = function (operator, approved, txConfig, callback) {
+    var promiEvent = new PromiEvent(true);
+
+    this.contract.then(function (contract) {
+        return contract.methods.setApprovalForAll(formatters.inputAddressFormatter(operator), approved).send(txConfig);
+    }).then(function (receipt) {
+        if (_.isFunction(callback)) {
+            // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
+            callback(receipt, receipt);
+
+            return;
+        }
+
+        promiEvent.resolve(receipt);
+    }).catch(function (error) {
+        if (_.isFunction(callback)) {
+            callback(error, null);
+
+            return;
+        }
+
+        promiEvent.reject(error);
+    });
+
+    return promiEvent.eventEmitter;
+};
+
+/**
+ * Returns true if the operator is approved
+ *
+ * @method isApprovedForAll
+ *
+ * @param {string} owner
+ * @param {string} operator
+ * @param {function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<boolean>}
+ */
+Registry.prototype.isApprovedForAll = function (owner, operator, callback) {
+    var promiEvent = new PromiEvent(true);
+
+    this.contract.then(function (contract) {
+        return contract.methods.isApprovedForAll(
+            formatters.inputAddressFormatter(owner),
+            formatters.inputAddressFormatter(operator)
+        ).call();
+    }).then(function (receipt) {
+        if (_.isFunction(callback)) {
+            // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
+            callback(receipt, receipt);
+
+            return;
+        }
+
+        promiEvent.resolve(receipt);
+    }).catch(function (error) {
+        if (_.isFunction(callback)) {
+            callback(error, null);
+
+            return;
+        }
+
+        promiEvent.reject(error);
+    });
+
+    return promiEvent.eventEmitter;
+};
+
+/**
+ * Returns true if the record exists
+ *
+ * @method recordExists
+ *
+ * @param {string} name
+ * @param {function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<boolean>}
+ */
+Registry.prototype.recordExists = function (name, callback) {
+    var promiEvent = new PromiEvent(true);
+
+    this.contract.then(function (contract) {
+        return contract.methods.recordExists(namehash.hash(name)).call();
+    }).then(function (receipt) {
+        if (_.isFunction(callback)) {
+            // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
+            callback(receipt, receipt);
+
+            return;
+        }
+
+        promiEvent.resolve(receipt);
+    }).catch(function (error) {
+        if (_.isFunction(callback)) {
+            callback(error, null);
+
+            return;
+        }
+
+        promiEvent.reject(error);
+    });
+
+    return promiEvent.eventEmitter;
+};
+
+/**
  * Returns the resolver contract associated with a name.
  *
  * @deprecated Please use the "getResolver" method instead of "resolver"
