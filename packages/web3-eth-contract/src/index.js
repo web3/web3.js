@@ -996,7 +996,8 @@ Contract.prototype._executeMethod = function _executeMethod(){
 
             return sendTransaction(args.options, args.callback);
 
-
+        default:
+            throw new Error('Method \"' + args.type + '\" not implemented.');
 
     }
 
