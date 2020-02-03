@@ -5,6 +5,7 @@ web3.eth.ens
 ============
 
 The ``web3.eth.ens`` functions let you interacting with ENS.
+We recommend to read the .. documentation ENS: https://docs.ens.domains/ is providing to get deeper insights about the internals of the name service.
 
 ------------------------------------------------------------------------------
 
@@ -62,6 +63,11 @@ Returns
 - ``getTTL(name, callback): Promise``
 - ``setTTL(name, ttl, txConfig, callback): PromiEvent``
 - ``setSubnodeOwner(name, label, address, txConfig, callback): PromiEvent``
+- ``setRecord(name, owner, resolver, ttl, txConfig, callback): PromiEvent``
+- ``setSubnodeRecord(name, label, owner, resolver, ttl, txConfig, callback): PromiEvent``
+- ``setApprovalForAll(operator, approved, txConfig, callback): PromiEvent``
+- ``isApprovedForAll(owner, operator, callback): Promise``
+- ``recordExists(name, callback): Promise``
 
 -------
 Example
@@ -75,12 +81,17 @@ Example
         owner: Function(name, callback), // Deprecated
         getOwner: Function(name, callback),
         setOwner: Function(name, address, txConfig, callback),
-        resolver: Function(name, callback) // Deprecated
-        getResolver: Function(name, callback)
-        setResolver: Function(name, address, txConfig, callback)
-        getTTL: Function(name, callback)
-        setTTL: Function(name, ttl, txConfig, callback)
-        setSubnodeOwner: Function(name, label, address, txConfig, callback)
+        resolver: Function(name, callback), // Deprecated
+        getResolver: Function(name, callback),
+        setResolver: Function(name, address, txConfig, callback),
+        getTTL: Function(name, callback),
+        setTTL: Function(name, ttl, txConfig, callback),
+        setSubnodeOwner: Function(name, label, address, txConfig, callback),
+        setRecord(name, owner, resolver, ttl, txConfig, callback),
+        setSubnodeRecord(name, label, owner, resolver, ttl, txConfig, callback),
+        setApprovalForAll(operator, approved, txConfig, callback),
+        isApprovedForAll(owner, operator, txConfig, callback),
+        recordExists(name, callback)
     }
 
 ------------------------------------------------------------------------------
@@ -108,7 +119,7 @@ Parameters
 Returns
 -------
 
-``Resolver`` - The ENS resolver for this name.
+``Promise<Resolver>`` - The ENS resolver for this name.
 
 -------
 Example
@@ -143,7 +154,7 @@ Parameters
 Returns
 -------
 
-``Resolver`` - The ENS resolver for this name.
+``Promise<Resolver>`` - The ENS resolver for this name.
 
 -------
 Example
@@ -180,7 +191,7 @@ Parameters
 Returns
 -------
 
-``PromiEvent<TransactionReceipt>``
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
 
 -------
 Example
@@ -215,7 +226,7 @@ Parameters
 Returns
 -------
 
-``String`` - The address of the registrar (EOA or CA).
+`Promise<String>`` - The address of the registrar (EOA or CA).
 
 -------
 Example
@@ -252,7 +263,7 @@ Parameters
 Returns
 -------
 
-``PromiEvent<TransactionReceipt>``
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
 
 -------
 Example
@@ -324,7 +335,7 @@ Parameters
 Returns
 -------
 
-``PromiEvent<TransactionReceipt>``
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
 
 -------
 Example
@@ -346,7 +357,7 @@ setSubnodeOwner
 
     web3.eth.ens.setSubnodeOwner(name, label, address [, txConfig ] [, callback]);
 
-Does set the caching TTL (time-to-live) of a name.
+Creates a new subdomain of the given node, assigning ownership of it to the specified owner
 
 ----------
 Parameters
@@ -362,7 +373,7 @@ Parameters
 Returns
 -------
 
-``PromiEvent<TransactionReceipt>``
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
 
 -------
 Example
@@ -377,12 +388,200 @@ Example
 
 ------------------------------------------------------------------------------
 
+setRecord
+=========
+
+.. code-block:: javascript
+
+    web3.eth.ens.setRecord(name, owner, resolver, ttl, [, txConfig ] [, callback]);
+
+Sets the owner, resolver, and TTL for an ENS record in a single operation.
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``owner`` - ``String``: The owner of the name record
+3. ``resolver`` - ``String``: The resolver address of the name record
+4. ``ttl`` - ``String | Number``: Time to live value (uint64)
+5. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+6. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.setRecord('ethereum.eth', '0x...', '0x...', 1000000, {...}).then(function (receipt) {
+        console.log(receipt); // successfully web3.ethereum.eth registered
+    });
+    > {...}
+
+------------------------------------------------------------------------------
+
+setSubnodeRecord
+================
+
+.. code-block:: javascript
+
+    web3.eth.ens.setSubnodeRecord(name, label, owner, resolver, ttl, [, txConfig ] [, callback]);
+
+Sets the owner, resolver and TTL for a subdomain, creating it if necessary.
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``label`` - ``String``: The label of the subnode
+3. ``owner`` - ``String``: The owner of the name record
+4. ``resolver`` - ``String``: The resolver address of the name record
+5. ``ttl`` - ``String | Number``: Time to live value (uint64)
+6. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+7. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.setSubnodeRecord('ethereum.eth', 'web3', '0x...', '0x...', 1000000, {...}).then(function (receipt) {
+        console.log(receipt); // successfully web3.ethereum.eth registered
+    });
+    > {...}
+
+------------------------------------------------------------------------------
+
+setApprovalForAll
+=================
+
+.. code-block:: javascript
+
+    web3.eth.ens.setApprovalForAll(operator, approved, [, txConfig ] [, callback]);
+
+Sets or clears an approval. Approved accounts can execute all ENS registry operations on behalf of the caller.
+
+----------
+Parameters
+----------
+
+1. ``operator`` - ``String``: The operator address
+2. ``approved`` - ``Boolean``
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+4. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.setApprovalForAll('0x...', true, {...}).then(function (receipt) {
+        console.log(receipt);
+    });
+    > {...}
+
+------------------------------------------------------------------------------
+
+isApprovedForAll
+================
+
+.. code-block:: javascript
+
+    web3.eth.ens.isApprovedForAll(owner, operator [, callback]);
+
+Returns ``true`` if the operator is approved to make ENS registry operations on behalf of the owner.
+
+----------
+Parameters
+----------
+
+1. ``owner`` - ``String``: The owner address.
+2. ``operator`` - ``String``: The operator address.
+3. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``Promise<Boolean>``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.isApprovedForAll('0x0...', '0x0...').then(function (isApproved) {
+        console.log(isApproved);
+    })
+    > true
+
+------------------------------------------------------------------------------
+
+recordExists
+============
+
+.. code-block:: javascript
+
+    web3.eth.ens.recordExists(name,  [, callback]);
+
+Returns ``true`` if node exists in this ENS registry.
+This will return ``false`` for records that are in the legacy ENS registry but have not yet been migrated to the new one.
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``Promise<Boolean>``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.recordExists('0x0...', '0x0...').then(function (isExisting) {
+        console.log(isExisting);
+    })
+    > true
+
+------------------------------------------------------------------------------
+
 getAddress
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.ens.getAddress(ENSName);
+    web3.eth.ens.getAddress(ENSName [, callback]);
 
 Resolves an ENS name to an Ethereum address.
 
@@ -391,6 +590,7 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The ENS name to resolve.
+2. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
 Returns
@@ -427,8 +627,15 @@ Parameters
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``address`` - ``String``: The address to set.
 3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+4. ``callback`` - ``Function``: (optional) Optional callback
 
 Emits an ``AddrChanged`` event.
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
 
 -------
 Example
@@ -492,7 +699,7 @@ getPubkey
 
 .. code-block:: javascript
 
-    web3.eth.ens.getPubkey(ENSName);
+    web3.eth.ens.getPubkey(ENSName [, callback]);
 
 Returns the X and Y coordinates of the curve point for the public key.
 
@@ -501,12 +708,13 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The ENS name.
+2. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
 Returns
 -------
 
-``Object<String, String>`` - The X and Y coordinates.
+``Promise<Object<String, String>>`` - The X and Y coordinates.
 
 -------
 Example
@@ -543,8 +751,15 @@ Parameters
 2. ``x`` - ``String``: The X coordinate of the public key.
 3. ``y`` - ``String``: The Y coordinate of the public key.
 4. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+5. ``callback`` - ``Function``: (optional) Optional callback
 
 Emits an ``PubkeyChanged`` event.
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
 
 -------
 Example
@@ -610,7 +825,7 @@ getContent
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContent(ENSName);
+    web3.eth.ens.getContent(ENSName [, callback]);
 
 Returns the content hash associated with an ENS node.
 
@@ -619,12 +834,13 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The ENS name.
+2. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
 Returns
 -------
 
-``String`` - The content hash associated with an ENS node.
+``Promise<String>`` - The content hash associated with an ENS node.
 
 -------
 Example
@@ -655,8 +871,15 @@ Parameters
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``hash`` - ``String``: The content hash to set.
 3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+4. ``callback`` - ``Function``: (optional) Optional callback
 
 Emits an ``ContentChanged`` event.
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
 
 -------
 Example
@@ -720,7 +943,7 @@ getMultihash
 
 .. code-block:: javascript
 
-    web3.eth.ens.getMultihash(ENSName);
+    web3.eth.ens.getMultihash(ENSName [, callback]);
 
 Returns the multihash associated with an ENS node.
 
@@ -729,12 +952,13 @@ Parameters
 ----------
 
 1. ``ENSName`` - ``String``: The ENS name.
+2. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
 Returns
 -------
 
-``String`` - The associated multihash.
+``Promise<String>`` - The associated multihash.
 
 -------
 Example
@@ -746,6 +970,42 @@ Example
         console.log(result);
     });
     > 'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK'
+
+------------------------------------------------------------------------------
+
+supportsInterface
+=================
+
+.. code-block:: javascript
+
+    web3.eth.ens.supportsInterface(name, interfaceId [, callback]);
+
+Returns ``true`` if the related ``Resolver`` does support the given signature or interfaceId.
+
+----------
+Parameters
+----------
+
+1. ``name`` - ``String``: The ENS name.
+2. ``interfaceId`` - ``String``: The signature of the function or the interfaceId as described in the ENS documentation
+3. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``Promise<Boolean>``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.supportsInterface('ethereum.eth', 'addr(bytes32').then(function (result) {
+        console.log(result);
+    });
+    > true
 
 ------------------------------------------------------------------------------
 
@@ -765,8 +1025,15 @@ Parameters
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``hash`` - ``String``: The multihash to set.
 3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+4. ``callback`` - ``Function``: (optional) Optional callback
 
 Emits an ``MultihashChanged``event.
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
 
 -------
 Example
@@ -824,6 +1091,12 @@ Known resolver events
 4. NameChanged(node bytes32, name string)
 5. ABIChanged(node bytes32, contentType uint256)
 6. PubkeyChanged(node bytes32, x bytes32, y bytes32)
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
 
 -------
 Example
@@ -916,41 +1189,3 @@ Example
 
 
 For further information on the handling of contract events please see :ref:`here <contract-events>`.
-
-------------------------------------------------------------------------------
-
-supportsInterface
-=================
-
-.. code-block:: javascript
-
-    web3.eth.ens.supportsInterface(name, interfaceId [, callback]);
-
-Returns ``true`` if the related ``Resolver`` does support the given signature or interfaceId.
-
-----------
-Parameters
-----------
-
-1. ``name`` - ``String``: The ENS name.
-2. ``interfaceId`` - ``String``: The signature of the function or the interfaceId as described in the ENS documentation
-2. ``callback`` - ``Function``: (optional) Optional callback
-
--------
-Returns
--------
-
-``Boolean``
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.eth.ens.supportsInterface('ethereum.eth', 'addr(bytes32').then(function (result) {
-        console.log(result);
-    });
-    > true
-
-------------------------------------------------------------------------------
