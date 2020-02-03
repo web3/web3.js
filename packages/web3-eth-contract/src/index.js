@@ -601,7 +601,7 @@ Contract.prototype.deploy = function(options, callback){
 };
 
 /**
- * Gets the event signature and outputformatters
+ * Gets the event signature and outputFormatters
  *
  * @method _generateEventOptions
  * @param {Object} event
