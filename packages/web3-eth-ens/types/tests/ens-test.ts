@@ -58,6 +58,45 @@ ens.setSubnodeOwner('name', 'label', '0x...', {});
 // $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 ens.setSubnodeOwner('name', 'label', '0x...', {}, (error: Error, receipt: TransactionReceipt) => {});
 
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+ens.setRecord('name', 'owner', 'resolver', '100000');
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+ens.setRecord('name', 'owner', 'resolver', 100000);
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+ens.setRecord('name', 'owner', 'resolver', 100000, {});
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+ens.setRecord('name', 'owner', 'resolver', 100000, {}, (error: Error, receipt: TransactionReceipt) => {});
+
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+ens.setSubnodeRecord('name', 'label', 'owner', 'resolver', '100000');
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+ens.setSubnodeRecord('name', 'label', 'owner', 'resolver', 100000);
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+ens.setSubnodeRecord('name', 'label', 'owner', 'resolver', 100000, {});
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+ens.setSubnodeRecord('name', 'label', 'owner', 'resolver', 100000, {}, (error: Error, receipt: TransactionReceipt) => {});
+
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+ens.setApprovalForAll('name', true);
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+ens.setApprovalForAll('name', false, {});
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+ens.setApprovalForAll('name', true, {}, (error: Error, receipt: TransactionReceipt) => {});
+
+// $ExpectType Promise<string>
+ens.isApprovedForAll('owner', 'operator');
+// $ExpectType Promise<string>
+ens.isApprovedForAll('owner', 'operator', (error: Error, result: boolean) => {});
+// $ExpectType Promise<string>
+ens.isApprovedForAll('owner', 'operator', (value: any) => {});
+
+// $ExpectType Promise<string>
+ens.recordExists('name');
+// $ExpectType Promise<string>
+ens.recordExists('name', (error: Error, result: boolean) => {});
+// $ExpectType Promise<string>
+ens.recordExists('name', (value: any) => {});
+
 // $ExpectType Promise<string>
 ens.getTTL('name');
 // $ExpectType Promise<string>
