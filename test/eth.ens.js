@@ -34,7 +34,7 @@ function prepareProviderForSetter(provider, signature, types, params, error) {
                 gasPrice: '0x64',
                 nonce: '0x1',
                 data: sha3(signature).slice(0, 10) + abiCoder.encodeParameters(types, params).substr(2),
-                to: '0x314159265dd8dbb310642f98f50c066173c1259b'
+                to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e'
             }]
         );
     });
@@ -68,7 +68,7 @@ function prepareProviderForSetter(provider, signature, types, params, error) {
         assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
     });
     provider.injectResult({
-        contractAddress: '0x314159265dd8dbb310642f98f50c066173c1259b',
+        contractAddress: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
         cumulativeGasUsed: '0xa',
         transactionIndex: '0x3',
         blockNumber: '0xa',
@@ -93,7 +93,7 @@ function prepareProviderForSetter(provider, signature, types, params, error) {
  * @returns {void}
  */
 function isExpectedReceipt(receipt) {
-    assert.equal(receipt.contractAddress, '0x314159265dD8dbb310642f98f50C066173C1259b');
+    assert.equal(receipt.contractAddress, '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e');
     assert.equal(receipt.cumulativeGasUsed, 10);
     assert.equal(receipt.transactionIndex, 3);
     assert.equal(receipt.blockNumber, 10);
@@ -519,8 +519,8 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -549,8 +549,8 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -582,8 +582,8 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    data: sha3(resolverSig).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -626,7 +626,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -665,8 +665,8 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
 
@@ -685,7 +685,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
 
@@ -707,7 +707,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
 
@@ -737,7 +737,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
 
@@ -766,7 +766,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -784,7 +784,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -802,7 +802,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -822,7 +822,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
 
@@ -850,7 +850,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
 
@@ -876,7 +876,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
 
@@ -903,7 +903,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -921,7 +921,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -942,7 +942,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -960,7 +960,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
 
@@ -989,7 +989,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
 
@@ -1016,7 +1016,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
 
@@ -1045,7 +1045,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSig).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -1074,7 +1074,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSig).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -1106,7 +1106,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSig).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -1150,7 +1150,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSig).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -1192,7 +1192,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -1227,7 +1227,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -1270,7 +1270,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -1321,7 +1321,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -1370,7 +1370,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -1400,7 +1400,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -1435,7 +1435,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -1478,7 +1478,7 @@ describe('ens', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                     data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
-                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
@@ -1593,7 +1593,7 @@ describe('ens', function () {
     describe('custom registry address', function () {
         let web3;
         let provider;
-        const address = '0x314159265dD8dbb310642f98f50C066173C1259b';
+        const address = '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e';
 
         beforeEach(function () {
             provider = new FakeHttpProvider();
