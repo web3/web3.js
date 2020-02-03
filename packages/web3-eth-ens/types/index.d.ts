@@ -85,6 +85,58 @@ export class Ens {
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 
+    setRecord(
+        name: string,
+        owner: string,
+        resolver: string,
+        ttl: number | string,
+        txConfig?: TransactionConfig,
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+
+    setSubnodeRecord(
+        name: string,
+        label: string,
+        owner: string,
+        resolver: string,
+        ttl: number | string,
+        txConfig?: TransactionConfig,
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+
+    setApprovalForAll(
+        operator: string,
+        approved: boolean,
+        txConfig?: TransactionConfig,
+        callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    isApprovedForAll(
+        owner: string,
+        operator: string,
+        callback?: (value: any) => void
+    ): Promise<string>;
+    isApprovedForAll(
+        owner: string,
+        operator: string,
+        callback?: (error: Error, result: boolean) => void
+    ): Promise<string>;
+
+    /**
+     * @deprecated This callback signature is deprecated
+     */
+    recordExists(
+        name: string,
+        callback?: (value: any) => void
+    ): Promise<string>;
+    recordExists(
+        name: string,
+        callback?: (error: Error, result: boolean) => void
+    ): Promise<string>;
+
     /**
      * @deprecated This callback signature is deprecated
      */
