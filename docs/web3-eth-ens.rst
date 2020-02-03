@@ -5,7 +5,7 @@ web3.eth.ens
 ============
 
 The ``web3.eth.ens`` functions let you interacting with ENS.
-We recommend to read the .. documentation ENS: https://docs.ens.domains/ is providing to get deeper insights about the internals of the name service.
+We recommend reading the `documentation ENS <https://docs.ens.domains/>`_ is providing to get deeper insights about the internals of the name service.
 
 ------------------------------------------------------------------------------
 
