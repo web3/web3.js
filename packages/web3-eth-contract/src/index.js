@@ -1002,7 +1002,6 @@ Contract.prototype._executeMethod = function _executeMethod(){
     }
 
 
-
 };
 
 module.exports = Contract;
