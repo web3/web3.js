@@ -23,7 +23,7 @@ const targetPackagePath = path.join(process.cwd(), process.argv[2], 'package.jso
 const web3Package = require(web3PackagePath);
 const targetPackage = require(targetPackagePath);
 
-// Use pre-release version which isn't ever really
+// Use version least likely to conflict with what's been
 // published to npm. (Maps to `lerna version` command
 // in e2e.npm.publish.sh)
 const version = semver.inc(web3Package.version, 'minor');
@@ -59,4 +59,3 @@ console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 console.log(JSON.stringify(targetPackage.resolutions, null, ' '));
 
 fs.writeFileSync(targetPackagePath, JSON.stringify(targetPackage, null, '    '));
-
