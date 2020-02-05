@@ -240,10 +240,14 @@ Registry.prototype.setTTL = function (name, ttl, txConfig, callback) {
 Registry.prototype.setSubnodeOwner = function (name, label, address, txConfig, callback) {
     var promiEvent = new PromiEvent(true);
 
+    if (!utils.isHexStrict(label)) {
+        label = utils.sha3(label);
+    }
+
     this.contract.then(function (contract) {
         return contract.methods.setSubnodeOwner(
             namehash.hash(name),
-            utils.sha3(label),
+            label,
             formatters.inputAddressFormatter(address)
         ).send(txConfig);
     }).then(function (receipt) {
@@ -334,10 +338,14 @@ Registry.prototype.setRecord = function (name, owner, resolver, ttl, txConfig, c
 Registry.prototype.setSubnodeRecord = function (name, label, owner, resolver, ttl, txConfig, callback) {
     var promiEvent = new PromiEvent(true);
 
+    if (!utils.isHexStrict(label)) {
+        label = utils.sha3(label);
+    }
+
     this.contract.then(function (contract) {
         return contract.methods.setSubnodeRecord(
             namehash.hash(name),
-            utils.sha3(label),
+            label,
             formatters.inputAddressFormatter(owner),
             formatters.inputAddressFormatter(resolver),
             ttl
