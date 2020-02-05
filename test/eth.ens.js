@@ -229,7 +229,343 @@ describe('ens', function () {
             }
         });
 
-        it('should set the resolver record for a name', async function () {
+        it('should set the record for a name', async function () {
+            const signature = 'setRecord(bytes32,address,address,uint64)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'address', 'address', 'uint64'],
+                [
+                    hashedName,
+                    '0x0123456701234567012345670123456701234567',
+                    '0x0123456701234567012345670123456701234567',
+                    10000
+                ],
+                false
+            );
+
+            const receipt = await web3.eth.ens.setRecord(
+                name,
+                '0x0123456701234567012345670123456701234567',
+                '0x0123456701234567012345670123456701234567',
+                10000,
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                });
+
+            isExpectedReceipt(receipt);
+        });
+
+        it('should set the record for a name and throw the expected error (callback)', function (done) {
+            const signature = 'setRecord(bytes32,address,address,uint64)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'address', 'address', 'uint64'],
+                [
+                    hashedName,
+                    '0x0123456701234567012345670123456701234567',
+                    '0x0123456701234567012345670123456701234567',
+                    10000
+                ],
+                true
+            );
+
+            web3.eth.ens.setRecord(
+                name,
+                '0x0123456701234567012345670123456701234567',
+                '0x0123456701234567012345670123456701234567',
+                10000,
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                },
+                function (error, result) {
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.equal(result, null);
+
+                    done();
+                }
+            );
+        });
+
+        it('should set the record for a name and throw the expected error (promise)', async function () {
+            const signature = 'setRecord(bytes32,address,address,uint64)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'address', 'address', 'uint64'],
+                [
+                    hashedName,
+                    '0x0123456701234567012345670123456701234567',
+                    '0x0123456701234567012345670123456701234567',
+                    10000
+                ],
+                true
+            );
+
+            try {
+                await web3.eth.ens.setRecord(
+                    name,
+                    '0x0123456701234567012345670123456701234567',
+                    '0x0123456701234567012345670123456701234567',
+                    10000,
+                    {
+                        from: '0x0123456701234567012345670123456701234567',
+                        gas: 100,
+                        gasPrice: 100,
+                        nonce: 1
+                    }
+                );
+
+                assert.fail();
+            } catch (error) {
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
+            }
+        });
+
+        it('should set the owner, resolver, and ttl for a name', async function () {
+            const signature = 'setSubnodeRecord(bytes32,bytes32,address,address,uint64)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'bytes32', 'address', 'address', 'uint64'],
+                [
+                    hashedName,
+                    utils.sha3('label'),
+                    '0x0123456701234567012345670123456701234567',
+                    '0x0123456701234567012345670123456701234567',
+                    10000
+                ],
+                false
+            );
+
+            const receipt = await web3.eth.ens.setSubnodeRecord(
+                name,
+                'label',
+                '0x0123456701234567012345670123456701234567',
+                '0x0123456701234567012345670123456701234567',
+                10000,
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                });
+
+            isExpectedReceipt(receipt);
+        });
+
+        it('should set the owner, resolver, and ttl for a name with already hashed label', async function () {
+            const signature = 'setSubnodeRecord(bytes32,bytes32,address,address,uint64)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'bytes32', 'address', 'address', 'uint64'],
+                [
+                    hashedName,
+                    utils.sha3('label'),
+                    '0x0123456701234567012345670123456701234567',
+                    '0x0123456701234567012345670123456701234567',
+                    10000
+                ],
+                false
+            );
+
+            const receipt = await web3.eth.ens.setSubnodeRecord(
+                name,
+                utils.sha3('label'),
+                '0x0123456701234567012345670123456701234567',
+                '0x0123456701234567012345670123456701234567',
+                10000,
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                });
+
+            isExpectedReceipt(receipt);
+        });
+
+        it('should set the owner, resolver, and ttl for a name and throw the expected error (callback)', function (done) {
+            const signature = 'setSubnodeRecord(bytes32,bytes32,address,address,uint64)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'bytes32', 'address', 'address', 'uint64'],
+                [
+                    hashedName,
+                    utils.sha3('label'),
+                    '0x0123456701234567012345670123456701234567',
+                    '0x0123456701234567012345670123456701234567',
+                    10000
+                ],
+                true
+            );
+
+            web3.eth.ens.setSubnodeRecord(
+                name,
+                'label',
+                '0x0123456701234567012345670123456701234567',
+                '0x0123456701234567012345670123456701234567',
+                10000,
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                },
+                function (error, result) {
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.equal(result, null);
+
+                    done();
+                }
+            );
+        });
+
+        it('should set the owner, resolver, and ttl for a name and throw the expected error (promise)', async function () {
+            const signature = 'setSubnodeRecord(bytes32,bytes32,address,address,uint64)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'bytes32', 'address', 'address', 'uint64'],
+                [
+                    hashedName,
+                    utils.sha3('label'),
+                    '0x0123456701234567012345670123456701234567',
+                    '0x0123456701234567012345670123456701234567',
+                    10000
+                ],
+                true
+            );
+
+            try {
+                await web3.eth.ens.setSubnodeRecord(
+                    name,
+                    'label',
+                    '0x0123456701234567012345670123456701234567',
+                    '0x0123456701234567012345670123456701234567',
+                    10000,
+                    {
+                        from: '0x0123456701234567012345670123456701234567',
+                        gas: 100,
+                        gasPrice: 100,
+                        nonce: 1
+                    }
+                );
+
+                assert.fail();
+            } catch (error) {
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
+            }
+        });
+
+        it('should set an approval by the given operator', async function () {
+            const signature = 'setApprovalForAll(address,bool)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['address', 'bool'],
+                [
+                    '0x0123456701234567012345670123456701234567',
+                    true
+                ],
+                false
+            );
+
+            const receipt = await web3.eth.ens.setApprovalForAll(
+                '0x0123456701234567012345670123456701234567',
+                true,
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                });
+
+            isExpectedReceipt(receipt);
+        });
+
+        it('should set an approval by the given operator and throw the expected error (callback)', function (done) {
+            const signature = 'setApprovalForAll(address,bool)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['address', 'bool'],
+                [
+                    '0x0123456701234567012345670123456701234567',
+                    true
+                ],
+                true
+            );
+
+            web3.eth.ens.setApprovalForAll(
+                '0x0123456701234567012345670123456701234567',
+                true,
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                },
+                function (error, result) {
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.equal(result, null);
+
+                    done();
+                }
+            );
+        });
+
+        it('should set an approval by the given operator and throw the expected error (promise)', async function () {
+            const signature = 'setApprovalForAll(address,bool)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['address', 'bool'],
+                [
+                    '0x0123456701234567012345670123456701234567',
+                    true
+                ],
+                true
+            );
+
+            try {
+                await web3.eth.ens.setApprovalForAll(
+                    '0x0123456701234567012345670123456701234567',
+                    true,
+                    {
+                        from: '0x0123456701234567012345670123456701234567',
+                        gas: 100,
+                        gasPrice: 100,
+                        nonce: 1
+                    }
+                );
+
+                assert.fail();
+            } catch (error) {
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
+            }
+        });
+
+        it('should set the owner, resolver, and TTL for an record', async function () {
             const signature = 'setResolver(bytes32,address)';
 
             prepareProviderForSetter(
@@ -253,7 +589,7 @@ describe('ens', function () {
             isExpectedReceipt(receipt);
         });
 
-        it('should set the resolver record for a name and throw the expected error (callback)', function (done) {
+        it('should set the owner, resolver, and TTL for an record and throw the expected error (callback)', function (done) {
             const signature = 'setResolver(bytes32,address)';
 
             prepareProviderForSetter(
@@ -282,7 +618,7 @@ describe('ens', function () {
             );
         });
 
-        it('should set the resolver record for a name and throw the expected error (promise)', async function () {
+        it('should set the owner, resolver, and TTL for an record and throw the expected error (promise)', async function () {
             const signature = 'setResolver(bytes32,address)';
 
             prepareProviderForSetter(
@@ -418,6 +754,31 @@ describe('ens', function () {
             isExpectedReceipt(receipt);
         });
 
+        it('should create a new sub node with the specified hashed label and owner', async function () {
+            const signature = 'setSubnodeOwner(bytes32,bytes32,address)';
+
+            prepareProviderForSetter(
+                provider,
+                signature,
+                ['bytes32', 'bytes32', 'address'],
+                [hashedName, utils.sha3('label'), '0x0123456701234567012345670123456701234567'],
+                false
+            );
+
+            const receipt = await web3.eth.ens.setSubnodeOwner(
+                name,
+                utils.sha3('label'),
+                '0x0123456701234567012345670123456701234567',
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 100,
+                    gasPrice: 100,
+                    nonce: 1
+                });
+
+            isExpectedReceipt(receipt);
+        });
+
         it('should create a new sub node with the specified label and owner and throw the expected error (callback)', function (done) {
             const signature = 'setSubnodeOwner(bytes32,bytes32,address)';
 
@@ -479,7 +840,7 @@ describe('ens', function () {
         });
     });
 
-    describe('getters', function () {
+    describe.only('getters', function () {
         beforeEach(function () {
             provider = new FakeHttpProvider();
             web3 = new Web3(provider);
@@ -751,6 +1112,116 @@ describe('ens', function () {
 
             try {
                 await web3.eth.ens.getTTL('foobar.eth');
+
+                assert.fail();
+            } catch (error) {
+                assert.equal(error.code, 1234);
+                assert.equal(error.message, 'ERROR');
+            }
+        });
+
+        it('should call isApprovedForAll and return the expected result (promise)', async function () {
+            const signature = 'isApprovedForAll(address,address)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '00000000000000000000000001234567012345670123456701234567012345670000000000000000000000000123456701234567012345670123456701234567',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000001');
+
+            const isApproved = await web3.eth.ens.isApprovedForAll(
+                '0x0123456701234567012345670123456701234567',
+                '0x0123456701234567012345670123456701234567'
+            );
+
+            assert.equal(isApproved, true);
+        });
+
+        it('should call isApprovedForAll and return the expected result (callback)', function (done) {
+            const signature = 'isApprovedForAll(address,address)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '00000000000000000000000001234567012345670123456701234567012345670000000000000000000000000123456701234567012345670123456701234567',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000001');
+
+            web3.eth.ens.isApprovedForAll(
+                '0x0123456701234567012345670123456701234567',
+                '0x0123456701234567012345670123456701234567',
+                function (error, isApproved) {
+                    assert.equal(isApproved, true);
+
+                    done();
+                }
+            );
+        });
+
+        it('should call isApprovedForAll and return the expected result (callback)', function (done) {
+            const signature = 'isApprovedForAll(address,address)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '00000000000000000000000001234567012345670123456701234567012345670000000000000000000000000123456701234567012345670123456701234567',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+
+            provider.error.push(null);
+
+            provider.injectError({
+                code: 1234,
+                message: 'ERROR'
+            });
+
+            web3.eth.ens.isApprovedForAll(
+                '0x0123456701234567012345670123456701234567',
+                '0x0123456701234567012345670123456701234567',
+                function (error, isApproved) {
+                    assert.equal(isApproved, null);
+                    assert.equal(error.code, 1234);
+                    assert.equal(error.message, 'ERROR');
+
+                    done();
+                });
+        });
+
+        it('should call isApprovedForAll and return the expected result (promise)', async function () {
+            const signature = 'isApprovedForAll(address,address)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + '00000000000000000000000001234567012345670123456701234567012345670000000000000000000000000123456701234567012345670',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+
+            provider.error.push(null);
+
+            provider.injectError({
+                code: 1234,
+                message: 'ERROR'
+            });
+
+            try {
+                await web3.eth.ens.isApprovedForAll(
+                    '0x0123456701234567012345670123456701234567',
+                    '0x0123456701234567012345670123456701234567'
+                );
 
                 assert.fail();
             } catch (error) {
