@@ -364,7 +364,7 @@ Parameters
 ----------
 
 1. ``name`` - ``String``: The ENS name.
-2. ``label`` - ``String``: The name of the sub-domain
+2. ``label`` - ``String``: The name of the sub-domain or the sha3 hash of it
 3. ``address`` - ``String``: The registrar of this sub-domain
 4. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
 5. ``callback`` - ``Function``: (optional) Optional callback
@@ -441,7 +441,7 @@ Parameters
 ----------
 
 1. ``name`` - ``String``: The ENS name.
-2. ``label`` - ``String``: The label of the subnode
+2. ``label`` - ``String``: The name of the sub-domain or the sha3 hash of it
 3. ``owner`` - ``String``: The owner of the name record
 4. ``resolver`` - ``String``: The resolver address of the name record
 5. ``ttl`` - ``String | Number``: Time to live value (uint64)
