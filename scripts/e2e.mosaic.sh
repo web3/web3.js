@@ -31,9 +31,9 @@ echo "Installing updated web3 via virtual registry "
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 
 git submodule update --init --recursive
-yarn --registry http://localhost:4873 --network-timeout 100000
+yarn --registry http://localhost:4873
 
-yarn add web3@e2e --registry http://localhost:4873 --network-timeout 100000
+yarn add web3@e2e --registry http://localhost:4873
 
 yarn list web3
 yarn list web3-utils

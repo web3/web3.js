@@ -52,7 +52,7 @@ fi
 git checkout $BRANCH --
 
 # Lerna version
-lerna version patch \
+lerna version minor \
   --force-publish=* \
   --no-git-tag-version \
   --no-push \

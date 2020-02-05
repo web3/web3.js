@@ -5,6 +5,10 @@ auth:
 uplinks:
   npmjs:
     url: https://registry.npmjs.org/
+    timeout: 25000ms
+  yarn:
+    url: https://registry.yarnpkg.com/
+    timeout: 25000ms
 packages:
   '@*/*':
     # scoped packages
