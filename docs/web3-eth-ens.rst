@@ -545,7 +545,7 @@ recordExists
 
 .. code-block:: javascript
 
-    web3.eth.ens.recordExists(name,  [, callback]);
+    web3.eth.ens.recordExists(name [, callback]);
 
 Returns ``true`` if node exists in this ENS registry.
 This will return ``false`` for records that are in the legacy ENS registry but have not yet been migrated to the new one.
