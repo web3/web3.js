@@ -840,7 +840,7 @@ describe('ens', function () {
         });
     });
 
-    describe.only('getters', function () {
+    describe('getters', function () {
         beforeEach(function () {
             provider = new FakeHttpProvider();
             web3 = new Web3(provider);
