@@ -148,7 +148,7 @@ Registry.prototype.setOwner = function (name, address, txConfig, callback) {
 /**
  * Returns the TTL of the given node by his name
  *
- * @method ttl
+ * @method getTTL
  *
  * @param {string} name
  * @param {function} callback
