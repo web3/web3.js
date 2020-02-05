@@ -79,3 +79,27 @@ errors.TransactionOutOfGasError({});
 
 // $ExpectType Error
 errors.ResolverMethodMissingError('0x0000000000000000000000000000000000000001', 'content');
+
+// $ExpectType Error
+errors.ContractMissingABIError();
+
+// $ExpectType Error
+errors.ContractOnceRequiresCallbackError();
+
+// $ExpectType Error
+errors.ContractEventDoesNotExistError('nonEvent');
+
+// $ExpectType Error
+errors.ContractUnsetContractAddressError();
+
+// $ExpectType Error
+errors.ContractReservedEventError('newListener');
+
+// $ExpectType Error
+errors.ContractMissingDeployDataError();
+
+// $ExpectType Error
+errors.ContractMissingToAddressError();
+
+// $ExpectType Error
+errors.ContractMissingFromAddressError();
