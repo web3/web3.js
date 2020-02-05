@@ -151,6 +151,93 @@ ENS.prototype.setResolver = function (name, address, txConfig, callback) {
 };
 
 /**
+ * Sets the owner, resolver, and TTL for an ENS record in a single operation.
+ *
+ * @method setRecord
+ *
+ * @param {string} name
+ * @param {string} owner
+ * @param {string} resolver
+ * @param {string | number} ttl
+ * @param {TransactionConfig} txConfig
+ * @param {function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
+ */
+ENS.prototype.setRecord = function (name, owner, resolver, ttl, txConfig, callback) {
+    return this.registry.setRecord(name, owner, resolver, ttl, txConfig, callback);
+};
+
+/**
+ * Sets the owner, resolver and TTL for a subdomain, creating it if necessary.
+ *
+ * @method setSubnodeRecord
+ *
+ * @param {string} name
+ * @param {string} label
+ * @param {string} owner
+ * @param {string} resolver
+ * @param {string | number} ttl
+ * @param {TransactionConfig} txConfig
+ * @param {function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
+ */
+ENS.prototype.setSubnodeRecord = function (name, label, owner, resolver, ttl, txConfig, callback) {
+    return this.registry.setSubnodeRecord(name, label, owner, resolver, ttl, txConfig, callback);
+};
+
+/**
+ * Sets or clears an approval by the given operator.
+ *
+ * @method setApprovalForAll
+ *
+ * @param {string} operator
+ * @param {boolean} approved
+ * @param {TransactionConfig} txConfig
+ * @param {function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
+ */
+ENS.prototype.setApprovalForAll = function (operator, approved, txConfig, callback) {
+    return this.registry.setApprovalForAll(operator, approved, txConfig, callback);
+};
+
+/**
+ * Returns true if the operator is approved
+ *
+ * @method isApprovedForAll
+ *
+ * @param {string} owner
+ * @param {string} operator
+ * @param {function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<boolean>}
+ */
+ENS.prototype.isApprovedForAll = function (owner, operator, callback) {
+    return this.registry.isApprovedForAll(owner, operator, callback);
+};
+
+/**
+ * Returns true if the record exists
+ *
+ * @method recordExists
+ *
+ * @param {string} name
+ * @param {function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<boolean>}
+ */
+ENS.prototype.recordExists = function (name, callback) {
+    return this.registry.recordExists(name, callback);
+};
+
+/**
  * Returns the address of the owner of an ENS name.
  *
  * @method setSubnodeOwner
