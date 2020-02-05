@@ -98,8 +98,8 @@ describe('contract: errors', function () {
             "type": "event"
         }];
 
-        const address = '0xEE221E529cF6DB20179E7bAeb4442e9CbdCa83d7';
-        const contract = new eth.Contract(newListenerEventAbi, address);
+        const contractAddress = '0xEE221E529cF6DB20179E7bAeb4442e9CbdCa83d7';
+        const contract = new eth.Contract(newListenerEventAbi, contractAddress);
 
         try {
             contract.once('newListener', () => {});
@@ -137,7 +137,7 @@ describe('contract: errors', function () {
         });
     })
 
-    it('errors when send is called without a contract address set', function(){
+    it('errors when send is called without a *contract address* set', function(){
         const expected = 'This contract object doesn\'t have address set yet, ' +
                          'please set an address first.';
 
@@ -150,12 +150,12 @@ describe('contract: errors', function () {
         }
     });
 
-    it('errors when send is called without a from address being set', async function(){
+    it('errors when send is called without a *from address* being set', async function(){
         const expected = 'No "from" address specified in neither the given options, '
                          'nor the default options.';
 
-        const address = '0xEE221E529cF6DB20179E7bAeb4442e9CbdCa83d7';
-        const contract = new eth.Contract(abi, address);
+        const contractAddress = '0xEE221E529cF6DB20179E7bAeb4442e9CbdCa83d7';
+        const contract = new eth.Contract(abi, contractAddress);
         try {
             await contract.methods.simpleMethod("0xaaa").send({});
             assert.fail();
