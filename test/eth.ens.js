@@ -2201,5 +2201,4 @@ describe('ens', function () {
             assert.equal(web3.eth.ens.registryAddress, formatters.inputAddressFormatter(address));
         });
     });
-})
-;
+});
