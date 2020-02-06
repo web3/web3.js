@@ -30,6 +30,7 @@
         "lint": "jshint *.js packages",
         "test": "mocha --grep E2E --invert; jshint *.js packages",
         "test:unit": "nyc --no-clean --silent _mocha -- -R spec --grep E2E --invert",
+        "test:cov": "npm run cov:clean; npm run test:unit; npm run test:e2e:clients; npm run cov:html",
         "dtslint": "lerna run dtslint",
         "depcheck": "lerna exec dependency-check -- --missing --verbose .",
         "bundlesize": "bundlesize",
@@ -49,7 +50,9 @@
         "test:e2e:ens": "./scripts/e2e.ens.sh",
         "test:e2e:ganache:core": "./scripts/e2e.ganache.core.sh",
         "ci": "./scripts/ci.sh",
-        "coveralls": "./scripts/coveralls.sh"
+        "coveralls": "./scripts/coveralls.sh",
+        "cov:clean": "rm -rf .nyc_output; rm -rf coverage",
+        "cov:html": "nyc report --reporter=html"
     },
     "repository": {
         "type": "git",
