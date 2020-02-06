@@ -24,7 +24,8 @@ Fixes #(issue)
 - [ ] My changes generate no new warnings.
 - [ ] Any dependent changes have been merged and published in downstream modules.
 - [ ] I ran ```npm run dtslint``` with success and extended the tests and types if necessary.
-- [ ] I ran ```npm run test:unit``` with success and extended the tests if necessary.
+- [ ] I ran ```npm run test:unit``` with success.
+- [ ] I have executed ``npm run test:cov`` and my test cases do cover all lines and branches of the added code.
 - [ ] I ran ```npm run build-all``` and tested the resulting file/'s from  ```dist``` folder in a browser.
 - [ ] I have updated the ``CHANGELOG.md`` file in the root folder.
 - [ ] I have tested my code on the live network.
