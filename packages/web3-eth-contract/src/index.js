@@ -601,10 +601,9 @@ Contract.prototype.deploy = function(options, callback){
     // throw error, if no "data" is specified
     if(!options.data) {
         if (typeof callback === 'function'){
-            callback(errors.ContractMissingDeployDataError());
-        } else {
-            throw errors.ContractMissingDeployDataError();
+            return callback(errors.ContractMissingDeployDataError());
         }
+        throw errors.ContractMissingDeployDataError();
     }
 
     var constructor = _.find(this.options.jsonInterface, function (method) {
