@@ -382,7 +382,7 @@ Example
 .. code-block:: javascript
 
     web3.eth.ens.setSubnodeOwner('ethereum.eth', 'web3', '0x...', {...}).then(function (receipt) {
-        console.log(receipt); // successfully web3.ethereum.eth registered
+        console.log(receipt); // successfully defined the owner of web3.ethereum.eth
     });
     > {...}
 
@@ -421,7 +421,7 @@ Example
 .. code-block:: javascript
 
     web3.eth.ens.setRecord('ethereum.eth', '0x...', '0x...', 1000000, {...}).then(function (receipt) {
-        console.log(receipt); // successfully web3.ethereum.eth registered
+        console.log(receipt); // successfully registered ethereum.eth
     });
     > {...}
 
@@ -461,7 +461,7 @@ Example
 .. code-block:: javascript
 
     web3.eth.ens.setSubnodeRecord('ethereum.eth', 'web3', '0x...', '0x...', 1000000, {...}).then(function (receipt) {
-        console.log(receipt); // successfully web3.ethereum.eth registered
+        console.log(receipt); // successfully registered web3.ethereum.eth
     });
     > {...}
 
