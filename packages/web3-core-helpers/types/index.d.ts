@@ -84,11 +84,10 @@ export class errors {
     static ContractMissingABIError(): Error
     static ContractOnceRequiresCallbackError(): Error
     static ContractEventDoesNotExistError(eventName: string): Error
-    static ContractUnsetContractAddressError(): Error
     static ContractReservedEventError(type: string): Error
     static ContractMissingDeployDataError(): Error
-    static ContractMissingToAddressError(): Error
-    static ContractMissingFromAddressError(): Error
+    static ContractNoAddressDefinedError(): Error
+    static ContractNoFromAddressDefinedError(): Error
 }
 
 export class WebsocketProviderBase {
