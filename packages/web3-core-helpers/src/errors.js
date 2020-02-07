@@ -119,19 +119,16 @@ module.exports = {
     ContractEventDoesNotExistError: function(eventName) {
         return new Error('Event "' + eventName + '" doesn\'t exist in this contract.');
     },
-    ContractUnsetContractAddressError: function() {
-        return new Error('This contract object doesn\'t have address set yet, please set an address first.');
-    },
     ContractReservedEventError: function(type) {
         return new Error('The event "'+ type +'" is a reserved event name, you can\'t use it.');
     },
     ContractMissingDeployDataError: function() {
         return new Error('No "data" specified in neither the given options, nor the default options.');
     },
-    ContractMissingToAddressError: function() {
+    ContractNoAddressDefinedError: function() {
         return new Error('This contract object doesn\'t have address set yet, please set an address first.');
     },
-    ContractMissingFromAddressError: function() {
+    ContractNoFromAddressDefinedError: function() {
         return new Error('No "from" address specified in neither the given options, nor the default options.');
     }
 };

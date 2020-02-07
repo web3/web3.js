@@ -651,7 +651,7 @@ Contract.prototype._generateEventOptions = function() {
     }
 
     if (!utils.isAddress(this.options.address)) {
-        throw errors.ContractUnsetContractAddressError();
+        throw errors.ContractNoAddressDefinedError();
     }
 
     return {
@@ -859,7 +859,7 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
 
     // add contract address
     if(!this._deployData && !utils.isAddress(this._parent.options.address))
-        throw errors.ContractMissingToAddressError();
+        throw errors.ContractNoAddressDefinedError();
 
     if(!this._deployData)
         processedArgs.options.to = this._parent.options.address;
@@ -948,7 +948,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
 
             // return error, if no "from" is specified
             if(!utils.isAddress(args.options.from)) {
-                return utils._fireError(errors.ContractMissingFromAddressError(), defer.eventEmitter, defer.reject, args.callback);
+                return utils._fireError(errors.ContractNoFromAddressDefinedError(), defer.eventEmitter, defer.reject, args.callback);
             }
 
             if (_.isBoolean(this._method.payable) && !this._method.payable && args.options.value && args.options.value > 0) {

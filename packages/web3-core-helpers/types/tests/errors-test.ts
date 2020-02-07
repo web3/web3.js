@@ -90,16 +90,13 @@ errors.ContractOnceRequiresCallbackError();
 errors.ContractEventDoesNotExistError('nonEvent');
 
 // $ExpectType Error
-errors.ContractUnsetContractAddressError();
-
-// $ExpectType Error
 errors.ContractReservedEventError('newListener');
 
 // $ExpectType Error
 errors.ContractMissingDeployDataError();
 
 // $ExpectType Error
-errors.ContractMissingToAddressError();
+errors.ContractNoAddressDefinedError();
 
 // $ExpectType Error
-errors.ContractMissingFromAddressError();
+errors.ContractNoFromAddressDefinedError();
