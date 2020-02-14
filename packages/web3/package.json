@@ -56,7 +56,8 @@
         "web3-eth-personal": "1.2.6",
         "web3-net": "1.2.6",
         "web3-shh": "1.2.6",
-        "web3-utils": "1.2.6"
+        "web3-utils": "1.2.6",
+        "web3-crux": "1.2.6"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
