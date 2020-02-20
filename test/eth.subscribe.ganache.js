@@ -199,7 +199,7 @@ describe('subscription connect/reconnect', function () {
         });
     });
 
-    it('errors when the provider is not set (.on("error"))', function (done) {
+    it('errors when the provider does not support subscriptions (.on("error"))', function (done) {
         web3 = new Web3('http://localhost:' + port);
 
         web3.eth
