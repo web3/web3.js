@@ -23,6 +23,7 @@ elif [ "$TEST" = "unit_and_e2e_clients" ]; then
   npm run test:e2e:ganache
   npm run test:e2e:geth:insta
   npm run test:e2e:geth:auto
+  npm run test:e2e:ens
   npm run test:unit
   npm run coveralls
 
