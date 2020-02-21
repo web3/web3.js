@@ -210,6 +210,7 @@ export interface AbiItem {
     payable?: boolean;
     stateMutability?: StateMutabilityType;
     type: AbiType;
+    gas?: number
 }
 
 export interface AbiInput {
