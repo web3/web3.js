@@ -5,6 +5,10 @@ var Parent = require('./sources/Parent');
 var utils = require('./helpers/test.utils');
 var Web3 = utils.getWeb3();
 
+async function delay(secs=0){
+  return new Promise(resolve => setTimeout(() => resolve(), secs * 1000))
+}
+
 describe('contract.events [ @E2E ]', function() {
     // `getPastEvents` not working with Geth instamine over websockets.
     if (process.env.GETH_INSTAMINE) return;
@@ -28,6 +32,59 @@ describe('contract.events [ @E2E ]', function() {
 
         basic = new web3.eth.Contract(Basic.abi, basicOptions);
         instance = await basic.deploy().send({from: accounts[0]});
+    });
+
+    it.only('gets all events starting from block 0', async function(){
+        // Only test geth, automining at 2s interval
+        if (!process.env.GETH_AUTOMINE) return;
+
+        this.timeout(20000);
+
+        let startingBlock = 0;
+        let newBlock = 0;
+
+        startingBlock = await web3.eth.getBlockNumber();
+        console.log(`startingBlock = ${startingBlock}`);
+
+        // Fire 1st event
+        await instance
+            .methods
+            .firesEvent(accounts[0], 1)
+            .send({from: accounts[0]});
+
+        // Wait for blocks to mine
+        await delay(3);
+
+        newBlock = await web3.eth.getBlockNumber();
+        console.log(`newBlock = ${newBlock}`);
+
+        // Fire 2nd event
+        await instance
+            .methods
+            .firesEvent(accounts[0], 1)
+            .send({from: accounts[0]});
+
+
+        // Wait for blocks to mine
+        await delay(3);
+        newBlock = await web3.eth.getBlockNumber();
+        console.log(`newBlock = ${newBlock}`);
+
+        // Subscribe to events, requesting all from the past...
+        let counter = 0;
+        return new Promise(async function(resolve){
+            instance.events.BasicEvent({
+                fromBlock: 0,
+            })
+            .on('data', function (event) {
+                counter++;
+                console.log(`got events: ${JSON.stringify(event, null, ' ')}`)
+
+                if (counter === 2){
+                    resolve()
+                }
+            })
+        })
     });
 
     it('contract.getPastEvents', async function(){
