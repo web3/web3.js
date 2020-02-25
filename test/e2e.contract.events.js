@@ -10,6 +10,7 @@ async function delay(secs=0){
 }
 
 describe('contract.events [ @E2E ]', function() {
+    this.timeout(25000);
     // `getPastEvents` not working with Geth instamine over websockets.
     //if (process.env.GETH_INSTAMINE) return;
 
@@ -38,10 +39,10 @@ describe('contract.events [ @E2E ]', function() {
         // Only test geth, automining at 20s interval
         if (!process.env.GETH_AUTOMINE) return;
 
-        this.timeout(20000);
-
         return new Promise(async function(resolve){
             web3.eth.subscribe('logs', {}, function(err, event){
+                assert(event.blockNumber < 10);
+
                 if (!err){
                     console.log(`EVENT --> ${JSON.stringify(event, null, ' ')}`);
                     resolve();
