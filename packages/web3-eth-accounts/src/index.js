@@ -25,7 +25,6 @@
 var _ = require('underscore');
 var core = require('web3-core');
 var Method = require('web3-core-method');
-var Promise = require('any-promise');
 var Account = require('eth-lib/lib/account');
 var Hash = require('eth-lib/lib/hash');
 var RLP = require('eth-lib/lib/rlp');// jshint ignore:line
