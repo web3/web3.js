@@ -164,6 +164,7 @@ The contribution guidelines are provided in [CONTRIBUTIONS](./CONTRIBUTIONS.md)
 -   Scala - [web3j-scala](https://github.com/mslinn/web3j-scala)
 -   Purescript - [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
 -   PHP - [web3.php](https://github.com/sc0Vu/web3.php)
+-   Ruby - [ethereum.rb](https://github.com/EthWorks/ethereum.rb)
 
 [repo]: https://github.com/ethereum/web3.js
 [docs]: http://web3js.readthedocs.io/
