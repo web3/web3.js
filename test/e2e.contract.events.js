@@ -11,7 +11,7 @@ async function delay(secs=0){
 
 describe('contract.events [ @E2E ]', function() {
     // `getPastEvents` not working with Geth instamine over websockets.
-    if (process.env.GETH_INSTAMINE) return;
+    //if (process.env.GETH_INSTAMINE) return;
 
     var web3;
     var accounts;
@@ -34,57 +34,31 @@ describe('contract.events [ @E2E ]', function() {
         instance = await basic.deploy().send({from: accounts[0]});
     });
 
-    it.only('gets all events starting from block 0', async function(){
-        // Only test geth, automining at 2s interval
+    it.only('subscribes to events from a block numbered less than 10', async function(){
+        // Only test geth, automining at 20s interval
         if (!process.env.GETH_AUTOMINE) return;
 
         this.timeout(20000);
 
-        let startingBlock = 0;
-        let newBlock = 0;
-
-        startingBlock = await web3.eth.getBlockNumber();
-        console.log(`startingBlock = ${startingBlock}`);
-
-        // Fire 1st event
-        await instance
-            .methods
-            .firesEvent(accounts[0], 1)
-            .send({from: accounts[0]});
-
-        // Wait for blocks to mine
-        await delay(3);
-
-        newBlock = await web3.eth.getBlockNumber();
-        console.log(`newBlock = ${newBlock}`);
-
-        // Fire 2nd event
-        await instance
-            .methods
-            .firesEvent(accounts[0], 1)
-            .send({from: accounts[0]});
-
-
-        // Wait for blocks to mine
-        await delay(3);
-        newBlock = await web3.eth.getBlockNumber();
-        console.log(`newBlock = ${newBlock}`);
-
-        // Subscribe to events, requesting all from the past...
-        let counter = 0;
         return new Promise(async function(resolve){
-            instance.events.BasicEvent({
-                fromBlock: 0,
-            })
-            .on('data', function (event) {
-                counter++;
-                console.log(`got events: ${JSON.stringify(event, null, ' ')}`)
-
-                if (counter === 2){
-                    resolve()
+            web3.eth.subscribe('logs', {}, function(err, event){
+                if (!err){
+                    console.log(`EVENT --> ${JSON.stringify(event, null, ' ')}`);
+                    resolve();
+                } else {
+                    console.log("err:" + err);
+                    reject();
                 }
-            })
-        })
+            });
+
+            const startingBlock = await web3.eth.getBlockNumber();
+            console.log(`startingBlock = ${startingBlock}`);
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({from: accounts[0]});
+        });
     });
 
     it('contract.getPastEvents', async function(){
