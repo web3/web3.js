@@ -151,3 +151,4 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 
 - Add missing subscription.on('connected') TS type definition (#3319)
+- Add missing bignumber.js dependency for TS types (#3386)
