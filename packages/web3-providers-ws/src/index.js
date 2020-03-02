@@ -24,7 +24,8 @@
 
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
-var Ws = require('@web3-js/websocket').w3cwebsocket;
+//var Ws = require('@web3-js/websocket').w3cwebsocket;
+var Ws = require('ws');
 
 var isNode = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
 
@@ -61,6 +62,10 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
     if (!Ws) {
         throw new Error('websocket is not available');
     }
+  
+    if (Ws.name !== 'WebSocket') {
+      throw new Error(`we are using the old @web3-js/websocket: ${Ws.name}`)
+    }
 
     var _this = this;
     this.responseCallbacks = {};
@@ -79,19 +84,19 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
         headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
     }
 
-    // Allow a custom client configuration
-    var clientConfig = options.clientConfig || undefined;
-
-    // Allow a custom request options
-    // https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketClient.md#connectrequesturl-requestedprotocols-origin-headers-requestoptions
-    var requestOptions = options.requestOptions || undefined;
+    if (options.requestOptions) {
+      console.warn("options.requestOptions present but not currently supported by ws")
+    }
+    if (options.clientConfig) {
+      console.warn("options.clientConfig present but not currently supported by ws")
+    }
 
     // When all node core implementations that do not have the
     // WHATWG compatible URL parser go out of service this line can be removed.
     if (parsedURL.auth) {
         headers.authorization = 'Basic ' + _btoa(parsedURL.auth);
     }
-    this.connection = new Ws(url, protocol, undefined, headers, requestOptions, clientConfig);
+    this.connection = new Ws(url, protocol, options)
 
     this.addDefaultEvents();
 

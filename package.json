@@ -1,7 +1,7 @@
 {
     "name": "web3",
     "private": true,
-    "version": "1.2.6",
+    "version": "1.2.5",
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
     "engines": {
@@ -148,5 +148,8 @@
         "@ensdomains/resolver": "^0.1.13",
         "truffle": "^5.1.8",
         "regenerator-runtime": "^0.13.3"
+    },
+    "dependencies": {
+        "ws": "^7.2.1"
     }
 }
