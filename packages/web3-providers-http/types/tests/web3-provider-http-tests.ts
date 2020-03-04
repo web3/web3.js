@@ -22,7 +22,7 @@
 
 import * as http from 'http';
 import * as https from 'https';
-import { HttpProvider } from 'web3-providers';
+import { HttpProvider } from 'web3-providers-http';
 import { JsonRpcResponse } from 'web3-core-helpers';
 
 const httpProvider = new HttpProvider('http://localhost:8545', {
