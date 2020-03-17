@@ -6,9 +6,11 @@ uplinks:
   npmjs:
     url: https://registry.npmjs.org/
     timeout: 100000ms
+    agent_options: { keepAlive: true, keepAliveMsecs: 10000, timeout: 100000 }
   yarn:
     url: https://registry.yarnpkg.com/
     timeout: 100000ms
+    agent_options: { keepAlive: true, keepAliveMsecs: 10000, timeout: 100000 }
 packages:
   '@*/*':
     # scoped packages
