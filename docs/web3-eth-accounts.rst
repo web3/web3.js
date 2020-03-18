@@ -98,12 +98,18 @@ privateKeyToAccount
 
 Creates an account object from a private key.
 
+For more advanced hierarchial address derivation, see 
+[truffle-hd-awallet-provider](https://github.com/trufflesuite/truffle/tree/develop/packages/hdwallet-provider)
+package.
+
 ----------
 Parameters
 ----------
 
-1. ``privateKey`` - ``String``: The private key to convert.
-1. ``ignoreLength`` - ``Boolean``: If set to true does the ``privateKey`` length not get validated.
+1. ``privateKey`` - ``String``: The private key to import. This is 32 bytes of random data.
+If you are supplying a hexadecimal number, it must have `0x` prefix in order to be in line 
+with other Ethereum libraries.
+2. ``ignoreLength`` - ``Boolean``: If set to true does the ``privateKey`` length not get validated.
 
 -------
 Returns
