@@ -264,10 +264,12 @@ describe("eth", function () {
                     assert.equal(ethAccounts.wallet.length, 0);
 
                     done();
-                }, 1);
+                }, 1000);
             });
 
             it("encrypt then decrypt wallet", function() {
+                this.timeout(10000);
+
                 var ethAccounts = new Accounts();
                 var password = "qwerty";
 
