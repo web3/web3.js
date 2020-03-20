@@ -2,7 +2,7 @@
 
 This is a sub package of [web3.js][repo]
 
-This is a websocket provider for [web3.js][repo].  
+This is a websocket provider for [web3.js][repo].
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -31,16 +31,33 @@ This will expose the `Web3WsProvider` object on the window object.
 var Web3WsProvider = require('web3-providers-ws');
 
 var options = {
-    timeout: 30000,
-    headers: { authorization: 'Basic username:password' },
+    timeout: 30000, // ms
+
+    // Useful for credentialed urls, e.g: ws://username:password@localhost:8546
+    headers: {
+      authorization: 'Basic username:password'
+    },
+
+    // Useful if requests are large
+    clientConfig: {
+      maxReceivedFrameSize: 100000000,   // bytes - default: 1MiB
+      maxReceivedMessageSize: 100000000, // bytes - default: 8MiB
+    },
+
+    // Enable auto reconnection
     reconnect: {
-        auto: false,
-        delay: 5000,
-        maxAttempts: false,
+        auto: true,
+        delay: 5000, // ms
+        maxAttempts: 5,
         onTimeout: false
     }
-}; // set a custom timeout at 30 seconds, credentials (you can also add the credentials to the URL: ws://username:password@localhost:8546), and enable WebSocket auto-reconnection
+};
+
 var ws = new Web3WsProvider('ws://localhost:8546', options);
+
+(Additional client config options can be found [here][1])
+
+[1]: https://github.com/web3-js/WebSocket-Node/blob/polyfill/globalThis/docs/WebSocketClient.md
 ```
 
 ## Types
