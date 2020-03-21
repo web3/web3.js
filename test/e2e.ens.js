@@ -50,5 +50,25 @@ describe('ENS [ @E2E ]', function () {
             '0x0000000000000000000000000000000000000001'
         );
     });
+
+    it('should error when calling "getContent" if resolver does not support it', async function () {
+        try {
+            await web3.eth.ens.getContent('resolver');
+            assert.fail();
+        } catch(err){
+            assert(err.message.includes(resolverAddr));
+            assert(err.message.includes('does not implement requested method: "content"'))
+        }
+    })
+
+    it('should error when calling "setContent" if resolver does not support it', async function () {
+        try {
+            await web3.eth.ens.setContent('resolver', web3.utils.sha3('test'));
+            assert.fail();
+        } catch(err){
+            assert(err.message.includes(resolverAddr));
+            assert(err.message.includes('does not implement requested method: "setContent"'))
+        }
+    })
 });
 

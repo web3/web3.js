@@ -106,5 +106,8 @@ module.exports = {
     },
     TransactionOutOfGasError: function(receipt) {
         return this.TransactionError('Transaction ran out of gas. Please provide more gas:\n' + JSON.stringify(receipt, null, 2), receipt);
+    },
+    ResolverMethodMissingError: function(address, name) {
+        return new Error(`The resolver at ${address} does not implement requested method: "${name}".`);
     }
 };

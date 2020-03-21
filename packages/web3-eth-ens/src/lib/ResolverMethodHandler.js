@@ -22,6 +22,7 @@
 
 var PromiEvent = require('web3-core-promievent');
 var namehash = require('eth-ens-namehash');
+var errors = require('web3-core-helpers').errors;
 var _ = require('underscore');
 
 /**
@@ -71,6 +72,9 @@ ResolverMethodHandler.prototype.call = function (callback) {
     var preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
     this.parent.registry.getResolver(this.ensName).then(function (resolver) {
+        if (!resolver.methods[self.methodName]){
+            throw errors.ResolverMethodMissingError(resolver.options.address, self.methodName);
+        }
         self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, callback);
     }).catch(function(error) {
         if (_.isFunction(callback)) {
@@ -99,6 +103,9 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
     var preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
     this.parent.registry.getResolver(this.ensName).then(function (resolver) {
+        if (!resolver.methods[self.methodName]){
+            throw errors.ResolverMethodMissingError(resolver.options.address, self.methodName);
+        }
         self.parent.handleSend(promiEvent, resolver.methods[self.methodName], preparedArguments, sendOptions, callback);
     }).catch(function(error) {
         if (_.isFunction(callback)) {
