@@ -3,7 +3,7 @@ const utils = require('./helpers/test.utils');
 const Web3 = utils.getWeb3();
 const assert = require('assert');
 
-describe('ENS [ @E2E ]', function () {
+describe.only('ENS [ @E2E ]', function () {
     this.timeout(50000);
 
     let web3;
@@ -12,6 +12,7 @@ describe('ENS [ @E2E ]', function () {
     let addresses;
     let registryAddr;
     let resolverAddr;
+    let options;
 
     before(async function(){
         web3 = new Web3('http://localhost:8545');
@@ -22,6 +23,12 @@ describe('ENS [ @E2E ]', function () {
         registryAddr = addresses.registry;
         resolverAddr = addresses.resolver;
         web3.eth.ens.registryAddress = registryAddr;
+
+        options = {
+            from: account,
+            gas: 4000000,
+            gasPrice: 1
+        }
     });
 
     it('custom registry got defined in the ENS module', function () {
@@ -69,6 +76,96 @@ describe('ENS [ @E2E ]', function () {
             assert(err.message.includes(resolverAddr));
             assert(err.message.includes('does not implement requested method: "setContent"'))
         }
-    })
+    });
+
+    // This test must be run before any contentHashes are set
+    it('getContentHash return object keys are null if no contentHash is set', async function(){
+        const val = await web3.eth.ens.getContentHash('resolver');
+
+        assert.equal(val.protocolType, null);
+        assert.equal(val.decoded, null);
+        assert.equal(val.error,  null);
+    });
+
+    /**
+     * NB: hash values for these tests are borrowed from unit tests at @ensdomains/ui
+     * Link: https://github.com/ensdomains/ui/blob/3e62e440b53466eeec9dd1c63d73924eefbd88c1/src/utils/contents.test.js#L1-L151
+     */
+    it('should get/set an IPFS contentHash (ipfs://)', async function(){
+        const prefix = "ipfs://"
+        const hash = "QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn";
+
+        await web3.eth.ens.setContentHash('resolver', prefix + hash, options);
+        const val = await web3.eth.ens.getContentHash('resolver');
+
+        assert.equal(val.protocolType, 'ipfs');
+        assert.equal(val.decoded, hash);
+    });
+
+    it('should get/set an IPFS contentHash (/ipfs/)', async function(){
+        const prefix = "/ipfs/"
+        const hash = "QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL";
+
+        await web3.eth.ens.setContentHash('resolver', prefix + hash, options);
+        const val = await web3.eth.ens.getContentHash('resolver');
+
+        assert.equal(val.protocolType, 'ipfs');
+        assert.equal(val.decoded, hash);
+    });
+
+    it('should get/set a bzz contentHash', async function(){
+        const prefix = "bzz://";
+        const hash = "d1de9994b4d039f6548d191eb26786769f580809256b4685ef316805265ea162";
+
+        await web3.eth.ens.setContentHash('resolver', prefix + hash, options);
+        const val = await web3.eth.ens.getContentHash('resolver');
+
+        assert.equal(val.protocolType, 'bzz');
+        assert.equal(val.decoded, hash);
+    });
+
+    it('should get/set an onion contentHash', async function(){
+        const prefix = "onion://"
+        const hash = "3g2upl4pq6kufc4m";
+
+        await web3.eth.ens.setContentHash('resolver', prefix + hash, options);
+        const val = await web3.eth.ens.getContentHash('resolver');
+
+        assert.equal(val.protocolType, 'onion');
+        assert.equal(val.decoded, hash);
+    });
+
+    it('should get/set an onion3 contentHash', async function(){
+        const prefix = "onion3://"
+        const hash = "p53lf57qovyuvwsc6xnrppyply3vtqm7l6pcobkmyqsiofyeznfu5uqd";
+
+        await web3.eth.ens.setContentHash('resolver', prefix + hash, options);
+        const val = await web3.eth.ens.getContentHash('resolver');
+
+        assert.equal(val.protocolType, 'onion3');
+        assert.equal(val.decoded, hash);
+    });
+
+    it('setContentHash errors when encoding an invalid contentHash (promise)', async function(){
+        // Missing required protocol prefix
+        const hash = "p53lf57qovyuvwsc6xnrppyply3vtqm7l6pcobkmyqsiofyeznfu5uqd";
+
+        try {
+            await web3.eth.ens.setContentHash('resolver', hash, options);
+            assert.fail();
+        } catch(err) {
+            assert(err.message.includes(`Could not encode ${hash}`));
+        }
+    });
+
+    it('setContentHash errors when encoding an invalid contentHash (callback)', function(done){
+        // Missing required protocol prefix
+        const hash = "p53lf57qovyuvwsc6xnrppyply3vtqm7l6pcobkmyqsiofyeznfu5uqd";
+
+        web3.eth.ens.setContentHash('resolver', hash, options, function(err, result){
+            assert(err.message.includes(`Could not encode ${hash}`));
+            done();
+        });
+    });
 });
 
