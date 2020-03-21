@@ -26,6 +26,7 @@ var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
 var Registry = require('./contracts/Registry');
 var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
+var contentHash = require('./lib/contentHash');
 
 /**
  * Constructs a new instance of ENS
@@ -363,7 +364,7 @@ ENS.prototype.setAddress = function (name, address, txConfig, callback) {
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.getPubkey = function (name, callback) {
-    return this.resolverMethodHandler.method(name, 'pubkey', [], callback).call(callback);
+    return this.resolverMethodHandler.method(name, 'pubkey', [], null, callback).call(callback);
 };
 
 /**
@@ -414,6 +415,52 @@ ENS.prototype.getContent = function (name, callback) {
  */
 ENS.prototype.setContent = function (name, hash, txConfig, callback) {
     return this.resolverMethodHandler.method(name, 'setContent', [hash]).send(txConfig, callback);
+};
+
+/**
+ * Returns the content
+ *
+ * @method getContent
+ *
+ * @param {string} name
+ * @param {function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
+ */
+ENS.prototype.getContentHash = function (name, callback) {
+    return this.resolverMethodHandler.method(name, 'contenthash', [], contentHash.decode).call(callback);
+};
+
+/**
+ * Set the content
+ *
+ * @method setContent
+ *
+ * @param {string} name
+ * @param {string} hash
+ * @param {function} callback
+ * @param {TransactionConfig} txConfig
+ *
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
+ */
+ENS.prototype.setContentHash = function (name, hash, txConfig, callback) {
+    var encoded;
+    try {
+        encoded = contentHash.encode(hash);
+    } catch(err){
+        var error = new Error(`Could not encode ${hash}. See docs for supported hash protocols.`);
+
+        if (_.isFunction(callback)) {
+            callback(error, null);
+
+            return;
+        }
+
+        throw error;
+    }
+    return this.resolverMethodHandler.method(name, 'setContenthash', [encoded]).send(txConfig, callback);
 };
 
 /**
