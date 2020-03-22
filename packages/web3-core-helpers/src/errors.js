@@ -41,6 +41,9 @@ module.exports = {
         var message = !!result && !!result.error && !!result.error.message ? result.error.message : 'Invalid JSON RPC response: ' + JSON.stringify(result);
         return new Error(message);
     },
+    RequestFailed: function (){
+        return new Error('HTTP request failed');
+    },
     ConnectionTimeout: function (ms){
         return new Error('CONNECTION TIMEOUT: timeout of ' + ms + ' ms achived');
     },
