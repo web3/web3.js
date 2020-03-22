@@ -5,6 +5,7 @@ var assert = chai.assert;
 var FakeXHR2 = function () {
     this.responseText = undefined;
     this.readyState = 4;
+    this.status = 200;
     this.onreadystatechange = null;
     this.async = true;
     this.agents = {};
