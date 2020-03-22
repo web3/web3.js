@@ -450,7 +450,7 @@ ENS.prototype.setContentHash = function (name, hash, txConfig, callback) {
     try {
         encoded = contentHash.encode(hash);
     } catch(err){
-        var error = new Error(`Could not encode ${hash}. See docs for supported hash protocols.`);
+        var error = new Error('Could not encode ' + hash + '. See docs for supported hash protocols.');
 
         if (_.isFunction(callback)) {
             callback(error, null);
