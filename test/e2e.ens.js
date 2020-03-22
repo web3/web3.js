@@ -3,7 +3,7 @@ const utils = require('./helpers/test.utils');
 const Web3 = utils.getWeb3();
 const assert = require('assert');
 
-describe.only('ENS [ @E2E ]', function () {
+describe('ENS [ @E2E ]', function () {
     this.timeout(50000);
 
     let web3;

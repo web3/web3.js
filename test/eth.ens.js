@@ -2235,6 +2235,149 @@ describe('ens', function () {
                 }
             );
         });
+
+        it('should error if resolver ABI does not support contenthash (promise)', async function () {
+            const resolverSignature = 'resolver(bytes32)';
+            const contentSignature = 'contenthash(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + sha3('contenthash(bytes32)').slice(2, 10) + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            try {
+                await web3.eth.ens.getContentHash('foobar.eth');
+
+                assert.fail();
+            } catch (error) {
+                assert(error.message.includes('does not implement requested method: "contenthash"'));
+            }
+        });
+
+        it('should error if resolver ABI does not support contenthash (callback)', function (done) {
+            const resolverSignature = 'resolver(bytes32)';
+            const contentSignature = 'contenthash(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + sha3('contenthash(bytes32)').slice(2, 10) + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            web3.eth.ens.getContentHash(
+                'foobar.eth',
+                function (error, result) {
+                    assert(error.message.includes('does not implement requested method: "contenthash"'));
+                    assert.equal(result, null);
+                    done();
+                }
+            );
+        });
+
+        it('should error if resolver ABI does not support setContenthash (promise)', async function () {
+            const resolverSignature = 'resolver(bytes32)';
+            const contentSignature = 'setContentHash(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + sha3('contenthash(bytes32)').slice(2, 10) + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            try {
+                await web3.eth.ens.setContentHash(
+                    'foobar.eth',
+                    'ipfs://QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn'
+                );
+
+                assert.fail();
+            } catch (error) {
+                assert(error.message.includes('does not implement requested method: "setContenthash"'));
+            }
+        });
+
+        it('should error if resolver ABI does not support setContenthash (callback)', function (done) {
+            const resolverSignature = 'resolver(bytes32)';
+            const contentSignature = 'setContenthash(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + sha3('contenthash(bytes32)').slice(2, 10) + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            web3.eth.ens.setContentHash(
+                'foobar.eth',
+                'ipfs://QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn',
+                {
+                    from: '0x0123456701234567012345670123456701234567',
+                    gas: 4000000,
+                    gasPrice: 1
+                },
+                function (error, result) {
+                    assert(error.message.includes('does not implement requested method: "setContenthash"'));
+                    assert.equal(result, null);
+                    done();
+                }
+            );
+        });
     });
 
     describe('checkNetwork', function () {
