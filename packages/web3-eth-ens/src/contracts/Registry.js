@@ -535,7 +535,7 @@ Registry.prototype.getResolver = function (name, callback) {
     return this.contract.then(function (contract) {
         return contract.methods.resolver(namehash.hash(name)).call();
     }).then(async function (address) {
-        var abi = await self._getResolverABI(address);
+        var abi = await self.getResolverABI(address);
         var contract = new Contract(abi, address);
         contract.setProvider(self.ens.eth.currentProvider);
 
@@ -563,17 +563,17 @@ Registry.prototype.getResolver = function (name, callback) {
  * whether the contract at <address> supports the `contentHash` interface.
  * Defaults to legacy Resolver if something goes wrong while checking.
  *
- * @method  _getResolverABI
+ * @method  getResolverABI
  *
  * @param   {string} address resolver address
  * @returns {object}         resolver ABI
  */
-Registry.prototype._getResolverABI = async function(address){
+Registry.prototype.getResolverABI = async function(address){
     var isNewResolver = false;
 
     try {
         // Both ABIs implement EIP 165.
-        const resolver = new Contract(RESOLVER_ABI, address);
+        var resolver = new Contract(RESOLVER_ABI, address);
         resolver.setProvider(this.ens.eth.currentProvider);
         isNewResolver = await resolver
             .methods
@@ -581,16 +581,16 @@ Registry.prototype._getResolverABI = async function(address){
             .call();
 
     } catch(err){
-        var msg = `Could not identify ABI of resolver contract at "${address}". ` +
-                  `Defaulting to legacy resolver ABI.`
-
-        console.warn(msg);
+        console.warn( 'Could not identify ABI of resolver contract at "' + address + '". ' +
+                      'Defaulting to legacy resolver ABI.');
     }
 
-    if (isNewResolver) return PUBLIC_RESOLVER_ABI;
+    if (isNewResolver){
+        return PUBLIC_RESOLVER_ABI;
+    }
 
     return RESOLVER_ABI;
-}
+};
 
 /**
  * Returns the address of the owner of an ENS name.
