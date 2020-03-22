@@ -418,22 +418,22 @@ ENS.prototype.setContent = function (name, hash, txConfig, callback) {
 };
 
 /**
- * Returns the content
+ * Returns the contentHash
  *
- * @method getContent
+ * @method getContentHash
  *
  * @param {string} name
  * @param {function} callback
  *
  * @callback callback callback(error, result)
- * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
+ * @returns {PromiEvent<ContentHash>}
  */
 ENS.prototype.getContentHash = function (name, callback) {
     return this.resolverMethodHandler.method(name, 'contenthash', [], contentHash.decode).call(callback);
 };
 
 /**
- * Set the content
+ * Set the contentHash
  *
  * @method setContent
  *

@@ -938,6 +938,134 @@ For further information on the handling of contract events please see :ref:`here
 
 ------------------------------------------------------------------------------
 
+getContentHash
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.ens.getContentHash(ENSName [, callback]);
+
+Returns the content hash object associated with an ENS node.
+
+----------
+Parameters
+----------
+
+1. ``ENSName`` - ``String``: The ENS name.
+2. ``callback`` - ``Function``: (optional) Optional callback
+
+-------
+Returns
+-------
+
+``Promise<Object>`` - The content hash object associated with an ENS node.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.getContentHash('ethereum.eth').then(function (result) {
+        console.log(result);
+    });
+    > {
+        "protocolType": "ipfs",
+        "decoded": "QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL"
+    }
+
+------------------------------------------------------------------------------
+
+setContentHash
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.ens.setContentHash(ENSName, hash [, txConfig ] [, callback]);
+
+Sets the content hash associated with an ENS node.
+
+----------
+Parameters
+----------
+
+1. ``ENSName`` - ``String``: The ENS name.
+2. ``hash`` - ``String``: The content hash to set.
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+4. ``callback`` - ``Function``: (optional) Optional callback
+
+Emits a ``ContenthashChanged`` event.
+
+Supports the following protocols as valid ``hash`` inputs:
+
+1. ``ipfs://``   - example: ipfs://QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL
+2. ``/ipfs/``    - example: /ipfs/QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL
+3. ``bzz://``    - example: bzz://d1de9994b4d039f6548d191eb26786769f580809256b4685ef316805265ea162
+4. ``onion://``  - example: onion://3g2upl4pq6kufc4m
+5. ``onion3://`` - exmaple: onion3://p53lf57qovyuvwsc6xnrppyply3vtqm7l6pcobkmyqsiofyeznfu5uqd
+
+-------
+Returns
+-------
+
+``PromiEvent<TransactionReceipt | TransactionRevertInstructionError>``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.setContentHash(
+        'ethereum.eth',
+        'ipfs://QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL',
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
+    ).then(function (result) {
+             console.log(result.events);
+     });
+    > ContenthashChanged(...)
+
+    // Or using the event emitter
+
+    web3.eth.ens.setContentHash(
+        'ethereum.eth',
+        'ipfs://QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL',
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
+    )
+    .on('transactionHash', function(hash){
+        ...
+    })
+    .on('confirmation', function(confirmationNumber, receipt){
+        ...
+    })
+    .on('receipt', function(receipt){
+        ...
+    })
+    .on('error', console.error);
+
+    // Or listen to the ContenthashChanged event on the resolver
+
+    web3.eth.ens.resolver('ethereum.eth').then(function (resolver) {
+        resolver.events.ContenthashChanged({fromBlock: 0}, function(error, event) {
+            console.log(event);
+        })
+        .on('data', function(event){
+            console.log(event);
+        })
+        .on('changed', function(event){
+            // remove event from local database
+        })
+        .on('error', console.error);
+    });
+
+
+For further information on the handling of contract events please see :ref:`here <contract-events>`.
+
+
 getMultihash
 =====================
 
