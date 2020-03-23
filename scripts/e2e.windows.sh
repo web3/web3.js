@@ -22,4 +22,6 @@ source verdaccio_pid
 kill -9 $VERDACCIO_PID
 
 # Terminate stray node process
-kill -9 $(grep node <(ps -ef) | sed 's/.*\travis *\([0-9]*\).*/\1/')
+if [ ! -z "$CI" ]; then
+  kill -9 $(grep node <(ps -ef) | sed 's/.*\travis *\([0-9]*\).*/\1/')
+fi
