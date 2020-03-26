@@ -44,7 +44,7 @@ export class Contract {
 
     clone(): Contract;
 
-    deploy(options: DeployOptions): ContractSendMethod;
+    deploy<T extends typeof Contract>(options: DeployOptions): ContractSendMethod<T>;
 
     methods: any;
 
@@ -87,7 +87,7 @@ export interface ContractSendMethod<T> {
     arguments: any[];
 
     call(
-        options: SendOptions,
+        options?: SendOptions,
         callback?: (err: Error, transactionHash: string) => void
     ): Promise<T>;
 
