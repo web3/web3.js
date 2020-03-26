@@ -83,7 +83,14 @@ export interface DeployOptions {
     arguments?: any[];
 }
 
-export interface ContractSendMethod {
+export interface ContractSendMethod<T> {
+    arguments: any[];
+
+    call(
+        options: SendOptions,
+        callback?: (err: Error, transactionHash: string) => void
+    ): Promise<T>;
+
     send(
         options: SendOptions,
         callback?: (err: Error, transactionHash: string) => void
