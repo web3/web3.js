@@ -67,7 +67,7 @@ contract.options.data;
 // $ExpectType Contract
 contract.clone();
 
-// $ExpectType ContractSendMethod
+// $ExpectType ContractSendMethod<Contract>
 contract.deploy({
     data: '0x12345...',
     arguments: [123, 'My String']
