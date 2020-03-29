@@ -44,7 +44,7 @@ export class Contract {
 
     clone(): Contract;
 
-    deploy<T extends typeof Contract>(options: DeployOptions): ContractSendMethod<T>;
+    deploy(options: DeployOptions): ContractSendMethod<Contract>;
 
     methods: any;
 
