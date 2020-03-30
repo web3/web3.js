@@ -1345,7 +1345,7 @@ describe('ens', function () {
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
 
-            const owner = await web3.eth.ens.registry.owner('foobar.eth');
+            const owner = await web3.eth.ens.registry.getOwner('foobar.eth');
 
             assert.equal(owner, '0x0123456701234567012345670123456701234567');
         });
@@ -1482,7 +1482,7 @@ describe('ens', function () {
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
 
-            const resolver = await web3.eth.ens.resolver('foobar.eth');
+            const resolver = await web3.eth.ens.getResolver('foobar.eth');
 
             assert.equal(resolver.options.address, '0x0123456701234567012345670123456701234567');
         });
@@ -1500,7 +1500,7 @@ describe('ens', function () {
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
 
-            web3.eth.ens.resolver('foobar.eth', function (error, resolver) {
+            web3.eth.ens.getResolver('foobar.eth', function (error, resolver) {
                 assert.equal(resolver.options.address, '0x0123456701234567012345670123456701234567');
                 assert.equal(error.options.address, '0x0123456701234567012345670123456701234567'); // For backward compatibility
 
