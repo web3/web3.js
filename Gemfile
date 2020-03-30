@@ -1,1 +1,0 @@
-gem 'coveralls', require: false
