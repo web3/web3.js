@@ -20,7 +20,7 @@
         "number-to-bn": "1.7.0",
         "randombytes": "^2.1.0",
         "underscore": "1.9.1",
-        "utf8": "3.0.0"
+        "uwutf8": "3.0.2"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",

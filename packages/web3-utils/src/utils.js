@@ -23,7 +23,7 @@
 var _ = require('underscore');
 var BN = require('bn.js');
 var numberToBN = require('number-to-bn');
-var utf8 = require('utf8');
+var uwutf8 = require('uwutf8');
 var Hash = require("eth-lib/lib/hash");
 var ethereumBloomFilters = require('ethereum-bloom-filters');
 
@@ -166,7 +166,7 @@ var rightPad = function (string, chars, sign) {
  * @returns {String} hex representation of input string
  */
 var utf8ToHex = function(str) {
-    str = utf8.encode(str);
+    str = uwutf8.encode(str);
     var hex = "";
 
     // remove \u0000 padding from either side
@@ -216,7 +216,7 @@ var hexToUtf8 = function(hex) {
         // }
     }
 
-    return utf8.decode(str);
+    return uwutf8.decode(str, { strict: false });
 };
 
 
