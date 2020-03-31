@@ -153,13 +153,13 @@ The contribution guidelines are provided in [CONTRIBUTIONS](./CONTRIBUTIONS.md)
 
 ### Similar libraries in other languages
 
--   Python - [Web3.py](https://github.com/ethereum/web3.py)
--   Haskell - [hs-web3](https://github.com/airalab/hs-web3)
--   Java - [web3j](https://github.com/web3j/web3j)
--   Scala - [web3j-scala](https://github.com/mslinn/web3j-scala)
--   Purescript - [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
--   PHP - [web3.php](https://github.com/sc0Vu/web3.php)
--   Ruby - [ethereum.rb](https://github.com/EthWorks/ethereum.rb)
+-   Haskell: [hs-web3](https://github.com/airalab/hs-web3)
+-   Java: [web3j](https://github.com/web3j/web3j)
+-   PHP: [web3.php](https://github.com/sc0Vu/web3.php)
+-   Purescript: [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
+-   Python: [Web3.py](https://github.com/ethereum/web3.py)
+-   Ruby: [ethereum.rb](https://github.com/EthWorks/ethereum.rb)
+-   Scala: [web3j-scala](https://github.com/mslinn/web3j-scala)
 
 [repo]: https://github.com/ethereum/web3.js
 [docs]: http://web3js.readthedocs.io/
