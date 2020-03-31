@@ -35,7 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 ## [1.2.6]
-Added gas type in Contract AbiItem
+### Added
+
+- Added gas type in Contract AbiItem
 
 ## [1.2.0]
 
