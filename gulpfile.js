@@ -13,7 +13,6 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
 var exorcist = require('exorcist');
-var bower = require('bower');
 var streamify = require('gulp-streamify');
 var replace = require('gulp-replace');
 var exec = require('child_process').exec;
@@ -130,8 +129,6 @@ gulp.task('version', function() {
     var jsPattern = /version: '[.0-9\-a-z]*'/;
     var glob = [
         './package.json',
-        './bower.json',
-        './package.js'
     ];
 
     return gulp.src(glob, {base: './'})
@@ -139,13 +136,6 @@ gulp.task('version', function() {
         .pipe(replace(jsPattern, 'version: \'' + version + '\''))
         .pipe(gulp.dest('./'));
 });
-
-gulp.task('bower', gulp.series('version', function(cb) {
-    bower.commands.install().on('end', function(installed) {
-        console.log(installed);
-        cb();
-    });
-}));
 
 gulp.task('lint', function() {
     return gulp.src(['./*.js', './lib/*.js'])
