@@ -28,14 +28,6 @@ npm install web3
 yarn add web3
 ```
 
-### Meteor
-
-_Note_: works only in the Browser for now. (PR welcome).
-
-```bash
-meteor add ethereum:web3
-```
-
 ### In the Browser
 
 Use the prebuild `dist/web3.min.js`, or
