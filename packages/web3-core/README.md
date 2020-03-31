@@ -2,9 +2,10 @@
 
 [![NPM Package][npm-image]][npm-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
 
-This is a sub package of [web3.js][repo]
+This is a sub-package of [web3.js][repo].
 
 The core package contains core functions for [web3.js][repo] packages.
+
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -36,9 +37,6 @@ CoolLib.BatchRequest();
 CoolLib.extend();
 ...
 ```
-
-[docs]: http://web3js.readthedocs.io/en/1.0/
-[repo]: https://github.com/ethereum/web3.js
 
 ## Types
 
