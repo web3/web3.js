@@ -2,9 +2,10 @@
 
 [![NPM Package][npm-image]][npm-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
 
-This is a sub package of [web3.js][repo]
+This is a sub-package of [web3.js][repo].
 
-The Method package used within most [web3.js][repo] packages.
+This method package is used within most [web3.js][repo] packages.
+
 Please read the [documentation][docs] for more.
 
 ## Installation

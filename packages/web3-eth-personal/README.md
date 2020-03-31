@@ -2,9 +2,10 @@
 
 [![NPM Package][npm-image]][npm-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
 
-This is a sub package of [web3.js][repo]
+This is a sub-package of [web3.js][repo].
 
-This is the personal package to be used in the `web3-eth` package.
+This is the personal package used in the `web3-eth` package.
+
 Please read the [documentation][docs] for more.
 
 ## Installation

@@ -2,9 +2,10 @@
 
 [![NPM Package][npm-image]][npm-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
 
-This is a sub package of [web3.js][repo]
+This is a sub-package of [web3.js][repo].
 
-The requestmanager package is used by most [web3.js][repo] packages.
+This requestmanager package is used by most [web3.js][repo] packages.
+
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -36,7 +37,6 @@ var Web3RequestManager = require('web3-core-requestmanager');
 
 var requestManager = new Web3RequestManager(new Web3WsProvider('ws://localhost:8546'));
 ```
-
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js

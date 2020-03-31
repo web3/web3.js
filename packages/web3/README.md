@@ -2,9 +2,9 @@
 
 [![NPM Package][npm-image]][npm-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
 
-This is a main package of [web3.js](https://github.com/ethereum/web3.js)
+This is the main package of [web3.js][repo].
 
-Please read the main [readme](https://github.com/ethereum/web3.js) and [documentation](https://web3js.readthedocs.io) for more.
+Please read the main [README][repo-readme] and [documentation][docs] for more.
 
 ## Installation
 
@@ -20,6 +20,7 @@ All the TypeScript typings are placed in the `types` folder.
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
+[repo-readme]: https://github.com/ethereum/web3.js/blob/1.x/README.md
 [npm-image]: https://img.shields.io/npm/v/web3.svg
 [npm-url]: https://npmjs.org/package/web3
 [deps-image]: https://david-dm.org/ethereum/web3.js/1.x/status.svg?path=packages/web3
