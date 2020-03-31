@@ -17,13 +17,12 @@ Adding web3.js
 ==============
 
 .. index:: npm
-.. index:: bower
-.. index:: meteor
+.. index:: yarn
 
 First you need to get web3.js into your project. This can be done using the following methods:
 
 - npm: ``npm install web3``
-- meteor: ``meteor add ethereum:web3``
+- yarn: ``yarn add web3``
 - pure js: link the ``dist/web3.min.js``
 
 After that you need to create a web3 instance and set a provider.
