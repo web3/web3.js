@@ -148,8 +148,8 @@ Released with 1.0.0-beta.37 code base.
 
 - Ensure '0x' prefix is existing for Accounts.sign and Accounts.privateKeyToAccount (#3041)
 - Repository cleanup
-  - Removed unneeded `docs/_build` folder
-  - Removed bower and meteor artifact files
+  - Removed old `docs/_build` folder
+  - Removed old bower and meteor artifacts
   - Moved logo assets to own folder
   - Moved github assets to own folder
 
