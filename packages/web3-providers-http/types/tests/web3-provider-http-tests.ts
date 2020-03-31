@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import * as http from 'http';
+import * as https from 'https';
 import { HttpProvider } from 'web3-providers';
 import { JsonRpcResponse } from 'web3-core-helpers';
 
@@ -31,7 +33,12 @@ const httpProvider = new HttpProvider('http://localhost:8545', {
             value: '*'
         }
     ],
-    withCredentials: false
+    withCredentials: false,
+    agent: {
+        baseUrl: 'base',
+        http: new http.Agent({}),
+        https: new https.Agent({})
+    }
 });
 
 // $ExpectType void

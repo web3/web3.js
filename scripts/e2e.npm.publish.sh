@@ -21,12 +21,16 @@ fi
 # To model publication correctly, this script needs to run
 # without web3's dev deps being installed. It installs
 # what it needs here.
-npm install -g verdaccio@4.3.4
+npm install -g verdaccio@4.4.2
 npm install -g npm-auth-to-token@1.0.0
 npm install -g lerna@3.18.3
 
-# Launch npm proxy registry
-verdaccio --config verdaccio.yml & npx wait-port 4873
+# Launch npm proxy registry and save pid to kill server (req. in Windows env)
+verdaccio --config verdaccio.yml &
+VERDACCIO_PID=$!
+echo "VERDACCIO_PID=$VERDACCIO_PID" > verdaccio_pid
+
+npx wait-port 4873
 
 # `npm add user`
 curl -XPUT \
@@ -52,12 +56,15 @@ fi
 git checkout $BRANCH --
 
 # Lerna version
-lerna version patch \
+lerna version minor \
   --force-publish=* \
   --no-git-tag-version \
   --no-push \
   --allow-branch $BRANCH \
   --yes
+
+# Set email prior to publishing (necessary for Windows)
+git config user.email "you@example.com"
 
 # Commit changes because lerna checks git before
 git commit -a -m 'virtual-version-bump'

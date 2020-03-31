@@ -44,4 +44,14 @@ elif [ "$TEST" = "e2e_mosaic" ]; then
   npm run test:e2e:publish
   npm run test:e2e:mosaic
 
+elif [ "$TEST" = "e2e_windows" ]; then
+
+  bash ./scripts/e2e.npm.publish.sh
+  bash ./scripts/e2e.windows.sh
+
+elif [ "$TEST" = "e2e_ganache" ]; then
+
+  npm run test:e2e:publish
+  npm run test:e2e:ganache:core
+
 fi

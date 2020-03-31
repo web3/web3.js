@@ -96,8 +96,6 @@ Released with 1.0.0-beta.37 code base.
 
 - Fix npm installation error for scrypt-shim and websocket (#3210)
 
-## [Unreleased]
-
 ## [1.2.5]
 
 ### Added
@@ -105,11 +103,12 @@ Released with 1.0.0-beta.37 code base.
 - ``eth_requestAccounts`` as ``requestAccounts`` added to web3-eth package (#3219)
 - ``sha3Raw`` and ``soliditySha3Raw`` added to web3-utils package (#3226)
 - ``eth_getProof`` as ``getProof`` added to web3-eth package (#3220)
-- ``BN`` and ``BigNumber`` objects are now supported by the ``abi.encodeParameter(s)`` method (#3238) 
+- ``BN`` and ``BigNumber`` objects are now supported by the ``abi.encodeParameter(s)`` method (#3238)
 - ``getPendingTransactions`` added to web3-eth package (#3239)
 - Revert instruction handling added which can get activated with the ``handleRevert`` module property (#3248)
 - The ``receipt`` does now exist as property on the error object for transaction related errors (#3259)
 - ``internalType`` added to ``AbiInput`` TS interface in ``web3-utils`` (#3279)
+- Agent option added to the ``HttpProvider`` options (#2980)
 
 ### Changed
 
@@ -117,7 +116,45 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 
+- Fix crash when decoding events with identical signatures, differently indexed args (#3272)
+- Fix user supplied callback not fired in eth.accounts.signTransaction (#3283)
 - Fix minified bundle (#3256)
 - ``defaultBlock`` property handling fixed (#3247)
-- ``clearSubscriptions`` does no longer throw an error if no running subscriptions do exist (#3246) 
+- ``clearSubscriptions`` does no longer throw an error if no running subscriptions do exist (#3246)
 - callback type definition for ``Accounts.signTransaction`` fixed (#3280)
+- fix: export bloom functions on the index.js
+- Prefer receipt status to code availability on contract deployment (#3298)
+
+## [1.2.6]
+
+### Added
+
+- Görli testnet ENS registry added to the known registries (#3338)
+
+### Changed
+
+- ENS registry addresses updated (#3353, https://medium.com/the-ethereum-name-service/ens-registry-migration-bug-fix-new-features-64379193a5a)
+
+## [Unreleased]
+
+## [1.2.7]
+
+### Added
+
+- ENS module extended with the possibility to add a custom registry (#3301)
+- Missing ENS Registry methods and Resolver.supportsInterface method added (#3325)
+
+### Changed
+
+- Ensure '0x' prefix is existing for Accounts.sign and Accounts.privateKeyToAccount (#3041)
+- Repository cleanup
+  - Removed old `docs/_build` folder
+  - Removed old bower and meteor artifacts
+  - Moved logo assets to own folder
+  - Moved github assets to own folder
+
+### Fixed
+
+- Add missing subscription.on('connected') TS type definition (#3319)
+- Add missing bignumber.js dependency for TS types (#3386)
+- Upgrade swarm-js to 0.1.40 to remove npm vulnerability warning (#3399)
