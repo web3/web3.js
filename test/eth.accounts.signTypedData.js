@@ -26,9 +26,15 @@ describe("eth", function () {
 
                 assert.equal(data.signature, test.signature);
             });
-        });
 
-        // TODO: recover
+            it("recover signature using a string", function() {
+                var ethAccounts = new Accounts();
+
+                var address = ethAccounts.recoverTypedData(test.data, test.signature);
+
+                assert.equal(address, test.address);
+            });
+        });
     });
 
     it('should add the "0x" prefix to the privateKey', function() {
