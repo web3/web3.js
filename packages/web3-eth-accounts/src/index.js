@@ -370,8 +370,10 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
 };
 
 Accounts.prototype.recoverTypedData = function recover(data, signature) {
-    // TODO: signature format: if v,r,s then concat before calling sigUtil.recoverTypedMessage
-    return sigUtil.recoverTypedMessage({ data, sig: signature });
+    return sigUtil.recoverTypedMessage({
+        data,
+        sig: _.isObject(signature) ? Account.encodeSignature(signature) : signature
+    });
 };
 
 // Taken from https://github.com/ethereumjs/ethereumjs-wallet
