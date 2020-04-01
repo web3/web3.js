@@ -18,64 +18,36 @@ var tests = [
 
 describe("eth", function () {
     describe("accounts", function () {
-
         tests.forEach(function (test, i) {
             it("signTypedData - string", function() {
-                var ethAccounts = new Accounts();
-
-                var data = ethAccounts.signTypedData(test.data, test.privateKey);
-
+                var data = new Accounts().signTypedData(test.data, test.privateKey);
                 assert.equal(data.signature, test.signature);
             });
 
             it("signTypedData - vsr", function() {
-                var ethAccounts = new Accounts();
-
-                var data = ethAccounts.signTypedData(test.data, test.privateKey);
-
+                var data = new Accounts().signTypedData(test.data, test.privateKey);
                 assert.deepEqual([ data.v, data.r, data.s], test.vsr);
             });
 
             it("recoverTypedData - string", function() {
-                var ethAccounts = new Accounts();
-
-                var address = ethAccounts.recoverTypedData(test.data, test.signature);
-
+                var address = new Accounts().recoverTypedData(test.data, test.signature);
                 assert.equal(address, test.address);
             });
 
             it("recoverTypedData - vsr", function() {
-                var ethAccounts = new Accounts();
-
-                var address = ethAccounts.recoverTypedData(test.data, test.vsr);
-
+                var address = new Accounts().recoverTypedData(test.data, test.vsr);
                 assert.equal(address, test.address);
             });
+
+            it("account.signTypedData - string", function() {
+                var data = new Accounts().privateKeyToAccount(test.privateKey).signTypedData(test.data);
+                assert.equal(data.signature, test.signature);
+            });
+
+            it("account.signTypedData - vsr", function() {
+                var data = new Accounts().privateKeyToAccount(test.privateKey).signTypedData(test.data);
+                assert.deepEqual([ data.v, data.r, data.s], test.vsr);
+            });
         });
-    });
-
-    it('should add the "0x" prefix to the privateKey', function() {
-        assert.equal(
-            '0xc85ef7d79691fe79573b1a7064c19c1a9819ebdbd1faaab1a8ec92344438aaf4',
-            new Accounts().privateKeyToAccount('c85ef7d79691fe79573b1a7064c19c1a9819ebdbd1faaab1a8ec92344438aaf4').privateKey
-        );
-    });
-
-    it('should throw if a privateKey is given with a invalid length', function() {
-        try {
-            new Accounts().privateKeyToAccount('0000be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
-            assert.fail();
-        } catch(err) {
-            assert(err.message.includes('Private key must be 32 bytes long'));
-        }
-    });
-
-    it('should throw if a privateKey is given with a invalid length', function() {
-        try {
-            new Accounts().sign('data', '00be6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
-            assert.fail();
-        } catch(err) {
-            assert(err.message.includes('Private key must be 32 bytes long'));
-        }
     });
 });
