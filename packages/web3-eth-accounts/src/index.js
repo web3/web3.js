@@ -36,6 +36,7 @@ var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
 var Transaction = require('ethereumjs-tx').Transaction;
 var Common = require('ethereumjs-common').default;
+var sigUtil = require('eth-sig-util');
 
 
 var isNot = function(value) {
@@ -106,7 +107,9 @@ Accounts.prototype._addAccountFunctions = function(account) {
     account.sign = function sign(data) {
         return _this.sign(data, account.privateKey);
     };
-
+    account.signTypedData = function signTypedData(data) {
+        return _this.signTypedData(data, account.privateKey);
+    };
     account.encrypt = function encrypt(password, options) {
         return _this.encrypt(account.privateKey, password, options);
     };
@@ -317,6 +320,27 @@ Accounts.prototype.sign = function sign(data, privateKey) {
     return {
         message: data,
         messageHash: hash,
+        v: vrs[0],
+        r: vrs[1],
+        s: vrs[2],
+        signature: signature
+    };
+};
+
+Accounts.prototype.signTypedData = function signTypedData(data, privateKey) {
+    if (!privateKey.startsWith('0x')) {
+        privateKey = '0x' + privateKey;
+    }
+
+    // 64 hex characters + hex-prefix
+    if (privateKey.length !== 66) {
+        throw new Error("Private key must be 32 bytes long");
+    }
+
+    var signature = sigUtil.signTypedMessage(Buffer.from(privateKey.substring(2), 'hex'), { data });
+    var vrs = Account.decodeSignature(signature);
+    return {
+        message: data,
         v: vrs[0],
         r: vrs[1],
         s: vrs[2],
