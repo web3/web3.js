@@ -471,6 +471,18 @@ var Eth = function Eth() {
                 return payload;
             }
         }),
+        // TODO: first params should be object with keys ['types', 'primaryType', 'domain', 'message']
+        // Or json.stringify version of this object
+        new Method({
+            name: 'signTypedData',
+            call: 'eth_signTypedData',
+            params: 2,
+            inputFormatter: [JSON.stringify, formatter.inputAddressFormatter],
+            transformPayload: function (payload) {
+                payload.params.reverse();
+                return payload;
+            }
+        }),
         new Method({
             name: 'call',
             call: 'eth_call',
@@ -626,4 +638,3 @@ core.addProviders(Eth);
 
 
 module.exports = Eth;
-
