@@ -52,6 +52,7 @@
         "@types/node": "^12.6.1",
         "web3-bzz": "1.2.6",
         "web3-core": "1.2.6",
+        "web3-core-helpers": "1.2.6",
         "web3-eth": "1.2.6",
         "web3-eth-personal": "1.2.6",
         "web3-net": "1.2.6",
