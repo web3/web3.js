@@ -72,11 +72,18 @@ describe('web3-providers-http', function () {
     describe('send', function () {
         it('should send basic async request', function (done) {
             var provider = new HttpProvider();
-
             provider.send({}, function (err, result) {
                 assert.equal(typeof result, 'object');
                 done();
             });
+        });
+    });
+
+    describe('supportsSubscriptions', function () {
+        it('should turn false by default', function () {
+            var provider = new HttpProvider();
+
+            assert.isFalse(provider.supportsSubscriptions());
         });
     });
 });

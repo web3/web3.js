@@ -79,7 +79,7 @@ describe('method.send [ @E2E ]', function () {
 
             basic = new web3.eth.Contract(Basic.abi, basicOptions);
             instance = await basic.deploy().send({from: accounts[0]});
-        })
+        });
 
         it('returns a receipt', async function () {
             var receipt = await instance
