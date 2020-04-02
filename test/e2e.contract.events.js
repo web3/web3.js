@@ -133,6 +133,53 @@ describe('contract.events [ @E2E ]', function() {
         });
     });
 
+    it('hears events when subscribed to "logs" (emitter)', function(){
+        return new Promise(async function(resolve, reject){
+
+            assert(typeof instance.options.address === 'string');
+            assert(instance.options.address.length > 0);
+
+            const subscription = web3.eth.subscribe(
+                "logs",
+                {
+                    address: instance.options.address
+                })
+                .once("data", function(log) {
+                    assert.equal(log.address, instance.options.address);
+                    subscription.unsubscribe();
+                    resolve();
+                });
+
+            await instance
+                    .methods
+                    .firesEvent(accounts[0], 1)
+                    .send({from: accounts[0]});
+        });
+    });
+
+    it('hears events when subscribed to "logs" (callback)', function(){
+        return new Promise(async function(resolve, reject){
+
+            assert(typeof instance.options.address === 'string');
+            assert(instance.options.address.length > 0);
+
+            const subscription = web3.eth.subscribe(
+                "logs",
+                {
+                    address: instance.options.address
+                },
+                function(error, log) {
+                   assert.equal(log.address, instance.options.address);
+                   subscription.unsubscribe();
+                   resolve();
+                });
+
+            await instance
+                    .methods
+                    .firesEvent(accounts[0], 1)
+                    .send({from: accounts[0]});
+        });
+    });
 
     // Test models event signature shadowing when one contract calls another.
     // Child and parent contracts have an event named `similar` which has the same
