@@ -1,14 +1,14 @@
 <p align="center">
-<img src="https://github.com/ethereum/web3.js/raw/1.x/web3js.jpg" width=200 />
+  <img src="assets/logo/web3js.jpg" width="200" alt="web3.js" />
 </p>
 
 # web3.js - Ethereum JavaScript API
 
-[![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)[![npm](https://img.shields.io/npm/dm/web3.svg)](https://www.npmjs.com/package/web3) [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url] [![Coverage Status][coveralls-image]][coveralls-url]
-[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+[![Gitter][gitter-image]][gitter-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url]
+[![Lerna][lerna-image]][lerna-url]
 
 This is the Ethereum [JavaScript API][docs]
-which connects to the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
+which connects to the [Generic JSON-RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
 
 You need to run a local or remote [Ethereum](https://www.ethereum.org/) node to use this library.
 
@@ -28,14 +28,6 @@ npm install web3
 yarn add web3
 ```
 
-### Meteor
-
-_Note_: works only in the Browser for now. (PR welcome).
-
-```bash
-meteor add ethereum:web3
-```
-
 ### In the Browser
 
 Use the prebuild `dist/web3.min.js`, or
@@ -47,6 +39,18 @@ npm run-script build
 
 Then include `dist/web3.js` in your html file.
 This will expose `Web3` on the window object.
+
+Or via jsDelivr CDN:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+```
+
+UNPKG:
+
+```html
+<script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
+```
 
 ## Usage
 
@@ -100,7 +104,7 @@ If you are using the types in a `commonjs` module like for example a node app yo
 
 ## Documentation
 
-Documentation can be found at [read the docs][docs].
+Documentation can be found at [ReadTheDocs][docs].
 
 ## Building
 
@@ -117,7 +121,7 @@ sudo apt-get install npm
 
 ### Building (gulp)
 
-Build only the web3.js package
+Build only the web3.js package:
 
 ```bash
 npm run-script build
@@ -143,29 +147,37 @@ The contribution guidelines are provided in [CONTRIBUTIONS](./CONTRIBUTIONS.md)
 
 ### Community
 
--   [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
+-   [Gitter][gitter-url]
+-   [StackExchange][stackexchange-url]
 -   [Forum](https://forum.ethereum.org/categories/ethereum-js)
 
 ### Similar libraries in other languages
 
--   Python - [Web3.py](https://github.com/ethereum/web3.py)
--   Haskell - [hs-web3](https://github.com/airalab/hs-web3)
--   Java - [web3j](https://github.com/web3j/web3j)
--   Scala - [web3j-scala](https://github.com/mslinn/web3j-scala)
--   Purescript - [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
--   PHP - [web3.php](https://github.com/sc0Vu/web3.php)
+-   Haskell: [hs-web3](https://github.com/airalab/hs-web3)
+-   Java: [web3j](https://github.com/web3j/web3j)
+-   PHP: [web3.php](https://github.com/sc0Vu/web3.php)
+-   Purescript: [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
+-   Python: [Web3.py](https://github.com/ethereum/web3.py)
+-   Ruby: [ethereum.rb](https://github.com/EthWorks/ethereum.rb)
+-   Scala: [web3j-scala](https://github.com/mslinn/web3j-scala)
 
 [repo]: https://github.com/ethereum/web3.js
 [docs]: http://web3js.readthedocs.io/
-[npm-image]: https://badge.fury.io/js/web3.png
+[npm-image]: https://img.shields.io/npm/dm/web3.svg
 [npm-url]: https://npmjs.org/package/web3
-[travis-image]: https://travis-ci.org/ethereum/web3.js.svg
-[travis-url]: https://travis-ci.org/ethereum/web3.js
-[dep-image]: https://david-dm.org/ethereum/web3.js.svg
-[dep-url]: https://david-dm.org/ethereum/web3.js
-[dep-dev-image]: https://david-dm.org/ethereum/web3.js/dev-status.svg
-[dep-dev-url]: https://david-dm.org/ethereum/web3.js#info=devDependencies
-[coveralls-image]: https://coveralls.io/repos/ethereum/web3.js/badge.svg?branch=master
+[travis-image]: https://travis-ci.org/ethereum/web3.js.svg?branch=1.x
+[travis-url]: https://travis-ci.org/ethereum/web3.js?branch=1.x
+[deps-image]: https://david-dm.org/ethereum/web3.js/1.x/status.svg
+[deps-url]: https://david-dm.org/ethereum/web3.js/1.x
+[deps-dev-image]: https://david-dm.org/ethereum/web3.js/1.x/dev-status.svg
+[deps-dev-url]: https://david-dm.org/ethereum/web3.js/1.x/#info=devDependencies
+[coveralls-image]: https://coveralls.io/repos/ethereum/web3.js/badge.svg?branch=1.x
 [coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=1.x
 [waffle-image]: https://badge.waffle.io/ethereum/web3.js.svg?label=ready&title=Ready
 [waffle-url]: https://waffle.io/ethereum/web3.js
+[gitter-image]: https://badges.gitter.im/Join%20Chat.svg
+[gitter-url]:  https://gitter.im/ethereum/web3.js
+[lerna-image]: https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg
+[lerna-url]: https://lerna.js.org/
+[stackexchange-image]: https://img.shields.io/badge/web3js-stackexchange-brightgreen
+[stackexchange-url]: https://ethereum.stackexchange.com/questions/tagged/web3js

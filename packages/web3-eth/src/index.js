@@ -88,6 +88,10 @@ var Eth = function Eth() {
         setProvider.apply(_this, arguments);
 
         _this.setRequestManager(_this._requestManager);
+
+        // Set detectedAddress/lastSyncCheck back to null because the provider could be connected to a different chain now
+        _this.ens._detectedAddress = null;
+        _this.ens._lastSyncCheck = null;
     };
 
 
