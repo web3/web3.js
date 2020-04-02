@@ -20,7 +20,7 @@
  * @date 2017
  */
 
-'use strict';
+"use strict";
 
 
 var requestManager = require('web3-core-requestmanager');
@@ -84,4 +84,3 @@ module.exports = {
         pkg.providers = requestManager.Manager.providers;
     }
 };
-

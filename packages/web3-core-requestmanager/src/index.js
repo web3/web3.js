@@ -20,7 +20,7 @@
  * @date 2017
  */
 
-'use strict';
+"use strict";
 
 
 var _ = require('underscore');
@@ -93,7 +93,7 @@ RequestManager.prototype.setProvider = function (provider, net) {
 
 
     // reset the old one before changing, if still connected
-    if (this.provider && this.provider.connected)
+    if(this.provider && this.provider.connected)
         this.clearSubscriptions();
 
     this.provider = provider || null;
@@ -156,7 +156,7 @@ RequestManager.prototype.send = function (data, callback) {
 
     var payload = Jsonrpc.toPayload(data.method, data.params);
     this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, result) {
-        if (result && result.id && payload.id !== result.id) return callback(new Error('Wrong response id "' + result.id + '" (expected: "' + payload.id + '") in ' + JSON.stringify(payload)));
+        if(result && result.id && payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));
 
         if (err) {
             return callback(err);
@@ -221,7 +221,7 @@ RequestManager.prototype.addSubscription = function (subscription, callback) {
             }
         );
     } else {
-        throw new Error('The provider doesn\'t support subscriptions: ' + this.provider.constructor.name);
+        throw new Error('The provider doesn\'t support subscriptions: '+ this.provider.constructor.name);
     }
 };
 
@@ -271,7 +271,7 @@ RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
     }
 
     //  reset notification callbacks etc.
-    if (this.provider.reset)
+    if(this.provider.reset)
         this.provider.reset();
 };
 
