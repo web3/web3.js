@@ -37,9 +37,17 @@ var tests = [
 ];
 
 describe('lib/utils/utils', function () {
+    it('should turn err', function () {
+        try{
+            utils.toBN('test').toString(10);
+        } catch (e) {
+            assert.equal(e, 'Error: Error: [number-to-bn] while converting number "test" to BN.js instance, error: invalid number value. Value must be an integer, hex string, BN or BigNumber instance. Note, decimals are not supported. Given value: "test"');
+        }
+    });
+
     describe('toBN', function () {
         tests.forEach(function (test) {
-            it('should turn ' + test.value + ' to ' + test.expected, function () {
+            it(`should turn ${tests.value} to ${tests.expected}`, function () {
                 assert.equal(utils.toBN(test.value).toString(10), test.expected);
             });
         });
