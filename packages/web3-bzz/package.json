@@ -15,7 +15,7 @@
     "dependencies": {
         "@types/node": "^10.12.18",
         "got": "9.6.0",
-        "swarm-js": "0.1.39",
+        "swarm-js": "^0.1.40",
         "underscore": "1.9.1"
     },
     "devDependencies": {
