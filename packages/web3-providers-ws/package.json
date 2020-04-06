@@ -14,6 +14,7 @@
   "main": "src/index.js",
   "dependencies": {
     "@web3-js/websocket": "^1.0.29",
+    "eventemitter3": "^4.0.0",
     "underscore": "1.9.1",
     "web3-core-helpers": "1.2.6"
   },
