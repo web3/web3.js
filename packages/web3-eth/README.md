@@ -1,8 +1,11 @@
 # web3-eth
 
-This is a sub package of [web3.js][repo]
+[![NPM Package][npm-image]][npm-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
 
-This is the Eth package to be used [web3.js][repo].
+This is a sub-package of [web3.js][repo].
+
+This Eth package is used within some [web3.js][repo] package.
+
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -35,7 +38,13 @@ var eth = new Web3Eth('ws://localhost:8546');
 
 ## Types
 
-All the typescript typings are placed in the types folder.
+All the TypeScript typings are placed in the `types` folder.
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
-[repo]: https://github.com/ethereum/web3.js
+[repo]: https://github.com/ethereum/web3-eth.js
+[npm-image]: https://img.shields.io/npm/v/web3-eth.svg
+[npm-url]: https://npmjs.org/package/web3-eth
+[deps-image]: https://david-dm.org/ethereum/web3.js/1.x/status.svg?path=packages/web3-eth
+[deps-url]: https://david-dm.org/ethereum/web3.js/1.x?path=packages/web3-eth
+[deps-dev-image]: https://david-dm.org/ethereum/web3.js/1.x/dev-status.svg?path=packages/web3-eth
+[deps-dev-url]: https://david-dm.org/ethereum/web3.js/1.x?type=dev&path=packages/web3-eth
