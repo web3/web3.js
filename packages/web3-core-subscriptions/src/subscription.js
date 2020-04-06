@@ -232,9 +232,13 @@ Subscription.prototype.subscribe = function() {
     // get past logs, if fromBlock is available
     if(payload.params[0] === 'logs' && _.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
         // send the subscription request
+
+        // copy the params to avoid race-condition with deletion below this block
+        var blockParams = Object.assign({}, payload.params[1]);
+
         this.options.requestManager.send({
             method: 'eth_getLogs',
-            params: [payload.params[1]]
+            params: [blockParams]
         }, function (err, logs) {
             if(!err) {
                 logs.forEach(function(log){
