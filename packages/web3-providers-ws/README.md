@@ -34,10 +34,33 @@ This will expose the `Web3WsProvider` object on the window object.
 var Web3WsProvider = require('web3-providers-ws');
 
 var options = {
-    timeout: 30000,
-    headers: { authorization: 'Basic username:password' }
-}; // set a custom timeout at 30 seconds, and credentials (you can also add the credentials to the URL: ws://username:password@localhost:8546)
+    timeout: 30000, // ms
+
+    // Useful for credentialed urls, e.g: ws://username:password@localhost:8546
+    headers: {
+      authorization: 'Basic username:password'
+    },
+
+    // Useful if requests are large
+    clientConfig: {
+      maxReceivedFrameSize: 100000000,   // bytes - default: 1MiB
+      maxReceivedMessageSize: 100000000, // bytes - default: 8MiB
+    },
+
+    // Enable auto reconnection
+    reconnect: {
+        auto: true,
+        delay: 5000, // ms
+        maxAttempts: 5,
+        onTimeout: false
+    }
+};
+
 var ws = new Web3WsProvider('ws://localhost:8546', options);
+
+(Additional client config options can be found [here][1])
+
+[1]: https://github.com/web3-js/WebSocket-Node/blob/polyfill/globalThis/docs/WebSocketClient.md
 ```
 
 ## Types
