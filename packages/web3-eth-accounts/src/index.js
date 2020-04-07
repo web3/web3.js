@@ -477,6 +477,9 @@ Accounts.prototype.encrypt = function(privateKey, password, options) {
     };
 };
 
+// Helper to format the eth_signTypedData result in web3-eth.
+Accounts.prototype._decodeSignature = Account.decodeSignature;
+
 
 // Note: this is trying to follow closely the specs on
 // http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html

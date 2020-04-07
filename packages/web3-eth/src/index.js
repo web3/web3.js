@@ -491,7 +491,16 @@ var Eth = function Eth() {
             name: 'signTypedData',
             call: 'eth_signTypedData',
             params: 2,
-            inputFormatter: [JSON.stringify, formatter.inputAddressFormatter],
+            inputFormatter: [null, formatter.inputAddressFormatter],
+            outputFormatter: function (result) {
+                var vrs = this.accounts._decodeSignature(result);
+                return {
+                    v: vrs[0],
+                    r: vrs[1],
+                    s: vrs[2],
+                    signature: result
+                }
+            },
             transformPayload: function (payload) {
                 payload.params.reverse();
                 return payload;
