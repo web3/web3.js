@@ -58,6 +58,17 @@ describe('ENS [ @E2E ]', function () {
         );
     });
 
+    it('should get/set a publickey', async function(){
+        const x = "0x3078303030303030303030303030303030303030303030303030303030303030";
+        const y = "0x3030303030303030303030303030303030303030303030303030303030303030";
+
+        await web3.eth.ens.setPubkey('resolver', x, y, options);
+        const coords = await web3.eth.ens.getPubkey('resolver');
+
+        assert.equal(coords.x, x);
+        assert.equal(coords.y, y);
+    });
+
     it('should error when calling "getContent" if resolver does not support it', async function () {
         try {
             await web3.eth.ens.getContent('resolver');
