@@ -393,9 +393,9 @@ eth.sendTransaction(
     (error: Error, hash: string) => {}
 );
 
-// $ExpectType PromiEvent<TransactionReceipt>
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 eth.sendSignedTransaction('0xf889808609184e72a0008227109');
-// $ExpectType PromiEvent<TransactionReceipt>
+// $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 eth.sendSignedTransaction(
     '0xf889808609184e72a0008227109',
     (error: Error, hash: string) => {}
