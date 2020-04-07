@@ -938,12 +938,12 @@ For further information on the handling of contract events please see :ref:`here
 
 ------------------------------------------------------------------------------
 
-getContentHash
+getContenthash
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContentHash(ENSName [, callback]);
+    web3.eth.ens.getContenthash(ENSName [, callback]);
 
 Returns the content hash object associated with an ENS node.
 
@@ -966,7 +966,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContentHash('ethereum.eth').then(function (result) {
+    web3.eth.ens.getContenthash('ethereum.eth').then(function (result) {
         console.log(result);
     });
     > {
@@ -976,12 +976,12 @@ Example
 
 ------------------------------------------------------------------------------
 
-setContentHash
+setContenthash
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.ens.setContentHash(ENSName, hash [, txConfig ] [, callback]);
+    web3.eth.ens.setContenthash(ENSName, hash [, txConfig ] [, callback]);
 
 Sets the content hash associated with an ENS node.
 
@@ -1016,7 +1016,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.ens.setContentHash(
+    web3.eth.ens.setContenthash(
         'ethereum.eth',
         'ipfs://QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL',
         {
@@ -1029,7 +1029,7 @@ Example
 
     // Or using the event emitter
 
-    web3.eth.ens.setContentHash(
+    web3.eth.ens.setContenthash(
         'ethereum.eth',
         'ipfs://QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL',
         {
