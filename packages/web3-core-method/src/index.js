@@ -235,6 +235,13 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             params: 2,
             inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter]
         }),
+        new Method({
+            name: 'getTransactionByHash',
+            call: 'eth_getTransactionByHash',
+            params: 1,
+            inputFormatter: [null],
+            outputFormatter: formatters.outputTransactionFormatter
+        }),
         new Subscriptions({
             name: 'subscribe',
             type: 'eth',
@@ -421,10 +428,29 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                 try {
                                     var revertMessage = null;
 
-                                    if (method.handleRevert && method.call === 'eth_sendTransaction') {
+                                    if ( method.handleRevert &&
+                                        (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'))
+                                    {
+                                        var txReplayOptions = payload.params[0];
+
+                                        // If send was raw, fetch the transaction and reconstitute the
+                                        // original params so they can be replayed with `eth_call`
+                                        if (method.call === 'eth_sendRawTransaction'){
+                                            var txToReplay = await _ethereumCall.getTransactionByHash(receipt.transactionHash);
+
+                                            txReplayOptions = formatters.inputTransactionFormatter({
+                                                data: txToReplay.input,
+                                                to: txToReplay.to,
+                                                from: txToReplay.from,
+                                                gas: txToReplay.gas,
+                                                gasPrice: txToReplay.gasPrice,
+                                                value: txToReplay.value
+                                            })
+                                        }
+
                                         // Get revert reason string with eth_call
                                         revertMessage = await method.getRevertReason(
-                                            payload.params[0],
+                                            txReplayOptions,
                                             receipt.blockNumber
                                         );
 

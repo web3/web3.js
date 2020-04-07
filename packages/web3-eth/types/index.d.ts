@@ -300,7 +300,7 @@ export class Eth {
     sendSignedTransaction(
         signedTransactionData: string,
         callback?: (error: Error, hash: string) => void
-    ): PromiEvent<TransactionReceipt>;
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
     sign(
         dataToSign: string,
