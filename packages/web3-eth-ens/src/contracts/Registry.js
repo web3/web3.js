@@ -29,6 +29,7 @@ var utils = require('web3-utils');
 var REGISTRY_ABI = require('../ressources/ABI/Registry');
 var RESOLVER_ABI = require('../ressources/ABI/Resolver');
 
+
 /**
  * A wrapper around the ENS registry contract.
  *
