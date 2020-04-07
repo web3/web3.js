@@ -2254,7 +2254,7 @@ describe('ens', function () {
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             try {
-                await web3.eth.ens.getContentHash('foobar.eth');
+                await web3.eth.ens.getContenthash('foobar.eth');
 
                 assert.fail();
             } catch (error) {
@@ -2287,7 +2287,7 @@ describe('ens', function () {
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
-            web3.eth.ens.getContentHash(
+            web3.eth.ens.getContenthash(
                 'foobar.eth',
                 function (error, result) {
                     assert(error.message.includes('does not implement requested method: "contenthash"'));
@@ -2299,7 +2299,7 @@ describe('ens', function () {
 
         it('should error if resolver ABI does not support setContenthash (promise)', async function () {
             const resolverSignature = 'resolver(bytes32)';
-            const contentSignature = 'setContentHash(bytes32)';
+            const contentSignature = 'setContenthash(bytes32)';
             const contenthashInterfaceId = 'bc1c58d1';
 
             provider.injectValidation(function (payload) {
@@ -2323,7 +2323,7 @@ describe('ens', function () {
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             try {
-                await web3.eth.ens.setContentHash(
+                await web3.eth.ens.setContenthash(
                     'foobar.eth',
                     'ipfs://QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn'
                 );
@@ -2359,7 +2359,7 @@ describe('ens', function () {
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
-            web3.eth.ens.setContentHash(
+            web3.eth.ens.setContenthash(
                 'foobar.eth',
                 'ipfs://QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn',
                 {

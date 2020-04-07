@@ -26,7 +26,7 @@ var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
 var Registry = require('./contracts/Registry');
 var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
-var contentHash = require('./lib/contentHash');
+var contenthash = require('./lib/contentHash');
 
 /**
  * Constructs a new instance of ENS
@@ -418,9 +418,9 @@ ENS.prototype.setContent = function (name, hash, txConfig, callback) {
 };
 
 /**
- * Returns the contentHash
+ * Returns the contenthash
  *
- * @method getContentHash
+ * @method getContenthash
  *
  * @param {string} name
  * @param {function} callback
@@ -428,12 +428,12 @@ ENS.prototype.setContent = function (name, hash, txConfig, callback) {
  * @callback callback callback(error, result)
  * @returns {PromiEvent<ContentHash>}
  */
-ENS.prototype.getContentHash = function (name, callback) {
-    return this.resolverMethodHandler.method(name, 'contenthash', [], contentHash.decode).call(callback);
+ENS.prototype.getContenthash = function (name, callback) {
+    return this.resolverMethodHandler.method(name, 'contenthash', [], contenthash.decode).call(callback);
 };
 
 /**
- * Set the contentHash
+ * Set the contenthash
  *
  * @method setContent
  *
@@ -445,10 +445,10 @@ ENS.prototype.getContentHash = function (name, callback) {
  * @callback callback callback(error, result)
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
-ENS.prototype.setContentHash = function (name, hash, txConfig, callback) {
+ENS.prototype.setContenthash = function (name, hash, txConfig, callback) {
     var encoded;
     try {
-        encoded = contentHash.encode(hash);
+        encoded = contenthash.encode(hash);
     } catch(err){
         var error = new Error('Could not encode ' + hash + '. See docs for supported hash protocols.');
 
