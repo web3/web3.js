@@ -141,12 +141,18 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 
+- Add revert reason support to sendSignedTransaction
 - ENS module extended with the possibility to add a custom registry (#3301)
 - Missing ENS Registry methods and Resolver.supportsInterface method added (#3325)
 
 ### Changed
 
 - Ensure '0x' prefix is existing for Accounts.sign and Accounts.privateKeyToAccount (#3041)
+- Repository cleanup
+  - Removed old `docs/_build` folder
+  - Removed old bower and meteor artifacts
+  - Moved logo assets to own folder
+  - Moved github assets to own folder
 
 ### Fixed
 
