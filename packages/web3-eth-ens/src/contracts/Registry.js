@@ -28,14 +28,6 @@ var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
 var REGISTRY_ABI = require('../ressources/ABI/Registry');
 var RESOLVER_ABI = require('../ressources/ABI/Resolver');
-var PUBLIC_RESOLVER_ABI = require('../ressources/ABI/PublicResolver');
-
-// Value taken from EIP 1577 (Content Hash) specification
-// Support for this interface is used as a switch to decide whether to
-// instantiate the Resolver contract as a PublicResolver or legacy Resolver.
-// Both contracts implement EIP 165 (Supports Interface).
-var CONTENT_HASH_INTERFACE_ID = "0xbc1c58d1";
-
 
 /**
  * A wrapper around the ENS registry contract.
@@ -534,9 +526,8 @@ Registry.prototype.getResolver = function (name, callback) {
 
     return this.contract.then(function (contract) {
         return contract.methods.resolver(namehash.hash(name)).call();
-    }).then(async function (address) {
-        var abi = await self.getResolverABI(address);
-        var contract = new Contract(abi, address);
+    }).then(function (address) {
+        var contract = new Contract(RESOLVER_ABI, address);
         contract.setProvider(self.ens.eth.currentProvider);
 
         if (_.isFunction(callback)) {
@@ -556,40 +547,6 @@ Registry.prototype.getResolver = function (name, callback) {
 
         throw error;
     });
-};
-
-/**
- * Returns either PublicResolver ABI or legacy Resolver ABI based on
- * whether the contract at <address> supports the `contentHash` interface.
- * Defaults to legacy Resolver if something goes wrong while checking.
- *
- * @method  getResolverABI
- *
- * @param   {string} address resolver address
- * @returns {object}         resolver ABI
- */
-Registry.prototype.getResolverABI = async function(address){
-    var isNewResolver = false;
-
-    try {
-        // Both ABIs implement EIP 165.
-        var resolver = new Contract(RESOLVER_ABI, address);
-        resolver.setProvider(this.ens.eth.currentProvider);
-        isNewResolver = await resolver
-            .methods
-            .supportsInterface(CONTENT_HASH_INTERFACE_ID)
-            .call();
-
-    } catch(err){
-        console.warn( 'Could not identify ABI of resolver contract at "' + address + '". ' +
-                      'Defaulting to legacy resolver ABI.');
-    }
-
-    if (isNewResolver){
-        return PUBLIC_RESOLVER_ABI;
-    }
-
-    return RESOLVER_ABI;
 };
 
 /**
