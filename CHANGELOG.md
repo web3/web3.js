@@ -144,6 +144,7 @@ Released with 1.0.0-beta.37 code base.
 - Add revert reason support to sendSignedTransaction
 - ENS module extended with the possibility to add a custom registry (#3301)
 - Missing ENS Registry methods and Resolver.supportsInterface method added (#3325)
+- Introduce review and release guidelines: `REVIEW.md` and `RELEASE.md`
 
 ### Changed
 
