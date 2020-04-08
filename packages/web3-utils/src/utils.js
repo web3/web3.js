@@ -23,10 +23,19 @@
 var _ = require('underscore');
 var BN = require('bn.js');
 var numberToBN = require('number-to-bn');
-var utf8 = require('utf8');
 var Hash = require("eth-lib/lib/hash");
 var ethereumBloomFilters = require('ethereum-bloom-filters');
 
+var utf8Encoder;
+var utf8Decoder;
+if (typeof TextEncoder !== 'undefined' && typeof TextDecoder !== 'undefined') {
+    utf8Encoder = new TextEncoder();
+    utf8Decoder = new TextDecoder();
+} else {
+    var util = require('util');
+    utf8Encoder = new util.TextEncoder();
+    utf8Decoder = new util.TextDecoder();
+}
 
 
 /**
@@ -166,22 +175,21 @@ var rightPad = function (string, chars, sign) {
  * @returns {String} hex representation of input string
  */
 var utf8ToHex = function(str) {
-    str = utf8.encode(str);
+    var bytes = utf8Encoder.encode(str);
     var hex = "";
 
-    // remove \u0000 padding from either side
-    str = str.replace(/^(?:\u0000)*/,'');
-    str = str.split("").reverse().join("");
-    str = str.replace(/^(?:\u0000)*/,'');
-    str = str.split("").reverse().join("");
-
-    for(var i = 0; i < str.length; i++) {
-        var code = str.charCodeAt(i);
+    for(var i = 0; i < bytes.length; i++) {
+        var code = bytes[i];
         // if (code !== 0) {
         var n = code.toString(16);
         hex += n.length < 2 ? '0' + n : n;
         // }
     }
+
+    hex = hex.replace(/^(?:00)*/,'');
+    hex = hex.split("").reverse().join("");
+    hex = hex.replace(/^(?:00)*/,'');
+    hex = hex.split("").reverse().join("");
 
     return "0x" + hex;
 };
@@ -197,7 +205,7 @@ var hexToUtf8 = function(hex) {
     if (!isHexStrict(hex))
         throw new Error('The parameter "'+ hex +'" must be a valid HEX string.');
 
-    var str = "";
+    var bytes = [];
     var code = 0;
     hex = hex.replace(/^0x/i,'');
 
@@ -212,11 +220,11 @@ var hexToUtf8 = function(hex) {
     for (var i=0; i < l; i+=2) {
         code = parseInt(hex.substr(i, 2), 16);
         // if (code !== 0) {
-        str += String.fromCharCode(code);
+        bytes.push(code);
         // }
     }
 
-    return utf8.decode(str);
+    return utf8Decoder.decode(Uint8Array.from(bytes));
 };
 
 

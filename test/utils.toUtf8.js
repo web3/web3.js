@@ -8,7 +8,8 @@ var tests = [
     { value: '0x6d79537472696e67', expected: 'myString'},
     { value: '0x6d79537472696e6700', expected: 'myString'},
     { value: '0x65787065637465642076616c7565000000000000000000000000000000000000', expected: 'expected value'},
-    { value: '0x000000000000000000000000000000000000657870656374000065642076616c7565', expected: 'expect\u0000\u0000ed value'}
+    { value: '0x000000000000000000000000000000000000657870656374000065642076616c7565', expected: 'expect\u0000\u0000ed value'},
+    { value: '0x9f90e274657374', expected: '���test' }
 ];
 
 describe('lib/utils/utils', function () {
