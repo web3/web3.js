@@ -486,7 +486,9 @@ Wallet.prototype.create = function(numberOfAccounts, entropy) {
 };
 
 Wallet.prototype.add = function(account) {
-
+    if (!account.startsWith('0x')) {
+        account = '0x' + account;
+    }
     if (_.isString(account)) {
         account = this._accounts.privateKeyToAccount(account);
     }
