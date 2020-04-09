@@ -10,14 +10,17 @@ function getTestFiles(){
     switch (process.env.BROWSER_BUNDLE_TEST){
         case 'publishedDist': return ["packages/web3/dist/web3.min.js", "test/e2e.minified.js"]
         case 'gitRepoDist':   return ["dist/web3.min.js", "test/e2e.minified.js"]
-        default:              return ["test/**/e2e*.js"]
+        default:              return ["test/**/e2e*.js", "test/**/*tf8*.js"]
     }
 }
 
 // Only loads browserified preprocessor for the logic unit tests so we can `require` stuff.
 function getPreprocessors(){
     if (!process.env.BROWSER_BUNDLE_TEST){
-        return { 'test/**/e2e*.js': [ 'browserify' ] }
+        return {
+            'test/**/e2e*.js': [ 'browserify' ],
+            'test/**/*tf8*.js': [ 'browserify' ]
+        }
     }
 }
 
