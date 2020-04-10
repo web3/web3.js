@@ -101,7 +101,8 @@ const abiItem: AbiItem = {
     ],
     payable: false,
     stateMutability: "pure",
-    type: "function"
+    type: "function",
+    gas: 175875
 };
 // $ExpectType string
 jsonInterfaceMethodToString(abiItem);
