@@ -17,6 +17,8 @@
  * @date 2018
  */
 
+// Minimum TypeScript Version: 3.0
+
 import { AccountsBase, SignedTransaction, WalletBase } from 'web3-core';
 
 export {SignedTransaction} from 'web3-core';

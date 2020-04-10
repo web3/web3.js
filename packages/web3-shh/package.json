@@ -9,7 +9,7 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint types --onlyTestTsNext"
+        "dtslint": "dtslint types"
     },
     "main": "src/index.js",
     "dependencies": {
@@ -20,7 +20,7 @@
     },
     "devDependencies": {
         "@types/node": "^12.12.5",
-        "definitelytyped-header-parser": "^1.0.1",
-        "dtslint": "0.4.2"
+        "definitelytyped-header-parser": "^3.9.0",
+        "dtslint": "^3.4.1"
     }
 }

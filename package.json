@@ -139,7 +139,7 @@
         "puppeteer": "^1.20.0",
         "sandboxed-module": "^2.0.3",
         "surge": "^0.21.3",
-        "typescript": "next",
+        "typescript": "^3.8.3",
         "underscore": "^1.9.1",
         "vinyl-source-stream": "^2.0.0",
         "wait-port": "^0.2.6",
