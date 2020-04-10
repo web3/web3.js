@@ -17,7 +17,7 @@
  * @date 2019
  */
 
-import { errors } from 'web3-core-helpers';
+import { errors, WebSocketEvent } from 'web3-core-helpers';
 
 // $ExpectType Error
 errors.ErrorResponse(new Error('hey'));
@@ -25,7 +25,7 @@ errors.ErrorResponse(new Error('hey'));
 // $ExpectType Error
 errors.InvalidNumberOfParams(1, 3, 'method');
 
-// $ExpectType Error
+// $ExpectType ConnectionError
 errors.InvalidConnection('https://localhost:2345432');
 
 // $ExpectType Error
@@ -37,8 +37,42 @@ errors.InvalidResponse(new Error('hey'));
 // $ExpectType Error
 errors.ConnectionTimeout('timeout');
 
+// $ExpectType Error
+errors.ConnectionNotOpenError();
+
+// $ExpectType Error
+errors.MaxAttemptsReachedOnReconnectingError();
+
+// $ExpectType Error
+errors.PendingRequestsOnReconnectingError();
+
+const event: WebSocketEvent = {code: 100, reason: 'reason'};
+// $ExpectType ConnectionError
+errors.ConnectionError('msg', event);
+
+// $ExpectType Error | ConnectionError
+errors.ConnectionCloseError(event);
+
+// $ExpectType Error | ConnectionError
+errors.ConnectionCloseError(true);
+
 // $ExpectType RevertInstructionError
 errors.RevertInstructionError('reason', 'signature');
 
 // $ExpectType TransactionRevertInstructionError
 errors.TransactionRevertInstructionError('reason', 'signature', {});
+
+// $ExpectType TransactionError
+errors.TransactionError('reason', {});
+
+// $ExpectType TransactionError
+errors.NoContractAddressFoundError({});
+
+// $ExpectType TransactionError
+errors.ContractCodeNotStoredError({});
+
+// $ExpectType TransactionError
+errors.TransactionRevertedWithoutReasonError({});
+
+// $ExpectType TransactionError
+errors.TransactionOutOfGasError({});
