@@ -18,6 +18,8 @@
  * @date 2018
  */
 
+// Minimum TypeScript Version: 3.0
+
 import * as net from 'net';
 import {
     HttpProviderBase,
@@ -394,8 +396,6 @@ export class IpcProvider extends IpcProviderBase {
 
 export class WebsocketProvider extends WebsocketProviderBase {
     constructor(host: string, options?: WebsocketProviderOptions);
-
-    isConnecting(): boolean;
 }
 
 export interface PastLogsOptions extends LogsOptions {

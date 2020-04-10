@@ -13,7 +13,8 @@ setProvider
 
 Will change the provider for its module.
 
-.. note:: When called on the umbrella package ``web3`` it will also set the provider for all sub modules ``web3.eth``, ``web3.shh``, etc EXCEPT ``web3.bzz`` which needs a separate provider at all times.
+.. note::
+    When called on the umbrella package ``web3`` it will also set the provider for all sub modules ``web3.eth``, ``web3.shh``, etc EXCEPT ``web3.bzz`` which needs a separate provider at all times.
 
 ----------
 Parameters
@@ -98,6 +99,75 @@ Example
     // on windows the path is: "\\\\.\\pipe\\geth.ipc"
     // on linux the path is: "/users/myuser/.ethereum/geth.ipc"
 
+-------------
+Configuration
+-------------
+
+.. code-block:: javascript
+
+    // ====
+    // Http
+    // ====
+
+    var Web3HttpProvider = require('web3-providers-http');
+
+    var options = {
+        keepAlive: true,
+        withCredentials: false,
+        timeout: 20000, // ms
+        headers: [
+            {
+                name: 'Access-Control-Allow-Origin',
+                value: '*'
+            },
+            {
+                ...
+            }
+        ],
+        agent: {
+            http: http.Agent(...),
+            baseUrl: ''
+        }
+    };
+
+    var provider = new Web3HttpProvider('http://localhost:8545', options);
+
+    // ==========
+    // Websockets
+    // ==========
+
+    var Web3WsProvider = require('web3-providers-ws');
+
+    var options = {
+        timeout: 30000, // ms
+
+        // Useful for credentialed urls, e.g: ws://username:password@localhost:8546
+        headers: {
+          authorization: 'Basic username:password'
+        },
+
+        // Useful if requests result are large
+        clientConfig: {
+          maxReceivedFrameSize: 100000000,   // bytes - default: 1MiB
+          maxReceivedMessageSize: 100000000, // bytes - default: 8MiB
+        },
+
+        // Enable auto reconnection
+        reconnect: {
+            auto: true,
+            delay: 5000, // ms
+            maxAttempts: 5,
+            onTimeout: false
+        }
+    };
+
+    var ws = new Web3WsProvider('ws://localhost:8546', options);
+
+
+More information for the Http and Websocket provider modules can be found here:
+
+    - `HttpProvider <https://github.com/ethereum/web3.js/tree/1.x/packages/web3-providers-http#usage>`_
+    - `WebsocketProvider <https://github.com/ethereum/web3.js/tree/1.x/packages/web3-providers-ws#usage>`_
 
 ------------------------------------------------------------------------------
 
