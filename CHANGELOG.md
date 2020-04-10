@@ -161,3 +161,6 @@ Released with 1.0.0-beta.37 code base.
 - Add missing subscription.on('connected') TS type definition (#3319)
 - Add missing bignumber.js dependency for TS types (#3386)
 - Upgrade swarm-js to 0.1.40 to remove npm vulnerability warning (#3399)
+- Upgrade devDeps to resolve security warnings
+  - dtslint 0.4.2 => 3.4.1
+  - definitelytyped-header-parser 1.0.1 => 3.9.0
