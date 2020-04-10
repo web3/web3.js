@@ -19,6 +19,8 @@
  * @date 2018
  */
 
+// Minimum TypeScript Version: 3.0
+
 import * as net from 'net';
 import {
     BatchRequest,
@@ -300,7 +302,7 @@ export class Eth {
     sendSignedTransaction(
         signedTransactionData: string,
         callback?: (error: Error, hash: string) => void
-    ): PromiEvent<TransactionReceipt>;
+    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
     sign(
         dataToSign: string,

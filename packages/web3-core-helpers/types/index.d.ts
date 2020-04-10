@@ -17,6 +17,8 @@
  * @date 2018
  */
 
+// Minimum TypeScript Version: 3.0
+
 import * as net from 'net';
 import * as http from 'http';
 import * as https from 'https';
@@ -64,10 +66,15 @@ export class errors {
         expected: number,
         method: string
     ): Error;
-    static InvalidConnection(host: string): Error;
+    static InvalidConnection(host: string, event?: WebSocketEvent): ConnectionError;
     static InvalidProvider(): Error;
     static InvalidResponse(result: Error): Error;
     static ConnectionTimeout(ms: string): Error;
+    static ConnectionNotOpenError(): Error;
+    static ConnectionCloseError(event: WebSocketEvent | boolean): Error | ConnectionError;
+    static MaxAttemptsReachedOnReconnectingError(): Error;
+    static PendingRequestsOnReconnectingError(): Error;
+    static ConnectionError(msg: string, event?: WebSocketEvent): ConnectionError;
     static RevertInstructionError(reason: string, signature: string): RevertInstructionError
     static TransactionRevertInstructionError(reason: string, signature: string, receipt: object): TransactionRevertInstructionError
     static TransactionError(message: string, receipt: object): TransactionError
@@ -82,12 +89,10 @@ export class WebsocketProviderBase {
 
     isConnecting(): boolean;
 
-    responseCallbacks: any;
-    notificationCallbacks: any;
+    requestQueue: Map<string, RequestItem>;
+    responseQueue: Map<string, RequestItem>;
     connected: boolean;
     connection: any;
-
-    addDefaultEvents(): void;
 
     supportsSubscriptions(): boolean;
 
@@ -107,6 +112,10 @@ export class WebsocketProviderBase {
     reset(): void;
 
     disconnect(code: number, reason: string): void;
+
+    connect(): void;
+
+    reconnect(): void;
 }
 
 export class IpcProviderBase {
@@ -183,6 +192,19 @@ export interface WebsocketProviderOptions {
     clientConfig?: string;
     requestOptions?: any;
     origin?: string;
+    reconnect?: ReconnectOptions;
+}
+
+export interface ReconnectOptions {
+    auto?: boolean;
+    delay?: number;
+    maxAttempts?: number;
+    onTimeout?: boolean;
+}
+
+export interface RequestItem {
+    payload: JsonRpcPayload;
+    callback: (error: any, result: any) => void;
 }
 
 export interface JsonRpcPayload {
@@ -211,4 +233,14 @@ export interface TransactionRevertInstructionError extends Error {
 
 export interface TransactionError extends Error {
     receipt: object;
+}
+
+export interface ConnectionError extends Error {
+    code: string | undefined;
+    reason: string | undefined;
+}
+
+export interface WebSocketEvent {
+    code?: number;
+    reason?: string;
 }

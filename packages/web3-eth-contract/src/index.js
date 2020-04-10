@@ -56,21 +56,23 @@ var Contract = function Contract(jsonInterface, address, options) {
         args = Array.prototype.slice.call(arguments);
 
     if(!(this instanceof Contract)) {
-        throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
+        throw new Error('Please use the "new" keyword to instantiate a web3.eth.Contract() object!');
     }
 
-    // sets _requestManager
-    core.packageInit(this, [this.constructor.currentProvider]);
+    this.setProvider = function () {
+        core.packageInit(_this, arguments);
+
+        _this.clearSubscriptions = _this._requestManager.clearSubscriptions;
+    };
+
+    // sets _requestmanager
+    core.packageInit(this, [this.constructor]);
 
     this.clearSubscriptions = this._requestManager.clearSubscriptions;
-
-
 
     if(!jsonInterface || !(Array.isArray(jsonInterface))) {
         throw new Error('You must provide the json interface of the contract when instantiating a contract object.');
     }
-
-
 
     // create the options object
     this.options = {};
@@ -298,6 +300,17 @@ var Contract = function Contract(jsonInterface, address, options) {
 
 };
 
+/**
+ * Sets the new provider, creates a new requestManager, registers the "data" listener on the provider and sets the
+ * accounts module for the Contract class.
+ *
+ * @method setProvider
+ *
+ * @param {string|provider} provider
+ * @param {Accounts} accounts
+ *
+ * @returns void
+ */
 Contract.setProvider = function(provider, accounts) {
     // Contract.currentProvider = provider;
     core.packageInit(this, [provider]);
@@ -690,9 +703,11 @@ Contract.prototype.once = function(event, options, callback) {
  * Adds event listeners and creates a subscription.
  *
  * @method _on
+ *
  * @param {String} event
  * @param {Object} options
  * @param {Function} callback
+ *
  * @return {Object} the event subscription
  */
 Contract.prototype._on = function(){
@@ -700,8 +715,8 @@ Contract.prototype._on = function(){
 
 
     // prevent the event "newListener" and "removeListener" from being overwritten
-    this._checkListener('newListener', subOptions.event.name, subOptions.callback);
-    this._checkListener('removeListener', subOptions.event.name, subOptions.callback);
+    this._checkListener('newListener', subOptions.event.name);
+    this._checkListener('removeListener', subOptions.event.name);
 
     // TODO check if listener already exists? and reuse subscription if options are the same.
 
@@ -727,6 +742,7 @@ Contract.prototype._on = function(){
         type: 'eth',
         requestManager: this._requestManager
     });
+
     subscription.subscribe('logs', subOptions.params, subOptions.callback || function () {});
 
     return subscription;
