@@ -157,6 +157,7 @@ Released with 1.0.0-beta.37 code base.
   - Moved logo assets to own folder
   - Moved github assets to own folder
 - Remove @types/node from (non-dev) dependency tree (#3965, #3227)
+- Improve code clarity of HttpProvider keepAlive option setting (#3463)
 
 ### Fixed
 
