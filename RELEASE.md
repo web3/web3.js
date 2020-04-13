@@ -72,39 +72,45 @@ The following describes the steps required to release a new version of `web3.js`
 
 ## Release Procedure
 
-1.  Create release branch (e.g. `release/1.2.7`)
-1.  Change version number in `packages/web3/package.json`
-1.  Create minified build from release branch
-    1.  Run `npm run build` (runs gulp task)
-    1.  (for `1.x`, ensure minified file is available in release PR since some projects will use for release candidate tests. for `2.x`, no minified file is needed.)
-1.  Update root package version in `package.json`
-1.  Create release PR ([example](https://github.com/ethereum/web3.js/pull/3351))
+1.  Create a GitHub draft release.
+    1.  [Example](https://github.com/ethereum/web3.js/releases/tag/v1.2.7-rc.0) - should contain at a minimum: release notes, changelog, any other important notes.
+    1.  Request review on the draft release from a web3.js contributor ([@cgewecke](https://github.com/cgewecke)) for completeness, grammar, etc.
+1.  Create release branch (e.g. `release/1.2.7`).
+1.  Update version number in `packages/web3/package.json`.
+1.  Update root package version number in `package.json`.
+1.  Update `CHANGELOG.md`.
+    1.  Move section header `[Unreleased]` to bottom.
+    1.  Add next anticipated release version number to bottom (as a placeholder for new changelog entries).
+1.  Create minified build from release branch.
+    1.  Run `npm run build` (runs gulp task).
+    1.  For `1.x`, ensure minified file is available in release PR, since some projects will use for release candidate tests. For `2.x`, no minified file is needed.
+1.  Create release PR ([example](https://github.com/ethereum/web3.js/pull/3351)).
     1.  Request review from key contributors:
         1.  Chris from EthereumJS ([@cgewecke](https://github.com/cgewecke))
         1.  Michael from Embark ([@michaelsbradleyjr](https://github.com/michaelsbradleyjr))
         1.  Nicholas from Truffle ([@gnidan](https://github.com/gnidan))
         1.  Patricio from Nomic Labs ([@alcuadrado](https://github.com/alcuadrado))
         1.  If touches or affects ENS: Nick Johnson ([@Arachnid](https://github.com/Arachnid))
-1.  Check `npm run build-all` runs with success
+1.  Check `npm run build-all` runs with success.
     1.  (tests if webpack can bundle each standalone package)
 1.  Ensure CI is green / passing.
     1.  (spend time here inspecting the CI logs to ensure everything looks valid and results were reported correctly)
 1.  Wait 1 week for community discourse and 2 reviewer approvals.
     1.  (if release is an emergency patch, time limit may be reduced relative to its severity.)
-1.  Run `npm run release`
-1.  Run `git push` of release commit
+1.  Run `npm run release`.
+1.  Run `git push` of release commit.
     1.  Ensure tags (created automatically by lerna) are pushed.
     1.  e.g.`git push ethereum release/1.2.7 --follow-tags`
-1.  For `rc`, release on GitHub and nowhere else.
-1.  For non-`rc`, save a new release to `Draft` and request review from web3.js contributor ([@cgewecke](https://github.com/cgewecke)) for grammar, etc.
-1.  After release, a GitHub Webhook triggers ReadTheDocs build
-    1.  (may sometimes need to be manually triggered in ReadTheDocs admin panel)
-    1.  Activate version
-    1.  Set version to default if release is `minor` or `major`
-1.  Apply appropriate `npm` tags to release
-    1.  Try e.g. `lerna publish --dist-tag rc` - if unsuccessful, run once for every package: `npm dist-tag add <package-name>@<version> rc`
-1.  Share the release announcement on:
-    1.  (_note:_ there is a delay on npm between different regions, so all may not see the release immediately)
+1.  Publish the GitHub release.
+1.  A GitHub Webhook should trigger the ReadTheDocs build after the release is published.
+    1.  (The build may sometimes need to be manually triggered in ReadTheDocs admin panel.)
+    1.  Activate the new version
+    1.  Set the version to default if release is `major` or `minor`
+1.  Apply appropriate `npm` tags to release, like `rc`.
+    1.  Try the cmd: `lerna publish --dist-tag rc`
+    1.  Lerna can sometimes have difficulty with the number of packages we have. If the above command is unsuccessful, then check every package and run the following command once for every package that is missing its tags: `npm dist-tag add <package-name>@<version> rc`
+1.  If non-`rc`, share the release announcement on:
+    1.  (_Note:_ There is a delay on npm between different regions, so all may not see the release immediately.)
     1.  Twitter
     1.  Gitter
     1.  Ethereum JavaScript Community (EJC) Discord
