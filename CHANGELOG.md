@@ -163,3 +163,4 @@ Released with 1.0.0-beta.37 code base.
 - Upgrade devDeps to resolve security warnings
   - dtslint 0.4.2 => 3.4.1
   - definitelytyped-header-parser 1.0.1 => 3.9.0
+  - Fix  misleading paths in the providers package
