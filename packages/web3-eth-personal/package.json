@@ -1,6 +1,6 @@
 {
     "name": "web3-eth-personal",
-    "version": "1.2.6",
+    "version": "1.2.7-rc.0",
     "description": "Web3 module to interact with the Ethereum blockchain accounts stored in the node.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth-personal",
     "license": "LGPL-3.0",
@@ -14,11 +14,11 @@
     "main": "src/index.js",
     "dependencies": {
         "@types/node": "^12.6.1",
-        "web3-core": "1.2.6",
-        "web3-core-helpers": "1.2.6",
-        "web3-core-method": "1.2.6",
-        "web3-net": "1.2.6",
-        "web3-utils": "1.2.6"
+        "web3-core": "1.2.7-rc.0",
+        "web3-core-helpers": "1.2.7-rc.0",
+        "web3-core-method": "1.2.7-rc.0",
+        "web3-net": "1.2.7-rc.0",
+        "web3-utils": "1.2.7-rc.0"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^3.9.0",
