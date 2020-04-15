@@ -1,6 +1,6 @@
 {
     "name": "web3",
-    "version": "1.2.6",
+    "version": "1.2.7-rc.0",
     "description": "Ethereum JavaScript API",
     "repository": "https://github.com/ethereum/web3.js",
     "license": "LGPL-3.0",
@@ -49,13 +49,13 @@
         }
     ],
     "dependencies": {
-        "web3-bzz": "1.2.6",
-        "web3-core": "1.2.6",
-        "web3-eth": "1.2.6",
-        "web3-eth-personal": "1.2.6",
-        "web3-net": "1.2.6",
-        "web3-shh": "1.2.6",
-        "web3-utils": "1.2.6"
+        "web3-bzz": "1.2.7-rc.0",
+        "web3-core": "1.2.7-rc.0",
+        "web3-eth": "1.2.7-rc.0",
+        "web3-eth-personal": "1.2.7-rc.0",
+        "web3-net": "1.2.7-rc.0",
+        "web3-shh": "1.2.7-rc.0",
+        "web3-utils": "1.2.7-rc.0"
     },
     "devDependencies": {
         "@types/node": "^12.12.34",

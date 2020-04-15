@@ -1,6 +1,6 @@
 {
     "name": "web3-core-method",
-    "version": "1.2.6",
+    "version": "1.2.7-rc.0",
     "description": "Creates the methods on the web3 modules. This is an internal package.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-core-method",
     "license": "LGPL-3.0",
@@ -14,10 +14,10 @@
     "main": "src/index.js",
     "dependencies": {
         "underscore": "1.9.1",
-        "web3-core-helpers": "1.2.6",
-        "web3-core-promievent": "1.2.6",
-        "web3-core-subscriptions": "1.2.6",
-        "web3-utils": "1.2.6"
+        "web3-core-helpers": "1.2.7-rc.0",
+        "web3-core-promievent": "1.2.7-rc.0",
+        "web3-core-subscriptions": "1.2.7-rc.0",
+        "web3-utils": "1.2.7-rc.0"
     },
     "devDependencies": {
         "dtslint": "^3.4.1",
