@@ -1,5 +1,5 @@
 {
-    "name": "web3",
+    "name": "web3.js",
     "private": true,
     "version": "1.2.6",
     "description": "Ethereum JavaScript API wrapper repository",
