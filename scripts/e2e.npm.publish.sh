@@ -61,6 +61,7 @@ lerna version minor \
   --no-git-tag-version \
   --no-push \
   --allow-branch $BRANCH \
+  --ignore-scripts \
   --yes
 
 # Set email prior to publishing (necessary for Windows)
@@ -73,5 +74,6 @@ git commit -a -m 'virtual-version-bump'
 lerna publish from-package \
   --dist-tag e2e \
   --registry http://localhost:4873 \
+  --ignore-scripts \
   --yes
 
