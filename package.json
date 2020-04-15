@@ -30,7 +30,7 @@
         "lint": "jshint *.js packages",
         "test": "mocha --grep E2E --invert; jshint *.js packages",
         "test:unit": "nyc --no-clean --silent _mocha -- -R spec --grep E2E --invert --exit",
-        "test:cov": "npm run cov:clean; npm run test:unit; npm run test:e2e:clients; npm run cov:html",
+        "test:cov": "npm run cov:clean; npm run test:unit; npm run test:e2e:clients; npm run cov:merge_reports",
         "dtslint": "lerna run dtslint",
         "depcheck": "lerna exec dependency-check -- --missing --verbose .",
         "bundlesize": "bundlesize",
@@ -49,9 +49,8 @@
         "test:e2e:mosaic": "./scripts/e2e.mosaic.sh",
         "test:e2e:ganache:core": "./scripts/e2e.ganache.core.sh",
         "ci": "./scripts/ci.sh",
-        "coveralls": "./scripts/coveralls.sh",
         "cov:clean": "rm -rf .nyc_output; rm -rf coverage",
-        "cov:html": "nyc report --reporter=html"
+        "cov:merge_reports": "nyc report --reporter=lcov --reporter=html"
     },
     "repository": {
         "type": "git",
@@ -108,7 +107,6 @@
         "bundlesize": "^0.18.0",
         "chai": "^4.2.0",
         "core-js": "^3.4.8",
-        "coveralls": "^3.0.7",
         "crypto-js": "^3.1.9-1",
         "del": "^4.1.1",
         "dependency-check": "^4.1.0",
