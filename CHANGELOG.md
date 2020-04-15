@@ -135,8 +135,6 @@ Released with 1.0.0-beta.37 code base.
 
 - ENS registry addresses updated (#3353, https://medium.com/the-ethereum-name-service/ens-registry-migration-bug-fix-new-features-64379193a5a)
 
-## [Unreleased]
-
 ## [1.2.7]
 
 ### Added
@@ -173,3 +171,13 @@ Released with 1.0.0-beta.37 code base.
 - Race-condition when subscribing to historical logs as first client request (#3389)
 - Fix crash when using Web-Workers by removing any-promise dependency (#3377 #2211 #1774)
 - MaxListenersExceededWarning event emitter warning mitigated (#1648)
+
+## [Unreleased]
+
+## [1.2.8]
+
+### Added
+
+### Changed
+
+### Fixed
