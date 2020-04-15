@@ -20,7 +20,7 @@
         }
     ],
     "scripts": {
-        "preversion": "npm run build-all",
+        "version": "npm run build-all",
         "postinstall": "lerna bootstrap",
         "build": "lerna bootstrap && gulp",
         "build-all": "lerna bootstrap && gulp all",
