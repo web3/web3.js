@@ -74,7 +74,7 @@ describe('contract.deploy [ @E2E ]', function() {
         it('errors on OOG reached while running EVM', async function(){
             const estimate = await basic
                 .deploy()
-                .estimateGas()
+                .estimateGas({from: accounts[0]})
 
             const gas = estimate - 1000;
 
