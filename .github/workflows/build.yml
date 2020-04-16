@@ -42,7 +42,6 @@ jobs:
                         "unit_and_e2e_clients",
                         "e2e_ganache",
                         "e2e_mosaic",
-                        "e2e_ens",
                         "e2e_browsers",
                     ]
         env:
