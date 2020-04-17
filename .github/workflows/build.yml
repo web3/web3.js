@@ -49,6 +49,8 @@ jobs:
             CI: true
             DISPLAY: :99.0
             PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+            SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+            SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
         steps:
             - uses: actions/setup-node@v1
               with:
