@@ -17,8 +17,6 @@
  * @date 2019
  */
 
-// Minimum TypeScript Version: 3.7
-
 export class Subscription<T> {
     constructor(options: SubscriptionOptions);
 
