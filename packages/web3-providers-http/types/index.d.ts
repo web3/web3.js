@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-// Minimum TypeScript Version: 3.0
-
 import { HttpProviderBase } from 'web3-core-helpers';
 
 export class HttpProvider extends HttpProviderBase {}
