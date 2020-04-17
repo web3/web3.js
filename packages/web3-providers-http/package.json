@@ -8,7 +8,7 @@
         "node": ">=8.0.0"
     },
     "scripts": {
-        "dtslint": "dtslint types --onlyTestTsNext"
+        "dtslint": "dtslint --localTs node_modules/typescript/lib types"
     },
     "types": "types/index.d.ts",
     "main": "src/index.js",
@@ -17,7 +17,7 @@
         "xhr2-cookies": "1.1.0"
     },
     "devDependencies": {
-        "definitelytyped-header-parser": "^1.0.1",
-        "dtslint": "0.4.2"
+        "dtslint": "^3.4.1",
+        "typescript": "latest"
     }
 }
