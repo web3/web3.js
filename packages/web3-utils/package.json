@@ -9,7 +9,7 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint types --onlyTestTsNext"
+        "dtslint": "dtslint --localTs node_modules/typescript/lib types"
     },
     "main": "src/index.js",
     "dependencies": {
@@ -23,7 +23,7 @@
         "utf8": "3.0.0"
     },
     "devDependencies": {
-        "definitelytyped-header-parser": "^1.0.1",
-        "dtslint": "0.4.2"
+        "dtslint": "^3.4.1",
+        "typescript": "latest"
     }
 }

@@ -1600,7 +1600,7 @@ Executes a message call transaction, which is directly executed in the VM of the
 Parameters
 ----------
 
-1. ``Object`` - A transaction object see :ref:`web3.eth.sendTransaction <eth-sendtransaction-return>`, with the difference that for calls the ``from`` property is optional as well.
+1. ``Object`` - A transaction object, see :ref:`web3.eth.sendTransaction <eth-sendtransaction-return>`. For calls the ``from`` property is optional however it is highly recommended to explicitly set it or it may default to `address(0)` depending on your node or provider.
 2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 

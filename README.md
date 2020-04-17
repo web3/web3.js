@@ -4,8 +4,7 @@
 
 # web3.js - Ethereum JavaScript API
 
-[![Gitter][gitter-image]][gitter-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url]
-[![Lerna][lerna-image]][lerna-url]
+[![Gitter][gitter-image]][gitter-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![NPM Package Downloads][npm-image-downloads]][npm-url] [![Build Status][actions-image]][actions-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url]
 
 This is the Ethereum [JavaScript API][docs]
 which connects to the [Generic JSON-RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
@@ -163,14 +162,15 @@ The contribution guidelines are provided in [CONTRIBUTIONS](./CONTRIBUTIONS.md)
 
 [repo]: https://github.com/ethereum/web3.js
 [docs]: http://web3js.readthedocs.io/
-[npm-image]: https://img.shields.io/npm/dm/web3.svg
+[npm-image-version]: https://img.shields.io/npm/v/web3.svg
+[npm-image-downloads]: https://img.shields.io/npm/dm/web3.svg
 [npm-url]: https://npmjs.org/package/web3
-[travis-image]: https://travis-ci.org/ethereum/web3.js.svg?branch=1.x
-[travis-url]: https://travis-ci.org/ethereum/web3.js?branch=1.x
-[deps-image]: https://david-dm.org/ethereum/web3.js/1.x/status.svg
-[deps-url]: https://david-dm.org/ethereum/web3.js/1.x
+[actions-image]: https://github.com/ethereum/web3.js/workflows/Build/badge.svg
+[actions-url]: https://github.com/ethereum/web3.js/actions
 [deps-dev-image]: https://david-dm.org/ethereum/web3.js/1.x/dev-status.svg
-[deps-dev-url]: https://david-dm.org/ethereum/web3.js/1.x/#info=devDependencies
+[deps-dev-url]: https://david-dm.org/ethereum/web3.js/1.x?type=dev
+[dep-dev-image]: https://david-dm.org/ethereum/web3.js/dev-status.svg
+[dep-dev-url]: https://david-dm.org/ethereum/web3.js#info=devDependencies
 [coveralls-image]: https://coveralls.io/repos/ethereum/web3.js/badge.svg?branch=1.x
 [coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=1.x
 [waffle-image]: https://badge.waffle.io/ethereum/web3.js.svg?label=ready&title=Ready
