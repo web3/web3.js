@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-// Minimum TypeScript Version: 3.0
-
 import BN = require('bn.js');
 
 export type Unit =
