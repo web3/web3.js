@@ -17,8 +17,6 @@
  * @date 2018
  */
 
-// Minimum TypeScript Version: 3.0
-
 import { NetworkBase } from 'web3-core';
 
 export class Network extends NetworkBase {}
