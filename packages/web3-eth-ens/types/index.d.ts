@@ -17,8 +17,6 @@
  * @date 2018
  */
 
-// Minimum TypeScript Version: 3.0
-
 import { PromiEvent, TransactionConfig, TransactionReceipt } from 'web3-core';
 import { TransactionRevertInstructionError } from 'web3-core-helpers';
 import { Eth } from 'web3-eth';
