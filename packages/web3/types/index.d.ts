@@ -17,8 +17,6 @@
  * @date 2018
  */
 
-// Minimum TypeScript Version: 3.0
-
 import * as net from 'net';
 import { Bzz } from 'web3-bzz';
 import { BatchRequest, provider, Providers, Extension } from 'web3-core';
