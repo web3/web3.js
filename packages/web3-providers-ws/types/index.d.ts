@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-// Minimum TypeScript Version: 3.0
-
 import { WebsocketProviderBase } from 'web3-core-helpers';
 
 export class WebsocketProvider extends WebsocketProviderBase { }

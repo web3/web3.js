@@ -135,8 +135,6 @@ Released with 1.0.0-beta.37 code base.
 
 - ENS registry addresses updated (#3353, https://medium.com/the-ethereum-name-service/ens-registry-migration-bug-fix-new-features-64379193a5a)
 
-## [Unreleased]
-
 ## [1.2.7]
 
 ### Added
@@ -156,8 +154,11 @@ Released with 1.0.0-beta.37 code base.
   - Removed old bower and meteor artifacts
   - Moved logo assets to own folder
   - Moved github assets to own folder
-- Remove @types/node from (non-dev) dependency tree (#3965, #3227)
-- Improve code clarity of HttpProvider keepAlive option setting (#3463)
+  - Remove @types/node from (non-dev) dependency tree (#3965, #3227)
+- *Please note*: Geth [v1.9.12](https://github.com/ethereum/go-ethereum/releases/tag/v1.9.12) contains a breaking change for `eth_call` that will not default to your first account anymore if `from` is not set. If a sender is not explicitly defined, the `eth_call` will be executed from `address(0)`. (#3467)
+  - This was done to avoid the same input behaving differently in different environments. You should never do `eth_call` without explicitly setting a sender.
+  - This means that if you're calling `view` methods that refer to a `msg.sender` without explicitly setting a `from` address in your request options, you may see unexpected behavior.
+  - In `web3.js`, the `from` address can be specified on a per-call basis or by setting the `defaultAccount` property.
 
 ### Fixed
 
@@ -170,3 +171,18 @@ Released with 1.0.0-beta.37 code base.
 - Race-condition when subscribing to historical logs as first client request (#3389)
 - Fix crash when using Web-Workers by removing any-promise dependency (#3377 #2211 #1774)
 - MaxListenersExceededWarning event emitter warning mitigated (#1648)
+
+## [Unreleased]
+
+## [1.2.8]
+
+### Added
+
+### Changed
+
+- Change CI provider from Travis to Github Actions. (#3468)
+- Improve code clarity of HttpProvider keepAlive option setting. (#3463)
+
+### Fixed
+
+- Fix intermittent CI build issues with `dtslint`. (#3479)
