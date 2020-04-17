@@ -2,7 +2,7 @@
 
 # --------------------------------------------------------------------------------
 # NB: This script temporarily removed from CI while truffle remains on Web3@1.2.1.
-#     To re-enable, add a `env: TEST=e2e_truffle` job to the matrix in travis.yml.
+#     To re-enable, add a `e2e_truffle` job to the matrix in `.github/workflows/test.yml`.
 # --------------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------
