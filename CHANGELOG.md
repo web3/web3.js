@@ -183,3 +183,5 @@ Released with 1.0.0-beta.37 code base.
 - Change CI provider from Travis to Github Actions. (#3468)
 
 ### Fixed
+
+- Fix intermittent CI build issues with `dtslint`. (#3479)
