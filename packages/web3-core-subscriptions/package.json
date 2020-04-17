@@ -9,7 +9,7 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint types"
+        "dtslint": "dtslint --localTs node_modules/typescript/lib types"
     },
     "main": "src/index.js",
     "dependencies": {
@@ -18,7 +18,7 @@
         "web3-core-helpers": "1.2.6"
     },
     "devDependencies": {
-        "definitelytyped-header-parser": "^3.9.0",
-        "dtslint": "^3.4.1"
+        "dtslint": "^3.4.1",
+        "typescript": "latest"
     }
 }
