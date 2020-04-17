@@ -19,8 +19,8 @@ echo "Publishing test site with surge.sh. See link below.                   "
 echo "======================================================================"
 
 # Mark file with current commit and branch
-sed -i "s/__COMMIT_HASH__/$TRAVIS_COMMIT/g" scripts/html/index.html
-sed -i "s/__BRANCH__/$TRAVIS_PULL_REQUEST_BRANCH/g" scripts/html/index.html
+sed -i "s/__COMMIT_HASH__/$GITHUB_SHA/g" scripts/html/index.html
+sed -i "s/__BRANCH__/$GITHUB_REF/g" scripts/html/index.html
 
 cp packages/web3/dist/web3.min.js scripts/html
 cd scripts
