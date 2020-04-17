@@ -18,8 +18,6 @@
  * @date 2018
  */
 
-// Minimum TypeScript Version: 3.0
-
 import * as net from 'net';
 import {
     HttpProviderBase,
