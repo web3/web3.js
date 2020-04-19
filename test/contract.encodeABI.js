@@ -28,7 +28,8 @@ var abi = [
         ],
         payable: false,
         type: "function",
-        stateMutability: "view"
+        stateMutability: "view",
+        gas: 175875
     }
 ];
 

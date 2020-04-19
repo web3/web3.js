@@ -29,8 +29,8 @@
         "docs": "cd docs; make html;",
         "lint": "jshint *.js packages",
         "test": "mocha --grep E2E --invert; jshint *.js packages",
-        "test:unit": "nyc --no-clean --silent _mocha -- -R spec --grep E2E --invert",
-        "test:cov": "npm run cov:clean; npm run test:unit; npm run test:e2e:clients; npm run cov:html",
+        "test:unit": "nyc --no-clean --silent _mocha -- -R spec --grep E2E --invert --exit",
+        "test:cov": "npm run cov:clean; npm run test:unit; npm run test:e2e:clients; npm run cov:merge_reports",
         "dtslint": "lerna run dtslint",
         "depcheck": "lerna exec dependency-check -- --missing --verbose .",
         "bundlesize": "bundlesize",
@@ -49,9 +49,8 @@
         "test:e2e:mosaic": "./scripts/e2e.mosaic.sh",
         "test:e2e:ganache:core": "./scripts/e2e.ganache.core.sh",
         "ci": "./scripts/ci.sh",
-        "coveralls": "./scripts/coveralls.sh",
         "cov:clean": "rm -rf .nyc_output; rm -rf coverage",
-        "cov:html": "nyc report --reporter=html"
+        "cov:merge_reports": "nyc report --reporter=lcov --reporter=html"
     },
     "repository": {
         "type": "git",
@@ -96,6 +95,8 @@
     "devDependencies": {
         "@babel/core": "^7.6.4",
         "@babel/preset-env": "^7.6.3",
+        "@ensdomains/ens": "^0.4.0",
+        "@ensdomains/resolver": "^0.1.13",
         "@types/bignumber.js": "^4.0.2",
         "@types/bn.js": "^4.11.5",
         "@types/node": "^12.6.1",
@@ -108,7 +109,6 @@
         "bundlesize": "^0.18.0",
         "chai": "^4.2.0",
         "core-js": "^3.4.8",
-        "coveralls": "^3.0.7",
         "crypto-js": "^3.1.9-1",
         "del": "^4.1.1",
         "dependency-check": "^4.1.0",
@@ -118,7 +118,7 @@
         "ethjs-signer": "^0.1.1",
         "exorcist": "^1.0.1",
         "ganache-cli": "^6.7.0",
-        "geth-dev-assistant": "^0.1.3",
+        "geth-dev-assistant": "^0.1.4",
         "gulp": "^4.0.2",
         "gulp-jshint": "^2.1.0",
         "gulp-rename": "^1.4.0",
@@ -135,16 +135,14 @@
         "lerna": "^3.18.3",
         "mocha": "^6.2.1",
         "nyc": "^14.1.1",
+        "pify": "^4.0.1",
         "puppeteer": "^1.20.0",
+        "regenerator-runtime": "^0.13.3",
         "sandboxed-module": "^2.0.3",
         "surge": "^0.21.3",
-        "typescript": "next",
+        "typescript": "^3.8.3",
         "underscore": "^1.9.1",
         "vinyl-source-stream": "^2.0.0",
-        "wait-port": "^0.2.6",
-        "@ensdomains/ens": "^0.4.0",
-        "@ensdomains/resolver": "^0.1.13",
-        "truffle": "^5.1.8",
-        "regenerator-runtime": "^0.13.3"
+        "wait-port": "^0.2.6"
     }
 }

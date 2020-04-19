@@ -1,0 +1,81 @@
+name: "Build"
+on:
+    push:
+        branches:
+            - master
+        tags:
+            - "*"
+    pull_request:
+        types: [opened, reopened, synchronize]
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        env:
+            TEST: "build_and_lint"
+        steps:
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: 12
+            - uses: actions/checkout@v1
+            - run: bash ./scripts/install.sh
+            - run: bash ./scripts/ci.sh
+    unit:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: [8, 10, 11, 12, 13]
+        env:
+            TEST: "unit"
+        steps:
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node }}
+            - uses: actions/checkout@v1
+            - run: bash ./scripts/install.sh
+            - run: bash ./scripts/ci.sh
+    e2e:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                testCmd:
+                    [
+                        "unit_and_e2e_clients",
+                        "e2e_ganache",
+                        "e2e_mosaic",
+                        "e2e_browsers",
+                    ]
+        env:
+            TEST: ${{ matrix.testCmd }}
+            CI: true
+            DISPLAY: :99.0
+            PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+            SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+            SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+        steps:
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: 12
+            - uses: actions/checkout@v1
+
+            - run: bash ./scripts/install.sh
+            - run: bash ./scripts/ci.sh
+              continue-on-error: ${{ matrix.testCmd == 'e2e_ganache' || matrix.testCmd == 'e2e_mosiac' }}
+
+            - name: Send coverage reports to Coveralls
+              if: env.TEST == 'unit_and_e2e_clients'
+              uses: coverallsapp/github-action@master
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+    e2e_windows:
+        runs-on: windows-latest
+        env:
+            TEST: "e2e_windows"
+            CI: true
+        steps:
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: 12
+            - uses: actions/checkout@v1
+            - run: bash ./scripts/install.sh
+            - run: bash ./scripts/ci.sh
+              continue-on-error: true
