@@ -8,17 +8,18 @@
     "node": ">=8.0.0"
   },
   "scripts": {
-    "dtslint": "dtslint types --onlyTestTsNext"
+    "dtslint": "dtslint --localTs node_modules/typescript/lib types"
   },
   "types": "types/index.d.ts",
   "main": "src/index.js",
   "dependencies": {
     "@web3-js/websocket": "^1.0.29",
+    "eventemitter3": "^4.0.0",
     "underscore": "1.9.1",
     "web3-core-helpers": "1.2.6"
   },
   "devDependencies": {
-    "definitelytyped-header-parser": "^1.0.1",
-    "dtslint": "0.4.2"
+    "dtslint": "^3.4.1",
+    "typescript": "latest"
   }
 }

@@ -32,7 +32,6 @@ function Subscription(options) {
     this.id = null;
     this.callback = _.identity;
     this.arguments = null;
-    this._reconnectIntervalId = null;
 
     this.options = {
         subscription: options.subscription,
@@ -78,7 +77,11 @@ Subscription.prototype._validateArgs = function (args) {
         subscription.params = 0;
 
     if (args.length !== subscription.params) {
-        throw errors.InvalidNumberOfParams(args.length, subscription.params + 1, args[0]);
+        throw errors.InvalidNumberOfParams(
+            args.length,
+            subscription.params,
+            subscription.subscriptionName
+        );
     }
 };
 
@@ -174,7 +177,6 @@ Subscription.prototype.unsubscribe = function(callback) {
     this.options.requestManager.removeSubscription(this.id, callback);
     this.id = null;
     this.removeAllListeners();
-    clearInterval(this._reconnectIntervalId);
 };
 
 /**
@@ -194,18 +196,28 @@ Subscription.prototype.subscribe = function() {
         return this;
     }
 
+    // throw error, if provider is not set
     if(!this.options.requestManager.provider) {
-        var err1 = new Error('No provider set.');
-        this.callback(err1, null, this);
-        this.emit('error', err1);
+        setTimeout(function(){
+            var err1 = new Error('No provider set.');
+            _this.callback(err1, null, _this);
+            _this.emit('error', err1);
+        },0);
+
         return this;
     }
 
     // throw error, if provider doesnt support subscriptions
     if(!this.options.requestManager.provider.on) {
-        var err2 = new Error('The current provider doesn\'t support subscriptions: '+ this.options.requestManager.provider.constructor.name);
-        this.callback(err2, null, this);
-        this.emit('error', err2);
+        setTimeout(function(){
+            var err2 = new Error(
+                'The current provider doesn\'t support subscriptions: ' +
+                _this.options.requestManager.provider.constructor.name
+            );
+            _this.callback(err2, null, _this);
+            _this.emit('error', err2);
+        },0);
+
         return this;
     }
 
@@ -220,9 +232,13 @@ Subscription.prototype.subscribe = function() {
     // get past logs, if fromBlock is available
     if(payload.params[0] === 'logs' && _.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
         // send the subscription request
+
+        // copy the params to avoid race-condition with deletion below this block
+        var blockParams = Object.assign({}, payload.params[1]);
+
         this.options.requestManager.send({
             method: 'eth_getLogs',
-            params: [payload.params[1]]
+            params: [blockParams]
         }, function (err, logs) {
             if(!err) {
                 logs.forEach(function(log){
@@ -234,8 +250,10 @@ Subscription.prototype.subscribe = function() {
                 // TODO subscribe here? after the past logs?
 
             } else {
-                _this.callback(err, null, _this);
-                _this.emit('error', err);
+                setTimeout(function(){
+                    _this.callback(err, null, _this);
+                    _this.emit('error', err);
+                },0);
             }
         });
     }
@@ -249,12 +267,12 @@ Subscription.prototype.subscribe = function() {
     this.options.requestManager.send(payload, function (err, result) {
         if(!err && result) {
             _this.id = result;
+            _this.method = payload.params[0];
             _this.emit('connected', result);
 
             // call callback on notifications
-            _this.options.requestManager.addSubscription(_this.id, payload.params[0] , _this.options.type, function(err, result) {
-
-                if (!err) {
+            _this.options.requestManager.addSubscription(_this, function(error, result) {
+                if (!error) {
                     if (!_.isArray(result)) {
                         result = [result];
                     }
@@ -272,37 +290,34 @@ Subscription.prototype.subscribe = function() {
                         _this.callback(null, output, _this);
                     });
                 } else {
-                    // unsubscribe, but keep listeners
-                    _this.options.requestManager.removeSubscription(_this.id);
-
-                    // re-subscribe, if connection fails
-                    if(_this.options.requestManager.provider.once) {
-                        _this._reconnectIntervalId = setInterval(function () {
-                            // TODO check if that makes sense!
-                            if (_this.options.requestManager.provider.reconnect) {
-                                _this.options.requestManager.provider.reconnect();
-                            }
-                        }, 500);
-
-                        _this.options.requestManager.provider.once('connect', function () {
-                            clearInterval(_this._reconnectIntervalId);
-                            _this.subscribe(_this.callback);
-                        });
-                    }
-                    _this.emit('error', err);
-
-                     // call the callback, last so that unsubscribe there won't affect the emit above
-                    _this.callback(err, null, _this);
+                    _this.callback(error, false, _this);
+                    _this.emit('error', error);
                 }
             });
         } else {
-          _this.callback(err, null, _this);
-          _this.emit('error', err);
+            setTimeout(function(){
+                _this.callback(err, false, _this);
+                _this.emit('error', err);
+            },0);
         }
     });
 
     // return an object to cancel the subscription
     return this;
+};
+
+/**
+ * Resubscribe
+ *
+ * @method resubscribe
+ *
+ * @returns {void}
+ */
+Subscription.prototype.resubscribe = function () {
+    this.options.requestManager.removeSubscription(this.id); // unsubscribe
+    this.id = null;
+
+    this.subscribe(this.callback);
 };
 
 module.exports = Subscription;

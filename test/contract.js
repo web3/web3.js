@@ -1178,7 +1178,7 @@ var runTests = function(contractFactory) {
                 assert.equal(result.returnValues.amount, 1);
                 assert.equal(result.returnValues.t1, 1);
                 assert.equal(result.returnValues.t2, 8);
-                assert.deepEqual(sub.options.requestManager.subscriptions, {});
+                assert.deepEqual(sub.options.requestManager.subscriptions, new Map());
 
                 assert.equal(count, 1);
                 count++;
@@ -1260,7 +1260,7 @@ var runTests = function(contractFactory) {
                 assert.equal(result.returnValues.amount, 1);
                 assert.equal(result.returnValues.t1, 1);
                 assert.equal(result.returnValues.t2, 8);
-                assert.deepEqual(sub.options.requestManager.subscriptions, {});
+                assert.deepEqual(sub.options.requestManager.subscriptions, new Map());
 
                 assert.equal(count, 1);
                 count++;
@@ -3121,6 +3121,31 @@ describe('typical usage', function() {
         eth.setProvider(provider2);
         assert.deepEqual(contract.currentProvider, provider2);
         assert.deepEqual(eth.currentProvider, provider2);
+    });
+
+    it('should update contract instance provider when calling setProvider on itself', function () {
+        var provider1 = new FakeIpcProvider();
+        var provider2 = new FakeHttpProvider();
+
+        var eth = new Eth(provider1);
+        var contract = new eth.Contract(abi, address);
+        assert.deepEqual(contract.currentProvider, provider1);
+
+        contract.setProvider(provider2);
+        assert.deepEqual(contract.currentProvider, provider2);
+    });
+
+    it('errors when invoked without the "new" operator', function () {
+        try {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+
+            eth.Contract(abi, address);
+
+            assert.fail();
+        } catch(err) {
+            assert(err.message.includes('the "new" keyword'));
+        }
     });
 
     it('should deploy a contract, sign transaction, and return contract instance', function (done) {
