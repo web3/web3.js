@@ -19,10 +19,10 @@
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
-import * as http from "http";
-import * as https from "https";
+import * as http from 'http';
+import * as https from 'https';
 
-import { HttpProviderBase, JsonRpcResponse } from "web3-core-helpers";
+import { HttpProviderBase, JsonRpcResponse } from 'web3-core-helpers';
 
 export interface HttpHeader {
     name: string;
