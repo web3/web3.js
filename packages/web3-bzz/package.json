@@ -1,6 +1,6 @@
 {
     "name": "web3-bzz",
-    "version": "1.2.7-rc.0",
+    "version": "1.2.7",
     "description": "Web3 module to interact with the Swarm network.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-bzz",
     "license": "LGPL-3.0",
