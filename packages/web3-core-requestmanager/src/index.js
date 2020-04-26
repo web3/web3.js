@@ -130,6 +130,13 @@ RequestManager.prototype.setProvider = function (provider, net) {
                     subscription.callback(errors.ConnectionCloseError(event));
                     _this.subscriptions.delete(subscription.subscription.id);
                 });
+
+                if(_this.provider.emit){
+                    _this.provider.emit('error', errors.ConnectionCloseError(event));
+                }
+            }
+            if(_this.provider.emit){
+                _this.provider.emit('end', event);
             }
         });
 
