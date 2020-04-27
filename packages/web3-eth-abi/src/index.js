@@ -24,8 +24,8 @@
 var _ = require('underscore');
 var utils = require('web3-utils');
 
-var EthersAbi = require('ethers/utils/abi-coder').AbiCoder;
-var ethersAbiCoder = new EthersAbi(function (type, value) {
+var EthersAbiCoder = require('@ethersproject/abi').AbiCoder;
+var ethersAbiCoder = new EthersAbiCoder(function (type, value) {
     if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) {
         return value.toString();
     }
@@ -99,9 +99,27 @@ ABICoder.prototype.encodeParameter = function (type, param) {
 ABICoder.prototype.encodeParameters = function (types, params) {
     return ethersAbiCoder.encode(
         this.mapTypes(types),
-        params.map(function (param) {
+        params.map(function (param, index) {
+            // Format BN to string
             if (utils.isBN(param) || utils.isBigNumber(param)) {
                 return param.toString(10);
+            }
+
+            // Format bytes to even-length
+            if (types[index] === 'bytes') {
+                if (param.length & 1) { // bitwise AND operator returns true if odd
+                    return param + '0'
+                }
+            }
+
+            // Format bytes32 to fixed length
+            if (types[index] === 'bytes32') {
+                if (param.substring(2) === '0x') {
+                    param = param.substring(2)
+                }
+                if (param.length < 64) {
+                    return utils.rightPad(param, 64)
+                }
             }
 
             return param;
