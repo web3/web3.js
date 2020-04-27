@@ -181,6 +181,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - Change CI provider from Travis to Github Actions. (#3468)
+- Update `web3-eth-abi` ABICoder dependency. (#3490)
 
 ### Fixed
 
