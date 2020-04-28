@@ -32,6 +32,7 @@ function Subscription(options) {
     this.id = null;
     this.callback = _.identity;
     this.arguments = null;
+    this.checkpoint = null; // for reconnection
 
     this.options = {
         subscription: options.subscription,
@@ -192,6 +193,12 @@ Subscription.prototype.subscribe = function() {
     var args = Array.prototype.slice.call(arguments);
     var payload = this._toPayload(args);
 
+    if (this.checkpoint) {
+        payload.params[1] = {
+            fromBlock: this.checkpoint + 1, // checkpoint was already processed
+        }
+    }
+
     if(!payload) {
         return this;
     }
@@ -279,6 +286,7 @@ Subscription.prototype.subscribe = function() {
 
                     result.forEach(function(resultItem) {
                         var output = _this._formatOutput(resultItem);
+                        _this.checkpoint = output.blockNumber;
 
                         if (_.isFunction(_this.options.subscription.subscriptionHandler)) {
                             return _this.options.subscription.subscriptionHandler.call(_this, output);
