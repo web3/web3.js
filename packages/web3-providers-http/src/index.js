@@ -40,13 +40,14 @@ var HttpProvider = function HttpProvider(host, options) {
     this.agent = options.agent;
     this.connected = false;
 
-    var keepAlive = (options.keepAlive === true || options.keepAlive !== false) ? true : false;
+    // keepAlive is true unless explicitly set to false
+    const keepAlive = options.keepAlive !== false;
     this.host = host || 'http://localhost:8545';
     if (!this.agent) {
         if (this.host.substring(0,5) === "https") {
-            this.httpsAgent = new https.Agent({ keepAlive: keepAlive });
+            this.httpsAgent = new https.Agent({ keepAlive });
         } else {
-            this.httpAgent = new http.Agent({ keepAlive: keepAlive });
+            this.httpAgent = new http.Agent({ keepAlive });
         }
     }
 };

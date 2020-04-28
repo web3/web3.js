@@ -181,6 +181,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - Change CI provider from Travis to Github Actions. (#3468)
+- Improve code clarity of HttpProvider keepAlive option setting. (#3463)
 
 ### Fixed
 
