@@ -25,7 +25,7 @@ Fixes #(issue)
 - [ ] Any dependent changes have been merged and published in downstream modules.
 - [ ] I ran `npm run dtslint` with success and extended the tests and types if necessary.
 - [ ] I ran `npm run test:unit` with success.
-- [ ] I have executed `npm run test:cov` and my test cases cover all the lines and branches of the added code.
-- [ ] I ran `npm run build-all` and tested the resulting files from  `dist` folder in a browser.
+- [ ] I ran `npm run test:cov` and my test cases cover all the lines and branches of the added code.
+- [ ] I ran `npm run build-all` and tested the resulting files from `dist` folder in a browser.
 - [ ] I have updated the `CHANGELOG.md` file in the root folder.
 - [ ] I have tested my code on the live network.

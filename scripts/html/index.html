@@ -11,6 +11,8 @@
   <p id="blockNumber"></p>
   <p id="timestamp"></p>
   <p id="gasLimit"></p>
+  <p id="commitHash"></p>
+  <p id="branch"></p>
 
   <script>
     var web3 = new Web3('https://mainnet.infura.io/v3/1d13168ffb894ad2827f2152620bd27c');
@@ -20,6 +22,8 @@
       document.getElementById("timestamp").innerHTML = "block.timestamp: " + block.timestamp;
       document.getElementById("gasLimit").innerHTML = "block.gasLimit: " + block.gasLimit;
       document.getElementById("today").innerHTML = "Today is " + Date(block.timestamp);
+      document.getElementById("commitHash").innerHTML = "Commit: " + "__COMMIT_HASH__";
+      document.getElementById("branch").innerHTML = "Branch: " + "__BRANCH__";
     }
     writeBlock();
   </script>
