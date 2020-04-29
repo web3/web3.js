@@ -1,8 +1,266 @@
 "use strict";
 
-// This ABI taken from @ensdomains/resolver@0.2.4
-// @ensdomains/resolver/build/contracts/Resolver.json
 var RESOLVER = [
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "interfaceID",
+                "type": "bytes4"
+            }
+        ],
+        "name": "supportsInterface",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            },
+            {
+                "name": "contentTypes",
+                "type": "uint256"
+            }
+        ],
+        "name": "ABI",
+        "outputs": [
+            {
+                "name": "contentType",
+                "type": "uint256"
+            },
+            {
+                "name": "data",
+                "type": "bytes"
+            }
+        ],
+        "payable": false,
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            },
+            {
+                "name": "hash",
+                "type": "bytes"
+            }
+        ],
+        "name": "setMultihash",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            }
+        ],
+        "name": "multihash",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            },
+            {
+                "name": "x",
+                "type": "bytes32"
+            },
+            {
+                "name": "y",
+                "type": "bytes32"
+            }
+        ],
+        "name": "setPubkey",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            }
+        ],
+        "name": "content",
+        "outputs": [
+            {
+                "name": "ret",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            }
+        ],
+        "name": "addr",
+        "outputs": [
+            {
+                "name": "ret",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            },
+            {
+                "name": "contentType",
+                "type": "uint256"
+            },
+            {
+                "name": "data",
+                "type": "bytes"
+            }
+        ],
+        "name": "setABI",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            }
+        ],
+        "name": "name",
+        "outputs": [
+            {
+                "name": "ret",
+                "type": "string"
+            }
+        ],
+        "payable": false,
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            },
+            {
+                "name": "name",
+                "type": "string"
+            }
+        ],
+        "name": "setName",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            },
+            {
+                "name": "hash",
+                "type": "bytes32"
+            }
+        ],
+        "name": "setContent",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            }
+        ],
+        "name": "pubkey",
+        "outputs": [
+            {
+                "name": "x",
+                "type": "bytes32"
+            },
+            {
+                "name": "y",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            },
+            {
+                "name": "addr",
+                "type": "address"
+            }
+        ],
+        "name": "setAddr",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "ensAddr",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "type": "constructor"
+    },
     {
         "anonymous": false,
         "inputs": [
@@ -30,16 +288,11 @@ var RESOLVER = [
             },
             {
                 "indexed": false,
-                "name": "coinType",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "name": "newAddress",
-                "type": "bytes"
+                "name": "hash",
+                "type": "bytes32"
             }
         ],
-        "name": "AddressChanged",
+        "name": "ContentChanged",
         "type": "event"
     },
     {
@@ -107,28 +360,6 @@ var RESOLVER = [
                 "type": "bytes32"
             },
             {
-                "indexed": true,
-                "name": "indexedKey",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "name": "key",
-                "type": "string"
-            }
-        ],
-        "name": "TextChanged",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
                 "indexed": false,
                 "name": "hash",
                 "type": "bytes"
@@ -136,92 +367,6 @@ var RESOLVER = [
         ],
         "name": "ContenthashChanged",
         "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "indexed": false,
-                "name": "hash",
-                "type": "bytes32"
-            }
-        ],
-        "name": "ContentChanged",
-        "type": "event"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "contentTypes",
-                "type": "uint256"
-            }
-        ],
-        "name": "ABI",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            },
-            {
-                "name": "",
-                "type": "bytes"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "coinType",
-                "type": "uint256"
-            }
-        ],
-        "name": "addr",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            }
-        ],
-        "name": "addr",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
     },
     {
         "constant": true,
@@ -243,175 +388,6 @@ var RESOLVER = [
         "type": "function"
     },
     {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            }
-        ],
-        "name": "dnsrr",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            }
-        ],
-        "name": "name",
-        "outputs": [
-            {
-                "name": "",
-                "type": "string"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            }
-        ],
-        "name": "pubkey",
-        "outputs": [
-            {
-                "name": "x",
-                "type": "bytes32"
-            },
-            {
-                "name": "y",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "key",
-                "type": "string"
-            }
-        ],
-        "name": "text",
-        "outputs": [
-            {
-                "name": "",
-                "type": "string"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "interfaceID",
-                "type": "bytes4"
-            }
-        ],
-        "name": "interfaceImplementer",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "contentType",
-                "type": "uint256"
-            },
-            {
-                "name": "data",
-                "type": "bytes"
-            }
-        ],
-        "name": "setABI",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "addr",
-                "type": "address"
-            }
-        ],
-        "name": "setAddr",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "coinType",
-                "type": "uint256"
-            },
-            {
-                "name": "a",
-                "type": "bytes"
-            }
-        ],
-        "name": "setAddr",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
         "constant": false,
         "inputs": [
             {
@@ -424,220 +400,6 @@ var RESOLVER = [
             }
         ],
         "name": "setContenthash",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "data",
-                "type": "bytes"
-            }
-        ],
-        "name": "setDnsrr",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "_name",
-                "type": "string"
-            }
-        ],
-        "name": "setName",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "x",
-                "type": "bytes32"
-            },
-            {
-                "name": "y",
-                "type": "bytes32"
-            }
-        ],
-        "name": "setPubkey",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "key",
-                "type": "string"
-            },
-            {
-                "name": "value",
-                "type": "string"
-            }
-        ],
-        "name": "setText",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "interfaceID",
-                "type": "bytes4"
-            },
-            {
-                "name": "implementer",
-                "type": "address"
-            }
-        ],
-        "name": "setInterface",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "interfaceID",
-                "type": "bytes4"
-            }
-        ],
-        "name": "supportsInterface",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "pure",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "data",
-                "type": "bytes[]"
-            }
-        ],
-        "name": "multicall",
-        "outputs": [
-            {
-                "name": "results",
-                "type": "bytes[]"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            }
-        ],
-        "name": "content",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            }
-        ],
-        "name": "multihash",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "hash",
-                "type": "bytes32"
-            }
-        ],
-        "name": "setContent",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "node",
-                "type": "bytes32"
-            },
-            {
-                "name": "hash",
-                "type": "bytes"
-            }
-        ],
-        "name": "setMultihash",
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
