@@ -145,7 +145,7 @@ ABICoder.prototype.encodeParameters = function (types, params) {
                     coder.coders.forEach((c, i) => {
                         if (c.name === 'bytes') {
                             param[i] = bytesToEvenLength(param[i])
-                       } else if (c.name === 'bytes32') {
+                        } else if (c.name === 'bytes32') {
                             param[i] = bytes32ToFixedLength(param[i])
                         } else if (c.name === 'tuple') {
                             modifyParams(c, param[i])
