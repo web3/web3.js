@@ -350,6 +350,38 @@ describe('WebsocketProvider (ganache)', function () {
         });
     });
 
+    it('does not auto reconnect after max. configured attempts has elapsed', function () {
+        this.timeout(6000);
+
+        return new Promise(async function (resolve) {
+            server = ganache.server({port: port});
+            await pify(server.listen)(port);
+
+            web3 = new Web3(
+                new Web3.providers.WebsocketProvider(
+                    host + port,
+                    {reconnect: {auto: true, maxAttempts: 1, delay: 1000,}}
+                )
+            );
+
+            web3.currentProvider.once('connect', async function () {
+                // Close and then re-open server after
+                // reconnection window has elapsed.
+                await pify(server.close)();
+                await utils.waitSeconds(2);
+                await pify(server.listen)(port);
+
+                try {
+                    await web3.eth.getBlockNumber();
+                } catch (err){
+                    assert(err.message.includes('connection not open on send()'));
+                    resolve();
+                }
+
+            });
+        });
+    });
+
     it('allows disconnection when reconnect is enabled', function () {
         this.timeout(6000);
 
