@@ -103,8 +103,6 @@ function isExpectedReceipt(receipt) {
 }
 
 describe('ens', function () {
-    this.timeout(5000);
-
     let provider;
     let web3;
     const hashedName = namehash.hash('foobar.eth');
