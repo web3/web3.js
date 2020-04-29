@@ -24,19 +24,7 @@ var PromiEvent = require('web3-core-promievent');
 var namehash = require('eth-ens-namehash');
 var errors = require('web3-core-helpers').errors;
 var _ = require('underscore');
-
-// These ids obtained at ensdomains docs:
-// https://docs.ens.domains/contract-developer-guide/writing-a-resolver
-var interfaceIds = {
-    addr: "0x3b3b57de",
-    setAddr: "0x3b3b57de",
-    pubkey: "0xc8690233",
-    setPubkey: "0xc8690233",
-    contenthash: "0xbc1c58d1",
-    setContenthash: "0xbc1c58d1",
-    content: "0xd8389dc5",
-    setContent: "0xd8389dc5"
-};
+var interfaceIds = require('../config').interfaceIds;
 
 /**
  * @param {Registry} registry
