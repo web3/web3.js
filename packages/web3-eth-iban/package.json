@@ -1,6 +1,6 @@
 {
     "name": "web3-eth-iban",
-    "version": "1.2.6",
+    "version": "1.2.7",
     "description": "This package converts Ethereum addresses to IBAN addresses a vice versa.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth-iban",
     "license": "LGPL-3.0",
@@ -14,7 +14,7 @@
     "main": "src/index.js",
     "dependencies": {
         "bn.js": "4.11.8",
-        "web3-utils": "1.2.6"
+        "web3-utils": "1.2.7"
     },
     "devDependencies": {
         "dtslint": "^3.4.1",
