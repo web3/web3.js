@@ -51,6 +51,7 @@ jobs:
             PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
             SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
             SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+            BUNDLESIZE_GITHUB_TOKEN: ${{ secrets.BUNDLESIZE_GITHUB_TOKEN }}
         steps:
             - uses: actions/setup-node@v1
               with:
