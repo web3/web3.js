@@ -411,8 +411,9 @@ export interface LogsOptions {
 
 export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest' | 'genesis';
 
-export interface AbstractProvider extends EventEmitter {
+export interface AbstractProvider {
     send(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
+    sendAsync(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
   }
 
 export type provider =
