@@ -178,6 +178,8 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 
+- Introduce review and release guidelines. (#3460)
+
 ### Changed
 
 - Change CI provider from Travis to Github Actions. (#3468)
