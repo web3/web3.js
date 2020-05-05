@@ -179,11 +179,14 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - Introduce review and release guidelines. (#3460)
+- Add EIP-1193 compatible provider to `AbstractProvider` interface. (#3499)
+- Add Typescript definitions for contract `methods` and `call`. (#3454)
 
 ### Changed
 
 - Change CI provider from Travis to Github Actions. (#3468)
 - Improve code clarity of HttpProvider keepAlive option setting. (#3463)
+- Updated type definitions for Web3 HTTP Provider. (#3482)
 
 ### Fixed
 
