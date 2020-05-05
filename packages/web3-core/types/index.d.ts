@@ -19,12 +19,15 @@
  */
 
 import * as net from 'net';
+import { EventEmitter } from "events"
 import {
     HttpProviderBase,
     HttpProviderOptions,
     IpcProviderBase,
     WebsocketProviderBase,
-    WebsocketProviderOptions
+    WebsocketProviderOptions,
+    JsonRpcPayload,
+    JsonRpcResponse
 } from 'web3-core-helpers';
 import { Method } from 'web3-core-method';
 import BN = require('bn.js');
@@ -408,9 +411,15 @@ export interface LogsOptions {
 
 export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest' | 'genesis';
 
+export interface AbstractProvider {
+    send(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
+    sendAsync(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
+  }
+
 export type provider =
     | HttpProvider
     | IpcProvider
     | WebsocketProvider
+    | AbstractProvider
     | string
     | null;
