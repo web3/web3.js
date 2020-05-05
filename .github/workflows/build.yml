@@ -49,6 +49,9 @@ jobs:
             CI: true
             DISPLAY: :99.0
             PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+            SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+            SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+            BUNDLESIZE_GITHUB_TOKEN: ${{ secrets.BUNDLESIZE_GITHUB_TOKEN }}
         steps:
             - uses: actions/setup-node@v1
               with:
@@ -57,7 +60,7 @@ jobs:
 
             - run: bash ./scripts/install.sh
             - run: bash ./scripts/ci.sh
-              continue-on-error: ${{ matrix.testCmd == 'e2e_ganache' || matrix.testCmd == 'e2e_mosiac' }}
+              continue-on-error: ${{ matrix.testCmd == 'e2e_ganache' || matrix.testCmd == 'e2e_mosaic' }}
 
             - name: Send coverage reports to Coveralls
               if: env.TEST == 'unit_and_e2e_clients'
