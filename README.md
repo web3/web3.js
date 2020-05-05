@@ -142,7 +142,9 @@ npm test
 
 ### Contributing
 
-The contribution guidelines are provided in [CONTRIBUTIONS](./CONTRIBUTIONS.md)
+Please follow the [Contribution Guidelines](./CONTRIBUTIONS.md) and [Review Guidelines](./REVIEW.md).
+
+This project adheres to the [Release Guidelines](./REVIEW.md).
 
 ### Community
 

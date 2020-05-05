@@ -19,6 +19,9 @@
 
 import Web3 from 'web3';
 import * as net from 'net';
+import { AbstractProvider } from 'web3-core';
+import { JsonRpcPayload, JsonRpcResponse } from "web3-core-helpers"
+import { EventEmitter } from 'events';
 
 // $ExpectType Utils
 Web3.utils;
@@ -85,3 +88,10 @@ web3 = new Web3('https://localhost:5000/', netSocket);
 
 // $ExpectType Web3
 web3 = new Web3();
+
+class CustomProvider implements AbstractProvider {
+    send(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void) {}
+    sendAsync(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void) {}
+}
+// $ExpectType Web3
+web3 = new Web3(new CustomProvider());
