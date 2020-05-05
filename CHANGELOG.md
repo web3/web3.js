@@ -178,10 +178,14 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 
+- Introduce review and release guidelines. (#3460)
+
 ### Changed
 
 - Change CI provider from Travis to Github Actions. (#3468)
+- Improve code clarity of HttpProvider keepAlive option setting. (#3463)
 
 ### Fixed
 
 - Fix intermittent CI build issues with `dtslint`. (#3479)
+- Fix provider "error" / "end" events not fired when Websocket provider disconnects (#3485)

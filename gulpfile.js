@@ -119,6 +119,7 @@ var ugliyOptions = {
     }
 };
 
+// Apply lerna.json version to root package.json
 gulp.task('version', function() {
     if (!lernaJSON.version) {
         throw new Error('version property is missing from lerna.json');
@@ -143,6 +144,7 @@ gulp.task('lint', function() {
         .pipe(jshint.reporter('default'));
 });
 
+// Delete dist folder
 gulp.task('clean', gulp.series('lint', function(cb) {
     del([DEST]).then(cb.bind(null, null));
 }));
