@@ -36,7 +36,7 @@ var Personal = function Personal() {
     // sets _requestmanager
     core.packageInit(this, arguments);
 
-    this.net = new Net(this.currentProvider);
+    this.net = new Net(this);
 
     var defaultAccount = null;
     var defaultBlock = 'latest';

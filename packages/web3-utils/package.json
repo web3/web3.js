@@ -1,6 +1,6 @@
 {
     "name": "web3-utils",
-    "version": "1.2.6",
+    "version": "1.2.7",
     "description": "Collection of utility functions used in web3.js.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-utils",
     "license": "LGPL-3.0",
@@ -9,7 +9,7 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint types --onlyTestTsNext"
+        "dtslint": "dtslint --localTs node_modules/typescript/lib types"
     },
     "main": "src/index.js",
     "dependencies": {
@@ -23,7 +23,7 @@
         "utf8": "3.0.0"
     },
     "devDependencies": {
-        "definitelytyped-header-parser": "^1.0.1",
-        "dtslint": "0.4.2"
+        "dtslint": "^3.4.1",
+        "typescript": "latest"
     }
 }
