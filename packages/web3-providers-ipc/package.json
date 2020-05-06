@@ -1,6 +1,6 @@
 {
     "name": "web3-providers-ipc",
-    "version": "1.2.6",
+    "version": "1.2.7",
     "description": "Module to handle web3 RPC connections over IPC sockets.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-providers-ipc",
     "license": "LGPL-3.0",
@@ -8,18 +8,18 @@
         "node": ">=8.0.0"
     },
     "scripts": {
-        "dtslint": "dtslint types --onlyTestTsNext"
+        "dtslint": "dtslint --localTs node_modules/typescript/lib types"
     },
     "types": "types/index.d.ts",
     "main": "src/index.js",
     "dependencies": {
         "oboe": "2.1.4",
         "underscore": "1.9.1",
-        "web3-core-helpers": "1.2.6"
+        "web3-core-helpers": "1.2.7"
     },
     "devDependencies": {
         "@types/node": "^12.12.5",
-        "definitelytyped-header-parser": "^1.0.1",
-        "dtslint": "0.4.2"
+        "dtslint": "^3.4.1",
+        "typescript": "latest"
     }
 }

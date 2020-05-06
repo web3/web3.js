@@ -21,12 +21,16 @@ fi
 # To model publication correctly, this script needs to run
 # without web3's dev deps being installed. It installs
 # what it needs here.
-npm install -g verdaccio@4.4.2
+npm install -g verdaccio@4.4.4
 npm install -g npm-auth-to-token@1.0.0
 npm install -g lerna@3.18.3
 
-# Launch npm proxy registry
-verdaccio --config verdaccio.yml & npx wait-port 4873
+# Launch npm proxy registry and save pid to kill server (req. in Windows env)
+verdaccio --config verdaccio.yml &
+VERDACCIO_PID=$!
+echo "VERDACCIO_PID=$VERDACCIO_PID" > verdaccio_pid
+
+npx wait-port 4873
 
 # `npm add user`
 curl -XPUT \
@@ -42,11 +46,10 @@ npm-auth-to-token \
   -r http://localhost:4873
 
 # Prep branch for Lerna's git-checks
-BRANCH=$TRAVIS_PULL_REQUEST_BRANCH
-if [ -z "$BRANCH" ]; then
-
-  BRANCH=$TRAVIS_BRANCH
-
+if [[ $GITHUB_REF = 'refs/pull/'* ]]; then
+  BRANCH=${GITHUB_HEAD_REF#refs/pull/}
+else
+  BRANCH=${GITHUB_REF#refs/heads/}
 fi
 
 git checkout $BRANCH --
@@ -57,7 +60,12 @@ lerna version minor \
   --no-git-tag-version \
   --no-push \
   --allow-branch $BRANCH \
+  --ignore-scripts \
   --yes
+
+# Set identity prior to publishing (necessary for Windows)
+git config user.email "you@example.com"
+git config user.name "Your Name"
 
 # Commit changes because lerna checks git before
 git commit -a -m 'virtual-version-bump'
@@ -66,5 +74,6 @@ git commit -a -m 'virtual-version-bump'
 lerna publish from-package \
   --dist-tag e2e \
   --registry http://localhost:4873 \
+  --ignore-scripts \
   --yes
 

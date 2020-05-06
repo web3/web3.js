@@ -1,23 +1,27 @@
-const addresses = require('./config/ensAddresses');
-const registryAddr = addresses.registry;
-const resolverAddr = addresses.resolver;
+const setupENS = require('../scripts/js/ens');
 const utils = require('./helpers/test.utils');
 const Web3 = utils.getWeb3();
 const assert = require('assert');
 
 describe('ENS [ @E2E ]', function () {
+    this.timeout(50000);
+
     let web3;
     let account;
+    let accounts;
+    let addresses;
+    let registryAddr;
+    let resolverAddr;
 
-    if (!process.env.E2E_ENS) {
-        return;
-    }
-
-    beforeEach(async function () {
-        web3 = new Web3('ws://localhost:' + utils.getWebsocketPort());
-        web3.eth.ens.registryAddress = registryAddr;
-        const accounts = await web3.eth.getAccounts();
+    before(async function(){
+        web3 = new Web3('http://localhost:8545');
+        accounts = await web3.eth.getAccounts();
         account = accounts[0];
+
+        addresses = await setupENS(web3);
+        registryAddr = addresses.registry;
+        resolverAddr = addresses.resolver;
+        web3.eth.ens.registryAddress = registryAddr;
     });
 
     it('custom registry got defined in the ENS module', function () {
@@ -25,7 +29,7 @@ describe('ENS [ @E2E ]', function () {
     });
 
     it('should return the subnode owner of "resolver"', async function () {
-        const owner = await web3.eth.ens.registry.owner('resolver');
+        const owner = await web3.eth.ens.registry.getOwner('resolver');
 
         assert.equal(
             owner,
@@ -34,7 +38,7 @@ describe('ENS [ @E2E ]', function () {
     });
 
     it('should fetch the registered resolver for the subnode "resolver"', async function () {
-        const resolver = await web3.eth.ens.registry.resolver('resolver');
+        const resolver = await web3.eth.ens.registry.getResolver('resolver');
         assert.equal(resolver.options.address, resolverAddr);
     });
 

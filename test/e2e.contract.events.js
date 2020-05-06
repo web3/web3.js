@@ -13,6 +13,7 @@ describe('contract.events [ @E2E ]', function() {
     var accounts;
     var basic;
     var instance;
+    var port;
 
     var basicOptions = {
         data: Basic.bytecode,
@@ -20,8 +21,8 @@ describe('contract.events [ @E2E ]', function() {
         gas: 4000000
     };
 
-    before(async function(){
-        var port = utils.getWebsocketPort();
+    beforeEach(async function(){
+        port = utils.getWebsocketPort();
 
         web3 = new Web3('ws://localhost:' + port);
         accounts = await web3.eth.getAccounts();
@@ -70,6 +71,161 @@ describe('contract.events [ @E2E ]', function() {
                 .methods
                 .firesEvent(accounts[0], 1)
                 .send({from: accounts[0]});
+        });
+    });
+
+    it('should not hear the error handler when connection.closed() called', function(){
+        this.timeout(15000);
+
+        let failed = false;
+
+        return new Promise(async (resolve, reject) => {
+            instance
+                .events
+                .BasicEvent({
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                })
+                .on('error', function(err) {
+                    failed = true;
+                    this.removeAllListeners();
+                    reject(new Error('err listener should not hear connection.close'));
+                });
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({from: accounts[0]});
+
+            web3.currentProvider.connection.close();
+
+            // Resolve only if we haven't already rejected
+            setTimeout(() => { if(!failed) resolve() }, 2500)
+        });
+    });
+
+    it('should not hear the error handler when provider.disconnect() called', function(){
+        this.timeout(15000);
+
+        let failed = false;
+
+        return new Promise(async (resolve, reject) => {
+            instance
+                .events
+                .BasicEvent({
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                })
+                .on('error', function(err) {
+                    failed = true;
+                    this.removeAllListeners();
+                    reject(new Error('err listener should not hear provider.disconnect'));
+                });
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({from: accounts[0]});
+
+            web3.currentProvider.disconnect();
+
+            // Resolve only if we haven't already rejected
+            setTimeout(() => { if(!failed) resolve() }, 2500)
+        });
+    });
+
+    // Regression test for a race-condition where a fresh web3 instance
+    // subscribing to past events would have its call parameters deleted while it
+    // made initial Websocket handshake and return an incorrect response.
+    it('can immediately listen for events in the past', async function(){
+        this.timeout(15000);
+
+        const first = await instance
+            .methods
+            .firesEvent(accounts[0], 1)
+            .send({from: accounts[0]});
+
+        const second = await instance
+            .methods
+            .firesEvent(accounts[0], 1)
+            .send({from: accounts[0]});
+
+        // Go forward one block...
+        await utils.mine(web3, accounts[0]);
+        const latestBlock = await web3.eth.getBlockNumber();
+
+        assert(first.blockNumber < latestBlock);
+        assert(second.blockNumber < latestBlock);
+
+        // Re-instantiate web3 & instance to simulate
+        // subscribing to past events as first request
+        web3 = new Web3('ws://localhost:' + port);
+        const newInstance = new web3.eth.Contract(Basic.abi, instance.options.address);
+
+        let counter = 0;
+        await new Promise(async resolve => {
+            newInstance
+                .events
+                .BasicEvent({
+                    fromBlock: 0
+                })
+                .on('data', function(event) {
+                    counter++;
+                    assert(event.blockNumber < latestBlock);
+
+                    if (counter === 2){
+                        this.removeAllListeners();
+                        resolve();
+                    }
+                });
+        });
+    });
+
+    it('hears events when subscribed to "logs" (emitter)', function(){
+        return new Promise(async function(resolve, reject){
+
+            assert(typeof instance.options.address === 'string');
+            assert(instance.options.address.length > 0);
+
+            const subscription = web3.eth.subscribe(
+                "logs",
+                {
+                    address: instance.options.address
+                })
+                .once("data", function(log) {
+                    assert.equal(log.address, instance.options.address);
+                    subscription.unsubscribe();
+                    resolve();
+                });
+
+            await instance
+                    .methods
+                    .firesEvent(accounts[0], 1)
+                    .send({from: accounts[0]});
+        });
+    });
+
+    it('hears events when subscribed to "logs" (callback)', function(){
+        return new Promise(async function(resolve, reject){
+
+            assert(typeof instance.options.address === 'string');
+            assert(instance.options.address.length > 0);
+
+            const subscription = web3.eth.subscribe(
+                "logs",
+                {
+                    address: instance.options.address
+                },
+                function(error, log) {
+                   assert.equal(log.address, instance.options.address);
+                   subscription.unsubscribe();
+                   resolve();
+                });
+
+            await instance
+                    .methods
+                    .firesEvent(accounts[0], 1)
+                    .send({from: accounts[0]});
         });
     });
 
