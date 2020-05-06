@@ -26,8 +26,9 @@ First you need to get web3.js into your project. This can be done using the foll
 - pure js: link the ``dist/web3.min.js``
 
 After that you need to create a web3 instance and set a provider.
-Ethereum supported Browsers like TrustWallet or MetaMask will have an ``ethereumProvider`` or ``ethereum``
-or ``web3.currentProvider`` available. For  web3.js, check ``Web3.givenProvider``.
+
+Most Ethereum-supported browsers like MetaMask and TrustWallet have an [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) compliant provider available at ``window.ethereum``. For web3.js, check ``Web3.givenProvider``.
+
 If this property is ``null`` you should connect to a remote/local node.
 
 .. code-block:: javascript
