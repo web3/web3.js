@@ -223,6 +223,13 @@ Subscription.prototype.subscribe = function() {
         return this;
     }
 
+    // Re-subscription only: continue fetching from the last block we received.
+    // a dropped connection may have resulted in gaps in the logs...
+    if (this.lastBlock && _.isObject(this.options.params)){
+        payload.params[1] = this.options.params
+        payload.params[1].fromBlock = this.lastBlock +1;
+    }
+
     // if id is there unsubscribe first
     if (this.id) {
         this.unsubscribe();
@@ -233,16 +240,11 @@ Subscription.prototype.subscribe = function() {
 
     // get past logs, if fromBlock is available
     if(payload.params[0] === 'logs' && _.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
-        // continue fetching from the last block we received.
-        // a dropped connection may have resulted in gaps in the logs...
-        if (this.lastBlock){
-            payload.params[1].fromBlock = this.lastBlock + 1;
-        }
+        // send the subscription request
 
         // copy the params to avoid race-condition with deletion below this block
         var blockParams = Object.assign({}, payload.params[1]);
 
-        // send the subscription request
         this.options.requestManager.send({
             method: 'eth_getLogs',
             params: [blockParams]
@@ -288,7 +290,7 @@ Subscription.prototype.subscribe = function() {
                         var output = _this._formatOutput(resultItem);
 
                         // Track current block (for gaps introduced by dropped connections)
-                        _this.lastBlock = output.blockNumber;
+                        _this.lastBlock = _.isObject(output) ? output.blockNumber : null;
 
                         if (_.isFunction(_this.options.subscription.subscriptionHandler)) {
                             return _this.options.subscription.subscriptionHandler.call(_this, output);
