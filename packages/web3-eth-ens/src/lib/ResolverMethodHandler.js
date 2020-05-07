@@ -22,7 +22,9 @@
 
 var PromiEvent = require('web3-core-promievent');
 var namehash = require('eth-ens-namehash');
+var errors = require('web3-core-helpers').errors;
 var _ = require('underscore');
+var interfaceIds = require('../config').interfaceIds;
 
 /**
  * @param {Registry} registry
@@ -41,14 +43,15 @@ function ResolverMethodHandler(registry) {
  * @param {function} callback
  * @returns {Object}
  */
-ResolverMethodHandler.prototype.method = function (ensName, methodName, methodArguments, callback) {
+ResolverMethodHandler.prototype.method = function (ensName, methodName, methodArguments, outputFormatter, callback) {
     return {
         call: this.call.bind({
             ensName: ensName,
             methodName: methodName,
             methodArguments: methodArguments,
             callback: callback,
-            parent: this
+            parent: this,
+            outputFormatter: outputFormatter
         }),
         send: this.send.bind({
             ensName: ensName,
@@ -69,9 +72,11 @@ ResolverMethodHandler.prototype.call = function (callback) {
     var self = this;
     var promiEvent = new PromiEvent();
     var preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
+    var outputFormatter = this.outputFormatter || null;
 
-    this.parent.registry.getResolver(this.ensName).then(function (resolver) {
-        self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, callback);
+    this.parent.registry.getResolver(this.ensName).then(async function (resolver) {
+        await self.parent.checkInterfaceSupport(resolver, self.methodName);
+        self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, outputFormatter, callback);
     }).catch(function(error) {
         if (_.isFunction(callback)) {
             callback(error, null);
@@ -98,7 +103,8 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
     var promiEvent = new PromiEvent();
     var preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
-    this.parent.registry.getResolver(this.ensName).then(function (resolver) {
+    this.parent.registry.getResolver(this.ensName).then(async function (resolver) {
+        await self.parent.checkInterfaceSupport(resolver, self.methodName);
         self.parent.handleSend(promiEvent, resolver.methods[self.methodName], preparedArguments, sendOptions, callback);
     }).catch(function(error) {
         if (_.isFunction(callback)) {
@@ -122,9 +128,13 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
  * @param {function} callback
  * @returns {eventifiedPromise}
  */
-ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, preparedArguments, callback) {
+ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, preparedArguments, outputFormatter, callback) {
     method.apply(this, preparedArguments).call()
         .then(function (result) {
+            if (outputFormatter){
+                result = outputFormatter(result);
+            }
+
             if (_.isFunction(callback)) {
                 // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
                 callback(result, result);
@@ -206,6 +216,33 @@ ResolverMethodHandler.prototype.prepareArguments = function (name, methodArgumen
     }
 
     return [node];
+};
+
+/**
+ *
+ *
+ * @param {Contract} resolver
+ * @param {string} methodName
+ *
+ * @returns {Promise}
+ */
+ResolverMethodHandler.prototype.checkInterfaceSupport = async function (resolver, methodName) {
+    // Skip validation for undocumented interface ids (ex: multihash)
+    if (!interfaceIds[methodName]) return;
+
+    var supported = false;
+    try {
+        supported = await resolver
+            .methods
+            .supportsInterface(interfaceIds[methodName])
+            .call();
+    } catch(err) {
+        console.warn('Could not verify interface of resolver contract at "' + resolver.options.address + '". ');
+    }
+
+    if (!supported){
+        throw errors.ResolverMethodMissingError(resolver.options.address, methodName);
+    }
 };
 
 module.exports = ResolverMethodHandler;
