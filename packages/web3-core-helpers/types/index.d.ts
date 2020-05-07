@@ -80,6 +80,7 @@ export class errors {
     static ContractCodeNotStoredError(receipt: object): TransactionError
     static TransactionRevertedWithoutReasonError(receipt: object): TransactionError
     static TransactionOutOfGasError(receipt: object): TransactionError
+    static ResolverMethodMissingError(address: string, name: string): Error
 }
 
 export class WebsocketProviderBase {
