@@ -97,7 +97,7 @@
         "@babel/core": "^7.6.4",
         "@babel/preset-env": "^7.6.3",
         "@ensdomains/ens": "^0.4.0",
-        "@ensdomains/resolver": "^0.1.13",
+        "@ensdomains/resolver": "^0.2.4",
         "@types/bignumber.js": "^4.0.2",
         "@types/bn.js": "^4.11.5",
         "@types/node": "^12.6.1",
