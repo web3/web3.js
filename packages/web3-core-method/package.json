@@ -13,6 +13,7 @@
     },
     "main": "src/index.js",
     "dependencies": {
+        "@ethersproject/transactions": "^5.0.0-beta.135",
         "underscore": "1.9.1",
         "web3-core-helpers": "1.2.7",
         "web3-core-promievent": "1.2.7",
