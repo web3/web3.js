@@ -279,5 +279,65 @@ describe('contract.events [ @E2E ]', function() {
         assert.equal(childEvents[1].event, 'Identical');
         assert.equal(typeof childEvents[1].returnValues.childA, 'string');
     });
+
+    // This test only runs against the ganache client launched in scripts/e2e.ganache.sh
+    // It's too complicated for geth auto-mining (we'd have to poll for blocks)
+    // and geth instamine's websockets connection is too fragile for the tests in this file.
+    it('backfills missed events when auto-reconnecting', function(){
+        if(!process.env.GANACHE) return;
+        this.timeout(10000);
+
+        let counter = 0;
+        const acc = accounts[0];
+
+        // Create a parallel connection & contract instance
+        // so we can trigger events while the WS provider is down...
+        const _web3 = new Web3('http://localhost:8545');
+        const shadow = new _web3.eth.Contract(Basic.abi, instance.options.address);
+
+        // Create a reconnect-enabled WS provider and set the default Web3 with it.
+        const provider = new Web3.providers.WebsocketProvider(
+            'ws://localhost:' + port,
+            {
+                reconnect: {
+                    auto: true,
+                    delay: 4000,
+                    maxAttempts: 1
+                }
+            }
+        );
+
+        web3.setProvider(provider);
+
+        return new Promise(async function (resolve) {
+            instance
+                .events
+                .BasicEvent()
+                .on('data', function(event) {
+                    counter++;
+
+                    if (counter === 2){
+                        assert(finalBlock === event.blockNumber + 2);
+                        this.removeAllListeners();
+                        resolve();
+                    }
+                });
+
+            // First: a regular event
+            const firstReceipt = await instance.methods.firesEvent(acc, 1).send({from: acc});
+
+            // Close connection and let it settle...
+            provider.connection.close(4000);
+            await utils.waitSeconds(1);
+
+            // Submit another event on parallel connection and mine forward 2 blocks
+            const secondReceipt = await shadow.methods.firesEvent(acc, 1).send({from: acc});
+            utils.mine(_web3, acc);
+            utils.mine(_web3, acc);
+
+            const finalBlock = await _web3.eth.getBlockNumber();
+            assert(finalBlock === secondReceipt.blockNumber + 2)
+        });
+    });
 });
 
