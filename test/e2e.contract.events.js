@@ -280,6 +280,9 @@ describe('contract.events [ @E2E ]', function() {
         assert.equal(typeof childEvents[1].returnValues.childA, 'string');
     });
 
+    // This test only runs against the ganache client launched in scripts/e2e.ganache.sh
+    // It's too complicated for geth auto-mining (we'd have to poll for blocks)
+    // and geth instamine's websockets connection is too fragile for the tests in this file.
     it('backfills missed events when auto-reconnecting', function(){
         if(!process.env.GANACHE) return;
         this.timeout(10000);
