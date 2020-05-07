@@ -410,6 +410,7 @@ WebsocketProvider.prototype.reconnect = function () {
     }
 
     this.emit(this.ERROR, errors.MaxAttemptsReachedOnReconnectingError());
+    this.reconnecting = false;
 
     if (this.requestQueue.size > 0) {
         this.requestQueue.forEach(function (request, key) {
