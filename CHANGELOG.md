@@ -185,6 +185,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - Change CI provider from Travis to Github Actions. (#3468)
+- Update `web3-eth-abi` ABICoder dependency. (#3490)
 - Improve code clarity of HttpProvider keepAlive option setting. (#3463)
 - Updated type definitions for Web3 HTTP Provider. (#3482)
 
