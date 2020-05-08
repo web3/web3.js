@@ -193,3 +193,4 @@ Released with 1.0.0-beta.37 code base.
 
 - Fix intermittent CI build issues with `dtslint`. (#3479)
 - Fix provider "error" / "end" events not fired when Websocket provider disconnects (#3485)
+- Fix WSS credentials Base64 encoding (for browser) (#3508)
