@@ -172,8 +172,6 @@ Released with 1.0.0-beta.37 code base.
 - Fix crash when using Web-Workers by removing any-promise dependency (#3377 #2211 #1774)
 - MaxListenersExceededWarning event emitter warning mitigated (#1648)
 
-## [Unreleased]
-
 ## [1.2.8]
 
 ### Added
@@ -199,3 +197,7 @@ Released with 1.0.0-beta.37 code base.
 - Remove web3-eth revert error return types to squash TS compilation errors. (#3496)
 - Backfill event subscriptions when WS connection dropped across multiple blocks. (#3491)
 - Stop swallowing errors when WS connection has died after exhausting reconnection attempts. (#3492)
+
+## [Unreleased]
+
+## [1.2.9]
