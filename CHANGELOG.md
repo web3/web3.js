@@ -172,8 +172,6 @@ Released with 1.0.0-beta.37 code base.
 - Fix crash when using Web-Workers by removing any-promise dependency (#3377 #2211 #1774)
 - MaxListenersExceededWarning event emitter warning mitigated (#1648)
 
-## [Unreleased]
-
 ## [1.2.8]
 
 ### Added
@@ -181,6 +179,7 @@ Released with 1.0.0-beta.37 code base.
 - Introduce review and release guidelines. (#3460)
 - Add EIP-1193 compatible provider to `AbstractProvider` interface. (#3499)
 - Add Typescript definitions for contract `methods` and `call`. (#3454)
+- Add support for ENS contenthash methods. (#3392, #2782)
 
 ### Changed
 
@@ -188,9 +187,23 @@ Released with 1.0.0-beta.37 code base.
 - Update `web3-eth-abi` ABICoder dependency. (#3490)
 - Improve code clarity of HttpProvider keepAlive option setting. (#3463)
 - Updated type definitions for Web3 HTTP Provider. (#3482)
+- Fix indentation of web3-eth documentation. (#3478)
 
 ### Fixed
 
 - Fix intermittent CI build issues with `dtslint`. (#3479)
-- Fix provider "error" / "end" events not fired when Websocket provider disconnects (#3485)
 - Fix WSS credentials Base64 encoding (for browser) (#3508)
+- Fire provider "error" and/or "end" events when Websocket provider disconnects. (#3485)
+- Remove web3-eth revert error return types to squash TS compilation errors. (#3496)
+- Backfill event subscriptions when WS connection dropped across multiple blocks. (#3491)
+- Stop swallowing errors when WS connection has died after exhausting reconnection attempts. (#3492)
+
+## [Unreleased]
+
+## [1.2.9]
+
+### Added
+
+### Changed
+
+### Fixed
