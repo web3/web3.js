@@ -151,9 +151,10 @@ describe('contract.deploy [ @E2E ]', function() {
     describe('ws', function() {
         // Websockets extremely erratic for geth instamine...
         if (process.env.GETH_INSTAMINE) return;
+        var port;
 
         before(async function(){
-            var port = utils.getWebsocketPort();
+            port = utils.getWebsocketPort();
 
             web3 = new Web3('ws://localhost:' + port);
             accounts = await web3.eth.getAccounts();
@@ -259,6 +260,10 @@ describe('contract.deploy [ @E2E ]', function() {
                     done();
                 })
         })
+
+        it('can connect over wss with username:password header', function(){
+            const _web3 = new Web3('wss://usr:psswrd@localhost:' + port);
+        });
     });
 });
 

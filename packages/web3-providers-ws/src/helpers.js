@@ -18,7 +18,7 @@ if (isNode) {
         helpers = require('url').parse;
     }
 } else {
-    _btoa = btoa;
+    _btoa = btoa.bind(window);
     helpers = function(url) {
         return new URL(url);
     };
