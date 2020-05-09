@@ -350,6 +350,60 @@ var RESOLVER = [
         ],
         "name": "PubkeyChanged",
         "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "node",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "hash",
+                "type": "bytes"
+            }
+        ],
+        "name": "ContenthashChanged",
+        "type": "event"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            }
+        ],
+        "name": "contenthash",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "node",
+                "type": "bytes32"
+            },
+            {
+                "name": "hash",
+                "type": "bytes"
+            }
+        ],
+        "name": "setContenthash",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
     }
 ];
 
