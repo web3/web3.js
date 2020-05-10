@@ -442,14 +442,14 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
                                             var parsedTx = EthersTransactionUtils.parse(rawTransactionHex);
 
-                                            txReplayOptions = {
+                                            txReplayOptions = formatters.inputTransactionFormatter({
                                                 data: parsedTx.data,
                                                 to: parsedTx.to,
                                                 from: parsedTx.from,
                                                 gas: parsedTx.gasLimit.toHexString(),
                                                 gasPrice: parsedTx.gasPrice.toHexString(),
                                                 value: parsedTx.value.toHexString()
-                                            }
+                                            })
                                         }
 
                                         // Get revert reason string with eth_call
