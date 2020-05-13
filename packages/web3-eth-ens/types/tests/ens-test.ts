@@ -25,6 +25,9 @@ const ens = new Ens('http://localhost:7545', null, new Accounts('http://localhos
 // $ExpectType Registry
 ens.registry;
 
+// $ExpectType TransactionSigner
+ens.transactionSigner;
+
 // $ExpectType Promise<Contract>
 ens.resolver('name');
 

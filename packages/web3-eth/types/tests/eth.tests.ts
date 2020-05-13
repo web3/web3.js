@@ -44,6 +44,9 @@ eth.abi;
 // $ExpectType Network
 eth.net;
 
+// $ExpectType TransactionSigner
+eth.transactionSigner;
+
 eth.clearSubscriptions();
 
 // $ExpectType Subscription<Log>
@@ -453,11 +456,11 @@ eth.submitWork(
     (error: Error, result: boolean) => {}
 );
 
-// $ExpectType Promise<[]>
-eth.pendingTransactions();
+// $ExpectType Promise<Transaction[]>
+eth.getPendingTransactions();
 
-// $ExpectType Promise<[]>
-eth.pendingTransactions((error: Error, result: []) => {});
+// $ExpectType Promise<Transaction[]>
+eth.getPendingTransactions((error: Error, result: Transaction[]) => {});
 
 // $ExpectType Promise<GetProof>
 eth.getProof(

@@ -29,6 +29,7 @@ import {
     TransactionConfig,
     TransactionReceipt,
     Web3ModuleOptions,
+    TransactionSigner
 } from 'web3-core';
 import {Contract, ContractOptions} from 'web3-eth-contract';
 import {Iban} from 'web3-eth-iban';
@@ -54,6 +55,7 @@ export class Eth extends AbstractWeb3Module {
     ens: Ens;
     abi: AbiCoder;
     net: Network;
+    transactionSigner: TransactionSigner;
 
     clearSubscriptions(): Promise<boolean>;
 
@@ -112,6 +114,8 @@ export class Eth extends AbstractWeb3Module {
 
     getTransaction(transactionHash: string, callback?: (error: Error, transaction: Transaction) => void): Promise<Transaction>;
 
+    getPendingTransactions(callback?: (error: Error, result: Transaction[]) => void): Promise<Transaction[]>;
+
     getTransactionFromBlock(hashStringOrNumber: string | number, indexNumber: number, callback?: (error: Error, transaction: Transaction) => void): Promise<Transaction>;
 
     getTransactionReceipt(hash: string, callback?: (error: Error, transactionReceipt: TransactionReceipt) => void): Promise<TransactionReceipt>;
@@ -143,8 +147,6 @@ export class Eth extends AbstractWeb3Module {
     getWork(callback?: (error: Error, result: string[]) => void): Promise<string[]>;
 
     submitWork(data: [string, string, string], callback?: (error: Error, result: boolean) => void): Promise<boolean>;
-
-    pendingTransactions(callback?: (error: Error, result: []) => void): Promise<[]>;
 
     getProof(address: string, storageKey: string[], blockNumber: number | string | "latest" | "earliest", callback?: (error: Error, result: GetProof) => void): Promise<GetProof>;
 }
@@ -205,7 +207,7 @@ export interface PastLogsOptions {
 export interface LogsOptions {
     fromBlock?: number | string;
     address?: string | string[];
-    topics?: Array<string | string[]>
+    topics?: Array<string | string[] | null>
 }
 
 export interface Subscription<T> {

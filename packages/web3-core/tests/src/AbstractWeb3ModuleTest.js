@@ -1,13 +1,23 @@
-import AbstractWeb3Module from '../../src/AbstractWeb3Module';
+import Provider from '../__mocks__/Provider';
 import MethodFactory from '../__mocks__/MethodFactory';
+import ProviderResolver from '../__mocks__/ProviderResolver';
+import AbstractWeb3Module from '../../src/AbstractWeb3Module';
+
+// Mocks
+jest.mock('../__mocks__/ProviderResolver');
+jest.mock('../__mocks__/Provider');
 
 /**
  * AbstractWeb3Module test
  */
 describe('AbstractWeb3ModuleTest', () => {
-    let abstractWeb3Module, methodFactoryMock;
+    let abstractWeb3Module, methodFactoryMock, providerResolverMock, providerMock;
 
     beforeEach(() => {
+        providerResolverMock = new ProviderResolver();
+        providerMock = new Provider();
+        providerResolverMock.resolve.mockReturnValue(providerMock);
+
         methodFactoryMock = new MethodFactory();
         methodFactoryMock.hasMethod = jest.fn(() => {
             return false;
@@ -22,7 +32,8 @@ describe('AbstractWeb3ModuleTest', () => {
                 defaultGas: 100
             },
             methodFactoryMock,
-            {}
+            {},
+            providerResolverMock
         );
     });
 
@@ -33,7 +44,7 @@ describe('AbstractWeb3ModuleTest', () => {
 
         expect(abstractWeb3Module.transactionBlockTimeout).toEqual(50);
 
-        expect(abstractWeb3Module.transactionConfirmationBlocks).toEqual(24);
+        expect(abstractWeb3Module.transactionConfirmationBlocks).toEqual(0);
 
         expect(abstractWeb3Module.transactionPollingTimeout).toEqual(750);
 
@@ -43,7 +54,9 @@ describe('AbstractWeb3ModuleTest', () => {
 
         expect(abstractWeb3Module.BatchRequest).toBeInstanceOf(Function);
 
-        expect(abstractWeb3Module.currentProvider.host).toEqual('http://localhost:8545');
+        expect(abstractWeb3Module.currentProvider).toEqual(providerMock);
+
+        expect(providerResolverMock.resolve).toHaveBeenCalledWith('http://localhost:8545', {});
     });
 
     it('gets the BatchRequest property and it is of type BatchRequest', () => {
@@ -108,21 +121,27 @@ describe('AbstractWeb3ModuleTest', () => {
     it('calls setProvider returns true and sets the provider as currentProvider', () => {
         expect(abstractWeb3Module.setProvider('http://newhost')).toEqual(true);
 
-        expect(abstractWeb3Module.currentProvider.host).toEqual('http://newhost');
+        expect(abstractWeb3Module.currentProvider).toEqual(providerMock);
     });
 
     it('calls setProvider and throws an error because of the resolver', () => {
+        providerResolverMock.resolve = () => {
+            throw new Error('Invalid provider');
+        };
+
         expect(() => {
             abstractWeb3Module.setProvider({nope: true});
         }).toThrow('Invalid provider');
     });
 
     it('calls setProvider and returns false because of the equal host', () => {
+        abstractWeb3Module._currentProvider.host = 'http://localhost:8545';
+
         expect(abstractWeb3Module.setProvider('http://localhost:8545')).toEqual(false);
     });
 
     it('calls setProvider and returns false because it is the same provider', () => {
-        expect(abstractWeb3Module.setProvider('http://localhost:8545')).toEqual(false);
+        expect(abstractWeb3Module.setProvider(providerMock)).toEqual(false);
     });
 
     it('calls isSameProvider without a currentProvider set and returns false', () => {
@@ -149,14 +168,7 @@ describe('AbstractWeb3ModuleTest', () => {
     });
 
     it('calls isSameProvider and returns true', () => {
-        const provider = {
-            constructor: {
-                name: 'HttpProvider'
-            },
-            host: 'http://localhost:8545'
-        };
-
-        expect(abstractWeb3Module.isSameProvider(provider)).toEqual(true);
+        expect(abstractWeb3Module.isSameProvider(providerMock)).toEqual(true);
     });
 
     it('initiates a HttpProvider with the providers property of the module', () => {
@@ -169,5 +181,20 @@ describe('AbstractWeb3ModuleTest', () => {
         expect(AbstractWeb3Module.providers.HttpProvider).toBeInstanceOf(Function);
         expect(AbstractWeb3Module.providers.WebsocketProvider).toBeInstanceOf(Function);
         expect(AbstractWeb3Module.providers.IpcProvider).toBeInstanceOf(Function);
+    });
+
+    it('calls clearSubscriptions with a socket provider and resolves with the expected value', async () => {
+        providerMock.supportsSubscriptions.mockReturnValueOnce(true);
+        providerMock.clearSubscriptions.mockReturnValueOnce(Promise.resolve(true));
+
+        await expect(abstractWeb3Module.clearSubscriptions('unsubscribe_method')).resolves.toEqual(true);
+
+        expect(providerMock.clearSubscriptions).toHaveBeenCalledWith('unsubscribe_method');
+    });
+
+    it('calls clearSubscriptions without a socket provider and resolves with the expected value', async () => {
+        providerMock.supportsSubscriptions.mockReturnValueOnce(false);
+
+        await expect(abstractWeb3Module.clearSubscriptions('unsubscribe_method')).resolves.toEqual(true);
     });
 });

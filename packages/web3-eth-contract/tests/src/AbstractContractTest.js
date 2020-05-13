@@ -126,6 +126,20 @@ describe('AbstractContractTest', () => {
         expect(abstractContract).toBeInstanceOf(AbstractWeb3Module);
     });
 
+    it('sets the transactionSigner property', () => {
+        abstractContract.transactionSigner = {};
+
+        expect(abstractContract.transactionSigner).toEqual({});
+    });
+
+    it('sets the transactionSigner property and throws the expected error', () => {
+        try {
+            abstractContract.transactionSigner = {type: 'TransactionSigner'};
+        } catch (error) {
+            expect(error).toEqual(new Error('Invalid TransactionSigner given!'));
+        }
+    });
+
     it('calls once and throws an error because no callback is defined', () => {
         expect(() => {
             abstractContract.once('event', {});
@@ -243,7 +257,7 @@ describe('AbstractContractTest', () => {
                 defaultGas: undefined,
                 defaultGasPrice: undefined,
                 transactionBlockTimeout: 50,
-                transactionConfirmationBlocks: 24,
+                transactionConfirmationBlocks: 0,
                 transactionPollingTimeout: 750,
                 transactionSigner: {}
             }

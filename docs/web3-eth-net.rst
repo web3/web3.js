@@ -38,6 +38,7 @@ Returns
     - ``"morden"`` for the morden test network
     - ``"rinkeby"`` for the rinkeby test network
     - ``"ropsten"`` for the ropsten test network
+    - ``"goerli"`` for the goerli test network
     - ``"kovan"`` for the kovan test network
     - ``"private"`` for undetectable networks.
 

@@ -21,7 +21,7 @@ import {Accounts} from 'web3-eth-accounts';
 import {AbiCoder} from 'web3-eth-abi';
 import {Contract, ContractModuleFactory} from 'web3-eth-contract';
 import {provider} from 'web3-providers';
-import {AbstractWeb3Module, PromiEvent, Web3ModuleOptions, TransactionConfig} from 'web3-core';
+import {AbstractWeb3Module, PromiEvent, Web3ModuleOptions, TransactionConfig, TransactionSigner} from 'web3-core';
 import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
 import {Utils} from 'web3-utils';
@@ -36,6 +36,7 @@ export class Ens extends AbstractWeb3Module {
     );
 
     registry: Registry;
+    transactionSigner: TransactionSigner;
 
     resolver(name: string): Promise<Contract>;
 

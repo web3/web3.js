@@ -4,7 +4,7 @@ import {AbstractWeb3Module} from 'web3-core';
 import * as Utils from 'web3-utils';
 import TransactionSigner from '../../../__mocks__/TransactionSigner';
 import ChainIdMethod from '../../../../src/methods/network/ChainIdMethod';
-import TransactionObserver from '../../../../src/observers/TransactionObserver';
+import AbstractTransactionObserver from '../../../../lib/observers/AbstractTransactionObserver';
 import GetTransactionCountMethod from '../../../../src/methods/account/GetTransactionCountMethod';
 import EthSendTransactionMethod from '../../../../src/methods/transaction/EthSendTransactionMethod';
 import AbstractObservedTransactionMethod from '../../../../lib/methods/transaction/AbstractObservedTransactionMethod';
@@ -15,7 +15,7 @@ jest.mock('web3-utils');
 jest.mock('web3-providers');
 jest.mock('web3-core');
 jest.mock('../../../../src/methods/network/ChainIdMethod');
-jest.mock('../../../../src/observers/TransactionObserver');
+jest.mock('../../../../lib/observers/AbstractTransactionObserver');
 jest.mock('../../../../src/methods/account/GetTransactionCountMethod');
 
 /**
@@ -51,8 +51,8 @@ describe('EthSendTransactionMethodTest', () => {
         new ChainIdMethod();
         chainIdMethodMock = ChainIdMethod.mock.instances[0];
 
-        new TransactionObserver();
-        transactionObserverMock = TransactionObserver.mock.instances[0];
+        new AbstractTransactionObserver();
+        transactionObserverMock = AbstractTransactionObserver.mock.instances[0];
 
         method = new EthSendTransactionMethod(
             Utils,
