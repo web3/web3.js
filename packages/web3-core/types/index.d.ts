@@ -420,6 +420,7 @@ export interface AbstractProvider {
     sendAsync(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
     send?(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
     request?(args: RequestArguments): Promise<any>;
+    connected?: boolean;
   }
 
 export type provider =
