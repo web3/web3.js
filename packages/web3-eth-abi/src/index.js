@@ -116,7 +116,7 @@ ABICoder.prototype.encodeParameters = function (types, params) {
             return param.toString(10);
         }
 
-        // Handle some formatting of params as to not break previous compatability
+        // Handle some formatting of params for backwards compatability with Ethers V4
         const formatParam = (type, param) => {
             if (type.match(paramTypeBytesArray) || type.match(paramTypeNumberArray)) {
                 return param.map(p => formatParam(type.replace('[]', ''), p))
