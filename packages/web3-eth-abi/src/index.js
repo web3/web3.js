@@ -118,22 +118,22 @@ ABICoder.prototype.encodeParameters = function (types, params) {
 
         // Handle some formatting of params for backwards compatability with Ethers V4
         const formatParam = (type, param) => {
-            if (type.match(paramTypeBytesArray) || type.match(paramTypeNumberArray)) {
+            if (type.match(paramTypeBytesArray)) {
                 return param.map(p => formatParam(type.replace('[]', ''), p))
             }
 
             // Format correct width for u?int[0-9]*
-            let match = type.match(paramTypeNumber);
+            /*let match = type.match(paramTypeNumber);
             if (match) {
                 let size = parseInt(match[2] || "256");
                 if (size / 8 < param.length) {
                     // pad to correct bit width
                     param = utils.leftPad(param, size);
                 }
-            }
+            }*/
 
             // Format correct length for bytes[0-9]+
-            match = type.match(paramTypeBytes);
+            let match = type.match(paramTypeBytes);
             if (match) {
                 if (Buffer.isBuffer(param)) {
                     param = utils.toHex(param);
@@ -151,9 +151,9 @@ ABICoder.prototype.encodeParameters = function (types, params) {
                         param = utils.rightPad(param, size * 2)
                     }
                 }
-                
+
                 // format odd-length bytes to even-length
-                if (param.length % 2 === 1) { 
+                if (param.length % 2 === 1) {
                     param = '0x0' + param.substring(2)
                 }
             }
