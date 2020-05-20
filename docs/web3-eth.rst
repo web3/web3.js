@@ -1346,8 +1346,7 @@ Parameters
 
 2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
-.. note:: The ``from`` property can also be an address or index from the :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`. It will then sign locally using the private key of that account, and send the transaction via :ref:`web3.eth.sendSignedTransaction() <eth-sendsignedtransaction>`. If the properties ``chain`` and ``hardfork`` or ``common`` are not set, Web3 will try to set appropriate values by
-querying the network for its chainId and networkId.
+.. note:: The ``from`` property can also be an address or index from the :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`. It will then sign locally using the private key of that account, and send the transaction via :ref:`web3.eth.sendSignedTransaction() <eth-sendsignedtransaction>`. If the properties ``chain`` and ``hardfork`` or ``common`` are not set, Web3 will try to set appropriate values by querying the network for its chainId and networkId.
 
 .. _eth-sendtransaction-return:
 
