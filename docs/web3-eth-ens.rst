@@ -991,18 +991,18 @@ Parameters
 
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``hash`` - ``String``: The content hash to set.
-3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described :ref:`here <eth-sendtransaction>`
 4. ``callback`` - ``Function``: (optional) Optional callback
 
 Emits a ``ContenthashChanged`` event.
 
 Supports the following protocols as valid ``hash`` inputs:
 
-1. ``ipfs://``   - example: ipfs://QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL
-2. ``/ipfs/``    - example: /ipfs/QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL
-3. ``bzz://``    - example: bzz://d1de9994b4d039f6548d191eb26786769f580809256b4685ef316805265ea162
-4. ``onion://``  - example: onion://3g2upl4pq6kufc4m
-5. ``onion3://`` - exmaple: onion3://p53lf57qovyuvwsc6xnrppyply3vtqm7l6pcobkmyqsiofyeznfu5uqd
+1. ``ipfs://``   - ipfs://QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL
+2. ``/ipfs/``    - /ipfs/QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL
+3. ``bzz://``    - bzz://d1de9994b4d039f6548d191eb26786769f580809256b4685ef316805265ea162
+4. ``onion://``  - onion://3g2upl4pq6kufc4m
+5. ``onion3://`` - onion3://p53lf57qovyuvwsc6xnrppyply3vtqm7l6pcobkmyqsiofyeznfu5uqd
 
 -------
 Returns
