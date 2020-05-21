@@ -36,6 +36,7 @@ jobs:
     e2e:
         runs-on: ubuntu-latest
         strategy:
+            fail-fast: false
             matrix:
                 testCmd:
                     [
