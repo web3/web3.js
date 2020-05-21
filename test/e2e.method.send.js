@@ -65,6 +65,44 @@ describe('method.send [ @E2E ]', function () {
                 assert(receipt.status === false);
             }
         });
+
+        describe('transactionPollingTimeout', function(){
+            // Test requires a node auto mining at intervals
+            if(!process.env.GETH_AUTOMINE) return;
+
+            // Geth interval is 2s so these txs w/ .25s polling timeouts
+            // should error before a single block resolves.
+            it('is configurable for web3.eth methods', async function(){
+                web3.eth.transactionPollingTimeout = .25;
+
+                try {
+                    await web3.eth.sendTransaction({
+                        from: accounts[0],
+                        to: accounts[1],
+                        value: web3.utils.toWei('1', 'ether'),
+                        gas: 21000,
+                        gasPrice: 1
+                    });
+                    assert.fail();
+                } catch(err){
+                    assert(err.message.includes('Transaction was not mined within 0.25 seconds'))
+                }
+            });
+
+            it('is configurable for contract methods', async function(){
+                web3.eth.transactionPollingTimeout = .25;
+
+                try {
+                    await instance
+                            .methods
+                            .setValue('1')
+                            .send({from: accounts[0]});
+                    assert.fail();
+                } catch(err){
+                    assert(err.message.includes('Transaction was not mined within 0.25 seconds'))
+                }
+            })
+        });
     });
 
     describe('ws', function () {
