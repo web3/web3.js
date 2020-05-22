@@ -179,12 +179,14 @@ Released with 1.0.0-beta.37 code base.
 - Introduce review and release guidelines. (#3460)
 - Add EIP-1193 compatible provider to `AbstractProvider` interface. (#3499)
 - Add Typescript definitions for contract `methods` and `call`. (#3454)
+- Update AbstractProvider and contract.methods TS definitions (#3521)
 - Add support for ENS contenthash methods. (#3392, #2782)
 
 ### Changed
 
 - Change CI provider from Travis to Github Actions. (#3468)
 - Update `web3-eth-abi` ABICoder dependency. (#3490)
+- Update AbiCoder param formatting (#3522)
 - Improve code clarity of HttpProvider keepAlive option setting. (#3463)
 - Updated type definitions for Web3 HTTP Provider. (#3482)
 - Fix indentation of web3-eth documentation. (#3478)
@@ -197,6 +199,7 @@ Released with 1.0.0-beta.37 code base.
 - Remove web3-eth revert error return types to squash TS compilation errors. (#3496)
 - Backfill event subscriptions when WS connection dropped across multiple blocks. (#3491)
 - Stop swallowing errors when WS connection has died after exhausting reconnection attempts. (#3492)
+- Fix setContenthash docs formatting (#3511)
 
 ## [Unreleased]
 
