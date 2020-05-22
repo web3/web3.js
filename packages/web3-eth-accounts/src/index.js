@@ -293,9 +293,10 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
 /* jshint ignore:end */
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
-    var message = utils.isHexStrict(data) ? utils.hexToBytes(data) : data;
-    var messageBuffer = Buffer.from(message);
-    var preamble = '\x19Ethereum Signed Message:\n' + message.length;
+    var messageHex = utils.isHexStrict(data) ? data : utils.utf8ToHex(data);
+    var messageBytes = utils.hexToBytes(messageHex)
+    var messageBuffer = Buffer.from(messageBytes);
+    var preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
     var preambleBuffer = Buffer.from(preamble);
     var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return Hash.keccak256s(ethMessage);
