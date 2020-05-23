@@ -54,6 +54,15 @@ describe('subscription connect/reconnect', function () {
             });
     });
 
+    it('clearSubscriptions', async function() {
+        web3.eth.subscribe('newBlockHeaders');
+        await waitSeconds(1); // Sub need a little time to set up
+
+        assert.equal(1, web3.eth._requestManager.subscriptions.size);
+        web3.eth.clearSubscriptions();
+        assert.equal(0, web3.eth._requestManager.subscriptions.size);
+    });
+
     it('resubscribes to an existing subscription', function (done) {
         this.timeout(5000);
 
