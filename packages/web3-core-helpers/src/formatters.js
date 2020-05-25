@@ -18,6 +18,7 @@
  * @file formatters.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @author Marek Kotewicz <marek@parity.io>
+ * @author WBT <wbt@users.noreply.github.com>
  * @date 2017
  */
 
@@ -123,6 +124,67 @@ var inputBlockNumberFormatter = function (blockNumber) {
 
     return (utils.isHexStrict(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : utils.numberToHex(blockNumber);
 };
+
+/**
+ * Returns <0 if a<b, >0 if a>b; =0 otherwise.
+ * For more details on this type of function, see
+ * developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+ *
+ * @method compareBlockNumbers
+ *
+ * @param {String|Number|BN} a
+ *
+ * @param {String|Number|BN} b
+ *
+ * @returns {Number} -1, 0, or 1
+ */
+compareBlockNumbers: function(a, b) {
+    if(a == "genesis") {
+        if(b == "genesis") {
+            return 0;
+        } else {
+            return -1;
+        }
+    } else if (a == "earliest") {
+        if(b == "genesis") {
+            return 1;
+        } else if (b == "earliest") {
+            return 0;
+        } else {
+            return -1;
+        }
+    } else if (a == "latest") {
+        if(b == "pending") {
+            return -1;
+        } else if (b == "latest") {
+            return 0;
+        } else {
+            return -1;
+        }
+    } else if (a == "pending") {
+        if(b == "pending") {
+            return 0;
+        } else {
+            return -1;
+        }
+    } else { //a is not a predefined block number string.
+        if((b == "genesis") || (b == "earliest")) {
+            return 1;
+        } else if((b == "latest") || (b == "pending")) {
+            return -1;
+        } else { //neither a nor b is a predefined block number string.
+            let bnA = new BN(a);
+            let bnB = new BN(b);
+            if(bnA.lt(bnB)) {
+                return -1;
+            } else if(bnA.eq(bnB)) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+    }
+},
 
 /**
  * Formats the input of a transaction and converts all values to HEX
