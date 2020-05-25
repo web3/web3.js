@@ -138,7 +138,7 @@ var inputBlockNumberFormatter = function (blockNumber) {
  *
  * @returns {Number} -1, 0, or 1
  */
-compareBlockNumbers: function(a, b) {
+var compareBlockNumbers = function(a, b) {
     if(a == "genesis") {
         if(b == "genesis") {
             return 0;
@@ -548,6 +548,7 @@ var outputSyncingFormatter = function (result) {
 };
 
 module.exports = {
+    compareBlockNumbers: compareBlockNumbers,
     inputDefaultBlockNumberFormatter: inputDefaultBlockNumberFormatter,
     inputBlockNumberFormatter: inputBlockNumberFormatter,
     inputCallFormatter: inputCallFormatter,
