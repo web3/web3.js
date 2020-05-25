@@ -184,7 +184,7 @@ var compareBlockNumbers = function(a, b) {
             }
         }
     }
-},
+};
 
 /**
  * Formats the input of a transaction and converts all values to HEX
