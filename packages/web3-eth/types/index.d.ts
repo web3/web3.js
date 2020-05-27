@@ -87,6 +87,7 @@ export class Eth {
     transactionPollingTimeout: number;
     transactionConfirmationBlocks: number;
     transactionBlockTimeout: number;
+    handleRevert: boolean;
     readonly currentProvider: provider;
 
     setProvider(provider: provider): boolean;
