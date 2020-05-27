@@ -372,7 +372,7 @@ handleRevert
 
 The ``handleRevert`` options property defaults to ``false`` and returns the revert reason string if enabled on :ref:`send <contract-send>` or :ref:`call <contract-call>` of a contract method.
 
-.. note:: The revert reason string and signature exists as property on the returned error.
+.. note:: The revert reason string and signature are properties on the returned error.
 
 -------
 Returns
@@ -1257,4 +1257,3 @@ Example
     },{
         ...
     }]
-

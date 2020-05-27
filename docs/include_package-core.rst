@@ -289,7 +289,7 @@ extend
 
 Allows extending the web3 modules.
 
-.. note:: You also have ``*.extend.formatters`` as additional formatter functions to be used for in and output formatting. Please see the `source file <https://github.com/ethereum/web3.js/blob/1.x/packages/web3-core-helpers/src/formatters.js>`_ for function details.
+.. note:: You also have ``*.extend.formatters`` as additional formatter functions to be used for input and output formatting. Please see the `source file <https://github.com/ethereum/web3.js/blob/1.x/packages/web3-core-helpers/src/formatters.js>`_ for function details.
 
 ----------
 Parameters
