@@ -31,11 +31,11 @@ Returns
 -------
 
 ``Object``: A list of module constructors:
-    - ``Eth`` - ``Constructor``: The Eth module for interacting with the Ethereum network see :ref:`web3.eth <eth>` for more.
-    - ``Net`` - ``Constructor``: The Net module for interacting with network properties see :ref:`web3.eth.net <eth-net>` for more.
-    - ``Personal`` - ``Constructor``: The Personal module for interacting with the Ethereum accounts see :ref:`web3.eth.personal <personal>` for more.
-    - ``Shh`` - ``Constructor``: The Shh module for interacting with the whisper protocol see :ref:`web3.shh <shh>` for more.
-    - ``Bzz`` - ``Constructor``: The Bzz module for interacting with the swarm network see :ref:`web3.bzz <bzz>` for more.
+    - ``Eth`` - ``Constructor``: The Eth module for interacting with the Ethereum network (:ref:`web3.eth <eth>`).
+    - ``Net`` - ``Constructor``: The Net module for interacting with network properties (:ref:`web3.eth.net <eth-net>`).
+    - ``Personal`` - ``Constructor``: The Personal module for interacting with the Ethereum accounts (:ref:`web3.eth.personal <personal>`).
+    - ``Shh`` - ``Constructor``: The Shh module for interacting with the whisper protocol (:ref:`web3.shh <shh>`).
+    - ``Bzz`` - ``Constructor``: The Bzz module for interacting with the swarm network (:ref:`web3.bzz <bzz>`).
 
 -------
 Example
@@ -79,7 +79,7 @@ The Web3 class is an umbrella package to house all Ethereum related modules.
 version
 ============
 
-    Static accessible property of the Web3 class and property of the instance as well.
+Static accessible property of the Web3 class and property of the instance as well.
 
 .. code-block:: javascript
 
@@ -111,7 +111,7 @@ Example
 utils
 =====================
 
-    Static accessible property of the Web3 class and property of the instance as well.
+Static accessible property of the Web3 class and property of the instance as well.
 
 .. code-block:: javascript
 

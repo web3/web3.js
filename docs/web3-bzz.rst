@@ -7,7 +7,7 @@ web3.bzz
 .. note:: This API might change over time.
 
 
-The ``web3-bzz`` package allows you to interact swarm the decentralized file store.
+The ``web3-bzz`` package allows you to interact with swarm, the decentralized file store.
 For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
 
 
@@ -43,7 +43,7 @@ setProvider
 
 Will change the provider for its module.
 
-.. note:: When called on the umbrella package ``web3`` it will also set the provider for all sub modules ``web3.eth``, ``web3.shh``, etc EXCEPT ``web3.bzz`` which needs a separate provider at all times.
+.. note:: When called on the umbrella package ``web3`` it will also set the provider for all sub modules ``web3.eth``, ``web3.shh``, etc. EXCEPT ``web3.bzz`` which needs a separate provider at all times.
 
 ----------
 Parameters
@@ -80,7 +80,7 @@ givenProvider
     web3.bzz.givenProvider
 
 When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser.
-Will return the given provider by the (browser) environment, otherwise ``null``.
+Returns the given provider by the (browser) environment, otherwise ``null``.
 
 
 -------
@@ -117,14 +117,14 @@ currentProvider
 
     bzz.currentProvider
 
-Will return the current provider URL, otherwise ``null``.
+Returns the current provider URL, otherwise ``null``.
 
 
 -------
 Returns
 -------
 
-``Object``: The current provider URL or ``null``;
+``Object``: The current provider URL or ``null``.
 
 -------
 Example
@@ -151,7 +151,7 @@ upload
 
    web3.bzz.upload(mixed)
 
-Uploads files folders or raw data to swarm.
+Uploads files, folders or raw data to swarm.
 
 ----------
 Parameters
@@ -223,7 +223,7 @@ download
 
    web3.bzz.download(bzzHash [, localpath])
 
-Downloads files and folders from swarm, as buffer or to disk (only node.js).
+Downloads files and folders from swarm as buffer or to disk (only node.js).
 
 ----------
 Parameters

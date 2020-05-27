@@ -5,8 +5,7 @@ web3.shh
 ========
 
 
-The ``web3-shh`` package allows you to interact with the whisper protocol for broadcasting.
-For more see `Whisper  Overview <https://github.com/ethereum/go-ethereum/wiki/Whisper>`_.
+The ``web3-shh`` package allows you to interact with the whisper protocol for broadcasting. For more see `Whisper Overview <https://github.com/ethereum/go-ethereum/wiki/Whisper>`_.
 
 
 .. code-block:: javascript
