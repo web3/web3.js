@@ -5,7 +5,7 @@ web3.eth.net
 =========
 
 
-Contains functions to receive information about the current network.
+Contains functions to get information about the current network.
 
 
 ------------------------------------------------------------------------------
