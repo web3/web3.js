@@ -4,8 +4,7 @@
 Callbacks Promises Events
 =========================
 
-To help web3 integrate into all kind of projects with different standards
-we provide multiple ways to act on asynchronous functions.
+To help web3 integrate into all kind of projects with different standards we provide multiple ways to act on asynchronous functions.
 
 Most web3.js objects allow a callback as the last parameter, as well as returning promises to chain functions.
 
