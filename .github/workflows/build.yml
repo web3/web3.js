@@ -5,8 +5,22 @@ on:
             - "1.x"
         tags:
             - "*"
+        paths-ignore:
+            - "**.md"
+            - "**.rst"
+            - ".editorconfig"
+            - ".gitignore"
+            - ".npmignore"
+            - "LICENSE"
     pull_request:
         types: [opened, reopened, synchronize]
+        paths-ignore:
+            - "**.md"
+            - "**.rst"
+            - ".editorconfig"
+            - ".gitignore"
+            - ".npmignore"
+            - "LICENSE"
 jobs:
     lint:
         runs-on: ubuntu-latest
