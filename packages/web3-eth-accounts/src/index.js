@@ -30,7 +30,7 @@ var Hash = require('eth-lib/lib/hash');
 var RLP = require('eth-lib/lib/rlp');// jshint ignore:line
 var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
-var scrypt = require('@web3-js/scrypt-shim');
+var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
@@ -293,9 +293,10 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
 /* jshint ignore:end */
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
-    var message = utils.isHexStrict(data) ? utils.hexToBytes(data) : data;
-    var messageBuffer = Buffer.from(message);
-    var preamble = '\x19Ethereum Signed Message:\n' + message.length;
+    var messageHex = utils.isHexStrict(data) ? data : utils.utf8ToHex(data);
+    var messageBytes = utils.hexToBytes(messageHex)
+    var messageBuffer = Buffer.from(messageBytes);
+    var preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
     var preambleBuffer = Buffer.from(preamble);
     var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return Hash.keccak256s(ethMessage);
@@ -365,7 +366,7 @@ Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
         kdfparams = json.crypto.kdfparams;
 
         // FIXME: support progress reporting callback
-        derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        derivedKey = scrypt.syncScrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
     } else if (json.crypto.kdf === 'pbkdf2') {
         kdfparams = json.crypto.kdfparams;
 
@@ -415,7 +416,7 @@ Accounts.prototype.encrypt = function(privateKey, password, options) {
         kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
         kdfparams.r = options.r || 8;
         kdfparams.p = options.p || 1;
-        derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        derivedKey = scrypt.syncScrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
     } else {
         throw new Error('Unsupported kdf');
     }

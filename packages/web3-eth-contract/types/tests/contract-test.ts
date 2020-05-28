@@ -46,6 +46,9 @@ contract.transactionConfirmationBlocks;
 // $ExpectType number
 contract.transactionBlockTimeout;
 
+// $ExpectType boolean
+contract.handleRevert;
+
 // $ExpectType string
 contract.options.address;
 

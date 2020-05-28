@@ -13,10 +13,10 @@
   "types": "types/index.d.ts",
   "main": "src/index.js",
   "dependencies": {
-    "@web3-js/websocket": "^1.0.29",
     "eventemitter3": "^4.0.0",
     "underscore": "1.9.1",
-    "web3-core-helpers": "1.2.8"
+    "web3-core-helpers": "1.2.8",
+    "websocket": "^1.0.31"
   },
   "devDependencies": {
     "dtslint": "^3.4.1",

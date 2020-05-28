@@ -539,11 +539,21 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
     // start watching for confirmation depending on the support features of the provider
     var startWatching = function (existingReceipt) {
-        // if provider allows PUB/SUB
-        if (_.isFunction(this.requestManager.provider.on)) {
-            _ethereumCall.subscribe('newBlockHeaders', checkConfirmation.bind(null, existingReceipt, false));
-        } else {
+        const startInterval = () => {
             intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
+        }
+        
+        if (!this.requestManager.provider.on) {
+            startInterval()
+        } else {
+            _ethereumCall.subscribe('newBlockHeaders', function (err, blockHeader, sub) {
+                if (err || !blockHeader) {
+                    // fall back to polling
+                    startInterval()
+                } else {
+                    checkConfirmation(existingReceipt, false, err, blockHeader, sub);
+                }
+            })
         }
     }.bind(this);
 
