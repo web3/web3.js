@@ -31,6 +31,12 @@ jobs:
               with:
                   node-version: 12
             - uses: actions/checkout@v1
+            - uses: actions/cache@v2
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
             - run: bash ./scripts/install.sh
             - run: bash ./scripts/ci.sh
     unit:
@@ -45,6 +51,12 @@ jobs:
               with:
                   node-version: ${{ matrix.node }}
             - uses: actions/checkout@v1
+            - uses: actions/cache@v2
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
             - run: bash ./scripts/install.sh
             - run: bash ./scripts/ci.sh
     e2e:
@@ -72,7 +84,12 @@ jobs:
               with:
                   node-version: 12
             - uses: actions/checkout@v1
-
+            - uses: actions/cache@v2
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
             - run: bash ./scripts/install.sh
             - run: bash ./scripts/ci.sh
 
@@ -91,5 +108,15 @@ jobs:
               with:
                   node-version: 12
             - uses: actions/checkout@v1
+            - name: Get npm cache directory
+              id: npm-cache
+              run: |
+                  echo "::set-output name=dir::$(npm config get cache)"
+            - uses: actions/cache@v2
+              with:
+                  path: ${{ steps.npm-cache.outputs.dir }}
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
             - run: bash ./scripts/install.sh
             - run: bash ./scripts/ci.sh
