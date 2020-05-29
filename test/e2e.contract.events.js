@@ -410,9 +410,6 @@ describe('contract.events [ @E2E ]', function() {
     it('when an invalid utf-8 string is passed in JS as param to emit', async function(){
         const msg = '�������';
 
-        // Browser does it's own thing
-        const expected = (global.window) ? 'ｿｿｿｿｿｿ' : msg;
-
         await instance
             .methods
             .firesStringEvent(msg)
@@ -423,7 +420,7 @@ describe('contract.events [ @E2E ]', function() {
             toBlock: 'latest'
         });
 
-        assert.equal(expected, events[0].returnValues.str)
+        assert.equal(msg, events[0].returnValues.str)
     });
 
     it('when Solidity emits an invalid utf-8 string', async function(){
