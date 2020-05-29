@@ -29,7 +29,7 @@ yarn add web3
 
 ### In the Browser
 
-Use the prebuild `dist/web3.min.js`, or
+Use the prebuilt `dist/web3.min.js`, or
 build using the [web3.js][repo] repository:
 
 ```bash
@@ -142,7 +142,9 @@ npm test
 
 ### Contributing
 
-The contribution guidelines are provided in [CONTRIBUTIONS](./CONTRIBUTIONS.md)
+Please follow the [Contribution Guidelines](./CONTRIBUTIONS.md) and [Review Guidelines](./REVIEW.md).
+
+This project adheres to the [Release Guidelines](./REVIEW.md).
 
 ### Community
 

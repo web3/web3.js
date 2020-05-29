@@ -45,21 +45,12 @@ npm-auth-to-token \
   -e test@test.com \
   -r http://localhost:4873
 
-# Prep branch for Lerna's git-checks
-if [[ $GITHUB_REF = 'refs/pull/'* ]]; then
-  BRANCH=${GITHUB_HEAD_REF#refs/pull/}
-else
-  BRANCH=${GITHUB_REF#refs/heads/}
-fi
-
-git checkout $BRANCH --
-
 # Lerna version
 lerna version minor \
   --force-publish=* \
   --no-git-tag-version \
   --no-push \
-  --allow-branch $BRANCH \
+  --ignore-scripts \
   --yes
 
 # Set identity prior to publishing (necessary for Windows)
@@ -73,5 +64,6 @@ git commit -a -m 'virtual-version-bump'
 lerna publish from-package \
   --dist-tag e2e \
   --registry http://localhost:4873 \
+  --ignore-scripts \
   --yes
 

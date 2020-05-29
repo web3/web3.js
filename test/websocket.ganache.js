@@ -32,6 +32,111 @@ describe('WebsocketProvider (ganache)', function () {
         }
     });
 
+    it('"error" handler fires if the client closes unilaterally', async function(){
+        this.timeout(5000);
+
+        server = ganache.server({port: port});
+        await pify(server.listen)(port);
+
+        // Open and verify connection
+        web3 = new Web3(new Web3.providers.WebsocketProvider(host + port));
+        await web3.eth.getBlockNumber();
+
+        await new Promise(async function(resolve){
+            web3.currentProvider.once('error', function(err){
+                assert(err.message.includes('Connection dropped by remote peer.'))
+                assert(err.message.includes('1006'));
+                resolve();
+            });
+
+            await pify(server.close)();
+        })
+    })
+
+    it('"error" handler fires if Web3 disconnects with error code', async function(){
+        this.timeout(5000);
+
+        server = ganache.server({port: port});
+        await pify(server.listen)(port);
+
+        // Open and verify connection
+        web3 = new Web3(new Web3.providers.WebsocketProvider(host + port));
+        await web3.eth.getBlockNumber();
+
+        await new Promise(async function(resolve){
+            web3.currentProvider.once('error', function(err){
+                assert(err.message.includes('1012'));
+                assert(err.message.includes('restart'));
+                resolve();
+            });
+
+            web3.currentProvider.disconnect(1012, 'restart');
+        })
+    })
+
+    it('"error" handler *DOES NOT* fire if disconnection is clean', async function(){
+        this.timeout(5000);
+
+        server = ganache.server({port: port});
+        await pify(server.listen)(port);
+
+        // Open and verify connection
+        web3 = new Web3(new Web3.providers.WebsocketProvider(host + port));
+        await web3.eth.getBlockNumber();
+
+        await new Promise(async function(resolve, reject){
+            web3.currentProvider.once('error', function(err){
+                reject('Should not fire error handler')
+            });
+
+            web3.currentProvider.disconnect(1000);
+            await utils.waitSeconds(2)
+            resolve();
+        })
+    })
+
+    it('"end" handler fires with close event object if client disconnect', async function(){
+        this.timeout(5000);
+
+        server = ganache.server({port: port});
+        await pify(server.listen)(port);
+
+        // Open and verify connection
+        web3 = new Web3(new Web3.providers.WebsocketProvider(host + port));
+        await web3.eth.getBlockNumber();
+
+        await new Promise(async function(resolve){
+            web3.currentProvider.once('end', function(event){
+                assert.equal(event.type, 'close');
+                assert.equal(event.wasClean, false);
+                resolve();
+            });
+
+            await pify(server.close)();
+        })
+    })
+
+    it('"end" handler fires with close event object if Web3 disconnects', async function(){
+        this.timeout(5000);
+
+        server = ganache.server({port: port});
+        await pify(server.listen)(port);
+
+        // Open and verify connection
+        web3 = new Web3(new Web3.providers.WebsocketProvider(host + port));
+        await web3.eth.getBlockNumber();
+
+        await new Promise(async function(resolve){
+            web3.currentProvider.once('end', function(event){
+                assert.equal(event.type, 'close');
+                assert.equal(event.wasClean, true);
+                resolve();
+            });
+
+            web3.currentProvider.disconnect(1000);
+        })
+    });
+
     // Here, the first error (try/caught) is fired by the request queue checker in
     // the onClose handler. The second error is fired by the readyState check in .send
     it('errors when requests continue after socket closed', async function () {
@@ -213,6 +318,66 @@ describe('WebsocketProvider (ganache)', function () {
             web3.currentProvider.once('error', function (error) {
                 assert(error.message.includes('Maximum number of reconnect attempts reached!'));
                 resolve();
+            });
+        });
+    });
+
+    it('errors when call is made after max. configured attempts has elapsed', function () {
+        this.timeout(6000);
+
+        return new Promise(async function (resolve) {
+            server = ganache.server({port: port});
+            await pify(server.listen)(port);
+
+            web3 = new Web3(
+                new Web3.providers.WebsocketProvider(
+                    host + port,
+                    {reconnect: {auto: true, maxAttempts: 1, delay: 1000,}}
+                )
+            );
+
+            web3.currentProvider.once('connect', async function () {
+                await pify(server.close)();
+                await utils.waitSeconds(2);
+
+                try {
+                    await web3.eth.getBlockNumber();
+                } catch (err) {
+                    assert(err.message.includes('connection not open on send()'));
+                    resolve();
+                }
+            });
+        });
+    });
+
+    it('does not auto reconnect after max. configured attempts has elapsed', function () {
+        this.timeout(6000);
+
+        return new Promise(async function (resolve) {
+            server = ganache.server({port: port});
+            await pify(server.listen)(port);
+
+            web3 = new Web3(
+                new Web3.providers.WebsocketProvider(
+                    host + port,
+                    {reconnect: {auto: true, maxAttempts: 1, delay: 1000,}}
+                )
+            );
+
+            web3.currentProvider.once('connect', async function () {
+                // Close and then re-open server after
+                // reconnection window has elapsed.
+                await pify(server.close)();
+                await utils.waitSeconds(2);
+                await pify(server.listen)(port);
+
+                try {
+                    await web3.eth.getBlockNumber();
+                } catch (err){
+                    assert(err.message.includes('connection not open on send()'));
+                    resolve();
+                }
+
             });
         });
     });

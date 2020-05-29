@@ -24,7 +24,9 @@ import {
     HttpProviderOptions,
     IpcProviderBase,
     WebsocketProviderBase,
-    WebsocketProviderOptions
+    WebsocketProviderOptions,
+    JsonRpcPayload,
+    JsonRpcResponse
 } from 'web3-core-helpers';
 import { Method } from 'web3-core-method';
 import BN = require('bn.js');
@@ -408,9 +410,23 @@ export interface LogsOptions {
 
 export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest' | 'genesis';
 
+export interface RequestArguments {
+    method: string;
+    params?: any;
+    [key: string]: any;
+}
+
+export interface AbstractProvider {
+    sendAsync(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
+    send?(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
+    request?(args: RequestArguments): Promise<any>;
+    connected?: boolean;
+  }
+
 export type provider =
     | HttpProvider
     | IpcProvider
     | WebsocketProvider
+    | AbstractProvider
     | string
     | null;
