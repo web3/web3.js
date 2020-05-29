@@ -436,4 +436,23 @@ describe('contract.events [ @E2E ]', function() {
 
         assert.equal('�������', events[0].returnValues.str)
     });
+
+    it('when wide unicode characters are passed in JS as param to emit', async function(){
+        const msg = '💐';
+
+        await instance
+            .methods
+            .firesStringEvent(msg)
+            .send({from: accounts[0]});
+
+        const events = await instance.getPastEvents({
+            fromBlock: 0,
+            toBlock: 'latest'
+        });
+
+        assert(msg.length > 'a'.length);
+        assert.equal(msg, events[0].returnValues.str)
+    })
+
+
 });
