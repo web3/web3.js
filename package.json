@@ -1,7 +1,7 @@
 {
-    "name": "web3",
+    "name": "web3.js",
     "private": true,
-    "version": "1.2.6",
+    "version": "1.2.8",
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
     "engines": {
@@ -20,10 +20,11 @@
         }
     ],
     "scripts": {
+        "version": "npm run build-all",
         "postinstall": "lerna bootstrap",
-        "build": "gulp",
-        "build-all": "gulp all",
-        "release": "lerna bootstrap; lerna publish",
+        "build": "lerna bootstrap && gulp",
+        "build-all": "lerna bootstrap && gulp all",
+        "publish": "lerna publish",
         "bootstrap": "lerna bootstrap",
         "watch": "gulp watch",
         "docs": "cd docs; make html;",
@@ -96,7 +97,7 @@
         "@babel/core": "^7.6.4",
         "@babel/preset-env": "^7.6.3",
         "@ensdomains/ens": "^0.4.0",
-        "@ensdomains/resolver": "^0.1.13",
+        "@ensdomains/resolver": "^0.2.4",
         "@types/bignumber.js": "^4.0.2",
         "@types/bn.js": "^4.11.5",
         "@types/node": "^12.6.1",
@@ -132,7 +133,7 @@
         "karma-firefox-launcher": "^1.2.0",
         "karma-mocha": "^1.3.0",
         "karma-spec-reporter": "0.0.32",
-        "lerna": "^3.18.3",
+        "lerna": "^3.20.2",
         "mocha": "^6.2.1",
         "nyc": "^14.1.1",
         "pify": "^4.0.1",

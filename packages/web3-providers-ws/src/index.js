@@ -25,7 +25,7 @@
 var EventEmitter = require('eventemitter3');
 var helpers = require('./helpers.js');
 var errors = require('web3-core-helpers').errors;
-var Ws = require('@web3-js/websocket').w3cwebsocket;
+var Ws = require('websocket').w3cwebsocket;
 
 /**
  * @param {string} url
@@ -410,6 +410,7 @@ WebsocketProvider.prototype.reconnect = function () {
     }
 
     this.emit(this.ERROR, errors.MaxAttemptsReachedOnReconnectingError());
+    this.reconnecting = false;
 
     if (this.requestQueue.size > 0) {
         this.requestQueue.forEach(function (request, key) {

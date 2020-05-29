@@ -7,7 +7,6 @@ web3.eth.subscribe
 The ``web3.eth.subscribe`` function lets you subscribe to specific events in the blockchain.
 
 
-
 subscribe
 =====================
 
@@ -19,9 +18,9 @@ subscribe
 Parameters
 ----------
 
-1. ``String`` - The subscription, you want to subscribe to.
+1. ``String`` - The subscription you want to subscribe to.
 2. ``Mixed`` - (optional) Optional additional parameters, depending on the subscription type.
-3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second. Will be called for each incoming subscription, and the subscription itself as 3 parameter.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second. Will be called for each incoming subscription, and the subscription itself as the 3rd parameter.
 
 .. _eth-subscription-return:
 
@@ -33,7 +32,7 @@ Returns
 
     - ``subscription.id``: The subscription id, used to identify and unsubscribing the subscription.
     - ``subscription.subscribe([callback])``: Can be used to re-subscribe with the same parameters.
-    - ``subscription.unsubscribe([callback])``: Unsubscribes the subscription and returns `TRUE` in the callback if successfull.
+    - ``subscription.unsubscribe([callback])``: Unsubscribes the subscription and returns `TRUE` in the callback if successful.
     - ``subscription.arguments``: The subscription arguments, used when re-subscribing.
     - ``on("data")`` returns ``Object``: Fires on each incoming log with the log object as argument.
     - ``on("changed")`` returns ``Object``: Fires on each log which was removed from the blockchain. The log will have the additional property ``"removed: true"``.
@@ -257,7 +256,7 @@ subscribe("syncing")
 
     web3.eth.subscribe('syncing' [, callback]);
 
-Subscribe to syncing events. This will return an object when the node is syncing and when its finished syncing will return ``FALSE``.
+Subscribe to syncing events. This will return an object when the node is syncing and when it's finished syncing will return ``FALSE``.
 
 ----------
 Parameters
@@ -341,7 +340,7 @@ Parameters
 Returns
 -------
 
-``EventEmitter``: An :ref:`subscription instance <eth-subscription-return>` as an event emitter with the following events:
+``EventEmitter``: A :ref:`subscription instance <eth-subscription-return>` as an event emitter with the following events:
 
 - ``"data"`` returns ``Object``: Fires on each incoming log with the log object as argument.
 - ``"changed"`` returns ``Object``: Fires on each log which was removed from the blockchain. The log will have the additional property ``"removed: true"``.
