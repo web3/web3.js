@@ -34,6 +34,48 @@ These tests are "allowed failures". They're:
 + useful for catching problems which are difficult to anticipate
 + exposed to failure for reasons outside of Web3's control, ex: when fixes here surface bugs in the target.
 
+## Implementation Details
+
+**Code coverage**
+
+Coverage is measured by aggregating the results of tests run in the `unit_and_e2e_clients`
+CI job.
+
+**Tests which use an Ethereum client**
+
+The npm script `test:e2e:clients` greps all tests with an `[ E2E ]` tag
+in their mocha test description and runs them against:
++ ganache-cli
++ geth 1.9.13 (POA, single instance, instamining)
++ geth 1.9.13 (POA, single instance, mining at 2s intervals)
+
+These tests are grouped in files prefixed by "e2e", ex: `test/e2e.method.call.js`.
+
+Additionally, there are conventional unit tests postfixed `.ganache.js` which spin up a ganache
+server programatically within mocha. This pattern is useful if you want to
+control client configuration for a specific case, test against multiple independent providers, etc.
+
+**"Real world" tests**
+
+The tests which install Web3's current state in an external real-world project and
+run their unit tests accomplish this by publishing the monorepo to an ephemeral private
+npm registry which is spun up in CI using [verdaccio][14]. (Implementation details can
+be seen in [scripts/e2e.npm.publish.sh][15])
+
+The real world target is then cloned and npm or yarn are used to replace the target's existing
+Web3 version with the version published to the the private registry. A simple example can be seen at
+[scripts/e2e.ganache.core.sh][10].
+
+In practice, complex projects can have many versions of Web3 nested in their dependency tree.
+For the test to be valid, it's important to coerce all of them to the virtually published package.
+This can be done with [scripts/js/resolutions.js][18] which modifies the target's
+`package.json` to take advantage of Yarn's [selective dependency resolutions][17].
+An example of its use can be seen at [scripts/e2e.mosaic.sh][8].
+
+[14]: https://verdaccio.org/docs/en/installation
+[15]: https://github.com/ethereum/web3.js/blob/1.x/scripts/e2e.npm.publish.sh
+[17]: https://classic.yarnpkg.com/en/docs/selective-version-resolutions/
+[18]: https://github.com/ethereum/web3.js/blob/1.x/scripts/js/resolutions.js
 
 [8]: https://github.com/ethereum/web3.js/blob/1.x/scripts/e2e.mosaic.sh
 [9]: https://github.com/cgewecke/mosaic-1
