@@ -847,10 +847,12 @@ The **callback** will return the 32 bytes transaction hash.
 
 ``PromiEvent``: A :ref:`promise combined event emitter <promiEvent>`. Resolves when the transaction *receipt* is available, OR if this ``send()`` is called from a ``someContract.deploy()``, then the promise will resolve with the *new contract instance*. Additionally the following events are available:
 
-- ``"transactionHash"`` returns ``String``: is fired right after the transaction is sent and a transaction hash is available.
-- ``"receipt"`` returns ``Object``: is fired when the transaction *receipt* is available. Receipts from contracts will have no ``logs`` property, but instead an ``events`` property with event names as keys and events as properties. See :ref:`getPastEvents return values <contract-events-return>` for details about the returned event object.
-- ``"confirmation"`` returns ``Number``, ``Object``: is fired for every confirmation up to the 24th confirmation. Receives the confirmation number as the first and the receipt as the second argument. Fired from confirmation 1 on, which is the block where it's minded.
-- ``"error"`` returns ``Error`` and ``Object|undefined``: Is fired if an error occurs during sending. If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+- ``sending``: Fired immediately before transmitting the transaction request.
+- ``sent``: Fired immediately after the request body has been written to the client, but before the transaction hash is received.
+- ``"transactionHash"`` returns ``String``: Fired when the transaction hash is available.
+- ``"receipt"`` returns ``Object``: Fired when the transaction *receipt* is available. Receipts from contracts will have no ``logs`` property, but instead an ``events`` property with event names as keys and events as properties. See :ref:`getPastEvents return values <contract-events-return>` for details about the returned event object.
+- ``"confirmation"`` returns ``confirmation: Number``, ``receipt: Object``, ``latestBlockHash: String``: Fired for every confirmation up to the 24th confirmation.
+- ``"error"`` returns ``Error`` and ``Object|undefined``: Fired if an error occurs during sending. If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
 
 
 -------
