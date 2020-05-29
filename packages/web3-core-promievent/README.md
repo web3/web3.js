@@ -48,8 +48,8 @@ var myFunc = function(){
 
 // and run it
 myFunc()
+.on('done', console.log)
 .then(console.log);
-.on('done', console.log);
 ```
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
