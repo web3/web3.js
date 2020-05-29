@@ -43,7 +43,7 @@ CI job.
 
 **Tests which use an Ethereum client**
 
-The npm script `test:e2e:clients` greps all tests with an `[ E2E ]` tag
+The npm script `test:e2e:clients` greps all tests with an `[ @E2E ]` tag
 in their mocha test description and runs them against:
 + ganache-cli
 + geth 1.9.13 (POA, single instance, instamining)
@@ -62,12 +62,12 @@ run their unit tests accomplish this by publishing the monorepo to an ephemeral 
 npm registry which is spun up in CI using [verdaccio][14]. (Implementation details can
 be seen in [scripts/e2e.npm.publish.sh][15])
 
-The real world target is then cloned and npm or yarn are used to replace the target's existing
+The real world target is then cloned and npm or yarn are used to replace its existing
 Web3 version with the version published to the the private registry. A simple example can be seen at
 [scripts/e2e.ganache.core.sh][10].
 
 In practice, complex projects can have many versions of Web3 nested in their dependency tree.
-For the test to be valid, it's important to coerce all of them to the virtually published package.
+It's important to coerce all of them to the virtually published package's version for the test to be valid.
 This can be done with [scripts/js/resolutions.js][18] which modifies the target's
 `package.json` to take advantage of Yarn's [selective dependency resolutions][17].
 An example of its use can be seen at [scripts/e2e.mosaic.sh][8].

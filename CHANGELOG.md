@@ -212,3 +212,5 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 ### Fixed
+
+- Fix size property de-referencing crash when calling web3.eth.clearSubscriptions (#3527)
