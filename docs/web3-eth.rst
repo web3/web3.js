@@ -1356,10 +1356,12 @@ The **callback** will return the 32 bytes transaction hash.
 
 ``PromiEvent``: A :ref:`promise combined event emitter <promiEvent>`. Resolves when the transaction :ref:`receipt <eth-gettransactionreceipt-return>` is available. The following events are also available:
 
-- ``"transactionHash"`` returns ``String``: Is fired right after the transaction is sent and a transaction hash is available.
-- ``"receipt"`` returns ``Object``: Is fired when the transaction receipt is available.
-- ``"confirmation"`` returns ``Number``, ``Object``: Is fired for every confirmation up to the 12th confirmation. Receives the confirmation number as the first and the :ref:`receipt <eth-gettransactionreceipt-return>` as the second argument. Fired from confirmation 0 on, which is the block where it's mined.
-``"error"`` returns ``Error`` and ``Object|undefined``: Is fired if an error occurs during sending. If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+- ``sending``: Fired immediately before transmitting the transaction request.
+- ``sent``: Fired immediately after the request body has been written to the client, but before the transaction hash is received.
+- ``"transactionHash"`` returns ``String``: Fired when the transaction hash is available.
+- ``"receipt"`` returns ``Object``: Fired when the transaction receipt is available.
+- ``"confirmation"`` returns ``Number``, ``Object``: Fired for every confirmation up to the 12th confirmation. Receives the confirmation number as the first and the :ref:`receipt <eth-gettransactionreceipt-return>` as the second argument. Fired from confirmation 0 on, which is the block where it's mined.
+``"error"`` returns ``Error`` and ``Object|undefined``: Fired if an error occurs during sending. If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
 
 
 -------

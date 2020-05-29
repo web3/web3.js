@@ -139,8 +139,9 @@ describe('contract.deploy [ @E2E ]', function() {
                         assert(receipt.contractAddress);
 
                         if (number === 1) { // Confirmation numbers are zero indexed
-                            var endBlock = await web3.eth.getBlockNumber();
-                            assert(endBlock >= (startBlock + 2));
+                            var endBlock = await web3.eth.getBlock('latest');
+                            assert(endBlock.number >= (startBlock + 2));
+                            assert(endBlock.hash === latestBlockHash);
                             resolve();
                         }
                     })
@@ -198,6 +199,24 @@ describe('contract.deploy [ @E2E ]', function() {
             }
         });
 
+        it('fires the sending event', function(done){
+            basic
+                .deploy()
+                .send({from: accounts[0]})
+                .on('sending', () => {
+                    done();
+                })
+        });
+
+        it('fires the sent event', function(done){
+            basic
+                .deploy()
+                .send({from: accounts[0]})
+                .on('sent', () => {
+                    done();
+                })
+        });
+
         it('fires the transactionHash event', function(done){
             basic
                 .deploy()
@@ -225,10 +244,11 @@ describe('contract.deploy [ @E2E ]', function() {
                 await basic
                     .deploy()
                     .send({from: accounts[0]})
-                    .on('confirmation', async (number, receipt) => {
+                    .on('confirmation', async (number, receipt, latestBlockHash) => {
                         if (number === 1) { // Confirmation numbers are zero indexed
-                            var endBlock = await web3.eth.getBlockNumber();
-                            assert(endBlock >= (startBlock + 2));
+                            var endBlock = await web3.eth.getBlock('latest');
+                            assert(endBlock.number >= (startBlock + 2));
+                            assert(endBlock.hash === latestBlockHash);
                             resolve();
                         }
                     })

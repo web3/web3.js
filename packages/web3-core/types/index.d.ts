@@ -60,6 +60,16 @@ export interface Providers {
 
 export interface PromiEvent<T> extends Promise<T> {
     once(
+        type: 'sending',
+        handler: () => void
+    ): PromiEvent<T>;
+
+    once(
+        type: 'sent',
+        handler: () => void
+    ): PromiEvent<T>;
+
+    once(
         type: 'transactionHash',
         handler: (receipt: string) => void
     ): PromiEvent<T>;
@@ -71,7 +81,7 @@ export interface PromiEvent<T> extends Promise<T> {
 
     once(
         type: 'confirmation',
-        handler: (confNumber: number, receipt: TransactionReceipt) => void
+        handler: (confNumber: number, receipt: TransactionReceipt, latestBlockHash?: string) => void
     ): PromiEvent<T>;
 
     once(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
@@ -93,7 +103,7 @@ export interface PromiEvent<T> extends Promise<T> {
 
     on(
         type: 'confirmation',
-        handler: (confNumber: number, receipt: TransactionReceipt) => void
+        handler: (confNumber: number, receipt: TransactionReceipt, latestBlockHash?: string) => void
     ): PromiEvent<T>;
 
     on(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
