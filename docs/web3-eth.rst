@@ -358,6 +358,20 @@ Returns
 
 ``number``: The current value of transactionBlockTimeout (default: 50)
 
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.transactionBlockTimeout;
+    > 50
+
+    // set the transaction block timeout
+    web3.eth.transactionBlockTimeout = 100;
+
+
 ------------------------------------------------------------------------------
 
 .. _web3-module-transactionconfirmationblocks:
@@ -378,6 +392,20 @@ Returns
 
 ``number``: The current value of transactionConfirmationBlocks (default: 24)
 
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.transactionConfirmationBlocks;
+    > 24
+
+    // set the transaction confirmations blocks
+    web3.eth.transactionConfirmationBlocks = 50;
+
+
 ------------------------------------------------------------------------------
 
 .. _web3-module-transactionpollingtimeout:
@@ -397,6 +425,20 @@ Returns
 -------
 
 ``number``: The current value of transactionPollingTimeout (default: 750)
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.transactionPollingTimeout;
+    > 750
+
+    // set the transaction polling timeout
+    web3.eth.transactionPollingTimeout = 1000;
+
 
 ------------------------------------------------------------------------------
 
@@ -423,6 +465,20 @@ Returns
 -------
 
 ``boolean``: The current value of ``handleRevert`` (default: false)
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.handlRevert;
+    > false
+
+    // turn revert handling on
+    web3.eth.handleRevert = true;
+
 
 ------------------------------------------------------------------------------
 
