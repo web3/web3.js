@@ -1,0 +1,25 @@
+{
+    "name": "web3-tolar",
+    "version": "1.0.0",
+    "description": "Adapter for tolar",
+    "main": "dist/index.js",
+    "scripts": {
+        "test": "tsc && mocha -r ts-node/register tests/**/*.test.ts",
+        "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test"
+    },
+    "author": "Toni Beverin",
+    "license": "ISC",
+    "dependencies": {
+        "web3": "file:../web3"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.2.11",
+        "@types/mocha": "^7.0.2",
+        "@types/node": "^13.11.1",
+        "chai": "^4.2.0",
+        "mocha": "^7.1.1",
+        "nyc": "^15.0.1",
+        "ts-node": "^8.8.2",
+        "typescript": "^3.8.3"
+    }
+}
