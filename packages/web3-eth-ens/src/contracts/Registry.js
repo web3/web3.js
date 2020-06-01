@@ -26,8 +26,8 @@ var namehash = require('eth-ens-namehash');
 var PromiEvent = require('web3-core-promievent');
 var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
-var REGISTRY_ABI = require('../ressources/ABI/Registry');
-var RESOLVER_ABI = require('../ressources/ABI/Resolver');
+var REGISTRY_ABI = require('../resources/ABI/Registry');
+var RESOLVER_ABI = require('../resources/ABI/Resolver');
 
 
 /**

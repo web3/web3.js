@@ -168,6 +168,12 @@ ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, prepa
  */
 ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, preparedArguments, sendOptions, callback) {
     method.apply(this, preparedArguments).send(sendOptions)
+        .on('sending', function () {
+            promiEvent.eventEmitter.emit('sending');
+        })
+        .on('sent', function () {
+            promiEvent.eventEmitter.emit('sent');
+        })
         .on('transactionHash', function (hash) {
             promiEvent.eventEmitter.emit('transactionHash', hash);
         })
