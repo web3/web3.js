@@ -677,11 +677,7 @@ Method.prototype.buildCall = function () {
                 params: [sign.rawTransaction]
             });
 
-            defer.eventEmitter.emit('sending');
-
             method.requestManager.send(signedPayload, sendTxCallback);
-
-            defer.eventEmitter.emit('sent');
         };
 
 
@@ -746,18 +742,15 @@ Method.prototype.buildCall = function () {
                 }
             }
 
-            if (isSendTx) {
-                defer.eventEmitter.emit('sending');
-            }
 
-            var res = method.requestManager.send(payload, sendTxCallback);
-
-            if (isSendTx) {
-                defer.eventEmitter.emit('sent');
-            }
-
-            return res;
+            return method.requestManager.send(payload, sendTxCallback);
         };
+
+        if (isSendTx) {
+            setTimeout(() => {
+                defer.eventEmitter.emit('sending');
+            }, 10);
+        }
 
         // Send the actual transaction
         if (isSendTx && _.isObject(payload.params[0]) && typeof payload.params[0].gasPrice === 'undefined') {
@@ -779,6 +772,12 @@ Method.prototype.buildCall = function () {
 
         } else {
             sendRequest(payload, method);
+        }
+
+        if (isSendTx) {
+            setTimeout(() => {
+                defer.eventEmitter.emit('sent');
+            }, 10);
         }
 
         return defer.eventEmitter;

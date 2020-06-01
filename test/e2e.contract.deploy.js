@@ -135,7 +135,7 @@ describe('contract.deploy [ @E2E ]', function() {
                 await basic
                     .deploy()
                     .send({from: accounts[0]})
-                    .on('confirmation', async (number, receipt) => {
+                    .on('confirmation', async (number, receipt, latestBlockHash) => {
                         assert(receipt.contractAddress);
 
                         if (number === 1) { // Confirmation numbers are zero indexed
