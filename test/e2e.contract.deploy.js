@@ -199,20 +199,22 @@ describe('contract.deploy [ @E2E ]', function() {
             }
         });
 
-        it('fires the sending event', function(done){
+        it('fires the sending event with the payload', function(done){
             basic
                 .deploy()
                 .send({from: accounts[0]})
-                .on('sending', () => {
+                .on('sending', (payload) => {
+                    assert(basic.options.data === payload.params[0].data)
                     done();
                 })
         });
 
-        it('fires the sent event', function(done){
+        it('fires the sent event with the payload', function(done){
             basic
                 .deploy()
                 .send({from: accounts[0]})
-                .on('sent', () => {
+                .on('sent', (payload) => {
+                    assert(basic.options.data === payload.params[0].data)
                     done();
                 })
         });
