@@ -11,6 +11,10 @@
   <p id="blockNumber"></p>
   <p id="timestamp"></p>
   <p id="gasLimit"></p>
+
+  <h4> Important: this test site is shared by all pull requests & is overwritten by the most recent run. </h4>
+  <h4> It's only informative when the PR ref number listed below matches your PR. </h4>
+
   <p id="commitHash"></p>
   <p id="branch"></p>
 
@@ -22,11 +26,10 @@
       document.getElementById("timestamp").innerHTML = "block.timestamp: " + block.timestamp;
       document.getElementById("gasLimit").innerHTML = "block.gasLimit: " + block.gasLimit;
       document.getElementById("today").innerHTML = "Today is " + Date(block.timestamp);
-      document.getElementById("commitHash").innerHTML = "Commit: " + "__COMMIT_HASH__";
+      document.getElementById("commitHash").innerHTML = "Merge commit hash: " + "__COMMIT_HASH__";
       document.getElementById("branch").innerHTML = "Branch: " + "__BRANCH__";
     }
     writeBlock();
   </script>
 </body>
 </html>
-

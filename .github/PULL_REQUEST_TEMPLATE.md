@@ -29,3 +29,6 @@ Fixes #(issue)
 - [ ] I ran `npm run build-all` and tested the resulting files from `dist` folder in a browser.
 - [ ] I have updated the `CHANGELOG.md` file in the root folder.
 - [ ] I have tested my code on the live network.
+- [ ] The browser visual inspection check looks ok: [sudden-playground.surge.sh][1]
+
+[1]: http://sudden-playground.surge.sh/
