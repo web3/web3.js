@@ -22,6 +22,17 @@ describe('web.providers.givenProvider (ganache)', function(){
         basic = new web3.eth.Contract(Basic.abi, basicOptions);
     })
 
+    after(function(done){
+        provider.close(done);
+    })
+
+    it('requestManager attaches 4 listeners', async function(){
+        assert.equal(1, web3.currentProvider.listenerCount('data'))
+        assert.equal(1, web3.currentProvider.listenerCount('connect'))
+        assert.equal(1, web3.currentProvider.listenerCount('error'))
+        assert.equal(1, web3.currentProvider.listenerCount('close'))
+    });
+
     it('deploys a contract', async function(){
         var instance = await basic.deploy().send({from: accounts[0]})
         assert(web3.utils.isAddress(instance.options.address));
@@ -44,4 +55,5 @@ describe('web.providers.givenProvider (ganache)', function(){
             done();
         },500);
     })
+
 })
