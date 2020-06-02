@@ -39,6 +39,7 @@ export class Contract {
     transactionPollingTimeout: number;
     transactionConfirmationBlocks: number;
     transactionBlockTimeout: number;
+    handleRevert: boolean;
 
     options: Options;
 
@@ -46,9 +47,7 @@ export class Contract {
 
     deploy(options: DeployOptions): ContractSendMethod;
 
-    methods: {
-        [key: string]: ContractSendMethod;
-    };
+    methods: any;
 
     once(
         event: string,

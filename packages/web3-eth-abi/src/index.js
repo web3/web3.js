@@ -99,74 +99,50 @@ ABICoder.prototype.encodeParameter = function (type, param) {
  * @return {String} encoded list of params
  */
 ABICoder.prototype.encodeParameters = function (types, params) {
-    const bytesToEvenLength = (param) => {
-        if (Buffer.isBuffer(param)) {
-            param = utils.toHex(param)
+    var self = this;
+    types = self.mapTypes(types)
+
+    params = params.map(function (param, index) {
+        let type = types[index]
+        if (typeof type === 'object' && type.type) {
+            // We may get a named type of shape {name, type}
+            type = type.type
         }
-        // bitwise AND operator returns true if odd
-        if (param.length & 1) { 
-            return '0x0' + param.substring(2)
+
+        // Format BN to string
+        if (utils.isBN(param) || utils.isBigNumber(param)) {
+            return param.toString(10);
         }
-        return param
-    }
-    const bytes32ToFixedLength = (param) => {
-        if (Buffer.isBuffer(param)) {
-            param = utils.toHex(param)
-        }
-        if (param.length < 66) { // 66 includes `0x`
-            return utils.rightPad(param, 64)
-        }
-        return param
-    }
 
-    return ethersAbiCoder.encode(
-        this.mapTypes(types),
-        params.map(function (param, index) {
-            let type = types[index]
-            if (typeof type === 'object' && type.type) {
-                // We may get a named type of shape {name, type}
-                type = type.type
-            }
+        param = self.formatParam(type, param)
 
-            // Format BN to string
-            if (utils.isBN(param) || utils.isBigNumber(param)) {
-                return param.toString(10);
-            }
-
-            // Convert odd-length bytes to even
-            if (type === 'bytes') {
-                param = bytesToEvenLength(param)
-            } else if (type === 'bytes[]') {
-                param = param.map(p => bytesToEvenLength(p))
-            }
-
-            // Convert bytes32 to fixed length
-            if (type === 'bytes32') {
-                param = bytes32ToFixedLength(param)
-            } else if (type === 'bytes32[]') {
-                param = param.map(p => bytes32ToFixedLength(p))
-            }
-
-            // Format tuples for above rules
-            if (typeof type === 'string' && type.includes('tuple')) {
-                const coder = ethersAbiCoder._getCoder(ParamType.from(type));
-                const modifyParams = (coder, param) => {
-                    coder.coders.forEach((c, i) => {
-                        if (c.name === 'bytes') {
-                            param[i] = bytesToEvenLength(param[i])
-                        } else if (c.name === 'bytes32') {
-                            param[i] = bytes32ToFixedLength(param[i])
-                        } else if (c.name === 'tuple') {
-                            modifyParams(c, param[i])
-                        }
-                    })
+        // Format params for tuples
+        if (typeof type === 'string' && type.includes('tuple')) {
+            const coder = ethersAbiCoder._getCoder(ParamType.from(type));
+            const modifyParams = (coder, param) => {
+                if (coder.name === 'array') {
+                    return param.map(p =>
+                        modifyParams(
+                            ethersAbiCoder._getCoder(ParamType.from(coder.type.replace('[]', ''))),
+                            p
+                        )
+                    )
                 }
-                modifyParams(coder, param)
+                coder.coders.forEach((c, i) => {
+                    if (c.name === 'tuple') {
+                        modifyParams(c, param[i])
+                    } else {
+                        param[i] = self.formatParam(c.name, param[i])
+                    }
+                })
             }
+            modifyParams(coder, param)
+        }
 
-            return param;
-        })
-    );
+        return param;
+    })
+
+    return ethersAbiCoder.encode(types, params);
 };
 
 /**
@@ -260,6 +236,63 @@ ABICoder.prototype.mapStructToCoderFormat = function (struct) {
     });
 
     return components;
+};
+
+/**
+ * Handle some formatting of params for backwards compatability with Ethers V4
+ *
+ * @method formatParam
+ * @param {String} - type
+ * @param {any} - param
+ * @return {any} - The formatted param
+ */
+ABICoder.prototype.formatParam = function (type, param) {
+    const paramTypeBytes = new RegExp(/^bytes([0-9]*)$/);
+    const paramTypeBytesArray = new RegExp(/^bytes([0-9]*)\[\]$/);
+    const paramTypeNumber = new RegExp(/^(u?int)([0-9]*)$/);
+    const paramTypeNumberArray = new RegExp(/^(u?int)([0-9]*)\[\]$/);
+
+    if (type.match(paramTypeBytesArray) || type.match(paramTypeNumberArray)) {
+        return param.map(p => this.formatParam(type.replace('[]', ''), p))
+    }
+
+    // Format correct width for u?int[0-9]*
+    let match = type.match(paramTypeNumber);
+    if (match) {
+        let size = parseInt(match[2] || "256");
+        if (size / 8 < param.length) {
+            // pad to correct bit width
+            param = utils.leftPad(param, size);
+        }
+    }
+
+    // Format correct length for bytes[0-9]+
+    match = type.match(paramTypeBytes);
+    if (match) {
+        if (Buffer.isBuffer(param)) {
+            param = utils.toHex(param);
+        }
+
+        // format to correct length
+        let size = parseInt(match[1]);
+        if (size) {
+            let maxSize = size * 2;
+            if (param.substring(0, 2) === '0x') {
+                maxSize += 2;
+            }
+            if (param.length < maxSize) {
+                // pad to correct length
+                param = utils.rightPad(param, size * 2)
+            }
+        }
+        
+        // format odd-length bytes to even-length
+        if (param.length % 2 === 1) { 
+            param = '0x0' + param.substring(2)
+        }
+    }
+
+    return param
 };
 
 /**

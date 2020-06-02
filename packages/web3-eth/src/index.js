@@ -265,7 +265,7 @@ var Eth = function Eth() {
     });
 
 
-    this.clearSubscriptions = _this._requestManager.clearSubscriptions;
+    this.clearSubscriptions = _this._requestManager.clearSubscriptions.bind(_this._requestManager);
 
     // add net
     this.net = new Net(this);
