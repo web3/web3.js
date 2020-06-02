@@ -207,6 +207,8 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 
+- Add events `sending` and `sent` to transaction submission, add `latestBlockHash` to `confirmation` (#3550)
+
 ### Changed
 
 ### Fixed
