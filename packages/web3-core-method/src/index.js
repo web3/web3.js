@@ -746,12 +746,6 @@ Method.prototype.buildCall = function () {
             return method.requestManager.send(payload, sendTxCallback);
         };
 
-        if (isSendTx) {
-            setTimeout(() => {
-                defer.eventEmitter.emit('sending');
-            }, 10);
-        }
-
         // Send the actual transaction
         if (isSendTx && _.isObject(payload.params[0]) && typeof payload.params[0].gasPrice === 'undefined') {
 
@@ -767,17 +761,29 @@ Method.prototype.buildCall = function () {
                     payload.params[0].gasPrice = gasPrice;
                 }
 
+                if (isSendTx) {
+                    setTimeout(() => {
+                        defer.eventEmitter.emit('sending', payload);
+                    }, 0);
+                }
+
                 sendRequest(payload, method);
             });
 
         } else {
+            if (isSendTx) {
+                setTimeout(() => {
+                    defer.eventEmitter.emit('sending', payload);
+                }, 0);
+            }
+
             sendRequest(payload, method);
         }
 
         if (isSendTx) {
             setTimeout(() => {
-                defer.eventEmitter.emit('sent');
-            }, 10);
+                defer.eventEmitter.emit('sent', payload);
+            }, 0);
         }
 
         return defer.eventEmitter;
