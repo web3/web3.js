@@ -309,20 +309,24 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                         // been confirmed by the direct call to checkConfirmation needed
                         // for parity instant-seal
                         if (existingReceipt === undefined || confirmationCount !== 0) {
+                            // Get latest block to emit with confirmation
+                            var latestBlock = await _ethereumCall.getBlockByNumber('latest');
+                            var latestBlockHash = latestBlock ? latestBlock.hash : null;
+
                             if (isPolling) { // Check if actually a new block is existing on polling
                                 if (lastBlock) {
                                     block = await _ethereumCall.getBlockByNumber(lastBlock.number + 1);
                                     if (block) {
                                         lastBlock = block;
-                                        defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                        defer.eventEmitter.emit('confirmation', confirmationCount, receipt, latestBlockHash);
                                     }
                                 } else {
                                     block = await _ethereumCall.getBlockByNumber(receipt.blockNumber);
                                     lastBlock = block;
-                                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt, latestBlockHash);
                                 }
                             } else {
-                                defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                defer.eventEmitter.emit('confirmation', confirmationCount, receipt, latestBlockHash);
                             }
                         }
 
@@ -742,6 +746,7 @@ Method.prototype.buildCall = function () {
                 }
             }
 
+
             return method.requestManager.send(payload, sendTxCallback);
         };
 
@@ -759,13 +764,31 @@ Method.prototype.buildCall = function () {
                 if (gasPrice) {
                     payload.params[0].gasPrice = gasPrice;
                 }
+
+                if (isSendTx) {
+                    setTimeout(() => {
+                        defer.eventEmitter.emit('sending', payload);
+                    }, 0);
+                }
+
                 sendRequest(payload, method);
             });
 
         } else {
+            if (isSendTx) {
+                setTimeout(() => {
+                    defer.eventEmitter.emit('sending', payload);
+                }, 0);
+            }
+
             sendRequest(payload, method);
         }
 
+        if (isSendTx) {
+            setTimeout(() => {
+                defer.eventEmitter.emit('sent', payload);
+            }, 0);
+        }
 
         return defer.eventEmitter;
     };
