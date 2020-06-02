@@ -201,17 +201,34 @@ Released with 1.0.0-beta.37 code base.
 - Stop swallowing errors when WS connection has died after exhausting reconnection attempts. (#3492)
 - Fix setContenthash docs formatting (#3511)
 
-## [Unreleased]
-
 ## [1.2.9]
 
 ### Added
 
+- Add `sending` and `sent` events for tx submissions (#3438)
+- Add `latestBlockHash` arg to `confirmation` event handler payload (#3438)
+- Make socket providers' max listeners threshold configurable (#3469)
 - Documentation about testing & ci resources for Web3.js development (#3528)
-- Add events `sending` and `sent` to transaction submission, add `latestBlockHash` to `confirmation` (#3550)
+- More detailed documentation about how to use `method.encodeABI` (#3549)
+- Integration tests for `transactionPollingTimeout` (#3513)
 
 ### Changed
 
+- Websocket package from @web3-js/websocket@1.0.29 to websocket@1.0.31 (#3371)
+- Upgrade `@web3-js/scrypt-shim@0.1.0` to `scrypt-js@3.0.1`
+- sendSignedTransaction revert handling synthesizes tx without network call (#3457)
+- Make docs grammar more idiomatic, normalize punctuation (#3543)
+
 ### Fixed
 
-- Fix size property de-referencing crash when calling web3.eth.clearSubscriptions (#3527)
+- Size property de-referencing crash when calling web3.eth.clearSubscriptions (#3527)
+- Abi param encoding for tuple arrays (#3538)
+- `account.hashMessage` with non-ASCII characters (#3523)
+- Subscription support check in method confirmations loop (#3432)
+- TS bindings for `handleRevert` added (#3452)
+- Docs: spelling of pre-defined block number (#3539)
+- Docs: missing defaultBlock param option in `method.call` description (#3558)
+
+## [Unreleased]
+
+## [1.2.10]
