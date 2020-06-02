@@ -207,6 +207,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 
+- Documentation about testing & ci resources for Web3.js development (#3528)
 - Add events `sending` and `sent` to transaction submission, add `latestBlockHash` to `confirmation` (#3550)
 
 ### Changed
