@@ -986,8 +986,9 @@ methods.myMethod.encodeABI
 
     myContract.methods.myMethod([param1[, param2[, ...]]]).encodeABI()
 
-Encodes the ABI for this method. This can be used to send a transaction, call a method, or pass it into another smart contract's method as arguments.
+Encodes the ABI for this method. The resulting hex string is 32-bit function signature hash plus the passed parameters in  Solidity tightly packed format. This can be used to send a transaction, call a method, or pass it into another smart contract's method as arguments. Set the `data` field on `web3.eth.sendTransaction` options as the `encodeABI()` result and it is the same as calling the contract method with `contract.myMethod.send()`. 
 
+Some use cases for `encodeABI()` include: preparing a smart contract transaction for a multisignature wallet, working with offline wallets and cold storage and creating transaction payload for complex smart contract proxy calls.
 
 ----------
 Parameters
