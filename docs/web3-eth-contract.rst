@@ -737,7 +737,7 @@ methods.myMethod.call
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]]).call(options[, callback])
+    myContract.methods.myMethod([param1[, param2[, ...]]]).call(options [, defaultBlock] [, callback])
 
 Will call a "constant" method and execute its smart contract method in the EVM without sending any transaction. Note calling cannot alter the smart contract state.
 
@@ -749,7 +749,8 @@ Parameters
     * ``from`` - ``String`` (optional): The address the call "transaction" should be made from. For calls the ``from`` property is optional however it is highly recommended to explicitly set it or it may default to `address(0)` depending on your node or provider.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this call "transaction".
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this call "transaction" (gas limit).
-2. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the smart contract method execution as the second argument, or with an error object as the first argument.
+``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`contract.defaultBlock <defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.  Useful for requesting data from or replaying transactions in past blocks.
+3. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the smart contract method execution as the second argument, or with an error object as the first argument.
 
 -------
 Returns
