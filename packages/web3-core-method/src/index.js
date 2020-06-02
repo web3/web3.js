@@ -30,6 +30,8 @@ var utils = require('web3-utils');
 var promiEvent = require('web3-core-promievent');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 
+var EthersTransactionUtils = require('@ethersproject/transactions');
+
 var Method = function Method(options) {
 
     if (!options.call || !options.name) {
@@ -436,15 +438,17 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                         // If send was raw, fetch the transaction and reconstitute the
                                         // original params so they can be replayed with `eth_call`
                                         if (method.call === 'eth_sendRawTransaction'){
-                                            var txToReplay = await _ethereumCall.getTransactionByHash(receipt.transactionHash);
+                                            var rawTransactionHex = payload.params[0];
+
+                                            var parsedTx = EthersTransactionUtils.parse(rawTransactionHex);
 
                                             txReplayOptions = formatters.inputTransactionFormatter({
-                                                data: txToReplay.input,
-                                                to: txToReplay.to,
-                                                from: txToReplay.from,
-                                                gas: txToReplay.gas,
-                                                gasPrice: txToReplay.gasPrice,
-                                                value: txToReplay.value
+                                                data: parsedTx.data,
+                                                to: parsedTx.to,
+                                                from: parsedTx.from,
+                                                gas: parsedTx.gasLimit.toHexString(),
+                                                gasPrice: parsedTx.gasPrice.toHexString(),
+                                                value: parsedTx.value.toHexString()
                                             })
                                         }
 
