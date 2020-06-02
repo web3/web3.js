@@ -426,6 +426,40 @@ Returns
 
 ------------------------------------------------------------------------------
 
+.. _web3-module-maxListenersWarningThreshold:
+
+maxListenersWarningThreshold
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.maxListenersWarningThreshold
+
+This defines the threshold above which a warning about the number of event listeners
+attached to a provider which supports sockets subscriptions will be written to the console.
+You may see this warning if you call ``setProvider`` on large numbers of Web3 contract objects.
+
+-------
+Returns
+-------
+
+``number``: The current value of maxListenersWarningThreshold (default: 100)
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.maxListenersWarningThreshold;
+    > 100
+
+    // set the max listeners warning threshold
+    web3.eth.maxListenersWarningThreshold = 200;
+
+------------------------------------------------------------------------------
+
 getProtocolVersion
 =====================
 
