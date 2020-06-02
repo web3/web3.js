@@ -52,7 +52,6 @@ var abi = require('web3-eth-abi');
  * @param {Object} options
  */
 var Contract = function Contract(jsonInterface, address, options) {
-    console.log('Using virtually published Web3 in web3-eth-contract (constructor)');
     var _this = this,
         args = Array.prototype.slice.call(arguments);
 
