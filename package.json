@@ -49,6 +49,7 @@
         "test:e2e:truffle": "./scripts/e2e.truffle.sh",
         "test:e2e:mosaic": "./scripts/e2e.mosaic.sh",
         "test:e2e:ganache:core": "./scripts/e2e.ganache.core.sh",
+        "test:e2e:gnosis:dex": "./scripts/e2e.gnosis.dex.sh",
         "ci": "./scripts/ci.sh",
         "cov:clean": "rm -rf .nyc_output; rm -rf coverage",
         "cov:merge_reports": "nyc report --reporter=lcov --reporter=html"
