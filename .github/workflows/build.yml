@@ -44,6 +44,7 @@ jobs:
                         "e2e_ganache",
                         "e2e_mosaic",
                         "e2e_browsers",
+                        "e2e_gnosis_dex"
                     ]
         env:
             TEST: ${{ matrix.testCmd }}
