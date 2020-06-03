@@ -146,10 +146,14 @@ Configuration
           authorization: 'Basic username:password'
         },
 
-        // Useful if requests result are large
         clientConfig: {
+          // Useful if requests are large
           maxReceivedFrameSize: 100000000,   // bytes - default: 1MiB
           maxReceivedMessageSize: 100000000, // bytes - default: 8MiB
+
+          // Useful to keep a connection alive
+          keepalive: true,
+          keepaliveInterval: 60000 // ms
         },
 
         // Enable auto reconnection
