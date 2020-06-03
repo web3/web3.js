@@ -11,7 +11,7 @@ which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JS
 
 You need to run a local Ethereum node to use this library.
 
-[Documentation](https://github.com/ethereum/wiki/wiki/JavaScript-API)
+[Documentation](DOCUMENTATION.md)
 
 ## Table of Contents
 
