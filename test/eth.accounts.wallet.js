@@ -113,12 +113,15 @@ describe("eth", function () {
                 assert.equal(ethAccounts.wallet.length, 1);
             });
 
-            it("remove wallet using an index", function() {
+            it("remove wallet using an index", async function() {
                 var ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
                 var wallet = ethAccounts.wallet.add(test.privateKey);
                 assert.equal(ethAccounts.wallet.length, 1);
+
+                // await setImmediate to fix wallet race condition when calling `wallet.remove` immediately after `wallet.add`
+                await new Promise(resolve => setImmediate(resolve));
 
                 ethAccounts.wallet.remove(0);
 
@@ -130,12 +133,15 @@ describe("eth", function () {
 
             });
 
-            it("remove wallet using an address", function() {
+            it("remove wallet using an address", async function() {
                 var ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
                 var wallet = ethAccounts.wallet.add(test.privateKey);
                 assert.equal(ethAccounts.wallet.length, 1);
+
+                // await setImmediate to fix wallet race condition when calling `wallet.remove` immediately after `wallet.add`
+                await new Promise(resolve => setImmediate(resolve));
 
                 ethAccounts.wallet.remove(test.address);
 
@@ -147,12 +153,15 @@ describe("eth", function () {
 
             });
 
-            it("remove wallet using an lowercase address", function() {
+            it("remove wallet using an lowercase address", async function() {
                 var ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
                 var wallet = ethAccounts.wallet.add(test.privateKey);
                 assert.equal(ethAccounts.wallet.length, 1);
+
+                // await setImmediate to fix wallet race condition when calling `wallet.remove` immediately after `wallet.add`
+                await new Promise(resolve => setImmediate(resolve));
 
                 ethAccounts.wallet.remove(test.address.toLowerCase());
 
@@ -164,7 +173,7 @@ describe("eth", function () {
 
             });
 
-            it("create 5 wallets, remove two, create two more and check for overwrites", function() {
+            it("create 5 wallets, remove two, create two more and check for overwrites", async function() {
                 var count = 5;
                 var ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
@@ -177,6 +186,9 @@ describe("eth", function () {
                 var lastAddress = ethAccounts.wallet[4].address;
                 var remainingAddresses = [0,1,3];
                 var beforeRemoval = remainingAddresses.map(function(n) { return wallet[n].address } );
+
+                // await setImmediate to fix wallet race condition when calling `wallet.remove` immediately after `wallet.add`
+                await new Promise(resolve => setImmediate(resolve));
 
                 ethAccounts.wallet.remove(2);
                 ethAccounts.wallet.remove(4);
@@ -209,7 +221,9 @@ describe("eth", function () {
                 assert.equal(ethAccounts.wallet.length, count);
             });
 
-            it("clear wallet", function() {
+            it("clear wallet", async function() {
+                this.timeout(10000);
+
                 var count = 10;
                 var ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
@@ -221,6 +235,9 @@ describe("eth", function () {
                 for (var i = 0; i < count; i++) {
                     addresses.push(wallet[i].address);
                 }
+
+                // await setImmediate to fix wallet race condition when calling `wallet.remove` immediately after `wallet.add`
+                await new Promise(resolve => setImmediate(resolve));
 
                 ethAccounts.wallet.clear();
 
@@ -233,7 +250,9 @@ describe("eth", function () {
                 assert.equal(ethAccounts.wallet.length, 0);
             });
 
-            it("remove accounts then clear wallet", function(done) {
+            it("remove accounts then clear wallet", async function() {
+                this.timeout(10000);
+
                 var count = 10;
                 var ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
@@ -246,28 +265,30 @@ describe("eth", function () {
                     addresses.push(wallet[i].address);
                 }
 
+                // await setImmediate to fix wallet race condition when calling `wallet.remove` immediately after `wallet.add`
+                await new Promise(resolve => setImmediate(resolve));
+
                 ethAccounts.wallet.remove(0);
                 assert.isUndefined(ethAccounts.wallet[0])
                 ethAccounts.wallet.remove(5);
                 assert.isUndefined(ethAccounts.wallet[5])
 
-                setTimeout(function () {
+                ethAccounts.wallet.clear();
 
-                    ethAccounts.wallet.clear();
+                await new Promise(resolve => setImmediate(resolve));
 
-                    for (var i = 0; i < count; i++) {
-                        assert.isUndefined(ethAccounts.wallet[i]);
-                        assert.isUndefined(ethAccounts.wallet[addresses[i]]);
-                        assert.isUndefined(ethAccounts.wallet[addresses[i].toLowerCase()]);
-                    }
+                for (var i = 0; i < count; i++) {
+                    assert.isUndefined(ethAccounts.wallet[i]);
+                    assert.isUndefined(ethAccounts.wallet[addresses[i]]);
+                    assert.isUndefined(ethAccounts.wallet[addresses[i].toLowerCase()]);
+                }
 
-                    assert.equal(ethAccounts.wallet.length, 0);
-
-                    done();
-                }, 1);
+                assert.equal(ethAccounts.wallet.length, 0);
             });
 
-            it("encrypt then decrypt wallet", function() {
+            it("encrypt then decrypt wallet", async function() {
+                this.timeout(10000);
+
                 var ethAccounts = new Accounts();
                 var password = "qwerty";
 
@@ -276,6 +297,9 @@ describe("eth", function () {
                 var wallet = ethAccounts.wallet.create(5);
                 var addressFromWallet = ethAccounts.wallet[0].address;
                 assert.equal(ethAccounts.wallet.length, 5);
+
+                // await setImmediate to fix wallet race condition when calling `wallet.remove` immediately after `wallet.add`
+                await new Promise(resolve => setImmediate(resolve));
 
                 ethAccounts.wallet.remove(2);
                 assert.equal(ethAccounts.wallet.length, 4);

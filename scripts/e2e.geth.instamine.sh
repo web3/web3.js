@@ -24,17 +24,11 @@ echo " "
 # Launch client w/ two unlocked accounts.
 # + accounts[0] default geth unlocked bal = ~infinity
 # + accounts[1] unlocked, bal=50 eth, signing password = 'left-hand-of-darkness'
-geth-dev-assistant --accounts 1 --tag 'stable'
+geth-dev-assistant --accounts 1 --tag 'v1.9.13'
 
 # Test
-GETH_INSTAMINE=true istanbul cover _mocha -- \
+GETH_INSTAMINE=true nyc --no-clean --silent _mocha -- \
   --reporter spec \
   --grep 'E2E' \
   --timeout 15000 \
   --exit
-
-# Copy cov for this run to a temp file we can combine later and send to coveralls
-if [ "$CI" = true ]; then
-  cp coverage/coverage.raw.json .cov_geth_insta.json
-fi
-

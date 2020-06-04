@@ -18,8 +18,19 @@ if [ -z "$CI" ]; then
 
 fi
 
-# Launch npm proxy registry
-npx verdaccio --config verdaccio.yml & npx wait-port 4873
+# To model publication correctly, this script needs to run
+# without web3's dev deps being installed. It installs
+# what it needs here.
+npm install -g verdaccio@4.4.4
+npm install -g npm-auth-to-token@1.0.0
+npm install -g lerna@3.18.3
+
+# Launch npm proxy registry and save pid to kill server (req. in Windows env)
+verdaccio --config verdaccio.yml &
+VERDACCIO_PID=$!
+echo "VERDACCIO_PID=$VERDACCIO_PID" > verdaccio_pid
+
+npx wait-port 4873
 
 # `npm add user`
 curl -XPUT \
@@ -28,36 +39,31 @@ curl -XPUT \
    'http://localhost:4873/-/user/org.couchdb.user:test'
 
 # `npm login`
-npx npm-auth-to-token \
+npm-auth-to-token \
   -u test \
   -p test \
   -e test@test.com \
   -r http://localhost:4873
 
-# Prep branch for Lerna's git-checks
-BRANCH=$TRAVIS_PULL_REQUEST_BRANCH
-if [ -z "$BRANCH" ]; then
-
-  BRANCH=$TRAVIS_BRANCH
-
-fi
-
-git checkout $BRANCH --
-
 # Lerna version
-npx lerna version patch \
+lerna version minor \
   --force-publish=* \
   --no-git-tag-version \
   --no-push \
-  --allow-branch $BRANCH \
+  --ignore-scripts \
   --yes
+
+# Set identity prior to publishing (necessary for Windows)
+git config user.email "you@example.com"
+git config user.name "Your Name"
 
 # Commit changes because lerna checks git before
 git commit -a -m 'virtual-version-bump'
 
 # Lerna publish to e2e tag
-npx lerna publish from-package \
+lerna publish from-package \
   --dist-tag e2e \
   --registry http://localhost:4873 \
+  --ignore-scripts \
   --yes
 

@@ -1,8 +1,11 @@
 # web3-providers-http
 
-_This is a sub package of [web3.js][repo]_
+[![NPM Package][npm-image]][npm-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
 
-This is a HTTP provider for [web3.js][repo].  
+This is a sub-package of [web3.js][repo].
+
+This is a HTTP provider for [web3.js][repo].
+
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -28,18 +31,29 @@ This will expose the `Web3HttpProvider` object on the window object.
 
 ```js
 // in node.js
+var http = require('http');
 var Web3HttpProvider = require('web3-providers-http');
 
 var options = {
+    keepAlive: true,
     timeout: 20000, // milliseconds,
-    headers: [{name: 'Access-Control-Allow-Origin', value: '*'},{...}]
+    headers: [{name: 'Access-Control-Allow-Origin', value: '*'},{...}],
+    withCredentials: false,
+    agent: {http: http.Agent(...), baseUrl: ''}
 };
-var http = new Web3HttpProvider('http://localhost:8545', options);
+
+var provider = new Web3HttpProvider('http://localhost:8545', options);
 ```
 
 ## Types
 
-All the typescript typings are placed in the types folder.
+All the TypeScript typings are placed in the `types` folder.
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
+[npm-image]: https://img.shields.io/npm/dm/web3-providers-http.svg
+[npm-url]: https://npmjs.org/package/web3-providers-http
+[deps-image]: https://david-dm.org/ethereum/web3.js/1.x/status.svg?path=packages/web3-providers-http
+[deps-url]: https://david-dm.org/ethereum/web3.js/1.x?path=packages/web3-providers-http
+[deps-dev-image]: https://david-dm.org/ethereum/web3.js/1.x/dev-status.svg?path=packages/web3-providers-http
+[deps-dev-url]: https://david-dm.org/ethereum/web3.js/1.x?type=dev&path=packages/web3-providers-http

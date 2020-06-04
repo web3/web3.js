@@ -1,7 +1,24 @@
 process.env.MOZ_HEADLESS = 1;
 
-if (!process.env.TRAVIS){
+if (!process.env.GITHUB_ACTION) {
     process.env.CHROME_BIN = require('puppeteer').executablePath();
+}
+
+// BROWSER_BUNDLE_TEST is set for an un-browserified check that both bundles load correctly.
+// BROWSER_BUNDLE_TEST is not set for the e2e unit tests, which check that bundle internals are ok.
+function getTestFiles(){
+    switch (process.env.BROWSER_BUNDLE_TEST){
+        case 'publishedDist': return ["packages/web3/dist/web3.min.js", "test/e2e.minified.js"]
+        case 'gitRepoDist':   return ["dist/web3.min.js", "test/e2e.minified.js"]
+        default:              return ["test/**/e2e*.js"]
+    }
+}
+
+// Only loads browserified preprocessor for the logic unit tests so we can `require` stuff.
+function getPreprocessors(){
+    if (!process.env.BROWSER_BUNDLE_TEST){
+        return { 'test/**/e2e*.js': [ 'browserify' ] }
+    }
 }
 
 module.exports = function (config) {
@@ -10,12 +27,8 @@ module.exports = function (config) {
             'mocha',
             'browserify'
         ],
-        files: [
-            'test/**/e2e*.js'
-        ],
-        preprocessors: {
-            'test/**/e2e*.js': [ 'browserify' ]
-        },
+        files: getTestFiles(),
+        preprocessors: getPreprocessors(),
         plugins: [
             'karma-chrome-launcher',
             'karma-firefox-launcher',
@@ -37,16 +50,16 @@ module.exports = function (config) {
                 base: 'Firefox',
                 flags: ['-headless'],
             },
-            Chrome_travis_ci: {
+            Chrome_ci: {
                 base: 'Chrome',
                 flags: ['--no-sandbox']
             }
         },
     };
 
-    if(process.env.TRAVIS) {
+    if(process.env.GITHUB_ACTION) {
         configuration.browsers = [
-            'Chrome_travis_ci',
+            'Chrome_ci',
             'FirefoxHeadless'
         ];
     }

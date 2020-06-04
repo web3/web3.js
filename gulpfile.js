@@ -10,11 +10,9 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
-var babel = require('gulp-babel');
 var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
 var exorcist = require('exorcist');
-var bower = require('bower');
 var streamify = require('gulp-streamify');
 var replace = require('gulp-replace');
 var exec = require('child_process').exec;
@@ -121,6 +119,7 @@ var ugliyOptions = {
     }
 };
 
+// Apply lerna.json version to root package.json
 gulp.task('version', function() {
     if (!lernaJSON.version) {
         throw new Error('version property is missing from lerna.json');
@@ -131,8 +130,6 @@ gulp.task('version', function() {
     var jsPattern = /version: '[.0-9\-a-z]*'/;
     var glob = [
         './package.json',
-        './bower.json',
-        './package.js'
     ];
 
     return gulp.src(glob, {base: './'})
@@ -141,19 +138,13 @@ gulp.task('version', function() {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('bower', gulp.series('version', function(cb) {
-    bower.commands.install().on('end', function(installed) {
-        console.log(installed);
-        cb();
-    });
-}));
-
 gulp.task('lint', function() {
     return gulp.src(['./*.js', './lib/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
+// Delete dist folder
 gulp.task('clean', gulp.series('lint', function(cb) {
     del([DEST]).then(cb.bind(null, null));
 }));
@@ -167,6 +158,7 @@ packages.forEach(function(pckg, i) {
         var stream = browserify(browserifyOptions)
             .require(pckg.src, {expose: pckg.expose})
             .require('bn.js', {expose: 'BN'}) // expose it to dapp developers
+            .add('./node_modules/regenerator-runtime')
             .add(pckg.src);
 
         if (pckg.ignore) {
@@ -175,7 +167,24 @@ packages.forEach(function(pckg, i) {
             });
         }
 
-        var bundle = stream.bundle();
+        var bundle = stream.transform(
+            "babelify",
+            {
+                global: true,
+                presets: [
+                    [
+                        "@babel/preset-env",
+                        {
+                            useBuiltIns: 'entry',
+                            corejs: 3,
+                            targets: {
+                                ie: 10
+                            }
+                        }
+                    ]
+                ]
+            }
+        ).bundle();
 
         stream = bundle
             .pipe(exorcist(path.join(DEST, pckg.fileName + '.js.map')));
@@ -185,11 +194,7 @@ packages.forEach(function(pckg, i) {
                 .pipe(exorcist(path.join(WEB3_PACKAGE_DEST, pckg.fileName + '.js.map')));
         }
 
-        stream = stream.pipe(source(pckg.fileName + '.js'))
-            .pipe(streamify(babel({
-                compact: false,
-                presets: [[ '@babel/preset-env', { "useBuiltIns": "usage", "corejs": 2 } ]]
-            })));
+        stream = stream.pipe(source(pckg.fileName + '.js'));
 
         if (pckg.fileName === 'web3') {
             stream = stream

@@ -63,9 +63,11 @@ var _fireError = function (error, emitter, reject, callback, optionalData) {
     if (_.isFunction(reject)) {
         // suppress uncatched error if an error listener is present
         // OR suppress uncatched error if an callback listener is present
-        if (emitter &&
+        if (
+            emitter &&
             (_.isFunction(emitter.listeners) &&
-            emitter.listeners('error').length) || _.isFunction(callback)) {
+            emitter.listeners('error').length) || _.isFunction(callback)
+        ) {
             emitter.catch(function(){});
         }
         // reject later, to be able to return emitter
@@ -314,8 +316,6 @@ var toChecksumAddress = function (address) {
     return checksumAddress;
 };
 
-
-
 module.exports = {
     _fireError: _fireError,
     _jsonInterfaceMethodToString: _jsonInterfaceMethodToString,
@@ -330,8 +330,10 @@ module.exports = {
     isHex: utils.isHex,
     isHexStrict: utils.isHexStrict,
     sha3: utils.sha3,
+    sha3Raw: utils.sha3Raw,
     keccak256: utils.sha3,
-    soliditySha3: soliditySha3,
+    soliditySha3: soliditySha3.soliditySha3,
+    soliditySha3Raw: soliditySha3.soliditySha3Raw,
     isAddress: utils.isAddress,
     checkAddressChecksum: utils.checkAddressChecksum,
     toChecksumAddress: toChecksumAddress,
@@ -370,6 +372,12 @@ module.exports = {
     leftPad: utils.leftPad,
     padRight: utils.rightPad,
     rightPad: utils.rightPad,
-    toTwosComplement: utils.toTwosComplement
-};
+    toTwosComplement: utils.toTwosComplement,
 
+    isBloom: utils.isBloom,
+    isUserEthereumAddressInBloom: utils.isUserEthereumAddressInBloom,
+    isContractAddressInBloom: utils.isContractAddressInBloom,
+    isTopic: utils.isTopic,
+    isTopicInBloom: utils.isTopicInBloom,
+    isInBloom: utils.isInBloom
+};

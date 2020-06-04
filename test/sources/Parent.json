@@ -1,0 +1,83 @@
+{
+  "contractName": "Parent",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "parentA",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "parentB",
+          "type": "address"
+        }
+      ],
+      "name": "Identical",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Similar",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "a",
+          "type": "address"
+        }
+      ],
+      "name": "fireChildIdenticalEvent",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "a",
+          "type": "address"
+        }
+      ],
+      "name": "fireChildSimilarEvent",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b506101be806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806333953f3e1461003b578063cdaef7191461007f575b600080fd5b61007d6004803603602081101561005157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506100c3565b005b6100c16004803603602081101561009557600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610126565b005b8073ffffffffffffffffffffffffffffffffffffffff1663e62f41486040518163ffffffff1660e01b8152600401600060405180830381600087803b15801561010b57600080fd5b505af115801561011f573d6000803e3d6000fd5b5050505050565b8073ffffffffffffffffffffffffffffffffffffffff166339eb06136040518163ffffffff1660e01b8152600401600060405180830381600087803b15801561016e57600080fd5b505af1158015610182573d6000803e3d6000fd5b505050505056fea265627a7a723158201570ee9f18c1363a1ed9485e2163e981c47ef63669cd44ce420f350ed4949ad664736f6c634300050f0032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c806333953f3e1461003b578063cdaef7191461007f575b600080fd5b61007d6004803603602081101561005157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506100c3565b005b6100c16004803603602081101561009557600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610126565b005b8073ffffffffffffffffffffffffffffffffffffffff1663e62f41486040518163ffffffff1660e01b8152600401600060405180830381600087803b15801561010b57600080fd5b505af115801561011f573d6000803e3d6000fd5b5050505050565b8073ffffffffffffffffffffffffffffffffffffffff166339eb06136040518163ffffffff1660e01b8152600401600060405180830381600087803b15801561016e57600080fd5b505af1158015610182573d6000803e3d6000fd5b505050505056fea265627a7a723158201570ee9f18c1363a1ed9485e2163e981c47ef63669cd44ce420f350ed4949ad664736f6c634300050f0032",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
