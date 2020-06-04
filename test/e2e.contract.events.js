@@ -89,12 +89,10 @@ describe('contract.events [ @E2E ]', function() {
                     .methods
                     .firesEvent(accounts[0], 1)
                     .send({ from: accounts[0] });
-
-                // assert.fail();
-
             } catch (err) {
                 assert(err.message === 'Invalid option: toBlock. Use getPastEvents for specific range.');
                 resolve();
+                done();
             }
         });
     });
@@ -113,12 +111,10 @@ describe('contract.events [ @E2E ]', function() {
                     .methods
                     .firesEvent(accounts[0], 1)
                     .send({ from: accounts[0] });
-
-                // assert.fail();
-
             } catch (err) {
                 assert(err.message === 'Invalid option: toBlock. Use getPastEvents for specific range.');
-                resolve()
+                resolve();
+                done();
             }
         });
     });
