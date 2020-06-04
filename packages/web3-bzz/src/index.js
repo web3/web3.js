@@ -45,9 +45,7 @@ var Bzz = function Bzz(provider) {
 // set default ethereum provider
 /* jshint ignore:start */
 Bzz.givenProvider = null;
-if(typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
-    Bzz.givenProvider = ethereumProvider.bzz;
-} else if (typeof ethereum !== 'undefined' && ethereum.bzz) {
+if (typeof ethereum !== 'undefined' && ethereum.bzz) {
     Bzz.givenProvider = ethereum.bzz;
 }
 /* jshint ignore:end */
