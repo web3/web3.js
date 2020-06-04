@@ -99,6 +99,30 @@ describe('contract.events [ @E2E ]', function() {
         });
     });
 
+    it('errors when toBlock is passed to contract.events.allEvents', function () {
+        return new Promise(async (resolve, reject) => {
+            try {
+                instance
+                    .events
+                    .allEvents({
+                        fromBlock: 0,
+                        toBlock: 'latest'
+                    })
+
+                await instance
+                    .methods
+                    .firesEvent(accounts[0], 1)
+                    .send({ from: accounts[0] });
+
+                // assert.fail();
+
+            } catch (err) {
+                assert(err.message === 'Invalid option: toBlock. Use getPastEvents for specific range.');
+                resolve()
+            }
+        });
+    });
+
     it('should not hear the error handler when connection.closed() called', function(){
         this.timeout(15000);
 
