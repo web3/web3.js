@@ -101,6 +101,7 @@ var Eth = function Eth() {
     var transactionBlockTimeout = 50;
     var transactionConfirmationBlocks = 24;
     var transactionPollingTimeout = 750;
+    var maxListenersWarningThreshold = 100;
     var defaultChain, defaultHardfork, defaultCommon;
 
     Object.defineProperty(this, 'handleRevert', {
@@ -263,9 +264,21 @@ var Eth = function Eth() {
         },
         enumerable: true
     });
+    Object.defineProperty(this, 'maxListenersWarningThreshold', {
+        get: function () {
+            return maxListenersWarningThreshold;
+        },
+        set: function (val) {
+            if (_this.currentProvider && _this.currentProvider.setMaxListeners){
+                maxListenersWarningThreshold = val;
+                _this.currentProvider.setMaxListeners(val);
+            }
+        },
+        enumerable: true
+    });
 
 
-    this.clearSubscriptions = _this._requestManager.clearSubscriptions;
+    this.clearSubscriptions = _this._requestManager.clearSubscriptions.bind(_this._requestManager);
 
     // add net
     this.net = new Net(this);
@@ -278,6 +291,9 @@ var Eth = function Eth() {
     // add personal
     this.personal = new Personal(this);
     this.personal.defaultAccount = this.defaultAccount;
+
+    // set warnings threshold
+    this.maxListenersWarningThreshold = maxListenersWarningThreshold;
 
     // create a proxy Contract type for this instance, as a Contract's provider
     // is stored as a class member rather than an instance variable. If we do

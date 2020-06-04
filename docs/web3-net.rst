@@ -5,7 +5,7 @@ web3.*.net
 ========
 
 
-The ``web3-net`` package allows you to interact with the Ethereum nodes network properties.
+The ``web3-net`` package allows you to interact with an Ethereum node's network properties.
 
 
 .. code-block:: javascript

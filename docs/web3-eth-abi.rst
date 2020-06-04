@@ -4,8 +4,7 @@
 web3.eth.abi
 =========
 
-The ``web3.eth.abi`` functions let you de- and encode parameters to ABI (Application Binary Interface) for function calls to the EVM (Ethereum Virtual Machine).
-
+The ``web3.eth.abi`` functions let you encode and decode parameters to ABI (Application Binary Interface) for function calls to the EVM (Ethereum Virtual Machine).
 
 
 ------------------------------------------------------------------------------
@@ -245,7 +244,7 @@ encodeFunctionCall
 
     web3.eth.abi.encodeFunctionCall(jsonInterface, parameters);
 
-Encodes a function call using its :ref:`JSON interface <glossary-json-interface>` object and given paramaters.
+Encodes a function call using its :ref:`JSON interface <glossary-json-interface>` object and given parameters.
 
 ----------
 Parameters
@@ -464,7 +463,7 @@ decodeLog
 
     web3.eth.abi.decodeLog(inputs, hexString, topics);
 
-Decodes ABI encoded log data and indexed topic data.
+Decodes ABI-encoded log data and indexed topic data.
 
 ----------
 Parameters

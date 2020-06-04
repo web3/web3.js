@@ -1,7 +1,8 @@
 var chai = require('chai');
 var assert = chai.assert;
 var formatters = require('../packages/web3-core-helpers/src/formatters.js');
-var FakeHttpProvider = require('./helpers/FakeIpcProvider');
+var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var FakeIpcProvider = require('./helpers/FakeIpcProvider');
 var Eth = require('../packages/web3-eth');
 var Method = require('../packages/web3-core-method');
 
@@ -220,7 +221,7 @@ describe('lib/web3/method', function () {
         });
 
         var succeedOnReceipt = function () {
-            var provider = new FakeHttpProvider();
+            var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
             var method = new Method({
                 name: 'sendTransaction',
@@ -343,7 +344,7 @@ describe('lib/web3/method', function () {
 
 
         var succeedwhenDeploying = function () {
-            var provider = new FakeHttpProvider();
+            var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
             var method = new Method({
                 name: 'sendTransaction',
@@ -461,7 +462,7 @@ describe('lib/web3/method', function () {
         });
 
         var failOnCodeEmpty = function () {
-            var provider = new FakeHttpProvider();
+            var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
             var method = new Method({
                 name: 'sendTransaction',
@@ -561,7 +562,7 @@ describe('lib/web3/method', function () {
         });
 
         var failOnMissingAddress = function () {
-            var provider = new FakeHttpProvider();
+            var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
             var method = new Method({
                 name: 'sendTransaction',
@@ -661,7 +662,7 @@ describe('lib/web3/method', function () {
         });
 
         var failOnTimeout = function () {
-            var provider = new FakeHttpProvider();
+            var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
             var method = new Method({
                 name: 'sendTransaction',
@@ -750,7 +751,7 @@ describe('lib/web3/method', function () {
         });
 
         it('should give confirmation receipts with on("confirmation", ...) when subscribing "sendTransaction"', function (done) {
-            var provider = new FakeHttpProvider();
+            var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
             var method = new Method({
                 name: 'sendTransaction',
@@ -859,6 +860,182 @@ describe('lib/web3/method', function () {
                 }
             });
 
+        });
+
+        it('should subscribe to new blocks if using IpcProvider', function (done) {
+            const provider = new FakeIpcProvider();
+            const eth = new Eth(provider);
+
+            const method = new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter]
+            });
+            method.setRequestManager(eth._requestManager, eth);
+
+            // generate send function
+            const send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    value: '0xa',
+                    gasPrice: "0x574d94bba"
+                }]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+            });
+            provider.injectResult(null);
+
+            provider.injectValidation(function (payload) {
+                // here is the check.
+                // will be `eth_subscribe` if subscribing.
+                // will be `eth_getTransactionReceipt` if polling.
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params, ['newHeads']);
+                done();
+            });
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                value: '0xa',
+                gasPrice: '23435234234'
+            })
+        });
+
+        it('should use polling if using HttpProvider', function (done) {
+            const provider = new FakeHttpProvider();
+            const eth = new Eth(provider);
+
+            const method = new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter]
+            });
+            method.setRequestManager(eth._requestManager, eth);
+
+            // generate send function
+            const send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    value: '0xa',
+                    gasPrice: "0x574d94bba"
+                }]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+            });
+            provider.injectResult(null);
+
+            provider.injectValidation(function (payload) {
+                // here is the check.
+                // will be `eth_subscribe` if subscribing.
+                // will be `eth_getTransactionReceipt` if polling.
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+                done();
+            });
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                value: '0xa',
+                gasPrice: '23435234234'
+            })
+        });
+
+        it('should use polling if using provider with method `on` but no subscription capabilities', function (done) {
+            this.timeout(5000);
+
+            const provider = new FakeHttpProvider();
+            // provider with method 'on' but no subscription capabilities should use polling
+            provider.on = (...args) => {}
+            const eth = new Eth(provider);
+
+            const method = new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter]
+            });
+            method.setRequestManager(eth._requestManager, eth);
+
+            // generate send function
+            const send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    value: '0xa',
+                    gasPrice: "0x574d94bba"
+                }]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+            });
+            provider.injectResult(null);
+
+            provider.injectValidation(function (payload) {
+                // here is the check.
+                // first will try subscribing with `eth_subscribe`.
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params, ['newHeads']);
+            });
+            provider.injectResult(null);
+
+            // after failing with `eth_subscribe`,
+            // it should start polling with `eth_getTransactionReceipt`
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+            });
+            provider.injectResult(null);
+
+            // second poll
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+            });
+            provider.injectResult(null);
+
+            // third poll
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+                done();
+            });
+            provider.injectResult(null);
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                value: '0xa',
+                gasPrice: '23435234234'
+            })
         });
     });
 });

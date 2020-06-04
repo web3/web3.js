@@ -1,7 +1,7 @@
 {
     "name": "web3.js",
     "private": true,
-    "version": "1.2.7",
+    "version": "1.2.8",
     "description": "Ethereum JavaScript API wrapper repository",
     "license": "LGPL-3.0",
     "engines": {
@@ -49,6 +49,7 @@
         "test:e2e:truffle": "./scripts/e2e.truffle.sh",
         "test:e2e:mosaic": "./scripts/e2e.mosaic.sh",
         "test:e2e:ganache:core": "./scripts/e2e.ganache.core.sh",
+        "test:e2e:gnosis:dex": "./scripts/e2e.gnosis.dex.sh",
         "ci": "./scripts/ci.sh",
         "cov:clean": "rm -rf .nyc_output; rm -rf coverage",
         "cov:merge_reports": "nyc report --reporter=lcov --reporter=html"
@@ -97,7 +98,7 @@
         "@babel/core": "^7.6.4",
         "@babel/preset-env": "^7.6.3",
         "@ensdomains/ens": "^0.4.0",
-        "@ensdomains/resolver": "^0.1.13",
+        "@ensdomains/resolver": "^0.2.4",
         "@types/bignumber.js": "^4.0.2",
         "@types/bn.js": "^4.11.5",
         "@types/node": "^12.6.1",
