@@ -74,7 +74,7 @@ describe('contract.deploy [ @E2E ]', function() {
         it('errors on OOG reached while running EVM', async function(){
             const estimate = await basic
                 .deploy()
-                .estimateGas()
+                .estimateGas({from: accounts[0]})
 
             const gas = estimate - 1000;
 
@@ -135,12 +135,13 @@ describe('contract.deploy [ @E2E ]', function() {
                 await basic
                     .deploy()
                     .send({from: accounts[0]})
-                    .on('confirmation', async (number, receipt) => {
+                    .on('confirmation', async (number, receipt, latestBlockHash) => {
                         assert(receipt.contractAddress);
 
                         if (number === 1) { // Confirmation numbers are zero indexed
-                            var endBlock = await web3.eth.getBlockNumber();
-                            assert(endBlock >= (startBlock + 2));
+                            var endBlock = await web3.eth.getBlock('latest');
+                            assert(endBlock.number >= (startBlock + 2));
+                            assert(endBlock.hash === latestBlockHash);
                             resolve();
                         }
                     })
@@ -151,9 +152,10 @@ describe('contract.deploy [ @E2E ]', function() {
     describe('ws', function() {
         // Websockets extremely erratic for geth instamine...
         if (process.env.GETH_INSTAMINE) return;
+        var port;
 
         before(async function(){
-            var port = utils.getWebsocketPort();
+            port = utils.getWebsocketPort();
 
             web3 = new Web3('ws://localhost:' + port);
             accounts = await web3.eth.getAccounts();
@@ -197,6 +199,26 @@ describe('contract.deploy [ @E2E ]', function() {
             }
         });
 
+        it('fires the sending event with the payload', function(done){
+            basic
+                .deploy()
+                .send({from: accounts[0]})
+                .on('sending', (payload) => {
+                    assert(basic.options.data === payload.params[0].data)
+                    done();
+                })
+        });
+
+        it('fires the sent event with the payload', function(done){
+            basic
+                .deploy()
+                .send({from: accounts[0]})
+                .on('sent', (payload) => {
+                    assert(basic.options.data === payload.params[0].data)
+                    done();
+                })
+        });
+
         it('fires the transactionHash event', function(done){
             basic
                 .deploy()
@@ -224,10 +246,11 @@ describe('contract.deploy [ @E2E ]', function() {
                 await basic
                     .deploy()
                     .send({from: accounts[0]})
-                    .on('confirmation', async (number, receipt) => {
+                    .on('confirmation', async (number, receipt, latestBlockHash) => {
                         if (number === 1) { // Confirmation numbers are zero indexed
-                            var endBlock = await web3.eth.getBlockNumber();
-                            assert(endBlock >= (startBlock + 2));
+                            var endBlock = await web3.eth.getBlock('latest');
+                            assert(endBlock.number >= (startBlock + 2));
+                            assert(endBlock.hash === latestBlockHash);
                             resolve();
                         }
                     })
@@ -259,6 +282,10 @@ describe('contract.deploy [ @E2E ]', function() {
                     done();
                 })
         })
+
+        it('can connect over wss with username:password header', function(){
+            const _web3 = new Web3('wss://usr:psswrd@localhost:' + port);
+        });
     });
 });
 

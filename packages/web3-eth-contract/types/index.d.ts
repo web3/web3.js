@@ -21,6 +21,7 @@ import BN = require('bn.js');
 import {Common, PromiEvent, provider, hardfork, chain, BlockNumber, PastLogsOptions, LogsOptions} from 'web3-core';
 import {AbiItem} from 'web3-utils';
 
+// TODO: Add generic type!
 export class Contract {
     constructor(
         jsonInterface: AbiItem[],
@@ -38,6 +39,7 @@ export class Contract {
     transactionPollingTimeout: number;
     transactionConfirmationBlocks: number;
     transactionBlockTimeout: number;
+    handleRevert: boolean;
 
     options: Options;
 
@@ -88,6 +90,11 @@ export interface ContractSendMethod {
         callback?: (err: Error, transactionHash: string) => void
     ): PromiEvent<Contract>;
 
+    call(
+        options?: CallOptions,
+        callback?: (err: Error, result: any) => void
+    ): Promise<any>;
+
     estimateGas(
         options: EstimateGasOptions,
         callback?: (err: Error, gas: number) => void
@@ -105,6 +112,12 @@ export interface ContractSendMethod {
     estimateGas(): Promise<number>;
 
     encodeABI(): string;
+}
+
+export interface CallOptions {
+    from?: string;
+    gasPrice?: string;
+    gas?: number;
 }
 
 export interface SendOptions {

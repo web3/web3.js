@@ -24,6 +24,7 @@ export class Subscription<T> {
     options: SubscriptionOptions;
     callback: () => void;
     arguments: any;
+    lastBlock: number;
 
     subscribe(callback?: (error: Error, result: T) => void): Subscription<T>;
 

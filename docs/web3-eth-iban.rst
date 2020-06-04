@@ -4,15 +4,14 @@
 web3.eth.Iban
 =========
 
-The ``web3.eth.Iban`` function lets convert Ethereum addresses from and to IBAN and BBAN.
-
+The ``web3.eth.Iban`` function converts Ethereum addresses from and to IBAN and BBAN.
 
 ------------------------------------------------------------------------------
 
 Iban instance
 =====================
 
-This's instance of Iban
+This instance of Iban.
 
 .. code-block:: javascript
 
@@ -27,13 +26,16 @@ Iban contructor
 
     new web3.eth.Iban(ibanAddress)
 
-Generates a iban object with conversion methods and validity checks. Also has singleton functions for conversion like
-:ref:`Iban.toAddress() <_eth-iban-toaddress>`,
-:ref:`Iban.toIban() <_eth-iban-toiban>`,
-:ref:`Iban.fromAddress() <_eth-iban-fromaddress>`,
-:ref:`Iban.fromBban() <_eth-iban-frombban>`,
-:ref:`Iban.createIndirect() <_eth-iban-createindirect>`,
-:ref:`Iban.isValid() <_eth-iban-isvalid>`.
+Generates a iban object with conversion methods and validity checks.
+
+Also has singleton functions for conversion like:
+
+- :ref:`Iban.toAddress() <eth-iban-toaddress>`
+- :ref:`Iban.toIban() <eth-iban-toiban>`
+- :ref:`Iban.fromAddress() <eth-iban-fromaddress>`
+- :ref:`Iban.fromBban() <eth-iban-frombban>`
+- :ref:`Iban.createIndirect() <eth-iban-createindirect>`
+- :ref:`Iban.isValid() <eth-iban-isvalid>`
 
 ----------
 Parameters
@@ -64,7 +66,7 @@ Example
 toAddress
 =====================
 
-    static function
+Static function.
 
 .. code-block:: javascript
 
@@ -103,7 +105,7 @@ Example
 toIban
 =====================
 
-    static function
+Static function.
 
 .. code-block:: javascript
 
@@ -137,10 +139,10 @@ Example
 
 .. _eth-iban-fromaddress:
 
-    static function, return IBAN instance
-
 fromAddress
 =====================
+
+Static function, returns IBAN instance.
 
 .. code-block:: javascript
 
@@ -220,15 +222,15 @@ createIndirect
 
     web3.eth.Iban.createIndirect(options)
 
-Singleton: Creates an indirect IBAN address from a institution and identifier.
+Singleton: Creates an indirect IBAN address from an institution and identifier.
 
 ----------
 Parameters
 ----------
 
 1. ``Object``: the options object as follows:
-    - ``institution`` - ``String``: the institution to be assigned
-    - ``identifier`` - ``String``: the identifier to be assigned
+    - ``institution`` - ``String``: the institution to be assigned.
+    - ``identifier`` - ``String``: the identifier to be assigned.
 
 -------
 Returns
@@ -253,7 +255,7 @@ Example
 
 .. _eth-iban-isvalid:
 
-    static function, return boolean
+Static function, returns boolean.
 
 isValid
 =====================
@@ -296,7 +298,7 @@ Example
 prototype.isValid
 =====================
 
-    method of Iban instance
+Method of Iban instance.
 
 .. code-block:: javascript
 
@@ -334,7 +336,7 @@ Example
 prototype.isDirect
 =====================
 
-    method of Iban instance
+Method of Iban instance.
 
 .. code-block:: javascript
 
@@ -369,7 +371,7 @@ Example
 prototype.isIndirect
 =====================
 
-    method of Iban instance
+Method of Iban instance.
 
 .. code-block:: javascript
 
@@ -404,7 +406,7 @@ Example
 prototype.checksum
 =====================
 
-    method of Iban instance
+Method of Iban instance.
 
 .. code-block:: javascript
 
@@ -440,8 +442,7 @@ Example
 prototype.institution
 =====================
 
-    method of Iban instance
-
+Method of Iban instance.
 
 .. code-block:: javascript
 
@@ -477,7 +478,7 @@ Example
 prototype.client
 =====================
 
-    method of Iban instance
+Method of Iban instance.
 
 .. code-block:: javascript
 
@@ -512,7 +513,7 @@ Example
 prototype.toAddress
 =====================
 
-    method of Iban instance
+Method of Iban instance.
 
 .. code-block:: javascript
 
@@ -548,7 +549,7 @@ Example
 prototype.toString
 =====================
 
-    method of Iban instance
+Method of Iban instance.
 
 .. code-block:: javascript
 
