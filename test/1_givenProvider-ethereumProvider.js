@@ -11,7 +11,7 @@ describe('Web3.providers.givenProvider', function () {
         decache('../packages/web3-bzz');
     });
 
-    describe('should be set if window.ethereum is available ', function () {
+    describe('should be set if window.ethereum is available', function () {
         beforeEach(function(){
             global.ethereum = {bzz: 'http://givenProvider:8501'};
         });
