@@ -19,7 +19,6 @@
  */
 
 import * as net from 'net';
-import { EventEmitter } from "events"
 import {
     HttpProviderBase,
     HttpProviderOptions,
@@ -61,8 +60,18 @@ export interface Providers {
 
 export interface PromiEvent<T> extends Promise<T> {
     once(
+        type: 'sending',
+        handler: (payload: object) => void
+    ): PromiEvent<T>;
+
+    once(
+        type: 'sent',
+        handler: (payload: object) => void
+    ): PromiEvent<T>;
+
+    once(
         type: 'transactionHash',
-        handler: (receipt: string) => void
+        handler: (transactionHash: string) => void
     ): PromiEvent<T>;
 
     once(
@@ -72,7 +81,7 @@ export interface PromiEvent<T> extends Promise<T> {
 
     once(
         type: 'confirmation',
-        handler: (confNumber: number, receipt: TransactionReceipt) => void
+        handler: (confirmationNumber: number, receipt: TransactionReceipt, latestBlockHash?: string) => void
     ): PromiEvent<T>;
 
     once(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
@@ -94,7 +103,7 @@ export interface PromiEvent<T> extends Promise<T> {
 
     on(
         type: 'confirmation',
-        handler: (confNumber: number, receipt: TransactionReceipt) => void
+        handler: (confNumber: number, receipt: TransactionReceipt, latestBlockHash?: string) => void
     ): PromiEvent<T>;
 
     on(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
@@ -411,9 +420,17 @@ export interface LogsOptions {
 
 export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest' | 'genesis';
 
+export interface RequestArguments {
+    method: string;
+    params?: any;
+    [key: string]: any;
+}
+
 export interface AbstractProvider {
-    send(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
     sendAsync(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
+    send?(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
+    request?(args: RequestArguments): Promise<any>;
+    connected?: boolean;
   }
 
 export type provider =

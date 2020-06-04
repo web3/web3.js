@@ -38,7 +38,6 @@ import {
     LogsOptions,
     PastLogsOptions
 } from 'web3-core';
-import {RevertInstructionError, TransactionRevertInstructionError} from 'web3-core-helpers';
 import {Subscription} from 'web3-core-subscriptions';
 import {AbiCoder} from 'web3-eth-abi';
 import {Accounts} from 'web3-eth-accounts';
@@ -88,6 +87,7 @@ export class Eth {
     transactionPollingTimeout: number;
     transactionConfirmationBlocks: number;
     transactionBlockTimeout: number;
+    handleRevert: boolean;
     readonly currentProvider: provider;
 
     setProvider(provider: provider): boolean;
@@ -295,12 +295,12 @@ export class Eth {
     sendTransaction(
         transactionConfig: TransactionConfig,
         callback?: (error: Error, hash: string) => void
-    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
+    ): PromiEvent<TransactionReceipt>;
 
     sendSignedTransaction(
         signedTransactionData: string,
         callback?: (error: Error, hash: string) => void
-    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
+    ): PromiEvent<TransactionReceipt>;
 
     sign(
         dataToSign: string,
@@ -328,20 +328,20 @@ export class Eth {
         ) => void
     ): Promise<RLPEncodedTransaction>;
 
-    call(transactionConfig: TransactionConfig): Promise<string | RevertInstructionError>;
+    call(transactionConfig: TransactionConfig): Promise<string>;
     call(
         transactionConfig: TransactionConfig,
         defaultBlock?: BlockNumber
-    ): Promise<string | RevertInstructionError>;
+    ): Promise<string>;
     call(
         transactionConfig: TransactionConfig,
         callback?: (error: Error, data: string) => void
-    ): Promise<string | RevertInstructionError>;
+    ): Promise<string>;
     call(
         transactionConfig: TransactionConfig,
         defaultBlock: BlockNumber,
         callback: (error: Error, data: string) => void
-    ): Promise<string | RevertInstructionError>;
+    ): Promise<string>;
 
     estimateGas(
         transactionConfig: TransactionConfig,

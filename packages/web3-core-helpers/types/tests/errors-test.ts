@@ -76,3 +76,6 @@ errors.TransactionRevertedWithoutReasonError({});
 
 // $ExpectType TransactionError
 errors.TransactionOutOfGasError({});
+
+// $ExpectType Error
+errors.ResolverMethodMissingError('0x0000000000000000000000000000000000000001', 'content');

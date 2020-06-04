@@ -172,20 +172,63 @@ Released with 1.0.0-beta.37 code base.
 - Fix crash when using Web-Workers by removing any-promise dependency (#3377 #2211 #1774)
 - MaxListenersExceededWarning event emitter warning mitigated (#1648)
 
-## [Unreleased]
-
 ## [1.2.8]
 
 ### Added
 
 - Introduce review and release guidelines. (#3460)
+- Add EIP-1193 compatible provider to `AbstractProvider` interface. (#3499)
+- Add Typescript definitions for contract `methods` and `call`. (#3454)
+- Update AbstractProvider and contract.methods TS definitions (#3521)
+- Add support for ENS contenthash methods. (#3392, #2782)
 
 ### Changed
 
 - Change CI provider from Travis to Github Actions. (#3468)
+- Update `web3-eth-abi` ABICoder dependency. (#3490)
+- Update AbiCoder param formatting (#3522)
 - Improve code clarity of HttpProvider keepAlive option setting. (#3463)
+- Updated type definitions for Web3 HTTP Provider. (#3482)
+- Fix indentation of web3-eth documentation. (#3478)
 
 ### Fixed
 
 - Fix intermittent CI build issues with `dtslint`. (#3479)
-- Fix provider "error" / "end" events not fired when Websocket provider disconnects (#3485)
+- Fix WSS credentials Base64 encoding (for browser) (#3508)
+- Fire provider "error" and/or "end" events when Websocket provider disconnects. (#3485)
+- Remove web3-eth revert error return types to squash TS compilation errors. (#3496)
+- Backfill event subscriptions when WS connection dropped across multiple blocks. (#3491)
+- Stop swallowing errors when WS connection has died after exhausting reconnection attempts. (#3492)
+- Fix setContenthash docs formatting (#3511)
+
+## [1.2.9]
+
+### Added
+
+- Add `sending` and `sent` events for tx submissions (#3438)
+- Add `latestBlockHash` arg to `confirmation` event handler payload (#3438)
+- Make socket providers' max listeners threshold configurable (#3469)
+- Documentation about testing & ci resources for Web3.js development (#3528)
+- More detailed documentation about how to use `method.encodeABI` (#3549)
+- Integration tests for `transactionPollingTimeout` (#3513)
+
+### Changed
+
+- Websocket package from @web3-js/websocket@1.0.29 to websocket@1.0.31 (#3371)
+- Upgrade `@web3-js/scrypt-shim@0.1.0` to `scrypt-js@3.0.1`
+- sendSignedTransaction revert handling synthesizes tx without network call (#3457)
+- Make docs grammar more idiomatic, normalize punctuation (#3543)
+
+### Fixed
+
+- Size property de-referencing crash when calling web3.eth.clearSubscriptions (#3527)
+- Abi param encoding for tuple arrays (#3538)
+- `account.hashMessage` with non-ASCII characters (#3523)
+- Subscription support check in method confirmations loop (#3432)
+- TS bindings for `handleRevert` added (#3452)
+- Docs: spelling of pre-defined block number (#3539)
+- Docs: missing defaultBlock param option in `method.call` description (#3558)
+
+## [Unreleased]
+
+## [1.2.10]

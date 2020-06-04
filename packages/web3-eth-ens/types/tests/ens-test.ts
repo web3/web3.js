@@ -20,7 +20,7 @@
 import { TransactionRevertInstructionError } from 'web3-core-helpers';
 import { TransactionReceipt } from 'web3-core';
 import { Contract } from 'web3-eth-contract';
-import { Ens } from 'web3-eth-ens';
+import { Ens, ContentHash } from 'web3-eth-ens';
 import { Eth } from 'web3-eth';
 
 const ens = new Ens(new Eth('http://localhost:8545'));
@@ -210,12 +210,12 @@ ens.setMultihash('name', 'hash', {}, (error: Error, result: any) => {});
 // $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 ens.setMultihash('name', 'hash', {});
 
-// $ExpectType Promise<string>
+// $ExpectType Promise<ContentHash>
 ens.getContenthash('name');
-// $ExpectType Promise<string>
-ens.getContenthash('name', (error: Error, contenthash: string) => {});
-// $ExpectType Promise<string>
-ens.getContenthash('name', (value: any) => {});
+// $ExpectType Promise<ContentHash>
+ens.getContenthash('name', (error: Error, contenthash: ContentHash) => {});
+// $ExpectType Promise<ContentHash>
+ens.getContenthash('name', (value: ContentHash) => {});
 
 // $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 ens.setContenthash('name', 'hash');

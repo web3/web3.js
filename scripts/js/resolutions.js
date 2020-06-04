@@ -28,28 +28,51 @@ const targetPackage = require(targetPackagePath);
 // in e2e.npm.publish.sh)
 const version = semver.inc(web3Package.version, 'minor');
 
-targetPackage.resolutions = {
-  "@nomiclabs/**/web3": `${version}`,
-  "@nomiclabs/**/web3-bzz": `${version}`,
-  "@nomiclabs/**/web3-core-helpers": `${version}`,
-  "@nomiclabs/**/web3-core-method": `${version}`,
-  "@nomiclabs/**/web3-core-promievent": `${version}`,
-  "@nomiclabs/**/web3-core-requestmanager": `${version}`,
-  "@nomiclabs/**/web3-core-subscriptions": `${version}`,
-  "@nomiclabs/**/web3-core": `${version}`,
-  "@nomiclabs/**/web3-eth-abi": `${version}`,
-  "@nomiclabs/**/web3-eth-accounts": `${version}`,
-  "@nomiclabs/**/web3-eth-contract": `${version}`,
-  "@nomiclabs/**/web3-eth-ens": `${version}`,
-  "@nomiclabs/**/web3-eth-iban": `${version}`,
-  "@nomiclabs/**/web3-eth-personal": `${version}`,
-  "@nomiclabs/**/web3-eth": `${version}`,
-  "@nomiclabs/**/web3-net": `${version}`,
-  "@nomiclabs/**/web3-providers-http": `${version}`,
-  "@nomiclabs/**/web3-providers-ipc": `${version}`,
-  "@nomiclabs/**/web3-providers-ws": `${version}`,
-  "@nomiclabs/**/web3-shh": `${version}`,
-  "@nomiclabs/**/web3-utils": `${version}`
+const web3Modules = [
+  "web3",
+  "web3-bzz",
+  "web3-core-helpers",
+  "web3-core-method",
+  "web3-core-promievent",
+  "web3-core-requestmanager",
+  "web3-core-subscriptions",
+  "web3-core",
+  "web3-eth-abi",
+  "web3-eth-accounts",
+  "web3-eth-contract",
+  "web3-eth-ens",
+  "web3-eth-iban",
+  "web3-eth-personal",
+  "web3-eth",
+  "web3-net",
+  "web3-providers-http",
+  "web3-providers-ipc",
+  "web3-providers-ws",
+  "web3-shh",
+  "web3-utils"
+];
+
+
+targetPackage.resolutions = {};
+
+// Coerce every version of web3 in the sub-dependency tree to
+// the virtually published version
+for ( const mod of web3Modules ){
+  targetPackage.resolutions[`*/**/${mod}`] = version;
+}
+
+// Remove any outer-level web3 modules so yarn flat-packs a single
+// set of web3 modules at the outerlevel
+if (targetPackage.devDependencies){
+  for ( const mod of web3Modules ){
+    delete targetPackage.devDependencies[mod];
+  }
+}
+
+if (targetPackage.dependencies){
+  for ( const mod of web3Modules ){
+    delete targetPackage.dependencies[mod];
+  }
 }
 
 console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");

@@ -30,6 +30,8 @@ var utils = require('web3-utils');
 var promiEvent = require('web3-core-promievent');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 
+var EthersTransactionUtils = require('@ethersproject/transactions');
+
 var Method = function Method(options) {
 
     if (!options.call || !options.name) {
@@ -307,20 +309,24 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                         // been confirmed by the direct call to checkConfirmation needed
                         // for parity instant-seal
                         if (existingReceipt === undefined || confirmationCount !== 0) {
+                            // Get latest block to emit with confirmation
+                            var latestBlock = await _ethereumCall.getBlockByNumber('latest');
+                            var latestBlockHash = latestBlock ? latestBlock.hash : null;
+
                             if (isPolling) { // Check if actually a new block is existing on polling
                                 if (lastBlock) {
                                     block = await _ethereumCall.getBlockByNumber(lastBlock.number + 1);
                                     if (block) {
                                         lastBlock = block;
-                                        defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                        defer.eventEmitter.emit('confirmation', confirmationCount, receipt, latestBlockHash);
                                     }
                                 } else {
                                     block = await _ethereumCall.getBlockByNumber(receipt.blockNumber);
                                     lastBlock = block;
-                                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt, latestBlockHash);
                                 }
                             } else {
-                                defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                defer.eventEmitter.emit('confirmation', confirmationCount, receipt, latestBlockHash);
                             }
                         }
 
@@ -436,15 +442,17 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                         // If send was raw, fetch the transaction and reconstitute the
                                         // original params so they can be replayed with `eth_call`
                                         if (method.call === 'eth_sendRawTransaction'){
-                                            var txToReplay = await _ethereumCall.getTransactionByHash(receipt.transactionHash);
+                                            var rawTransactionHex = payload.params[0];
+
+                                            var parsedTx = EthersTransactionUtils.parse(rawTransactionHex);
 
                                             txReplayOptions = formatters.inputTransactionFormatter({
-                                                data: txToReplay.input,
-                                                to: txToReplay.to,
-                                                from: txToReplay.from,
-                                                gas: txToReplay.gas,
-                                                gasPrice: txToReplay.gasPrice,
-                                                value: txToReplay.value
+                                                data: parsedTx.data,
+                                                to: parsedTx.to,
+                                                from: parsedTx.from,
+                                                gas: parsedTx.gasLimit.toHexString(),
+                                                gasPrice: parsedTx.gasPrice.toHexString(),
+                                                value: parsedTx.value.toHexString()
                                             })
                                         }
 
@@ -539,11 +547,21 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
     // start watching for confirmation depending on the support features of the provider
     var startWatching = function (existingReceipt) {
-        // if provider allows PUB/SUB
-        if (_.isFunction(this.requestManager.provider.on)) {
-            _ethereumCall.subscribe('newBlockHeaders', checkConfirmation.bind(null, existingReceipt, false));
-        } else {
+        const startInterval = () => {
             intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
+        }
+        
+        if (!this.requestManager.provider.on) {
+            startInterval()
+        } else {
+            _ethereumCall.subscribe('newBlockHeaders', function (err, blockHeader, sub) {
+                if (err || !blockHeader) {
+                    // fall back to polling
+                    startInterval()
+                } else {
+                    checkConfirmation(existingReceipt, false, err, blockHeader, sub);
+                }
+            })
         }
     }.bind(this);
 
@@ -728,6 +746,7 @@ Method.prototype.buildCall = function () {
                 }
             }
 
+
             return method.requestManager.send(payload, sendTxCallback);
         };
 
@@ -745,13 +764,31 @@ Method.prototype.buildCall = function () {
                 if (gasPrice) {
                     payload.params[0].gasPrice = gasPrice;
                 }
+
+                if (isSendTx) {
+                    setTimeout(() => {
+                        defer.eventEmitter.emit('sending', payload);
+                    }, 0);
+                }
+
                 sendRequest(payload, method);
             });
 
         } else {
+            if (isSendTx) {
+                setTimeout(() => {
+                    defer.eventEmitter.emit('sending', payload);
+                }, 0);
+            }
+
             sendRequest(payload, method);
         }
 
+        if (isSendTx) {
+            setTimeout(() => {
+                defer.eventEmitter.emit('sent', payload);
+            }, 0);
+        }
 
         return defer.eventEmitter;
     };
