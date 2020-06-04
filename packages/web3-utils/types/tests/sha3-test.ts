@@ -23,9 +23,9 @@
 import BN = require('bn.js');
 import {sha3} from 'web3-utils';
 
-// $ExpectType string
+// $ExpectType string | null
 sha3('234');
-// $ExpectType string
+// $ExpectType string | null
 sha3(new BN(3));
 
 // $ExpectError

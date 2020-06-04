@@ -6,7 +6,7 @@ var tests = [
     { value: 'genesis', expected: '0x0' },
     { value: 'latest', expected: 'latest' },
     { value: 'pending', expected: 'pending' },
-    { value: 'earliest', expected: '0x0' },
+    { value: 'earliest', expected: 'earliest' },
     { value: 1, expected: '0x1' },
     { value: '0x1', expected: '0x1' }
 ];

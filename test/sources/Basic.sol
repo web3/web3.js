@@ -16,8 +16,16 @@ contract Basic {
         value = _value;
     }
 
-    function reverts() public {
+    function requireWithoutReason() public {
         require(false);
+    }
+
+    function requireWithReason() public {
+        require(false, 'REVERTED WITH REQUIRE');
+    }
+
+    function reverts() public {
+        revert('REVERTED WITH REVERT');
     }
 
     function firesEvent(address addr, uint val) public {

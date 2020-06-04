@@ -25,13 +25,12 @@
 var _ = require('underscore');
 var core = require('web3-core');
 var Method = require('web3-core-method');
-var Promise = require('any-promise');
 var Account = require('eth-lib/lib/account');
 var Hash = require('eth-lib/lib/hash');
 var RLP = require('eth-lib/lib/rlp');// jshint ignore:line
 var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
-var scrypt = require('scrypt-shim');
+var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
@@ -120,7 +119,16 @@ Accounts.prototype.create = function create(entropy) {
     return this._addAccountFunctions(Account.create(entropy || utils.randomHex(32)));
 };
 
-Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey) {
+Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey, ignoreLength) {
+    if (!privateKey.startsWith('0x')) {
+        privateKey = '0x' + privateKey;
+    }
+
+    // 64 hex characters + hex-prefix
+    if (!ignoreLength && privateKey.length !== 66) {
+        throw new Error("Private key must be 32 bytes long");
+    }
+
     return this._addAccountFunctions(Account.fromPrivate(privateKey));
 };
 
@@ -128,7 +136,6 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     var _this = this,
         error = false,
         transactionOptions = {},
-        result,
         hasTxSigningOptions = !!(tx && ((tx.chain && tx.hardfork) || tx.common));
 
     callback = callback || function() {
@@ -235,7 +242,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             var rawTransaction = '0x' + rlpEncoded;
             var transactionHash = utils.keccak256(rawTransaction);
 
-            return {
+            var result = {
                 messageHash: '0x' + Buffer.from(ethTx.hash(false)).toString('hex'),
                 v: '0x' + Buffer.from(ethTx.v).toString('hex'),
                 r: '0x' + Buffer.from(ethTx.r).toString('hex'),
@@ -244,13 +251,13 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                 transactionHash: transactionHash
             };
 
+            callback(null, result);
+            return result;
+
         } catch (e) {
             callback(e);
             return Promise.reject(e);
         }
-
-        callback(null, result);
-        return result;
     }
 
 
@@ -286,15 +293,25 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
 /* jshint ignore:end */
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
-    var message = utils.isHexStrict(data) ? utils.hexToBytes(data) : data;
-    var messageBuffer = Buffer.from(message);
-    var preamble = '\x19Ethereum Signed Message:\n' + message.length;
+    var messageHex = utils.isHexStrict(data) ? data : utils.utf8ToHex(data);
+    var messageBytes = utils.hexToBytes(messageHex)
+    var messageBuffer = Buffer.from(messageBytes);
+    var preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
     var preambleBuffer = Buffer.from(preamble);
     var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return Hash.keccak256s(ethMessage);
 };
 
 Accounts.prototype.sign = function sign(data, privateKey) {
+    if (!privateKey.startsWith('0x')) {
+        privateKey = '0x' + privateKey;
+    }
+
+    // 64 hex characters + hex-prefix
+    if (privateKey.length !== 66) {
+        throw new Error("Private key must be 32 bytes long");
+    }
+
     var hash = this.hashMessage(data);
     var signature = Account.sign(hash, privateKey);
     var vrs = Account.decodeSignature(signature);
@@ -349,7 +366,7 @@ Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
         kdfparams = json.crypto.kdfparams;
 
         // FIXME: support progress reporting callback
-        derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        derivedKey = scrypt.syncScrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
     } else if (json.crypto.kdf === 'pbkdf2') {
         kdfparams = json.crypto.kdfparams;
 
@@ -372,12 +389,12 @@ Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
     var decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, 'hex'));
     var seed = '0x' + Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex');
 
-    return this.privateKeyToAccount(seed);
+    return this.privateKeyToAccount(seed, true);
 };
 
 Accounts.prototype.encrypt = function(privateKey, password, options) {
     /* jshint maxcomplexity: 20 */
-    var account = this.privateKeyToAccount(privateKey);
+    var account = this.privateKeyToAccount(privateKey, true);
 
     options = options || {};
     var salt = options.salt || cryp.randomBytes(32);
@@ -399,7 +416,7 @@ Accounts.prototype.encrypt = function(privateKey, password, options) {
         kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
         kdfparams.r = options.r || 8;
         kdfparams.p = options.p || 1;
-        derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        derivedKey = scrypt.syncScrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
     } else {
         throw new Error('Unsupported kdf');
     }

@@ -104,8 +104,20 @@ var runTests = function (obj, method, tests) {
                                 w3 = web3[obj];
                             }
 
+                            if (test.defaultOptions) {
+                                test.defaultOptions.forEach(function(option) {
+                                    w3[option[0]] = option[1];
+                                });
+                            }
+
                             assert.throws(function(){ w3[method].apply(w3, args); });
                         } else {
+                            if (test.defaultOptions) {
+                                test.defaultOptions.forEach(function(option) {
+                                    w3[option[0]] = option[1];
+                                });
+                            }
+
                             assert.throws(function(){ web3[method].apply(web3, args); });
                         }
 
@@ -120,8 +132,20 @@ var runTests = function (obj, method, tests) {
                                 w3 = web3[obj];
                             }
 
+                            if (test.defaultOptions) {
+                                test.defaultOptions.forEach(function(option) {
+                                    w3[option[0]] = option[1];
+                                });
+                            }
+
                             result = w3[method].apply(w3, args);
                         } else {
+                            if (test.defaultOptions) {
+                                test.defaultOptions.forEach(function(option) {
+                                    w3[option[0]] = option[1];
+                                });
+                            }
+
                             result = web3[method].apply(web3, args);
                         }
 
@@ -186,6 +210,12 @@ var runTests = function (obj, method, tests) {
                                 w3 = web3[obj];
                             }
 
+                            if (test.defaultOptions) {
+                                test.defaultOptions.forEach(function(option) {
+                                    w3[option[0]] = option[1];
+                                });
+                            }
+
                             assert.throws(function(){ w3[method].apply(w3, args); });
                         } else {
                             assert.throws(function(){ web3[method].apply(web3, args); });
@@ -209,8 +239,20 @@ var runTests = function (obj, method, tests) {
                                 w3 = web3[obj];
                             }
 
+                            if (test.defaultOptions) {
+                                test.defaultOptions.forEach(function(option) {
+                                    w3[option[0]] = option[1];
+                                });
+                            }
+
                             w3[method].apply(w3, args);
                         } else {
+                            if (test.defaultOptions) {
+                                test.defaultOptions.forEach(function(option) {
+                                    w3[option[0]] = option[1];
+                                });
+                            }
+
                             web3[method].apply(web3, args);
                         }
                     }

@@ -113,6 +113,24 @@ describe('transaction and message signing [ @E2E ]', function() {
         assert(receipt.status === true);
     });
 
+    it('accounts.signTransaction, (with callback, nonce not specified)', function(done){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txObject = {
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gasLimit: web3.utils.toHex(21000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+        };
+
+        web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey, async function(err, signed){
+            const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+            assert(receipt.status === true);
+            done();
+        });
+    });
+
     it('accounts.signTransaction errors when common, chain and hardfork all defined', async function(){
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -218,6 +236,58 @@ describe('transaction and message signing [ @E2E ]', function() {
         }
     });
 
+    it('wallet executes method call using chain & hardfork options', async function(){
+        // Geth --dev errors with 'invalid sender' when using these options.
+        // Requires a custom common configuration (see next test). Ganache doesn't care
+        if(!process.env.GANACHE) return;
+
+        basic = new web3.eth.Contract(Basic.abi, basicOptions);
+        basic.defaultChain = 'mainnet';
+        basic.defaultHardfork = 'istanbul';
+
+        instance = await basic
+            .deploy()
+            .send({from: wallet[0].address});
+
+        const receipt = await instance
+            .methods
+            .setValue('1')
+            .send({from: wallet[0].address});
+
+        assert(receipt.status === true);
+        assert(web3.utils.isHexStrict(receipt.transactionHash));
+    });
+
+    it('wallet executes method call using customCommon option', async function(){
+        const networkId = await web3.eth.net.getId();
+        const chainId = await web3.eth.getChainId();
+
+        const customCommon = {
+            baseChain: 'mainnet',
+            customChain: {
+                name: 'custom-network',
+                networkId: networkId,
+                chainId: chainId,
+            },
+            harfork: 'istanbul',
+        };
+
+        basic = new web3.eth.Contract(Basic.abi, basicOptions);
+        basic.defaultCommon = customCommon;
+
+        instance = await basic
+            .deploy()
+            .send({from: wallet[0].address});
+
+        const receipt = await instance
+            .methods
+            .setValue('1')
+            .send({from: wallet[0].address});
+
+        assert(receipt.status === true);
+        assert(web3.utils.isHexStrict(receipt.transactionHash));
+    });
+
     it('transactions sent with wallet throws error correctly (with receipt)', async function(){
         const data = instance
             .methods
@@ -240,6 +310,35 @@ describe('transaction and message signing [ @E2E ]', function() {
 
             assert(err.message.includes('revert'))
             assert(receipt.status === false);
+        }
+    });
+
+    it('sendSignedTransaction reverts with reason', async function(){
+        const data = instance
+            .methods
+            .reverts()
+            .encodeABI();
+
+        const source = wallet[0].address;
+        const txCount = await web3.eth.getTransactionCount(source);
+
+        const txObject = {
+            nonce:    web3.utils.toHex(txCount),
+            to:       instance.options.address,
+            gasLimit: web3.utils.toHex(400000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+            data: data
+        };
+
+        const signed = await web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey);
+
+        web3.eth.handleRevert = true;
+        try {
+            await web3.eth.sendSignedTransaction(signed.rawTransaction);
+            assert.fail();
+        } catch(err){
+            assert.equal(err.receipt.status, false);
+            assert.equal(err.reason, "REVERTED WITH REVERT");
         }
     });
 

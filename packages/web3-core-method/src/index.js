@@ -30,6 +30,8 @@ var utils = require('web3-utils');
 var promiEvent = require('web3-core-promievent');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 
+var EthersTransactionUtils = require('@ethersproject/transactions');
+
 var Method = function Method(options) {
 
     if (!options.call || !options.name) {
@@ -43,6 +45,7 @@ var Method = function Method(options) {
     this.outputFormatter = options.outputFormatter;
     this.transformPayload = options.transformPayload;
     this.extraFormatters = options.extraFormatters;
+    this.abiCoder = options.abiCoder; // Will be used to encode the revert reason string
 
     this.requestManager = options.requestManager;
 
@@ -57,9 +60,10 @@ var Method = function Method(options) {
     this.defaultCommon = options.defaultCommon;
     this.defaultChain = options.defaultChain;
     this.defaultHardfork = options.defaultHardfork;
+    this.handleRevert = options.handleRevert;
 };
 
-Method.prototype.setRequestManager = function(requestManager, accounts) {
+Method.prototype.setRequestManager = function (requestManager, accounts) {
     this.requestManager = requestManager;
 
     // reference to eth.accounts
@@ -69,7 +73,7 @@ Method.prototype.setRequestManager = function(requestManager, accounts) {
 
 };
 
-Method.prototype.createFunction = function(requestManager, accounts) {
+Method.prototype.createFunction = function (requestManager, accounts) {
     var func = this.buildCall();
     func.call = this.call;
 
@@ -78,7 +82,7 @@ Method.prototype.createFunction = function(requestManager, accounts) {
     return func;
 };
 
-Method.prototype.attachToObject = function(obj) {
+Method.prototype.attachToObject = function (obj) {
     var func = this.buildCall();
     func.call = this.call;
     var name = this.name.split('.');
@@ -97,7 +101,7 @@ Method.prototype.attachToObject = function(obj) {
  * @param {Array} arguments
  * @return {String} name of jsonrpc method
  */
-Method.prototype.getCall = function(args) {
+Method.prototype.getCall = function (args) {
     return _.isFunction(this.call) ? this.call(args) : this.call;
 };
 
@@ -108,7 +112,7 @@ Method.prototype.getCall = function(args) {
  * @param {Array} arguments
  * @return {Function|Null} callback, if exists
  */
-Method.prototype.extractCallback = function(args) {
+Method.prototype.extractCallback = function (args) {
     if (_.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
     }
@@ -121,7 +125,7 @@ Method.prototype.extractCallback = function(args) {
  * @param {Array} arguments
  * @throws {Error} if it is not
  */
-Method.prototype.validateArgs = function(args) {
+Method.prototype.validateArgs = function (args) {
     if (args.length !== this.params) {
         throw errors.InvalidNumberOfParams(args.length, this.params, this.name);
     }
@@ -134,14 +138,14 @@ Method.prototype.validateArgs = function(args) {
  * @param {Array}
  * @return {Array}
  */
-Method.prototype.formatInput = function(args) {
+Method.prototype.formatInput = function (args) {
     var _this = this;
 
     if (!this.inputFormatter) {
         return args;
     }
 
-    return this.inputFormatter.map(function(formatter, index) {
+    return this.inputFormatter.map(function (formatter, index) {
         // bind this for defaultBlock, and defaultAccount
         return formatter ? formatter.call(_this, args[index]) : args[index];
     });
@@ -154,11 +158,11 @@ Method.prototype.formatInput = function(args) {
  * @param {Object}
  * @return {Object}
  */
-Method.prototype.formatOutput = function(result) {
+Method.prototype.formatOutput = function (result) {
     var _this = this;
 
     if (_.isArray(result)) {
-        return result.map(function(res) {
+        return result.map(function (res) {
             return _this.outputFormatter && res ? _this.outputFormatter(res) : res;
         });
     } else {
@@ -173,7 +177,7 @@ Method.prototype.formatOutput = function(result) {
  * @param {Array} args
  * @return {Object}
  */
-Method.prototype.toPayload = function(args) {
+Method.prototype.toPayload = function (args) {
     var call = this.getCall(args);
     var callback = this.extractCallback(args);
     var params = this.formatInput(args);
@@ -193,7 +197,7 @@ Method.prototype.toPayload = function(args) {
 };
 
 
-Method.prototype._confirmTransaction = function(defer, result, payload) {
+Method.prototype._confirmTransaction = function (defer, result, payload) {
     var method = this,
         promiseResolved = false,
         canUnsubscribe = true,
@@ -206,7 +210,8 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
         isContractDeployment = _.isObject(payload.params[0]) &&
             payload.params[0].data &&
             payload.params[0].from &&
-            !payload.params[0].to;
+            !payload.params[0].to,
+        hasBytecode = isContractDeployment && payload.params[0].data.length > 2;
 
     // add custom send Methods
     var _ethereumCalls = [
@@ -214,7 +219,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
             name: 'getBlockByNumber',
             call: 'eth_getBlockByNumber',
             params: 2,
-            inputFormatter: [formatters.inputBlockNumberFormatter, function(val) {
+            inputFormatter: [formatters.inputBlockNumberFormatter, function (val) {
                 return !!val;
             }],
             outputFormatter: formatters.outputBlockFormatter
@@ -232,6 +237,13 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
             params: 2,
             inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter]
         }),
+        new Method({
+            name: 'getTransactionByHash',
+            call: 'eth_getTransactionByHash',
+            params: 1,
+            inputFormatter: [null],
+            outputFormatter: formatters.outputTransactionFormatter
+        }),
         new Subscriptions({
             name: 'subscribe',
             type: 'eth',
@@ -246,19 +258,19 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
     ];
     // attach methods to this._ethereumCall
     var _ethereumCall = {};
-    _.each(_ethereumCalls, function(mthd) {
+    _.each(_ethereumCalls, function (mthd) {
         mthd.attachToObject(_ethereumCall);
         mthd.requestManager = method.requestManager; // assign rather than call setRequestManager()
     });
 
 
     // fire "receipt" and confirmation events and resolve after
-    var checkConfirmation = function(existingReceipt, isPolling, err, blockHeader, sub) {
+    var checkConfirmation = function (existingReceipt, isPolling, err, blockHeader, sub) {
         if (!err) {
             // create fake unsubscribe
             if (!sub) {
                 sub = {
-                    unsubscribe: function() {
+                    unsubscribe: function () {
                         clearInterval(intervalId);
                     }
                 };
@@ -266,7 +278,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
             // if we have a valid receipt we don't need to send a request
             return (existingReceipt ? promiEvent.resolve(existingReceipt) : _ethereumCall.getTransactionReceipt(result))
             // catch error from requesting receipt
-                .catch(function(err) {
+                .catch(function (err) {
                     sub.unsubscribe();
                     promiseResolved = true;
                     utils._fireError(
@@ -279,7 +291,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                     );
                 })
                 // if CONFIRMATION listener exists check for confirmations, by setting canUnsubscribe = false
-                .then(async function(receipt) {
+                .then(async function (receipt) {
                     if (!receipt || !receipt.blockHash) {
                         throw new Error('Receipt missing or blockHash null');
                     }
@@ -297,20 +309,24 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                         // been confirmed by the direct call to checkConfirmation needed
                         // for parity instant-seal
                         if (existingReceipt === undefined || confirmationCount !== 0) {
+                            // Get latest block to emit with confirmation
+                            var latestBlock = await _ethereumCall.getBlockByNumber('latest');
+                            var latestBlockHash = latestBlock ? latestBlock.hash : null;
+
                             if (isPolling) { // Check if actually a new block is existing on polling
                                 if (lastBlock) {
                                     block = await _ethereumCall.getBlockByNumber(lastBlock.number + 1);
                                     if (block) {
                                         lastBlock = block;
-                                        defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                        defer.eventEmitter.emit('confirmation', confirmationCount, receipt, latestBlockHash);
                                     }
                                 } else {
                                     block = await _ethereumCall.getBlockByNumber(receipt.blockNumber);
                                     lastBlock = block;
-                                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt, latestBlockHash);
                                 }
                             } else {
-                                defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                defer.eventEmitter.emit('confirmation', confirmationCount, receipt, latestBlockHash);
                             }
                         }
 
@@ -328,7 +344,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                     return receipt;
                 })
                 // CHECK for CONTRACT DEPLOYMENT
-                .then(function(receipt) {
+                .then(async function (receipt) {
 
                     if (isContractDeployment && !promiseResolved) {
 
@@ -340,7 +356,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                             }
 
                             utils._fireError(
-                                new Error('The transaction receipt didn\'t contain a contract address.'),
+                                errors.NoContractAddressFoundError(receipt),
                                 defer.eventEmitter,
                                 defer.reject,
                                 null,
@@ -349,49 +365,56 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                             return;
                         }
 
-                        _ethereumCall.getCode(receipt.contractAddress, function(e, code) {
+                        var code;
+                        try {
+                            code = await _ethereumCall.getCode(receipt.contractAddress);
+                        } catch(err){
+                            // ignore;
+                        }
 
-                            if (!code) {
-                                return;
-                            }
+                        if (!code) {
+                            return;
+                        }
 
+                        // If deployment is status.true and there was a real
+                        // bytecode string, assume it was successful.
+                        var deploymentSuccess = receipt.status === true && hasBytecode;
 
-                            if (code.length > 2) {
-                                defer.eventEmitter.emit('receipt', receipt);
+                        if (deploymentSuccess || code.length > 2) {
+                            defer.eventEmitter.emit('receipt', receipt);
 
-                                // if contract, return instance instead of receipt
-                                if (method.extraFormatters && method.extraFormatters.contractDeployFormatter) {
-                                    defer.resolve(method.extraFormatters.contractDeployFormatter(receipt));
-                                } else {
-                                    defer.resolve(receipt);
-                                }
-
-                                // need to remove listeners, as they aren't removed automatically when succesfull
-                                if (canUnsubscribe) {
-                                    defer.eventEmitter.removeAllListeners();
-                                }
-
+                            // if contract, return instance instead of receipt
+                            if (method.extraFormatters && method.extraFormatters.contractDeployFormatter) {
+                                defer.resolve(method.extraFormatters.contractDeployFormatter(receipt));
                             } else {
-                                utils._fireError(
-                                    new Error('The contract code couldn\'t be stored, please check your gas limit.'),
-                                    defer.eventEmitter,
-                                    defer.reject,
-                                    null,
-                                    receipt
-                                );
+                                defer.resolve(receipt);
                             }
 
+                            // need to remove listeners, as they aren't removed automatically when succesfull
                             if (canUnsubscribe) {
-                                sub.unsubscribe();
+                                defer.eventEmitter.removeAllListeners();
                             }
-                            promiseResolved = true;
-                        });
+
+                        } else {
+                            utils._fireError(
+                                errors.ContractCodeNotStoredError(receipt),
+                                defer.eventEmitter,
+                                defer.reject,
+                                null,
+                                receipt
+                            );
+                        }
+
+                        if (canUnsubscribe) {
+                            sub.unsubscribe();
+                        }
+                        promiseResolved = true;
                     }
 
                     return receipt;
                 })
                 // CHECK for normal tx check for receipt only
-                .then(function(receipt) {
+                .then(async function (receipt) {
                     if (!isContractDeployment && !promiseResolved) {
                         if (!receipt.outOfGas &&
                             (!gasProvided || gasProvided !== receipt.gasUsed) &&
@@ -408,16 +431,65 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                             receiptJSON = JSON.stringify(receipt, null, 2);
 
                             if (receipt.status === false || receipt.status === '0x0') {
-                                utils._fireError(
-                                    new Error('Transaction has been reverted by the EVM:\n' + receiptJSON),
-                                    defer.eventEmitter,
-                                    defer.reject,
-                                    null,
-                                    receipt
-                                );
+                                try {
+                                    var revertMessage = null;
+
+                                    if ( method.handleRevert &&
+                                        (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'))
+                                    {
+                                        var txReplayOptions = payload.params[0];
+
+                                        // If send was raw, fetch the transaction and reconstitute the
+                                        // original params so they can be replayed with `eth_call`
+                                        if (method.call === 'eth_sendRawTransaction'){
+                                            var rawTransactionHex = payload.params[0];
+
+                                            var parsedTx = EthersTransactionUtils.parse(rawTransactionHex);
+
+                                            txReplayOptions = formatters.inputTransactionFormatter({
+                                                data: parsedTx.data,
+                                                to: parsedTx.to,
+                                                from: parsedTx.from,
+                                                gas: parsedTx.gasLimit.toHexString(),
+                                                gasPrice: parsedTx.gasPrice.toHexString(),
+                                                value: parsedTx.value.toHexString()
+                                            })
+                                        }
+
+                                        // Get revert reason string with eth_call
+                                        revertMessage = await method.getRevertReason(
+                                            txReplayOptions,
+                                            receipt.blockNumber
+                                        );
+
+                                        if (revertMessage) { // Only throw a revert error if a revert reason is existing
+                                            utils._fireError(
+                                                errors.TransactionRevertInstructionError(revertMessage.reason, revertMessage.signature, receipt),
+                                                defer.eventEmitter,
+                                                defer.reject,
+                                                null,
+                                                receipt
+                                            );
+                                        } else {
+                                            throw false; // Throw false and let the try/catch statement handle the error correctly after
+                                        }
+                                    } else {
+                                        throw false; // Throw false and let the try/catch statement handle the error correctly after
+                                    }
+                                } catch (error) {
+                                    // Throw an normal revert error if no revert reason is given or the detection of it is disabled
+                                    utils._fireError(
+                                        errors.TransactionRevertedWithoutReasonError(receipt),
+                                        defer.eventEmitter,
+                                        defer.reject,
+                                        null,
+                                        receipt
+                                    );
+                                }
                             } else {
+                                // Throw OOG if status is not existing and provided gas and used gas are equal
                                 utils._fireError(
-                                    new Error('Transaction ran out of gas. Please provide more gas:\n' + receiptJSON),
+                                    errors.TransactionOutOfGasError(receipt),
                                     defer.eventEmitter,
                                     defer.reject,
                                     null,
@@ -434,7 +506,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
 
                 })
                 // time out the transaction if not mined after 50 blocks
-                .catch(function() {
+                .catch(function () {
                     timeoutCount++;
 
                     // check to see if we are http polling
@@ -444,7 +516,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                             sub.unsubscribe();
                             promiseResolved = true;
                             utils._fireError(
-                                new Error('Transaction was not mined within ' + method.transactionPollingTimeout + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
+                                errors.TransactionError('Transaction was not mined within ' + method.transactionPollingTimeout + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
                                 defer.eventEmitter,
                                 defer.reject
                             );
@@ -454,7 +526,7 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                             sub.unsubscribe();
                             promiseResolved = true;
                             utils._fireError(
-                                new Error('Transaction was not mined within ' + method.transactionBlockTimeout + ' blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
+                                errors.TransactionError('Transaction was not mined within ' + method.transactionBlockTimeout + ' blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'),
                                 defer.eventEmitter,
                                 defer.reject
                             );
@@ -474,19 +546,29 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
     };
 
     // start watching for confirmation depending on the support features of the provider
-    var startWatching = function(existingReceipt) {
-        // if provider allows PUB/SUB
-        if (_.isFunction(this.requestManager.provider.on)) {
-            _ethereumCall.subscribe('newBlockHeaders', checkConfirmation.bind(null, existingReceipt, false));
-        } else {
+    var startWatching = function (existingReceipt) {
+        const startInterval = () => {
             intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
+        }
+        
+        if (!this.requestManager.provider.on) {
+            startInterval()
+        } else {
+            _ethereumCall.subscribe('newBlockHeaders', function (err, blockHeader, sub) {
+                if (err || !blockHeader) {
+                    // fall back to polling
+                    startInterval()
+                } else {
+                    checkConfirmation(existingReceipt, false, err, blockHeader, sub);
+                }
+            })
         }
     }.bind(this);
 
 
     // first check if we already have a confirmed transaction
     _ethereumCall.getTransactionReceipt(result)
-        .then(function(receipt) {
+        .then(function (receipt) {
             if (receipt && receipt.blockHash) {
                 if (defer.eventEmitter.listeners('confirmation').length > 0) {
                     // We must keep on watching for new Blocks, if a confirmation listener is present
@@ -498,14 +580,14 @@ Method.prototype._confirmTransaction = function(defer, result, payload) {
                 startWatching();
             }
         })
-        .catch(function() {
+        .catch(function () {
             if (!promiseResolved) startWatching();
         });
 
 };
 
 
-var getWallet = function(from, accounts) {
+var getWallet = function (from, accounts) {
     var wallet = null;
 
     // is index given
@@ -524,18 +606,36 @@ var getWallet = function(from, accounts) {
     return wallet;
 };
 
-Method.prototype.buildCall = function() {
+Method.prototype.buildCall = function () {
     var method = this,
-        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'); // || method.call === 'personal_sendTransaction'
+        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'), // || method.call === 'personal_sendTransaction'
+        isCall = (method.call === 'eth_call');
 
     // actual send function
-    var send = function() {
+    var send = function () {
         var defer = promiEvent(!isSendTx),
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
-
         // CALLBACK function
-        var sendTxCallback = function(err, result) {
+        var sendTxCallback = function (err, result) {
+            if (method.handleRevert && !err && isCall && (method.isRevertReasonString(result) && method.abiCoder)) {
+                var reason = method.abiCoder.decodeParameter('string', '0x' + result.substring(10));
+                var signature = 'Error(String)';
+
+                utils._fireError(
+                    errors.RevertInstructionError(reason, signature),
+                    defer.eventEmitter,
+                    defer.reject,
+                    payload.callback,
+                    {
+                        reason: reason,
+                        signature: signature
+                    }
+                );
+
+                return;
+            }
+
             try {
                 result = method.formatOutput(result);
             } catch (e) {
@@ -560,10 +660,8 @@ Method.prototype.buildCall = function() {
 
             // return PROMISE
             if (!isSendTx) {
-
                 if (!err) {
                     defer.resolve(result);
-
                 }
 
                 // return PROMIEVENT
@@ -576,7 +674,7 @@ Method.prototype.buildCall = function() {
         };
 
         // SENDS the SIGNED SIGNATURE
-        var sendSignedTx = function(sign) {
+        var sendSignedTx = function (sign) {
 
             var signedPayload = _.extend({}, payload, {
                 method: 'eth_sendRawTransaction',
@@ -587,7 +685,7 @@ Method.prototype.buildCall = function() {
         };
 
 
-        var sendRequest = function(payload, method) {
+        var sendRequest = function (payload, method) {
 
             if (method && method.accounts && method.accounts.wallet && method.accounts.wallet.length) {
                 var wallet;
@@ -616,11 +714,11 @@ Method.prototype.buildCall = function() {
 
                         return method.accounts.signTransaction(txOptions, wallet.privateKey)
                             .then(sendSignedTx)
-                            .catch(function(err) {
+                            .catch(function (err) {
                                 if (_.isFunction(defer.eventEmitter.listeners) && defer.eventEmitter.listeners('error').length) {
                                     defer.eventEmitter.emit('error', err);
                                     defer.eventEmitter.removeAllListeners();
-                                    defer.eventEmitter.catch(function() {
+                                    defer.eventEmitter.catch(function () {
                                     });
                                 }
                                 defer.reject(err);
@@ -648,6 +746,7 @@ Method.prototype.buildCall = function() {
                 }
             }
 
+
             return method.requestManager.send(payload, sendTxCallback);
         };
 
@@ -660,18 +759,36 @@ Method.prototype.buildCall = function() {
                 params: 0
             })).createFunction(method.requestManager);
 
-            getGasPrice(function(err, gasPrice) {
+            getGasPrice(function (err, gasPrice) {
 
                 if (gasPrice) {
                     payload.params[0].gasPrice = gasPrice;
                 }
+
+                if (isSendTx) {
+                    setTimeout(() => {
+                        defer.eventEmitter.emit('sending', payload);
+                    }, 0);
+                }
+
                 sendRequest(payload, method);
             });
 
         } else {
+            if (isSendTx) {
+                setTimeout(() => {
+                    defer.eventEmitter.emit('sending', payload);
+                }, 0);
+            }
+
             sendRequest(payload, method);
         }
 
+        if (isSendTx) {
+            setTimeout(() => {
+                defer.eventEmitter.emit('sent', payload);
+            }, 0);
+        }
 
         return defer.eventEmitter;
     };
@@ -684,12 +801,63 @@ Method.prototype.buildCall = function() {
 };
 
 /**
+ * Returns the revert reason string if existing or otherwise false.
+ *
+ * @method getRevertReason
+ *
+ * @param {Object} txOptions
+ * @param {Number} blockNumber
+ *
+ * @returns {Promise<Boolean|String>}
+ */
+Method.prototype.getRevertReason = function (txOptions, blockNumber) {
+    var self = this;
+
+    return new Promise(function (resolve, reject) {
+        (new Method({
+            name: 'call',
+            call: 'eth_call',
+            params: 2,
+            abiCoder: self.abiCoder,
+            handleRevert: true
+        }))
+            .createFunction(self.requestManager)(txOptions, utils.numberToHex(blockNumber))
+            .then(function () {
+                resolve(false);
+            })
+            .catch(function (error) {
+                if (error.reason) {
+                    resolve({
+                        reason: error.reason,
+                        signature: error.signature
+                    });
+                } else {
+                    reject(error);
+                }
+            });
+    });
+};
+
+/**
+ * Checks if the given hex string is a revert message from the EVM
+ *
+ * @method isRevertReasonString
+ *
+ * @param {String} data - Hex string prefixed with 0x
+ *
+ * @returns {Boolean}
+ */
+Method.prototype.isRevertReasonString = function (data) {
+    return _.isString(data) && ((data.length - 2) / 2) % 32 === 4 && data.substring(0, 10) === '0x08c379a0';
+};
+
+/**
  * Should be called to create the pure JSONRPC request which can be used in a batch request
  *
  * @method request
  * @return {Object} jsonrpc request
  */
-Method.prototype.request = function() {
+Method.prototype.request = function () {
     var payload = this.toPayload(Array.prototype.slice.call(arguments));
     payload.format = this.formatOutput.bind(this);
     return payload;

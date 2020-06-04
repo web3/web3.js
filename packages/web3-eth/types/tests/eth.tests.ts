@@ -43,10 +43,16 @@ const eth_empty = new Eth();
 // $ExpectType Eth
 const eth = new Eth('http://localhost:8545');
 
+// $ExpectType provider
+eth.currentProvider;
+
+// $ExpectType any
+eth.givenProvider;
+
 // $ExpectType string | null
 eth.defaultAccount;
 
-// $ExpectType string | number
+// $ExpectType BlockNumber
 eth.defaultBlock;
 
 // $ExpectType Common
@@ -66,6 +72,9 @@ eth.transactionConfirmationBlocks;
 
 // $ExpectType number
 eth.transactionBlockTimeout;
+
+// $ExpectType boolean
+eth.handleRevert;
 
 // $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => Contract
 eth.Contract;
@@ -122,18 +131,6 @@ eth.subscribe(
     'pendingTransactions',
     (error: Error, transactionHash: string) => {}
 );
-
-// $ExpectType provider
-eth.currentProvider;
-
-// $ExpectType any
-eth.givenProvider;
-
-// $ExpectType string | null
-eth.defaultAccount;
-
-// $ExpectType string | number
-eth.defaultBlock;
 
 // $ExpectType boolean
 eth.setProvider('https://localhost:2100');

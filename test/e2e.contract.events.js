@@ -74,6 +74,7 @@ describe('contract.events [ @E2E ]', function() {
         });
     });
 
+
     it('errors when toBlock is passed to contract.events.<eventName>', function () {
         return new Promise(async resolve => {
             try {

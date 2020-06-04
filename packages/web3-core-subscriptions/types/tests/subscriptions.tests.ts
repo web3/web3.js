@@ -69,6 +69,9 @@ subscription.arguments;
 // $ExpectType SubscriptionOptions
 subscription.options;
 
+// $ExpectType number
+subscription.lastBlock;
+
 // $ExpectType Subscription<unknown>
 subscription.subscribe(() => {});
 
@@ -83,3 +86,6 @@ subscription.on('changed', () => {});
 
 // $ExpectType Subscription<unknown>
 subscription.on('error', () => {});
+
+// $ExpectType Subscription<unknown>
+subscription.on('connected', () => {});

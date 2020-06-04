@@ -25,7 +25,7 @@ const contract = new Contract([]);
 // $ExpectType string | null
 contract.defaultAccount;
 
-// $ExpectType string | number
+// $ExpectType BlockNumber
 contract.defaultBlock;
 
 // $ExpectType Common
@@ -45,6 +45,9 @@ contract.transactionConfirmationBlocks;
 
 // $ExpectType number
 contract.transactionBlockTimeout;
+
+// $ExpectType boolean
+contract.handleRevert;
 
 // $ExpectType string
 contract.options.address;

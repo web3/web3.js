@@ -25,7 +25,7 @@ Later, when we want to check if an element is in the set, we simply hash the ele
 
 **Real Life Example**
 
-A ethereum real life example in where this is useful is if you want to update a users balance on every new block so it stays as close to real time as possible. Without using a bloom filter on every new block you would have to force the balances even if that user may not of had any activity within that block. But if you use the logBlooms from the block you can test the bloom filter against the users ethereum address before you do any more slow operations, this will dramatically decrease the amount of calls you do as you will only be doing those extra operations if that ethereum address is within that block (minus the false positives outcome which will be negligible). This will be highly performant for your app.
+An ethereum real life example in where this is useful is if you want to update a users balance on every new block so it stays as close to real time as possible. Without using a bloom filter on every new block you would have to force the balances even if that user may not of had any activity within that block. But if you use the logBlooms from the block you can test the bloom filter against the users ethereum address before you do any more slow operations, this will dramatically decrease the amount of calls you do as you will only be doing those extra operations if that ethereum address is within that block (minus the false positives outcome which will be negligible). This will be highly performant for your app.
 
 ---------
 Functions
@@ -241,6 +241,8 @@ Example
 
 ------------------------------------------------------------------------------
 
+.. _utils-sha3:
+
 sha3
 =====================
 
@@ -289,7 +291,23 @@ Example
 
 ------------------------------------------------------------------------------
 
+
+sha3Raw
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.sha3Raw(string)
+
+Will calculate the sha3 of the input but does return the hash value instead of ``null`` if for example a empty string is passed.
+
+.. note::  Further details about this function can be seen here :ref:`sha3 <utils-sha3>`
+
+
+------------------------------------------------------------------------------
+
 .. _utils-soliditysha3:
+
 
 soliditySha3
 =====================
@@ -369,6 +387,26 @@ Example
     web3.utils.soliditySha3({t: 'string', v: 'Hello!%'}, {t: 'int8', v:-23}, {t: 'address', v: '0x85F43D8a49eeB85d32Cf465507DD71d507100C1d'});
     > "0xa13b31627c1ed7aaded5aecec71baf02fe123797fffd45e662eac8e06fbe4955"
 
+
+
+------------------------------------------------------------------------------
+
+.. _utils-soliditysha3Raw:
+
+
+soliditySha3Raw
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.soliditySha3Raw(param1 [, param2, ...])
+
+Will calculate the sha3 of given input parameters in the same way solidity would.
+This means arguments will be ABI converted and tightly packed before being hashed.
+The difference between this function and the ``soliditySha3`` function is that it will return the hash value instead of ``null`` if for example a empty string is given.
+
+
+.. note::  Further details about this function can be seen here :ref:`soliditySha3 <utils-soliditysha3>`
 
 
 ------------------------------------------------------------------------------
@@ -540,7 +578,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.toChecksumAddress('0xc1912fee45d61c87cc5ea59dae31190fffff2323');
+    web3.utils.toChecksumAddress('0xc1912fee45d61c87cc5ea59dae31190fffff232d');
     > "0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d"
 
     web3.utils.toChecksumAddress('0XC1912FEE45D61C87CC5EA59DAE31190FFFFF232D');
