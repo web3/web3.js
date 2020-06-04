@@ -33,9 +33,9 @@ try {
   global = window;
 }
 
-// EthereumProvider
-if(typeof global.ethereumProvider !== 'undefined') {
-    givenProvider = global.ethereumProvider;
+// EIP-1193: window.ethereum
+if (typeof global.ethereum !== 'undefined') {
+    givenProvider = global.ethereum;
 
 // Legacy web3.currentProvider
 } else if(typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
