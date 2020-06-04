@@ -33,15 +33,8 @@ try {
   global = window;
 }
 
-// EthereumProvider
-//
-// TODO: removable? This `if` clause looks like an early, subsequently abandoned
-// name for the browser injected provider described in EIP 1193
-if(typeof global.ethereumProvider !== 'undefined') {
-    givenProvider = global.ethereumProvider;
-
-// EIP 1193: window.ethereum
-} else if (typeof global.ethereum !== 'undefined') {
+// EIP-1193: window.ethereum
+if (typeof global.ethereum !== 'undefined') {
     givenProvider = global.ethereum;
 
 // Legacy web3.currentProvider
