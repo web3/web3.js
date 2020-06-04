@@ -146,6 +146,10 @@ var _txInputFormatter = function (options) {
         delete options.input;
     }
 
+    if (options.data && !options.data.startsWith('0x')) {
+        options.data = '0x' + options.data;
+    }
+
     if (options.data && !utils.isHex(options.data)) {
         throw new Error('The data field must be HEX encoded data.');
     }

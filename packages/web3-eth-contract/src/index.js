@@ -536,6 +536,10 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
         if(!this._deployData)
             throw new Error('The contract has no contract data option set. This is necessary to append the constructor parameters.');
 
+        if(!this._deployData.startsWith('0x')) {
+            this._deployData = '0x' + this._deployData;
+        }
+
         return this._deployData + paramsABI;
 
     }
