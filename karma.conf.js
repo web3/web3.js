@@ -1,6 +1,6 @@
 process.env.MOZ_HEADLESS = 1;
 
-if (!process.env.TRAVIS){
+if (!process.env.GITHUB_ACTION) {
     process.env.CHROME_BIN = require('puppeteer').executablePath();
 }
 
@@ -50,16 +50,16 @@ module.exports = function (config) {
                 base: 'Firefox',
                 flags: ['-headless'],
             },
-            Chrome_travis_ci: {
+            Chrome_ci: {
                 base: 'Chrome',
                 flags: ['--no-sandbox']
             }
         },
     };
 
-    if(process.env.TRAVIS) {
+    if(process.env.GITHUB_ACTION) {
         configuration.browsers = [
-            'Chrome_travis_ci',
+            'Chrome_ci',
             'FirefoxHeadless'
         ];
     }

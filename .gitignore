@@ -8,8 +8,6 @@ npm-debug.log
 /coverage
 /tmp
 node_modules
-bower_components
-/bower
 .idea/
 .npm/
 .vscode/

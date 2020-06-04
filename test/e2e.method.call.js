@@ -57,7 +57,7 @@ describe('method.call [ @E2E ]', function () {
                 await wrongInstance
                     .methods
                     .getValue()
-                    .call();
+                    .call({from: accounts[0]});
 
                 assert.fail();
 

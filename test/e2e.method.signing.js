@@ -313,6 +313,35 @@ describe('transaction and message signing [ @E2E ]', function() {
         }
     });
 
+    it('sendSignedTransaction reverts with reason', async function(){
+        const data = instance
+            .methods
+            .reverts()
+            .encodeABI();
+
+        const source = wallet[0].address;
+        const txCount = await web3.eth.getTransactionCount(source);
+
+        const txObject = {
+            nonce:    web3.utils.toHex(txCount),
+            to:       instance.options.address,
+            gasLimit: web3.utils.toHex(400000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+            data: data
+        };
+
+        const signed = await web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey);
+
+        web3.eth.handleRevert = true;
+        try {
+            await web3.eth.sendSignedTransaction(signed.rawTransaction);
+            assert.fail();
+        } catch(err){
+            assert.equal(err.receipt.status, false);
+            assert.equal(err.reason, "REVERTED WITH REVERT");
+        }
+    });
+
     it('transactions sent with wallet error correctly (OOG)', function(done){
         const data = instance
             .methods

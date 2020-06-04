@@ -68,14 +68,26 @@ var Eth = function Eth() {
     // sets _requestmanager
     core.packageInit(this, arguments);
 
+    // overwrite package setRequestManager
+    var setRequestManager = this.setRequestManager;
+    this.setRequestManager = function (manager) {
+        setRequestManager(manager);
+
+        _this.net.setRequestManager(manager);
+        _this.personal.setRequestManager(manager);
+        _this.accounts.setRequestManager(manager);
+        _this.Contract._requestManager = _this._requestManager;
+        _this.Contract.currentProvider = _this._provider;
+
+        return true;
+    };
+
     // overwrite setProvider
     var setProvider = this.setProvider;
     this.setProvider = function () {
         setProvider.apply(_this, arguments);
-        _this.net.setProvider.apply(_this, arguments);
-        _this.personal.setProvider.apply(_this, arguments);
-        _this.accounts.setProvider.apply(_this, arguments);
-        _this.Contract.setProvider(_this.currentProvider, _this.accounts);
+
+        _this.setRequestManager(_this._requestManager);
 
         // Set detectedAddress/lastSyncCheck back to null because the provider could be connected to a different chain now
         _this.ens._detectedAddress = null;
@@ -89,6 +101,7 @@ var Eth = function Eth() {
     var transactionBlockTimeout = 50;
     var transactionConfirmationBlocks = 24;
     var transactionPollingTimeout = 750;
+    var maxListenersWarningThreshold = 100;
     var defaultChain, defaultHardfork, defaultCommon;
 
     Object.defineProperty(this, 'handleRevert', {
@@ -251,21 +264,36 @@ var Eth = function Eth() {
         },
         enumerable: true
     });
+    Object.defineProperty(this, 'maxListenersWarningThreshold', {
+        get: function () {
+            return maxListenersWarningThreshold;
+        },
+        set: function (val) {
+            if (_this.currentProvider && _this.currentProvider.setMaxListeners){
+                maxListenersWarningThreshold = val;
+                _this.currentProvider.setMaxListeners(val);
+            }
+        },
+        enumerable: true
+    });
 
 
-    this.clearSubscriptions = _this._requestManager.clearSubscriptions;
+    this.clearSubscriptions = _this._requestManager.clearSubscriptions.bind(_this._requestManager);
 
     // add net
-    this.net = new Net(this.currentProvider);
+    this.net = new Net(this);
     // add chain detection
     this.net.getNetworkType = getNetworkType.bind(this);
 
     // add accounts
-    this.accounts = new Accounts(this.currentProvider);
+    this.accounts = new Accounts(this);
 
     // add personal
-    this.personal = new Personal(this.currentProvider);
+    this.personal = new Personal(this);
     this.personal.defaultAccount = this.defaultAccount;
+
+    // set warnings threshold
+    this.maxListenersWarningThreshold = maxListenersWarningThreshold;
 
     // create a proxy Contract type for this instance, as a Contract's provider
     // is stored as a class member rather than an instance variable. If we do
@@ -284,7 +312,7 @@ var Eth = function Eth() {
         var setProvider = self.setProvider;
         self.setProvider = function() {
           setProvider.apply(self, arguments);
-          core.packageInit(_this, [self.currentProvider]);
+          core.packageInit(_this, [self]);
         };
     };
 
@@ -305,7 +333,9 @@ var Eth = function Eth() {
     this.Contract.transactionConfirmationBlocks = this.transactionConfirmationBlocks;
     this.Contract.transactionPollingTimeout = this.transactionPollingTimeout;
     this.Contract.handleRevert = this.handleRevert;
-    this.Contract.setProvider(this.currentProvider, this.accounts);
+    this.Contract._requestManager = this._requestManager;
+    this.Contract._ethAccounts = this.accounts;
+    this.Contract.currentProvider = this._requestManager.provider;
 
     // add IBAN
     this.Iban = Iban;
@@ -446,7 +476,8 @@ var Eth = function Eth() {
             name: 'sendSignedTransaction',
             call: 'eth_sendRawTransaction',
             params: 1,
-            inputFormatter: [null]
+            inputFormatter: [null],
+            abiCoder: abi
         }),
         new Method({
             name: 'signTransaction',
@@ -611,7 +642,7 @@ var Eth = function Eth() {
 
     methods.forEach(function(method) {
         method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager, _this.accounts); // second param means is eth.accounts (necessary for wallet signing)
+        method.setRequestManager(_this._requestManager, _this.accounts); // second param is the eth.accounts module (necessary for signing transactions locally)
         method.defaultBlock = _this.defaultBlock;
         method.defaultAccount = _this.defaultAccount;
         method.transactionBlockTimeout = _this.transactionBlockTimeout;
@@ -622,6 +653,7 @@ var Eth = function Eth() {
 
 };
 
+// Adds the static givenProvider and providers property to the Eth module
 core.addProviders(Eth);
 
 
