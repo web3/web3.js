@@ -58,8 +58,7 @@ describe('contract.events [ @E2E ]', function() {
             instance
                 .events
                 .BasicEvent({
-                    fromBlock: 0,
-                    toBlock: 'latest'
+                    fromBlock: 0
                 })
                 .on('data', function(event) {
                     assert.equal(event.event, 'BasicEvent');
@@ -74,6 +73,51 @@ describe('contract.events [ @E2E ]', function() {
         });
     });
 
+
+    it('errors when toBlock is passed to contract.events.<eventName>', function () {
+        return new Promise(async resolve => {
+            try {
+                instance
+                    .events
+                    .BasicEvent({
+                        fromBlock: 0,
+                        toBlock: 'latest'
+                    })
+
+                await instance
+                    .methods
+                    .firesEvent(accounts[0], 1)
+                    .send({ from: accounts[0] });
+            } catch (err) {
+                assert(err.message === 'Invalid option: toBlock. Use getPastEvents for specific range.');
+                resolve();
+                done();
+            }
+        });
+    });
+
+    it('errors when toBlock is passed to contract.events.allEvents', function () {
+        return new Promise(async (resolve, reject) => {
+            try {
+                instance
+                    .events
+                    .allEvents({
+                        fromBlock: 0,
+                        toBlock: 'latest'
+                    })
+
+                await instance
+                    .methods
+                    .firesEvent(accounts[0], 1)
+                    .send({ from: accounts[0] });
+            } catch (err) {
+                assert(err.message === 'Invalid option: toBlock. Use getPastEvents for specific range.');
+                resolve();
+                done();
+            }
+        });
+    });
+
     it('should not hear the error handler when connection.closed() called', function(){
         this.timeout(15000);
 
@@ -83,8 +127,7 @@ describe('contract.events [ @E2E ]', function() {
             instance
                 .events
                 .BasicEvent({
-                    fromBlock: 0,
-                    toBlock: 'latest'
+                    fromBlock: 0
                 })
                 .on('error', function(err) {
                     failed = true;
@@ -113,8 +156,7 @@ describe('contract.events [ @E2E ]', function() {
             instance
                 .events
                 .BasicEvent({
-                    fromBlock: 0,
-                    toBlock: 'latest'
+                    fromBlock: 0
                 })
                 .on('error', function(err) {
                     failed = true;
