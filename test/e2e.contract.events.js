@@ -75,6 +75,10 @@ describe('contract.events [ @E2E ]', function() {
 
 
     it('works also when toBlock is passed to contract.events.<eventName>', function () {
+        const originalWarn = console.warn
+        let message
+        console.warn = function(str) { message = str }
+
         return new Promise(async resolve => {
             instance
                 .events
@@ -86,6 +90,9 @@ describe('contract.events [ @E2E ]', function() {
                     this.removeAllListeners();
                     resolve();
                 });
+            
+            assert.equal(message, 'Invalid option: toBlock. Use getPastEvents for specific range.');
+            console.warn = originalWarn
 
             await instance
                 .methods
@@ -95,6 +102,10 @@ describe('contract.events [ @E2E ]', function() {
     });
 
     it('works also when toBlock is passed to contract.events.allEvents', function () {
+        const originalWarn = console.warn
+        let message
+        console.warn = function(str) { message = str }
+        
         return new Promise(async (resolve, reject) => {
             instance
                 .events
@@ -105,6 +116,9 @@ describe('contract.events [ @E2E ]', function() {
                     this.removeAllListeners();
                     resolve();
                 });
+
+            assert.equal(message, 'Invalid option: toBlock. Use getPastEvents for specific range.');
+            console.warn = originalWarn
 
             await instance
                 .methods
