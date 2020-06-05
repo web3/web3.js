@@ -717,6 +717,10 @@ Contract.prototype.once = function(event, options, callback) {
 Contract.prototype._on = function(){
     var subOptions = this._generateEventOptions.apply(this, arguments);
 
+    if (subOptions.params && subOptions.params.toBlock) {
+        delete subOptions.params.toBlock;
+        console.warn('Invalid option: toBlock. Use getPastEvents for specific range.');
+    }
 
     // prevent the event "newListener" and "removeListener" from being overwritten
     this._checkListener('newListener', subOptions.event.name);
