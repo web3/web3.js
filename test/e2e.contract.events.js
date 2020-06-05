@@ -58,8 +58,7 @@ describe('contract.events [ @E2E ]', function() {
             instance
                 .events
                 .BasicEvent({
-                    fromBlock: 0,
-                    toBlock: 'latest'
+                    fromBlock: 0
                 })
                 .on('data', function(event) {
                     assert.equal(event.event, 'BasicEvent');
@@ -74,6 +73,60 @@ describe('contract.events [ @E2E ]', function() {
         });
     });
 
+
+    it('works also when toBlock is passed to contract.events.<eventName>', function () {
+        const originalWarn = console.warn
+        let message
+        console.warn = function(str) { message = str }
+
+        return new Promise(async resolve => {
+            instance
+                .events
+                .BasicEvent({
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                }).on('data', function(event) {
+                    assert.equal(event.event, 'BasicEvent');
+                    this.removeAllListeners();
+                    resolve();
+                });
+            
+            assert.equal(message, 'Invalid option: toBlock. Use getPastEvents for specific range.');
+            console.warn = originalWarn
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({from: accounts[0]});
+        });
+    });
+
+    it('works also when toBlock is passed to contract.events.allEvents', function () {
+        const originalWarn = console.warn
+        let message
+        console.warn = function(str) { message = str }
+        
+        return new Promise(async (resolve, reject) => {
+            instance
+                .events
+                .allEvents({
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                }).on('data', function(event) {
+                    this.removeAllListeners();
+                    resolve();
+                });
+
+            assert.equal(message, 'Invalid option: toBlock. Use getPastEvents for specific range.');
+            console.warn = originalWarn
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({ from: accounts[0] });
+        });
+    });
+
     it('should not hear the error handler when connection.closed() called', function(){
         this.timeout(15000);
 
@@ -83,8 +136,7 @@ describe('contract.events [ @E2E ]', function() {
             instance
                 .events
                 .BasicEvent({
-                    fromBlock: 0,
-                    toBlock: 'latest'
+                    fromBlock: 0
                 })
                 .on('error', function(err) {
                     failed = true;
@@ -113,8 +165,7 @@ describe('contract.events [ @E2E ]', function() {
             instance
                 .events
                 .BasicEvent({
-                    fromBlock: 0,
-                    toBlock: 'latest'
+                    fromBlock: 0
                 })
                 .on('error', function(err) {
                     failed = true;
@@ -340,4 +391,3 @@ describe('contract.events [ @E2E ]', function() {
         });
     });
 });
-
