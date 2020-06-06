@@ -188,7 +188,7 @@ export interface WebsocketProviderOptions {
     reconnectDelay?: number;
     headers?: any;
     protocol?: string;
-    clientConfig?: string;
+    clientConfig?: object;
     requestOptions?: any;
     origin?: string;
     reconnect?: ReconnectOptions;
