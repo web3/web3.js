@@ -6,6 +6,7 @@
 npm-debug.log
 .npm/
 /coverage
+packages/web3-tolar/coverage/
 /tmp
 node_modules
 .idea/
@@ -21,3 +22,12 @@ contracts/
 migrations/
 truffle-config.js
 test/config/ensAddresses.json
+packages/web3-tolar/coverage
+packages/web3-tolar/coverage/
+packages/web3-tolar/coverage/lcov.info
+packages/web3-tolar/coverage/lcov-report/index.html
+packages/web3-tolar/coverage/lcov-report/src/index.html
+packages/web3-tolar/coverage/lcov-report/src/index.ts.html
+packages/web3-tolar/coverage/lcov-report/tests/index.html
+packages/web3-tolar/coverage/lcov-report/tests/index.test.ts.html
+packages/web3-tolar/coverage/lcov.info

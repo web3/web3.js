@@ -3,17 +3,18 @@ import { Method } from "web3-core-method";
 var Method = require("web3-core-method");
 var _ = require("underscore");
 
-var Accounts = require("web3-eth-accounts");
+//var Accounts = require("web3-eth-accounts");
+var Accounts = require("../../../web3-eth-accounts");
 
 export class TolarAccounts extends Accounts {
     methods: Method[] = [
         new Method({
-            name: "create",
+            name: "createRemote",
             call: "account_create",
             params: 1,
         }),
         new Method({
-            name: "open",
+            name: "openRemote",
             call: "account_open",
             params: 1,
         }),
@@ -32,6 +33,7 @@ export class TolarAccounts extends Accounts {
             name: "createNewAddress",
             call: "account_createNewAddress",
             params: 3,
+            inputFormatter: [null, null, null],
         }),
         new Method({
             name: "exportKeyFile",
@@ -41,6 +43,7 @@ export class TolarAccounts extends Accounts {
         new Method({
             name: "importKeyFile",
             call: "account_importKeyFile",
+            inputFormatter: [(a: any) => a, null, null, null],
             params: 4,
         }),
         new Method({

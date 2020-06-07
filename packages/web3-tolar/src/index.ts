@@ -1,8 +1,10 @@
-import web3 from "web3";
-import { Method } from "web3-core-method";
-import { TolarNet } from "./tolar-net/tolar-net";
-import { TolarAccounts } from "./tolar-account/tolar-account";
-import Web3 from "web3";
+import Web3 from 'web3';
+//import web3 from "web3";
+import { Method } from 'web3-core-method';
+
+import { TolarAccounts } from './tolar-account/tolar-account';
+import { TolarNet } from './tolar-net/tolar-net';
+
 var _ = require("underscore");
 
 var helpers = require("web3-core-helpers");
@@ -32,85 +34,163 @@ export class Tolar {
     setMethods() {
         this.methods = [
             new Method({
-                name: "netPeerCount",
-                call: "net_peerCount",
-                params: 0,
-            }),
-            new Method({
-                name: "netMasterNodeCount",
-                call: "net_masterNodeCount",
-                params: 0,
-            }),
-            new Method({
-                name: "netIsMasterNode",
-                call: "net_isMasterNode",
-                params: 0,
-            }),
-
-            new Method({
-                name: "netMaxPeerCount",
-                call: "net_maxPeerCount",
-                params: 0,
-            }),
-            new Method({
-                name: "tolGetBlockCount",
+                name: "getBlockCount",
                 call: "tol_getBlockCount",
                 params: 0,
             }),
             new Method({
-                name: "tolGetBlockByHash",
+                name: "getBlockByHash",
                 call: "tol_getBlockByHash",
                 params: 1,
             }),
             new Method({
-                name: "tolGetBlockByIndex",
+                name: "getBlockByIndex",
                 call: "tol_getBlockByIndex",
                 params: 1,
             }),
             new Method({
-                name: "tolGetTransaction",
+                name: "getTransaction",
                 call: "tol_getTransaction",
                 params: 1,
             }),
             new Method({
-                name: "tolGetBlockchainInfo",
+                name: "getBlockchainInfo",
                 call: "tol_getBlockchainInfo",
                 params: 0,
             }),
             new Method({
-                name: "tolGetTransactionList",
+                name: "getTransactionList",
                 call: "tol_getTransactionList",
                 params: 3,
             }),
             new Method({
-                name: "tolGetNonce",
+                name: "getNonce",
                 call: "tol_getNonce",
                 params: 1,
             }),
             new Method({
-                name: "tolGetBalance",
+                name: "getBalance",
                 call: "tol_getBalance",
                 params: 2,
             }),
             new Method({
-                name: "tolGetLatestBalance",
+                name: "getLatestBalance",
                 call: "tol_getLatestBalance",
                 params: 1,
             }),
 
             new Method({
-                name: "tolTryCallTransaction",
+                name: "tryCallTransaction",
                 call: "tol_tryCallTransaction",
                 params: 7,
             }),
             new Method({
-                name: "tolGetTransactionReceipt",
+                name: "getTransactionReceipt",
                 call: "tol_getTransactionReceipt",
                 params: 1,
             }),
             new Method({
-                name: "tolGetGasEstimate",
+                name: "getGasEstimate",
                 call: "tol_getGasEstimate",
+                params: 1,
+            }),
+            new Method({
+                name: "getHashBytes",
+                call: "util_getHashBytes",
+                params: 1,
+            }),
+            new Method({
+                name: "getHashHex",
+                call: "util_getHashHex",
+                inputFormatter: [
+                    (a: any) => {
+                        console.log(a);
+                        return a;
+                    },
+                ],
+                params: 1,
+            }),
+            new Method({
+                name: "sendSignedTransaction",
+                call: "tx_sendSignedTransaction",
+                inputFormatter: [
+                    (a: Tx) => {
+                        //         /**
+                        //      {body:TransactionObj,
+                        //     sig_data:{
+                        //         hash,
+                        //         signature,
+                        //         signerId:string
+                        //     }}
+
+                        //     */
+                        //         //a = {};
+                        //         // a.sender_address;
+                        //         // a.receiver_address;
+                        //         // a.value; //0
+                        //         // a.gas; //21463
+                        //         // a.gas_price; //1
+                        //         // a.data; //''
+                        //         // a.nonce; //0
+                        //         // let b = JSON.parse(JSON.stringify(a));
+
+                        //         // 1. cili obj to sha 3 hash -> bytearray -// korsiti se i pretvaranje u hex bez prefixa i u sign transaction dodati u hash field i u hex pa je to hash
+                        //         // 2. to u sign metoud,
+                        //         //
+                        //         /* console.log(
+                        //             "Hashes:\n",
+                        //             //utils.sha3(a),
+                        //             "\n",
+                        //             utils.soliditySha3(a)
+                        //         );*/
+                        //         // let x = await (this as any).getHashBytes(a);
+                        //         // let y = await (this as any).getHashHex(a);
+
+                        //         // console.log(
+                        //         //     "Hash:\n",
+                        //         //     // x,
+                        //         //     //   "\n",
+                        //         //     // utils.sha3(x),
+                        //         //     //   "\n",
+                        //         //     //    utils.soliditySha3(x),
+                        //         //     "\n",
+                        //         //     y,
+                        //         //     "\nEnd\n"
+                        //         // );
+                        //         // let privateKeyToAcc = (this
+                        //         //     .account as any).privateKeyToAccount(
+                        //         //     "0xd7ce009203c5d16d6b5daafa1efb1167a9e4558e88dff0bc14ebd65f3f0fc116"
+                        //         // );
+                        //         // console.log("pk to acc\n", privateKeyToAcc);
+
+                        //         // const signRes = (this.account as any).sign(
+                        //         //     "0x" + y,
+                        //         //     "0xd7ce009203c5d16d6b5daafa1efb1167a9e4558e88dff0bc14ebd65f3f0fc116"
+                        //         // );
+
+                        //         // console.log(utils.hexToBytes(`0x${y}`));
+                        //         //console.log(utils.hexToBytes(utils.bytesToHex));
+                        //         // console.log(signRes);
+                        //         // console.log({
+                        //         //     body: b,
+                        //         //     sig_data: {
+                        //         //         hash: y,
+                        //         //         signature: signRes.signature.substr(2),
+                        //         //         signer_id: signRes.signer_id,
+                        //         //     },
+                        //         // });
+                        console.log(a);
+                        return a;
+                        //         //  {
+                        //         //     body: b,
+                        //         //     sig_data: {
+                        //         //         hash: utils.toHex(x).substr(2),
+                        //         //         signature: signRes.signature.substr(2),
+                        //         //         signer_id: signRes.signer_id,
+                        //         //     },
+                        //         // };
+                    },
+                ],
                 params: 1,
             }),
         ];
@@ -129,5 +209,13 @@ export class Tolar {
         this.extendTolar();
     }
 }
-
+interface Tx {
+    sender_address: string;
+    receiver_address: string;
+    value: number;
+    gas: number;
+    gas_price: number;
+    data: string;
+    nonce: number;
+}
 module.exports = Tolar;
