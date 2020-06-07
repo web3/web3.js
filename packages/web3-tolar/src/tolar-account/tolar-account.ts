@@ -1,5 +1,6 @@
-import Web3 from "web3";
-import { Method } from "web3-core-method";
+import Web3 from 'web3';
+import { Method } from 'web3-core-method';
+
 var Method = require("web3-core-method");
 var _ = require("underscore");
 
@@ -81,13 +82,23 @@ export class TolarAccounts extends Accounts {
             call: "account_sendExecuteFunctionTransaction",
             params: 8,
         }),
+        new Method({
+            name: "getHashHex",
+            call: "util_getHashHex",
+            params: 1,
+        }),
+        // new Method({
+        //     name: "signTransaction",
+        //     call: "util_getHashHex",
+        //     params: 1,
+        // }),
     ];
     constructor(private web3: Web3) {
         super(web3);
-        this.extendAccounts3();
+        this.extendAccounts();
     }
 
-    extendAccounts3() {
+    extendAccounts() {
         _.each(this.methods, (method: any) => {
             method.attachToObject(this);
             method.setRequestManager((this.web3 as any)._requestManager);

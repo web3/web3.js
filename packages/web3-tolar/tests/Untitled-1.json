@@ -1,9 +1,0 @@
-{
-    "sender_address": "5484c512b1cf3d45e7506a772b7358375acc571b2930d27deb",
-    "receiver_address": "5472de4346f7a78fd5e719a00ab03c0aba3e1c5b6113273bde",
-    "amount": 10,
-    "gas": 24000,
-    "gas_price": 1,
-    "data": "datata",
-    "nonce": 9
-}

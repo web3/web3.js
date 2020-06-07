@@ -39,13 +39,52 @@ var utils = require("web3-utils");
 var helpers = require("web3-core-helpers");
 var Transaction = require("ethereumjs-tx").Transaction;
 var Common = require("ethereumjs-common").default;
+const elliptic = require("elliptic");
+const secp256k1 = new elliptic.ec("secp256k1"); // eslint-disable-line
 
 var isNot = function (value) {
     return _.isUndefined(value) || _.isNull(value);
 };
-
+let fromPrivateFn = Account.fromPrivate;
+let recoverFn = Account.recover;
 var Accounts = function Accounts() {
-    console.log("constructed->2");
+    (() => {
+        let extendedModule = {
+            test: () => {
+                console.log("TEST: Test called from extended module");
+            },
+        };
+
+        let ethAddressToTolarAddress = (ethAddress) => {
+            const prefix = "T";
+            const prefixHex = utils.toHex(prefix).substr(2);
+
+            const addressHash = utils.soliditySha3(ethAddress);
+            const hashOfHash = utils.soliditySha3(addressHash);
+            const tolarAddress =
+                prefixHex +
+                ethAddress.substr(2) +
+                hashOfHash.substr(hashOfHash.length - 8);
+            return tolarAddress.toLowerCase();
+        };
+
+        Object.assign(Account, {
+            publicKey: (privateKey) => {
+                var buffer = Buffer.from(privateKey.slice(2), "hex");
+                var ecKey = secp256k1.keyFromPrivate(buffer);
+                return ecKey.getPublic(false, "hex").slice(2);
+            },
+            sign: Account.makeSigner(0), // v=27|28 instead of 0|1...;
+            fromPrivate: (privateKey) => {
+                const res = fromPrivateFn(privateKey);
+                return Object.assign(res, {
+                    address: ethAddressToTolarAddress(res.address),
+                });
+            },
+            recover: (hash, signature) =>
+                ethAddressToTolarAddress(recoverFn(hash, signature)),
+        });
+    })();
     var _this = this;
 
     // sets _requestmanager
@@ -110,7 +149,7 @@ Accounts.prototype._addAccountFunctions = function (account) {
 
     // add sign functions
     account.signTransaction = function signTransaction(tx, callback) {
-        return _this.signTransaction(tx, account.privateKey, callback);
+        return _this.signTransactionNew(tx, account.privateKey, callback);
     };
     account.sign = function sign(data) {
         return _this.sign(data, account.privateKey);
@@ -144,12 +183,44 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(
 
     return this._addAccountFunctions(Account.fromPrivate(privateKey));
 };
-
+Accounts.prototype.signTransactionNew = async function signTransactionNew(
+    tx,
+    privateKey,
+    callback
+) {
+    var _this = this;
+    const txHash = await this.getHashHex(tx);
+    const signature = this.privateKeyToAccount(privateKey).sign(
+        "0x" + txHash,
+        privateKey
+    );
+    let toFixedHexPlaces = (hex, places) => {
+        hex = hex.replace(/^0x/, "");
+        while (hex.length < places) {
+            hex = "0" + hex;
+        }
+        console.log(hex);
+        return hex;
+    };
+    const signedTx = {
+        body: tx,
+        sig_data: {
+            hash: txHash,
+            signature:
+                signature.r.substr(2) +
+                signature.s.substr(2) +
+                toFixedHexPlaces(signature.v, 2),
+            signer_id: signature.signer_id,
+        },
+    };
+    return signedTx;
+};
 Accounts.prototype.signTransaction = function signTransaction(
     tx,
     privateKey,
     callback
 ) {
+    console.log(Object.keys(this));
     var _this = this,
         error = false,
         transactionOptions = {},

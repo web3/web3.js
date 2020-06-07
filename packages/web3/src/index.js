@@ -49,6 +49,7 @@ var Web3 = function Web3() {
     this.eth = new Eth(this);
     this.shh = new Shh(this);
     this.bzz = new Bzz(this);
+    console.log("tolar constructed");
     this.tolar = new Tolar(this);
     // overwrite package setProvider
     var setProvider = this.setProvider;

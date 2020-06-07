@@ -7,12 +7,7 @@ import { TolarNet } from './tolar-net/tolar-net';
 
 var _ = require("underscore");
 
-var helpers = require("web3-core-helpers");
-var Subscriptions = require("web3-core-subscriptions").subscriptions;
 var Method = require("web3-core-method");
-var utils = require("web3-utils");
-var Net = require("web3-net");
-var formatter = helpers.formatters;
 
 export class Tolar {
     defaultAccount: string | number = null;
@@ -102,95 +97,11 @@ export class Tolar {
             new Method({
                 name: "getHashHex",
                 call: "util_getHashHex",
-                inputFormatter: [
-                    (a: any) => {
-                        console.log(a);
-                        return a;
-                    },
-                ],
                 params: 1,
             }),
             new Method({
                 name: "sendSignedTransaction",
                 call: "tx_sendSignedTransaction",
-                inputFormatter: [
-                    (a: Tx) => {
-                        //         /**
-                        //      {body:TransactionObj,
-                        //     sig_data:{
-                        //         hash,
-                        //         signature,
-                        //         signerId:string
-                        //     }}
-
-                        //     */
-                        //         //a = {};
-                        //         // a.sender_address;
-                        //         // a.receiver_address;
-                        //         // a.value; //0
-                        //         // a.gas; //21463
-                        //         // a.gas_price; //1
-                        //         // a.data; //''
-                        //         // a.nonce; //0
-                        //         // let b = JSON.parse(JSON.stringify(a));
-
-                        //         // 1. cili obj to sha 3 hash -> bytearray -// korsiti se i pretvaranje u hex bez prefixa i u sign transaction dodati u hash field i u hex pa je to hash
-                        //         // 2. to u sign metoud,
-                        //         //
-                        //         /* console.log(
-                        //             "Hashes:\n",
-                        //             //utils.sha3(a),
-                        //             "\n",
-                        //             utils.soliditySha3(a)
-                        //         );*/
-                        //         // let x = await (this as any).getHashBytes(a);
-                        //         // let y = await (this as any).getHashHex(a);
-
-                        //         // console.log(
-                        //         //     "Hash:\n",
-                        //         //     // x,
-                        //         //     //   "\n",
-                        //         //     // utils.sha3(x),
-                        //         //     //   "\n",
-                        //         //     //    utils.soliditySha3(x),
-                        //         //     "\n",
-                        //         //     y,
-                        //         //     "\nEnd\n"
-                        //         // );
-                        //         // let privateKeyToAcc = (this
-                        //         //     .account as any).privateKeyToAccount(
-                        //         //     "0xd7ce009203c5d16d6b5daafa1efb1167a9e4558e88dff0bc14ebd65f3f0fc116"
-                        //         // );
-                        //         // console.log("pk to acc\n", privateKeyToAcc);
-
-                        //         // const signRes = (this.account as any).sign(
-                        //         //     "0x" + y,
-                        //         //     "0xd7ce009203c5d16d6b5daafa1efb1167a9e4558e88dff0bc14ebd65f3f0fc116"
-                        //         // );
-
-                        //         // console.log(utils.hexToBytes(`0x${y}`));
-                        //         //console.log(utils.hexToBytes(utils.bytesToHex));
-                        //         // console.log(signRes);
-                        //         // console.log({
-                        //         //     body: b,
-                        //         //     sig_data: {
-                        //         //         hash: y,
-                        //         //         signature: signRes.signature.substr(2),
-                        //         //         signer_id: signRes.signer_id,
-                        //         //     },
-                        //         // });
-                        console.log(a);
-                        return a;
-                        //         //  {
-                        //         //     body: b,
-                        //         //     sig_data: {
-                        //         //         hash: utils.toHex(x).substr(2),
-                        //         //         signature: signRes.signature.substr(2),
-                        //         //         signer_id: signRes.signer_id,
-                        //         //     },
-                        //         // };
-                    },
-                ],
                 params: 1,
             }),
         ];
