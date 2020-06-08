@@ -236,3 +236,4 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 
 - Extend `_txInputFormatter` with hex prefix check (#3317)
+- Extract revert reason string for geth >= 1.9.15 (#3520)
