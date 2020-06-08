@@ -623,6 +623,7 @@ Method.prototype.buildCall = function () {
 
                 // Ganache / Geth <= 1.9.13 return the reason data as a successful eth_call response
                 // Geth >= 1.9.15 attaches the reason data to an error object.
+                // Geth 1.9.14 is missing revert reason (https://github.com/ethereum/web3.js/issues/3520)
                 if (!err && method.isRevertReasonString(result)){
                     reasonData = result.substring(10);
                 } else if (err && err.data){
