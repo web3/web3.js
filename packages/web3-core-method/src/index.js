@@ -550,7 +550,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         const startInterval = () => {
             intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
         }
-        
+
         if (!this.requestManager.provider.on) {
             startInterval()
         } else {
@@ -618,22 +618,34 @@ Method.prototype.buildCall = function () {
 
         // CALLBACK function
         var sendTxCallback = function (err, result) {
-            if (method.handleRevert && !err && isCall && (method.isRevertReasonString(result) && method.abiCoder)) {
-                var reason = method.abiCoder.decodeParameter('string', '0x' + result.substring(10));
-                var signature = 'Error(String)';
+            if (method.handleRevert && isCall && method.abiCoder) {
+                var reasonData;
 
-                utils._fireError(
-                    errors.RevertInstructionError(reason, signature),
-                    defer.eventEmitter,
-                    defer.reject,
-                    payload.callback,
-                    {
-                        reason: reason,
-                        signature: signature
-                    }
-                );
+                // Ganache / Geth <= 1.9.13 return the reason data as a successful eth_call response
+                // Geth >= 1.9.15 attaches the reason data to an error object.
+                if (!err && method.isRevertReasonString(result)){
+                    reasonData = result.substring(10);
+                } else if (err && err.data){
+                    reasonData = err.data.substring(10);
+                }
 
-                return;
+                if (reasonData){
+                    var reason = method.abiCoder.decodeParameter('string', '0x' + reasonData);
+                    var signature = 'Error(String)';
+
+                    utils._fireError(
+                        errors.RevertInstructionError(reason, signature),
+                        defer.eventEmitter,
+                        defer.reject,
+                        payload.callback,
+                        {
+                            reason: reason,
+                            signature: signature
+                        }
+                    );
+
+                    return;
+                }
             }
 
             try {
