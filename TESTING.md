@@ -46,8 +46,8 @@ CI job.
 The npm script `test:e2e:clients` greps all tests with an `[ @E2E ]` tag
 in their mocha test description and runs them against:
 + ganache-cli
-+ geth 1.9.13 (POA, single instance, instamining)
-+ geth 1.9.13 (POA, single instance, mining at 2s intervals)
++ geth stable (POA, single instance, instamining)
++ geth stable (POA, single instance, mining at 2s intervals)
 
 These tests are grouped in files prefixed by "e2e", ex: `test/e2e.method.call.js`.
 
