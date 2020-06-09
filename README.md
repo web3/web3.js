@@ -4,7 +4,7 @@
 
 # web3.js - Ethereum JavaScript API
 
-[![Gitter][gitter-image]][gitter-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![NPM Package Downloads][npm-image-downloads]][npm-url] [![Build Status][actions-image]][actions-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url]
+[![Gitter][gitter-image]][gitter-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![NPM Package Downloads][npm-image-downloads]][npm-url] [![Build Status][actions-image]][actions-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url] [![Netlify Status][netlify-image]][netlify-url]
 
 This is the Ethereum [JavaScript API][docs]
 which connects to the [Generic JSON-RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
@@ -181,5 +181,7 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 [gitter-url]:  https://gitter.im/ethereum/web3.js
 [lerna-image]: https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg
 [lerna-url]: https://lerna.js.org/
+[netlify-image]: https://api.netlify.com/api/v1/badges/1fc64933-d170-4939-8bdb-508ecd205519/deploy-status
+[netlify-url]: https://app.netlify.com/sites/web3-staging/deploys
 [stackexchange-image]: https://img.shields.io/badge/web3js-stackexchange-brightgreen
 [stackexchange-url]: https://ethereum.stackexchange.com/questions/tagged/web3js

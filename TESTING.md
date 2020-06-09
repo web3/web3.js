@@ -17,7 +17,7 @@ These should pass for PRs to merge:
 | typescript | dtslint | -- | TS type definitions tests |
 | dependencies  | depcheck | -- | Verifies every dependency is listed correctly in the module package |
 | bundle | test:e2e:min | [e2e.minified.js][3] | Verifies minified bundle loads in a headless browser *without* being webpacked / browserified | :white_check_mark: |
-| cdn | test:e2e:cdn | [e2e.cdn.sh][4]| Visual inspection check: publishes an (un-webpacked) site that uses web3.min.js at http://sudden-playground.surge.sh/ | :white_check_mark: |
+| cdn | test:e2e:cdn | [e2e.cdn.sh][4]| Visual inspection check: publishes an (un-webpacked) site that uses web3.min.js at https://web3-staging.netlify.app/ | :white_check_mark: |
 | windows | -- | [e2e.windows.sh][5] | Verifies Web3 installs on Windows OS / Node 12 and can connect to Infura over wss and https | :white_check_mark: |
 
 
