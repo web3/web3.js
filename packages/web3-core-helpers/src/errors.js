@@ -76,7 +76,7 @@ module.exports = {
     },
     DuplicateRequestIDError: function(id){
         return new Error('Duplicate request id '+id+
-                         ' sent to provider. Try setting a unique provider object for each copy of'+
+                         ' sent to Provider. Try setting a unique provider object for each copy of'+
                          ' jsonrpc.js used in the project instead of sharing a single Provider.');
     },
     RevertInstructionError: function(reason, signature) {
