@@ -18,8 +18,14 @@ echo "======================================================================"
 echo "Preparing test site for web3-staging.netlify.app                      "
 echo "======================================================================"
 
-# Mark file with current commit and branch
-sed -i "s|__COMMIT_HASH__|$COMMIT_REF|g" scripts/html/index.html
-sed -i "s|__BRANCH__|$BRANCH|g" scripts/html/index.html
-
 cp packages/web3/dist/web3.min.js scripts/html
+
+cd scripts/html
+
+BUNDLE_SIZE=$(stat -f%z web3.min.js)
+
+# Mark file with current commit, branch, and bundle size.
+sed -i "s|__COMMIT_HASH__|$COMMIT_REF|g" index.html
+sed -i "s|__BRANCH__|$BRANCH|g" index.html
+sed -i "s|__BUNDLE_SIZE__|$BUNDLE_SIZE|g" index.html
+
