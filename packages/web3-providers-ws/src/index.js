@@ -308,6 +308,11 @@ WebsocketProvider.prototype.send = function (payload, callback) {
         id = payload[0].id;
     }
 
+    if(this.requestQueue.has(id) || this.responseQueue.has(id)) {
+        this.emit(this.ERROR, errors.DuplicateRequestIDError(id));
+        return;
+    }
+    
     if (this.connection.readyState === this.connection.CONNECTING || this.reconnecting) {
         this.requestQueue.set(id, request);
 
