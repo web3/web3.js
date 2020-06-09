@@ -536,6 +536,10 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
         if(!this._deployData)
             throw new Error('The contract has no contract data option set. This is necessary to append the constructor parameters.');
 
+        if(!this._deployData.startsWith('0x')) {
+            this._deployData = '0x' + this._deployData;
+        }
+
         return this._deployData + paramsABI;
 
     }
@@ -713,6 +717,10 @@ Contract.prototype.once = function(event, options, callback) {
 Contract.prototype._on = function(){
     var subOptions = this._generateEventOptions.apply(this, arguments);
 
+    if (subOptions.params && subOptions.params.toBlock) {
+        delete subOptions.params.toBlock;
+        console.warn('Invalid option: toBlock. Use getPastEvents for specific range.');
+    }
 
     // prevent the event "newListener" and "removeListener" from being overwritten
     this._checkListener('newListener', subOptions.event.name);

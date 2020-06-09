@@ -44,14 +44,13 @@ jobs:
                         "e2e_ganache",
                         "e2e_mosaic",
                         "e2e_browsers",
+                        "e2e_gnosis_dex"
                     ]
         env:
             TEST: ${{ matrix.testCmd }}
             CI: true
             DISPLAY: :99.0
             PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
-            SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
-            SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
             BUNDLESIZE_GITHUB_TOKEN: ${{ secrets.BUNDLESIZE_GITHUB_TOKEN }}
         steps:
             - uses: actions/setup-node@v1

@@ -49,6 +49,7 @@
         "test:e2e:truffle": "./scripts/e2e.truffle.sh",
         "test:e2e:mosaic": "./scripts/e2e.mosaic.sh",
         "test:e2e:ganache:core": "./scripts/e2e.ganache.core.sh",
+        "test:e2e:gnosis:dex": "./scripts/e2e.gnosis.dex.sh",
         "ci": "./scripts/ci.sh",
         "cov:clean": "rm -rf .nyc_output; rm -rf coverage",
         "cov:merge_reports": "nyc report --reporter=lcov --reporter=html"
@@ -111,6 +112,7 @@
         "chai": "^4.2.0",
         "core-js": "^3.4.8",
         "crypto-js": "^3.1.9-1",
+        "decache": "^4.6.0",
         "del": "^4.1.1",
         "dependency-check": "^4.1.0",
         "ethereumjs-common": "^1.3.2",
@@ -140,7 +142,6 @@
         "puppeteer": "^1.20.0",
         "regenerator-runtime": "^0.13.3",
         "sandboxed-module": "^2.0.3",
-        "surge": "^0.21.3",
         "typescript": "^3.8.3",
         "underscore": "^1.9.1",
         "vinyl-source-stream": "^2.0.0",
