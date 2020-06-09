@@ -73,6 +73,7 @@ export class errors {
     static MaxAttemptsReachedOnReconnectingError(): Error;
     static PendingRequestsOnReconnectingError(): Error;
     static ConnectionError(msg: string, event?: WebSocketEvent): ConnectionError;
+    static DuplicateRequestIDError(id: string | number): Error;
     static RevertInstructionError(reason: string, signature: string): RevertInstructionError
     static TransactionRevertInstructionError(reason: string, signature: string, receipt: object): TransactionRevertInstructionError
     static TransactionError(message: string, receipt: object): TransactionError
