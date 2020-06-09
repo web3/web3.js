@@ -22,7 +22,7 @@ cp packages/web3/dist/web3.min.js scripts/html
 
 cd scripts/html
 
-BUNDLE_SIZE=$(stat -f%z web3.min.js)
+BUNDLE_SIZE=$(wc -c web3.min.js | awk '{print $1}')
 
 # Mark file with current commit, branch, and bundle size.
 sed -i "s|__COMMIT_HASH__|$COMMIT_REF|g" index.html
