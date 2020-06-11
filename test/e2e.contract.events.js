@@ -407,6 +407,9 @@ describe('contract.events [ @E2E ]', function() {
         assert.equal(events[0].returnValues.str, msg)
     });
 
+    // Malformed utf-8 sequence in the following two tests comes from 
+    // https://www.w3.org/2001/06/utf-8-wrong/UTF-8-test.html
+    // Section: 3.1.8 
     it('when an invalid utf-8 string is passed in JS as param to emit', async function(){
         const msg = '�������';
 
