@@ -236,4 +236,4 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 
 - Extend `_txInputFormatter` with hex prefix check (#3317)
-- Fixed `Buffer.concat` breaking the new scrypt responses in browsers (#3580)
+- Fixed `Buffer.concat` incompatibility to the Buffer impl in React (#3580)
