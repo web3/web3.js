@@ -390,5 +390,16 @@ describe('transaction and message signing [ @E2E ]', function() {
         const recovered = await web3.eth.personal.ecRecover(message, signed.signature);
         assert.equal(wallet[0].address.toLowerCase(), recovered.toLowerCase());
     })
+
+    // Smoke test to validate browserify's buffer polyfills (feross/buffer@5)
+    // A companion regression test for Webpack & feross/buffer@4.9.2 exists at:
+    // test/eth.accounts.webpack.js
+    it("encrypt then decrypt wallet", async function() {
+        this.timeout(10000);
+
+        const password = "qwerty";
+        const keystore = wallet.encrypt(password);
+        wallet.decrypt(keystore, password);
+    });
 });
 
