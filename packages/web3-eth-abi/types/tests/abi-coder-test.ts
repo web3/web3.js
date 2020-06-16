@@ -20,9 +20,7 @@
  * @date 2018
  */
 
-import { AbiCoder } from 'web3-eth-abi';
-
-const abiCoder = new AbiCoder();
+import abiCoder from 'web3-eth-abi';
 
 // $ExpectType string
 abiCoder.encodeFunctionSignature('myMethod(uint256,string)');
