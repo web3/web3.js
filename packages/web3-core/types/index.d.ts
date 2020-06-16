@@ -19,7 +19,6 @@
  */
 
 import * as net from 'net';
-import { EventEmitter } from "events"
 import {
     HttpProviderBase,
     HttpProviderOptions,
@@ -432,7 +431,7 @@ export interface AbstractProvider {
     send?(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
     request?(args: RequestArguments): Promise<any>;
     connected?: boolean;
-}
+  }
 
 export type provider =
     | HttpProvider
