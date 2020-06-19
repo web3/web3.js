@@ -109,11 +109,6 @@ ABICoder.prototype.encodeParameters = function (types, params) {
             type = type.type
         }
 
-        // Format BN to string
-        if (utils.isBN(param) || utils.isBigNumber(param)) {
-            return param.toString(10);
-        }
-
         param = self.formatParam(type, param)
 
         // Format params for tuples
@@ -252,6 +247,11 @@ ABICoder.prototype.formatParam = function (type, param) {
     const paramTypeNumber = new RegExp(/^(u?int)([0-9]*)$/);
     const paramTypeNumberArray = new RegExp(/^(u?int)([0-9]*)\[\]$/);
 
+    // Format BN to string
+    if (utils.isBN(param) || utils.isBigNumber(param)) {
+        return param.toString(10);
+    }
+
     if (type.match(paramTypeBytesArray) || type.match(paramTypeNumberArray)) {
         return param.map(p => this.formatParam(type.replace('[]', ''), p))
     }
@@ -285,9 +285,9 @@ ABICoder.prototype.formatParam = function (type, param) {
                 param = utils.rightPad(param, size * 2)
             }
         }
-        
+
         // format odd-length bytes to even-length
-        if (param.length % 2 === 1) { 
+        if (param.length % 2 === 1) {
             param = '0x0' + param.substring(2)
         }
     }
