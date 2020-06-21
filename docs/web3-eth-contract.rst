@@ -141,10 +141,9 @@ Property
 The default block parameters can be one of the following:
 
 - ``Number|BN|BigNumber``: A block number
-- ``"genesis"`` - ``String``: The genesis block
+- ``"earliest"`` - ``String``: The genesis block
 - ``"latest"`` - ``String``: The latest block (current head of the blockchain)
 - ``"pending"`` - ``String``: The currently mined block (including pending transactions)
-- ``"earliest"`` - ``String``: The genesis block
 
 Default is ``"latest"``.
 
@@ -749,7 +748,7 @@ Parameters
     * ``from`` - ``String`` (optional): The address the call "transaction" should be made from. For calls the ``from`` property is optional however it is highly recommended to explicitly set it or it may default to `address(0)` depending on your node or provider.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this call "transaction".
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this call "transaction" (gas limit).
-``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`contract.defaultBlock <defaultblock>`. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.  Useful for requesting data from or replaying transactions in past blocks.
+``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`contract.defaultBlock <defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.  Useful for requesting data from or replaying transactions in past blocks.
 3. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the smart contract method execution as the second argument, or with an error object as the first argument.
 
 -------
@@ -989,7 +988,7 @@ methods.myMethod.encodeABI
 
     myContract.methods.myMethod([param1[, param2[, ...]]]).encodeABI()
 
-Encodes the ABI for this method. The resulting hex string is 32-bit function signature hash plus the passed parameters in  Solidity tightly packed format. This can be used to send a transaction, call a method, or pass it into another smart contract's method as arguments. Set the `data` field on `web3.eth.sendTransaction` options as the `encodeABI()` result and it is the same as calling the contract method with `contract.myMethod.send()`. 
+Encodes the ABI for this method. The resulting hex string is 32-bit function signature hash plus the passed parameters in  Solidity tightly packed format. This can be used to send a transaction, call a method, or pass it into another smart contract's method as arguments. Set the `data` field on `web3.eth.sendTransaction` options as the `encodeABI()` result and it is the same as calling the contract method with `contract.myMethod.send()`.
 
 Some use cases for `encodeABI()` include: preparing a smart contract transaction for a multisignature wallet, working with offline wallets and cold storage and creating transaction payload for complex smart contract proxy calls.
 
@@ -1102,7 +1101,7 @@ Parameters
 
 1. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used. For specific range use :ref:`getPastEvents <getPastEvents>`.
+    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used. For specific range use :ref:`getPastEvents <getPastEvents>`.
     * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
 2. ``callback`` - ``Function`` (optional): This callback will be fired for each *event* as the second argument, or an error as the first argument.
 
@@ -1211,8 +1210,8 @@ Parameters
 1. ``event`` - ``String``: The name of the event in the contract, or ``"allEvents"`` to get all events.
 2. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Lets you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
-    * ``toBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (less than or equal to) to get events up to (Defaults to ``"latest"``). Pre-defined block numbers as ``"latest"``, ``"earliest"``, ``"pending"``, and ``"genesis"`` can also be used.
+    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.
+    * ``toBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (less than or equal to) to get events up to (Defaults to ``"latest"``). Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.
     * ``topics`` - ``Array`` (optional): This allows manually setting the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
 3. ``callback`` - ``Function`` (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
 
