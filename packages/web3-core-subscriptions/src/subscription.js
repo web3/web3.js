@@ -228,7 +228,7 @@ Subscription.prototype.subscribe = function() {
     // a dropped connection may have resulted in gaps in the logs...
     if (this.lastBlock && _.isObject(this.options.params)){
         payload.params[1] = this.options.params
-        payload.params[1].fromBlock = this.lastBlock +1;
+        payload.params[1].fromBlock = formatters.inputBlockNumberFormatter(this.lastBlock + 1);
     }
 
     // if id is there unsubscribe first
@@ -245,9 +245,6 @@ Subscription.prototype.subscribe = function() {
 
         // copy the params to avoid race-condition with deletion below this block
         var blockParams = Object.assign({}, payload.params[1]);
-
-        // ensure the block number is properly formatted
-        blockParams.fromBlock = formatters.inputBlockNumberFormatter(blockParams.fromBlock)
 
         this.options.requestManager.send({
             method: 'eth_getLogs',
