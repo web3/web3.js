@@ -41,3 +41,5 @@ Contents:
     web3-utils
     web3-admin
 
+
+Special thanks to `Netlify <https://www.netlify.com/>`_ for providing build and deploy services for our end-to-end integration tests.
