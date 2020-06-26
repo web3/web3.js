@@ -398,8 +398,18 @@ describe('transaction and message signing [ @E2E ]', function() {
         this.timeout(10000);
 
         const password = "qwerty";
+        const addressFromWallet = wallet[0].address;
+
         const keystore = wallet.encrypt(password);
+
+        // Wallet created w/ 10 accounts in before block
+        assert.equal(keystore.length, 10);
+
         wallet.decrypt(keystore, password);
+        assert.equal(wallet.length, 10);
+
+        const addressFromKeystore = wallet[0].address;
+        assert.equal(addressFromKeystore, addressFromWallet);
     });
 });
 

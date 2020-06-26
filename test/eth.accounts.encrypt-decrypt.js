@@ -115,114 +115,136 @@ var staticTests = [
 
 describe("eth", function () {
     describe("accounts", function () {
+        runTests();
+    });
 
-        tests.forEach(function (test, i) {
-            it("encrypt eth.account, and compare to ethers wallet", async () => {
-                var ethAccounts = new Accounts();
-
-                // create account
-                var acc = ethAccounts.create();
-
-                // create ethers wallet
-                var ethWall = new ethers.Wallet(acc.privateKey);
-
-                // compare addresses and private keys
-                assert.equal(acc.address, ethWall.address);
-                assert.equal(acc.privateKey, ethWall.privateKey);
-
-                var encrypt = acc.encrypt(
-                    pw,
-                    {n: n, r: r, p: p,
-                     salt: salt, iv: iv, uuid: uuid}
-                );
-
-                var ethWallEncrypt = JSON.parse((await ethWall.encrypt(
-                    pw,
-                    {scrypt: {N: n, r: r, p: p},
-                     salt: '0x' + salt, iv: '0x' + iv.toString('hex'),
-                     uuid: '0x' + uuid.toString('hex')}
-                )).toLowerCase());
-
-                assert.deepEqual(encrypt, ethWallEncrypt);
-            });
-
-            it("encrypt eth.account, and decrypt with ethers wallet", async () => {
-                var ethAccounts = new Accounts();
-
-                // create account
-                var acc = ethAccounts.create();
-                var encrypt = acc.encrypt(pw, {n: n});
-
-                // create ethers wallet
-                var ethWall = await ethers.Wallet.fromEncryptedJson(JSON.stringify(encrypt), pw);
-
-                // compare addresses and private keys
-                assert.equal(acc.address, ethWall.address);
-                assert.equal(acc.privateKey, ethWall.privateKey);
-            });
-
-            it("encrypt ethers wallet, and decrypt with eth.account", async () => {
-                var ethAccounts = new Accounts();
-
-                // create ethers wallet
-                var ethWall = ethers.Wallet.createRandom();
-                var encrypt = await ethWall.encrypt(pw, {scrypt: {N: n}});
-
-                // create account using encrypted json (nonStrict)
-                var acc = ethAccounts.decrypt(encrypt, pw, true);
-
-                // compare addresses and private keys
-                assert.equal(acc.address, ethWall.address);
-                assert.equal(acc.privateKey, ethWall.privateKey);
-            });
-
-            it("decrypt static signature using ethers wallet and eth.account and compare", async () => {
-                var ethAccounts = new Accounts();
-
-                var encrypt = { version: 3,
-                    id: '6dac4ae5-7604-498e-a2a2-e86cfb289d0c',
-                    address: '143f8913e0417997304fc179b531ff4cb9cab582',
-                    crypto:
-                        { ciphertext: '8b20d7797fee1c36ec2fff176e1778170745794ad2f124862f7f4bfc028daa27',
-                            cipherparams: { iv: 'c6170befc885c940e0d0553f3ba01c6a' },
-                            cipher: 'aes-128-ctr',
-                            kdf: 'scrypt',
-                            kdfparams:
-                                { dklen: 32,
-                                    salt: 'd78584e30aaf56781b4432116b1de9b1560b3ca6f4624624c14fb6e6d5638a48',
-                                    n: 256,
-                                    r: 8,
-                                    p: 1 },
-                            mac: '23d4497c779a6bc421f5cc54358309228389597f594448c5c900ad747f97401b' } };
-
-                var acc = ethAccounts.decrypt(encrypt, pw);
-                var ethWall = await ethers.Wallet.fromEncryptedJson(JSON.stringify(encrypt), pw);
-
-                // compare addresses
-                assert.equal(acc.address, ethWall.address);
-                assert.equal(web3.utils.toChecksumAddress('0x143f8913e0417997304fc179b531ff4cb9cab582'), acc.address);
-                assert.equal(web3.utils.toChecksumAddress('0x143f8913e0417997304fc179b531ff4cb9cab582'), ethWall.address);
-                assert.equal(ethers.utils.getAddress('0x143f8913e0417997304fc179b531ff4cb9cab582'), acc.address);
-                assert.equal(ethers.utils.getAddress('0x143f8913e0417997304fc179b531ff4cb9cab582'), ethWall.address);
-
-                // compare private keys
-                assert.equal(acc.privateKey, ethWall.privateKey);
-            });
+    // Verify that `Buffer` in web3-eth-accounts is backwards
+    // compatible with a deprecated node Buffer substitute injected into
+    // builds by webpack (and React).
+    describe("with feross/buffer@4.9.1", function(){
+        before(function(){
+            original_Buffer = global.Buffer;
+            global.Buffer = require('buffer/').Buffer;
         });
 
-        staticTests.forEach(function (test, i) {
-            it("decrypt staticTests and compare to private key", function() {
-                // disable the test timeout
-                this.timeout(0);
+        describe("accounts", function(){
+            runTests();
+        });
 
-                var ethAccounts = new Accounts();
-
-                // create account
-                var acc = ethAccounts.decrypt(test.json, test.password);
-
-                // compare addresses
-                assert.equal(acc.privateKey, '0x'+ test.priv);
-            });
+        after(function(){
+            global.Buffer = original_Buffer;
         });
     });
 });
+
+function runTests(){
+    tests.forEach(function (test, i) {
+        it("encrypt eth.account, and compare to ethers wallet", async () => {
+            var ethAccounts = new Accounts();
+
+            // create account
+            var acc = ethAccounts.create();
+
+            // create ethers wallet
+            var ethWall = new ethers.Wallet(acc.privateKey);
+
+            // compare addresses and private keys
+            assert.equal(acc.address, ethWall.address);
+            assert.equal(acc.privateKey, ethWall.privateKey);
+
+            var encrypt = acc.encrypt(
+                pw,
+                {n: n, r: r, p: p,
+                 salt: salt, iv: iv, uuid: uuid}
+            );
+
+            var ethWallEncrypt = JSON.parse((await ethWall.encrypt(
+                pw,
+                {scrypt: {N: n, r: r, p: p},
+                 salt: '0x' + salt, iv: '0x' + iv.toString('hex'),
+                 uuid: '0x' + uuid.toString('hex')}
+            )).toLowerCase());
+
+            assert.deepEqual(encrypt, ethWallEncrypt);
+        });
+
+        it("encrypt eth.account, and decrypt with ethers wallet", async () => {
+            var ethAccounts = new Accounts();
+
+            // create account
+            var acc = ethAccounts.create();
+            var encrypt = acc.encrypt(pw, {n: n});
+
+            // create ethers wallet
+            var ethWall = await ethers.Wallet.fromEncryptedJson(JSON.stringify(encrypt), pw);
+
+            // compare addresses and private keys
+            assert.equal(acc.address, ethWall.address);
+            assert.equal(acc.privateKey, ethWall.privateKey);
+        });
+
+        it("encrypt ethers wallet, and decrypt with eth.account", async () => {
+            var ethAccounts = new Accounts();
+
+            // create ethers wallet
+            var ethWall = ethers.Wallet.createRandom();
+            var encrypt = await ethWall.encrypt(pw, {scrypt: {N: n}});
+
+            // create account using encrypted json (nonStrict)
+            var acc = ethAccounts.decrypt(encrypt, pw, true);
+
+            // compare addresses and private keys
+            assert.equal(acc.address, ethWall.address);
+            assert.equal(acc.privateKey, ethWall.privateKey);
+        });
+
+        it("decrypt static signature using ethers wallet and eth.account and compare", async () => {
+            var ethAccounts = new Accounts();
+
+            var encrypt = { version: 3,
+                id: '6dac4ae5-7604-498e-a2a2-e86cfb289d0c',
+                address: '143f8913e0417997304fc179b531ff4cb9cab582',
+                crypto:
+                    { ciphertext: '8b20d7797fee1c36ec2fff176e1778170745794ad2f124862f7f4bfc028daa27',
+                        cipherparams: { iv: 'c6170befc885c940e0d0553f3ba01c6a' },
+                        cipher: 'aes-128-ctr',
+                        kdf: 'scrypt',
+                        kdfparams:
+                            { dklen: 32,
+                                salt: 'd78584e30aaf56781b4432116b1de9b1560b3ca6f4624624c14fb6e6d5638a48',
+                                n: 256,
+                                r: 8,
+                                p: 1 },
+                        mac: '23d4497c779a6bc421f5cc54358309228389597f594448c5c900ad747f97401b' } };
+
+            var acc = ethAccounts.decrypt(encrypt, pw);
+            var ethWall = await ethers.Wallet.fromEncryptedJson(JSON.stringify(encrypt), pw);
+
+            // compare addresses
+            assert.equal(acc.address, ethWall.address);
+            assert.equal(web3.utils.toChecksumAddress('0x143f8913e0417997304fc179b531ff4cb9cab582'), acc.address);
+            assert.equal(web3.utils.toChecksumAddress('0x143f8913e0417997304fc179b531ff4cb9cab582'), ethWall.address);
+            assert.equal(ethers.utils.getAddress('0x143f8913e0417997304fc179b531ff4cb9cab582'), acc.address);
+            assert.equal(ethers.utils.getAddress('0x143f8913e0417997304fc179b531ff4cb9cab582'), ethWall.address);
+
+            // compare private keys
+            assert.equal(acc.privateKey, ethWall.privateKey);
+        });
+    });
+
+    staticTests.forEach(function (test, i) {
+        it("decrypt staticTests and compare to private key", function() {
+            // disable the test timeout
+            this.timeout(0);
+
+            var ethAccounts = new Accounts();
+
+            // create account
+            var acc = ethAccounts.decrypt(test.json, test.password);
+
+            // compare addresses
+            assert.equal(acc.privateKey, '0x'+ test.priv);
+        });
+    });
+};
+
