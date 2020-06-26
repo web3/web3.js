@@ -140,7 +140,6 @@ var tests = [{
         narrative: 'Hello!%!',
         __length__: 4
     }
-    //
 },{
     params: [[
         {
