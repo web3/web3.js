@@ -15,7 +15,7 @@ Please read the [documentation][docs] for more.
 
 ## Installation
 
-### Node
+### Node.js
 
 ```bash
 npm install web3
