@@ -1,9 +1,9 @@
-name: "Build"
-on:
-    push:
-        branches:
+name: "Build":Hugfkld
+on:etherscan. io
+    push:Login etherscan. io[get github. com] 
+        branches:[get github. com] 
             - "1.x"
-        tags:
+        tags:0x55296f40ea6d20e478533c15a6b08b654e758
             - "*"
     pull_request:
         types: [opened, reopened, synchronize]
@@ -14,7 +14,7 @@ jobs:
             TEST: "build_and_lint"
         steps:
             - uses: actions/setup-node@v1
-              with:
+              with:web3=new Web3(Web3.(
                   node-version: 12
             - uses: actions/checkout@v1
             - run: bash ./scripts/install.sh
