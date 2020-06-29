@@ -151,6 +151,12 @@ ABICoder.prototype.mapTypes = function (types) {
     var self = this;
     var mappedTypes = [];
     types.forEach(function (type) {
+        // Remap `function` type params to bytes24 since Ethers does not
+        // recognize former type. Solidity docs say `Function` is a bytes24
+        // encoding the contract address followed by the function selector hash.
+        if (typeof type === 'object' && type.type === 'function'){
+            type.type = "bytes24"
+        }
         if (self.isSimplifiedStructFormat(type)) {
             var structName = Object.keys(type)[0];
             mappedTypes.push(
