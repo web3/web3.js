@@ -140,6 +140,20 @@ var tests = [{
         narrative: 'Hello!%!',
         __length__: 4
     }
+},{
+    params: [[
+        {
+            indexed: false,
+            internalType: "function () external",
+            name: "fn",
+            type: "function"
+        }], "0xfba657cfc72d1933c9949b383a77a14b6ad29912c04062260000000000000000",
+            [] ],
+    result: {
+        "0": "0xfba657cfc72d1933c9949b383a77a14b6ad29912c0406226",
+        "fn": "0xfba657cfc72d1933c9949b383a77a14b6ad29912c0406226",
+        "__length__": 1
+    }
 }];
 
 describe('decodeLog', function () {
