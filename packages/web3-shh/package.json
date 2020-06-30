@@ -21,6 +21,6 @@
     "devDependencies": {
         "@types/node": "^12.12.5",
         "dtslint": "^3.4.1",
-        "typescript": "latest"
+        "typescript": "^3.9.5"
     }
 }
