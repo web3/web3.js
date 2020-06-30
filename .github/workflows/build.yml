@@ -75,8 +75,6 @@ jobs:
         env:
             TEST: ${{ matrix.testCmd }}
             CI: true
-            DISPLAY: :99.0
-            PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
             BUNDLESIZE_GITHUB_TOKEN: ${{ secrets.BUNDLESIZE_GITHUB_TOKEN }}
         steps:
             - uses: actions/setup-node@v1

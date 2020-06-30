@@ -1,9 +1,5 @@
 process.env.MOZ_HEADLESS = 1;
 
-if (!process.env.GITHUB_ACTION) {
-    process.env.CHROME_BIN = require('puppeteer').executablePath();
-}
-
 // BROWSER_BUNDLE_TEST is set for an un-browserified check that both bundles load correctly.
 // BROWSER_BUNDLE_TEST is not set for the e2e unit tests, which check that bundle internals are ok.
 function getTestFiles(){
