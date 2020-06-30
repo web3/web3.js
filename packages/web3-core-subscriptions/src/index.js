@@ -59,7 +59,7 @@ Subscriptions.prototype.buildCall = function() {
         }
 
         var subscription = new Subscription({
-            subscription: _this.subscriptions[arguments[0]],
+            subscription: _this.subscriptions[arguments[0]] || {}, // Subscript might not exist
             requestManager: _this.requestManager,
             type: _this.type
         });

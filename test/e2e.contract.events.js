@@ -13,6 +13,7 @@ describe('contract.events [ @E2E ]', function() {
     var accounts;
     var basic;
     var instance;
+    var port;
 
     var basicOptions = {
         data: Basic.bytecode,
@@ -20,8 +21,8 @@ describe('contract.events [ @E2E ]', function() {
         gas: 4000000
     };
 
-    before(async function(){
-        var port = utils.getWebsocketPort();
+    beforeEach(async function(){
+        port = utils.getWebsocketPort();
 
         web3 = new Web3('ws://localhost:' + port);
         accounts = await web3.eth.getAccounts();
@@ -57,8 +58,7 @@ describe('contract.events [ @E2E ]', function() {
             instance
                 .events
                 .BasicEvent({
-                    fromBlock: 0,
-                    toBlock: 'latest'
+                    fromBlock: 0
                 })
                 .on('data', function(event) {
                     assert.equal(event.event, 'BasicEvent');
@@ -70,6 +70,165 @@ describe('contract.events [ @E2E ]', function() {
                 .methods
                 .firesEvent(accounts[0], 1)
                 .send({from: accounts[0]});
+        });
+    });
+
+
+    it('works also when toBlock is passed to contract.events.<eventName>', function () {
+        const originalWarn = console.warn
+        let message
+        console.warn = function(str) { message = str }
+
+        return new Promise(async resolve => {
+            instance
+                .events
+                .BasicEvent({
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                }).on('data', function(event) {
+                    assert.equal(event.event, 'BasicEvent');
+                    this.removeAllListeners();
+                    resolve();
+                });
+            
+            assert.equal(message, 'Invalid option: toBlock. Use getPastEvents for specific range.');
+            console.warn = originalWarn
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({from: accounts[0]});
+        });
+    });
+
+    it('works also when toBlock is passed to contract.events.allEvents', function () {
+        const originalWarn = console.warn
+        let message
+        console.warn = function(str) { message = str }
+        
+        return new Promise(async (resolve, reject) => {
+            instance
+                .events
+                .allEvents({
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                }).on('data', function(event) {
+                    this.removeAllListeners();
+                    resolve();
+                });
+
+            assert.equal(message, 'Invalid option: toBlock. Use getPastEvents for specific range.');
+            console.warn = originalWarn
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({ from: accounts[0] });
+        });
+    });
+
+    it('should not hear the error handler when connection.closed() called', function(){
+        this.timeout(15000);
+
+        let failed = false;
+
+        return new Promise(async (resolve, reject) => {
+            instance
+                .events
+                .BasicEvent({
+                    fromBlock: 0
+                })
+                .on('error', function(err) {
+                    failed = true;
+                    this.removeAllListeners();
+                    reject(new Error('err listener should not hear connection.close'));
+                });
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({from: accounts[0]});
+
+            web3.currentProvider.connection.close();
+
+            // Resolve only if we haven't already rejected
+            setTimeout(() => { if(!failed) resolve() }, 2500)
+        });
+    });
+
+    it('should not hear the error handler when provider.disconnect() called', function(){
+        this.timeout(15000);
+
+        let failed = false;
+
+        return new Promise(async (resolve, reject) => {
+            instance
+                .events
+                .BasicEvent({
+                    fromBlock: 0
+                })
+                .on('error', function(err) {
+                    failed = true;
+                    this.removeAllListeners();
+                    reject(new Error('err listener should not hear provider.disconnect'));
+                });
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({from: accounts[0]});
+
+            web3.currentProvider.disconnect();
+
+            // Resolve only if we haven't already rejected
+            setTimeout(() => { if(!failed) resolve() }, 2500)
+        });
+    });
+
+    // Regression test for a race-condition where a fresh web3 instance
+    // subscribing to past events would have its call parameters deleted while it
+    // made initial Websocket handshake and return an incorrect response.
+    it('can immediately listen for events in the past', async function(){
+        this.timeout(15000);
+
+        const first = await instance
+            .methods
+            .firesEvent(accounts[0], 1)
+            .send({from: accounts[0]});
+
+        const second = await instance
+            .methods
+            .firesEvent(accounts[0], 1)
+            .send({from: accounts[0]});
+
+        // Go forward one block...
+        await utils.mine(web3, accounts[0]);
+        const latestBlock = await web3.eth.getBlockNumber();
+
+        assert(first.blockNumber < latestBlock);
+        assert(second.blockNumber < latestBlock);
+
+        // Re-instantiate web3 & instance to simulate
+        // subscribing to past events as first request
+        web3 = new Web3('ws://localhost:' + port);
+        const newInstance = new web3.eth.Contract(Basic.abi, instance.options.address);
+
+        let counter = 0;
+        await new Promise(async resolve => {
+            newInstance
+                .events
+                .BasicEvent({
+                    fromBlock: 0
+                })
+                .on('data', function(event) {
+                    counter++;
+                    assert(event.blockNumber < latestBlock);
+
+                    if (counter === 2){
+                        this.removeAllListeners();
+                        resolve();
+                    }
+                });
         });
     });
 
@@ -171,5 +330,132 @@ describe('contract.events [ @E2E ]', function() {
         assert.equal(childEvents[1].event, 'Identical');
         assert.equal(typeof childEvents[1].returnValues.childA, 'string');
     });
-});
 
+    // This test only runs against the ganache client launched in scripts/e2e.ganache.sh
+    // It's too complicated for geth auto-mining (we'd have to poll for blocks)
+    // and geth instamine's websockets connection is too fragile for the tests in this file.
+    it('backfills missed events when auto-reconnecting', function(){
+        if(!process.env.GANACHE) return;
+        this.timeout(10000);
+
+        let counter = 0;
+        const acc = accounts[0];
+
+        // Create a parallel connection & contract instance
+        // so we can trigger events while the WS provider is down...
+        const _web3 = new Web3('http://localhost:8545');
+        const shadow = new _web3.eth.Contract(Basic.abi, instance.options.address);
+
+        // Create a reconnect-enabled WS provider and set the default Web3 with it.
+        const provider = new Web3.providers.WebsocketProvider(
+            'ws://localhost:' + port,
+            {
+                reconnect: {
+                    auto: true,
+                    delay: 4000,
+                    maxAttempts: 1
+                }
+            }
+        );
+
+        web3.setProvider(provider);
+
+        return new Promise(async function (resolve) {
+            instance
+                .events
+                .BasicEvent()
+                .on('data', function(event) {
+                    counter++;
+
+                    if (counter === 2){
+                        assert(finalBlock === event.blockNumber + 2);
+                        this.removeAllListeners();
+                        resolve();
+                    }
+                });
+
+            // First: a regular event
+            const firstReceipt = await instance.methods.firesEvent(acc, 1).send({from: acc});
+
+            // Close connection and let it settle...
+            provider.connection.close(4000);
+            await utils.waitSeconds(1);
+
+            // Submit another event on parallel connection and mine forward 2 blocks
+            const secondReceipt = await shadow.methods.firesEvent(acc, 1).send({from: acc});
+            utils.mine(_web3, acc);
+            utils.mine(_web3, acc);
+
+            const finalBlock = await _web3.eth.getBlockNumber();
+            assert(finalBlock === secondReceipt.blockNumber + 2)
+        });
+    });
+
+    it('when event param is a simple string', async function(){
+        const msg = 'simplestring';
+
+        await instance
+            .methods
+            .firesStringEvent(msg)
+            .send({from: accounts[0]});
+
+        const events = await instance.getPastEvents({
+            fromBlock: 0,
+            toBlock: 'latest'
+        });
+
+        assert.equal(events[0].returnValues.str, msg)
+    });
+
+    // Malformed utf-8 sequence in the following two tests comes from 
+    // https://www.w3.org/2001/06/utf-8-wrong/UTF-8-test.html
+    // Section: 3.1.8 
+    it('when an invalid utf-8 string is passed in JS as param to emit', async function(){
+        const msg = '�������';
+
+        await instance
+            .methods
+            .firesStringEvent(msg)
+            .send({from: accounts[0]});
+
+        const events = await instance.getPastEvents({
+            fromBlock: 0,
+            toBlock: 'latest'
+        });
+
+        assert.equal(msg, events[0].returnValues.str)
+    });
+
+    it('when Solidity emits an invalid utf-8 string', async function(){
+        await instance
+            .methods
+            .firesIllegalUtf8StringEvent()
+            .send({from: accounts[0]});
+
+        const events = await instance.getPastEvents({
+            fromBlock: 0,
+            toBlock: 'latest'
+        });
+
+        assert.equal('�������', events[0].returnValues.str)
+    });
+
+    it('when wide unicode characters are passed in JS as param to emit', async function(){
+        const msg = '💐';
+
+        await instance
+            .methods
+            .firesStringEvent(msg)
+            .send({from: accounts[0]});
+
+        const events = await instance.getPastEvents({
+            fromBlock: 0,
+            toBlock: 'latest'
+        });
+
+        assert(msg.length > 'a'.length);
+        assert.equal(msg, events[0].returnValues.str)
+    })
+
+
+});

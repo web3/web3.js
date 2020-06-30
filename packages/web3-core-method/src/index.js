@@ -30,6 +30,8 @@ var utils = require('web3-utils');
 var promiEvent = require('web3-core-promievent');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 
+var EthersTransactionUtils = require('@ethersproject/transactions');
+
 var Method = function Method(options) {
 
     if (!options.call || !options.name) {
@@ -235,6 +237,13 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             params: 2,
             inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter]
         }),
+        new Method({
+            name: 'getTransactionByHash',
+            call: 'eth_getTransactionByHash',
+            params: 1,
+            inputFormatter: [null],
+            outputFormatter: formatters.outputTransactionFormatter
+        }),
         new Subscriptions({
             name: 'subscribe',
             type: 'eth',
@@ -300,20 +309,24 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                         // been confirmed by the direct call to checkConfirmation needed
                         // for parity instant-seal
                         if (existingReceipt === undefined || confirmationCount !== 0) {
+                            // Get latest block to emit with confirmation
+                            var latestBlock = await _ethereumCall.getBlockByNumber('latest');
+                            var latestBlockHash = latestBlock ? latestBlock.hash : null;
+
                             if (isPolling) { // Check if actually a new block is existing on polling
                                 if (lastBlock) {
                                     block = await _ethereumCall.getBlockByNumber(lastBlock.number + 1);
                                     if (block) {
                                         lastBlock = block;
-                                        defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                        defer.eventEmitter.emit('confirmation', confirmationCount, receipt, latestBlockHash);
                                     }
                                 } else {
                                     block = await _ethereumCall.getBlockByNumber(receipt.blockNumber);
                                     lastBlock = block;
-                                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt, latestBlockHash);
                                 }
                             } else {
-                                defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                                defer.eventEmitter.emit('confirmation', confirmationCount, receipt, latestBlockHash);
                             }
                         }
 
@@ -421,10 +434,31 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                 try {
                                     var revertMessage = null;
 
-                                    if (method.handleRevert && method.call === 'eth_sendTransaction') {
+                                    if ( method.handleRevert &&
+                                        (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'))
+                                    {
+                                        var txReplayOptions = payload.params[0];
+
+                                        // If send was raw, fetch the transaction and reconstitute the
+                                        // original params so they can be replayed with `eth_call`
+                                        if (method.call === 'eth_sendRawTransaction'){
+                                            var rawTransactionHex = payload.params[0];
+
+                                            var parsedTx = EthersTransactionUtils.parse(rawTransactionHex);
+
+                                            txReplayOptions = formatters.inputTransactionFormatter({
+                                                data: parsedTx.data,
+                                                to: parsedTx.to,
+                                                from: parsedTx.from,
+                                                gas: parsedTx.gasLimit.toHexString(),
+                                                gasPrice: parsedTx.gasPrice.toHexString(),
+                                                value: parsedTx.value.toHexString()
+                                            })
+                                        }
+
                                         // Get revert reason string with eth_call
                                         revertMessage = await method.getRevertReason(
-                                            payload.params[0],
+                                            txReplayOptions,
                                             receipt.blockNumber
                                         );
 
@@ -513,11 +547,21 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
     // start watching for confirmation depending on the support features of the provider
     var startWatching = function (existingReceipt) {
-        // if provider allows PUB/SUB
-        if (_.isFunction(this.requestManager.provider.on)) {
-            _ethereumCall.subscribe('newBlockHeaders', checkConfirmation.bind(null, existingReceipt, false));
-        } else {
+        const startInterval = () => {
             intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
+        }
+
+        if (!this.requestManager.provider.on) {
+            startInterval()
+        } else {
+            _ethereumCall.subscribe('newBlockHeaders', function (err, blockHeader, sub) {
+                if (err || !blockHeader) {
+                    // fall back to polling
+                    startInterval()
+                } else {
+                    checkConfirmation(existingReceipt, false, err, blockHeader, sub);
+                }
+            })
         }
     }.bind(this);
 
@@ -574,22 +618,35 @@ Method.prototype.buildCall = function () {
 
         // CALLBACK function
         var sendTxCallback = function (err, result) {
-            if (method.handleRevert && !err && isCall && (method.isRevertReasonString(result) && method.abiCoder)) {
-                var reason = method.abiCoder.decodeParameter('string', '0x' + result.substring(10));
-                var signature = 'Error(String)';
+            if (method.handleRevert && isCall && method.abiCoder) {
+                var reasonData;
 
-                utils._fireError(
-                    errors.RevertInstructionError(reason, signature),
-                    defer.eventEmitter,
-                    defer.reject,
-                    payload.callback,
-                    {
-                        reason: reason,
-                        signature: signature
-                    }
-                );
+                // Ganache / Geth <= 1.9.13 return the reason data as a successful eth_call response
+                // Geth >= 1.9.15 attaches the reason data to an error object.
+                // Geth 1.9.14 is missing revert reason (https://github.com/ethereum/web3.js/issues/3520)
+                if (!err && method.isRevertReasonString(result)){
+                    reasonData = result.substring(10);
+                } else if (err && err.data){
+                    reasonData = err.data.substring(10);
+                }
 
-                return;
+                if (reasonData){
+                    var reason = method.abiCoder.decodeParameter('string', '0x' + reasonData);
+                    var signature = 'Error(String)';
+
+                    utils._fireError(
+                        errors.RevertInstructionError(reason, signature),
+                        defer.eventEmitter,
+                        defer.reject,
+                        payload.callback,
+                        {
+                            reason: reason,
+                            signature: signature
+                        }
+                    );
+
+                    return;
+                }
             }
 
             try {
@@ -702,6 +759,7 @@ Method.prototype.buildCall = function () {
                 }
             }
 
+
             return method.requestManager.send(payload, sendTxCallback);
         };
 
@@ -719,13 +777,31 @@ Method.prototype.buildCall = function () {
                 if (gasPrice) {
                     payload.params[0].gasPrice = gasPrice;
                 }
+
+                if (isSendTx) {
+                    setTimeout(() => {
+                        defer.eventEmitter.emit('sending', payload);
+                    }, 0);
+                }
+
                 sendRequest(payload, method);
             });
 
         } else {
+            if (isSendTx) {
+                setTimeout(() => {
+                    defer.eventEmitter.emit('sending', payload);
+                }, 0);
+            }
+
             sendRequest(payload, method);
         }
 
+        if (isSendTx) {
+            setTimeout(() => {
+                defer.eventEmitter.emit('sent', payload);
+            }, 0);
+        }
 
         return defer.eventEmitter;
     };

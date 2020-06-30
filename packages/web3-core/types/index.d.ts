@@ -24,7 +24,9 @@ import {
     HttpProviderOptions,
     IpcProviderBase,
     WebsocketProviderBase,
-    WebsocketProviderOptions
+    WebsocketProviderOptions,
+    JsonRpcPayload,
+    JsonRpcResponse
 } from 'web3-core-helpers';
 import { Method } from 'web3-core-method';
 import BN = require('bn.js');
@@ -58,8 +60,18 @@ export interface Providers {
 
 export interface PromiEvent<T> extends Promise<T> {
     once(
+        type: 'sending',
+        handler: (payload: object) => void
+    ): PromiEvent<T>;
+
+    once(
+        type: 'sent',
+        handler: (payload: object) => void
+    ): PromiEvent<T>;
+
+    once(
         type: 'transactionHash',
-        handler: (receipt: string) => void
+        handler: (transactionHash: string) => void
     ): PromiEvent<T>;
 
     once(
@@ -69,7 +81,7 @@ export interface PromiEvent<T> extends Promise<T> {
 
     once(
         type: 'confirmation',
-        handler: (confNumber: number, receipt: TransactionReceipt) => void
+        handler: (confirmationNumber: number, receipt: TransactionReceipt, latestBlockHash?: string) => void
     ): PromiEvent<T>;
 
     once(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
@@ -91,7 +103,7 @@ export interface PromiEvent<T> extends Promise<T> {
 
     on(
         type: 'confirmation',
-        handler: (confNumber: number, receipt: TransactionReceipt) => void
+        handler: (confNumber: number, receipt: TransactionReceipt, latestBlockHash?: string) => void
     ): PromiEvent<T>;
 
     on(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
@@ -394,8 +406,6 @@ export class IpcProvider extends IpcProviderBase {
 
 export class WebsocketProvider extends WebsocketProviderBase {
     constructor(host: string, options?: WebsocketProviderOptions);
-
-    isConnecting(): boolean;
 }
 
 export interface PastLogsOptions extends LogsOptions {
@@ -410,9 +420,23 @@ export interface LogsOptions {
 
 export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest' | 'genesis';
 
+export interface RequestArguments {
+    method: string;
+    params?: any;
+    [key: string]: any;
+}
+
+export interface AbstractProvider {
+    sendAsync(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
+    send?(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
+    request?(args: RequestArguments): Promise<any>;
+    connected?: boolean;
+  }
+
 export type provider =
     | HttpProvider
     | IpcProvider
     | WebsocketProvider
+    | AbstractProvider
     | string
     | null;

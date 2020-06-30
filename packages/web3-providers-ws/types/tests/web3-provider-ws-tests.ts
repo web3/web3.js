@@ -33,28 +33,25 @@ const options: WebsocketProviderOptions = {
 const wsProvider = new WebsocketProvider('ws://localhost:8545', options);
 
 // $ExpectType boolean
-wsProvider.isConnecting();
-
-// $ExpectType boolean
 wsProvider.connected;
 
 // $ExpectType void
 wsProvider.disconnect(100, 'reason');
 
-// $ExpectType any
-wsProvider.responseCallbacks;
+// $ExpectType void
+wsProvider.reconnect();
 
-// $ExpectType any
-wsProvider.notificationCallbacks;
+// $ExpectType Map<string, RequestItem>
+wsProvider.requestQueue;
+
+// $ExpectType Map<string, RequestItem>
+wsProvider.responseQueue;
 
 // $ExpectType any
 wsProvider.connection;
 
 // $ExpectType boolean
 wsProvider.connected;
-
-// $ExpectType void
-wsProvider.addDefaultEvents();
 
 // $ExpectType boolean
 wsProvider.supportsSubscriptions();

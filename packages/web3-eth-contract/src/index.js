@@ -56,21 +56,23 @@ var Contract = function Contract(jsonInterface, address, options) {
         args = Array.prototype.slice.call(arguments);
 
     if(!(this instanceof Contract)) {
-        throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
+        throw new Error('Please use the "new" keyword to instantiate a web3.eth.Contract() object!');
     }
 
-    // sets _requestManager
-    core.packageInit(this, [this.constructor.currentProvider]);
+    this.setProvider = function () {
+        core.packageInit(_this, arguments);
+
+        _this.clearSubscriptions = _this._requestManager.clearSubscriptions;
+    };
+
+    // sets _requestmanager
+    core.packageInit(this, [this.constructor]);
 
     this.clearSubscriptions = this._requestManager.clearSubscriptions;
 
-
-
     if(!jsonInterface || !(Array.isArray(jsonInterface))) {
-        throw new Error('You must provide the json interface of the contract when instantiating a contract object.');
+        throw errors.ContractMissingABIError();
     }
-
-
 
     // create the options object
     this.options = {};
@@ -298,6 +300,17 @@ var Contract = function Contract(jsonInterface, address, options) {
 
 };
 
+/**
+ * Sets the new provider, creates a new requestManager, registers the "data" listener on the provider and sets the
+ * accounts module for the Contract class.
+ *
+ * @method setProvider
+ *
+ * @param {string|provider} provider
+ * @param {Accounts} accounts
+ *
+ * @returns void
+ */
 Contract.setProvider = function(provider, accounts) {
     // Contract.currentProvider = provider;
     core.packageInit(this, [provider]);
@@ -329,7 +342,7 @@ Contract.prototype._getCallback = function getCallback(args) {
  */
 Contract.prototype._checkListener = function(type, event){
     if(event === type) {
-        throw new Error('The event "'+ type +'" is a reserved event name, you can\'t use it.');
+        throw errors.ContractReservedEventError(type);
     }
 };
 
@@ -523,6 +536,10 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
         if(!this._deployData)
             throw new Error('The contract has no contract data option set. This is necessary to append the constructor parameters.');
 
+        if(!this._deployData.startsWith('0x')) {
+            this._deployData = '0x' + this._deployData;
+        }
+
         return this._deployData + paramsABI;
 
     }
@@ -581,9 +598,12 @@ Contract.prototype.deploy = function(options, callback){
     options = this._getOrSetDefaultOptions(options);
 
 
-    // return error, if no "data" is specified
+    // throw error, if no "data" is specified
     if(!options.data) {
-        return utils._fireError(new Error('No "data" specified in neither the given options, nor the default options.'), null, null, callback);
+        if (typeof callback === 'function'){
+            return callback(errors.ContractMissingDeployDataError());
+        }
+        throw errors.ContractMissingDeployDataError();
     }
 
     var constructor = _.find(this.options.jsonInterface, function (method) {
@@ -627,11 +647,11 @@ Contract.prototype._generateEventOptions = function() {
         });
 
     if (!event) {
-        throw new Error('Event "' + eventName + '" doesn\'t exist in this contract.');
+        throw errors.ContractEventDoesNotExistError(eventName);
     }
 
     if (!utils.isAddress(this.options.address)) {
-        throw new Error('This contract object doesn\'t have address set yet, please set an address first.');
+        throw errors.ContractNoAddressDefinedError();
     }
 
     return {
@@ -668,7 +688,7 @@ Contract.prototype.once = function(event, options, callback) {
     callback = this._getCallback(args);
 
     if (!callback) {
-        throw new Error('Once requires a callback as the second parameter.');
+        throw errors.ContractOnceRequiresCallbackError();
     }
 
     // don't allow fromBlock
@@ -690,18 +710,24 @@ Contract.prototype.once = function(event, options, callback) {
  * Adds event listeners and creates a subscription.
  *
  * @method _on
+ *
  * @param {String} event
  * @param {Object} options
  * @param {Function} callback
+ *
  * @return {Object} the event subscription
  */
 Contract.prototype._on = function(){
     var subOptions = this._generateEventOptions.apply(this, arguments);
 
+    if (subOptions.params && subOptions.params.toBlock) {
+        delete subOptions.params.toBlock;
+        console.warn('Invalid option: toBlock. Use getPastEvents for specific range.');
+    }
 
     // prevent the event "newListener" and "removeListener" from being overwritten
-    this._checkListener('newListener', subOptions.event.name, subOptions.callback);
-    this._checkListener('removeListener', subOptions.event.name, subOptions.callback);
+    this._checkListener('newListener', subOptions.event.name);
+    this._checkListener('removeListener', subOptions.event.name);
 
     // TODO check if listener already exists? and reuse subscription if options are the same.
 
@@ -727,6 +753,7 @@ Contract.prototype._on = function(){
         type: 'eth',
         requestManager: this._requestManager
     });
+
     subscription.subscribe('logs', subOptions.params, subOptions.callback || function () {});
 
     return subscription;
@@ -832,7 +859,7 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
 
     // add contract address
     if(!this._deployData && !utils.isAddress(this._parent.options.address))
-        throw new Error('This contract object doesn\'t have address set yet, please set an address first.');
+        throw errors.ContractNoAddressDefinedError();
 
     if(!this._deployData)
         processedArgs.options.to = this._parent.options.address;
@@ -921,7 +948,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
 
             // return error, if no "from" is specified
             if(!utils.isAddress(args.options.from)) {
-                return utils._fireError(new Error('No "from" address specified in neither the given options, nor the default options.'), defer.eventEmitter, defer.reject, args.callback);
+                return utils._fireError(errors.ContractNoFromAddressDefinedError(), defer.eventEmitter, defer.reject, args.callback);
             }
 
             if (_.isBoolean(this._method.payable) && !this._method.payable && args.options.value && args.options.value > 0) {

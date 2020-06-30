@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # -----------------------------
-# Travis CI matrix job selector
+# CI matrix job selector
 # -----------------------------
 
 # Exit immediately on error
@@ -23,9 +23,8 @@ elif [ "$TEST" = "unit_and_e2e_clients" ]; then
   npm run test:e2e:ganache
   npm run test:e2e:geth:insta
   npm run test:e2e:geth:auto
-  npm run test:e2e:ens
   npm run test:unit
-  npm run coveralls
+  npm run cov:merge_reports
 
 elif [ "$TEST" = "e2e_browsers" ]; then
 
@@ -45,10 +44,6 @@ elif [ "$TEST" = "e2e_mosaic" ]; then
   npm run test:e2e:publish
   npm run test:e2e:mosaic
 
-elif [ "$TEST" = "e2e_ens" ]; then
-
-  npm run test:e2e:ens
-
 elif [ "$TEST" = "e2e_windows" ]; then
 
   bash ./scripts/e2e.npm.publish.sh
@@ -58,5 +53,10 @@ elif [ "$TEST" = "e2e_ganache" ]; then
 
   npm run test:e2e:publish
   npm run test:e2e:ganache:core
+
+elif [ "$TEST" = "e2e_gnosis_dex" ]; then
+
+  npm run test:e2e:publish
+  npm run test:e2e:gnosis:dex
 
 fi

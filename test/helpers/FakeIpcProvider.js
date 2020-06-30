@@ -31,6 +31,7 @@ var FakeIpcProvider = function IpcProvider() {
     this.error = [];
     this.validation = [];
     this.notificationCallbacks = [];
+    this.connected = true;
 };
 
 
@@ -65,6 +66,10 @@ FakeIpcProvider.prototype.on = function (type, callback) {
     if(type === 'data') {
         this.notificationCallbacks.push(callback);
     }
+};
+
+FakeIpcProvider.prototype.reset = function () {
+    this.notificationCallbacks = [];
 };
 
 FakeIpcProvider.prototype.getResponseOrError = function (type, payload) {

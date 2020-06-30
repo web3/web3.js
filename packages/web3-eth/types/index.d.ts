@@ -38,7 +38,6 @@ import {
     LogsOptions,
     PastLogsOptions
 } from 'web3-core';
-import {RevertInstructionError, TransactionRevertInstructionError} from 'web3-core-helpers';
 import {Subscription} from 'web3-core-subscriptions';
 import {AbiCoder} from 'web3-eth-abi';
 import {Accounts} from 'web3-eth-accounts';
@@ -88,6 +87,7 @@ export class Eth {
     transactionPollingTimeout: number;
     transactionConfirmationBlocks: number;
     transactionBlockTimeout: number;
+    handleRevert: boolean;
     readonly currentProvider: provider;
 
     setProvider(provider: provider): boolean;
@@ -211,7 +211,7 @@ export class Eth {
     getBlock(blockHashOrBlockNumber: BlockNumber | string): Promise<BlockTransactionString>;
     getBlock(
         blockHashOrBlockNumber: BlockNumber | string,
-        returnTransactionObjects: true
+        returnTransactionObjects: boolean
     ): Promise<BlockTransactionObject>;
     getBlock(
         blockHashOrBlockNumber: BlockNumber | string,
@@ -219,7 +219,7 @@ export class Eth {
     ): Promise<BlockTransactionString>;
     getBlock(
         blockHashOrBlockNumber: BlockNumber | string,
-        returnTransactionObjects: true,
+        returnTransactionObjects: boolean,
         callback?: (error: Error, block: BlockTransactionObject) => void
     ): Promise<BlockTransactionObject>;
 
@@ -240,7 +240,7 @@ export class Eth {
     getUncle(
         blockHashOrBlockNumber: BlockNumber | string,
         uncleIndex: number | string | BN,
-        returnTransactionObjects: true
+        returnTransactionObjects: boolean
     ): Promise<BlockTransactionObject>;
     getUncle(
         blockHashOrBlockNumber: BlockNumber | string,
@@ -250,7 +250,7 @@ export class Eth {
     getUncle(
         blockHashOrBlockNumber: BlockNumber | string,
         uncleIndex: number | string | BN,
-        returnTransactionObjects: true,
+        returnTransactionObjects: boolean,
         callback?: (error: Error, uncle: any) => void
     ): Promise<BlockTransactionObject>;
 
@@ -295,7 +295,7 @@ export class Eth {
     sendTransaction(
         transactionConfig: TransactionConfig,
         callback?: (error: Error, hash: string) => void
-    ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
+    ): PromiEvent<TransactionReceipt>;
 
     sendSignedTransaction(
         signedTransactionData: string,
@@ -328,20 +328,20 @@ export class Eth {
         ) => void
     ): Promise<RLPEncodedTransaction>;
 
-    call(transactionConfig: TransactionConfig): Promise<string | RevertInstructionError>;
+    call(transactionConfig: TransactionConfig): Promise<string>;
     call(
         transactionConfig: TransactionConfig,
         defaultBlock?: BlockNumber
-    ): Promise<string | RevertInstructionError>;
+    ): Promise<string>;
     call(
         transactionConfig: TransactionConfig,
         callback?: (error: Error, data: string) => void
-    ): Promise<string | RevertInstructionError>;
+    ): Promise<string>;
     call(
         transactionConfig: TransactionConfig,
         defaultBlock: BlockNumber,
         callback: (error: Error, data: string) => void
-    ): Promise<string | RevertInstructionError>;
+    ): Promise<string>;
 
     estimateGas(
         transactionConfig: TransactionConfig,

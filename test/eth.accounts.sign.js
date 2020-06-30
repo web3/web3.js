@@ -145,4 +145,15 @@ describe("eth", function () {
             assert(err.message.includes('Private key must be 32 bytes long'));
         }
     });
+
+    it('should sign data correctly using an emoji character', function() {
+        const message = '🤗'
+        const ethAccounts = new Accounts();
+
+        const hashMessage = ethAccounts.hashMessage(message)
+        assert.equal(hashMessage, '0x716ce69c5d2d629c168bc02e24a961456bdc5a362d366119305aea73978a0332')
+
+        const hashMessageHex = ethAccounts.hashMessage(web3.utils.utf8ToHex(message))
+        assert.equal(hashMessageHex, '0x716ce69c5d2d629c168bc02e24a961456bdc5a362d366119305aea73978a0332')
+    });
 });
