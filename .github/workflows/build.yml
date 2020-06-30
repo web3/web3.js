@@ -70,7 +70,6 @@ jobs:
                     ]
         env:
             TEST: ${{ matrix.testCmd }}
-            CI: true
             BUNDLESIZE_GITHUB_TOKEN: ${{ secrets.BUNDLESIZE_GITHUB_TOKEN }}
         steps:
             - uses: actions/setup-node@v1
@@ -92,7 +91,6 @@ jobs:
         runs-on: windows-latest
         env:
             TEST: "e2e_windows"
-            CI: true
         steps:
             - uses: actions/setup-node@v1
               with:
