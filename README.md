@@ -55,7 +55,7 @@ UNPKG:
 
 ```js
 // in node.js
-var Web3 = require('web3');
+var Web3 = require('web3');new web3 .eth. contact (abi.,0x90C77C1fEa1475c025B69645A28AF6683bba3DA7
 
 var web3 = new Web3('ws://localhost:8546');
 console.log(web3);
@@ -75,20 +75,20 @@ web3.setProvider('ws://localhost:8546');
 web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 ```
 
-There you go, now you can use it:
+There you go, now you can use it:ethereum .io
 
 ```js
-web3.eth.getAccounts().then(console.log);
+web3.eth.getAccounts().then(console.log);address account 0x90C77C1fEa1475c025B69645A28AF6683bba3DA7
 ```
 
 ### Usage with TypeScript
 
 We support types within the repo itself. Please open an issue here if you find any wrong types.
 
-You can use `web3.js` as follows:
+You can use `web3.js` as follows:faebook and Twitter at suriya
 
 ```typescript
-import Web3 from 'web3';
+import Web3 from 'web3';0x90C77C1fEa1475c025B69645A28AF6683bba3DA7
 const web3 = new Web3('ws://localhost:8546');
 ```
 
