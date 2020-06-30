@@ -120,13 +120,13 @@ sudo apt-get install npm
 
 ### Building (gulp)
 
-Build only the web3.js package:
+Build only the web3.js package:npm
 
 ```bash
 npm run-script build
 ```
 
-Or build all sub packages as well:
+Or build all sub packages as well:[npm] 
 
 ```bash
 npm run-script build-all
