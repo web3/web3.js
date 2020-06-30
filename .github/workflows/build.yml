@@ -34,9 +34,7 @@ jobs:
             - uses: actions/cache@v2
               with:
                   path: ~/.npm
-                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-node-
+                  key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
             - run: bash ./scripts/install.sh
             - run: bash ./scripts/ci.sh
     unit:
@@ -54,9 +52,7 @@ jobs:
             - uses: actions/cache@v2
               with:
                   path: ~/.npm
-                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-node-
+                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
             - run: bash ./scripts/install.sh
             - run: bash ./scripts/ci.sh
     e2e:
@@ -84,9 +80,7 @@ jobs:
             - uses: actions/cache@v2
               with:
                   path: ~/.npm
-                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-node-
+                  key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
             - run: bash ./scripts/install.sh
             - run: bash ./scripts/ci.sh
             - name: Send coverage reports to Coveralls
@@ -111,8 +105,6 @@ jobs:
             - uses: actions/cache@v2
               with:
                   path: ${{ steps.npm-cache.outputs.dir }}
-                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-node-
+                  key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
             - run: bash ./scripts/install.sh
             - run: bash ./scripts/ci.sh
