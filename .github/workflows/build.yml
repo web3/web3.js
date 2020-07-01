@@ -4,23 +4,11 @@ on:
         branches:
             - "1.x"
         tags:
-            - "*"
-        paths-ignore:
-            - "**.md"
-            - "**.rst"
-            - ".editorconfig"
-            - ".gitignore"
-            - ".npmignore"
-            - "LICENSE"
+            - v1*
     pull_request:
+        branches:
+            - "1.x"
         types: [opened, reopened, synchronize]
-        paths-ignore:
-            - "**.md"
-            - "**.rst"
-            - ".editorconfig"
-            - ".gitignore"
-            - ".npmignore"
-            - "LICENSE"
 jobs:
     lint:
         runs-on: ubuntu-latest
@@ -34,10 +22,10 @@ jobs:
             - uses: actions/cache@v2
               id: cache-deps
               with:
-                path: |
-                  node_modules
-                  */*/node_modules
-                key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
+                  path: |
+                      node_modules
+                      */*/node_modules
+                  key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
             - run: bash ./scripts/install.sh
               if: steps.cache-deps.outputs.cache-hit != 'true'
             - run: bash ./scripts/ci.sh
@@ -56,10 +44,10 @@ jobs:
             - uses: actions/cache@v2
               id: cache-deps
               with:
-                path: |
-                  node_modules
-                  */*/node_modules
-                key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+                  path: |
+                      node_modules
+                      */*/node_modules
+                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
             - run: bash ./scripts/install.sh
               if: steps.cache-deps.outputs.cache-hit != 'true'
             - run: bash ./scripts/ci.sh
@@ -74,7 +62,7 @@ jobs:
                         "e2e_ganache",
                         "e2e_mosaic",
                         "e2e_browsers",
-                        "e2e_gnosis_dex"
+                        "e2e_gnosis_dex",
                     ]
         env:
             TEST: ${{ matrix.testCmd }}
@@ -87,10 +75,10 @@ jobs:
             - uses: actions/cache@v2
               id: cache-deps
               with:
-                path: |
-                  node_modules
-                  */*/node_modules
-                key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
+                  path: |
+                      node_modules
+                      */*/node_modules
+                  key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
             - run: bash ./scripts/install.sh
               if: steps.cache-deps.outputs.cache-hit != 'true'
             - run: bash ./scripts/ci.sh
