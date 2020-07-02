@@ -11,5 +11,5 @@ skip=(
 )
 
 if [[ ! " ${skip[@]} " =~ " ${TEST} " ]]; then
-  npm install
+  npm ci
 fi

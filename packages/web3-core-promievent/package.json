@@ -9,6 +9,6 @@
     },
     "main": "src/index.js",
     "dependencies": {
-        "eventemitter3": "3.1.2"
+        "eventemitter3": "4.0.4"
     }
 }

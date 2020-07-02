@@ -9,12 +9,12 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint --localTs node_modules/typescript/lib  types"
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib  types"
     },
     "main": "src/index.js",
     "dependencies": {
         "crypto-browserify": "3.12.0",
-        "eth-lib": "^0.2.8",
+        "eth-lib": "0.2.8",
         "ethereumjs-common": "^1.3.2",
         "ethereumjs-tx": "^2.1.1",
         "scrypt-js": "^3.0.1",
@@ -27,6 +27,6 @@
     },
     "devDependencies": {
         "dtslint": "^3.4.1",
-        "typescript": "latest"
+        "typescript": "^3.9.5"
     }
 }

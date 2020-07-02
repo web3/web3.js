@@ -9,16 +9,16 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint --localTs node_modules/typescript/lib types"
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
     },
     "main": "src/index.js",
     "dependencies": {
-        "eventemitter3": "3.1.2",
+        "eventemitter3": "4.0.4",
         "underscore": "1.9.1",
         "web3-core-helpers": "1.2.9"
     },
     "devDependencies": {
         "dtslint": "^3.4.1",
-        "typescript": "latest"
+        "typescript": "^3.9.5"
     }
 }

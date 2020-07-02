@@ -9,11 +9,11 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint --localTs node_modules/typescript/lib types"
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
     },
     "main": "src/index.js",
     "dependencies": {
-        "@types/node": "^12.6.1",
+        "@types/node": "^12.12.6",
         "web3-core": "1.2.9",
         "web3-core-helpers": "1.2.9",
         "web3-core-method": "1.2.9",
@@ -22,6 +22,6 @@
     },
     "devDependencies": {
         "dtslint": "^3.4.1",
-        "typescript": "latest"
+        "typescript": "^3.9.5"
     }
 }
