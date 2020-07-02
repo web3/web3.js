@@ -2,9 +2,8 @@
 
 [![NPM Package][npm-image]][npm-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
 
-This is a sub package of [web3.js][repo]
+This is a sub-package of [web3.js][repo] with useful helper functions.
 
-Helper functions used in [web3.js][repo] packages.
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -18,8 +17,7 @@ npm install web3-core-helpers
 ## Usage
 
 ```js
-// in node.js
-var helpers = require('web3-core-helpers');
+const helpers = require('web3-core-helpers');
 
 helpers.formatters;
 helpers.errors;

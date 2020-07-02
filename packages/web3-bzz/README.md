@@ -16,24 +16,12 @@ Please read the [documentation][docs] for more.
 npm install web3-bzz
 ```
 
-### In the Browser
-
-Build running the following in the [web3.js][repo] repository:
-
-```bash
-npm run-script build-all
-```
-
-Then include `dist/web3-bzz.js` in your html file.
-This will expose the `Web3Personal` object on the window object.
-
 ## Usage
 
 ```js
-// in node.js
-var Web3Bzz = require('web3-bzz');
+const Web3Bzz = require('web3-bzz');
 
-var bzz = new Web3Bzz('http://swarm-gateways.net');
+const bzz = new Web3Bzz('http://swarm-gateways.net');
 ```
 
 ## Types
