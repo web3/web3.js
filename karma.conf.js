@@ -1,16 +1,13 @@
-process.env.MOZ_HEADLESS = 1;
-
-if (!process.env.GITHUB_ACTION) {
-    process.env.CHROME_BIN = require('puppeteer').executablePath();
-}
-
 // BROWSER_BUNDLE_TEST is set for an un-browserified check that both bundles load correctly.
 // BROWSER_BUNDLE_TEST is not set for the e2e unit tests, which check that bundle internals are ok.
 function getTestFiles(){
     switch (process.env.BROWSER_BUNDLE_TEST){
-        case 'publishedDist': return ["packages/web3/dist/web3.min.js", "test/e2e.minified.js"]
-        case 'gitRepoDist':   return ["dist/web3.min.js", "test/e2e.minified.js"]
-        default:              return ["test/**/e2e*.js"]
+        case 'publishedDist':
+            return ["packages/web3/dist/web3.min.js", "test/e2e.minified.js"]
+        case 'gitRepoDist':
+            return ["dist/web3.min.js", "test/e2e.minified.js"]
+        default:
+            return ["test/**/e2e*.js"]
     }
 }
 
@@ -22,11 +19,8 @@ function getPreprocessors(){
 }
 
 module.exports = function (config) {
-    var configuration = {
-        frameworks: [
-            'mocha',
-            'browserify'
-        ],
+    const configuration = {
+        frameworks: ['mocha', 'browserify'],
         files: getTestFiles(),
         preprocessors: getPreprocessors(),
         plugins: [
@@ -37,32 +31,12 @@ module.exports = function (config) {
             'karma-spec-reporter'
         ],
         reporters: ['spec'],
-        port: 9876,  // karma web server port
+        port: 9876, // karma web server port
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: false,
-        browsers: [
-            'ChromeHeadless',
-            'FirefoxHeadless'
-        ],
-        customLaunchers: {
-            FirefoxHeadless: {
-                base: 'Firefox',
-                flags: ['-headless'],
-            },
-            Chrome_ci: {
-                base: 'Chrome',
-                flags: ['--no-sandbox']
-            }
-        },
+        browsers: ["ChromeHeadless", "FirefoxHeadless"],
     };
-
-    if(process.env.GITHUB_ACTION) {
-        configuration.browsers = [
-            'Chrome_ci',
-            'FirefoxHeadless'
-        ];
-    }
 
     config.set(configuration);
 };

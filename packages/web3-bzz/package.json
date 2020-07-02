@@ -9,17 +9,17 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint --localTs node_modules/typescript/lib types"
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
     },
     "main": "src/index.js",
     "dependencies": {
-        "@types/node": "^10.12.18",
+        "@types/node": "^12.12.6",
         "got": "9.6.0",
         "swarm-js": "^0.1.40",
         "underscore": "1.9.1"
     },
     "devDependencies": {
         "dtslint": "^3.4.1",
-        "typescript": "latest"
+        "typescript": "^3.9.5"
     }
 }

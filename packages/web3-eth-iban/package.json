@@ -9,15 +9,15 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint --localTs node_modules/typescript/lib types"
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
     },
     "main": "src/index.js",
     "dependencies": {
-        "bn.js": "4.11.8",
+        "bn.js": "^4.11.9",
         "web3-utils": "1.2.9"
     },
     "devDependencies": {
         "dtslint": "^3.4.1",
-        "typescript": "latest"
+        "typescript": "^3.9.5"
     }
 }

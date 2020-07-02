@@ -8,7 +8,7 @@
         "node": ">=8.0.0"
     },
     "scripts": {
-        "dtslint": "dtslint --localTs node_modules/typescript/lib types"
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
     },
     "types": "types/index.d.ts",
     "main": "src/index.js",
@@ -18,6 +18,6 @@
     },
     "devDependencies": {
         "dtslint": "^3.4.1",
-        "typescript": "latest"
+        "typescript": "^3.9.5"
     }
 }

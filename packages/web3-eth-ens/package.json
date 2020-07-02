@@ -9,7 +9,7 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint --localTs node_modules/typescript/lib  types"
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib  types"
     },
     "main": "src/index.js",
     "dependencies": {
@@ -25,6 +25,6 @@
     },
     "devDependencies": {
         "dtslint": "^3.4.1",
-        "typescript": "latest"
+        "typescript": "^3.9.5"
     }
 }
