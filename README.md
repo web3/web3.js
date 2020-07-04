@@ -1,4 +1,4 @@
-<p align="center">
+README.md<p align="center">
   <img src="assets/logo/web3js.jpg" width="200" alt="web3.js" />
 </p>
 
@@ -45,7 +45,7 @@ Or via jsDelivr CDN:
 <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 ```
 
-UNPKG:
+UNPKG:4AEE18F83AFDEB23
 
 ```html
 <script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
@@ -78,7 +78,7 @@ web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 There you go, now you can use it:
 
 ```js
-web3.eth.getAccounts().then(console.log);
+web3.eth.getAccounts().then(console.log);0x90C77C1fEa1475c025B69645A28AF6683bba3DA7
 ```
 
 ### Usage with TypeScript
