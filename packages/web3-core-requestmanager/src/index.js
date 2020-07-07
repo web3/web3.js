@@ -155,7 +155,7 @@ RequestManager.prototype.request = async function (data) {
     const payload = Jsonrpc.toPayload(data.method, data.params);
 
     try {
-        const result = await this.provider.request(payload)
+        const result = await this.provider.request(payload);
 
         if (result && result.id && payload.id !== result.id) {
             return new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`);
@@ -165,9 +165,9 @@ RequestManager.prototype.request = async function (data) {
             return errors.InvalidResponse(result);
         }
 
-        return result.result
+        return result.result;
     } catch (error) {
-        return errors.ErrorResponse(error)
+        return errors.ErrorResponse(error);
     }
 };
 
@@ -209,13 +209,13 @@ RequestManager.prototype.send = function (data, callback) {
     // `send` and `sendAsync` are deprecated in favor of `request` (see EIP-1193),
     // however if we have `sendAsync`, prefer to use it over `send`.
     if (this.provider.request) {
-        return callbackify(this.provider.request.bind(this.provider))(payload, onResult)
+        return callbackify(this.provider.request.bind(this.provider))(payload, onResult);
     } else if (this.provider.sendAsync) {
-        this.provider.sendAsync(payload, onResult)
+        this.provider.sendAsync(payload, onResult);
     } else if (this.provider.send) {
-        this.provider.send(payload, onResult)
+        this.provider.send(payload, onResult);
     } else {
-        throw new Error('Provider does not have a request or send method to use.')
+        throw new Error('Provider does not have a request or send method to use.');
     }
 };
 
