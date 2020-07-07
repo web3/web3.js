@@ -31,5 +31,69 @@ describe('Web3.providers.givenProvider', function () {
             assert.deepEqual(Bzz.givenProvider, global.ethereum.bzz);
         });
     });
+
+    describe('should use request() if available, otherwise falling back to sendAsync() and send()', function () {
+
+        after(function(){
+            global.ethereum = undefined
+        })
+
+        it('should use request()', function () {
+            global.ethereum = {
+                request: () => { throw new Error('used request') },
+                sendAsync: () => { throw new Error('used sendAsync') }, 
+                send: () => { throw new Error('used send') }
+            };
+            
+            const Web3 = require('../packages/web3');
+            const web3 = new Web3(Web3.givenProvider)
+            try {
+                web3.eth.getBlockNumber()
+            } catch (error) {
+                assert.equal(error.message, 'used request')
+            }
+        });
+
+        it('should use sendAsync()', function () {
+            global.ethereum = {
+                sendAsync: () => { throw new Error('used sendAsync') }, 
+                send: () => { throw new Error('used send') }
+            };
+            
+            const Web3 = require('../packages/web3');
+            const web3 = new Web3(Web3.givenProvider)
+            try {
+                web3.eth.getBlockNumber()
+            } catch (error) {
+                assert.equal(error.message, 'used sendAsync')
+            }
+        });
+
+        it('should use send()', function () {
+            global.ethereum = {
+                send: () => { throw new Error('used send') }
+            };
+            
+            const Web3 = require('../packages/web3');
+            const web3 = new Web3(Web3.givenProvider)
+            try {
+                web3.eth.getBlockNumber()
+            } catch (error) {
+                assert.equal(error.message, 'used send')
+            }
+        });
+        
+        it('should error without any request or send method', function () {
+            global.ethereum = {};
+            
+            const Web3 = require('../packages/web3');
+            const web3 = new Web3(Web3.givenProvider)
+            try {
+                web3.eth.getBlockNumber()
+            } catch (error) {
+                assert.equal(error.message, 'Provider does not have a request or send method to use.')
+            }
+        });
+    });
 });
 
