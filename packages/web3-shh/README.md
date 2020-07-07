@@ -2,9 +2,10 @@
 
 [![NPM Package][npm-image]][npm-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
 
-This is a sub package of [web3.js][repo]
+This is a sub-package of [web3.js][repo]
 
-This is the whisper v5 package.  
+This is the whisper v5 package.
+
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -15,24 +16,12 @@ Please read the [documentation][docs] for more.
 npm install web3-shh
 ```
 
-### In the Browser
-
-Build running the following in the [web3.js][repo] repository:
-
-```bash
-npm run-script build-all
-```
-
-Then include `dist/web3-shh.js` in your html file.
-This will expose the `Web3Personal` object on the window object.
-
 ## Usage
 
 ```js
-// in node.js
-var Web3Personal = require('web3-shh');
+const Web3Personal = require('web3-shh');
 
-var shh = new Web3Personal('ws://localhost:8546');
+const shh = new Web3Personal('ws://localhost:8546');
 ```
 
 ## Types

@@ -4,9 +4,7 @@ var Eth = require('../packages/web3-eth');
 var sha3 = require('../packages/web3-utils').sha3;
 var FakeIpcProvider = require('./helpers/FakeIpcProvider');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
-var Promise = require('bluebird');
 var StandAloneContract = require('../packages/web3-eth-contract');
-
 
 var abi = [{
     "type": "constructor",
@@ -1742,14 +1740,14 @@ var runTests = function(contractFactory) {
             var contract = contractFactory(abi, address, provider);
 
 
-            Promise.join(
+            Promise.all([
                 contract.methods.balance(address).call(),
                 contract.methods.owner().call(),
                 contract.methods.getStr().call()
-            ).spread(function(m1, m2, m3) {
-                assert.deepEqual(m1, '10');
-                assert.deepEqual(m2, '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe');
-                assert.deepEqual(m3, 'Hello!%!');
+            ]).then(results => {
+                assert.deepEqual(results[0], '10');
+                assert.deepEqual(results[1], '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe');
+                assert.deepEqual(results[2], 'Hello!%!');
 
                 done();
             });

@@ -33,7 +33,7 @@ Use the prebuilt `dist/web3.min.js`, or
 build using the [web3.js][repo] repository:
 
 ```bash
-npm run-script build
+npm run build
 ```
 
 Then include `dist/web3.js` in your html file.
@@ -54,10 +54,10 @@ UNPKG:
 ## Usage
 
 ```js
-// in node.js
-var Web3 = require('web3');
+// In Node.js
+const Web3 = require('web3');
 
-var web3 = new Web3('ws://localhost:8546');
+let web3 = new Web3('ws://localhost:8546');
 console.log(web3);
 > {
     eth: ... ,
@@ -92,7 +92,7 @@ import Web3 from 'web3';
 const web3 = new Web3('ws://localhost:8546');
 ```
 
-If you are using the types in a `commonjs` module like for example a node app you just have to enable `esModuleInterop` in your `tsconfig` compile option, also enable `allowSyntheticDefaultImports` for typesystem compatibility:
+If you are using the types in a `commonjs` module, like in a Node app, you just have to enable `esModuleInterop` and `allowSyntheticDefaultImports` in your `tsconfig` for typesystem compatibility:
 
 ```js
 "compilerOptions": {
@@ -118,21 +118,13 @@ sudo apt-get install nodejs
 sudo apt-get install npm
 ```
 
-### Building (gulp)
+### Building (webpack)
 
-Build only the web3.js package:
-
-```bash
-npm run-script build
-```
-
-Or build all sub packages as well:
+Build the web3.js package:
 
 ```bash
-npm run-script build-all
+npm run build
 ```
-
-This will put all the browser build files into the `dist` folder.
 
 ### Testing (mocha)
 
@@ -150,7 +142,6 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 
 -   [Gitter][gitter-url]
 -   [StackExchange][stackexchange-url]
--   [Forum](https://forum.ethereum.org/categories/ethereum-js)
 
 ### Similar libraries in other languages
 

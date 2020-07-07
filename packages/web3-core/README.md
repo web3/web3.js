@@ -19,16 +19,12 @@ npm install web3-core
 ## Usage
 
 ```js
-// in node.js
-var core = require('web3-core');
+const core = require('web3-core');
 
-var CoolLib = function CoolLib() {
-
+const CoolLib = function CoolLib() {
     // sets _requestmanager and adds basic functions
     core.packageInit(this, arguments);
-
 };
-
 
 CoolLib.providers;
 CoolLib.givenProvider;

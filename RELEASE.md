@@ -81,8 +81,6 @@ The following describes the steps required to release a new version of `web3.js`
     1.  Add next anticipated release version number to bottom (as a placeholder for new changelog entries).
 1.  Create release commit and tags e.g. `lerna version 1.2.7-rc.0 --no-push`
     1.  (updates package version numbers, builds minified file (for `1.x`), creates release commit and tags.)
-1.  For `1.x`, save [index.html](https://github.com/ethereum/web3.js/blob/1.x/scripts/html/index.html) to your local machine and test loading minified file to ensure its integrity. Be sure to delete `index.html` after.
-1.  Check git working state is clean. Sometimes files modified by gulp are not included. If so, run `git commit --amend` and `git tag -d 1.2.7-rc.0` and `git tag 1.2.7-rc.0`.
 1.  Push release branch to origin with tags `git push origin release/1.2.7 --follow-tags`.
 1.  Create release PR as draft ([example](https://github.com/ethereum/web3.js/pull/3351)).
 1.  Ensure CI is green / passing.
@@ -107,7 +105,6 @@ The following describes the steps required to release a new version of `web3.js`
 1.  Create GitHub draft release from text of `rc` release.
 1.  Checkout release branch (e.g. `release/1.2.7`).
 1.  Create and push release commit and tags: `lerna version 1.2.7 --force-publish --no-push`
-1.  Check git working state is clean. Sometimes files modified by gulp are not included. If so, run `git commit --amend` and `git tag -d 1.2.7` and `git tag 1.2.7`.
 1.  Push release branch to origin with tags `git push origin release/1.2.7 --follow-tags`.
 1.  Publish the GitHub release.
 1.  A GitHub Webhook should trigger the ReadTheDocs build after the release is published.
