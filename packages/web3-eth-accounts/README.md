@@ -16,24 +16,12 @@ Please read the [documentation][docs] for more.
 npm install web3-eth-accounts
 ```
 
-### In the Browser
-
-Build running the following in the [web3.js][repo] repository:
-
-```bash
-npm run-script build-all
-```
-
-Then include `dist/web3-eth-accounts.js` in your html file.
-This will expose the `Web3EthAccounts` object on the window object.
-
 ## Usage
 
 ```js
-// in node.js
-var Web3EthAccounts = require('web3-eth-accounts');
+const Web3EthAccounts = require('web3-eth-accounts');
 
-var account = new Web3EthAccounts('ws://localhost:8546');
+const account = new Web3EthAccounts('ws://localhost:8546');
 account.create();
 > {
   address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',

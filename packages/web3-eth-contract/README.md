@@ -16,27 +16,15 @@ Please read the [documentation][docs] for more.
 npm install web3-eth-contract
 ```
 
-### In the Browser
-
-Build running the following in the [web3.js][repo] repository:
-
-```bash
-npm run-script build-all
-```
-
-Then include `dist/web3-eth-contract.js` in your html file.
-This will expose the `Web3EthContract` object on the window object.
-
 ## Usage
 
 ```js
-// in node.js
-var Web3EthContract = require('web3-eth-contract');
+const Web3EthContract = require('web3-eth-contract');
 
-// set provider for all later instances to use
+// Set provider for all later instances to use
 Web3EthContract.setProvider('ws://localhost:8546');
 
-var contract = new Web3EthContract(jsonInterface, address);
+const contract = new Web3EthContract(jsonInterface, address);
 contract.methods.somFunc().send({from: ....})
 .on('receipt', function(){
     ...
