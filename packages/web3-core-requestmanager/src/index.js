@@ -20,6 +20,7 @@
 "use strict";
 
 
+const { callbackify } = require('util');
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var Jsonrpc = require('./jsonrpc.js');
@@ -142,25 +143,53 @@ RequestManager.prototype.setProvider = function (provider, net) {
 };
 
 /**
- * TODO: This method should be implemented with a Promise instead of a callback
- *
- * Should be used to asynchronously send request
- *
- * @method sendAsync
+ * The `request` method available on `window.ethereum` provider as specified in [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193).
+ * @method request
+ * @param {Object} data
+ */
+RequestManager.prototype.request = async function (data) {
+    if (!this.provider) {
+        return errors.InvalidProvider();
+    }
+
+    const payload = Jsonrpc.toPayload(data.method, data.params);
+
+    try {
+        const result = await this.provider.request(payload)
+
+        if (result && result.id && payload.id !== result.id) {
+            return new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`);
+        }
+
+        if (!Jsonrpc.isValidResponse(result)) {
+            return errors.InvalidResponse(result);
+        }
+
+        return result.result
+    } catch (error) {
+        return errors.ErrorResponse(error)
+    }
+};
+
+/**
+ * Asynchronously send request.
+ * @method send
  * @param {Object} data
  * @param {Function} callback
  */
 RequestManager.prototype.send = function (data, callback) {
-    callback = callback || function () {
-    };
+    callback = callback || function () {};
 
     if (!this.provider) {
         return callback(errors.InvalidProvider());
     }
 
     var payload = Jsonrpc.toPayload(data.method, data.params);
-    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, result) {
-        if(result && result.id && payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));
+
+    const onResult = function (err, result) {
+        if(result && result.id && payload.id !== result.id) {
+            return callback(new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`));
+        }
 
         if (err) {
             return callback(err);
@@ -175,14 +204,24 @@ RequestManager.prototype.send = function (data, callback) {
         }
 
         callback(null, result.result);
-    });
+    };
+
+    // `send` and `sendAsync` are deprecated in favor of `request` (see EIP-1193),
+    // however if we have `sendAsync`, prefer to use it over `send`.
+    if (this.provider.request) {
+        return callbackify(this.provider.request.bind(this.provider))(payload, onResult)
+    } else if (this.provider.sendAsync) {
+        this.provider.sendAsync(payload, onResult)
+    } else if (this.provider.send) {
+        this.provider.send(payload, onResult)
+    } else {
+        throw new Error('Provider does not have a request or send method to use.')
+    }
 };
 
 /**
- * TODO: This method should be implemented with a Promise instead of a callback
- *
- * Should be called to asynchronously send batch request
- *
+ * Asynchronously send batch request.
+ * Only works if provider supports batch methods through `sendAsync` or `send`.
  * @method sendBatch
  * @param {Array} data - array of payload objects
  * @param {Function} callback
