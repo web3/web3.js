@@ -26,7 +26,7 @@
         "test:cov": "npm run cov:clean; npm run test:unit; npm run test:e2e:clients; npm run cov:merge_reports",
         "dtslint": "lerna run dtslint",
         "depcheck": "lerna exec dependency-check -- --missing --verbose .",
-        "bundlesize": "bundlesize",
+        "bundlesize": "bundlesize || true",
         "geth": "geth-dev-assistant --accounts 5 --tag stable --gasLimit 7000000",
         "test:e2e:ganache": "./scripts/e2e.ganache.sh",
         "test:e2e:geth:auto": "./scripts/e2e.geth.automine.sh",
