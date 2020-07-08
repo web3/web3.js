@@ -143,36 +143,9 @@ RequestManager.prototype.setProvider = function (provider, net) {
 };
 
 /**
- * The `request` method available on `window.ethereum` provider as specified in [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193).
- * @method request
- * @param {Object} data
- */
-RequestManager.prototype.request = async function (data) {
-    if (!this.provider) {
-        return errors.InvalidProvider();
-    }
-
-    const payload = Jsonrpc.toPayload(data.method, data.params);
-
-    try {
-        const result = await this.provider.request(payload);
-
-        if (result && result.id && payload.id !== result.id) {
-            return new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`);
-        }
-
-        if (!Jsonrpc.isValidResponse(result)) {
-            return errors.InvalidResponse(result);
-        }
-
-        return result.result;
-    } catch (error) {
-        return errors.ErrorResponse(error);
-    }
-};
-
-/**
- * Asynchronously send request.
+ * Asynchronously send request to provider.
+ * Prefers to use the `request` method available on the provider as specified in [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193).
+ * If `request` is not available, falls back to `sendAsync` and `send` respectively.
  * @method send
  * @param {Object} data
  * @param {Function} callback
@@ -184,7 +157,7 @@ RequestManager.prototype.send = function (data, callback) {
         return callback(errors.InvalidProvider());
     }
 
-    var payload = Jsonrpc.toPayload(data.method, data.params);
+    const payload = Jsonrpc.toPayload(data.method, data.params);
 
     const onResult = function (err, result) {
         if(result && result.id && payload.id !== result.id) {
@@ -206,10 +179,8 @@ RequestManager.prototype.send = function (data, callback) {
         callback(null, result.result);
     };
 
-    // `send` and `sendAsync` are deprecated in favor of `request` (see EIP-1193),
-    // however if we have `sendAsync`, prefer to use it over `send`.
     if (this.provider.request) {
-        return callbackify(this.provider.request.bind(this.provider))(payload, onResult);
+        callbackify(this.provider.request.bind(this.provider))(payload, onResult);
     } else if (this.provider.sendAsync) {
         this.provider.sendAsync(payload, onResult);
     } else if (this.provider.send) {
