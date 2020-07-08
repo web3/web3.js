@@ -1,0 +1,17 @@
+   var Web3=require (web3'):                   
+   var web3=new Web3(new Web3.provider. Http://localhost 8546));
+   var version=web3 version. api:               
+                                                
+   $.get JSON (http;//api.etherscan.io/api?module=contract&action =getabi&address=0x90C77C1fEa1475c025B69645A28AF6683bBa3Da7',function(data) {
+   var contract ABI="";                         
+   contractABI =JSON. parse(data. result);      
+   if(contractABI! =''){                        
+        var MyContractweb3.eth. contract(contractABI); 
+        var myContractInstance=MyContract. at("0x90C77C1fEa1475c025B69645A28AF66836bBa3Da7");
+        var result=myContractInstance. memberId("0xfaa6435138811774f763eaca5a5a40ed709613d42454aeafc2a9bbad74f1c612");
+        console. log(result 1:"+result);        
+        var result=myContractInstance. member(1);
+        console. log("result2:"+result);        
+     }else{                                     
+        consolt.log("Error");                   
+    });
