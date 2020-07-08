@@ -16,24 +16,12 @@ Please read the [documentation][docs] for more.
 npm install web3-eth-personal
 ```
 
-### In the Browser
-
-Build running the following in the [web3.js][repo] repository:
-
-```bash
-npm run-script build-all
-```
-
-Then include `dist/web3-eth-personal.js` in your html file.
-This will expose the `Web3EthPersonal` object on the window object.
-
 ## Usage
 
 ```js
-// in node.js
-var Web3EthPersonal = require('web3-eth-personal');
+const Web3EthPersonal = require('web3-eth-personal');
 
-var personal = new Web3EthPersonal('ws://localhost:8546');
+const personal = new Web3EthPersonal('ws://localhost:8546');
 ```
 
 ## Types
