@@ -27,3 +27,5 @@ packages:
     proxy: npmjs yarn
 logs:
   - {type: stdout, format: pretty, level: warn}
+server:
+  keepAliveTimeout: 600 # specified in seconds

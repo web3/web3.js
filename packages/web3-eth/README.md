@@ -4,7 +4,7 @@
 
 This is a sub-package of [web3.js][repo].
 
-This Eth package is used within some [web3.js][repo] package.
+This Eth package is used within some [web3.js][repo] packages.
 
 Please read the [documentation][docs] for more.
 
@@ -16,24 +16,12 @@ Please read the [documentation][docs] for more.
 npm install web3-eth
 ```
 
-### In the Browser
-
-Build running the following in the [web3.js][repo] repository:
-
-```bash
-npm run-script build-all
-```
-
-Then include `dist/web3-eth.js` in your html file.
-This will expose the `Web3Eth` object on the window object.
-
 ## Usage
 
 ```js
-// in node.js
-var Web3Eth = require('web3-eth');
+const Web3Eth = require('web3-eth');
 
-var eth = new Web3Eth('ws://localhost:8546');
+const eth = new Web3Eth('ws://localhost:8546');
 ```
 
 ## Types

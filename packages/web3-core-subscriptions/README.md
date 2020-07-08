@@ -16,25 +16,12 @@ Please read the [documentation][docs] for more.
 npm install web3-core-subscriptions
 ```
 
-### In the Browser
-
-Build running the following in the [web3.js][repo] repository:
-
-```bash
-npm run-script build-all
-```
-
-Then include `dist/web3-core-subscriptions.js` in your html file.
-This will expose the `Web3Subscriptions` object on the window object.
-
-
 ## Usage
 
 ```js
-// in node.js
-var Web3Subscriptions = require('web3-core-subscriptions');
+const Web3Subscriptions = require('web3-core-subscriptions');
 
-var sub = new Web3Subscriptions({
+const sub = new Web3Subscriptions({
     name: 'subscribe',
     type: 'eth',
     subscriptions: {
@@ -53,7 +40,6 @@ sub.attachToObject(myCoolLib);
 
 myCoolLib.subscribe('newBlockHeaders', function(){ ... });
 ```
-
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js

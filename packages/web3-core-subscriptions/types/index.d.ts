@@ -17,8 +17,6 @@
  * @date 2019
  */
 
-// Minimum TypeScript Version: 3.7
-
 export class Subscription<T> {
     constructor(options: SubscriptionOptions);
 
@@ -26,6 +24,7 @@ export class Subscription<T> {
     options: SubscriptionOptions;
     callback: () => void;
     arguments: any;
+    lastBlock: number;
 
     subscribe(callback?: (error: Error, result: T) => void): Subscription<T>;
 

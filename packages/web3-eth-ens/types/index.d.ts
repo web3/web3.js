@@ -17,12 +17,16 @@
  * @date 2018
  */
 
-// Minimum TypeScript Version: 3.0
-
 import { PromiEvent, TransactionConfig, TransactionReceipt } from 'web3-core';
 import { TransactionRevertInstructionError } from 'web3-core-helpers';
 import { Eth } from 'web3-eth';
 import { Contract } from 'web3-eth-contract';
+
+export interface ContentHash {
+    protocolType: 'ipfs' | 'bzz' | 'onion' | 'onion3' | null,
+    decoded: string | null,
+    error?: Error | null
+}
 
 // TODO: Define as soon as implemented the generic contract
 export class Ens {
@@ -281,12 +285,12 @@ export class Ens {
      */
     getContenthash(
         name: string,
-        callback?: (value: any) => void
-    ): Promise<string>;
+        callback?: (value: ContentHash) => void
+    ): Promise<ContentHash>;
     getContenthash(
         name: string,
-        callback?: (error: Error, contenthash: string) => void
-    ): Promise<string>;
+        callback?: (error: Error, contenthash: ContentHash) => void
+    ): Promise<ContentHash>;
 
     setContenthash(
         name: string,

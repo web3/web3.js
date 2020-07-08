@@ -17,8 +17,6 @@
  * @date 2018
  */
 
-// Minimum TypeScript Version: 3.0
-
 import {JsonRpcPayload} from 'web3-core-helpers';
 
 export interface Method {
@@ -31,5 +29,6 @@ export interface Method {
     extraFormatters?: any;
     defaultBlock?: string;
     defaultAccount?: string | null;
-    abiCoder?: any
+    abiCoder?: any;
+    handleRevert?: boolean;
 }

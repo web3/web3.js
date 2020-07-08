@@ -7,6 +7,8 @@ contract Basic {
 
     uint value;
     event BasicEvent(address addr, uint indexed val);
+    event StringEvent(string str);
+    event IndexedStringEvent(string str);
 
     function getValue() public view returns (uint val) {
         return value;
@@ -32,4 +34,15 @@ contract Basic {
         emit BasicEvent(addr, val);
     }
 
+    function firesStringEvent(string memory _str) public {
+        emit StringEvent(_str);
+    }
+
+    function firesIndexedStringEvent(string memory _str) public {
+        emit IndexedStringEvent(_str);
+    }
+
+    function firesIllegalUtf8StringEvent() public {
+        emit StringEvent('�������');
+    }
 }
