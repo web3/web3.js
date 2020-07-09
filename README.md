@@ -36,7 +36,7 @@ build using the [web3.js][repo] repository:
 npm run build
 ```
 
-Then include `dist/web3.js` in your html file.
+Then include `dist/web3.min.js` in your html file.
 This will expose `Web3` on the window object.
 
 Or via jsDelivr CDN:
