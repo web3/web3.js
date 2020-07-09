@@ -233,10 +233,36 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.2.10]
 
+### Added
+
+- Add support for EIP-1193 provider `request` method (#3625)
+
+### Changed
+
+- Upgrade minified bundle build process (from gulp to webpack) (#3618)
+- CI improvements: add dependency caching, netlify browser test preview (#3598, #3602)
+- Remove references to `genesis` block in 1.x documentation (#3594)
+- Disallow setting `toBlock` when subscribing to contract events (#3207)
+
 ### Fixed
 
 - Extend `_txInputFormatter` with hex prefix check (#3317)
 - Extract revert reason string for geth >= 1.9.15 (#3520)
-- Incorrect param encoding of BN object in arrayed inputs (#3592)
-- Fix Chrome syntax error by removing mis-encoded whitespace characters from web3-utils files (#3601)
-- Fixed `Buffer.concat` incompatibility to the Buffer impl in React (#3580)
+- Fix Incorrect param encoding of BN object in arrayed inputs (#3592)
+- Remove mis-encoded whitespace characters from web3-utils files (#3601)
+- Fix incompatibilities with webpack Buffer polyfill for wallet.encrypt/decrypt (#3580)
+- Fix misformatted `fromBlock` value when re-subscribing to events over WS (#3596)
+- Support `Function` type log parameter decoding (#2826)
+- Add undefined callback check to websocket provider response queue (#3574)
+- Fix WS clientConfig type (#3563)
+
+## [Unreleased]
+
+## [1.2.11]
+
+### Added
+
+### Changed
+
+### Fixed
+
