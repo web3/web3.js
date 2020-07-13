@@ -7,7 +7,7 @@ var utils = require('../packages/web3-utils/');
 var BigNumber = require('bignumber.js');
 
 var tests = [
-    { value: 1, expected: utils.padLeft(new BigNumber(1).round().toString(16), 64) },
+    { value: 1, expected: utils.padLeft(new BigNumber(1).integerValue().toString(16), 64) },
     { value: '1', expected: utils.padLeft(new BigNumber(1).toString(16), 64) },
     { value: '0x1', expected: utils.padLeft(new BigNumber(1).toString(16), 64) },
     { value: '15', expected: utils.padLeft(new BigNumber(15).toString(16), 64)},

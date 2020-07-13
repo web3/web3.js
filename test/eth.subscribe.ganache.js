@@ -54,6 +54,15 @@ describe('subscription connect/reconnect', function () {
             });
     });
 
+    it('clearSubscriptions', async function() {
+        web3.eth.subscribe('newBlockHeaders');
+        await waitSeconds(1); // Sub need a little time to set up
+
+        assert.equal(1, web3.eth._requestManager.subscriptions.size);
+        web3.eth.clearSubscriptions();
+        assert.equal(0, web3.eth._requestManager.subscriptions.size);
+    });
+
     it('resubscribes to an existing subscription', function (done) {
         this.timeout(5000);
 
@@ -224,18 +233,27 @@ describe('subscription connect/reconnect', function () {
     });
 
     it('errors when the subscription got established (is running) and the connection does get closed', function () {
+        this.timeout(5000);
+        let counter = 0;
+
         return new Promise(async function (resolve) {
             web3.eth
                 .subscribe('newBlockHeaders')
                 .once('data', async function () {
                     await pify(server.close)();
                 })
-                .once('error', function (err) {
+                .on('error', function (err) {
+                    counter++;
                     assert(err.message.includes('CONNECTION ERROR'));
                     assert(err.message.includes('close code `1006`'));
                     assert(err.message.includes('Connection dropped by remote peer.'));
-                    resolve();
                 });
+
+            // Make sure error handler doesn't fire twice
+            await waitSeconds(2);
+            assert.equal(counter, 1);
+            web3.eth.currentProvider.removeAllListeners();
+            resolve();
         });
     });
 

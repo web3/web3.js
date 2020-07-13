@@ -25,6 +25,7 @@
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var EventEmitter = require('eventemitter3');
+var formatters = require('web3-core-helpers').formatters;
 
 function Subscription(options) {
     EventEmitter.call(this);
@@ -32,6 +33,7 @@ function Subscription(options) {
     this.id = null;
     this.callback = _.identity;
     this.arguments = null;
+    this.lastBlock = null; // "from" block tracker for backfilling events on reconnection
 
     this.options = {
         subscription: options.subscription,
@@ -176,6 +178,7 @@ Subscription.prototype._toPayload = function (args) {
 Subscription.prototype.unsubscribe = function(callback) {
     this.options.requestManager.removeSubscription(this.id, callback);
     this.id = null;
+    this.lastBlock = null;
     this.removeAllListeners();
 };
 
@@ -219,6 +222,13 @@ Subscription.prototype.subscribe = function() {
         },0);
 
         return this;
+    }
+
+    // Re-subscription only: continue fetching from the last block we received.
+    // a dropped connection may have resulted in gaps in the logs...
+    if (this.lastBlock && _.isObject(this.options.params)){
+        payload.params[1] = this.options.params
+        payload.params[1].fromBlock = formatters.inputBlockNumberFormatter(this.lastBlock + 1);
     }
 
     // if id is there unsubscribe first
@@ -279,6 +289,9 @@ Subscription.prototype.subscribe = function() {
 
                     result.forEach(function(resultItem) {
                         var output = _this._formatOutput(resultItem);
+
+                        // Track current block (for gaps introduced by dropped connections)
+                        _this.lastBlock = _.isObject(output) ? output.blockNumber : null;
 
                         if (_.isFunction(_this.options.subscription.subscriptionHandler)) {
                             return _this.options.subscription.subscriptionHandler.call(_this, output);

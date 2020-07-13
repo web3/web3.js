@@ -1,10 +1,10 @@
-<!---
+<!--
 
 Steps before creating an issue: 
 
 1. I've read the documentation.
-2. I was looking for an solution on stackoverflow or something else.
-3. I was looking for an identical issue.
+2. I've tried googling or asking my question on stackoverflow.
+3. I've tried searching this repository for similar issues.
 
 -->
 
@@ -20,5 +20,8 @@ Steps before creating an issue:
 
 #### Logs
 
-#### Versions
-[NPM, Node, Web3.js, OS, device...]
+<!-- Please share any relevant logs that may help us debug your issue. -->
+
+#### Environment
+
+<!-- e.g. Versions used of: npm, Node, web3.js, OS, device -->

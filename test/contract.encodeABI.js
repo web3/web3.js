@@ -4,7 +4,6 @@ var Eth = require('../packages/web3-eth');
 var sha3 = require('../packages/web3-utils').sha3;
 var FakeIpcProvider = require('./helpers/FakeIpcProvider');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
-var Promise = require('bluebird');
 
 var abi = [
     {
@@ -28,7 +27,8 @@ var abi = [
         ],
         payable: false,
         type: "function",
-        stateMutability: "view"
+        stateMutability: "view",
+        gas: 175875
     }
 ];
 

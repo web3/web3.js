@@ -57,13 +57,19 @@ describe('method.call [ @E2E ]', function () {
                 await wrongInstance
                     .methods
                     .getValue()
-                    .call();
+                    .call({from: accounts[0]});
 
                 assert.fail();
 
             } catch (err) {
-                assert(err.message.includes("Returned values aren't valid"));
-                assert(err.message.includes('the correct ABI'));
+                // ganache | geth <= 1.9.13
+                const nullDataResponse = err.message.includes("Returned values aren't valid") &&
+                                         err.message.includes('the correct ABI');
+
+                // geth >= 1.9.15
+                const gethErrResponse = err.message.includes("revert");
+
+                assert(nullDataResponse || gethErrResponse);
             }
         })
     });

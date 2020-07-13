@@ -2,9 +2,7 @@
 
 [![NPM Package][npm-image]][npm-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
 
-This is a sub-package of [web3.js][repo].
-
-This is a websocket provider for [web3.js][repo].  
+This is a websocket provider sub-package for [web3.js][repo].  
 
 Please read the [documentation][docs] for more.
 
@@ -16,24 +14,12 @@ Please read the [documentation][docs] for more.
 npm install web3-providers-ws
 ```
 
-### In the Browser
-
-Build running the following in the [web3.js][repo] repository:
-
-```bash
-npm run-script build-all
-```
-
-Then include `dist/web3-providers-ws.js` in your html file.
-This will expose the `Web3WsProvider` object on the window object.
-
 ## Usage
 
 ```js
-// in node.js
-var Web3WsProvider = require('web3-providers-ws');
+const Web3WsProvider = require('web3-providers-ws');
 
-var options = {
+const options = {
     timeout: 30000, // ms
 
     // Useful for credentialed urls, e.g: ws://username:password@localhost:8546
@@ -41,10 +27,14 @@ var options = {
       authorization: 'Basic username:password'
     },
 
-    // Useful if requests are large
     clientConfig: {
+      // Useful if requests are large
       maxReceivedFrameSize: 100000000,   // bytes - default: 1MiB
       maxReceivedMessageSize: 100000000, // bytes - default: 8MiB
+
+      // Useful to keep a connection alive
+      keepalive: true,
+      keepaliveInterval: 60000 // ms
     },
 
     // Enable auto reconnection
@@ -56,12 +46,10 @@ var options = {
     }
 };
 
-var ws = new Web3WsProvider('ws://localhost:8546', options);
-
-(Additional client config options can be found [here][1])
-
-[1]: https://github.com/web3-js/WebSocket-Node/blob/polyfill/globalThis/docs/WebSocketClient.md
+const ws = new Web3WsProvider('ws://localhost:8546', options);
 ```
+
+Additional client config options can be found [here](https://github.com/theturtle32/WebSocket-Node/blob/v1.0.31/docs/WebSocketClient.md#client-config-options).
 
 ## Types
 

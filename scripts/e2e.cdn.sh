@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 # --------------------------------------------------------------------
-# Publishes a small test site that uses the packages/web3/dist/min
+# Prepares a small test site that uses the packages/web3/dist/min
 # --------------------------------------------------------------------
 
 if [ -z "$CI" ]; then
 
   echo "======================================================================"
-  echo "This script publishes a test site with surge.sh. Only run in CI."
+  echo "This script prepares a test site for Netlify. Only run in CI.         "
   echo "======================================================================"
 
   exit 1
@@ -15,17 +15,17 @@ if [ -z "$CI" ]; then
 fi
 
 echo "======================================================================"
-echo "Publishing test site with surge.sh. See link below.                   "
+echo "Preparing test site for web3-staging.netlify.app                      "
 echo "======================================================================"
 
 cp packages/web3/dist/web3.min.js scripts/html
-cd scripts
-(echo "" && exit && cat ) | npx surge --domain sudden-playground.surge.sh html
 
-# Might be running locally in development
-rm html/web3.min.js
+cd scripts/html
 
-# Sometimes surge.sh fails with an auth error because it's generated a name which
-# is already taken (or something?) This test is just meant to be a visual
-# inspection check if/when there are doubts - we don't want it crash CI alot.
-exit 0
+BUNDLE_SIZE=$(wc -c web3.min.js | awk '{print $1}')
+
+# Mark file with current commit, branch, and bundle size.
+sed -i "s|__COMMIT_HASH__|$COMMIT_REF|g" index.html
+sed -i "s|__BRANCH__|$BRANCH|g" index.html
+sed -i "s|__BUNDLE_SIZE__|$BUNDLE_SIZE|g" index.html
+

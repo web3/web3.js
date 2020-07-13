@@ -1,16 +1,13 @@
 /*
     This file is part of web3.js.
-
     web3.js is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
     web3.js is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Lesser General Public License for more details.
-
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -23,6 +20,7 @@
 "use strict";
 
 
+const { callbackify } = require('util');
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var Jsonrpc = require('./jsonrpc.js');
@@ -130,6 +128,13 @@ RequestManager.prototype.setProvider = function (provider, net) {
                     subscription.callback(errors.ConnectionCloseError(event));
                     _this.subscriptions.delete(subscription.subscription.id);
                 });
+
+                if(_this.provider && _this.provider.emit){
+                    _this.provider.emit('error', errors.ConnectionCloseError(event));
+                }
+            }
+            if(_this.provider && _this.provider.emit){
+                _this.provider.emit('end', event);
             }
         });
 
@@ -138,25 +143,26 @@ RequestManager.prototype.setProvider = function (provider, net) {
 };
 
 /**
- * TODO: This method should be implemented with a Promise instead of a callback
- *
- * Should be used to asynchronously send request
- *
- * @method sendAsync
+ * Asynchronously send request to provider.
+ * Prefers to use the `request` method available on the provider as specified in [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193).
+ * If `request` is not available, falls back to `sendAsync` and `send` respectively.
+ * @method send
  * @param {Object} data
  * @param {Function} callback
  */
 RequestManager.prototype.send = function (data, callback) {
-    callback = callback || function () {
-    };
+    callback = callback || function () {};
 
     if (!this.provider) {
         return callback(errors.InvalidProvider());
     }
 
-    var payload = Jsonrpc.toPayload(data.method, data.params);
-    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, result) {
-        if(result && result.id && payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));
+    const payload = Jsonrpc.toPayload(data.method, data.params);
+
+    const onResult = function (err, result) {
+        if(result && result.id && payload.id !== result.id) {
+            return callback(new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`));
+        }
 
         if (err) {
             return callback(err);
@@ -171,14 +177,22 @@ RequestManager.prototype.send = function (data, callback) {
         }
 
         callback(null, result.result);
-    });
+    };
+
+    if (this.provider.request) {
+        callbackify(this.provider.request.bind(this.provider))(payload, onResult);
+    } else if (this.provider.sendAsync) {
+        this.provider.sendAsync(payload, onResult);
+    } else if (this.provider.send) {
+        this.provider.send(payload, onResult);
+    } else {
+        throw new Error('Provider does not have a request or send method to use.');
+    }
 };
 
 /**
- * TODO: This method should be implemented with a Promise instead of a callback
- *
- * Should be called to asynchronously send batch request
- *
+ * Asynchronously send batch request.
+ * Only works if provider supports batch methods through `sendAsync` or `send`.
  * @method sendBatch
  * @param {Array} data - array of payload objects
  * @param {Function} callback

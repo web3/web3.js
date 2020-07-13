@@ -42,10 +42,10 @@ const httpProvider = new HttpProvider('http://localhost:8545', {
 });
 
 // $ExpectType void
-httpProvider.send({} as any, (error: Error | null) => {});
+httpProvider.send({}, (error: Error | null) => {});
 
 // $ExpectType void
-httpProvider.send({} as any, (error: Error | null, result: JsonRpcResponse | undefined) => {});
+httpProvider.send({}, (error: Error | null, result: JsonRpcResponse | undefined) => {});
 
 // $ExpectType boolean
 httpProvider.disconnect();
