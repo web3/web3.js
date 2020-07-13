@@ -52,7 +52,7 @@ var Web3 = function Web3() {
 
     // overwrite package setProvider
     var setProvider = this.setProvider;
-    this.setProvider = function (provider, net) {
+    this.setProvider = function (provider) {
         setProvider.apply(_this, arguments);
 
         _this.eth.setRequestManager(_this._requestManager);

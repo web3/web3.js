@@ -294,7 +294,7 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
     var messageHex = utils.isHexStrict(data) ? data : utils.utf8ToHex(data);
-    var messageBytes = utils.hexToBytes(messageHex)
+    var messageBytes = utils.hexToBytes(messageHex);
     var messageBuffer = Buffer.from(messageBytes);
     var preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
     var preambleBuffer = Buffer.from(preamble);
