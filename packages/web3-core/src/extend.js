@@ -20,19 +20,16 @@
  * @date 2017
  */
 
-"use strict";
+const formatters = require('web3-core-helpers').formatters;
+const Method = require('web3-core-method');
+const utils = require('web3-utils');
 
 
-var formatters = require('web3-core-helpers').formatters;
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
-
-
-var extend = function (pckg) {
+const extend = (pckg) => {
     /* jshint maxcomplexity:5 */
-    var ex = function (extension) {
+    const ex = (extension) => {
 
-        var extendedObject;
+        const extendedObject;
         if (extension.property) {
             if (!pckg[extension.property]) {
                 pckg[extension.property] = {};
