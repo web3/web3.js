@@ -21,36 +21,34 @@
  * @date 2017
  */
 
-"use strict";
-
 module.exports = {
-    ErrorResponse: function (result) {
+    ErrorResponse: (result) => {
         var message = !!result && !!result.error && !!result.error.message ? result.error.message : JSON.stringify(result);
         var data = (!!result.error && !!result.error.data) ? result.error.data : null;
         var err = new Error('Returned error: ' + message);
         err.data = data;
         return err;
     },
-    InvalidNumberOfParams: function (got, expected, method) {
+    InvalidNumberOfParams: (got, expected, method) => {
         return new Error('Invalid number of parameters for "'+ method +'". Got '+ got +' expected '+ expected +'!');
     },
-    InvalidConnection: function (host, event){
+    InvalidConnection: (host, event) => {
         return this.ConnectionError('CONNECTION ERROR: Couldn\'t connect to node '+ host +'.', event);
     },
-    InvalidProvider: function () {
+    InvalidProvider: () => {
         return new Error('Provider not set or invalid');
     },
-    InvalidResponse: function (result){
+    InvalidResponse: (result) => {
         var message = !!result && !!result.error && !!result.error.message ? result.error.message : 'Invalid JSON RPC response: ' + JSON.stringify(result);
         return new Error(message);
     },
-    ConnectionTimeout: function (ms){
+    ConnectionTimeout: (ms) => {
         return new Error('CONNECTION TIMEOUT: timeout of ' + ms + ' ms achived');
     },
-    ConnectionNotOpenError: function (event){
+    ConnectionNotOpenError: (event) => {
         return this.ConnectionError('connection not open on send()', event);
     },
-    ConnectionCloseError: function (event){
+    ConnectionCloseError: (event) => {
         if (typeof event === 'object' && event.code && event.reason) {
             return this.ConnectionError(
                 'CONNECTION ERROR: The connection got closed with ' +
@@ -62,13 +60,13 @@ module.exports = {
 
         return new Error('CONNECTION ERROR: The connection closed unexpectedly');
     },
-    MaxAttemptsReachedOnReconnectingError: function (){
+    MaxAttemptsReachedOnReconnectingError: () => {
         return new Error('Maximum number of reconnect attempts reached!');
     },
-    PendingRequestsOnReconnectingError: function (){
+    PendingRequestsOnReconnectingError: () => {
         return new Error('CONNECTION ERROR: Provider started to reconnect before the response got received!');
     },
-    ConnectionError: function (msg, event){
+    ConnectionError: (msg, event) => {
         const error = new Error(msg);
         if (event) {
             error.code = event.code;
@@ -77,14 +75,14 @@ module.exports = {
 
         return error;
     },
-    RevertInstructionError: function(reason, signature) {
+    RevertInstructionError: (reason, signature) => {
         var error = new Error('Your request got reverted with the following reason string: ' + reason);
         error.reason = reason;
         error.signature = signature;
 
         return error;
     },
-    TransactionRevertInstructionError: function(reason, signature, receipt) {
+    TransactionRevertInstructionError: (reason, signature, receipt) => {
         var error = new Error('Transaction has been reverted by the EVM:\n' + JSON.stringify(receipt, null, 2));
         error.reason = reason;
         error.signature = signature;
@@ -92,46 +90,46 @@ module.exports = {
 
         return error;
     },
-    TransactionError: function(message, receipt) {
+    TransactionError: (message, receipt) => {
         var error = new Error(message);
         error.receipt = receipt;
 
         return error;
     },
-    NoContractAddressFoundError: function(receipt) {
+    NoContractAddressFoundError: (receipt) => {
        return this.TransactionError('The transaction receipt didn\'t contain a contract address.', receipt);
     },
-    ContractCodeNotStoredError: function(receipt) {
+    ContractCodeNotStoredError: (receipt) => {
         return this.TransactionError('The contract code couldn\'t be stored, please check your gas limit.', receipt);
     },
-    TransactionRevertedWithoutReasonError: function(receipt) {
+    TransactionRevertedWithoutReasonError: (receipt) => {
         return this.TransactionError('Transaction has been reverted by the EVM:\n' + JSON.stringify(receipt, null, 2), receipt);
     },
-    TransactionOutOfGasError: function(receipt) {
+    TransactionOutOfGasError: (receipt) => {
         return this.TransactionError('Transaction ran out of gas. Please provide more gas:\n' + JSON.stringify(receipt, null, 2), receipt);
     },
-    ResolverMethodMissingError: function(address, name) {
+    ResolverMethodMissingError: (address, name) => {
         return new Error('The resolver at ' + address + 'does not implement requested method: "' + name + '".');
     },
-    ContractMissingABIError: function() {
+    ContractMissingABIError: () => {
         return new Error('You must provide the json interface of the contract when instantiating a contract object.');
     },
-    ContractOnceRequiresCallbackError: function() {
+    ContractOnceRequiresCallbackError: () => {
         return new Error('Once requires a callback as the second parameter.');
     },
-    ContractEventDoesNotExistError: function(eventName) {
+    ContractEventDoesNotExistError: (eventName) => {
         return new Error('Event "' + eventName + '" doesn\'t exist in this contract.');
     },
-    ContractReservedEventError: function(type) {
+    ContractReservedEventError: (type) => {
         return new Error('The event "'+ type +'" is a reserved event name, you can\'t use it.');
     },
-    ContractMissingDeployDataError: function() {
+    ContractMissingDeployDataError: () => {
         return new Error('No "data" specified in neither the given options, nor the default options.');
     },
-    ContractNoAddressDefinedError: function() {
+    ContractNoAddressDefinedError: () => {
         return new Error('This contract object doesn\'t have address set yet, please set an address first.');
     },
-    ContractNoFromAddressDefinedError: function() {
+    ContractNoFromAddressDefinedError: () => {
         return new Error('No "from" address specified in neither the given options, nor the default options.');
     }
 };

@@ -21,11 +21,9 @@
  * @date 2017
  */
 
-"use strict";
-
-var _ = require('underscore');
-var utils = require('web3-utils');
-var Iban = require('web3-eth-iban');
+const _ = require('underscore');
+const utils = require('web3-utils');
+const Iban = require('web3-eth-iban');
 
 
 /**
@@ -37,7 +35,7 @@ var Iban = require('web3-eth-iban');
  *
  * @returns {Array<String>}
  */
-var inputStorageKeysFormatter = function (keys) {
+const inputStorageKeysFormatter = (keys) => {
     return keys.map(utils.numberToHex);
 };
 
@@ -50,7 +48,7 @@ var inputStorageKeysFormatter = function (keys) {
  *
  * @returns {object}
  */
-var outputProofFormatter = function (proof) {
+const outputProofFormatter = (proof) => {
     proof.address = utils.toChecksumAddress(proof.address);
     proof.nonce = utils.hexToNumberString(proof.nonce);
     proof.balance = utils.hexToNumberString(proof.balance);
@@ -67,7 +65,7 @@ var outputProofFormatter = function (proof) {
  *
  * @returns {BN} object
  */
-var outputBigNumberFormatter = function (number) {
+const outputBigNumberFormatter = (number) => {
     return utils.toBN(number).toString(10);
 };
 
@@ -80,7 +78,7 @@ var outputBigNumberFormatter = function (number) {
  *
  * @returns {Boolean}
  */
-var isPredefinedBlockNumber = function (blockNumber) {
+const isPredefinedBlockNumber = (blockNumber) => {
     return blockNumber === 'latest' || blockNumber === 'pending' || blockNumber === 'earliest';
 };
 
@@ -93,7 +91,7 @@ var isPredefinedBlockNumber = function (blockNumber) {
  *
  * @returns {String}
  */
-var inputDefaultBlockNumberFormatter = function (blockNumber) {
+const inputDefaultBlockNumberFormatter = (blockNumber) => {
     if (this && (blockNumber === undefined || blockNumber === null)) {
         return inputBlockNumberFormatter(this.defaultBlock);
     }
@@ -108,7 +106,7 @@ var inputDefaultBlockNumberFormatter = function (blockNumber) {
  *
  * @returns {String}
  */
-var inputBlockNumberFormatter = function (blockNumber) {
+const inputBlockNumberFormatter = (blockNumber) => {
     if (blockNumber === undefined) {
         return undefined;
     }
@@ -131,7 +129,7 @@ var inputBlockNumberFormatter = function (blockNumber) {
  * @param {Object} transaction options
  * @returns object
  */
-var _txInputFormatter = function (options) {
+const _txInputFormatter = (options) => {
 
     if (options.to) { // it might be contract creation
         options.to = inputAddressFormatter(options.to);
@@ -159,9 +157,9 @@ var _txInputFormatter = function (options) {
         options.gas = options.gas || options.gasLimit;
     }
 
-    ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
+    ['gasPrice', 'gas', 'value', 'nonce'].filter((key) => {
         return options[key] !== undefined;
-    }).forEach(function (key) {
+    }).forEach((key) => {
         options[key] = utils.numberToHex(options[key]);
     });
 
@@ -175,11 +173,11 @@ var _txInputFormatter = function (options) {
  * @param {Object} transaction options
  * @returns object
  */
-var inputCallFormatter = function (options) {
+const inputCallFormatter = (options) => {
 
     options = _txInputFormatter(options);
 
-    var from = options.from || (this ? this.defaultAccount : null);
+    const from = options.from || (this ? this.defaultAccount : null);
 
     if (from) {
         options.from = inputAddressFormatter(from);
@@ -196,7 +194,7 @@ var inputCallFormatter = function (options) {
  * @param {Object} options
  * @returns object
  */
-var inputTransactionFormatter = function (options) {
+const inputTransactionFormatter = (options) => {
 
     options = _txInputFormatter(options);
 
@@ -221,7 +219,7 @@ var inputTransactionFormatter = function (options) {
  * @param {String} data
  * @returns {String}
  */
-var inputSignFormatter = function (data) {
+const inputSignFormatter = (data) => {
     return (utils.isHexStrict(data)) ? data : utils.utf8ToHex(data);
 };
 
@@ -232,7 +230,7 @@ var inputSignFormatter = function (data) {
  * @param {Object} tx
  * @returns {Object}
  */
-var outputTransactionFormatter = function (tx) {
+const outputTransactionFormatter = (tx) => {
     if (tx.blockNumber !== null)
         tx.blockNumber = utils.hexToNumber(tx.blockNumber);
     if (tx.transactionIndex !== null)
@@ -262,7 +260,7 @@ var outputTransactionFormatter = function (tx) {
  * @param {Object} receipt
  * @returns {Object}
  */
-var outputTransactionReceiptFormatter = function (receipt) {
+const outputTransactionReceiptFormatter = (receipt) => {
     if (typeof receipt !== 'object') {
         throw new Error('Received receipt is invalid: ' + receipt);
     }
@@ -296,7 +294,7 @@ var outputTransactionReceiptFormatter = function (receipt) {
  * @param {Object} block
  * @returns {Object}
  */
-var outputBlockFormatter = function (block) {
+const outputBlockFormatter = (block) => {
 
     // transform to number
     block.gasLimit = utils.hexToNumber(block.gasLimit);
@@ -312,7 +310,7 @@ var outputBlockFormatter = function (block) {
         block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
 
     if (_.isArray(block.transactions)) {
-        block.transactions.forEach(function (item) {
+        block.transactions.forEach((item) => {
             if (!_.isString(item))
                 return outputTransactionFormatter(item);
         });
@@ -331,8 +329,8 @@ var outputBlockFormatter = function (block) {
  * @param {Object} log object
  * @returns {Object} log
  */
-var inputLogFormatter = function (options) {
-    var toTopic = function (value) {
+const inputLogFormatter = (options) => {
+    const toTopic = (value) => {
 
         if (value === null || typeof value === 'undefined')
             return null;
@@ -354,14 +352,14 @@ var inputLogFormatter = function (options) {
 
     // make sure topics, get converted to hex
     options.topics = options.topics || [];
-    options.topics = options.topics.map(function (topic) {
+    options.topics = options.topics.map((topic) => {
         return (_.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
     });
 
     toTopic = null;
 
     if (options.address) {
-        options.address = (_.isArray(options.address)) ? options.address.map(function (addr) {
+        options.address = (_.isArray(options.address)) ? options.address.map((addr) => {
             return inputAddressFormatter(addr);
         }) : inputAddressFormatter(options.address);
     }
@@ -376,13 +374,13 @@ var inputLogFormatter = function (options) {
  * @param {Object} log object
  * @returns {Object} log
  */
-var outputLogFormatter = function (log) {
+const outputLogFormatter = (log) => {
 
     // generate a custom log id
     if (typeof log.blockHash === 'string' &&
         typeof log.transactionHash === 'string' &&
         typeof log.logIndex === 'string') {
-        var shaId = utils.sha3(log.blockHash.replace('0x', '') + log.transactionHash.replace('0x', '') + log.logIndex.replace('0x', ''));
+        const shaId = utils.sha3(log.blockHash.replace('0x', '') + log.transactionHash.replace('0x', '') + log.logIndex.replace('0x', ''));
         log.id = 'log_' + shaId.replace('0x', '').substr(0, 8);
     } else if (!log.id) {
         log.id = null;
@@ -409,7 +407,7 @@ var outputLogFormatter = function (log) {
  * @param {Object} transaction object
  * @returns {Object}
  */
-var inputPostFormatter = function (post) {
+const inputPostFormatter = (post) => {
 
     // post.payload = utils.toHex(post.payload);
 
@@ -426,7 +424,7 @@ var inputPostFormatter = function (post) {
     }
 
     // format the following options
-    post.topics = post.topics.map(function (topic) {
+    post.topics = post.topics.map((topic) => {
         // convert only if not hex
         return (topic.indexOf('0x') === 0) ? topic : utils.fromUtf8(topic);
     });
@@ -441,7 +439,7 @@ var inputPostFormatter = function (post) {
  * @param {Object}
  * @returns {Object}
  */
-var outputPostFormatter = function (post) {
+const outputPostFormatter = (post) => {
 
     post.expiry = utils.hexToNumber(post.expiry);
     post.sent = utils.hexToNumber(post.sent);
@@ -458,15 +456,15 @@ var outputPostFormatter = function (post) {
     if (!post.topics) {
         post.topics = [];
     }
-    post.topics = post.topics.map(function (topic) {
+    post.topics = post.topics.map((topic) => {
         return utils.toUtf8(topic);
     });
 
     return post;
 };
 
-var inputAddressFormatter = function (address) {
-    var iban = new Iban(address);
+const inputAddressFormatter = (address) => {
+    const iban = new Iban(address);
     if (iban.isValid() && iban.isDirect()) {
         return iban.toAddress().toLowerCase();
     } else if (utils.isAddress(address)) {
@@ -476,7 +474,7 @@ var inputAddressFormatter = function (address) {
 };
 
 
-var outputSyncingFormatter = function (result) {
+const outputSyncingFormatter = (result) => {
 
     result.startingBlock = utils.hexToNumber(result.startingBlock);
     result.currentBlock = utils.hexToNumber(result.currentBlock);

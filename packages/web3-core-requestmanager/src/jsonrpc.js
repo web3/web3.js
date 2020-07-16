@@ -22,8 +22,6 @@
  * @date 2015
  */
 
-"use strict";
-
 // Initialize Jsonrpc as a simple object with utility functions.
 var Jsonrpc = {
     messageId: 0
@@ -37,7 +35,7 @@ var Jsonrpc = {
  * @param {Array} params, an array of method params, optional
  * @returns {Object} valid jsonrpc payload object
  */
-Jsonrpc.toPayload = function (method, params) {
+Jsonrpc.toPayload = (method, params) => {
     if (!method) {
         throw new Error('JSONRPC method should be specified for params: "'+ JSON.stringify(params) +'"!');
     }
@@ -60,16 +58,16 @@ Jsonrpc.toPayload = function (method, params) {
  * @param {Object}
  * @returns {Boolean} true if response is valid, otherwise false
  */
-Jsonrpc.isValidResponse = function (response) {
+Jsonrpc.isValidResponse = (response) => {
+    const validateSingleMessage = (message) => {
+        return !!message &&
+          !message.error &&
+          message.jsonrpc === '2.0' &&
+          (typeof message.id === 'number' || typeof message.id === 'string') &&
+          message.result !== undefined; // only undefined is not valid json object
+        }
+      
     return Array.isArray(response) ? response.every(validateSingleMessage) : validateSingleMessage(response);
-
-    function validateSingleMessage(message){
-      return !!message &&
-        !message.error &&
-        message.jsonrpc === '2.0' &&
-        (typeof message.id === 'number' || typeof message.id === 'string') &&
-        message.result !== undefined; // only undefined is not valid json object
-    }
 };
 
 /**
@@ -79,8 +77,8 @@ Jsonrpc.isValidResponse = function (response) {
  * @param {Array} messages, an array of objects with method (required) and params (optional) fields
  * @returns {Array} batch payload
  */
-Jsonrpc.toBatchPayload = function (messages) {
-    return messages.map(function (message) {
+Jsonrpc.toBatchPayload = (messages) => {
+    return messages.map((message) => {
         return Jsonrpc.toPayload(message.method, message.params);
     });
 };

@@ -4,7 +4,7 @@
     web3.js is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+   (at your option) any later version.
 
     web3.js is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,18 +21,17 @@
  * @date 2017
  */
 
-'use strict';
+const _ = require('underscore');
+const errors = require('web3-core-helpers').errors;
+const formatters = require('web3-core-helpers').formatters;
+const utils = require('web3-utils');
+const promiEvent = require('web3-core-promievent');
+const Subscriptions = require('web3-core-subscriptions').subscriptions;
 
-var _ = require('underscore');
-var errors = require('web3-core-helpers').errors;
-var formatters = require('web3-core-helpers').formatters;
-var utils = require('web3-utils');
-var promiEvent = require('web3-core-promievent');
-var Subscriptions = require('web3-core-subscriptions').subscriptions;
+const EthersTransactionUtils = require('@ethersproject/transactions');
 
-var EthersTransactionUtils = require('@ethersproject/transactions');
-
-var Method = function Method(options) {
+// TODO Ensure this works
+const Method = Method = (options) => {
 
     if (!options.call || !options.name) {
         throw new Error('When creating a method you need to provide at least the "name" and "call" property.');
@@ -63,7 +62,7 @@ var Method = function Method(options) {
     this.handleRevert = options.handleRevert;
 };
 
-Method.prototype.setRequestManager = function (requestManager, accounts) {
+Method.prototype.setRequestManager = (requestManager, accounts) => {
     this.requestManager = requestManager;
 
     // reference to eth.accounts
@@ -73,8 +72,8 @@ Method.prototype.setRequestManager = function (requestManager, accounts) {
 
 };
 
-Method.prototype.createFunction = function (requestManager, accounts) {
-    var func = this.buildCall();
+Method.prototype.create = (requestManager, accounts) => {
+    const func = this.buildCall();
     func.call = this.call;
 
     this.setRequestManager(requestManager || this.requestManager, accounts || this.accounts);
@@ -82,10 +81,10 @@ Method.prototype.createFunction = function (requestManager, accounts) {
     return func;
 };
 
-Method.prototype.attachToObject = function (obj) {
-    var func = this.buildCall();
+Method.prototype.attachToObject = (obj) => {
+    const func = this.buildCall();
     func.call = this.call;
-    var name = this.name.split('.');
+    const name = this.name.split('.');
     if (name.length > 1) {
         obj[name[0]] = obj[name[0]] || {};
         obj[name[0]][name[1]] = func;
@@ -101,8 +100,8 @@ Method.prototype.attachToObject = function (obj) {
  * @param {Array} arguments
  * @return {String} name of jsonrpc method
  */
-Method.prototype.getCall = function (args) {
-    return _.isFunction(this.call) ? this.call(args) : this.call;
+Method.prototype.getCall = (args) => {
+    return _.is(this.call) ? this.call(args) : this.call;
 };
 
 /**
@@ -110,10 +109,10 @@ Method.prototype.getCall = function (args) {
  *
  * @method extractCallback
  * @param {Array} arguments
- * @return {Function|Null} callback, if exists
+ * @return {|Null} callback, if exists
  */
-Method.prototype.extractCallback = function (args) {
-    if (_.isFunction(args[args.length - 1])) {
+Method.prototype.extractCallback = (args) => {
+    if (_.is(args[args.length - 1])) {
         return args.pop(); // modify the args array!
     }
 };
@@ -125,7 +124,7 @@ Method.prototype.extractCallback = function (args) {
  * @param {Array} arguments
  * @throws {Error} if it is not
  */
-Method.prototype.validateArgs = function (args) {
+Method.prototype.validateArgs = (args) => {
     if (args.length !== this.params) {
         throw errors.InvalidNumberOfParams(args.length, this.params, this.name);
     }
@@ -138,14 +137,14 @@ Method.prototype.validateArgs = function (args) {
  * @param {Array}
  * @return {Array}
  */
-Method.prototype.formatInput = function (args) {
-    var _this = this;
+Method.prototype.formatInput = (args) => {
+    const _this = this;
 
     if (!this.inputFormatter) {
         return args;
     }
 
-    return this.inputFormatter.map(function (formatter, index) {
+    return this.inputFormatter.map( (formatter, index) => {
         // bind this for defaultBlock, and defaultAccount
         return formatter ? formatter.call(_this, args[index]) : args[index];
     });
@@ -158,11 +157,11 @@ Method.prototype.formatInput = function (args) {
  * @param {Object}
  * @return {Object}
  */
-Method.prototype.formatOutput = function (result) {
-    var _this = this;
+Method.prototype.formatOutput = (result) => {
+    const _this = this;
 
     if (_.isArray(result)) {
-        return result.map(function (res) {
+        return result.map( (res) => {
             return _this.outputFormatter && res ? _this.outputFormatter(res) : res;
         });
     } else {
@@ -177,13 +176,13 @@ Method.prototype.formatOutput = function (result) {
  * @param {Array} args
  * @return {Object}
  */
-Method.prototype.toPayload = function (args) {
-    var call = this.getCall(args);
-    var callback = this.extractCallback(args);
-    var params = this.formatInput(args);
+Method.prototype.toPayload = (args) => {
+    const call = this.getCall(args);
+    const callback = this.extractCallback(args);
+    const params = this.formatInput(args);
     this.validateArgs(params);
 
-    var payload = {
+    const payload = {
         method: call,
         params: params,
         callback: callback
@@ -197,8 +196,8 @@ Method.prototype.toPayload = function (args) {
 };
 
 
-Method.prototype._confirmTransaction = function (defer, result, payload) {
-    var method = this,
+Method.prototype._confirmTransaction = (defer, result, payload) => {
+    const method = this,
         promiseResolved = false,
         canUnsubscribe = true,
         timeoutCount = 0,
@@ -214,12 +213,12 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         hasBytecode = isContractDeployment && payload.params[0].data.length > 2;
 
     // add custom send Methods
-    var _ethereumCalls = [
+    const _ethereumCalls = [
         new Method({
             name: 'getBlockByNumber',
             call: 'eth_getBlockByNumber',
             params: 2,
-            inputFormatter: [formatters.inputBlockNumberFormatter, function (val) {
+            inputFormatter: [formatters.inputBlockNumberFormatter, (val) => {
                 return !!val;
             }],
             outputFormatter: formatters.outputBlockFormatter
@@ -257,20 +256,20 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         })
     ];
     // attach methods to this._ethereumCall
-    var _ethereumCall = {};
-    _.each(_ethereumCalls, function (mthd) {
+    const _ethereumCall = {};
+    _.each(_ethereumCalls, (mthd) => {
         mthd.attachToObject(_ethereumCall);
         mthd.requestManager = method.requestManager; // assign rather than call setRequestManager()
     });
 
 
     // fire "receipt" and confirmation events and resolve after
-    var checkConfirmation = function (existingReceipt, isPolling, err, blockHeader, sub) {
+    const checkConfirmation = (existingReceipt, isPolling, err, blockHeader, sub) => {
         if (!err) {
             // create fake unsubscribe
             if (!sub) {
                 sub = {
-                    unsubscribe: function () {
+                    unsubscribe: () => {
                         clearInterval(intervalId);
                     }
                 };
@@ -278,7 +277,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             // if we have a valid receipt we don't need to send a request
             return (existingReceipt ? promiEvent.resolve(existingReceipt) : _ethereumCall.getTransactionReceipt(result))
             // catch error from requesting receipt
-                .catch(function (err) {
+                .catch( (err) => {
                     sub.unsubscribe();
                     promiseResolved = true;
                     utils._fireError(
@@ -291,7 +290,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                     );
                 })
                 // if CONFIRMATION listener exists check for confirmations, by setting canUnsubscribe = false
-                .then(async function (receipt) {
+                .then(async (receipt) => {
                     if (!receipt || !receipt.blockHash) {
                         throw new Error('Receipt missing or blockHash null');
                     }
@@ -303,15 +302,15 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
                     // check if confirmation listener exists
                     if (defer.eventEmitter.listeners('confirmation').length > 0) {
-                        var block;
+                        const block;
 
                         // If there was an immediately retrieved receipt, it's already
                         // been confirmed by the direct call to checkConfirmation needed
                         // for parity instant-seal
                         if (existingReceipt === undefined || confirmationCount !== 0) {
                             // Get latest block to emit with confirmation
-                            var latestBlock = await _ethereumCall.getBlockByNumber('latest');
-                            var latestBlockHash = latestBlock ? latestBlock.hash : null;
+                            const latestBlock = await _ethereumCall.getBlockByNumber('latest');
+                            const latestBlockHash = latestBlock ? latestBlock.hash : null;
 
                             if (isPolling) { // Check if actually a new block is existing on polling
                                 if (lastBlock) {
@@ -344,7 +343,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                     return receipt;
                 })
                 // CHECK for CONTRACT DEPLOYMENT
-                .then(async function (receipt) {
+                .then(async (receipt) => {
 
                     if (isContractDeployment && !promiseResolved) {
 
@@ -365,7 +364,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                             return;
                         }
 
-                        var code;
+                        const code;
                         try {
                             code = await _ethereumCall.getCode(receipt.contractAddress);
                         } catch(err){
@@ -378,7 +377,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
                         // If deployment is status.true and there was a real
                         // bytecode string, assume it was successful.
-                        var deploymentSuccess = receipt.status === true && hasBytecode;
+                        const deploymentSuccess = receipt.status === true && hasBytecode;
 
                         if (deploymentSuccess || code.length > 2) {
                             defer.eventEmitter.emit('receipt', receipt);
@@ -414,11 +413,11 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                     return receipt;
                 })
                 // CHECK for normal tx check for receipt only
-                .then(async function (receipt) {
+                .then(async (receipt) => {
                     if (!isContractDeployment && !promiseResolved) {
                         if (!receipt.outOfGas &&
-                            (!gasProvided || gasProvided !== receipt.gasUsed) &&
-                            (receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined')) {
+                           (!gasProvided || gasProvided !== receipt.gasUsed) &&
+                           (receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined')) {
                             defer.eventEmitter.emit('receipt', receipt);
                             defer.resolve(receipt);
 
@@ -432,19 +431,19 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
                             if (receipt.status === false || receipt.status === '0x0') {
                                 try {
-                                    var revertMessage = null;
+                                    const revertMessage = null;
 
                                     if ( method.handleRevert &&
-                                        (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'))
+                                       (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'))
                                     {
-                                        var txReplayOptions = payload.params[0];
+                                        const txReplayOptions = payload.params[0];
 
                                         // If send was raw, fetch the transaction and reconstitute the
                                         // original params so they can be replayed with `eth_call`
                                         if (method.call === 'eth_sendRawTransaction'){
-                                            var rawTransactionHex = payload.params[0];
+                                            const rawTransactionHex = payload.params[0];
 
-                                            var parsedTx = EthersTransactionUtils.parse(rawTransactionHex);
+                                            const parsedTx = EthersTransactionUtils.parse(rawTransactionHex);
 
                                             txReplayOptions = formatters.inputTransactionFormatter({
                                                 data: parsedTx.data,
@@ -506,7 +505,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
                 })
                 // time out the transaction if not mined after 50 blocks
-                .catch(function () {
+                .catch( () => {
                     timeoutCount++;
 
                     // check to see if we are http polling
@@ -546,7 +545,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
     };
 
     // start watching for confirmation depending on the support features of the provider
-    var startWatching = function (existingReceipt) {
+    const startWatching = (existingReceipt) => {
         const startInterval = () => {
             intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
         }
@@ -554,7 +553,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         if (!this.requestManager.provider.on) {
             startInterval()
         } else {
-            _ethereumCall.subscribe('newBlockHeaders', function (err, blockHeader, sub) {
+            _ethereumCall.subscribe('newBlockHeaders', (err, blockHeader, sub) => {
                 if (err || !blockHeader) {
                     // fall back to polling
                     startInterval()
@@ -568,7 +567,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
     // first check if we already have a confirmed transaction
     _ethereumCall.getTransactionReceipt(result)
-        .then(function (receipt) {
+        .then( (receipt) => {
             if (receipt && receipt.blockHash) {
                 if (defer.eventEmitter.listeners('confirmation').length > 0) {
                     // We must keep on watching for new Blocks, if a confirmation listener is present
@@ -580,15 +579,15 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                 startWatching();
             }
         })
-        .catch(function () {
+        .catch( () {
             if (!promiseResolved) startWatching();
         });
 
 };
 
 
-var getWallet = function (from, accounts) {
-    var wallet = null;
+const getWallet = (from, accounts) {
+    const wallet = null;
 
     // is index given
     if (_.isNumber(from)) {
@@ -606,20 +605,20 @@ var getWallet = function (from, accounts) {
     return wallet;
 };
 
-Method.prototype.buildCall = function () {
-    var method = this,
+Method.prototype.buildCall = () {
+    const method = this,
         isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'), // || method.call === 'personal_sendTransaction'
         isCall = (method.call === 'eth_call');
 
-    // actual send function
-    var send = function () {
-        var defer = promiEvent(!isSendTx),
+    // actual send 
+    const send = () {
+        const defer = promiEvent(!isSendTx),
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
-        // CALLBACK function
-        var sendTxCallback = function (err, result) {
+        // CALLBACK 
+        const sendTxCallback = (err, result) {
             if (method.handleRevert && isCall && method.abiCoder) {
-                var reasonData;
+                const reasonData;
 
                 // Ganache / Geth <= 1.9.13 return the reason data as a successful eth_call response
                 // Geth >= 1.9.15 attaches the reason data to an error object.
@@ -631,8 +630,8 @@ Method.prototype.buildCall = function () {
                 }
 
                 if (reasonData){
-                    var reason = method.abiCoder.decodeParameter('string', '0x' + reasonData);
-                    var signature = 'Error(String)';
+                    const reason = method.abiCoder.decodeParameter('string', '0x' + reasonData);
+                    const signature = 'Error(String)';
 
                     utils._fireError(
                         errors.RevertInstructionError(reason, signature),
@@ -687,9 +686,9 @@ Method.prototype.buildCall = function () {
         };
 
         // SENDS the SIGNED SIGNATURE
-        var sendSignedTx = function (sign) {
+        const sendSignedTx = (sign) {
 
-            var signedPayload = _.extend({}, payload, {
+            const signedPayload = _.extend({}, payload, {
                 method: 'eth_sendRawTransaction',
                 params: [sign.rawTransaction]
             });
@@ -698,20 +697,20 @@ Method.prototype.buildCall = function () {
         };
 
 
-        var sendRequest = function (payload, method) {
+        const sendRequest = (payload, method) {
 
             if (method && method.accounts && method.accounts.wallet && method.accounts.wallet.length) {
-                var wallet;
+                const wallet;
 
                 // ETH_SENDTRANSACTION
                 if (payload.method === 'eth_sendTransaction') {
-                    var tx = payload.params[0];
+                    const tx = payload.params[0];
                     wallet = getWallet((_.isObject(tx)) ? tx.from : null, method.accounts);
 
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
-                        var txOptions = _.omit(tx, 'from');
+                        const txOptions = _.omit(tx, 'from');
 
                         if (method.defaultChain && !txOptions.chain) {
                             txOptions.chain = method.defaultChain;
@@ -727,11 +726,11 @@ Method.prototype.buildCall = function () {
 
                         return method.accounts.signTransaction(txOptions, wallet.privateKey)
                             .then(sendSignedTx)
-                            .catch(function (err) {
-                                if (_.isFunction(defer.eventEmitter.listeners) && defer.eventEmitter.listeners('error').length) {
+                            .catch( (err) {
+                                if (_.is(defer.eventEmitter.listeners) && defer.eventEmitter.listeners('error').length) {
                                     defer.eventEmitter.emit('error', err);
                                     defer.eventEmitter.removeAllListeners();
-                                    defer.eventEmitter.catch(function () {
+                                    defer.eventEmitter.catch( () {
                                     });
                                 }
                                 defer.reject(err);
@@ -740,12 +739,12 @@ Method.prototype.buildCall = function () {
 
                     // ETH_SIGN
                 } else if (payload.method === 'eth_sign') {
-                    var data = payload.params[1];
+                    const data = payload.params[1];
                     wallet = getWallet(payload.params[0], method.accounts);
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
-                        var sign = method.accounts.sign(data, wallet.privateKey);
+                        const sign = method.accounts.sign(data, wallet.privateKey);
 
                         if (payload.callback) {
                             payload.callback(null, sign.signature);
@@ -766,13 +765,13 @@ Method.prototype.buildCall = function () {
         // Send the actual transaction
         if (isSendTx && _.isObject(payload.params[0]) && typeof payload.params[0].gasPrice === 'undefined') {
 
-            var getGasPrice = (new Method({
+            const getGasPrice = (new Method({
                 name: 'getGasPrice',
                 call: 'eth_gasPrice',
                 params: 0
-            })).createFunction(method.requestManager);
+            })).create(method.requestManager);
 
-            getGasPrice(function (err, gasPrice) {
+            getGasPrice( (err, gasPrice) {
 
                 if (gasPrice) {
                     payload.params[0].gasPrice = gasPrice;
@@ -823,22 +822,22 @@ Method.prototype.buildCall = function () {
  *
  * @returns {Promise<Boolean|String>}
  */
-Method.prototype.getRevertReason = function (txOptions, blockNumber) {
-    var self = this;
+Method.prototype.getRevertReason = (txOptions, blockNumber) {
+    const self = this;
 
-    return new Promise(function (resolve, reject) {
-        (new Method({
+    return new Promise( (resolve, reject) {
+       (new Method({
             name: 'call',
             call: 'eth_call',
             params: 2,
             abiCoder: self.abiCoder,
             handleRevert: true
         }))
-            .createFunction(self.requestManager)(txOptions, utils.numberToHex(blockNumber))
-            .then(function () {
+            .create(self.requestManager)(txOptions, utils.numberToHex(blockNumber))
+            .then( () {
                 resolve(false);
             })
-            .catch(function (error) {
+            .catch( (error) {
                 if (error.reason) {
                     resolve({
                         reason: error.reason,
@@ -860,7 +859,7 @@ Method.prototype.getRevertReason = function (txOptions, blockNumber) {
  *
  * @returns {Boolean}
  */
-Method.prototype.isRevertReasonString = function (data) {
+Method.prototype.isRevertReasonString = (data) {
     return _.isString(data) && ((data.length - 2) / 2) % 32 === 4 && data.substring(0, 10) === '0x08c379a0';
 };
 
@@ -870,8 +869,8 @@ Method.prototype.isRevertReasonString = function (data) {
  * @method request
  * @return {Object} jsonrpc request
  */
-Method.prototype.request = function () {
-    var payload = this.toPayload(Array.prototype.slice.call(arguments));
+Method.prototype.request = () {
+    const payload = this.toPayload(Array.prototype.slice.call(arguments));
     payload.format = this.formatOutput.bind(this);
     return payload;
 };

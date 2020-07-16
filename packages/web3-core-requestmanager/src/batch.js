@@ -20,12 +20,10 @@
  * @date 2015
  */
 
-"use strict";
+const Jsonrpc = require('./jsonrpc');
+const errors = require('web3-core-helpers').errors;
 
-var Jsonrpc = require('./jsonrpc');
-var errors = require('web3-core-helpers').errors;
-
-var Batch = function (requestManager) {
+const Batch = (requestManager) => {
     this.requestManager = requestManager;
     this.requests = [];
 };
@@ -36,7 +34,7 @@ var Batch = function (requestManager) {
  * @method add
  * @param {Object} jsonrpc requet object
  */
-Batch.prototype.add = function (request) {
+Batch.prototype.add = (request) => {
     this.requests.push(request);
 };
 
@@ -45,13 +43,13 @@ Batch.prototype.add = function (request) {
  *
  * @method execute
  */
-Batch.prototype.execute = function () {
-    var requests = this.requests;
-    this.requestManager.sendBatch(requests, function (err, results) {
+Batch.prototype.execute = () => {
+    const requests = this.requests;
+    this.requestManager.sendBatch(requests, (err, results) => {
         results = results || [];
-        requests.map(function (request, index) {
+        requests.map((request, index) => {
             return results[index] || {};
-        }).forEach(function (result, index) {
+        }).forEach((result, index) => {
             if (requests[index].callback) {
                 if (result && result.error) {
                     return requests[index].callback(errors.ErrorResponse(result));

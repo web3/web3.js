@@ -20,10 +20,9 @@
  * @date 2017
  */
 
-"use strict";
 
-var errors = require('./errors');
-var formatters = require('./formatters');
+const errors = require('./errors');
+const formatters = require('./formatters');
 
 module.exports = {
     errors: errors,

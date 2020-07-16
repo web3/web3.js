@@ -25,20 +25,17 @@
  * @date 2017
  */
 
-"use strict";
+const version = require('../package.json').version;
+const core = require('web3-core');
+const Eth = require('web3-eth');
+const Net = require('web3-net');
+const Personal = require('web3-eth-personal');
+const Shh = require('web3-shh');
+const Bzz = require('web3-bzz');
+const utils = require('web3-utils');
 
-
-var version = require('../package.json').version;
-var core = require('web3-core');
-var Eth = require('web3-eth');
-var Net = require('web3-net');
-var Personal = require('web3-eth-personal');
-var Shh = require('web3-shh');
-var Bzz = require('web3-bzz');
-var utils = require('web3-utils');
-
-var Web3 = function Web3() {
-    var _this = this;
+const Web3 = () => {
+    const _this = this;
 
     // sets _requestmanager etc
     core.packageInit(this, arguments);
@@ -51,8 +48,10 @@ var Web3 = function Web3() {
     this.bzz = new Bzz(this);
 
     // overwrite package setProvider
-    var setProvider = this.setProvider;
-    this.setProvider = function (provider, net) {
+    const setProvider = this.setProvider;
+    // `net` is used by arguments
+    // TODO Remove aguments
+    this.setProvider = (provider, net) => {
         setProvider.apply(_this, arguments);
 
         _this.eth.setRequestManager(_this._requestManager);

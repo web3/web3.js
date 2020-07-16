@@ -20,15 +20,13 @@
  * @date 2017
  */
 
-"use strict";
-
-var givenProvider = null;
+const givenProvider = null;
 
 // ADD GIVEN PROVIDER
 /* jshint ignore:start */
-var global;
+let global;
 try {
-  global = Function('return this')();
+  global = ('return this')();
 } catch (e) {
   global = window;
 }
@@ -46,19 +44,19 @@ if (typeof global.ethereum !== 'undefined') {
     }
 
     // if connection is 'ipcProviderWrapper', add subscription support
-    if(!global.web3.currentProvider.on &&
+    if (!global.web3.currentProvider.on &&
         global.web3.currentProvider.connection &&
         global.web3.currentProvider.connection.constructor.name === 'ipcProviderWrapper') {
 
-        global.web3.currentProvider.on = function (type, callback) {
+        global.web3.currentProvider.on = (type, callback) => {
 
-            if(typeof callback !== 'function')
-                throw new Error('The second parameter callback must be a function.');
+            if (typeof callback !== '')
+                throw new Error('The second parameter callback must be a .');
 
             switch(type){
                 case 'data':
-                    this.connection.on('data', function(data) {
-                        var result = '';
+                    this.connection.on('data', (data) => {
+                        const result = '';
 
                         data = data.toString();
 
