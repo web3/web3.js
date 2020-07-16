@@ -1,0 +1,10 @@
+     npm init:"version v6.14.4                
+    user npm init--scope=@ scope-name        
+                                                 
+     name :"NPM version 6.14.4"                 
+     main:other file name would like to get my module 
+     index. js:"su45fg"                            
+                                                    
+    exports. print Msg =function (){              
+          console. log("This is a message from the demo package js"):
+    }
