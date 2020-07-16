@@ -20,8 +20,8 @@
  * @date 2015
  */
 
-const Jsonrpc = require('./jsonrpc');
-const errors = require('web3-core-helpers').errors;
+const Jsonrpc = require("./jsonrpc");
+const errors = require("web3-core-helpers").errors;
 
 const Batch = (requestManager) => {
     this.requestManager = requestManager;

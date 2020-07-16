@@ -562,7 +562,8 @@ Method.prototype._confirmTransaction = (defer, result, payload) => {
                 }
             })
         }
-    }.bind(this);
+    }
+    startWatching.bind(this);
 
 
     // first check if we already have a confirmed transaction
@@ -579,14 +580,14 @@ Method.prototype._confirmTransaction = (defer, result, payload) => {
                 startWatching();
             }
         })
-        .catch( () {
+        .catch(() => {
             if (!promiseResolved) startWatching();
         });
 
 };
 
 
-const getWallet = (from, accounts) {
+const getWallet = (from, accounts) => {
     const wallet = null;
 
     // is index given
@@ -605,18 +606,18 @@ const getWallet = (from, accounts) {
     return wallet;
 };
 
-Method.prototype.buildCall = () {
+Method.prototype.buildCall = () => {
     const method = this,
         isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'), // || method.call === 'personal_sendTransaction'
         isCall = (method.call === 'eth_call');
 
     // actual send 
-    const send = () {
+    const send = () => {
         const defer = promiEvent(!isSendTx),
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
         // CALLBACK 
-        const sendTxCallback = (err, result) {
+        const sendTxCallback = (err, result) => {
             if (method.handleRevert && isCall && method.abiCoder) {
                 const reasonData;
 
@@ -686,7 +687,7 @@ Method.prototype.buildCall = () {
         };
 
         // SENDS the SIGNED SIGNATURE
-        const sendSignedTx = (sign) {
+        const sendSignedTx = (sign) => {
 
             const signedPayload = _.extend({}, payload, {
                 method: 'eth_sendRawTransaction',
@@ -697,7 +698,7 @@ Method.prototype.buildCall = () {
         };
 
 
-        const sendRequest = (payload, method) {
+        const sendRequest = (payload, method) => {
 
             if (method && method.accounts && method.accounts.wallet && method.accounts.wallet.length) {
                 const wallet;
@@ -771,7 +772,7 @@ Method.prototype.buildCall = () {
                 params: 0
             })).create(method.requestManager);
 
-            getGasPrice( (err, gasPrice) {
+            getGasPrice((err, gasPrice) => {
 
                 if (gasPrice) {
                     payload.params[0].gasPrice = gasPrice;
@@ -822,10 +823,10 @@ Method.prototype.buildCall = () {
  *
  * @returns {Promise<Boolean|String>}
  */
-Method.prototype.getRevertReason = (txOptions, blockNumber) {
+Method.prototype.getRevertReason = (txOptions, blockNumber) => {
     const self = this;
 
-    return new Promise( (resolve, reject) {
+    return new Promise((resolve, reject) => {
        (new Method({
             name: 'call',
             call: 'eth_call',
@@ -834,10 +835,10 @@ Method.prototype.getRevertReason = (txOptions, blockNumber) {
             handleRevert: true
         }))
             .create(self.requestManager)(txOptions, utils.numberToHex(blockNumber))
-            .then( () {
+            .then( () => {
                 resolve(false);
             })
-            .catch( (error) {
+            .catch( (error) => {
                 if (error.reason) {
                     resolve({
                         reason: error.reason,
@@ -859,7 +860,7 @@ Method.prototype.getRevertReason = (txOptions, blockNumber) {
  *
  * @returns {Boolean}
  */
-Method.prototype.isRevertReasonString = (data) {
+Method.prototype.isRevertReasonString = (data) => {
     return _.isString(data) && ((data.length - 2) / 2) % 32 === 4 && data.substring(0, 10) === '0x08c379a0';
 };
 
@@ -869,7 +870,7 @@ Method.prototype.isRevertReasonString = (data) {
  * @method request
  * @return {Object} jsonrpc request
  */
-Method.prototype.request = () {
+Method.prototype.request = () => {
     const payload = this.toPayload(Array.prototype.slice.call(arguments));
     payload.format = this.formatOutput.bind(this);
     return payload;

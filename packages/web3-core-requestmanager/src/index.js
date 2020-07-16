@@ -17,12 +17,12 @@
  * @date 2017
  */
 
-const { callbackify } = require('util');
-const _ = require('underscore');
-const errors = require('web3-core-helpers').errors;
-const Jsonrpc = require('./jsonrpc.js');
-const BatchManager = require('./batch.js');
-const givenProvider = require('./givenProvider.js');
+const {callbackify} = require("util");
+const _ = require("underscore");
+const errors = require("web3-core-helpers").errors;
+const Jsonrpc = require("./jsonrpc.js");
+const BatchManager = require("./batch.js");
+const givenProvider = require("./givenProvider.js");
 
 /**
  * It's responsible for passing messages to providers
@@ -47,9 +47,9 @@ const RequestManager = (provider, net) => {
 RequestManager.givenProvider = givenProvider;
 
 RequestManager.providers = {
-    WebsocketProvider: require('web3-providers-ws'),
-    HttpProvider: require('web3-providers-http'),
-    IpcProvider: require('web3-providers-ipc')
+    WebsocketProvider: require("web3-providers-ws"),
+    HttpProvider: require("web3-providers-http"),
+    IpcProvider: require("web3-providers-ipc")
 };
 
 
@@ -67,7 +67,7 @@ RequestManager.prototype.setProvider = (provider, net) => {
     const _this = this;
 
     // autodetect provider
-    if (provider && typeof provider === 'string' && this.providers) {
+    if (provider && typeof provider === "string" && this.providers) {
 
         // HTTP
         if (/^http(s)?:\/\//i.test(provider)) {
@@ -78,11 +78,11 @@ RequestManager.prototype.setProvider = (provider, net) => {
             provider = new this.providers.WebsocketProvider(provider);
 
             // IPC
-        } else if (provider && typeof net === 'object' && typeof net.connect === 'function') {
+        } else if (provider && typeof net === "object" && typeof net.connect === "function") {
             provider = new this.providers.IpcProvider(provider, net);
 
         } else if (provider) {
-            throw new Error('Can\'t autodetect provider for "' + provider + '"');
+            throw new Error("Can't autodetect provider for \"" + provider + "\"");
         }
     }
 
@@ -95,7 +95,7 @@ RequestManager.prototype.setProvider = (provider, net) => {
 
     // listen to incoming notifications
     if (this.provider && this.provider.on) {
-        this.provider.on('data', (result, deprecatedResult) => {
+        this.provider.on("data", (result, deprecatedResult) => {
             result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
             // check for result.method, to prevent old providers errors to pass as result
@@ -105,21 +105,21 @@ RequestManager.prototype.setProvider = (provider, net) => {
         });
 
         // resubscribe if the provider has reconnected
-        this.provider.on('connect', () => {
+        this.provider.on("connect", () => {
             _this.subscriptions.forEach((subscription) => {
                 subscription.subscription.resubscribe();
             });
         });
 
         // notify all subscriptions about the error condition
-        this.provider.on('error', (error) => {
+        this.provider.on("error", (error) => {
             _this.subscriptions.forEach((subscription) => {
                 subscription.callback(error);
             });
         });
 
         // notify all subscriptions about bad close conditions
-        this.provider.on('close', (event) => {
+        this.provider.on("close", (event) => {
             if (!_this._isCleanCloseEvent(event) || _this._isIpcCloseError(event)) {
                 _this.subscriptions.forEach((subscription) => {
                     subscription.callback(errors.ConnectionCloseError(event));
@@ -127,11 +127,11 @@ RequestManager.prototype.setProvider = (provider, net) => {
                 });
 
                 if(_this.provider && _this.provider.emit){
-                    _this.provider.emit('error', errors.ConnectionCloseError(event));
+                    _this.provider.emit("error", errors.ConnectionCloseError(event));
                 }
             }
             if(_this.provider && _this.provider.emit){
-                _this.provider.emit('end', event);
+                _this.provider.emit("end", event);
             }
         });
 
@@ -183,7 +183,7 @@ RequestManager.prototype.send = (data, callback) => {
     } else if (this.provider.send) {
         this.provider.send(payload, onResult);
     } else {
-        throw new Error('Provider does not have a request or send method to use.');
+        throw new Error("Provider does not have a request or send method to use.");
     }
 };
 
@@ -200,7 +200,7 @@ RequestManager.prototype.sendBatch = (data, callback) => {
     }
 
     const payload = Jsonrpc.toBatchPayload(data);
-    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, (err, results) => {
+    this.provider[this.provider.sendAsync ? "sendAsync" : "send"](payload, (err, results) => {
         if (err) {
             return callback(err);
         }
@@ -232,7 +232,7 @@ RequestManager.prototype.addSubscription = (subscription, callback) => {
             }
         );
     } else {
-        throw new Error('The provider doesn\'t support subscriptions: ' + this.provider.constructor.name);
+        throw new Error("The provider doesn't support subscriptions: " + this.provider.constructor.name);
     }
 };
 
@@ -252,14 +252,14 @@ RequestManager.prototype.removeSubscription = (id, callback) => {
 
         // then, try to actually unsubscribe
         this.send({
-            method: type + '_unsubscribe',
+            method: type + "_unsubscribe",
             params: [id]
         }, callback);
 
         return;
     }
 
-    if (typeof callback === 'function') {
+    if (typeof callback === "function") {
         // call the callback if the subscription was already removed
         callback(null);
     }
@@ -276,7 +276,7 @@ RequestManager.prototype.clearSubscriptions = (keepIsSyncing) => {
     // uninstall all subscriptions
     if (this.subscriptions.size > 0) {
         this.subscriptions.forEach((value, id) => {
-            if (!keepIsSyncing || value.name !== 'syncing')
+            if (!keepIsSyncing || value.name !== "syncing")
                 _this.removeSubscription(id);
         });
     }
@@ -296,7 +296,7 @@ RequestManager.prototype.clearSubscriptions = (keepIsSyncing) => {
  * @returns {boolean}
  */
 RequestManager.prototype._isCleanCloseEvent = (event) => {
-    return typeof event === 'object' && ([1000].includes(event.code) || event.wasClean === true);
+    return typeof event === "object" && ([1000].includes(event.code) || event.wasClean === true);
 };
 
 /**
@@ -309,7 +309,7 @@ RequestManager.prototype._isCleanCloseEvent = (event) => {
  * @returns {boolean}
  */
 RequestManager.prototype._isIpcCloseError = (event) => {
-    return typeof event === 'boolean' && event;
+    return typeof event === "boolean" && event;
 };
 
 module.exports = {

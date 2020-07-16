@@ -23,7 +23,7 @@
  */
 
 // Initialize Jsonrpc as a simple object with utility functions.
-var Jsonrpc = {
+const Jsonrpc = {
     messageId: 0
 };
 
@@ -37,14 +37,14 @@ var Jsonrpc = {
  */
 Jsonrpc.toPayload = (method, params) => {
     if (!method) {
-        throw new Error('JSONRPC method should be specified for params: "'+ JSON.stringify(params) +'"!');
+        throw new Error("JSONRPC method should be specified for params: \""+ JSON.stringify(params) +"\"!");
     }
 
     // advance message ID
     Jsonrpc.messageId++;
 
     return {
-        jsonrpc: '2.0',
+        jsonrpc: "2.0",
         id: Jsonrpc.messageId,
         method: method,
         params: params || []
@@ -62,8 +62,8 @@ Jsonrpc.isValidResponse = (response) => {
     const validateSingleMessage = (message) => {
         return !!message &&
           !message.error &&
-          message.jsonrpc === '2.0' &&
-          (typeof message.id === 'number' || typeof message.id === 'string') &&
+          message.jsonrpc === "2.0" &&
+          (typeof message.id === "number" || typeof message.id === "string") &&
           message.result !== undefined; // only undefined is not valid json object
         }
       
