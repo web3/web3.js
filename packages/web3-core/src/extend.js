@@ -29,7 +29,7 @@ const extend = (pckg) => {
     /* jshint maxcomplexity:5 */
     const ex = (extension) => {
 
-        const extendedObject;
+        let extendedObject;
         if (extension.property) {
             if (!pckg[extension.property]) {
                 pckg[extension.property] = {};

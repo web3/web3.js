@@ -302,7 +302,7 @@ Method.prototype._confirmTransaction = (defer, result, payload) => {
 
                     // check if confirmation listener exists
                     if (defer.eventEmitter.listeners('confirmation').length > 0) {
-                        const block;
+                        let block;
 
                         // If there was an immediately retrieved receipt, it's already
                         // been confirmed by the direct call to checkConfirmation needed
@@ -364,7 +364,7 @@ Method.prototype._confirmTransaction = (defer, result, payload) => {
                             return;
                         }
 
-                        const code;
+                        let code;
                         try {
                             code = await _ethereumCall.getCode(receipt.contractAddress);
                         } catch(err){
@@ -619,7 +619,7 @@ Method.prototype.buildCall = () => {
         // CALLBACK 
         const sendTxCallback = (err, result) => {
             if (method.handleRevert && isCall && method.abiCoder) {
-                const reasonData;
+                let reasonData;
 
                 // Ganache / Geth <= 1.9.13 return the reason data as a successful eth_call response
                 // Geth >= 1.9.15 attaches the reason data to an error object.
@@ -701,7 +701,7 @@ Method.prototype.buildCall = () => {
         const sendRequest = (payload, method) => {
 
             if (method && method.accounts && method.accounts.wallet && method.accounts.wallet.length) {
-                const wallet;
+                let wallet;
 
                 // ETH_SENDTRANSACTION
                 if (payload.method === 'eth_sendTransaction') {
@@ -727,11 +727,11 @@ Method.prototype.buildCall = () => {
 
                         return method.accounts.signTransaction(txOptions, wallet.privateKey)
                             .then(sendSignedTx)
-                            .catch( (err) {
+                            .catch((err) => {
                                 if (_.is(defer.eventEmitter.listeners) && defer.eventEmitter.listeners('error').length) {
                                     defer.eventEmitter.emit('error', err);
                                     defer.eventEmitter.removeAllListeners();
-                                    defer.eventEmitter.catch( () {
+                                    defer.eventEmitter.catch(() => {
                                     });
                                 }
                                 defer.reject(err);

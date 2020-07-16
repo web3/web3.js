@@ -5,7 +5,10 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 module.exports = {
     mode: "production",
     entry: {
-        web3: "./packages/web3/src/index.js",
+        web3: [
+            "babel-polyfill",
+            "./packages/web3/src/index.js",
+        ]
     },
     plugins: [
         new CleanWebpackPlugin(),
