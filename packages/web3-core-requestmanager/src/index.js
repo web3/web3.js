@@ -102,7 +102,7 @@ RequestManager.prototype.setProvider = function (provider, net) {
             result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
             // check for result.method, to prevent old providers errors to pass as result
-            if (result.method && _this.subscriptions.has(result.params.subscription)) {
+            if (result.method && result.params && _this.subscriptions.has(result.params.subscription)) {
                 _this.subscriptions.get(result.params.subscription).callback(null, result.params.result);
             }
         });
