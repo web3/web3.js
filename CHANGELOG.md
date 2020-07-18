@@ -260,6 +260,10 @@ Released with 1.0.0-beta.37 code base.
 
 - Fix Provider.request response (#3647)
 
+### Added
+
+- Add unit tests for isHex and isHexStrict (#3622)
+
 ## [Unreleased]
 
 ## [1.2.12]
