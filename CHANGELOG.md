@@ -229,8 +229,6 @@ Released with 1.0.0-beta.37 code base.
 - Docs: spelling of pre-defined block number (#3539)
 - Docs: missing defaultBlock param option in `method.call` description (#3558)
 
-## [Unreleased]
-
 ## [1.2.10]
 
 ### Added
@@ -256,9 +254,15 @@ Released with 1.0.0-beta.37 code base.
 - Add undefined callback check to websocket provider response queue (#3574)
 - Fix WS clientConfig type (#3563)
 
+## [1.2.11]
+
+### Fixed
+
+- Fix Provider.request response (#3647)
+
 ## [Unreleased]
 
-## [1.2.11]
+## [1.2.12]
 
 ### Added
 

@@ -159,7 +159,7 @@ RequestManager.prototype.send = function (data, callback) {
 
     const payload = Jsonrpc.toPayload(data.method, data.params);
 
-    const onResult = function (err, result) {
+    const onJsonrpcResult = function (err, result) {
         if(result && result.id && payload.id !== result.id) {
             return callback(new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`));
         }
@@ -180,11 +180,11 @@ RequestManager.prototype.send = function (data, callback) {
     };
 
     if (this.provider.request) {
-        callbackify(this.provider.request.bind(this.provider))(payload, onResult);
+        callbackify(this.provider.request.bind(this.provider))(payload, callback);
     } else if (this.provider.sendAsync) {
-        this.provider.sendAsync(payload, onResult);
+        this.provider.sendAsync(payload, onJsonrpcResult);
     } else if (this.provider.send) {
-        this.provider.send(payload, onResult);
+        this.provider.send(payload, onJsonrpcResult);
     } else {
         throw new Error('Provider does not have a request or send method to use.');
     }
