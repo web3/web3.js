@@ -272,5 +272,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 
+- Improve RequestManager send method (#3649)
+
 ### Fixed
 
