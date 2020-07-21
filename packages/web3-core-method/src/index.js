@@ -453,7 +453,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                                 gas: parsedTx.gasLimit.toHexString(),
                                                 gasPrice: parsedTx.gasPrice.toHexString(),
                                                 value: parsedTx.value.toHexString()
-                                            })
+                                            });
                                         }
 
                                         // Get revert reason string with eth_call
@@ -549,19 +549,19 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
     var startWatching = function (existingReceipt) {
         const startInterval = () => {
             intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
-        }
+        };
 
         if (!this.requestManager.provider.on) {
-            startInterval()
+            startInterval();
         } else {
             _ethereumCall.subscribe('newBlockHeaders', function (err, blockHeader, sub) {
                 if (err || !blockHeader) {
                     // fall back to polling
-                    startInterval()
+                    startInterval();
                 } else {
                     checkConfirmation(existingReceipt, false, err, blockHeader, sub);
                 }
-            })
+            });
         }
     }.bind(this);
 
