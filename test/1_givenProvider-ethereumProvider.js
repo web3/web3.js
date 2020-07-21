@@ -40,7 +40,7 @@ describe('Web3.providers.givenProvider', function () {
 
         it('should use request()', async function () {
             global.ethereum = {
-                request: async () => { return { jsonrpc: '2.0', id: 0, result: 100 } },
+                request: async () => { return '0x64' },
                 sendAsync: () => { throw new Error('used sendAsync') }, 
                 send: () => { throw new Error('used send') }
             };
