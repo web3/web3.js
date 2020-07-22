@@ -12,7 +12,7 @@
         "tsc": "tsc -b tsconfig.json",
         "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
     },
-    "main": "src/index.js",
+    "main": "lib/index.js",
     "dependencies": {
         "@types/node": "^12.12.6",
         "web3-core": "1.2.11",

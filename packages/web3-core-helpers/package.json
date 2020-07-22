@@ -12,7 +12,7 @@
         "tsc": "tsc -b tsconfig.json",
         "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
     },
-    "main": "src/index.js",
+    "main": "lib/index.js",
     "dependencies": {
         "underscore": "1.9.1",
         "web3-eth-iban": "1.2.11",
