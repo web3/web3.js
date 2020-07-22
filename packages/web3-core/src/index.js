@@ -20,8 +20,6 @@
  * @date 2017
  */
 
-// import requestManager from "web3-core-requestmanager";
-// import extend from "./extend";
 const requestManager = require("web3-core-requestmanager");
 const extend = require("./extend");
 
