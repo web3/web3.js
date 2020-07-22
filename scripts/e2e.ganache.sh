@@ -26,7 +26,8 @@ echo " "
 npx ganache-cli --noVMErrorsOnRPCResponse > /dev/null &
 client=$!
 npx wait-port 8545
-
+ls -la /home/runner/work/web3.js/web3.js/packages/web3/
+ls -la /home/runner/work/web3.js/web3.js/packages/web3/lib
 # Test
 GANACHE=true nyc --no-clean --silent _mocha -- \
   --reporter spec \
