@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "./built",
+        "outDir": "./lib",
         "allowJs": true,
         "target": "esnext",
         "pretty": true,

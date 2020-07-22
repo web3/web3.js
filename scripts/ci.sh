@@ -36,26 +36,31 @@ elif [ "$TEST" = "e2e_browsers" ]; then
 
 elif [ "$TEST" = "e2e_truffle" ]; then
 
+  npm run build
   npm run test:e2e:publish
   npm run test:e2e:truffle
 
 elif [ "$TEST" = "e2e_mosaic" ]; then
 
+  npm run build
   npm run test:e2e:publish
   npm run test:e2e:mosaic
 
 elif [ "$TEST" = "e2e_windows" ]; then
 
+  npm run build
   bash ./scripts/e2e.npm.publish.sh
   bash ./scripts/e2e.windows.sh
 
 elif [ "$TEST" = "e2e_ganache" ]; then
 
+  npm run build
   npm run test:e2e:publish
   npm run test:e2e:ganache:core
 
 elif [ "$TEST" = "e2e_gnosis_dex" ]; then
 
+  npm run build
   npm run test:e2e:publish
   npm run test:e2e:gnosis:dex
 
