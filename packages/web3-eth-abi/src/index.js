@@ -100,16 +100,16 @@ ABICoder.prototype.encodeParameter = function (type, param) {
  */
 ABICoder.prototype.encodeParameters = function (types, params) {
     var self = this;
-    types = self.mapTypes(types)
+    types = self.mapTypes(types);
 
     params = params.map(function (param, index) {
-        let type = types[index]
+        let type = types[index];
         if (typeof type === 'object' && type.type) {
             // We may get a named type of shape {name, type}
-            type = type.type
+            type = type.type;
         }
 
-        param = self.formatParam(type, param)
+        param = self.formatParam(type, param);
 
         // Format params for tuples
         if (typeof type === 'string' && type.includes('tuple')) {
@@ -121,21 +121,21 @@ ABICoder.prototype.encodeParameters = function (types, params) {
                             ethersAbiCoder._getCoder(ParamType.from(coder.type.replace('[]', ''))),
                             p
                         )
-                    )
+                    );
                 }
                 coder.coders.forEach((c, i) => {
                     if (c.name === 'tuple') {
-                        modifyParams(c, param[i])
+                        modifyParams(c, param[i]);
                     } else {
-                        param[i] = self.formatParam(c.name, param[i])
+                        param[i] = self.formatParam(c.name, param[i]);
                     }
-                })
-            }
-            modifyParams(coder, param)
+                });
+            };
+            modifyParams(coder, param);
         }
 
         return param;
-    })
+    });
 
     return ethersAbiCoder.encode(types, params);
 };
@@ -155,7 +155,7 @@ ABICoder.prototype.mapTypes = function (types) {
         // recognize former type. Solidity docs say `Function` is a bytes24
         // encoding the contract address followed by the function selector hash.
         if (typeof type === 'object' && type.type === 'function'){
-            type.type = "bytes24"
+            type.type = "bytes24";
         }
         if (self.isSimplifiedStructFormat(type)) {
             var structName = Object.keys(type)[0];
@@ -259,7 +259,7 @@ ABICoder.prototype.formatParam = function (type, param) {
     }
 
     if (type.match(paramTypeBytesArray) || type.match(paramTypeNumberArray)) {
-        return param.map(p => this.formatParam(type.replace('[]', ''), p))
+        return param.map(p => this.formatParam(type.replace('[]', ''), p));
     }
 
     // Format correct width for u?int[0-9]*
@@ -288,17 +288,17 @@ ABICoder.prototype.formatParam = function (type, param) {
             }
             if (param.length < maxSize) {
                 // pad to correct length
-                param = utils.rightPad(param, size * 2)
+                param = utils.rightPad(param, size * 2);
             }
         }
 
         // format odd-length bytes to even-length
         if (param.length % 2 === 1) {
-            param = '0x0' + param.substring(2)
+            param = '0x0' + param.substring(2);
         }
     }
 
-    return param
+    return param;
 };
 
 /**

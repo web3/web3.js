@@ -26,7 +26,7 @@ jobs:
                   path: |
                       node_modules
                       */*/node_modules
-                  key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
+                  key: 0-${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
             - run: bash ./scripts/install.sh
               if: steps.cache-deps.outputs.cache-hit != 'true'
             - run: bash ./scripts/ci.sh
@@ -48,7 +48,7 @@ jobs:
                   path: |
                       node_modules
                       */*/node_modules
-                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+                  key: 0-${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
             - run: bash ./scripts/install.sh
               if: steps.cache-deps.outputs.cache-hit != 'true'
             - run: bash ./scripts/ci.sh
@@ -78,7 +78,7 @@ jobs:
                   path: |
                       node_modules
                       */*/node_modules
-                  key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
+                  key: 0-${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
             - run: bash ./scripts/install.sh
               if: steps.cache-deps.outputs.cache-hit != 'true'
             - run: bash ./scripts/ci.sh
