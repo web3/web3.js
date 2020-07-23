@@ -270,7 +270,12 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 
+- Support for typescript files (.ts) to be writtern alongside regular .js files (#3652)
+
 ### Changed
+
+- `npm run build` now uses TSC to compile (.js allowed) and the build folder is now located under `lib` (#3652)
+- Modernized web3-core to use newer es syntax (#3652)
 
 ### Fixed
 
