@@ -9,9 +9,10 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
+        "tsc": "tsc -b tsconfig.json",
         "dtslint": "dtslint --localTs ../../node_modules/typescript/lib  types"
     },
-    "main": "src/index.js",
+    "main": "lib/index.js",
     "dependencies": {
         "crypto-browserify": "3.12.0",
         "eth-lib": "0.2.8",

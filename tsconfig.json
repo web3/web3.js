@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "outDir": "./lib",
+        "allowJs": true,
+        "target": "esnext",
+        "pretty": true,
+        "module": "commonjs",
+    }
+}

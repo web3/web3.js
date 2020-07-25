@@ -7,7 +7,7 @@
     "engines": {
         "node": ">=8.0.0"
     },
-    "main": "src/index.js",
+    "main": "lib/index.js",
     "bugs": {
         "url": "https://github.com/ethereum/web3.js/issues"
     },
@@ -19,6 +19,7 @@
     "author": "ethereum.org",
     "types": "types/index.d.ts",
     "scripts": {
+        "tsc": "tsc -b tsconfig.json",
         "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types",
         "postinstall": "node angular-patch.js"
     },

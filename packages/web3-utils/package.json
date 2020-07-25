@@ -9,9 +9,10 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
+        "tsc": "tsc -b tsconfig.json",
         "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
     },
-    "main": "src/index.js",
+    "main": "lib/index.js",
     "dependencies": {
         "bn.js": "^4.11.9",
         "eth-lib": "0.2.8",

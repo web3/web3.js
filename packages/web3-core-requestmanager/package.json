@@ -7,7 +7,10 @@
     "engines": {
         "node": ">=8.0.0"
     },
-    "main": "src/index.js",
+    "main": "lib/index.js",
+    "scripts": {
+        "tsc": "tsc -b tsconfig.json"
+    },
     "dependencies": {
         "underscore": "1.9.1",
         "web3-core-helpers": "1.2.11",
