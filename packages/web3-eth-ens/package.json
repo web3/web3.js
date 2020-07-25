@@ -9,9 +9,10 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
+        "tsc": "tsc -b tsconfig.json",
         "dtslint": "dtslint --localTs ../../node_modules/typescript/lib  types"
     },
-    "main": "src/index.js",
+    "main": "lib/index.js",
     "dependencies": {
         "content-hash": "^2.5.2",
         "eth-ens-namehash": "2.0.8",

@@ -9,9 +9,10 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
+        "tsc": "tsc -b tsconfig.json",
         "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
     },
-    "main": "src/index.js",
+    "main": "lib/index.js",
     "dependencies": {
         "@ethersproject/transactions": "^5.0.0-beta.135",
         "underscore": "1.9.1",

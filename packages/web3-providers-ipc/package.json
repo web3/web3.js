@@ -8,10 +8,11 @@
         "node": ">=8.0.0"
     },
     "scripts": {
+        "tsc": "tsc -b tsconfig.json",
         "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
     },
     "types": "types/index.d.ts",
-    "main": "src/index.js",
+    "main": "lib/index.js",
     "dependencies": {
         "oboe": "2.1.4",
         "underscore": "1.9.1",
