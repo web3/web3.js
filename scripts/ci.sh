@@ -7,13 +7,14 @@
 # Exit immediately on error
 set -o errexit
 
+npm run build
+
 if [ "$TEST" = "unit" ]; then
 
   npm run test:unit
 
 elif [ "$TEST" = "build_and_lint" ]; then
 
-  npm run build
   npm run dtslint
   npm run depcheck
   npm run bundlesize
@@ -28,7 +29,6 @@ elif [ "$TEST" = "unit_and_e2e_clients" ]; then
 
 elif [ "$TEST" = "e2e_browsers" ]; then
 
-  npm run build
   npm run test:e2e:chrome
   npm run test:e2e:firefox
   npm run test:e2e:min

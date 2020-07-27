@@ -227,7 +227,7 @@ Subscription.prototype.subscribe = function() {
     // Re-subscription only: continue fetching from the last block we received.
     // a dropped connection may have resulted in gaps in the logs...
     if (this.lastBlock && _.isObject(this.options.params)){
-        payload.params[1] = this.options.params
+        payload.params[1] = this.options.params;
         payload.params[1].fromBlock = formatters.inputBlockNumberFormatter(this.lastBlock + 1);
     }
 
