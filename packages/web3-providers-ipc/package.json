@@ -14,7 +14,7 @@
     "types": "types/index.d.ts",
     "main": "lib/index.js",
     "dependencies": {
-        "oboe": "2.1.4",
+        "oboe": "2.1.5",
         "underscore": "1.9.1",
         "web3-core-helpers": "1.2.11"
     },
