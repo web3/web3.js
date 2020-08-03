@@ -23,7 +23,6 @@ if (isNode) {
       var parsedUrl = require('url').parse(url);
       var auth = parsedUrl.auth ? parsedUrl.auth.split(':') : null;
       if (auth && auth.length !== 1) {
-        delete parsedUrl.auth;
         parsedUrl.username = auth[0];
         parsedUrl.password = auth[1];
       }
