@@ -20,13 +20,14 @@ if (isNode) {
 } else {
     _btoa = btoa.bind(window);
     helpers = function(url) {
-        var parsedUrl = new URL(url);
-        // web3 uses URL's username and password on websocket provider, which are not
-        // implemented by react-native, instead of throwing a `not implemented` error
-        // by default, simply return undefined
-        Object.defineProperty(parsedUrl, 'username', {value:undefined});
-        Object.defineProperty(parsedUrl, 'password', {value:undefined});
-        return parsedUrl;
+      var parsedUrl = require('url').parse(url);
+      var auth = parsedUrl.auth ? parsedUrl.auth.split(':') : null;
+      if (auth && auth.length !== 1) {
+        delete parsedUrl.auth;
+        parsedUrl.username = auth[0];
+        parsedUrl.password = auth[1];
+      }
+      return parsedUrl;
     };
 }
 
