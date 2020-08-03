@@ -20,13 +20,7 @@ if (isNode) {
 } else {
     _btoa = btoa.bind(window);
     helpers = function(url) {
-      var parsedUrl = require('url').parse(url);
-      var auth = parsedUrl.auth ? parsedUrl.auth.split(':') : null;
-      if (auth && auth.length !== 1) {
-        parsedUrl.username = auth[0];
-        parsedUrl.password = auth[1];
-      }
-      return parsedUrl;
+      return require('url').parse(url);
     };
 }
 
