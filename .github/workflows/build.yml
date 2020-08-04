@@ -36,7 +36,6 @@ jobs:
                   node-version: ${{ matrix.node }}
             - uses: actions/checkout@v2
             - run: bash ./scripts/install.sh
-              if: steps.cache-deps.outputs.cache-hit != 'true'
             - run: bash ./scripts/ci.sh
     e2e:
         runs-on: ubuntu-latest
