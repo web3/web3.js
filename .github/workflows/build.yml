@@ -59,7 +59,6 @@ jobs:
                   node-version: 12
             - uses: actions/checkout@v2
             - run: bash ./scripts/install.sh
-              if: steps.cache-deps.outputs.cache-hit != 'true'
             - run: bash ./scripts/ci.sh
             - name: Send coverage reports to Coveralls
               if: env.TEST == 'unit_and_e2e_clients'
