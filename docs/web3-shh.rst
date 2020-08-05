@@ -769,7 +769,7 @@ Example
     ]).then(() => {
 
         // will receive also its own message send, below
-        subscription = shh.subscribe("messages", {
+        subscription = web3.shh.subscribe("messages", {
             symKeyID: identities[0],
             topics: ['0xffaadd11']
         }).on('data', console.log);
