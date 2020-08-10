@@ -157,34 +157,19 @@ RequestManager.prototype.send = function (data, callback) {
         return callback(errors.InvalidProvider());
     }
 
-    const payload = Jsonrpc.toPayload(data.method, data.params);
+    const { method, params } = data
 
-    const onJsonrpcResult = function (err, result) {
-        if(result && result.id && payload.id !== result.id) {
-            return callback(new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`));
-        }
-
-        if (err) {
-            return callback(err);
-        }
-
-        if (result && result.error) {
-            return callback(errors.ErrorResponse(result));
-        }
-
-        if (!Jsonrpc.isValidResponse(result)) {
-            return callback(errors.InvalidResponse(result));
-        }
-
-        callback(null, result.result);
-    };
+    const jsonrpcPayload = Jsonrpc.toPayload(method, params);
+    const jsonrpcResultCallback = this._jsonrpcResultCallback(callback, jsonrpcPayload)
 
     if (this.provider.request) {
-        callbackify(this.provider.request.bind(this.provider))(payload, callback);
+        const callbackRequest = callbackify(this.provider.request)
+        const requestArgs = { method, params }
+        callbackRequest(requestArgs, callback);
     } else if (this.provider.sendAsync) {
-        this.provider.sendAsync(payload, onJsonrpcResult);
+        this.provider.sendAsync(jsonrpcPayload, jsonrpcResultCallback);
     } else if (this.provider.send) {
-        this.provider.send(payload, onJsonrpcResult);
+        this.provider.send(jsonrpcPayload, jsonrpcResultCallback);
     } else {
         throw new Error('Provider does not have a request or send method to use.');
     }
@@ -313,6 +298,39 @@ RequestManager.prototype._isCleanCloseEvent = function (event) {
  */
 RequestManager.prototype._isIpcCloseError = function (event) {
     return typeof event === 'boolean' && event;
+};
+
+/**
+ * The jsonrpc result callback for RequestManager.send
+ * 
+ * @method _jsonrpcResultCallback
+ * 
+ * @param {Function} callback the callback to use
+ * @param {Object} payload the jsonrpc payload
+ * 
+ * @returns {Function} return callback of form (err, result)
+ *
+ */
+RequestManager.prototype._jsonrpcResultCallback = function (callback, payload) {
+    return function(err, result) { 
+        if(result && result.id && payload.id !== result.id) {
+            return callback(new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`));
+        }
+
+        if (err) {
+            return callback(err);
+        }
+
+        if (result && result.error) {
+            return callback(errors.ErrorResponse(result));
+        }
+
+        if (!Jsonrpc.isValidResponse(result)) {
+            return callback(errors.InvalidResponse(result));
+        }
+
+        callback(null, result.result);
+    }
 };
 
 module.exports = {
