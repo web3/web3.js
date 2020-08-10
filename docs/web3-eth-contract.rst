@@ -590,7 +590,7 @@ Returns
 
 - ``Array`` - arguments: The arguments passed to the method before. They can be changed.
 - ``Function`` - :ref:`send <contract-send>`: Will deploy the contract. The promise will resolve with the new contract instance, instead of the receipt!
-- ``Function`` - :ref:`estimateGas <contract-estimateGas>`: Will estimate the gas used for deploying.
+- ``Function`` - :ref:`estimateGas <contract-estimateGas>`: Will estimate the gas used for deploying. Note: You must specify a ``from`` address otherwise you may experience odd behavior.
 - ``Function`` - :ref:`encodeABI <contract-encodeABI>`: Encodes the ABI of the deployment, which is contract data + constructor parameters
 
 -------
@@ -688,7 +688,7 @@ Returns
 - ``Array`` - arguments: The arguments passed to the method before. They can be changed.
 - ``Function`` - :ref:`call <contract-call>`: Will call the "constant" method and execute its smart contract method in the EVM without sending a transaction (Can't alter the smart contract state).
 - ``Function`` - :ref:`send <contract-send>`: Will send a transaction to the smart contract and execute its method (Can alter the smart contract state).
-- ``Function`` - :ref:`estimateGas <contract-estimateGas>`: Will estimate the gas used when the method would be executed on chain.
+- ``Function`` - :ref:`estimateGas <contract-estimateGas>`: Will estimate the gas used when the method would be executed on chain. Note: You must specify a ``from`` address otherwise you may experience odd behavior.
 - ``Function`` - :ref:`encodeABI <contract-encodeABI>`: Encodes the ABI for this method. This can be send using a transaction, call the method or passing into another smart contracts method as argument.
 
 -------
@@ -937,6 +937,7 @@ methods.myMethod.estimateGas
 
 Will call to estimate the gas a method execution will take when executed in the EVM.
 The estimation can differ from the actual gas used when later sending a transaction, as the state of the smart contract can be different at that time.
+Note: You must specify a ``from`` address otherwise you may experience odd behavior.
 
 ----------
 Parameters
