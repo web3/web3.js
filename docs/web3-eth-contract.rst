@@ -1040,7 +1040,7 @@ Parameters
 1. ``event`` - ``String``: The name of the event in the contract, or ``"allEvents"`` to get all events.
 2. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Lets you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``topics`` - ``Array`` (optional): This allows you to manually set the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
+    * ``topics`` - ``Array`` (optional): This allows you to manually set the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically. Each topic can also be a nested array of topics that behaves as “or” operation between the given nested topics.
 3. ``callback`` - ``Function``: This callback will be fired for the first *event* as the second argument, or an error as the first argument. See :ref:`getPastEvents return values <contract-events-return>` for details about the event structure.
 
 -------
@@ -1102,7 +1102,7 @@ Parameters
 1. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
     * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used. For specific range use :ref:`getPastEvents <getPastEvents>`.
-    * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
+    * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically. Each topic can also be a nested array of topics that behaves as “or” operation between the given nested topics.
 2. ``callback`` - ``Function`` (optional): This callback will be fired for each *event* as the second argument, or an error as the first argument.
 
 .. _contract-events-return:
@@ -1212,7 +1212,7 @@ Parameters
     * ``filter`` - ``Object`` (optional): Lets you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
     * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.
     * ``toBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (less than or equal to) to get events up to (Defaults to ``"latest"``). Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.
-    * ``topics`` - ``Array`` (optional): This allows manually setting the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
+    * ``topics`` - ``Array`` (optional): This allows manually setting the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically. Each topic can also be a nested array of topics that behaves as “or” operation between the given nested topics.
 3. ``callback`` - ``Function`` (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
 
 
