@@ -1722,6 +1722,7 @@ estimateGas
     web3.eth.estimateGas(callObject [, callback])
 
 Executes a message call or transaction and returns the amount of the gas used.
+Note: You must specify a ``from`` address otherwise you may experience odd behavior.
 
 ----------
 Parameters
