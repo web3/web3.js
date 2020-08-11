@@ -9,6 +9,7 @@ set -o errexit
 
 if [ "$TEST" = "unit" ]; then
 
+  npm run build
   npm run test:unit
 
 elif [ "$TEST" = "build_and_lint" ]; then
@@ -20,11 +21,12 @@ elif [ "$TEST" = "build_and_lint" ]; then
 
 elif [ "$TEST" = "unit_and_e2e_clients" ]; then
 
+  npm run build
   npm run test:e2e:ganache
   npm run test:e2e:geth:insta
   npm run test:e2e:geth:auto
   npm run test:unit
-  npm run cov:merge_reports 
+  npm run cov:merge_reports
 
 elif [ "$TEST" = "e2e_browsers" ]; then
 
@@ -53,5 +55,10 @@ elif [ "$TEST" = "e2e_ganache" ]; then
 
   npm run test:e2e:publish
   npm run test:e2e:ganache:core
+
+elif [ "$TEST" = "e2e_gnosis_dex" ]; then
+
+  npm run test:e2e:publish
+  npm run test:e2e:gnosis:dex
 
 fi

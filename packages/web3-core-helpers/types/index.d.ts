@@ -81,6 +81,13 @@ export class errors {
     static TransactionRevertedWithoutReasonError(receipt: object): TransactionError
     static TransactionOutOfGasError(receipt: object): TransactionError
     static ResolverMethodMissingError(address: string, name: string): Error
+    static ContractMissingABIError(): Error
+    static ContractOnceRequiresCallbackError(): Error
+    static ContractEventDoesNotExistError(eventName: string): Error
+    static ContractReservedEventError(type: string): Error
+    static ContractMissingDeployDataError(): Error
+    static ContractNoAddressDefinedError(): Error
+    static ContractNoFromAddressDefinedError(): Error
 }
 
 export class WebsocketProviderBase {
@@ -188,7 +195,7 @@ export interface WebsocketProviderOptions {
     reconnectDelay?: number;
     headers?: any;
     protocol?: string;
-    clientConfig?: string;
+    clientConfig?: object;
     requestOptions?: any;
     origin?: string;
     reconnect?: ReconnectOptions;

@@ -5,8 +5,7 @@ web3.shh
 ========
 
 
-The ``web3-shh`` package allows you to interact with the whisper protocol for broadcasting.
-For more see `Whisper  Overview <https://github.com/ethereum/go-ethereum/wiki/Whisper>`_.
+The ``web3-shh`` package allows you to interact with the whisper protocol for broadcasting. For more see `Whisper Overview <https://github.com/ethereum/go-ethereum/wiki/Whisper>`_.
 
 
 .. code-block:: javascript
@@ -760,25 +759,25 @@ Example
 
 .. code-block:: javascript
 
-    var identities = [];
+    var identities = {};
     var subscription = null;
 
     Promise.all([
-        web3.shh.newSymKey().then((id) => {identities.push(id);}),
-        web3.shh.newKeyPair().then((id) => {identities.push(id);})
+        web3.shh.newSymKey().then((id) => {identities.symKey = id;}),
+        web3.shh.newKeyPair().then((id) => {identities.keyPair = id;})
 
     ]).then(() => {
 
         // will receive also its own message send, below
-        subscription = shh.subscribe("messages", {
-            symKeyID: identities[0],
+        subscription = web3.shh.subscribe("messages", {
+            symKeyID: identities.symKey,
             topics: ['0xffaadd11']
         }).on('data', console.log);
 
     }).then(() => {
        web3.shh.post({
-            symKeyID: identities[0], // encrypts using the sym key ID
-            sig: identities[1], // signs the message using the keyPair ID
+            symKeyID: identities.symKey, // encrypts using the sym key ID
+            sig: identities.keyPair, // signs the message using the keyPair ID
             ttl: 10,
             topic: '0xffaadd11',
             payload: '0xffffffdddddd1122',

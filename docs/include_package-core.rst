@@ -14,7 +14,7 @@ setProvider
 Will change the provider for its module.
 
 .. note::
-    When called on the umbrella package ``web3`` it will also set the provider for all sub modules ``web3.eth``, ``web3.shh``, etc EXCEPT ``web3.bzz`` which needs a separate provider at all times.
+    When called on the umbrella package ``web3`` it will also set the provider for all sub modules ``web3.eth``, ``web3.shh``, etc. EXCEPT ``web3.bzz`` which needs a separate provider at all times.
 
 ----------
 Parameters
@@ -146,10 +146,14 @@ Configuration
           authorization: 'Basic username:password'
         },
 
-        // Useful if requests result are large
         clientConfig: {
+          // Useful if requests are large
           maxReceivedFrameSize: 100000000,   // bytes - default: 1MiB
           maxReceivedMessageSize: 100000000, // bytes - default: 8MiB
+
+          // Useful to keep a connection alive
+          keepalive: true,
+          keepaliveInterval: 60000 // ms
         },
 
         // Enable auto reconnection
@@ -220,7 +224,7 @@ Will return the current provider, otherwise ``null``.
 Returns
 -------
 
-``Object``: The current provider set or ``null``;
+``Object``: The current provider set or ``null``.
 
 -------
 Example
@@ -289,7 +293,7 @@ extend
 
 Allows extending the web3 modules.
 
-.. note:: You also have ``*.extend.formatters`` as additional formatter functions to be used for in and output formatting. Please see the `source file <https://github.com/ethereum/web3.js/blob/master/packages/web3-core-helpers/src/formatters.js>`_ for function details.
+.. note:: You also have ``*.extend.formatters`` as additional formatter functions to be used for input and output formatting. Please see the `source file <https://github.com/ethereum/web3.js/blob/1.x/packages/web3-core-helpers/src/formatters.js>`_ for function details.
 
 ----------
 Parameters

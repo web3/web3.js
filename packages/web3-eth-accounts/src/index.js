@@ -30,7 +30,7 @@ var Hash = require('eth-lib/lib/hash');
 var RLP = require('eth-lib/lib/rlp');// jshint ignore:line
 var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
-var scrypt = require('@web3-js/scrypt-shim');
+var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
@@ -149,29 +149,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     }
 
     function signed(tx) {
-        if (tx.common && (tx.chain && tx.hardfork)) {
-            error = new Error(
-                'Please provide the ethereumjs-common object or the chain and hardfork property but not all together.'
-            );
-        }
-
-        if ((tx.chain && !tx.hardfork) || (tx.hardfork && !tx.chain)) {
-            error = new Error(
-                'When specifying chain and hardfork, both values must be defined. ' +
-                'Received "chain": ' + tx.chain + ', "hardfork": ' + tx.hardfork
-            );
-        }
-
-        if (!tx.gas && !tx.gasLimit) {
-            error = new Error('"gas" is missing');
-        }
-
-        if (tx.nonce < 0 ||
-            tx.gas < 0 ||
-            tx.gasPrice < 0 ||
-            tx.chainId < 0) {
-            error = new Error('Gas, gasPrice, nonce or chainId is lower than 0');
-        }
+        const error = _validateTransactionForSigning(tx);
 
         if (error) {
             callback(error);
@@ -280,6 +258,35 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     });
 };
 
+function _validateTransactionForSigning(tx) {
+    if (tx.common && (tx.chain && tx.hardfork)) {
+        return new Error(
+            'Please provide the ethereumjs-common object or the chain and hardfork property but not all together.'
+        );
+    }
+
+    if ((tx.chain && !tx.hardfork) || (tx.hardfork && !tx.chain)) {
+        return new Error(
+            'When specifying chain and hardfork, both values must be defined. ' +
+            'Received "chain": ' + tx.chain + ', "hardfork": ' + tx.hardfork
+        );
+    }
+
+    if (!tx.gas && !tx.gasLimit) {
+        return new Error('"gas" is missing');
+    }
+
+    if (tx.nonce < 0 ||
+        tx.gas < 0 ||
+        tx.gasPrice < 0 ||
+        tx.chainId < 0) {
+        return new Error('Gas, gasPrice, nonce or chainId is lower than 0');
+    }
+
+    return;
+}
+
+
 /* jshint ignore:start */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
     var values = RLP.decode(rawTx);
@@ -294,7 +301,7 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
     var messageHex = utils.isHexStrict(data) ? data : utils.utf8ToHex(data);
-    var messageBytes = utils.hexToBytes(messageHex)
+    var messageBytes = utils.hexToBytes(messageHex);
     var messageBuffer = Buffer.from(messageBytes);
     var preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
     var preambleBuffer = Buffer.from(preamble);
@@ -366,7 +373,7 @@ Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
         kdfparams = json.crypto.kdfparams;
 
         // FIXME: support progress reporting callback
-        derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        derivedKey = scrypt.syncScrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
     } else if (json.crypto.kdf === 'pbkdf2') {
         kdfparams = json.crypto.kdfparams;
 
@@ -381,13 +388,13 @@ Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
 
     var ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
 
-    var mac = utils.sha3(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
+    var mac = utils.sha3(Buffer.from([...derivedKey.slice(16, 32), ...ciphertext])).replace('0x', '');
     if (mac !== json.crypto.mac) {
         throw new Error('Key derivation failed - possibly wrong password');
     }
 
     var decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, 'hex'));
-    var seed = '0x' + Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex');
+    var seed = '0x' + Buffer.from([...decipher.update(ciphertext), ...decipher.final()]).toString('hex');
 
     return this.privateKeyToAccount(seed, true);
 };
@@ -416,7 +423,7 @@ Accounts.prototype.encrypt = function(privateKey, password, options) {
         kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
         kdfparams.r = options.r || 8;
         kdfparams.p = options.p || 1;
-        derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        derivedKey = scrypt.syncScrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
     } else {
         throw new Error('Unsupported kdf');
     }
@@ -426,9 +433,13 @@ Accounts.prototype.encrypt = function(privateKey, password, options) {
         throw new Error('Unsupported cipher');
     }
 
-    var ciphertext = Buffer.concat([cipher.update(Buffer.from(account.privateKey.replace('0x', ''), 'hex')), cipher.final()]);
 
-    var mac = utils.sha3(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')])).replace('0x', '');
+    var ciphertext = Buffer.from([
+        ...cipher.update(Buffer.from(account.privateKey.replace('0x', ''), 'hex')),
+        ...cipher.final()]
+    );
+
+    var mac = utils.sha3(Buffer.from([...derivedKey.slice(16, 32), ...ciphertext])).replace('0x', '');
 
     return {
         version: 3,
@@ -625,6 +636,5 @@ function storageAvailable(type) {
             (storage && storage.length !== 0);
     }
 }
-
 
 module.exports = Accounts;

@@ -73,6 +73,9 @@ eth.transactionConfirmationBlocks;
 // $ExpectType number
 eth.transactionBlockTimeout;
 
+// $ExpectType boolean
+eth.handleRevert;
+
 // $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => Contract
 eth.Contract;
 

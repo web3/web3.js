@@ -401,7 +401,7 @@ var isBloom = function (bloom) {
 };
 
 /**
- * Returns true if the ethereum users address is part of the given bloom 
+ * Returns true if the ethereum users address is part of the given bloom
  * note: false positives are possible.
  *
  * @method isUserEthereumAddressInBloom
@@ -414,7 +414,7 @@ var isUserEthereumAddressInBloom = function (bloom, ethereumAddress) {
 };
 
 /**
- * Returns true if the contract address is part of the given bloom 
+ * Returns true if the contract address is part of the given bloom
  * note: false positives are possible.
  *
  * @method isUserEthereumAddressInBloom

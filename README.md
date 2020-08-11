@@ -4,7 +4,7 @@
 
 # web3.js - Ethereum JavaScript API
 
-[![Gitter][gitter-image]][gitter-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![NPM Package Downloads][npm-image-downloads]][npm-url] [![Build Status][actions-image]][actions-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url]
+[![Gitter][gitter-image]][gitter-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![NPM Package Downloads][npm-image-downloads]][npm-url] [![Build Status][actions-image]][actions-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url] [![Netlify Status][netlify-image]][netlify-url]
 
 This is the Ethereum [JavaScript API][docs]
 which connects to the [Generic JSON-RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
@@ -29,14 +29,14 @@ yarn add web3
 
 ### In the Browser
 
-Use the prebuild `dist/web3.min.js`, or
+Use the prebuilt `dist/web3.min.js`, or
 build using the [web3.js][repo] repository:
 
 ```bash
-npm run-script build
+npm run build
 ```
 
-Then include `dist/web3.js` in your html file.
+Then include `dist/web3.min.js` in your html file.
 This will expose `Web3` on the window object.
 
 Or via jsDelivr CDN:
@@ -54,10 +54,10 @@ UNPKG:
 ## Usage
 
 ```js
-// in node.js
-var Web3 = require('web3');
+// In Node.js
+const Web3 = require('web3');
 
-var web3 = new Web3('ws://localhost:8546');
+let web3 = new Web3('ws://localhost:8546');
 console.log(web3);
 > {
     eth: ... ,
@@ -92,7 +92,7 @@ import Web3 from 'web3';
 const web3 = new Web3('ws://localhost:8546');
 ```
 
-If you are using the types in a `commonjs` module like for example a node app you just have to enable `esModuleInterop` in your `tsconfig` compile option, also enable `allowSyntheticDefaultImports` for typesystem compatibility:
+If you are using the types in a `commonjs` module, like in a Node app, you just have to enable `esModuleInterop` and `allowSyntheticDefaultImports` in your `tsconfig` for typesystem compatibility:
 
 ```js
 "compilerOptions": {
@@ -118,21 +118,13 @@ sudo apt-get install nodejs
 sudo apt-get install npm
 ```
 
-### Building (gulp)
+### Building (webpack)
 
-Build only the web3.js package:
-
-```bash
-npm run-script build
-```
-
-Or build all sub packages as well:
+Build the web3.js package:
 
 ```bash
-npm run-script build-all
+npm run build
 ```
-
-This will put all the browser build files into the `dist` folder.
 
 ### Testing (mocha)
 
@@ -150,7 +142,6 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 
 -   [Gitter][gitter-url]
 -   [StackExchange][stackexchange-url]
--   [Forum](https://forum.ethereum.org/categories/ethereum-js)
 
 ### Similar libraries in other languages
 
@@ -181,5 +172,7 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 [gitter-url]:  https://gitter.im/ethereum/web3.js
 [lerna-image]: https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg
 [lerna-url]: https://lerna.js.org/
+[netlify-image]: https://api.netlify.com/api/v1/badges/1fc64933-d170-4939-8bdb-508ecd205519/deploy-status
+[netlify-url]: https://app.netlify.com/sites/web3-staging/deploys
 [stackexchange-image]: https://img.shields.io/badge/web3js-stackexchange-brightgreen
 [stackexchange-url]: https://ethereum.stackexchange.com/questions/tagged/web3js

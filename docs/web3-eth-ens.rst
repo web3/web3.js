@@ -4,8 +4,8 @@
 web3.eth.ens
 ============
 
-The ``web3.eth.ens`` functions let you interacting with ENS.
-We recommend reading the `documentation ENS <https://docs.ens.domains/>`_ is providing to get deeper insights about the internals of the name service.
+The ``web3.eth.ens`` functions let you interact with ENS.
+We recommend reading the `ENS documentation <https://docs.ens.domains/>`_ to get deeper insights about the internals of the name service.
 
 ------------------------------------------------------------------------------
 
@@ -176,7 +176,7 @@ setResolver
 
     web3.eth.ens.setResolver(name, address [, txConfig ] [, callback]);
 
-Does set the resolver contract address of a name.
+Sets the resolver contract address of a name.
 
 ----------
 Parameters
@@ -184,7 +184,7 @@ Parameters
 
 1. ``name`` - ``String``: The ENS name.
 2. ``address`` - ``String``: The contract address of the deployed ``Resolver`` contract.
-3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described :ref:`here <eth-sendtransaction>`
 4. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
@@ -249,14 +249,14 @@ setOwner
 
     web3.eth.ens.setOwner(name [, txConfig ] [, callback]);
 
-Does set the owner of the given name.
+Sets the owner of the given name.
 
 ----------
 Parameters
 ----------
 
 1. ``name`` - ``String``: The ENS name.
-2. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+2. ``txConfig`` - ``Object``: (optional) The transaction options as described :ref:`here <eth-sendtransaction>`
 3. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
@@ -320,7 +320,7 @@ setTTL
 
     web3.eth.ens.setTTL(name, ttl [, txConfig ] [, callback]);
 
-Does set the caching TTL (time-to-live) of a name.
+Sets the caching TTL (time-to-live) of a name.
 
 ----------
 Parameters
@@ -328,7 +328,7 @@ Parameters
 
 1. ``name`` - ``String``: The ENS name.
 2. ``ttl`` - ``Number``: The TTL value (uint64)
-3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described :ref:`here <eth-sendtransaction>`
 4. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
@@ -357,17 +357,17 @@ setSubnodeOwner
 
     web3.eth.ens.setSubnodeOwner(name, label, address [, txConfig ] [, callback]);
 
-Creates a new subdomain of the given node, assigning ownership of it to the specified owner
+Creates a new subdomain of the given node, assigning ownership of it to the specified owner.
 
 ----------
 Parameters
 ----------
 
 1. ``name`` - ``String``: The ENS name.
-2. ``label`` - ``String``: The name of the sub-domain or the sha3 hash of it
-3. ``address`` - ``String``: The registrar of this sub-domain
-4. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
-5. ``callback`` - ``Function``: (optional) Optional callback
+2. ``label`` - ``String``: The name of the sub-domain or the sha3 hash of it.
+3. ``address`` - ``String``: The registrar of this sub-domain.
+4. ``txConfig`` - ``Object``: (optional) The transaction options as described :ref:`here <eth-sendtransaction>`.
+5. ``callback`` - ``Function``: (optional) Optional callback.
 
 -------
 Returns
@@ -402,11 +402,11 @@ Parameters
 ----------
 
 1. ``name`` - ``String``: The ENS name.
-2. ``owner`` - ``String``: The owner of the name record
-3. ``resolver`` - ``String``: The resolver address of the name record
-4. ``ttl`` - ``String | Number``: Time to live value (uint64)
-5. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
-6. ``callback`` - ``Function``: (optional) Optional callback
+2. ``owner`` - ``String``: The owner of the name record.
+3. ``resolver`` - ``String``: The resolver address of the name record.
+4. ``ttl`` - ``String | Number``: Time to live value (uint64).
+5. ``txConfig`` - ``Object``: (optional) The transaction options as described :ref:`here <eth-sendtransaction>`.
+6. ``callback`` - ``Function``: (optional) Optional callback.
 
 -------
 Returns
@@ -441,12 +441,12 @@ Parameters
 ----------
 
 1. ``name`` - ``String``: The ENS name.
-2. ``label`` - ``String``: The name of the sub-domain or the sha3 hash of it
-3. ``owner`` - ``String``: The owner of the name record
-4. ``resolver`` - ``String``: The resolver address of the name record
-5. ``ttl`` - ``String | Number``: Time to live value (uint64)
-6. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
-7. ``callback`` - ``Function``: (optional) Optional callback
+2. ``label`` - ``String``: The name of the sub-domain or the sha3 hash of it.
+3. ``owner`` - ``String``: The owner of the name record.
+4. ``resolver`` - ``String``: The resolver address of the name record.
+5. ``ttl`` - ``String | Number``: Time to live value (uint64).
+6. ``txConfig`` - ``Object``: (optional) The transaction options as described :ref:`here <eth-sendtransaction>`.
+7. ``callback`` - ``Function``: (optional) Optional callback.
 
 -------
 Returns
@@ -482,7 +482,7 @@ Parameters
 
 1. ``operator`` - ``String``: The operator address
 2. ``approved`` - ``Boolean``
-3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described :ref:`here <eth-sendtransaction>`
 4. ``callback`` - ``Function``: (optional) Optional callback
 
 -------
@@ -618,7 +618,7 @@ setAddress
 
     web3.eth.ens.setAddress(ENSName, address [, txConfig ] [, callback]);
 
-Sets the address of an ENS name in his resolver.
+Sets the address of an ENS name in this resolver.
 
 ----------
 Parameters
@@ -626,7 +626,7 @@ Parameters
 
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``address`` - ``String``: The address to set.
-3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described :ref:`here <eth-sendtransaction>`
 4. ``callback`` - ``Function``: (optional) Optional callback
 
 Emits an ``AddrChanged`` event.
@@ -741,7 +741,7 @@ setPubkey
 
     web3.eth.ens.setPubkey(ENSName, x, y [, txConfig ] [, callback]);
 
-Sets the SECP256k1 public key associated with an ENS node
+Sets the SECP256k1 public key associated with an ENS node.
 
 ----------
 Parameters
@@ -750,7 +750,7 @@ Parameters
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``x`` - ``String``: The X coordinate of the public key.
 3. ``y`` - ``String``: The Y coordinate of the public key.
-4. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+4. ``txConfig`` - ``Object``: (optional) The transaction options as described :ref:`here <eth-sendtransaction>`
 5. ``callback`` - ``Function``: (optional) Optional callback
 
 Emits an ``PubkeyChanged`` event.
@@ -870,7 +870,7 @@ Parameters
 
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``hash`` - ``String``: The content hash to set.
-3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described :ref:`here <eth-sendtransaction>`
 4. ``callback`` - ``Function``: (optional) Optional callback
 
 Emits an ``ContentChanged`` event.
@@ -1152,7 +1152,7 @@ Parameters
 
 1. ``ENSName`` - ``String``: The ENS name.
 2. ``hash`` - ``String``: The multihash to set.
-3. ``txConfig`` - ``Object``: (optional) The transaction options as described ::ref::`here <eth-sendtransaction>`
+3. ``txConfig`` - ``Object``: (optional) The transaction options as described :ref:`here <eth-sendtransaction>`
 4. ``callback`` - ``Function``: (optional) Optional callback
 
 Emits an ``MultihashChanged``event.
@@ -1215,10 +1215,10 @@ Known resolver events
 ------------
 
 1. AddrChanged(node bytes32, a address)
-2. ContentChanged(node bytes32, hash bytes32)
-4. NameChanged(node bytes32, name string)
-5. ABIChanged(node bytes32, contentType uint256)
-6. PubkeyChanged(node bytes32, x bytes32, y bytes32)
+1. ContentChanged(node bytes32, hash bytes32)
+1. NameChanged(node bytes32, name string)
+1. ABIChanged(node bytes32, contentType uint256)
+1. PubkeyChanged(node bytes32, x bytes32, y bytes32)
 
 -------
 Returns
@@ -1271,9 +1271,9 @@ Known registry events
 ------------
 
 1. Transfer(node bytes32, owner address)
-2. NewOwner(node bytes32, label bytes32, owner address)
-4. NewResolver(node bytes32, resolver address)
-5. NewTTL(node bytes32, ttl uint64)
+1. NewOwner(node bytes32, label bytes32, owner address)
+1. NewResolver(node bytes32, resolver address)
+1. NewTTL(node bytes32, ttl uint64)
 
 -------
 Example

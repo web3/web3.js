@@ -26,7 +26,10 @@
 module.exports = {
     ErrorResponse: function (result) {
         var message = !!result && !!result.error && !!result.error.message ? result.error.message : JSON.stringify(result);
-        return new Error('Returned error: ' + message);
+        var data = (!!result.error && !!result.error.data) ? result.error.data : null;
+        var err = new Error('Returned error: ' + message);
+        err.data = data;
+        return err;
     },
     InvalidNumberOfParams: function (got, expected, method) {
         return new Error('Invalid number of parameters for "'+ method +'". Got '+ got +' expected '+ expected +'!');
@@ -109,5 +112,26 @@ module.exports = {
     },
     ResolverMethodMissingError: function(address, name) {
         return new Error('The resolver at ' + address + 'does not implement requested method: "' + name + '".');
+    },
+    ContractMissingABIError: function() {
+        return new Error('You must provide the json interface of the contract when instantiating a contract object.');
+    },
+    ContractOnceRequiresCallbackError: function() {
+        return new Error('Once requires a callback as the second parameter.');
+    },
+    ContractEventDoesNotExistError: function(eventName) {
+        return new Error('Event "' + eventName + '" doesn\'t exist in this contract.');
+    },
+    ContractReservedEventError: function(type) {
+        return new Error('The event "'+ type +'" is a reserved event name, you can\'t use it.');
+    },
+    ContractMissingDeployDataError: function() {
+        return new Error('No "data" specified in neither the given options, nor the default options.');
+    },
+    ContractNoAddressDefinedError: function() {
+        return new Error('This contract object doesn\'t have address set yet, please set an address first.');
+    },
+    ContractNoFromAddressDefinedError: function() {
+        return new Error('No "from" address specified in neither the given options, nor the default options.');
     }
 };

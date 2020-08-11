@@ -201,14 +201,84 @@ Released with 1.0.0-beta.37 code base.
 - Stop swallowing errors when WS connection has died after exhausting reconnection attempts. (#3492)
 - Fix setContenthash docs formatting (#3511)
 
-## [Unreleased]
-
 ## [1.2.9]
 
 ### Added
 
+- Add `sending` and `sent` events for tx submissions (#3438)
+- Add `latestBlockHash` arg to `confirmation` event handler payload (#3438)
+- Make socket providers' max listeners threshold configurable (#3469)
+- Documentation about testing & ci resources for Web3.js development (#3528)
+- More detailed documentation about how to use `method.encodeABI` (#3549)
+- Integration tests for `transactionPollingTimeout` (#3513)
+
 ### Changed
+
+- Websocket package from @web3-js/websocket@1.0.29 to websocket@1.0.31 (#3371)
+- Upgrade `@web3-js/scrypt-shim@0.1.0` to `scrypt-js@3.0.1`
+- sendSignedTransaction revert handling synthesizes tx without network call (#3457)
+- Make docs grammar more idiomatic, normalize punctuation (#3543)
 
 ### Fixed
 
-- Fix size property de-referencing crash when calling web3.eth.clearSubscriptions (#3527)
+- Size property de-referencing crash when calling web3.eth.clearSubscriptions (#3527)
+- Abi param encoding for tuple arrays (#3538)
+- `account.hashMessage` with non-ASCII characters (#3523)
+- Subscription support check in method confirmations loop (#3432)
+- TS bindings for `handleRevert` added (#3452)
+- Docs: spelling of pre-defined block number (#3539)
+- Docs: missing defaultBlock param option in `method.call` description (#3558)
+
+## [1.2.10]
+
+### Added
+
+- Add support for EIP-1193 provider `request` method (#3625)
+
+### Changed
+
+- Upgrade minified bundle build process (from gulp to webpack) (#3618)
+- CI improvements: add dependency caching, netlify browser test preview (#3598, #3602)
+- Remove references to `genesis` block in 1.x documentation (#3594)
+- Disallow setting `toBlock` when subscribing to contract events (#3207)
+
+### Fixed
+
+- Extend `_txInputFormatter` with hex prefix check (#3317)
+- Extract revert reason string for geth >= 1.9.15 (#3520)
+- Fix Incorrect param encoding of BN object in arrayed inputs (#3592)
+- Remove mis-encoded whitespace characters from web3-utils files (#3601)
+- Fix incompatibilities with webpack Buffer polyfill for wallet.encrypt/decrypt (#3580)
+- Fix misformatted `fromBlock` value when re-subscribing to events over WS (#3596)
+- Support `Function` type log parameter decoding (#2826)
+- Add undefined callback check to websocket provider response queue (#3574)
+- Fix WS clientConfig type (#3563)
+
+## [1.2.11]
+
+### Fixed
+
+- Fix Provider.request response (#3647)
+
+### Added
+
+- Add unit tests for isHex and isHexStrict (#3622)
+
+## [Unreleased]
+
+## [1.2.12]
+
+### Added
+
+- Support for typescript files (.ts) to be writtern alongside regular .js files (#3652)
+
+### Changed
+
+- Improve RequestManager send method (#3649)
+- `npm run build` now uses TSC to compile (.js allowed) and the build folder is now located under `lib` (#3652)
+- Modernized web3-core to use newer es syntax (#3652)
+- Bump lodash from 4.17.15 to 4.17.19
+
+### Fixed
+
+- Fix parsing of non-`eth_subscription` provider events (#3660)

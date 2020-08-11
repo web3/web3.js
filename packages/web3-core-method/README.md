@@ -16,24 +16,12 @@ Please read the [documentation][docs] for more.
 npm install web3-core-method
 ```
 
-### In the Browser
-
-Build running the following in the [web3.js][repo] repository:
-
-```bash
-npm run-script build-all
-```
-
-Then include `dist/web3-core-method.js` in your html file.
-This will expose the `Web3Method` object on the window object.
-
 ## Usage
 
 ```js
-// in node.js
-var Web3Method = require('web3-core-method');
+const Web3Method = require('web3-core-method');
 
-var method = new Web3Method({
+const method = new Web3Method({
     name: 'sendTransaction',
     call: 'eth_sendTransaction',
     params: 1,

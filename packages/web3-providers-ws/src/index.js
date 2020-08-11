@@ -130,7 +130,9 @@ WebsocketProvider.prototype._onMessage = function (e) {
         }
 
         if (_this.responseQueue.has(id)) {
-            _this.responseQueue.get(id).callback(false, result);
+            if(_this.responseQueue.get(id).callback !== undefined) {
+                _this.responseQueue.get(id).callback(false, result);
+            }
             _this.responseQueue.delete(id);
         }
     });

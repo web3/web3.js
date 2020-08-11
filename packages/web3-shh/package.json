@@ -1,6 +1,6 @@
 {
     "name": "web3-shh",
-    "version": "1.2.8",
+    "version": "1.2.11",
     "description": "Web3 module to interact with the Whisper messaging protocol.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-shh",
     "license": "LGPL-3.0",
@@ -9,18 +9,19 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint --localTs node_modules/typescript/lib  types"
+        "tsc": "tsc -b tsconfig.json",
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib  types"
     },
-    "main": "src/index.js",
+    "main": "lib/index.js",
     "dependencies": {
-        "web3-core": "1.2.8",
-        "web3-core-method": "1.2.8",
-        "web3-core-subscriptions": "1.2.8",
-        "web3-net": "1.2.8"
+        "web3-core": "1.2.11",
+        "web3-core-method": "1.2.11",
+        "web3-core-subscriptions": "1.2.11",
+        "web3-net": "1.2.11"
     },
     "devDependencies": {
-        "@types/node": "^12.12.5",
+        "@types/node": "^12.12.6",
         "dtslint": "^3.4.1",
-        "typescript": "latest"
+        "typescript": "^3.9.5"
     }
 }

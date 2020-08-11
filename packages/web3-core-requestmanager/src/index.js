@@ -1,16 +1,13 @@
 /*
     This file is part of web3.js.
-
     web3.js is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
     web3.js is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Lesser General Public License for more details.
-
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -23,6 +20,7 @@
 "use strict";
 
 
+const { callbackify } = require('util');
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var Jsonrpc = require('./jsonrpc.js');
@@ -103,8 +101,8 @@ RequestManager.prototype.setProvider = function (provider, net) {
         this.provider.on('data', function data(result, deprecatedResult) {
             result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
-            // check for result.method, to prevent old providers errors to pass as result
-            if (result.method && _this.subscriptions.has(result.params.subscription)) {
+            // if result is a subscription, call callback for that subscription
+            if (result.method && result.params && result.params.subscription && _this.subscriptions.has(result.params.subscription)) {
                 _this.subscriptions.get(result.params.subscription).callback(null, result.params.result);
             }
         });
@@ -145,47 +143,41 @@ RequestManager.prototype.setProvider = function (provider, net) {
 };
 
 /**
- * TODO: This method should be implemented with a Promise instead of a callback
- *
- * Should be used to asynchronously send request
- *
- * @method sendAsync
+ * Asynchronously send request to provider.
+ * Prefers to use the `request` method available on the provider as specified in [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193).
+ * If `request` is not available, falls back to `sendAsync` and `send` respectively.
+ * @method send
  * @param {Object} data
  * @param {Function} callback
  */
 RequestManager.prototype.send = function (data, callback) {
-    callback = callback || function () {
-    };
+    callback = callback || function () {};
 
     if (!this.provider) {
         return callback(errors.InvalidProvider());
     }
 
-    var payload = Jsonrpc.toPayload(data.method, data.params);
-    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, result) {
-        if(result && result.id && payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));
+    const { method, params } = data
 
-        if (err) {
-            return callback(err);
-        }
+    const jsonrpcPayload = Jsonrpc.toPayload(method, params);
+    const jsonrpcResultCallback = this._jsonrpcResultCallback(callback, jsonrpcPayload)
 
-        if (result && result.error) {
-            return callback(errors.ErrorResponse(result));
-        }
-
-        if (!Jsonrpc.isValidResponse(result)) {
-            return callback(errors.InvalidResponse(result));
-        }
-
-        callback(null, result.result);
-    });
+    if (this.provider.request) {
+        const callbackRequest = callbackify(this.provider.request)
+        const requestArgs = { method, params }
+        callbackRequest(requestArgs, callback);
+    } else if (this.provider.sendAsync) {
+        this.provider.sendAsync(jsonrpcPayload, jsonrpcResultCallback);
+    } else if (this.provider.send) {
+        this.provider.send(jsonrpcPayload, jsonrpcResultCallback);
+    } else {
+        throw new Error('Provider does not have a request or send method to use.');
+    }
 };
 
 /**
- * TODO: This method should be implemented with a Promise instead of a callback
- *
- * Should be called to asynchronously send batch request
- *
+ * Asynchronously send batch request.
+ * Only works if provider supports batch methods through `sendAsync` or `send`.
  * @method sendBatch
  * @param {Array} data - array of payload objects
  * @param {Function} callback
@@ -306,6 +298,39 @@ RequestManager.prototype._isCleanCloseEvent = function (event) {
  */
 RequestManager.prototype._isIpcCloseError = function (event) {
     return typeof event === 'boolean' && event;
+};
+
+/**
+ * The jsonrpc result callback for RequestManager.send
+ * 
+ * @method _jsonrpcResultCallback
+ * 
+ * @param {Function} callback the callback to use
+ * @param {Object} payload the jsonrpc payload
+ * 
+ * @returns {Function} return callback of form (err, result)
+ *
+ */
+RequestManager.prototype._jsonrpcResultCallback = function (callback, payload) {
+    return function(err, result) { 
+        if(result && result.id && payload.id !== result.id) {
+            return callback(new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`));
+        }
+
+        if (err) {
+            return callback(err);
+        }
+
+        if (result && result.error) {
+            return callback(errors.ErrorResponse(result));
+        }
+
+        if (!Jsonrpc.isValidResponse(result)) {
+            return callback(errors.InvalidResponse(result));
+        }
+
+        callback(null, result.result);
+    }
 };
 
 module.exports = {

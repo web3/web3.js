@@ -58,8 +58,7 @@ describe('contract.events [ @E2E ]', function() {
             instance
                 .events
                 .BasicEvent({
-                    fromBlock: 0,
-                    toBlock: 'latest'
+                    fromBlock: 0
                 })
                 .on('data', function(event) {
                     assert.equal(event.event, 'BasicEvent');
@@ -74,6 +73,60 @@ describe('contract.events [ @E2E ]', function() {
         });
     });
 
+
+    it('works also when toBlock is passed to contract.events.<eventName>', function () {
+        const originalWarn = console.warn
+        let message
+        console.warn = function(str) { message = str }
+
+        return new Promise(async resolve => {
+            instance
+                .events
+                .BasicEvent({
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                }).on('data', function(event) {
+                    assert.equal(event.event, 'BasicEvent');
+                    this.removeAllListeners();
+                    resolve();
+                });
+            
+            assert.equal(message, 'Invalid option: toBlock. Use getPastEvents for specific range.');
+            console.warn = originalWarn
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({from: accounts[0]});
+        });
+    });
+
+    it('works also when toBlock is passed to contract.events.allEvents', function () {
+        const originalWarn = console.warn
+        let message
+        console.warn = function(str) { message = str }
+        
+        return new Promise(async (resolve, reject) => {
+            instance
+                .events
+                .allEvents({
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                }).on('data', function(event) {
+                    this.removeAllListeners();
+                    resolve();
+                });
+
+            assert.equal(message, 'Invalid option: toBlock. Use getPastEvents for specific range.');
+            console.warn = originalWarn
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({ from: accounts[0] });
+        });
+    });
+
     it('should not hear the error handler when connection.closed() called', function(){
         this.timeout(15000);
 
@@ -83,8 +136,7 @@ describe('contract.events [ @E2E ]', function() {
             instance
                 .events
                 .BasicEvent({
-                    fromBlock: 0,
-                    toBlock: 'latest'
+                    fromBlock: 0
                 })
                 .on('error', function(err) {
                     failed = true;
@@ -113,8 +165,7 @@ describe('contract.events [ @E2E ]', function() {
             instance
                 .events
                 .BasicEvent({
-                    fromBlock: 0,
-                    toBlock: 'latest'
+                    fromBlock: 0
                 })
                 .on('error', function(err) {
                     failed = true;
@@ -339,5 +390,72 @@ describe('contract.events [ @E2E ]', function() {
             assert(finalBlock === secondReceipt.blockNumber + 2)
         });
     });
-});
 
+    it('when event param is a simple string', async function(){
+        const msg = 'simplestring';
+
+        await instance
+            .methods
+            .firesStringEvent(msg)
+            .send({from: accounts[0]});
+
+        const events = await instance.getPastEvents({
+            fromBlock: 0,
+            toBlock: 'latest'
+        });
+
+        assert.equal(events[0].returnValues.str, msg)
+    });
+
+    // Malformed utf-8 sequence in the following two tests comes from 
+    // https://www.w3.org/2001/06/utf-8-wrong/UTF-8-test.html
+    // Section: 3.1.8 
+    it('when an invalid utf-8 string is passed in JS as param to emit', async function(){
+        const msg = '�������';
+
+        await instance
+            .methods
+            .firesStringEvent(msg)
+            .send({from: accounts[0]});
+
+        const events = await instance.getPastEvents({
+            fromBlock: 0,
+            toBlock: 'latest'
+        });
+
+        assert.equal(msg, events[0].returnValues.str)
+    });
+
+    it('when Solidity emits an invalid utf-8 string', async function(){
+        await instance
+            .methods
+            .firesIllegalUtf8StringEvent()
+            .send({from: accounts[0]});
+
+        const events = await instance.getPastEvents({
+            fromBlock: 0,
+            toBlock: 'latest'
+        });
+
+        assert.equal('�������', events[0].returnValues.str)
+    });
+
+    it('when wide unicode characters are passed in JS as param to emit', async function(){
+        const msg = '💐';
+
+        await instance
+            .methods
+            .firesStringEvent(msg)
+            .send({from: accounts[0]});
+
+        const events = await instance.getPastEvents({
+            fromBlock: 0,
+            toBlock: 'latest'
+        });
+
+        assert(msg.length > 'a'.length);
+        assert.equal(msg, events[0].returnValues.str)
+    })
+
+
+});

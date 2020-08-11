@@ -25,6 +25,7 @@
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var EventEmitter = require('eventemitter3');
+var formatters = require('web3-core-helpers').formatters;
 
 function Subscription(options) {
     EventEmitter.call(this);
@@ -226,8 +227,8 @@ Subscription.prototype.subscribe = function() {
     // Re-subscription only: continue fetching from the last block we received.
     // a dropped connection may have resulted in gaps in the logs...
     if (this.lastBlock && _.isObject(this.options.params)){
-        payload.params[1] = this.options.params
-        payload.params[1].fromBlock = this.lastBlock +1;
+        payload.params[1] = this.options.params;
+        payload.params[1].fromBlock = formatters.inputBlockNumberFormatter(this.lastBlock + 1);
     }
 
     // if id is there unsubscribe first

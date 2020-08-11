@@ -7,7 +7,7 @@ web3.eth.personal
 
 The ``web3-eth-personal`` package allows you to interact with the Ethereum node's accounts.
 
-.. note:: Many of these functions send sensitive information, like password. Never call these functions over a unsecured Websocket or HTTP provider, as your password will be sent in plain text!
+.. note:: Many of these functions send sensitive information like passwords. Never call these functions over a unsecured Websocket or HTTP provider, as your password will be sent in plain text!
 
 
 .. code-block:: javascript
@@ -46,7 +46,7 @@ newAccount
 
 Creates a new account.
 
-.. note:: Never call this function over a unsecured Websocket or HTTP provider, as your password will be send in plain text!
+.. note:: Never call this function over a unsecured Websocket or HTTP provider, as your password will be sent in plain text!
 
 ----------
 Parameters
@@ -89,7 +89,7 @@ The sign method calculates an Ethereum specific signature with:
 Adding a prefix to the message makes the calculated signature recognisable as an Ethereum specific signature.
 
 If you have the original message and the signed message, you can discover the signing account address
-using :ref:`web3.eth.personal.ecRecover <eth-personal-ecRecover>` (See example below)
+using :ref:`web3.eth.personal.ecRecover <eth-personal-ecRecover>`. See example below.
 
 
 .. note:: Sending your account password over an unsecured HTTP RPC connection is highly unsecure.
@@ -376,8 +376,7 @@ the RPC method ``personal_listAccounts``. Using :ref:`web3.eth.accounts.create()
 will not add accounts into this list. For that use
 :ref:`web3.eth.personal.newAccount() <personal-newaccount>`.
 
-The results are the same as :ref:`web3.eth.getAccounts() <eth-getaccounts>` except that calls
-the RPC method ``eth_accounts``.
+The results are the same as :ref:`web3.eth.getAccounts() <eth-getaccounts>` except that calls the RPC method ``eth_accounts``.
 
 -------
 Returns

@@ -306,7 +306,7 @@ var toChecksumAddress = function (address) {
     var checksumAddress = '0x';
 
     for (var i = 0; i < address.length; i++ ) {
-        // If ith character is 9 to f then make it uppercase
+        // If ith character is 8 to f then make it uppercase
         if (parseInt(addressHash[i], 16) > 7) {
             checksumAddress += address[i].toUpperCase();
         } else {
@@ -372,12 +372,12 @@ module.exports = {
     leftPad: utils.leftPad,
     padRight: utils.rightPad,
     rightPad: utils.rightPad,
-    toTwosComplement: utils.toTwosComplement,
+    toTwosComplement: utils.toTwosComplement,
 
-    isBloom: utils.isBloom,
-    isUserEthereumAddressInBloom: utils.isUserEthereumAddressInBloom,
-    isContractAddressInBloom: utils.isContractAddressInBloom,
-    isTopic: utils.isTopic,
-    isTopicInBloom: utils.isTopicInBloom,
-    isInBloom: utils.isInBloom
+    isBloom: utils.isBloom,
+    isUserEthereumAddressInBloom: utils.isUserEthereumAddressInBloom,
+    isContractAddressInBloom: utils.isContractAddressInBloom,
+    isTopic: utils.isTopic,
+    isTopicInBloom: utils.isTopicInBloom,
+    isInBloom: utils.isInBloom
 };

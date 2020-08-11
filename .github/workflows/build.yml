@@ -4,20 +4,35 @@ on:
         branches:
             - "1.x"
         tags:
-            - "*"
+            - v1*
     pull_request:
+        branches:
+            - "1.x"
         types: [opened, reopened, synchronize]
 jobs:
     lint:
         runs-on: ubuntu-latest
         env:
             TEST: "build_and_lint"
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         steps:
             - uses: actions/setup-node@v1
               with:
                   node-version: 12
-            - uses: actions/checkout@v1
-            - run: bash ./scripts/install.sh
+
+            - uses: actions/checkout@v2
+
+            - uses: actions/cache@v2
+              id: cache-deps
+              with:
+                  path: |
+                      node_modules
+                      */*/node_modules
+                  key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
+
+            - run: npm ci
+              if: steps.cache-deps.outputs.cache-hit != 'true'
+
             - run: bash ./scripts/ci.sh
     unit:
         runs-on: ubuntu-latest
@@ -30,8 +45,20 @@ jobs:
             - uses: actions/setup-node@v1
               with:
                   node-version: ${{ matrix.node }}
-            - uses: actions/checkout@v1
-            - run: bash ./scripts/install.sh
+
+            - uses: actions/checkout@v2
+
+            - uses: actions/cache@v2
+              id: cache-deps
+              with:
+                  path: |
+                      node_modules
+                      */*/node_modules
+                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+
+            - run: npm ci
+              if: steps.cache-deps.outputs.cache-hit != 'true'
+
             - run: bash ./scripts/ci.sh
     e2e:
         runs-on: ubuntu-latest
@@ -40,26 +67,32 @@ jobs:
             matrix:
                 testCmd:
                     [
-                        "unit_and_e2e_clients",
-                        "e2e_ganache",
-                        "e2e_mosaic",
-                        "e2e_browsers",
+                        'unit_and_e2e_clients',
+                        'e2e_browsers',
+                        'e2e_ganache',
+                        'e2e_mosaic',
+                        'e2e_gnosis_dex',
                     ]
         env:
             TEST: ${{ matrix.testCmd }}
-            CI: true
-            DISPLAY: :99.0
-            PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
-            SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
-            SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
-            BUNDLESIZE_GITHUB_TOKEN: ${{ secrets.BUNDLESIZE_GITHUB_TOKEN }}
         steps:
             - uses: actions/setup-node@v1
               with:
                   node-version: 12
-            - uses: actions/checkout@v1
+            - uses: actions/checkout@v2
 
-            - run: bash ./scripts/install.sh
+            - uses: actions/cache@v2
+              id: cache-deps
+              if: env.TEST == 'unit_and_e2e_clients' || env.TEST == 'e2e_browsers'
+              with:
+                  path: |
+                      node_modules
+                      */*/node_modules
+                  key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
+
+            - run: npm ci
+              if: (env.TEST == 'unit_and_e2e_clients' || env.TEST == 'e2e_browsers') && steps.cache-deps.outputs.cache-hit != 'true'
+
             - run: bash ./scripts/ci.sh
 
             - name: Send coverage reports to Coveralls
@@ -71,11 +104,9 @@ jobs:
         runs-on: windows-latest
         env:
             TEST: "e2e_windows"
-            CI: true
         steps:
             - uses: actions/setup-node@v1
               with:
                   node-version: 12
-            - uses: actions/checkout@v1
-            - run: bash ./scripts/install.sh
+            - uses: actions/checkout@v2
             - run: bash ./scripts/ci.sh

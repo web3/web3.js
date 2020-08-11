@@ -39,6 +39,7 @@ export class Contract {
     transactionPollingTimeout: number;
     transactionConfirmationBlocks: number;
     transactionBlockTimeout: number;
+    handleRevert: boolean;
 
     options: Options;
 
