@@ -25,6 +25,7 @@
 "use strict";
 
 var _ = require('underscore');
+var BN = require('bn.js');
 var utils = require('web3-utils');
 var Iban = require('web3-eth-iban');
 
@@ -126,7 +127,7 @@ var inputBlockNumberFormatter = function (blockNumber) {
 };
 
 /**
- * Returns <0 if a<b, >0 if a>b; =0 otherwise.
+ * Returns -1 if a<b, 1 if a>b; 0 if a == b.
  * For more details on this type of function, see
  * developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
  *
@@ -139,49 +140,44 @@ var inputBlockNumberFormatter = function (blockNumber) {
  * @returns {Number} -1, 0, or 1
  */
 var compareBlockNumbers = function(a, b) {
-    if(a == "genesis") {
-        if(b == "genesis") {
-            return 0;
-        } else {
-            return -1;
-        }
-    } else if (a == "earliest") {
-        if(b == "genesis") {
-            return 1;
-        } else if (b == "earliest") {
-            return 0;
-        } else {
-            return -1;
-        }
+    if (a == b) {
+        return 0;
+    } else if (("genesis" || "earliest") == a && ("genesis" || "earliest") == b) {
+        return 0;
+    } else if (("genesis" || "earliest") == a) {
+        // b !== a, thus a < b
+        return -1;
+    } else if (("genesis" || "earliest") == b) {
+        // b !== a, thus a > b
+        return 1;
     } else if (a == "latest") {
-        if(b == "pending") {
+        if (b == "pending") {
             return -1;
-        } else if (b == "latest") {
-            return 0;
         } else {
-            return -1;
+            // b !== ("pending" OR "latest"), thus a > b
+            return 1;
+        }
+    } else if (b === "latest") {
+        if (a == "pending") {
+            return 1;
+        } else {
+            // b !== ("pending" OR "latest"), thus a > b
+            return -1 
         }
     } else if (a == "pending") {
-        if(b == "pending") {
+        // b (== OR <) "latest", thus a > b
+        return 1;
+    } else if (b == "pending") {
+        return -1;
+    } else {
+        let bnA = new BN(a);
+        let bnB = new BN(b);
+        if(bnA.lt(bnB)) {
+            return -1;
+        } else if(bnA.eq(bnB)) {
             return 0;
         } else {
-            return -1;
-        }
-    } else { //a is not a predefined block number string.
-        if((b == "genesis") || (b == "earliest")) {
             return 1;
-        } else if((b == "latest") || (b == "pending")) {
-            return -1;
-        } else { //neither a nor b is a predefined block number string.
-            let bnA = new BN(a);
-            let bnB = new BN(b);
-            if(bnA.lt(bnB)) {
-                return -1;
-            } else if(bnA.eq(bnB)) {
-                return 0;
-            } else {
-                return 1;
-            }
         }
     }
 };
