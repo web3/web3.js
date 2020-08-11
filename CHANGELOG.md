@@ -271,6 +271,7 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - Support for typescript files (.ts) to be writtern alongside regular .js files (#3652)
+- Add compareBlock function that allows for complex block comparisons (#3682)
 
 ### Changed
 
