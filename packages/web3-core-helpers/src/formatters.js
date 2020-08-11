@@ -142,12 +142,12 @@ var inputBlockNumberFormatter = function (blockNumber) {
 var compareBlockNumbers = function(a, b) {
     if (a == b) {
         return 0;
-    } else if (("genesis" || "earliest") == a && ("genesis" || "earliest") == b) {
+    } else if (("genesis" == a || "earliest" == a) && ("genesis" == b || "earliest" ==  b)) {
         return 0;
-    } else if (("genesis" || "earliest") == a) {
+    } else if ("genesis" == a || "earliest" == a) {
         // b !== a, thus a < b
         return -1;
-    } else if (("genesis" || "earliest") == b) {
+    } else if ("genesis" == b || "earliest" == b) {
         // b !== a, thus a > b
         return 1;
     } else if (a == "latest") {
