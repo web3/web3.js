@@ -141,8 +141,10 @@ var inputBlockNumberFormatter = function (blockNumber) {
  */
 var compareBlockNumbers = function(a, b) {
     if (a == b) {
+        console.log("hit")
         return 0;
-    } else if (("genesis" == a || "earliest" == a) && ("genesis" == b || "earliest" ==  b)) {
+    } else if (("genesis" == a || "earliest" == a || 0 == a) && ("genesis" == b || "earliest" ==  b) || 0 == a) {
+        console.log("hdqwit")
         return 0;
     } else if ("genesis" == a || "earliest" == a) {
         // b !== a, thus a < b
@@ -151,6 +153,7 @@ var compareBlockNumbers = function(a, b) {
         // b !== a, thus a > b
         return 1;
     } else if (a == "latest") {
+        console.log("here")
         if (b == "pending") {
             return -1;
         } else {

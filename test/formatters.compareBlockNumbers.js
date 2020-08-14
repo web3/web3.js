@@ -21,20 +21,29 @@ const tests = [
     { input: {a: new BN(1), b: 1}, result: 0 },
     { input: {a: new BN(1), b: 2}, result: -1 },
     { input: {a: new BN(2), b: 1}, result: 1 },
-    { input: {a: 1, b: new BN(1)}, result: 0 },
-    { input: {a: 1, b: new BN(2)}, result: -1 },
-    { input: {a: 2, b: new BN(1)}, result: 1 },
-    // Base cases for strings
-    { input: {a: genesis, b: genesis}, result: 0 },
-    { input: {a: earliest, b: earliest}, result: 0 },
+    // Base cases for strings (sanity)
+    { input: {a: genesis, b: earliest}, result: 0 },
+    { input: {a: genesis, b: 0}, result: 0 },
+    { input: {a: earliest, b: 0}, result: 0 },
     { input: {a: latest, b: latest}, result: 0 },
     { input: {a: pending, b: pending}, result: 0 },
     // Complex Strings
-    { input: {a: earliest, b: genesis}, result: 0 },
-    { input: {a: genesis, b: earliest}, result: 0 },
+    // Genesis
     { input: {a: earliest, b: 2}, result: -1 },    
-    { input: {a: 2, b: earliest}, result: 1 },
-    { input: {a: earliest, b: 2}, result: -1 },
+    { input: {a: earliest, b: new BN(2)}, result: -1 },
+    { input: {a: earliest, b: latest}, result: -1 },
+    { input: {a: earliest, b: pending}, result: -1 },
+    { input: {a: genesis, b: 2}, result: -1 },    
+    { input: {a: genesis, b: new BN(2)}, result: -1 },
+    { input: {a: genesis, b: latest}, result: -1 },
+    { input: {a: genesis, b: pending}, result: -1 },
+    // latest
+    { input: {a: latest, b: 0}, result: 1 },
+    { input: {a: latest, b: new BN(1)}, result: 1 },
+    { input: {a: latest, b: pending}, result: -1 },
+    // pending 
+    { input: {a: pending, b: 0}, result: 1 },
+    { input: {a: pending, b: new BN(1)}, result: 1 },
 ];
 
 describe('formatters', function () {
