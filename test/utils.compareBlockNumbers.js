@@ -1,7 +1,7 @@
 const chai = require('chai');
 const assert = chai.assert;
 const BN = require('bn.js');
-const formatters = require('../packages/web3-core-helpers/src/formatters.js');
+const formatters = require('../packages/web3-utils/src/index.js');
 
 const pending = "pending";
 const latest = "latest";
@@ -55,19 +55,4 @@ describe('formatters', function () {
         });
     });
 
-    describe('compare blocknumbers - inverted', function () {
-        tests.forEach(t => {
-            // flip
-            [t.input.a, t.input.b] = [t.input.b, t.input.a];
-            // opposite
-            if (t.result != 0) {
-                t.result = t.result * -1;
-            }
-        })
-        tests.forEach(function(test){
-            it('should return the correct value', function () {
-                assert.deepEqual(formatters.compareBlockNumbers(test.input.a, test.input.b), test.result);
-            });
-        });
-    });
 });

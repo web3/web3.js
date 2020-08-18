@@ -18,14 +18,12 @@
  * @file formatters.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @author Marek Kotewicz <marek@parity.io>
- * @author WBT <wbt@users.noreply.github.com>
  * @date 2017
  */
 
 "use strict";
 
 var _ = require('underscore');
-var BN = require('bn.js');
 var utils = require('web3-utils');
 var Iban = require('web3-eth-iban');
 
@@ -124,65 +122,6 @@ var inputBlockNumberFormatter = function (blockNumber) {
     }
 
     return (utils.isHexStrict(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : utils.numberToHex(blockNumber);
-};
-
-/**
- * Returns -1 if a<b, 1 if a>b; 0 if a == b.
- * For more details on this type of function, see
- * developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
- *
- * @method compareBlockNumbers
- *
- * @param {String|Number|BN} a
- *
- * @param {String|Number|BN} b
- *
- * @returns {Number} -1, 0, or 1
- */
-var compareBlockNumbers = function(a, b) {
-    if (a == b) {
-        console.log("hit")
-        return 0;
-    } else if (("genesis" == a || "earliest" == a || 0 == a) && ("genesis" == b || "earliest" ==  b) || 0 == a) {
-        console.log("hdqwit")
-        return 0;
-    } else if ("genesis" == a || "earliest" == a) {
-        // b !== a, thus a < b
-        return -1;
-    } else if ("genesis" == b || "earliest" == b) {
-        // b !== a, thus a > b
-        return 1;
-    } else if (a == "latest") {
-        console.log("here")
-        if (b == "pending") {
-            return -1;
-        } else {
-            // b !== ("pending" OR "latest"), thus a > b
-            return 1;
-        }
-    } else if (b === "latest") {
-        if (a == "pending") {
-            return 1;
-        } else {
-            // b !== ("pending" OR "latest"), thus a > b
-            return -1 
-        }
-    } else if (a == "pending") {
-        // b (== OR <) "latest", thus a > b
-        return 1;
-    } else if (b == "pending") {
-        return -1;
-    } else {
-        let bnA = new BN(a);
-        let bnB = new BN(b);
-        if(bnA.lt(bnB)) {
-            return -1;
-        } else if(bnA.eq(bnB)) {
-            return 0;
-        } else {
-            return 1;
-        }
-    }
 };
 
 /**
@@ -551,7 +490,6 @@ var outputSyncingFormatter = function (result) {
 };
 
 module.exports = {
-    compareBlockNumbers: compareBlockNumbers,
     inputDefaultBlockNumberFormatter: inputDefaultBlockNumberFormatter,
     inputBlockNumberFormatter: inputBlockNumberFormatter,
     inputCallFormatter: inputCallFormatter,
