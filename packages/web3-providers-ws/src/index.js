@@ -25,7 +25,7 @@
 var EventEmitter = require('eventemitter3');
 var helpers = require('./helpers.js');
 var errors = require('web3-core-helpers').errors;
-var Ws = require('@nomiclabs/websocket').w3cwebsocket;
+var Ws = require('@chainsafe/websocket').w3cwebsocket;
 
 /**
  * @param {string} url

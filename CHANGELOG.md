@@ -278,7 +278,7 @@ Released with 1.0.0-beta.37 code base.
 - `npm run build` now uses TSC to compile (.js allowed) and the build folder is now located under `lib` (#3652)
 - Modernized web3-core to use newer es syntax (#3652)
 - Bump lodash from 4.17.15 to 4.17.19
-- Switch websocket library to use @nomiclabs fork for removal of node-gyp
+- Switch websocket library to use @chainsafe fork for removal of node-gyp
 
 ### Fixed
 
