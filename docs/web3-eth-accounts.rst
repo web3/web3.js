@@ -99,7 +99,7 @@ privateKeyToAccount
 Creates an account object from a private key.
 
 For more advanced hierarchial address derivation, see 
-[truffle-hd-awallet-provider](https://github.com/trufflesuite/truffle/tree/develop/packages/hdwallet-provider)
+[truffle-hd-wallet-provider](https://github.com/trufflesuite/truffle/tree/develop/packages/hdwallet-provider)
 package.
 
 ----------
