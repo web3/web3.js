@@ -332,7 +332,7 @@ var toChecksumAddress = function (address) {
 var compareBlockNumbers = function(a, b) {
     if (a == b) {
         return 0;
-    } else if (("genesis" == a || "earliest" == a || 0 == a) && ("genesis" == b || "earliest" ==  b) || 0 == a) {
+    } else if (("genesis" == a || "earliest" == a || 0 == a) && ("genesis" == b || "earliest" ==  b || 0 == b)) {
         return 0;
     } else if ("genesis" == a || "earliest" == a) {
         // b !== a, thus a < b
