@@ -381,7 +381,7 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
 
     var notIndexedInputs = [];
     var indexedParams = [];
-    var topicCount = 1;
+    var topicCount = 1; //topics[0] is reserved for identifying the event
 
     // TODO check for anonymous logs?
 
