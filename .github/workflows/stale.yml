@@ -13,5 +13,7 @@ jobs:
         stale-issue-message: 'This issue has been automatically marked as stale because it has not had recent activity. It will be closed in 7 days if no further activity occurs. Thank you for your contributions. If you believe this was a mistake, please comment.'
         stale-pr-message: 'This PR has been automatically marked as stale beacause it has not had recent activity. It will be closed in 7 days if no further activity occurs. Thank you for your contributions. If you believe this was a mistake, please comment.'
         days-before-stale: 30
-        days-before-close: 7
+        days-before-close: 7 
         operations-per-run: 100
+        exempt-pr-labels: 'work-in-progress'
+        exempt-issue-labels: 'work-in-progress'
