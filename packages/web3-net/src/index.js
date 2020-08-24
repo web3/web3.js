@@ -25,32 +25,18 @@
 const Core = require('web3-core');
 const Method = require('web3-core-method');
 const utils = require('web3-utils');
-
+const methods = require('./methods');
 
 class Net extends Core {
     constructor () {
         super()
-        [
-            new Method({
-                name: 'getId',
-                call: 'net_version',
-                params: 0,
-                outputFormatter: parseInt
-            }),
-            new Method({
-                name: 'isListening',
-                call: 'net_listening',
-                params: 0
-            }),
-            new Method({
-                name: 'getPeerCount',
-                call: 'net_peerCount',
-                params: 0,
-                outputFormatter: utils.hexToNumber
-            })
-        ].forEach(function(method) {
-            method.attachToObject(_this);
-            method.setRequestManager(_this._requestManager);
+        methods.forEach((methodOps) => {
+            if (methodOps.outputFormatter && typeof methodOps.outputFormatter === 'string') {
+                methodOps.outputFormatter = utils[methodOps.outputFormatter]
+            }
+            const method = new Method(methodOps)
+            method.attachToObject(this);
+            method.setRequestManager(this._requestManager);
         });
     }
 };
