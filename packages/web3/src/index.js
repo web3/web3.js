@@ -28,53 +28,92 @@
 "use strict";
 
 
-var version = require('../package.json').version;
-var core = require('web3-core');
-var Eth = require('web3-eth');
-var Net = require('web3-net');
-var Personal = require('web3-eth-personal');
-var Shh = require('web3-shh');
-var Bzz = require('web3-bzz');
-var utils = require('web3-utils');
+const version = require('../package.json').version;
+const Eth = require('web3-eth');
+const Net = require('web3-net');
+const Personal = require('web3-eth-personal');
+const Shh = require('web3-shh');
+const Bzz = require('web3-bzz');
+const utils = require('web3-utils');
+const { Manager, BatchManager } = require("web3-core-requestmanager");
 
-var Web3 = function Web3() {
-    var _this = this;
+const preset = {}
 
-    // sets _requestmanager etc
-    core.packageInit(this, arguments);
+class Web3 {
+  // todo no catch all args
+  constructor (...args) {
+
+    this.givenProvider = Manager.givenProvider;
+    this.providers = Manager.providers;
 
     this.version = version;
     this.utils = utils;
+
+
 
     this.eth = new Eth(this);
     this.shh = new Shh(this);
     this.bzz = new Bzz(this);
 
-    // overwrite package setProvider
-    var setProvider = this.setProvider;
-    this.setProvider = function (provider, net) {
-        /*jshint unused: false */
-        setProvider.apply(_this, arguments);
 
-        _this.eth.setRequestManager(_this._requestManager);
-        _this.shh.setRequestManager(_this._requestManager);
-        _this.bzz.setProvider(provider);
+    // static values
+    this.version = Web3.version;
+    this.utils = Wb3.utils;
+    this.modules = Web3.modules;
 
-        return true;
+    // attach batch request creation
+    this.BatchRequest = BatchManager.bind(null, pkg._requestManager);
+
+    // attach extend function
+    this.extend = extend(this);
+
+  }
+
+  setProvider (provider, net) {
+    this.eth.setRequestManager(this._requestManager);
+    this.shh.setRequestManager(this._requestManager);
+    this.bzz.setProvider(provider);
+    return true;
+  }
+
+  addProviders (pkg) {
+    this.givenProvider = requestManager.Manager.givenProvider;
+    this.providers = requestManager.Manager.providers;
+  }
+
+  static get providers () {
+    return Manager.providers
+  }
+
+  static get givenProvider () {
+    return Manager.givenProvider
+  }
+
+  static setProvider (provider, net) {
+    preset.provider = provider;
+    preset.net = net;
+    return true;
+  }
+
+  static get utils () {
+    return utils;
+  }
+
+  static get version () {
+    return version;
+  }
+
+  static get modules () {
+    return {
+      Eth: Eth,
+      Net: Net,
+      Personal: Personal,
+      Shh: Shh,
+      Bzz: Bzz
     };
-};
+  }
 
-Web3.version = version;
-Web3.utils = utils;
-Web3.modules = {
-    Eth: Eth,
-    Net: Net,
-    Personal: Personal,
-    Shh: Shh,
-    Bzz: Bzz
 };
-
-core.addProviders(Web3);
 
 module.exports = Web3;
 

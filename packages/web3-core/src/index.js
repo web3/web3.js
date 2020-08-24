@@ -20,10 +20,67 @@
  * @date 2017
  */
 
-const requestManager = require("web3-core-requestmanager");
+const { Manager, BatchManager } = require("web3-core-requestmanager");
 const extend = require("./extend");
 
-const packageInit = (pkg, args) => {
+
+
+
+
+
+class Core {
+  constructor (...args) {
+    // sets _requestmanager etc
+    if (args[0] && args[0]._requestManager) {
+        this._requestManager = args[0]._requestManager;
+    } else {
+        this._requestManager = Manager(args[0], args[1]);
+    }
+
+    // add givenProvider
+    this.givenProvider = Manager.givenProvider;
+    this.providers = Manager.providers;
+
+    this._provider = this._requestManager.provider;
+
+    // attach batch request creation
+    this.BatchRequest = BatchManager.bind(null, this._requestManager);
+
+    // attach extend function
+    this.extend = extend(this);
+  }
+
+  setRequestManager (manager) {
+    this._requestManager = manager;
+    this._provider = manager.provider;
+  }
+
+  set curentProvider (newProvider) {
+    return this.setProvider(newProvider);
+  }
+
+  get curentProvider () {
+    return this._provider;
+  }
+
+  setProvider (provider, net) {
+    this._requestManager.setProvider(provider, net);
+    this._provider = this._requestManager.provider;
+    this.extend = extend(this);
+    return true;
+  }
+
+  addProviders () {
+    this.givenProvider = Manager.givenProvider;
+    this.providers = Manager.providers;
+  }
+
+  static addProviders (pkg) {
+    pkg.givenProvider = Manager.givenProvider;
+    pkg.providers = Manager.providers;
+  }
+
+  static packageInit (pkg, args) {
     args = Array.prototype.slice.call(args);
 
     if (!pkg) {
@@ -46,12 +103,12 @@ const packageInit = (pkg, args) => {
     if (args[0] && args[0]._requestManager) {
         pkg._requestManager = args[0]._requestManager;
     } else {
-        pkg._requestManager = new requestManager.Manager(args[0], args[1]);
+        pkg._requestManager = new Manager(args[0], args[1]);
     }
 
     // add givenProvider
-    pkg.givenProvider = requestManager.Manager.givenProvider;
-    pkg.providers = requestManager.Manager.providers;
+    pkg.givenProvider = Manager.givenProvider;
+    pkg.providers = Manager.providers;
 
     pkg._provider = pkg._requestManager.provider;
 
@@ -70,18 +127,14 @@ const packageInit = (pkg, args) => {
     };
 
     // attach batch request creation
-    pkg.BatchRequest = requestManager.BatchManager.bind(null, pkg._requestManager);
+    pkg.BatchRequest =BatchManager.bind(null, pkg._requestManager);
 
     // attach extend function
     pkg.extend = extend(pkg);
+  }
+
+
+
 }
 
-const addProviders = (pkg) => {
-    pkg.givenProvider = requestManager.Manager.givenProvider;
-    pkg.providers = requestManager.Manager.providers;
-}
-
-module.exports = {
-    packageInit,
-    addProviders
-}
+module.exports = Core

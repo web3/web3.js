@@ -22,179 +22,61 @@
 
 "use strict";
 
-var core = require('web3-core');
-var Subscriptions = require('web3-core-subscriptions').subscriptions;
-var Method = require('web3-core-method');
-// var formatters = require('web3-core-helpers').formatters;
-var Net = require('web3-net');
+const Core = require('web3-core');
+const subscriptionMethods = require('./subscription-methods.js')
+const Subscriptions = require('web3-core-subscriptions').subscriptions;
+const Method = require('web3-core-method');
+// const formatters = require('web3-core-helpers').formatters;
+const Net = require('web3-net');
 
 
-var Shh = function Shh() {
-    var _this = this;
+class Shh extends Core {
+    constructor () {
+        super()
+        // sets _requestmanager
 
-    // sets _requestmanager
-    core.packageInit(this, arguments);
+        // overwrite package setRequestManager
+        var setRequestManager = this.setRequestManager;
+        this.setRequestManager = function (manager) {
+            setRequestManager(manager);
 
-    // overwrite package setRequestManager
-    var setRequestManager = this.setRequestManager;
-    this.setRequestManager = function (manager) {
-        setRequestManager(manager);
+            this.net.setRequestManager(manager);
 
-        _this.net.setRequestManager(manager);
+            return true;
+        };
 
-        return true;
-    };
+        // overwrite setProvider
+        var setProvider = this.setProvider;
+        this.setProvider = function () {
+            setProvider.apply(this, arguments);
 
-    // overwrite setProvider
-    var setProvider = this.setProvider;
-    this.setProvider = function () {
-        setProvider.apply(_this, arguments);
+            this.setRequestManager(this._requestManager);
+        };
 
-        _this.setRequestManager(_this._requestManager);
-    };
+        this.net = new Net(this);
 
-    this.net = new Net(this);
-
-    [
-        new Subscriptions({
-            name: 'subscribe',
-            type: 'shh',
-            subscriptions: {
-                'messages': {
-                    params: 1
-                    // inputFormatter: [formatters.inputPostFormatter],
-                    // outputFormatter: formatters.outputPostFormatter
+        [new Subscriptions({
+                name: 'subscribe',
+                type: 'shh',
+                subscriptions: {
+                    'messages': {
+                        params: 1
+                        // inputFormatter: [formatters.inputPostFormatter],
+                        // outputFormatter: formatters.outputPostFormatter
+                    }
                 }
-            }
-        }),
+            }),
+        ].concat(subscriptionMethods.map((method) => new Method(method))).forEach(function(method) {
+            method.attachToObject(this);
+            method.setRequestManager(this._requestManager);
+        });
+    }
 
-        new Method({
-            name: 'getVersion',
-            call: 'shh_version',
-            params: 0
-        }),
-        new Method({
-            name: 'getInfo',
-            call: 'shh_info',
-            params: 0
-        }),
-        new Method({
-            name: 'setMaxMessageSize',
-            call: 'shh_setMaxMessageSize',
-            params: 1
-        }),
-        new Method({
-            name: 'setMinPoW',
-            call: 'shh_setMinPoW',
-            params: 1
-        }),
-        new Method({
-            name: 'markTrustedPeer',
-            call: 'shh_markTrustedPeer',
-            params: 1
-        }),
-        new Method({
-            name: 'newKeyPair',
-            call: 'shh_newKeyPair',
-            params: 0
-        }),
-        new Method({
-            name: 'addPrivateKey',
-            call: 'shh_addPrivateKey',
-            params: 1
-        }),
-        new Method({
-            name: 'deleteKeyPair',
-            call: 'shh_deleteKeyPair',
-            params: 1
-        }),
-        new Method({
-            name: 'hasKeyPair',
-            call: 'shh_hasKeyPair',
-            params: 1
-        }),
-        new Method({
-            name: 'getPublicKey',
-            call: 'shh_getPublicKey',
-            params: 1
-        }),
-        new Method({
-            name: 'getPrivateKey',
-            call: 'shh_getPrivateKey',
-            params: 1
-        }),
-        new Method({
-            name: 'newSymKey',
-            call: 'shh_newSymKey',
-            params: 0
-        }),
-        new Method({
-            name: 'addSymKey',
-            call: 'shh_addSymKey',
-            params: 1
-        }),
-        new Method({
-            name: 'generateSymKeyFromPassword',
-            call: 'shh_generateSymKeyFromPassword',
-            params: 1
-        }),
-        new Method({
-            name: 'hasSymKey',
-            call: 'shh_hasSymKey',
-            params: 1
-        }),
-        new Method({
-            name: 'getSymKey',
-            call: 'shh_getSymKey',
-            params: 1
-        }),
-        new Method({
-            name: 'deleteSymKey',
-            call: 'shh_deleteSymKey',
-            params: 1
-        }),
 
-        new Method({
-            name: 'newMessageFilter',
-            call: 'shh_newMessageFilter',
-            params: 1
-        }),
-        new Method({
-            name: 'getFilterMessages',
-            call: 'shh_getFilterMessages',
-            params: 1
-        }),
-        new Method({
-            name: 'deleteMessageFilter',
-            call: 'shh_deleteMessageFilter',
-            params: 1
-        }),
-
-        new Method({
-            name: 'post',
-            call: 'shh_post',
-            params: 1,
-            inputFormatter: [null]
-        }),
-
-        new Method({
-            name: 'unsubscribe',
-            call: 'shh_unsubscribe',
-            params: 1
-        })
-    ].forEach(function(method) {
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager);
-    });
+    clearSubscriptions () {
+         this._requestManager.clearSubscriptions();
+    }
 };
-
-Shh.prototype.clearSubscriptions = function () {
-     this._requestManager.clearSubscriptions();
-};
-
-core.addProviders(Shh);
-
-
 
 module.exports = Shh;
 
