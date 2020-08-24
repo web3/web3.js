@@ -66,7 +66,7 @@ class Shh extends Core {
                     }
                 }
             }),
-        ].concat(subscriptionMethods.map((method) => new Method(method))).forEach(function(method) {
+        ].concat(subscriptionMethods.map((method) => new Method(method))).forEach((method) => {
             method.attachToObject(this);
             method.setRequestManager(this._requestManager);
         });

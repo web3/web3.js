@@ -27,7 +27,7 @@
 
 "use strict";
 
-
+const Core = require('web3-core')
 const version = require('../package.json').version;
 const Eth = require('web3-eth');
 const Net = require('web3-net');
@@ -39,13 +39,10 @@ const { Manager, BatchManager } = require("web3-core-requestmanager");
 
 const preset = {}
 
-class Web3 {
+class Web3 extends Core{
   // todo no catch all args
   constructor (...args) {
-
-    this.givenProvider = Manager.givenProvider;
-    this.providers = Manager.providers;
-
+    super(args)
     this.version = version;
     this.utils = utils;
 
@@ -58,15 +55,8 @@ class Web3 {
 
     // static values
     this.version = Web3.version;
-    this.utils = Wb3.utils;
+    this.utils = Web3.utils;
     this.modules = Web3.modules;
-
-    // attach batch request creation
-    this.BatchRequest = BatchManager.bind(null, pkg._requestManager);
-
-    // attach extend function
-    this.extend = extend(this);
-
   }
 
   setProvider (provider, net) {
@@ -74,19 +64,6 @@ class Web3 {
     this.shh.setRequestManager(this._requestManager);
     this.bzz.setProvider(provider);
     return true;
-  }
-
-  addProviders (pkg) {
-    this.givenProvider = requestManager.Manager.givenProvider;
-    this.providers = requestManager.Manager.providers;
-  }
-
-  static get providers () {
-    return Manager.providers
-  }
-
-  static get givenProvider () {
-    return Manager.givenProvider
   }
 
   static setProvider (provider, net) {

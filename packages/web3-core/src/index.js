@@ -34,7 +34,7 @@ class Core {
     if (args[0] && args[0]._requestManager) {
         this._requestManager = args[0]._requestManager;
     } else {
-        this._requestManager = Manager(args[0], args[1]);
+        this._requestManager = new Manager(args[0], args[1]);
     }
 
     // add givenProvider
@@ -61,6 +61,14 @@ class Core {
 
   get curentProvider () {
     return this._provider;
+  }
+
+  static get providers () {
+    return Manager.providers
+  }
+
+  static get givenProvider () {
+    return Manager.givenProvider
   }
 
   setProvider (provider, net) {

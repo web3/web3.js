@@ -38,9 +38,9 @@ class Personal extends Core {
         this.net = new Net(this);
 
         this.defaultAccount = null;
-        this.defaultBlock = 'latest';
+        this._defaultBlock = 'latest';
 
-        this._mthods = methods.forEach(function(methodParam) {
+        this._mthods = methods.forEach((methodParam) => {
             if (methodParam.inputFormatter) {
                 methodParam.inputFormatter = methodParam.inputFormatter.map((format) =>{
                     if (format === null) return null
@@ -51,10 +51,10 @@ class Personal extends Core {
                 methodParam.outputFormatter = utils[methodParam.outputFormatter]
             }
             const method = new Method(methodParam);
-            method.attachToObject(_this);
-            method.setRequestManager(_this._requestManager);
-            method.defaultBlock = _this.defaultBlock;
-            method.defaultAccount = _this.defaultAccount;
+            method.attachToObject(this);
+            method.setRequestManager(this._requestManager);
+            method.defaultBlock = this.defaultBlock;
+            method.defaultAccount = this.defaultAccount;
         });
     }
 
@@ -72,8 +72,12 @@ class Personal extends Core {
         return val;
     }
 
+    get defaultBlock () {
+        return this._defaultBlock
+    }
+
     set defaultBlock (val) {
-        this.defaultBlock = val;
+        this._defaultBlock = val;
 
         // update defaultBlock
         if (this._methods) {
