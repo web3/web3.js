@@ -334,6 +334,7 @@ module.exports = {
     keccak256: utils.sha3,
     soliditySha3: soliditySha3.soliditySha3,
     soliditySha3Raw: soliditySha3.soliditySha3Raw,
+    encodePacked: soliditySha3.encodePacked,
     isAddress: utils.isAddress,
     checkAddressChecksum: utils.checkAddressChecksum,
     toChecksumAddress: toChecksumAddress,
