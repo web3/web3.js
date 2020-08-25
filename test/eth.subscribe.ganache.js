@@ -59,7 +59,7 @@ describe('subscription connect/reconnect', function () {
         await waitSeconds(1); // Sub need a little time to set up
 
         assert.equal(1, web3.eth._requestManager.subscriptions.size);
-        web3.eth.clearSubscriptions();
+        assert.ok(web3.eth.clearSubscriptions())
         assert.equal(0, web3.eth._requestManager.subscriptions.size);
     });
 
