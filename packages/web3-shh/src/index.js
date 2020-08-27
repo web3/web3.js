@@ -31,8 +31,8 @@ const Net = require('web3-net');
 
 
 class Shh extends Core {
-    constructor () {
-        super()
+    constructor (...args) {
+        super(...args)
         // sets _requestmanager
 
         // overwrite package setRequestManager

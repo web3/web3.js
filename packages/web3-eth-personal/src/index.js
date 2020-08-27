@@ -32,24 +32,27 @@ var formatters = require('web3-core-helpers').formatters;
 const methods = require('./methods.js')
 
 class Personal extends Core {
-    constructor () {
-        super()
+    constructor (...args) {
+        super(...args)
 
         this.net = new Net(this);
 
-        this.defaultAccount = null;
+        this._defaultAccount = null;
         this._defaultBlock = 'latest';
 
         this._mthods = methods.forEach((methodParam) => {
+
             if (methodParam.inputFormatter) {
                 methodParam.inputFormatter = methodParam.inputFormatter.map((format) =>{
                     if (format === null) return null
                     return formatters[format];
                 })
             }
+
             if (methodParam.outputFormatter) {
                 methodParam.outputFormatter = utils[methodParam.outputFormatter]
             }
+
             const method = new Method(methodParam);
             method.attachToObject(this);
             method.setRequestManager(this._requestManager);
@@ -58,9 +61,13 @@ class Personal extends Core {
         });
     }
 
+    get defaultAccount () {
+        return this._defaultAccount
+    }
+
     set defaultAccount (val) {
         if(val) {
-            this.defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
+            this._defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
         }
 
         // update defaultBlock
@@ -81,7 +88,7 @@ class Personal extends Core {
 
         // update defaultBlock
         if (this._methods) {
-            methods.forEach(function(method) {
+            this._methods.forEach(function(method) {
                 method.defaultBlock = defaultBlock;
             });
         }

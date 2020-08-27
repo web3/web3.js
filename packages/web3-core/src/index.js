@@ -135,7 +135,7 @@ class Core {
     };
 
     // attach batch request creation
-    pkg.BatchRequest =BatchManager.bind(null, pkg._requestManager);
+    pkg.BatchRequest = BatchManager.bind(null, pkg._requestManager);
 
     // attach extend function
     pkg.extend = extend(pkg);

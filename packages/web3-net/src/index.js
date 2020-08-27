@@ -28,8 +28,8 @@ const utils = require('web3-utils');
 const methods = require('./methods');
 
 class Net extends Core {
-    constructor () {
-        super()
+    constructor (...args) {
+        super(...args)
         methods.forEach((methodOps) => {
             if (methodOps.outputFormatter && typeof methodOps.outputFormatter === 'string') {
                 methodOps.outputFormatter = utils[methodOps.outputFormatter]

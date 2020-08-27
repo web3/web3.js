@@ -39,14 +39,12 @@ const { Manager, BatchManager } = require("web3-core-requestmanager");
 
 const preset = {}
 
-class Web3 extends Core{
+class Web3 extends Core {
   // todo no catch all args
   constructor (...args) {
-    super(args)
+    super(...args)
     this.version = version;
     this.utils = utils;
-
-
 
     this.eth = new Eth(this);
     this.shh = new Shh(this);
