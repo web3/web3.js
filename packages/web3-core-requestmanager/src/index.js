@@ -257,21 +257,29 @@ RequestManager.prototype.removeSubscription = function (id, callback) {
  * Should be called to reset the subscriptions
  *
  * @method reset
+ * 
+ * @returns {boolean}
  */
 RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
-    var _this = this;
+    try {
+        var _this = this;
 
-    // uninstall all subscriptions
-    if (this.subscriptions.size > 0) {
-        this.subscriptions.forEach(function (value, id) {
-            if (!keepIsSyncing || value.name !== 'syncing')
-                _this.removeSubscription(id);
-        });
+        // uninstall all subscriptions
+        if (this.subscriptions.size > 0) {
+            this.subscriptions.forEach(function (value, id) {
+                if (!keepIsSyncing || value.name !== 'syncing')
+                    _this.removeSubscription(id);
+            });
+        }
+
+        //  reset notification callbacks etc.
+        if(this.provider.reset)
+            this.provider.reset();
+
+        return true
+    } catch (e) {
+        throw new Error(`Error while clearing subscriptions: ${e}`)
     }
-
-    //  reset notification callbacks etc.
-    if(this.provider.reset)
-        this.provider.reset();
 };
 
 /**
