@@ -1043,7 +1043,7 @@ toWei
 
 Converts any `ether value <http://ethdocs.org/en/latest/ether.html>`_ value into `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na>`_.
 
-.. note:: "wei" are the smallest ethereum unit, and you should always make calculations in wei and convert only for display reasons.
+.. note:: "wei" are the smallest ether unit, and you should always make calculations in wei and convert only for display reasons.
 
 ----------
 Parameters
@@ -1391,4 +1391,3 @@ Example
 
     web3.utils.toTwosComplement('-0x1');
     > "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-
