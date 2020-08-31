@@ -277,6 +277,7 @@ Released with 1.0.0-beta.37 code base.
 - Improve RequestManager send method (#3649)
 - `npm run build` now uses TSC to compile (.js allowed) and the build folder is now located under `lib` (#3652)
 - Modernized web3-core to use newer es syntax (#3652)
+- Bumped `web3-providers-ipc` `oboe` version to 2.1.5 (#3661)
 - Bump lodash from 4.17.15 to 4.17.19
 
 ### Fixed
