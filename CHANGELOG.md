@@ -280,6 +280,7 @@ Released with 1.0.0-beta.37 code base.
 - Modernized web3-core to use newer es syntax (#3652)
 - Bumped `web3-providers-ipc` `oboe` version to 2.1.5 (#3661)
 - Bump lodash from 4.17.15 to 4.17.19
+- Bump websocket version which removes node-gyp from web3.js (#3865)
 
 ### Fixed
 
