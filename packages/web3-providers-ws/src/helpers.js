@@ -19,7 +19,7 @@ if (isNode) {
     }
 } else {
     _btoa = btoa.bind(window);
-    helpers = require('url').parse;;
+    helpers = require('url').parse;
 }
 
 module.exports = {
