@@ -12,6 +12,7 @@ describe('utils', function() {
         u.methodExists(utils, 'toWei');
         u.methodExists(utils, 'toBN');
         u.methodExists(utils, 'isAddress');
+        u.methodExists(utils, 'soliditySha3');
+        u.methodExists(utils, 'encodePacked');
     });
 });
-

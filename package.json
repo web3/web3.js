@@ -92,6 +92,7 @@
         "@babel/plugin-transform-runtime": "^7.10.4",
         "@babel/preset-env": "^7.10.4",
         "@babel/runtime": "^7.10.4",
+        "@chainsafe/geth-dev-assistant": "^0.1.5",
         "@ensdomains/ens": "^0.4.0",
         "@ensdomains/resolver": "^0.2.4",
         "@types/bignumber.js": "^4.0.2",
@@ -115,7 +116,6 @@
         "ethers": "4.0.33",
         "ethjs-signer": "^0.1.1",
         "ganache-cli": "^6.7.0",
-        "geth-dev-assistant": "^0.1.5",
         "jshint": "^2.10.2",
         "karma": "^5.1.0",
         "karma-browserify": "^7.0.0",
@@ -134,5 +134,6 @@
         "wait-port": "^0.2.6",
         "webpack": "^4.43.0",
         "webpack-cli": "^3.3.12"
-    }
+    },
+    "dependencies": {}
 }
