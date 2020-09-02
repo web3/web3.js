@@ -17,7 +17,7 @@
     "eventemitter3": "4.0.4",
     "underscore": "1.9.1",
     "web3-core-helpers": "1.2.11",
-    "websocket": "^1.0.31"
+    "websocket": "^1.0.32"
   },
   "devDependencies": {
     "dtslint": "^3.4.1",
