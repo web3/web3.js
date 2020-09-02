@@ -115,6 +115,7 @@ export function isTopic(topic: string): boolean;
 export function jsonInterfaceMethodToString(abiItem: AbiItem): string;
 export function soliditySha3(...val: Mixed[]): string | null;
 export function soliditySha3Raw(...val: Mixed[]): string;
+export function encodePacked(...val: Mixed[]): string | null;
 export function getUnitValue(unit: Unit): string;
 export function unitMap(): Units;
 export function testAddress(bloom: string, address: string): boolean;
@@ -170,6 +171,7 @@ export interface Utils {
     jsonInterfaceMethodToString(abiItem: AbiItem): string;
     soliditySha3(...val: Mixed[]): string | null;
     soliditySha3Raw(...val: Mixed[]): string;
+    encodePacked(...val: Mixed[]): string | null;
     getUnitValue(unit: Unit): string;
     unitMap(): Units;
     testAddress(bloom: string, address: string): boolean;
