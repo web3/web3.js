@@ -1,8 +1,9 @@
 var isNode = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
+var isRN = typeof navigator !== 'undefined' && navigator.product === 'ReactNative';
 
 var _btoa = null;
 var helpers = null;
-if (isNode) {
+if (isNode || isRN) {
     _btoa = function(str) {
         return Buffer.from(str).toString('base64');
     };
@@ -19,7 +20,9 @@ if (isNode) {
     }
 } else {
     _btoa = btoa.bind(window);
-    helpers = require('url').parse;
+    helpers = function(url) {
+        return new URL(url);
+    };
 }
 
 module.exports = {
