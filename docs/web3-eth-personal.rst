@@ -78,7 +78,7 @@ sign
 
 .. code-block:: javascript
 
-    web3.eth.personal.sign(dataToSign, address, password [, callback])
+    web3.eth.personal.sign(dataToSign, address, password, [ callback])
 
 The sign method calculates an Ethereum specific signature with:
 
@@ -143,7 +143,7 @@ ecRecover
 
 .. code-block:: javascript
 
-    web3.eth.personal.ecRecover(dataThatWasSigned, signature [, callback])
+    web3.eth.personal.ecRecover(dataThatWasSigned, signature, [ callback])
 
 Recovers the account that signed the data.
 
@@ -182,7 +182,7 @@ signTransaction
 
 .. code-block:: javascript
 
-    web3.eth.personal.signTransaction(transaction, password [, callback])
+    web3.eth.personal.signTransaction(transaction, password, [ callback])
 
 Signs a transaction. This account needs to be unlocked.
 
@@ -244,7 +244,7 @@ sendTransaction
 
 .. code-block:: javascript
 
-    web3.eth.personal.sendTransaction(transactionOptions, password [, callback])
+    web3.eth.personal.sendTransaction(transactionOptions, password, [ callback])
 
 This method sends a transaction over the management API.
 
@@ -293,7 +293,7 @@ unlockAccount
 
 .. code-block:: javascript
 
-    web3.eth.personal.unlockAccount(address, password, unlockDuraction [, callback])
+    web3.eth.personal.unlockAccount(address, password, unlockDuraction, [ callback])
 
 Signs data using a specific account.
 
@@ -326,7 +326,7 @@ lockAccount
 
 .. code-block:: javascript
 
-    web3.eth.personal.lockAccount(address [, callback])
+    web3.eth.personal.lockAccount(address, [ callback])
 
 Locks the given account.
 

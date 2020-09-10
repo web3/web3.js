@@ -782,7 +782,7 @@ getBalance
 
 .. code-block:: javascript
 
-    web3.eth.getBalance(address [, defaultBlock] [, callback])
+    web3.eth.getBalance(address, [ defaultBlock], [ callback])
 
 Get the balance of an address at a given block.
 
@@ -822,7 +822,7 @@ getStorageAt
 
 .. code-block:: javascript
 
-    web3.eth.getStorageAt(address, position [, defaultBlock] [, callback])
+    web3.eth.getStorageAt(address, position, [ defaultBlock], [ callback])
 
 Get the storage at a specific position of an address.
 
@@ -861,7 +861,7 @@ getCode
 
 .. code-block:: javascript
 
-    web3.eth.getCode(address [, defaultBlock] [, callback])
+    web3.eth.getCode(address, [ defaultBlock], [ callback])
 
 Get the code at a specific address.
 
@@ -901,7 +901,7 @@ getBlock
 
 .. code-block:: javascript
 
-     web3.eth.getBlock(blockHashOrBlockNumber [, returnTransactionObjects] [, callback])
+     web3.eth.getBlock(blockHashOrBlockNumber, [ returnTransactionObjects], [ callback])
 
 Returns a block matching the block number or block hash.
 
@@ -981,7 +981,7 @@ getBlockTransactionCount
 
 .. code-block:: javascript
 
-    web3.eth.getBlockTransactionCount(blockHashOrBlockNumber [, callback])
+    web3.eth.getBlockTransactionCount(blockHashOrBlockNumber, [ callback])
 
 Returns the number of transaction in a given block.
 
@@ -1021,7 +1021,7 @@ getBlockUncleCount
 
 .. code-block:: javascript
 
-    web3.eth.getBlockUncleCount(blockHashOrBlockNumber [, callback])
+    web3.eth.getBlockUncleCount(blockHashOrBlockNumber, [ callback])
 
 Returns the number of uncles in a block from a block matching the given block hash.
 
@@ -1059,7 +1059,7 @@ getUncle
 
 .. code-block:: javascript
 
-    web3.eth.getUncle(blockHashOrBlockNumber, uncleIndex [, returnTransactionObjects] [, callback])
+    web3.eth.getUncle(blockHashOrBlockNumber, uncleIndex, [ returnTransactionObjects], [ callback])
 
 Returns a blocks uncle by a given uncle index position.
 
@@ -1103,7 +1103,7 @@ getTransaction
 
 .. code-block:: javascript
 
-    web3.eth.getTransaction(transactionHash [, callback])
+    web3.eth.getTransaction(transactionHash, [ callback])
 
 Returns a transaction matching the given transaction hash.
 
@@ -1170,7 +1170,7 @@ getPendingTransactions
 
 .. code-block:: javascript
 
-    web3.eth.getPendingTransactions([, callback])
+    web3.eth.getPendingTransactions([callback])
 
 Returns a list of pending transactions.
 
@@ -1252,7 +1252,7 @@ getTransactionFromBlock
 
 .. code-block:: javascript
 
-    getTransactionFromBlock(hashStringOrNumber, indexNumber [, callback])
+    getTransactionFromBlock(hashStringOrNumber, indexNumber, [ callback])
 
 Returns a transaction based on a block hash or number and the transaction's index position.
 
@@ -1294,7 +1294,7 @@ getTransactionReceipt
 
 .. code-block:: javascript
 
-    web3.eth.getTransactionReceipt(hash [, callback])
+    web3.eth.getTransactionReceipt(hash, [ callback])
 
 Returns the receipt of a transaction by transaction hash.
 
@@ -1364,7 +1364,7 @@ getTransactionCount
 
 .. code-block:: javascript
 
-    web3.eth.getTransactionCount(address [, defaultBlock] [, callback])
+    web3.eth.getTransactionCount(address, [ defaultBlock], [ callback])
 
 Get the number of transactions sent from this address.
 
@@ -1404,7 +1404,7 @@ sendTransaction
 
 .. code-block:: javascript
 
-    web3.eth.sendTransaction(transactionObject [, callback])
+    web3.eth.sendTransaction(transactionObject, [ callback])
 
 Sends a transaction to the network.
 
@@ -1507,7 +1507,7 @@ sendSignedTransaction
 
 .. code-block:: javascript
 
-    web3.eth.sendSignedTransaction(signedTransactionData [, callback])
+    web3.eth.sendSignedTransaction(signedTransactionData, [ callback])
 
 Sends an already signed transaction, generated for example using :ref:`web3.eth.accounts.signTransaction <eth-accounts-signtransaction>`.
 
@@ -1570,7 +1570,7 @@ sign
 
 .. code-block:: javascript
 
-    web3.eth.sign(dataToSign, address [, callback])
+    web3.eth.sign(dataToSign, address, [ callback])
 
 Signs data using a specific account. This account needs to be unlocked.
 
@@ -1616,7 +1616,7 @@ signTransaction
 
 .. code-block:: javascript
 
-    web3.eth.signTransaction(transactionObject, address [, callback])
+    web3.eth.signTransaction(transactionObject, address, [ callback])
 
 Signs a transaction. This account needs to be unlocked.
 
@@ -1678,7 +1678,7 @@ call
 
 .. code-block:: javascript
 
-    web3.eth.call(callObject [, defaultBlock] [, callback])
+    web3.eth.call(callObject, [ defaultBlock], [ callback])
 
 Executes a message call transaction, which is directly executed in the VM of the node, but never mined into the blockchain.
 
@@ -1719,7 +1719,7 @@ estimateGas
 
 .. code-block:: javascript
 
-    web3.eth.estimateGas(callObject [, callback])
+    web3.eth.estimateGas(callObject, [ callback])
 
 Executes a message call or transaction and returns the amount of the gas used.
 Note: You must specify a ``from`` address otherwise you may experience odd behavior.
@@ -1762,7 +1762,7 @@ getPastLogs
 
 .. code-block:: javascript
 
-    web3.eth.getPastLogs(options [, callback])
+    web3.eth.getPastLogs(options, [ callback])
 
 Gets past logs, matching the given options.
 

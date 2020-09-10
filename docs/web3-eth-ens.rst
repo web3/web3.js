@@ -101,7 +101,7 @@ resolver
 
 .. code-block:: javascript
 
-    web3.eth.ens.resolver(name [, callback]);
+    web3.eth.ens.resolver(name, [ callback]);
 
 Returns the resolver contract to an Ethereum address.
 
@@ -139,7 +139,7 @@ getResolver
 
 .. code-block:: javascript
 
-    web3.eth.ens.getResolver(name [, callback]);
+    web3.eth.ens.getResolver(name, [ callback]);
 
 Returns the resolver contract to an Ethereum address.
 
@@ -174,7 +174,7 @@ setResolver
 
 .. code-block:: javascript
 
-    web3.eth.ens.setResolver(name, address [, txConfig ] [, callback]);
+    web3.eth.ens.setResolver(name, address, [ txConfig ], [ callback]);
 
 Sets the resolver contract address of a name.
 
@@ -211,7 +211,7 @@ getOwner
 
 .. code-block:: javascript
 
-    web3.eth.ens.getOwner(name [, callback]);
+    web3.eth.ens.getOwner(name, [ callback]);
 
 Returns the owner of a name.
 
@@ -247,7 +247,7 @@ setOwner
 
 .. code-block:: javascript
 
-    web3.eth.ens.setOwner(name [, txConfig ] [, callback]);
+    web3.eth.ens.setOwner(name, [ txConfig ], [ callback]);
 
 Sets the owner of the given name.
 
@@ -283,7 +283,7 @@ getTTL
 
 .. code-block:: javascript
 
-    web3.eth.ens.getTTL(name [, callback]);
+    web3.eth.ens.getTTL(name, [ callback]);
 
 Returns the caching TTL (time-to-live) of a name.
 
@@ -318,7 +318,7 @@ setTTL
 
 .. code-block:: javascript
 
-    web3.eth.ens.setTTL(name, ttl [, txConfig ] [, callback]);
+    web3.eth.ens.setTTL(name, ttl, [ txConfig ], [ callback]);
 
 Sets the caching TTL (time-to-live) of a name.
 
@@ -355,7 +355,7 @@ setSubnodeOwner
 
 .. code-block:: javascript
 
-    web3.eth.ens.setSubnodeOwner(name, label, address [, txConfig ] [, callback]);
+    web3.eth.ens.setSubnodeOwner(name, label, address, [ txConfig ], [ callback]);
 
 Creates a new subdomain of the given node, assigning ownership of it to the specified owner.
 
@@ -393,7 +393,7 @@ setRecord
 
 .. code-block:: javascript
 
-    web3.eth.ens.setRecord(name, owner, resolver, ttl, [, txConfig ] [, callback]);
+    web3.eth.ens.setRecord(name, owner, resolver, ttl,, [ txConfig ], [ callback]);
 
 Sets the owner, resolver, and TTL for an ENS record in a single operation.
 
@@ -432,7 +432,7 @@ setSubnodeRecord
 
 .. code-block:: javascript
 
-    web3.eth.ens.setSubnodeRecord(name, label, owner, resolver, ttl, [, txConfig ] [, callback]);
+    web3.eth.ens.setSubnodeRecord(name, label, owner, resolver, ttl,, [ txConfig ], [ callback]);
 
 Sets the owner, resolver and TTL for a subdomain, creating it if necessary.
 
@@ -472,7 +472,7 @@ setApprovalForAll
 
 .. code-block:: javascript
 
-    web3.eth.ens.setApprovalForAll(operator, approved, [, txConfig ] [, callback]);
+    web3.eth.ens.setApprovalForAll(operator, approved,, [ txConfig ], [ callback]);
 
 Sets or clears an approval. Approved accounts can execute all ENS registry operations on behalf of the caller.
 
@@ -509,7 +509,7 @@ isApprovedForAll
 
 .. code-block:: javascript
 
-    web3.eth.ens.isApprovedForAll(owner, operator [, callback]);
+    web3.eth.ens.isApprovedForAll(owner, operator, [ callback]);
 
 Returns ``true`` if the operator is approved to make ENS registry operations on behalf of the owner.
 
@@ -545,7 +545,7 @@ recordExists
 
 .. code-block:: javascript
 
-    web3.eth.ens.recordExists(name [, callback]);
+    web3.eth.ens.recordExists(name, [ callback]);
 
 Returns ``true`` if node exists in this ENS registry.
 This will return ``false`` for records that are in the legacy ENS registry but have not yet been migrated to the new one.
@@ -581,7 +581,7 @@ getAddress
 
 .. code-block:: javascript
 
-    web3.eth.ens.getAddress(ENSName [, callback]);
+    web3.eth.ens.getAddress(ENSName, [ callback]);
 
 Resolves an ENS name to an Ethereum address.
 
@@ -616,7 +616,7 @@ setAddress
 
 .. code-block:: javascript
 
-    web3.eth.ens.setAddress(ENSName, address [, txConfig ] [, callback]);
+    web3.eth.ens.setAddress(ENSName, address, [ txConfig ], [ callback]);
 
 Sets the address of an ENS name in this resolver.
 
@@ -699,7 +699,7 @@ getPubkey
 
 .. code-block:: javascript
 
-    web3.eth.ens.getPubkey(ENSName [, callback]);
+    web3.eth.ens.getPubkey(ENSName, [ callback]);
 
 Returns the X and Y coordinates of the curve point for the public key.
 
@@ -739,7 +739,7 @@ setPubkey
 
 .. code-block:: javascript
 
-    web3.eth.ens.setPubkey(ENSName, x, y [, txConfig ] [, callback]);
+    web3.eth.ens.setPubkey(ENSName, x, y, [ txConfig ], [ callback]);
 
 Sets the SECP256k1 public key associated with an ENS node.
 
@@ -825,7 +825,7 @@ getContent
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContent(ENSName [, callback]);
+    web3.eth.ens.getContent(ENSName, [ callback]);
 
 Returns the content hash associated with an ENS node.
 
@@ -860,7 +860,7 @@ setContent
 
 .. code-block:: javascript
 
-    web3.eth.ens.setContent(ENSName, hash [, txConfig ] [, callback]);
+    web3.eth.ens.setContent(ENSName, hash, [ txConfig ], [ callback]);
 
 Sets the content hash associated with an ENS node.
 
@@ -943,7 +943,7 @@ getContenthash
 
 .. code-block:: javascript
 
-    web3.eth.ens.getContenthash(ENSName [, callback]);
+    web3.eth.ens.getContenthash(ENSName, [ callback]);
 
 Returns the content hash object associated with an ENS node.
 
@@ -981,7 +981,7 @@ setContenthash
 
 .. code-block:: javascript
 
-    web3.eth.ens.setContenthash(ENSName, hash [, txConfig ] [, callback]);
+    web3.eth.ens.setContenthash(ENSName, hash, [ txConfig ], [ callback]);
 
 Sets the content hash associated with an ENS node.
 
@@ -1071,7 +1071,7 @@ getMultihash
 
 .. code-block:: javascript
 
-    web3.eth.ens.getMultihash(ENSName [, callback]);
+    web3.eth.ens.getMultihash(ENSName, [ callback]);
 
 Returns the multihash associated with an ENS node.
 
@@ -1106,7 +1106,7 @@ supportsInterface
 
 .. code-block:: javascript
 
-    web3.eth.ens.supportsInterface(name, interfaceId [, callback]);
+    web3.eth.ens.supportsInterface(name, interfaceId, [ callback]);
 
 Returns ``true`` if the related ``Resolver`` does support the given signature or interfaceId.
 
@@ -1142,7 +1142,7 @@ setMultihash
 
 .. code-block:: javascript
 
-    web3.eth.ens.setMultihash(ENSName, hash [, txConfig ] [, callback]);
+    web3.eth.ens.setMultihash(ENSName, hash, [ txConfig ], [ callback]);
 
 Sets the multihash associated with an ENS node.
 

@@ -37,7 +37,7 @@ new contract
 
 .. code-block:: javascript
 
-    new web3.eth.Contract(jsonInterface[, address][, options])
+    new web3.eth.Contract(jsonInterface, [address], [options])
 
 Creates a new contract instance with all its methods and events defined in its :ref:`json interface <glossary-json-interface>` object.
 
@@ -661,7 +661,7 @@ methods
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]])
+    myContract.methods.myMethod([param1], [param2], [...])
 
 Creates a transaction object for that method, which then can be :ref:`called <contract-call>`, :ref:`send <contract-send>`, :ref:`estimated  <contract-estimateGas>`, or :ref:`ABI encoded <contract-encodeABI>`.
 
@@ -736,7 +736,7 @@ methods.myMethod.call
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]]).call(options [, defaultBlock] [, callback])
+    myContract.methods.myMethod([param1], [param2], [...]).call(options, [ defaultBlock], [ callback])
 
 Will call a "constant" method and execute its smart contract method in the EVM without sending any transaction. Note calling cannot alter the smart contract state.
 
@@ -824,7 +824,7 @@ methods.myMethod.send
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]]).send(options[, callback])
+    myContract.methods.myMethod([param1], [param2], [...]).send(options, [callback])
 
 Will send a transaction to the smart contract and execute its method. Note this can alter the smart contract state.
 
@@ -933,7 +933,7 @@ methods.myMethod.estimateGas
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]]).estimateGas(options[, callback])
+    myContract.methods.myMethod([param1], [param2], [...]).estimateGas(options, [callback])
 
 Will call to estimate the gas a method execution will take when executed in the EVM.
 The estimation can differ from the actual gas used when later sending a transaction, as the state of the smart contract can be different at that time.
@@ -987,7 +987,7 @@ methods.myMethod.encodeABI
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]]).encodeABI()
+    myContract.methods.myMethod([param1], [param2], [...]).encodeABI()
 
 Encodes the ABI for this method. The resulting hex string is 32-bit function signature hash plus the passed parameters in  Solidity tightly packed format. This can be used to send a transaction, call a method, or pass it into another smart contract's method as arguments. Set the `data` field on `web3.eth.sendTransaction` options as the `encodeABI()` result and it is the same as calling the contract method with `contract.myMethod.send()`.
 
@@ -1030,7 +1030,7 @@ once
 
 .. code-block:: javascript
 
-    myContract.once(event[, options], callback)
+    myContract.once(event, [options], callback)
 
 Subscribes to an event and unsubscribes immediately after the first event or error. Will only fire for a single event.
 
@@ -1092,7 +1092,7 @@ events
 
 .. code-block:: javascript
 
-    myContract.events.MyEvent([options][, callback])
+    myContract.events.MyEvent([options], [callback])
 
 Subscribe to an event.
 
@@ -1186,7 +1186,7 @@ events.allEvents
 
 .. code-block:: javascript
 
-    myContract.events.allEvents([options][, callback])
+    myContract.events.allEvents([options], [callback])
 
 Same as :ref:`events <contract-events>` but receives all events from this smart contract.
 Optionally the filter property can filter those events.
@@ -1200,7 +1200,7 @@ getPastEvents
 
 .. code-block:: javascript
 
-    myContract.getPastEvents(event[, options][, callback])
+    myContract.getPastEvents(event, [options], [callback])
 
 Gets past events for this contract.
 

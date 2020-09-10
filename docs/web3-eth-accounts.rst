@@ -50,7 +50,7 @@ Returns
 
     - ``address`` - ``string``: The account address.
     - ``privateKey`` - ``string``: The accounts private key. This should never be shared or stored unencrypted in localstorage! Also make sure to ``null`` the memory after usage.
-    - ``signTransaction(tx [, callback])`` - ``Function``: The function to sign transactions. See :ref:`web3.eth.accounts.signTransaction() <eth-accounts-signtransaction>` for more.
+    - ``signTransaction(tx, [ callback])`` - ``Function``: The function to sign transactions. See :ref:`web3.eth.accounts.signTransaction() <eth-accounts-signtransaction>` for more.
     - ``sign(data)`` - ``Function``: The function to sign transactions. See :ref:`web3.eth.accounts.sign() <eth-accounts-sign>` for more.
 
 -------
@@ -94,7 +94,7 @@ privateKeyToAccount
 
 .. code-block:: javascript
 
-    web3.eth.accounts.privateKeyToAccount(privateKey [, ignoreLength ]);
+    web3.eth.accounts.privateKeyToAccount(privateKey, [ ignoreLength ]);
 
 Creates an account object from a private key.
 
@@ -141,7 +141,7 @@ signTransaction
 
 .. code-block:: javascript
 
-    web3.eth.accounts.signTransaction(tx, privateKey [, callback]);
+    web3.eth.accounts.signTransaction(tx, privateKey, [ callback]);
 
 Signs an Ethereum transaction with a given private key.
 
@@ -378,8 +378,8 @@ recover
 .. code-block:: javascript
 
     web3.eth.accounts.recover(signatureObject);
-    web3.eth.accounts.recover(message, signature [, preFixed]);
-    web3.eth.accounts.recover(message, v, r, s [, preFixed]);
+    web3.eth.accounts.recover(message, signature, [ preFixed]);
+    web3.eth.accounts.recover(message, v, r, s, [ preFixed]);
 
 Recovers the Ethereum address which was used to sign the given data.
 
@@ -586,7 +586,7 @@ wallet.create
 
 .. code-block:: javascript
 
-    web3.eth.accounts.wallet.create(numberOfAccounts [, entropy]);
+    web3.eth.accounts.wallet.create(numberOfAccounts, [ entropy]);
 
 Generates one or more accounts in the wallet. If wallets already exist they will not be overridden.
 
@@ -898,7 +898,7 @@ wallet.save
 
 .. code-block:: javascript
 
-    web3.eth.accounts.wallet.save(password [, keyName]);
+    web3.eth.accounts.wallet.save(password, [ keyName]);
 
 Stores the wallet encrypted and as string in local storage.
 
@@ -935,7 +935,7 @@ wallet.load
 
 .. code-block:: javascript
 
-    web3.eth.accounts.wallet.load(password [, keyName]);
+    web3.eth.accounts.wallet.load(password, [ keyName]);
 
 Loads a wallet from local storage and decrypts it.
 

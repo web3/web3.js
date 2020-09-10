@@ -724,7 +724,7 @@ post
 
 .. code-block:: javascript
 
-   web3.shh.post(object [, callback])
+   web3.shh.post(object, [ callback])
 
 This method should be called, when we want to post whisper a message to the network.
 
@@ -797,7 +797,7 @@ subscribe
 
 .. code-block:: javascript
 
-    web3.shh.subscribe('messages', options [, callback])
+    web3.shh.subscribe('messages', options, [ callback])
 
 Subscribe for incoming whisper messages.
 

@@ -314,7 +314,7 @@ soliditySha3
 
 .. code-block:: javascript
 
-    web3.utils.soliditySha3(param1 [, param2, ...])
+    web3.utils.soliditySha3(param1, [ param2, ...])
 
 Will calculate the sha3 of given input parameters in the same way solidity would.
 This means arguments will be ABI converted and tightly packed before being hashed.
@@ -399,7 +399,7 @@ soliditySha3Raw
 
 .. code-block:: javascript
 
-    web3.utils.soliditySha3Raw(param1 [, param2, ...])
+    web3.utils.soliditySha3Raw(param1, [ param2, ...])
 
 Will calculate the sha3 of given input parameters in the same way solidity would.
 This means arguments will be ABI converted and tightly packed before being hashed.
@@ -1038,7 +1038,7 @@ toWei
 
 .. code-block:: javascript
 
-    web3.utils.toWei(number [, unit])
+    web3.utils.toWei(number, [ unit])
 
 
 Converts any `ether value <http://ethdocs.org/en/latest/ether.html>`_ value into `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na>`_.
@@ -1112,7 +1112,7 @@ fromWei
 
 .. code-block:: javascript
 
-    web3.utils.fromWei(number [, unit])
+    web3.utils.fromWei(number, [ unit])
 
 
 Converts any `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na>`_ value into a `ether value <http://ethdocs.org/en/latest/ether.html>`_.
@@ -1267,8 +1267,8 @@ padLeft
 
 .. code-block:: javascript
 
-    web3.utils.padLeft(string, characterAmount [, sign])
-    web3.utils.leftPad(string, characterAmount [, sign]) // ALIAS
+    web3.utils.padLeft(string, characterAmount, [ sign])
+    web3.utils.leftPad(string, characterAmount, [ sign]) // ALIAS
 
 
 Adds a padding on the left of a string, Useful for adding paddings to HEX strings.
@@ -1310,8 +1310,8 @@ padRight
 
 .. code-block:: javascript
 
-    web3.utils.padRight(string, characterAmount [, sign])
-    web3.utils.rightPad(string, characterAmount [, sign]) // ALIAS
+    web3.utils.padRight(string, characterAmount, [ sign])
+    web3.utils.rightPad(string, characterAmount, [ sign]) // ALIAS
 
 
 Adds a padding on the right of a string, Useful for adding paddings to HEX strings.

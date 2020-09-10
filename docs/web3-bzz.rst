@@ -221,7 +221,7 @@ download
 
 .. code-block:: javascript
 
-   web3.bzz.download(bzzHash [, localpath])
+   web3.bzz.download(bzzHash, [ localpath])
 
 Downloads files and folders from swarm as buffer or to disk (only node.js).
 

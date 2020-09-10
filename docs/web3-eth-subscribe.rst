@@ -12,7 +12,7 @@ subscribe
 
 .. code-block:: javascript
 
-    web3.eth.subscribe(type [, options] [, callback]);
+    web3.eth.subscribe(type, [ options], [ callback]);
 
 ----------
 Parameters
@@ -113,7 +113,7 @@ subscribe("pendingTransactions")
 
 .. code-block:: javascript
 
-    web3.eth.subscribe('pendingTransactions' [, callback]);
+    web3.eth.subscribe('pendingTransactions', [ callback]);
 
 Subscribes to incoming pending transactions.
 
@@ -170,7 +170,7 @@ subscribe("newBlockHeaders")
 
 .. code-block:: javascript
 
-    web3.eth.subscribe('newBlockHeaders' [, callback]);
+    web3.eth.subscribe('newBlockHeaders', [ callback]);
 
 Subscribes to incoming block headers. This can be used as timer to check for changes on the blockchain.
 
@@ -254,7 +254,7 @@ subscribe("syncing")
 
 .. code-block:: javascript
 
-    web3.eth.subscribe('syncing' [, callback]);
+    web3.eth.subscribe('syncing', [ callback]);
 
 Subscribe to syncing events. This will return an object when the node is syncing and when it's finished syncing will return ``FALSE``.
 
@@ -320,7 +320,7 @@ subscribe("logs")
 
 .. code-block:: javascript
 
-    web3.eth.subscribe('logs', options [, callback]);
+    web3.eth.subscribe('logs', options, [ callback]);
 
 Subscribes to incoming logs, filtered by the given options.
 If a valid numerical ``fromBlock`` options property is set, Web3 will retrieve logs beginning from this point, backfilling the response as necessary.
