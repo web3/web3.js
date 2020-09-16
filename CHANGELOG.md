@@ -287,3 +287,7 @@ Released with 1.0.0-beta.37 code base.
 - Fix parsing of non-`eth_subscription` provider events (#3660)
 - Fix parsedUrl problem of websocket provider (#3666)
 - Fix return value for `clearSubscriptions` (#3689)
+
+### Removed
+
+- Removed post-install script in `packages/web3`. Added documentation to root README (#3717)
