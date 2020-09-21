@@ -21,20 +21,25 @@ export class ETH2Core {
                 throw new Error(`Invalid HTTP(S) provider: ${provider}`)
             }
 
-            this._httpClient = ETH2Core.createHttpClient(provider)
+            const result = ETH2Core.createHttpClient(provider)
+            if (result instanceof Error) {
+                throw result
+            }
+            this._httpClient = result
+
             this.provider = provider
         } catch (error) {
-            throw new Error(`Failed to set provider: ${error}`)
+            throw new Error(`Failed to set provider: ${error.message}`)
         }
     }
 
-    static createHttpClient(baseUrl: string) {
+    static createHttpClient(baseUrl: string): AxiosInstance | Error {
         try {
             return Axios.create({
                 baseURL: baseUrl
             })
         } catch (error) {
-            throw new Error(`Failed to create HTTP client: ${error}`)
+            return new Error(`Failed to create HTTP client: ${error.message}`)
         }
     }
 }

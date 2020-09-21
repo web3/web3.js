@@ -6,12 +6,12 @@ export class ETH2BeaconChain extends ETH2Core {
         super('eth2-beaconchain', provider)
     }
 
-    async attestations(params: IBeaconChainAttestationsParams): Promise<IBeaconChainAttestationsResponse> {
+    async attestations(params: IBeaconChainAttestationsParams): Promise<IBeaconChainAttestationsResponse | Error> {
         try {
             const response = await this._httpClient.get('beacon/attestations', { params })
             return response.data
         } catch (error) {
-            throw new Error(`Failed to get attestations: ${error}`)
+            return new Error(`Failed to get attestations: ${error.message}`)
         }
     }
 
@@ -20,7 +20,7 @@ export class ETH2BeaconChain extends ETH2Core {
             const response = await this._httpClient.get('beacon/chainhead')
             return response.data
         } catch (error) {
-            throw new Error(`Failed to get chain head: ${error}`)
+            throw new Error(`Failed to get chain head: ${error.message}`)
         }
     }
 
@@ -29,15 +29,13 @@ export class ETH2BeaconChain extends ETH2Core {
             const response = await this._httpClient.get('beacon/config')
             return response.data
         } catch (error) {
-            throw new Error(`Failed to get config: ${error}`)
+            throw new Error(`Failed to get config: ${error.message}`)
         }
     }
 }
 
 (async () => {
     try {
-        console.log(`SANITY ${Date.now()}`)
-    
         const provider = 'http://54.157.182.30:3500/eth/v1alpha1/'
         const eth2BeaconChain = new ETH2BeaconChain(provider)
 
@@ -46,12 +44,18 @@ export class ETH2BeaconChain extends ETH2Core {
 
         const attestationsParams = {
             // epoch: '9946',
-            genesisEpoch: false,
+            // genesisEpoch: false,
             // pageSize: 1,
             // pageToken: 
         }
-        console.log(await eth2BeaconChain.attestations(attestationsParams))
+        const result = await eth2BeaconChain.attestations(attestationsParams)
+        if (result instanceof Error) {
+            console.log(`I received an error: ${result.message}`)
+            return
+        }
+        console.log(`RESULT: ${JSON.stringify(result)}`)
+
     } catch (error) {
-        console.log(`ERROR: ${error}`)
+        console.log(error)
     }
 })()
