@@ -1,0 +1,23 @@
+{
+    "name": "web3-eth2-beaconchain",
+    "version": "1.3.0",
+    "description": "Web3 ETH2 Beacon chain tools.",
+    "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth2-beaconchain",
+    "license": "LGPL-3.0",
+    "engines": {
+        "node": ">=8.0.0"
+    },
+    "types": "types/index.d.ts",
+    "scripts": {
+        "tsc": "tsc -b tsconfig.json",
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
+    },
+    "main": "lib/index.js",
+    "dependencies": {
+        "@types/node": "^12.12.6"
+    },
+    "devDependencies": {
+        "dtslint": "^3.4.1",
+        "typescript": "^3.9.5"
+    }
+}
