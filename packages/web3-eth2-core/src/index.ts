@@ -1,18 +1,20 @@
 import Axios, {AxiosInstance} from 'axios'
 
 import { ETH2CoreOpts } from '../types/index'
+import { BaseAPISchema } from './schema'
 
 export class ETH2Core {
-    protected _httpClient: AxiosInstance
+    private _httpClient: AxiosInstance
     
     name: string
     provider: string
     protectProvider: boolean
 
-    constructor(packageName:string, provider: string, opts: ETH2CoreOpts = {}) {
-        this.name = packageName
-        this.setProvider(provider)
+    constructor(provider: string, opts: ETH2CoreOpts = {}, schema: BaseAPISchema) {
+        this.name = schema.packageName
+        this.setProvider(`${provider}${schema.routePrefix}`)
         this.protectProvider = opts.protectProvider || false
+        this.buildAPIWrappersFromSchema(schema)
     }
 
     setProvider(provider: string) {
@@ -30,6 +32,21 @@ export class ETH2Core {
             this.provider = provider
         } catch (error) {
             throw new Error(`Failed to set provider: ${error.message}`)
+        }
+    }
+
+    private buildAPIWrappersFromSchema(schema: BaseAPISchema) {
+        for (const method of schema.methods) {
+            this[method.name] = async (params: method.paramsType): method.returnType => {
+                try {
+                    if (method.inputFormatter) method.inputFormatter(params)
+                    let {data} = await this._httpClient[method.restMethod](method.route, { params })
+                    if (method.outputFormatter) data = method.outputFormatter(data)
+                    return data
+                } catch (error) {
+                    throw new Error(`${method.errorPrefix} ${error.message}`)
+                }
+            }
         }
     }
 
