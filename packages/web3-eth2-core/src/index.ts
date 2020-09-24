@@ -1,7 +1,7 @@
 import Axios, {AxiosInstance} from 'axios'
 
 import { ETH2CoreOpts } from '../types/index'
-import { BaseAPISchema } from './schema'
+import { BaseAPISchema, BaseAPIMethodSchema } from './schema'
 
 export class ETH2Core {
     private _httpClient: AxiosInstance
@@ -37,9 +37,9 @@ export class ETH2Core {
 
     private buildAPIWrappersFromSchema(schema: BaseAPISchema) {
         for (const method of schema.methods) {
-            this[method.name] = async (params: method.paramsType): method.returnType => {
+            this[method.name] = async (params: BaseAPIMethodSchema["paramsType"]): Promise<BaseAPIMethodSchema["returnType"]> => {
                 try {
-                    if (method.inputFormatter) method.inputFormatter(params)
+                    if (method.inputFormatter) params = method.inputFormatter(params)
                     let {data} = await this._httpClient[method.restMethod](method.route, { params })
                     if (method.outputFormatter) data = method.outputFormatter(data)
                     return data
