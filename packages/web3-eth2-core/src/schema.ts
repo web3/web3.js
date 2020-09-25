@@ -1,10 +1,10 @@
-export interface BaseAPISchema {
+export interface IBaseAPISchema {
     packageName: string,
     routePrefix: string,
-    methods: BaseAPIMethodSchema[]
+    methods: IBaseAPIMethodSchema[]
 }
 
-export interface BaseAPIMethodSchema {
+export interface IBaseAPIMethodSchema {
     name: string,
     route: string,
     restMethod: string
