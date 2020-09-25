@@ -17,6 +17,7 @@
         "@types/node": "^12.12.6"
     },
     "devDependencies": {
+        "@chainsafe/lodestar-types": "^0.11.0",
         "dtslint": "^3.4.1",
         "typescript": "^3.9.5"
     }
