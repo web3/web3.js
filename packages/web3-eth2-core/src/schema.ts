@@ -1,3 +1,9 @@
+export interface BaseAPISchema {
+    packageName: string,
+    routePrefix: string,
+    methods: BaseAPIMethodSchema[]
+}
+
 export interface BaseAPIMethodSchema {
     name: string,
     route: string,
@@ -8,10 +14,4 @@ export interface BaseAPIMethodSchema {
     outputFormatter: any,
     errors: any
     errorPrefix: string
-}
-
-export interface BaseAPISchema {
-    packageName: string,
-    routePrefix: string,
-    methods: BaseAPIMethodSchema[]
 }

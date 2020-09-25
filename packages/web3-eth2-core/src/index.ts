@@ -37,10 +37,11 @@ export class ETH2Core {
 
     private buildAPIWrappersFromSchema(schema: BaseAPISchema) {
         for (const method of schema.methods) {
-            this[method.name] = async (params: BaseAPIMethodSchema["paramsType"]): Promise<BaseAPIMethodSchema["returnType"]> => {
+            this[method.name] = async (params: BaseAPIMethodSchema['paramsType']): Promise<BaseAPIMethodSchema['returnType']> => {
                 try {
                     if (method.inputFormatter) params = method.inputFormatter(params)
-                    let {data} = await this._httpClient[method.restMethod](method.route, { params })
+                    console.log(`${schema.routePrefix}${method.route}`)
+                    let {data} = await this._httpClient[method.restMethod](`${schema.routePrefix}${method.route}`, { params })
                     if (method.outputFormatter) data = method.outputFormatter(data)
                     return data
                 } catch (error) {

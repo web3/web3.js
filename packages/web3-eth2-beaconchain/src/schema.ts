@@ -1,20 +1,31 @@
-import { BaseAPISchema } from '../../web3-eth2-core/src/schema'
-import {
-    IBeaconChainAttestationsParams, IBeaconChainAttestationsResponse } from '../types/index'
+// import { Genesis } from '@chainsafe/lodestar-types'
 
-export interface BeaconChainAPISchema extends BaseAPISchema {
+export const DefaultSchema = {
     packageName: 'eth2-beaconchain',
     routePrefix: '/eth/v1alpha1/beacon/',
     methods: [
+        // {
+        //     name: 'genesis',
+        //     route: 'genesis',
+        //     restMethod: 'get',
+        //     paramsType: null,
+        //     returnType: null,
+        //     inputFormatter: null,
+        //     outputFormatter: null,
+        //     errors: null,
+        //     errorPrefix: 'Failed to get genesis:'
+        // }
         {
             name: 'attestations',
             route: 'attestations',
-            restMethod: 'get'
-            paramsType: IBeaconChainAttestationsParams,
-            returnType: IBeaconChainAttestationsResponse,
+            restMethod: 'get',
+            // paramsType: IBeaconChainAttestationsParams,
+            paramsType: null,
+            // returnType: IBeaconChainAttestationsResponse,
+            returnType: null,
             inputFormatter: null,
             outputFormatter: null,
-            errors: null
+            errors: null,
             errorPrefix: 'Failed to get attestations:'
         },
         // {
