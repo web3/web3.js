@@ -289,3 +289,7 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.3.1]
+
+### Removed
+
+- Removed post-install script in `packages/web3`. Added documentation to root README (#3717)
