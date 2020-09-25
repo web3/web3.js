@@ -1,7 +1,7 @@
 import Axios, {AxiosInstance} from 'axios'
 
 import { ETH2CoreOpts } from '../types/index'
-import { BaseAPISchema, BaseAPIMethodSchema } from './schema'
+import { IBaseAPISchema, IBaseAPIMethodSchema } from './schema'
 
 export class ETH2Core {
     private _httpClient: AxiosInstance
@@ -10,7 +10,7 @@ export class ETH2Core {
     provider: string
     protectProvider: boolean
 
-    constructor(provider: string, opts: ETH2CoreOpts = {}, schema: BaseAPISchema) {
+    constructor(provider: string, opts: ETH2CoreOpts = {}, schema: IBaseAPISchema) {
         this.name = schema.packageName
         this.setProvider(`${provider}${schema.routePrefix}`)
         this.protectProvider = opts.protectProvider || false
@@ -24,9 +24,6 @@ export class ETH2Core {
             }
 
             const result = ETH2Core.createHttpClient(provider)
-            if (result instanceof Error) {
-                throw result
-            }
             this._httpClient = result
 
             this.provider = provider
@@ -35,9 +32,9 @@ export class ETH2Core {
         }
     }
 
-    private buildAPIWrappersFromSchema(schema: BaseAPISchema) {
+    private buildAPIWrappersFromSchema(schema: IBaseAPISchema) {
         for (const method of schema.methods) {
-            this[method.name] = async (params: BaseAPIMethodSchema['paramsType']): Promise<BaseAPIMethodSchema['returnType']> => {
+            this[method.name] = async (params: IBaseAPIMethodSchema['paramsType']): Promise<IBaseAPIMethodSchema['returnType']> => {
                 try {
                     if (method.inputFormatter) params = method.inputFormatter(params)
                     console.log(`${schema.routePrefix}${method.route}`)
@@ -51,13 +48,13 @@ export class ETH2Core {
         }
     }
 
-    static createHttpClient(baseUrl: string): AxiosInstance | Error {
+    static createHttpClient(baseUrl: string): AxiosInstance {
         try {
             return Axios.create({
                 baseURL: baseUrl
             })
         } catch (error) {
-            return new Error(`Failed to create HTTP client: ${error.message}`)
+            throw new Error(`Failed to create HTTP client: ${error.message}`)
         }
     }
 }
