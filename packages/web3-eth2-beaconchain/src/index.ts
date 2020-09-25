@@ -1,9 +1,9 @@
 import { ETH2Core } from '../../web3-eth2-core/src/index'
 import { DefaultSchema } from './schema'
-import { BaseAPISchema } from '../../web3-eth2-core/src/schema'
+import { IBaseAPISchema } from '../../web3-eth2-core/src/schema'
 
 export class ETH2BeaconChain extends ETH2Core {
-    constructor(provider: string, schema: BaseAPISchema = DefaultSchema) {
+    constructor(provider: string, schema: IBaseAPISchema = DefaultSchema) {
         super(provider, { protectProvider: true }, schema)
     }
 }
