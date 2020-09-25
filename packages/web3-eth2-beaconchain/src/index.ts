@@ -17,14 +17,14 @@ export class ETH2BeaconChain extends ETH2Core {
         // // console.log(await eth2BeaconChain.chainHead())
         // // console.log(await eth2BeaconChain.config())
 
-        // const attestationsParams = {
-        //     // epoch: '9946',
-        //     genesisEpoch: false,
-        //     // pageSize: 1,
-        //     // pageToken: 
-        // }
-        // const result = await eth2BeaconChain.attestations(attestationsParams)
-        // console.log(result)
+        const attestationsParams = {
+            // epoch: '9946',
+            genesisEpoch: false,
+            // pageSize: 1,
+            // pageToken: 
+        }
+        const result = await eth2BeaconChain.attestations(attestationsParams)
+        console.log(result)
 
     } catch (error) {
         console.log(error)
