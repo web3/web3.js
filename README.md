@@ -101,6 +101,15 @@ If you are using the types in a `commonjs` module, like in a Node app, you just 
     ....
 ```
 
+## Trouble shooting and known issues.
+
+### Web3 and Angular
+If you are using Ionic/Angular at a version >5 you may run into a build error in which modules `crypto` and `stream` are `undefined`
+
+a work around for this is to go into your node-modules and at `/angular-cli-files/models/webpack-configs/browser.js` change  the `node: false` to `node: {crypto: true, stream: true}` as mentioned [here](https://github.com/ethereum/web3.js/issues/2260#issuecomment-458519127)
+
+Another variation of this problem was an issue opned on angular-cli: https://github.com/angular/angular-cli/issues/1548
+
 ## Documentation
 
 Documentation can be found at [ReadTheDocs][docs].
