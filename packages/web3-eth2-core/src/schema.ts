@@ -8,8 +8,6 @@ export interface IBaseAPIMethodSchema {
     name: string,
     route: string,
     restMethod: string
-    paramsType: any,
-    returnType: any,
     inputFormatter: any,
     outputFormatter: any,
     errors: any
