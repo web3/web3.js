@@ -14,13 +14,13 @@ export class ETH2BeaconChain extends ETH2Core {
         // // const provider = 'http://beacon.prylabs.network:30002'
         const eth2BeaconChain = new ETH2BeaconChain(provider)
 
-        // // console.log(await eth2BeaconChain.chainHead())
+        console.log(await eth2BeaconChain.chainHead())
         // // console.log(await eth2BeaconChain.config())
 
         const attestationsParams = {
             // epoch: '9946',
             genesisEpoch: false,
-            // pageSize: 1,
+            // pageSize: 3,
             // pageToken: 
         }
         const result = await eth2BeaconChain.attestations(attestationsParams)

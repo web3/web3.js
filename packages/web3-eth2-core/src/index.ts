@@ -1,16 +1,18 @@
 import Axios, {AxiosInstance} from 'axios'
 
-import { ETH2CoreOpts } from '../types/index'
-import { IBaseAPISchema, IBaseAPIMethodSchema } from './schema'
+import { ETH2BaseOpts, ETH2Function } from '../types/index'
+import { IBaseAPISchema } from './schema'
 
 export class ETH2Core {
     private _httpClient: AxiosInstance
+
+    [ key: string ]: ETH2Function | any;
     
     name: string
     provider: string
     protectProvider: boolean
 
-    constructor(provider: string, opts: ETH2CoreOpts = {}, schema: IBaseAPISchema) {
+    constructor(provider: string, opts: ETH2BaseOpts = {}, schema: IBaseAPISchema) {
         this.name = schema.packageName
         this.setProvider(`${provider}${schema.routePrefix}`)
         this.protectProvider = opts.protectProvider || false
@@ -34,11 +36,10 @@ export class ETH2Core {
 
     private buildAPIWrappersFromSchema(schema: IBaseAPISchema) {
         for (const method of schema.methods) {
-            this[method.name] = async (params: IBaseAPIMethodSchema['paramsType']): Promise<IBaseAPIMethodSchema['returnType']> => {
+            this[method.name] = async (params: any): Promise<any> => {
                 try {
                     if (method.inputFormatter) params = method.inputFormatter(params)
-                    console.log(`${schema.routePrefix}${method.route}`)
-                    let {data} = await this._httpClient[method.restMethod](`${schema.routePrefix}${method.route}`, { params })
+                    let {data} = await this._httpClient[method.restMethod](method.route, { params })
                     if (method.outputFormatter) data = method.outputFormatter(data)
                     return data
                 } catch (error) {
