@@ -19,11 +19,10 @@
  */
 
 import {Log} from 'web3-core';
-import {
+import Eth, {
     BlockTransactionObject,
     BlockTransactionString,
     BlockHeader,
-    Eth,
     GetProof,
     Syncing,
     RLPEncodedTransaction,

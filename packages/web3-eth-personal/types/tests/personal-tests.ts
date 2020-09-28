@@ -20,7 +20,7 @@
  */
 
 import { RLPEncodedTransaction } from 'web3-core';
-import { Personal } from 'web3-eth-personal';
+import Personal from 'web3-eth-personal';
 
 // $ExpectType Personal
 const personal_empty = new Personal();
