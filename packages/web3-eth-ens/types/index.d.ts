@@ -29,7 +29,7 @@ export interface ContentHash {
 }
 
 // TODO: Define as soon as implemented the generic contract
-export class Ens {
+export default class Ens {
     constructor(eth: Eth);
 
     registryAddress: string | null;

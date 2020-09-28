@@ -60,7 +60,7 @@ export {
     chain
 } from 'web3-core';
 
-export class Eth {
+export default class Eth {
     constructor();
     constructor(provider: provider);
     constructor(provider: provider, net: net.Socket);

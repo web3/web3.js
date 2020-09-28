@@ -22,7 +22,7 @@ import {Common, PromiEvent, provider, hardfork, chain, BlockNumber, PastLogsOpti
 import {AbiItem} from 'web3-utils';
 
 // TODO: Add generic type!
-export class Contract {
+export default class Contract {
     constructor(
         jsonInterface: AbiItem[],
         address?: string,

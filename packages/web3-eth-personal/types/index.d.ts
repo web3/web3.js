@@ -21,7 +21,7 @@
 import * as net from 'net';
 import { provider, RLPEncodedTransaction, TransactionConfig, BatchRequest, Providers, Extension } from 'web3-core';
 
-export class Personal {
+export default class Personal {
     constructor();
     constructor(provider: provider);
     constructor(provider: provider, net: net.Socket);

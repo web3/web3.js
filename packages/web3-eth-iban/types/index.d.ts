@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-export class Iban {
+export default class Iban {
     constructor(
         iban: string
     )
