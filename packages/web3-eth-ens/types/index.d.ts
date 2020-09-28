@@ -19,8 +19,8 @@
 
 import { PromiEvent, TransactionConfig, TransactionReceipt } from 'web3-core';
 import { TransactionRevertInstructionError } from 'web3-core-helpers';
-import { Eth } from 'web3-eth';
-import { Contract } from 'web3-eth-contract';
+import Eth from 'web3-eth';
+import Contract from 'web3-eth-contract';
 
 export interface ContentHash {
     protocolType: 'ipfs' | 'bzz' | 'onion' | 'onion3' | null,
