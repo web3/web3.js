@@ -289,3 +289,6 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.3.1]
+
+### Changed
+- bump utils 0.10.0^ -> 0.12.0
