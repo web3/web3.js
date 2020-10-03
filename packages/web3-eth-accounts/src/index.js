@@ -149,29 +149,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     }
 
     function signed(tx) {
-        if (tx.common && (tx.chain && tx.hardfork)) {
-            error = new Error(
-                'Please provide the ethereumjs-common object or the chain and hardfork property but not all together.'
-            );
-        }
-
-        if ((tx.chain && !tx.hardfork) || (tx.hardfork && !tx.chain)) {
-            error = new Error(
-                'When specifying chain and hardfork, both values must be defined. ' +
-                'Received "chain": ' + tx.chain + ', "hardfork": ' + tx.hardfork
-            );
-        }
-
-        if (!tx.gas && !tx.gasLimit) {
-            error = new Error('"gas" is missing');
-        }
-
-        if (tx.nonce < 0 ||
-            tx.gas < 0 ||
-            tx.gasPrice < 0 ||
-            tx.chainId < 0) {
-            error = new Error('Gas, gasPrice, nonce or chainId is lower than 0');
-        }
+        const error = _validateTransactionForSigning(tx);
 
         if (error) {
             callback(error);
@@ -280,6 +258,35 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     });
 };
 
+function _validateTransactionForSigning(tx) {
+    if (tx.common && (tx.chain && tx.hardfork)) {
+        return new Error(
+            'Please provide the ethereumjs-common object or the chain and hardfork property but not all together.'
+        );
+    }
+
+    if ((tx.chain && !tx.hardfork) || (tx.hardfork && !tx.chain)) {
+        return new Error(
+            'When specifying chain and hardfork, both values must be defined. ' +
+            'Received "chain": ' + tx.chain + ', "hardfork": ' + tx.hardfork
+        );
+    }
+
+    if (!tx.gas && !tx.gasLimit) {
+        return new Error('"gas" is missing');
+    }
+
+    if (tx.nonce < 0 ||
+        tx.gas < 0 ||
+        tx.gasPrice < 0 ||
+        tx.chainId < 0) {
+        return new Error('Gas, gasPrice, nonce or chainId is lower than 0');
+    }
+
+    return;
+}
+
+
 /* jshint ignore:start */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
     var values = RLP.decode(rawTx);
@@ -294,7 +301,7 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
     var messageHex = utils.isHexStrict(data) ? data : utils.utf8ToHex(data);
-    var messageBytes = utils.hexToBytes(messageHex)
+    var messageBytes = utils.hexToBytes(messageHex);
     var messageBuffer = Buffer.from(messageBytes);
     var preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
     var preambleBuffer = Buffer.from(preamble);
@@ -629,6 +636,5 @@ function storageAvailable(type) {
             (storage && storage.length !== 0);
     }
 }
-
 
 module.exports = Accounts;

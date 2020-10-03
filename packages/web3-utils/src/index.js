@@ -27,7 +27,7 @@ var ethjsUnit = require('ethjs-unit');
 var utils = require('./utils.js');
 var soliditySha3 = require('./soliditySha3.js');
 var randombytes = require('randombytes');
-
+var BN = require('bn.js');
 
 
 /**
@@ -306,7 +306,7 @@ var toChecksumAddress = function (address) {
     var checksumAddress = '0x';
 
     for (var i = 0; i < address.length; i++ ) {
-        // If ith character is 9 to f then make it uppercase
+        // If ith character is 8 to f then make it uppercase
         if (parseInt(addressHash[i], 16) > 7) {
             checksumAddress += address[i].toUpperCase();
         } else {
@@ -314,6 +314,62 @@ var toChecksumAddress = function (address) {
         }
     }
     return checksumAddress;
+};
+
+/**
+ * Returns -1 if a<b, 1 if a>b; 0 if a == b.
+ * For more details on this type of function, see
+ * developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+ *
+ * @method compareBlockNumbers
+ *
+ * @param {String|Number|BN} a
+ *
+ * @param {String|Number|BN} b
+ *
+ * @returns {Number} -1, 0, or 1
+ */
+var compareBlockNumbers = function(a, b) {
+    if (a == b) {
+        return 0;
+    } else if (("genesis" == a || "earliest" == a || 0 == a) && ("genesis" == b || "earliest" ==  b || 0 == b)) {
+        return 0;
+    } else if ("genesis" == a || "earliest" == a) {
+        // b !== a, thus a < b
+        return -1;
+    } else if ("genesis" == b || "earliest" == b) {
+        // b !== a, thus a > b
+        return 1;
+    } else if (a == "latest") {
+        if (b == "pending") {
+            return -1;
+        } else {
+            // b !== ("pending" OR "latest"), thus a > b
+            return 1;
+        }
+    } else if (b === "latest") {
+        if (a == "pending") {
+            return 1;
+        } else {
+            // b !== ("pending" OR "latest"), thus a > b
+            return -1 
+        }
+    } else if (a == "pending") {
+        // b (== OR <) "latest", thus a > b
+        return 1;
+    } else if (b == "pending") {
+        return -1;
+    } else {
+        let bnA = new BN(a);
+        let bnB = new BN(b);
+        if(bnA.lt(bnB)) {
+            return -1;
+        } else if(bnA.eq(bnB)) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
 };
 
 module.exports = {
@@ -334,6 +390,7 @@ module.exports = {
     keccak256: utils.sha3,
     soliditySha3: soliditySha3.soliditySha3,
     soliditySha3Raw: soliditySha3.soliditySha3Raw,
+    encodePacked: soliditySha3.encodePacked,
     isAddress: utils.isAddress,
     checkAddressChecksum: utils.checkAddressChecksum,
     toChecksumAddress: toChecksumAddress,
@@ -379,5 +436,7 @@ module.exports = {
     isContractAddressInBloom: utils.isContractAddressInBloom,
     isTopic: utils.isTopic,
     isTopicInBloom: utils.isTopicInBloom,
-    isInBloom: utils.isInBloom
+    isInBloom: utils.isInBloom,
+
+    compareBlockNumbers: compareBlockNumbers
 };

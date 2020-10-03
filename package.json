@@ -17,12 +17,12 @@
     "scripts": {
         "version": "npm run build",
         "postinstall": "npm run bootstrap",
-        "build": "npm run bootstrap && webpack && cp -r ./dist ./packages/web3",
+        "build": "npm run bootstrap && lerna run tsc && webpack && cp -r ./dist ./packages/web3",
         "publish": "lerna publish",
         "bootstrap": "lerna bootstrap --hoist",
         "lint": "jshint *.js packages",
-        "test": "mocha --grep E2E --invert; jshint *.js packages",
-        "test:unit": "nyc --no-clean --silent _mocha -- -R spec --grep E2E --invert --exit",
+        "test": "mocha -R spec --require ts-node/register --grep E2E --invert",
+        "test:unit": "nyc --no-clean --silent _mocha -- -R spec --require ts-node/register --grep E2E --invert --exit",
         "test:cov": "npm run cov:clean; npm run test:unit; npm run test:e2e:clients; npm run cov:merge_reports",
         "dtslint": "lerna run dtslint",
         "depcheck": "lerna exec dependency-check -- --missing --verbose .",
@@ -92,6 +92,7 @@
         "@babel/plugin-transform-runtime": "^7.10.4",
         "@babel/preset-env": "^7.10.4",
         "@babel/runtime": "^7.10.4",
+        "@chainsafe/geth-dev-assistant": "^0.1.5",
         "@ensdomains/ens": "^0.4.0",
         "@ensdomains/resolver": "^0.2.4",
         "@types/bignumber.js": "^4.0.2",
@@ -115,7 +116,6 @@
         "ethers": "4.0.33",
         "ethjs-signer": "^0.1.1",
         "ganache-cli": "^6.7.0",
-        "geth-dev-assistant": "^0.1.5",
         "jshint": "^2.10.2",
         "karma": "^5.1.0",
         "karma-browserify": "^7.0.0",
@@ -128,10 +128,12 @@
         "nyc": "^14.1.1",
         "pify": "^4.0.1",
         "sandboxed-module": "^2.0.3",
+        "ts-node": "^8.10.2",
         "typescript": "^3.9.5",
         "underscore": "1.9.1",
         "wait-port": "^0.2.6",
         "webpack": "^4.43.0",
         "webpack-cli": "^3.3.12"
-    }
+    },
+    "dependencies": {}
 }

@@ -10,6 +10,7 @@ npm-debug.log
 node_modules
 .idea/
 .npm/
+.history/
 .vscode/
 packages/web3/dist/
 lerna-debug.log
@@ -19,3 +20,4 @@ contracts/
 migrations/
 truffle-config.js
 test/config/ensAddresses.json
+*/**/lib

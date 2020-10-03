@@ -3,6 +3,7 @@
     "bitwise": true,
     "camelcase": true,
     "eqeqeq": true,
+    "esversion": 8,
     "freeze": true,
     "funcscope": false,
     "maxcomplexity": 15,

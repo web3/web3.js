@@ -30,6 +30,7 @@ npx wait-port 8545
 # Test
 GANACHE=true nyc --no-clean --silent _mocha -- \
   --reporter spec \
+  --require ts-node/register \
   --grep 'E2E' \
   --timeout 5000 \
   --exit

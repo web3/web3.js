@@ -101,8 +101,8 @@ RequestManager.prototype.setProvider = function (provider, net) {
         this.provider.on('data', function data(result, deprecatedResult) {
             result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
-            // check for result.method, to prevent old providers errors to pass as result
-            if (result.method && _this.subscriptions.has(result.params.subscription)) {
+            // if result is a subscription, call callback for that subscription
+            if (result.method && result.params && result.params.subscription && _this.subscriptions.has(result.params.subscription)) {
                 _this.subscriptions.get(result.params.subscription).callback(null, result.params.result);
             }
         });
@@ -157,34 +157,19 @@ RequestManager.prototype.send = function (data, callback) {
         return callback(errors.InvalidProvider());
     }
 
-    const payload = Jsonrpc.toPayload(data.method, data.params);
+    const { method, params } = data
 
-    const onResult = function (err, result) {
-        if(result && result.id && payload.id !== result.id) {
-            return callback(new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`));
-        }
-
-        if (err) {
-            return callback(err);
-        }
-
-        if (result && result.error) {
-            return callback(errors.ErrorResponse(result));
-        }
-
-        if (!Jsonrpc.isValidResponse(result)) {
-            return callback(errors.InvalidResponse(result));
-        }
-
-        callback(null, result.result);
-    };
+    const jsonrpcPayload = Jsonrpc.toPayload(method, params);
+    const jsonrpcResultCallback = this._jsonrpcResultCallback(callback, jsonrpcPayload)
 
     if (this.provider.request) {
-        callbackify(this.provider.request.bind(this.provider))(payload, onResult);
+        const callbackRequest = callbackify(this.provider.request)
+        const requestArgs = { method, params }
+        callbackRequest(requestArgs, callback);
     } else if (this.provider.sendAsync) {
-        this.provider.sendAsync(payload, onResult);
+        this.provider.sendAsync(jsonrpcPayload, jsonrpcResultCallback);
     } else if (this.provider.send) {
-        this.provider.send(payload, onResult);
+        this.provider.send(jsonrpcPayload, jsonrpcResultCallback);
     } else {
         throw new Error('Provider does not have a request or send method to use.');
     }
@@ -272,21 +257,29 @@ RequestManager.prototype.removeSubscription = function (id, callback) {
  * Should be called to reset the subscriptions
  *
  * @method reset
+ * 
+ * @returns {boolean}
  */
 RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
-    var _this = this;
+    try {
+        var _this = this;
 
-    // uninstall all subscriptions
-    if (this.subscriptions.size > 0) {
-        this.subscriptions.forEach(function (value, id) {
-            if (!keepIsSyncing || value.name !== 'syncing')
-                _this.removeSubscription(id);
-        });
+        // uninstall all subscriptions
+        if (this.subscriptions.size > 0) {
+            this.subscriptions.forEach(function (value, id) {
+                if (!keepIsSyncing || value.name !== 'syncing')
+                    _this.removeSubscription(id);
+            });
+        }
+
+        //  reset notification callbacks etc.
+        if(this.provider.reset)
+            this.provider.reset();
+
+        return true
+    } catch (e) {
+        throw new Error(`Error while clearing subscriptions: ${e}`)
     }
-
-    //  reset notification callbacks etc.
-    if(this.provider.reset)
-        this.provider.reset();
 };
 
 /**
@@ -313,6 +306,39 @@ RequestManager.prototype._isCleanCloseEvent = function (event) {
  */
 RequestManager.prototype._isIpcCloseError = function (event) {
     return typeof event === 'boolean' && event;
+};
+
+/**
+ * The jsonrpc result callback for RequestManager.send
+ * 
+ * @method _jsonrpcResultCallback
+ * 
+ * @param {Function} callback the callback to use
+ * @param {Object} payload the jsonrpc payload
+ * 
+ * @returns {Function} return callback of form (err, result)
+ *
+ */
+RequestManager.prototype._jsonrpcResultCallback = function (callback, payload) {
+    return function(err, result) { 
+        if(result && result.id && payload.id !== result.id) {
+            return callback(new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`));
+        }
+
+        if (err) {
+            return callback(err);
+        }
+
+        if (result && result.error) {
+            return callback(errors.ErrorResponse(result));
+        }
+
+        if (!Jsonrpc.isValidResponse(result)) {
+            return callback(errors.InvalidResponse(result));
+        }
+
+        callback(null, result.result);
+    }
 };
 
 module.exports = {

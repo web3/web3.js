@@ -230,14 +230,67 @@ Released with 1.0.0-beta.37 code base.
 - Docs: spelling of pre-defined block number (#3539)
 - Docs: missing defaultBlock param option in `method.call` description (#3558)
 
-## [Unreleased]
-
 ## [1.2.10]
+
+### Added
+
+- Add support for EIP-1193 provider `request` method (#3625)
+
+### Changed
+
+- Upgrade minified bundle build process (from gulp to webpack) (#3618)
+- CI improvements: add dependency caching, netlify browser test preview (#3598, #3602)
+- Remove references to `genesis` block in 1.x documentation (#3594)
+- Disallow setting `toBlock` when subscribing to contract events (#3207)
 
 ### Fixed
 
 - Extend `_txInputFormatter` with hex prefix check (#3317)
 - Extract revert reason string for geth >= 1.9.15 (#3520)
-- Incorrect param encoding of BN object in arrayed inputs (#3592)
-- Fix Chrome syntax error by removing mis-encoded whitespace characters from web3-utils files (#3601)
-- Fixed `Buffer.concat` incompatibility to the Buffer impl in React (#3580)
+- Fix Incorrect param encoding of BN object in arrayed inputs (#3592)
+- Remove mis-encoded whitespace characters from web3-utils files (#3601)
+- Fix incompatibilities with webpack Buffer polyfill for wallet.encrypt/decrypt (#3580)
+- Fix misformatted `fromBlock` value when re-subscribing to events over WS (#3596)
+- Support `Function` type log parameter decoding (#2826)
+- Add undefined callback check to websocket provider response queue (#3574)
+- Fix WS clientConfig type (#3563)
+
+## [1.2.11]
+
+### Fixed
+
+- Fix Provider.request response (#3647)
+
+### Added
+
+- Add unit tests for isHex and isHexStrict (#3622)
+
+## [1.3.0]
+
+### Added
+
+- Support for typescript files (.ts) to be written alongside regular .js files (#3652)
+- Add compareBlock function that allows for complex block comparisons (#3682)
+
+### Changed
+
+- Improve RequestManager send method (#3649)
+- `npm run build` now uses TSC to compile (.js allowed) and the build folder is now located under `lib` (#3652)
+- Modernized web3-core to use newer es syntax (#3652)
+- Bumped `web3-providers-ipc` `oboe` version to 2.1.5 (#3661)
+- Bump lodash from 4.17.15 to 4.17.19 (#3641)
+- Bump websocket version which removes node-gyp from web3.js (#3685)
+
+### Fixed
+
+- Fix parsing of non-`eth_subscription` provider events (#3660)
+- Fix parsedUrl problem of websocket provider (#3666)
+- Fix return value for `clearSubscriptions` (#3689)
+
+## [Unreleased]
+
+## [1.3.1]
+
+### Removed
+
+- Removed post-install script in `packages/web3`. Added documentation to root README (#3717)
