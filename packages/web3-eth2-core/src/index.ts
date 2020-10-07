@@ -19,6 +19,16 @@ export class ETH2Core {
         this.buildAPIWrappersFromSchema(schema)
     }
 
+    static createHttpClient(baseUrl: string): AxiosInstance {
+        try {
+            return Axios.create({
+                baseURL: baseUrl
+            })
+        } catch (error) {
+            throw new Error(`Failed to create HTTP client: ${error.message}`)
+        }
+    }
+
     setProvider(provider: string) {
         try {
             if (!provider || typeof provider !== 'string' || !/^http(s)?:\/\//i.test(provider)) {
@@ -34,28 +44,39 @@ export class ETH2Core {
         }
     }
 
+    private routeBuilder(rawUrl: string, parameters: any): string {
+        try {
+            let computedRoute = rawUrl
+
+            // Find all: ${valuesWeWant} in rawUrl, returns array with only valuesWeWant
+            const foundIdentifiers = rawUrl.match(/(?<=\$\{).*?(?=\})/gm) // Matches ${valueWeWant}, but doesn't include ${}
+
+            for (const foundIdentifier of foundIdentifiers) {
+                computedRoute = computedRoute.replace(`\${${foundIdentifier}}`, parameters[foundIdentifier])
+            }
+            
+            return computedRoute
+        } catch (error) {
+            throw new Error(`Failed to build route: ${error.message}`)
+        }
+    }
+
     private buildAPIWrappersFromSchema(schema: IBaseAPISchema) {
         for (const method of schema.methods) {
-            this[method.name] = async (params: any): Promise<any> => {
+            this[method.name] = async (routeParameters: any, queryParameters: any = {}): Promise<any> => {
                 try {
-                    if (method.inputFormatter) params = method.inputFormatter(params)
-                    let {data} = await this._httpClient[method.restMethod](method.route, { params })
+                    if (method.inputFormatter) queryParameters = method.inputFormatter(queryParameters)
+
+                    const computedRoute = this.routeBuilder(method.route, routeParameters)
+                    let {data} = await this._httpClient[method.restMethod](computedRoute, { queryParameters })
+                    if (data.data) data = data.data
+
                     if (method.outputFormatter) data = method.outputFormatter(data)
                     return data
                 } catch (error) {
                     throw new Error(`${method.errorPrefix} ${error.message}`)
                 }
             }
-        }
-    }
-
-    static createHttpClient(baseUrl: string): AxiosInstance {
-        try {
-            return Axios.create({
-                baseURL: baseUrl
-            })
-        } catch (error) {
-            throw new Error(`Failed to create HTTP client: ${error.message}`)
         }
     }
 }
