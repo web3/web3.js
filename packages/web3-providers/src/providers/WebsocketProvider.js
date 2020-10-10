@@ -72,13 +72,10 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @param {Event} event
      */
     onError(event) {
+        super.onError(event);
         if (event.code === 'ECONNREFUSED') {
             this.reconnect();
-
-            return;
         }
-
-        super.onError(event);
     }
 
     /**
@@ -89,13 +86,10 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @param {CloseEvent} closeEvent
      */
     onClose(closeEvent) {
-        if (closeEvent.code !== 1000 || closeEvent.wasClean === false) {
-            this.reconnect();
-
-            return;
-        }
-
         super.onClose();
+        if (closeEvent.code !== 1000 || closeEvent.wasClean === false) {
+            this.reconnect(); 
+        } 
     }
 
     /**
