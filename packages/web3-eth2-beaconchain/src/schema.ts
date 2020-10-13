@@ -147,6 +147,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to attestations from operations pool:'
         },
         {
+            notImplemented: true,
             name: 'submitAttestation',
             route: 'pool/attestations',
             restMethod: 'post',
@@ -156,6 +157,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to submit attestations to operations pool:'
         },
         {
+            notImplemented: true,
             name: 'getAttesterSlashings',
             route: 'pool/attester_slashings',
             restMethod: 'get',
@@ -165,6 +167,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to get attester slashings from operations pool:'
         },
         {
+            notImplemented: true,
             name: 'submitAttesterSlashings',
             route: 'pool/attester_slashings',
             restMethod: 'post',
@@ -174,6 +177,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to submit attester slashings to operations pool:'
         },
         {
+            notImplemented: true,
             name: 'getProposerSlashings',
             route: 'pool/proposer_slashings',
             restMethod: 'get',
@@ -183,6 +187,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to get proposer slashings from operations pool:'
         },
         {
+            notImplemented: true,
             name: 'submitProposerSlashings',
             route: 'pool/proposer_slashings',
             restMethod: 'post',
@@ -192,6 +197,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to submit proposer slashings to operations pool:'
         },
         {
+            notImplemented: true,
             name: 'getSignedVoluntaryExits',
             route: 'pool/voluntary_exits',
             restMethod: 'get',
@@ -201,6 +207,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to get signed voluntary exits from operations pool'
         },
         {
+            notImplemented: true,
             name: 'submitVoluntaryExit',
             route: 'pool/voluntary_exits',
             restMethod: 'post',
