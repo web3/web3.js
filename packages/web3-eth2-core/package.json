@@ -9,8 +9,9 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "tsc": "tsc -b tsconfig.json",
-        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types",
+        "test": "jest",
+        "tsc": "tsc -b tsconfig.json"
     },
     "main": "lib/index.js",
     "dependencies": {
@@ -18,7 +19,10 @@
         "axios": "^0.20.0"
     },
     "devDependencies": {
+        "@types/jest": "^26.0.14",
         "dtslint": "^3.4.1",
+        "jest": "^26.5.3",
+        "ts-jest": "^26.4.1",
         "typescript": "^3.9.5"
     }
 }
