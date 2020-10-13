@@ -51,8 +51,10 @@ export class ETH2Core {
             // Find all: ${valuesWeWant} in rawUrl, returns array with only valuesWeWant
             const foundIdentifiers = rawUrl.match(/(?<=\$\{).*?(?=\})/gm) // Matches ${valueWeWant}, but doesn't include ${}
 
-            for (const foundIdentifier of foundIdentifiers) {
-                computedRoute = computedRoute.replace(`\${${foundIdentifier}}`, parameters[foundIdentifier])
+            if (foundIdentifiers !== null) {
+                for (const foundIdentifier of foundIdentifiers) {
+                    computedRoute = computedRoute.replace(`\${${foundIdentifier}}`, parameters[foundIdentifier])
+                }
             }
             
             return computedRoute
@@ -63,6 +65,11 @@ export class ETH2Core {
 
     private buildAPIWrappersFromSchema(schema: IBaseAPISchema) {
         for (const method of schema.methods) {
+            if (method.notImplemented) {
+                this[method.name] = async () => { throw new Error('Method not implemented by beacon chain client') }
+                continue;
+            }
+
             this[method.name] = async (routeParameters: any, queryParameters: any = {}): Promise<any> => {
                 try {
                     if (method.inputFormatter) queryParameters = method.inputFormatter(queryParameters)
