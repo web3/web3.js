@@ -12,7 +12,7 @@ export class ETH2Core {
     provider: string
     protectProvider: boolean
 
-    constructor(provider: string, opts: ETH2BaseOpts = {}, schema: IBaseAPISchema) {
+    constructor(provider: string, schema: IBaseAPISchema, opts: ETH2BaseOpts = {}) {
         this.name = schema.packageName
         this.setProvider(`${provider}${schema.routePrefix}`)
         this.protectProvider = opts.protectProvider || false
@@ -44,15 +44,15 @@ export class ETH2Core {
         }
     }
 
-    private routeBuilder(rawUrl: string, parameters: any): string {
+    private routeBuilder(rawUrl: string, parameters: { [ key: string]: string }): string {
         try {
             let computedRoute = rawUrl
 
             // Find all: ${valuesWeWant} in rawUrl, returns array with only valuesWeWant
             const foundIdentifiers = rawUrl.match(/(?<=\$\{).*?(?=\})/gm) // Matches ${valueWeWant}, but doesn't include ${}
-
             if (foundIdentifiers !== null) {
                 for (const foundIdentifier of foundIdentifiers) {
+                    if (parameters[foundIdentifier] === undefined) throw new Error(`The parameter ${foundIdentifier} was not provided`)
                     computedRoute = computedRoute.replace(`\${${foundIdentifier}}`, parameters[foundIdentifier])
                 }
             }

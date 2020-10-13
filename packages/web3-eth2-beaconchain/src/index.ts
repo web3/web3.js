@@ -6,6 +6,6 @@ import { IBaseAPISchema } from '../../web3-eth2-core/src/schema'
 // @ts-ignore
 export class ETH2BeaconChain extends ETH2Core implements IETH2BeaconChain {
     constructor(provider: string, schema: IBaseAPISchema = DefaultSchema) {
-        super(provider, { protectProvider: true }, schema)
+        super(provider, schema, { protectProvider: true })
     }
 }
