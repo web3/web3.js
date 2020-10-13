@@ -16,7 +16,7 @@ expect.extend({
 let eth2BeaconChain
 
 beforeAll(() => {
-    const provider = 'http://localhost:9596' // default port for Lodestar
+    const provider = 'http://127.0.0.1:9596' // default port for Lodestar
     eth2BeaconChain = new ETH2BeaconChain(provider)
 })
 
@@ -85,8 +85,8 @@ it('getEpochCommittees - NOT IMPLEMENTED IN LODESTAR', async () => {
     }
 
     const queryParameters = {
-        index: "1",
-        slot: "1"
+        index: '1',
+        slot: '1'
     }
 
     const response = eth2BeaconChain.getEpochCommittees(routeParameters, queryParameters)
