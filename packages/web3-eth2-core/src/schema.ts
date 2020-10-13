@@ -5,6 +5,7 @@ export interface IBaseAPISchema {
 }
 
 export interface IBaseAPIMethodSchema {
+    notImplemented?: true,
     name: string,
     route: string,
     restMethod: string
