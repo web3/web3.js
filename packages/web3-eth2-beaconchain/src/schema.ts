@@ -14,6 +14,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to get genesis block:'
         },
         {
+            notImplemented: true,
             name: 'getHashRoot',
             route: 'states/${stateId}/root',
             restMethod: 'get',
@@ -23,6 +24,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to get state hash tree root:'
         },
         {
+            notImplemented: true,
             name: 'getForkData',
             route: 'states/${stateId}/fork',
             restMethod: 'get',
@@ -32,6 +34,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to get fork object for state:'
         },
         {
+            notImplemented: true,
             name: 'getFinalityCheckpoint',
             route: 'states/${stateId}/finality_checkpoints',
             restMethod: 'get',
@@ -41,6 +44,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to get state finality checkpoints:'
         },
         {
+            notImplemented: true,
             name: 'getValidators',
             route: 'states/${stateId}/validators',
             restMethod: 'get',
@@ -50,6 +54,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to get state validators:'
         },
         {
+            notImplemented: true,
             name: 'getValidatorById',
             route: 'states/${stateId}/validators/${validatorId}',
             restMethod: 'get',
@@ -59,6 +64,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to validator from state by id:'
         },
         {
+            notImplemented: true,
             name: 'getValidatorBalances',
             route: 'states/${stateId}/validator_balances',
             restMethod: 'get',
@@ -68,6 +74,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to validator balances from state:'
         },
         {
+            notImplemented: true,
             name: 'getEpochCommittees',
             route: 'states/${stateId}/committees/${epoch}',
             restMethod: 'get',
