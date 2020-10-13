@@ -2,7 +2,7 @@ import { IBaseAPISchema } from '../../web3-eth2-core/src/schema'
 
 export const DefaultSchema: IBaseAPISchema = {
     packageName: 'eth2-beaconchain',
-    routePrefix: '/v1/beacon/',
+    routePrefix: '/eth/v1/beacon/',
     methods: [
         {
             name: 'getGenesis',
