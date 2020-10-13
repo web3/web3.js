@@ -130,6 +130,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to get block root:'
         },
         {
+            notImplemented: true,
             name: 'getBlockAttestations',
             route: 'blocks/${blockId}/attestations',
             restMethod: 'get',
@@ -139,6 +140,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to block attestations:'
         },
         {
+            notImplemented: true,
             name: 'getAttestationsFromPool',
             route: 'pool/attestations',
             restMethod: 'get',

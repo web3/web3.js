@@ -185,53 +185,53 @@ it('getBlockAttestations', async () => {
     const routeParameters = {
         blockId: 'genesis',
     }
-    const expectedResponse = [
-        {
-            aggregation_bits: expect.stringMatching(/0x[a-f|A-F|\d]{2}/),
-            signature: expect.stringMatching(/0x[a-f|A-F|\d]{192}/),
-            data: {
-                slot: expect.stringMatching(/\d/),
-                index: expect.stringMatching(/\d/),
-                beacon_block_root: expect.stringMatching(/0x[a-f|A-F|\d]{62}/),
-                source: {
-                    epoch: expect.stringMatching(/\d/),
-                    root: expect.stringMatching(/0x[a-f|A-F|\d]{62}/)
-                },
-                target: {
-                    epoch: expect.stringMatching(/\d/),
-                    root: expect.stringMatching(/0x[a-f|A-F|\d]{62}/)
-                }
-            }
-        }
-    ]
+    // const expectedResponse = [
+    //     {
+    //         aggregation_bits: expect.stringMatching(/0x[a-f|A-F|\d]{2}/),
+    //         signature: expect.stringMatching(/0x[a-f|A-F|\d]{192}/),
+    //         data: {
+    //             slot: expect.stringMatching(/\d/),
+    //             index: expect.stringMatching(/\d/),
+    //             beacon_block_root: expect.stringMatching(/0x[a-f|A-F|\d]{62}/),
+    //             source: {
+    //                 epoch: expect.stringMatching(/\d/),
+    //                 root: expect.stringMatching(/0x[a-f|A-F|\d]{62}/)
+    //             },
+    //             target: {
+    //                 epoch: expect.stringMatching(/\d/),
+    //                 root: expect.stringMatching(/0x[a-f|A-F|\d]{62}/)
+    //             }
+    //         }
+    //     }
+    // ]
 
-    const response = await eth2BeaconChain.getBlockAttestations(routeParameters)
-    expect(response).toMatchObject(expectedResponse)
+    const response = eth2BeaconChain.getBlockAttestations(routeParameters)
+    await expect(response).rejects.toThrow('Method not implemented by beacon chain client')
 })
 
 it('getAttestationsFromPool', async () => {
-    const expectedResponse = [
-        {
-            aggregation_bits: expect.stringMatching(/0x[a-f|A-F|\d]{2}/),
-            signature: expect.stringMatching(/0x[a-f|A-F|\d]{192}/),
-            data: {
-                slot: expect.stringMatching(/\d/),
-                index: expect.stringMatching(/\d/),
-                beacon_block_root: expect.stringMatching(/0x[a-f|A-F|\d]{62}/),
-                source: {
-                    epoch: expect.stringMatching(/\d/),
-                    root: expect.stringMatching(/0x[a-f|A-F|\d]{62}/)
-                },
-                target: {
-                    epoch: expect.stringMatching(/\d/),
-                    root: expect.stringMatching(/0x[a-f|A-F|\d]{62}/)
-                }
-            }
-        }
-    ]
+    // const expectedResponse = [
+    //     {
+    //         aggregation_bits: expect.stringMatching(/0x[a-f|A-F|\d]{2}/),
+    //         signature: expect.stringMatching(/0x[a-f|A-F|\d]{192}/),
+    //         data: {
+    //             slot: expect.stringMatching(/\d/),
+    //             index: expect.stringMatching(/\d/),
+    //             beacon_block_root: expect.stringMatching(/0x[a-f|A-F|\d]{62}/),
+    //             source: {
+    //                 epoch: expect.stringMatching(/\d/),
+    //                 root: expect.stringMatching(/0x[a-f|A-F|\d]{62}/)
+    //             },
+    //             target: {
+    //                 epoch: expect.stringMatching(/\d/),
+    //                 root: expect.stringMatching(/0x[a-f|A-F|\d]{62}/)
+    //             }
+    //         }
+    //     }
+    // ]
 
-    const response = await eth2BeaconChain.getAttestationsFromPool()
-    expect(response).toMatchObject(expectedResponse)
+    const response = eth2BeaconChain.getAttestationsFromPool()
+    await expect(response).rejects.toThrow('Method not implemented by beacon chain client')
 })
 
 it('submitAttestation', async () => {
