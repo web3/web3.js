@@ -1,6 +1,6 @@
 import { Genesis } from '@chainsafe/lodestar-types'
 
-export interface IETH2BeaconChain {
+export interface ETH2BeaconChain {
   getGenesis(): Promise<Genesis>
   getBlockHeader(): Promise<any>
 }

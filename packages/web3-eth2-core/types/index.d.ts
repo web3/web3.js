@@ -1,5 +1,5 @@
-export type ETH2BaseOpts = {
+export interface ETH2BaseOpts {
     protectProvider?: boolean
 }
 
-export type ETH2Function<T = any> = (...args: Array<any>) => Promise<T>;
+export type ETH2Function<T = any> = (...args: any[]) => Promise<T>;

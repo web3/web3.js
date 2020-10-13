@@ -102,6 +102,7 @@ export const DefaultSchema: IBaseAPISchema = {
             errorPrefix: 'Failed to get block header:'
         },
         {
+            notImplemented: true,
             name: 'publishSignedBlock',
             route: 'blocks',
             restMethod: 'post',

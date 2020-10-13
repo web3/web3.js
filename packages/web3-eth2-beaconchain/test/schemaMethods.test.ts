@@ -141,7 +141,8 @@ it('getBlockHeader', async () => {
 })
 
 it('publishSignedBlock', async () => {
-    console.warn('method publishSignedBlock is not yet tested')
+    const response = eth2BeaconChain.publishSignedBlock()
+    await expect(response).rejects.toThrow('Method not implemented by beacon chain client')
 })
 
 it('getBlock', async () => {
