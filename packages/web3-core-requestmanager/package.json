@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "underscore": "1.9.1",
+        "util": "^0.12.0",
         "web3-core-helpers": "1.3.0",
         "web3-providers-http": "1.3.0",
         "web3-providers-ipc": "1.3.0",
