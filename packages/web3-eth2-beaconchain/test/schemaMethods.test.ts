@@ -31,35 +31,35 @@ it('getGenesis', async () => {
     expect(response).toMatchObject(expectedResponse)
 })
 
-it('getHashRoot - NOT IMPLEMENTED IN LODESTAR', async () => {
+it('getHashRoot - NOT IMPLEMENTED', async () => {
     const routeParameters = { stateId: 'head' }
 
     const response = eth2BeaconChain.getHashRoot(routeParameters)
     await expect(response).rejects.toThrow('Method not implemented by beacon chain client')
 })
 
-it('getForkData - NOT IMPLEMENTED IN LODESTAR', async () => {
+it('getForkData - NOT IMPLEMENTED', async () => {
     const routeParameters = { stateId: 'head' }
 
     const response = eth2BeaconChain.getForkData(routeParameters)
     await expect(response).rejects.toThrow('Method not implemented by beacon chain client')
 })
 
-it('getFinalityCheckpoint - NOT IMPLEMENTED IN LODESTAR', async () => {
+it('getFinalityCheckpoint - NOT IMPLEMENTED', async () => {
     const routeParameters = { stateId: 'head' }
 
     const response = eth2BeaconChain.getFinalityCheckpoint(routeParameters)
     await expect(response).rejects.toThrow('Method not implemented by beacon chain client')
 })
 
-it('getValidators - NOT IMPLEMENTED IN LODESTAR', async () => {
+it('getValidators - NOT IMPLEMENTED', async () => {
     const routeParameters = { stateId: 'head' }
 
     const response = eth2BeaconChain.getValidators(routeParameters)
     await expect(response).rejects.toThrow('Method not implemented by beacon chain client')
 })
 
-it('getValidatorById - NOT IMPLEMENTED IN LODESTAR', async () => {
+it('getValidatorById - NOT IMPLEMENTED', async () => {
     const routeParameters = {
         stateId: 'head',
         validatorId: '0x93247f2209abcacf57b75a51dafae777f9dd38bc7053d1af526f220a7489a6d3a2753e5f3e8b1cfe39b56f43611df74a'
@@ -69,7 +69,7 @@ it('getValidatorById - NOT IMPLEMENTED IN LODESTAR', async () => {
     await expect(response).rejects.toThrow('Method not implemented by beacon chain client')
 })
 
-it('getValidatorBalances - NOT IMPLEMENTED IN LODESTAR', async () => {
+it('getValidatorBalances - NOT IMPLEMENTED', async () => {
     const routeParameters = {
         stateId: 'head',
     }
@@ -78,7 +78,7 @@ it('getValidatorBalances - NOT IMPLEMENTED IN LODESTAR', async () => {
     await expect(response).rejects.toThrow('Method not implemented by beacon chain client')
 })
 
-it('getEpochCommittees - NOT IMPLEMENTED IN LODESTAR', async () => {
+it('getEpochCommittees - NOT IMPLEMENTED', async () => {
     const routeParameters = {
         stateId: 'head',
         epoch: ''

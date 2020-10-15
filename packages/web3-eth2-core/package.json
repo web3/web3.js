@@ -15,11 +15,11 @@
     },
     "main": "lib/index.js",
     "dependencies": {
-        "@types/node": "^12.12.6",
         "axios": "^0.20.0"
     },
     "devDependencies": {
         "@types/jest": "^26.0.14",
+        "@types/node": "^14.11.8",
         "dtslint": "^3.4.1",
         "jest": "^26.5.3",
         "ts-jest": "^26.4.1",

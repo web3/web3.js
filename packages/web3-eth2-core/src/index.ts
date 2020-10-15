@@ -10,7 +10,7 @@ export class ETH2Core {
     
     name: string
     provider: string
-    protectProvider: boolean
+    protectProvider: boolean // Protects from global overwrite when using .use functionality
 
     constructor(provider: string, schema: IBaseAPISchema, opts: ETH2BaseOpts = {}) {
         this.name = schema.packageName
@@ -35,9 +35,7 @@ export class ETH2Core {
                 throw new Error(`Invalid HTTP(S) provider: ${provider}`)
             }
 
-            const result = ETH2Core.createHttpClient(provider)
-            this._httpClient = result
-
+            this._httpClient = ETH2Core.createHttpClient(provider)
             this.provider = provider
         } catch (error) {
             throw new Error(`Failed to set provider: ${error.message}`)
