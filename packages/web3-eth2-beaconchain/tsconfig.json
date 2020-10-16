@@ -4,6 +4,9 @@
       "outDir": "./lib"
     },
     "include": [
-      "./src"
+      "src"
     ],
+    "exclude": [
+      ""
+    ]
    }
