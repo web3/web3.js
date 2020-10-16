@@ -5,8 +5,5 @@
   },
   "include": [
     "src"
-  ],
-  "exclude": [
-    ""
   ]
  }

@@ -14,7 +14,9 @@
         "tsc": "tsc -b tsconfig.json"
     },
     "main": "lib/index.js",
-    "dependencies": {},
+    "dependencies": {
+        "web3-eth2-core": "^1.3.0"
+    },
     "devDependencies": {
         "@chainsafe/lodestar-types": "^0.11.0",
         "@types/jest": "^26.0.14",
