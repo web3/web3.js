@@ -334,6 +334,19 @@ ABICoder.prototype.decodeParameter = function (type, bytes) {
  * @return {Array} array of plain params
  */
 ABICoder.prototype.decodeParameters = function (outputs, bytes) {
+    return this.decodeParametersWith(outputs, bytes, false);
+}
+
+/**
+ * Should be used to decode list of params
+ *
+ * @method decodeParameter
+ * @param {Array} outputs
+ * @param {String} bytes
+ * @param {Boolean} loose
+ * @return {Array} array of plain params
+ */
+ABICoder.prototype.decodeParametersWith = function (outputs, bytes, loose) {
     if (outputs.length > 0 && (!bytes || bytes === '0x' || bytes === '0X')) {
         throw new Error(
             'Returned values aren\'t valid, did it run Out of Gas? ' +
@@ -344,7 +357,7 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
         );
     }
 
-    var res = ethersAbiCoder.decode(this.mapTypes(outputs), '0x' + bytes.replace(/0x/i, ''));
+    var res = ethersAbiCoder.decode(this.mapTypes(outputs), '0x' + bytes.replace(/0x/i, ''), loose);
     var returnValue = new Result();
     returnValue.__length__ = 0;
 
@@ -398,7 +411,7 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
 
 
     var nonIndexedData = data;
-    var notIndexedParams = (nonIndexedData) ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [];
+    var notIndexedParams = (nonIndexedData) ? this.decodeParametersWith(notIndexedInputs, nonIndexedData, true) : [];
 
     var returnValue = new Result();
     returnValue.__length__ = 0;

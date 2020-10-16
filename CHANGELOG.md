@@ -290,6 +290,13 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.3.1]
 
+### Changed
+- bump utils 0.10.0^ -> 0.12.0 (#3733)
+
 ### Removed
 
 - Removed post-install script in `packages/web3`. Added documentation to root README (#3717)
+
+### Fixed
+
+- Fixed decoding bytes and string parameters for logs emitted with solc 0.4.x (#3724, #3738)
