@@ -8,14 +8,9 @@ describe('Web3.providers.currentProvider', function () {
     beforeEach(function(){
         decache('../packages/web3');
         decache('../packages/web3-eth');
-        decache('../packages/web3-bzz');
     });
 
     describe('should be set if web3.currentProvider is available', function () {
-        beforeEach(function(){
-            global.web3 = {currentProvider: {bzz: 'http://givenProvider:8501'}};
-        });
-
         it('when instantiating Web3', function () {
             var Web3 = require('../packages/web3');
             assert.deepEqual(Web3.givenProvider, global.web3.currentProvider);

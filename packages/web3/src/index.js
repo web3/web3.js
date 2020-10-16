@@ -34,7 +34,6 @@ var Eth = require('web3-eth');
 var Net = require('web3-net');
 var Personal = require('web3-eth-personal');
 var Shh = require('web3-shh');
-var Bzz = require('web3-bzz');
 var utils = require('web3-utils');
 
 var Web3 = function Web3() {
@@ -48,7 +47,6 @@ var Web3 = function Web3() {
 
     this.eth = new Eth(this);
     this.shh = new Shh(this);
-    this.bzz = new Bzz(this);
 
     // overwrite package setProvider
     var setProvider = this.setProvider;
@@ -58,7 +56,6 @@ var Web3 = function Web3() {
 
         _this.eth.setRequestManager(_this._requestManager);
         _this.shh.setRequestManager(_this._requestManager);
-        _this.bzz.setProvider(provider);
 
         return true;
     };
@@ -71,7 +68,6 @@ Web3.modules = {
     Net: Net,
     Personal: Personal,
     Shh: Shh,
-    Bzz: Bzz
 };
 
 core.addProviders(Web3);

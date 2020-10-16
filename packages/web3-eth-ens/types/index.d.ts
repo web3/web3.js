@@ -23,7 +23,7 @@ import { Eth } from 'web3-eth';
 import { Contract } from 'web3-eth-contract';
 
 export interface ContentHash {
-    protocolType: 'ipfs' | 'bzz' | 'onion' | 'onion3' | null,
+    protocolType: 'ipfs' | 'onion' | 'onion3' | null,
     decoded: string | null,
     error?: Error | null
 }

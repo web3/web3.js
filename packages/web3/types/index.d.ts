@@ -18,7 +18,6 @@
  */
 
 import * as net from 'net';
-import { Bzz } from 'web3-bzz';
 import { BatchRequest, provider, Providers, Extension } from 'web3-core';
 import { Eth } from 'web3-eth';
 import { Personal } from 'web3-eth-personal';
@@ -44,7 +43,6 @@ export default class Web3 {
     utils: Utils;
     eth: Eth;
     shh: Shh;
-    bzz: Bzz;
     version: string;
     static readonly version: string;
     static readonly utils: Utils;
@@ -56,5 +54,4 @@ export interface Modules {
     Net: new (provider: provider, net: net.Socket) => Network;
     Personal: new (provider: provider, net: net.Socket) => Personal;
     Shh: new (provider: provider, net: net.Socket) => Shh;
-    Bzz: new (provider: provider) => Bzz;
 }

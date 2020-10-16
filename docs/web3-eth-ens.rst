@@ -1000,7 +1000,6 @@ Supports the following protocols as valid ``hash`` inputs:
 
 1. ``ipfs://``   - ipfs://QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL
 2. ``/ipfs/``    - /ipfs/QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL
-3. ``bzz://``    - bzz://d1de9994b4d039f6548d191eb26786769f580809256b4685ef316805265ea162
 4. ``onion://``  - onion://3g2upl4pq6kufc4m
 5. ``onion3://`` - onion3://p53lf57qovyuvwsc6xnrppyply3vtqm7l6pcobkmyqsiofyeznfu5uqd
 

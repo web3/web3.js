@@ -35,7 +35,6 @@ Returns
     - ``Net`` - ``Constructor``: The Net module for interacting with network properties (:ref:`web3.eth.net <eth-net>`).
     - ``Personal`` - ``Constructor``: The Personal module for interacting with the Ethereum accounts (:ref:`web3.eth.personal <personal>`).
     - ``Shh`` - ``Constructor``: The Shh module for interacting with the whisper protocol (:ref:`web3.shh <shh>`).
-    - ``Bzz`` - ``Constructor``: The Bzz module for interacting with the swarm network (:ref:`web3.bzz <bzz>`).
 
 -------
 Example
@@ -49,7 +48,6 @@ Example
         Net: Net(provider),
         Personal: Personal(provider),
         Shh: Shh(provider),
-        Bzz: Bzz(provider),
     }
 
 
@@ -69,7 +67,6 @@ The Web3 class is an umbrella package to house all Ethereum related modules.
 
     > web3.eth
     > web3.shh
-    > web3.bzz
     > web3.utils
     > web3.version
 

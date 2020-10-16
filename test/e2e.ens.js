@@ -124,17 +124,6 @@ describe('ENS [ @E2E ]', function () {
         assert.equal(val.decoded, hash);
     });
 
-    it('should get/set a bzz contenthash', async function(){
-        const prefix = "bzz://";
-        const hash = "d1de9994b4d039f6548d191eb26786769f580809256b4685ef316805265ea162";
-
-        await web3.eth.ens.setContenthash('resolver', prefix + hash, options);
-        const val = await web3.eth.ens.getContenthash('resolver');
-
-        assert.equal(val.protocolType, 'bzz');
-        assert.equal(val.decoded, hash);
-    });
-
     it('should get/set an onion contenthash', async function(){
         const prefix = "onion://"
         const hash = "3g2upl4pq6kufc4m";
