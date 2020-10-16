@@ -23,7 +23,6 @@ The ``web3-net`` package allows you to interact with an Ethereum node's network 
 
     // -> web3.eth.net
     // -> web3.bzz.net
-    // -> web3.shh.net
 
 
 

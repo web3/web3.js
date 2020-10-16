@@ -19,7 +19,6 @@ var chai = require('chai');
 var assert = chai.assert;
 var Web3 = require('../packages/web3');
 var Eth = require('../packages/web3-eth');
-var Shh = require('../packages/web3-shh');
 var Personal = require('../packages/web3-eth-personal');
 var Accounts = require('../packages/web3-eth-accounts');
 var Contract = require('../packages/web3-eth-contract');
@@ -31,8 +30,6 @@ var tests = [{
     Lib: Web3
 },{
     Lib: Eth
-},{
-    Lib: Shh
 },{
     Lib: Personal
 },{
@@ -65,7 +62,6 @@ describe('lib/web3/setProvider', function () {
         assert.equal(lib.eth.personal.currentProvider.constructor.name, provider1.constructor.name);
         assert.equal(lib.eth.Contract.currentProvider.constructor.name, provider1.constructor.name);
         assert.equal(lib.eth.accounts.currentProvider.constructor.name, provider1.constructor.name);
-        assert.equal(lib.shh.currentProvider.constructor.name, provider1.constructor.name);
         assert.equal(lib.bzz.currentProvider, provider1.bzz);
 
         assert.equal(lib.eth._requestManager.provider.constructor.name, provider1.constructor.name);
@@ -73,14 +69,12 @@ describe('lib/web3/setProvider', function () {
         assert.equal(lib.eth.personal._requestManager.provider.constructor.name, provider1.constructor.name);
         assert.equal(lib.eth.Contract._requestManager.provider.constructor.name, provider1.constructor.name);
         assert.equal(lib.eth.accounts._requestManager.provider.constructor.name, provider1.constructor.name);
-        assert.equal(lib.shh._requestManager.provider.constructor.name, provider1.constructor.name);
 
         assert.equal(lib2.eth.currentProvider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.eth.net.currentProvider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.eth.personal.currentProvider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.eth.Contract.currentProvider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.eth.accounts.currentProvider.constructor.name, provider3.constructor.name);
-        assert.equal(lib2.shh.currentProvider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.bzz.currentProvider, provider3.bzz);
 
         assert.equal(lib2.eth._requestManager.provider.constructor.name, provider3.constructor.name);
@@ -88,7 +82,6 @@ describe('lib/web3/setProvider', function () {
         assert.equal(lib2.eth.personal._requestManager.provider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.eth.Contract._requestManager.provider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.eth.accounts._requestManager.provider.constructor.name, provider3.constructor.name);
-        assert.equal(lib2.shh._requestManager.provider.constructor.name, provider3.constructor.name);
 
 
         lib.setProvider(provider2);
@@ -98,7 +91,6 @@ describe('lib/web3/setProvider', function () {
         assert.equal(lib.eth.personal.currentProvider.constructor.name, provider2.constructor.name);
         assert.equal(lib.eth.Contract.currentProvider.constructor.name, provider2.constructor.name);
         assert.equal(lib.eth.accounts.currentProvider.constructor.name, provider2.constructor.name);
-        assert.equal(lib.shh.currentProvider.constructor.name, provider2.constructor.name);
         assert.equal(lib.bzz.currentProvider, provider2.bzz);
 
         assert.equal(lib.eth._requestManager.provider.constructor.name, provider2.constructor.name);
@@ -106,14 +98,12 @@ describe('lib/web3/setProvider', function () {
         assert.equal(lib.eth.personal._requestManager.provider.constructor.name, provider2.constructor.name);
         assert.equal(lib.eth.Contract._requestManager.provider.constructor.name, provider2.constructor.name);
         assert.equal(lib.eth.accounts._requestManager.provider.constructor.name, provider2.constructor.name);
-        assert.equal(lib.shh._requestManager.provider.constructor.name, provider2.constructor.name);
 
         assert.equal(lib2.eth.currentProvider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.eth.net.currentProvider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.eth.personal.currentProvider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.eth.Contract.currentProvider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.eth.accounts.currentProvider.constructor.name, provider3.constructor.name);
-        assert.equal(lib2.shh.currentProvider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.bzz.currentProvider, provider3.bzz);
 
         assert.equal(lib2.eth._requestManager.provider.constructor.name, provider3.constructor.name);
@@ -121,7 +111,6 @@ describe('lib/web3/setProvider', function () {
         assert.equal(lib2.eth.personal._requestManager.provider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.eth.Contract._requestManager.provider.constructor.name, provider3.constructor.name);
         assert.equal(lib2.eth.accounts._requestManager.provider.constructor.name, provider3.constructor.name);
-        assert.equal(lib2.shh._requestManager.provider.constructor.name, provider3.constructor.name);
 
 
     });

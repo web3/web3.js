@@ -48,7 +48,6 @@ const web3Modules = [
   "web3-providers-http",
   "web3-providers-ipc",
   "web3-providers-ws",
-  "web3-shh",
   "web3-utils"
 ];
 

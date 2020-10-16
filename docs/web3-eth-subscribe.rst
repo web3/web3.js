@@ -78,8 +78,6 @@ clearSubscriptions
 
 Resets subscriptions.
 
-.. note:: This will not reset subscriptions from other packages like ``web3-shh``, as they use their own requestManager.
-
 ----------
 Parameters
 ----------
