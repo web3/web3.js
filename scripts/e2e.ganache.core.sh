@@ -52,5 +52,4 @@ TEST_BUILD=node npx mocha \
   --invert \
   --check-leaks \
   --recursive \
-  --globals _scratch \
-  --opts ./test/.mocharc
+  --globals _scratch
