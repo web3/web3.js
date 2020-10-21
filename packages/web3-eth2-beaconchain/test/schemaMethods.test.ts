@@ -13,7 +13,7 @@ expect.extend({
     }
 })
 
-let eth2BeaconChain
+let eth2BeaconChain: any // should be ETH2BeaconChain but types aren't implemented yet
 
 beforeAll(() => {
     const provider = 'http://127.0.0.1:9596' // default port for Lodestar
