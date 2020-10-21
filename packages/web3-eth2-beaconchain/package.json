@@ -11,7 +11,9 @@
     "scripts": {
         "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types",
         "test": "jest",
-        "tsc": "tsc -b tsconfig.json"
+        "build": "npm run build:types && npm run build:js",
+        "build:types": "tsc --emitDeclarationOnly",
+        "tsc": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
     },
     "main": "lib/index.js",
     "dependencies": {
