@@ -290,6 +290,11 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.3.1]
 
+### Added
+
+- Add `web3-eth2-core` package (#3743)
+- Add `web3-eth2-beaconchain` package (#3743)
+
 ### Changed
 
 - bump utils 0.10.0^ -> 0.12.0 (#3733)
