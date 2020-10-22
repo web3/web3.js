@@ -303,3 +303,4 @@ Released with 1.0.0-beta.37 code base.
 - Fix possible unhandled promise rejection when sending a transaction (#3708)
 - Fixed decoding bytes and string parameters for logs emitted with solc 0.4.x (#3724, #3738)
 - Grammar changes to inputAddressFormatter error message
+- Fixed vulnerable dependencies
