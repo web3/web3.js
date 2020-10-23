@@ -297,6 +297,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - bump utils 0.10.0^ -> 0.12.0 (#3733)
+- Use message event for 1193 provider subscriptions
 
 ### Removed
 
