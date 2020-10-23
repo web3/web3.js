@@ -172,4 +172,5 @@ export interface EventData {
     blockHash: string;
     blockNumber: number;
     address: string;
+    removed: boolean;
 }
