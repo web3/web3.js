@@ -1,0 +1,29 @@
+{
+    "name": "web3-eth2-beaconchain",
+    "version": "1.3.0",
+    "description": "Web3 ETH2 Beacon chain API wrappers.",
+    "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth2-beaconchain",
+    "license": "LGPL-3.0",
+    "engines": {
+        "node": ">=8.0.0"
+    },
+    "types": "types/index.d.ts",
+    "scripts": {
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types",
+        "test": "jest",
+        "tsc": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
+    },
+    "main": "lib/index.js",
+    "dependencies": {
+        "web3-eth2-core": "^1.3.0"
+    },
+    "devDependencies": {
+        "@chainsafe/lodestar-types": "^0.11.0",
+        "@types/jest": "^26.0.14",
+        "@types/node": "^14.11.2",
+        "dtslint": "^3.4.1",
+        "jest": "^26.4.2",
+        "ts-jest": "^26.4.1",
+        "typescript": "^4.0.3"
+    }
+}

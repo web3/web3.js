@@ -290,7 +290,13 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.3.1]
 
+### Added
+
+- Add `web3-eth2-core` package (#3743)
+- Add `web3-eth2-beaconchain` package (#3743)
+
 ### Changed
+
 - bump utils 0.10.0^ -> 0.12.0 (#3733)
 
 ### Removed
@@ -299,5 +305,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 
+- Fix possible unhandled promise rejection when sending a transaction (#3708)
 - Fixed decoding bytes and string parameters for logs emitted with solc 0.4.x (#3724, #3738)
 - Grammar changes to inputAddressFormatter error message
+- Fixed vulnerable dependencies

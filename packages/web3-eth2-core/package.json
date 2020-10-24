@@ -1,0 +1,28 @@
+{
+    "name": "web3-eth2-core",
+    "version": "1.3.0",
+    "description": "Web3 ETH2 core tools for sub-packages. This is an internal package.",
+    "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth2-core",
+    "license": "LGPL-3.0",
+    "engines": {
+        "node": ">=8.0.0"
+    },
+    "types": "types/index.d.ts",
+    "scripts": {
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types",
+        "test": "jest",
+        "tsc": "tsc -b tsconfig.json"
+    },
+    "main": "lib/index.js",
+    "dependencies": {
+        "axios": "^0.20.0"
+    },
+    "devDependencies": {
+        "@types/jest": "^26.0.14",
+        "@types/node": "^14.11.8",
+        "dtslint": "^3.4.1",
+        "jest": "^26.5.3",
+        "ts-jest": "^26.4.1",
+        "typescript": "^3.9.5"
+    }
+}
