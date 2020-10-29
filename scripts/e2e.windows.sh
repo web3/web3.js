@@ -7,7 +7,7 @@
 set -o errexit
 
 # Setup mock project to install web3 from virtual registry
-mkdir windows_test
+mkdir -p windows_test
 cp scripts/js/basic_usage.js windows_test/basic_usage.js
 cd windows_test
 
