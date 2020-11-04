@@ -122,7 +122,7 @@ RequestManager.prototype.setProvider = function (provider, net) {
         });
 
         // notify all subscriptions about bad close conditions
-        this.provider.on('close', function close(event) {
+        this.provider.on('disconnect', function close(event) {
             if (!_this._isCleanCloseEvent(event) || _this._isIpcCloseError(event)) {
                 _this.subscriptions.forEach(function (subscription) {
                     subscription.callback(errors.ConnectionCloseError(event));
@@ -257,7 +257,7 @@ RequestManager.prototype.removeSubscription = function (id, callback) {
  * Should be called to reset the subscriptions
  *
  * @method reset
- * 
+ *
  * @returns {boolean}
  */
 RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
@@ -310,12 +310,12 @@ RequestManager.prototype._isIpcCloseError = function (event) {
 
 /**
  * The jsonrpc result callback for RequestManager.send
- * 
+ *
  * @method _jsonrpcResultCallback
- * 
+ *
  * @param {Function} callback the callback to use
  * @param {Object} payload the jsonrpc payload
- * 
+ *
  * @returns {Function} return callback of form (err, result)
  *
  */

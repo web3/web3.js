@@ -30,7 +30,7 @@ describe('web.providers.givenProvider (ganache)', function(){
         assert.equal(1, web3.currentProvider.listenerCount('data'))
         assert.equal(1, web3.currentProvider.listenerCount('connect'))
         assert.equal(1, web3.currentProvider.listenerCount('error'))
-        assert.equal(1, web3.currentProvider.listenerCount('close'))
+        assert.equal(1, web3.currentProvider.listenerCount('disconnect'))
     });
 
     it('deploys a contract', async function(){
