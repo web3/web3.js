@@ -22,6 +22,7 @@
 
 /**
  * Source: https://docs.ens.domains/ens-deployments
+ * EnergyWebChain source: https://energyweb.atlassian.net/wiki/spaces/EWF/pages/555745281/Using+ENS
  *
  * @type {{addresses: {main: string, rinkeby: string, goerli: string, ropsten: string}}}
  */
@@ -31,7 +32,7 @@ var config = {
         ropsten: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
         rinkeby: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
         goerli: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
-        energyWebChain: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+        energyWebChain: "0x0A6d64413c07E10E890220BBE1c49170080C6Ca0",
     },
     // These ids obtained at ensdomains docs:
     // https://docs.ens.domains/contract-developer-guide/writing-a-resolver
