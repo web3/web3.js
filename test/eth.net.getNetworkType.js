@@ -28,6 +28,10 @@ var tests = [{
     id: 42,
     result: 'private'
 },{
+    hash: '0x0b6d3e680af2fc525392c720666cce58e3d8e6fe75ba4b48cb36bcc69039229b',
+    id: 246,
+    result: 'energyWebChain'
+},{
     hash: '0xffe56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3',
     id: 1,
     result: 'private'
