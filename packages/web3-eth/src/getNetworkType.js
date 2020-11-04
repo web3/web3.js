@@ -63,6 +63,10 @@ var getNetworkType = function (callback) {
                 id === 42) {
                 returnValue = 'kovan';
             }
+            if (genesis.hash === '0x0b6d3e680af2fc525392c720666cce58e3d8e6fe75ba4b48cb36bcc69039229b' &&
+                id === 246) {
+                returnValue = 'energyWebChain';
+            }
 
             if (_.isFunction(callback)) {
                 callback(null, returnValue);
