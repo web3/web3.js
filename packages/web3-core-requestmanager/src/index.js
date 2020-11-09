@@ -122,7 +122,7 @@ RequestManager.prototype.setProvider = function (provider, net) {
         });
 
         // notify all subscriptions about bad close conditions
-        this.provider.on('disconnect', function close(event) {
+        const disconnect = function disconnect(event) {
             if (!_this._isCleanCloseEvent(event) || _this._isIpcCloseError(event)) {
                 _this.subscriptions.forEach(function (subscription) {
                     subscription.callback(errors.ConnectionCloseError(event));
@@ -136,7 +136,9 @@ RequestManager.prototype.setProvider = function (provider, net) {
             if (_this.provider && _this.provider.emit) {
                 _this.provider.emit('end', event);
             }
-        });
+        };
+        this.provider.on('close', disconnect);
+        this.provider.on('disconnect', disconnect);
 
         // TODO add end, timeout??
     }
