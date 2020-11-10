@@ -159,6 +159,20 @@ var randomHex = function(size) {
 };
 
 /**
+ * Returns a hex string without 0x prefix
+ *
+ * @param {string} hexStr 0x prefixed hex string
+ * @returns {string} hex string without 0x prefix
+ */
+var stripHexPrefix = function(hexStr) {
+    if (!_.isString(hexStr)) {
+        throw new Error("function expects only string as an argument")
+    }
+    return hexStr.replace(/^0x/i, '');
+};
+
+
+/**
  * Should be called to get ascii from it's hex representation
  *
  * @method hexToAscii
@@ -415,6 +429,8 @@ module.exports = {
     utf8ToHex: utils.utf8ToHex,
     stringToHex: utils.utf8ToHex,
     fromUtf8: utils.utf8ToHex,
+
+    stripHexPrefix: stripHexPrefix,
 
     hexToAscii: hexToAscii,
     toAscii: hexToAscii,
