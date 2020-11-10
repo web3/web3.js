@@ -86,6 +86,37 @@ Example
     web3.utils.randomHex(0)
     > "0x"
 
+------------------------------------------------------------------------------
+
+stripHexPrefix
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.stripHexPrefix(hexStr)
+
+Returns the corresponding string without 0x prefix.
+
+----------
+Parameters
+----------
+
+1. ``hexStr`` - ``string``:  Input string
+
+-------
+Returns
+-------
+
+``String``: The input string without 0x prefix.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.stripHexPrefix('0x1234567890')
+    > "1234567890"
 
 
 
