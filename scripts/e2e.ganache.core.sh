@@ -11,6 +11,7 @@ set -o errexit
 # Install ganache-core
 git clone https://github.com/trufflesuite/ganache-core
 cd ganache-core
+git checkout tags/v2.13.0
 
 # Install via registry and verify
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
