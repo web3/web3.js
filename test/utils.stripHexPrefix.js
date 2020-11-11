@@ -1,5 +1,5 @@
 var chai = require('chai');
-var utils = require('web3-utils');
+var utils = require('../packages/web3-utils');
 
 var BigNumber = require('bignumber.js');
 var BN = require('bn.js');
@@ -46,7 +46,7 @@ describe('lib/utils/utils', function () {
     describe('stripHexPrefix', function () {
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
-                assert.strictEqual(utils.stripHexPrefix(test.value), test.expected);
+                assert.deepEqual(utils.stripHexPrefix(test.value), test.expected);
             });
         });
     });
