@@ -32,6 +32,10 @@ var tests = [{
     id: 246,
     result: 'energyWebChain'
 },{
+    hash: '0xebd8b413ca7b7f84a8dd20d17519ce2b01954c74d94a0a739a3e416abe0e43e5',
+    id: 73799,
+    result: 'volta'
+},{
     hash: '0xffe56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3',
     id: 1,
     result: 'private'
@@ -70,8 +74,7 @@ describe('getNetworkType', function () {
                 done();
             })
             .catch(function (err) {
-                throw err;
-                done();
+                done(err);
             });
         });
     });

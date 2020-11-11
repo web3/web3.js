@@ -294,7 +294,7 @@ Released with 1.0.0-beta.37 code base.
 
 - Add `web3-eth2-core` package (#3743)
 - Add `web3-eth2-beaconchain` package (#3743)
-- Energy Webchain network ENS registry added to the known registries (#3768)
+- Energy WebChain/Volta network ENS registry added to the known registries (#3768)
 
 ### Changed
 

@@ -67,6 +67,10 @@ var getNetworkType = function (callback) {
                 id === 246) {
                 returnValue = 'energyWebChain';
             }
+            if (genesis.hash === '0xebd8b413ca7b7f84a8dd20d17519ce2b01954c74d94a0a739a3e416abe0e43e5' &&
+                id === 73799) {
+                returnValue = 'volta';
+            }
 
             if (_.isFunction(callback)) {
                 callback(null, returnValue);
