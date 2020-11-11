@@ -396,8 +396,8 @@ var isHex = function (hex) {
  * @returns {String}
  */
 var stripHexPrefix = function (str) {
-    if (isHex(str)) 
-        return str.replace(/^(?:\-)0x/i, '')
+    if (str !== 0 && isHex(str))
+        return str.replace(/^(-)?0x/i, '$1')
     return str;
 };
 
