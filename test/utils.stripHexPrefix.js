@@ -44,7 +44,6 @@ var tests = [
 
 describe('lib/utils/utils', function () {
     describe('stripHexPrefix', function () {
-        console.log(utils, "UTILS")
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
                 assert.strictEqual(utils.stripHexPrefix(test.value), test.expected);
