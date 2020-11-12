@@ -39,7 +39,8 @@ var tests = [
     { value: '\u0003\u0000\u0000\u00005èÆÕL]\u0012|Î¾\u001a7«\u00052\u0011(ÐY\n<\u0010\u0000\u0000\u0000\u0000\u0000\u0000e!ßd/ñõì\f:z¦Î¦±ç·÷Í¢Ëß\u00076*\bñùC1ÉUÀé2\u001aÓB',
       expected: '\u0003\u0000\u0000\u00005èÆÕL]\u0012|Î¾\u001a7«\u00052\u0011(ÐY\n<\u0010\u0000\u0000\u0000\u0000\u0000\u0000e!ßd/ñõì\f:z¦Î¦±ç·÷Í¢Ëß\u00076*\bñùC1ÉUÀé2\u001aÓB'},
     { value: '내가 제일 잘 나가', expected: '내가 제일 잘 나가'},
-    { value: Buffer.from('100'), expected: Buffer.from('100')}
+    { value: Buffer.from('100'), expected: Buffer.from('100')},
+    { value: '0xfffff0x0fffffffffff0xffffff0x', expected: '0xfffff0x0fffffffffff0xffffff0x'}
 ];
 
 describe('lib/utils/utils', function () {
