@@ -137,6 +137,7 @@ RequestManager.prototype.setProvider = function (provider, net) {
                 _this.provider.emit('end', event);
             }
         };
+        // TODO: Remove close once the standard allows it
         this.provider.on('close', disconnect);
         this.provider.on('disconnect', disconnect);
 

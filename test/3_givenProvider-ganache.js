@@ -30,7 +30,10 @@ describe('web.providers.givenProvider (ganache)', function(){
         assert.equal(1, web3.currentProvider.listenerCount('data'))
         assert.equal(1, web3.currentProvider.listenerCount('connect'))
         assert.equal(1, web3.currentProvider.listenerCount('error'))
-        assert.equal(1, web3.currentProvider.listenerCount('disconnect'))
+        // TODO: Remove close once the standard allows it
+        assert(
+            web3.currentProvider.listenerCount("disconnect") === 1 || web3.currentProvider.listenerCount("close") === 1
+        );
     });
 
     it('deploys a contract', async function(){
