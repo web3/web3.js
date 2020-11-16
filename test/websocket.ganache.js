@@ -43,9 +43,9 @@ describe('WebsocketProvider (ganache)', function () {
         await web3.eth.getBlockNumber();
 
         await new Promise(async function(resolve){
-            web3.currentProvider.once('error', function(err){
-                assert(err.message.includes('Connection dropped by remote peer.'))
-                assert(err.message.includes('1006'));
+            web3.currentProvider.on('close', function (err) {
+                assert(err.reason.includes('Connection dropped by remote peer.'));
+                assert(err.code === 1006);
                 resolve();
             });
 
@@ -64,9 +64,9 @@ describe('WebsocketProvider (ganache)', function () {
         await web3.eth.getBlockNumber();
 
         await new Promise(async function(resolve){
-            web3.currentProvider.once('error', function(err){
-                assert(err.message.includes('1012'));
-                assert(err.message.includes('restart'));
+            web3.currentProvider.on('close', function (err) {
+                assert(err.reason.includes('restart'));
+                assert(err.code === 1012);
                 resolve();
             });
 
@@ -106,9 +106,9 @@ describe('WebsocketProvider (ganache)', function () {
         await web3.eth.getBlockNumber();
 
         await new Promise(async function(resolve){
-            web3.currentProvider.once('end', function(event){
-                assert.equal(event.type, 'close');
-                assert.equal(event.wasClean, false);
+            web3.currentProvider.on('close', function (err) {
+                assert.equal(err.type, 'close');
+                assert.equal(err.wasClean, false);
                 resolve();
             });
 
@@ -127,9 +127,9 @@ describe('WebsocketProvider (ganache)', function () {
         await web3.eth.getBlockNumber();
 
         await new Promise(async function(resolve){
-            web3.currentProvider.once('end', function(event){
-                assert.equal(event.type, 'close');
-                assert.equal(event.wasClean, true);
+            web3.currentProvider.on('close', function (err) {
+                assert.equal(err.type, 'close');
+                assert.equal(err.wasClean, true);
                 resolve();
             });
 
