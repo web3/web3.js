@@ -292,8 +292,8 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 
-- Add `web3-eth2-core` package (#3743)
-- Add `web3-eth2-beaconchain` package (#3743)
+- Add `web3-eth2-core` package (#3743) (renamed to `web3-eth2-base`)
+- Add `web3-eth2-beaconchain` package (#3743) (renamed to `web3-eth2-beacon`)
 - Add `stripHexPrefix` method to `web3-utils` package (#3776)
 
 ### Changed
