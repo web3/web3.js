@@ -1,7 +1,7 @@
-import { IBaseAPISchema } from '../../web3-eth2-core/src/schema'
+import { IBaseAPISchema } from '../../web3-eth2-base/src/schema'
 
 export const DefaultSchema: IBaseAPISchema = {
-    packageName: 'eth2-beaconchain',
+    packageName: 'eth2-beacon',
     routePrefix: '/eth/v1/beacon/',
     methods: [
         {
