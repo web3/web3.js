@@ -1,4 +1,4 @@
-import { ETH2Core } from '../src/index'
+import { ETH2Base } from '../src/index'
 
 const provider = 'http://127.0.0.1:9596'
 const testAPISchema = {
@@ -18,7 +18,7 @@ const testAPISchema = {
 }
 
 it('constructs a ETH2Core instance with expected properties', () => {
-    const eth2Core = new ETH2Core(provider, testAPISchema, { protectProvider: true })
+    const eth2Core = new ETH2Base(provider, testAPISchema, { protectProvider: true })
 
     expect(eth2Core.name).toBe(testAPISchema.packageName)
     expect(eth2Core.provider).toBe(`${provider}${testAPISchema.routePrefix}`)
