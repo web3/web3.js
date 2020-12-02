@@ -1,15 +1,15 @@
 // @ts-ignore - types not full implemented yet
-import { ETH2Core } from 'web3-eth2-core'
+import { ETH2Base } from 'web3-eth2-base'
 import { DefaultSchema } from './schema'
 
-import { IETH2BeaconChain } from '../types/index'
+import { IETH2Beacon } from '../types/index'
 // @ts-ignore - types not full implemented yet
 import { IBaseAPISchema } from 'web3-eth2-core'
 // @ts-ignore - types not full implemented yet
 import { ETH2BaseOpts } from 'web3-eth2-core'
 
-// @ts-ignore - ETH2BeaconChain incorrectly implements interface IETH2BeaconChain
-export class ETH2BeaconChain extends ETH2Core implements IETH2BeaconChain {
+// @ts-ignore - ETH2Beacon incorrectly implements interface IETH2Beacon
+export class ETH2Beacon extends ETH2Base implements IETH2Beacon {
     constructor(
         provider: string,
         schema: IBaseAPISchema = DefaultSchema,
