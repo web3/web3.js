@@ -22,27 +22,28 @@
 
 'use strict';
 
-var _ = require('underscore');
-var core = require('web3-core');
-var Method = require('web3-core-method');
-var Account = require('eth-lib/lib/account');
-var Hash = require('eth-lib/lib/hash');
-var RLP = require('eth-lib/lib/rlp');// jshint ignore:line
-var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
-var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
-var scrypt = require('scrypt-js');
-var uuid = require('uuid');
-var utils = require('web3-utils');
-var helpers = require('web3-core-helpers');
-var Transaction = require('ethereumjs-tx').Transaction;
-var Common = require('ethereumjs-common').default;
+const _ = require('underscore');
+const core = require('web3-core');
+const Method = require('web3-core-method');
+const Account = require('eth-lib/lib/account');
+const Hash = require('eth-lib/lib/hash');
+const RLP = require('eth-lib/lib/rlp');// jshint ignore:line
+const Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
+const cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
+const scrypt = require('scrypt-js');
+const uuid = require('uuid');
+const utils = require('web3-utils');
+const helpers = require('web3-core-helpers');
+const Transaction = require('ethereumjs-tx').Transaction;
+const Common = require('ethereumjs-common').default;
 
 
-var isNot = function(value) {
+const isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
 };
 
-var Accounts = function Accounts() {
+class Accounts {
+    constructor () {
     var _this = this;
 
     // sets _requestmanager
@@ -94,168 +95,339 @@ var Accounts = function Accounts() {
 
 
     this.wallet = new Wallet(this);
-};
-
-Accounts.prototype._addAccountFunctions = function(account) {
-    var _this = this;
-
-    // add sign functions
-    account.signTransaction = function signTransaction(tx, callback) {
-        return _this.signTransaction(tx, account.privateKey, callback);
-    };
-    account.sign = function sign(data) {
-        return _this.sign(data, account.privateKey);
-    };
-
-    account.encrypt = function encrypt(password, options) {
-        return _this.encrypt(account.privateKey, password, options);
-    };
-
-
-    return account;
-};
-
-Accounts.prototype.create = function create(entropy) {
-    return this._addAccountFunctions(Account.create(entropy || utils.randomHex(32)));
-};
-
-Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey, ignoreLength) {
-    if (!privateKey.startsWith('0x')) {
-        privateKey = '0x' + privateKey;
     }
 
-    // 64 hex characters + hex-prefix
-    if (!ignoreLength && privateKey.length !== 66) {
-        throw new Error("Private key must be 32 bytes long");
+    _addAccountFunctions (account) {
+        var _this = this;
+
+        // add sign functions
+        account.signTransaction = function signTransaction(tx, callback) {
+            return _this.signTransaction(tx, account.privateKey, callback);
+        };
+        account.sign = function sign(data) {
+            return _this.sign(data, account.privateKey);
+        };
+
+        account.encrypt = function encrypt(password, options) {
+            return _this.encrypt(account.privateKey, password, options);
+        };
+
+
+        return account;
     }
 
-    return this._addAccountFunctions(Account.fromPrivate(privateKey));
-};
-
-Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
-    var _this = this,
-        error = false,
-        transactionOptions = {},
-        hasTxSigningOptions = !!(tx && ((tx.chain && tx.hardfork) || tx.common));
-
-    callback = callback || function() {
-    };
-
-    if (!tx) {
-        error = new Error('No transaction object given!');
-
-        callback(error);
-        return Promise.reject(error);
+    create(entropy) {
+        return this._addAccountFunctions(Account.create(entropy || utils.randomHex(32)));
     }
 
-    function signed(tx) {
-        const error = _validateTransactionForSigning(tx);
+    privateKeyToAccount(privateKey, ignoreLength) {
+        if (!privateKey.startsWith('0x')) {
+            privateKey = '0x' + privateKey;
+        }
 
-        if (error) {
+        // 64 hex characters + hex-prefix
+        if (!ignoreLength && privateKey.length !== 66) {
+            throw new Error("Private key must be 32 bytes long");
+        }
+
+        return this._addAccountFunctions(Account.fromPrivate(privateKey));
+    }
+    signTransaction(tx, privateKey, callback) {
+        var _this = this,
+            error = false,
+            transactionOptions = {},
+            hasTxSigningOptions = !!(tx && ((tx.chain && tx.hardfork) || tx.common));
+
+        callback = callback || function() {
+        };
+
+        if (!tx) {
+            error = new Error('No transaction object given!');
+
             callback(error);
             return Promise.reject(error);
         }
 
-        try {
-            var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
-            transaction.to = transaction.to || '0x';
-            transaction.data = transaction.data || '0x';
-            transaction.value = transaction.value || '0x';
-            transaction.chainId = utils.numberToHex(transaction.chainId);
+        function signed(tx) {
+            const error = _validateTransactionForSigning(tx);
 
-            // Because tx has no ethereumjs-tx signing options we use fetched vals.
-            if (!hasTxSigningOptions) {
-                transactionOptions.common = Common.forCustomChain(
-                    'mainnet',
-                    {
-                        name: 'custom-network',
-                        networkId: transaction.networkId,
-                        chainId: transaction.chainId
-                    },
-                    'petersburg'
-                );
+            if (error) {
+                callback(error);
+                return Promise.reject(error);
+            }
 
-                delete transaction.networkId;
-            } else {
-                if (transaction.common) {
+            try {
+                var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
+                transaction.to = transaction.to || '0x';
+                transaction.data = transaction.data || '0x';
+                transaction.value = transaction.value || '0x';
+                transaction.chainId = utils.numberToHex(transaction.chainId);
+
+                // Because tx has no ethereumjs-tx signing options we use fetched vals.
+                if (!hasTxSigningOptions) {
                     transactionOptions.common = Common.forCustomChain(
-                        transaction.common.baseChain || 'mainnet',
+                        'mainnet',
                         {
-                            name: transaction.common.customChain.name || 'custom-network',
-                            networkId: transaction.common.customChain.networkId,
-                            chainId: transaction.common.customChain.chainId
+                            name: 'custom-network',
+                            networkId: transaction.networkId,
+                            chainId: transaction.chainId
                         },
-                        transaction.common.hardfork || 'petersburg'
+                        'petersburg'
                     );
 
-                    delete transaction.common;
+                    delete transaction.networkId;
+                } else {
+                    if (transaction.common) {
+                        transactionOptions.common = Common.forCustomChain(
+                            transaction.common.baseChain || 'mainnet',
+                            {
+                                name: transaction.common.customChain.name || 'custom-network',
+                                networkId: transaction.common.customChain.networkId,
+                                chainId: transaction.common.customChain.chainId
+                            },
+                            transaction.common.hardfork || 'petersburg'
+                        );
+
+                        delete transaction.common;
+                    }
+
+                    if (transaction.chain) {
+                        transactionOptions.chain = transaction.chain;
+                        delete transaction.chain;
+                    }
+
+                    if (transaction.hardfork) {
+                        transactionOptions.hardfork = transaction.hardfork;
+                        delete transaction.hardfork;
+                    }
                 }
 
-                if (transaction.chain) {
-                    transactionOptions.chain = transaction.chain;
-                    delete transaction.chain;
+                if (privateKey.startsWith('0x')) {
+                    privateKey = privateKey.substring(2);
                 }
 
-                if (transaction.hardfork) {
-                    transactionOptions.hardfork = transaction.hardfork;
-                    delete transaction.hardfork;
+                var ethTx = new Transaction(transaction, transactionOptions);
+
+                ethTx.sign(Buffer.from(privateKey, 'hex'));
+
+                var validationResult = ethTx.validate(true);
+
+                if (validationResult !== '') {
+                    throw new Error('Signer Error: ' + validationResult);
                 }
+
+                var rlpEncoded = ethTx.serialize().toString('hex');
+                var rawTransaction = '0x' + rlpEncoded;
+                var transactionHash = utils.keccak256(rawTransaction);
+
+                var result = {
+                    messageHash: '0x' + Buffer.from(ethTx.hash(false)).toString('hex'),
+                    v: '0x' + Buffer.from(ethTx.v).toString('hex'),
+                    r: '0x' + Buffer.from(ethTx.r).toString('hex'),
+                    s: '0x' + Buffer.from(ethTx.s).toString('hex'),
+                    rawTransaction: rawTransaction,
+                    transactionHash: transactionHash
+                };
+
+                callback(null, result);
+                return result;
+
+            } catch (e) {
+                callback(e);
+                return Promise.reject(e);
             }
-
-            if (privateKey.startsWith('0x')) {
-                privateKey = privateKey.substring(2);
-            }
-
-            var ethTx = new Transaction(transaction, transactionOptions);
-
-            ethTx.sign(Buffer.from(privateKey, 'hex'));
-
-            var validationResult = ethTx.validate(true);
-
-            if (validationResult !== '') {
-                throw new Error('Signer Error: ' + validationResult);
-            }
-
-            var rlpEncoded = ethTx.serialize().toString('hex');
-            var rawTransaction = '0x' + rlpEncoded;
-            var transactionHash = utils.keccak256(rawTransaction);
-
-            var result = {
-                messageHash: '0x' + Buffer.from(ethTx.hash(false)).toString('hex'),
-                v: '0x' + Buffer.from(ethTx.v).toString('hex'),
-                r: '0x' + Buffer.from(ethTx.r).toString('hex'),
-                s: '0x' + Buffer.from(ethTx.s).toString('hex'),
-                rawTransaction: rawTransaction,
-                transactionHash: transactionHash
-            };
-
-            callback(null, result);
-            return result;
-
-        } catch (e) {
-            callback(e);
-            return Promise.reject(e);
         }
+
+
+        // Resolve immediately if nonce, chainId, price and signing options are provided
+        if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined && hasTxSigningOptions) {
+            return Promise.resolve(signed(tx));
+        }
+
+        // Otherwise, get the missing info from the Ethereum Node
+        return Promise.all([
+            isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId,
+            isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
+            isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
+            isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1
+        ]).then(function(args) {
+            if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
+                throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
+            }
+            return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2], networkId: args[3]}));
+        });
     }
 
+    /* jshint ignore:start */
+    recoverTransaction(rawTx) {
+        var values = RLP.decode(rawTx);
+        var signature = Account.encodeSignature(values.slice(6, 9));
+        var recovery = Bytes.toNumber(values[6]);
+        var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
+        var signingData = values.slice(0, 6).concat(extraData);
+        var signingDataHex = RLP.encode(signingData);
+        return Account.recover(Hash.keccak256(signingDataHex), signature);
+    }
+/* jshint ignore:end */
 
-    // Resolve immediately if nonce, chainId, price and signing options are provided
-    if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined && hasTxSigningOptions) {
-        return Promise.resolve(signed(tx));
+    hashMessage(data) {
+        var messageHex = utils.isHexStrict(data) ? data : utils.utf8ToHex(data);
+        var messageBytes = utils.hexToBytes(messageHex);
+        var messageBuffer = Buffer.from(messageBytes);
+        var preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
+        var preambleBuffer = Buffer.from(preamble);
+        var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
+        return Hash.keccak256s(ethMessage);
     }
 
-    // Otherwise, get the missing info from the Ethereum Node
-    return Promise.all([
-        isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId,
-        isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
-        isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
-        isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1
-    ]).then(function(args) {
-        if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
-            throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
+    sign(data, privateKey) {
+        if (!privateKey.startsWith('0x')) {
+            privateKey = '0x' + privateKey;
         }
-        return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2], networkId: args[3]}));
-    });
+
+        // 64 hex characters + hex-prefix
+        if (privateKey.length !== 66) {
+            throw new Error("Private key must be 32 bytes long");
+        }
+
+        var hash = this.hashMessage(data);
+        var signature = Account.sign(hash, privateKey);
+        var vrs = Account.decodeSignature(signature);
+        return {
+            message: data,
+            messageHash: hash,
+            v: vrs[0],
+            r: vrs[1],
+            s: vrs[2],
+            signature: signature
+        };
+    }
+
+    recover(message, signature, preFixed) {
+        var args = [].slice.apply(arguments);
+
+
+        if (_.isObject(message)) {
+            return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
+        }
+
+        if (!preFixed) {
+            message = this.hashMessage(message);
+        }
+
+        if (args.length >= 4) {
+            preFixed = args.slice(-1)[0];
+            preFixed = _.isBoolean(preFixed) ? !!preFixed : false;
+
+            return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
+        }
+        return Account.recover(message, signature);
+    }
+
+    // Taken from https://github.com/ethereumjs/ethereumjs-wallet
+    decrypt (v3Keystore, password, nonStrict) {
+        /* jshint maxcomplexity: 10 */
+
+        if (!_.isString(password)) {
+            throw new Error('No password given.');
+        }
+
+        var json = (_.isObject(v3Keystore)) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
+
+        if (json.version !== 3) {
+            throw new Error('Not a valid V3 wallet');
+        }
+
+        var derivedKey;
+        var kdfparams;
+        if (json.crypto.kdf === 'scrypt') {
+            kdfparams = json.crypto.kdfparams;
+
+            // FIXME: support progress reporting callback
+            derivedKey = scrypt.syncScrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        } else if (json.crypto.kdf === 'pbkdf2') {
+            kdfparams = json.crypto.kdfparams;
+
+            if (kdfparams.prf !== 'hmac-sha256') {
+                throw new Error('Unsupported parameters to PBKDF2');
+            }
+
+            derivedKey = cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+        } else {
+            throw new Error('Unsupported key derivation scheme');
+        }
+
+        var ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
+
+        var mac = utils.sha3(Buffer.from([...derivedKey.slice(16, 32), ...ciphertext])).replace('0x', '');
+        if (mac !== json.crypto.mac) {
+            throw new Error('Key derivation failed - possibly wrong password');
+        }
+
+        var decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, 'hex'));
+        var seed = '0x' + Buffer.from([...decipher.update(ciphertext), ...decipher.final()]).toString('hex');
+
+        return this.privateKeyToAccount(seed, true);
+    }
+
+    encrypt (privateKey, password, options) {
+        /* jshint maxcomplexity: 20 */
+        var account = this.privateKeyToAccount(privateKey, true);
+
+        options = options || {};
+        var salt = options.salt || cryp.randomBytes(32);
+        var iv = options.iv || cryp.randomBytes(16);
+
+        var derivedKey;
+        var kdf = options.kdf || 'scrypt';
+        var kdfparams = {
+            dklen: options.dklen || 32,
+            salt: salt.toString('hex')
+        };
+
+        if (kdf === 'pbkdf2') {
+            kdfparams.c = options.c || 262144;
+            kdfparams.prf = 'hmac-sha256';
+            derivedKey = cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+        } else if (kdf === 'scrypt') {
+            // FIXME: support progress reporting callback
+            kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
+            kdfparams.r = options.r || 8;
+            kdfparams.p = options.p || 1;
+            derivedKey = scrypt.syncScrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        } else {
+            throw new Error('Unsupported kdf');
+        }
+
+        var cipher = cryp.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
+        if (!cipher) {
+            throw new Error('Unsupported cipher');
+        }
+
+
+        var ciphertext = Buffer.from([
+            ...cipher.update(Buffer.from(account.privateKey.replace('0x', ''), 'hex')),
+            ...cipher.final()]
+        );
+
+        var mac = utils.sha3(Buffer.from([...derivedKey.slice(16, 32), ...ciphertext])).replace('0x', '');
+
+        return {
+            version: 3,
+            id: uuid.v4({random: options.uuid || cryp.randomBytes(16)}),
+            address: account.address.toLowerCase().replace('0x', ''),
+            crypto: {
+                ciphertext: ciphertext.toString('hex'),
+                cipherparams: {
+                    iv: iv.toString('hex')
+                },
+                cipher: options.cipher || 'aes-128-ctr',
+                kdf: kdf,
+                kdfparams: kdfparams,
+                mac: mac.toString('hex')
+            }
+        };
+    }
 };
 
 function _validateTransactionForSigning(tx) {
@@ -287,322 +459,154 @@ function _validateTransactionForSigning(tx) {
 }
 
 
-/* jshint ignore:start */
-Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
-    var values = RLP.decode(rawTx);
-    var signature = Account.encodeSignature(values.slice(6, 9));
-    var recovery = Bytes.toNumber(values[6]);
-    var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
-    var signingData = values.slice(0, 6).concat(extraData);
-    var signingDataHex = RLP.encode(signingData);
-    return Account.recover(Hash.keccak256(signingDataHex), signature);
-};
-/* jshint ignore:end */
-
-Accounts.prototype.hashMessage = function hashMessage(data) {
-    var messageHex = utils.isHexStrict(data) ? data : utils.utf8ToHex(data);
-    var messageBytes = utils.hexToBytes(messageHex);
-    var messageBuffer = Buffer.from(messageBytes);
-    var preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
-    var preambleBuffer = Buffer.from(preamble);
-    var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
-    return Hash.keccak256s(ethMessage);
-};
-
-Accounts.prototype.sign = function sign(data, privateKey) {
-    if (!privateKey.startsWith('0x')) {
-        privateKey = '0x' + privateKey;
-    }
-
-    // 64 hex characters + hex-prefix
-    if (privateKey.length !== 66) {
-        throw new Error("Private key must be 32 bytes long");
-    }
-
-    var hash = this.hashMessage(data);
-    var signature = Account.sign(hash, privateKey);
-    var vrs = Account.decodeSignature(signature);
-    return {
-        message: data,
-        messageHash: hash,
-        v: vrs[0],
-        r: vrs[1],
-        s: vrs[2],
-        signature: signature
-    };
-};
-
-Accounts.prototype.recover = function recover(message, signature, preFixed) {
-    var args = [].slice.apply(arguments);
-
-
-    if (_.isObject(message)) {
-        return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
-    }
-
-    if (!preFixed) {
-        message = this.hashMessage(message);
-    }
-
-    if (args.length >= 4) {
-        preFixed = args.slice(-1)[0];
-        preFixed = _.isBoolean(preFixed) ? !!preFixed : false;
-
-        return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
-    }
-    return Account.recover(message, signature);
-};
-
-// Taken from https://github.com/ethereumjs/ethereumjs-wallet
-Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
-    /* jshint maxcomplexity: 10 */
-
-    if (!_.isString(password)) {
-        throw new Error('No password given.');
-    }
-
-    var json = (_.isObject(v3Keystore)) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
-
-    if (json.version !== 3) {
-        throw new Error('Not a valid V3 wallet');
-    }
-
-    var derivedKey;
-    var kdfparams;
-    if (json.crypto.kdf === 'scrypt') {
-        kdfparams = json.crypto.kdfparams;
-
-        // FIXME: support progress reporting callback
-        derivedKey = scrypt.syncScrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
-    } else if (json.crypto.kdf === 'pbkdf2') {
-        kdfparams = json.crypto.kdfparams;
-
-        if (kdfparams.prf !== 'hmac-sha256') {
-            throw new Error('Unsupported parameters to PBKDF2');
-        }
-
-        derivedKey = cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
-    } else {
-        throw new Error('Unsupported key derivation scheme');
-    }
-
-    var ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
-
-    var mac = utils.sha3(Buffer.from([...derivedKey.slice(16, 32), ...ciphertext])).replace('0x', '');
-    if (mac !== json.crypto.mac) {
-        throw new Error('Key derivation failed - possibly wrong password');
-    }
-
-    var decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, 'hex'));
-    var seed = '0x' + Buffer.from([...decipher.update(ciphertext), ...decipher.final()]).toString('hex');
-
-    return this.privateKeyToAccount(seed, true);
-};
-
-Accounts.prototype.encrypt = function(privateKey, password, options) {
-    /* jshint maxcomplexity: 20 */
-    var account = this.privateKeyToAccount(privateKey, true);
-
-    options = options || {};
-    var salt = options.salt || cryp.randomBytes(32);
-    var iv = options.iv || cryp.randomBytes(16);
-
-    var derivedKey;
-    var kdf = options.kdf || 'scrypt';
-    var kdfparams = {
-        dklen: options.dklen || 32,
-        salt: salt.toString('hex')
-    };
-
-    if (kdf === 'pbkdf2') {
-        kdfparams.c = options.c || 262144;
-        kdfparams.prf = 'hmac-sha256';
-        derivedKey = cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
-    } else if (kdf === 'scrypt') {
-        // FIXME: support progress reporting callback
-        kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
-        kdfparams.r = options.r || 8;
-        kdfparams.p = options.p || 1;
-        derivedKey = scrypt.syncScrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
-    } else {
-        throw new Error('Unsupported kdf');
-    }
-
-    var cipher = cryp.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
-    if (!cipher) {
-        throw new Error('Unsupported cipher');
-    }
-
-
-    var ciphertext = Buffer.from([
-        ...cipher.update(Buffer.from(account.privateKey.replace('0x', ''), 'hex')),
-        ...cipher.final()]
-    );
-
-    var mac = utils.sha3(Buffer.from([...derivedKey.slice(16, 32), ...ciphertext])).replace('0x', '');
-
-    return {
-        version: 3,
-        id: uuid.v4({random: options.uuid || cryp.randomBytes(16)}),
-        address: account.address.toLowerCase().replace('0x', ''),
-        crypto: {
-            ciphertext: ciphertext.toString('hex'),
-            cipherparams: {
-                iv: iv.toString('hex')
-            },
-            cipher: options.cipher || 'aes-128-ctr',
-            kdf: kdf,
-            kdfparams: kdfparams,
-            mac: mac.toString('hex')
-        }
-    };
-};
-
 
 // Note: this is trying to follow closely the specs on
 // http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html
 
-function Wallet(accounts) {
-    this._accounts = accounts;
-    this.length = 0;
-    this.defaultKeyName = 'web3js_wallet';
-}
+class Wallet  {
+    constructor (accounts) {
+        if (!storageAvailable('localStorage')) {
+            delete this.save;
+            delete this.load;
+        }
 
-Wallet.prototype._findSafeIndex = function(pointer) {
-    pointer = pointer || 0;
-    if (_.has(this, pointer)) {
-        return this._findSafeIndex(pointer + 1);
-    } else {
-        return pointer;
+        this._accounts = accounts;
+        this.length = 0;
+        this.defaultKeyName = 'web3js_wallet';
     }
-};
 
-Wallet.prototype._currentIndexes = function() {
-    var keys = Object.keys(this);
-    var indexes = keys
-        .map(function(key) {
-            return parseInt(key);
-        })
-        .filter(function(n) {
-            return (n < 9e20);
+    _findSafeIndex (pointer) {
+        pointer = pointer || 0;
+        if (_.has(this, pointer)) {
+            return this._findSafeIndex(pointer + 1);
+        } else {
+            return pointer;
+        }
+    }
+
+    _currentIndexes () {
+        var keys = Object.keys(this);
+        var indexes = keys
+            .map(function(key) {
+                return parseInt(key);
+            })
+            .filter(function(n) {
+                return (n < 9e20);
+            });
+
+        return indexes;
+    }
+
+    create (numberOfAccounts, entropy) {
+        for (var i = 0; i < numberOfAccounts; ++i) {
+            this.add(this._accounts.create(entropy).privateKey);
+        }
+        return this;
+    }
+
+    add (account) {
+
+        if (_.isString(account)) {
+            account = this._accounts.privateKeyToAccount(account);
+        }
+        if (!this[account.address]) {
+            account = this._accounts.privateKeyToAccount(account.privateKey);
+            account.index = this._findSafeIndex();
+
+            this[account.index] = account;
+            this[account.address] = account;
+            this[account.address.toLowerCase()] = account;
+
+            this.length++;
+
+            return account;
+        } else {
+            return this[account.address];
+        }
+    }
+
+    remove (addressOrIndex) {
+        var account = this[addressOrIndex];
+
+        if (account && account.address) {
+            // address
+            this[account.address].privateKey = null;
+            delete this[account.address];
+            // address lowercase
+            this[account.address.toLowerCase()].privateKey = null;
+            delete this[account.address.toLowerCase()];
+            // index
+            this[account.index].privateKey = null;
+            delete this[account.index];
+
+            this.length--;
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    clear () {
+        var _this = this;
+        var indexes = this._currentIndexes();
+
+        indexes.forEach(function(index) {
+            _this.remove(index);
         });
 
-    return indexes;
-};
-
-Wallet.prototype.create = function(numberOfAccounts, entropy) {
-    for (var i = 0; i < numberOfAccounts; ++i) {
-        this.add(this._accounts.create(entropy).privateKey);
+        return this;
     }
-    return this;
-};
 
-Wallet.prototype.add = function(account) {
+    encrypt (password, options) {
+        var _this = this;
+        var indexes = this._currentIndexes();
 
-    if (_.isString(account)) {
-        account = this._accounts.privateKeyToAccount(account);
+        var accounts = indexes.map(function(index) {
+            return _this[index].encrypt(password, options);
+        });
+
+        return accounts;
     }
-    if (!this[account.address]) {
-        account = this._accounts.privateKeyToAccount(account.privateKey);
-        account.index = this._findSafeIndex();
 
-        this[account.index] = account;
-        this[account.address] = account;
-        this[account.address.toLowerCase()] = account;
 
-        this.length++;
+    decrypt (encryptedWallet, password) {
+        var _this = this;
 
-        return account;
-    } else {
-        return this[account.address];
+        encryptedWallet.forEach(function(keystore) {
+            var account = _this._accounts.decrypt(keystore, password);
+
+            if (account) {
+                _this.add(account);
+            } else {
+                throw new Error('Couldn\'t decrypt accounts. Password wrong?');
+            }
+        });
+
+        return this;
     }
-};
 
-Wallet.prototype.remove = function(addressOrIndex) {
-    var account = this[addressOrIndex];
-
-    if (account && account.address) {
-        // address
-        this[account.address].privateKey = null;
-        delete this[account.address];
-        // address lowercase
-        this[account.address.toLowerCase()].privateKey = null;
-        delete this[account.address.toLowerCase()];
-        // index
-        this[account.index].privateKey = null;
-        delete this[account.index];
-
-        this.length--;
+    save (password, keyName) {
+        localStorage.setItem(keyName || this.defaultKeyName, JSON.stringify(this.encrypt(password)));
 
         return true;
-    } else {
-        return false;
-    }
-};
-
-Wallet.prototype.clear = function() {
-    var _this = this;
-    var indexes = this._currentIndexes();
-
-    indexes.forEach(function(index) {
-        _this.remove(index);
-    });
-
-    return this;
-};
-
-Wallet.prototype.encrypt = function(password, options) {
-    var _this = this;
-    var indexes = this._currentIndexes();
-
-    var accounts = indexes.map(function(index) {
-        return _this[index].encrypt(password, options);
-    });
-
-    return accounts;
-};
-
-
-Wallet.prototype.decrypt = function(encryptedWallet, password) {
-    var _this = this;
-
-    encryptedWallet.forEach(function(keystore) {
-        var account = _this._accounts.decrypt(keystore, password);
-
-        if (account) {
-            _this.add(account);
-        } else {
-            throw new Error('Couldn\'t decrypt accounts. Password wrong?');
-        }
-    });
-
-    return this;
-};
-
-Wallet.prototype.save = function(password, keyName) {
-    localStorage.setItem(keyName || this.defaultKeyName, JSON.stringify(this.encrypt(password)));
-
-    return true;
-};
-
-Wallet.prototype.load = function(password, keyName) {
-    var keystore = localStorage.getItem(keyName || this.defaultKeyName);
-
-    if (keystore) {
-        try {
-            keystore = JSON.parse(keystore);
-        } catch (e) {
-
-        }
     }
 
-    return this.decrypt(keystore || [], password);
-};
+    load (password, keyName) {
+        var keystore = localStorage.getItem(keyName || this.defaultKeyName);
 
-if (!storageAvailable('localStorage')) {
-    delete Wallet.prototype.save;
-    delete Wallet.prototype.load;
+        if (keystore) {
+            try {
+                keystore = JSON.parse(keystore);
+            } catch (e) {
+
+            }
+        }
+
+        return this.decrypt(keystore || [], password);
+    }
 }
+
 
 /**
  * Checks whether a storage type is available or not
