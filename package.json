@@ -12,6 +12,8 @@
         "doc": "./doc"
     },
     "scripts": {
+        "preinstall": "./deprecated.sh",
+        "postinstall": "./deprecated.sh",
         "clean": "lerna clean",
         "link": "lerna link",
         "bootstrap": "lerna bootstrap",
