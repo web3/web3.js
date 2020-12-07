@@ -15,13 +15,15 @@ npm install web3-providers-ipc
 ```
 
 ## Usage
-
 ```js
 const Web3IpcProvider = require('web3-providers-ipc');
 const net = require(net);
 
+// connect to your local ipc
 const ipc = new Web3IpcProvider('/Users/me/Library/Ethereum/geth.ipc', net);
 ```
+
+Note: make sure to run [geth](https://geth.ethereum.org/).
 
 ## Types
 
