@@ -395,7 +395,7 @@ describe('transaction and message signing [ @E2E ]', function() {
     // A companion regression test for Webpack & feross/buffer@4.9.2 exists at:
     // test/eth.accounts.webpack.js
     it("encrypt then decrypt wallet", function(done) {
-        this.timeout(10000);
+        this.timeout(20000);
         try {
             const password = "qwerty";
             const addressFromWallet = wallet[0].address;
