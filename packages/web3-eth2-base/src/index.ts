@@ -3,7 +3,7 @@ import Axios, {AxiosInstance} from 'axios'
 import { ETH2BaseOpts, ETH2Function } from '../types/index'
 import { IBaseAPISchema } from './schema'
 
-export class ETH2Core {
+export class ETH2Base {
     private _httpClient: AxiosInstance
 
     [ key: string ]: ETH2Function | any;
@@ -35,7 +35,7 @@ export class ETH2Core {
                 throw new Error(`Invalid HTTP(S) provider: ${provider}`)
             }
 
-            this._httpClient = ETH2Core.createHttpClient(provider)
+            this._httpClient = ETH2Base.createHttpClient(provider)
             this.provider = provider
         } catch (error) {
             throw new Error(`Failed to set provider: ${error.message}`)

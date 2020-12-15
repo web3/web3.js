@@ -1,4 +1,4 @@
-import { ETH2BeaconChain } from '../src/index'
+import { ETH2Beacon } from '../src/index'
 
 // Jest doesn't have a native method to test if value is boolean
 expect.extend({
@@ -17,7 +17,7 @@ let eth2BeaconChain: any // should be ETH2BeaconChain but types aren't implement
 
 beforeAll(() => {
     const provider = 'http://127.0.0.1:9596' // default port for Lodestar
-    eth2BeaconChain = new ETH2BeaconChain(provider)
+    eth2BeaconChain = new ETH2Beacon(provider)
 })
 
 it('getGenesis', async () => {
