@@ -310,3 +310,4 @@ Released with 1.0.0-beta.37 code base.
 - Fixed decoding bytes and string parameters for logs emitted with solc 0.4.x (#3724, #3738)
 - Grammar changes to inputAddressFormatter error message
 - Fixed vulnerable dependencies
+- Fixed mutation of inputs to encoding and decoding functions (#3748)
