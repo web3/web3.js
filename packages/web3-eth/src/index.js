@@ -22,421 +22,384 @@
 
 "use strict";
 
-var _ = require('underscore');
-var core = require('web3-core');
-var helpers = require('web3-core-helpers');
-var Subscriptions = require('web3-core-subscriptions').subscriptions;
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
-var Net = require('web3-net');
+const _ = require('underscore');
+const core = require('web3-core');
+const helpers = require('web3-core-helpers');
+const Subscriptions = require('web3-core-subscriptions').subscriptions;
+const Method = require('web3-core-method');
+const utils = require('web3-utils');
+const Net = require('web3-net');
 
-var ENS = require('web3-eth-ens');
-var Personal = require('web3-eth-personal');
-var BaseContract = require('web3-eth-contract');
-var Iban = require('web3-eth-iban');
-var Accounts = require('web3-eth-accounts');
-var abi = require('web3-eth-abi');
+const ENS = require('web3-eth-ens');
+const Personal = require('web3-eth-personal');
+const BaseContract = require('web3-eth-contract');
+const Iban = require('web3-eth-iban');
+const Accounts = require('web3-eth-accounts');
+const abi = require('web3-eth-abi');
 
-var getNetworkType = require('./getNetworkType.js');
-var formatter = helpers.formatters;
+const methodConfigs = require('./methods.js')
 
+const getNetworkType = require('./getNetworkType.js');
+const formatter = helpers.formatters;
 
-var blockCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
-};
+class Eth  {
+    constructor () {
 
-var transactionFromBlockCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
-};
+        core.packageInit(this, arguments);
+        this._values = {
+            handleRevert: false,
+            defaultAccount: null,
+            defaultBlock: 'latest',
+            transactionBlockTimeout: 50,
+            transactionConfirmationBlocks: 24,
+            transactionPollingTimeout: 750,
+            maxListenersWarningThreshold: 100,
+        }
+        // sets _requestmanager
 
-var uncleCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
-};
+        // overwrite package setRequestManager
+        const setRequestManager = this.setRequestManager;
+        this.setRequestManager = (manager) => {
+            setRequestManager(manager);
 
-var getBlockTransactionCountCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
-};
+            this.net.setRequestManager(manager);
+            this.personal.setRequestManager(manager);
+            this.accounts.setRequestManager(manager);
+            this.Contract._requestManager = this._requestManager;
+            this.Contract.currentProvider = this._provider;
 
-var uncleCountCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
-};
-
-
-var Eth = function Eth() {
-    var _this = this;
-
-    // sets _requestmanager
-    core.packageInit(this, arguments);
-
-    // overwrite package setRequestManager
-    var setRequestManager = this.setRequestManager;
-    this.setRequestManager = function (manager) {
-        setRequestManager(manager);
-
-        _this.net.setRequestManager(manager);
-        _this.personal.setRequestManager(manager);
-        _this.accounts.setRequestManager(manager);
-        _this.Contract._requestManager = _this._requestManager;
-        _this.Contract.currentProvider = _this._provider;
-
-        return true;
-    };
-
-    // overwrite setProvider
-    var setProvider = this.setProvider;
-    this.setProvider = function () {
-        setProvider.apply(_this, arguments);
-
-        _this.setRequestManager(_this._requestManager);
-
-        // Set detectedAddress/lastSyncCheck back to null because the provider could be connected to a different chain now
-        _this.ens._detectedAddress = null;
-        _this.ens._lastSyncCheck = null;
-    };
-
-
-    var handleRevert = false;
-    var defaultAccount = null;
-    var defaultBlock = 'latest';
-    var transactionBlockTimeout = 50;
-    var transactionConfirmationBlocks = 24;
-    var transactionPollingTimeout = 750;
-    var maxListenersWarningThreshold = 100;
-    var defaultChain, defaultHardfork, defaultCommon;
-
-    Object.defineProperty(this, 'handleRevert', {
-        get: function () {
-            return handleRevert;
-        },
-        set: function (val) {
-            handleRevert = val;
-
-            // also set on the Contract object
-            _this.Contract.handleRevert = handleRevert;
-
-            // update handleRevert
-            methods.forEach(function(method) {
-                method.handleRevert = handleRevert;
-            });
-        },
-        enumerable: true
-    });
-    Object.defineProperty(this, 'defaultCommon', {
-        get: function () {
-            return defaultCommon;
-        },
-        set: function (val) {
-            defaultCommon = val;
-
-            // also set on the Contract object
-            _this.Contract.defaultCommon = defaultCommon;
-
-            // update defaultBlock
-            methods.forEach(function(method) {
-                method.defaultCommon = defaultCommon;
-            });
-        },
-        enumerable: true
-    });
-    Object.defineProperty(this, 'defaultHardfork', {
-        get: function () {
-            return defaultHardfork;
-        },
-        set: function (val) {
-            defaultHardfork = val;
-
-            // also set on the Contract object
-            _this.Contract.defaultHardfork = defaultHardfork;
-
-            // update defaultBlock
-            methods.forEach(function(method) {
-                method.defaultHardfork = defaultHardfork;
-            });
-        },
-        enumerable: true
-    });
-    Object.defineProperty(this, 'defaultChain', {
-        get: function () {
-            return defaultChain;
-        },
-        set: function (val) {
-            defaultChain = val;
-
-            // also set on the Contract object
-            _this.Contract.defaultChain = defaultChain;
-
-            // update defaultBlock
-            methods.forEach(function(method) {
-                method.defaultChain = defaultChain;
-            });
-        },
-        enumerable: true
-    });
-    Object.defineProperty(this, 'transactionPollingTimeout', {
-        get: function () {
-            return transactionPollingTimeout;
-        },
-        set: function (val) {
-            transactionPollingTimeout = val;
-
-            // also set on the Contract object
-            _this.Contract.transactionPollingTimeout = transactionPollingTimeout;
-
-            // update defaultBlock
-            methods.forEach(function(method) {
-                method.transactionPollingTimeout = transactionPollingTimeout;
-            });
-        },
-        enumerable: true
-    });
-    Object.defineProperty(this, 'transactionConfirmationBlocks', {
-        get: function () {
-            return transactionConfirmationBlocks;
-        },
-        set: function (val) {
-            transactionConfirmationBlocks = val;
-
-            // also set on the Contract object
-            _this.Contract.transactionConfirmationBlocks = transactionConfirmationBlocks;
-
-            // update defaultBlock
-            methods.forEach(function(method) {
-                method.transactionConfirmationBlocks = transactionConfirmationBlocks;
-            });
-        },
-        enumerable: true
-    });
-    Object.defineProperty(this, 'transactionBlockTimeout', {
-        get: function () {
-            return transactionBlockTimeout;
-        },
-        set: function (val) {
-            transactionBlockTimeout = val;
-
-            // also set on the Contract object
-            _this.Contract.transactionBlockTimeout = transactionBlockTimeout;
-
-            // update defaultBlock
-            methods.forEach(function(method) {
-                method.transactionBlockTimeout = transactionBlockTimeout;
-            });
-        },
-        enumerable: true
-    });
-    Object.defineProperty(this, 'defaultAccount', {
-        get: function () {
-            return defaultAccount;
-        },
-        set: function (val) {
-            if(val) {
-                defaultAccount = utils.toChecksumAddress(formatter.inputAddressFormatter(val));
-            }
-
-            // also set on the Contract object
-            _this.Contract.defaultAccount = defaultAccount;
-            _this.personal.defaultAccount = defaultAccount;
-
-            // update defaultBlock
-            methods.forEach(function(method) {
-                method.defaultAccount = defaultAccount;
-            });
-
-            return val;
-        },
-        enumerable: true
-    });
-    Object.defineProperty(this, 'defaultBlock', {
-        get: function () {
-            return defaultBlock;
-        },
-        set: function (val) {
-            defaultBlock = val;
-            // also set on the Contract object
-            _this.Contract.defaultBlock = defaultBlock;
-            _this.personal.defaultBlock = defaultBlock;
-
-            // update defaultBlock
-            methods.forEach(function(method) {
-                method.defaultBlock = defaultBlock;
-            });
-
-            return val;
-        },
-        enumerable: true
-    });
-    Object.defineProperty(this, 'maxListenersWarningThreshold', {
-        get: function () {
-            return maxListenersWarningThreshold;
-        },
-        set: function (val) {
-            if (_this.currentProvider && _this.currentProvider.setMaxListeners){
-                maxListenersWarningThreshold = val;
-                _this.currentProvider.setMaxListeners(val);
-            }
-        },
-        enumerable: true
-    });
-
-
-    this.clearSubscriptions = _this._requestManager.clearSubscriptions.bind(_this._requestManager);
-
-    // add net
-    this.net = new Net(this);
-    // add chain detection
-    this.net.getNetworkType = getNetworkType.bind(this);
-
-    // add accounts
-    this.accounts = new Accounts(this);
-
-    // add personal
-    this.personal = new Personal(this);
-    this.personal.defaultAccount = this.defaultAccount;
-
-    // set warnings threshold
-    this.maxListenersWarningThreshold = maxListenersWarningThreshold;
-
-    // create a proxy Contract type for this instance, as a Contract's provider
-    // is stored as a class member rather than an instance variable. If we do
-    // not create this proxy type, changing the provider in one instance of
-    // web3-eth would subsequently change the provider for _all_ contract
-    // instances!
-    var self = this;
-    var Contract = function Contract() {
-        BaseContract.apply(this, arguments);
-
-        // when Eth.setProvider is called, call packageInit
-        // on all contract instances instantiated via this Eth
-        // instances. This will update the currentProvider for
-        // the contract instances
-        var _this = this;
-        var setProvider = self.setProvider;
-        self.setProvider = function() {
-          setProvider.apply(self, arguments);
-          core.packageInit(_this, [self]);
+            return true;
         };
-    };
 
-    Contract.setProvider = function() {
-        BaseContract.setProvider.apply(this, arguments);
-    };
+        // overwrite setProvider
+        const setProvider = this.setProvider.bind(this);
+        this.setProvider = () => {
+            setProvider(arguments);
 
-    // make our proxy Contract inherit from web3-eth-contract so that it has all
-    // the right functionality and so that instanceof and friends work properly
-    Contract.prototype = Object.create(BaseContract.prototype);
-    Contract.prototype.constructor = Contract;
+            this.setRequestManager(this._requestManager);
 
-    // add contract
-    this.Contract = Contract;
-    this.Contract.defaultAccount = this.defaultAccount;
-    this.Contract.defaultBlock = this.defaultBlock;
-    this.Contract.transactionBlockTimeout = this.transactionBlockTimeout;
-    this.Contract.transactionConfirmationBlocks = this.transactionConfirmationBlocks;
-    this.Contract.transactionPollingTimeout = this.transactionPollingTimeout;
-    this.Contract.handleRevert = this.handleRevert;
-    this.Contract._requestManager = this._requestManager;
-    this.Contract._ethAccounts = this.accounts;
-    this.Contract.currentProvider = this._requestManager.provider;
+            // Set detectedAddress/lastSyncCheck back to null because the provider could be connected to a different chain now
+            this.ens._detectedAddress = null;
+            this.ens._lastSyncCheck = null;
+        };
 
-    // add IBAN
-    this.Iban = Iban;
+        // create a proxy Contract type for this instance, as a Contract's provider
+        // is stored as a class member rather than an instance variable. If we do
+        // not create this proxy type, changing the provider in one instance of
+        // web3-eth would subsequently change the provider for _all_ contract
+        // instances!
+        const self = this;
+        const Contract = function Contract() {
+            BaseContract.apply(this, arguments);
 
-    // add ABI
-    this.abi = abi;
+            // when Eth.setProvider is called, call packageInit
+            // on all contract instances instantiated via this Eth
+            // instances. This will update the currentProvider for
+            // the contract instances
+            var setProvider = self.setProvider;
+            self.setProvider = () => {
+              setProvider.apply(self, arguments);
+              core.packageInit(this, [self]);
+            };
+        };
 
-    // add ENS
-    this.ens = new ENS(this);
+        Contract.setProvider = function() {
+            BaseContract.setProvider.apply(this, arguments);
+        };
 
-    methods.forEach(function(methodConfig) {
-        const method = new Method(methodConfig)
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager, _this.accounts); // second param is the eth.accounts module (necessary for signing transactions locally)
-        method.defaultBlock = _this.defaultBlock;
-        method.defaultAccount = _this.defaultAccount;
-        method.transactionBlockTimeout = _this.transactionBlockTimeout;
-        method.transactionConfirmationBlocks = _this.transactionConfirmationBlocks;
-        method.transactionPollingTimeout = _this.transactionPollingTimeout;
-        method.handleRevert = _this.handleRevert;
-    });
+        // make our proxy Contract inherit from web3-eth-contract so that it has all
+        // the right functionality and so that instanceof and friends work properly
+        Contract.prototype = Object.create(BaseContract.prototype);
+        Contract.prototype.constructor = Contract;
+        // add contract
+        this.Contract = Contract;
+        this.Contract.defaultAccount = this.defaultAccount;
+        this.Contract.defaultBlock = this.defaultBlock;
+        this.Contract.transactionBlockTimeout = this.transactionBlockTimeout;
+        this.Contract.transactionConfirmationBlocks = this.transactionConfirmationBlocks;
+        this.Contract.transactionPollingTimeout = this.transactionPollingTimeout;
+        this.Contract.handleRevert = this.handleRevert;
+        this.Contract._requestManager = this._requestManager;
+        this.Contract._ethAccounts = this.accounts;
+        this.Contract.currentProvider = this._requestManager.provider;
 
-new Subscriptions({
-        name: 'subscribe',
-        type: 'eth',
-        subscriptions: {
-            'newBlockHeaders': {
-                // TODO rename on RPC side?
-                subscriptionName: 'newHeads', // replace subscription with this name
-                params: 0,
-                outputFormatter: formatter.outputBlockFormatter
-            },
-            'pendingTransactions': {
-                subscriptionName: 'newPendingTransactions', // replace subscription with this name
-                params: 0
-            },
-            'logs': {
-                params: 1,
-                inputFormatter: [formatter.inputLogFormatter],
-                outputFormatter: formatter.outputLogFormatter,
-                // DUBLICATE, also in web3-eth-contract
-                subscriptionHandler: function (output) {
-                    if(output.removed) {
-                        this.emit('changed', output);
-                    } else {
-                        this.emit('data', output);
-                    }
+        // add IBAN
+        this.Iban = Iban;
 
-                    if (_.isFunction(this.callback)) {
-                        this.callback(null, output, this);
-                    }
-                }
-            },
-            'syncing': {
-                params: 0,
-                outputFormatter: formatter.outputSyncingFormatter,
-                subscriptionHandler: function (output) {
-                    var _this = this;
+        // add ABI
+        this.abi = abi;
 
-                    // fire TRUE at start
-                    if(this._isSyncing !== true) {
-                        this._isSyncing = true;
-                        this.emit('changed', _this._isSyncing);
+        // add ENS
+        this.ens = new ENS(this);
+        // add accounts
+        this.accounts = new Accounts(this);
+
+
+        this.clearSubscriptions = this._requestManager.clearSubscriptions.bind(this._requestManager);
+
+        // add net
+        this.net = new Net(this);
+        // add chain detection
+        this.net.getNetworkType = getNetworkType.bind(this);
+
+        // add personal
+        this.personal = new Personal(this);
+        this.personal.defaultAccount = this.defaultAccount;
+
+        const methods = methodConfigs.map((methodConfig) => {
+            return new Method(methodConfig)
+        });
+
+        const subscriptions = new Subscriptions({
+            name: 'subscribe',
+            type: 'eth',
+            subscriptions: {
+                'newBlockHeaders': {
+                    // TODO rename on RPC side?
+                    subscriptionName: 'newHeads', // replace subscription with this name
+                    params: 0,
+                    outputFormatter: formatter.outputBlockFormatter
+                },
+                'pendingTransactions': {
+                    subscriptionName: 'newPendingTransactions', // replace subscription with this name
+                    params: 0
+                },
+                'logs': {
+                    params: 1,
+                    inputFormatter: [formatter.inputLogFormatter],
+                    outputFormatter: formatter.outputLogFormatter,
+                    // DUBLICATE, also in web3-eth-contract
+                    subscriptionHandler: function (output) {
+                        if(output.removed) {
+                            this.emit('changed', output);
+                        } else {
+                            this.emit('data', output);
+                        }
 
                         if (_.isFunction(this.callback)) {
-                            this.callback(null, _this._isSyncing, this);
-                        }
-
-                        setTimeout(function () {
-                            _this.emit('data', output);
-
-                            if (_.isFunction(_this.callback)) {
-                                _this.callback(null, output, _this);
-                            }
-                        }, 0);
-
-                        // fire sync status
-                    } else {
-                        this.emit('data', output);
-                        if (_.isFunction(_this.callback)) {
                             this.callback(null, output, this);
                         }
+                    }
+                },
+                'syncing': {
+                    params: 0,
+                    outputFormatter: formatter.outputSyncingFormatter,
+                    subscriptionHandler: function (output) {
+                        // fire TRUE at start
+                        if(this._isSyncing !== true) {
+                            this._isSyncing = true;
+                            this.emit('changed', this._isSyncing);
 
-                        // wait for some time before fireing the FALSE
-                        clearTimeout(this._isSyncingTimeout);
-                        this._isSyncingTimeout = setTimeout(function () {
-                            if(output.currentBlock > output.highestBlock - 200) {
-                                _this._isSyncing = false;
-                                _this.emit('changed', _this._isSyncing);
-
-                                if (_.isFunction(_this.callback)) {
-                                    _this.callback(null, _this._isSyncing, _this);
-                                }
+                            if (_.isFunction(this.callback)) {
+                                this.callback(null, this._isSyncing, this);
                             }
-                        }, 500);
+
+                            setTimeout(() => {
+                                this.emit('data', output);
+
+                                if (_.isFunction(this.callback)) {
+                                    this.callback(null, output, this);
+                                }
+                            }, 0);
+
+                            // fire sync status
+                        } else {
+                            this.emit('data', output);
+                            if (_.isFunction(this.callback)) {
+                                this.callback(null, output, this);
+                            }
+
+                            // wait for some time before fireing the FALSE
+                            clearTimeout(this._isSyncingTimeout);
+                            this._isSyncingTimeout = setTimeout(() => {
+                                if(output.currentBlock > output.highestBlock - 200) {
+                                    this._isSyncing = false;
+                                    this.emit('changed', this._isSyncing);
+
+                                    if (_.isFunction(this.callback)) {
+                                        this.callback(null, this._isSyncing, this);
+                                    }
+                                }
+                            }, 500);
+                        }
                     }
                 }
             }
-        }
-    })
+        })
+        methods.push(subscriptions)
+        methods.forEach((method) => {
+            method.attachToObject(this);
+            method.setRequestManager(this._requestManager, this.accounts); // second param is the eth.accounts module (necessary for signing transactions locally)
+            method.defaultBlock = this._values.defaultBlock;
+            method.defaultAccount = this._values.defaultAccount;
+            method.transactionBlockTimeout = this._values.transactionBlockTimeout;
+            method.transactionConfirmationBlocks = this._values.transactionConfirmationBlocks;
+            method.transactionPollingTimeout = this._values.transactionPollingTimeout;
+            method.handleRevert = this._values.handleRevert;
+        });
 
+    }
+
+    get handleRevert () {
+        return this._values.handleRevert;
+    }
+
+    set handleRevert (val) {
+        this._values.handleRevert = val;
+
+        // also set on the Contract object
+        this.Contract.handleRevert = val;
+
+        // update handleRevert
+        methodConfigs.forEach((method) => {
+            this[method.name].handleRevert = val;
+        });
+    }
+
+    get defaultCommon () {
+        return this._values.defaultCommon;
+    }
+
+    set defaultCommon (val) {
+        this._values.defaultCommon = val;
+
+        // also set on the Contract object
+        this.Contract.defaultCommon = val;
+
+        // update defaultBlock
+        methodConfigs.forEach((method) => {
+            this[method.name].defaultCommon = val;
+        });
+    }
+
+    get defaultHardfork () {
+        return this._values.defaultHardfork;
+    }
+
+    set defaultHardfork (val) {
+        this._values.defaultHardfork = val;
+
+        // also set on the Contract object
+        this.Contract.defaultHardfork = val;
+
+        // update defaultBlock
+        methodConfigs.forEach((method) => {
+            this[method.name].defaultHardfork = defaultHardfork;
+        });
+    }
+    get defaultChain () {
+        return this._values.defaultChain;
+    }
+
+    set defaultChain (val) {
+        this._values.defaultChain = val;
+
+        // also set on the Contract object
+        this.Contract.defaultChain = val;
+
+        // update defaultBlock
+        methodConfigs.forEach((method) => {
+            this[method.name].defaultChain = val;
+        });
+    }
+
+    get transactionPollingTimeout () {
+        return this._values.transactionPollingTimeout;
+    }
+
+    set transactionPollingTimeout (val) {
+        this._values.transactionPollingTimeout = val;
+
+        // also set on the Contract object
+        this.Contract.transactionPollingTimeout = val;
+
+        // update defaultBlock
+        methodConfigs.forEach((method) => {
+            this[method.name].transactionPollingTimeout = val;
+        });
+    }
+
+    get transactionConfirmationBlocks () {
+        return this._values.transactionConfirmationBlocks;
+    }
+
+    set transactionConfirmationBlocks (val) {
+        this._values.transactionConfirmationBlocks = val;
+
+        // also set on the Contract object
+        this.Contract.transactionConfirmationBlocks = val;
+
+        // update defaultBlock
+        methodConfigs.forEach((method) => {
+            this[method.name].transactionConfirmationBlocks = val;
+        });
+    }
+
+    get transactionBlockTimeout () {
+        return this._values.transactionBlockTimeout;
+    }
+
+    set transactionBlockTimeout (val) {
+        this._values.transactionBlockTimeout = val;
+
+        // also set on the Contract object
+        this.Contract.transactionBlockTimeout = val;
+
+        // update defaultBlock
+        methodConfigs.forEach((method) => {
+            this[method.name].transactionBlockTimeout = val;
+        });
+    }
+
+    get defaultAccount () {
+        return this._values.defaultAccount;
+    }
+
+    set defaultAccount (val) {
+        if(val) {
+            this._values.defaultAccount = utils.toChecksumAddress(formatter.inputAddressFormatter(val));
+        }
+
+        // also set on the Contract object
+        this.Contract.defaultAccount = this._values.defaultAccount ;
+        this.personal.defaultAccount = this._values.defaultAccount ;
+
+        // update defaultBlock
+        methodConfigs.forEach((method) => {
+            this[method.name].defaultAccount = this._values.defaultAccount ;
+        });
+
+        return val;
+    }
+
+    get defaultBlock () {
+        return this._values.defaultBlock;
+    }
+
+    set defaultBlock (val) {
+        this._values.defaultBlock = val;
+        // also set on the Contract object
+        this.Contract.defaultBlock = val;
+        this.personal.defaultBlock = val;
+
+        // update defaultBlock
+        methodConfigs.forEach((method) => {
+            this[method.name].defaultBlock = val;
+        });
+
+        return val;
+    }
+
+    get maxListenersWarningThreshold () {
+        return this._values.maxListenersWarningThreshold;
+    }
+
+    set maxListenersWarningThreshold (val) {
+        if (this.currentProvider && this.currentProvider.setMaxListeners){
+            this._values.maxListenersWarningThreshold = val;
+            this.currentProvider.setMaxListeners(val);
+        }
+    }
 
 };
 

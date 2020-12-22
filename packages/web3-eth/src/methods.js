@@ -1,3 +1,29 @@
+const abi = require('web3-eth-abi');
+const utils = require('web3-utils');
+const formatter = require('web3-core-helpers').formatters;
+
+function blockCall (args) {
+    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
+};
+
+function transactionFromBlockCall (args) {
+    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
+};
+
+function uncleCall (args) {
+    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
+};
+
+function getBlockTransactionCountCall (args) {
+    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
+};
+
+function uncleCountCall (args) {
+    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
+};
+
+
+
 module.exports = [    {
         name: 'getNodeInfo',
         call: 'web3_clientVersion'
