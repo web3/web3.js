@@ -22,4 +22,4 @@
 
 import { IpcProviderBase } from 'web3-core-helpers';
 
-export class IpcProvider extends IpcProviderBase { }
+export default class IpcProvider extends IpcProviderBase { }

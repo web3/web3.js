@@ -21,8 +21,8 @@
  */
 
 import * as net from 'net';
-import { IpcProvider } from 'web3-providers';
 import { JsonRpcResponse } from 'web3-core-helpers';
+import IpcProvider from 'web3-providers-ipc';
 
 const ipcProvider = new IpcProvider(
     '/Users/myuser/Library/Ethereum/geth.ipc',

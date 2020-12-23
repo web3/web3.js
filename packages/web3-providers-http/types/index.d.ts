@@ -43,7 +43,7 @@ export interface HttpProviderOptions {
     keepAlive?: boolean;
 }
 
-export class HttpProvider extends HttpProviderBase {
+export default class HttpProvider extends HttpProviderBase {
     host: string;
 
     withCredentials: boolean;
