@@ -286,8 +286,6 @@ Released with 1.0.0-beta.37 code base.
 - Fix parsedUrl problem of websocket provider (#3666)
 - Fix return value for `clearSubscriptions` (#3689)
 
-## [Unreleased]
-
 ## [1.3.1]
 
 ### Added
@@ -310,3 +308,11 @@ Released with 1.0.0-beta.37 code base.
 - Fixed decoding bytes and string parameters for logs emitted with solc 0.4.x (#3724, #3738)
 - Grammar changes to inputAddressFormatter error message
 - Fixed vulnerable dependencies
+
+## [Unreleased]
+
+## [1.3.2]
+
+### Changed
+
+- Remove `notImplemented` flag from ETH2 Beacon Chain package methods schema
