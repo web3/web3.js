@@ -1,5 +1,7 @@
 import Axios, {AxiosInstance} from 'axios'
 
+Axios.defaults.adapter = require('axios/lib/adapters/http');
+
 import { ETH2BaseOpts, ETH2Function } from '../types/index'
 import { IBaseAPISchema } from './schema'
 
@@ -63,17 +65,12 @@ export class ETH2Base {
 
     private buildAPIWrappersFromSchema(schema: IBaseAPISchema) {
         for (const method of schema.methods) {
-            if (method.notImplemented) {
-                this[method.name] = async () => { throw new Error('Method not implemented by beacon chain client') }
-                continue;
-            }
-
             this[method.name] = async (routeParameters: any, queryParameters: any = {}): Promise<any> => {
                 try {
                     if (method.inputFormatter) queryParameters = method.inputFormatter(queryParameters)
 
                     const computedRoute = this.routeBuilder(method.route, routeParameters)
-                    let {data} = await this._httpClient[method.restMethod](computedRoute, { queryParameters })
+                    let {data} = await this._httpClient[method.restMethod](computedRoute, { params: queryParameters })
                     if (data.data) data = data.data
 
                     if (method.outputFormatter) data = method.outputFormatter(data)
