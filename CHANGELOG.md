@@ -316,3 +316,4 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - Remove `notImplemented` flag from ETH2 Beacon Chain package methods schema
+- Fixed mutation of inputs to encoding and decoding functions (#3748)
