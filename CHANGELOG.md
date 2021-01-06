@@ -317,3 +317,4 @@ Released with 1.0.0-beta.37 code base.
 
 - Remove `notImplemented` flag from ETH2 Beacon Chain package methods schema
 - Fixed mutation of inputs to encoding and decoding functions (#3748)
+- Rename `web3-eth2-base` to `web3-eth2-core` and `web3-eth2-beacon` to `web3-eth2-beaconchain`
