@@ -666,6 +666,41 @@ Example
     web3.utils.toHex('I have 100€');
     > "0x49206861766520313030e282ac"
 
+------------------------------------------------------------------------------
+
+stripHexPrefix
+=====================
+
+.. code-block:: javascript
+    web3.utils.stripHexPrefix(str)
+Returns provided string without 0x prefix.
+
+----------
+Parameters
+----------
+
+1. ``str`` - ``string``:  Input string
+
+-------
+Returns
+-------
+
+``String``: The input string without 0x prefix.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.stripHexPrefix('234');
+    > "234"
+
+    web3.utils.stripHexPrefix('0x234');
+    > "234"
+
+    web3.utils.stripHexPrefix(42);
+    > 42
 
 ------------------------------------------------------------------------------
 

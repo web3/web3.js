@@ -286,14 +286,13 @@ Released with 1.0.0-beta.37 code base.
 - Fix parsedUrl problem of websocket provider (#3666)
 - Fix return value for `clearSubscriptions` (#3689)
 
-## [Unreleased]
-
 ## [1.3.1]
 
 ### Added
 
-- Add `web3-eth2-core` package (#3743)
-- Add `web3-eth2-beaconchain` package (#3743)
+- Add `web3-eth2-core` package (#3743) (renamed to `web3-eth2-base`)
+- Add `web3-eth2-beaconchain` package (#3743) (renamed to `web3-eth2-beacon`)
+- Add `stripHexPrefix` method to `web3-utils` package (#3776)
 
 ### Changed
 
@@ -309,3 +308,12 @@ Released with 1.0.0-beta.37 code base.
 - Fixed decoding bytes and string parameters for logs emitted with solc 0.4.x (#3724, #3738)
 - Grammar changes to inputAddressFormatter error message
 - Fixed vulnerable dependencies
+
+## [Unreleased]
+
+## [1.3.2]
+
+### Changed
+
+- Remove `notImplemented` flag from ETH2 Beacon Chain package methods schema
+- Fixed mutation of inputs to encoding and decoding functions (#3748)
