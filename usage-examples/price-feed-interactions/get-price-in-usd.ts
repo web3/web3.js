@@ -2,7 +2,8 @@
 require("dotenv").config(); // this ensures process.env. ... contains your .env file configuration values
 
 const Web3 = require('web3');
-const web3 = new Web3(new Web3.providers.HttpProvider(`https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`));
+
+const web3 = new Web3(new Web3.providers.HttpProvider(process.env.PROVIDER_URL));
 
 const { priceFeedAbi } = require('./contract-abis.json');
 
