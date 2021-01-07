@@ -1,4 +1,4 @@
-import { ETH2Base } from '../src/index'
+import { ETH2Core } from '../src/index'
 
 const provider = 'http://127.0.0.1:9596'
 const testAPISchema = {
@@ -38,7 +38,7 @@ const testAPISchema = {
 let eth2Core
 
 beforeAll(() => {
-    eth2Core = new ETH2Base(provider, testAPISchema, { protectProvider: true })
+    eth2Core = new ETH2Core(provider, testAPISchema, { protectProvider: true })
 })
 
 it('Should build expectedComputedRoute with 1 parameter', () => {
