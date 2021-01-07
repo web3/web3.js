@@ -1,3 +1,5 @@
+DO NOT MERGE THIS
+
 <p align="center">
   <img src="assets/logo/web3js.jpg" width="200" alt="web3.js" />
 </p>
