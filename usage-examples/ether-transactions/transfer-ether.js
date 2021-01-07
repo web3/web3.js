@@ -1,4 +1,6 @@
 
+// Scroll to the bottom to see how the transfer example can be triggered
+
 require('dotenv').config() // this ensures process.env. ... contains your .env file configuration values
 
 const Web3 = require('web3');
@@ -27,6 +29,7 @@ async function signAndSend(transactionObject, senderPrivateKey) {
 
 
 async function getTransactionObject(from, to, value) {
+
     const txCount = await web3.eth.getTransactionCount(from, "pending")
     const gasPrice = await web3.eth.getGasPrice()
     
