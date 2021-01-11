@@ -638,3 +638,18 @@ describe('lib/solidity/coder', function () {
                         '737472696e670000000000000000000000000000000000000000000000000000'})
     });
 });
+
+describe('/lib/solidity/coder', function() {
+    describe('decodeParam', function () {
+        it('should not alter inputs', function () {
+            const t = {
+                type: "function",
+                name: "f",
+                internalType: "function () external"
+            };
+            const copyOfT = Object.assign({}, t);
+            coder.decodeParameter(t, '063e4f349a9e91c6575aedab0e70087fab642ecac04062260000000000000000'); //must not alter t!
+            assert.deepEqual(t, copyOfT);
+        });
+    });
+});

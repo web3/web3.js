@@ -11,6 +11,7 @@ set -o errexit
 # Install ganache-core
 git clone https://github.com/trufflesuite/ganache-core
 cd ganache-core
+git checkout tags/v2.13.0
 
 # Install via registry and verify
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
@@ -52,5 +53,4 @@ TEST_BUILD=node npx mocha \
   --invert \
   --check-leaks \
   --recursive \
-  --globals _scratch \
-  --opts ./test/.mocharc
+  --globals _scratch

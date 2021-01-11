@@ -725,17 +725,22 @@ Method.prototype.buildCall = function () {
                             txOptions.common = method.defaultCommon;
                         }
 
-                        return method.accounts.signTransaction(txOptions, wallet.privateKey)
+                        method.accounts.signTransaction(txOptions, wallet.privateKey)
                             .then(sendSignedTx)
                             .catch(function (err) {
                                 if (_.isFunction(defer.eventEmitter.listeners) && defer.eventEmitter.listeners('error').length) {
-                                    defer.eventEmitter.emit('error', err);
+                                    try {
+                                        defer.eventEmitter.emit('error', err);
+                                    } catch (err) {
+                                        // Ignore userland error prevent it to bubble up within web3.
+                                    }
                                     defer.eventEmitter.removeAllListeners();
                                     defer.eventEmitter.catch(function () {
                                     });
                                 }
                                 defer.reject(err);
                             });
+                        return;
                     }
 
                     // ETH_SIGN

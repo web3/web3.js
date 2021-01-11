@@ -242,12 +242,12 @@ describe('subscription connect/reconnect', function () {
                 .once('data', async function () {
                     await pify(server.close)();
                 })
-                .on('error', function (err) {
-                    counter++;
-                    assert(err.message.includes('CONNECTION ERROR'));
-                    assert(err.message.includes('close code `1006`'));
-                    assert(err.message.includes('Connection dropped by remote peer.'));
-                });
+
+            web3.eth.currentProvider.on('close', function (err) {
+                counter++;
+                assert(err.reason.includes('Connection dropped by remote peer.'));
+                assert(err.code === 1006);
+            });
 
             // Make sure error handler doesn't fire twice
             await waitSeconds(2);

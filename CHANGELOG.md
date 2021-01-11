@@ -264,13 +264,11 @@ Released with 1.0.0-beta.37 code base.
 
 - Add unit tests for isHex and isHexStrict (#3622)
 
-## [Unreleased]
-
-## [1.2.12]
+## [1.3.0]
 
 ### Added
 
-- Support for typescript files (.ts) to be writtern alongside regular .js files (#3652)
+- Support for typescript files (.ts) to be written alongside regular .js files (#3652)
 - Add compareBlock function that allows for complex block comparisons (#3682)
 
 ### Changed
@@ -279,11 +277,44 @@ Released with 1.0.0-beta.37 code base.
 - `npm run build` now uses TSC to compile (.js allowed) and the build folder is now located under `lib` (#3652)
 - Modernized web3-core to use newer es syntax (#3652)
 - Bumped `web3-providers-ipc` `oboe` version to 2.1.5 (#3661)
-- Bump lodash from 4.17.15 to 4.17.19
-- Bump websocket version which removes node-gyp from web3.js (#3865)
+- Bump lodash from 4.17.15 to 4.17.19 (#3641)
+- Bump websocket version which removes node-gyp from web3.js (#3685)
 
 ### Fixed
 
 - Fix parsing of non-`eth_subscription` provider events (#3660)
 - Fix parsedUrl problem of websocket provider (#3666)
 - Fix return value for `clearSubscriptions` (#3689)
+
+## [1.3.1]
+
+### Added
+
+- Add `web3-eth2-core` package (#3743) (renamed to `web3-eth2-base`)
+- Add `web3-eth2-beaconchain` package (#3743) (renamed to `web3-eth2-beacon`)
+- Add `stripHexPrefix` method to `web3-utils` package (#3776)
+
+### Changed
+
+- bump utils 0.10.0^ -> 0.12.0 (#3733)
+
+### Removed
+
+- Removed post-install script in `packages/web3`. Added documentation to root README (#3717)
+
+### Fixed
+
+- Fix possible unhandled promise rejection when sending a transaction (#3708)
+- Fixed decoding bytes and string parameters for logs emitted with solc 0.4.x (#3724, #3738)
+- Grammar changes to inputAddressFormatter error message
+- Fixed vulnerable dependencies
+
+## [Unreleased]
+
+## [1.3.2]
+
+### Changed
+
+- Remove `notImplemented` flag from ETH2 Beacon Chain package methods schema
+- Fixed mutation of inputs to encoding and decoding functions (#3748)
+- Rename `web3-eth2-base` to `web3-eth2-core` and `web3-eth2-beacon` to `web3-eth2-beaconchain`

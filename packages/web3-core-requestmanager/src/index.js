@@ -91,7 +91,7 @@ RequestManager.prototype.setProvider = function (provider, net) {
 
 
     // reset the old one before changing, if still connected
-    if(this.provider && this.provider.connected)
+    if (this.provider && this.provider.connected)
         this.clearSubscriptions();
 
     this.provider = provider || null;
@@ -122,21 +122,24 @@ RequestManager.prototype.setProvider = function (provider, net) {
         });
 
         // notify all subscriptions about bad close conditions
-        this.provider.on('close', function close(event) {
-            if (!_this._isCleanCloseEvent(event) || _this._isIpcCloseError(event)){
+        const disconnect = function disconnect(event) {
+            if (!_this._isCleanCloseEvent(event) || _this._isIpcCloseError(event)) {
                 _this.subscriptions.forEach(function (subscription) {
                     subscription.callback(errors.ConnectionCloseError(event));
                     _this.subscriptions.delete(subscription.subscription.id);
                 });
 
-                if(_this.provider && _this.provider.emit){
+                if (_this.provider && _this.provider.emit) {
                     _this.provider.emit('error', errors.ConnectionCloseError(event));
                 }
             }
-            if(_this.provider && _this.provider.emit){
+            if (_this.provider && _this.provider.emit) {
                 _this.provider.emit('end', event);
             }
-        });
+        };
+        // TODO: Remove close once the standard allows it
+        this.provider.on('close', disconnect);
+        this.provider.on('disconnect', disconnect);
 
         // TODO add end, timeout??
     }
@@ -151,7 +154,7 @@ RequestManager.prototype.setProvider = function (provider, net) {
  * @param {Function} callback
  */
 RequestManager.prototype.send = function (data, callback) {
-    callback = callback || function () {};
+    callback = callback || function () { };
 
     if (!this.provider) {
         return callback(errors.InvalidProvider());
@@ -163,7 +166,7 @@ RequestManager.prototype.send = function (data, callback) {
     const jsonrpcResultCallback = this._jsonrpcResultCallback(callback, jsonrpcPayload)
 
     if (this.provider.request) {
-        const callbackRequest = callbackify(this.provider.request)
+        const callbackRequest = callbackify(this.provider.request.bind(this.provider))
         const requestArgs = { method, params }
         callbackRequest(requestArgs, callback);
     } else if (this.provider.sendAsync) {
@@ -220,7 +223,7 @@ RequestManager.prototype.addSubscription = function (subscription, callback) {
             }
         );
     } else {
-        throw new Error('The provider doesn\'t support subscriptions: '+ this.provider.constructor.name);
+        throw new Error('The provider doesn\'t support subscriptions: ' + this.provider.constructor.name);
     }
 };
 
@@ -257,7 +260,7 @@ RequestManager.prototype.removeSubscription = function (id, callback) {
  * Should be called to reset the subscriptions
  *
  * @method reset
- * 
+ *
  * @returns {boolean}
  */
 RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
@@ -273,7 +276,7 @@ RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
         }
 
         //  reset notification callbacks etc.
-        if(this.provider.reset)
+        if (this.provider.reset)
             this.provider.reset();
 
         return true
@@ -310,18 +313,18 @@ RequestManager.prototype._isIpcCloseError = function (event) {
 
 /**
  * The jsonrpc result callback for RequestManager.send
- * 
+ *
  * @method _jsonrpcResultCallback
- * 
+ *
  * @param {Function} callback the callback to use
  * @param {Object} payload the jsonrpc payload
- * 
+ *
  * @returns {Function} return callback of form (err, result)
  *
  */
 RequestManager.prototype._jsonrpcResultCallback = function (callback, payload) {
-    return function(err, result) { 
-        if(result && result.id && payload.id !== result.id) {
+    return function (err, result) {
+        if (result && result.id && payload.id !== result.id) {
             return callback(new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`));
         }
 
