@@ -155,7 +155,7 @@ ABICoder.prototype.mapTypes = function (types) {
         // recognize former type. Solidity docs say `Function` is a bytes24
         // encoding the contract address followed by the function selector hash.
         if (typeof type === 'object' && type.type === 'function'){
-            type.type = "bytes24";
+            type = Object.assign({}, type, { type: "bytes24" });
         }
         if (self.isSimplifiedStructFormat(type)) {
             var structName = Object.keys(type)[0];
