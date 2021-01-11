@@ -1,6 +1,8 @@
 
 // Scroll to the bottom to see how the transfer example can be triggered
 
+// dotenv is an external dependency and would need to be installed for your project
+// e.g. npm i -s dotenv
 require('dotenv').config() // this ensures process.env. ... contains your .env file configuration values
 
 const Web3 = require('web3');
