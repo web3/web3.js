@@ -33,7 +33,7 @@ var core = require('@redbud-hk/web3-core');
 var Eth = require('@redbud-hk/web3-eth');
 var Net = require('@redbud-hk/web3-net');
 var Personal = require('@redbud-hk/web3-eth-personal');
-var Shh = require('web3-shh');
+var Shh = require('@redbud-hk/web3-shh');
 var Bzz = require('@redbud-hk/web3-bzz');
 var utils = require('@redbud-hk/web3-utils');
 

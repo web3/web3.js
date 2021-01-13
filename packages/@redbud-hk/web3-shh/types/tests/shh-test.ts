@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { Info, Notification, Shh } from 'web3-shh';
+import { Info, Notification, Shh } from '@redbud-hk/web3-shh';
 
 // $ExpectType Shh
 const shh_empty = new Shh();

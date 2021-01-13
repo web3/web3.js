@@ -19,7 +19,7 @@ npm install web3-shh
 ## Usage
 
 ```js
-const Web3Personal = require('web3-shh');
+const Web3Personal = require('@redbud-hk/web3-shh');
 
 const shh = new Web3Personal('ws://localhost:8546');
 ```

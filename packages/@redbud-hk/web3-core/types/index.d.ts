@@ -124,7 +124,7 @@ export interface Transaction {
     to: string | null;
     value: string;
     gasPrice: string;
-    gas: number;
+    gas: string;
     input: string;
 }
 

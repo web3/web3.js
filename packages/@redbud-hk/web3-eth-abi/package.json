@@ -1,6 +1,6 @@
 {
     "name": "@redbud-hk/web3-eth-abi",
-    "version": "1.4.2",
+    "version": "1.5.0",
     "description": "Web3 module encode and decode EVM in/output.",
     "repository": "https://github.com/redbud-hk/web3.js/tree/1.x/packages/web3-eth-abi",
     "license": "LGPL-3.0",
@@ -16,7 +16,7 @@
     "dependencies": {
         "@ethersproject/abi": "5.0.7",
         "underscore": "1.9.1",
-        "@redbud-hk/web3-utils": "1.4.2"
+        "@redbud-hk/web3-utils": "1.5.0"
     },
     "devDependencies": {
         "dtslint": "^3.4.1",

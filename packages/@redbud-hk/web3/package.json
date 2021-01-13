@@ -1,6 +1,6 @@
 {
     "name": "@redbud-hk/web3",
-    "version": "1.4.2",
+    "version": "1.5.0",
     "description": "Ethereum JavaScript API",
     "repository": "https://github.com/redbud-hk/web3.js",
     "license": "LGPL-3.0",
@@ -49,13 +49,13 @@
         }
     ],
     "dependencies": {
-        "@redbud-hk/web3-bzz": "1.4.2",
-        "@redbud-hk/web3-core": "1.4.2",
-        "@redbud-hk/web3-eth": "1.4.2",
-        "@redbud-hk/web3-eth-personal": "1.4.2",
-        "@redbud-hk/web3-net": "1.4.2",
-        "@redbud-hk/web3-shh": "1.4.2",
-        "@redbud-hk/web3-utils": "1.4.2"
+        "@redbud-hk/web3-bzz": "1.5.0",
+        "@redbud-hk/web3-core": "1.5.0",
+        "@redbud-hk/web3-eth": "1.5.0",
+        "@redbud-hk/web3-eth-personal": "1.5.0",
+        "@redbud-hk/web3-net": "1.5.0",
+        "@redbud-hk/web3-shh": "1.5.0",
+        "@redbud-hk/web3-utils": "1.5.0"
     },
     "devDependencies": {
         "@types/node": "^12.12.6",

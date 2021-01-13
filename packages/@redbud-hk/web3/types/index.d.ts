@@ -23,7 +23,7 @@ import { BatchRequest, provider, Providers, Extension } from '@redbud-hk/web3-co
 import { Eth } from '@redbud-hk/web3-eth';
 import { Personal } from '@redbud-hk/web3-eth-personal';
 import { Network } from '@redbud-hk/web3-net';
-import { Shh } from 'web3-shh';
+import { Shh } from '@redbud-hk/web3-shh';
 import { Utils } from '@redbud-hk/web3-utils';
 
 export default class Web3 {

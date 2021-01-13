@@ -1,6 +1,6 @@
 {
   "name": "@redbud-hk/web3-providers-ws",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Module to handle web3 RPC connections over WebSockets.",
   "repository": "https://github.com/redbud-hk/web3.js/tree/1.x/packages/web3-providers-ws",
   "license": "LGPL-3.0",
@@ -16,7 +16,7 @@
   "dependencies": {
     "eventemitter3": "4.0.4",
     "underscore": "1.9.1",
-    "@redbud-hk/web3-core-helpers": "1.4.2",
+    "@redbud-hk/web3-core-helpers": "1.5.0",
     "websocket": "^1.0.32"
   },
   "devDependencies": {
