@@ -21,7 +21,7 @@
  */
 
 import * as net from 'net';
-import { IpcProvider } from 'web3-providers';
+import { IpcProvider } from '@redbud-hk/web3-providers';
 import { JsonRpcResponse } from '@redbud-hk/web3-core-helpers';
 
 const ipcProvider = new IpcProvider(

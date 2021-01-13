@@ -1,6 +1,6 @@
 {
     "name": "@redbud-hk/web3-shh",
-    "version": "1.5.0",
+    "version": "1.5.3",
     "description": "Web3 module to interact with the Whisper messaging protocol.",
     "repository": "https://github.com/redbud-hk/web3.js/tree/1.x/packages/web3-shh",
     "license": "LGPL-3.0",
@@ -14,10 +14,10 @@
     },
     "main": "lib/index.js",
     "dependencies": {
-        "@redbud-hk/web3-core": "1.5.0",
-        "@redbud-hk/web3-core-method": "1.5.0",
-        "@redbud-hk/web3-core-subscriptions": "1.5.0",
-        "@redbud-hk/web3-net": "1.5.0"
+        "@redbud-hk/web3-core": "1.5.3",
+        "@redbud-hk/web3-core-method": "1.5.3",
+        "@redbud-hk/web3-core-subscriptions": "1.5.3",
+        "@redbud-hk/web3-net": "1.5.3"
     },
     "devDependencies": {
         "@types/node": "^12.12.6",

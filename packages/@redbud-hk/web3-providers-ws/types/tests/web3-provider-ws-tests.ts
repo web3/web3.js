@@ -21,7 +21,7 @@
  */
 
 import { WebsocketProviderOptions, JsonRpcResponse } from '@redbud-hk/web3-core-helpers';
-import { WebsocketProvider } from 'web3-providers';
+import { WebsocketProvider } from '@redbud-hk/web3-providers';
 
 const options: WebsocketProviderOptions = {
     timeout: 30000,
