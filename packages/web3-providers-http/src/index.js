@@ -22,7 +22,7 @@
  * @date 2015
  */
 
-var errors = require('web3-core-helpers').errors;
+var errors = require('@redbud-hk/web3-core-helpers').errors;
 var XHR2 = require('xhr2-cookies').XMLHttpRequest; // jshint ignore: line
 var http = require('http');
 var https = require('https');

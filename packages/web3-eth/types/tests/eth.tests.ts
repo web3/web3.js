@@ -18,7 +18,7 @@
  * @date 2018
  */
 
-import {Log} from 'web3-core';
+import {Log} from '@redbud-hk/web3-core';
 import {
     BlockTransactionObject,
     BlockTransactionString,
@@ -33,7 +33,7 @@ import {
     hardfork,
     Common,
     chain
-} from 'web3-eth';
+} from '@redbud-hk/web3-eth';
 import BN = require('bn.js');
 import BigNumber from 'bignumber.js';
 

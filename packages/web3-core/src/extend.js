@@ -23,9 +23,9 @@
 "use strict";
 
 
-var formatters = require('web3-core-helpers').formatters;
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
+var formatters = require('@redbud-hk/web3-core-helpers').formatters;
+var Method = require('@redbud-hk/web3-core-method');
+var utils = require('@redbud-hk/web3-utils');
 
 
 var extend = function (pckg) {

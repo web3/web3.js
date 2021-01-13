@@ -19,8 +19,8 @@
  * @date 2018
  */
 
-import { RLPEncodedTransaction } from 'web3-core';
-import { Personal } from 'web3-eth-personal';
+import { RLPEncodedTransaction } from '@redbud-hk/web3-core';
+import { Personal } from '@redbud-hk/web3-eth-personal';
 
 // $ExpectType Personal
 const personal_empty = new Personal();

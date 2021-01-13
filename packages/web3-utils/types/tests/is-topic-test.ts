@@ -21,7 +21,7 @@
  */
 
 import BN = require('bn.js');
-import {isTopic} from 'web3-utils';
+import {isTopic} from '@redbud-hk/web3-utils';
 
 // $ExpectType boolean
 isTopic('0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef');

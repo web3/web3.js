@@ -23,7 +23,7 @@
 
 var Buffer = require('buffer').Buffer;
 var _ = require('underscore');
-var utils = require('web3-utils');
+var utils = require('@redbud-hk/web3-utils');
 
 var EthersAbiCoder = require('@ethersproject/abi').AbiCoder;
 var ParamType = require('@ethersproject/abi').ParamType;

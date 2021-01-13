@@ -24,7 +24,7 @@
 
 var EventEmitter = require('eventemitter3');
 var helpers = require('./helpers.js');
-var errors = require('web3-core-helpers').errors;
+var errors = require('@redbud-hk/web3-core-helpers').errors;
 var Ws = require('websocket').w3cwebsocket;
 
 /**

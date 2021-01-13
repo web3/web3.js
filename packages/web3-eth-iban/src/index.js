@@ -25,7 +25,7 @@
 
 "use strict";
 
-var utils = require('web3-utils');
+var utils = require('@redbud-hk/web3-utils');
 var BigNumber = require('bn.js');
 
 

@@ -19,7 +19,7 @@
  *
  * To initialize a contract use:
  *
- *  var Contract = require('web3-eth-contract');
+ *  var Contract = require('@redbud-hk/web3-eth-contract');
  *  Contract.setProvider('ws://localhost:8546');
  *  var contract = new Contract(abi, address, ...);
  *
@@ -32,14 +32,14 @@
 
 
 var _ = require('underscore');
-var core = require('web3-core');
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
-var Subscription = require('web3-core-subscriptions').subscription;
-var formatters = require('web3-core-helpers').formatters;
-var errors = require('web3-core-helpers').errors;
-var promiEvent = require('web3-core-promievent');
-var abi = require('web3-eth-abi');
+var core = require('@redbud-hk/web3-core');
+var Method = require('@redbud-hk/web3-core-method');
+var utils = require('@redbud-hk/web3-utils');
+var Subscription = require('@redbud-hk/web3-core-subscriptions').subscription;
+var formatters = require('@redbud-hk/web3-core-helpers').formatters;
+var errors = require('@redbud-hk/web3-core-helpers').errors;
+var promiEvent = require('@redbud-hk/web3-core-promievent');
+var abi = require('@redbud-hk/web3-eth-abi');
 
 
 /**

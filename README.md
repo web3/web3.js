@@ -18,7 +18,7 @@ Please read the [documentation][docs] for more.
 ### Node
 
 ```bash
-npm install web3
+npm install @redbud-hk/web3
 ```
 
 ### Yarn
@@ -42,20 +42,20 @@ This will expose `Web3` on the window object.
 Or via jsDelivr CDN:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@redbud-hk/web3@latest/dist/web3.min.js"></script>
 ```
 
 UNPKG:
 
 ```html
-<script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
+<script src="https://unpkg.com/@redbud-hk/web3@latest/dist/web3.min.js"></script>
 ```
 
 ## Usage
 
 ```js
 // In Node.js
-const Web3 = require('web3');
+const Web3 = require('@redbud-hk/web3');
 
 let web3 = new Web3('ws://localhost:8546');
 console.log(web3);
@@ -88,7 +88,7 @@ We support types within the repo itself. Please open an issue here if you find a
 You can use `web3.js` as follows:
 
 ```typescript
-import Web3 from 'web3';
+import Web3 from '@redbud-hk/web3';
 const web3 = new Web3('ws://localhost:8546');
 ```
 

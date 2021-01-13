@@ -21,7 +21,7 @@
  */
 
 import BN = require('bn.js');
-import {isAddress} from 'web3-utils';
+import {isAddress} from '@redbud-hk/web3-utils';
 
 // $ExpectType boolean
 isAddress('0x8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51');

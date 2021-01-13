@@ -13,7 +13,7 @@ To use this package standalone use:
 
 .. code-block:: javascript
 
-    var Accounts = require('web3-eth-accounts');
+    var Accounts = require('@redbud-hk/web3-eth-accounts');
 
     // Passing in the eth or web3 package is necessary to allow retrieving chainId, gasPrice and nonce automatically
     // for accounts.signTransaction().

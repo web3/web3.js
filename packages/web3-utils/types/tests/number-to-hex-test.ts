@@ -21,7 +21,7 @@
  */
 
 import BN = require('bn.js');
-import {numberToHex} from 'web3-utils';
+import {numberToHex} from '@redbud-hk/web3-utils';
 
 // $ExpectType string
 numberToHex('232');

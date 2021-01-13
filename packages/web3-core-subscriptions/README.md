@@ -19,7 +19,7 @@ npm install web3-core-subscriptions
 ## Usage
 
 ```js
-const Web3Subscriptions = require('web3-core-subscriptions');
+const Web3Subscriptions = require('@redbud-hk/web3-core-subscriptions');
 
 const sub = new Web3Subscriptions({
     name: 'subscribe',

@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import { WebsocketProviderOptions, JsonRpcResponse } from 'web3-core-helpers';
+import { WebsocketProviderOptions, JsonRpcResponse } from '@redbud-hk/web3-core-helpers';
 import { WebsocketProvider } from 'web3-providers';
 
 const options: WebsocketProviderOptions = {

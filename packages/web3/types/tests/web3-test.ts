@@ -17,10 +17,10 @@
  * @date 2018
  */
 
-import Web3 from 'web3';
+import Web3 from '@redbud-hk/web3';
 import * as net from 'net';
-import { AbstractProvider, RequestArguments } from 'web3-core';
-import { JsonRpcPayload, JsonRpcResponse } from 'web3-core-helpers';
+import { AbstractProvider, RequestArguments } from '@redbud-hk/web3-core';
+import { JsonRpcPayload, JsonRpcResponse } from '@redbud-hk/web3-core-helpers';
 
 // $ExpectType Utils
 Web3.utils;

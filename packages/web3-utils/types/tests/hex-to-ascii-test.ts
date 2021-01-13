@@ -21,7 +21,7 @@
  */
 
 import BN = require('bn.js');
-import {hexToAscii} from 'web3-utils';
+import {hexToAscii} from '@redbud-hk/web3-utils';
 
 // $ExpectType string
 hexToAscii('0x4920686176652031303021');

@@ -19,7 +19,7 @@ npm install web3-utils
 ## Usage
 
 ```js
-const Web3Utils = require('web3-utils');
+const Web3Utils = require('@redbud-hk/web3-utils');
 console.log(Web3Utils);
 {
     sha3: function(){},

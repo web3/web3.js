@@ -17,9 +17,9 @@
  * @date 2018
  */
 
-import { AccountsBase, SignedTransaction, WalletBase } from 'web3-core';
+import { AccountsBase, SignedTransaction, WalletBase } from '@redbud-hk/web3-core';
 
-export {SignedTransaction} from 'web3-core';
+export {SignedTransaction} from '@redbud-hk/web3-core';
 
 export class Accounts extends AccountsBase {}
 

@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import { AbiCoder } from 'web3-eth-abi';
+import { AbiCoder } from '@redbud-hk/web3-eth-abi';
 
 const abiCoder = new AbiCoder();
 

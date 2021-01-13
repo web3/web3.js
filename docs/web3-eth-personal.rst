@@ -12,7 +12,7 @@ The ``web3-eth-personal`` package allows you to interact with the Ethereum node'
 
 .. code-block:: javascript
 
-    var Personal = require('web3-eth-personal');
+    var Personal = require('@redbud-hk/web3-eth-personal');
 
     // "Personal.providers.givenProvider" will be set if in an Ethereum supported browser.
     var personal = new Personal(Personal.givenProvider || 'ws://some.local-or-remote.node:8546');
@@ -20,7 +20,7 @@ The ``web3-eth-personal`` package allows you to interact with the Ethereum node'
 
     // or using the web3 umbrella package
 
-    var Web3 = require('web3');
+    var Web3 = require('@redbud-hk/web3');
     var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
 
     // -> web3.eth.personal

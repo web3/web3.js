@@ -22,8 +22,8 @@
 
 var _ = require('underscore');
 var config = require('./config');
-var formatters = require('web3-core-helpers').formatters;
-var utils = require('web3-utils');
+var formatters = require('@redbud-hk/web3-core-helpers').formatters;
+var utils = require('@redbud-hk/web3-utils');
 var Registry = require('./contracts/Registry');
 var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
 var contenthash = require('./lib/contentHash');

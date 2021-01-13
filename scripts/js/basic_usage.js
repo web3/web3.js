@@ -2,7 +2,7 @@
 
 // This script runs some simple Web3 calls.
 // Useful for validating the published version in different OS environments.
-const Web3 = require('web3');
+const Web3 = require('@redbud-hk/web3');
 const util = require('util');
 const log = console.log;
 

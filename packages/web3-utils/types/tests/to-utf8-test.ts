@@ -21,7 +21,7 @@
  */
 
 import BN = require('bn.js');
-import {toUtf8} from 'web3-utils';
+import {toUtf8} from '@redbud-hk/web3-utils';
 
 // $ExpectType string
 toUtf8('0x49206861766520313030e282ac');

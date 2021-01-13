@@ -13,7 +13,7 @@ var IpcProvider = SandboxedModule.require('../packages/web3-providers-ipc', {
     singleOnly: true
 });
 
-describe('web3-providers-ipc', function () {
+describe('@redbud-hk/web3-providers-ipc', function () {
 
     // oboe.js DOESNT WORK with FakeIpcProvider
     // describe('send', function () {

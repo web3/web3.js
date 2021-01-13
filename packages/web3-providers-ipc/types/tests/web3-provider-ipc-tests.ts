@@ -22,7 +22,7 @@
 
 import * as net from 'net';
 import { IpcProvider } from 'web3-providers';
-import { JsonRpcResponse } from 'web3-core-helpers';
+import { JsonRpcResponse } from '@redbud-hk/web3-core-helpers';
 
 const ipcProvider = new IpcProvider(
     '/Users/myuser/Library/Ethereum/geth.ipc',

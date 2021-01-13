@@ -21,7 +21,7 @@
  */
 
 import BN = require('bn.js');
-import {encodePacked} from 'web3-utils';
+import {encodePacked} from '@redbud-hk/web3-utils';
 
 // $ExpectType string | null
 encodePacked('234564535', '0xfff23243', true, -10);

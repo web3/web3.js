@@ -17,7 +17,7 @@ npm install web3-providers-ws
 ## Usage
 
 ```js
-const Web3WsProvider = require('web3-providers-ws');
+const Web3WsProvider = require('@redbud-hk/web3-providers-ws');
 
 const options = {
     timeout: 30000, // ms

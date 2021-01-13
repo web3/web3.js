@@ -19,7 +19,7 @@ npm install web3-bzz
 ## Usage
 
 ```js
-const Web3Bzz = require('web3-bzz');
+const Web3Bzz = require('@redbud-hk/web3-bzz');
 
 const bzz = new Web3Bzz('http://swarm-gateways.net');
 ```

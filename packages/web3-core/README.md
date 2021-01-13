@@ -19,7 +19,7 @@ npm install web3-core
 ## Usage
 
 ```js
-const core = require('web3-core');
+const core = require('@redbud-hk/web3-core');
 
 const CoolLib = function CoolLib() {
     // sets _requestmanager and adds basic functions

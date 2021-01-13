@@ -20,7 +20,7 @@
  * @date 2019
  */
 
-import { isTopic } from 'web3-utils';
+import { isTopic } from '@redbud-hk/web3-utils';
 
 // $ExpectType boolean
 isTopic('0x000000000000000000000000b3bb037d2f2341a1c2775d51909a3d944597987d');

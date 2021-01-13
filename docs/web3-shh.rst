@@ -18,7 +18,7 @@ The ``web3-shh`` package allows you to interact with the whisper protocol for br
 
     // or using the web3 umbrella package
 
-    var Web3 = require('web3');
+    var Web3 = require('@redbud-hk/web3');
     var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
 
     // -> web3.shh

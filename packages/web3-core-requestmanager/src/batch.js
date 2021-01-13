@@ -23,7 +23,7 @@
 "use strict";
 
 var Jsonrpc = require('./jsonrpc');
-var errors = require('web3-core-helpers').errors;
+var errors = require('@redbud-hk/web3-core-helpers').errors;
 
 var Batch = function (requestManager) {
     this.requestManager = requestManager;

@@ -21,7 +21,7 @@
  */
 
 import BN = require('bn.js');
-import {fromDecimal} from 'web3-utils';
+import {fromDecimal} from '@redbud-hk/web3-utils';
 
 // $ExpectType string
 fromDecimal('232');

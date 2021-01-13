@@ -18,8 +18,8 @@
  */
 
 import * as net from 'net';
-import { BatchRequest, provider, Providers, Extension } from 'web3-core';
-import { Network } from 'web3-net';
+import { BatchRequest, provider, Providers, Extension } from '@redbud-hk/web3-core';
+import { Network } from '@redbud-hk/web3-net';
 
 export class Shh {
     constructor();

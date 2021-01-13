@@ -21,7 +21,7 @@
  */
 
 import BN = require('bn.js');
-import {soliditySha3Raw} from 'web3-utils';
+import {soliditySha3Raw} from '@redbud-hk/web3-utils';
 
 // $ExpectType string
 soliditySha3Raw('234564535', '0xfff23243', true, -10);

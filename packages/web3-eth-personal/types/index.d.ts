@@ -19,7 +19,7 @@
  */
 
 import * as net from 'net';
-import { provider, RLPEncodedTransaction, TransactionConfig, BatchRequest, Providers, Extension } from 'web3-core';
+import { provider, RLPEncodedTransaction, TransactionConfig, BatchRequest, Providers, Extension } from '@redbud-hk/web3-core';
 
 export class Personal {
     constructor();

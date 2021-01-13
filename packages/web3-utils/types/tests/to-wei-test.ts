@@ -21,7 +21,7 @@
  */
 
 import BN = require('bn.js');
-import {toWei} from 'web3-utils';
+import {toWei} from '@redbud-hk/web3-utils';
 
 const bigNumber = new BN(3);
 

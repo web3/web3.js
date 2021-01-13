@@ -29,13 +29,13 @@
 
 
 var version = require('../package.json').version;
-var core = require('web3-core');
-var Eth = require('web3-eth');
-var Net = require('web3-net');
-var Personal = require('web3-eth-personal');
+var core = require('@redbud-hk/web3-core');
+var Eth = require('@redbud-hk/web3-eth');
+var Net = require('@redbud-hk/web3-net');
+var Personal = require('@redbud-hk/web3-eth-personal');
 var Shh = require('web3-shh');
-var Bzz = require('web3-bzz');
-var utils = require('web3-utils');
+var Bzz = require('@redbud-hk/web3-bzz');
+var utils = require('@redbud-hk/web3-utils');
 
 var Web3 = function Web3() {
     var _this = this;

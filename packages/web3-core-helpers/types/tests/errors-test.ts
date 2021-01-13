@@ -17,7 +17,7 @@
  * @date 2019
  */
 
-import { errors, WebSocketEvent } from 'web3-core-helpers';
+import { errors, WebSocketEvent } from '@redbud-hk/web3-core-helpers';
 
 // $ExpectType Error
 errors.ErrorResponse(new Error('hey'));

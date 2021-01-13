@@ -14,7 +14,7 @@ To use it standalone:
 
 .. code-block:: javascript
 
-    var Contract = require('web3-eth-contract');
+    var Contract = require('@redbud-hk/web3-eth-contract');
 
     // set provider for all later instances to use
     Contract.setProvider('ws://localhost:8546');

@@ -34,7 +34,7 @@ Example
 
 .. code-block:: javascript
 
-    var Web3 = require('web3');
+    var Web3 = require('@redbud-hk/web3');
     var web3 = new Web3('http://localhost:8545');
     // or
     var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
@@ -84,7 +84,7 @@ Example
 
 .. code-block:: javascript
 
-    var Web3 = require('web3');
+    var Web3 = require('@redbud-hk/web3');
     // use the given Provider, e.g in Mist, or instantiate a new websocket provider
     var web3 = new Web3(Web3.givenProvider || 'ws://remotenode.com:8546');
     // or
@@ -109,7 +109,7 @@ Configuration
     // Http
     // ====
 
-    var Web3HttpProvider = require('web3-providers-http');
+    var Web3HttpProvider = require('@redbud-hk/web3-providers-http');
 
     var options = {
         keepAlive: true,
@@ -136,7 +136,7 @@ Configuration
     // Websockets
     // ==========
 
-    var Web3WsProvider = require('web3-providers-ws');
+    var Web3WsProvider = require('@redbud-hk/web3-providers-ws');
 
     var options = {
         timeout: 30000, // ms

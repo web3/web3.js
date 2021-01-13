@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {unitMap} from 'web3-utils';
+import {unitMap} from '@redbud-hk/web3-utils';
 
 // $ExpectType Units
 unitMap();

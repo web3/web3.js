@@ -37,16 +37,16 @@ import {
     BlockNumber,
     LogsOptions,
     PastLogsOptions
-} from 'web3-core';
-import {Subscription} from 'web3-core-subscriptions';
-import {AbiCoder} from 'web3-eth-abi';
-import {Accounts} from 'web3-eth-accounts';
-import {Contract, ContractOptions} from 'web3-eth-contract';
-import {Ens} from 'web3-eth-ens';
-import {Iban} from 'web3-eth-iban';
-import {Personal} from 'web3-eth-personal';
-import {Network} from 'web3-net';
-import {AbiItem} from 'web3-utils';
+} from '@redbud-hk/web3-core';
+import {Subscription} from '@redbud-hk/web3-core-subscriptions';
+import {AbiCoder} from '@redbud-hk/web3-eth-abi';
+import {Accounts} from '@redbud-hk/web3-eth-accounts';
+import {Contract, ContractOptions} from '@redbud-hk/web3-eth-contract';
+import {Ens} from '@redbud-hk/web3-eth-ens';
+import {Iban} from '@redbud-hk/web3-eth-iban';
+import {Personal} from '@redbud-hk/web3-eth-personal';
+import {Network} from '@redbud-hk/web3-net';
+import {AbiItem} from '@redbud-hk/web3-utils';
 import {BigNumber} from 'bignumber.js';
 import BN = require('bn.js');
 
@@ -58,7 +58,7 @@ export {
     hardfork,
     Common,
     chain
-} from 'web3-core';
+} from '@redbud-hk/web3-core';
 
 export class Eth {
     constructor();

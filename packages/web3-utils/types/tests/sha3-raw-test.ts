@@ -21,7 +21,7 @@
  */
 
 import BN = require('bn.js');
-import {sha3Raw} from 'web3-utils';
+import {sha3Raw} from '@redbud-hk/web3-utils';
 
 // $ExpectType string
 sha3Raw('234');

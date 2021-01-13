@@ -19,7 +19,7 @@ npm install web3-core-promievent
 ## Usage
 
 ```js
-const Web3PromiEvent = require('web3-core-promievent');
+const Web3PromiEvent = require('@redbud-hk/web3-core-promievent');
 
 const myFunc = function(){
     const promiEvent = Web3PromiEvent();

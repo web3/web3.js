@@ -19,7 +19,7 @@ npm install web3-core-method
 ## Usage
 
 ```js
-const Web3Method = require('web3-core-method');
+const Web3Method = require('@redbud-hk/web3-core-method');
 
 const method = new Web3Method({
     name: 'sendTransaction',
