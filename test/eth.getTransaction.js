@@ -24,7 +24,7 @@ var formattedTxResult = {
     "from":"0x407D73d8a49eeb85D32Cf465507dd71d507100c1", // checksum address
     "to":"0x85F43D8a49eeB85d32Cf465507DD71d507100C1d", // checksum address
     "value": '520464',
-    "gas": 520464,
+    "gas": '520464',
     "gasPrice": '10000000000000',
     "input":"0x603880600c6000396000f30060"
 };

@@ -399,8 +399,8 @@ export interface BlockHeader {
     receiptRoot: string;
     miner: string;
     extraData: string;
-    gasLimit: number;
-    gasUsed: number;
+    gasLimit: string;
+    gasUsed: string;
     timestamp: number | string;
 }
 
@@ -410,7 +410,7 @@ export interface Block extends BlockTransactionBase {
 }
 
 export interface BlockTransactionBase extends BlockHeader {
-    size: number;
+    size: string;
     difficulty: number;
     totalDifficulty: number;
     uncles: string[];

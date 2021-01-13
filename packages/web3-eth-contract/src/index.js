@@ -414,7 +414,7 @@ Contract.prototype._encodeEventABI = function (event, options) {
                     return null;
                 }
 
-                // TODO: https://github.com/ethereum/web3.js/issues/344
+                // TODO: https://github.com/redbud-hk/web3.js/issues/344
                 // TODO: deal properly with components
 
                 if (_.isArray(value)) {

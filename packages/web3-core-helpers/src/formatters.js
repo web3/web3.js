@@ -238,8 +238,8 @@ var outputTransactionFormatter = function (tx) {
     if (tx.transactionIndex !== null)
         tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
     tx.nonce = utils.hexToNumber(tx.nonce);
-    tx.gas = utils.hexToNumber(tx.gas);
-    tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
+    tx.gas = utils.hexToNumberString(tx.gas);
+    tx.gasPrice = utils.hexToNumberString(tx.gasPrice);
     tx.value = outputBigNumberFormatter(tx.value);
 
     if (tx.to && utils.isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
@@ -271,8 +271,8 @@ var outputTransactionReceiptFormatter = function (receipt) {
         receipt.blockNumber = utils.hexToNumber(receipt.blockNumber);
     if (receipt.transactionIndex !== null)
         receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
-    receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
-    receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
+    receipt.cumulativeGasUsed = utils.hexToNumberString(receipt.cumulativeGasUsed);
+    receipt.gasUsed = utils.hexToNumberString(receipt.gasUsed);
 
     if (_.isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
@@ -299,9 +299,9 @@ var outputTransactionReceiptFormatter = function (receipt) {
 var outputBlockFormatter = function (block) {
 
     // transform to number
-    block.gasLimit = utils.hexToNumber(block.gasLimit);
-    block.gasUsed = utils.hexToNumber(block.gasUsed);
-    block.size = utils.hexToNumber(block.size);
+    block.gasLimit = utils.hexToNumberString(block.gasLimit);
+    block.gasUsed = utils.hexToNumberString(block.gasUsed);
+    block.size = utils.hexToNumberString(block.size);
     block.timestamp = utils.hexToNumber(block.timestamp);
     if (block.number !== null)
         block.number = utils.hexToNumber(block.number);

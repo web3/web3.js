@@ -2,14 +2,14 @@
     "name": "web3",
     "version": "1.3.2-rc.0",
     "description": "Ethereum JavaScript API",
-    "repository": "https://github.com/ethereum/web3.js",
+    "repository": "https://github.com/redbud-hk/web3.js",
     "license": "LGPL-3.0",
     "engines": {
         "node": ">=8.0.0"
     },
     "main": "lib/index.js",
     "bugs": {
-        "url": "https://github.com/ethereum/web3.js/issues"
+        "url": "https://github.com/redbud-hk/web3.js/issues"
     },
     "keywords": [
         "Ethereum",

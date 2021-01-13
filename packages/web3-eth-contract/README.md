@@ -32,17 +32,17 @@ contract.methods.somFunc().send({from: ....})
 ```
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
-[repo]: https://github.com/ethereum/web3.js
+[repo]: https://github.com/redbud-hk/web3.js
 
 ## Types
 
 All the TypeScript typings are placed in the `types` folder.
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
-[repo]: https://github.com/ethereum/web3.js
+[repo]: https://github.com/redbud-hk/web3.js
 [npm-image]: https://img.shields.io/npm/v/web3-eth-contract.svg
 [npm-url]: https://npmjs.org/package/web3-eth-contract
-[deps-image]: https://david-dm.org/ethereum/web3.js/1.x/status.svg?path=packages/web3-eth-contract
-[deps-url]: https://david-dm.org/ethereum/web3.js/1.x?path=packages/web3-eth-contract
-[deps-dev-image]: https://david-dm.org/ethereum/web3.js/1.x/dev-status.svg?path=packages/web3-eth-contract
-[deps-dev-url]: https://david-dm.org/ethereum/web3.js/1.x?type=dev&path=packages/web3-eth-contract
+[deps-image]: https://david-dm.org/redbud-hk/web3.js/1.x/status.svg?path=packages/web3-eth-contract
+[deps-url]: https://david-dm.org/redbud-hk/web3.js/1.x?path=packages/web3-eth-contract
+[deps-dev-image]: https://david-dm.org/redbud-hk/web3.js/1.x/dev-status.svg?path=packages/web3-eth-contract
+[deps-dev-url]: https://david-dm.org/redbud-hk/web3.js/1.x?type=dev&path=packages/web3-eth-contract

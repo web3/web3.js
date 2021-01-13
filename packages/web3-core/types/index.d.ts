@@ -197,8 +197,8 @@ export interface TransactionReceipt {
     from: string;
     to: string;
     contractAddress?: string;
-    cumulativeGasUsed: number;
-    gasUsed: number;
+    cumulativeGasUsed: string;
+    gasUsed: string;
     logs: Log[];
     logsBloom: string;
     events?: {

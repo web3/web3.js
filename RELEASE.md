@@ -73,7 +73,7 @@ The following describes the steps required to release a new version of `web3.js`
 ## Release Candidate (RC) Release Procedure
 
 1.  Create a GitHub draft release.
-    1.  [Example](https://github.com/ethereum/web3.js/releases/tag/v1.2.7-rc.0) - should contain at a minimum: release notes, changelog, any other important notes.
+    1.  [Example](https://github.com/redbud-hk/web3.js/releases/tag/v1.2.7-rc.0) - should contain at a minimum: release notes, changelog, any other important notes.
     1.  Request review on the draft release from a web3.js contributor ([@cgewecke](https://github.com/cgewecke)) for completeness, grammar, etc.
 1.  Create release branch (e.g. `release/1.2.7`).
 1.  Update and commit `CHANGELOG.md`.
@@ -82,7 +82,7 @@ The following describes the steps required to release a new version of `web3.js`
 1.  Create release commit and tags e.g. `lerna version 1.2.7-rc.0 --no-push`
     1.  (updates package version numbers, builds minified file (for `1.x`), creates release commit and tags.)
 1.  Push release branch to origin with tags `git push origin release/1.2.7 --follow-tags`.
-1.  Create release PR as draft ([example](https://github.com/ethereum/web3.js/pull/3351)).
+1.  Create release PR as draft ([example](https://github.com/redbud-hk/web3.js/pull/3351)).
 1.  Ensure CI is green / passing.
     1.  (spend time here inspecting the CI logs to ensure everything looks valid and results were reported correctly)
 1.  Run `npm run publish from-package -- --dist-tag rc`.

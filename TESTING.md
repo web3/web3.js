@@ -73,17 +73,17 @@ This can be done with [scripts/js/resolutions.js][18] which modifies the target'
 An example of its use can be seen at [scripts/e2e.mosaic.sh][8].
 
 [14]: https://verdaccio.org/docs/en/installation
-[15]: https://github.com/ethereum/web3.js/blob/1.x/scripts/e2e.npm.publish.sh
+[15]: https://github.com/redbud-hk/web3.js/blob/1.x/scripts/e2e.npm.publish.sh
 [17]: https://classic.yarnpkg.com/en/docs/selective-version-resolutions/
-[18]: https://github.com/ethereum/web3.js/blob/1.x/scripts/js/resolutions.js
+[18]: https://github.com/redbud-hk/web3.js/blob/1.x/scripts/js/resolutions.js
 
-[8]: https://github.com/ethereum/web3.js/blob/1.x/scripts/e2e.mosaic.sh
+[8]: https://github.com/redbud-hk/web3.js/blob/1.x/scripts/e2e.mosaic.sh
 [9]: https://github.com/cgewecke/mosaic-1
-[10]: https://github.com/ethereum/web3.js/blob/1.x/scripts/e2e.ganache.core.sh
+[10]: https://github.com/redbud-hk/web3.js/blob/1.x/scripts/e2e.ganache.core.sh
 [11]: https://github.com/trufflesuite/ganache-core
 
-[1]: https://github.com/ethereum/web3.js/blob/1.x/test/eth.accounts.sign.js
-[2]: https://github.com/ethereum/web3.js/blob/1.x/test/e2e.contract.events.js
-[3]: https://github.com/ethereum/web3.js/blob/1.x/test/e2e.minified.js
-[4]: https://github.com/ethereum/web3.js/blob/1.x/scripts/e2e.cdn.sh
-[5]: https://github.com/ethereum/web3.js/blob/1.x/scripts/e2e.windows.sh
+[1]: https://github.com/redbud-hk/web3.js/blob/1.x/test/eth.accounts.sign.js
+[2]: https://github.com/redbud-hk/web3.js/blob/1.x/test/e2e.contract.events.js
+[3]: https://github.com/redbud-hk/web3.js/blob/1.x/test/e2e.minified.js
+[4]: https://github.com/redbud-hk/web3.js/blob/1.x/scripts/e2e.cdn.sh
+[5]: https://github.com/redbud-hk/web3.js/blob/1.x/scripts/e2e.windows.sh

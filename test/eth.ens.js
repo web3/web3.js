@@ -95,11 +95,11 @@ function prepareProviderForSetter(provider, signature, types, params, error) {
  */
 function isExpectedReceipt(receipt) {
     assert.equal(receipt.contractAddress, '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e');
-    assert.equal(receipt.cumulativeGasUsed, 10);
+    assert.equal(receipt.cumulativeGasUsed, '10');
     assert.equal(receipt.transactionIndex, 3);
     assert.equal(receipt.blockNumber, 10);
     assert.equal(receipt.blockHash, '0xbf1234');
-    assert.equal(receipt.gasUsed, 0);
+    assert.equal(receipt.gasUsed, '0');
 }
 
 describe('ens', function () {
