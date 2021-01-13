@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var sha3 = require('../packages/web3-utils').sha3;
+var sha3 = require('../packages/@redbud-hk/web3-utils').sha3;
 var CryptoJS = require('crypto-js');
 var cjsSha3 = require('crypto-js/sha3');
 

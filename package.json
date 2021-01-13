@@ -6,10 +6,10 @@
     "engines": {
         "node": ">=8.0.0"
     },
-    "main": "./packages/web3/src/index.js",
+    "main": "./packages/@redbud-hk/web3/src/index.js",
     "bundlesize": [
         {
-            "path": "./packages/web3/dist/web3.min.js",
+            "path": "./packages/@redbud-hk/web3/dist/web3.min.js",
             "maxSize": "1.5 mB",
             "compression": "none"
         }
@@ -17,7 +17,7 @@
     "scripts": {
         "version": "npm run build",
         "postinstall": "npm run bootstrap",
-        "build": "npm run bootstrap && lerna run tsc && webpack && cp -r ./dist ./packages/web3",
+        "build": "npm run bootstrap && lerna run tsc && webpack && cp -r ./dist ./packages/@redbud-hk/web3",
         "publish": "lerna publish",
         "bootstrap": "lerna bootstrap --hoist",
         "lint": "jshint *.js packages",

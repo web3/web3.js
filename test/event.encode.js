@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Eth = require('../packages/web3-eth');
+var Eth = require('../packages/@redbud-hk/web3-eth');
 
 
 var address = '0x1234567890123456789012345678901234567890';

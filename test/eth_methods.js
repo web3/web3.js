@@ -2,7 +2,7 @@ var chai = require('chai');
 var assert = chai.assert;
 var u = require('./helpers/test.utils.js');
 
-var Eth = require('../packages/web3-eth');
+var Eth = require('../packages/@redbud-hk/web3-eth');
 var eth = new Eth();
 
 describe('eth', function() {

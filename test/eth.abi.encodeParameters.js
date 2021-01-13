@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Abi = require('../packages/web3-eth-abi');
+var Abi = require('../packages/@redbud-hk/web3-eth-abi');
 
 var tests = [{
     params: [['uint256','string'], ['2345675643', 'Hello!%']],

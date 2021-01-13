@@ -5,7 +5,7 @@ var https = require('https');
 var SandboxedModule = require('sandboxed-module');
 
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
-var HttpProvider = SandboxedModule.require('../packages/web3-providers-http', {
+var HttpProvider = SandboxedModule.require('../packages/@redbud-hk/web3-providers-http', {
     requires: {
         'xhr2-cookies': require('./helpers/FakeXHR2'),
         // 'xmlhttprequest': require('./helpers/FakeXMLHttpRequest')

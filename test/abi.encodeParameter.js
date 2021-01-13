@@ -2,7 +2,7 @@ var chai = require('chai');
 var assert = chai.assert;
 var BN = require('bn.js');
 var BigNumber = require('bignumber.js');
-var coder = require('../packages/web3-eth-abi');
+var coder = require('../packages/@redbud-hk/web3-eth-abi');
 
 
 describe('lib/solidity/coder', function () {

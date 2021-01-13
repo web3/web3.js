@@ -1,5 +1,5 @@
 var assert = require('assert');
-var utils = require('../packages/web3-utils');
+var utils = require('../packages/@redbud-hk/web3-utils');
 
 describe('lib/utils/utils', function () {
     describe('fromWei', function () {

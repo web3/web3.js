@@ -1,7 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
 
-var errors = require('../packages/web3-core-helpers/src/errors.js');
+var errors = require('../packages/@redbud-hk/web3-core-helpers/src/errors.js');
 
 describe('lib/web3/method', function () {
     describe('getCall', function () {

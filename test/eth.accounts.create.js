@@ -1,8 +1,8 @@
-var Accounts = require("./../packages/web3-eth-accounts");
+var Accounts = require("./../packages/@redbud-hk/web3-eth-accounts");
 var ethers = require('ethers');
 var chai = require('chai');
 var assert = chai.assert;
-var Web3 = require('../packages/web3');
+var Web3 = require('../packages/@redbud-hk/web3');
 var web3 = new Web3();
 
 var tests = [];

@@ -17,14 +17,14 @@ var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 
 var chai = require('chai');
 var assert = chai.assert;
-var Web3 = require('../packages/web3');
-var Eth = require('../packages/web3-eth');
-var Shh = require('../packages/web3-shh');
-var Personal = require('../packages/web3-eth-personal');
-var Accounts = require('../packages/web3-eth-accounts');
-var Contract = require('../packages/web3-eth-contract');
-var Net = require('../packages/web3-net');
-var Bzz = require('../packages/web3-bzz');
+var Web3 = require('../packages/@redbud-hk/web3');
+var Eth = require('../packages/@redbud-hk/web3-eth');
+var Shh = require('../packages/@redbud-hk/web3-shh');
+var Personal = require('../packages/@redbud-hk/web3-eth-personal');
+var Accounts = require('../packages/@redbud-hk/web3-eth-accounts');
+var Contract = require('../packages/@redbud-hk/web3-eth-contract');
+var Net = require('../packages/@redbud-hk/web3-net');
+var Bzz = require('../packages/@redbud-hk/web3-bzz');
 
 
 var tests = [{

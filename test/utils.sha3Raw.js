@@ -1,7 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
 var cjsSha3 = require('crypto-js/sha3');
-var sha3Raw = require('../packages/web3-utils').sha3Raw;
+var sha3Raw = require('../packages/@redbud-hk/web3-utils').sha3Raw;
 
 describe('web3.sha3Raw', function () {
     it('should return the sha3 hash with hex prefix', function() {

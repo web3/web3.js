@@ -2,7 +2,7 @@ var testMethod = require('./helpers/test.method.js');
 var chai = require('chai');
 var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
-var Web3 = require('../packages/web3');
+var Web3 = require('../packages/@redbud-hk/web3');
 
 var clone = function (object) { return object ? JSON.parse(JSON.stringify(object)) : []; };
 

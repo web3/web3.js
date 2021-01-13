@@ -1,7 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Eth = require('../packages/web3-eth');
-var Web3 = require('../packages/web3');
+var Eth = require('../packages/@redbud-hk/web3-eth');
+var Web3 = require('../packages/@redbud-hk/web3');
 
 var eth = new Eth();
 

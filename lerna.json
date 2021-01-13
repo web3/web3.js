@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0",
+  "version": "1.4.2",
   "lerna": "2.0.0",
   "command": {
     "init": {
@@ -11,6 +11,6 @@
     }
   },
   "packages": [
-    "packages/*"
+    "packages/@redbud-hk/*"
   ]
 }

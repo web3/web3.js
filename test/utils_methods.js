@@ -1,5 +1,5 @@
 var u = require('./helpers/test.utils.js');
-var utils = require('../packages/web3-utils');
+var utils = require('../packages/@redbud-hk/web3-utils');
 
 describe('utils', function() {
     describe('methods', function () {

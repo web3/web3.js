@@ -1,0 +1,35 @@
+{
+    "name": "@redbud-hk/web3-eth",
+    "version": "1.4.2",
+    "description": "Web3 module to interact with the Ethereum blockchain and smart contracts.",
+    "repository": "https://github.com/redbud-hk/web3.js/tree/1.x/packages/web3-eth",
+    "license": "LGPL-3.0",
+    "engines": {
+        "node": ">=8.0.0"
+    },
+    "types": "types/index.d.ts",
+    "scripts": {
+        "tsc": "tsc -b tsconfig.json",
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib  types"
+    },
+    "main": "lib/index.js",
+    "dependencies": {
+        "underscore": "1.9.1",
+        "@redbud-hk/web3-core": "1.4.2",
+        "@redbud-hk/web3-core-helpers": "1.4.2",
+        "@redbud-hk/web3-core-method": "1.4.2",
+        "@redbud-hk/web3-core-subscriptions": "1.4.2",
+        "@redbud-hk/web3-eth-abi": "1.4.2",
+        "@redbud-hk/web3-eth-accounts": "1.4.2",
+        "@redbud-hk/web3-eth-contract": "1.4.2",
+        "@redbud-hk/web3-eth-ens": "1.4.2",
+        "@redbud-hk/web3-eth-iban": "1.4.2",
+        "@redbud-hk/web3-eth-personal": "1.4.2",
+        "@redbud-hk/web3-net": "1.4.2",
+        "@redbud-hk/web3-utils": "1.4.2"
+    },
+    "devDependencies": {
+        "dtslint": "^3.4.1",
+        "typescript": "^3.9.5"
+    }
+}

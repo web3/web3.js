@@ -1,6 +1,6 @@
 var assert = require('assert');
 var ganache = require('ganache-cli');
-var Web3 = require('../packages/web3');
+var Web3 = require('../packages/@redbud-hk/web3');
 var Basic = require('./sources/Basic');
 
 describe('web.providers.givenProvider (ganache)', function(){

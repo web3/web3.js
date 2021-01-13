@@ -24,7 +24,7 @@ npm install @redbud-hk/web3
 ### Yarn
 
 ```bash
-yarn add web3
+yarn add @redbud-hk/web3
 ```
 
 ### In the Browser

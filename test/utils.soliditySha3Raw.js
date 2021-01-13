@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var soliditySha3Raw = require('../packages/web3-utils').soliditySha3Raw;
+var soliditySha3Raw = require('../packages/@redbud-hk/web3-utils').soliditySha3Raw;
 
 describe('web3.soliditySha3Raw', function () {
     it('should return the sha3 hash of a empty string with hex prefix', function () {

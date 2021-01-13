@@ -6,9 +6,9 @@ describe('Web3.providers.givenProvider', function () {
 
     // Setting of 'global.' requires a deep reset
     beforeEach(function(){
-        decache('../packages/web3');
-        decache('../packages/web3-eth');
-        decache('../packages/web3-bzz');
+        decache('../packages/@redbud-hk/web3');
+        decache('../packages/@redbud-hk/web3-eth');
+        decache('../packages/@redbud-hk/web3-bzz');
     });
 
     describe('should be set if window.ethereum is available', function () {
@@ -17,17 +17,17 @@ describe('Web3.providers.givenProvider', function () {
         });
 
         it('when instantiating Web3', function () {
-            var Web3 = require('../packages/web3');
+            var Web3 = require('../packages/@redbud-hk/web3');
             assert.deepEqual(Web3.givenProvider, global.ethereum);
         });
 
         it('when instantiating Eth', function () {
-            var Eth = require('../packages/web3-eth');
+            var Eth = require('../packages/@redbud-hk/web3-eth');
             assert.deepEqual(Eth.givenProvider, global.ethereum);
         });
 
         it('when instantiating Bzz', function () {
-            var Bzz = require('../packages/web3-bzz');
+            var Bzz = require('../packages/@redbud-hk/web3-bzz');
             assert.deepEqual(Bzz.givenProvider, global.ethereum.bzz);
         });
     });
@@ -44,7 +44,7 @@ describe('Web3.providers.givenProvider', function () {
                 sendAsync: () => { throw new Error('used sendAsync') }, 
                 send: () => { throw new Error('used send') }
             };
-            const Web3 = require('../packages/web3');
+            const Web3 = require('../packages/@redbud-hk/web3');
             const web3 = new Web3(Web3.givenProvider);
             const blockNumber = await web3.eth.getBlockNumber();
             assert.equal(blockNumber, 100)
@@ -55,7 +55,7 @@ describe('Web3.providers.givenProvider', function () {
                 sendAsync: (args, callback) => { return callback(null, {jsonrpc: '2.0', id: 0, result: 101}) }, 
                 send: () => { throw new Error('used send') }
             };
-            const Web3 = require('../packages/web3');
+            const Web3 = require('../packages/@redbud-hk/web3');
             const web3 = new Web3(Web3.givenProvider);
             const blockNumber = await web3.eth.getBlockNumber();
             assert.equal(blockNumber, 101)
@@ -65,7 +65,7 @@ describe('Web3.providers.givenProvider', function () {
             global.ethereum = {
                 send: (args, callback) => { return callback(null, {jsonrpc: '2.0', id: 0, result: 102}) }
             };
-            const Web3 = require('../packages/web3');
+            const Web3 = require('../packages/@redbud-hk/web3');
             const web3 = new Web3(Web3.givenProvider);
             const blockNumber = await web3.eth.getBlockNumber();
             assert.equal(blockNumber, 102)
@@ -73,7 +73,7 @@ describe('Web3.providers.givenProvider', function () {
         
         it('should error without any request or send method', async function () {
             global.ethereum = {};
-            const Web3 = require('../packages/web3');
+            const Web3 = require('../packages/@redbud-hk/web3');
             const web3 = new Web3(Web3.givenProvider);
             try {
                 await web3.eth.getBlockNumber();

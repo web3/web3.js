@@ -1,5 +1,5 @@
 const assert = require('assert');
-const Eth = require('../packages/web3-eth');
+const Eth = require('../packages/@redbud-hk/web3-eth');
 const FakeIpcProvider = require('./helpers/FakeIpcProvider');
 
 const abi = [{

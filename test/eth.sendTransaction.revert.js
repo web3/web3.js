@@ -1,6 +1,6 @@
 var assert = require('chai').assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
-var Web3 = require('../packages/web3');
+var Web3 = require('../packages/@redbud-hk/web3');
 
 describe('sendTransaction revert:', function () {
     var provider;

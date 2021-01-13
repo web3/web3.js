@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var chai = require('chai');
 var assert = chai.assert;
-var coder = require('../packages/web3-eth-abi');
+var coder = require('../packages/@redbud-hk/web3-eth-abi');
 
 // TODO check line 108 again!
 
