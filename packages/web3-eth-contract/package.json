@@ -1,5 +1,5 @@
 {
-    "name": "web3-eth-contract",
+    "name": "@redbud-hk/web3-eth-contract",
     "version": "1.4.0",
     "description": "Web3 module to interact with Ethereum smart contracts.",
     "repository": "https://github.com/redbud-hk/web3.js/tree/1.x/packages/web3-eth-contract",
@@ -16,13 +16,13 @@
     "dependencies": {
         "@types/bn.js": "^4.11.5",
         "underscore": "1.9.1",
-        "web3-core": "1.4.0",
-        "web3-core-helpers": "1.4.0",
-        "web3-core-method": "1.4.0",
-        "web3-core-promievent": "1.4.0",
-        "web3-core-subscriptions": "1.4.0",
-        "web3-eth-abi": "1.4.0",
-        "web3-utils": "1.4.0"
+        "@redbud-hk/web3-core": "1.4.0",
+        "@redbud-hk/web3-core-helpers": "1.4.0",
+        "@redbud-hk/web3-core-method": "1.4.0",
+        "@redbud-hk/web3-core-promievent": "1.4.0",
+        "@redbud-hk/web3-core-subscriptions": "1.4.0",
+        "@redbud-hk/web3-eth-abi": "1.4.0",
+        "@redbud-hk/web3-utils": "1.4.0"
     },
     "devDependencies": {
         "dtslint": "^3.4.1",

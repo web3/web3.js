@@ -1,5 +1,5 @@
 {
-    "name": "web3",
+    "name": "@redbud-hk/web3",
     "version": "1.4.0",
     "description": "Ethereum JavaScript API",
     "repository": "https://github.com/redbud-hk/web3.js",
@@ -49,13 +49,13 @@
         }
     ],
     "dependencies": {
-        "web3-bzz": "1.4.0",
-        "web3-core": "1.4.0",
-        "web3-eth": "1.4.0",
-        "web3-eth-personal": "1.4.0",
-        "web3-net": "1.4.0",
-        "web3-shh": "1.4.0",
-        "web3-utils": "1.4.0"
+        "@redbud-hk/web3-bzz": "1.4.0",
+        "@redbud-hk/web3-core": "1.4.0",
+        "@redbud-hk/web3-eth": "1.4.0",
+        "@redbud-hk/web3-eth-personal": "1.4.0",
+        "@redbud-hk/web3-net": "1.4.0",
+        "@redbud-hk/web3-shh": "1.4.0",
+        "@redbud-hk/web3-utils": "1.4.0"
     },
     "devDependencies": {
         "@types/node": "^12.12.6",

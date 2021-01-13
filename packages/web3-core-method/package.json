@@ -1,5 +1,5 @@
 {
-    "name": "web3-core-method",
+    "name": "@redbud-hk/web3-core-method",
     "version": "1.4.0",
     "description": "Creates the methods on the web3 modules. This is an internal package.",
     "repository": "https://github.com/redbud-hk/web3.js/tree/1.x/packages/web3-core-method",
@@ -16,10 +16,10 @@
     "dependencies": {
         "@ethersproject/transactions": "^5.0.0-beta.135",
         "underscore": "1.9.1",
-        "web3-core-helpers": "1.4.0",
-        "web3-core-promievent": "1.4.0",
-        "web3-core-subscriptions": "1.4.0",
-        "web3-utils": "1.4.0"
+        "@redbud-hk/web3-core-helpers": "1.4.0",
+        "@redbud-hk/web3-core-promievent": "1.4.0",
+        "@redbud-hk/web3-core-subscriptions": "1.4.0",
+        "@redbud-hk/web3-utils": "1.4.0"
     },
     "devDependencies": {
         "dtslint": "^3.4.1",

@@ -1,5 +1,5 @@
 {
-    "name": "web3-core-helpers",
+    "name": "@redbud-hk/web3-core-helpers",
     "version": "1.4.0",
     "description": "Web3 core tools helper for sub packages. This is an internal package.",
     "repository": "https://github.com/redbud-hk/web3.js/tree/1.x/packages/web3-core-helpers",
@@ -15,8 +15,8 @@
     "main": "lib/index.js",
     "dependencies": {
         "underscore": "1.9.1",
-        "web3-eth-iban": "1.4.0",
-        "web3-utils": "1.4.0"
+        "@redbud-hk/web3-eth-iban": "1.4.0",
+        "@redbud-hk/web3-utils": "1.4.0"
     },
     "devDependencies": {
         "@types/node": "^12.12.6",

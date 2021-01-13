@@ -1,5 +1,5 @@
 {
-    "name": "web3-bzz",
+    "name": "@redbud-hk/web3-bzz",
     "version": "1.4.0",
     "description": "Web3 module to interact with the Swarm network.",
     "repository": "https://github.com/redbud-hk/web3.js/tree/1.x/packages/web3-bzz",

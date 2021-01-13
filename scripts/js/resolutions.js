@@ -29,27 +29,27 @@ const targetPackage = require(targetPackagePath);
 const version = semver.inc(web3Package.version, 'minor');
 
 const web3Modules = [
-  "web3",
-  "web3-bzz",
-  "web3-core-helpers",
-  "web3-core-method",
-  "web3-core-promievent",
-  "web3-core-requestmanager",
-  "web3-core-subscriptions",
-  "web3-core",
-  "web3-eth-abi",
-  "web3-eth-accounts",
-  "web3-eth-contract",
-  "web3-eth-ens",
-  "web3-eth-iban",
-  "web3-eth-personal",
-  "web3-eth",
-  "web3-net",
-  "web3-providers-http",
-  "web3-providers-ipc",
-  "web3-providers-ws",
-  "web3-shh",
-  "web3-utils"
+  "@redbud-hk/web3",
+  "@redbud-hk/web3-bzz",
+  "@redbud-hk/web3-core-helpers",
+  "@redbud-hk/web3-core-method",
+  "@redbud-hk/web3-core-promievent",
+  "@redbud-hk/web3-core-requestmanager",
+  "@redbud-hk/web3-core-subscriptions",
+  "@redbud-hk/web3-core",
+  "@redbud-hk/web3-eth-abi",
+  "@redbud-hk/web3-eth-accounts",
+  "@redbud-hk/web3-eth-contract",
+  "@redbud-hk/web3-eth-ens",
+  "@redbud-hk/web3-eth-iban",
+  "@redbud-hk/web3-eth-personal",
+  "@redbud-hk/web3-eth",
+  "@redbud-hk/web3-net",
+  "@redbud-hk/web3-providers-http",
+  "@redbud-hk/web3-providers-ipc",
+  "@redbud-hk/web3-providers-ws",
+  "@redbud-hk/web3-shh",
+  "@redbud-hk/web3-utils"
 ];
 
 

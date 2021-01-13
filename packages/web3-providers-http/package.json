@@ -1,5 +1,5 @@
 {
-    "name": "web3-providers-http",
+    "name": "@redbud-hk/web3-providers-http",
     "version": "1.4.0",
     "description": "Module to handle web3 RPC connections over HTTP.",
     "repository": "https://github.com/redbud-hk/web3.js/tree/1.x/packages/web3-providers-http",
@@ -14,7 +14,7 @@
     "types": "types/index.d.ts",
     "main": "lib/index.js",
     "dependencies": {
-        "web3-core-helpers": "1.4.0",
+        "@redbud-hk/web3-core-helpers": "1.4.0",
         "xhr2-cookies": "1.1.0"
     },
     "devDependencies": {

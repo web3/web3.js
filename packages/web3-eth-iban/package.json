@@ -1,5 +1,5 @@
 {
-    "name": "web3-eth-iban",
+    "name": "@redbud-hk/web3-eth-iban",
     "version": "1.4.0",
     "description": "This package converts Ethereum addresses to IBAN addresses a vice versa.",
     "repository": "https://github.com/redbud-hk/web3.js/tree/1.x/packages/web3-eth-iban",
@@ -15,7 +15,7 @@
     "main": "lib/index.js",
     "dependencies": {
         "bn.js": "^4.11.9",
-        "web3-utils": "1.4.0"
+        "@redbud-hk/web3-utils": "1.4.0"
     },
     "devDependencies": {
         "dtslint": "^3.4.1",
