@@ -131,7 +131,7 @@
         "nyc": "^14.1.1",
         "pify": "^4.0.1",
         "sandboxed-module": "^2.0.4",
-        "ts-node": "^8.10.2",
+        "ts-node": "^9.0.0",
         "typescript": "^3.9.7",
         "underscore": "1.9.1",
         "wait-port": "^0.2.9",
