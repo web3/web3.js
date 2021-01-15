@@ -17,8 +17,8 @@ import {
   SignedVoluntaryExit
 } from '@chainsafe/lodestar-types'
 
-type StateId = 'head' | 'genesis' | 'finalized' | 'justified' | Slot | Root
-type BlockId = 'head' | 'genesis' | 'finalized' | Slot | Root
+export type StateId = 'head' | 'genesis' | 'finalized' | 'justified' | Slot | Root
+export type BlockId = 'head' | 'genesis' | 'finalized' | Slot | Root
 
 export interface IETH2BeaconChain {
   getGenesis(): Promise<Genesis | null>
