@@ -29,29 +29,28 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`web3-cli hello [FILE]`](#web3-cli-hello-file)
+* [`web3-cli block [PROVIDER]`](#web3-cli-block-provider)
 * [`web3-cli help [COMMAND]`](#web3-cli-help-command)
-* [`web3-cli validator [FILE]`](#web3-cli-validator-file)
+* [`web3-cli validatorInfo [FILE]`](#web3-cli-validatorinfo-file)
 
-## `web3-cli hello [FILE]`
+## `web3-cli block [PROVIDER]`
 
 describe the command here
 
 ```
 USAGE
-  $ web3-cli hello [FILE]
+  $ web3-cli block [PROVIDER]
+
+ARGUMENTS
+  PROVIDER  HTTP endpoint for Ethereum node
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-
-EXAMPLE
-  $ web3-cli hello
-  hello world from ./src/hello.ts!
+  -b, --blockId=blockId  (required) Block identifier
+  -c, --chain=chain      [default: 1] Version of Ethereum chain e.g. ETH1 is default while ETH2 = 2
+  -h, --help             show CLI help
 ```
 
-_See code: [src/commands/hello.ts](https://github.com/ChainSafe/web3-cli/blob/v0.0.0/src/commands/hello.ts)_
+_See code: [src/commands/block.ts](https://github.com/ChainSafe/web3-cli/blob/v0.0.0/src/commands/block.ts)_
 
 ## `web3-cli help [COMMAND]`
 
@@ -70,13 +69,13 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.1/src/commands/help.ts)_
 
-## `web3-cli validator [FILE]`
+## `web3-cli validatorInfo [FILE]`
 
 describe the command here
 
 ```
 USAGE
-  $ web3-cli validator [FILE]
+  $ web3-cli validatorInfo [FILE]
 
 OPTIONS
   -f, --force
@@ -84,5 +83,5 @@ OPTIONS
   -n, --name=name  name to print
 ```
 
-_See code: [src/commands/validator.ts](https://github.com/ChainSafe/web3-cli/blob/v0.0.0/src/commands/validator.ts)_
+_See code: [src/commands/validatorInfo.ts](https://github.com/ChainSafe/web3-cli/blob/v0.0.0/src/commands/validatorInfo.ts)_
 <!-- commandsstop -->
