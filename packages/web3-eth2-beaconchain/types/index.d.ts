@@ -17,7 +17,7 @@ import {
   SignedVoluntaryExit
 } from '@chainsafe/lodestar-types'
 
-import { IBaseAPISchema, ETH2BaseOpts } from 'web3-eth2-core'
+import { BaseAPISchema, ETH2BaseOpts } from 'web3-eth2-core'
 
 export type StateId = 'head' | 'genesis' | 'finalized' | 'justified' | Slot | Root
 export type BlockId = 'head' | 'genesis' | 'finalized' | Slot | Root
@@ -25,7 +25,7 @@ export type BlockId = 'head' | 'genesis' | 'finalized' | Slot | Root
 export class ETH2BeaconChain {
   constructor(
     provider: string,
-    schema?: IBaseAPISchema,
+    schema?: BaseAPISchema,
     opts?: ETH2BaseOpts
   )
 
