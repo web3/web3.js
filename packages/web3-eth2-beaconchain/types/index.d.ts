@@ -26,9 +26,9 @@ export interface IETH2BeaconChain {
   getForkData(params: {stateId: StateId}): Promise<Fork>
   getFinalityCheckpoint(params: {stateId: StateId}): Promise<FinalityCheckpoints>
   getValidators(params: {stateId: StateId}): Promise<Validator[]>
-  getValidatorById(params: {stateId: StateId}, validatorId: string): Promise<ValidatorResponse>
+  getValidatorById(params: {stateId: StateId, validatorId: string}): Promise<ValidatorResponse>
   getValidatorBalances(params: {stateId: StateId}): Promise<ValidatorBalance>
-  getEpochCommittees(params: {stateId: StateId}, epoch: Epoch): Promise<BeaconCommitteeResponse>
+  getEpochCommittees(params: {stateId: StateId, epoch: Epoch}): Promise<BeaconCommitteeResponse>
   getBlockHeaders(): Promise<SignedBeaconHeaderResponse[]>
   getBlockHeader(params: {blockId: BlockId}): Promise<SignedBeaconHeaderResponse>
   publishSignedBlock(): Promise<void>
