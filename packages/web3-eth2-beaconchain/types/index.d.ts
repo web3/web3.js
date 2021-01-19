@@ -22,20 +22,20 @@ export type BlockId = 'head' | 'genesis' | 'finalized' | Slot | Root
 
 export interface IETH2BeaconChain {
   getGenesis(): Promise<Genesis | null>
-  getHashRoot(stateId: StateId): Promise<{ root: Root }>
-  getForkData(stateId: StateId): Promise<Fork>
-  getFinalityCheckpoint(stateId: StateId): Promise<FinalityCheckpoints>
-  getValidators(stateId: StateId): Promise<Validator[]>
-  getValidatorById(stateId: StateId, validatorId: string): Promise<ValidatorResponse>
-  getValidatorBalances(stateId: StateId): Promise<ValidatorBalance>
-  getEpochCommittees(stateId: StateId, epoch: Epoch): Promise<BeaconCommitteeResponse>
+  getHashRoot(params: {stateId: StateId}): Promise<{ root: Root }>
+  getForkData(params: {stateId: StateId}): Promise<Fork>
+  getFinalityCheckpoint(params: {stateId: StateId}): Promise<FinalityCheckpoints>
+  getValidators(params: {stateId: StateId}): Promise<Validator[]>
+  getValidatorById(params: {stateId: StateId}, validatorId: string): Promise<ValidatorResponse>
+  getValidatorBalances(params: {stateId: StateId}): Promise<ValidatorBalance>
+  getEpochCommittees(params: {stateId: StateId}, epoch: Epoch): Promise<BeaconCommitteeResponse>
   getBlockHeaders(): Promise<SignedBeaconHeaderResponse[]>
-  getBlockHeader(blockId: BlockId): Promise<SignedBeaconHeaderResponse>
+  getBlockHeader(params: {blockId: BlockId}): Promise<SignedBeaconHeaderResponse>
   publishSignedBlock(): Promise<void>
-  getBlock(blockId: BlockId): Promise<SignedBeaconHeaderResponse>
-  getBlockRoot(blockId: BlockId): Promise<Root>
-  getBlockAttestations(blockId: BlockId): Promise<Attestation>
-  getAttestationsFromPool(slot: Slot, committee_index: CommitteeIndex): Promise<Attestation[]>
+  getBlock(params: {blockId: BlockId}): Promise<SignedBeaconHeaderResponse>
+  getBlockRoot(params: {blockId: BlockId}): Promise<Root>
+  getBlockAttestations(params: {blockId: BlockId}): Promise<Attestation>
+  getAttestationsFromPool(params: {slot: Slot, committee_index: CommitteeIndex}): Promise<Attestation[]>
   submitAttestation(): Promise<void>
   getAttesterSlashings(): Promise<{ [index: string]: IndexedAttestation }>
   submitAttesterSlashings(): Promise<void>
