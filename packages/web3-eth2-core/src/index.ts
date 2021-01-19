@@ -2,7 +2,7 @@ import Axios, {AxiosInstance} from 'axios'
 
 Axios.defaults.adapter = require('axios/lib/adapters/http');
 
-import { ETH2BaseOpts, ETH2Function, IBaseAPISchema } from '../types/index'
+import { ETH2BaseOpts, ETH2Function, BaseAPISchema } from '../types/index'
 
 export class ETH2Core {
     private _httpClient: AxiosInstance
@@ -13,7 +13,7 @@ export class ETH2Core {
     provider: string
     protectProvider: boolean // Protects from global overwrite when using .use functionality
 
-    constructor(provider: string, schema: IBaseAPISchema, opts: ETH2BaseOpts = {}) {
+    constructor(provider: string, schema: BaseAPISchema, opts: ETH2BaseOpts = {}) {
         this.name = schema.packageName
         this.setProvider(`${provider}${schema.routePrefix}`)
         this.protectProvider = opts.protectProvider || false
@@ -62,7 +62,7 @@ export class ETH2Core {
         }
     }
 
-    private buildAPIWrappersFromSchema(schema: IBaseAPISchema) {
+    private buildAPIWrappersFromSchema(schema: BaseAPISchema) {
         for (const method of schema.methods) {
             this[method.name] = async (routeParameters: any, queryParameters: any = {}): Promise<any> => {
                 try {
