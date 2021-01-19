@@ -51,6 +51,4 @@ export class ETH2BeaconChain {
   submitProposerSlashings(): Promise<void>
   getSignedVoluntaryExits(): Promise<SignedVoluntaryExit[]>
   submitVoluntaryExit(): Promise<void>
-  addBlockExplorerApi(): void
-  blockExplorerApi: IBlockExplorerApi | undefined
 }
