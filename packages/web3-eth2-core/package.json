@@ -1,6 +1,6 @@
 {
     "name": "web3-eth2-core",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "description": "Web3 ETH2 core tools for sub-packages. This is an internal package.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth2-core",
     "license": "LGPL-3.0",
