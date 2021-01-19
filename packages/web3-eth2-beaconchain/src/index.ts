@@ -2,7 +2,7 @@
 import { ETH2Core } from 'web3-eth2-core'
 import { DefaultSchema } from './schema'
 
-import { IETH2BeaconChain } from '../types/index'
+import { ETH2BeaconChain as IETH2BeaconChain } from '../types/index'
 // @ts-ignore - types not full implemented yet
 import { IBaseAPISchema } from 'web3-eth2-core'
 // @ts-ignore - types not full implemented yet

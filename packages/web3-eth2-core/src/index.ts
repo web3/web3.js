@@ -2,8 +2,7 @@ import Axios, {AxiosInstance} from 'axios'
 
 Axios.defaults.adapter = require('axios/lib/adapters/http');
 
-import { ETH2BaseOpts, ETH2Function } from '../types/index'
-import { IBaseAPISchema } from './schema'
+import { ETH2BaseOpts, ETH2Function, IBaseAPISchema } from '../types/index'
 
 export class ETH2Core {
     private _httpClient: AxiosInstance
