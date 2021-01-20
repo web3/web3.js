@@ -309,8 +309,8 @@ var Eth = function Eth() {
         // instances. This will update the currentProvider for
         // the contract instances
         var _this = this;
-        var setProvider = self.setProvider;
         self.setProvider = function() {
+          // use setProvider reference from above
           setProvider.apply(self, arguments);
           core.packageInit(_this, [self]);
         };
@@ -658,4 +658,3 @@ core.addProviders(Eth);
 
 
 module.exports = Eth;
-
