@@ -313,6 +313,12 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.3.2]
 
+### Fixed
+
+- Fix EIP-1193 provider subscriptions (#3864)
+
+## [1.3.3]
+
 ### Changed
 
 - Remove `notImplemented` flag from ETH2 Beacon Chain package methods schema
