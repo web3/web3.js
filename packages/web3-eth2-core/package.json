@@ -9,7 +9,6 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types",
         "test": "jest",
         "tsc": "tsc -b tsconfig.json"
     },

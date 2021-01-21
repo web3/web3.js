@@ -335,6 +335,7 @@ Released with 1.0.0-beta.37 code base.
 ### Removed
 
 - `schema.ts` from `web3-eth2-core`
+- `dtslint` npm command from `web3-eth2-core` and `web3-eth2-beaconchain` as `index.d.ts` files were removed
 
 ### Added
 
