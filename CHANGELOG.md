@@ -337,5 +337,6 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - Add `ETH2Core` class export to `index.d.ts` for `web3-eth2-core`
+- Deprecation of bzz warning
 
 ## [1.3.4]
