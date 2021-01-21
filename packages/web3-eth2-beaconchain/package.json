@@ -9,7 +9,7 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "echo 'Skipping dtslint in web3-eth2-beaconchain'",
+        "dtslint": "echo 'Skipping dtslint in web3-eth2-beaconchain' && exit 0",
         "test": "jest",
         "tsc": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
     },

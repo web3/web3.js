@@ -9,7 +9,7 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "echo 'Skipping dtslint in web3-eth2-core'",
+        "dtslint": "echo 'Skipping dtslint in web3-eth2-core' && exit 0",
         "test": "jest",
         "tsc": "tsc -b tsconfig.json"
     },
