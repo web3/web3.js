@@ -9,7 +9,6 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "",
         "test": "jest",
         "tsc": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
     },
