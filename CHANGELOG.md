@@ -327,3 +327,6 @@ Released with 1.0.0-beta.37 code base.
 - Bump `ts-node` from version `^8.10.2` to `^9.0.0`
 - Ran `npm audit fix` which fixed 4 vulnerabilities
 - Correct `web3-eth2-beaconchain` type declarations
+
+### Added
+- Deprecation of bzz warning
