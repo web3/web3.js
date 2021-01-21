@@ -148,7 +148,7 @@ describe('ens', function () {
         });
 
         it('should set the owner record for a name', async function () {
-            this.timeout(10000);
+            this.timeout(12000);
             const signature = 'setOwner(bytes32,address)';
 
             prepareProviderForSetter(
