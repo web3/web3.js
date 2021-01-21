@@ -4,13 +4,7 @@ export interface ETH2BaseOpts {
 
 export type ETH2Function<T = any> = (...args: any[]) => Promise<T>;
 
-export interface BaseAPISchema {
-    packageName: string,
-    routePrefix: string,
-    methods: BaseAPIMethodSchema[]
-}
-
-export interface BaseAPIMethodSchema {
+export interface BaseAPISchemaMethod {
     notImplemented?: true,
     name: string,
     route: string,
@@ -21,12 +15,12 @@ export interface BaseAPIMethodSchema {
     errorPrefix: string
 }
 
-export class ETH2Core {
-    constructor(
-        provider: string,
-        schema: BaseAPISchema,
-        opts: ETH2BaseOpts
-    )
+export interface BaseAPISchema {
+    packageName: string,
+    routePrefix: string,
+    methods: BaseAPISchemaMethod[]
+}
 
+export interface ETH2Core {
     setProvider(provider: string): void
 }

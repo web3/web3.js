@@ -1,7 +1,7 @@
 import { ETH2Core, BaseAPISchema, ETH2BaseOpts } from 'web3-eth2-core'
 import { DefaultSchema } from './schema'
 
-import { ETH2BeaconChain as IETH2BeaconChain } from '../types/index'
+import { ETH2BeaconChain as IETH2BeaconChain } from '../types/types'
 
 // @ts-ignore - ETH2BeaconChain incorrectly implements interface IETH2BeaconChain
 // because methods are added during runtime
