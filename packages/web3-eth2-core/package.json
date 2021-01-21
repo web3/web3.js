@@ -9,6 +9,7 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
+        "dtslint": "",
         "test": "jest",
         "tsc": "tsc -b tsconfig.json"
     },
