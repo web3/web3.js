@@ -1,9 +1,21 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "./lib"
+    "outDir": "./lib",
+    "module": "commonjs",
+        "lib": ["es6"],
+        "target": "es6",
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "noEmit": true,
+        "allowSyntheticDefaultImports": false,
+        "baseUrl": ".",
+        "paths": {
+            "web3-eth2-core": ["."]
+        }
   },
   "include": [
     "src"
-  ]
+, "types.ts"  ]
  }

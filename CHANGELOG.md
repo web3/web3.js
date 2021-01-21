@@ -330,6 +330,7 @@ Released with 1.0.0-beta.37 code base.
 - Move interfaces `IBaseAPISchema` and `IBaseAPIMethodSchema` to `index.d.ts` for `web3-eth2-core`
 - Removes `IETH2BeaconChain` interface in favor of exporting a class type: `ETH2BeaconChain`
 - Remove `index.d.ts` files in favor of `types.ts` for `web3-eth2-core` and `web3-eth2-beaconchain`
+- Update dependencies for `web3-eth2-core`
 
 ### Removed
 

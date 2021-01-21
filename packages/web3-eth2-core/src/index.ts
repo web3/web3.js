@@ -2,7 +2,7 @@ import Axios, {AxiosInstance} from 'axios'
 
 Axios.defaults.adapter = require('axios/lib/adapters/http');
 
-import { ETH2BaseOpts, ETH2Function, BaseAPISchema } from '../types/index'
+import { ETH2BaseOpts, ETH2Function, BaseAPISchema } from '../types'
 
 export class ETH2Core {
     private _httpClient: AxiosInstance
@@ -69,6 +69,7 @@ export class ETH2Core {
                     if (method.inputFormatter) queryParameters = method.inputFormatter(queryParameters)
 
                     const computedRoute = this.routeBuilder(method.route, routeParameters)
+                    // @ts-ignore
                     let {data} = await this._httpClient[method.restMethod](computedRoute, { params: queryParameters })
                     if (data.data) data = data.data
 

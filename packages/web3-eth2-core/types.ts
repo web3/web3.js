@@ -8,7 +8,7 @@ export interface BaseAPISchemaMethod {
     notImplemented?: true,
     name: string,
     route: string,
-    restMethod: string
+    restMethod: 'get' | 'post'
     inputFormatter: any,
     outputFormatter: any,
     errors: any
