@@ -98,14 +98,25 @@ RequestManager.prototype.setProvider = function (provider, net) {
 
     // listen to incoming notifications
     if (this.provider && this.provider.on) {
-        this.provider.on('data', function data(result, deprecatedResult) {
-            result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
+        if (typeof provider.request === 'function') { // EIP-1193 provider
+            this.provider.on('message', function (payload) {
+                if (payload && payload.type === 'eth_subscription' && payload.data) {
+                    const data = payload.data
+                    if (data.subscription && _this.subscriptions.has(data.subscription)) {
+                        _this.subscriptions.get(data.subscription).callback(null, data.result);
+                    }
+                }
+            })
+        } else { // legacy provider subscription event
+            this.provider.on('data', function data(result, deprecatedResult) {
+                result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
-            // if result is a subscription, call callback for that subscription
-            if (result.method && result.params && result.params.subscription && _this.subscriptions.has(result.params.subscription)) {
-                _this.subscriptions.get(result.params.subscription).callback(null, result.params.result);
-            }
-        });
+                // if result is a subscription, call callback for that subscription
+                if (result.method && result.params && result.params.subscription && _this.subscriptions.has(result.params.subscription)) {
+                    _this.subscriptions.get(result.params.subscription).callback(null, result.params.result);
+                }
+            });
+        }
 
         // resubscribe if the provider has reconnected
         this.provider.on('connect', function connect() {

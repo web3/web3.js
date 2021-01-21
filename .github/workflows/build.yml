@@ -8,6 +8,7 @@ on:
     pull_request:
         branches:
             - "1.x"
+            - "release/*"
         types: [opened, reopened, synchronize]
 jobs:
     lint:
