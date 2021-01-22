@@ -1,7 +1,6 @@
 var FakeHttpProvider = require('./helpers/FakeIpcProvider');
 var Web3 = require('../packages/web3');
 var Accounts = require("./../packages/web3-eth-accounts");
-var ethjsSigner = require("ethjs-signer");
 var chai = require('chai');
 var _ = require('underscore');
 var assert = chai.assert;
@@ -675,14 +674,6 @@ describe("eth", function () {
                     testAccount.signTransaction(test.transaction).then(function (tx) {
                         assert.equal(ethAccounts.recoverTransaction(tx.rawTransaction), test.address);
                     });
-                });
-
-                it("recoverTransaction, must also recover old signature from eth-signer", function() {
-                    var ethAccounts = new Accounts();
-
-                    var oldSignature = ethjsSigner.sign(test.transaction, test.privateKey);
-
-                    assert.equal(ethAccounts.recoverTransaction(oldSignature), test.address);
                 });
             }
         });

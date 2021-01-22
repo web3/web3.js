@@ -309,7 +309,7 @@ Released with 1.0.0-beta.37 code base.
 - Grammar changes to inputAddressFormatter error message
 - Fixed vulnerable dependencies
 
-## [1.3.2]
+## [1.3.3]
 
 ### Fixed
 
@@ -317,7 +317,7 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
-## [1.3.3]
+## [1.3.4]
 
 ### Changed
 
@@ -341,5 +341,3 @@ Released with 1.0.0-beta.37 code base.
 
 - Add `ETH2Core` class export to `index.d.ts` for `web3-eth2-core`
 - Deprecation of bzz warning
-
-## [1.3.4]
