@@ -1,3 +1,4 @@
+# WARNING: 2.X IS NO LONGER BEING MAINTAINED AND WILL BE DEPRECATED FROM NPM
 
 ![Web3.js logo](assets/web3js.svg)
 
