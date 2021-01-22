@@ -9,7 +9,6 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "dtslint": "echo 'Skipping dtslint in web3-eth2-core' && exit 0",
         "test": "jest",
         "tsc": "tsc -b tsconfig.json"
     },
@@ -20,7 +19,6 @@
     "devDependencies": {
         "@types/jest": "^26.0.14",
         "@types/node": "^14.14.22",
-        "dtslint": "^3.4.1",
         "jest": "^26.5.3",
         "ts-jest": "^26.4.1",
         "typescript": "^3.9.5"
