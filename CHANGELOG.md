@@ -330,3 +330,6 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 - Deprecation of bzz warning
+
+### Removed
+- ethjs-signer test (#3876)
