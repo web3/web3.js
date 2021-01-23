@@ -7,7 +7,6 @@
     "engines": {
         "node": ">=8.0.0"
     },
-    "types": "types.ts",
     "scripts": {
         "test": "jest",
         "tsc": "tsc -b tsconfig.json"
