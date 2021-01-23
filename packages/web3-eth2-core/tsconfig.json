@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
         "web3-eth2-core": ["."]
-    }
+    },
+    "types" : ["node","jest"]
   }
 }
