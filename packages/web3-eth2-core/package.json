@@ -9,7 +9,7 @@
     },
     "scripts": {
         "test": "jest",
-        "tsc": "tsc -b tsconfig.json"
+        "tsc": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
     },
     "main": "lib/index.js",
     "dependencies": {
