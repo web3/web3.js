@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "declaration": true,
     "outDir": "lib",
     "strict": true,
     "esModuleInterop": true,
@@ -13,10 +12,7 @@
     "strictFunctionTypes": true,
     "noEmit": true,
     "allowSyntheticDefaultImports": false,
-    "baseUrl": ".",
-    "paths": {
-        "web3-eth2-core": ["."]
-    },
-    "types" : ["node","jest"]
+    "types" : ["node","jest"],
+    "rootDirs": ["./src", "./test"]
   }
 }
