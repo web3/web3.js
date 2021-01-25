@@ -309,15 +309,15 @@ Released with 1.0.0-beta.37 code base.
 - Grammar changes to inputAddressFormatter error message
 - Fixed vulnerable dependencies
 
-## [Unreleased]
-
-## [1.3.2]
+## [1.3.3]
 
 ### Fixed
 
 - Fix EIP-1193 provider subscriptions (#3864)
 
-## [1.3.3]
+## [Unreleased]
+
+## [1.3.4]
 
 ### Changed
 
@@ -327,9 +327,12 @@ Released with 1.0.0-beta.37 code base.
 - Bump `ts-node` from version `^8.10.2` to `^9.0.0`
 - Ran `npm audit fix` which fixed 4 vulnerabilities
 - Correct `web3-eth2-beaconchain` type declarations
+- Fix default value for `fromBlock` option for `logs` subscriptions (defaults to `latest`)
 
 ### Added
+
 - Deprecation of bzz warning
 
 ### Removed
+
 - ethjs-signer test (#3876)
