@@ -7,9 +7,8 @@
     "engines": {
         "node": ">=8.0.0"
     },
-    "types": "types/index.d.ts",
+    "types": "types.ts",
     "scripts": {
-        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types",
         "test": "jest",
         "tsc": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
     },
@@ -21,7 +20,6 @@
         "@chainsafe/lodestar-types": "^0.13.0",
         "@types/jest": "^26.0.14",
         "@types/node": "^14.11.2",
-        "dtslint": "^3.4.1",
         "jest": "^26.4.2",
         "ts-jest": "^26.4.1",
         "typescript": "^4.0.3"

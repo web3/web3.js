@@ -18,6 +18,7 @@ const testAPISchema = {
 }
 
 it('constructs a ETH2Core instance with expected properties', () => {
+    // @ts-ignore using a mock schema for test
     const eth2Core = new ETH2Core(provider, testAPISchema, { protectProvider: true })
 
     expect(eth2Core.name).toBe(testAPISchema.packageName)
