@@ -2,19 +2,18 @@ import Axios, {AxiosInstance} from 'axios'
 
 Axios.defaults.adapter = require('axios/lib/adapters/http');
 
-import { ETH2BaseOpts, ETH2Function } from '../types/index'
-import { IBaseAPISchema } from './schema'
+import { ETH2BaseOpts, ETH2Function, BaseAPISchema } from '../types'
 
 export class ETH2Core {
-    private _httpClient: AxiosInstance
+    private _httpClient: AxiosInstance | undefined
 
     [ key: string ]: ETH2Function | any;
     
     name: string
-    provider: string
+    provider: string | undefined
     protectProvider: boolean // Protects from global overwrite when using .use functionality
 
-    constructor(provider: string, schema: IBaseAPISchema, opts: ETH2BaseOpts = {}) {
+    constructor(provider: string, schema: BaseAPISchema, opts: ETH2BaseOpts = {}) {
         this.name = schema.packageName
         this.setProvider(`${provider}${schema.routePrefix}`)
         this.protectProvider = opts.protectProvider || false
@@ -63,13 +62,14 @@ export class ETH2Core {
         }
     }
 
-    private buildAPIWrappersFromSchema(schema: IBaseAPISchema) {
+    private buildAPIWrappersFromSchema(schema: BaseAPISchema) {
         for (const method of schema.methods) {
             this[method.name] = async (routeParameters: any, queryParameters: any = {}): Promise<any> => {
                 try {
                     if (method.inputFormatter) queryParameters = method.inputFormatter(queryParameters)
 
                     const computedRoute = this.routeBuilder(method.route, routeParameters)
+                    // @ts-ignore
                     let {data} = await this._httpClient[method.restMethod](computedRoute, { params: queryParameters })
                     if (data.data) data = data.data
 

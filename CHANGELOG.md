@@ -309,8 +309,6 @@ Released with 1.0.0-beta.37 code base.
 - Grammar changes to inputAddressFormatter error message
 - Fixed vulnerable dependencies
 
-## [Unreleased]
-
 ## [1.3.2]
 
 ### Fixed
@@ -319,17 +317,33 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.3.3]
 
+### Fixed
+
+- Update `dist` to latest release (`1.3.2`) (#3875)
+
+## [Unreleased]
+
+## [1.3.4]
+
 ### Changed
 
-- Remove `notImplemented` flag from ETH2 Beacon Chain package methods schema
+- Remove `notImplemented` flag from ETH2 Beacon Chain package methods schema (#3861)
 - Fixed mutation of inputs to encoding and decoding functions (#3748)
-- Rename `web3-eth2-base` to `web3-eth2-core` and `web3-eth2-beacon` to `web3-eth2-beaconchain`
-- Bump `ts-node` from version `^8.10.2` to `^9.0.0`
-- Ran `npm audit fix` which fixed 4 vulnerabilities
-- Correct `web3-eth2-beaconchain` type declarations
-
-### Added
-- Deprecation of bzz warning
+- Rename `web3-eth2-base` to `web3-eth2-core` and `web3-eth2-beacon` to `web3-eth2-beaconchain` (#3833)
+- Bump `ts-node` from version `^8.10.2` to `^9.0.0` (#3856)
+- Ran `npm audit fix` which fixed 4 vulnerabilities (#3856)
+- Correct `web3-eth2-beaconchain` type declarations (#3859) and (#3865)
+- Move interfaces `IBaseAPISchema` and `IBaseAPIMethodSchema` to `index.d.ts` for `web3-eth2-core` (#3878)
+- Removes `IETH2BeaconChain` interface in favor of exporting a class type: `ETH2BeaconChain` (#3878)
+- Remove `index.d.ts` files in favor of `types.ts` for `web3-eth2-core` and `web3-eth2-beaconchain` (#3878)
+- Update dependencies for `web3-eth2-core` (#3878)
 
 ### Removed
-- ethjs-signer test (#3876)
+
+- `schema.ts` from `web3-eth2-core` (#3878)
+- `dtslint` npm command from `web3-eth2-core` and `web3-eth2-beaconchain` as `index.d.ts` files were removed (#3878)
+
+### Added
+
+- Add `ETH2Core` class export to `index.d.ts` for `web3-eth2-core` (#3878)
+- Deprecation of bzz warning (#3872)
