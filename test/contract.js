@@ -2745,6 +2745,7 @@ var runTests = function(contractFactory) {
                 assert.equal(payload.method, 'eth_getLogs');
                 assert.deepEqual(payload.params, [{
                     address: addressLowercase,
+                    fromBlock: "latest",
                     topics: [
                           "0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651",
                           "0x000000000000000000000000" + address2.replace('0x',''),
