@@ -16,7 +16,7 @@
     },
     "main": "lib/index.js",
     "dependencies": {
-        "web3-eth2-core": "file:../web3-eth2-core"
+        "web3-eth2-core": "^1.3.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.10",
