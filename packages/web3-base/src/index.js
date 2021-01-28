@@ -16,18 +16,41 @@ export default class Base {
     this.BatchRequest = BatchManager.bind(null, this._requestManager);
   }
 
-  setRequestManager (manager) {
-    this._requestManager = manager;
-    this._provider = manager.provider;
+/***
+  returns true
+  params:
+  provider: string||object
+  net?: network connection object
+*/
+  setProvider (provider, net) {
+    this._requestManager.setProvider(provider, net);
+    this._provider = this._requestManager.provider;
+    return true;
   }
 
+/***
+  Adds the default providers from the RequestManager class
+*/
+  addProviders () {
+    this.givenProvider = Manager.givenProvider;
+    this.providers = Manager.providers;
+  }
+
+/***
+  sets the current provider
+*/
   set curentProvider (newProvider) {
     return this.setProvider(newProvider);
   }
 
+/***
+  returns the currently set provider
+*/
   get curentProvider () {
     return this._provider;
   }
+
+  // Class methods
 
   static get providers () {
     return Manager.providers
@@ -36,21 +59,4 @@ export default class Base {
   static get givenProvider () {
     return Manager.givenProvider
   }
-
-  setProvider (provider, net) {
-    this._requestManager.setProvider(provider, net);
-    this._provider = this._requestManager.provider;
-    return true;
-  }
-
-  addProviders () {
-    this.givenProvider = Manager.givenProvider;
-    this.providers = Manager.providers;
-  }
-
-  static addProviders (pkg) {
-    pkg.givenProvider = Manager.givenProvider;
-    pkg.providers = Manager.providers;
-  }
-
 }
