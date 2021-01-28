@@ -23,10 +23,6 @@ export interface BaseAPISchema {
     methods: BaseAPISchemaMethod[]
 }
 
-// export interface ETH2Core {
-//     setProvider(provider: string): void
-// }
-
 export declare class ETH2Core {
     private _httpClient;
     [key: string]: ETH2Function | any;
