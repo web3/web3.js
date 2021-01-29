@@ -132,4 +132,4 @@ jobs:
             #           */*/node_modules
             #       key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
 
-            - run: bash ./scripts/ci.sh
+            - run: npm ci
