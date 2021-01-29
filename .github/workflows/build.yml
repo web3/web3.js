@@ -122,7 +122,7 @@ jobs:
               with:
                   node-version: ${{ matrix.node }}
 
-            # - uses: actions/checkout@v2
+            - uses: actions/checkout@v2
 
             # - uses: actions/cache@v2
             #   id: cache-deps
