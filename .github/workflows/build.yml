@@ -134,7 +134,7 @@ jobs:
                       */*/node_modules
                   key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
 
-            - run: make -C ./packages/web3-eth2-beaconchain lighthouse-docker
+            - run: docker run -p 9000:9000 -p 127.0.0.1:5052:5052 -v ${HOME}/.lighthouse:/root/.lighthouse sigp/lighthouse lighthouse --network mainnet beacon --http --http-address 0.0.0.0
             - run: npm ci
               if: steps.cache-deps.outputs.cache-hit != 'true'
 
