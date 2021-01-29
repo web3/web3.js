@@ -63,7 +63,9 @@ elif [ "$TEST" = "e2e_gnosis_dex" ]; then
 
 elif [ "$TEST" = "eth2" ]; then
   
+  npm --prefix ./packages/web3-eth2-core run build
   npm --prefix ./packages/web3-eth2-core run test
+  npm --prefix ./packages/web3-eth2-beaconchain run build
   npm --prefix ./packages/web3-eth2-beaconchain run test
 
 fi
