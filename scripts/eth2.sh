@@ -11,9 +11,9 @@ set -o errexit
 # Run cleanup on exit
 trap cleanup EXIT
 
-cleanup(){
-  docker stop lighthouse
-}
+# cleanup(){
+#   docker stop lighthouse
+# }
 
 echo " "
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
