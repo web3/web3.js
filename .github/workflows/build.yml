@@ -133,9 +133,10 @@ jobs:
                       node_modules
                       */*/node_modules
                   key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
-
-            - run: lighthouse --network mainnet beacon --http --http-address 0.0.0.0
+            
             - run: npm ci
               if: steps.cache-deps.outputs.cache-hit != 'true'
 
-            - run: bash ./scripts/ci.sh
+            - run: |
+                lighthouse --network mainnet beacon --http --http-address 0.0.0.0 &
+                bash ./scripts/ci.sh
