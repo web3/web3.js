@@ -112,8 +112,9 @@ jobs:
             - run: bash ./scripts/ci.sh
     eth2:
         runs-on: ubuntu-latest
-        container:
-            image: sigp/lighthouse
+        services:
+            lighthouse:
+                image: sigp/lighthouse
         strategy:
             matrix:
                 node: [8, 10, 11, 12, 13]
