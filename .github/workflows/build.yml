@@ -112,8 +112,14 @@ jobs:
             - run: bash ./scripts/ci.sh
     eth2:
         runs-on: ubuntu-latest
-        container:
-            image: sigp/lighthouse
+        services:
+            lighthouse:
+                image: sigp/lighthouse
+                options: >-
+                    --network mainnet
+                    beacon
+                    --http
+                    --http-address 0.0.0.0
         strategy:
             matrix:
                 node: [8, 10, 11, 12, 13]
@@ -137,6 +143,4 @@ jobs:
             - run: npm ci
               if: steps.cache-deps.outputs.cache-hit != 'true'
 
-            - run: |
-                lighthouse --network mainnet beacon --http --http-address 0.0.0.0 &
-                bash ./scripts/ci.sh
+            - run: bash ./scripts/ci.sh
