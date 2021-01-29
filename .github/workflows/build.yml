@@ -122,17 +122,14 @@ jobs:
               with:
                   node-version: ${{ matrix.node }}
 
-            - uses: actions/checkout@v2
+            # - uses: actions/checkout@v2
 
-            - uses: actions/cache@v2
-              id: cache-deps
-              with:
-                  path: |
-                      node_modules
-                      */*/node_modules
-                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
-            
-            - run: npm ci
-              if: steps.cache-deps.outputs.cache-hit != 'true'
+            # - uses: actions/cache@v2
+            #   id: cache-deps
+            #   with:
+            #       path: |
+            #           node_modules
+            #           */*/node_modules
+            #       key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
 
             - run: bash ./scripts/ci.sh
