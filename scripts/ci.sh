@@ -63,7 +63,6 @@ elif [ "$TEST" = "e2e_gnosis_dex" ]; then
 
 elif [ "$TEST" = "eth2" ]; then
   
-  npm run build
   bash ./scripts/eth2.sh
 
 fi
