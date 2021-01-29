@@ -61,4 +61,9 @@ elif [ "$TEST" = "e2e_gnosis_dex" ]; then
   npm run test:e2e:publish
   npm run test:e2e:gnosis:dex
 
+elif [ "$TEST" = "eth2" ]; then
+
+  npm --prefix ./packages/web3-eth2-core run test
+  npm --prefix ./packages/web3-eth2-beaconchain run test
+
 fi
