@@ -9,9 +9,6 @@ on:
         branches:
             - "1.x"
         types: [opened, reopened, synchronize]
-        paths-ignore:
-            - '**/README.md'
-            - '**/CHANGELOG.md'
 jobs:
     lint:
         runs-on: ubuntu-latest
