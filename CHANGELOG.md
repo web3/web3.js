@@ -359,4 +359,4 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 
-- Unified babel compiler for `web3-eth2-core` and `web3-eth2-beaconchain`
+- Unified babel compiler for `web3-eth2-core` and `web3-eth2-beaconchain` (#3892)
