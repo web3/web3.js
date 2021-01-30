@@ -356,3 +356,7 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - Github action for running tests for `web3-eth2-core` and `web3-eth2-beaconchain` packages (#3892)
+
+### Changed
+
+- Unified babel compiler for `web3-eth2-core` and `web3-eth2-beaconchain`
