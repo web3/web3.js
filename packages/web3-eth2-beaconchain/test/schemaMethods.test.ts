@@ -135,7 +135,7 @@ it('getValidatorBalances', async () => {
     expect(response[0]).toMatchObject(expectedResponse)
 })
 
-xit('getEpochCommittees', async () => {
+it('getEpochCommittees', async () => {
     const routeParameters = {
         stateId: 'head',
         epoch: ''
