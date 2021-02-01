@@ -1,6 +1,6 @@
 {
     "name": "web3-eth2-beaconchain",
-    "version": "1.3.1ss",
+    "version": "1.3.1",
     "description": "Web3 ETH2 Beacon chain API wrappers.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth2-beaconchain",
     "license": "LGPL-3.0",
@@ -10,18 +10,27 @@
     "types": "types.ts",
     "scripts": {
         "test": "jest",
-        "tsc": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
+        "tsc": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+        "type-check": "tsc --noEmit",
+        "type-check:watch": "npm run type-check -- --watch"
     },
     "main": "lib/index.js",
     "dependencies": {
         "web3-eth2-core": "^1.3.0"
     },
     "devDependencies": {
+        "@babel/cli": "^7.12.10",
+        "@babel/core": "^7.12.10",
+        "@babel/plugin-proposal-class-properties": "^7.12.1",
+        "@babel/plugin-transform-runtime": "^7.12.10",
+        "@babel/preset-env": "^7.12.11",
+        "@babel/preset-typescript": "^7.12.7",
+        "@babel/runtime": "^7.12.5",
         "@chainsafe/lodestar-types": "^0.13.0",
         "@types/jest": "^26.0.14",
         "@types/node": "^14.11.2",
+        "babel-jest": "^26.6.3",
         "jest": "^26.4.2",
-        "ts-jest": "^26.4.1",
         "typescript": "^4.0.3"
     }
 }
