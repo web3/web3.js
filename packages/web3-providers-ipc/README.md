@@ -23,7 +23,7 @@ const net = require(net);
 const ipc = new Web3IpcProvider('/Users/me/Library/Ethereum/geth.ipc', net);
 ```
 
-Note: make sure to run [geth](https://geth.ethereum.org/).
+Note: make sure to run [geth](https://geth.ethereum.org/) and for information on IPCs click [here](https://ethereum.stackexchange.com/questions/1492/when-is-the-geth-ipc-file-produced)
 
 ## Types
 
