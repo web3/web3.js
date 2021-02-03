@@ -350,3 +350,4 @@ Released with 1.0.0-beta.37 code base.
 - Add `ETH2Core` class export to `index.d.ts` for `web3-eth2-core` (#3878)
 - Deprecation of bzz warning (#3872)
 - Deprecation of shh warning (#3888)
+- Edited documentation to include how to use Web3 with a remote node provider 
