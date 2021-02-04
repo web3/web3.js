@@ -10,17 +10,24 @@
     "types": "types.ts",
     "scripts": {
         "test": "jest",
-        "tsc": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
+        "tsc": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+        "type-check": "tsc --noEmit",
+        "type-check:watch": "npm run type-check -- --watch"
     },
     "main": "lib/index.js",
     "dependencies": {
         "axios": "^0.21.1"
     },
     "devDependencies": {
+        "@babel/cli": "^7.12.10",
+        "@babel/core": "^7.12.10",
+        "@babel/plugin-proposal-class-properties": "^7.12.1",
+        "@babel/preset-env": "^7.12.11",
+        "@babel/preset-typescript": "^7.12.7",
         "@types/jest": "^26.0.14",
         "@types/node": "^14.14.22",
         "jest": "^26.5.3",
-        "ts-jest": "^26.4.1",
-        "typescript": "^3.9.5"
+        "ts-jest": "^26.4.4",
+        "typescript": "^3.9.7"
     }
 }
