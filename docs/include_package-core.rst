@@ -7,14 +7,12 @@ setProvider
 
     web3.setProvider(myProvider)
     web3.eth.setProvider(myProvider)
-    web3.shh.setProvider(myProvider)
-    web3.bzz.setProvider(myProvider)
     ...
 
 Will change the provider for its module.
 
 .. note::
-    When called on the umbrella package ``web3`` it will also set the provider for all sub modules ``web3.eth``, ``web3.shh``, etc. EXCEPT ``web3.bzz`` which needs a separate provider at all times.
+    When called on the umbrella package ``web3`` it will also set the provider for all sub modules
 
 ----------
 Parameters
@@ -62,8 +60,6 @@ providers
 
     web3.providers
     web3.eth.providers
-    web3.shh.providers
-    web3.bzz.providers
     ...
 
 Contains the current available :ref:`providers <web3-providers>`.
@@ -182,8 +178,6 @@ givenProvider
 
     web3.givenProvider
     web3.eth.givenProvider
-    web3.shh.givenProvider
-    web3.bzz.givenProvider
     ...
 
 When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser.
@@ -213,8 +207,6 @@ currentProvider
 
     web3.currentProvider
     web3.eth.currentProvider
-    web3.shh.currentProvider
-    web3.bzz.currentProvider
     ...
 
 Will return the current provider, otherwise ``null``.
@@ -244,8 +236,6 @@ BatchRequest
 
     new web3.BatchRequest()
     new web3.eth.BatchRequest()
-    new web3.shh.BatchRequest()
-    new web3.bzz.BatchRequest()
 
 Class to create and execute batch requests.
 
@@ -287,8 +277,6 @@ extend
 
     web3.extend(methods)
     web3.eth.extend(methods)
-    web3.shh.extend(methods)
-    web3.bzz.extend(methods)
     ...
 
 Allows extending the web3 modules.
@@ -352,7 +340,6 @@ Example
         },
         directCall: function(){},
         eth: Eth {...},
-        bzz: Bzz {...},
         ...
     }
 

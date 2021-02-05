@@ -22,8 +22,6 @@ The ``web3-net`` package allows you to interact with an Ethereum node's network 
     var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
 
     // -> web3.eth.net
-    // -> web3.bzz.net
-    // -> web3.shh.net
 
 
 
