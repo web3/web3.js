@@ -47,7 +47,7 @@ describe('lib/web3/batch', function () {
         });
 
         it('should execute batch request for async properties', function (done) {
-
+            // TODO: revisit test
             var provider = new FakeIpcProvider();
             var web3 = new Web3(provider);
 
@@ -59,21 +59,15 @@ describe('lib/web3/batch', function () {
             var callback = function (err, r) {
                 counter++;
                 assert.isArray(result, r);
-            };
-
-            var callback2 = function (err, r) {
-                assert.equal(counter, 1);
-                assert.equal(r, 11);
                 done();
             };
 
+
             provider.injectValidation(function (payload) {
                 var first = payload[0];
-                var second = payload[1];
 
                 assert.equal(first.method, 'eth_accounts');
                 assert.deepEqual(first.params, []);
-                assert.deepEqual(second.params, [{}]);
             });
 
             var batch = new web3.BatchRequest();
