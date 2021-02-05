@@ -107,22 +107,10 @@ describe('lib/web3/setProvider', function () {
         it(test.Lib.name +' should set the provider using constructor', function () {
 
             var provider1 = new FakeHttpProvider();
-            var lib;
+            var lib= new test.Lib(provider1);
 
-
-            if(test.swarm) {
-
-                lib = new test.Lib('http://localhost:8500');
-
-                assert.equal(lib.currentProvider, 'http://localhost:8500');
-
-            } else {
-
-                lib = new test.Lib(provider1);
-
-                assert.equal(lib.currentProvider.constructor.name, provider1.constructor.name);
-                assert.equal(lib._requestManager.provider.constructor.name, provider1.constructor.name);
-            }
+            assert.equal(lib.currentProvider.constructor.name, provider1.constructor.name);
+            assert.equal(lib._requestManager.provider.constructor.name, provider1.constructor.name);
 
         });
         it(test.Lib.name +' should set the provider using setProvider, after empty init', function () {
@@ -130,69 +118,33 @@ describe('lib/web3/setProvider', function () {
             var provider1 = new FakeHttpProvider();
             var lib = new test.Lib();
 
+            assert.isNull(lib.currentProvider);
+            assert.isNull(lib._requestManager.provider);
 
+            lib.setProvider(provider1);
 
-            if(test.swarm) {
-
-                assert.isNull(lib.currentProvider);
-
-                lib.setProvider('http://localhost:8500');
-
-                assert.equal(lib.currentProvider, 'http://localhost:8500');
-
-            } else {
-
-                assert.isNull(lib.currentProvider);
-                assert.isNull(lib._requestManager.provider);
-
-                lib.setProvider(provider1);
-
-                assert.equal(lib.currentProvider.constructor.name, provider1.constructor.name);
-                assert.equal(lib._requestManager.provider.constructor.name, provider1.constructor.name);
-            }
+            assert.equal(lib.currentProvider.constructor.name, provider1.constructor.name);
+            assert.equal(lib._requestManager.provider.constructor.name, provider1.constructor.name);
 
         });
         it(test.Lib.name +' should set the provider using constructor, and change later using setProvider', function () {
 
             var provider1 = new FakeHttpProvider();
             var provider2 = new FakeIpcProvider();
-            var swarmProvider1 = 'http://localhost:8500';
-            var swarmProvider2 = 'http://swarm-gateways.net';
 
-            var lib;
+            var lib = new test.Lib(provider1);
+            assert.equal(lib.currentProvider.constructor.name, provider1.constructor.name);
+            assert.equal(lib._requestManager.provider.constructor.name, provider1.constructor.name);
 
+            lib.setProvider(provider2);
 
-            if(test.swarm) {
+            assert.equal(lib.currentProvider.constructor.name, provider2.constructor.name);
+            assert.equal(lib._requestManager.provider.constructor.name, provider2.constructor.name);
 
-                lib = new test.Lib(swarmProvider1);
+            lib.setProvider(provider1);
 
-                assert.equal(lib.currentProvider, swarmProvider1);
-
-                lib.setProvider(swarmProvider2);
-
-                assert.equal(lib.currentProvider, swarmProvider2);
-
-                lib.setProvider(swarmProvider1);
-
-                assert.equal(lib.currentProvider, swarmProvider1);
-
-            } else {
-
-                lib = new test.Lib(provider1);
-
-                assert.equal(lib.currentProvider.constructor.name, provider1.constructor.name);
-                assert.equal(lib._requestManager.provider.constructor.name, provider1.constructor.name);
-
-                lib.setProvider(provider2);
-
-                assert.equal(lib.currentProvider.constructor.name, provider2.constructor.name);
-                assert.equal(lib._requestManager.provider.constructor.name, provider2.constructor.name);
-
-                lib.setProvider(provider1);
-
-                assert.equal(lib.currentProvider.constructor.name, provider1.constructor.name);
-                assert.equal(lib._requestManager.provider.constructor.name, provider1.constructor.name);
-            }
+            assert.equal(lib.currentProvider.constructor.name, provider1.constructor.name);
+            assert.equal(lib._requestManager.provider.constructor.name, provider1.constructor.name);
 
         });
     });
