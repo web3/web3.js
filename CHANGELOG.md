@@ -356,6 +356,7 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - Github action for running tests for `web3-eth2-core` and `web3-eth2-beaconchain` packages (#3892)
+- Added documentation that describes how to use Web3 with a remote node provider (#3884)
 
 ### Changed
 
