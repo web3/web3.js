@@ -30,7 +30,6 @@ const version = semver.inc(web3Package.version, 'minor');
 
 const web3Modules = [
   "web3",
-  "web3-bzz",
   "web3-core-helpers",
   "web3-core-method",
   "web3-core-promievent",
@@ -48,7 +47,6 @@ const web3Modules = [
   "web3-providers-http",
   "web3-providers-ipc",
   "web3-providers-ws",
-  "web3-shh",
   "web3-utils"
 ];
 
