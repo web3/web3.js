@@ -153,7 +153,7 @@ export interface EventOptions extends LogsOptions {
 }
 
 export interface Filter {
-    [key: string]: number | string | string[] | number[];
+    [key: string]: number | string | string[] | number[] | undefined;
 }
 
 export interface EventData {
