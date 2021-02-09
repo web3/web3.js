@@ -110,3 +110,29 @@ jobs:
                   node-version: 12
             - uses: actions/checkout@v2
             - run: bash ./scripts/ci.sh
+    eth2:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: [10, 11, 12, 13]
+        env:
+            TEST: "eth2"
+        steps:
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node }}
+
+            - uses: actions/checkout@v2
+
+            - uses: actions/cache@v2
+              id: cache-deps
+              with:
+                  path: |
+                      node_modules
+                      */*/node_modules
+                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+
+            - run: npm ci
+              if: steps.cache-deps.outputs.cache-hit != 'true'
+
+            - run: bash ./scripts/ci.sh
