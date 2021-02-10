@@ -31,6 +31,6 @@ npx wait-port 8545
 GANACHE=true nyc --no-clean --silent _mocha -- \
   --reporter spec \
   --require ts-node/register \
-  --grep 'E2E' \
+  --grep "E2E|should return instance of StateManager on start|should handle events properly via the data event handler|should call get whisper version (shh_version)" \
   --timeout 5000 \
   --exit
