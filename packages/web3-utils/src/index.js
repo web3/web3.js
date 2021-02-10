@@ -411,6 +411,7 @@ module.exports = {
     hexToUtf8: utils.hexToUtf8,
     hexToString: utils.hexToUtf8,
     toUtf8: utils.hexToUtf8,
+    stripHexPrefix: utils.stripHexPrefix,
 
     utf8ToHex: utils.utf8ToHex,
     stringToHex: utils.utf8ToHex,

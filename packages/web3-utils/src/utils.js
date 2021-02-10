@@ -388,6 +388,18 @@ var isHex = function (hex) {
     return ((_.isString(hex) || _.isNumber(hex)) && /^(-0x|0x)?[0-9a-f]*$/i.test(hex));
 };
 
+/**
+ * Remove 0x prefix from string
+ *
+ * @method stripHexPrefix
+ * @param {String} str to be checked
+ * @returns {String}
+ */
+var stripHexPrefix = function (str) {
+    if (str !== 0 && isHex(str))
+        return str.replace(/^(-)?0x/i, '$1')
+    return str;
+};
 
 /**
  * Returns true if given string is a valid Ethereum block header bloom.
@@ -534,6 +546,7 @@ module.exports = {
     bytesToHex: bytesToHex,
     isHex: isHex,
     isHexStrict: isHexStrict,
+    stripHexPrefix: stripHexPrefix,
     leftPad: leftPad,
     rightPad: rightPad,
     toTwosComplement: toTwosComplement,

@@ -35,15 +35,17 @@ const testAPISchema = {
     ]
 }
 
-let eth2Core
+let eth2Core: ETH2Core
 
 beforeAll(() => {
+    // @ts-ignore using a mock schema for test
     eth2Core = new ETH2Core(provider, testAPISchema, { protectProvider: true })
 })
 
 it('Should build expectedComputedRoute with 1 parameter', () => {
     const routeParameter = { replaceMe: 'testValue' }
     const expectedComputedRoute = `additional/route/${routeParameter.replaceMe}`
+    // @ts-ignore routeBuilder is private
     const computedRoute = eth2Core.routeBuilder(testAPISchema.methods[0].route, routeParameter)
     expect(computedRoute).toBe(expectedComputedRoute)
 })
@@ -51,6 +53,7 @@ it('Should build expectedComputedRoute with 1 parameter', () => {
 it('Should throw missing parameter error', () => {
     const routeParameter = {}
     expect(() => {
+        // @ts-ignore routeBuilder is private
         eth2Core.routeBuilder(testAPISchema.methods[0].route, routeParameter)
     }).toThrow('Failed to build route: The parameter replaceMe was not provided')
 })
@@ -58,6 +61,7 @@ it('Should throw missing parameter error', () => {
 it('Should build expectedComputedRoute with 0 parameters', () => {
     const routeParameter = {}
     const expectedComputedRoute = testAPISchema.methods[1].route
+    // @ts-ignore routeBuilder is private
     const computedRoute = eth2Core.routeBuilder(testAPISchema.methods[1].route, routeParameter)
     expect(computedRoute).toBe(expectedComputedRoute)
 })
@@ -70,6 +74,7 @@ it('Should build expectedComputedRoute with 4 parameters', () => {
         replaceMe4: 'testValue4'
     }
     const expectedComputedRoute = `${routeParameters.replaceMe1}/foo/${routeParameters.replaceMe2}/${routeParameters.replaceMe3}/bar/${routeParameters.replaceMe4}`
+    // @ts-ignore routeBuilder is private
     const computedRoute = eth2Core.routeBuilder(testAPISchema.methods[2].route, routeParameters)
     expect(computedRoute).toBe(expectedComputedRoute)
 })
