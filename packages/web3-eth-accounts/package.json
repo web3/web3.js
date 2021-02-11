@@ -14,6 +14,7 @@
     },
     "main": "lib/index.js",
     "dependencies": {
+        "@ethereumjs/tx": "^3.0.1",
         "crypto-browserify": "3.12.0",
         "eth-lib": "0.2.8",
         "ethereumjs-common": "^1.3.2",
