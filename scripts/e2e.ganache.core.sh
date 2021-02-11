@@ -51,7 +51,7 @@ npm run build
 #   this is due to the deprecation of the shh package
 # Skipping them with grep / invert.
 TEST_BUILD=node npx mocha \
-  --grep "should return instance of StateManager on start|should handle events properly via the data event handler|should call get whisper version (shh_version)" \
+  --grep "should return instance of StateManager on start|should handle events properly via the data event handler|Whisper" \
   --invert \
   --check-leaks \
   --recursive \
