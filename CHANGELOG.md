@@ -348,6 +348,6 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - Add `ETH2Core` class export to `index.d.ts` for `web3-eth2-core` (#3878)
-- Add `usage-examples` to simplify the usage of this package 
+- Add `usage-examples` to simplify the usage of this package (#3844)
 - Deprecation of bzz warning (#3872)
 - Deprecation of shh warning (#3888)
