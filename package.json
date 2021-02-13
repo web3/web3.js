@@ -17,7 +17,7 @@
     "scripts": {
         "version": "npm run build",
         "postinstall": "npm run bootstrap",
-        "build": "npm run bootstrap && lerna run tsc && webpack && cp -r ./dist ./packages/web3",
+        "build": "npm run bootstrap && lerna run compile && webpack && cp -r ./dist ./packages/web3",
         "publish": "lerna publish",
         "bootstrap": "lerna bootstrap --hoist",
         "lint": "jshint *.js packages",
