@@ -364,4 +364,4 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 
-- Renamed the `tsc` script in all packages to `compile`, and the corresponding `lerna run` usage in the main `package.json` (#3894)
+- Renamed the `tsc` script in all packages to `compile`; updates the corresponding `lerna run` usage in the main `package.json` (#3894)
