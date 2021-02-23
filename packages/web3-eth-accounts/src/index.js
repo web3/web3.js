@@ -34,9 +34,8 @@ var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
-var Transaction = require('ethereumjs-tx').Transaction;
-var TransactionNew = require('@ethereumjs/tx')
-var Common = require('ethereumjs-common').default;
+var Transaction = require('@ethereumjs/tx').Transaction;
+var Common = require('@ethereumjs/common').default;
 
 
 var isNot = function(value) {
@@ -206,26 +205,29 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             if (privateKey.startsWith('0x')) {
                 privateKey = privateKey.substring(2);
             }
+            
+            var ethTx = Transaction.fromTxData(transaction, transactionOptions);
 
-            var ethTx = new Transaction(transaction, transactionOptions);
+            var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));
+            var validationResult = signedTx.validate(true);
 
-            ethTx.sign(Buffer.from(privateKey, 'hex'));
-
-            var validationResult = ethTx.validate(true);
-
-            if (validationResult !== '') {
-                throw new Error('Signer Error: ' + validationResult);
+            if (!validationResult || validationResult.length > 0) {
+                const errorString = 'Signer Error: '
+                for(const validationError of validationResult) {
+                    `${errorString} ${validationError}.`
+                }
+                throw new Error(errorString);
             }
 
-            var rlpEncoded = ethTx.serialize().toString('hex');
+            var rlpEncoded = signedTx.serialize().toString('hex');
             var rawTransaction = '0x' + rlpEncoded;
             var transactionHash = utils.keccak256(rawTransaction);
-
+            
             var result = {
-                messageHash: '0x' + Buffer.from(ethTx.hash(false)).toString('hex'),
-                v: '0x' + Buffer.from(ethTx.v).toString('hex'),
-                r: '0x' + Buffer.from(ethTx.r).toString('hex'),
-                s: '0x' + Buffer.from(ethTx.s).toString('hex'),
+                messageHash: '0x' + Buffer.from(signedTx.hash()).toString('hex'),
+                v: '0x' + Buffer.from(signedTx.v).toString('hex'),
+                r: '0x' + Buffer.from(signedTx.r).toString('hex'),
+                s: '0x' + Buffer.from(signedTx.s).toString('hex'),
                 rawTransaction: rawTransaction,
                 transactionHash: transactionHash
             };
