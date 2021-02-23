@@ -163,7 +163,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             transaction.value = transaction.value || '0x';
             transaction.chainId = utils.numberToHex(transaction.chainId);
 
-            // Because tx has no ethereumjs-tx signing options we use fetched vals.
+            // Because tx has no @ethereumjs/tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
                 transactionOptions.common = Common.forCustomChain(
                     'mainnet',
