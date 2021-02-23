@@ -212,9 +212,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             var validationResult = signedTx.validate(true);
 
             if (!validationResult || validationResult.length > 0) {
-                const errorString = 'Signer Error: '
+                let errorString = 'Signer Error: '
                 for(const validationError of validationResult) {
-                    `${errorString} ${validationError}.`
+                    errorString = `${errorString} ${validationError}.`
                 }
                 throw new Error(errorString);
             }
