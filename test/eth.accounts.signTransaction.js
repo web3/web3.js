@@ -480,6 +480,22 @@ var tests = [
         },
         error: true
     },
+    {
+        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+        transaction: {
+            chainId: 1,
+            nonce: 0,
+            gasPrice: "20000000000",
+            gas: 21000,
+            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
+            value: "1000000000",
+            data: "",
+            common: common
+        },
+        error: true
+    },
 ];
 
 describe("eth", function () {
