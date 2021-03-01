@@ -16,60 +16,60 @@
 */
 /**
  * @file batch.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @date 2015
+ * @author ChainSafe <info@chainsafe.io>
+ * @date 2021
  */
 
-"use strict";
+import Jsonrpc from './jsonrpc';
+import { errors }  from 'web3-core-helpers';
 
-var Jsonrpc = require('./jsonrpc');
-var errors = require('web3-core-helpers').errors;
-
-var Batch = function (requestManager) {
+export default class Batch {
+  constructor (requestManager) {
     this.requestManager = requestManager;
     this.requests = [];
-};
+  }
 
-/**
- * Should be called to add create new request to batch request
- *
- * @method add
- * @param {Object} jsonrpc requet object
- */
-Batch.prototype.add = function (request) {
+  get name () {
+    return 'batch'
+  }
+
+  /**
+   * Should be called to add create new request to batch request
+   *
+   * @method add
+   * @param {Object} jsonrpc requet object
+   */
+  add (request) {
     this.requests.push(request);
-};
+  }
 
-/**
- * Should be called to execute batch request
- *
- * @method execute
- */
-Batch.prototype.execute = function () {
-    var requests = this.requests;
-    this.requestManager.sendBatch(requests, function (err, results) {
-        results = results || [];
-        requests.map(function (request, index) {
-            return results[index] || {};
-        }).forEach(function (result, index) {
-            if (requests[index].callback) {
-                if (result && result.error) {
-                    return requests[index].callback(errors.ErrorResponse(result));
-                }
+  /**
+   * Should be called to execute batch request
+   *
+   * @method execute
+   */
+  async execute () {
+    // if no request the return an empty array
+    if (!this.requests.length) return []
+    this.requestManager.sendBatch(this.requests, (err, results = []) => {
+      if (!results.length) return
+      results.forEach((result, index) => {
+        if (requests[index].callback) {
+          if (result && result.error) {
+            return requests[index].callback(errors.ErrorResponse(result));
+          }
 
-                if (!Jsonrpc.isValidResponse(result)) {
-                    return requests[index].callback(errors.InvalidResponse(result));
-                }
+          if (!Jsonrpc.isValidResponse(result)) {
+            return requests[index].callback(errors.InvalidResponse(result));
+          }
 
-                try {
-                    requests[index].callback(null, requests[index].format ? requests[index].format(result.result) : result.result);
-                } catch (err) {
-                    requests[index].callback(err);
-                }
-            }
-        });
+          try {
+            requests[index].callback(null, requests[index].format ? requests[index].format(result.result) : result.result);
+          } catch (err) {
+            requests[index].callback(err);
+          }
+        }
+      });
     });
+  }
 };
-
-module.exports = Batch;
-

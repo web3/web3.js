@@ -1,5 +1,35 @@
-import { callbackify } from 'util';
-import errors from 'web3-core-helpers';
+/*
+    This file is part of web3.js.
+
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/**
+ * @file batch.js
+ * @author ChainSafe <info@chainsafe.io>
+ * @date 2021
+ */
+
+import WebsocketProvider from 'web3-providers-ws'
+import HttpProvider from 'web3-providers-http'
+import IpcProvider from 'web3-providers-ipc'
+
+import {
+  ConnectionCloseError,
+  InvalidResponse,
+  InvalidProvider,
+  ErrorResponse,
+} from 'web3-core-helpers/errors';
 import Jsonrpc = './jsonrpc.js';
 import givenProvider from './givenProvider.js';
 const noop = () => {}
@@ -23,6 +53,11 @@ export default class RequestManager {
     this.setProvider(provider, net);
     this.subscriptions = new Map();
   }
+
+  get name () {
+    return 'requestManager'
+  }
+
 /**
 * sets the provider
 *
@@ -101,12 +136,12 @@ export default class RequestManager {
       const disconnect = (event) => {
         if (this._isCleanCloseEvent(event) || this._isIpcCloseError(event)) {
           this.subscriptions.forEach((subscription) => {
-            subscription.callback(errors.ConnectionCloseError(event));
+            subscription.callback(ConnectionCloseError(event));
             this.subscriptions.delete(subscription.subscription.id);
           });
 
           if (this.provider && this.provider.emit) {
-            this.provider.emit('error', errors.ConnectionCloseError(event));
+            this.provider.emit('error', ConnectionCloseError(event));
           }
         }
 
@@ -132,20 +167,34 @@ export default class RequestManager {
 * @returns void
 */
 
-  send (data, cb = noop) {
-    // figure out which send method is available
-    let sendMethod = provider.request || provider.sendAsync || provider.send;
+  async send (data, cb) {
+    const provider = this.provider
+    const { request, send, sendAsync } = provider
+    const { method, params } = data
     // if none are available throw error
-    if(!sendMethod) throw new Error('Provider does not have a request or send method to use.');
-    // callbackify method if its request
-    if (provider.request) sendMethod = callbackify(sendMethod.bind(provider));
+    if(!send && !sendAsync && !request) throw new Error('Provider does not have a request or send method to use.');
     // format the payload for either request or jsonRpc
-    const payload = provider.request ? { method, params} : Jsonrpc.toPayload(method, params);
-    // format the cb
-    // dev note: maybe get rid of this requires more investigation in standards
-    const callback = provider.request ? cb : this._jsonrpcResultCallback(callback, payload);
-    // call method
-    sendMethod(payload, callback);
+    const payload = provider.request ? { method, params } : Jsonrpc.toPayload(method, params);
+    // figure out which send method is available
+    const sendMethod = request || (payload, cb) => {
+      const send = sendAsync || send;
+      let resolve, reject;
+      const jsonResult = new Promise ((res, rej) => {
+        resolve = resolve
+      });
+      // format the cb
+      if (!cb) {
+        cb = (err, res) => {
+          if (err) return reject(err)
+          resolve(res)
+        }
+      }
+      const wrappedCb = this._jsonrpcResultCallback(cb, payload)
+      send(payload, wrappedCb);
+      return result
+    }
+    const result = await sendMethod(payload);
+    return result
   }
 
 
@@ -155,23 +204,22 @@ export default class RequestManager {
 
   static get providers () {
     return {
-      WebsocketProvider: require('web3-providers-ws'),
-      HttpProvider: require('web3-providers-http'),
-      IpcProvider: require('web3-providers-ipc')
+      WebsocketProvider,
+      HttpProvider,
+      IpcProvider,
     }
   }
   /**
   * Asynchronously send batch request.
   * Only works if provider supports batch methods through `sendAsync` or `send`.
+  * if no callback is provided then an array of promises will be returned that
+  * will resolve the results.
   * @method sendBatch
   * @param {Array} data - array of payload objects
-  * @param {Function} callback
+  * @param {Function} optional callback
   */
   sendBatch (data, callback) {
-    if (!this.provider) {
-     return callback(errors.InvalidProvider());
-    }
-
+    this._checkProvider()
     const payload = Jsonrpc.toBatchPayload(data);
     const sendMethod = this.provider.sendAsync || this.provider.send
     if (!sendMethod) throw new Error('Provider does not have a send method to use.')
@@ -179,9 +227,8 @@ export default class RequestManager {
       if (err) return callback(err);
 
       if (!Array.isArray(results)) {
-        return callback(errors.InvalidResponse(results));
+        return callback(InvalidResponse(results));
       }
-
       callback(null, results);
     });
   }
@@ -259,6 +306,10 @@ export default class RequestManager {
     }
   }
 
+  _checkProvider () {
+    if (!this.provider) throw InvalidProvider()
+  }
+
   /**
   * Evaluates WS close event
   *
@@ -304,14 +355,11 @@ export default class RequestManager {
         return callback(new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`));
       }
 
-
       if (result && result.error) {
-        return callback(errors.ErrorResponse(result));
-      }
+        return callback(ErrorResponse(result));
 
       if (!Jsonrpc.isValidResponse(result)) {
-        return callback(errors.InvalidResponse(result));
-      }
+        return callback(InvalidResponse(result));
 
       callback(null, result.result);
     }
