@@ -27,7 +27,6 @@ var tests = [
             nonce: 0,
             gasPrice: "20000000000",
             gas: 21000,
-            gasLimit: 21000,
             to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
             toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
             value: "1000000000",
@@ -49,7 +48,6 @@ var tests = [
                 nonce: 0,
                 gasPrice: "0",
                 gas: 31853,
-                gasLimit: 31853,
                 to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
                 toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
                 value: "0",
@@ -74,7 +72,6 @@ var tests = [
             nonce: 0,
             gasPrice: "234567897654321",
             gas: 2000000,
-            gasLimit: 2000000,
             to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
             toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
             value: "1000000000",
@@ -99,7 +96,6 @@ var tests = [
             nonce: 0,
             gasPrice: "0",
             gas: 31853,
-            gasLimit: 31853,
             to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
             toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
             value: "0",
@@ -124,7 +120,6 @@ var tests = [
             nonce: 0,
             gasPrice: "20000000000",
             gas: 21000,
-            gasLimit: 21000,
             to: '0x3535353535353535353535353535353535353535',
             toIban: 'XE4967QZMA14MI680T89KSPPJEJMU68MEYD', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -145,7 +140,6 @@ var tests = [
             nonce: 0,
             gasPrice: "230000000000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -167,7 +161,6 @@ var tests = [
             nonce: 10,
             gasPrice: "230000000000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -189,7 +182,6 @@ var tests = [
             nonce: '0xa',
             gasPrice: "230000000000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -211,7 +203,6 @@ var tests = [
             nonce: '16',
             gasPrice: "230000000000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -233,7 +224,6 @@ var tests = [
             nonce: 16,
             gasPrice: "230000000000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -255,7 +245,6 @@ var tests = [
             nonce: '0x16',
             gasPrice: "230000000000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -277,7 +266,6 @@ var tests = [
             nonce: '0x16',
             gasPrice: "230000000000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -299,7 +287,6 @@ var tests = [
             nonce: 2,
             gasPrice: "20000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -317,7 +304,6 @@ var tests = [
             nonce: 2,
             gasPrice: "20000",
             gas: 0,
-            gasLimit: 21000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -335,7 +321,6 @@ var tests = [
             nonce: 2,
             gasPrice: "0A",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -352,7 +337,6 @@ var tests = [
             nonce: 2,
             gasPrice: "200000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -369,7 +353,6 @@ var tests = [
             nonce: 2,
             gasPrice: "A",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -386,7 +369,6 @@ var tests = [
             nonce: 'a',
             gasPrice: "230000000000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -403,7 +385,6 @@ var tests = [
             nonce: 1,
             gasPrice: "230000000000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -420,7 +401,6 @@ var tests = [
             nonce: 0,
             gasPrice: "230000000000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -437,7 +417,6 @@ var tests = [
             nonce: -2,
             gasPrice: "230000000000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -454,7 +433,6 @@ var tests = [
             nonce: 0,
             gasPrice: "-230000000000",
             gas: 50000,
-            gasLimit: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
@@ -471,27 +449,10 @@ var tests = [
             nonce: 0,
             gasPrice: "230000000000",
             gas: -50000,
-            gasLimit: 21000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
             toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
             data: "0x0123abcd",
-            common: common
-        },
-        error: true
-    },
-    {
-        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
-        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
-        transaction: {
-            chainId: 1,
-            nonce: 0,
-            gasPrice: "20000000000",
-            gas: 21000,
-            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
-            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
-            value: "1000000000",
-            data: "",
             common: common
         },
         error: true
