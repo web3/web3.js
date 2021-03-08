@@ -125,7 +125,7 @@ HttpProvider.prototype.send = function (payload, callback) {
         request.send(JSON.stringify(payload));
     } catch(error) {
         this.connected = false;
-        callback(errors.InvalidConnection(this.host));
+        callback(errors.InvalidConnection(this.host, { code: 'ECONNREFUSED', reason: 'ECONNREFUSED' }));
     }
 };
 
