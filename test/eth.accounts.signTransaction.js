@@ -17,6 +17,9 @@ var common = {
 
 var clone = function (object) { return object ? _.clone(object) : []; };
 
+// @NOTE eth.account.signTransaction was updated to default gasLimit to provided gas if not
+// explicitly set, so transactionHash includes gasLimit accordingly
+
 var tests = [
     {
         address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
