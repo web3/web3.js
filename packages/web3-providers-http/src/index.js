@@ -112,9 +112,15 @@ HttpProvider.prototype.send = function (payload, callback) {
         }
     };
 
-    request.onerror = function() {
-        callback(errors.RequestFailed());
-    };
+	//since XHR2._onHttpRequestError swallows the initial request error, we need to get it from the underlying request
+	request.addEventListener('loadstart', function() {
+		var clientRequest = request._request;
+		if (clientRequest) {
+			clientRequest.on('error', function (error) {
+				callback(error || errors.RequestFailed());
+			});
+		}		
+	});
 
     request.ontimeout = function() {
         _this.connected = false;
