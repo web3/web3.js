@@ -158,10 +158,10 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
         try {
             var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
-            transaction.to = transaction.to || '0x';
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
             transaction.chainId = utils.numberToHex(transaction.chainId);
+            transaction.gasLimit = transaction.gasLimit || transaction.gas;
 
             // Because tx has no @ethereumjs/tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
@@ -201,13 +201,12 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                     delete transaction.hardfork;
                 }
             }
-
+            
             if (privateKey.startsWith('0x')) {
                 privateKey = privateKey.substring(2);
             }
             
             var ethTx = Transaction.fromTxData(transaction, transactionOptions);
-
             var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));
             var validationResult = signedTx.validate(true);
 
