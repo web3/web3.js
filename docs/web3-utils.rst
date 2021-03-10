@@ -319,6 +319,8 @@ soliditySha3
 Will calculate the sha3 of given input parameters in the same way solidity would.
 This means arguments will be ABI converted and tightly packed before being hashed.
 
+.. warning:: This method poses a security risk where multiple inputs can compute to the same hash. Provided in the example code are multiple cases of this security risk
+
 ----------
 Parameters
 ----------
@@ -343,6 +345,20 @@ Example
 -------
 
 .. code-block:: javascript
+
+    // As a short example of the non-distinguished nature of
+    // Solidity tight-packing (which is why it is inappropriate
+    // for many things from a security point of view), consider
+    // the following examples are all equal, despite representing
+    // very different values and layouts.
+    web3.utils.soliditySha3('hello','world01')
+    // "0xfb0a9d38c4dc568cbd105866540986fabf3c08c1bfb78299ce21aa0e5c0c586b"
+    web3.utils.soliditySha3({type: 'string', value: 'helloworld'},{type: 'string', value: '01'})
+    // "0xfb0a9d38c4dc568cbd105866540986fabf3c08c1bfb78299ce21aa0e5c0c586b"
+    web3.utils.soliditySha3({type: 'string', value: 'hell'},{type: 'string', value: 'oworld'},{type: 'uint16', value: 0x3031})
+    // "0xfb0a9d38c4dc568cbd105866540986fabf3c08c1bfb78299ce21aa0e5c0c586b"
+    web3.utils.soliditySha3({type: 'uint96', value: '32309054545061485574011236401'})
+    // "0xfb0a9d38c4dc568cbd105866540986fabf3c08c1bfb78299ce21aa0e5c0c586b"
 
     web3.utils.soliditySha3('234564535', '0xfff23243', true, -10);
     // auto detects:        uint256,      bytes,     bool,   int256
