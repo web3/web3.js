@@ -238,7 +238,7 @@ var outputTransactionFormatter = function (tx) {
     if (tx.transactionIndex !== null)
         tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
     tx.nonce = utils.hexToNumber(tx.nonce);
-    tx.gas = utils.hexToNumber(tx.gas);
+    tx.gas = outputBigNumberFormatter(tx.gas);
     tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
     tx.value = outputBigNumberFormatter(tx.value);
 
@@ -345,9 +345,9 @@ var inputLogFormatter = function (options) {
             return utils.fromUtf8(value);
     };
 
-    if (options === undefined) options = {}
+    if (options === undefined) options = {};
     // If options !== undefined, don't blow out existing data
-    if (options.fromBlock === undefined) options = {...options, fromBlock: 'latest'}
+    if (options.fromBlock === undefined) options = {...options, fromBlock: 'latest'};
     if (options.fromBlock || options.fromBlock === 0)
         options.fromBlock = inputBlockNumberFormatter(options.fromBlock);
 
