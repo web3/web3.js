@@ -39,4 +39,8 @@ FakeXHR2.prototype.send = function (payload) {
     }
 };
 
+FakeXHR2.prototype.addEventListener = function(eventType, callback) {
+	callback();
+}
+
 module.exports = {XMLHttpRequest: FakeXHR2};
