@@ -40,6 +40,9 @@ async function main(){
   let web3;
   let block;
 
+  log('process.env.INFURA_HTTP', process.env.INFURA_HTTP);
+  log('process.env.INFURA_WSS', process.env.INFURA_WSS);
+
   // Providers
   log();
   log('>>>>>>');
