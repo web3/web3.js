@@ -40,6 +40,9 @@ async function main(){
   let web3;
   let block;
 
+  log('process.env.INFURA_HTTP', process.env.INFURA_HTTP);
+  log('process.env.INFURA_WSS', process.env.INFURA_WSS);
+
   // Providers
   log();
   log('>>>>>>');
@@ -47,7 +50,7 @@ async function main(){
   log('>>>>>>');
 
   // Http
-  web3 = new Web3('https://mainnet.infura.io/v3/1d13168ffb894ad2827f2152620bd27c');
+  web3 = new Web3(process.env.INFURA_HTTP);
   block = await getBlockWithRetry(web3);
   log(util.inspect(block));
 
@@ -57,7 +60,7 @@ async function main(){
   log('>>>>>>');
 
   // WebSockets
-  web3 = new Web3('wss://mainnet.infura.io/ws/v3/1d13168ffb894ad2827f2152620bd27c');
+  web3 = new Web3(process.env.INFURA_WSS);
   block = await getBlockWithRetry(web3);
   web3.currentProvider.disconnect();
   log(util.inspect(block));
