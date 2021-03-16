@@ -286,14 +286,13 @@ Released with 1.0.0-beta.37 code base.
 - Fix parsedUrl problem of websocket provider (#3666)
 - Fix return value for `clearSubscriptions` (#3689)
 
-## [Unreleased]
-
 ## [1.3.1]
 
 ### Added
 
-- Add `web3-eth2-core` package (#3743)
-- Add `web3-eth2-beaconchain` package (#3743)
+- Add `web3-eth2-core` package (#3743) (renamed to `web3-eth2-base`)
+- Add `web3-eth2-beaconchain` package (#3743) (renamed to `web3-eth2-beacon`)
+- Add `stripHexPrefix` method to `web3-utils` package (#3776)
 
 ### Changed
 
@@ -309,3 +308,58 @@ Released with 1.0.0-beta.37 code base.
 - Fixed decoding bytes and string parameters for logs emitted with solc 0.4.x (#3724, #3738)
 - Grammar changes to inputAddressFormatter error message
 - Fixed vulnerable dependencies
+
+## [1.3.2]
+
+### Fixed
+
+- Fix EIP-1193 provider subscriptions (#3864)
+
+## [1.3.3]
+
+### Fixed
+
+- Update `dist` to latest release (`1.3.2`) (#3875)
+
+## [1.3.4]
+
+### Changed
+
+- Fixed mutation of inputs to encoding and decoding functions (#3748)
+- Fix default value for `fromBlock` option for `logs` subscriptions (defaults to `latest`) (#3883)
+- ethjs-signer test (#3876)
+- Rename `web3-eth2-base` to `web3-eth2-core` and `web3-eth2-beacon` to `web3-eth2-beaconchain` (#3833)
+- Bump `ts-node` from version `^8.10.2` to `^9.0.0` (#3856)
+- Ran `npm audit fix` which fixed 4 vulnerabilities (#3856)
+- Correct `web3-eth2-beaconchain` type declarations (#3859) and (#3865)
+- Move interfaces `IBaseAPISchema` and `IBaseAPIMethodSchema` to `index.d.ts` for `web3-eth2-core` (#3878)
+- Update dependencies for `web3-eth2-core` (#3878)
+
+### Removed
+
+- Remove `notImplemented` flag from ETH2 Beacon Chain package methods schema (#3861)
+- Removes `IETH2BeaconChain` interface in favor of exporting a class type: `ETH2BeaconChain` (#3878)
+- Remove `index.d.ts` files in favor of `types.ts` for `web3-eth2-core` and `web3-eth2-beaconchain` (#3878)
+- `schema.ts` from `web3-eth2-core` (#3878)
+- `dtslint` npm command from `web3-eth2-core` and `web3-eth2-beaconchain` as `index.d.ts` files were removed (#3878)
+
+### Added
+
+- Add `ETH2Core` class export to `index.d.ts` for `web3-eth2-core` (#3878)
+- Deprecation of bzz warning (#3872)
+- Deprecation of shh warning (#3888)
+
+## [Unreleased]
+
+## [1.3.5]
+
+### Added
+
+- Github action for running tests for `web3-eth2-core` and `web3-eth2-beaconchain` packages (#3892)
+- Added Security risk warning to docs for `web3.utils.soliditySha3` (#3908)
+
+### Changed
+
+- Unified babel compiler for `web3-eth2-core` and `web3-eth2-beaconchain` (#3892)
+- Upgrade `@chainsafe/geth-dev-assistant` from `0.1.5` to `0.1.9` (#3950)
+- Replaced hardcoded infura link with Github Secret for some tests (#3943)

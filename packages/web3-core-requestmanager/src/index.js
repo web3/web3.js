@@ -98,14 +98,25 @@ RequestManager.prototype.setProvider = function (provider, net) {
 
     // listen to incoming notifications
     if (this.provider && this.provider.on) {
-        this.provider.on('data', function data(result, deprecatedResult) {
-            result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
+        if (typeof provider.request === 'function') { // EIP-1193 provider
+            this.provider.on('message', function (payload) {
+                if (payload && payload.type === 'eth_subscription' && payload.data) {
+                    const data = payload.data
+                    if (data.subscription && _this.subscriptions.has(data.subscription)) {
+                        _this.subscriptions.get(data.subscription).callback(null, data.result);
+                    }
+                }
+            })
+        } else { // legacy provider subscription event
+            this.provider.on('data', function data(result, deprecatedResult) {
+                result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
-            // if result is a subscription, call callback for that subscription
-            if (result.method && result.params && result.params.subscription && _this.subscriptions.has(result.params.subscription)) {
-                _this.subscriptions.get(result.params.subscription).callback(null, result.params.result);
-            }
-        });
+                // if result is a subscription, call callback for that subscription
+                if (result.method && result.params && result.params.subscription && _this.subscriptions.has(result.params.subscription)) {
+                    _this.subscriptions.get(result.params.subscription).callback(null, result.params.result);
+                }
+            });
+        }
 
         // resubscribe if the provider has reconnected
         this.provider.on('connect', function connect() {
@@ -122,7 +133,7 @@ RequestManager.prototype.setProvider = function (provider, net) {
         });
 
         // notify all subscriptions about bad close conditions
-        this.provider.on('close', function close(event) {
+        const disconnect = function disconnect(event) {
             if (!_this._isCleanCloseEvent(event) || _this._isIpcCloseError(event)) {
                 _this.subscriptions.forEach(function (subscription) {
                     subscription.callback(errors.ConnectionCloseError(event));
@@ -136,7 +147,10 @@ RequestManager.prototype.setProvider = function (provider, net) {
             if (_this.provider && _this.provider.emit) {
                 _this.provider.emit('end', event);
             }
-        });
+        };
+        // TODO: Remove close once the standard allows it
+        this.provider.on('close', disconnect);
+        this.provider.on('disconnect', disconnect);
 
         // TODO add end, timeout??
     }
@@ -257,7 +271,7 @@ RequestManager.prototype.removeSubscription = function (id, callback) {
  * Should be called to reset the subscriptions
  *
  * @method reset
- * 
+ *
  * @returns {boolean}
  */
 RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
@@ -310,12 +324,12 @@ RequestManager.prototype._isIpcCloseError = function (event) {
 
 /**
  * The jsonrpc result callback for RequestManager.send
- * 
+ *
  * @method _jsonrpcResultCallback
- * 
+ *
  * @param {Function} callback the callback to use
  * @param {Object} payload the jsonrpc payload
- * 
+ *
  * @returns {Function} return callback of form (err, result)
  *
  */
