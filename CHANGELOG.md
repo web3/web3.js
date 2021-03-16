@@ -321,8 +321,6 @@ Released with 1.0.0-beta.37 code base.
 
 - Update `dist` to latest release (`1.3.2`) (#3875)
 
-## [Unreleased]
-
 ## [1.3.4]
 
 ### Changed
@@ -351,3 +349,18 @@ Released with 1.0.0-beta.37 code base.
 - Add `usage-examples` to simplify the usage of this package (#3844)
 - Deprecation of bzz warning (#3872)
 - Deprecation of shh warning (#3888)
+
+## [Unreleased]
+
+## [1.3.5]
+
+### Added
+
+- Github action for running tests for `web3-eth2-core` and `web3-eth2-beaconchain` packages (#3892)
+- Added Security risk warning to docs for `web3.utils.soliditySha3` (#3908)
+
+### Changed
+
+- Unified babel compiler for `web3-eth2-core` and `web3-eth2-beaconchain` (#3892)
+- Upgrade `@chainsafe/geth-dev-assistant` from `0.1.5` to `0.1.9` (#3950)
+- Replaced hardcoded infura link with Github Secret for some tests (#3943)
