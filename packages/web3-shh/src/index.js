@@ -32,9 +32,6 @@ var Net = require('web3-net');
 var Shh = function Shh() {
 
 
-    console.warn('web3-shh package will be deprecated in version 1.3.5 and will no longer be supported.')
-
-
     var _this = this;
 
     // sets _requestmanager
