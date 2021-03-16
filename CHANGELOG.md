@@ -366,3 +366,4 @@ Released with 1.0.0-beta.37 code base.
 - Replaced hardcoded infura link with Github Secret for some tests (#3943)
 - Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-eth-accounts` (#3941)
 - Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-bzz` (#3940)
+- Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-core-requestmanager` (#3945)
