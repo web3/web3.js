@@ -57,6 +57,7 @@ async function main(){
   log('>>>>>>');
 
   // WebSockets
+  console.log('process.env.INFURA_WSS', process.env.INFURA_WSS)
   web3 = new Web3(process.env.INFURA_WSS);
   block = await getBlockWithRetry(web3);
   web3.currentProvider.disconnect();
