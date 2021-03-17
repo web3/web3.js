@@ -52,9 +52,9 @@ const iso13616Prepare = function (iban) {
     iban = iban.toUpperCase();
     iban = iban.substr(4) + iban.substr(0,4);
 
-    return iban.split('').map(function(n){
+    return iban.split('').map(function(n) {
         const code = n.charCodeAt(0);
-        if (code >= A && code <= Z){
+        if (code >= A && code <= Z) {
             // A = 10, B = 11, ... Z = 35
             return code - A + 10;
         } else {
