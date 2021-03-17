@@ -356,6 +356,7 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - Github action for running tests for `web3-eth2-core` and `web3-eth2-beaconchain` packages (#3892)
+- Added description to documentation on how to connect using a remote node provider (#3884)
 - Added Security risk warning to docs for `web3.utils.soliditySha3` (#3908)
 - `.nvmrc` file using Node.js version `v.14.15.1` (#3817)
 
