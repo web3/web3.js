@@ -357,9 +357,14 @@ Released with 1.0.0-beta.37 code base.
 
 - Github action for running tests for `web3-eth2-core` and `web3-eth2-beaconchain` packages (#3892)
 - Added Security risk warning to docs for `web3.utils.soliditySha3` (#3908)
+- `.nvmrc` file using Node.js version `v.14.15.1` (#3817)
 
 ### Changed
 
 - Unified babel compiler for `web3-eth2-core` and `web3-eth2-beaconchain` (#3892)
+- moved deprecation warnings to postinstall scripts (#3917)
 - Upgrade `@chainsafe/geth-dev-assistant` from `0.1.5` to `0.1.9` (#3950)
 - Replaced hardcoded infura link with Github Secret for some tests (#3943)
+- Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-eth-accounts` (#3941)
+- Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-bzz` (#3940)
+- Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-core-requestmanager` (#3945)
