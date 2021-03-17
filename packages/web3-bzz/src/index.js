@@ -28,10 +28,6 @@ var swarm = require("swarm-js");
 
 var Bzz = function Bzz(provider) {
 
-
-    console.warn('web3-bzz package will be deprecated in version 1.3.5 and will no longer be supported.')
-
-
     this.givenProvider = Bzz.givenProvider;
 
     if (provider && provider._requestManager) {

@@ -10,7 +10,8 @@
     "types": "types/index.d.ts",
     "scripts": {
         "tsc": "tsc -b tsconfig.json",
-        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types",
+        "postinstall": "echo \"WARNING: the web3-bzz api will be deprecated in the next version\""
     },
     "main": "lib/index.js",
     "dependencies": {
