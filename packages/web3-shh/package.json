@@ -9,7 +9,7 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "tsc": "tsc -b tsconfig.json",
+        "compile": "tsc -b tsconfig.json",
         "dtslint": "dtslint --localTs ../../node_modules/typescript/lib  types",
         "postinstall": "echo \"WARNING: the web3-shh api will be deprecated in the next version\""
     },
