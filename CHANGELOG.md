@@ -357,6 +357,7 @@ Released with 1.0.0-beta.37 code base.
 - Added description to documentation on how to connect using a remote node provider (#3884)
 - Added Security risk warning to docs for `web3.utils.soliditySha3` (#3908)
 - `.nvmrc` file using Node.js version `v.14.15.1` (#3817)
+- Add commitment to semantic versioning since version `1.3.0` and onwards (#3961)
 
 ### Changed
 
