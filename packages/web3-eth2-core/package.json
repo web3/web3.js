@@ -10,7 +10,7 @@
     "types": "types.ts",
     "scripts": {
         "test": "jest",
-        "tsc": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+        "compile": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
         "type-check": "tsc --noEmit",
         "type-check:watch": "npm run type-check -- --watch"
     },

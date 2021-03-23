@@ -9,7 +9,7 @@
     },
     "main": "lib/index.js",
     "scripts": {
-        "tsc": "tsc -b tsconfig.json"
+        "compile": "tsc -b tsconfig.json"
     },
     "dependencies": {
         "underscore": "1.9.1",

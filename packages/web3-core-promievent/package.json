@@ -9,7 +9,7 @@
     },
     "main": "lib/index.js",
     "scripts": {
-        "tsc": "tsc -b tsconfig.json"
+        "compile": "tsc -b tsconfig.json"
     },
     "dependencies": {
         "eventemitter3": "4.0.4"

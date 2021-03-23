@@ -9,7 +9,7 @@
     },
     "types": "types/index.d.ts",
     "scripts": {
-        "tsc": "tsc -b tsconfig.json",
+        "compile": "tsc -b tsconfig.json",
         "dtslint": "dtslint --localTs ../../node_modules/typescript/lib  types"
     },
     "main": "lib/index.js",
