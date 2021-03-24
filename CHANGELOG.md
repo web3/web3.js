@@ -349,8 +349,6 @@ Released with 1.0.0-beta.37 code base.
 - Deprecation of bzz warning (#3872)
 - Deprecation of shh warning (#3888)
 
-## [Unreleased]
-
 ## [1.3.5]
 
 ### Added
@@ -359,6 +357,7 @@ Released with 1.0.0-beta.37 code base.
 - Added description to documentation on how to connect using a remote node provider (#3884)
 - Added Security risk warning to docs for `web3.utils.soliditySha3` (#3908)
 - `.nvmrc` file using Node.js version `v.14.15.1` (#3817)
+- Add commitment to semantic versioning since version `1.3.0` and onwards (#3961)
 
 ### Changed
 
@@ -371,3 +370,7 @@ Released with 1.0.0-beta.37 code base.
 - Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-bzz` (#3940)
 - Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-core-requestmanager` (#3945)
 - Rewrite `web3-eth-iban` in ES6 (#3955)
+
+## [Unreleased]
+
+## [1.3.6]
