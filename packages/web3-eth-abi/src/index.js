@@ -255,7 +255,12 @@ ABICoder.prototype.formatParam = function (type, param) {
 
     // Format BN to string
     if (utils.isBN(param) || utils.isBigNumber(param)) {
-        return param.toString(10);
+        let p = param.toString(10);
+        while (p.charAt(0) === "0") {
+            p = p.substring(1);
+        }
+
+        return p;
     }
 
     if (type.match(paramTypeBytesArray) || type.match(paramTypeNumberArray)) {

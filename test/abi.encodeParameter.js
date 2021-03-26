@@ -3,6 +3,7 @@ var assert = chai.assert;
 var BN = require('bn.js');
 var BigNumber = require('bignumber.js');
 var coder = require('../packages/web3-eth-abi');
+var utils = require("../packages/web3-utils");
 
 
 describe('lib/solidity/coder', function () {
@@ -13,6 +14,12 @@ describe('lib/solidity/coder', function () {
             });
         };
 
+        it("should keep -1 at -1", function () {
+            assert.equal(coder.formatParam("uint8", "-1"), "-1");
+        });
+        it("should keep -1 at -1 for BN", function () {
+            assert.equal(coder.formatParam("uint8", utils.toBN("-1")), "-1");
+        });
 
         test({ type: 'address', value: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
                                                     expected: '000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1'});
