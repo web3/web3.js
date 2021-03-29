@@ -17,7 +17,7 @@
     "scripts": {
         "version": "npm run build",
         "postinstall": "npm run bootstrap",
-        "build": "npm run bootstrap && lerna run tsc && webpack && cp -r ./dist ./packages/web3",
+        "build": "npm run bootstrap && lerna run compile && webpack && cp -r ./dist ./packages/web3",
         "publish": "lerna publish",
         "bootstrap": "lerna bootstrap --hoist",
         "lint": "jshint *.js packages",
@@ -95,7 +95,7 @@
         "@babel/preset-env": "^7.12.1",
         "@babel/preset-typescript": "^7.12.1",
         "@babel/runtime": "^7.12.1",
-        "@chainsafe/geth-dev-assistant": "^0.1.5",
+        "@chainsafe/geth-dev-assistant": "^0.1.9",
         "@ensdomains/ens": "^0.4.5",
         "@ensdomains/resolver": "^0.2.4",
         "@types/bignumber.js": "^4.0.2",
@@ -136,6 +136,5 @@
         "wait-port": "^0.2.9",
         "webpack": "^4.44.2",
         "webpack-cli": "^3.3.12"
-    },
-    "dependencies": {}
+    }
 }
