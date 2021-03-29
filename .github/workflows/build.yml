@@ -3,11 +3,14 @@ on:
     push:
         branches:
             - "1.x"
+            - "3.x"
         tags:
             - v1*
+            - v3*
     pull_request:
         branches:
             - "1.x"
+            - "3.x"
         types: [opened, reopened, synchronize]
 jobs:
     lint:
