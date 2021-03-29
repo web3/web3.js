@@ -234,10 +234,10 @@ var inputSignFormatter = function (data) {
  */
 var outputTransactionFormatter = function (tx) {
     if (tx.blockNumber !== null)
-        tx.blockNumber = outputBigNumberFormatter(tx.blockNumber);
+        tx.blockNumber = utils.hexToNumber(tx.blockNumber);
     if (tx.transactionIndex !== null)
-        tx.transactionIndex = outputBigNumberFormatter(tx.transactionIndex);
-    tx.nonce = outputBigNumberFormatter(tx.nonce);
+        tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
+    tx.nonce = utils.hexToNumber(tx.nonce);
     tx.gas = outputBigNumberFormatter(tx.gas);
     tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
     tx.value = outputBigNumberFormatter(tx.value);
@@ -268,9 +268,9 @@ var outputTransactionReceiptFormatter = function (receipt) {
     }
 
     if (receipt.blockNumber !== null)
-        receipt.blockNumber = outputBigNumberFormatter(receipt.blockNumber);
+        receipt.blockNumber = utils.hexToNumber(receipt.blockNumber);
     if (receipt.transactionIndex !== null)
-        receipt.transactionIndex = outputBigNumberFormatter(receipt.transactionIndex);
+        receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
     receipt.cumulativeGasUsed = outputBigNumberFormatter(receipt.cumulativeGasUsed);
     receipt.gasUsed = outputBigNumberFormatter(receipt.gasUsed);
 
@@ -301,15 +301,15 @@ var outputBlockFormatter = function (block) {
     // transform to number
     block.gasLimit = outputBigNumberFormatter(block.gasLimit);
     block.gasUsed = outputBigNumberFormatter(block.gasUsed);
-    block.size = outputBigNumberFormatter(block.size);
-    block.timestamp = outputBigNumberFormatter(block.timestamp);
+    block.size = utils.hexToNumber(block.size);
+    block.timestamp = utils.hexToNumber(block.timestamp);
     if (block.number !== null)
-        block.number = outputBigNumberFormatter(block.number);
+        block.number = utils.hexToNumber(block.number);
 
     if (block.difficulty)
-        block.difficulty = outputBigNumberFormatter(block.difficulty);
+        block.difficulty = utils.hexToNumber(block.difficulty);
     if (block.totalDifficulty)
-        block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
+        block.totalDifficulty = utils.hexToNumber(block.totalDifficulty);
 
     if (_.isArray(block.transactions)) {
         block.transactions.forEach(function (item) {
@@ -392,11 +392,11 @@ var outputLogFormatter = function (log) {
     }
 
     if (log.blockNumber !== null)
-        log.blockNumber = outputBigNumberFormatter(log.blockNumber);
+        log.blockNumber = utils.hexToNumber(log.blockNumber);
     if (log.transactionIndex !== null)
-        log.transactionIndex = outputBigNumberFormatter(log.transactionIndex);
+        log.transactionIndex = utils.hexToNumber(log.transactionIndex);
     if (log.logIndex !== null)
-        log.logIndex = outputBigNumberFormatter(log.logIndex);
+        log.logIndex = utils.hexToNumber(log.logIndex);
 
     if (log.address) {
         log.address = utils.toChecksumAddress(log.address);
