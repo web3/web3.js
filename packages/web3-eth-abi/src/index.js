@@ -256,9 +256,6 @@ ABICoder.prototype.formatParam = function (type, param) {
     // Format BN to string
     if (utils.isBN(param) || utils.isBigNumber(param)) {
         let p = param.toString(10);
-        while (p.charAt(0) === "0") {
-            p = p.substring(1);
-        }
 
         return p;
     }
@@ -271,7 +268,7 @@ ABICoder.prototype.formatParam = function (type, param) {
     let match = type.match(paramTypeNumber);
     if (match) {
         let size = parseInt(match[2] || "256");
-        if (size / 8 < param.length) {
+        if (size / 8 < param.length && param.charAt(0) !== '-') {
             // pad to correct bit width
             param = utils.leftPad(param, size);
         }
