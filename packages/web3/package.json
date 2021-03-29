@@ -20,8 +20,7 @@
     "types": "types/index.d.ts",
     "scripts": {
         "compile": "tsc -b tsconfig.json",
-        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types",
-        "postinstall": "echo \"WARNING: the web3-shh and web3-bzz api will be deprecated in the next version\""
+        "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types"
     },
     "authors": [
         {
