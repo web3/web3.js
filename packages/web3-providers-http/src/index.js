@@ -96,8 +96,10 @@ HttpProvider.prototype.send = function (payload, callback) {
     var _this = this;
     var request = this._prepareRequest();
 
+    let error = null;
+
     request.onreadystatechange = function() {
-        if (request.readyState === 4 && request.timeout !== 1) {
+        if (request.readyState === 4 && request.timeout !== 1 && !error) {
             var result = request.responseText;
             var error = null;
 
@@ -115,6 +117,12 @@ HttpProvider.prototype.send = function (payload, callback) {
     request.ontimeout = function() {
         _this.connected = false;
         callback(errors.ConnectionTimeout(this.timeout));
+    };
+
+    request.onerror = function() {
+        error = errors.RequestFailed('Check that there are enough ports available to send requests!');
+
+        callback(error, request.responseText);
     };
 
     try {
