@@ -47,7 +47,6 @@ describe('lib/web3/batch', function () {
         });
 
         it('should execute batch request for async properties', function (done) {
-            // TODO: revisit test
             var provider = new FakeIpcProvider();
             var web3 = new Web3(provider);
 
