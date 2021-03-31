@@ -61,7 +61,6 @@ let web3 = new Web3('ws://localhost:8546');
 console.log(web3);
 > {
     eth: ... ,
-    shh: ... ,
     utils: ...,
     ...
 }
@@ -185,3 +184,7 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 [netlify-url]: https://app.netlify.com/sites/web3-staging/deploys
 [stackexchange-image]: https://img.shields.io/badge/web3js-stackexchange-brightgreen
 [stackexchange-url]: https://ethereum.stackexchange.com/questions/tagged/web3js
+
+## Semantic versioning
+
+This project follows [semver](https://semver.org/) as closely as possible **from version 1.3.0 onwards**. Earlier minor version bumps [might](https://github.com/ethereum/web3.js/issues/3758) have included breaking behavior changes.

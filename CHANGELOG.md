@@ -356,8 +356,26 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - Github action for running tests for `web3-eth2-core` and `web3-eth2-beaconchain` packages (#3892)
+- Added description to documentation on how to connect using a remote node provider (#3884)
 - Added Security risk warning to docs for `web3.utils.soliditySha3` (#3908)
+- `.nvmrc` file using Node.js version `v.14.15.1` (#3817)
 
 ### Changed
 
 - Unified babel compiler for `web3-eth2-core` and `web3-eth2-beaconchain` (#3892)
+- Renamed the `tsc` script in all packages to `compile`; updates the corresponding `lerna run` usage in the main `package.json` (#3894)
+- moved deprecation warnings to postinstall scripts (#3917)
+- Upgrade `@chainsafe/geth-dev-assistant` from `0.1.5` to `0.1.9` (#3950)
+- Replaced hardcoded infura link with Github Secret for some tests (#3943)
+- Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-eth-accounts` (#3941)
+- Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-bzz` (#3940)
+- Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-core-requestmanager` (#3945)
+- Rewrite `web3-eth-iban` in ES6 (#3955)
+
+## [Unreleased]
+
+## [3.0.0]
+
+### Removed
+
+- removed bzz and shh api

@@ -36,8 +36,8 @@ var formattedBlockResult = {
     "totalDifficulty": '163591',
     "size": 163591,
     "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
-    "gasLimit": 653145,
-    "gasUsed": 653145,
+    "gasLimit": '653145',
+    "gasUsed": '653145',
     "timestamp": 1424182926,
     "transactions": ['0x460cfb8472af2c5fd05b5a2', '0x460cfb8472af2c5fd05b5a2'],
     "uncles": ["0x460cfb8472af2c5fd05b5a2", "0xd5460cfb8472af2c5fd05b5a2"]
@@ -89,8 +89,8 @@ var formattedBlockResultWithTx = {
     "totalDifficulty": '163591',
     "size": 163591,
     "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
-    "gasLimit": 653145,
-    "gasUsed": 653145,
+    "gasLimit": '653145',
+    "gasUsed": '653145',
     "timestamp": 1424182926,
     "transactions": [{
         "status": "mined",

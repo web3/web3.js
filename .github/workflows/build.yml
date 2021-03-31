@@ -3,11 +3,14 @@ on:
     push:
         branches:
             - "1.x"
+            - "3.x"
         tags:
             - v1*
+            - v3*
     pull_request:
         branches:
             - "1.x"
+            - "3.x"
         types: [opened, reopened, synchronize]
 jobs:
     lint:
@@ -75,6 +78,7 @@ jobs:
                     ]
         env:
             TEST: ${{ matrix.testCmd }}
+            INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
         steps:
             - uses: actions/setup-node@v1
               with:
@@ -104,6 +108,8 @@ jobs:
         runs-on: windows-latest
         env:
             TEST: "e2e_windows"
+            INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
+            INFURA_WSS: ${{ secrets.INFURA_WSS }}
         steps:
             - uses: actions/setup-node@v1
               with:
