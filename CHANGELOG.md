@@ -376,6 +376,10 @@ Released with 1.0.0-beta.37 code base.
 
 ## [3.0.0]
 
+### Changed
+
+- Update `e2e.ganahce.core.sh` to point to ChainSafe's fork of `ganache-core`
+
 ### Removed
 
 - removed bzz and shh api
