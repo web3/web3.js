@@ -27,6 +27,8 @@ To use it standalone:
     });
 
 
+> Note: For numbers (uint and int) please always use BN or BigNumber as it might cause troubles passing a string or a native JS number sometimes.
+
 ------------------------------------------------------------------------------
 
 
