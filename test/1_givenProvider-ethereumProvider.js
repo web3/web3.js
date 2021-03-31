@@ -8,12 +8,11 @@ describe('Web3.providers.givenProvider', function () {
     beforeEach(function(){
         decache('../packages/web3');
         decache('../packages/web3-eth');
-        decache('../packages/web3-bzz');
     });
 
     describe('should be set if window.ethereum is available', function () {
         beforeEach(function(){
-            global.ethereum = {bzz: 'http://givenProvider:8501'};
+            global.ethereum = { sendAsync: () => {} };
         });
 
         it('when instantiating Web3', function () {
@@ -26,10 +25,6 @@ describe('Web3.providers.givenProvider', function () {
             assert.deepEqual(Eth.givenProvider, global.ethereum);
         });
 
-        it('when instantiating Bzz', function () {
-            var Bzz = require('../packages/web3-bzz');
-            assert.deepEqual(Bzz.givenProvider, global.ethereum.bzz);
-        });
     });
 
     describe('should use request() if available, otherwise falling back to sendAsync() and send()', function () {
@@ -41,7 +36,7 @@ describe('Web3.providers.givenProvider', function () {
         it('should use request()', async function () {
             global.ethereum = {
                 request: async () => { return '0x64' },
-                sendAsync: () => { throw new Error('used sendAsync') }, 
+                sendAsync: () => { throw new Error('used sendAsync') },
                 send: () => { throw new Error('used send') }
             };
             const Web3 = require('../packages/web3');
@@ -52,7 +47,7 @@ describe('Web3.providers.givenProvider', function () {
 
         it('should use sendAsync()', async function () {
             global.ethereum = {
-                sendAsync: (args, callback) => { return callback(null, {jsonrpc: '2.0', id: 0, result: 101}) }, 
+                sendAsync: (args, callback) => { return callback(null, {jsonrpc: '2.0', id: 0, result: 101}) },
                 send: () => { throw new Error('used send') }
             };
             const Web3 = require('../packages/web3');
@@ -70,7 +65,7 @@ describe('Web3.providers.givenProvider', function () {
             const blockNumber = await web3.eth.getBlockNumber();
             assert.equal(blockNumber, 102)
         });
-        
+
         it('should error without any request or send method', async function () {
             global.ethereum = {};
             const Web3 = require('../packages/web3');
