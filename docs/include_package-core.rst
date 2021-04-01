@@ -29,7 +29,7 @@ Returns
 ``Boolean``
 
 -------
-Example
+Example: Local Geth Node
 -------
 
 .. code-block:: javascript
@@ -51,6 +51,16 @@ Example
     var web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net)); // mac os path
     // on windows the path is: "\\\\.\\pipe\\geth.ipc"
     // on linux the path is: "/users/myuser/.ethereum/geth.ipc"
+
+-------
+Example: Remote Node Provider
+-------
+
+.. code-block:: javascript
+
+    // Using a remote node provider, like Alchemy (https://www.alchemyapi.io/supernode), is simple.
+    var Web3 = require('web3');
+    var web3 = new Web3("https://eth-mainnet.alchemyapi.io/v2/your-api-key");
 
 
 ------------------------------------------------------------------------------
