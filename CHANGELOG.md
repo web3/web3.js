@@ -349,8 +349,6 @@ Released with 1.0.0-beta.37 code base.
 - Deprecation of bzz warning (#3872)
 - Deprecation of shh warning (#3888)
 
-## [Unreleased]
-
 ## [1.3.5]
 
 ### Added
@@ -359,6 +357,7 @@ Released with 1.0.0-beta.37 code base.
 - Added description to documentation on how to connect using a remote node provider (#3884)
 - Added Security risk warning to docs for `web3.utils.soliditySha3` (#3908)
 - `.nvmrc` file using Node.js version `v.14.15.1` (#3817)
+- Add commitment to semantic versioning since version `1.3.0` and onwards (#3961)
 
 ### Changed
 
@@ -372,7 +371,52 @@ Released with 1.0.0-beta.37 code base.
 - Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-core-requestmanager` (#3945)
 - Rewrite `web3-eth-iban` in ES6 (#3955)
 
+## [1.3.6]
+
+### Changes
+
+- Bump `underscore` package from `1.9.1` to `1.12.1` (#4051)
+- Bump `@ensdomains/ens` package from `^0.4.5` to `^0.6.0` (#4059)
+- Bump `ethers` package from `^5.0.18` to `^5.1.4` (#4059)
+
+### Removes
+
+- Accidental commit (yarn-error.log) (#4062)
+
+## [1.4.0]
+
+### Added
+
+- Berlin Transaction Support (#4083)
+- When signing a transaction, common object now defaults to berlin instead of petersburg
+
+### Changed
+
+- Changed Geth Docker verision from `stable` to `1.10.3` in `e2e.geth.instamine.sh` and `scripts/e2e.geth.automine.sh` (#4154)
+
+## [1.4.1]
+
+### Removes
+
+- Removing the underscore package 
+
 ## [Unreleased]
+
+## [1.5.0]
+
+### Added
+
+- London transaction support (#4155)
+- RPC support `eth_feehistory` call (#4191)
+- Add `toNumber` method to `web3.utils` (#4191)
+
+### Changed
+ - Grammar fix (#4088) and updated Swarm (#4151)and Whisper doc links (#4170)
+ - Removed deprecation notice for HttpProvider (#4008)
+ - Nonce added to send options in documentation and types (#4052)
+ - Updated Solidity example to modern syntax (#4147)
+ - Changing web3 connection example from lets to const (#3967)
+ - Updated the documentation for the transaction object to include EIP-2718 and EIP-1559 options (#4188)
 
 ## [3.0.0]
 
