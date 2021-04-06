@@ -50,13 +50,19 @@ async function getTransactionObject(from, to, value) {
 
 async function triggerTransferExample() {
 
-    const amountInEtherToBeSent = 0.01 * 1000000000000000000 // this would e.g. transfer 0.01 Ether
+    const amountInEtherToBeSent = 0.01 
+    const amountInWeiToBeSent = convertEtherToWEI(amountInEtherToBeSent)
     
-    const transactionObject = await getTransactionObject(process.env.FROM_WALLET_ADDRESS, process.env.TO_WALLET_ADDRESS, amountInEtherToBeSent)
+    const transactionObject = await getTransactionObject(process.env.FROM_WALLET_ADDRESS, process.env.TO_WALLET_ADDRESS, amountInWeiToBeSent)
 
     await signAndSend(transactionObject, process.env.SENDER_PRIVATE_KEY)
 
 }
+
+function convertEtherToWEI(amountInEther) {
+        return amountInEther * Math.pow(10, 18)
+}
+
 
 
 triggerTransferExample()
