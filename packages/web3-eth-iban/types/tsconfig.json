@@ -9,6 +9,7 @@
         "strictFunctionTypes": true,
         "noEmit": true,
         "allowSyntheticDefaultImports": false,
+        "esModuleInterop": true,
         "baseUrl": ".",
         "paths": {
             "web3-eth-iban": ["."]
