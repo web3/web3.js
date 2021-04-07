@@ -28,9 +28,7 @@ export class Subscription<T> {
 
     subscribe(callback?: (error: Error, result: T) => void): Subscription<T>;
 
-    unsubscribe(
-        callback?: (error: Error, result: boolean) => void
-    ): Promise<undefined | boolean>;
+    unsubscribe(callback?: (error: Error, result: boolean) => void): void;
 
     on(type: 'data', handler: (data: T) => void): Subscription<T>;
 
