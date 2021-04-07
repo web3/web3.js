@@ -75,7 +75,7 @@ subscription.lastBlock;
 // $ExpectType Subscription<unknown>
 subscription.subscribe(() => {});
 
-// $ExpectType Promise<boolean | undefined>
+// $ExpectType void
 subscription.unsubscribe(() => {});
 
 // $ExpectType Subscription<unknown>
