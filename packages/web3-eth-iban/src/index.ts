@@ -267,4 +267,4 @@ class Iban {
     };
 }
 
-module.exports = Iban;
+export default Iban;

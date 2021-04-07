@@ -1,8 +1,8 @@
-var chai = require('chai');
-var assert = chai.assert;
-var Iban = require('../packages/web3-eth-iban');
+import chai from 'chai';
+import Iban from '../';
+const assert = chai.assert;
 
-var tests = [
+const tests = [
     { obj: function () {}, is: false},
     { obj: new Function(), is: false},
     { obj: 'function', is: false},

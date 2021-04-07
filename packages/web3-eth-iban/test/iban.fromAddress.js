@@ -1,8 +1,8 @@
-var chai = require('chai');
-var assert = chai.assert;
-var Iban = require('../packages/web3-eth-iban');
+import chai from 'chai';
+import Iban from '../';
+const assert = chai.assert;
 
-var tests = [
+const tests = [
     { address: '00c5496aee77c1ba1f0854206a26dda82a81d6d8',   expected: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS'},
     { address: '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8', expected: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS'},
     { address: '0x11c5496aee77c1ba1f0854206a26dda82a81d6d8', expected: 'XE1222Q908LN1QBBU6XUQSO1OHWJIOS46OO'},
@@ -14,7 +14,7 @@ describe('lib/web3/iban', function () {
     describe('fromAddress', function () {
         tests.forEach(function (test) {
             it('shoud create indirect iban: ' +  test.expected, function () {
-                assert.deepEqual(Iban.toIban(test.address), test.expected);
+                assert.deepEqual(Iban.fromAddress(test.address), new Iban(test.expected));
             });
         });
     });
