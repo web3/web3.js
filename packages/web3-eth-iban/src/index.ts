@@ -23,8 +23,6 @@
  * @date 2015
  */
 
-"use strict";
-
 const utils = require('web3-utils');
 const BigNumber = require('bn.js');
 
@@ -88,6 +86,8 @@ const mod9710 = function (iban) {
  * @param {String} iban
  */
 class Iban {
+    _iban: any;
+
     constructor (iban) {
         this._iban = iban;
     }
