@@ -10,7 +10,8 @@
     "types": "lib/types/index.d.ts",
     "scripts": {
         "compile": "tsc -b tsconfig.json",
-        "dtslint": "eslint . --ext .js,.jsx,.ts,.tsx"
+        "dtslint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "test:unit": "nyc --no-clean --silent _mocha -- -R spec --require ts-node/register --exit"
     },
     "main": "lib/index.js",
     "dependencies": {

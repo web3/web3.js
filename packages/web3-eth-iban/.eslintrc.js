@@ -10,10 +10,12 @@ module.exports = {
     ],
     rules: {
         "@typescript-eslint/no-extra-semi": "off",
+        "@typescript-eslint/no-empty-function": "off",
     },
     env: {
         browser: true,
         es6: true,
         node: true,
+        mocha: true,
     },
 };
