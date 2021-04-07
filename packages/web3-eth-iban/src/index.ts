@@ -23,8 +23,8 @@
  * @date 2015
  */
 
-const utils = require('web3-utils');
-const BigNumber = require('bn.js');
+import utils from 'web3-utils';
+import BigNumber from 'bn.js';
 
 
 const leftPad = function (string, bytes) {
