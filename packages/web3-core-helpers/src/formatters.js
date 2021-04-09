@@ -238,9 +238,9 @@ var outputTransactionFormatter = function (tx) {
     if (tx.transactionIndex !== null)
         tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
     tx.nonce = utils.hexToNumber(tx.nonce);
-    tx.gas = utils.hexToNumber(tx.gas);
-    tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
-    tx.value = outputBigNumberFormatter(tx.value);
+    if (tx.gas) tx.gas = outputBigNumberFormatter(tx.gas);
+    if (tx.gasPrice) tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
+    if (tx.value) tx.value = outputBigNumberFormatter(tx.value);
 
     if (tx.to && utils.isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
         tx.to = utils.toChecksumAddress(tx.to);
@@ -271,8 +271,8 @@ var outputTransactionReceiptFormatter = function (receipt) {
         receipt.blockNumber = utils.hexToNumber(receipt.blockNumber);
     if (receipt.transactionIndex !== null)
         receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
-    receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
-    receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
+    if (receipt.cumulativeGasUsed) receipt.cumulativeGasUsed = outputBigNumberFormatter(receipt.cumulativeGasUsed);
+    if (receipt.gasUsed) receipt.gasUsed = outputBigNumberFormatter(receipt.gasUsed);
 
     if (_.isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
@@ -297,10 +297,10 @@ var outputTransactionReceiptFormatter = function (receipt) {
  * @returns {Object}
  */
 var outputBlockFormatter = function (block) {
-
+    
     // transform to number
-    block.gasLimit = utils.hexToNumber(block.gasLimit);
-    block.gasUsed = utils.hexToNumber(block.gasUsed);
+    if (block.gasLimit) block.gasLimit = outputBigNumberFormatter(block.gasLimit);
+    if (block.gasUsed) block.gasUsed = outputBigNumberFormatter(block.gasUsed);
     block.size = utils.hexToNumber(block.size);
     block.timestamp = utils.hexToNumber(block.timestamp);
     if (block.number !== null)
@@ -345,9 +345,9 @@ var inputLogFormatter = function (options) {
             return utils.fromUtf8(value);
     };
 
-    if (options === undefined) options = {}
+    if (options === undefined) options = {};
     // If options !== undefined, don't blow out existing data
-    if (options.fromBlock === undefined) options = {...options, fromBlock: 'latest'}
+    if (options.fromBlock === undefined) options = {...options, fromBlock: 'latest'};
     if (options.fromBlock || options.fromBlock === 0)
         options.fromBlock = inputBlockNumberFormatter(options.fromBlock);
 
