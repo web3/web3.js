@@ -372,8 +372,6 @@ Released with 1.0.0-beta.37 code base.
 - Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-core-requestmanager` (#3945)
 - Rewrite `web3-eth-iban` in ES6 (#3955)
 
-## [Unreleased]
-
 ## [3.0.0]
 
 ### Changed
@@ -384,3 +382,8 @@ Released with 1.0.0-beta.37 code base.
 ### Removed
 
 - Removed bzz and shh api (#3909)
+
+## [Unreleased]
+
+## [3.0.1]
+
