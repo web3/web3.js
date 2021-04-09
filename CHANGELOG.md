@@ -378,8 +378,9 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 
-- Update `e2e.ganahce.core.sh` to point to ChainSafe's fork of `ganache-core`
+- Updates the use of `hexToNumber` to `outputBigNumberFormatter` (which returns a number string instead of a number) (#3976)
+- Update `e2e.ganahce.core.sh` to point to ChainSafe's fork of `ganache-core` (#3976)
 
 ### Removed
 
-- removed bzz and shh api
+- Removed bzz and shh api (#3909)
