@@ -618,8 +618,9 @@ Method.prototype.buildCall = function () {
 
         // CALLBACK function
         var sendTxCallback = function (err, result) {
+            var reasonData, reason;
+
             if (method.handleRevert && isCall && method.abiCoder) {
-                var reasonData;
 
                 // Ganache / Geth <= 1.9.13 return the reason data as a successful eth_call response
                 // Geth >= 1.9.15 attaches the reason data to an error object.
@@ -631,7 +632,7 @@ Method.prototype.buildCall = function () {
                 }
 
                 if (reasonData){
-                    var reason = method.abiCoder.decodeParameter('string', '0x' + reasonData);
+                    reason = method.abiCoder.decodeParameter('string', '0x' + reasonData);
                     var signature = 'Error(String)';
 
                     utils._fireError(
@@ -650,7 +651,14 @@ Method.prototype.buildCall = function () {
             }
 
             try {
-                result = method.formatOutput(result);
+                if (!method.isRevertReasonString(result)) {
+                    result = method.formatOutput(result);
+                } else {
+                    reasonData = result.substring(10);
+                    reason = method.abiCoder.decodeParameter('string', '0x' + reasonData);
+
+                    throw new Error(reason);
+                }
             } catch (e) {
                 err = e;
             }
