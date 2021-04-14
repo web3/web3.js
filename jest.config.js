@@ -13,7 +13,7 @@ module.exports = {
         (acc, name) => ({
            ...acc,
            [`${name}(.*)$`]:
-           `<rootDir>/packages/./${name}/src/$1`,
+           `<rootDir>/packages/./${name}/$1`,
       }),
     {},
    ),

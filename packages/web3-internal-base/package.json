@@ -7,8 +7,11 @@
   "author": "ChainSafe Systems",
   "license": "LGPL-3.0",
   "scripts": {
-    "compile": "npx tsc",
-    "test": "yarn run compile && jest ./build"
+    "build": "yarn clean && yarn compile",
+    "clean": "rimraf lib",
+    "compile": "tsc --build",
+    "lint": "eslint \"./src/**/*.ts\" --max-warnings=0 --fix",
+    "test": "jest"
   },
   "devDependencies": {
     "@types/jest": "^26.0.22",

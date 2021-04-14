@@ -1,4 +1,5 @@
-import { Base, BaseAPISchema, BaseOpts } from 'web3-internal-base/types';
+import { Base } from 'web3-internal-base';
+import { BaseAPISchema, BaseOpts } from 'web3-internal-base/types';
 import { DefaultSchema } from './schema';
 
 import { Web3Eth as IWeb3Eth } from '../types';

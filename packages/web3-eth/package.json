@@ -1,7 +1,7 @@
 {
   "name": "web3-eth",
   "version": "4.0.0",
-  "description": "Core internal methods for Web3 4.x.x",
+  "description": "Ethereum RPC wrappers for Web3 4.x.x",
   "main": "build/index.js",
   "repository": "https://github.com/ChainSafe/web3.js",
   "author": "ChainSafe Systems",
