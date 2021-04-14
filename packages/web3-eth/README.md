@@ -2,12 +2,12 @@
   <img src="assets/logo/web3js.jpg" width="200" alt="web3.js" />
 </p>
 
-# web3.js - Internal Base
+# web3.js - Eth
 
 ## Installation
 
 ```bash
-yarn add web3-internal-base
+yarn add web3-eth
 ```
 
 ## Package.json Scripts
