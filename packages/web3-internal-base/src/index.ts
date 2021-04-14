@@ -4,7 +4,7 @@ Axios.defaults.adapter = require('axios/lib/adapters/http');
 
 import { BaseOpts, BaseFunction, BaseAPISchema } from './types'
 
-export class BaseCore {
+export class Base {
     private _httpClient: AxiosInstance | undefined
 
     [ key: string ]: BaseFunction | any;
@@ -36,7 +36,7 @@ export class BaseCore {
                 throw new Error(`Invalid HTTP(S) provider: ${provider}`)
             }
 
-            this._httpClient = ETH2Core.createHttpClient(provider)
+            this._httpClient = Base.createHttpClient(provider)
             this.provider = provider
         } catch (error) {
             throw new Error(`Failed to set provider: ${error.message}`)
