@@ -1,4 +1,4 @@
-import { BaseCore } from '../../src/index'
+import { Base } from '../../src/index'
 
 const provider = 'http://127.0.0.1:9596'
 const testAPISchema = {
@@ -17,12 +17,12 @@ const testAPISchema = {
     ]
 }
 
-it('constructs a ETH2Core instance with expected properties', () => {
+it('constructs a Base instance with expected properties', () => {
     // @ts-ignore using a mock schema for test
-    const eth2Core = new ETH2Core(provider, testAPISchema, { protectProvider: true })
+    const base = new Base(provider, testAPISchema, { protectProvider: true })
 
-    expect(eth2Core.name).toBe(testAPISchema.packageName)
-    expect(eth2Core.provider).toBe(`${provider}${testAPISchema.routePrefix}`)
-    expect(eth2Core.protectProvider)
-    expect(eth2Core.testMethod).toBeDefined()
+    expect(base.name).toBe(testAPISchema.packageName)
+    expect(base.provider).toBe(`${provider}${testAPISchema.routePrefix}`)
+    expect(base.protectProvider)
+    expect(base.testMethod).toBeDefined()
 })
