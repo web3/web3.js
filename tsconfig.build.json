@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
       "composite": true,
-      "target": "es6",
+      "target": "es2020",
       "module": "commonjs",
       "moduleResolution": "node",
       "strict": true,
@@ -10,12 +10,6 @@
       "allowSyntheticDefaultImports": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
-      "baseUrl": ".",
       "forceConsistentCasingInFileNames": true
-    },
-    "exclude": [
-      "node_modules",
-      "**/*.spec.ts",
-      "**/*.test.ts"
-    ]
+    }
   }
