@@ -1,10 +1,14 @@
+/**
+ * @module types
+ */
+
 import { AxiosInstance } from 'axios';
+
+export type BaseFunction<T = any> = (...args: any[]) => Promise<T>;
 
 export interface BaseOpts {
     protectProvider?: boolean
 }
-
-export type BaseFunction<T = any> = (...args: any[]) => Promise<T>;
 
 export interface BaseAPISchemaMethod {
     notImplemented?: true,

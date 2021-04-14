@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+/**
+ * @module types
+ */
+
+>>>>>>> wyatt/rewrite
 export interface RpcResponse {
     id: number,
     jsonrpc: string,
@@ -6,4 +13,8 @@ export interface RpcResponse {
 
 export interface Web3Eth {
     getBlocknumber(): Promise<RpcResponse>
+<<<<<<< HEAD
   }
+=======
+}
+>>>>>>> wyatt/rewrite

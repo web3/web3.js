@@ -7,11 +7,7 @@
     }
   },
   "references": [
-    {
-      "path": "./packages/web3-internal-base"
-    },
-    {
-      "path": "./packages/web3-eth"
-    }
+    {"path": "./packages/web3-internal-base"},
+    {"path": "./packages/web3-eth"}
   ]
 }
