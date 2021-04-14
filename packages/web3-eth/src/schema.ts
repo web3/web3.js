@@ -1,4 +1,4 @@
-import { BaseAPISchema } from 'web3-internal-base';
+import { BaseAPISchema } from 'web3-internal-base/types';
 
 export const DefaultSchema: BaseAPISchema = {
   packageName: 'eth',
