@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+    "outDir": "./dist",
+    "composite": true
+  },
+  "references": [{ "path": "../web3-internal-base" }]
+}
