@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "composite": true,
+      "target": "es6",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "strict": true,
+      "declaration": true,
+      "declarationMap": true,
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "baseUrl": ".",
+      "forceConsistentCasingInFileNames": true
+    },
+    "exclude": [
+      "node_modules",
+      "**/*.spec.ts",
+      "**/*.test.ts"
+    ]
+  }
