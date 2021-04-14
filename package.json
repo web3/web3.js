@@ -1,0 +1,27 @@
+{
+  "name": "web3.js",
+  "version": "4.0.0",
+  "description": "Ethereum API wrappers and utilities",
+  "main": "index.js",
+  "repository": "git@github.com:ChainSafe/web3.js.git",
+  "author": "ChainSafe Systems",
+  "license": "LGPL-3.0",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "build": "lerna run build --stream",
+    "lint": "lerna run lint --stream --parallel",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "eslint": "^7.24.0",
+    "jest": "^26.6.3",
+    "lerna": "^4.0.0",
+    "ts-jest": "^26.5.4",
+    "typescript": "^4.2.4"
+  }
+}
