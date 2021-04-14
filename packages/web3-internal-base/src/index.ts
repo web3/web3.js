@@ -2,7 +2,7 @@ import Axios, {AxiosInstance} from 'axios'
 
 Axios.defaults.adapter = require('axios/lib/adapters/http');
 
-import { BaseOpts, BaseFunction, BaseAPISchema } from './types'
+import { BaseOpts, BaseFunction, BaseAPISchema } from '../types'
 
 export class Base {
     private _httpClient: AxiosInstance | undefined
