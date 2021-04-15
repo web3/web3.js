@@ -1,5 +1,7 @@
 import { Base } from 'web3-internal-base';
-import { BaseAPISchema, BaseOpts } from 'web3-internal-base/types';
+import {
+  BaseAPISchema, BaseOpts, RpcParamsBase, RpcResponse
+} from 'web3-internal-base/types';
 import { DefaultSchema } from './schema';
 
 import { Web3Eth as IWeb3Eth } from '../types';
@@ -7,7 +9,7 @@ import { Web3Eth as IWeb3Eth } from '../types';
 // @ts-ignore - ETH2BeaconChain incorrectly implements interface IETH2BeaconChain
 // because methods are added during runtime
 // export class Web3Eth extends Base implements IWeb3Eth {
-export class Web3Eth implements IWeb3Eth extends Base {
+export default class Web3Eth extends Base implements IWeb3Eth {
   constructor(
     provider: string,
     schema: BaseAPISchema = DefaultSchema,
@@ -15,4 +17,8 @@ export class Web3Eth implements IWeb3Eth extends Base {
   ) {
     super(provider, schema, opts);
   }
+
+  // async getBlocknumber(rpcParams: RpcParamsBase): Promise<RpcResponse> {
+  //   return { id: undefined, jsonrpc: undefined, result: undefined }
+  // }
 }

@@ -10,10 +10,12 @@ export interface BaseOpts {
     protectProvider?: boolean
 }
 
+export type BaseAPISchemaParams = (string | number)[]
+
 export interface BaseAPISchemaMethod {
     notImplemented?: true,
     name: string,
-    route: string,
+    method: string,
     restMethod: 'get' | 'post'
     inputFormatter: any,
     outputFormatter: any,
@@ -23,7 +25,7 @@ export interface BaseAPISchemaMethod {
 
 export interface BaseAPISchema {
     packageName: string,
-    routePrefix: string,
+    methodPrefix: string,
     methods: BaseAPISchemaMethod[]
 }
 
@@ -38,4 +40,15 @@ export declare class Base {
     setProvider(provider: string): void;
     private routeBuilder;
     private buildAPIWrappersFromSchema;
+}
+
+export interface RpcParamsBase {
+    id: number,
+    jsonrpc?: string
+}
+
+export interface RpcResponse {
+    id: number | undefined,
+    jsonrpc: string | undefined,
+    result: string | undefined
 }
