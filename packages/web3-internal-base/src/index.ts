@@ -1,9 +1,8 @@
 import Axios, {AxiosInstance} from 'axios'
-
 Axios.defaults.adapter = require('axios/lib/adapters/http');
 
 import {
-    BaseOpts, BaseFunction, BaseAPISchema, RpcParams, RpcResponse
+    BaseOpts, BaseFunction, RpcParams, RpcResponse
 } from '../types'
 
 export class Base {
@@ -14,21 +13,16 @@ export class Base {
     name: string
     provider: string | undefined
     protectProvider: boolean // Protects from global overwrite when using .use functionality
-    methodPrefix: string
 
-    constructor(provider: string, schema: BaseAPISchema, opts: BaseOpts = {}) {
-        this.name = schema.packageName
+    constructor(packageName: string, provider: string, opts: BaseOpts = {}) {
+        this.name = packageName
         this.setProvider(provider)
         this.protectProvider = opts.protectProvider || false
-        this.methodPrefix = schema.methodPrefix
-        // this.buildAPIWrappersFromSchema(schema)
     }
 
     static createHttpClient(baseUrl: string): AxiosInstance {
         try {
-            return Axios.create({
-                baseURL: baseUrl
-            })
+            return Axios.create({baseURL: baseUrl})
         } catch (error) {
             throw new Error(`Failed to create HTTP client: ${error.message}`)
         }
@@ -61,29 +55,4 @@ export class Base {
             throw Error(`Error sending RPC: ${error.message}`)
         }
     }
-
-    // private buildAPIWrappersFromSchema(schema: BaseAPISchema) {
-    //     for (const method of schema.methods) {
-    //         this[method.name] = async (rpcParams: {[key: string]: string | number}): Promise<RpcResponse> => {
-    //             try {
-    //                 let rpcParams: RpcParams = []
-    //                 if (method.inputFormatter) rpcParams = method.inputFormatter(rpcParams)
-
-    //                 // @ts-ignore
-    //                 let {data} = await this._httpClient[method.restMethod]('', {
-    //                     jsonrpc: '2.0',
-    //                     method: `${this.methodPrefix}${method.method}`,
-    //                     id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), // generate random integer
-    //                     params: rpcParams
-    //                 })
-    //                 if (data.data) data = data.data
-
-    //                 if (method.outputFormatter) data = method.outputFormatter(data)
-    //                 return data
-    //             } catch (error) {
-    //                 throw Error(`${method.errorPrefix} ${error.message}`)
-    //             }
-    //         }
-    //     }
-    // }
 }
