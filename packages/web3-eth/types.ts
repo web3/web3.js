@@ -1,13 +1,5 @@
-/**
- * @module types
- */
-
-export interface RpcResponse {
-    id: number,
-    jsonrpc: string,
-    result: BigInt
-}
+import { RpcParamsBase, RpcResponse } from 'web3-internal-base/types'
 
 export interface Web3Eth {
-    getBlocknumber(): Promise<RpcResponse>
+    getBlocknumber(rpcParams: RpcParamsBase): Promise<RpcResponse>
 }

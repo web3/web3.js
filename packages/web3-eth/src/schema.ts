@@ -1,17 +1,30 @@
-import { BaseAPISchema } from 'web3-internal-base/types';
+import { BaseAPISchema, } from 'web3-internal-base/types';
 
 export const DefaultSchema: BaseAPISchema = {
   packageName: 'eth',
-  routePrefix: '/',
+  methodPrefix: 'eth_',
   methods: [
     {
       name: 'getBlockNumber',
-      route: 'eth_blockNumber',
-      restMethod: 'get',
+      method: 'blockNumber',
+      restMethod: 'post',
       inputFormatter: null,
       outputFormatter: null,
       errors: null,
       errorPrefix: 'Failed to get block number:',
     },
   ],
+  // packageName: 'eth',
+  // routePrefix: '/',
+  // methods: [
+  //   {
+  //     name: 'getBlockNumber',
+  //     route: 'eth_blockNumber',
+  //     restMethod: 'get',
+  //     inputFormatter: null,
+  //     outputFormatter: null,
+  //     errors: null,
+  //     errorPrefix: 'Failed to get block number:',
+  //   },
+  // ],
 };

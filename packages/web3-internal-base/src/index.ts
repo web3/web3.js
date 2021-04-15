@@ -2,7 +2,10 @@ import Axios, {AxiosInstance} from 'axios'
 
 Axios.defaults.adapter = require('axios/lib/adapters/http');
 
-import { BaseOpts, BaseFunction, BaseAPISchema } from '../types'
+import {
+    BaseOpts, BaseFunction, BaseAPISchema,
+    RpcParams, RpcResponse, BaseAPISchemaParams
+} from '../types'
 
 export class Base {
     private _httpClient: AxiosInstance | undefined
@@ -12,11 +15,13 @@ export class Base {
     name: string
     provider: string | undefined
     protectProvider: boolean // Protects from global overwrite when using .use functionality
+    methodPrefix: string
 
     constructor(provider: string, schema: BaseAPISchema, opts: BaseOpts = {}) {
         this.name = schema.packageName
-        this.setProvider(`${provider}${schema.routePrefix}`)
+        this.setProvider(provider)
         this.protectProvider = opts.protectProvider || false
+        this.methodPrefix = schema.methodPrefix
         this.buildAPIWrappersFromSchema(schema)
     }
 
@@ -43,40 +48,26 @@ export class Base {
         }
     }
 
-    private routeBuilder(rawUrl: string, parameters: { [ key: string]: string }): string {
-        try {
-            let computedRoute = rawUrl
-
-            // Find all: ${valuesWeWant} in rawUrl, returns array with only valuesWeWant
-            const foundIdentifiers = rawUrl.match(/(?<=\$\{).*?(?=\})/gm) // Matches ${valueWeWant}, but doesn't include ${}
-            if (foundIdentifiers !== null) {
-                for (const foundIdentifier of foundIdentifiers) {
-                    if (parameters[foundIdentifier] === undefined) throw new Error(`The parameter ${foundIdentifier} was not provided`)
-                    computedRoute = computedRoute.replace(`\${${foundIdentifier}}`, parameters[foundIdentifier])
-                }
-            }
-            
-            return computedRoute
-        } catch (error) {
-            throw new Error(`Failed to build route: ${error.message}`)
-        }
-    }
-
     private buildAPIWrappersFromSchema(schema: BaseAPISchema) {
         for (const method of schema.methods) {
-            this[method.name] = async (routeParameters: any, queryParameters: any = {}): Promise<any> => {
+            this[method.name] = async (rpcParams: {[key: string]: string | number}): Promise<RpcResponse> => {
                 try {
-                    if (method.inputFormatter) queryParameters = method.inputFormatter(queryParameters)
+                    let rpcParams: RpcParams = []
+                    if (method.inputFormatter) rpcParams = method.inputFormatter(rpcParams)
 
-                    const computedRoute = this.routeBuilder(method.route, routeParameters)
                     // @ts-ignore
-                    let {data} = await this._httpClient[method.restMethod](computedRoute, { params: queryParameters })
+                    let {data} = await this._httpClient[method.restMethod]('', {
+                        jsonrpc: '2.0',
+                        method: `${this.methodPrefix}${method.method}`,
+                        id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), // generate random integer
+                        params: rpcParams
+                    })
                     if (data.data) data = data.data
 
                     if (method.outputFormatter) data = method.outputFormatter(data)
                     return data
                 } catch (error) {
-                    throw new Error(`${method.errorPrefix} ${error.message}`)
+                    throw Error(`${method.errorPrefix} ${error.message}`)
                 }
             }
         }
