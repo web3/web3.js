@@ -3,8 +3,7 @@ import Axios, {AxiosInstance} from 'axios'
 Axios.defaults.adapter = require('axios/lib/adapters/http');
 
 import {
-    BaseOpts, BaseFunction, BaseAPISchema,
-    RpcParams, RpcResponse, BaseAPISchemaParams
+    BaseOpts, BaseFunction, BaseAPISchema, RpcParams, RpcResponse
 } from '../types'
 
 export class Base {
@@ -22,7 +21,7 @@ export class Base {
         this.setProvider(provider)
         this.protectProvider = opts.protectProvider || false
         this.methodPrefix = schema.methodPrefix
-        this.buildAPIWrappersFromSchema(schema)
+        // this.buildAPIWrappersFromSchema(schema)
     }
 
     static createHttpClient(baseUrl: string): AxiosInstance {
@@ -48,28 +47,43 @@ export class Base {
         }
     }
 
-    private buildAPIWrappersFromSchema(schema: BaseAPISchema) {
-        for (const method of schema.methods) {
-            this[method.name] = async (rpcParams: {[key: string]: string | number}): Promise<RpcResponse> => {
-                try {
-                    let rpcParams: RpcParams = []
-                    if (method.inputFormatter) rpcParams = method.inputFormatter(rpcParams)
-
-                    // @ts-ignore
-                    let {data} = await this._httpClient[method.restMethod]('', {
-                        jsonrpc: '2.0',
-                        method: `${this.methodPrefix}${method.method}`,
-                        id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), // generate random integer
-                        params: rpcParams
-                    })
-                    if (data.data) data = data.data
-
-                    if (method.outputFormatter) data = method.outputFormatter(data)
-                    return data
-                } catch (error) {
-                    throw Error(`${method.errorPrefix} ${error.message}`)
-                }
-            }
+    async sendRpc(rpcParams: RpcParams): Promise<RpcResponse> {
+        try {
+            if (!this._httpClient) throw Error('No HTTP client initiliazed')
+            const response = await this._httpClient.post('', {
+                id: rpcParams.id || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), // generate random integer
+                jsonrpc: rpcParams.jsonrpc || '2.0',
+                method: rpcParams.method,
+                params: rpcParams.params
+            })
+            return response.data.data ? response.data.data : response.data
+        } catch (error) {
+            throw Error(`Error sending RPC: ${error.message}`)
         }
     }
+
+    // private buildAPIWrappersFromSchema(schema: BaseAPISchema) {
+    //     for (const method of schema.methods) {
+    //         this[method.name] = async (rpcParams: {[key: string]: string | number}): Promise<RpcResponse> => {
+    //             try {
+    //                 let rpcParams: RpcParams = []
+    //                 if (method.inputFormatter) rpcParams = method.inputFormatter(rpcParams)
+
+    //                 // @ts-ignore
+    //                 let {data} = await this._httpClient[method.restMethod]('', {
+    //                     jsonrpc: '2.0',
+    //                     method: `${this.methodPrefix}${method.method}`,
+    //                     id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), // generate random integer
+    //                     params: rpcParams
+    //                 })
+    //                 if (data.data) data = data.data
+
+    //                 if (method.outputFormatter) data = method.outputFormatter(data)
+    //                 return data
+    //             } catch (error) {
+    //                 throw Error(`${method.errorPrefix} ${error.message}`)
+    //             }
+    //         }
+    //     }
+    // }
 }

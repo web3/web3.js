@@ -1,5 +1,5 @@
 
-import { Web3Eth } from '../../src/index'
+import Web3Eth from '../../src/index'
 
 const provider = 'http://127.0.0.1:8545'
 const methodPrefix = 'eth_'

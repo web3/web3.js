@@ -43,8 +43,13 @@ export declare class Base {
 }
 
 export interface RpcParamsBase {
-    id: number,
+    id?: number,
     jsonrpc?: string
+}
+
+export interface RpcParams extends RpcParamsBase {
+    method: string,
+    params: (string|number)[]
 }
 
 export interface RpcResponse {
