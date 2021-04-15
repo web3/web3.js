@@ -53,7 +53,7 @@ export interface RpcParams extends RpcParamsBase {
 }
 
 export interface RpcResponse {
-    id: number | undefined,
-    jsonrpc: string | undefined,
-    result: string | undefined
+    id: number,
+    jsonrpc: string,
+    result: string
 }
