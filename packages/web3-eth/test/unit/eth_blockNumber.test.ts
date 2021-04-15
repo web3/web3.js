@@ -16,7 +16,7 @@ it('[SANITY] constructs a Web3Eth instance with getBlockNumber method', () => {
 })
 
 it('should get block number', async () => {
-    const result: RpcResponse = await web3Eth.
+    const result: RpcResponse = await web3Eth.getBlockNumber()
     console.log(result)
     // { id: 7054039680174109, jsonrpc: '2.0', result: '0x0' }
     
