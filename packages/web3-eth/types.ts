@@ -3,4 +3,3 @@ export interface FormattedRpcResponse {
     jsonrpc: string,
     result: BigInt
 }
-3
