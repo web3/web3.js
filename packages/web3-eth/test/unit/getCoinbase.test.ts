@@ -21,7 +21,6 @@ it('[SANITY] constructs a Web3Eth instance with getCoinbase method', () => {
 
 it('should get protocol version - no params', async () => {
     const result: RpcResponse = await web3Eth.getCoinbase()
-    console.log(result)
     expect(typeof result.id).toBe('number')
     expect(result.jsonrpc).toBe('2.0')
     expect(typeof result.result).toBe('string')
