@@ -1,6 +1,6 @@
 import { RpcResponse } from 'web3-internal-base/types'
 
-export interface EthSyncingResponse extends RpcResponse {
+export interface RpcResponseSyncing extends RpcResponse {
     result: {
         startingBlock: string,
         currentBlock: string,

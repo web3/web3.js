@@ -2,7 +2,7 @@ import Axios, {AxiosInstance} from 'axios'
 Axios.defaults.adapter = require('axios/lib/adapters/http');
 
 import {
-    BaseOpts, BaseFunction, RpcParams, RpcResponse, FormattedRpcResponse
+    BaseOpts, BaseFunction, RpcParams, RpcResponse, RpcResponseBigInt
 } from '../types'
 
 export default class Base {
@@ -66,7 +66,7 @@ export default class Base {
         }
     }
 
-    async sendRpcFormatResponse(rpcParams: RpcParams): Promise<FormattedRpcResponse> {
+    async sendRpcFormatResponse(rpcParams: RpcParams): Promise<RpcResponseBigInt> {
         try {
             const response = await this.sendRpc(rpcParams)
             if (typeof response.result !== 'string'

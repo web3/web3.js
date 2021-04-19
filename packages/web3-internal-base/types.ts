@@ -58,7 +58,7 @@ export interface RpcResponse {
     result: string | number | boolean | (string|number)[] | {[key: string]: string | number}
 }
 
-export interface FormattedRpcResponse {
+export interface RpcResponseBigInt {
     id: number,
     jsonrpc: string,
     result: BigInt

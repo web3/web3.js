@@ -1,5 +1,5 @@
 
-import { FormattedRpcResponse } from 'web3-internal-base/types'
+import { RpcResponseBigInt } from 'web3-internal-base/types'
 
 import Web3Eth from '../../src/index'
 
@@ -17,14 +17,14 @@ it('[SANITY] constructs a Web3Eth instance with getProtocolVersion method', () =
 })
 
 it('should get protocol version - no params', async () => {
-    const result: FormattedRpcResponse = await web3Eth.getProtocolVersion()
+    const result: RpcResponseBigInt = await web3Eth.getProtocolVersion()
     expect(typeof result.id).toBe('number')
     expect(result.jsonrpc).toBe('2.0')
     expect(typeof result.result).toBe('bigint')
 })
 
 it(`should get block number - id param should be ${expectedId}`, async () => {
-    const result: FormattedRpcResponse = await web3Eth.getProtocolVersion({id: expectedId})
+    const result: RpcResponseBigInt = await web3Eth.getProtocolVersion({id: expectedId})
     expect(result.id).toBe(expectedId)
     expect(result.jsonrpc).toBe('2.0')
     expect(typeof result.result).toBe('bigint')
