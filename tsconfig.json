@@ -3,11 +3,13 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
     "paths": {
       "web3-internal-base/*": ["./packages/web3-internal-base/src/*"],
+      "web3-utils/*": ["./packages/web3-utils/src/*"],
       "web3-eth/*": ["./packages/web3-eth/src/*"]
     }
   },
   "references": [
     {"path": "./packages/web3-internal-base"},
+    {"path": "./packages/web3-utils"},
     {"path": "./packages/web3-eth"}
   ]
 }
