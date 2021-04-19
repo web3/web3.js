@@ -78,7 +78,7 @@ for (const method of config.methods) {
             expect(result.result).toBe(method.expectedResult)
     })
     
-    it(`(${method.name}) should get expected result - id param should be ${method.expectedId}`, async () => {
+    it(`(${method.name}) should get expected result - id param`, async () => {
         const result: RpcResponse | RpcResponseBigInt = await web3Eth[method.name]({id: method.expectedId})
         expect(result.id).toBe(method.expectedId)
         expect(result.jsonrpc).toBe(method.jsonRpcVersion ? method.jsonRpcVersion : config.jsonRpcVersion)
