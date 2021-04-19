@@ -55,5 +55,11 @@ export interface RpcParams extends RpcParamsBase {
 export interface RpcResponse {
     id: number,
     jsonrpc: string,
-    result: string
+    result: string | number | boolean | (string|number)[] | {[key: string]: string | number}
+}
+
+export interface FormattedRpcResponse {
+    id: number,
+    jsonrpc: string,
+    result: BigInt
 }
