@@ -20,9 +20,15 @@ const config: IConfig = {
     provider: 'http://127.0.0.1:8545',
     methods: [
         {
-            name: 'getBlockNumber',
+            name: 'getProtocolVersion',
             expectedId: 42,
-            expectedResult: BigInt(0)
+            expectedResultMethod: (rpcResponse: RpcResponseBigInt) => 
+                expect(typeof rpcResponse.result).toBe('bigint')
+        },
+        {
+            name: 'getSyncing',
+            expectedId: 42,
+            expectedResult: false
         },
         {
             name: 'getCoinbase',
@@ -33,25 +39,19 @@ const config: IConfig = {
             }
         },
         {
-            name: 'getHashRate',
-            expectedId: 42,
-            expectedResult: BigInt(0)
-        },
-        {
             name: 'getMining',
             expectedId: 42,
             expectedResult: true
         },
         {
-            name: 'getSyncing',
+            name: 'getHashRate',
             expectedId: 42,
-            expectedResult: false
+            expectedResult: BigInt(0)
         },
         {
-            name: 'getProtocolVersion',
+            name: 'getBlockNumber',
             expectedId: 42,
-            expectedResultMethod: (rpcResponse: RpcResponseBigInt) => 
-                expect(typeof rpcResponse.result).toBe('bigint')
+            expectedResult: BigInt(0)
         },
     ]
 }
