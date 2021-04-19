@@ -16,6 +16,7 @@
     "clean": "rimraf lib",
     "compile": "tsc --build",
     "lint": "eslint \"./src/**/*.ts\" --max-warnings=0 --fix",
+    "pretest": "./test/scripts/generateBasicTests.sh",
     "test": "jest"
   },
   "devDependencies": {
