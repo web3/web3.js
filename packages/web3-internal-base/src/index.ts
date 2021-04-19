@@ -2,10 +2,10 @@ import Axios, {AxiosInstance} from 'axios'
 Axios.defaults.adapter = require('axios/lib/adapters/http');
 
 import {
-    BaseOpts, BaseFunction, RpcParams, RpcResponse
+    BaseOpts, BaseFunction, RpcParams, RpcResponse, FormattedRpcResponse
 } from '../types'
 
-export class Base {
+export default class Base {
     private _httpClient: AxiosInstance | undefined
 
     [ key: string ]: BaseFunction | any;
@@ -24,7 +24,17 @@ export class Base {
         try {
             return Axios.create({baseURL: baseUrl})
         } catch (error) {
-            throw new Error(`Failed to create HTTP client: ${error.message}`)
+            throw Error(`Failed to create HTTP client: ${error.message}`)
+        }
+    }
+    
+    toBigInt(toConvert: string | number): BigInt {
+        try {
+            const bigIntBlockNumber = BigInt(toConvert)
+            if (bigIntBlockNumber === undefined) throw Error(`Unable to convert values: ${toConvert} into a BigInt`)
+            return bigIntBlockNumber
+        } catch (error) {
+            throw Error(error.message)
         }
     }
 
@@ -37,7 +47,7 @@ export class Base {
             this._httpClient = Base.createHttpClient(provider)
             this.provider = provider
         } catch (error) {
-            throw new Error(`Failed to set provider: ${error.message}`)
+            throw Error(`Failed to set provider: ${error.message}`)
         }
     }
 
@@ -53,6 +63,17 @@ export class Base {
             return response.data.data ? response.data.data : response.data
         } catch (error) {
             throw Error(`Error sending RPC: ${error.message}`)
+        }
+    }
+
+    async sendRpcFormatResponse(rpcParams: RpcParams): Promise<FormattedRpcResponse> {
+        try {
+            const response = await this.sendRpc(rpcParams)
+            if (typeof response.result !== 'string'
+                && typeof response.result !== 'number') throw Error(`Unable to convert ${response.result} into a BigInt`)
+            return {...response, result: this.toBigInt(response.result)}
+        } catch (error) {
+            throw Error(error.message)
         }
     }
 }
