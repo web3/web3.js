@@ -2,7 +2,7 @@
   "name": "web3-eth",
   "version": "4.0.0",
   "description": "Ethereum RPC wrappers for Web3 4.x.x",
-  "main": "build/index.js",
+  "main": "src/index.ts",
   "repository": "https://github.com/ChainSafe/web3.js",
   "author": "ChainSafe Systems",
   "license": "LGPL-3.0",
@@ -27,7 +27,8 @@
     "eslint-plugin-import": "^2.22.1",
     "jest": "^26.6.3",
     "ts-jest": "^26.5.4",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "web3-utils": "^4.0.0"
   },
   "dependencies": {
     "axios": "^0.21.1",
