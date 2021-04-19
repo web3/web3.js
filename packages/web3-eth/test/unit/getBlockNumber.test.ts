@@ -1,6 +1,7 @@
 
+import { FormattedRpcResponse } from 'web3-internal-base/types'
+
 import Web3Eth from '../../src/index'
-import { FormattedRpcResponse } from '../../types'
 
 const provider = 'http://127.0.0.1:8545'
 const expectedId = 42
