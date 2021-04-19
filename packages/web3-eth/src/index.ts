@@ -14,7 +14,7 @@ export default class Web3Eth extends Base {
    */
   async getProtocolVersion(rpcParams?: RpcParamsBase): Promise<RpcResponseBigInt> {
     try {
-      return await this.sendRpcFormatResponse({...rpcParams, method: 'eth_protocolVersion', params: []})
+      return await this.sendRpcFormatBigInt({...rpcParams, method: 'eth_protocolVersion', params: []})
     } catch (error) {
       throw Error(`Error getting protocol version: ${error.message}`)
     }
@@ -58,7 +58,7 @@ export default class Web3Eth extends Base {
     try {
       return await this.sendRpc({...rpcParams, method: 'eth_mining', params: []})
     } catch (error) {
-      throw Error(`Error getting coinbase address: ${error.message}`)
+      throw Error(`Error getting mining info: ${error.message}`)
     }
   }
 
@@ -68,11 +68,11 @@ export default class Web3Eth extends Base {
    * @param rpcParams Optionaly provide {id} and {jsonrpc} params to RPC call
    * @returns {RpcResponse} which includes a BigInt formatted {result}
    */
-   async getHashRate(rpcParams?: RpcParamsBase): Promise<RpcResponse> {
+   async getHashRate(rpcParams?: RpcParamsBase): Promise<RpcResponseBigInt> {
     try {
-      return await this.sendRpc({...rpcParams, method: 'eth_mining', params: []})
+      return await this.sendRpcFormatBigInt({...rpcParams, method: 'eth_mining', params: []})
     } catch (error) {
-      throw Error(`Error getting coinbase address: ${error.message}`)
+      throw Error(`Error getting hash rate: ${error.message}`)
     }
   }
 
@@ -83,7 +83,7 @@ export default class Web3Eth extends Base {
    */
   async getBlockNumber(rpcParams?: RpcParamsBase): Promise<RpcResponseBigInt> {
     try {
-      return await this.sendRpcFormatResponse({...rpcParams, method: 'eth_blockNumber', params: []})
+      return await this.sendRpcFormatBigInt({...rpcParams, method: 'eth_blockNumber', params: []})
     } catch (error) {
       throw Error(`Error getting block number: ${error.message}`)
     }

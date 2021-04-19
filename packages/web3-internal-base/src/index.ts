@@ -66,7 +66,7 @@ export default class Base {
         }
     }
 
-    async sendRpcFormatResponse(rpcParams: RpcParams): Promise<RpcResponseBigInt> {
+    async sendRpcFormatBigInt(rpcParams: RpcParams): Promise<RpcResponseBigInt> {
         try {
             const response = await this.sendRpc(rpcParams)
             if (typeof response.result !== 'string'
