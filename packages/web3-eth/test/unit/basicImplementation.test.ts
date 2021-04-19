@@ -6,6 +6,7 @@ import Web3Eth from '../../src/index'
 interface configMethod {
     name: string
     provider?: string
+    jsonRpcVersion?: string
     expectedResult?: any
     expectedId: number
     expectedResultMethod?: any
@@ -13,11 +14,13 @@ interface configMethod {
 
 interface IConfig {
     provider: string
+    jsonRpcVersion: string
     methods: configMethod[]
 }
 
 const config: IConfig = {
     provider: 'http://127.0.0.1:8545',
+    jsonRpcVersion: '2.0',
     methods: [
         {
             name: 'getProtocolVersion',
@@ -60,7 +63,7 @@ let web3Eth: Web3Eth
 
 for (const method of config.methods) {
     beforeAll(() => {
-        web3Eth = new Web3Eth(config.provider);
+        web3Eth = new Web3Eth(method.provider ? method.provider : config.provider);
     })
 
     it(`[SANITY](${method.name}) constructs a Web3Eth instance with method defined`, () => {
@@ -70,7 +73,7 @@ for (const method of config.methods) {
     it(`(${method.name}) should get expected result - no params`, async () => {
         const result: RpcResponse | RpcResponseBigInt = await web3Eth[method.name]()
         expect(typeof result.id).toBe('number')
-        expect(result.jsonrpc).toBe('2.0')
+        expect(result.jsonrpc).toBe(method.jsonRpcVersion ? method.jsonRpcVersion : config.jsonRpcVersion)
         method.expectedResultMethod ? method.expectedResultMethod(result) : 
             expect(result.result).toBe(method.expectedResult)
     })
@@ -78,7 +81,7 @@ for (const method of config.methods) {
     it(`(${method.name}) should get expected result - id param should be ${method.expectedId}`, async () => {
         const result: RpcResponse | RpcResponseBigInt = await web3Eth[method.name]({id: method.expectedId})
         expect(result.id).toBe(method.expectedId)
-        expect(result.jsonrpc).toBe('2.0')
+        expect(result.jsonrpc).toBe(method.jsonRpcVersion ? method.jsonRpcVersion : config.jsonRpcVersion)
         method.expectedResultMethod ? method.expectedResultMethod(result) : 
             expect(result.result).toBe(method.expectedResult)
     })
