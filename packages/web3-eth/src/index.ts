@@ -1,5 +1,6 @@
 import Base from 'web3-internal-base';
 import { BaseOpts, RpcParamsBase, RpcResponseBigInt, RpcResponse } from 'web3-internal-base/types';
+
 import { RpcResponseSyncing } from '../types';
 
 export default class Web3Eth extends Base {
@@ -70,7 +71,7 @@ export default class Web3Eth extends Base {
    */
    async getHashRate(rpcParams?: RpcParamsBase): Promise<RpcResponseBigInt> {
     try {
-      return await this.sendRpcFormatBigInt({...rpcParams, method: 'eth_mining', params: []})
+      return await this.sendRpcFormatBigInt({...rpcParams, method: 'eth_hashrate', params: []})
     } catch (error) {
       throw Error(`Error getting hash rate: ${error.message}`)
     }
