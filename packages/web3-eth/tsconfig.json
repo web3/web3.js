@@ -5,7 +5,10 @@
     "outDir": "./lib",
     "composite": true
   },
-  "references": [{ "path": "../web3-internal-base" }],
+  "references": [
+    { "path": "../web3-internal-base" },
+    { "path": "../web3-utils" }
+  ],
   "include": [
     "./src/**/*",
     "./types.ts"
