@@ -116,12 +116,11 @@ ABICoder.prototype.encodeParameters = function (types, params) {
             const coder = ethersAbiCoder._getCoder(ParamType.from(type));
             const modifyParams = (coder, param) => {
                 if (coder.name === 'array') {
-                    return param.map(p =>
-                        modifyParams(
-                            ethersAbiCoder._getCoder(ParamType.from(coder.type.replace('[]', ''))),
-                            p
-                        )
-                    );
+                    return param.map(p => {
+                        // `coder.type.replace('[]','')` can handle'tuple(string,string)[]', but cannot handle `tuple(string,string)[3]'.
+                        // Therefore, in order to handle tuple arrays of fixed length, the logic is changed to handle strings using regular expression expressions.
+                        modifyParams(ethersAbiCoder._getCoder(ParamType.from(coder.type.replace(/\[[1-9]*\]/g, ''))), p);
+                    });
                 }
                 coder.coders.forEach((c, i) => {
                     if (c.name === 'tuple') {
