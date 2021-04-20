@@ -7,3 +7,7 @@ export interface RpcResponseSyncing extends RpcResponse {
         highestBlock: string
     }
 }
+
+export interface RpcResponseAccounts extends RpcResponse {
+    result: string[]
+}

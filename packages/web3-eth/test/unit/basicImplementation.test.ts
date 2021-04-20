@@ -1,3 +1,5 @@
+// TODO create declarations file
+// @ts-ignore
 import { RpcResponse, RpcResponseBigInt } from 'web3-internal-base/types'
 import { checkAddress } from 'web3-utils'
 
@@ -17,6 +19,18 @@ interface IConfig {
     jsonRpcVersion: string
     methods: configMethod[]
 }
+const DEFAULT_GANACHE_ACCOUNTS = [
+    '0x6849a369b4dd0e5c5ba95906e1d19cff8f65c3a6',
+    '0xbed4e839f5173e0a8b4b8b78a7ac230d593c7361',
+    '0x4c14bc7b632c8f2df6b28844a1e126d2ea94d1eb',
+    '0x41f83491dbc34a1412f436d7e0ce1394b21856dc',
+    '0x4f262c7efedbc037db6aea270f745a73ffcdf7a4',
+    '0x2544c4fe49f82857f240ae46f5c24fbee00516af',
+    '0xd99461eb5a5b87a562ff5b3e55e250798ffb16b9',
+    '0x79eb9a40aba68aedb611ae43e561c397e9f7b661',
+    '0x9b11224603d977c97e72f52de65e271e29c8ec24',
+    '0xfc3a28dcb317ade139e3dfe01a35abe0562ab712'
+]
 
 const config: IConfig = {
     provider: 'http://127.0.0.1:8545',
@@ -52,6 +66,16 @@ const config: IConfig = {
             expectedResult: BigInt(0)
         },
         {
+            name: 'getGasPrice',
+            expectedId: 42,
+            expectedResult: BigInt(20000000000)
+        },
+        {
+            name: 'getAccounts',
+            expectedId: 42,
+            expectedResult: DEFAULT_GANACHE_ACCOUNTS
+        },
+        {
             name: 'getBlockNumber',
             expectedId: 42,
             expectedResult: BigInt(0)
@@ -75,7 +99,7 @@ for (const method of config.methods) {
         expect(typeof result.id).toBe('number')
         expect(result.jsonrpc).toBe(method.jsonRpcVersion ? method.jsonRpcVersion : config.jsonRpcVersion)
         method.expectedResultMethod ? method.expectedResultMethod(result) : 
-            expect(result.result).toBe(method.expectedResult)
+            expect(result.result).toStrictEqual(method.expectedResult)
     })
     
     it(`(${method.name}) should get expected result - id param`, async () => {
@@ -83,6 +107,6 @@ for (const method of config.methods) {
         expect(result.id).toBe(method.expectedId)
         expect(result.jsonrpc).toBe(method.jsonRpcVersion ? method.jsonRpcVersion : config.jsonRpcVersion)
         method.expectedResultMethod ? method.expectedResultMethod(result) : 
-            expect(result.result).toBe(method.expectedResult)
+            expect(result.result).toStrictEqual(method.expectedResult)
     })
 }
