@@ -1,10 +1,15 @@
-import { BaseOpts, RpcParamsBase, RpcResponseBigInt, RpcResponse } from 'web3-internal-base/types';
+import { RpcParamsBase, RpcResponseBigInt, RpcResponse } from 'web3-internal-base/types';
+import Web3RequestManager from 'web3-core-requestmanager'
+import { ProviderOptions } from 'web3-providers-http';
 
 import { RpcResponseAccounts, RpcResponseSyncing } from '../types';
 
 export default class Web3Eth {
-  constructor(provider: string, opts: BaseOpts = {}) {
-    super('eth', provider, opts);
+  requestManager: Web3RequestManager
+
+  constructor(options: ProviderOptions) {
+    // super('eth', provider, opts);
+    this.requestManager = new Web3RequestManager(options)
   }
 
   /**
