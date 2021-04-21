@@ -32,6 +32,6 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "web3-internal-base": "^1.0.0"
+    "web3-core-requestmanager": "^4.0.0"
   }
 }
