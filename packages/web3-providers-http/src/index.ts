@@ -13,8 +13,8 @@ interface IWeb3Provider {
 
 export interface ProviderOptions {
   providerString: string
-  protectProvider?: boolean
-  supportsSubscriptions?: boolean
+  protectProvider: boolean
+  supportsSubscriptions: boolean
 }
 
 class Web3ProviderBase {
@@ -25,8 +25,8 @@ class Web3ProviderBase {
 
   constructor(options: ProviderOptions) {
     this.providerString = options.providerString
-    this.protectProvider = options.protectProvider || false
-    this.supportsSubscriptions = options.supportsSubscriptions || false
+    this.protectProvider = options.protectProvider
+    this.supportsSubscriptions = options.supportsSubscriptions
   }
 
   setProvider(providerString: string) {
@@ -43,7 +43,11 @@ export default class Web3ProvidersHttp extends Web3ProviderBase implements IWeb3
   private _httpClient: AxiosInstance | undefined
 
   constructor(options: ProviderOptions) {
-    super(options)
+    super({
+      ...options,
+      protectProvider: options.protectProvider || false,
+      supportsSubscriptions: options.supportsSubscriptions || false
+    })
   }
 
   static createHttpClient(baseUrl: string): AxiosInstance {
