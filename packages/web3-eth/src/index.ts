@@ -1,9 +1,8 @@
-import Base from 'web3-internal-base';
 import { BaseOpts, RpcParamsBase, RpcResponseBigInt, RpcResponse } from 'web3-internal-base/types';
 
 import { RpcResponseAccounts, RpcResponseSyncing } from '../types';
 
-export default class Web3Eth extends Base {
+export default class Web3Eth {
   constructor(provider: string, opts: BaseOpts = {}) {
     super('eth', provider, opts);
   }
