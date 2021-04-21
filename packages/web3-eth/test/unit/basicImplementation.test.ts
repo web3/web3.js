@@ -1,5 +1,3 @@
-// TODO create declarations file
-// @ts-ignore
 import { RpcResponse, RpcResponseBigInt } from 'web3-internal-base/types'
 import { checkAddress } from 'web3-utils'
 
