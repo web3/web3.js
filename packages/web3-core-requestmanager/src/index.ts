@@ -1,14 +1,12 @@
 import Web3ProviderHttp, { ProviderOptions } from 'web3-providers-http'
 
-interface RequestManagerOptions {}
-
 enum ProviderProtocol { UNKNOWN, HTTP, WS, IPC }
 
 export default class Web3RequestManager {
     provider: Web3ProviderHttp | undefined
     providerProtocol: ProviderProtocol = ProviderProtocol.UNKNOWN
 
-    constructor(providerOptions: ProviderOptions, options?: RequestManagerOptions) {
+    constructor(providerOptions: ProviderOptions) {
         switch (Web3RequestManager.detectProviderProtocol(providerOptions.providerString)) {
             case ProviderProtocol.HTTP:
                 this.provider = new Web3ProviderHttp(providerOptions)
