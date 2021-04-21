@@ -11,9 +11,10 @@ interface IWeb3Provider {
   disconnect?: () => void
 }
 
-interface ProviderOptions {
+export interface ProviderOptions {
   providerString: string
   protectProvider?: boolean
+  supportsSubscriptions?: boolean
 }
 
 class Web3ProviderBase {
@@ -25,6 +26,7 @@ class Web3ProviderBase {
   constructor(options: ProviderOptions) {
     this.providerString = options.providerString
     this.protectProvider = options.protectProvider || false
+    this.supportsSubscriptions = options.supportsSubscriptions || false
   }
 
   setProvider(providerString: string) {
@@ -37,7 +39,7 @@ class Web3ProviderBase {
   }
 }
 
-export default class Web3ProviderHttp extends Web3ProviderBase implements IWeb3Provider {
+export default class Web3ProvidersHttp extends Web3ProviderBase implements IWeb3Provider {
   private _httpClient: AxiosInstance | undefined
 
   constructor(options: ProviderOptions) {
@@ -60,7 +62,7 @@ export default class Web3ProviderHttp extends Web3ProviderBase implements IWeb3P
         }
 
         super.setProvider(providerString)
-        this._httpClient = Web3ProviderHttp.createHttpClient(providerString)
+        this._httpClient = Web3ProvidersHttp.createHttpClient(providerString)
     } catch (error) {
         throw Error(`Failed to set provider: ${error.message}`)
     }

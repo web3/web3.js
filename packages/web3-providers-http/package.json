@@ -1,5 +1,5 @@
 {
-  "name": "web3-provider-http",
+  "name": "web3-providers-http",
   "version": "4.0.0",
   "description": "Ethereum HTTP provider for Web3 4.x.x",
   "main": "src/index.ts",
