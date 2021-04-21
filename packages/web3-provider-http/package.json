@@ -1,0 +1,36 @@
+{
+  "name": "web3-provider-http",
+  "version": "4.0.0",
+  "description": "Ethereum HTTP provider for Web3 4.x.x",
+  "main": "src/index.ts",
+  "repository": "https://github.com/ChainSafe/web3.js",
+  "author": "ChainSafe Systems",
+  "license": "LGPL-3.0",
+  "files": [
+    "lib/**/*.d.ts",
+    "lib/**/*.js",
+    "lib/**/*.js.map"
+  ],
+  "scripts": {
+    "build": "yarn clean && yarn compile",
+    "clean": "rimraf lib",
+    "compile": "tsc --build",
+    "lint": "eslint \"./src/**/*.ts\" --max-warnings=0 --fix",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.22",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.24.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "jest": "^26.6.3",
+    "ts-jest": "^26.5.4",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "web3-errors": "1.0.0"
+  }
+}
