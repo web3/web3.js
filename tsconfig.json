@@ -4,12 +4,14 @@
     "paths": {
       "web3-internal-base/*": ["./packages/web3-internal-base/src/*"],
       "web3-utils/*": ["./packages/web3-utils/src/*"],
-      "web3-eth/*": ["./packages/web3-eth/src/*"]
+      "web3-eth/*": ["./packages/web3-eth/src/*"],
+      "web3-errors/*": ["./packages/web3-errors/src/*"]
     }
   },
   "references": [
     {"path": "./packages/web3-internal-base"},
     {"path": "./packages/web3-utils"},
-    {"path": "./packages/web3-eth"}
+    {"path": "./packages/web3-eth"},
+    {"path": "./packages/web3-errors"}
   ]
 }
