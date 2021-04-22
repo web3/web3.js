@@ -30,7 +30,6 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "web3-errors": "1.0.0"
+    "axios": "^0.21.1"
   }
 }
