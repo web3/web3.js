@@ -141,7 +141,7 @@ export default class Web3Eth {
   }
 
   /**
-   * 
+   * Returns the number of most recent block
    * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
    * @returns {HttpRpcResponse} Contains returns JSON RPC data
    */

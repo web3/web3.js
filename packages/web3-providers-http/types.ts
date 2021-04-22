@@ -26,9 +26,3 @@ export interface IWeb3Provider {
     send: (options: any) => Promise<any>
     disconnect?: () => void
 }
-  
-export interface ProviderOptions {
-    providerString: string
-    protectProvider: boolean
-    supportsSubscriptions: boolean
-}

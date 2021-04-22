@@ -1,28 +1,8 @@
 import Axios, { AxiosInstance } from 'axios'
+import Web3ProviderBase from 'web3-providers-base'
+import { ProviderOptions } from 'web3-providers-base/types'
 
-import { HttpRpcOptions, HttpRpcResponse, IWeb3Provider, ProviderOptions } from '../types'
-
-class Web3ProviderBase {
-  providerString = ''
-  protectProvider = false
-  connected = false
-  supportsSubscriptions = false
-
-  constructor(options: ProviderOptions) {
-    this.providerString = options.providerString
-    this.protectProvider = options.protectProvider
-    this.supportsSubscriptions = options.supportsSubscriptions
-  }
-
-  setProvider(providerString: string) {
-    try {
-      if (this.protectProvider) throw Error('Provider is protected')
-      this.providerString = providerString
-    } catch (error) {
-      throw Error(`Error setting provider: ${error.message}`)
-    }
-  }
-}
+import { HttpRpcOptions, HttpRpcResponse, IWeb3Provider } from '../types'
 
 export default class Web3ProvidersHttp extends Web3ProviderBase implements IWeb3Provider {
   private _httpClient: AxiosInstance | undefined
