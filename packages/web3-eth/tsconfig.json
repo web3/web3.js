@@ -6,7 +6,6 @@
     "composite": true
   },
   "references": [
-    { "path": "../web3-internal-base" },
     { "path": "../web3-utils" }
   ],
   "include": [
