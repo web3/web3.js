@@ -347,7 +347,7 @@ var inputLogFormatter = function (options) {
 
     if (options === undefined) options = {}
     // If options !== undefined, don't blow out existing data
-    if (options.fromBlock === undefined) options = {...options, fromBlock: 'latest'}
+    if (options.fromBlock === undefined) options = Object.assign(options, {fromBlock: 'latest'})
     if (options.fromBlock || options.fromBlock === 0)
         options.fromBlock = inputBlockNumberFormatter(options.fromBlock);
 
