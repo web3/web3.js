@@ -1,21 +1,6 @@
 import Axios, { AxiosInstance } from 'axios'
 
-interface IWeb3Provider {
-  providerString: string
-  protectProvider: boolean
-  connected: boolean
-  supportsSubscriptions: boolean
-  setProvider: (providerString: string) => void
-  // TODO get rid of anys
-  send: (options: any) => Promise<any>
-  disconnect?: () => void
-}
-
-export interface ProviderOptions {
-  providerString: string
-  protectProvider: boolean
-  supportsSubscriptions: boolean
-}
+import { IWeb3Provider, ProviderOptions } from '../types'
 
 class Web3ProviderBase {
   providerString = ''
@@ -43,11 +28,7 @@ export default class Web3ProvidersHttp extends Web3ProviderBase implements IWeb3
   private _httpClient: AxiosInstance | undefined
 
   constructor(options: ProviderOptions) {
-    super({
-      ...options,
-      protectProvider: options.protectProvider || false,
-      supportsSubscriptions: options.supportsSubscriptions || false
-    })
+    super(options)
   }
 
   static createHttpClient(baseUrl: string): AxiosInstance {

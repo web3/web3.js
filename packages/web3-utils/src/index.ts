@@ -7,3 +7,13 @@ export function checkAddress(address: string, checkSum: boolean = false) {
     throw Error(error.message)
   }
 }
+
+export function toBigInt(value: string | number): BigInt {
+  try {
+      const bigIntValue = BigInt(value)
+      if (bigIntValue === undefined) throw Error(`Unable to convert values: ${value} into a BigInt`)
+      return bigIntValue
+  } catch (error) {
+      throw Error(error.message)
+  }
+}
