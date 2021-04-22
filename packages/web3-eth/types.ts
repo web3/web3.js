@@ -11,3 +11,18 @@ export interface RpcResponseSyncing extends RpcResponse {
 export interface RpcResponseAccounts extends RpcResponse {
     result: string[]
 }
+
+export interface ProviderOptions {
+    protectProvider?: boolean
+    supportsSubscriptions?: boolean
+}
+
+export interface Web3EthOptions {
+    packageName?: string
+    providerString: string
+    providerOptions?: ProviderOptions
+}
+
+export interface Web3EthMethodOptions { 
+    formatBigInt: boolean
+}
