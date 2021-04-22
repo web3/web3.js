@@ -1,5 +1,5 @@
 import Web3ProviderHttp from 'web3-providers-http'
-import { ProviderOptions } from 'web3-providers-http/types'
+import { ProviderOptions } from 'web3-providers-base/types'
 
 enum ProviderProtocol { UNKNOWN, HTTP, WS, IPC }
 

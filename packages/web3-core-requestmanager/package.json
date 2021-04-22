@@ -30,6 +30,7 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "web3-providers-http": "^4.0.0"
+    "web3-providers-http": "^4.0.0",
+    "web3-providers-base": "^1.0.0"
   }
 }
