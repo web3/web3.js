@@ -40,44 +40,44 @@ const config: IConfig = {
             expectedResultMethod: (httpRpcResponse: HttpRpcResponse) => 
                 expect(typeof httpRpcResponse.result).toBe('bigint')
         },
-        // {
-        //     name: 'getSyncing',
-        //     expectedId: 42,
-        //     expectedResult: false
-        // },
-        // {
-        //     name: 'getCoinbase',
-        //     expectedId: 42,
-        //     expectedResultMethod: (rpcResponse: RpcResponse) => {
-        //         if (typeof rpcResponse.result !== 'string') throw Error(`${rpcResponse.result} is expected to be a hex string address`)
-        //         expect(checkAddress(rpcResponse.result)).toBe(true)
-        //     }
-        // },
-        // {
-        //     name: 'getMining',
-        //     expectedId: 42,
-        //     expectedResult: true
-        // },
-        // {
-        //     name: 'getHashRate',
-        //     expectedId: 42,
-        //     expectedResult: BigInt(0)
-        // },
-        // {
-        //     name: 'getGasPrice',
-        //     expectedId: 42,
-        //     expectedResult: BigInt(20000000000)
-        // },
-        // {
-        //     name: 'getAccounts',
-        //     expectedId: 42,
-        //     expectedResult: DEFAULT_GANACHE_ACCOUNTS
-        // },
-        // {
-        //     name: 'getBlockNumber',
-        //     expectedId: 42,
-        //     expectedResult: BigInt(0)
-        // },
+        {
+            name: 'getSyncing',
+            expectedId: 42,
+            expectedResult: false
+        },
+        {
+            name: 'getCoinbase',
+            expectedId: 42,
+            expectedResultMethod: (httpRpcResponse: HttpRpcResponse) => {
+                if (typeof httpRpcResponse.result !== 'string') throw Error(`${httpRpcResponse.result} is expected to be a hex string address`)
+                expect(checkAddress(httpRpcResponse.result)).toBe(true)
+            }
+        },
+        {
+            name: 'getMining',
+            expectedId: 42,
+            expectedResult: true
+        },
+        {
+            name: 'getHashRate',
+            expectedId: 42,
+            expectedResult: BigInt(0)
+        },
+        {
+            name: 'getGasPrice',
+            expectedId: 42,
+            expectedResult: BigInt(20000000000)
+        },
+        {
+            name: 'getAccounts',
+            expectedId: 42,
+            expectedResult: DEFAULT_GANACHE_ACCOUNTS
+        },
+        {
+            name: 'getBlockNumber',
+            expectedId: 42,
+            expectedResult: BigInt(0)
+        },
     ]
 }
 
