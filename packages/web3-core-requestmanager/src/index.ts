@@ -43,7 +43,7 @@ export default class Web3RequestManager {
             if (this.provider === undefined) throw Error('No provider initialized')
             return this.provider.send(options)
         } catch (error) {
-            
+            throw Error(`Error sending: ${error.message}`)
         }
     }
 }
