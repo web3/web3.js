@@ -22,7 +22,3 @@ export interface Web3EthOptions {
     providerString: string
     providerOptions?: ProviderOptions
 }
-
-export interface Web3EthMethodOptions { 
-    formatBigInt: boolean
-}

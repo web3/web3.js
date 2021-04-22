@@ -1,4 +1,4 @@
-import { RpcResponse, RpcResponseBigInt } from 'web3-internal-base/types'
+import { HttpRpcResponse } from 'web3-providers-http/types'
 import { checkAddress } from 'web3-utils'
 
 import Web3Eth from '../../src/index'
@@ -37,8 +37,8 @@ const config: IConfig = {
         {
             name: 'getProtocolVersion',
             expectedId: 42,
-            expectedResultMethod: (rpcResponse: RpcResponseBigInt) => 
-                expect(typeof rpcResponse.result).toBe('bigint')
+            expectedResultMethod: (httpRpcResponse: HttpRpcResponse) => 
+                expect(typeof httpRpcResponse.result).toBe('bigint')
         },
         // {
         //     name: 'getSyncing',
@@ -85,7 +85,9 @@ let web3Eth: Web3Eth
 
 for (const method of config.methods) {
     beforeAll(() => {
-        web3Eth = new Web3Eth(method.provider ? method.provider : config.provider);
+        web3Eth = new Web3Eth({
+            providerString: method.provider ? method.provider : config.provider
+        });
     })
 
     it(`[SANITY](${method.name}) constructs a Web3Eth instance with method defined`, () => {
@@ -93,7 +95,7 @@ for (const method of config.methods) {
     })
     
     it(`(${method.name}) should get expected result - no params`, async () => {
-        const result: RpcResponse | RpcResponseBigInt = await web3Eth[method.name]()
+        const result: HttpRpcResponse = await web3Eth[method.name]()
         expect(typeof result.id).toBe('number')
         expect(result.jsonrpc).toBe(method.jsonRpcVersion ? method.jsonRpcVersion : config.jsonRpcVersion)
         method.expectedResultMethod ? method.expectedResultMethod(result) : 
@@ -101,7 +103,7 @@ for (const method of config.methods) {
     })
     
     it(`(${method.name}) should get expected result - id param`, async () => {
-        const result: RpcResponse | RpcResponseBigInt = await web3Eth[method.name]({id: method.expectedId})
+        const result: HttpRpcResponse = await web3Eth[method.name]({id: method.expectedId})
         expect(result.id).toBe(method.expectedId)
         expect(result.jsonrpc).toBe(method.jsonRpcVersion ? method.jsonRpcVersion : config.jsonRpcVersion)
         method.expectedResultMethod ? method.expectedResultMethod(result) : 

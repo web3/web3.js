@@ -3,7 +3,7 @@ import Web3RequestManager from 'web3-core-requestmanager'
 import { HttpRpcOptions, HttpRpcResponse } from 'web3-providers-http/types'
 import { toBigInt } from 'web3-utils'
 
-import { Web3EthOptions, Web3EthMethodOptions } from '../types'
+import { Web3EthOptions } from '../types'
 
 export default class Web3Eth {
   packageName: string
@@ -24,10 +24,14 @@ export default class Web3Eth {
    * @param options Optional method options such as {formatBigInt}
    * @returns {HttpRpcResponse}
    */
-  async getProtocolVersion(rpcOptions: HttpRpcOptions, options?: Web3EthMethodOptions): Promise<HttpRpcResponse> {
+  async getProtocolVersion(rpcOptions: HttpRpcOptions): Promise<HttpRpcResponse> {
     try {
-      let response = await this.requestManager.send(rpcOptions)
-      return options?.formatBigInt ? {...response, result: toBigInt(response.result)} : response
+      let response = await this.requestManager.send({
+        ...rpcOptions,
+        method: 'eth_protocolVersion',
+        params: []
+      })
+      return {...response, result: toBigInt(response.result)}
     } catch (error) {
       throw Error(`Error getting protocol version: ${error.message}`)
     }

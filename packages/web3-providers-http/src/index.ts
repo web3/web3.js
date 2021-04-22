@@ -1,6 +1,6 @@
 import Axios, { AxiosInstance } from 'axios'
 
-import { IWeb3Provider, ProviderOptions } from '../types'
+import { HttpRpcOptions, HttpRpcResponse, IWeb3Provider, ProviderOptions } from '../types'
 
 class Web3ProviderBase {
   providerString = ''
@@ -29,6 +29,7 @@ export default class Web3ProvidersHttp extends Web3ProviderBase implements IWeb3
 
   constructor(options: ProviderOptions) {
     super(options)
+    this._httpClient = Web3ProvidersHttp.createHttpClient(options.providerString)
   }
 
   static createHttpClient(baseUrl: string): AxiosInstance {
@@ -53,8 +54,7 @@ export default class Web3ProvidersHttp extends Web3ProviderBase implements IWeb3
     }
   }
 
-  // TODO get rid of anys
-  async send(options: any): Promise<any> {
+  async send(options: HttpRpcOptions): Promise<HttpRpcResponse> {
     try {
       if (!this._httpClient) throw Error('No HTTP client initiliazed')
       const response = await this._httpClient.post('', {
