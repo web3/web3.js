@@ -34,8 +34,8 @@ var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
-var Transaction = require('ethereumjs-tx').Transaction;
-var Common = require('ethereumjs-common').default;
+var Transaction = require('@ethereumjs/tx').Transaction;
+var Common = require('@ethereumjs/common').default;
 
 
 var isNot = function(value) {
@@ -158,12 +158,12 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
         try {
             var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
-            transaction.to = transaction.to || '0x';
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
             transaction.chainId = utils.numberToHex(transaction.chainId);
+            transaction.gasLimit = transaction.gasLimit || transaction.gas;
 
-            // Because tx has no ethereumjs-tx signing options we use fetched vals.
+            // Because tx has no @ethereumjs/tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
                 transactionOptions.common = Common.forCustomChain(
                     'mainnet',
@@ -201,30 +201,32 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                     delete transaction.hardfork;
                 }
             }
-
+            
             if (privateKey.startsWith('0x')) {
                 privateKey = privateKey.substring(2);
             }
+            
+            var ethTx = Transaction.fromTxData(transaction, transactionOptions);
+            var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));
+            var validationResult = signedTx.validate(true);
 
-            var ethTx = new Transaction(transaction, transactionOptions);
-
-            ethTx.sign(Buffer.from(privateKey, 'hex'));
-
-            var validationResult = ethTx.validate(true);
-
-            if (validationResult !== '') {
-                throw new Error('Signer Error: ' + validationResult);
+            if (!validationResult || validationResult.length > 0) {
+                let errorString = 'Signer Error: '
+                for(const validationError of validationResult) {
+                    errorString = `${errorString} ${validationError}.`
+                }
+                throw new Error(errorString);
             }
 
-            var rlpEncoded = ethTx.serialize().toString('hex');
+            var rlpEncoded = signedTx.serialize().toString('hex');
             var rawTransaction = '0x' + rlpEncoded;
             var transactionHash = utils.keccak256(rawTransaction);
-
+            
             var result = {
-                messageHash: '0x' + Buffer.from(ethTx.hash(false)).toString('hex'),
-                v: '0x' + Buffer.from(ethTx.v).toString('hex'),
-                r: '0x' + Buffer.from(ethTx.r).toString('hex'),
-                s: '0x' + Buffer.from(ethTx.s).toString('hex'),
+                messageHash: '0x' + Buffer.from(signedTx.hash()).toString('hex'),
+                v: '0x' + Buffer.from(signedTx.v).toString('hex'),
+                r: '0x' + Buffer.from(signedTx.r).toString('hex'),
+                s: '0x' + Buffer.from(signedTx.s).toString('hex'),
                 rawTransaction: rawTransaction,
                 transactionHash: transactionHash
             };
@@ -261,7 +263,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 function _validateTransactionForSigning(tx) {
     if (tx.common && (tx.chain && tx.hardfork)) {
         return new Error(
-            'Please provide the ethereumjs-common object or the chain and hardfork property but not all together.'
+            'Please provide the @ethereumjs/common object or the chain and hardfork property but not all together.'
         );
     }
 
