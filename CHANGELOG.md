@@ -374,6 +374,10 @@ Released with 1.0.0-beta.37 code base.
 
 ## [3.0.0]
 
+### Added
+
+- `regenerator-runtime` dev dependency was added to `web3-eth2-beaconchain` to fix failing tests3
+
 ### Changed
 
 - Updates the use of `hexToNumber` to `outputBigNumberFormatter` (which returns a number string instead of a number) (#3976)
