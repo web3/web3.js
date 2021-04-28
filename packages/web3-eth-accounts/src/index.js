@@ -208,11 +208,11 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             
             var ethTx = Transaction.fromTxData(transaction, transactionOptions);
             var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));
-            var validationResult = signedTx.validate(true);
+            var validationErrors = signedTx.validate(true);
 
-            if (!validationResult || validationResult.length > 0) {
+            if (validationErrors.length > 0) {
                 let errorString = 'Signer Error: '
-                for(const validationError of validationResult) {
+                for(const validationError of validationErrors) {
                     errorString = `${errorString} ${validationError}.`
                 }
                 throw new Error(errorString);
