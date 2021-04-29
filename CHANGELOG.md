@@ -1,0 +1,320 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+<!-- EXAMPLE
+
+## [1.0.0]
+
+### Added
+
+- I've added feature XY (#1000)
+
+### Changed
+
+- I've cleaned up XY (#1000)
+
+### Deprecated
+
+- I've deprecated XY (#1000)
+
+### Removed
+
+- I've removed XY (#1000)
+
+### Fixed
+
+- I've fixed XY (#1000)
+
+### Security
+
+- I've improved the security in XY (#1000)
+
+-->
+
+## [1.2.0]
+
+Released with 1.0.0-beta.37 code base.
+
+## [1.2.1]
+
+### Fixed
+
+- ``websocket`` dependency fixed (#2971, #2976)
+- ``requestOptions`` added to ``WebsocketProvider`` (#2979)
+- Node >= v8.0.0 support (#2938)
+
+## [1.2.2]
+
+### Added
+
+- localStorage support detection added (#3031)
+- getNetworkType method extended with Görli testnet (#3095)
+- supportsSubscriptions method added to providers (#3116)
+- Add `eth.getChainId` method (#3113)
+- Minified file added to web3 package (#3131)
+- The transaction confirmation workflow can now be configured (#3130)
+- Additional parameters for accounts.signTransaction added [(docs)](https://web3js.readthedocs.io/en/v1.2.2/web3-eth-accounts.html#signtransaction) (#3141)
+- Emit `connected` event on subscription creation (#3028)
+- TypeScript type definitions added for all modules (#3132)
+- Bloom filters added to web3.utils (#3137)
+
+### Fixed
+
+- Fix allow `0` as a valid `fromBlock` or `toBlock` filter param (#1100)
+- Fix randomHex returning inconsistent string lengths (#1490)
+- Fix make isBN minification safe (#1777)
+- Fix incorrect references to BigNumber in utils.fromWei and utils.toWei error messages (#2468)
+- Fix error incorrectly thrown when receipt.status is `null` (#2183)
+- Fix incorrectly populating chainId param with `net_version` when signing txs (#2378)
+- regeneratorRuntime error fixed (#3058)
+- Fix accessing event.name where event is undefined (#3014)
+- fixed Web3Utils toHex() for Buffer input (#3021)
+- Fix bubbling up tx signing errors (#2063, #3105)
+- HttpProvider: CORS issue with Firefox and Safari (#2978)
+- Ensure the immutability of the `tx` object passed to function `signTransaction` (#2190)
+- Gas check fixed (#2381)
+- Signing issues #1998, #2033, and #1074 fixed (#3125)
+- Fix hexToNumber and hexToNumberString prefix validation (#3086)
+- The receipt will now returned on a EVM error (this got removed on beta.18) (#3129)
+- Fixes transaction confirmations with the HttpProvider (#3140)
+
+## [1.2.3]
+
+### Fixed
+
+- Fix perfect gas usage causes tx to error (#3175)
+- Fix regenerator runtime error in web3.min.js (#3155)
+- Fix TS types for eth.subscribe syncing, newBlockHeaders, pendingTransactions (#3159)
+- Improve web3-eth-abi decodeParameters error message (#3134)
+
+## [1.2.4]
+
+### Fixed
+
+- Fix npm installation error for scrypt-shim and websocket (#3210)
+
+## [1.2.5]
+
+### Added
+
+- ``eth_requestAccounts`` as ``requestAccounts`` added to web3-eth package (#3219)
+- ``sha3Raw`` and ``soliditySha3Raw`` added to web3-utils package (#3226)
+- ``eth_getProof`` as ``getProof`` added to web3-eth package (#3220)
+- ``BN`` and ``BigNumber`` objects are now supported by the ``abi.encodeParameter(s)`` method (#3238)
+- ``getPendingTransactions`` added to web3-eth package (#3239)
+- Revert instruction handling added which can get activated with the ``handleRevert`` module property (#3248)
+- The ``receipt`` does now exist as property on the error object for transaction related errors (#3259)
+- ``internalType`` added to ``AbiInput`` TS interface in ``web3-utils`` (#3279)
+- Agent option added to the ``HttpProvider`` options (#2980)
+
+### Changed
+
+- ``eth-lib`` dependency updated (0.2.7 => ^0.2.8) (#3242)
+
+### Fixed
+
+- Fix crash when decoding events with identical signatures, differently indexed args (#3272)
+- Fix user supplied callback not fired in eth.accounts.signTransaction (#3283)
+- Fix minified bundle (#3256)
+- ``defaultBlock`` property handling fixed (#3247)
+- ``clearSubscriptions`` does no longer throw an error if no running subscriptions do exist (#3246)
+- callback type definition for ``Accounts.signTransaction`` fixed (#3280)
+- fix: export bloom functions on the index.js
+- Prefer receipt status to code availability on contract deployment (#3298)
+
+## [1.2.6]
+
+### Added
+
+- Görli testnet ENS registry added to the known registries (#3338)
+
+### Changed
+
+- ENS registry addresses updated (#3353, https://medium.com/the-ethereum-name-service/ens-registry-migration-bug-fix-new-features-64379193a5a)
+
+## [1.2.7]
+
+### Added
+
+- Add revert reason support to sendSignedTransaction (#3345)
+- ENS module extended with the possibility to add a custom registry (#3301)
+- Missing ENS Registry methods and Resolver.supportsInterface method added (#3325)
+- Add optional gas type to AbiItem typescript definitions (for ABIs generated by Vyper) (#3437)
+- Add görli testnet ENS registry to the known registries (#3252)
+- Add auto-reconnect option for Websockets (#3092, #1085, #1391, #1558, #1852, #1646)
+
+### Changed
+
+- Ensure '0x' prefix is existing for Accounts.sign and Accounts.privateKeyToAccount (#3041)
+- Repository cleanup (#3443)
+  - Removed old `docs/_build` folder
+  - Removed old bower and meteor artifacts
+  - Moved logo assets to own folder
+  - Moved github assets to own folder
+  - Remove @types/node from (non-dev) dependency tree (#3965, #3227)
+- *Please note*: Geth [v1.9.12](https://github.com/ethereum/go-ethereum/releases/tag/v1.9.12) contains a breaking change for `eth_call` that will not default to your first account anymore if `from` is not set. If a sender is not explicitly defined, the `eth_call` will be executed from `address(0)`. (#3467)
+  - This was done to avoid the same input behaving differently in different environments. You should never do `eth_call` without explicitly setting a sender.
+  - This means that if you're calling `view` methods that refer to a `msg.sender` without explicitly setting a `from` address in your request options, you may see unexpected behavior.
+  - In `web3.js`, the `from` address can be specified on a per-call basis or by setting the `defaultAccount` property.
+
+### Fixed
+
+- Add missing subscription.on('connected') TS type definition (#3319)
+- Add missing bignumber.js dependency for TS types (#3386)
+- Upgrade swarm-js to 0.1.40 to remove npm vulnerability warning (#3399)
+- Upgrade devDeps to resolve security warnings (#3464)
+  - dtslint 0.4.2 => 3.4.1
+  - definitelytyped-header-parser 1.0.1 => 3.9.0
+- Race-condition when subscribing to historical logs as first client request (#3389)
+- Fix crash when using Web-Workers by removing any-promise dependency (#3377 #2211 #1774)
+- MaxListenersExceededWarning event emitter warning mitigated (#1648)
+
+## [1.2.8]
+
+### Added
+
+- Introduce review and release guidelines. (#3460)
+- Add EIP-1193 compatible provider to `AbstractProvider` interface. (#3499)
+- Add Typescript definitions for contract `methods` and `call`. (#3454)
+- Update AbstractProvider and contract.methods TS definitions (#3521)
+- Add support for ENS contenthash methods. (#3392, #2782)
+
+### Changed
+
+- Change CI provider from Travis to Github Actions. (#3468)
+- Update `web3-eth-abi` ABICoder dependency. (#3490)
+- Update AbiCoder param formatting (#3522)
+- Improve code clarity of HttpProvider keepAlive option setting. (#3463)
+- Updated type definitions for Web3 HTTP Provider. (#3482)
+- Fix indentation of web3-eth documentation. (#3478)
+
+### Fixed
+
+- Fix intermittent CI build issues with `dtslint`. (#3479)
+- Fix WSS credentials Base64 encoding (for browser) (#3508)
+- Fire provider "error" and/or "end" events when Websocket provider disconnects. (#3485)
+- Remove web3-eth revert error return types to squash TS compilation errors. (#3496)
+- Backfill event subscriptions when WS connection dropped across multiple blocks. (#3491)
+- Stop swallowing errors when WS connection has died after exhausting reconnection attempts. (#3492)
+- Fix setContenthash docs formatting (#3511)
+
+## [1.2.9]
+
+### Added
+
+- Add `sending` and `sent` events for tx submissions (#3438)
+- Add `latestBlockHash` arg to `confirmation` event handler payload (#3438)
+- Make socket providers' max listeners threshold configurable (#3469)
+- Documentation about testing & ci resources for Web3.js development (#3528)
+- More detailed documentation about how to use `method.encodeABI` (#3549)
+- Integration tests for `transactionPollingTimeout` (#3513)
+
+### Changed
+
+- Websocket package from @web3-js/websocket@1.0.29 to websocket@1.0.31 (#3371)
+- Upgrade `@web3-js/scrypt-shim@0.1.0` to `scrypt-js@3.0.1`
+- sendSignedTransaction revert handling synthesizes tx without network call (#3457)
+- Make docs grammar more idiomatic, normalize punctuation (#3543)
+
+### Fixed
+
+- Size property de-referencing crash when calling web3.eth.clearSubscriptions (#3527)
+- Abi param encoding for tuple arrays (#3538)
+- `account.hashMessage` with non-ASCII characters (#3523)
+- Subscription support check in method confirmations loop (#3432)
+- TS bindings for `handleRevert` added (#3452)
+- Docs: spelling of pre-defined block number (#3539)
+- Docs: missing defaultBlock param option in `method.call` description (#3558)
+
+## [1.2.10]
+
+### Added
+
+- Add support for EIP-1193 provider `request` method (#3625)
+
+### Changed
+
+- Upgrade minified bundle build process (from gulp to webpack) (#3618)
+- CI improvements: add dependency caching, netlify browser test preview (#3598, #3602)
+- Remove references to `genesis` block in 1.x documentation (#3594)
+- Disallow setting `toBlock` when subscribing to contract events (#3207)
+
+### Fixed
+
+- Extend `_txInputFormatter` with hex prefix check (#3317)
+- Extract revert reason string for geth >= 1.9.15 (#3520)
+- Fix Incorrect param encoding of BN object in arrayed inputs (#3592)
+- Remove mis-encoded whitespace characters from web3-utils files (#3601)
+- Fix incompatibilities with webpack Buffer polyfill for wallet.encrypt/decrypt (#3580)
+- Fix misformatted `fromBlock` value when re-subscribing to events over WS (#3596)
+- Support `Function` type log parameter decoding (#2826)
+- Add undefined callback check to websocket provider response queue (#3574)
+- Fix WS clientConfig type (#3563)
+
+## [1.2.11]
+
+### Fixed
+
+- Fix Provider.request response (#3647)
+
+### Added
+
+- Add unit tests for isHex and isHexStrict (#3622)
+
+## [1.3.0]
+
+### Added
+
+- Support for typescript files (.ts) to be written alongside regular .js files (#3652)
+- Add compareBlock function that allows for complex block comparisons (#3682)
+
+### Changed
+
+- Improve RequestManager send method (#3649)
+- `npm run build` now uses TSC to compile (.js allowed) and the build folder is now located under `lib` (#3652)
+- Modernized web3-core to use newer es syntax (#3652)
+- Bumped `web3-providers-ipc` `oboe` version to 2.1.5 (#3661)
+- Bump lodash from 4.17.15 to 4.17.19 (#3641)
+- Bump websocket version which removes node-gyp from web3.js (#3685)
+
+### Fixed
+
+- Fix parsing of non-`eth_subscription` provider events (#3660)
+- Fix parsedUrl problem of websocket provider (#3666)
+- Fix return value for `clearSubscriptions` (#3689)
+
+## [1.3.1]
+
+### Added
+
+- Add `web3-eth2-core` package (#3743) (renamed to `web3-eth2-base`)
+- Add `web3-eth2-beaconchain` package (#3743) (renamed to `web3-eth2-beacon`)
+- Add `stripHexPrefix` method to `web3-utils` package (#3776)
+
+### Changed
+
+- bump utils 0.10.0^ -> 0.12.0 (#3733)
+
+### Removed
+
+- Removed post-install script in `packages/web3`. Added documentation to root README (#3717)
+
+### Fixed
+
+- Fix possible unhandled promise rejection when sending a transaction (#3708)
+- Fixed decoding bytes and string parameters for logs emitted with solc 0.4.x (#3724, #3738)
+- Grammar changes to inputAddressFormatter error message
+- Fixed vulnerable dependencies
+
+## [Unreleased]
+
+## [1.3.2]
+
+### Changed
+
+- Remove `notImplemented` flag from ETH2 Beacon Chain package methods schema
+- Fixed mutation of inputs to encoding and decoding functions (#3748)
+- Rename `web3-eth2-base` to `web3-eth2-core` and `web3-eth2-beacon` to `web3-eth2-beaconchain`
