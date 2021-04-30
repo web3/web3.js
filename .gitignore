@@ -21,3 +21,4 @@ migrations/
 truffle-config.js
 test/config/ensAddresses.json
 */**/lib
+*/**/yarn-error.log
