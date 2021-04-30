@@ -2,7 +2,7 @@
   <img src="../../assets/logo/web3js.jpg" width="200" alt="web3.js" />
 </p>
 
-# web3.js - Provider Base
+# web3.js - Providers Base
 
 ## Installation
 
