@@ -2,12 +2,12 @@
   <img src="../../assets/logo/web3js.jpg" width="200" alt="web3.js" />
 </p>
 
-# web3.js - Utils
+# web3.js - Provider Base
 
 ## Installation
 
 ```bash
-yarn add web3-utils
+yarn add web3-providers-base
 ```
 
 ## Package.json Scripts
