@@ -1,5 +1,10 @@
 name: "Build"
 on:
+    push:
+        branches:
+            - "4.x"
+        tags:
+            - v4*
     pull_request:
         branches:
             - "4.x"
@@ -44,7 +49,7 @@ jobs:
                   path: |
                       node_modules
                       */*/node_modules
-                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/yarn-lock.json') }}
+                  key: ${{ runner.os }}-node14-${{ hashFiles('**/yarn-lock.json') }}
 
             - run: yarn
               if: steps.cache-deps.outputs.cache-hit != 'true'
