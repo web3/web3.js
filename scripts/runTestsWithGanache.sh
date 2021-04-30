@@ -28,4 +28,4 @@ client=$!
 yarn wait-port 8545
 
 # Test
-yarn jest
+yarn lerna run test
