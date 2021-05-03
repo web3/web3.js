@@ -3,26 +3,27 @@
 import { ProviderOptions } from '../types';
 
 export default class Web3ProviderBase {
-  providerString = ''
+  providerString
 
-  protectProvider = false
+  protectProvider
+
+  supportsSubscriptions
 
   connected = false
 
-  supportsSubscriptions = false
-
   constructor(options: ProviderOptions) {
-    this.providerString = options.providerString;
-    this.protectProvider = options.protectProvider;
-    this.supportsSubscriptions = options.supportsSubscriptions;
+    this.providerString = options.providerString || '';
+    this.protectProvider = options.protectProvider || false;
+    this.supportsSubscriptions = options.supportsSubscriptions || false;
   }
 
   setProvider(providerString: string) {
     try {
-      if (this.protectProvider) throw Error('Provider is protected');
+      if (this.providerString !== ''
+        && this.protectProvider) throw Error('Provider is protected');
       this.providerString = providerString;
     } catch (error) {
-      throw Error(`Error setting provider: ${error.message}`);
+      throw Error(error.message);
     }
   }
 }

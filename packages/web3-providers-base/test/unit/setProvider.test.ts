@@ -25,6 +25,6 @@ describe('setProvider', () => {
         providerOptions.protectProvider = true
         const web3ProviderBase = new Web3ProviderBase(providerOptions)
         expect(() => web3ProviderBase.setProvider(updatedProviderString))
-            .toThrow(`Error setting provider: Provider is protected`)
+            .toThrow(`Provider is protected`)
     })
 })
