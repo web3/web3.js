@@ -1,4 +1,4 @@
-import { ProviderOptions } from '../types';
+import {ProviderOptions} from '../types';
 
 export default class Web3ProviderBase {
   private _providerUrl: string
