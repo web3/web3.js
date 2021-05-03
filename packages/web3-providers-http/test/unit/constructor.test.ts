@@ -7,7 +7,7 @@ describe('constructs a Web3ProvidersHttp instance with expected properties', () 
 
     beforeEach(() => {
         providerOptions = {
-            providerString: 'http://127.0.0.1:8545'
+            providerUrl: 'http://127.0.0.1:8545'
         }
     })
 
