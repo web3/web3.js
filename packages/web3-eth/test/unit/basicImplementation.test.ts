@@ -88,7 +88,7 @@ let web3Eth: Web3Eth
 for (const method of config.methods) {
     beforeAll(() => {
         web3Eth = new Web3Eth({
-            providerString: method.provider ? method.provider : config.provider
+            providerUrl: method.provider ? method.provider : config.provider
         });
     })
 

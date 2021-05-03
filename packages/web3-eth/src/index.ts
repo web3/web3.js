@@ -10,7 +10,7 @@ export default class Web3Eth {
 
   constructor(options: Web3EthOptions) {
     this.requestManager = new Web3RequestManager({
-      providerString: options.providerString,
+      providerUrl: options.providerUrl,
     });
     this.packageName = options.packageName || 'eth';
   }
