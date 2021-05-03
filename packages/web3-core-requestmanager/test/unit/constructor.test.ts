@@ -7,7 +7,7 @@ describe('constructs a Web3RequestManager instance with expected properties', ()
 
     beforeEach(() => {
         providerOptions = {
-            providerString: 'http://127.0.0.1:8545'
+            providerUrl: 'http://127.0.0.1:8545'
         }
     })
 
@@ -23,7 +23,7 @@ describe('constructs a Web3RequestManager instance with expected properties', ()
     })
 
     it('should have set providerProtocol to WS', () => {
-        providerOptions.providerString = 'wss://127.0.0.1:8545'
+        providerOptions.providerUrl = 'wss://127.0.0.1:8545'
 
         const web3RequestManager = new Web3RequestManager(providerOptions)
         // providerProtocol is an enum declared in src/index.ts
@@ -31,7 +31,7 @@ describe('constructs a Web3RequestManager instance with expected properties', ()
     })
 
     it('should have set providerProtocol to UNKNOWN', () => {
-        providerOptions.providerString = '127.0.0.1:8545'
+        providerOptions.providerUrl = '127.0.0.1:8545'
 
         const web3RequestManager = new Web3RequestManager(providerOptions)
         // providerProtocol is an enum declared in src/index.ts
