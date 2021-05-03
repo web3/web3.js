@@ -64,7 +64,7 @@ var tests = [
             transaction: {
                 chainId: 1,
                 nonce: 0,
-                gasPrice: 0x0,
+                gasPrice: 0x01,
                 gas: 31853,
                 to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
                 toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
@@ -707,11 +707,11 @@ describe("eth", function () {
 
                 it("recoverTransaction, must recover signature", function() {
                     var ethAccounts = new Accounts();
-
                     var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
                     assert.equal(testAccount.address, test.address);
 
                     testAccount.signTransaction(test.transaction).then(function (tx) {
+                        console.log(tx)
                         assert.equal(ethAccounts.recoverTransaction(tx.rawTransaction), test.address);
                     });
                 });
