@@ -15,6 +15,10 @@ module.exports = {
   plugins: [
     '@typescript-eslint',
   ],
+  // TODO Review these rules, disabled because false positives
   rules: {
+    'import/no-unresolved': 0,
+    'import/extensions': 0,
+    'no-underscore-dangle': 0
   },
 };
