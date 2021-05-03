@@ -2,8 +2,7 @@ import Web3ProviderBase from '../../src/index'
 
 describe('Web3ProviderBase.providerString', () => {
     const providerOptions = {
-        providerString: 'http://127.0.0.1:8545',
-        protectProvider: false
+        providerString: 'http://127.0.0.1:8545'
     }
     const updatedProviderString = 'teststring'
 
