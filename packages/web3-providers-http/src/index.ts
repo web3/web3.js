@@ -1,11 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
 import Web3ProviderBase from 'web3-providers-base';
-import { ProviderOptions } from 'web3-providers-base/types';
+import { ProviderOptions, IWeb3Provider } from 'web3-providers-base/types';
 
-import { HttpRpcOptions, HttpRpcResponse, IWeb3Provider } from '../types';
+import { HttpRpcOptions, HttpRpcResponse } from '../types';
 
 export default class Web3ProvidersHttp extends Web3ProviderBase implements IWeb3Provider {
-  private _httpClient: AxiosInstance | undefined
+  private _httpClient: AxiosInstance
 
   constructor(options: ProviderOptions) {
     super(options);
@@ -33,7 +33,7 @@ export default class Web3ProvidersHttp extends Web3ProviderBase implements IWeb3
   setProvider(providerString: string) {
     try {
       this._httpClient = Web3ProvidersHttp.createHttpClient(providerString);
-      super.setProvider(providerString);
+      super.providerString = providerString;
     } catch (error) {
       throw Error(`Failed to set provider: ${error.message}`);
     }
