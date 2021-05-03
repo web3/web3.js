@@ -5,12 +5,9 @@ export default class Web3ProviderBase {
 
   private readonly _protectProvider: boolean
 
-  private readonly _supportsSubscriptions: boolean
-
   constructor(options: ProviderOptions) {
     this._providerString = options.providerString;
     this._protectProvider = options.protectProvider;
-    this._supportsSubscriptions = options.supportsSubscriptions;
   }
 
   get providerString() {
@@ -23,9 +20,5 @@ export default class Web3ProviderBase {
 
   get protectProvider() {
     return this._protectProvider;
-  }
-
-  get supportsSubscriptions() {
-    return this._supportsSubscriptions;
   }
 }

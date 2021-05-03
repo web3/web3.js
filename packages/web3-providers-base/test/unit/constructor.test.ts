@@ -8,28 +8,24 @@ describe('constructs a Web3Eth instance with expected properties', () => {
         providerOptions = {
             providerString: 'http://127.0.0.1:8545',
             protectProvider: false,
-            supportsSubscriptions: false
         }
     })
 
-    it('providerOptions - falsey', () => {
+    it('providerOptions.protectProvider = false', () => {
         const web3ProviderBase = new Web3ProviderBase(providerOptions)
         expect(web3ProviderBase).toMatchObject({
             _providerString: providerOptions.providerString,
-            _protectProvider: providerOptions.protectProvider,
-            _supportsSubscriptions: providerOptions.supportsSubscriptions
+            _protectProvider: providerOptions.protectProvider
         })
     })
 
-    it('providerOptions - truthy', () => {
+    it('providerOptions.protectProvider = true', () => {
         providerOptions.protectProvider = true
-        providerOptions.supportsSubscriptions = true
 
         const web3ProviderBase = new Web3ProviderBase(providerOptions)
         expect(web3ProviderBase).toMatchObject({
             _providerString: providerOptions.providerString,
-            _protectProvider: providerOptions.protectProvider,
-            _supportsSubscriptions: providerOptions.supportsSubscriptions
+            _protectProvider: providerOptions.protectProvider
         })
     })
 })
