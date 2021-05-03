@@ -2,12 +2,12 @@ name: "Build"
 on:
     push:
         branches:
-            - "1.x"
+            - "4.x"
         tags:
-            - v1*
+            - v4*
     pull_request:
         branches:
-            - "1.x"
+            - "4.x"
         types: [opened, reopened, synchronize]
 jobs:
     lint:
@@ -18,7 +18,7 @@ jobs:
         steps:
             - uses: actions/setup-node@v1
               with:
-                  node-version: 12
+                  node-version: 14
 
             - uses: actions/checkout@v2
 
@@ -28,23 +28,18 @@ jobs:
                   path: |
                       node_modules
                       */*/node_modules
-                  key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
+                  key: ${{ runner.os }}-node14-${{ hashFiles('**/yarn-lock.json') }}
 
-            - run: npm ci
+            - run: yarn
               if: steps.cache-deps.outputs.cache-hit != 'true'
 
-            - run: bash ./scripts/ci.sh
+            - run: yarn lint
     unit:
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: [8, 10, 11, 12, 13]
-        env:
-            TEST: "unit"
         steps:
             - uses: actions/setup-node@v1
               with:
-                  node-version: ${{ matrix.node }}
+                  node-version: 14
 
             - uses: actions/checkout@v2
 
@@ -54,59 +49,9 @@ jobs:
                   path: |
                       node_modules
                       */*/node_modules
-                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+                  key: ${{ runner.os }}-node14-${{ hashFiles('**/yarn-lock.json') }}
 
-            - run: npm ci
+            - run: yarn
               if: steps.cache-deps.outputs.cache-hit != 'true'
 
-            - run: bash ./scripts/ci.sh
-    e2e:
-        runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                testCmd:
-                    [
-                        'unit_and_e2e_clients',
-                        'e2e_browsers',
-                        'e2e_ganache',
-                        'e2e_mosaic',
-                        'e2e_gnosis_dex',
-                    ]
-        env:
-            TEST: ${{ matrix.testCmd }}
-        steps:
-            - uses: actions/setup-node@v1
-              with:
-                  node-version: 12
-            - uses: actions/checkout@v2
-
-            - uses: actions/cache@v2
-              id: cache-deps
-              if: env.TEST == 'unit_and_e2e_clients' || env.TEST == 'e2e_browsers'
-              with:
-                  path: |
-                      node_modules
-                      */*/node_modules
-                  key: ${{ runner.os }}-node12-${{ hashFiles('**/package-lock.json') }}
-
-            - run: npm ci
-              if: (env.TEST == 'unit_and_e2e_clients' || env.TEST == 'e2e_browsers') && steps.cache-deps.outputs.cache-hit != 'true'
-
-            - run: bash ./scripts/ci.sh
-
-            - name: Send coverage reports to Coveralls
-              if: env.TEST == 'unit_and_e2e_clients'
-              uses: coverallsapp/github-action@master
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-    e2e_windows:
-        runs-on: windows-latest
-        env:
-            TEST: "e2e_windows"
-        steps:
-            - uses: actions/setup-node@v1
-              with:
-                  node-version: 12
-            - uses: actions/checkout@v2
-            - run: bash ./scripts/ci.sh
+            - run: yarn test
