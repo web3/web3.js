@@ -22,19 +22,24 @@ describe('constructs a Web3RequestManager instance with expected properties', ()
         expect(web3RequestManager.providerProtocol).toBe(1) // 1 === HTTP
     })
 
-    it('should have set providerProtocol to WS', () => {
+    it('should error because WS is not implemented', () => {
         providerOptions.providerUrl = 'wss://127.0.0.1:8545'
+        expect(() => {
+            new Web3RequestManager(providerOptions)
+        }).toThrowError('Provider protocol not implemented')
+    })
 
-        const web3RequestManager = new Web3RequestManager(providerOptions)
-        // providerProtocol is an enum declared in src/index.ts
-        expect(web3RequestManager.providerProtocol).toBe(2) // 2 === WS
+    it('should error because IPC is not implemented', () => {
+        providerOptions.providerUrl = 'ipc://geth.ipc'
+        expect(() => {
+            new Web3RequestManager(providerOptions)
+        }).toThrowError('Provider protocol not implemented')
     })
 
     it('should have set providerProtocol to UNKNOWN', () => {
         providerOptions.providerUrl = '127.0.0.1:8545'
-
-        const web3RequestManager = new Web3RequestManager(providerOptions)
-        // providerProtocol is an enum declared in src/index.ts
-        expect(web3RequestManager.providerProtocol).toBe(0) // 0 === UNKNOWN
+        expect(() => {
+            new Web3RequestManager(providerOptions)
+        }).toThrowError('Provider protocol not supported')
     })
 })
