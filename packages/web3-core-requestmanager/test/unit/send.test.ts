@@ -6,7 +6,7 @@ describe('Web3RequestManager.send', () => {
     it('should call Web3ProviderHttp.send', async () => {
         const web3ProviderHttpSendSpy = jest.spyOn(Web3ProviderHttp.prototype, 'send')
         const providerOptions = {
-            providerString: 'http://127.0.0.1:8545'
+            providerUrl: 'http://127.0.0.1:8545'
         }
         const httpRpcOptions = {
             id: 42,

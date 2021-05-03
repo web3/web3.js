@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import Web3ProviderBase from 'web3-providers-base';
-import { ProviderOptions, IWeb3Provider } from 'web3-providers-base/types';
+import {ProviderOptions, IWeb3Provider} from 'web3-providers-base/types';
 
 import { HttpRpcOptions, HttpRpcResponse } from '../types';
 
@@ -9,13 +9,13 @@ export default class Web3ProvidersHttp extends Web3ProviderBase implements IWeb3
 
   constructor(options: ProviderOptions) {
     super(options);
-    this._httpClient = Web3ProvidersHttp.createHttpClient(options.providerString);
+    this._httpClient = Web3ProvidersHttp.createHttpClient(options.providerUrl);
   }
 
-  static validateProviderString(providerString: string): boolean {
+  static validateProviderUrl(providerUrl: string): boolean {
     try {
-      return (typeof providerString !== 'string'
-          || /^http(s)?:\/\//i.test(providerString));
+      return (typeof providerUrl !== 'string'
+          || /^http(s)?:\/\//i.test(providerUrl));
     } catch (error) {
       throw Error(`Failed to validate provider string: ${error.message}`);
     }
@@ -23,17 +23,17 @@ export default class Web3ProvidersHttp extends Web3ProviderBase implements IWeb3
 
   static createHttpClient(baseUrl: string): AxiosInstance {
     try {
-      if (!Web3ProvidersHttp.validateProviderString(baseUrl)) throw Error('Invalid HTTP(S) URI provided');
+      if (!Web3ProvidersHttp.validateProviderUrl(baseUrl)) throw Error('Invalid HTTP(S) URL provided');
       return axios.create({ baseURL: baseUrl });
     } catch (error) {
       throw Error(`Failed to create HTTP client: ${error.message}`);
     }
   }
 
-  setProvider(providerString: string) {
+  setProvider(providerUrl: string) {
     try {
-      this._httpClient = Web3ProvidersHttp.createHttpClient(providerString);
-      super.providerString = providerString;
+      this._httpClient = Web3ProvidersHttp.createHttpClient(providerUrl);
+      super.providerUrl = providerUrl;
     } catch (error) {
       throw Error(`Failed to set provider: ${error.message}`);
     }

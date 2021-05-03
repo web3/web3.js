@@ -11,7 +11,7 @@ export default class Web3RequestManager {
     providerProtocol: ProviderProtocol = ProviderProtocol.UNKNOWN
 
     constructor(providerOptions: ProviderOptions) {
-      switch (Web3RequestManager.detectProviderProtocol(providerOptions.providerString)) {
+      switch (Web3RequestManager.detectProviderProtocol(providerOptions.providerUrl)) {
         case ProviderProtocol.HTTP:
           this.provider = new Web3ProviderHttp(providerOptions);
           this.providerProtocol = ProviderProtocol.HTTP;
@@ -26,11 +26,11 @@ export default class Web3RequestManager {
       }
     }
 
-    static detectProviderProtocol(providerString: string): ProviderProtocol {
+    static detectProviderProtocol(providerUrl: string): ProviderProtocol {
       try {
-        if (/^http(s)?:\/\//i.test(providerString)) {
+        if (/^http(s)?:\/\//i.test(providerUrl)) {
           return ProviderProtocol.HTTP;
-        } if (/^ws(s)?:\/\//i.test(providerString)) {
+        } if (/^ws(s)?:\/\//i.test(providerUrl)) {
           return ProviderProtocol.WS;
         }
         return ProviderProtocol.UNKNOWN;
