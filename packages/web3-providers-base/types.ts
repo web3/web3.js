@@ -1,3 +1,3 @@
 export interface ProviderOptions {
-    providerString: string
+    providerUrl: string
 }
