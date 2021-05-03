@@ -1,17 +1,17 @@
-import { ProviderOptions } from '../types';
+import {ProviderOptions} from '../types';
 
 export default class Web3ProviderBase {
-  private _providerString: string
+  private _providerUrl: string
 
   constructor(options: ProviderOptions) {
-    this._providerString = options.providerString;
+    this._providerUrl = options.providerUrl;
   }
 
-  get providerString() {
-    return this._providerString;
+  get providerUrl() {
+    return this._providerUrl;
   }
 
-  set providerString(providerString: string) {
-    this._providerString = providerString;
+  set providerUrl(providerUrl: string) {
+    this._providerUrl = providerUrl;
   }
 }
