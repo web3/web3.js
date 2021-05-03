@@ -7,21 +7,11 @@ describe('constructs a Web3ProvidersHttp instance with expected properties', () 
 
     beforeEach(() => {
         providerOptions = {
-            providerString: 'http://127.0.0.1:8545',
-            protectProvider: false,
-            supportsSubscriptions: false
+            providerString: 'http://127.0.0.1:8545'
         }
     })
 
     it('providerOptions - falsey', () => {
-        const web3ProvidersHttp = new Web3ProvidersHttp(providerOptions)
-        expect(web3ProvidersHttp).toMatchObject(providerOptions)
-    })
-
-    it('providerOptions - truthy', () => {
-        providerOptions.protectProvider = true
-        providerOptions.supportsSubscriptions = true
-
         const web3ProvidersHttp = new Web3ProvidersHttp(providerOptions)
         expect(web3ProvidersHttp).toMatchObject(providerOptions)
     })

@@ -9,9 +9,7 @@ describe('Web3ProvidersHttp.setProvider', () => {
 
     beforeEach(() => {
         providerOptions = {
-            providerString: 'http://127.0.0.1:8545',
-            protectProvider: false,
-            supportsSubscriptions: false
+            providerString: 'http://127.0.0.1:8545'
         }
     })
 
@@ -19,16 +17,6 @@ describe('Web3ProvidersHttp.setProvider', () => {
         const web3ProvidersHttp = new Web3ProvidersHttp(providerOptions)
         expect(web3ProvidersHttp).toMatchObject(providerOptions) // Sanity
         web3ProvidersHttp.setProvider(updatedProviderString)
-    })
-
-    it('should error because provider is protected', () => {
-        providerOptions.protectProvider = true
-
-        const web3ProvidersHttp = new Web3ProvidersHttp(providerOptions)
-        expect(web3ProvidersHttp).toMatchObject(providerOptions) // Sanity
-        expect(() => {
-            web3ProvidersHttp.setProvider(updatedProviderString)
-        }).toThrowError('Failed to set provider: Provider is protected')
     })
 
     it('should error because provider string is invalid', () => {

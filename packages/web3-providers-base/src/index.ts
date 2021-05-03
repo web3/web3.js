@@ -1,29 +1,17 @@
-// TODO Fix eslint issues
-// eslint-disable-next-line import/no-unresolved, import/extensions
 import { ProviderOptions } from '../types';
 
 export default class Web3ProviderBase {
-  providerString
-
-  protectProvider
-
-  supportsSubscriptions
-
-  connected = false
+  private _providerString: string
 
   constructor(options: ProviderOptions) {
-    this.providerString = options.providerString || '';
-    this.protectProvider = options.protectProvider || false;
-    this.supportsSubscriptions = options.supportsSubscriptions || false;
+    this._providerString = options.providerString;
   }
 
-  setProvider(providerString: string) {
-    try {
-      if (this.providerString !== ''
-        && this.protectProvider) throw Error('Provider is protected');
-      this.providerString = providerString;
-    } catch (error) {
-      throw Error(error.message);
-    }
+  get providerString() {
+    return this._providerString;
+  }
+
+  set providerString(providerString: string) {
+    this._providerString = providerString;
   }
 }

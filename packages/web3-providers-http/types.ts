@@ -15,14 +15,3 @@ export interface HttpRpcResponse {
         {[key: string]: string | number} |
         BigInt
 }
-
-export interface IWeb3Provider {
-    providerString: string
-    protectProvider: boolean
-    connected: boolean
-    supportsSubscriptions: boolean
-    setProvider: (providerString: string) => void
-    // TODO get rid of anys
-    send: (options: any) => Promise<any>
-    disconnect?: () => void
-}
