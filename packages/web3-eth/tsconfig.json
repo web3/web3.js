@@ -5,9 +5,6 @@
     "outDir": "./lib",
     "composite": true
   },
-  "references": [
-    { "path": "../web3-utils" }
-  ],
   "include": [
     "./src/**/*",
     "./types.ts"
