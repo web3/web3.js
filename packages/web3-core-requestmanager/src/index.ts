@@ -19,10 +19,14 @@ export default class Web3RequestManager {
         case ProviderProtocol.WS:
           this.providerProtocol = ProviderProtocol.WS;
           // TODO
-          break;
+          throw Error('Provider protocol not implemented')
+        case ProviderProtocol.IPC:
+          this.providerProtocol = ProviderProtocol.IPC;
+          // TODO
+          throw Error('Provider protocol not implemented')
         default:
           // TODO figure out if possible to support generic provider
-          break;
+          throw Error('Provider protocol not supported')
       }
     }
 
@@ -30,7 +34,9 @@ export default class Web3RequestManager {
       try {
         if (/^http(s)?:\/\//i.test(providerUrl)) {
           return ProviderProtocol.HTTP;
-        } if (/^ws(s)?:\/\//i.test(providerUrl)) {
+        } else if (/^ws(s)?:\/\//i.test(providerUrl)) {
+          return ProviderProtocol.WS;
+        } else if (/^ipc:\/\//i.test(providerUrl)) {
           return ProviderProtocol.WS;
         }
         return ProviderProtocol.UNKNOWN;
