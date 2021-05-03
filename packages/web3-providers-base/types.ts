@@ -1,5 +1,5 @@
 export interface ProviderOptions {
-    providerString: string
+    providerUrl: string
 }
 
 export interface IWeb3Provider {
