@@ -21,3 +21,18 @@ export interface BlockHashParameter {
 export interface BlockIdentifierParameter {
     blockNumber: blockIdentifier
 }
+
+export interface EthSignParameters {
+    address: string
+    message: string
+}
+
+export interface EthTransaction {
+    from: string
+    to?: string
+    gas?: BigInt
+    gasPrice?: BigInt
+    value?: BigInt
+    data?: string
+    nonce?: number
+}
