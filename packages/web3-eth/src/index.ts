@@ -1,18 +1,24 @@
 import Web3RequestManager from 'web3-core-requestmanager';
 import { HttpRpcOptions, HttpRpcResponse } from 'web3-providers-http/types';
 
-import { Web3EthOptions } from '../types';
+import {
+  EthAddressBlockParmeters, BlockHashParameter, BlockIdentifierParameter,
+  EthGetStorageAtParameters, Web3EthOptions } from '../types';
 
 export default class Web3Eth {
-  packageName: string
+  private _packageName: string
 
-  requestManager: Web3RequestManager
+  private _requestManager: Web3RequestManager
 
   constructor(options: Web3EthOptions) {
-    this.requestManager = new Web3RequestManager({
+    this._requestManager = new Web3RequestManager({
       providerUrl: options.providerUrl,
     });
-    this.packageName = options.packageName || 'eth';
+    this._packageName = options.packageName || 'eth';
+  }
+
+  get packageName() {
+    return this._packageName
   }
 
   /**
@@ -23,7 +29,7 @@ export default class Web3Eth {
    */
   async getProtocolVersion(rpcOptions: HttpRpcOptions): Promise<HttpRpcResponse> {
     try {
-      const response = await this.requestManager.send({
+      const response = await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_protocolVersion',
         params: [],
@@ -41,7 +47,7 @@ export default class Web3Eth {
    */
   async getSyncing(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
     try {
-      return await this.requestManager.send({
+      return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_syncing',
         params: [],
@@ -58,7 +64,7 @@ export default class Web3Eth {
    */
   async getCoinbase(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
     try {
-      return await this.requestManager.send({
+      return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_coinbase',
         params: [],
@@ -75,7 +81,7 @@ export default class Web3Eth {
    */
   async getMining(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
     try {
-      return await this.requestManager.send({
+      return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_mining',
         params: [],
@@ -92,7 +98,7 @@ export default class Web3Eth {
    */
   async getHashRate(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
     try {
-      const response = await this.requestManager.send({
+      const response = await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_hashrate',
         params: [],
@@ -110,7 +116,7 @@ export default class Web3Eth {
    */
   async getGasPrice(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
     try {
-      const response = await this.requestManager.send({
+      const response = await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_gasPrice',
         params: [],
@@ -128,7 +134,7 @@ export default class Web3Eth {
    */
   async getAccounts(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
     try {
-      return await this.requestManager.send({
+      return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_accounts',
         params: [],
@@ -145,7 +151,7 @@ export default class Web3Eth {
    */
   async getBlockNumber(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
     try {
-      const response = await this.requestManager.send({
+      const response = await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_blockNumber',
         params: [],
@@ -155,4 +161,160 @@ export default class Web3Eth {
       throw Error(`Error getting block number: ${error.message}`);
     }
   }
+
+  /**
+   * Returns the balance of the account of given address
+   * @param params Contains address to get balance of and an optional identifier
+   * for what block to use for the query
+   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
+   * @returns {HttpRpcResponse} Returns address balance in Wei formatted as BigInt
+   */
+   async getBalance(params: EthAddressBlockParmeters, rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+    try {
+      const response = await this._requestManager.send({
+        ...rpcOptions,
+        method: 'eth_getBalance',
+        params: [
+          params.address,
+          params.block || 'latest'
+        ],
+      });
+      return { ...response, result: BigInt(response.result) };
+    } catch (error) {
+      throw Error(`Error getting balance: ${error.message}`);
+    }
+  }
+
+  /**
+   * Returns the value from a storage position at a given address
+   * @param params Contains address to query storage of, position in storage,
+   * and an optional identifier for what block to use for the query
+   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
+   * @returns {HttpRpcResponse} Returns the value at provided storage position
+   */
+   async getStorageAt(params: EthGetStorageAtParameters, rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+    try {
+      return await this._requestManager.send({
+        ...rpcOptions,
+        method: 'eth_getStorageAt',
+        params: [
+          params.address,
+          params.position,
+          params.block || 'latest'
+        ],
+      });
+    } catch (error) {
+      throw Error(`Error getting storage: ${error.message}`);
+    }
+  }
+
+  /**
+   * Returns the number of transactions sent from an address
+   * @param params Contains address to query transaction count of,
+   * and an optional identifier for what block to use for the query
+   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
+   * @returns {HttpRpcResponse} Returns transaction count for provided address
+   */
+   async getTransactionCount(params: EthAddressBlockParmeters, rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+    try {
+      return await this._requestManager.send({
+        ...rpcOptions,
+        method: 'eth_getTransactionCount',
+        params: [
+          params.address,
+          params.block || 'latest'
+        ],
+      });
+    } catch (error) {
+      throw Error(`Error getting transaction count: ${error.message}`);
+    }
+  }
+
+  /**
+   * Returns the number of transactions in a block from a block matching the given block hash
+   * @param params Contains hash of block to query
+   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
+   * @returns {HttpRpcResponse} Returns the number of transaction included in provided block
+   */
+   async getBlockTransactionCountByHash(
+     params: BlockHashParameter,
+     rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+    try {
+      return await this._requestManager.send({
+        ...rpcOptions,
+        method: 'eth_getBlockTransactionCountByHash',
+        params: [
+          params.blockHash
+        ],
+      });
+    } catch (error) {
+      throw Error(`Error getting transaction count for block by hash: ${error.message}`);
+    }
+  }
+
+  /**
+   * Returns the number of transactions in a block from a block matching the given block number
+   * @param params Contains number of block to query
+   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
+   * @returns {HttpRpcResponse} Returns the number of transaction included in provided block
+   */
+   async getBlockTransactionCountByNumber(
+    params: BlockIdentifierParameter,
+    rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+   try {
+     return await this._requestManager.send({
+       ...rpcOptions,
+       method: 'eth_getBlockTransactionCountByNumber',
+       params: [
+         params.blockNumber
+       ],
+     });
+   } catch (error) {
+     throw Error(`Error getting transaction count for block by number: ${error.message}`);
+   }
+ }
+
+ /**
+   * Returns the number of uncles in a block from a block matching the given block hash
+   * @param params Contains hash of block to query
+   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
+   * @returns {HttpRpcResponse} Returns the number of uncles included in provided block
+   */
+  async getUncleCountByBlockHash(
+    params: BlockHashParameter,
+    rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+   try {
+     return await this._requestManager.send({
+       ...rpcOptions,
+       method: 'eth_getUncleCountByBlockHash',
+       params: [
+         params.blockHash
+       ],
+     });
+   } catch (error) {
+     throw Error(`Error getting uncle count for block by hash: ${error.message}`);
+   }
+ }
+
+ /**
+   * Returns the number of uncles in a block from a block matching the given block number
+   * @param params Contains number of block to query
+   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
+   * @returns {HttpRpcResponse} Returns the number of uncles included in provided block
+   */
+  async getUncleCountByBlockNumber(
+    params: BlockIdentifierParameter,
+    rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+   try {
+     return await this._requestManager.send({
+       ...rpcOptions,
+       method: 'eth_getUncleCountByBlockNumber',
+       params: [
+         params.blockNumber
+       ],
+     });
+   } catch (error) {
+     throw Error(`Error getting uncle count for block by number: ${error.message}`);
+   }
+ }
 }

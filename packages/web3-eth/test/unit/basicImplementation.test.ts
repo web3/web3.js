@@ -2,11 +2,13 @@ import {HttpRpcResponse} from 'web3-providers-http/types'
 import {isValidAddress} from 'ethereumjs-util'
 
 import Web3Eth from '../../src/index'
+import {DEFAULT_GANACHE_ACCOUNTS} from '../constants'
 
 interface configMethod {
     name: string
     provider?: string
     jsonRpcVersion?: string
+    params?: {[key: string]: string | number}
     expectedResult?: any
     expectedId: number
     expectedResultMethod?: any
@@ -17,20 +19,6 @@ interface IConfig {
     jsonRpcVersion: string
     methods: configMethod[]
 }
-
-// Mnemonic is hard coded in scripts/runTestsWithGanache.sh
-const DEFAULT_GANACHE_ACCOUNTS = [
-    '0x6849a369b4dd0e5c5ba95906e1d19cff8f65c3a6',
-    '0xbed4e839f5173e0a8b4b8b78a7ac230d593c7361',
-    '0x4c14bc7b632c8f2df6b28844a1e126d2ea94d1eb',
-    '0x41f83491dbc34a1412f436d7e0ce1394b21856dc',
-    '0x4f262c7efedbc037db6aea270f745a73ffcdf7a4',
-    '0x2544c4fe49f82857f240ae46f5c24fbee00516af',
-    '0xd99461eb5a5b87a562ff5b3e55e250798ffb16b9',
-    '0x79eb9a40aba68aedb611ae43e561c397e9f7b661',
-    '0x9b11224603d977c97e72f52de65e271e29c8ec24',
-    '0xfc3a28dcb317ade139e3dfe01a35abe0562ab712'
-]
 
 const config: IConfig = {
     provider: 'http://127.0.0.1:8545',
@@ -80,38 +68,63 @@ const config: IConfig = {
             expectedId: 42,
             expectedResult: BigInt(0)
         },
+        {
+            name: 'getBalance',
+            params: {
+                address: DEFAULT_GANACHE_ACCOUNTS[0]
+            },
+            expectedId: 42,
+            expectedResult: BigInt(100000000000000000000)
+        },
+        {
+            name: 'getBalance',
+            params: {
+                address: DEFAULT_GANACHE_ACCOUNTS[0],
+                block: 'earliest'
+            },
+            expectedId: 42,
+            expectedResult: BigInt(100000000000000000000)
+        },
     ]
 }
 
 let web3Eth: Web3Eth
 
 for (const method of config.methods) {
-    beforeAll(() => {
-        web3Eth = new Web3Eth({
-            providerUrl: method.provider ? method.provider : config.provider
-        });
-    })
-
-    it(`[SANITY](${method.name}) constructs a Web3Eth instance with method defined`, () => {
-        // @ts-ignore
-        expect(web3Eth[method.name]).not.toBe(undefined)
-    })
+    describe(`Web3Eth.${method.name}`, () => {
+        beforeAll(() => {
+            web3Eth = new Web3Eth({
+                providerUrl: method.provider ? method.provider : config.provider
+            });
+        })
     
-    it(`(${method.name}) should get expected result - no params`, async () => {
-        // @ts-ignore
-        const result: HttpRpcResponse = await web3Eth[method.name]()
-        expect(typeof result.id).toBe('number')
-        expect(result.jsonrpc).toBe(method.jsonRpcVersion ? method.jsonRpcVersion : config.jsonRpcVersion)
-        method.expectedResultMethod ? method.expectedResultMethod(result) : 
-            expect(result.result).toStrictEqual(method.expectedResult)
-    })
-    
-    it(`(${method.name}) should get expected result - id param`, async () => {
-        // @ts-ignore
-        const result: HttpRpcResponse = await web3Eth[method.name]({id: method.expectedId})
-        expect(result.id).toBe(method.expectedId)
-        expect(result.jsonrpc).toBe(method.jsonRpcVersion ? method.jsonRpcVersion : config.jsonRpcVersion)
-        method.expectedResultMethod ? method.expectedResultMethod(result) : 
-            expect(result.result).toStrictEqual(method.expectedResult)
+        it('should construct a Web3Eth instance with method defined', () => {
+            // @ts-ignore
+            expect(web3Eth[method.name]).not.toBe(undefined)
+        })
+        
+        it('should get expected result - no HTTP RPC params', async () => {
+            const result: HttpRpcResponse = method.params ?
+                // @ts-ignore
+                await web3Eth[method.name](method.params, {id: method.expectedId})
+                // @ts-ignore
+                : await web3Eth[method.name]({id: method.expectedId})
+            expect(typeof result.id).toBe('number')
+            expect(result.jsonrpc).toBe(method.jsonRpcVersion ? method.jsonRpcVersion : config.jsonRpcVersion)
+            method.expectedResultMethod ? method.expectedResultMethod(result) : 
+                expect(result.result).toStrictEqual(method.expectedResult)
+        })
+        
+        it('should get expected result - with id param', async () => {
+            const result: HttpRpcResponse = method.params ?
+                // @ts-ignore
+                await web3Eth[method.name](method.params, {id: method.expectedId})
+                // @ts-ignore
+                : await web3Eth[method.name]({id: method.expectedId})
+            expect(result.id).toBe(method.expectedId)
+            expect(result.jsonrpc).toBe(method.jsonRpcVersion ? method.jsonRpcVersion : config.jsonRpcVersion)
+            method.expectedResultMethod ? method.expectedResultMethod(result) : 
+                expect(result.result).toStrictEqual(method.expectedResult)
+        })
     })
 }
