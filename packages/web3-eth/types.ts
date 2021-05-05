@@ -1,4 +1,4 @@
-type blockIdentifier = number | 'latest' | 'earliest' | 'pending'
+export type blockIdentifier = number | 'latest' | 'earliest' | 'pending'
 
 export interface Web3EthOptions {
     packageName?: string

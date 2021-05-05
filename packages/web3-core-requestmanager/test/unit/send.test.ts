@@ -4,6 +4,8 @@ import Web3RequestManager from '../../src/index'
 
 describe('Web3RequestManager.send', () => {
     it('should call Web3ProviderHttp.send', async () => {
+        // Replace method so network call isn't made
+        Web3ProviderHttp.prototype.send = jest.fn()
         const web3ProviderHttpSendSpy = jest.spyOn(Web3ProviderHttp.prototype, 'send')
         const providerOptions = {
             providerUrl: 'http://127.0.0.1:8545'

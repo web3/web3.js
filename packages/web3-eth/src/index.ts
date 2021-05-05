@@ -30,12 +30,11 @@ export default class Web3Eth {
    */
   async getProtocolVersion(rpcOptions: HttpRpcOptions): Promise<HttpRpcResponse> {
     try {
-      const response = await this._requestManager.send({
+      return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_protocolVersion',
         params: [],
       });
-      return { ...response, result: BigInt(response.result) };
     } catch (error) {
       throw Error(`Error getting protocol version: ${error.message}`);
     }
