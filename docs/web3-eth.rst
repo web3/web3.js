@@ -690,7 +690,7 @@ getGasPrice
 
 
 Returns the current gas price oracle.
-The gas price is determined by the last few blocks median gas price.
+The gas price is determined by the last few blocks' median gas prices.
 
 -------
 Returns
