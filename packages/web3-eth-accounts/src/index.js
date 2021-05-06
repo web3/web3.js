@@ -205,9 +205,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             if (privateKey.startsWith('0x')) {
                 privateKey = privateKey.substring(2);
             }
-
+            
             var ethTx = Transaction.fromTxData(transaction, transactionOptions);
-            var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));
+            var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));            
             var validationErrors = signedTx.validate(true);
 
             if (validationErrors.length > 0) {
@@ -224,9 +224,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
             var result = {
                 messageHash: '0x' + Buffer.from(signedTx.hash(false)).toString('hex'),
-                v: '0x' + Buffer.from(signedTx.v).toString('hex'),
-                r: '0x' + Buffer.from(signedTx.r).toString('hex'),
-                s: '0x' + Buffer.from(signedTx.s).toString('hex'),
+                v: '0x' + signedTx.v.toString('hex'),
+                r: '0x' + signedTx.r.toString('hex'),
+                s: '0x' + signedTx.s.toString('hex'),
                 rawTransaction: rawTransaction,
                 transactionHash: transactionHash
             };
