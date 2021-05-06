@@ -28,7 +28,7 @@ export default class Web3Eth {
    * @param options Optional method options such as {formatBigInt}
    * @returns {HttpRpcResponse} Contains returns JSON RPC data
    */
-  async getProtocolVersion(rpcOptions: HttpRpcOptions): Promise<HttpRpcResponse> {
+  async getProtocolVersion(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,

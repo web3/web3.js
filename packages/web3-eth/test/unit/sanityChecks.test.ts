@@ -10,7 +10,7 @@ const blockIdentifiers: blockIdentifier[] = [undefined, 'latest', 'earliest', 'p
 
 let web3Eth: Web3Eth
 
-function callWeb3EthMethod(methodName: string, parameters: {[key: string]: string | number}) {
+function callWeb3EthMethod(methodName: string, parameters: {[key: string]: string | number | BigInt}) {
     return Object.keys(parameters).length === 0 ?
     // @ts-ignore
     web3Eth[methodName]()
@@ -20,15 +20,17 @@ function callWeb3EthMethod(methodName: string, parameters: {[key: string]: strin
 
 async function configureWeb3EthCall(
     methodName: string,
-    parameters: {[key: string]: string | number},
-    enumerateBlockIdentifiers = false): Promise<HttpRpcResponse> {
+    parameters: {[key: string]: string | number | BigInt},
+    enumerateBlockIdentifiers: boolean): Promise<HttpRpcResponse[]> {
     if (enumerateBlockIdentifiers) {
+        const methodPromises = []
         for (const blockIdentifier of blockIdentifiers) {
             if (blockIdentifier !== undefined) parameters.block = blockIdentifier
-            return callWeb3EthMethod(methodName, parameters)
+            methodPromises.push(callWeb3EthMethod(methodName, parameters))
         }
+        return await Promise.all(methodPromises)
     }
-    return callWeb3EthMethod(methodName, parameters)
+    return await callWeb3EthMethod(methodName, parameters)
 }
 
 for (const method of testConfig.methods) {
@@ -53,16 +55,22 @@ for (const method of testConfig.methods) {
             const result = await configureWeb3EthCall(
                 method.name,
                 method.parameters || {},
-                method.enumerateBlockIdentifiers)
-            expect(result).toMatchObject(method.expectedResult)
+                method.enumerateBlockIdentifiers || false)
+            Array.isArray(result) ?
+            result.forEach(methodResult => {
+                expect(methodResult).toMatchObject(method.expectedResult)})
+            : expect(result).toMatchObject(method.expectedResult)
         })
 
         it('should get expected result - id RPC parameter', async () => {
             const result = await configureWeb3EthCall(
                 method.name,
                 {...method.parameters, id: testConfig.expectedRpcId},
-                method.enumerateBlockIdentifiers)
-            expect(result).toMatchObject(method.expectedResult)
+                method.enumerateBlockIdentifiers || false)
+            Array.isArray(result) ?
+            result.forEach(methodResult => {
+                expect(methodResult).toMatchObject(method.expectedResult)})
+            : expect(result).toMatchObject(method.expectedResult)
         })
     })
 }
