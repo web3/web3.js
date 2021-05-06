@@ -64,7 +64,7 @@ var tests = [
             transaction: {
                 chainId: 1,
                 nonce: 0,
-                gasPrice: 0x01,
+                gasPrice: "0",
                 gas: 31853,
                 to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
                 toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
@@ -73,7 +73,7 @@ var tests = [
                 common: common
             },
             // expected r and s values from signature
-            r: "0x22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd9",
+            r: "0x22f17b38af35286ffbb0c6376c86ec91c200x01ecbad93f84913a0cc15e7580cd9",
             s: "0x83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
             // signature from eth_signTransaction
             rawTransaction: "0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
@@ -112,7 +112,7 @@ var tests = [
         transaction: {
             chainId: 1,
             nonce: 0,
-            gasPrice: "30000",
+            gasPrice: "0",
             gas: 31853,
             to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
             toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
@@ -124,7 +124,7 @@ var tests = [
         r: "0x22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd9",
         s: "0x83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
         // signature from eth_signTransaction
-        rawTransaction: "0xf86180827530827c6d94f0109fc8df283027b6285cc889f5aa624eac1f55808025a0f5ff501fc7f72e5fefb52aebaf422b5f5148f6d3aa8d72e23d7387ec90cb0f59a05e7b564f1e56b3832adfa36e6a20af0ecb4f8c82d4472d6f43594f349951d9d5",
+        rawTransaction: "0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
         oldSignature: "0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
         transactionHash: "0xb0c5e2c6b29eeb0b9c1d63eaa8b0f93c02ead18ae01cb7fc795b0612d3e9d55a",
         messageHash: "0xb0c5e2c6b29eeb0b9c1d63eaa8b0f93c02ead18ae01cb7fc795b0612d3e9d55a"
@@ -711,7 +711,13 @@ describe("eth", function () {
                     assert.equal(testAccount.address, test.address);
 
                     testAccount.signTransaction(test.transaction).then(function (tx) {
-                        assert.equal(ethAccounts.recoverTransaction(tx.rawTransaction), test.address);
+                        try {
+                            assert.equal(ethAccounts.recoverTransaction(tx.rawTransaction), test.address);
+                        } catch (e) {
+                            console.log(tx)
+                            console.log(test)
+                            console.log(e)
+                        }
                     });
                 });
             }
