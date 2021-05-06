@@ -73,7 +73,7 @@ for (const method of testConfig.methods) {
             Array.isArray(result) ?
                 result.forEach(methodResult => {
                     checkForExpected(method.expectedResult, methodResult, expectedSendParameters)})
-                    : checkForExpected(method.expectedResult, result, expectedSendParameters)
+                : checkForExpected(method.expectedResult, result, expectedSendParameters)
         })
 
         it('should get expected result - id RPC parameter', async () => {
@@ -90,8 +90,8 @@ for (const method of testConfig.methods) {
                     method.parameters ? Object.values(method.parameters) : []
             }
             Array.isArray(result) ?
-            result.forEach(methodResult => {
-                checkForExpected(method.expectedResult, methodResult, expectedSendParameters)})
+                result.forEach(methodResult => {
+                    checkForExpected(method.expectedResult, methodResult, expectedSendParameters)})
                 : checkForExpected(method.expectedResult, result, expectedSendParameters)
         })
     })
