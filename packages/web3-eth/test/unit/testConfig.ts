@@ -7,6 +7,7 @@ interface Method {
     parameters?: {[key: string]: string | number | BigInt}
     expectedResult: HttpRpcResponse
     enumerateBlockIdentifiers?: boolean
+    parameterIsTransactionObject?: boolean
 }
 
 interface TestConfig {
@@ -143,6 +144,7 @@ export const testConfig: TestConfig = {
                 value: BigInt(1)
             },
             expectedResult: {...expectedResultBase, result: '0x1'},
+            parameterIsTransactionObject: true
         },
         {
             name: 'sendTransaction',
@@ -155,6 +157,7 @@ export const testConfig: TestConfig = {
                 value: BigInt(1)
             },
             expectedResult: {...expectedResultBase, result: '0x1'},
+            parameterIsTransactionObject: true
         },
     ]
 }
