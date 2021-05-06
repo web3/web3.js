@@ -205,14 +205,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             if (privateKey.startsWith('0x')) {
                 privateKey = privateKey.substring(2);
             }
-            console.log("[web3-eth-accounts.signTransaction()] transaction object (pre-formatting)", transaction)
             
             var ethTx = Transaction.fromTxData(transaction, transactionOptions);
-            console.log("[web3-eth-accounts.signTransaction()] Transaction.fromTxData", ethTx)
-            
-            var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));
-            console.log("[web3-eth-accounts.signTransaction()] Transaction.sign", ethTx)
-            
+            var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));            
             var validationErrors = signedTx.validate(true);
 
             if (validationErrors.length > 0) {
@@ -229,9 +224,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
             var result = {
                 messageHash: '0x' + Buffer.from(signedTx.hash(false)).toString('hex'),
-                v: '0x' + Buffer.from(signedTx.v).toString('hex'),
-                r: '0x' + Buffer.from(signedTx.r).toString('hex'),
-                s: '0x' + Buffer.from(signedTx.s).toString('hex'),
+                v: '0x' + signedTx.v.toString('hex'),
+                r: '0x' + signedTx.r.toString('hex'),
+                s: '0x' + signedTx.s.toString('hex'),
                 rawTransaction: rawTransaction,
                 transactionHash: transactionHash
             };
