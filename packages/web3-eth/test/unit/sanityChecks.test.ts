@@ -7,8 +7,14 @@ import {testConfig} from './testConfig'
 
 // @ts-ignore undefined was added to test default blockIdentifier set by Web3Eth method
 const blockIdentifiers: blockIdentifier[] = [undefined, 'latest', 'earliest', 'pending', 42]
+const defaultSendParameters = {
+    jsonrpc: '2.0',
+    method: '',
+    params: []
+}
 
 let web3Eth: Web3Eth
+let web3RequestManagerSendSpy: jest.SpyInstance
 
 function callWeb3EthMethod(methodName: string, parameters: {[key: string]: string | number | BigInt}) {
     return Object.keys(parameters).length === 0 ?
@@ -33,10 +39,13 @@ async function configureWeb3EthCall(
     return await callWeb3EthMethod(methodName, parameters)
 }
 
+function checkForExpected(expectedResult: HttpRpcResponse, actualResult: HttpRpcResponse, expectedSendParameters: any) {
+    expect(actualResult).toMatchObject(expectedResult)
+    expect(web3RequestManagerSendSpy).toHaveBeenCalledWith(expectedSendParameters)
+}
+
 for (const method of testConfig.methods) {
     describe(`Web3Eth.${method.name}`, () => {
-        let web3RequestManagerSendSpy: jest.SpyInstance
-
         beforeAll(() => {
             Web3RequestManager.prototype.send = jest.fn()
             // @ts-ignore mockReturnValue added by jest
@@ -56,10 +65,15 @@ for (const method of testConfig.methods) {
                 method.name,
                 method.parameters || {},
                 method.enumerateBlockIdentifiers || false)
+            const expectedSendParameters = {
+                ...defaultSendParameters,
+                params: method.parameters,
+                method: method.rpcMethod
+            }
             Array.isArray(result) ?
             result.forEach(methodResult => {
                 expect(methodResult).toMatchObject(method.expectedResult)})
-            : expect(result).toMatchObject(method.expectedResult)
+            : checkForExpected(method.expectedResult, result, expectedSendParameters)
         })
 
         it('should get expected result - id RPC parameter', async () => {

@@ -11,6 +11,8 @@ export default class Web3Eth {
 
   private _requestManager: Web3RequestManager
 
+  private _DEFAULT_JSON_RPC_VERSION = '2.0'
+
   constructor(options: Web3EthOptions) {
     this._requestManager = new Web3RequestManager({
       providerUrl: options.providerUrl,
@@ -33,6 +35,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_protocolVersion',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [],
       });
     } catch (error) {
@@ -50,6 +53,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_syncing',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [],
       });
     } catch (error) {
@@ -67,6 +71,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_coinbase',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [],
       });
     } catch (error) {
@@ -84,6 +89,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_mining',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [],
       });
     } catch (error) {
@@ -101,6 +107,7 @@ export default class Web3Eth {
       const response = await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_hashrate',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [],
       });
       return { ...response, result: BigInt(response.result) };
@@ -119,6 +126,7 @@ export default class Web3Eth {
       const response = await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_gasPrice',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [],
       });
       return { ...response, result: BigInt(response.result) };
@@ -137,6 +145,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_accounts',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [],
       });
     } catch (error) {
@@ -154,6 +163,7 @@ export default class Web3Eth {
       const response = await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_blockNumber',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [],
       });
       return { ...response, result: BigInt(response.result) };
@@ -177,6 +187,7 @@ export default class Web3Eth {
       const response = await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getBalance',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [
           params.address,
           params.block || 'latest',
@@ -203,6 +214,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getStorageAt',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [
           params.address,
           params.position,
@@ -229,6 +241,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getTransactionCount',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [
           params.address,
           params.block || 'latest',
@@ -253,6 +266,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getBlockTransactionCountByHash',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [
           params.blockHash,
         ],
@@ -276,6 +290,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getBlockTransactionCountByNumber',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [
           params.blockNumber,
         ],
@@ -299,6 +314,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getUncleCountByBlockHash',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [
           params.blockHash,
         ],
@@ -322,6 +338,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getUncleCountByBlockNumber',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [
           params.blockNumber,
         ],
@@ -346,6 +363,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getCode',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [
           params.address,
           params.block || 'latest',
@@ -371,6 +389,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_sign',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [
           params.address,
           params.message,
@@ -396,6 +415,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_signTransaction',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [{
           ...transaction,
           gas: `0x${transaction.gas?.toString(16)}`,
@@ -423,6 +443,7 @@ export default class Web3Eth {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_sendTransaction',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [{
           ...transaction,
           gas: transaction.gas ? `0x${transaction.gas.toString(16)}` : undefined,
