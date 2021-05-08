@@ -132,7 +132,7 @@
         "sandboxed-module": "^2.0.4",
         "ts-node": "^9.0.0",
         "typescript": "^3.9.7",
-        "underscore": "1.9.1",
+        "underscore": "1.12.1",
         "wait-port": "^0.2.9",
         "webpack": "^4.44.2",
         "webpack-cli": "^3.3.12"
