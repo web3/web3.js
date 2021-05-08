@@ -429,7 +429,7 @@ export default class Web3Eth {
   }
 
   /**
-   * Submits a transaction object to the network
+   * Submits a transaction object to the provider to be sign and sent to the network
    * @param params A transaction object containing:
    * from, to, gas, gasPrice, value, data, and nonce
    * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
@@ -453,6 +453,28 @@ export default class Web3Eth {
       });
     } catch (error) {
       throw Error(`Error sending transaction: ${error.message}`);
+    }
+  }
+
+  /**
+   * Submits a previously signed transaction object to the network
+   * @param params Contains the raw signed transaction
+   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
+   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   */
+   async sendRawTransaction(
+    params: {rawTransaction: string},
+    rpcOptions?: HttpRpcOptions,
+  ): Promise<HttpRpcResponse> {
+    try {
+      return await this._requestManager.send({
+        ...rpcOptions,
+        method: 'eth_sendRawTransaction',
+        jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
+        params: [params.rawTransaction],
+      });
+    } catch (error) {
+      throw Error(`Error sending raw transaction: ${error.message}`);
     }
   }
 }

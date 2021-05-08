@@ -159,5 +159,11 @@ export const testConfig: TestConfig = {
             expectedResult: {...expectedResultBase, result: '0x1'},
             parameterIsTransactionObject: true
         },
+        {
+            name: 'sendRawTransaction',
+            rpcMethod: 'eth_sendRawTransaction',
+            parameters: {rawTransaction: '0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675'},
+            expectedResult: {...expectedResultBase, result: '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331'},
+        },
     ]
 }
