@@ -374,3 +374,4 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.3.6]
+- I've fixed XY (#4052)
