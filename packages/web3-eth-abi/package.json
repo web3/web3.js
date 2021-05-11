@@ -15,7 +15,7 @@
     "main": "lib/index.js",
     "dependencies": {
         "@ethersproject/abi": "5.0.7",
-        "underscore": "1.9.1",
+        "underscore": "1.12.1",
         "web3-utils": "1.3.5"
     },
     "devDependencies": {
