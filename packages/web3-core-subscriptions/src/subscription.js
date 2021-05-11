@@ -333,4 +333,10 @@ Subscription.prototype.resubscribe = function () {
     this.subscribe(this.callback);
 };
 
+Subscription.prototype.unsubscribeByID = function(id) {
+    if (this.id == id){ 
+        this.unsubscribe();
+    }
+};
+
 module.exports = Subscription;
