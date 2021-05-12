@@ -64,14 +64,16 @@ describe('subscription connect/reconnect', function () {
     });
 
     it('unsubscribes given an id', function (done) {
-        subscription = web3.eth.subscribe('newBlockHeaders')
-        .on("connected", function(subscriptionId) {
-            assert.equal(1, web3.eth._requestManager.subscriptions.size);
-            assert.ok(web3.eth.unsubscribeByID(subscriptionId))
-        });
         assert.equal(0, web3.eth._requestManager.subscriptions.size);
-
-
+        subscription = web3.eth
+            .subscribe('newBlockHeaders')
+            .on('connected', function (result) {
+                assert(result)
+                assert.equal(1, web3.eth._requestManager.subscriptions.size);
+                subscription.unsubscribeById(subscription.id); // Stop listening..
+                done();
+            });
+            assert.equal(0, web3.eth._requestManager.subscriptions.size);
         
     })
 
