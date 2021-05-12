@@ -63,6 +63,18 @@ describe('subscription connect/reconnect', function () {
         assert.equal(0, web3.eth._requestManager.subscriptions.size);
     });
 
+    it('unsubscribes given an id', function (done) {
+        subscription = web3.eth.subscribe('newBlockHeaders')
+        .on("connected", function(subscriptionId) {
+            assert.equal(1, web3.eth._requestManager.subscriptions.size);
+            assert.ok(web3.eth.unsubscribeByID(subscriptionId))
+        });
+        assert.equal(0, web3.eth._requestManager.subscriptions.size);
+
+
+        
+    })
+
     it('resubscribes to an existing subscription', function (done) {
         this.timeout(5000);
 
