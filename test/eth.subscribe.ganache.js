@@ -63,19 +63,19 @@ describe('subscription connect/reconnect', function () {
         assert.equal(0, web3.eth._requestManager.subscriptions.size);
     });
 
-    it('unsubscribes given an id', function (done) {
-        assert.equal(0, web3.eth._requestManager.subscriptions.size);
-        subscription = web3.eth
-            .subscribe('newBlockHeaders')
-            .on('connected', function (result) {
-                assert(result)
-                assert.equal(1, web3.eth._requestManager.subscriptions.size);
-                subscription.unsubscribeById(subscription.id); // Stop listening..
-                done();
-            });
-            assert.equal(0, web3.eth._requestManager.subscriptions.size);
+    // it('unsubscribes given an id', function (done) {
+    //     assert.equal(0, web3.eth._requestManager.subscriptions.size);
+    //     subscription = web3.eth
+    //         .subscribe('newBlockHeaders')
+    //         .on('connected', function (result) {
+    //             assert(result)
+    //             assert.equal(1, web3.eth._requestManager.subscriptions.size);
+    //             subscription.unsubscribeById(subscription.id); // Stop listening..
+    //             done();
+    //         });
+    //         assert.equal(0, web3.eth._requestManager.subscriptions.size);
         
-    })
+    // })
 
     it('resubscribes to an existing subscription', function (done) {
         this.timeout(5000);
