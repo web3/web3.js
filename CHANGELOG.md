@@ -375,7 +375,13 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changes
 
-- Update underscore package from `1.9.1` to `1.12.1` (#4051)
+- Bump `underscore` package from `1.9.1` to `1.12.1` (#4051)
+- Bump `@ensdomains/ens` package from `^0.4.5` to `^0.6.0` (#4059)
+- Bump `ethers` package from `^5.0.18` to `^5.1.4` ($4059)
+
+### Removes
+
+- Accidental commit (yarn-error.log) (#4062)
 
 ## [Unreleased]
 
