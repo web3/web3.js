@@ -79,6 +79,9 @@ describe('subscription connect/reconnect', function () {
             assert.equal(0, web3.eth._requestManager.subscriptions.size);
 
             subscription = web3.eth.subscribe('newBlockHeaders');
+
+            await waitSeconds(1);
+            
             subscription2 = web3.eth.subscribe("logs")
 
             await waitSeconds(1);
