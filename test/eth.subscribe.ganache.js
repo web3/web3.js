@@ -63,35 +63,29 @@ describe('subscription connect/reconnect', function () {
         assert.equal(0, web3.eth._requestManager.subscriptions.size);
     });
 
-    it('unsubscribes given an id', async function () {
-        assert.equal(0, web3.eth._requestManager.subscriptions.size);
+    it('unsubscribes given an id', async function ( ) {
         subscription = web3.eth.subscribe('newBlockHeaders');
         await waitSeconds(1);
 
         assert.equal(1, web3.eth._requestManager.subscriptions.size);
-        assert(web3.eth.removeSubscriptionById(subscription.id))
-        assert.equal(0, web3.eth._requestManager.subscriptions.size);
+        web3.eth.removeSubscriptionById(subscription.id)
 
+        assert.equal(0, web3.eth._requestManager.subscriptions.size);
         
     })
 
     it('unsubscribes given an id with multiple subscriptions', async function () {
-            assert.equal(0, web3.eth._requestManager.subscriptions.size);
 
             subscription = web3.eth.subscribe('newBlockHeaders');
-
-            await waitSeconds(1);
-            
-            subscription2 = web3.eth.subscribe("logs")
-
+            subscription2 = web3.eth.subscribe("logs");
             await waitSeconds(1);
     
             assert.equal(2, web3.eth._requestManager.subscriptions.size);
 
-            assert(web3.eth.removeSubscriptionById(subscription.id));
+            web3.eth.removeSubscriptionById(subscription.id);
             assert.equal(1, web3.eth._requestManager.subscriptions.size);
 
-            assert(web3.eth.removeSubscriptionById(subscription2.id))
+            web3.eth.removeSubscriptionById(subscription2.id);
             assert.equal(0, web3.eth._requestManager.subscriptions.size);
 
         })
