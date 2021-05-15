@@ -36,3 +36,7 @@ export interface EthTransaction {
     data?: string
     nonce?: number
 }
+
+export interface EthCallTransaction extends EthTransaction {
+    to: string
+}
