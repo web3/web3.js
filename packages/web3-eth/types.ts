@@ -1,3 +1,5 @@
+import { HttpRpcResponse } from "web3-providers-http/types";
+
 export type blockIdentifier = number | 'latest' | 'earliest' | 'pending'
 
 export interface Web3EthOptions {
@@ -39,4 +41,24 @@ export interface EthTransaction {
 
 export interface EthCallTransaction extends EthTransaction {
     to: string
+}
+
+export interface EthStringResult extends HttpRpcResponse {
+    result: string
+}
+
+export interface EthBooleanResult extends HttpRpcResponse {
+    result: boolean
+}
+
+export interface EthSyncingResult extends HttpRpcResponse {
+    result: {
+        startingBlock: string,
+        currentBlock: string,
+        highestBlock: string
+    } | false
+}
+
+export interface EthAccountsResult extends HttpRpcResponse {
+    result: string[]
 }

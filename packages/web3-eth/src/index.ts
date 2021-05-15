@@ -3,7 +3,7 @@ import { HttpRpcOptions, HttpRpcResponse } from 'web3-providers-http/types';
 
 import {
   EthAddressBlockParmeters, BlockHashParameter, BlockIdentifierParameter,
-  EthGetStorageAtParameters, Web3EthOptions, EthSignParameters, EthTransaction, EthCallTransaction, blockIdentifier,
+  EthGetStorageAtParameters, Web3EthOptions, EthSignParameters, EthTransaction, EthCallTransaction, blockIdentifier, EthStringResult, EthSyncingResult, EthBooleanResult, EthAccountsResult,
 } from '../types';
 
 export default class Web3Eth {
@@ -25,12 +25,37 @@ export default class Web3Eth {
   }
 
   /**
-   * Returns the current ethereum protocol version
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @param options Optional method options such as {formatBigInt}
-   * @returns {HttpRpcResponse} Contains returns JSON RPC data
+   * Returns Keccak-256 (not the standardized SHA3-256) of the given data
+   * @param {string} data Data to convert into SHA3 hash
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} SHA3 hash of {data}
    */
-  async getProtocolVersion(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+   async getSha3(
+    data: string,
+   rpcOptions?: HttpRpcOptions
+  ): Promise<EthStringResult> {
+  try {
+    return await this._requestManager.send({
+      ...rpcOptions,
+      method: 'eth_sha3',
+      jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
+      params: [],
+    });
+  } catch (error) {
+    throw Error(`Error getting sha3 hash: ${error.message}`);
+  }
+}
+
+  /**
+   * Returns the current ethereum protocol version
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} The current ethereum protocol version
+   */
+  async getProtocolVersion(rpcOptions?: HttpRpcOptions): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
@@ -45,10 +70,12 @@ export default class Web3Eth {
 
   /**
    * Returns an object with data about the sync status or {false} when not syncing
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Contains returns JSON RPC data
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Object with sync status data or {false} when not syncing
    */
-  async getSyncing(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+  async getSyncing(rpcOptions?: HttpRpcOptions): Promise<EthSyncingResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
@@ -57,16 +84,18 @@ export default class Web3Eth {
         params: [],
       });
     } catch (error) {
-      throw Error(`Error getting syncing info: ${error.message}`);
+      throw Error(`Error getting syncing status: ${error.message}`);
     }
   }
 
   /**
    * Returns the client's coinbase address
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Contains returns JSON RPC data
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} The current coinbase address
    */
-  async getCoinbase(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+  async getCoinbase(rpcOptions?: HttpRpcOptions): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
@@ -81,10 +110,12 @@ export default class Web3Eth {
 
   /**
    * Returns {true} if client is actively mining new blocks
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Contains returns JSON RPC data
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} {true} if the client is mining, otherwise {false}
    */
-  async getMining(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+  async getMining(rpcOptions?: HttpRpcOptions): Promise<EthBooleanResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
@@ -93,24 +124,25 @@ export default class Web3Eth {
         params: [],
       });
     } catch (error) {
-      throw Error(`Error getting mining info: ${error.message}`);
+      throw Error(`Error getting mining status: ${error.message}`);
     }
   }
 
   /**
    * Returns the number of hashes per second that the node is mining with
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Contains returns JSON RPC data
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Number of hashes per second
    */
-  async getHashRate(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+  async getHashRate(rpcOptions?: HttpRpcOptions): Promise<EthStringResult> {
     try {
-      const response = await this._requestManager.send({
+      return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_hashrate',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [],
       });
-      return { ...response, result: BigInt(response.result) };
     } catch (error) {
       throw Error(`Error getting hash rate: ${error.message}`);
     }
@@ -118,29 +150,32 @@ export default class Web3Eth {
 
   /**
    * Returns the current price per gas in wei
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Contains returns JSON RPC data
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing current gas price in wei
    */
-  async getGasPrice(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+  async getGasPrice(rpcOptions?: HttpRpcOptions): Promise<EthStringResult> {
     try {
-      const response = await this._requestManager.send({
+      return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_gasPrice',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [],
       });
-      return { ...response, result: BigInt(response.result) };
     } catch (error) {
-      throw Error(`Error getting hash rate: ${error.message}`);
+      throw Error(`Error getting gas price: ${error.message}`);
     }
   }
 
   /**
    * Returns a list of addresses owned by client.
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Contains returns JSON RPC data
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Array of addresses owned by the client
    */
-  async getAccounts(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+  async getAccounts(rpcOptions?: HttpRpcOptions): Promise<EthAccountsResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
@@ -149,24 +184,25 @@ export default class Web3Eth {
         params: [],
       });
     } catch (error) {
-      throw Error(`Error getting hash rate: ${error.message}`);
+      throw Error(`Error getting accounts: ${error.message}`);
     }
   }
 
   /**
    * Returns the number of most recent block
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Contains returns JSON RPC data
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing current block number client is on
    */
-  async getBlockNumber(rpcOptions?: HttpRpcOptions): Promise<HttpRpcResponse> {
+  async getBlockNumber(rpcOptions?: HttpRpcOptions): Promise<EthStringResult> {
     try {
-      const response = await this._requestManager.send({
+      return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_blockNumber',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [],
       });
-      return { ...response, result: BigInt(response.result) };
     } catch (error) {
       throw Error(`Error getting block number: ${error.message}`);
     }
@@ -174,26 +210,25 @@ export default class Web3Eth {
 
   /**
    * Returns the balance of the account of given address
-   * @param params Contains address to get balance of and an optional identifier
-   * for what block to use for the query
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Returns address balance in Wei formatted as BigInt
+   * @param {string} address Address to get balance of
+   * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing current balance in wei
    */
   async getBalance(
-    params: EthAddressBlockParmeters,
+    address: string,
+    blockIdentifier: blockIdentifier,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
-      const response = await this._requestManager.send({
+      return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getBalance',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [
-          params.address,
-          params.block || 'latest',
-        ],
+        params: [address, blockIdentifier],
       });
-      return { ...response, result: BigInt(response.result) };
     } catch (error) {
       throw Error(`Error getting balance: ${error.message}`);
     }
@@ -201,51 +236,56 @@ export default class Web3Eth {
 
   /**
    * Returns the value from a storage position at a given address
-   * @param params Contains address to query storage of, position in storage,
-   * and an optional identifier for what block to use for the query
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Returns the value at provided storage position
+   * @param {string} address Address of storage to query
+   * @param {string} storagePosition Hex string representing position in storage to retrieve
+   * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing value at {storagePosition}
    */
   async getStorageAt(
-    params: EthGetStorageAtParameters,
+    address: string,
+    storagePosition: string,
+    blockIdentifier: blockIdentifier,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getStorageAt',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
         params: [
-          params.address,
-          params.position,
-          params.block || 'latest',
+          address,
+          storagePosition,
+          blockIdentifier
         ],
       });
     } catch (error) {
-      throw Error(`Error getting storage: ${error.message}`);
+      throw Error(`Error getting storage value: ${error.message}`);
     }
   }
 
   /**
    * Returns the number of transactions sent from an address
-   * @param params Contains address to query transaction count of,
-   * and an optional identifier for what block to use for the query
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Returns transaction count for provided address
+   * @param {string} address Address to get transaction count of
+   * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing number of transactions sent by {address}
    */
   async getTransactionCount(
-    params: EthAddressBlockParmeters,
+    address: string,
+    blockIdentifier: blockIdentifier,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getTransactionCount',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [
-          params.address,
-          params.block || 'latest',
-        ],
+        params: [address, blockIdentifier],
       });
     } catch (error) {
       throw Error(`Error getting transaction count: ${error.message}`);
@@ -254,22 +294,22 @@ export default class Web3Eth {
 
   /**
    * Returns the number of transactions in a block from a block matching the given block hash
-   * @param params Contains hash of block to query
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Returns the number of transaction included in provided block
+   * @param {string} blockHash Hash of block to query transaction count of
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing number of transactions in block
    */
   async getBlockTransactionCountByHash(
-    params: BlockHashParameter,
+    blockHash: string,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getBlockTransactionCountByHash',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [
-          params.blockHash,
-        ],
+        params: [blockHash],
       });
     } catch (error) {
       throw Error(`Error getting transaction count for block by hash: ${error.message}`);
@@ -998,29 +1038,6 @@ export default class Web3Eth {
      });
    } catch (error) {
      throw Error(`Error submitting work: ${error.message}`);
-   }
- }
-
- /**
-   * Used for submitting mining hashrate
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
-   */
-  async submitHashRate(
-    hashRate: string,
-    clientId: string,
-    rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
-   try {
-     return await this._requestManager.send({
-       ...rpcOptions,
-       method: 'eth_submitHashRate',
-       jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-       params: [hashRate, clientId],
-     });
-   } catch (error) {
-     throw Error(`Error submitting hash rate: ${error.message}`);
    }
  }
 
