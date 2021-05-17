@@ -1,16 +1,16 @@
-import { HttpRpcResponse } from "web3-providers-http/types";
-import Web3RequestManager from "web3-core-requestmanager";
+import { HttpRpcResponse } from 'web3-providers-http/types';
+import Web3RequestManager from 'web3-core-requestmanager';
 
-import Web3Eth from "../../src";
-import { blockIdentifier, EthTransaction } from "../../types";
-import { testConfig } from "./testConfig";
+import Web3Eth from '../../src';
+import { blockIdentifier, EthTransaction } from '../../types';
+import { testConfig } from './testConfig';
 
 // @ts-ignore undefined was added to test default blockIdentifier set by Web3Eth method
 const blockIdentifiers: blockIdentifier[] = [
     undefined,
-    "latest",
-    "earliest",
-    "pending",
+    'latest',
+    'earliest',
+    'pending',
     42,
 ];
 
@@ -52,7 +52,7 @@ function formatTransactionObject(
 ): [EthTransaction] {
     for (const property in transactionObject) {
         // @ts-ignore
-        if (typeof transactionObject[property] === "bigint")
+        if (typeof transactionObject[property] === 'bigint')
             transactionObject[property] = `0x${transactionObject[
                 property
             ].toString(16)}`;
@@ -70,18 +70,18 @@ for (const method of testConfig.methods) {
             );
             web3RequestManagerSendSpy = jest.spyOn(
                 Web3RequestManager.prototype,
-                "send"
+                'send'
             );
 
             web3Eth = new Web3Eth({ providerUrl: testConfig.providerUrl });
         });
 
-        it("should construct a Web3Eth instance with method defined", () => {
+        it('should construct a Web3Eth instance with method defined', () => {
             // @ts-ignore
             expect(web3Eth[method.name]).not.toBe(undefined);
         });
 
-        it("should get expected result - default RPC parameters", async () => {
+        it('should get expected result - default RPC parameters', async () => {
             const result = await configureWeb3EthCall(
                 method.name,
                 method.parameters || {},
@@ -89,7 +89,7 @@ for (const method of testConfig.methods) {
             );
             const expectedSendParameters = {
                 method: method.rpcMethod,
-                jsonrpc: "2.0",
+                jsonrpc: '2.0',
                 params: method.parameterIsTransactionObject
                     ? // @ts-ignore we know this is a EthTransaction because of the flag
                       formatTransactionObject(method.parameters)
@@ -112,7 +112,7 @@ for (const method of testConfig.methods) {
                   );
         });
 
-        it("should get expected result - id RPC parameter", async () => {
+        it('should get expected result - id RPC parameter', async () => {
             const result = await configureWeb3EthCall(
                 method.name,
                 { ...method.parameters, id: testConfig.expectedRpcId },
@@ -120,7 +120,7 @@ for (const method of testConfig.methods) {
             );
             const expectedSendParameters = {
                 method: method.rpcMethod,
-                jsonrpc: "2.0",
+                jsonrpc: '2.0',
                 params: method.parameterIsTransactionObject
                     ? // @ts-ignore we know this is a EthTransaction because of the flag
                       formatTransactionObject(method.parameters)

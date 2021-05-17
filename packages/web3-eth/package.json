@@ -15,8 +15,7 @@
         "build": "yarn clean && yarn compile",
         "clean": "rimraf lib",
         "compile": "tsc --build",
-        "lint": "yarn prepare && eslint \"./src/**/*.ts\" --max-warnings=0 --fix",
-        "prepare": "yarn prettier --write .",
+        "lint": "yarn prettier --write . && eslint \"./src/**/*.ts\" --max-warnings=0",
         "test": "jest"
     },
     "devDependencies": {

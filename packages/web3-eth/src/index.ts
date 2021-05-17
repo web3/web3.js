@@ -1,11 +1,11 @@
-import Web3RequestManager from "web3-core-requestmanager";
-import { HttpRpcOptions } from "web3-providers-http/types";
+import Web3RequestManager from 'web3-core-requestmanager';
+import { HttpRpcOptions } from 'web3-providers-http/types';
 
 import {
     Web3EthOptions,
     EthTransaction,
     EthCallTransaction,
-    blockIdentifier,
+    BlockIdentifier,
     EthStringResult,
     EthSyncingResult,
     EthBooleanResult,
@@ -17,20 +17,20 @@ import {
     EthCompiledSolidityResult,
     EthLogResult,
     EthFilter,
-} from "../types";
+} from '../types';
 
 export default class Web3Eth {
     private _packageName: string;
 
     private _requestManager: Web3RequestManager;
 
-    private _DEFAULT_JSON_RPC_VERSION = "2.0";
+    private _DEFAULT_JSON_RPC_VERSION = '2.0';
 
     constructor(options: Web3EthOptions) {
         this._requestManager = new Web3RequestManager({
             providerUrl: options.providerUrl,
         });
-        this._packageName = options.packageName || "eth";
+        this._packageName = options.packageName || 'eth';
     }
 
     get packageName() {
@@ -52,7 +52,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_sha3",
+                method: 'eth_sha3',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [data],
             });
@@ -74,7 +74,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_protocolVersion",
+                method: 'eth_protocolVersion',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [],
             });
@@ -94,7 +94,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_syncing",
+                method: 'eth_syncing',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [],
             });
@@ -114,7 +114,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_coinbase",
+                method: 'eth_coinbase',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [],
             });
@@ -134,7 +134,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_mining",
+                method: 'eth_mining',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [],
             });
@@ -154,7 +154,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_hashrate",
+                method: 'eth_hashrate',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [],
             });
@@ -174,7 +174,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_gasPrice",
+                method: 'eth_gasPrice',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [],
             });
@@ -194,7 +194,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_accounts",
+                method: 'eth_accounts',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [],
             });
@@ -216,7 +216,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_blockNumber",
+                method: 'eth_blockNumber',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [],
             });
@@ -236,13 +236,13 @@ export default class Web3Eth {
      */
     async getBalance(
         address: string,
-        blockIdentifier: blockIdentifier,
+        blockIdentifier: BlockIdentifier,
         rpcOptions?: HttpRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getBalance",
+                method: 'eth_getBalance',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [address, blockIdentifier],
             });
@@ -264,13 +264,13 @@ export default class Web3Eth {
     async getStorageAt(
         address: string,
         storagePosition: string,
-        blockIdentifier: blockIdentifier,
+        blockIdentifier: BlockIdentifier,
         rpcOptions?: HttpRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getStorageAt",
+                method: 'eth_getStorageAt',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [address, storagePosition, blockIdentifier],
             });
@@ -290,13 +290,13 @@ export default class Web3Eth {
      */
     async getTransactionCount(
         address: string,
-        blockIdentifier: blockIdentifier,
+        blockIdentifier: BlockIdentifier,
         rpcOptions?: HttpRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getTransactionCount",
+                method: 'eth_getTransactionCount',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [address, blockIdentifier],
             });
@@ -320,7 +320,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getBlockTransactionCountByHash",
+                method: 'eth_getBlockTransactionCountByHash',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [blockHash],
             });
@@ -340,13 +340,13 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing number of transactions in block
      */
     async getBlockTransactionCountByNumber(
-        blockIdentifier: blockIdentifier,
+        blockIdentifier: BlockIdentifier,
         rpcOptions?: HttpRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getBlockTransactionCountByNumber",
+                method: 'eth_getBlockTransactionCountByNumber',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [blockIdentifier],
             });
@@ -372,7 +372,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getUncleCountByBlockHash",
+                method: 'eth_getUncleCountByBlockHash',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [blockHash],
             });
@@ -392,13 +392,13 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing number of uncles in block
      */
     async getUncleCountByBlockNumber(
-        blockIdentifier: blockIdentifier,
+        blockIdentifier: BlockIdentifier,
         rpcOptions?: HttpRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getUncleCountByBlockNumber",
+                method: 'eth_getUncleCountByBlockNumber',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [blockIdentifier],
             });
@@ -420,13 +420,13 @@ export default class Web3Eth {
      */
     async getCode(
         address: string,
-        blockIdentifier: blockIdentifier,
+        blockIdentifier: BlockIdentifier,
         rpcOptions?: HttpRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getCode",
+                method: 'eth_getCode',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [address, blockIdentifier],
             });
@@ -452,7 +452,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_sign",
+                method: 'eth_sign',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [address, message],
             });
@@ -483,7 +483,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_signTransaction",
+                method: 'eth_signTransaction',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [{ ...transaction }],
             });
@@ -514,7 +514,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_sendTransaction",
+                method: 'eth_sendTransaction',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [{ ...transaction }],
             });
@@ -538,7 +538,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_sendRawTransaction",
+                method: 'eth_sendRawTransaction',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [rawTransaction],
             });
@@ -571,7 +571,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_call",
+                method: 'eth_call',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [transaction],
             });
@@ -602,7 +602,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_estimateGas",
+                method: 'eth_estimateGas',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [transaction],
             });
@@ -628,7 +628,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getBlockByHash",
+                method: 'eth_getBlockByHash',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [blockHash, returnFullTxs],
             });
@@ -647,14 +647,14 @@ export default class Web3Eth {
      * @returns {Promise} A block object or null when no block was found
      */
     async getBlockByNumber(
-        blockIdentifier: blockIdentifier,
+        blockIdentifier: BlockIdentifier,
         returnFullTxs: boolean,
         rpcOptions?: HttpRpcOptions
     ): Promise<EthBlockResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getBlockByNumber",
+                method: 'eth_getBlockByNumber',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [blockIdentifier, returnFullTxs],
             });
@@ -678,7 +678,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getTransactionByHash",
+                method: 'eth_getTransactionByHash',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [txHash],
             });
@@ -704,7 +704,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getTransactionByBlockHashAndIndex",
+                method: 'eth_getTransactionByBlockHashAndIndex',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [blockHash, transactionIndex],
             });
@@ -725,14 +725,14 @@ export default class Web3Eth {
      * @returns {Promise} A transaction object or {null} when no transaction was found
      */
     async getTransactionByBlockNumberAndIndex(
-        blockIdentifier: blockIdentifier,
+        blockIdentifier: BlockIdentifier,
         transactionIndex: string,
         rpcOptions?: HttpRpcOptions
     ): Promise<EthTransactionResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getTransactionByBlockNumberAndIndex",
+                method: 'eth_getTransactionByBlockNumberAndIndex',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [blockIdentifier, transactionIndex],
             });
@@ -758,7 +758,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getTransactionReceipt",
+                method: 'eth_getTransactionReceipt',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [txHash],
             });
@@ -784,7 +784,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getUncleByBlockHashAndIndex",
+                method: 'eth_getUncleByBlockHashAndIndex',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [blockHash, uncleIndex],
             });
@@ -805,14 +805,14 @@ export default class Web3Eth {
      * @returns {Promise} A block object or null when no block was found
      */
     async getUncleByBlockNumberAndIndex(
-        blockIdentifier: blockIdentifier,
+        blockIdentifier: BlockIdentifier,
         uncleIndex: string,
         rpcOptions?: HttpRpcOptions
     ): Promise<EthBlockResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getUncleByBlockNumberAndIndex",
+                method: 'eth_getUncleByBlockNumberAndIndex',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [blockIdentifier, uncleIndex],
             });
@@ -836,7 +836,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getCompilers",
+                method: 'eth_getCompilers',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [],
             });
@@ -860,7 +860,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_compileSolidity",
+                method: 'eth_compileSolidity',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [sourceCode],
             });
@@ -886,7 +886,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_compileLLL",
+                method: 'eth_compileLLL',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [sourceCode],
             });
@@ -910,7 +910,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_compileSerpent",
+                method: 'eth_compileSerpent',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [sourceCode],
             });
@@ -940,7 +940,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_newFilter",
+                method: 'eth_newFilter',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [filter],
             });
@@ -962,7 +962,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_newBlockFilter",
+                method: 'eth_newBlockFilter',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [],
             });
@@ -984,7 +984,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_newPendingTransactionFilter",
+                method: 'eth_newPendingTransactionFilter',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [],
             });
@@ -1010,7 +1010,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_uninstallFilter",
+                method: 'eth_uninstallFilter',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [filterId],
             });
@@ -1034,7 +1034,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getFilterChanges",
+                method: 'eth_getFilterChanges',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [filterId],
             });
@@ -1058,7 +1058,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getFilterLogs",
+                method: 'eth_getFilterLogs',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [filterId],
             });
@@ -1081,7 +1081,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getLogs",
+                method: 'eth_getLogs',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [filter],
             });
@@ -1101,7 +1101,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_getWork",
+                method: 'eth_getWork',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [],
             });
@@ -1129,7 +1129,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_submitWork",
+                method: 'eth_submitWork',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [nonce, powHash, digest],
             });
@@ -1155,7 +1155,7 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: "eth_submitHashRate",
+                method: 'eth_submitHashRate',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [hashRate, clientId],
             });

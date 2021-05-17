@@ -1,6 +1,6 @@
-import { HttpRpcResponse } from "web3-providers-http/types";
+import { HttpRpcResponse } from 'web3-providers-http/types';
 
-export type blockIdentifier = number | "latest" | "earliest" | "pending";
+export type BlockIdentifier = number | 'latest' | 'earliest' | 'pending';
 
 export type EthLog = {
     removed: boolean;
@@ -97,8 +97,8 @@ export type EthCompiledSolidity = {
 };
 
 export type EthFilter = {
-    fromBlock?: blockIdentifier;
-    toBlock?: blockIdentifier;
+    fromBlock?: BlockIdentifier;
+    toBlock?: BlockIdentifier;
     address?: string;
     topics?: string | null | string[][];
     blochHash?: string;
