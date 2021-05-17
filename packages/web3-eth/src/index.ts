@@ -1,13 +1,11 @@
 import Web3RequestManager from 'web3-core-requestmanager';
-import { HttpRpcOptions, HttpRpcResponse } from 'web3-providers-http/types';
+import { HttpRpcOptions } from 'web3-providers-http/types';
 
 import {
-  EthAddressBlockParmeters, BlockHashParameter, BlockIdentifierParameter,
-  EthGetStorageAtParameters, Web3EthOptions, EthSignParameters, EthTransaction, EthCallTransaction, blockIdentifier, EthStringResult, EthSyncingResult, EthBooleanResult, EthAccountsResult, EthBlockResult, EthTransactionResult, EthTransactionReceiptResult,
-  EthStringArrayResult,
-  EthCompiledSolidityResult,
-  EthLogResult,
-  EthFilter
+  Web3EthOptions, EthTransaction, EthCallTransaction, blockIdentifier,
+  EthStringResult, EthSyncingResult, EthBooleanResult, EthAccountsResult,
+  EthBlockResult, EthTransactionResult, EthTransactionReceiptResult,
+  EthStringArrayResult, EthCompiledSolidityResult, EthLogResult, EthFilter
 } from '../types';
 
 export default class Web3Eth {

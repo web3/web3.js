@@ -109,28 +109,6 @@ export interface Web3EthOptions {
     providerUrl: string
 }
 
-export interface EthAddressBlockParmeters {
-    address: string
-    block?: blockIdentifier
-}
-
-export interface EthGetStorageAtParameters extends EthAddressBlockParmeters {
-    position: string
-}
-
-export interface BlockHashParameter {
-    blockHash: string
-}
-
-export interface BlockIdentifierParameter {
-    blockNumber: blockIdentifier
-}
-
-export interface EthSignParameters {
-    address: string
-    message: string
-}
-
 export interface EthCallTransaction extends EthTransaction {
     to: string
 }
