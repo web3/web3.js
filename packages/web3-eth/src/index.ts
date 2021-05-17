@@ -36,16 +36,13 @@ export default class Web3Eth {
    * @param {string} rpcOptions.jsonrpc JSON RPC version
    * @returns {Promise} SHA3 hash of {data}
    */
-   async getSha3(
-    data: string,
-   rpcOptions?: HttpRpcOptions
-  ): Promise<EthStringResult> {
+   async getSha3(data: string, rpcOptions?: HttpRpcOptions): Promise<EthStringResult> {
   try {
     return await this._requestManager.send({
       ...rpcOptions,
       method: 'eth_sha3',
       jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-      params: [],
+      params: [data],
     });
   } catch (error) {
     throw Error(`Error getting sha3 hash: ${error.message}`);
