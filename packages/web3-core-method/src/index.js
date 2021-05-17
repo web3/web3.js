@@ -102,7 +102,7 @@ Method.prototype.attachToObject = function (obj) {
  * @return {String} name of jsonrpc method
  */
 Method.prototype.getCall = function (args) {
-    return _.isFunction(this.call) ? this.call(args) : this.call;
+    return typeof this.call === 'function' ? this.call(args) : this.call;
 };
 
 /**
@@ -113,7 +113,7 @@ Method.prototype.getCall = function (args) {
  * @return {Function|Null} callback, if exists
  */
 Method.prototype.extractCallback = function (args) {
-    if (_.isFunction(args[args.length - 1])) {
+    if (typeof (args[args.length - 1]) === 'function') {
         return args.pop(); // modify the args array!
     }
 };
@@ -161,7 +161,7 @@ Method.prototype.formatInput = function (args) {
 Method.prototype.formatOutput = function (result) {
     var _this = this;
 
-    if (_.isArray(result)) {
+    if (Array.isArray(result)) {
         return result.map(function (res) {
             return _this.outputFormatter && res ? _this.outputFormatter(res) : res;
         });
@@ -180,6 +180,8 @@ Method.prototype.formatOutput = function (result) {
 Method.prototype.toPayload = function (args) {
     var call = this.getCall(args);
     var callback = this.extractCallback(args);
+    //check if last args is a function, if so pop it out.
+    
     var params = this.formatInput(args);
     this.validateArgs(params);
 
@@ -206,8 +208,8 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         intervalId = null,
         lastBlock = null,
         receiptJSON = '',
-        gasProvided = (_.isObject(payload.params[0]) && payload.params[0].gas) ? payload.params[0].gas : null,
-        isContractDeployment = _.isObject(payload.params[0]) &&
+        gasProvided = ((typeof payload.params[0] === 'object' && payload.params[0] != null) && payload.params[0].gas) ? payload.params[0].gas : null,
+        isContractDeployment = (typeof payload.params[0] === 'object' && payload.params[0] != null) &&
             payload.params[0].data &&
             payload.params[0].from &&
             !payload.params[0].to,
@@ -258,7 +260,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
     ];
     // attach methods to this._ethereumCall
     var _ethereumCall = {};
-    _.each(_ethereumCalls, function (mthd) {
+    _ethereumCalls.forEach(mthd =>  {
         mthd.attachToObject(_ethereumCall);
         mthd.requestManager = method.requestManager; // assign rather than call setRequestManager()
     });
@@ -591,11 +593,11 @@ var getWallet = function (from, accounts) {
     var wallet = null;
 
     // is index given
-    if (_.isNumber(from)) {
+    if (typeof from === 'number') {
         wallet = accounts.wallet[from];
 
         // is account given
-    } else if (_.isObject(from) && from.address && from.privateKey) {
+    } else if (typeof from === 'object' && from.address && from.privateKey) {
         wallet = from;
 
         // search in wallet for address
@@ -689,10 +691,10 @@ Method.prototype.buildCall = function () {
         // SENDS the SIGNED SIGNATURE
         var sendSignedTx = function (sign) {
 
-            var signedPayload = _.extend({}, payload, {
+            var signedPayload = { ... payload, 
                 method: 'eth_sendRawTransaction',
                 params: [sign.rawTransaction]
-            });
+            };
 
             method.requestManager.send(signedPayload, sendTxCallback);
         };
@@ -706,7 +708,7 @@ Method.prototype.buildCall = function () {
                 // ETH_SENDTRANSACTION
                 if (payload.method === 'eth_sendTransaction') {
                     var tx = payload.params[0];
-                    wallet = getWallet((_.isObject(tx)) ? tx.from : null, method.accounts);
+                    wallet = getWallet((typeof tx === 'object') ? tx.from : null, method.accounts);
 
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
@@ -728,7 +730,7 @@ Method.prototype.buildCall = function () {
                         method.accounts.signTransaction(txOptions, wallet.privateKey)
                             .then(sendSignedTx)
                             .catch(function (err) {
-                                if (_.isFunction(defer.eventEmitter.listeners) && defer.eventEmitter.listeners('error').length) {
+                                if (typeof defer.eventEmitter.listeners === 'function' && defer.eventEmitter.listeners('error').length) {
                                     try {
                                         defer.eventEmitter.emit('error', err);
                                     } catch (err) {
@@ -769,7 +771,7 @@ Method.prototype.buildCall = function () {
         };
 
         // Send the actual transaction
-        if (isSendTx && _.isObject(payload.params[0]) && typeof payload.params[0].gasPrice === 'undefined') {
+        if (isSendTx && typeof payload.params[0] === 'object' && typeof payload.params[0].gasPrice === 'undefined') {
 
             var getGasPrice = (new Method({
                 name: 'getGasPrice',
@@ -866,7 +868,7 @@ Method.prototype.getRevertReason = function (txOptions, blockNumber) {
  * @returns {Boolean}
  */
 Method.prototype.isRevertReasonString = function (data) {
-    return _.isString(data) && ((data.length - 2) / 2) % 32 === 4 && data.substring(0, 10) === '0x08c379a0';
+    return typeof data === 'string' && ((data.length - 2) / 2) % 32 === 4 && data.substring(0, 10) === '0x08c379a0';
 };
 
 /**
