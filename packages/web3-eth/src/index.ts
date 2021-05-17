@@ -3,7 +3,9 @@ import { HttpRpcOptions, HttpRpcResponse } from 'web3-providers-http/types';
 
 import {
   EthAddressBlockParmeters, BlockHashParameter, BlockIdentifierParameter,
-  EthGetStorageAtParameters, Web3EthOptions, EthSignParameters, EthTransaction, EthCallTransaction, blockIdentifier, EthStringResult, EthSyncingResult, EthBooleanResult, EthAccountsResult,
+  EthGetStorageAtParameters, Web3EthOptions, EthSignParameters, EthTransaction, EthCallTransaction, blockIdentifier, EthStringResult, EthSyncingResult, EthBooleanResult, EthAccountsResult, EthBlockResult, EthTransactionResult, EthTransactionReceiptResult,
+  EthStringArrayResult,
+  EthCompiledSolidityResult
 } from '../types';
 
 export default class Web3Eth {
@@ -318,22 +320,22 @@ export default class Web3Eth {
 
   /**
    * Returns the number of transactions in a block from a block matching the given block number
-   * @param params Contains number of block to query
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Returns the number of transaction included in provided block
+   * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing number of transactions in block
    */
   async getBlockTransactionCountByNumber(
-    params: BlockIdentifierParameter,
+    blockIdentifier: blockIdentifier,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getBlockTransactionCountByNumber',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [
-          params.blockNumber,
-        ],
+        params: [blockIdentifier],
       });
     } catch (error) {
       throw Error(`Error getting transaction count for block by number: ${error.message}`);
@@ -342,22 +344,22 @@ export default class Web3Eth {
 
   /**
    * Returns the number of uncles in a block from a block matching the given block hash
-   * @param params Contains hash of block to query
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Returns the number of uncles included in provided block
+   * @param {string} blockHash Hash of block to query
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing number of uncles in block
    */
   async getUncleCountByBlockHash(
-    params: BlockHashParameter,
+    blockHash: string,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getUncleCountByBlockHash',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [
-          params.blockHash,
-        ],
+        params: [blockHash],
       });
     } catch (error) {
       throw Error(`Error getting uncle count for block by hash: ${error.message}`);
@@ -366,22 +368,22 @@ export default class Web3Eth {
 
   /**
    * Returns the number of uncles in a block from a block matching the given block number
-   * @param params Contains number of block to query
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Returns the number of uncles included in provided block
+   * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing number of uncles in block
    */
   async getUncleCountByBlockNumber(
-    params: BlockIdentifierParameter,
+    blockIdentifier: blockIdentifier,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getUncleCountByBlockNumber',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [
-          params.blockNumber,
-        ],
+        params: [blockIdentifier],
       });
     } catch (error) {
       throw Error(`Error getting uncle count for block by number: ${error.message}`);
@@ -390,50 +392,50 @@ export default class Web3Eth {
 
   /**
    * Returns code at a given address
-   * @param params Contains address to query code of,
-   * and an optional identifier for what block to use for the query
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Returns the code from the given address
+   * @param {string} address Address to get code at
+   * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing the code at {address}
    */
   async getCode(
-    params: EthAddressBlockParmeters,
+    address: string,
+    blockIdentifier: blockIdentifier,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getCode',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [
-          params.address,
-          params.block || 'latest',
-        ],
+        params: [address, blockIdentifier],
       });
     } catch (error) {
-      throw Error(`Error getting code for address: ${error.message}`);
+      throw Error(`Error getting code at address: ${error.message}`);
     }
   }
 
   /**
    * Calculates an Ethereum specific signature
-   * @param params Contains address to use to sign,
-   * and a message to sign
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Signed message
+   * @param {string} address Address to use to sign {data}
+   * @param {string} message Message to sign
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing signed message
    */
   async sign(
-    params: EthSignParameters,
+    address: string,
+    message: string,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_sign',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [
-          params.address,
-          params.message,
-        ],
+        params: [address, message],
       });
     } catch (error) {
       throw Error(`Error signing message: ${error.message}`);
@@ -442,26 +444,29 @@ export default class Web3Eth {
 
   /**
    * Signs a transaction that can be submitted to the network at a later time using with sendRawTransaction
-   * @param params A transaction object containing:
-   * from, to, gas, gasPrice, value, data, and nonce
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Signed transaction object
+   * @param {object} transaction Ethereum transaction
+   * @param {string} transaction.from Address transaction will be sent from
+   * @param {string} transaction.to Address transaction is directed towards (optional when creating new contract)
+   * @param {string} transaction.gas Hex string representing gas to provide for transaction (ETH node defaults to 90,000)
+   * @param {string} transaction.gasPrice Hex string representing price paid for each unit of gas in Wei (ETH node will determine if not provided)
+   * @param {string} transaction.value Hex string representing number of Wei to send to {to}
+   * @param {string} transaction.data Hex string representing compiled code of a contract or the hash of the invoked method signature and encoded parameters
+   * @param {string} transaction.nonce Can be used to overwrite pending transactions that use the same nonce
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing signed message
    */
    async signTransaction(
     transaction: EthTransaction,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_signTransaction',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [{
-          ...transaction,
-          gas: `0x${transaction.gas?.toString(16)}`,
-          gasPrice: `0x${transaction.gasPrice?.toString(16)}`,
-          value: `0x${transaction.value?.toString(16)}`,
-        }],
+        params: [{...transaction}],
       });
     } catch (error) {
       throw Error(`Error signing transaction: ${error.message}`);
@@ -470,26 +475,29 @@ export default class Web3Eth {
 
   /**
    * Submits a transaction object to the provider to be sign and sent to the network
-   * @param params A transaction object containing:
-   * from, to, gas, gasPrice, value, data, and nonce
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {object} transaction Ethereum transaction
+   * @param {string} transaction.from Address transaction will be sent from
+   * @param {string} transaction.to Address transaction is directed towards (optional when creating new contract)
+   * @param {string} transaction.gas Hex string representing gas to provide for transaction (ETH node defaults to 90,000)
+   * @param {string} transaction.gasPrice Hex string representing price paid for each unit of gas in Wei (ETH node will determine if not provided)
+   * @param {string} transaction.value Hex string representing number of Wei to send to {to}
+   * @param {string} transaction.data Hex string representing compiled code of a contract or the hash of the invoked method signature and encoded parameters
+   * @param {string} transaction.nonce Can be used to overwrite pending transactions that use the same nonce
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Transaction hash or zero hash if the transaction is not yet available
    */
    async sendTransaction(
     transaction: EthTransaction,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_sendTransaction',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [{
-          ...transaction,
-          gas: transaction.gas ? `0x${transaction.gas.toString(16)}` : undefined,
-          gasPrice: transaction.gasPrice ? `0x${transaction.gasPrice.toString(16)}` : undefined,
-          value: transaction.value ? `0x${transaction.value.toString(16)}` : undefined
-        }],
+        params: [{...transaction}],
       });
     } catch (error) {
       throw Error(`Error sending transaction: ${error.message}`);
@@ -498,20 +506,22 @@ export default class Web3Eth {
 
   /**
    * Submits a previously signed transaction object to the network
-   * @param params Contains the raw signed transaction
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} rawTransaction Hex string representing previously signed transaction
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Transaction hash or zero hash if the transaction is not yet available
    */
    async sendRawTransaction(
-    params: {rawTransaction: string},
+    rawTransaction: string,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_sendRawTransaction',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [params.rawTransaction],
+        params: [rawTransaction],
       });
     } catch (error) {
       throw Error(`Error sending raw transaction: ${error.message}`);
@@ -519,15 +529,26 @@ export default class Web3Eth {
   }
 
   /**
+   * TODO Result is probably more than hex string, or perhpas should be decoded
+   * 
    * Executes a new message call immediately without creating a transaction on the block chain
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {object} transaction Ethereum transaction
+   * @param {string} transaction.from Address transaction will be sent from
+   * @param {string} transaction.to Address transaction is directed towards
+   * @param {string} transaction.gas Hex string representing gas to provide for transaction (ETH node defaults to 90,000)
+   * @param {string} transaction.gasPrice Hex string representing price paid for each unit of gas in Wei (ETH node will determine if not provided)
+   * @param {string} transaction.value Hex string representing number of Wei to send to {to}
+   * @param {string} transaction.data Hash of the method signature and encoded parameters
+   * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing return value of executed contract
    */
    async call(
     transaction: EthCallTransaction,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
@@ -542,14 +563,23 @@ export default class Web3Eth {
 
   /**
    * Generates and returns an estimate of how much gas is necessary to allow the transaction to complete
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {object} transaction Ethereum transaction
+   * @param {string} transaction.from Address transaction will be sent from (optional)
+   * @param {string} transaction.to Address transaction is directed towards (optional)
+   * @param {string} transaction.gas Hex string representing gas to provide for transaction (ETH node defaults to 90,000)
+   * @param {string} transaction.gasPrice Hex string representing price paid for each unit of gas in Wei (ETH node will determine if not provided)
+   * @param {string} transaction.value Hex string representing number of Wei to send to {to} (optional)
+   * @param {string} transaction.data Hash of the method signature and encoded parameters (optional)
+   * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Hex string representing estimated amount of gas to be used
    */
    async estimateGas(
     transaction: EthTransaction,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
@@ -564,23 +594,24 @@ export default class Web3Eth {
 
   /**
    * Returns information about a block by hash
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} blockHash Hash of block to get information for
+   * @param {boolean} returnFullTxs If {true} it returns the full transaction objects, if {false} returns only the hashes of the transactions
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} A block object or null when no block was found
    */
    async getBlockByHash(
-    params: {blockHash: string, returnFullTxs?: boolean},
+    blockHash: string,
+    returnFullTxs: boolean,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthBlockResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getBlockByHash',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [
-          params.blockHash,
-          params.returnFullTxs || false
-        ],
+        params: [blockHash, returnFullTxs],
       });
     } catch (error) {
       throw Error(`Error getting block by hash: ${error.message}`);
@@ -589,45 +620,48 @@ export default class Web3Eth {
 
   /**
    * Returns information about a block by number
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+   * @param {boolean} returnFullTxs If {true} it returns the full transaction objects, if {false} returns only the hashes of the transactions
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} A block object or null when no block was found
    */
    async getBlockByNumber(
-    params: {blockIdentifier: blockIdentifier, returnFullTxs?: boolean},
+    blockIdentifier: blockIdentifier,
+    returnFullTxs: boolean,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthBlockResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getBlockByNumber',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [
-          params.blockIdentifier,
-          params.returnFullTxs || false
-        ],
+        params: [blockIdentifier, returnFullTxs],
       });
     } catch (error) {
-      throw Error(`Error getting block by hash: ${error.message}`);
+      throw Error(`Error getting block by number: ${error.message}`);
     }
   }
 
   /**
    * Returns the information about a transaction requested by transaction hash
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} txHash Hash of transaction to retrieve
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} A transaction object or {null} when no transaction was found
    */
    async getTransactionByHash(
-    params: {txHash: string},
+    txHash: string,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthTransactionResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getTransactionByHash',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [params.txHash],
+        params: [txHash],
       });
     } catch (error) {
       throw Error(`Error getting transaction by hash: ${error.message}`);
@@ -636,20 +670,24 @@ export default class Web3Eth {
 
   /**
    * Returns information about a transaction by block hash and transaction index position
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} blockHash Hash of block to get transactions of
+   * @param {string} transactionIndex Hex string representing index of transaction to return
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} A transaction object or {null} when no transaction was found
    */
    async getTransactionByBlockHashAndIndex(
-    params: {blockHash: string, transactionIndex: string},
+    blockHash: string,
+    transactionIndex: string,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthTransactionResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getTransactionByBlockHashAndIndex',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [params.blockHash, params.transactionIndex],
+        params: [blockHash, transactionIndex],
       });
     } catch (error) {
       throw Error(`Error getting transaction by block hash and index: ${error.message}`);
@@ -658,36 +696,42 @@ export default class Web3Eth {
 
   /**
    * Returns information about a transaction by block number and transaction index position
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+   * @param {string} transactionIndex Hex string representing index of transaction to return
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} A transaction object or {null} when no transaction was found
    */
    async getTransactionByBlockNumberAndIndex(
-    params: {blockIdentifier: blockIdentifier, transactionIndex: string},
+    blockIdentifier: blockIdentifier,
+    transactionIndex: string,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthTransactionResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
         method: 'eth_getTransactionByBlockNumberAndIndex',
         jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-        params: [params.blockIdentifier, params.transactionIndex],
+        params: [blockIdentifier, transactionIndex],
       });
     } catch (error) {
-      throw Error(`Error getting transaction by block hash and index: ${error.message}`);
+      throw Error(`Error getting transaction by block number and index: ${error.message}`);
     }
   }
 
   /**
    * Returns the receipt of a transaction by transaction hash
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} txHash Hash of transaction to get receipt of
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} A transaction object or {null} when no receipt was found
    */
    async getTransactionReceipt(
     txHash: string,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthTransactionReceiptResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
@@ -702,15 +746,18 @@ export default class Web3Eth {
 
   /**
    * Returns information about a uncle of a block by hash and uncle index position
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} blockHash Hash of block to get uncles of
+   * @param {string} uncleIndex Index of uncle to retrieve
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} A block object or null when no block was found
    */
    async getUncleByBlockHashAndIndex(
     blockHash: string,
     uncleIndex: string,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthBlockResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
@@ -725,15 +772,18 @@ export default class Web3Eth {
 
   /**
    * Returns information about a uncle of a block by number and uncle index position
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+   * @param {string} uncleIndex Index of uncle to retrieve
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} A block object or null when no block was found
    */
    async getUncleByBlockNumberAndIndex(
     blockIdentifier: blockIdentifier,
     uncleIndex: string,
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthBlockResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
@@ -748,13 +798,14 @@ export default class Web3Eth {
 
   /**
    * Returns a list of available compilers in the client
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} A list of available compilers
    */
    async getCompilers(
     rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthStringArrayResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
@@ -769,14 +820,16 @@ export default class Web3Eth {
 
   /**
    * Returns compiled solidity code
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} sourceCode Solidity code to be compiled
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} compiled {sourceCode}
    */
    async compileSolidity(
      sourceCode: string,
      rpcOptions?: HttpRpcOptions,
-  ): Promise<HttpRpcResponse> {
+  ): Promise<EthCompiledSolidityResult> {
     try {
       return await this._requestManager.send({
         ...rpcOptions,
@@ -791,14 +844,16 @@ export default class Web3Eth {
 
   /**
    * Returns compiled LLL code
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} sourceCode LLL code to be compiled
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} compiled {sourceCode}
    */
    async compileLLL(
     sourceCode: string,
     rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
+ ): Promise<EthStringResult> {
    try {
      return await this._requestManager.send({
        ...rpcOptions,
@@ -813,14 +868,16 @@ export default class Web3Eth {
 
  /**
    * Returns compiled serpent code
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} sourceCode Serpent code to be compiled
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} compiled {sourceCode}
    */
   async compileSerpent(
     sourceCode: string,
     rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
+ ): Promise<EthStringResult> {
    try {
      return await this._requestManager.send({
        ...rpcOptions,

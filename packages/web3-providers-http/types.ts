@@ -13,5 +13,6 @@ export interface HttpRpcResponse {
         boolean |
         (string|number)[] |
         {[key: string]: string | number} |
-        BigInt
+        BigInt |
+        null | any
 }

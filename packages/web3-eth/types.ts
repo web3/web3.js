@@ -2,6 +2,100 @@ import { HttpRpcResponse } from "web3-providers-http/types";
 
 export type blockIdentifier = number | 'latest' | 'earliest' | 'pending'
 
+export type EthLog = {
+    removed: boolean
+    logIndex: string | null
+    transactionIndex: string | null
+    transactionHash: string | null
+    blockHash: string | null
+    blockNumber: string | null
+    address: string
+    data: string
+    topics: string[]
+}
+
+export type EthTransaction = {
+    from: string
+    to?: string
+    gas?: BigInt
+    gasPrice?: BigInt
+    value?: BigInt
+    data?: string
+    nonce?: number
+}
+
+export type EthMinedTransaction = {
+    blockHash: string | null
+    blockNumber: string | null
+    from: string
+    gas: string
+    gasPrice: string
+    hash: string
+    input: string
+    nonce: string
+    to: string | null
+    transactionIndex: string | null
+    value: string
+    v: string
+    r: string
+    s: string
+}
+
+export type EthBlock = {
+    number: string | null
+    hash: string | null
+    parentHash: string
+    nonce: string | null
+    sha3Uncles: string
+    logsBloom: string | null
+    transactionsRoot: string
+    stateRoot: string
+    receiptsRoot: string
+    miner: string
+    difficulty: string
+    totalDifficulty: string
+    extraData: string
+    size: string
+    gasLimit: string
+    gasUsed: string
+    timestamp: string
+    transactions: EthMinedTransaction[]
+    uncles: string[]
+    root?: string
+    status?: string
+}
+
+export type EthTransactionReceipt = {
+    transactionHash: string
+    transactionIndex: string
+    blockHash: string
+    blockNumber: string
+    from: string
+    to: string | null
+    cumulativeGasUsed: string
+    gasUsed: string
+    contractAdress: string | null
+    logs: EthLog[]
+    logsBloom: string
+}
+
+export type EthCompiledSolidity = {
+    code: string
+    info : {
+        source: string
+        language: string
+        languageVersion: string
+        compilerVersion: string
+        abiDefinition: any[]
+        userDoc: {
+            methods: {[key: string]: any}
+        }
+        developerDoc: {
+            methods: {[key: string]: any}
+        }
+    }
+}
+
 export interface Web3EthOptions {
     packageName?: string
     providerUrl: string
@@ -29,22 +123,16 @@ export interface EthSignParameters {
     message: string
 }
 
-export interface EthTransaction {
-    from: string
-    to?: string
-    gas?: BigInt
-    gasPrice?: BigInt
-    value?: BigInt
-    data?: string
-    nonce?: number
-}
-
 export interface EthCallTransaction extends EthTransaction {
     to: string
 }
 
 export interface EthStringResult extends HttpRpcResponse {
     result: string
+}
+
+export interface EthStringArrayResult extends HttpRpcResponse {
+    result: string[]
 }
 
 export interface EthBooleanResult extends HttpRpcResponse {
@@ -61,4 +149,20 @@ export interface EthSyncingResult extends HttpRpcResponse {
 
 export interface EthAccountsResult extends HttpRpcResponse {
     result: string[]
+}
+
+export interface EthBlockResult extends HttpRpcResponse {
+    result: EthBlock | null
+}
+
+export interface EthTransactionResult extends HttpRpcResponse {
+    result: EthMinedTransaction | null
+}
+
+export interface EthTransactionReceiptResult extends HttpRpcResponse {
+    result: EthTransactionReceipt | null
+}
+
+export interface EthCompiledSolidityResult extends HttpRpcResponse {
+    result: EthCompiledSolidity
 }
