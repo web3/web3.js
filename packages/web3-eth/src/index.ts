@@ -5,7 +5,9 @@ import {
   EthAddressBlockParmeters, BlockHashParameter, BlockIdentifierParameter,
   EthGetStorageAtParameters, Web3EthOptions, EthSignParameters, EthTransaction, EthCallTransaction, blockIdentifier, EthStringResult, EthSyncingResult, EthBooleanResult, EthAccountsResult, EthBlockResult, EthTransactionResult, EthTransactionReceiptResult,
   EthStringArrayResult,
-  EthCompiledSolidityResult
+  EthCompiledSolidityResult,
+  EthLogResult,
+  EthFilter
 } from '../types';
 
 export default class Web3Eth {
@@ -71,11 +73,11 @@ export default class Web3Eth {
   }
 
   /**
-   * Returns an object with data about the sync status or {false} when not syncing
+   * Returns an object with data about the sync status or false when not syncing
    * @param {object} rpcOptions RPC options
    * @param {number} rpcOptions.id ID used to identify request
    * @param {string} rpcOptions.jsonrpc JSON RPC version
-   * @returns {Promise} Object with sync status data or {false} when not syncing
+   * @returns {Promise} Object with sync status data or false when not syncing
    */
   async getSyncing(rpcOptions?: HttpRpcOptions): Promise<EthSyncingResult> {
     try {
@@ -111,11 +113,11 @@ export default class Web3Eth {
   }
 
   /**
-   * Returns {true} if client is actively mining new blocks
+   * Returns true if client is actively mining new blocks
    * @param {object} rpcOptions RPC options
    * @param {number} rpcOptions.id ID used to identify request
    * @param {string} rpcOptions.jsonrpc JSON RPC version
-   * @returns {Promise} {true} if the client is mining, otherwise {false}
+   * @returns {Promise} true if the client is mining, otherwise false
    */
   async getMining(rpcOptions?: HttpRpcOptions): Promise<EthBooleanResult> {
     try {
@@ -595,7 +597,7 @@ export default class Web3Eth {
   /**
    * Returns information about a block by hash
    * @param {string} blockHash Hash of block to get information for
-   * @param {boolean} returnFullTxs If {true} it returns the full transaction objects, if {false} returns only the hashes of the transactions
+   * @param {boolean} returnFullTxs If true it returns the full transaction objects, if false returns only the hashes of the transactions
    * @param {object} rpcOptions RPC options
    * @param {number} rpcOptions.id ID used to identify request
    * @param {string} rpcOptions.jsonrpc JSON RPC version
@@ -621,7 +623,7 @@ export default class Web3Eth {
   /**
    * Returns information about a block by number
    * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
-   * @param {boolean} returnFullTxs If {true} it returns the full transaction objects, if {false} returns only the hashes of the transactions
+   * @param {boolean} returnFullTxs If true it returns the full transaction objects, if false returns only the hashes of the transactions
    * @param {object} rpcOptions RPC options
    * @param {number} rpcOptions.id ID used to identify request
    * @param {string} rpcOptions.jsonrpc JSON RPC version
@@ -892,19 +894,20 @@ export default class Web3Eth {
 
  /**
    * Creates a filter object, based on filter options, to notify when the state changes (logs)
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {object} filter Filter to be created
+   * @param {string|number} filter.fromBlock Start filter at integer block number or "latest", "earliest", "pending"
+   * @param {string|number} filter.toBlock End filter at integer block number or "latest", "earliest", "pending"
+   * @param {string|string[]} filter.address: Contract address or list of addresses from which logs should originate
+   * @param {string[]} filter.topics Topics to use for filtering (optional)
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Filter id
    */
   async newFilter(
-    filter: {
-      fromBlock?: blockIdentifier,
-      toBlock?: blockIdentifier,
-      address?: string,
-      topics?: string | null | string[][]
-    },
+    filter: EthFilter,
     rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
+ ): Promise<EthStringResult> {
    try {
      return await this._requestManager.send({
        ...rpcOptions,
@@ -919,13 +922,14 @@ export default class Web3Eth {
 
  /**
    * Creates a filter in the node, to notify when a new block arrives
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Filter id
    */
   async newBlockFilter(
     rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
+ ): Promise<EthStringResult> {
    try {
      return await this._requestManager.send({
        ...rpcOptions,
@@ -940,13 +944,14 @@ export default class Web3Eth {
 
  /**
    * Creates a filter in the node, to notify when new pending transactions arrive
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Filter id
    */
   async newPendingTransactionFilter(
     rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
+ ): Promise<EthStringResult> {
    try {
      return await this._requestManager.send({
        ...rpcOptions,
@@ -961,14 +966,16 @@ export default class Web3Eth {
 
  /**
    * Uninstalls a filter with given id. Should always be called when watch is no longer needed
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} filterId Id of filter to uninstall from node
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Returns true if filter was successfully uninstalled, otherwise false
    */
   async uninstallFilter(
     filterId: string,
     rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
+ ): Promise<EthBooleanResult> {
    try {
      return await this._requestManager.send({
        ...rpcOptions,
@@ -983,14 +990,16 @@ export default class Web3Eth {
 
  /**
    * Polling method for a filter, which returns an array of logs which occurred since last poll
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} filterid Id of filter to retrieve changes from
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
    */
   async getFilterChanges(
     filterId: string,
     rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
+ ): Promise<EthLogResult> {
    try {
      return await this._requestManager.send({
        ...rpcOptions,
@@ -1005,14 +1014,16 @@ export default class Web3Eth {
 
  /**
    * Returns an array of all logs matching filter with given id
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} filterid Id of filter to retrieve
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
    */
   async getFilterLogs(
     filterId: string,
     rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
+ ): Promise<EthLogResult> {
    try {
      return await this._requestManager.send({
        ...rpcOptions,
@@ -1027,20 +1038,15 @@ export default class Web3Eth {
 
  /**
    * Returns an array of all logs matching a given filter object
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
    */
   async getLogs(
-    filter: {
-      fromBlock?: blockIdentifier,
-      toBlock?: blockIdentifier,
-      address?: string,
-      topics?: string | null | string[][],
-      blochHash?: string
-    },
+    filter: EthFilter,
     rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
+ ): Promise<EthLogResult> {
    try {
      return await this._requestManager.send({
        ...rpcOptions,
@@ -1055,13 +1061,14 @@ export default class Web3Eth {
 
  /**
    * Returns the hash of the current block, the seedHash, and the boundary condition to be met (“target”)
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Array of work info (in order: current block header pow-hash, seed hash used for the DAG, and boundary condition (“target”), 2^256 / difficulty)
    */
   async getWork(
     rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
+ ): Promise<EthStringArrayResult> {
    try {
      return await this._requestManager.send({
        ...rpcOptions,
@@ -1076,16 +1083,20 @@ export default class Web3Eth {
 
  /**
    * Used for submitting a proof-of-work solution
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} nonce Hex string representing found nonce (64 bits)
+   * @param {string} powHash Hex string representing POW hash (256 bits)
+   * @param {string} digest Hex string representing mix digest (256 bits)
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Returns true if the provided solution is valid, otherwise false
    */
   async submitWork(
     nonce: string,
     powHash: string,
     digest: string,
     rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
+ ): Promise<EthBooleanResult> {
    try {
      return await this._requestManager.send({
        ...rpcOptions,
@@ -1100,15 +1111,18 @@ export default class Web3Eth {
 
  /**
    * Used for submitting mining hashrate
-   * @param params Transaction object
-   * @param rpcOptions Optionaly provide {id} and {jsonrpc} params to RPC call
-   * @returns {HttpRpcResponse} Transaction hash or zero hash if transaction has not been mined
+   * @param {string} hashRate Hex string representing desired hash rate (32 bytes)
+   * @param {string} clientId Hex string representing ID identifying the client
+   * @param {object} rpcOptions RPC options
+   * @param {number} rpcOptions.id ID used to identify request
+   * @param {string} rpcOptions.jsonrpc JSON RPC version
+   * @returns {Promise} Returns true if the provided solution is valid, otherwise false
    */
   async submitHashRate(
     hashRate: string,
     clientId: string,
     rpcOptions?: HttpRpcOptions,
- ): Promise<HttpRpcResponse> {
+ ): Promise<EthBooleanResult> {
    try {
      return await this._requestManager.send({
        ...rpcOptions,

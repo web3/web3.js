@@ -96,6 +96,14 @@ export type EthCompiledSolidity = {
     }
 }
 
+export type EthFilter = {
+    fromBlock?: blockIdentifier,
+    toBlock?: blockIdentifier,
+    address?: string,
+    topics?: string | null | string[][],
+    blochHash?: string
+}
+
 export interface Web3EthOptions {
     packageName?: string
     providerUrl: string
@@ -165,4 +173,8 @@ export interface EthTransactionReceiptResult extends HttpRpcResponse {
 
 export interface EthCompiledSolidityResult extends HttpRpcResponse {
     result: EthCompiledSolidity
+}
+
+export interface EthLogResult extends HttpRpcResponse {
+    result: EthLog[]
 }
