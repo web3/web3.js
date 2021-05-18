@@ -280,6 +280,8 @@ var Eth = function Eth() {
 
     this.clearSubscriptions = _this._requestManager.clearSubscriptions.bind(_this._requestManager);
 
+    this.removeSubscriptionById = _this._requestManager.removeSubscription.bind(_this._requestManager);
+
     // add net
     this.net = new Net(this);
     // add chain detection
