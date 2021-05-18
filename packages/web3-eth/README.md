@@ -15,5 +15,5 @@ yarn add web3-eth
 -   `build`: Runs `yarn clean` and `yarn compile`
 -   `clean`: Uses `rimraf` to remove `lib/`
 -   `compile`: Uses `tsc` to build package and depedenent packages
--   `lint`: Uses `eslint` to lint package
+-   `lint`: Uses `prettier` to format code and `eslint` to lint package
 -   `test`: Uses `jest` to run tests
