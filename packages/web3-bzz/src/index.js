@@ -52,7 +52,7 @@ if (typeof ethereum !== 'undefined' && ethereum.bzz) {
 
 Bzz.prototype.setProvider = function(provider) {
     // is ethereum provider
-    if(typeof provider === 'object' && provider != null && typeof provider.bzz === 'string') {
+    if(typeof provider === 'object' && !!provider && typeof provider.bzz === 'string') {
         provider = provider.bzz;
     // is no string, set default
     }
