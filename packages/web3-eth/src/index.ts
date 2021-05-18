@@ -44,7 +44,7 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Client version
      */
-     async getClientVersion(
+    async getClientVersion(
         rpcOptions?: HttpRpcOptions
     ): Promise<EthStringResult> {
         try {
@@ -90,7 +90,7 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Current network version
      */
-     async getNetworkVersion(
+    async getNetworkVersion(
         rpcOptions?: HttpRpcOptions
     ): Promise<EthStringResult> {
         try {
@@ -112,7 +112,7 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} true if currently listening, otherwise false
      */
-     async getNetworkListening(
+    async getNetworkListening(
         rpcOptions?: HttpRpcOptions
     ): Promise<EthBooleanResult> {
         try {
@@ -134,7 +134,7 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} true if currently listening, otherwise false
      */
-     async getNetworkPeerCount(
+    async getNetworkPeerCount(
         rpcOptions?: HttpRpcOptions
     ): Promise<EthBooleanResult> {
         try {

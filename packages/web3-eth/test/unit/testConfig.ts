@@ -33,7 +33,7 @@ export const testConfig: TestConfig = {
             parameters: [],
             expectedResult: {
                 ...expectedResultBase,
-                result: "Mist/v0.9.3/darwin/go1.4.1"
+                result: 'Mist/v0.9.3/darwin/go1.4.1',
             },
         },
         {
