@@ -377,7 +377,6 @@ module.exports = {
     // extractDisplayName: extractDisplayName,
     // extractTypeName: extractTypeName,
     randomHex: randomHex,
-    _: _,
     BN: utils.BN,
     isBN: utils.isBN,
     isBigNumber: utils.isBigNumber,
