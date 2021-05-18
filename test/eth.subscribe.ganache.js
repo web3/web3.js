@@ -63,6 +63,33 @@ describe('subscription connect/reconnect', function () {
         assert.equal(0, web3.eth._requestManager.subscriptions.size);
     });
 
+    it('unsubscribes given an id', async function ( ) {
+        subscription = web3.eth.subscribe('newBlockHeaders');
+        await waitSeconds(1);
+
+        assert.equal(1, web3.eth._requestManager.subscriptions.size);
+        web3.eth.removeSubscriptionById(subscription.id)
+
+        assert.equal(0, web3.eth._requestManager.subscriptions.size);
+        
+    })
+
+    it('unsubscribes given an id with multiple subscriptions', async function () {
+
+            subscription = web3.eth.subscribe('newBlockHeaders');
+            subscription2 = web3.eth.subscribe("logs");
+            await waitSeconds(1);
+    
+            assert.equal(2, web3.eth._requestManager.subscriptions.size);
+
+            web3.eth.removeSubscriptionById(subscription.id);
+            assert.equal(1, web3.eth._requestManager.subscriptions.size);
+
+            web3.eth.removeSubscriptionById(subscription2.id);
+            assert.equal(0, web3.eth._requestManager.subscriptions.size);
+
+        })
+
     it('resubscribes to an existing subscription', function (done) {
         this.timeout(5000);
 
