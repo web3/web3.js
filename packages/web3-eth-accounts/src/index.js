@@ -356,7 +356,7 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
 Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
     /* jshint maxcomplexity: 10 */
 
-    if (!typeof password === 'string') {
+    if (!(typeof password === 'string')) {
         throw new Error('No password given.');
     }
 
@@ -469,7 +469,7 @@ function Wallet(accounts) {
 
 Wallet.prototype._findSafeIndex = function(pointer) {
     pointer = pointer || 0;
-    if (this.hasOwnProperty(pointer)) {
+    if (this != null && this.hasOwnProperty(pointer)) {
         return this._findSafeIndex(pointer + 1);
     } else {
         return pointer;
